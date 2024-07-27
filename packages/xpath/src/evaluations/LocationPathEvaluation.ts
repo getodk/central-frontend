@@ -24,10 +24,19 @@ import type {
 	MaybeProcessingInstructionNode,
 } from '../lib/dom/types.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
-import { distinct, filter, map, tee } from '../lib/iterators/common.ts';
+import { distinct, filter, tee } from '../lib/iterators/common.ts';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Evaluation } from './Evaluation.ts';
 import { NodeEvaluation } from './NodeEvaluation.ts';
+
+function* flatMapNodeSets(
+	contextNodes: Iterable<ContextNode>,
+	fn: (contextNode: ContextNode) => Iterable<ContextNode>
+): Iterable<ContextNode> {
+	for (const contextNode of contextNodes) {
+		yield* fn(contextNode);
+	}
+}
 
 type LocationPathParentContext = EvaluationContext | LocationPathEvaluation;
 
@@ -45,8 +54,6 @@ type EvaluationComparator = (lhs: Evaluation, rhs: Evaluation) => boolean;
 const filterNamespace = filter(isNamespaceAttribute);
 
 const filterNonNamespace = filter((attr: Attr) => !isNamespaceAttribute(attr));
-
-const filterNonAttribute = filter((node: Node) => !isAttributeNode(node));
 
 const getTreeWalker = (context: AxisEvaluationContext, step: AnyStep): TreeWalker => {
 	const { treeWalkers } = context;
@@ -72,15 +79,17 @@ const getTreeWalker = (context: AxisEvaluationContext, step: AnyStep): TreeWalke
 	}
 };
 
-interface AxisEvaluationContext {
+interface AxisEvaluationCurrentContext {
 	readonly rootNode: ContextParentNode;
 	readonly treeWalkers: EvaluationContextTreeWalkers;
+}
 
-	get contextNodes(): Iterable<ContextNode>;
+interface AxisEvaluationContext extends AxisEvaluationCurrentContext {
+	readonly contextNode: ContextNode;
 }
 
 const axisEvaluationContext = (
-	currentContext: AxisEvaluationContext,
+	currentContext: AxisEvaluationCurrentContext,
 	contextNode: ContextNode
 ): AxisEvaluationContext => {
 	const { rootNode, treeWalkers } = currentContext;
@@ -88,7 +97,7 @@ const axisEvaluationContext = (
 	return {
 		rootNode,
 		treeWalkers,
-		contextNodes: [contextNode],
+		contextNode,
 	};
 };
 
@@ -113,194 +122,177 @@ const axisEvaluators: AxisEvaluators = {
 	},
 
 	'ancestor-or-self': function* ancestorOrSelf(context, step) {
+		const { contextNode } = context;
 		const isNamedStep = step.stepType !== 'NodeTypeTest';
+		const currentContext = axisEvaluationContext(context, contextNode);
 
-		for (const contextNode of context.contextNodes) {
-			const currentContext = axisEvaluationContext(context, contextNode);
+		yield* axisEvaluators.ancestor(currentContext, step);
 
-			yield* axisEvaluators.ancestor(currentContext, step);
-
-			if (!isNamedStep || isElementNode(contextNode)) {
-				yield contextNode;
-			}
+		if (!isNamedStep || isElementNode(contextNode)) {
+			yield contextNode;
 		}
 	},
 
 	attribute: function* attribute(context) {
-		for (const contextNode of context.contextNodes) {
-			const attributeNodes = (contextNode as MaybeElementNode).attributes ?? [];
+		const attributeNodes = (context.contextNode as MaybeElementNode).attributes ?? [];
 
-			yield* filterNonNamespace(attributeNodes);
-		}
+		yield* filterNonNamespace(attributeNodes);
 	},
 
 	child: function* child(context, step) {
+		const { contextNode } = context;
 		const treeWalker = getTreeWalker(context, step);
 
-		for (const contextNode of context.contextNodes) {
-			let currentNode = contextNode;
+		let currentNode = contextNode;
 
-			treeWalker.currentNode = currentNode;
-			treeWalker.firstChild();
+		treeWalker.currentNode = currentNode;
+		treeWalker.firstChild();
 
-			do {
-				currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+		do {
+			currentNode = treeWalker.currentNode satisfies Node as ContextNode;
 
-				// `TreeWalker` "child" and "sibling" are lies. They will both happily
-				// enter descendants of those childrens to match their initial filter.
-				//
-				// TODO: as such, this check is *necessary*, but probably so expensive
-				// it may negate the benefits of using `TreeWalker` versus other
-				// traversal/filtering techniques. That said, it would be worth
-				// exploring the use of a `Set<ChildNode>` for this check to see if it
-				// negates the presumed performance impact.
-				if (currentNode.parentNode === contextNode) {
-					yield currentNode;
+			// `TreeWalker` "child" and "sibling" are lies. They will both happily
+			// enter descendants of those childrens to match their initial filter.
+			//
+			// TODO: as such, this check is *necessary*, but probably so expensive
+			// it may negate the benefits of using `TreeWalker` versus other
+			// traversal/filtering techniques. That said, it would be worth
+			// exploring the use of a `Set<ChildNode>` for this check to see if it
+			// negates the presumed performance impact.
+			if (currentNode.parentNode === contextNode) {
+				yield currentNode;
 
-					treeWalker.currentNode = currentNode;
-				}
-			} while (treeWalker.nextSibling() != null);
-		}
+				treeWalker.currentNode = currentNode;
+			}
+		} while (treeWalker.nextSibling() != null);
 	},
 
 	descendant: function* descendant(context, step) {
+		const { contextNode } = context;
 		const treeWalker = getTreeWalker(context, step);
 
-		for (const contextNode of context.contextNodes) {
-			treeWalker.currentNode = contextNode;
+		treeWalker.currentNode = contextNode;
 
-			if (treeWalker.firstChild() == null) {
-				continue;
+		if (treeWalker.firstChild() == null) {
+			return;
+		}
+
+		do {
+			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+
+			// Might be more efficient to "clone" the `TreeWalker` with each node
+			// as its root, than repeatedly performing this check...
+			if (!contextNode.contains(currentNode)) {
+				break;
 			}
 
-			do {
-				const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+			yield currentNode;
 
-				// Might be more efficient to "clone" the `TreeWalker` with each node
-				// as its root, than repeatedly performing this check...
-				if (!contextNode.contains(currentNode)) {
-					break;
-				}
-
-				yield currentNode;
-
-				treeWalker.currentNode = currentNode;
-			} while (treeWalker.nextNode() != null);
-		}
+			treeWalker.currentNode = currentNode;
+		} while (treeWalker.nextNode() != null);
 	},
 
 	'descendant-or-self': function* descendantOrSelf(context, step) {
-		for (const contextNode of context.contextNodes) {
-			yield contextNode;
+		const { contextNode } = context;
 
-			const selfContext = axisEvaluationContext(context, contextNode);
+		yield contextNode;
 
-			yield* axisEvaluators.descendant(selfContext, step);
-		}
+		const selfContext = axisEvaluationContext(context, contextNode);
+
+		yield* axisEvaluators.descendant(selfContext, step);
 	},
 
 	following: function* following(context, step) {
-		const contextNodes = map((node: Node) => (node as MaybeAttrNode).ownerElement ?? node)(
-			context.contextNodes
-		);
-
+		const { contextNode } = context;
+		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
 		const treeWalker = getTreeWalker(context, step);
 		const visited = new WeakSet<Node>();
 
-		for (const node of contextNodes) {
-			const { nextSibling } = node;
+		const { nextSibling } = effectiveContextNode;
 
-			if (nextSibling == null) {
+		if (nextSibling == null) {
+			return;
+		}
+
+		treeWalker.currentNode = nextSibling;
+
+		do {
+			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+
+			if (visited.has(currentNode)) {
 				continue;
 			}
 
-			treeWalker.currentNode = nextSibling;
+			visited.add(currentNode);
 
-			do {
-				const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+			yield currentNode;
 
-				if (visited.has(currentNode)) {
-					continue;
-				}
-
-				visited.add(currentNode);
-
-				yield currentNode;
-
-				treeWalker.currentNode = currentNode;
-			} while (treeWalker.nextNode() != null);
-		}
+			treeWalker.currentNode = currentNode;
+		} while (treeWalker.nextNode() != null);
 	},
 
 	'following-sibling': function* followingSibling(context, step) {
 		const visited = new WeakSet<ContextNode>();
 		const treeWalker = getTreeWalker(context, step);
+		const { contextNode } = context;
+		const { nextSibling } = contextNode;
 
-		for (const contextNode of context.contextNodes) {
-			const { nextSibling } = contextNode;
+		if (nextSibling == null) {
+			return;
+		}
 
-			if (nextSibling == null) {
+		const { parentNode } = contextNode;
+
+		treeWalker.currentNode = nextSibling;
+
+		do {
+			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+
+			if (visited.has(currentNode) || currentNode.parentNode !== parentNode) {
 				continue;
 			}
 
-			const { parentNode } = contextNode;
+			visited.add(currentNode);
 
-			treeWalker.currentNode = nextSibling;
+			yield currentNode;
 
-			do {
-				const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
-
-				if (visited.has(currentNode) || currentNode.parentNode !== parentNode) {
-					continue;
-				}
-
-				visited.add(currentNode);
-
-				yield currentNode;
-
-				treeWalker.currentNode = currentNode;
-			} while (treeWalker.nextSibling() != null);
-		}
+			treeWalker.currentNode = currentNode;
+		} while (treeWalker.nextSibling() != null);
 	},
 
 	namespace: function* namespace(context) {
-		for (const contextNode of context.contextNodes) {
-			const attributeNodes = (contextNode as MaybeElementNode).attributes ?? [];
+		const attributeNodes = (context.contextNode as MaybeElementNode).attributes ?? [];
 
-			yield* filterNamespace(attributeNodes);
-		}
+		yield* filterNamespace(attributeNodes);
 	},
 
 	parent: function* parent(context, step) {
-		const { contextNodes, rootNode } = context;
+		const { contextNode, rootNode } = context;
 		const treeWalker = getTreeWalker(context, step);
+		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
 
-		for (const contextNode of contextNodes) {
-			const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
+		if (effectiveContextNode === rootNode) {
+			return;
+		}
 
-			if (effectiveContextNode === rootNode) {
-				continue;
-			}
+		if (effectiveContextNode !== contextNode) {
+			yield effectiveContextNode;
 
-			if (effectiveContextNode !== contextNode) {
-				yield effectiveContextNode;
+			return;
+		}
 
-				continue;
-			}
+		treeWalker.currentNode = effectiveContextNode;
 
-			treeWalker.currentNode = effectiveContextNode;
+		const parentNode = treeWalker.parentNode();
 
-			const parentNode = treeWalker.parentNode();
-
-			if (parentNode != null) {
-				yield parentNode as ContextNode;
-				treeWalker.currentNode = parentNode;
-			}
+		if (parentNode != null) {
+			yield parentNode as ContextNode;
+			treeWalker.currentNode = parentNode;
 		}
 	},
 
 	preceding: function* preceding(context, step) {
-		const { rootNode } = context;
+		const { contextNode, rootNode } = context;
 		const { nodeType = null } = step;
 		const treeWalker = getTreeWalker(context, step);
 
@@ -314,73 +306,76 @@ const axisEvaluators: AxisEvaluators = {
 			treeWalker.previousNode();
 		}
 
-		for (const node of context.contextNodes) {
-			const contextNode = (node as MaybeAttrNode).ownerElement ?? node;
+		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
 
-			do {
-				const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+		do {
+			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
 
-				if (currentNode.contains(contextNode)) {
-					continue;
-				}
+			if (currentNode.contains(effectiveContextNode)) {
+				continue;
+			}
 
-				if (
-					currentNode === contextNode ||
-					(contextNode.compareDocumentPosition(currentNode) & Node.DOCUMENT_POSITION_PRECEDING) ===
-						0
-				) {
-					break;
-				}
+			if (
+				currentNode === effectiveContextNode ||
+				(effectiveContextNode.compareDocumentPosition(currentNode) &
+					Node.DOCUMENT_POSITION_PRECEDING) ===
+					0
+			) {
+				break;
+			}
 
-				yield currentNode;
+			yield currentNode;
 
-				treeWalker.currentNode = currentNode;
-			} while (treeWalker.nextNode() != null);
-		}
+			treeWalker.currentNode = currentNode;
+		} while (treeWalker.nextNode() != null);
 	},
 
 	'preceding-sibling': function* precedingSibling(context, step) {
+		const { contextNode } = context;
+
+		if (isAttributeNode(contextNode)) {
+			return;
+		}
+
 		const { nodeType = null } = step;
 		const treeWalker = getTreeWalker(context, step);
 
 		let parentNode: Node | null = null;
 
-		for (const node of filterNonAttribute(context.contextNodes)) {
-			const currentParentNode = node.parentNode;
+		const currentParentNode = contextNode.parentNode;
 
-			if (currentParentNode == null) {
-				continue;
-			}
-
-			if (currentParentNode !== parentNode) {
-				parentNode = currentParentNode;
-
-				// Safe, otherwise we wouldn't have a parent node!
-				treeWalker.currentNode = parentNode.firstChild!;
-
-				// See commentary on same logic under `preceding`
-				if (nodeType != null && nodeType !== 'node') {
-					treeWalker.nextSibling();
-					treeWalker.previousSibling();
-				}
-			}
-
-			do {
-				const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
-
-				if (currentNode === node) {
-					break;
-				}
-
-				yield currentNode;
-
-				treeWalker.currentNode = currentNode;
-			} while (treeWalker.nextSibling() != null);
+		if (currentParentNode == null) {
+			return;
 		}
+
+		if (currentParentNode !== parentNode) {
+			parentNode = currentParentNode;
+
+			// Safe, otherwise we wouldn't have a parent node!
+			treeWalker.currentNode = parentNode.firstChild!;
+
+			// See commentary on same logic under `preceding`
+			if (nodeType != null && nodeType !== 'node') {
+				treeWalker.nextSibling();
+				treeWalker.previousSibling();
+			}
+		}
+
+		do {
+			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+
+			if (currentNode === contextNode) {
+				break;
+			}
+
+			yield currentNode;
+
+			treeWalker.currentNode = currentNode;
+		} while (treeWalker.nextSibling() != null);
 	},
 
 	self: function* self(context) {
-		yield* context.contextNodes;
+		yield context.contextNode;
 	},
 };
 
@@ -774,8 +769,15 @@ export class LocationPathEvaluation
 
 		const { axisType } = step;
 		const axisEvaluator = axisEvaluators[axisType];
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const context: AxisEvaluationCurrentContext = this;
 
-		const nodes: Iterable<ContextNode> = nodesFilter(axisEvaluator(this, step));
+		const nodes = flatMapNodeSets(this.contextNodes, function* (contextNode) {
+			const currentContext = axisEvaluationContext(context, contextNode);
+			const axisNodes = axisEvaluator(currentContext, step);
+
+			yield* nodesFilter(axisNodes);
+		});
 
 		return new LocationPathEvaluation(this, nodes);
 	}
