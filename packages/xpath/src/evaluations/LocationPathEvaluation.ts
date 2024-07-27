@@ -182,29 +182,14 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	descendant: function* descendant(context) {
-		const { contextNode } = context;
-		const treeWalker = createTreeWalker(context);
+	descendant: function* descendant(context, step) {
+		for (const childNode of axisEvaluators.child(context, step)) {
+			yield childNode;
 
-		treeWalker.currentNode = contextNode;
+			const childContext = axisEvaluationContext(context, childNode);
 
-		if (treeWalker.firstChild() == null) {
-			return;
+			yield* axisEvaluators.descendant(childContext, step);
 		}
-
-		do {
-			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
-
-			// Might be more efficient to "clone" the `TreeWalker` with each node
-			// as its root, than repeatedly performing this check...
-			if (!contextNode.contains(currentNode)) {
-				break;
-			}
-
-			yield currentNode;
-
-			treeWalker.currentNode = currentNode;
-		} while (treeWalker.nextNode() != null);
 	},
 
 	'descendant-or-self': function* descendantOrSelf(context, step) {
