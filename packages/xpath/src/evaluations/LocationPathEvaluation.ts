@@ -169,32 +169,17 @@ const axisEvaluators: AxisEvaluators = {
 		yield* filterNonNamespace(attributeNodes);
 	},
 
-	child: function* child(context) {
+	child: function* child(context, step) {
 		const { contextNode } = context;
-		const treeWalker = createTreeWalker(context);
 
-		let currentNode = contextNode;
+		switch (step.nodeType) {
+			case '__NAMED__':
+				yield* (contextNode as MaybeElementNode).children ?? [];
+				break;
 
-		treeWalker.currentNode = currentNode;
-		treeWalker.firstChild();
-
-		do {
-			currentNode = treeWalker.currentNode satisfies Node as ContextNode;
-
-			// `TreeWalker` "child" and "sibling" are lies. They will both happily
-			// enter descendants of those childrens to match their initial filter.
-			//
-			// TODO: as such, this check is *necessary*, but probably so expensive
-			// it may negate the benefits of using `TreeWalker` versus other
-			// traversal/filtering techniques. That said, it would be worth
-			// exploring the use of a `Set<ChildNode>` for this check to see if it
-			// negates the presumed performance impact.
-			if (currentNode.parentNode === contextNode) {
-				yield currentNode;
-
-				treeWalker.currentNode = currentNode;
-			}
-		} while (treeWalker.nextSibling() != null);
+			default:
+				yield* contextNode.childNodes satisfies Iterable<ChildNode> as Iterable<ContextNode>;
+		}
 	},
 
 	descendant: function* descendant(context) {
