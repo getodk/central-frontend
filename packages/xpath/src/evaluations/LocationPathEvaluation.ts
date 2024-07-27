@@ -294,28 +294,32 @@ const axisEvaluators: AxisEvaluators = {
 		yield* filterNamespace(attributeNodes);
 	},
 
-	parent: function* parent(context) {
-		const { contextNode, rootNode } = context;
-		const treeWalker = createTreeWalker(context);
-		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
+	parent: function* parent(context, step) {
+		const { rootNode, contextNode } = context;
 
-		if (effectiveContextNode === rootNode) {
+		if (contextNode === rootNode) {
 			return;
 		}
 
-		if (effectiveContextNode !== contextNode) {
-			yield effectiveContextNode;
+		const { ownerElement } = contextNode as MaybeAttrNode;
+
+		// Attribute/namespace parent is its owner element
+		if (ownerElement != null) {
+			yield ownerElement;
 
 			return;
 		}
 
-		treeWalker.currentNode = effectiveContextNode;
+		let parentNode: Node | null;
 
-		const parentNode = treeWalker.parentNode();
+		if (step.nodeType === '__NAMED__') {
+			parentNode = contextNode.parentElement;
+		} else {
+			parentNode = contextNode.parentNode;
+		}
 
-		if (parentNode != null) {
-			yield parentNode as ContextNode;
-			treeWalker.currentNode = parentNode;
+		if (isContextNode(parentNode)) {
+			yield parentNode;
 		}
 	},
 
