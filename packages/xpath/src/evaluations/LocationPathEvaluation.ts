@@ -115,7 +115,7 @@ const createTreeWalker = (context: AxisEvaluationContext): TreeWalker => {
 	return contextDocument.createTreeWalker(contextDocument, NodeFilter.SHOW_ALL);
 };
 
-const isContextNode = (node: Node | null): node is ContextNode => {
+const isContextNode = (node: Node | null | undefined): node is ContextNode => {
 	return node != null;
 };
 
@@ -146,6 +146,24 @@ const axisEvaluationContext = (
 		visited,
 	};
 };
+
+type SiblingKey =
+	| 'nextElementSibling'
+	| 'nextSibling'
+	| 'previousElementSibling'
+	| 'previousSibling';
+
+function* siblings(contextNode: ContextNode, siblingType: SiblingKey): Iterable<ContextNode> {
+	let currentNode: Node | null | undefined = contextNode;
+
+	while (currentNode != null) {
+		currentNode = (currentNode as MaybeElementNode)[siblingType];
+
+		if (isContextNode(currentNode)) {
+			yield currentNode;
+		}
+	}
+}
 
 type EvaluateAxisNodes = (context: AxisEvaluationContext, step: AnyStep) => Iterable<ContextNode>;
 
@@ -258,33 +276,16 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	'following-sibling': function* followingSibling(context) {
-		const visited = new WeakSet<ContextNode>();
-		const treeWalker = createTreeWalker(context);
-		const { contextNode } = context;
-		const { nextSibling } = contextNode;
+	'following-sibling': function* followingSibling(context, step) {
+		let siblingKey: SiblingKey;
 
-		if (nextSibling == null) {
-			return;
+		if (step.nodeType === '__NAMED__') {
+			siblingKey = 'nextElementSibling';
+		} else {
+			siblingKey = 'nextSibling';
 		}
 
-		const { parentNode } = contextNode;
-
-		treeWalker.currentNode = nextSibling;
-
-		do {
-			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
-
-			if (visited.has(currentNode) || currentNode.parentNode !== parentNode) {
-				continue;
-			}
-
-			visited.add(currentNode);
-
-			yield currentNode;
-
-			treeWalker.currentNode = currentNode;
-		} while (treeWalker.nextSibling() != null);
+		yield* siblings(context.contextNode, siblingKey);
 	},
 
 	namespace: function* namespace(context) {
