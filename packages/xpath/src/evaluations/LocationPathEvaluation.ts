@@ -19,6 +19,7 @@ import {
 	isProcessingInstructionNode,
 	isTextNode,
 } from '../lib/dom/predicates.ts';
+import { sortDocumentOrder } from '../lib/dom/sort.ts';
 import type {
 	ContextDocument,
 	ContextNode,
@@ -323,43 +324,47 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	preceding: function* preceding(context, step) {
-		const { contextNode, rootNode } = context;
-		const { nodeType = null } = step;
-		const treeWalker = createTreeWalker(context);
-
-		treeWalker.currentNode = rootNode;
-
-		// The idea is that it applies the `TreeWalker`'s filter to select the
-		// pertinent `currentNode` when `rootNode` otherwise wouldn't have matched.
-		// It probably also performs poorly!
-		if (nodeType != null && nodeType !== 'node') {
-			treeWalker.nextNode();
-			treeWalker.previousNode();
-		}
-
+	preceding: function* preceding(context, step): Iterable<ContextNode> {
+		const { contextDocument, rootNode, contextNode, visited } = context;
 		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
 
-		do {
-			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+		if (visited.has(effectiveContextNode)) {
+			return;
+		}
 
-			if (currentNode.contains(effectiveContextNode)) {
-				continue;
-			}
+		visited.add(effectiveContextNode);
 
-			if (
-				currentNode === effectiveContextNode ||
-				(effectiveContextNode.compareDocumentPosition(currentNode) &
-					Node.DOCUMENT_POSITION_PRECEDING) ===
-					0
-			) {
-				break;
-			}
+		if (effectiveContextNode === rootNode) {
+			return;
+		}
 
+		if (effectiveContextNode === contextDocument.documentElement) {
+			yield* axisEvaluators['preceding-sibling'](context, step);
+
+			return;
+		}
+
+		const { lastChild, previousSibling, parentNode } = effectiveContextNode;
+
+		let currentNodes = filterContextNode([lastChild, previousSibling]);
+
+		if (effectiveContextNode !== rootNode && isContextNode(parentNode) && parentNode !== rootNode) {
+			const precedingParentSiblingsContext = axisEvaluationContext(context, parentNode);
+			const precedingParentSiblings = axisEvaluators['preceding-sibling'](
+				precedingParentSiblingsContext,
+				step
+			);
+
+			currentNodes = concat(currentNodes, precedingParentSiblings);
+		}
+
+		for (const currentNode of currentNodes) {
 			yield currentNode;
 
-			treeWalker.currentNode = currentNode;
-		} while (treeWalker.nextNode() != null);
+			const currentContext = axisEvaluationContext(context, currentNode);
+
+			yield* preceding(currentContext, step);
+		}
 	},
 
 	'preceding-sibling': function* precedingSibling(context, step) {
@@ -804,13 +809,20 @@ export class LocationPathEvaluation
 		};
 		const nodeTypeFilter = getNodeTypeFilter(step);
 
-		const nodes = flatMapNodeSets(this.contextNodes, function* (contextNode) {
+		let nodes = flatMapNodeSets(this.contextNodes, function* (contextNode) {
 			const currentContext = axisEvaluationContext(context, contextNode);
 			const axisNodes = axisEvaluator(currentContext, step);
 			const typedNodes = nodeTypeFilter(axisNodes);
 
 			yield* nodesFilter(typedNodes);
 		});
+
+		// TODO: this is out of spec! Tests currently depend on it. We could update
+		// the tests, but making the minimal change necessary for refactor to
+		// eliminate use of TreeWalker
+		if (axisType === 'preceding' || axisType === 'preceding-sibling') {
+			nodes = sortDocumentOrder(nodes) satisfies Iterable<Node> as Iterable<ContextNode>;
+		}
 
 		return new LocationPathEvaluation(this, nodes);
 	}
