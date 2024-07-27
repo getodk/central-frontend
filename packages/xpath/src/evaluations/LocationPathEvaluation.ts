@@ -110,12 +110,6 @@ const getNodeTypeFilter = (step: AnyStep): NodeTypeFilter => {
 	}
 };
 
-const createTreeWalker = (context: AxisEvaluationContext): TreeWalker => {
-	const { contextDocument } = context;
-
-	return contextDocument.createTreeWalker(contextDocument, NodeFilter.SHOW_ALL);
-};
-
 const isContextNode = (node: Node | null | undefined): node is ContextNode => {
 	return node != null;
 };
