@@ -34,6 +34,12 @@ import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Evaluation } from './Evaluation.ts';
 import { NodeEvaluation } from './NodeEvaluation.ts';
 
+function* concat<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
+	for (const iterable of iterables) {
+		yield* iterable;
+	}
+}
+
 function* flatMapNodeSets(
 	contextNodes: Iterable<ContextNode>,
 	fn: (contextNode: ContextNode) => Iterable<ContextNode>
@@ -109,9 +115,18 @@ const createTreeWalker = (context: AxisEvaluationContext): TreeWalker => {
 	return contextDocument.createTreeWalker(contextDocument, NodeFilter.SHOW_ALL);
 };
 
+const isContextNode = (node: Node | null): node is ContextNode => {
+	return node != null;
+};
+
+type ContextNodeFilter = (node: Iterable<Node | null>) => Iterable<ContextNode>;
+
+const filterContextNode: ContextNodeFilter = filter(isContextNode);
+
 interface AxisEvaluationCurrentContext {
 	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
+	readonly visited: WeakSet<ContextNode>;
 }
 
 interface AxisEvaluationContext extends AxisEvaluationCurrentContext {
@@ -122,12 +137,13 @@ const axisEvaluationContext = (
 	currentContext: AxisEvaluationCurrentContext,
 	contextNode: ContextNode
 ): AxisEvaluationContext => {
-	const { contextDocument, rootNode } = currentContext;
+	const { contextDocument, rootNode, visited } = currentContext;
 
 	return {
 		contextDocument,
 		rootNode,
 		contextNode,
+		visited,
 	};
 };
 
@@ -202,33 +218,44 @@ const axisEvaluators: AxisEvaluators = {
 		yield* axisEvaluators.descendant(selfContext, step);
 	},
 
-	following: function* following(context) {
-		const { contextNode } = context;
+	following: function* following(context, step) {
+		const { contextDocument, contextNode, rootNode, visited } = context;
 		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
-		const treeWalker = createTreeWalker(context);
-		const visited = new WeakSet<Node>();
 
-		const { nextSibling } = effectiveContextNode;
-
-		if (nextSibling == null) {
+		if (visited.has(effectiveContextNode)) {
 			return;
 		}
 
-		treeWalker.currentNode = nextSibling;
+		if (
+			effectiveContextNode === rootNode ||
+			effectiveContextNode === contextDocument.documentElement
+		) {
+			return;
+		}
 
-		do {
-			const currentNode = treeWalker.currentNode satisfies Node as ContextNode;
+		visited.add(effectiveContextNode);
 
-			if (visited.has(currentNode)) {
-				continue;
-			}
+		const { firstChild, nextSibling, parentNode } = effectiveContextNode;
 
-			visited.add(currentNode);
+		let currentNodes = filterContextNode([firstChild, nextSibling]);
 
+		if (isContextNode(parentNode) && parentNode !== rootNode) {
+			const followingParentSiblingsContext = axisEvaluationContext(context, parentNode);
+			const followingParentSiblings = axisEvaluators['following-sibling'](
+				followingParentSiblingsContext,
+				step
+			);
+
+			currentNodes = concat(currentNodes, followingParentSiblings);
+		}
+
+		for (const currentNode of currentNodes) {
 			yield currentNode;
 
-			treeWalker.currentNode = currentNode;
-		} while (treeWalker.nextNode() != null);
+			const currentContext = axisEvaluationContext(context, currentNode);
+
+			yield* axisEvaluators.following(currentContext, step);
+		}
 	},
 
 	'following-sibling': function* followingSibling(context) {
@@ -765,8 +792,11 @@ export class LocationPathEvaluation
 
 		const { axisType } = step;
 		const axisEvaluator = axisEvaluators[axisType];
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
-		const context: AxisEvaluationCurrentContext = this;
+		const context: AxisEvaluationCurrentContext = {
+			rootNode: this.rootNode,
+			contextDocument: this.contextDocument,
+			visited: new WeakSet(),
+		};
 		const nodeTypeFilter = getNodeTypeFilter(step);
 
 		const nodes = flatMapNodeSets(this.contextNodes, function* (contextNode) {
