@@ -2,10 +2,7 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { identity } from '@getodk/common/lib/identity.ts';
 import type { Temporal } from '@js-temporal/polyfill';
 import type { Context } from '../context/Context.ts';
-import type {
-	EvaluationContext,
-	EvaluationContextTreeWalkers,
-} from '../context/EvaluationContext.ts';
+import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import type { FilterPathExpressionEvaluator } from '../evaluator/expression/FilterPathExpressionEvaluator.ts';
 import type { LocationPathEvaluator } from '../evaluator/expression/LocationPathEvaluator.ts';
@@ -13,7 +10,15 @@ import type { LocationPathExpressionEvaluator } from '../evaluator/expression/Lo
 import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
 import type { NodeSetFunction } from '../evaluator/functions/NodeSetFunction.ts';
 import type { AnyStep, AxisType } from '../evaluator/step/Step.ts';
-import { isAttributeNode, isElementNode, isNamespaceAttribute } from '../lib/dom/predicates.ts';
+import {
+	isAttributeNode,
+	isCDataSection,
+	isCommentNode,
+	isElementNode,
+	isNamespaceAttribute,
+	isProcessingInstructionNode,
+	isTextNode,
+} from '../lib/dom/predicates.ts';
 import type {
 	ContextDocument,
 	ContextNode,
@@ -55,33 +60,58 @@ const filterNamespace = filter(isNamespaceAttribute);
 
 const filterNonNamespace = filter((attr: Attr) => !isNamespaceAttribute(attr));
 
-const getTreeWalker = (context: AxisEvaluationContext, step: AnyStep): TreeWalker => {
-	const { treeWalkers } = context;
+// TODO: we'll be able to optimize this so we don't always need it
+type NodeTypeFilter = (nodes: Iterable<ContextNode>) => Iterable<ContextNode>;
 
+const isNamedNode = (node: ContextNode): node is Attr | Element => {
+	return isElementNode(node) || isAttributeNode(node);
+};
+
+const filterNamedNodes: NodeTypeFilter = filter(isNamedNode);
+
+const filterProcessingInstructionNodes: NodeTypeFilter = filter(isProcessingInstructionNode);
+
+const filterCommentNodes: NodeTypeFilter = filter(isCommentNode);
+
+const filterNode: NodeTypeFilter = identity;
+
+const isXPathTextNode = (node: ContextNode): node is CDATASection | Text => {
+	return isTextNode(node) || isCDataSection(node);
+};
+
+const filterTextNode: NodeTypeFilter = filter(isXPathTextNode);
+
+const getNodeTypeFilter = (step: AnyStep): NodeTypeFilter => {
 	switch (step.nodeType) {
 		case '__NAMED__':
-			return treeWalkers.ELEMENT;
-
-		case 'comment':
-			return treeWalkers.COMMENT;
-
-		case 'node':
-			return treeWalkers.ANY;
+			return filterNamedNodes;
 
 		case 'processing-instruction':
-			return treeWalkers.PROCESSING_INSTRUCTION;
+			return filterProcessingInstructionNodes;
+
+		case 'comment':
+			return filterCommentNodes;
+
+		case 'node':
+			return filterNode;
 
 		case 'text':
-			return treeWalkers.TEXT;
+			return filterTextNode;
 
 		default:
 			throw new UnreachableError(step);
 	}
 };
 
+const createTreeWalker = (context: AxisEvaluationContext): TreeWalker => {
+	const { contextDocument } = context;
+
+	return contextDocument.createTreeWalker(contextDocument, NodeFilter.SHOW_ALL);
+};
+
 interface AxisEvaluationCurrentContext {
+	readonly contextDocument: ContextDocument;
 	readonly rootNode: ContextParentNode;
-	readonly treeWalkers: EvaluationContextTreeWalkers;
 }
 
 interface AxisEvaluationContext extends AxisEvaluationCurrentContext {
@@ -92,11 +122,11 @@ const axisEvaluationContext = (
 	currentContext: AxisEvaluationCurrentContext,
 	contextNode: ContextNode
 ): AxisEvaluationContext => {
-	const { rootNode, treeWalkers } = currentContext;
+	const { contextDocument, rootNode } = currentContext;
 
 	return {
+		contextDocument,
 		rootNode,
-		treeWalkers,
 		contextNode,
 	};
 };
@@ -139,9 +169,9 @@ const axisEvaluators: AxisEvaluators = {
 		yield* filterNonNamespace(attributeNodes);
 	},
 
-	child: function* child(context, step) {
+	child: function* child(context) {
 		const { contextNode } = context;
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 
 		let currentNode = contextNode;
 
@@ -167,9 +197,9 @@ const axisEvaluators: AxisEvaluators = {
 		} while (treeWalker.nextSibling() != null);
 	},
 
-	descendant: function* descendant(context, step) {
+	descendant: function* descendant(context) {
 		const { contextNode } = context;
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 
 		treeWalker.currentNode = contextNode;
 
@@ -202,10 +232,10 @@ const axisEvaluators: AxisEvaluators = {
 		yield* axisEvaluators.descendant(selfContext, step);
 	},
 
-	following: function* following(context, step) {
+	following: function* following(context) {
 		const { contextNode } = context;
 		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 		const visited = new WeakSet<Node>();
 
 		const { nextSibling } = effectiveContextNode;
@@ -231,9 +261,9 @@ const axisEvaluators: AxisEvaluators = {
 		} while (treeWalker.nextNode() != null);
 	},
 
-	'following-sibling': function* followingSibling(context, step) {
+	'following-sibling': function* followingSibling(context) {
 		const visited = new WeakSet<ContextNode>();
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 		const { contextNode } = context;
 		const { nextSibling } = contextNode;
 
@@ -266,9 +296,9 @@ const axisEvaluators: AxisEvaluators = {
 		yield* filterNamespace(attributeNodes);
 	},
 
-	parent: function* parent(context, step) {
+	parent: function* parent(context) {
 		const { contextNode, rootNode } = context;
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
 
 		if (effectiveContextNode === rootNode) {
@@ -294,7 +324,7 @@ const axisEvaluators: AxisEvaluators = {
 	preceding: function* preceding(context, step) {
 		const { contextNode, rootNode } = context;
 		const { nodeType = null } = step;
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 
 		treeWalker.currentNode = rootNode;
 
@@ -338,7 +368,7 @@ const axisEvaluators: AxisEvaluators = {
 		}
 
 		const { nodeType = null } = step;
-		const treeWalker = getTreeWalker(context, step);
+		const treeWalker = createTreeWalker(context);
 
 		let parentNode: Node | null = null;
 
@@ -467,8 +497,6 @@ export class LocationPathEvaluation
 	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
 
-	readonly treeWalkers: EvaluationContextTreeWalkers;
-
 	readonly timeZone: Temporal.TimeZone;
 
 	/**
@@ -523,7 +551,6 @@ export class LocationPathEvaluation
 			namespaceResolver,
 			rootNode,
 			timeZone,
-			treeWalkers,
 		} = parentContext;
 
 		this.evaluator = evaluator;
@@ -533,7 +560,6 @@ export class LocationPathEvaluation
 		this.namespaceResolver = namespaceResolver;
 		this.rootNode = rootNode;
 		this.timeZone = timeZone;
-		this.treeWalkers = treeWalkers;
 
 		const [nodes] = tee(distinct(contextNodes));
 
@@ -771,12 +797,14 @@ export class LocationPathEvaluation
 		const axisEvaluator = axisEvaluators[axisType];
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const context: AxisEvaluationCurrentContext = this;
+		const nodeTypeFilter = getNodeTypeFilter(step);
 
 		const nodes = flatMapNodeSets(this.contextNodes, function* (contextNode) {
 			const currentContext = axisEvaluationContext(context, contextNode);
 			const axisNodes = axisEvaluator(currentContext, step);
+			const typedNodes = nodeTypeFilter(axisNodes);
 
-			yield* nodesFilter(axisNodes);
+			yield* nodesFilter(typedNodes);
 		});
 
 		return new LocationPathEvaluation(this, nodes);

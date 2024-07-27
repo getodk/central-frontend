@@ -3,33 +3,10 @@ import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation.ts
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
 import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
-import type { FilteredTreeWalker, FilteredTreeWalkers } from '../lib/dom/traversal.ts';
-import { getDocument, getRootNode, getTreeWalker } from '../lib/dom/traversal.ts';
+import { getDocument, getRootNode } from '../lib/dom/traversal.ts';
 import type { ContextDocument, ContextNode, ContextParentNode } from '../lib/dom/types.ts';
 import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Context } from './Context.ts';
-
-class EvaluationContextTreeWalkers implements FilteredTreeWalkers {
-	readonly ANY: FilteredTreeWalker<'ANY'>;
-	readonly COMMENT: FilteredTreeWalker<'COMMENT'>;
-	readonly ELEMENT: FilteredTreeWalker<'ELEMENT'>;
-	readonly PROCESSING_INSTRUCTION: FilteredTreeWalker<'PROCESSING_INSTRUCTION'>;
-	readonly TEXT: FilteredTreeWalker<'TEXT'>;
-
-	constructor(contextDocument: ContextDocument, rootNode: ContextParentNode) {
-		this.ANY = getTreeWalker(contextDocument, rootNode, 'ANY');
-		this.COMMENT = getTreeWalker(contextDocument, rootNode, 'COMMENT');
-		this.ELEMENT = getTreeWalker(contextDocument, rootNode, 'ELEMENT');
-		this.PROCESSING_INSTRUCTION = getTreeWalker(
-			contextDocument,
-			rootNode,
-			'PROCESSING_INSTRUCTION'
-		);
-		this.TEXT = getTreeWalker(contextDocument, rootNode, 'TEXT');
-	}
-}
-
-export type { EvaluationContextTreeWalkers };
 
 export interface EvaluationContextOptions {
 	readonly document: ContextDocument;
@@ -37,7 +14,6 @@ export interface EvaluationContextOptions {
 	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: XPathNamespaceResolverObject;
 	readonly timeZone: Temporal.TimeZone;
-	readonly treeWalkers: EvaluationContextTreeWalkers;
 }
 
 /**
@@ -60,8 +36,6 @@ export class EvaluationContext implements Context {
 
 	readonly timeZone: Temporal.TimeZone;
 
-	readonly treeWalkers: EvaluationContextTreeWalkers;
-
 	constructor(
 		readonly evaluator: Evaluator,
 		contextNode: ContextNode,
@@ -72,7 +46,6 @@ export class EvaluationContext implements Context {
 			document = getDocument(rootNode),
 			functions = evaluator.functions,
 			namespaceResolver = new NamespaceResolver(document, contextNode),
-			treeWalkers = new EvaluationContextTreeWalkers(document, rootNode),
 			timeZone = evaluator.timeZone,
 		} = options;
 
@@ -82,7 +55,6 @@ export class EvaluationContext implements Context {
 		this.rootNode = rootNode;
 		this.functions = functions;
 		this.namespaceResolver = namespaceResolver;
-		this.treeWalkers = treeWalkers;
 		this.timeZone = timeZone;
 	}
 
