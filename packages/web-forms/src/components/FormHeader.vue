@@ -62,34 +62,32 @@ const handleLanguageChange = (event: FormLanguage) => {
 	
 
 	<!-- for mobile and tablet -->
-	<div class="inline lg:hidden smaller-screens">
-		<div class="flex align-items-center title-bar">
-			<h1 class="flex-grow-1">
-				{{ form.definition.bind.form.title }}
-			</h1>
+	<div class="flex lg:hidden align-items-center smaller-screens">
+		<h1 class="flex-grow-1">
+			{{ form.definition.bind.form.title }}
+		</h1>
 
-			<!-- for tablet -->
-			<div class="form-options hidden md:flex justify-content-end gap-3">
-				<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
-				<FormLanguageMenu 
-					:active-language="form.currentState.activeLanguage" 
-					:languages="languages" 
-					@update:active-language="handleLanguageChange"
-				/>
-			</div>
+		<!-- for tablet -->
+		<div class="form-options hidden md:flex justify-content-end gap-3">
+			<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+			<FormLanguageMenu 
+				:active-language="form.currentState.activeLanguage" 
+				:languages="languages" 
+				@update:active-language="handleLanguageChange"
+			/>
+		</div>
 			
-			<!-- for mobile -->
-			<div class="form-options flex md:hidden">
-				<PrimeButton v-if="languages.length > 0" icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
-				<PrimeButton v-else class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
-				<PrimeMenu id="overlay_menu" ref="menu" :model="items" :popup="true" />
-				<FormLanguageDialog 
-					v-model:state="languageDialogState" 
-					:active-language="form.currentState.activeLanguage" 
-					:languages="languages" 
-					@update:active-language="handleLanguageChange"
-				/>
-			</div>
+		<!-- for mobile -->
+		<div class="form-options flex md:hidden">
+			<PrimeButton v-if="languages.length > 0" icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
+			<PrimeButton v-else class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+			<PrimeMenu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+			<FormLanguageDialog 
+				v-model:state="languageDialogState" 
+				:active-language="form.currentState.activeLanguage" 
+				:languages="languages" 
+				@update:active-language="handleLanguageChange"
+			/>
 		</div>
 	</div>
 </template>
@@ -130,25 +128,21 @@ const handleLanguageChange = (event: FormLanguage) => {
 }
 
 .smaller-screens {
-	.title-bar{
-		background-color: var(--surface-0);
-		filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.15)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.30)) ;
+	background-color: var(--surface-0);
+	filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.15)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.30)) ;
 
-		h1 {
-			padding-left: 10px;
-			font-size: 1.5rem;
-		}
-
-		.form-options{
-			padding-right: 10px;
-		}
-		
-		.btn-menu{
-			color: var(--surface-900);
-		}
+	h1 {
+		padding-left: 10px;
+		font-size: 1.5rem;
 	}
 
+	.form-options{
+		padding-right: 10px;
+	}
 	
+	.btn-menu{
+		color: var(--surface-900);
+	}
 }
 
 </style>
