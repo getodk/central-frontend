@@ -30,7 +30,7 @@ const handleSubmit = () => {
 	}
 	else{
 		submitPressed.value = true;
-		window.scrollTo({top: 0, behavior: 'smooth'});
+		scrollToFirstInvalidQuestion();
 	}
 }
 
@@ -44,10 +44,18 @@ const formErrorMessage = computed(() => {
 	else return `${violationLength} questions with errors`;
 });
 
+const isInputElement = (e: HTMLElement): e is HTMLInputElement => e.tagName === 'INPUT';
+
 const scrollToFirstInvalidQuestion = () => {
 	document.getElementById(odkForm.value!.validationState.violations[0].nodeId + '_container')?.scrollIntoView({
 		behavior: 'smooth'
 	});
+	
+	// If first invalid element is a textbox then focus it.
+	const firstInvalidElement = document.getElementById(odkForm.value!.validationState.violations[0].nodeId);
+	if(firstInvalidElement && isInputElement(firstInvalidElement) && firstInvalidElement.type === 'text'){
+		firstInvalidElement.focus({preventScroll: true});
+	}
 }
 </script>
 
