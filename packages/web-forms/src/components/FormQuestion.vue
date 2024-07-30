@@ -35,7 +35,7 @@ const submitPressed = inject('submitPressed');
 	display: flex;
 	flex-direction: column;
 	padding: 0.5rem 1rem 0 1rem;
-	scroll-margin-top: 60px;
+	scroll-margin-top: 4rem;
 	border-radius: 10px;	
 
 	&.highlight {
