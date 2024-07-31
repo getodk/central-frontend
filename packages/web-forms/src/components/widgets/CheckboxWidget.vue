@@ -49,13 +49,8 @@ const setSelectNValue = (values: SelectItem[]) => {
 	outline: 1px solid var(--surface-300);
 	border-radius: 10px;
 	padding: 15px;
-	margin: 0 0 20px 0;
 	background: var(--surface-0);
 	cursor: pointer;
-
-	&:last-of-type{
-		margin-bottom: 0;
-	}
 
   &:has(.p-checkbox-input:hover),
 	&:has(.p-checkbox-input:focus-visible) {

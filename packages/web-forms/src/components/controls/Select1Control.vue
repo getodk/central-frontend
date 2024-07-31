@@ -66,6 +66,9 @@ label{
 
 .default-appearance {
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 
 	@media screen and (min-width: #{$md}) {
 		min-width: 50%;
