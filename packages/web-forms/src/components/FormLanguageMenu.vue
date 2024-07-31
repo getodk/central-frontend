@@ -39,6 +39,7 @@ defineEmits(['update:activeLanguage'])
 	border-radius: 30px;
 	border: none;
 	width: max-content;
+	max-width: 220px;
 	color: #424242;
 
 	&.p-focus {
