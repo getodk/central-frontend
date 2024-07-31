@@ -79,6 +79,8 @@ defineProps<{ appearances: SelectNodeAppearances}>();
     .p-checkbox {
       display: none;
     }
+
+    &:has(.p-checkbox-input:hover),
     &:has(.p-radiobutton-input:hover) {
       background-color: unset;
       outline: none;
