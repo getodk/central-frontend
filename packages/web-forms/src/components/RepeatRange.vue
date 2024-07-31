@@ -31,6 +31,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 	box-shadow: inset 0 0 0 1px #cbcacc;
 	margin-left: 36px;
 	min-width: 144px;
+	max-width: 260px;
 	font-weight: 400;
 	margin-bottom: 1rem;
 
