@@ -69,15 +69,12 @@ const toggleMenu = (event:  Event) => {
 </template>
 
 <style scoped lang="scss">
-.chevron {
-	padding-top: 2px;
-}
-
 h2 {
 	font-size: 1.2rem;
 	font-weight: 400;
 	margin: 0;
 	display: flex;
+	align-items: center;
 }
 
 .label-number {
