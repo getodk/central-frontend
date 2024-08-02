@@ -2,6 +2,7 @@
 import type { SelectNode } from '@getodk/xforms-engine';
 import { inject, ref } from 'vue';
 import ControlLabel from '../ControlLabel.vue';
+import ControlHint from '../ControlHint.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 import ColumnarAppearance from '../appearances/ColumnarAppearance.vue';
 import FieldListTable from '../appearances/FieldListTable.vue';
@@ -21,7 +22,10 @@ const submitPressed = inject<boolean>('submitPressed');
 </script>
 
 <template>
-	<ControlLabel v-if="!hasFieldListRelatedAppearance" :question="question" />
+	<div v-if="!hasFieldListRelatedAppearance" class="label-and-hint">
+		<ControlLabel :question="question" />
+		<ControlHint :question="question" />
+	</div>
   
 	<MultiselectDropdown v-if="question.appearances.autocomplete || question.appearances.minimal" :question="question" @change="touched = true" />
 
@@ -57,7 +61,7 @@ const submitPressed = inject<boolean>('submitPressed');
 <style lang="scss" scoped>
 @import 'primeflex/core/_variables.scss';
 
-label {
+.label-and-hint {
 	margin-bottom: 0.75rem;
 }
 

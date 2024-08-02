@@ -3,6 +3,7 @@ import type { StringNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
 import { computed, inject, ref } from 'vue';
 import ControlLabel from '../ControlLabel.vue';
+import ControlHint from '../ControlHint.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 
 const props = defineProps<{question: StringNode}>();
@@ -17,7 +18,10 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 </script>
 
 <template>
-	<ControlLabel :question="question" />
+	<div class="label-and-hint">
+		<ControlLabel :question="question" />
+		<ControlHint :question="question" />
+	</div>
 
 	<div class="textbox-container">
 		<InputText
@@ -37,7 +41,7 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 </template>
 
 <style scoped lang="scss">
-label {
+.label-and-hint {
 	margin-bottom: 0.75rem;
 }
 
