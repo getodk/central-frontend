@@ -44,6 +44,7 @@ describe('FormQuestion', () => {
 			props: {
 				question: fakeUnsupportedControlNode(),
 			},
+			global: globalMountOptions,
 		});
 
 		const unsupported = component.findComponent(UnsupportedControl);

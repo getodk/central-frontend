@@ -27,6 +27,9 @@ type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];
 
 export const globalMountOptions: GlobalMountOptions = {
 	plugins: [[PrimeVue, { ripple: false }]],
+	provide: {
+		submitPressed: false,
+	},
 	stubs: {
 		teleport: true,
 	},

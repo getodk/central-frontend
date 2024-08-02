@@ -69,7 +69,7 @@ export default mergeConfig(
 			// This is an open issue of jsdom
 			// see primefaces/primevue#4512 and jsdom/jsdom#2177
 			onConsoleLog(log: string, type: 'stderr' | 'stdout'): false | void {
-				if (log.startsWith('Error: Could not parse CSS stylesheet') && type === 'stderr') {
+				if (log.includes('Error: Could not parse CSS stylesheet') && type === 'stderr') {
 					return false;
 				}
 			},

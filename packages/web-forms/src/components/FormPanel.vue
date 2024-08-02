@@ -5,7 +5,7 @@ import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
 import { computed, ref } from 'vue';
 
-interface PanelProps {
+export interface PanelProps {
 	title?: string;
 	menuItems?: MenuItem[];
 	noUi?: boolean;
