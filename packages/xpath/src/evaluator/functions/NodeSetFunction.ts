@@ -8,12 +8,8 @@ export type NodeSetFunctionCallable = <Arguments extends readonly EvaluableArgum
 	args: Arguments
 ) => Iterable<Node>;
 
-export class NodeSetFunction<Length extends number> extends FunctionImplementation<Length> {
-	constructor(
-		localName: string,
-		signature: FunctionSignature<Length>,
-		call: NodeSetFunctionCallable
-	) {
+export class NodeSetFunction extends FunctionImplementation {
+	constructor(localName: string, signature: FunctionSignature, call: NodeSetFunctionCallable) {
 		super(localName, signature, (context, args) => {
 			const nodes = call(context, args);
 

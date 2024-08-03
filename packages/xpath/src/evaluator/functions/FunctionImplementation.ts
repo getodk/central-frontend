@@ -8,7 +8,6 @@
 // - TS types for arity -> expression nullishness?
 
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { IterableReadonlyTuple } from '@getodk/common/types/collections/IterableReadonlyTuple.ts';
 import type { Context } from '../../context/Context.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { EvaluationType } from '../../evaluations/EvaluationType.ts';
@@ -57,22 +56,10 @@ export interface Parameter {
 	readonly typeHint?: ParameterTypeHint;
 }
 
-// interface RequiredParameter extends Parameter {
-//   readonly arityType: 'required';
-// }
-
-// interface OptionalParameter extends Parameter {
-//   readonly arityType: 'optional';
-// }
-
-// interface VariadicParameter extends Parameter {
-//   readonly arityType: 'variadic';
-// }
-
 // TODO: this is the parameter signature, what about return? (partly addressed by `TypedFunction`)
 // TODO: is it possible to enforce order? I.e.:
 // [...RequiredParameter, ...OptionalParameter, ...([] | [VariadicParameter])]
-export type FunctionSignature<Length extends number> = IterableReadonlyTuple<Parameter, Length>;
+export type FunctionSignature = readonly Parameter[];
 
 export interface EvaluableArgument {
 	evaluate(context: Context): Evaluation<EvaluationType>;
@@ -93,20 +80,19 @@ export type FunctionCallable = <Arguments extends readonly EvaluableArgument[]>(
 	args: Arguments
 ) => Evaluation;
 
-export class FunctionImplementation<Length extends number> {
+export class FunctionImplementation {
 	readonly arity: FunctionArity;
 	protected readonly callable: FunctionCallable;
 
 	constructor(
 		readonly localName: string,
-		readonly signature: FunctionSignature<Length>,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		runtimeImplementation: FunctionCallable | FunctionImplementation<any>
+		readonly signature: FunctionSignature,
+		runtimeImplementation: FunctionCallable | FunctionImplementation
 	) {
 		// TODO: *validate signature order!*
 		const arity = [...signature].reduce(
 			(acc, parameter) => {
-				const { arityType } = parameter as Parameter;
+				const { arityType } = parameter;
 
 				switch (arityType) {
 					case 'required':
@@ -177,5 +163,3 @@ export class FunctionImplementation<Length extends number> {
 		}
 	}
 }
-
-export interface AnyFunctionImplementation extends FunctionImplementation<number> {}

@@ -91,7 +91,7 @@ export class FunctionLibraryCollection {
 		});
 	}
 
-	getDefaultImplementation(localName: string): FunctionImplementation<number> | null {
+	getDefaultImplementation(localName: string): FunctionImplementation | null {
 		for (const functionLibrary of this.defaultFunctionLibraries) {
 			const functionImplementation = functionLibrary.getImplementation(localName);
 
@@ -103,11 +103,7 @@ export class FunctionLibraryCollection {
 		return null;
 	}
 
-	getImplementation(
-		context: Context,
-		name: FunctionNameLookup
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	): FunctionImplementation<any> | null {
+	getImplementation(context: Context, name: FunctionNameLookup): FunctionImplementation | null {
 		const { localName, namespaceURI, prefix } = name;
 
 		const resolvedNamespaceURI =

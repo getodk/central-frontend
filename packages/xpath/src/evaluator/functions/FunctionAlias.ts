@@ -1,7 +1,7 @@
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
-export class FunctionAlias<Length extends number> extends FunctionImplementation<Length> {
-	constructor(localName: string, baseImplementation: FunctionImplementation<Length>) {
+export class FunctionAlias extends FunctionImplementation {
+	constructor(localName: string, baseImplementation: FunctionImplementation) {
 		super(localName, baseImplementation.signature, baseImplementation);
 	}
 }

@@ -8,14 +8,11 @@ export type TypedFunctionCallable<Type> = <Arguments extends readonly EvaluableA
 	args: Arguments
 ) => Type;
 
-export class TypedFunctionImplementation<
-	Type,
-	Length extends number,
-> extends FunctionImplementation<Length> {
+export class TypedFunctionImplementation<Type> extends FunctionImplementation {
 	protected constructor(
 		localName: string,
 		TypedResult: new (context: LocationPathEvaluation, value: Type) => Evaluation,
-		signature: FunctionSignature<Length>,
+		signature: FunctionSignature,
 		call: TypedFunctionCallable<Type>
 	) {
 		super(

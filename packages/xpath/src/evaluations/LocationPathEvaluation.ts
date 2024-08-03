@@ -387,8 +387,7 @@ interface LocationPathEvaluationOptions {
 type ArbitraryNodesTemporaryCallee =
 	| FilterPathExpressionEvaluator
 	| LocationPathEvaluator
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	| NodeSetFunction<any>;
+	| NodeSetFunction;
 
 // TODO: naming, general design/approach. This class has multiple, overlapping
 // purposes:
