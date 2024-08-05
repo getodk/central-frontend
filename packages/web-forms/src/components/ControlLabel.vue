@@ -17,7 +17,7 @@ label {
 	line-height: 1.8rem;
 
 	.required {
-		color: var(--red-500); // TODO/sk danger color should be a variable
+		color: var(--error-text-color);
 	}
 }
 
