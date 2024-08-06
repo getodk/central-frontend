@@ -15,14 +15,14 @@ describe('EntityShow', () => {
     const component = await load('/projects/p/entity-lists/trees/entities/e', {
       root: false
     });
-    component.findComponent(NotFound).exists().should.be.true();
+    component.findComponent(NotFound).exists().should.be.true;
   });
 
   it('validates the uuid route param', async () => {
     const component = await load('/projects/1/entity-lists/trees/entities/e f', {
       root: false
     });
-    component.findComponent(NotFound).exists().should.be.true();
+    component.findComponent(NotFound).exists().should.be.true;
   });
 
   it('sends the correct initial requests', () => {
@@ -104,7 +104,7 @@ describe('EntityShow', () => {
 
     it('hides the modal', async () => {
       const component = await submit();
-      component.getComponent(EntityUpdate).props().state.should.be.false();
+      component.getComponent(EntityUpdate).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
@@ -132,7 +132,7 @@ describe('EntityShow', () => {
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       return load('/projects/1/entity-lists/trees/entities/e', { root: false })
         .afterResponses(component => {
-          component.findComponent(EntityConflictSummary).exists().should.be.true();
+          component.findComponent(EntityConflictSummary).exists().should.be.true;
         })
         .request(async (component) => {
           await component.get('#entity-data-update-button').trigger('click');
@@ -160,7 +160,7 @@ describe('EntityShow', () => {
         .respondWithData(() => testData.extendedAudits.sorted())
         .respondWithData(() => testData.extendedEntityVersions.sorted())
         .afterResponses(component => {
-          component.findComponent(EntityConflictSummary).exists().should.be.false();
+          component.findComponent(EntityConflictSummary).exists().should.be.false;
         });
     });
   });

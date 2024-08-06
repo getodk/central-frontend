@@ -28,13 +28,13 @@ describe('UserResetPassword', () => {
         },
         root: false
       });
-      component.find('.user-row .reset-password').exists().should.be.false();
+      component.find('.user-row .reset-password').exists().should.be.false;
     });
 
     it('is disabled for the current user', async () => {
       const component = await load('/users', { root: false });
       const a = component.get('.user-row .reset-password');
-      a.element.parentNode.classList.contains('disabled').should.be.true();
+      a.element.parentNode.classList.contains('disabled').should.be.true;
       a.should.have.ariaDescription(/^You may not reset your own password/);
       await a.should.have.tooltip();
     });
@@ -71,14 +71,14 @@ describe('UserResetPassword', () => {
 
     it('hides the modal', async () => {
       const component = await submit();
-      component.getComponent(UserResetPassword).props().state.should.be.false();
+      component.getComponent(UserResetPassword).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
       const component = await submit();
       component.should.alert('success', (message) => {
-        message.should.containEql('Alice');
-        message.should.containEql('alice@getodk.org');
+        message.should.include('Alice');
+        message.should.include('alice@getodk.org');
       });
     });
   });

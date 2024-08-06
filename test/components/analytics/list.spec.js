@@ -17,12 +17,12 @@ describe('AnalyticsList', () => {
     it('renders a table if there are audit log entries', async () => {
       testData.extendedAudits.createPast(1, { action: 'analytics' });
       const component = await load('/system/analytics', { root: false });
-      component.findComponent(AuditTable).exists().should.be.true();
+      component.findComponent(AuditTable).exists().should.be.true;
     });
 
     it('does not render a table if there are no audit log entries', async () => {
       const component = await load('/system/analytics', { root: false });
-      component.findComponent(AuditTable).exists().should.be.false();
+      component.findComponent(AuditTable).exists().should.be.false;
     });
   });
 });

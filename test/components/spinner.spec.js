@@ -7,13 +7,13 @@ describe('Spinner', () => {
     const spinner = mount(Spinner, {
       props: { state: true }
     });
-    spinner.classes('active').should.be.true();
+    spinner.classes('active').should.be.true;
   });
 
   it('adds the correct class if the inline prop is true', () => {
     const spinner = mount(Spinner, {
       props: { inline: true }
     });
-    spinner.classes('inline').should.be.true();
+    spinner.classes('inline').should.be.true;
   });
 });

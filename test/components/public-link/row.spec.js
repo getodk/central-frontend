@@ -113,7 +113,7 @@ describe('PublicLinkRow', () => {
 
     it('does not render button if public link does not have a token', () => {
       testData.standardPublicLinks.createPast(1, { token: null });
-      mountComponent().find('.btn-danger').exists().should.be.false();
+      mountComponent().find('.btn-danger').exists().should.be.false;
     });
   });
 });

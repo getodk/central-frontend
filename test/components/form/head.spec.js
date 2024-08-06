@@ -97,7 +97,7 @@ describe('FormHead', () => {
       const tabs = app.findAll('#form-head-form-tabs li');
       tabs.length.should.equal(5);
       for (const tab of tabs) {
-        tab.classes('disabled').should.be.true();
+        tab.classes('disabled').should.be.true;
         const a = tab.get('a');
         a.should.have.ariaDescription('These functions will become available once you publish your Draft Form');
         await a.should.have.tooltip();
@@ -112,7 +112,7 @@ describe('FormHead', () => {
       const tabs = app.findAll('#form-head-form-tabs li');
       tabs.length.should.equal(5);
       for (const tab of tabs) {
-        tab.classes('disabled').should.be.false();
+        tab.classes('disabled').should.be.false;
         const a = tab.get('a');
         a.should.not.have.ariaDescription();
         await a.should.not.have.tooltip();
@@ -149,13 +149,13 @@ describe('FormHead', () => {
 
     it('is not shown if there are no form attachments', async () => {
       const app = await load('/projects/1/forms/f/draft');
-      findTab(app, 'Form Attachments').exists().should.be.false();
+      findTab(app, 'Form Attachments').exists().should.be.false;
     });
 
     it('is shown if there are form attachments', async () => {
       testData.standardFormAttachments.createPast(2, { blobExists: false });
       const app = await load('/projects/1/forms/f/draft');
-      findTab(app, 'Form Attachments').exists().should.be.true();
+      findTab(app, 'Form Attachments').exists().should.be.true;
     });
 
     describe('badge', () => {
@@ -193,7 +193,7 @@ describe('FormHead', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/submissions').then(app => {
-        app.find('#form-head-draft-nav').exists().should.be.false();
+        app.find('#form-head-draft-nav').exists().should.be.false;
       });
     });
 

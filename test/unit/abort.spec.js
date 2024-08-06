@@ -10,7 +10,7 @@ describe('util/abort', () => {
       const reject = sinon.fake();
       rejectOnAbort(controller.signal, reject);
       reject.callCount.should.equal(1);
-      reject.firstArg.should.be.an.Error();
+      reject.firstArg.should.be.an.instanceof(Error);
     });
 
     it('rejects if the signal becomes aborted', () => {
@@ -20,7 +20,7 @@ describe('util/abort', () => {
       reject.callCount.should.equal(0);
       controller.abort();
       reject.callCount.should.equal(1);
-      reject.firstArg.should.be.an.Error();
+      reject.firstArg.should.be.an.instanceof(Error);
     });
 
     it('returns a function to remove the event listener', () => {

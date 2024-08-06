@@ -20,7 +20,7 @@ describe('FormList', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       const app = await load('/projects/1', {}, { deletedForms: false });
-      app.find('#form-list-create-button').exists().should.be.false();
+      app.find('#form-list-create-button').exists().should.be.false;
     });
   });
 
@@ -42,8 +42,8 @@ describe('FormList', () => {
       const app = await load('/projects/1');
       const tables = app.findAllComponents(FormTable);
       tables.length.should.equal(2);
-      tables[0].props().showClosed.should.be.false();
-      tables[1].props().showClosed.should.be.true();
+      tables[0].props().showClosed.should.be.false;
+      tables[1].props().showClosed.should.be.true;
       tables[0].findAllComponents(FormRow).length.should.equal(2);
       tables[1].findAllComponents(FormRow).length.should.equal(1);
     });
@@ -54,7 +54,7 @@ describe('FormList', () => {
       testData.extendedForms.createPast(1, { state: 'open' });
       const app = await load('/projects/1');
       const closedTable = app.findAllComponents(FormTable)[1];
-      closedTable.find('*').exists().should.be.false();
+      closedTable.find('*').exists().should.be.false;
     });
   });
 

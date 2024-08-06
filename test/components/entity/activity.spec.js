@@ -60,7 +60,7 @@ describe('EntityActivity', () => {
       mockLogin();
       testData.extendedEntities.createPast(1);
       const button = mountComponent().find('#entity-activity-delete-button');
-      button.exists().should.be.true();
+      button.exists().should.be.true;
     });
 
     it('does not render the button for a project viewer', async () => {
@@ -68,7 +68,7 @@ describe('EntityActivity', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
       testData.extendedEntities.createPast(1);
       const button = mountComponent().find('#entity-activity-delete-button');
-      button.exists().should.be.false();
+      button.exists().should.be.false;
     });
   });
 
@@ -81,7 +81,7 @@ describe('EntityActivity', () => {
       const component = await load('/projects/1/entity-lists/trees/entities/e', {
         root: false
       });
-      component.findComponent(EntityConflictSummary).exists().should.be.true();
+      component.findComponent(EntityConflictSummary).exists().should.be.true;
     });
 
     it('hides the summary after resolve', () => {
@@ -100,7 +100,7 @@ describe('EntityActivity', () => {
         .respondWithData(() => testData.extendedAudits.sorted())
         .respondWithData(() => testData.extendedEntityVersions.sorted())
         .afterResponses(component => {
-          component.findComponent(EntityConflictSummary).exists().should.be.false();
+          component.findComponent(EntityConflictSummary).exists().should.be.false;
         });
     });
   });
@@ -302,7 +302,7 @@ describe('EntityActivity', () => {
           .complete()
           .modify(updateEntity)
           .afterResponses(app => {
-            app.find('.scroll-target').exists().should.be.false();
+            app.find('.scroll-target').exists().should.be.false;
           }));
     });
   });

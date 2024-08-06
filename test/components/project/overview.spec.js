@@ -77,7 +77,7 @@ describe('ProjectOverview', () => {
         mockLogin({ role: 'none' });
         testData.extendedProjects.createPast(1, { role });
         const app = await load('/projects/1', {}, { deletedForms: false });
-        app.findComponent(FormTrashList).exists().should.be.false();
+        app.findComponent(FormTrashList).exists().should.be.false;
       });
     }
 
@@ -91,9 +91,9 @@ describe('ProjectOverview', () => {
       })
         .beforeEachResponse((app, { url }) => {
           if (url === '/v1/projects/1')
-            app.findComponent(FormTrashList).exists().should.be.false();
+            app.findComponent(FormTrashList).exists().should.be.false;
           else {
-            app.findComponent(FormTrashList).exists().should.be.true();
+            app.findComponent(FormTrashList).exists().should.be.true;
             app.findAllComponents(FormTrashRow).length.should.equal(0);
           }
         })

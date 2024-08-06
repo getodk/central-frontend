@@ -12,7 +12,7 @@ import { mockLogin } from '../../util/session';
 describe('ProjectShow', () => {
   it('requires the projectId route param to be integer', async () => {
     const app = await load('/projects/p');
-    app.findComponent(NotFound).exists().should.be.true();
+    app.findComponent(NotFound).exists().should.be.true;
   });
 
   it('sends the correct initial requests', () => {
@@ -56,17 +56,17 @@ describe('ProjectShow', () => {
         load('/projects/1/entity-lists')
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.true();
+            datasets.dataExists.should.be.true;
           })
           .load('/projects/1', { project: false })
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.false();
+            datasets.dataExists.should.be.false;
           })
           .load('/projects/1/entity-lists', { project: false })
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.true();
+            datasets.dataExists.should.be.true;
           }));
 
       it('does not clear datasets if forms are not re-requested', () =>
@@ -77,7 +77,7 @@ describe('ProjectShow', () => {
           .route('/projects/1')
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.true();
+            datasets.dataExists.should.be.true;
           }));
     });
   });
@@ -96,7 +96,7 @@ describe('ProjectShow', () => {
         project: () => testData.extendedProjects.last()
       })
       .afterResponses(app => {
-        should(app.getComponent(ProjectOverview).vm).not.equal(vm);
+        expect(app.getComponent(ProjectOverview).vm).to.not.equal(vm);
       });
   });
 

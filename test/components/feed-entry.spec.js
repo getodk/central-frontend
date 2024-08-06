@@ -21,13 +21,13 @@ describe('FeedEntry', () => {
     const component = mountComponent({
       slots: { title: '<span id="foo"></span>' }
     });
-    component.find('.feed-entry-title #foo').exists().should.be.true();
+    component.find('.feed-entry-title #foo').exists().should.be.true;
   });
 
   it('uses the body slot', () => {
     const component = mountComponent({
       slots: { body: '<span id="foo"></span>' }
     });
-    component.find('.feed-entry-body #foo').exists().should.be.true();
+    component.find('.feed-entry-body #foo').exists().should.be.true;
   });
 });

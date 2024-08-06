@@ -99,13 +99,13 @@ cycles: series can be chained. For example:
     .mount(AuditList)
     .respondWithData(() => testData.extendedAudits.sorted())
     .afterResponses(component => {
-      component.findComponent(AuditRow).exists().should.be.true();
+      component.findComponent(AuditRow).exists().should.be.true;
     })
     .request(component =>
       component.get('#audit-filters-action select').setValue('user.delete'))
     .respondWithData(() => [])
     .afterResponses(component => {
-      component.findComponent(AuditRow).exists().should.be.false();
+      component.findComponent(AuditRow).exists().should.be.false;
     });
 
 Notice how the mounted component is passed to each request() and

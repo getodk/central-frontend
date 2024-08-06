@@ -59,7 +59,7 @@ describe('FormGroup', () => {
     const formGroup = mountComponent({
       props: { hasError: true }
     });
-    formGroup.classes('has-error').should.be.true();
+    formGroup.classes('has-error').should.be.true;
   });
 
   it('passes the autocomplete prop to the input', () => {
@@ -114,7 +114,7 @@ describe('FormGroup', () => {
       const formGroup = mountComponent({
         props: { autocomplete: 'off' }
       });
-      formGroup.findComponent(PasswordStrength).exists().should.be.false();
+      formGroup.findComponent(PasswordStrength).exists().should.be.false;
     });
 
     it('hides the strength meter for a password confirmation input', () => {

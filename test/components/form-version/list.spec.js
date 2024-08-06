@@ -17,7 +17,7 @@ describe('FormVersionList', () => {
         }
       })
       .afterResponses(() => {
-        success.should.be.true();
+        success.should.be.true;
       });
   });
 });

@@ -11,7 +11,7 @@ describe('ProjectFormAccessRow', () => {
     testData.extendedForms.createPast(1, { draft: true });
     return load('/projects/1/form-access').then(app => {
       const row = app.getComponent(ProjectFormAccessRow);
-      row.classes('project-form-access-row-draft').should.be.true();
+      row.classes('project-form-access-row-draft').should.be.true;
     });
   });
 
@@ -95,7 +95,7 @@ describe('ProjectFormAccessRow', () => {
         xmlFormId: 'f'
       });
       return load('/projects/1/form-access').then(app => {
-        app.find('.project-form-access-row-access').exists().should.be.false();
+        app.find('.project-form-access-row-access').exists().should.be.false;
       });
     });
   });

@@ -25,14 +25,14 @@ describe('AnalyticsForm', () => {
   describe('analytics are not configured', () => {
     it('selects the correct radio', () => {
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('input[type="radio"]').element.checked.should.be.true();
+      form.get('input[type="radio"]').element.checked.should.be.true;
     });
 
     it('renders the contact fields correctly', () => {
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('fieldset').element.disabled.should.be.true();
-      form.get('input[type="checkbox"]').element.checked.should.be.false();
-      form.get('fieldset fieldset').element.disabled.should.be.true();
+      form.get('fieldset').element.disabled.should.be.true;
+      form.get('input[type="checkbox"]').element.checked.should.be.false;
+      form.get('fieldset fieldset').element.disabled.should.be.true;
       form.get('input[type="email"]').element.value.should.equal('alice@getodk.org');
       form.get('input[autocomplete="organization"]').element.value.should.equal('');
     });
@@ -48,14 +48,14 @@ describe('AnalyticsForm', () => {
 
     it('selects the correct radio', () => {
       const form = mount(AnalyticsForm, mountOptions());
-      form.findAll('input[type="radio"]')[1].element.checked.should.be.true();
+      form.findAll('input[type="radio"]')[1].element.checked.should.be.true;
     });
 
     it('renders the contact fields correctly', () => {
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('fieldset').element.disabled.should.be.true();
-      form.get('input[type="checkbox"]').element.checked.should.be.false();
-      form.get('fieldset fieldset').element.disabled.should.be.true();
+      form.get('fieldset').element.disabled.should.be.true;
+      form.get('input[type="checkbox"]').element.checked.should.be.false;
+      form.get('fieldset fieldset').element.disabled.should.be.true;
       form.get('input[type="email"]').element.value.should.equal('alice@getodk.org');
       form.get('input[autocomplete="organization"]').element.value.should.equal('');
     });
@@ -68,7 +68,7 @@ describe('AnalyticsForm', () => {
         value: { enabled: true }
       });
       const form = mount(AnalyticsForm, mountOptions());
-      form.findAll('input[type="radio"]')[2].element.checked.should.be.true();
+      form.findAll('input[type="radio"]')[2].element.checked.should.be.true;
     });
 
     it('renders contact fields correctly if no contact information was provided', () => {
@@ -77,9 +77,9 @@ describe('AnalyticsForm', () => {
         value: { enabled: true }
       });
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('fieldset').element.disabled.should.be.false();
-      form.get('input[type="checkbox"]').element.checked.should.be.false();
-      form.get('fieldset fieldset').element.disabled.should.be.true();
+      form.get('fieldset').element.disabled.should.be.false;
+      form.get('input[type="checkbox"]').element.checked.should.be.false;
+      form.get('fieldset fieldset').element.disabled.should.be.true;
       form.get('input[type="email"]').element.value.should.equal('alice@getodk.org');
       form.get('input[autocomplete="organization"]').element.value.should.equal('');
     });
@@ -90,9 +90,9 @@ describe('AnalyticsForm', () => {
         value: { enabled: true, email: 'bob@getodk.org' }
       });
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('fieldset').element.disabled.should.be.false();
-      form.get('input[type="checkbox"]').element.checked.should.be.true();
-      form.get('fieldset fieldset').element.disabled.should.be.false();
+      form.get('fieldset').element.disabled.should.be.false;
+      form.get('input[type="checkbox"]').element.checked.should.be.true;
+      form.get('fieldset fieldset').element.disabled.should.be.false;
       form.get('input[type="email"]').element.value.should.equal('bob@getodk.org');
       form.get('input[autocomplete="organization"]').element.value.should.equal('');
     });
@@ -103,9 +103,9 @@ describe('AnalyticsForm', () => {
         value: { enabled: true, organization: 'ODK' }
       });
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('fieldset').element.disabled.should.be.false();
-      form.get('input[type="checkbox"]').element.checked.should.be.true();
-      form.get('fieldset fieldset').element.disabled.should.be.false();
+      form.get('fieldset').element.disabled.should.be.false;
+      form.get('input[type="checkbox"]').element.checked.should.be.true;
+      form.get('fieldset fieldset').element.disabled.should.be.false;
       form.get('input[type="email"]').element.value.should.equal('');
       form.get('input[autocomplete="organization"]').element.value.should.equal('ODK');
     });
@@ -116,9 +116,9 @@ describe('AnalyticsForm', () => {
         value: { enabled: true, email: 'alice@getodk.org', organization: 'ODK' }
       });
       const form = mount(AnalyticsForm, mountOptions());
-      form.get('fieldset').element.disabled.should.be.false();
-      form.get('input[type="checkbox"]').element.checked.should.be.true();
-      form.get('fieldset fieldset').element.disabled.should.be.false();
+      form.get('fieldset').element.disabled.should.be.false;
+      form.get('input[type="checkbox"]').element.checked.should.be.true;
+      form.get('fieldset fieldset').element.disabled.should.be.false;
       form.get('input[type="email"]').element.value.should.equal('alice@getodk.org');
       form.get('input[autocomplete="organization"]').element.value.should.equal('ODK');
     });
@@ -127,7 +127,7 @@ describe('AnalyticsForm', () => {
   it('enables the checkbox once share is selected', async () => {
     const form = mount(AnalyticsForm, mountOptions());
     await form.findAll('input[type="radio"]')[2].setValue(true);
-    form.get('fieldset').element.disabled.should.be.false();
+    form.get('fieldset').element.disabled.should.be.false;
   });
 
   it('enables the contact form if the checkbox is checked', async () => {
@@ -139,9 +139,9 @@ describe('AnalyticsForm', () => {
     const checkbox = form.get('input[type="checkbox"]');
     await checkbox.setValue(true);
     const fieldset = form.get('fieldset fieldset');
-    fieldset.element.disabled.should.be.false();
+    fieldset.element.disabled.should.be.false;
     await checkbox.setValue(false);
-    fieldset.element.disabled.should.be.true();
+    fieldset.element.disabled.should.be.true;
   });
 
   describe('request to unset the configuration', () => {
@@ -172,7 +172,7 @@ describe('AnalyticsForm', () => {
         .respondWithSuccess()
         .afterResponse(form => {
           const { analyticsConfig } = form.vm.$container.requestData;
-          analyticsConfig.isEmpty().should.be.true();
+          analyticsConfig.isEmpty().should.be.true;
         }));
   });
 
@@ -222,7 +222,7 @@ describe('AnalyticsForm', () => {
         }))
         .afterResponse(form => {
           const { analyticsConfig } = form.vm.$container.requestData;
-          analyticsConfig.get().value.enabled.should.be.false();
+          analyticsConfig.get().value.enabled.should.be.false;
         }));
   });
 
@@ -305,7 +305,7 @@ describe('AnalyticsForm', () => {
         }))
         .afterResponse(form => {
           const { analyticsConfig } = form.vm.$container.requestData;
-          analyticsConfig.get().value.enabled.should.be.true();
+          analyticsConfig.get().value.enabled.should.be.true;
         }));
   });
 

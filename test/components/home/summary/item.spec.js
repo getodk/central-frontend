@@ -16,15 +16,15 @@ const mountComponent = (options = undefined) =>
 
 describe('HomeSummaryItem', () => {
   it('renders the correct icon', () => {
-    mountComponent().find('.icon-user-circle').exists().should.be.true();
+    mountComponent().find('.icon-user-circle').exists().should.be.true;
   });
 
   it('uses the title slot', () => {
-    mountComponent().find('#title').exists().should.be.true();
+    mountComponent().find('#title').exists().should.be.true;
   });
 
   it('uses the body slot', () => {
-    mountComponent().find('#body').exists().should.be.true();
+    mountComponent().find('#body').exists().should.be.true;
   });
 
   it('passes the to prop to the Linkable', () => {

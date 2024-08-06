@@ -10,15 +10,15 @@ describe('DatasetSettings', () => {
   it('should have onReceipt selected', async () => {
     testData.extendedDatasets.createPast(1);
     const component = await load('/projects/1/entity-lists/trees/settings');
-    component.get('input[value="true"]').element.checked.should.be.false();
-    component.get('input[value="false"]').element.checked.should.be.true();
+    component.get('input[value="true"]').element.checked.should.be.false;
+    component.get('input[value="false"]').element.checked.should.be.true;
   });
 
   it('should have onApproval selected', async () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
     const component = await load('/projects/1/entity-lists/trees/settings');
-    component.get('input[value="true"]').element.checked.should.be.true();
-    component.get('input[value="false"]').element.checked.should.be.false();
+    component.get('input[value="true"]').element.checked.should.be.true;
+    component.get('input[value="false"]').element.checked.should.be.false;
   });
 
   it('should sends the correct request - true', async () => {
@@ -54,8 +54,8 @@ describe('DatasetSettings', () => {
       .request(async (component) => component.get('input[value="true"]').setValue(true))
       .respondWithData(() => testData.extendedDatasets.last())
       .then((component) => {
-        component.get('input[value="true"]').element.checked.should.be.true();
-        component.get('input[value="false"]').element.checked.should.be.false();
+        component.get('input[value="true"]').element.checked.should.be.true;
+        component.get('input[value="false"]').element.checked.should.be.false;
         component.should.alert('success');
       });
   });
@@ -72,10 +72,10 @@ describe('DatasetSettings', () => {
       })
       .then(async (component) => {
         const modal = component.getComponent(DatasetPendingSubmissions);
-        modal.props().state.should.be.true();
+        modal.props().state.should.be.true;
         await modal.get('.btn-link').trigger('click');
-        modal.props().state.should.be.false();
-        component.get('input[value="true"]').element.checked.should.be.true();
+        modal.props().state.should.be.false;
+        component.get('input[value="true"]').element.checked.should.be.true;
       });
   });
 
@@ -87,7 +87,7 @@ describe('DatasetSettings', () => {
       .respondWithProblem(500)
       .then(async (component) => {
         component.should.alert('danger');
-        component.get('input[value="true"]').element.checked.should.be.true();
+        component.get('input[value="true"]').element.checked.should.be.true;
       });
   });
 
@@ -116,8 +116,8 @@ describe('DatasetSettings', () => {
       .respondWithData(() => testData.extendedDatasets.update(-1, { approvalRequired: false }))
       .then(async (component) => {
         const modal = component.getComponent(DatasetPendingSubmissions);
-        modal.props().state.should.be.false();
-        component.get('input[value="false"]').element.checked.should.be.true();
+        modal.props().state.should.be.false;
+        component.get('input[value="false"]').element.checked.should.be.true;
       });
   });
 });

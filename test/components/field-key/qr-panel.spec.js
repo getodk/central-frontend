@@ -52,8 +52,8 @@ describe('FieldKeyQrPanel', () => {
       title.should.equal('Client Configuration Code');
       const body = panel.get('p').text();
       body.should.startWith('This is a Managed QR Code.');
-      body.should.containEql('Collect will exactly match the Forms available to “My App User”');
-      body.should.containEql('For the old behavior,');
+      body.should.include('Collect will exactly match the Forms available to “My App User”');
+      body.should.include('For the old behavior,');
     });
 
     it('shows the correct text for a legacy QR code', () => {
@@ -62,12 +62,12 @@ describe('FieldKeyQrPanel', () => {
       title.should.equal('Legacy Client Configuration Code');
       const body = panel.get('p').text();
       body.should.startWith('This is a Legacy QR Code.');
-      body.should.containEql('Users will have to manually Get Blank Forms');
-      body.should.containEql('For a more controlled and foolproof process,');
+      body.should.include('Users will have to manually Get Blank Forms');
+      body.should.include('For a more controlled and foolproof process,');
     });
   });
 
   it('adds a class for a legacy QR code', () => {
-    mountComponent({ managed: false }).classes('legacy').should.be.true();
+    mountComponent({ managed: false }).classes('legacy').should.be.true;
   });
 });

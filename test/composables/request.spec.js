@@ -37,7 +37,7 @@ describe('useRequest()', () => {
         .request(component =>
           component.vm.request({ method: 'DELETE', url: '/v1/projects/1' }))
         .beforeEachResponse(component => {
-          component.vm.awaitingResponse.should.be.true();
+          component.vm.awaitingResponse.should.be.true;
         })
         .respondWithSuccess());
 
@@ -48,7 +48,7 @@ describe('useRequest()', () => {
           component.vm.request({ method: 'DELETE', url: '/v1/projects/1' }))
         .respondWithSuccess()
         .afterResponse(component => {
-          component.vm.awaitingResponse.should.be.false();
+          component.vm.awaitingResponse.should.be.false;
         }));
 
     it('sets awaitingResponse to false after an error response', () =>
@@ -59,7 +59,7 @@ describe('useRequest()', () => {
             .catch(noop))
         .respondWithProblem()
         .afterResponse(component => {
-          component.vm.awaitingResponse.should.be.false();
+          component.vm.awaitingResponse.should.be.false;
         }));
   });
 
@@ -99,7 +99,7 @@ describe('useRequest()', () => {
             url: '/v1/projects/1',
             fulfillProblem: () => false
           });
-          return promise.should.be.rejected();
+          return promise.should.be.rejected;
         })
         .respondWithProblem());
 
@@ -136,7 +136,7 @@ describe('useRequest()', () => {
       const file = new File([''], name);
       // At least in Headless Chrome, `file` does not have its own `size`
       // property, but rather uses the Blob.prototype.size getter.
-      Object.prototype.hasOwnProperty.call(file, 'size').should.be.false();
+      Object.prototype.hasOwnProperty.call(file, 'size').should.be.false;
       Object.defineProperty(file, 'size', { value: 100000001 });
       return file;
     };
@@ -158,7 +158,7 @@ describe('useRequest()', () => {
         url: '/v1/projects/1/forms',
         data: largeFile('form.xml')
       });
-      return result.should.be.rejected();
+      return result.should.be.rejected;
     });
 
     it('shows a danger alert', () => {
@@ -169,7 +169,7 @@ describe('useRequest()', () => {
         data: largeFile('form.xml')
       }).catch(noop);
       component.should.alert('danger', (message) => {
-        message.should.containEql('form.xml');
+        message.should.include('form.xml');
       });
     });
   });

@@ -24,6 +24,6 @@ describe('ConfigError', () => {
     await wait();
     app.vm.$route.path.should.equal('/load-error');
 
-    isNavigationFailure(await app.vm.$router.push('/login')).should.be.true();
+    isNavigationFailure(await app.vm.$router.push('/login')).should.be.true;
   });
 });

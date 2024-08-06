@@ -33,7 +33,7 @@ describe('FormPreview', () => {
 
     const webForm = app.findComponent('.odk-form');
 
-    webForm.exists().should.be.true();
+    webForm.exists().should.be.true;
   });
 
   it('shows preview modal', async () => {
@@ -51,6 +51,6 @@ describe('FormPreview', () => {
 
     const app = await load('/projects/1/forms/a/preview').complete();
 
-    app.findComponent({ name: 'Navbar' }).exists().should.be.false();
+    app.findComponent({ name: 'Navbar' }).exists().should.be.false;
   });
 });

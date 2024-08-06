@@ -20,7 +20,7 @@ describe('EntityFilters', () => {
         load('/projects/1/entity-lists/trees/entities', { root: false })
           .beforeEachResponse((_, { url }) => {
             if (!url.includes('.svc')) return;
-            relativeUrl(url).searchParams.has('$filter').should.be.false();
+            relativeUrl(url).searchParams.has('$filter').should.be.false;
           }));
 
       it('sends the correct request for ?conflict=true', () =>
@@ -78,7 +78,7 @@ describe('EntityFilters', () => {
           load(`/projects/1/entity-lists/trees/entities?${query}`, { root: false })
             .beforeEachResponse((_, { url }) => {
               if (!url.includes('.svc')) return;
-              relativeUrl(url).searchParams.has('$filter').should.be.false();
+              relativeUrl(url).searchParams.has('$filter').should.be.false;
             }));
       }
     });
@@ -102,16 +102,16 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .afterResponses(app => {
-            app.findComponent(EntityMetadataRow).exists().should.be.true();
+            app.findComponent(EntityMetadataRow).exists().should.be.true;
           })
           .request(changeMultiselect('#entity-filters-conflict', [1]))
           .beforeEachResponse((app, { url }) => {
-            app.findComponent(EntityMetadataRow).exists().should.be.false();
-            relativeUrl(url).searchParams.has('$skiptoken').should.be.false();
+            app.findComponent(EntityMetadataRow).exists().should.be.false;
+            relativeUrl(url).searchParams.has('$skiptoken').should.be.false;
           })
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
-            app.findComponent(EntityMetadataRow).exists().should.be.true();
+            app.findComponent(EntityMetadataRow).exists().should.be.true;
           });
       });
 

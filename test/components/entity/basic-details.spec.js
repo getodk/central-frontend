@@ -69,7 +69,7 @@ describe('EntityBasicDetails', () => {
       createEntityFromSubmission();
       const component = mountComponent();
       const dd = component.find('#entity-basic-details-creating-submission');
-      dd.exists().should.be.true();
+      dd.exists().should.be.true;
     });
 
     it('shows the instance name if the submission has one', () => {
@@ -101,7 +101,7 @@ describe('EntityBasicDetails', () => {
         createEntityFromSubmission({ deleted: true });
         const component = mountComponent();
         const dd = component.get('#entity-basic-details-creating-submission');
-        dd.findComponent(RouterLinkStub).exists().should.be.false();
+        dd.findComponent(RouterLinkStub).exists().should.be.false;
       });
 
       it('shows a trash icon with a tooltip', async () => {
@@ -181,7 +181,7 @@ describe('EntityBasicDetails', () => {
       });
       const component = mountComponent();
       const dd = component.find('#entity-basic-details-creating-submission');
-      dd.exists().should.be.false();
+      dd.exists().should.be.false;
     });
   });
 

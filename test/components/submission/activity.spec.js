@@ -73,7 +73,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-review-button').exists().should.be.false();
+      component.find('#submission-activity-review-button').exists().should.be.false;
     });
 
     describe('after a successful response', () => {
@@ -118,7 +118,7 @@ describe('SubmissionActivity', () => {
       it('hides the modal', async () => {
         const component = await submit();
         const modal = component.getComponent(SubmissionUpdateReviewState);
-        modal.props().state.should.be.false();
+        modal.props().state.should.be.false;
       });
 
       it('shows a success alert', async () => {
@@ -148,7 +148,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-edit-button').exists().should.be.true();
+      component.find('#submission-activity-edit-button').exists().should.be.true;
     });
 
     it('does not render button if user cannot submission.update', () => {
@@ -157,7 +157,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-edit-button').exists().should.be.false();
+      component.find('#submission-activity-edit-button').exists().should.be.false;
     });
 
     it('disables the button if the submission is encrypted', async () => {

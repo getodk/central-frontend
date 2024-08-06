@@ -261,7 +261,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            component.getComponent(Spinner).props().state.should.be.true();
+            component.getComponent(Spinner).props().state.should.be.true;
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -374,7 +374,7 @@ describe('ProjectUserList', () => {
   describe('during a search request', () => {
     it('hides the assignments', () =>
       search({ root: false }).beforeAnyResponse(component => {
-        component.find('tbody tr').exists().should.be.false();
+        component.find('tbody tr').exists().should.be.false;
       }));
 
     it('does not disable the search input', () =>

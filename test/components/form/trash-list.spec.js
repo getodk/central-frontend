@@ -46,7 +46,7 @@ describe('FormTrashList', () => {
       .mount(FormTrashList, mountOptions())
       .respondWithData(() => [])
       .afterResponses(component => {
-        component.find('div').exists().should.be.false();
+        component.find('div').exists().should.be.false;
       }));
 
   it('shows the correct number of rows', () =>

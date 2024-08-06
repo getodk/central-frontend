@@ -10,7 +10,7 @@ describe('ProjectArchive', () => {
   it('does not render the button for an archived project', async () => {
     testData.extendedProjects.createPast(1, { archived: true });
     const component = await load('/projects/1/settings', { root: false });
-    component.find('#project-settings-archive-button').exists().should.be.false();
+    component.find('#project-settings-archive-button').exists().should.be.false;
   });
 
   it('toggles the modal', () => {

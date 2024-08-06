@@ -11,8 +11,8 @@ describe('EntityUploadWarnings', () => {
       props: { raggedRows: [[1, 2]] }
     });
     const warning = component.getComponent(EntityUploadWarning);
-    warning.text().should.containEql('Fewer columns were found than expected');
-    warning.props().ranges.should.eql([[1, 2]]);
+    warning.text().should.include('Fewer columns were found than expected');
+    expect(warning.props().ranges).to.eql([[1, 2]]);
   });
 
   it('shows a warning for a large cell', () => {
@@ -20,8 +20,8 @@ describe('EntityUploadWarnings', () => {
       props: { largeCell: 1 }
     });
     const warning = component.getComponent(EntityUploadWarning);
-    warning.text().should.containEql('Some cells are abnormally large');
-    warning.props().ranges.should.eql([[1, 1]]);
+    warning.text().should.include('Some cells are abnormally large');
+    expect(warning.props().ranges).to.eql([[1, 1]]);
   });
 
   it('shows multiple warnings', () => {
@@ -31,8 +31,8 @@ describe('EntityUploadWarnings', () => {
     const warnings = component.findAllComponents(EntityUploadWarning);
     warnings.length.should.equal(2);
     const text = warnings.map(warning => warning.text());
-    text[0].should.containEql('Fewer columns were found than expected');
-    text[1].should.containEql('Some cells are abnormally large');
+    text[0].should.include('Fewer columns were found than expected');
+    text[1].should.include('Some cells are abnormally large');
   });
 
   it('emits a rows event after a row range is clicked', async () => {

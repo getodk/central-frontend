@@ -12,7 +12,7 @@ describe('NavbarLinks', () => {
     load('/login')
       .restoreSession(false)
       .afterResponses(app => {
-        app.findComponent(NavbarLinks).exists().should.be.false();
+        app.findComponent(NavbarLinks).exists().should.be.false;
       }));
 
   it('renders the correct links for a sitewide administrator', () => {
@@ -62,7 +62,7 @@ describe('NavbarLinks', () => {
       const component = mount(NavbarLinks, {
         container: { router: mockRouter('/account/edit') }
       });
-      component.find('.active').exists().should.be.false();
+      component.find('.active').exists().should.be.false;
     });
   });
 });

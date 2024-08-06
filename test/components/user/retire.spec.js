@@ -23,7 +23,7 @@ describe('UserRetire', () => {
     it('is disabled for the current user', async () => {
       const component = await load('/users', { root: false });
       const a = component.get('.user-row .retire-user');
-      a.element.parentNode.classList.contains('disabled').should.be.true();
+      a.element.parentNode.classList.contains('disabled').should.be.true;
       a.should.have.ariaDescription('You may not retire yourself.');
       await a.should.have.tooltip();
     });
@@ -65,13 +65,13 @@ describe('UserRetire', () => {
 
     it('hides the modal', async () => {
       const component = await retire();
-      component.getComponent(UserRetire).props().state.should.be.false();
+      component.getComponent(UserRetire).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
       const component = await retire();
       component.should.alert('success', (message) => {
-        message.should.containEql('Person A');
+        message.should.include('Person A');
       });
     });
 

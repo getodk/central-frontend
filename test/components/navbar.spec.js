@@ -21,7 +21,7 @@ describe('Navbar', () => {
         .restoreSession()
         .respondFor('/', { users: false })
         .afterResponses(app => {
-          wasHidden.should.be.true();
+          wasHidden.should.be.true;
           app.getComponent(Navbar).should.be.visible();
         });
     });

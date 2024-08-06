@@ -33,7 +33,7 @@ describe('FormDraftStatus', () => {
     await load('/projects/1/forms/f/draft')
       .respondWithData(() => testData.formDraftDatasetDiffs.sorted())
       .beforeEachResponse((_, config) => requests.push(config.url))
-      .afterResponses(() => requests.should.containEql('/v1/projects/1/forms/f/draft/dataset-diff'));
+      .afterResponses(() => requests.should.include('/v1/projects/1/forms/f/draft/dataset-diff'));
   });
 
   it('does not sends dataset-diff requests when form is not entityRelated', async () => {
@@ -41,6 +41,6 @@ describe('FormDraftStatus', () => {
     testData.extendedForms.createPast(1, { draft: true, entityRelated: false });
     await load('/projects/1/forms/f/draft')
       .beforeEachResponse((_, config) => requests.push(config.url))
-      .afterResponses(() => requests.should.not.containEql('/v1/projects/1/forms/f/draft/dataset-diff'));
+      .afterResponses(() => requests.should.not.include('/v1/projects/1/forms/f/draft/dataset-diff'));
   });
 });

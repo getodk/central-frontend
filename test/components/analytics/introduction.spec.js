@@ -115,7 +115,7 @@ describe('AnalyticsIntroduction', () => {
         .respondFor('/system/analytics')
         .afterResponses(app => {
           const { state } = app.getComponent(AnalyticsIntroduction).props();
-          state.should.be.false();
+          state.should.be.false;
         }));
   });
 });

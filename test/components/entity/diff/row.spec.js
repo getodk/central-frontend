@@ -49,7 +49,7 @@ describe('EntityDiffRow', () => {
       const td = row.get('td');
       td.text().should.equal('height');
       await td.get('span').should.have.textTooltip();
-      td.classes('property').should.be.true();
+      td.classes('property').should.be.true;
     });
   });
 
@@ -88,7 +88,7 @@ describe('EntityDiffRow', () => {
       });
       const td = row.get('td:nth-child(2)');
       td.text().should.equal('(empty)');
-      td.classes('empty').should.be.true();
+      td.classes('empty').should.be.true;
     });
 
     it('renders correctly if the old value does not exist', () => {
@@ -105,7 +105,7 @@ describe('EntityDiffRow', () => {
       });
       const td = row.get('td:nth-child(2)');
       td.text().should.equal('(empty)');
-      td.classes('empty').should.be.true();
+      td.classes('empty').should.be.true;
     });
   });
 
@@ -144,7 +144,7 @@ describe('EntityDiffRow', () => {
       });
       const td = row.get('td:nth-child(4)');
       td.text().should.equal('(empty)');
-      td.classes('empty').should.be.true();
+      td.classes('empty').should.be.true;
     });
   });
 
@@ -163,9 +163,9 @@ describe('EntityDiffRow', () => {
     const row = mountComponent({
       props: { name: 'height' }
     });
-    row.get('td').classes('conflicting').should.be.true();
+    row.get('td').classes('conflicting').should.be.true;
     const iconContainer = row.get('td:nth-child(3) span');
-    iconContainer.find('.icon-exclamation-circle').exists().should.be.true();
+    iconContainer.find('.icon-exclamation-circle').exists().should.be.true;
     await iconContainer.should.have.tooltip('Another update already wrote to this property.');
     const text = row.get('.sr-only').text();
     text.should.equal('Another update already wrote to this property.');

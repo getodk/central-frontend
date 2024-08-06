@@ -102,6 +102,6 @@ describe('Popover', () => {
     await component.vm.$nextTick();
     await component.vm.$nextTick();
     const popover = document.querySelector('.popover');
-    popover.classList.contains('left').should.be.true();
+    popover.classList.contains('left').should.be.true;
   });
 });

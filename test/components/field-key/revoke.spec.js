@@ -22,7 +22,7 @@ describe('FieldKeyRevoke', () => {
       testData.extendedFieldKeys.createPast(1, { token: null });
       const app = await load('/projects/1/app-users');
       const li = app.get('.field-key-row .dropdown-menu li');
-      li.classes('disabled').should.be.true();
+      li.classes('disabled').should.be.true;
     });
   });
 
@@ -58,7 +58,7 @@ describe('FieldKeyRevoke', () => {
 
     it('hides the modal', async () => {
       const app = await revoke();
-      app.getComponent(FieldKeyRevoke).props().state.should.be.false();
+      app.getComponent(FieldKeyRevoke).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
@@ -70,8 +70,8 @@ describe('FieldKeyRevoke', () => {
       const app = await revoke();
       const rows = app.findAllComponents(FieldKeyRow);
       rows.length.should.equal(2);
-      rows[0].find('.field-key-row-popover-link').exists().should.be.true();
-      rows[1].find('.field-key-row-popover-link').exists().should.be.false();
+      rows[0].find('.field-key-row-popover-link').exists().should.be.true;
+      rows[1].find('.field-key-row-popover-link').exists().should.be.false;
       rows[1].findAll('td')[3].text().should.equal('Access revoked');
     });
   });

@@ -12,7 +12,7 @@ describe('Download', () => {
     const component = await load('/dl/projects/p/forms/f/submissions/s/attachments/a', {
       root: false
     });
-    component.findComponent(NotFound).exists().should.be.true();
+    component.findComponent(NotFound).exists().should.be.true;
   });
 
   it('sets the correct href attribute', async () => {
@@ -38,7 +38,7 @@ describe('Download', () => {
       attachTo: document.body
     })
       .then(component => {
-        handler.called.should.be.true();
+        handler.called.should.be.true;
         const { target } = handler.getCall(0).args[0];
         target.should.equal(component.get('a').element);
       })

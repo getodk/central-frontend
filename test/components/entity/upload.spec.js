@@ -67,7 +67,7 @@ describe('EntityUpload', () => {
       root: false
     });
     const button = component.find('#dataset-entities-upload-button');
-    button.exists().should.be.false();
+    button.exists().should.be.false;
   });
 
   describe('request for server data', () => {
@@ -186,7 +186,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('f\0o'));
       modal.should.alert('danger', 'The file “my_data.csv” is not a valid .csv file. It cannot be read.');
-      modal.findComponent(EntityUploadHeaderErrors).exists().should.be.false();
+      modal.findComponent(EntityUploadHeaderErrors).exists().should.be.false;
     });
 
     it('hides the alert after a valid file is selected', async () => {
@@ -194,7 +194,7 @@ describe('EntityUpload', () => {
       await selectFile(modal, createCSV('f\0o'));
       await selectFile(modal);
       modal.should.not.alert();
-      modal.findComponent(EntityUploadPopup).exists().should.be.true();
+      modal.findComponent(EntityUploadPopup).exists().should.be.true;
     });
 
     // This is not necessarily the ideal behavior. Showing an alert would be
@@ -232,7 +232,7 @@ describe('EntityUpload', () => {
       await selectFile(modal, createCSV('label,height\nx\ny,""\n"",1'));
       const error = modal.getComponent(EntityUploadDataError).props().message;
       error.should.startWith('There is a problem on row 4');
-      modal.findComponent(EntityUploadWarnings).exists().should.be.false();
+      modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     });
 
     it('shows rows to which a warning applies after they are selected', async () => {
@@ -286,8 +286,8 @@ describe('EntityUpload', () => {
     const popup = modal.getComponent(EntityUploadPopup);
     popup.props().warnings.should.equal(1);
     await popup.get('.btn-link').trigger('click');
-    modal.findComponent(EntityUploadPopup).exists().should.be.false();
-    modal.findComponent(EntityUploadWarnings).exists().should.be.false();
+    modal.findComponent(EntityUploadPopup).exists().should.be.false;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
@@ -297,11 +297,11 @@ describe('EntityUpload', () => {
     testData.extendedDatasets.createPast(1);
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
-    modal.findComponent(EntityUploadWarnings).exists().should.be.true();
+    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
-    modal.findComponent(EntityUploadPopup).exists().should.be.false();
-    modal.findComponent(EntityUploadWarnings).exists().should.be.false();
+    modal.findComponent(EntityUploadPopup).exists().should.be.false;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
@@ -342,18 +342,18 @@ describe('EntityUpload', () => {
     testData.extendedDatasets.createPast(1);
     return showModal()
       .afterResponses(modal => {
-        modal.find('.backdrop').exists().should.be.false();
+        modal.find('.backdrop').exists().should.be.false;
       })
       .request(async (modal) => {
         await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
       .beforeAnyResponse(modal => {
-        modal.find('.backdrop').exists().should.be.true();
+        modal.find('.backdrop').exists().should.be.true;
       })
       .respondWithProblem()
       .afterResponse(modal => {
-        modal.find('.backdrop').exists().should.be.false();
+        modal.find('.backdrop').exists().should.be.false;
       });
   });
 
@@ -380,7 +380,7 @@ describe('EntityUpload', () => {
 
     it('hides the modal', async () => {
       const component = await upload();
-      component.getComponent(EntityUpload).props().state.should.be.false();
+      component.getComponent(EntityUpload).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
@@ -401,8 +401,8 @@ describe('EntityUpload', () => {
         if (i === 0) return;
         component.get('#entity-table').should.be.hidden();
         const props = component.getComponent(OdataLoadingMessage).props();
-        props.odata.awaitingResponse.should.be.true();
-        props.refreshing.should.be.false();
+        props.odata.awaitingResponse.should.be.true;
+        props.refreshing.should.be.false;
         props.totalCount.should.equal(1);
       }));
 
@@ -411,7 +411,7 @@ describe('EntityUpload', () => {
         if (i === 0) return;
         // There should be no $filter query parameter.
         url.should.equal('/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true');
-        app.getComponent(OdataLoadingMessage).props().filter.should.be.false();
+        app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
         const filters = app.getComponent(EntityFilters).props();
         filters.conflict.should.eql([true, false]);
       }));

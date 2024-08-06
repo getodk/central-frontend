@@ -9,9 +9,12 @@ module.exports = {
     beforeEach: 'readonly',
     afterEach: 'readonly',
 
-    should: 'readonly'
+    // Chai
+    should: 'readonly',
+    expect: 'readonly'
   },
   rules: {
-    'no-await-in-loop': 'off'
+    'no-await-in-loop': 'off',
+    'no-unused-expressions': 'off'
   }
 };

@@ -83,7 +83,7 @@ describe('FormDraftTesting', () => {
       const path = '/projects/1/forms/f/draft/testing';
       return load(path)
         .then(c => {
-          c.find('.panel-dialog').exists().should.be.true();
+          c.find('.panel-dialog').exists().should.be.true;
         });
     });
 
@@ -93,7 +93,7 @@ describe('FormDraftTesting', () => {
       const path = '/projects/1/forms/f/draft/testing';
       return load(path)
         .then(c => {
-          c.find('.panel-dialog').exists().should.not.be.true();
+          c.find('.panel-dialog').exists().should.be.false;
         });
     });
   });

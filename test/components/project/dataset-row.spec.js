@@ -36,7 +36,7 @@ describe('ProjectDatasetRow', () => {
 
   it('should show dataset icon', () => {
     testData.extendedDatasets.createPast(1, { name: 'people' });
-    mountComponent(true).find('.col-icon span.icon-database').exists().should.be.true();
+    mountComponent(true).find('.col-icon span.icon-database').exists().should.be.true;
   });
 
   it('links to dataset page', () => {
@@ -61,7 +61,7 @@ describe('ProjectDatasetRow', () => {
     const lastEntity = '2023-01-01T00:00:00Z';
     testData.extendedDatasets.createPast(1, { name: 'people', lastEntity });
     const cell = mountComponent().get('.last-entity');
-    cell.find('.icon-clock-o').exists().should.be.true();
+    cell.find('.icon-clock-o').exists().should.be.true;
   });
 
   it('shows (none) if no entity', async () => {
@@ -86,7 +86,7 @@ describe('ProjectDatasetRow', () => {
   it('shows the correct icon for entity count', async () => {
     testData.extendedDatasets.createPast(1, { name: 'people', entities: 4 });
     const cell = mountComponent().find('.total-entities');
-    cell.find('.icon-asterisk').exists().should.be.true();
+    cell.find('.icon-asterisk').exists().should.be.true;
     await cell.get('span').should.have.tooltip('Total Entities');
   });
 
@@ -100,7 +100,7 @@ describe('ProjectDatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 3 });
     const cell = mountComponent().get('.conflicts-count');
     cell.text().should.equal('3 conflicts');
-    cell.find('.btn-danger').exists().should.be.true();
+    cell.find('.btn-danger').exists().should.be.true;
 
     const link = cell.getComponent('a');
     link.props().to.should.equal('/projects/1/entity-lists/people/entities?conflict=true');
@@ -110,6 +110,6 @@ describe('ProjectDatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 0 });
     const cell = mountComponent().get('.conflicts-count');
     cell.text().should.equal('0');
-    cell.find('.btn-danger').exists().should.be.false();
+    cell.find('.btn-danger').exists().should.be.false;
   });
 });

@@ -80,7 +80,7 @@ describe('AccountResetPassword', () => {
         })
         .afterResponse(app => {
           app.should.alert('success', (message) => {
-            message.should.containEql('alice@getodk.org');
+            message.should.include('alice@getodk.org');
           });
         }));
   });

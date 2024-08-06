@@ -33,7 +33,7 @@ describe('OdataAnalyze', () => {
       modal.get('.nav-tabs li.active a').text().should.equal(tabText);
 
       const help = modal.get('#odata-analyze-tool-help');
-      help.text().should.containEql(helpSubstring);
+      help.text().should.include(helpSubstring);
     };
 
     it('defaults to the Power BI tab', () => {

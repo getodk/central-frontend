@@ -23,7 +23,7 @@ describe('EntityDiffHead', () => {
     });
 
     it('shows the correct icon', () => {
-      mountComponent().find('.icon-warning').exists().should.be.true();
+      mountComponent().find('.icon-warning').exists().should.be.true;
     });
 
     it('shows the correct text', () => {
@@ -39,7 +39,7 @@ describe('EntityDiffHead', () => {
     });
 
     it('shows the correct icon', () => {
-      mountComponent().find('.icon-info-circle').exists().should.be.true();
+      mountComponent().find('.icon-info-circle').exists().should.be.true;
     });
 
     it('shows the correct text', () => {

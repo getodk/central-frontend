@@ -28,7 +28,7 @@ describe('LinkIfCan', () => {
       slots: { default: TestUtilSpan },
       container: { router: mockRouter('/') }
     });
-    component.findComponent(RouterLinkStub).exists().should.be.false();
+    component.findComponent(RouterLinkStub).exists().should.be.false;
     component.element.tagName.should.equal('SPAN');
     component.get('span').text().should.equal('Some span text');
   });

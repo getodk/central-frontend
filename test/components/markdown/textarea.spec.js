@@ -54,19 +54,19 @@ describe('MarkdownTextarea', () => {
 
   it('does not show markdown preview initially', () => {
     const component = mountComponent();
-    component.find('.preview-container').exists().should.be.false();
+    component.find('.preview-container').exists().should.be.false;
   });
 
   it('shows markdown preview after input and button click', async () => {
     const component = mountComponent();
-    component.find('.preview-container').exists().should.be.false();
+    component.find('.preview-container').exists().should.be.false;
     await component.setProps({ modelValue: 'foo' });
-    component.find('.preview-container').exists().should.be.false();
+    component.find('.preview-container').exists().should.be.false;
     const previewButton = component.get('.md-preview-btn');
     await previewButton.trigger('click');
     component.find('.preview-container').should.be.visible();
     await previewButton.trigger('click');
-    component.find('.preview-container').exists().should.be.false();
+    component.find('.preview-container').exists().should.be.false;
   });
 
   it('shows rendered markdown', async () => {
@@ -86,7 +86,7 @@ describe('MarkdownTextarea', () => {
         default: { template: '<button id="some-button">Button text</button>' }
       }
     });
-    component.find('#some-button').exists().should.be.true();
+    component.find('#some-button').exists().should.be.true;
   });
 
   it('adds "required" to textarea if required prop is true', () => {

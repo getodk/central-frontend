@@ -31,7 +31,7 @@ describe('EntityMetadataRow', () => {
     testData.extendedDatasets.createPast(1);
     testData.extendedEntities.createPast(1);
     const td = mountComponent({ rowNumber: 1000 }).get('td');
-    td.classes('row-number').should.be.true();
+    td.classes('row-number').should.be.true;
     td.text().should.equal('1000');
   });
 
@@ -41,7 +41,7 @@ describe('EntityMetadataRow', () => {
     testData.extendedEntities.createPast(1, { creator }).last();
     const row = mountComponent();
     const td = row.findAll('td')[1];
-    td.classes('creator-name').should.be.true();
+    td.classes('creator-name').should.be.true;
     td.text().should.equal(creator.displayName);
     await td.get('span').should.have.textTooltip();
   });
@@ -60,7 +60,7 @@ describe('EntityMetadataRow', () => {
       should.exist(updatedAt);
       const dateTimes = mountComponent().findAllComponents(DateTime);
       dateTimes.length.should.equal(2);
-      dateTimes[1].classes('updated-at').should.be.true();
+      dateTimes[1].classes('updated-at').should.be.true;
       dateTimes[1].props().iso.should.equal(updatedAt);
     });
 
@@ -86,12 +86,12 @@ describe('EntityMetadataRow', () => {
     it('shows conflict icon if there is a conflict', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-      mountComponent().find('.wrap-circle').exists().should.be.true();
+      mountComponent().find('.wrap-circle').exists().should.be.true;
     });
 
     it('does not show the count if there has not been an update', () => {
       testData.extendedEntities.createPast(1);
-      mountComponent().find('.wrap-circle').exists().should.be.false();
+      mountComponent().find('.wrap-circle').exists().should.be.false;
     });
   });
 
@@ -110,8 +110,8 @@ describe('EntityMetadataRow', () => {
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       const btn = mountComponent().findAll('.btn');
       btn.length.should.equal(2);
-      btn[0].classes('resolve-button').should.be.true();
-      btn[1].classes('more-button').should.be.true();
+      btn[0].classes('resolve-button').should.be.true;
+      btn[1].classes('more-button').should.be.true;
     });
   });
 

@@ -191,7 +191,7 @@ describe('util/date-time', () => {
 
   describe('maxDateTime()', () => {
     it('should return null if both values are null or undefined', () => {
-      should(maxDateTime(null, undefined)).be.null();
+      expect(maxDateTime(null, undefined)).to.be.null;
     });
 
     it('should return max value', () => {

@@ -37,14 +37,14 @@ describe('PageBack', () => {
       const component = mountComponent({
         props: { to: '/account/edit' }
       });
-      component.find('#page-back-title a').exists().should.be.false();
+      component.find('#page-back-title a').exists().should.be.false;
     });
 
     it('does not render a link if first element of to prop is null', () => {
       const component = mountComponent({
         props: { to: [null, '/account/edit'] }
       });
-      component.find('#page-back-title a').exists().should.be.false();
+      component.find('#page-back-title a').exists().should.be.false;
     });
 
     it('still uses the title slot', () => {

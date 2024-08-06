@@ -18,7 +18,7 @@ describe('DatasetList', () => {
       mockLogin({ role: 'admin' });
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       const app = await load('/projects/1/entity-lists');
-      app.find('#dataset-list-new-button').exists().should.be.true();
+      app.find('#dataset-list-new-button').exists().should.be.true;
     });
 
     it('does not render button if user cannot dataset.create', async () => {
@@ -26,7 +26,7 @@ describe('DatasetList', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       const app = await load('/projects/1/entity-lists');
-      app.find('#dataset-list-new-button').exists().should.be.false();
+      app.find('#dataset-list-new-button').exists().should.be.false;
     });
   });
 });

@@ -75,7 +75,7 @@ describe('SubmissionFieldDropdown', () => {
     });
     testData.extendedSubmissions.createPast(1);
     const component = await loadSubmissionList();
-    component.findComponent(SubmissionFieldDropdown).exists().should.be.false();
+    component.findComponent(SubmissionFieldDropdown).exists().should.be.false;
     component.getComponent(SubmissionTable).props().fields.length.should.equal(11);
   });
 
@@ -116,7 +116,7 @@ describe('SubmissionFieldDropdown', () => {
         .complete()
         .request(uncheckFirst)
         .beforeEachResponse((_, { url }) => {
-          url.should.containEql('.svc/Submissions');
+          url.should.include('.svc/Submissions');
         })
         .respondWithData(testData.submissionOData));
 
@@ -125,12 +125,12 @@ describe('SubmissionFieldDropdown', () => {
         .complete()
         .request(uncheckFirst)
         .beforeEachResponse(component => {
-          component.findComponent(SubmissionDataRow).exists().should.be.false();
+          component.findComponent(SubmissionDataRow).exists().should.be.false;
         })
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
           const table = component.getComponent(SubmissionTable);
-          table.findComponent(SubmissionDataRow).exists().should.be.true();
+          table.findComponent(SubmissionDataRow).exists().should.be.true;
           table.props().fields.length.should.equal(9);
         }));
   });

@@ -48,7 +48,7 @@ describe('FormTable', () => {
       headers.should.eql(['Name', 'Review States', 'Latest', 'Total']);
       const td = table.findAll('td');
       td.length.should.equal(6);
-      td[5].classes('total-submissions').should.be.true();
+      td[5].classes('total-submissions').should.be.true;
     });
 
     it('shows the correct columns to a Data Collector', async () => {
@@ -61,7 +61,7 @@ describe('FormTable', () => {
       headers.should.eql(['Name', 'Review States', 'Latest', 'Total', 'Actions']);
       const td = table.findAll('td');
       td.length.should.equal(7);
-      td[6].classes('actions').should.be.true();
+      td[6].classes('actions').should.be.true;
     });
   });
 

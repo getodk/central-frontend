@@ -8,7 +8,7 @@ describe('createAlert()', () => {
         alert[type]('Something happened!');
         alert.type.should.equal(type);
         alert.message.should.equal('Something happened!');
-        alert.state.should.be.true();
+        alert.state.should.be.true;
       });
     });
   }
@@ -18,7 +18,7 @@ describe('createAlert()', () => {
       const alert = createAlert();
       alert.info('Something happened!');
       alert.blank();
-      alert.state.should.be.false();
+      alert.state.should.be.false;
       should.not.exist(alert.message);
     });
   });

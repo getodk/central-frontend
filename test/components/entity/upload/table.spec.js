@@ -40,7 +40,7 @@ describe('EntityUploadTable', () => {
 
   it('does not render data if the entities prop is nullish', () => {
     testData.extendedDatasets.createPast(1);
-    mountComponent().find('tbody').exists().should.be.false();
+    mountComponent().find('tbody').exists().should.be.false;
   });
 
   it('shows a row for each entity', () => {

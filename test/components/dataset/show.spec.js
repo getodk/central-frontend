@@ -41,7 +41,7 @@ describe('DatasetShow', () => {
         project: false
       })
       .afterResponses(app => {
-        should(app.getComponent(DatasetOverview).vm).not.equal(vm);
+        expect(app.getComponent(DatasetOverview).vm).to.not.equal(vm);
       });
   });
 

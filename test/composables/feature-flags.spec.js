@@ -21,7 +21,7 @@ describe('useFeatureFlags()', () => {
   it('should return new-web-forms when W + F is pressed', async () => {
     const component = mountComponent();
 
-    component.classes().should.be.empty();
+    component.classes().should.be.empty;
 
     await component.trigger('keydown', { key: 'w' });
     await component.trigger('keydown', { key: 'f' });
@@ -31,6 +31,6 @@ describe('useFeatureFlags()', () => {
     await component.trigger('keyup', { key: 'w' });
     await component.trigger('keyup', { key: 'f' });
 
-    component.classes().should.be.empty();
+    component.classes().should.be.empty;
   });
 });

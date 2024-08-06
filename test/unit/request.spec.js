@@ -493,7 +493,7 @@ describe('util/request', () => {
     });
 
     it('returns undefined for a property that is not on the function', () => {
-      should(withHttpMethods(() => {}).foo).be.undefined();
+      expect(withHttpMethods(() => {}).foo).to.be.undefined;
     });
   });
 
@@ -539,31 +539,31 @@ describe('util/request', () => {
 
   describe('isProblem()', () => {
     it('returns true for a Problem', () => {
-      isProblem({ code: 404.1, message: 'Not found.' }).should.be.true();
+      isProblem({ code: 404.1, message: 'Not found.' }).should.be.true;
     });
 
     it('returns false for null', () => {
-      isProblem(null).should.be.false();
+      isProblem(null).should.be.false;
     });
 
     it('returns false for a string', () => {
-      isProblem('foo').should.be.false();
+      isProblem('foo').should.be.false;
     });
 
     it('returns false for an object without a code property', () => {
-      isProblem({ message: 'Not found.' }).should.be.false();
+      isProblem({ message: 'Not found.' }).should.be.false;
     });
 
     it('returns false for an object whose code property is not a number', () => {
-      isProblem({ code: '404.1', message: 'Not found.' }).should.be.false();
+      isProblem({ code: '404.1', message: 'Not found.' }).should.be.false;
     });
 
     it('returns false for an object without a message property', () => {
-      isProblem({ code: 404.1 }).should.be.false();
+      isProblem({ code: 404.1 }).should.be.false;
     });
 
     it('returns false for an object whose message property is not a string', () => {
-      isProblem({ code: 404.1, message: 123 }).should.be.false();
+      isProblem({ code: 404.1, message: 123 }).should.be.false;
     });
   });
 
@@ -573,7 +573,7 @@ describe('util/request', () => {
       const error = new Error();
       error.response = {};
       logAxiosError(logger, error);
-      logger.log.called.should.be.false();
+      logger.log.called.should.be.false;
     });
 
     it('logs the request if there was one', () => {
@@ -581,14 +581,14 @@ describe('util/request', () => {
       const error = new Error();
       error.request = {};
       logAxiosError(logger, error);
-      logger.log.calledWith(error.request).should.be.true();
+      logger.log.calledWith(error.request).should.be.true;
     });
 
     it('logs the error message if there was no request', () => {
       const logger = mockLogger();
       const error = new Error('foo');
       logAxiosError(logger, error);
-      logger.log.calledWith('foo').should.be.true();
+      logger.log.calledWith('foo').should.be.true;
     });
   });
 
