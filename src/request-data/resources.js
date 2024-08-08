@@ -14,7 +14,8 @@ import { mergeDeepLeft } from 'ramda';
 
 import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
-import { noargs } from '../util/util';
+import { noargs, noop } from '../util/util';
+import { apiPaths } from '../util/request';
 
 export default ({ i18n }, createResource) => {
   // Resources related to the session
@@ -75,6 +76,26 @@ export default ({ i18n }, createResource) => {
 
   createResource('dataset', () => ({
     transformResponse: ({ data }) => shallowReactive(data)
+  }));
+
+  createResource('userPreferences', (self) => ({
+    set: (k, v) => {
+      // Avoid posting prefs to the server when they haven't changed.
+      // This stringify-inequality-test may yield false positives, for instance when object field sort order changes.
+      // Thus superfluous requests are not 100% guaranteed to be filtered out.
+      const haschanged = JSON.stringify(self.data[k]) !== JSON.stringify(v);
+      if (haschanged) {
+        self.patch(Object.fromEntries(new Map([[k, v]])));
+        const headers = { 'Content-Type': 'application/json' };
+        self.request({
+          method: 'POST',
+          url: apiPaths.userPreferences(),
+          headers,
+          data: self.data,
+          patch: noop,
+        });
+      }
+    },
   }));
 
   const formDraft = createResource('formDraft', () =>
