@@ -95,7 +95,15 @@ export default {
   setup() {
     const { currentUser, projects } = useRequestData();
 
-    const sortMode = ref('latest');
+    const sortMode = computed({
+      get() {
+        return currentUser.preferences.site.projectSortMode || 'latest';
+      },
+      set(val) {
+        currentUser.preferences.site.projectSortMode = val;
+      },
+    });
+
     const sortFunction = computed(() => sortFunctions[sortMode.value]);
 
     const activeProjects = ref(null);
@@ -164,7 +172,7 @@ export default {
       const message = this.$t('alert.create');
       this.$router.push(this.projectPath(project.id))
         .then(() => { this.alert.success(message); });
-    }
+    },
   }
 };
 </script>

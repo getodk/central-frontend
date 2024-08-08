@@ -173,7 +173,9 @@ export const apiPaths = {
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
-  audits: (query) => `/v1/audits${queryString(query)}`
+  audits: (query) => `/v1/audits${queryString(query)}`,
+  userSitePreferences: (k) => `/v1/user-preferences/site/${k}`,
+  userProjectPreferences: (projectId, k) => `/v1/user-preferences/project/${projectId}/${k}`,
 };
 
 
