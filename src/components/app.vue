@@ -64,9 +64,9 @@ export default {
 
     const { features } = useFeatureFlags();
 
-    const { centralVersion } = useRequestData();
+    const { centralVersion, userPreferences } = useRequestData();
     const { callWait } = useCallWait();
-    return { visiblyLoggedIn, centralVersion, callWait, features };
+    return { visiblyLoggedIn, centralVersion, userPreferences, callWait, features };
   },
   computed: {
     routerReady() {
