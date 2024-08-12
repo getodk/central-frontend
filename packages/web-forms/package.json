@@ -28,7 +28,8 @@
   },
   "scripts": {
     "build": "npm-run-all -nl build:*",
-    "build:clean": "rimraf dist/",
+    "build:clean": "rimraf dist/ dist-demo/",
+    "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
     "build-preview": "yarn build && yarn vite serve build-preview --port 5174",
     "dev": "vite",

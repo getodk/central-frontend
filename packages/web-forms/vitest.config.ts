@@ -46,33 +46,35 @@ if (webkitFlakinessMitigations) {
 	globalSetup.push('./tests/globalSetup/mitigate-webkit-flakiness.ts');
 }
 
-export default mergeConfig(
-	viteConfig,
-	defineConfig({
-		test: {
-			browser: {
-				enabled: BROWSER_ENABLED,
-				name: BROWSER_NAME!,
-				provider: 'playwright',
-				fileParallelism: false,
-				headless: true,
-				screenshotFailures: false,
-			},
-			environment: TEST_ENVIRONMENT,
-			exclude: [...configDefaults.exclude, 'e2e/**'],
-			root: fileURLToPath(new URL('./', import.meta.url)),
+export default defineConfig((env) =>
+	mergeConfig(
+		viteConfig(env),
+		defineConfig({
+			test: {
+				browser: {
+					enabled: BROWSER_ENABLED,
+					name: BROWSER_NAME!,
+					provider: 'playwright',
+					fileParallelism: false,
+					headless: true,
+					screenshotFailures: false,
+				},
+				environment: TEST_ENVIRONMENT,
+				exclude: [...configDefaults.exclude, 'e2e/**'],
+				root: fileURLToPath(new URL('./', import.meta.url)),
 
-			/** @see {@link webkitFlakinessMitigations} */
-			globalSetup,
+				/** @see {@link webkitFlakinessMitigations} */
+				globalSetup,
 
-			// Suppress the console error log about parsing CSS stylesheet
-			// This is an open issue of jsdom
-			// see primefaces/primevue#4512 and jsdom/jsdom#2177
-			onConsoleLog(log: string, type: 'stderr' | 'stdout'): false | void {
-				if (log.includes('Error: Could not parse CSS stylesheet') && type === 'stderr') {
-					return false;
-				}
-			},
-		} satisfies VitestTestConfig,
-	})
+				// Suppress the console error log about parsing CSS stylesheet
+				// This is an open issue of jsdom
+				// see primefaces/primevue#4512 and jsdom/jsdom#2177
+				onConsoleLog(log: string, type: 'stderr' | 'stdout'): false | void {
+					if (log.includes('Error: Could not parse CSS stylesheet') && type === 'stderr') {
+						return false;
+					}
+				},
+			} satisfies VitestTestConfig,
+		})
+	)
 );
