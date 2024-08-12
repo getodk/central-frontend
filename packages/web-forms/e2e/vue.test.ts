@@ -1,6 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 
+const expandAllCategories = async (page: Page) => {
+	await page.evaluate(() => {
+		document.querySelectorAll('ul.category-list > li').forEach((c) => c.classList.add('expanded'));
+	});
+};
 test('All forms are rendered and there is no console error', async ({ page, browserName }) => {
 	let consoleErrors = 0;
 
@@ -15,7 +20,10 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 	// this ensures that Vue application is loaded before proceeding forward.
 	await expect(page.getByText('Demo Forms')).toBeVisible();
 
-	const forms = await page.locator('ul.form-list li').all();
+	// Let's expand all categories, so that Form list is visible
+	await expandAllCategories(page);
+
+	const forms = await page.locator('ul.form-list li a').all();
 
 	expect(forms.length).toBeGreaterThan(0);
 
@@ -81,6 +89,7 @@ test('All forms are rendered and there is no console error', async ({ page, brow
 		}
 
 		await page.goBack();
+		await expandAllCategories(page);
 	}
 
 	expect(consoleErrors).toBe(0);
