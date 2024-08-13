@@ -1,5 +1,5 @@
 import { RepeatElementDefinition } from '../../body/RepeatElementDefinition.ts';
-import type { ControlledRepeatRangeNode } from '../../client/repeat/ControlledRepeatRangeNode.ts';
+import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeControlledNode.ts';
 import { DependentExpression } from '../../expression/DependentExpression.ts';
 import { isConstantTruthyExpression } from '../xpath/semantic-analysis.ts';
 
@@ -13,7 +13,7 @@ import { isConstantTruthyExpression } from '../xpath/semantic-analysis.ts';
  * In both cases, the downstream effect is that the engine is responsible for
  * controlling the count of a repeat range's instances. Representing both cases
  * should simplify client usage, as well as implementation of the internal
- * representation of {@link ControlledRepeatRangeNode}.
+ * representation of {@link RepeatRangeControlledNode}.
  */
 export class RepeatCountControlExpression extends DependentExpression<'number'> {
 	static from(

@@ -1,9 +1,7 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
-import type {
-	RepeatRangeNode,
-	RepeatRangeNodeAppearances,
-} from '../client/repeat/RepeatRangeNode.ts';
+import type { RepeatRangeNodeAppearances } from '../client/repeat/BaseRepeatRangeNode.ts';
+import type { RepeatRangeUncontrolledNode } from '../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -38,7 +36,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 
 export class RepeatRange
 	extends DescendantNode<UncontrolledRepeatRangeDefinition, RepeatRangeStateSpec, RepeatInstance>
-	implements RepeatRangeNode, EvaluationContext, SubscribableDependency
+	implements RepeatRangeUncontrolledNode, EvaluationContext, SubscribableDependency
 {
 	/**
 	 * A repeat range doesn't have a corresponding primary instance element of its
@@ -131,8 +129,7 @@ export class RepeatRange
 	};
 
 	// RepeatRangeNode
-	readonly nodeType = 'repeat-range';
-	readonly countType = 'uncontrolled';
+	readonly nodeType = 'repeat-range:uncontrolled';
 
 	/**
 	 * @todo RepeatRange*, RepeatInstance* (and RepeatTemplate*) all share the

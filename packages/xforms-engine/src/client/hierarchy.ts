@@ -2,9 +2,9 @@ import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
 import type { ModelValueNode } from './ModelValueNode.ts';
 import type { NoteNode } from './NoteNode.ts';
-import type { ControlledRepeatRangeNode } from './repeat/ControlledRepeatRangeNode.ts';
 import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
-import type { RepeatRangeNode } from './repeat/RepeatRangeNode.ts';
+import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNode.ts';
+import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
 import type { StringNode } from './StringNode.ts';
@@ -22,9 +22,9 @@ export type AnyLeafNode =
 	| ModelValueNode;
 
 // prettier-ignore
-export type AnyRepeatRangeNode =
-	| ControlledRepeatRangeNode
-	| RepeatRangeNode;
+export type RepeatRangeNode =
+	| RepeatRangeControlledNode
+	| RepeatRangeUncontrolledNode;
 
 /**
  * Any of the concrete node types which may be a parent of non-repeat instance
@@ -47,8 +47,8 @@ export type GeneralParentNode =
  */
 // prettier-ignore
 export type AnyParentNode =
-	| AnyRepeatRangeNode
-	| GeneralParentNode;
+	| GeneralParentNode
+	| RepeatRangeNode;
 
 /**
  * Any of the concrete node types a client may get from the engine's form
