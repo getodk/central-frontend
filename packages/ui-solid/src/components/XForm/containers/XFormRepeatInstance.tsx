@@ -1,4 +1,4 @@
-import type { RepeatInstanceNode, RepeatRangeNode } from '@getodk/xforms-engine';
+import type { RepeatInstanceNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
 import { Box, Stack, styled } from '@suid/material';
 import { Show, createSignal } from 'solid-js';
 import { TopLevelRepeatInstance } from '../../styled/TopLevelRepeatInstance.tsx';
@@ -22,10 +22,12 @@ export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 
 		return instance.currentState.label ?? instance.parent.currentState.label;
 	};
-	const uncontrolledRepeatRange = (instance: RepeatInstanceNode): RepeatRangeNode | null => {
+	const uncontrolledRepeatRange = (
+		instance: RepeatInstanceNode
+	): RepeatRangeUncontrolledNode | null => {
 		const { parent } = instance;
 
-		if (parent.countType === 'uncontrolled') {
+		if (parent.nodeType === 'repeat-range:uncontrolled') {
 			return parent;
 		}
 

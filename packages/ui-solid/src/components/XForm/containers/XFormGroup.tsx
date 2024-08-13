@@ -1,4 +1,4 @@
-import type { AnyRepeatRangeNode, GroupNode } from '@getodk/xforms-engine';
+import type { GroupNode, RepeatRangeNode } from '@getodk/xforms-engine';
 import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
 import { NestedGroupBox } from '../../styled/NestedGroupBox.tsx';
 import { XFormQuestionList } from '../XFormQuestionList.tsx';
@@ -7,18 +7,21 @@ import { XFormGroupLabel } from './XFormGroupLabel.tsx';
 import { XFormRepeatList } from './XFormRepeatList.tsx';
 
 export interface XFormGroupProps {
-	readonly node: AnyRepeatRangeNode | GroupNode;
+	readonly node: GroupNode | RepeatRangeNode;
 }
 
-const repeatNode = (node: AnyRepeatRangeNode | GroupNode): AnyRepeatRangeNode | null => {
-	if (node.nodeType === 'repeat-range') {
+const repeatNode = (node: GroupNode | RepeatRangeNode): RepeatRangeNode | null => {
+	if (
+		node.nodeType === 'repeat-range:controlled' ||
+		node.nodeType === 'repeat-range:uncontrolled'
+	) {
 		return node;
 	}
 
 	return null;
 };
 
-const groupNode = (node: AnyRepeatRangeNode | GroupNode): GroupNode | null => {
+const groupNode = (node: GroupNode | RepeatRangeNode): GroupNode | null => {
 	if (node.nodeType === 'group') {
 		return node;
 	}
@@ -28,11 +31,7 @@ const groupNode = (node: AnyRepeatRangeNode | GroupNode): GroupNode | null => {
 
 export const XFormGroup = (props: XFormGroupProps) => {
 	const groupLabel = () => {
-		if (props.node.nodeType === 'repeat-range') {
-			return null;
-		}
-
-		return props.node.currentState.label;
+		return groupNode(props.node)?.currentState.label ?? null;
 	};
 	const isRelevant = createMemo(() => {
 		return props.node.currentState.relevant;

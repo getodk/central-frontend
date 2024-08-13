@@ -1,5 +1,5 @@
 // TODO: quite a bit of this is very similar to FormLanguageMenu
-import type { RepeatInstanceNode, RepeatRangeNode } from '@getodk/xforms-engine';
+import type { RepeatInstanceNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
 import Delete from '@suid/icons-material/Delete';
 import MoreVert from '@suid/icons-material/MoreVert';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@suid/material';
@@ -7,7 +7,7 @@ import { createSignal } from 'solid-js';
 
 interface RepeatInstanceOptionsMenuProps {
 	readonly index: number;
-	readonly range: RepeatRangeNode;
+	readonly range: RepeatRangeUncontrolledNode;
 	readonly instance: RepeatInstanceNode;
 }
 
