@@ -22,7 +22,10 @@ initializeForm(props.formXml, {
 	},
 }).then((f) => {
 	odkForm.value = f;
-  }).catch(() => {}); // eslint-disable-line -- noop
+}).catch((error) => {
+	// eslint-disable-next-line no-console
+	console.error(error);
+});
 
 const handleSubmit = () => {
 	if(odkForm.value?.validationState.violations?.length === 0){
