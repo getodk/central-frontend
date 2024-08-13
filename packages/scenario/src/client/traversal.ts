@@ -1,5 +1,5 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { AnyNode, RepeatRangeNode, RootNode } from '@getodk/xforms-engine';
+import type { AnyNode, AnyRepeatRangeNode, RootNode } from '@getodk/xforms-engine';
 import type { Scenario } from '../jr/Scenario.ts';
 
 /**
@@ -41,7 +41,7 @@ export const getNodeForReference = (instanceRoot: RootNode, reference: string): 
 	return result ?? null;
 };
 
-export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | null => {
+export const getClosestRepeatRange = (currentNode: AnyNode): AnyRepeatRangeNode | null => {
 	switch (currentNode.nodeType) {
 		case 'root':
 			return null;

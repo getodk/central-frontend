@@ -13,6 +13,7 @@ export type {
 	AnyLeafNode,
 	AnyNode,
 	AnyParentNode,
+	AnyRepeatRangeNode,
 	GeneralChildNode,
 	GeneralParentNode,
 } from './client/hierarchy.ts';

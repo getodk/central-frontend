@@ -1,5 +1,12 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import type { AnyNode, RepeatRangeNode, RootNode, SelectNode } from '@getodk/xforms-engine';
+import type {
+	AnyNode,
+	AnyRepeatRangeNode,
+	ControlledRepeatRangeNode,
+	RepeatRangeNode,
+	RootNode,
+	SelectNode,
+} from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -480,6 +487,10 @@ export class Scenario {
 			throw new Error(`Failed to find closest repeat range to node with reference: ${reference}`);
 		}
 
+		if (!this.isClientControlled(repeatRange)) {
+			throw new Error('Cannot remove repeat instance: repeat range is engine controlled');
+		}
+
 		repeatRange.addInstances();
 
 		const instances = repeatRange.currentState.children;
@@ -758,17 +769,12 @@ export class Scenario {
 	}
 
 	/** @todo this should change when we support `jr:count` */
-	private isCountControlled(node: RepeatRangeNode): boolean {
+	private isCountControlled(node: AnyRepeatRangeNode): node is ControlledRepeatRangeNode {
 		return node.definition.bodyElement.countExpression != null;
 	}
 
-	/** @todo this should change when we support `jr:noAddRemove` */
-	private isFixedCount(node: RepeatRangeNode): boolean {
-		return node.definition.bodyElement.isFixedCount;
-	}
-
-	private isClientControlled(node: RepeatRangeNode): boolean {
-		return !this.isCountControlled(node) && !this.isFixedCount(node);
+	private isClientControlled(node: AnyRepeatRangeNode): node is RepeatRangeNode {
+		return !this.isCountControlled(node);
 	}
 
 	/**

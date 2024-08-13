@@ -1,9 +1,9 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
+	AnyRepeatRangeNode,
 	GroupNode,
 	NoteNode,
 	RepeatInstanceNode,
-	RepeatRangeNode,
 	RootNode,
 	SelectNode,
 	StringNode,
@@ -16,7 +16,7 @@ export interface PositionalEventTypeMapping {
 	readonly GROUP: GroupNode;
 	readonly REPEAT: RepeatInstanceNode;
 	readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored
-	readonly PROMPT_NEW_REPEAT: RepeatRangeNode;
+	readonly PROMPT_NEW_REPEAT: AnyRepeatRangeNode;
 	readonly END_OF_FORM: null;
 }
 
@@ -48,7 +48,8 @@ const singletons = new Map<AnyEventNode, UnknownPositionalEvent>();
  *     the leaf nodes of a form with a corresponding user-interactive control.
  *   - An artificial landmark, representing the point at which a new <repeat>
  *     instance may be added. This roughly corresponds to a
- *     {@link RepeatRangeNode}, most specifically the end of that range.
+ *     {@link AnyRepeatRangeNode | repeat range}, most specifically the end of
+ *     that range.
  *
  * For those subclasses/"events" corresponding to a specific type of node, the
  * subclass may also implement additional node-specific behavior with which an
