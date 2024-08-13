@@ -39,6 +39,7 @@ provide('submitPressed', submitPressed);
 const formErrorMessage = computed(() => {
 	const violationLength = odkForm.value!.validationState.violations.length;
 
+	// TODO: translations
 	if(violationLength === 0) return '';
 	else if(violationLength === 1) return '1 question with error';
 	else return `${violationLength} questions with errors`;
@@ -50,7 +51,7 @@ const scrollToFirstInvalidQuestion = () => {
 	document.getElementById(odkForm.value!.validationState.violations[0].nodeId + '_container')?.scrollIntoView({
 		behavior: 'smooth'
 	});
-	
+
 	// If first invalid element is a textbox then focus it.
 	const firstInvalidElement = document.getElementById(odkForm.value!.validationState.violations[0].nodeId);
 	if(firstInvalidElement && isInputElement(firstInvalidElement) && firstInvalidElement.type === 'text'){
@@ -181,7 +182,7 @@ const scrollToFirstInvalidQuestion = () => {
 				margin-top: 0;
 				order: 3;
 			}
-			
+
 			.footer {
 				order: 4;
 				button {

@@ -32,6 +32,7 @@ const label = computed(() => {
 		return `${props.instance.parent.definition.bodyElement.label?.chunks[0].stringValue}`;
 	}
 
+	// TODO: translations
 	return `Repeat Item`;
 });
 
@@ -47,7 +48,12 @@ const children = computed(() => {
 });
 
 const menuItems: MenuItem[] = [
-	{label: 'Remove', icon: 'icon-delete', command: () => emit("remove")}
+	{
+		// TODO: translations
+		label: 'Remove',
+		icon: 'icon-delete',
+		command: () => emit("remove")
+	}
 ];
 
 </script>

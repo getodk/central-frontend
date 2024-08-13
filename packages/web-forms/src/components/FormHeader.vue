@@ -21,6 +21,7 @@ const print = () => window.print();
 
 const items = ref([
 	{
+		// TODO: translations
 		label: 'Print',
 		icon: 'icon-local_printshop',
 		command: print
@@ -29,6 +30,7 @@ const items = ref([
 
 if(languages.length > 0){
 	items.value.unshift({
+		// TODO: translations
 		label: 'Change language',
 		icon: 'icon-language',
 		command: () => languageDialogState.value = true
@@ -45,9 +47,9 @@ const handleLanguageChange = (event: FormLanguage) => {
 	<div class="hidden lg:inline larger-screens">
 		<div class="flex justify-content-end flex-wrap gap-3">
 			<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
-			<FormLanguageMenu 
-				:active-language="form.currentState.activeLanguage" 
-				:languages="languages" 
+			<FormLanguageMenu
+				:active-language="form.currentState.activeLanguage"
+				:languages="languages"
 				@update:active-language="handleLanguageChange"
 			/>
 		</div>
@@ -59,7 +61,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 			</template>
 		</PrimeCard>
 	</div>
-	
+
 
 	<!-- for mobile and tablet -->
 	<div class="flex lg:hidden align-items-center smaller-screens">
@@ -70,22 +72,22 @@ const handleLanguageChange = (event: FormLanguage) => {
 		<!-- for tablet -->
 		<div class="form-options hidden md:flex justify-content-end gap-3">
 			<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
-			<FormLanguageMenu 
-				:active-language="form.currentState.activeLanguage" 
-				:languages="languages" 
+			<FormLanguageMenu
+				:active-language="form.currentState.activeLanguage"
+				:languages="languages"
 				@update:active-language="handleLanguageChange"
 			/>
 		</div>
-			
+
 		<!-- for mobile -->
 		<div class="form-options flex md:hidden">
 			<PrimeButton v-if="languages.length > 0" icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
 			<PrimeButton v-else class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 			<PrimeMenu id="overlay_menu" ref="menu" :model="items" :popup="true" />
-			<FormLanguageDialog 
-				v-model:state="languageDialogState" 
-				:active-language="form.currentState.activeLanguage" 
-				:languages="languages" 
+			<FormLanguageDialog
+				v-model:state="languageDialogState"
+				:active-language="form.currentState.activeLanguage"
+				:languages="languages"
 				@update:active-language="handleLanguageChange"
 			/>
 		</div>
@@ -107,7 +109,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 		}
 	}
 
-	
+
 .form-title {
 	// var(--light-elevation-1);
 
@@ -139,7 +141,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 	.form-options{
 		padding-right: 10px;
 	}
-	
+
 	.btn-menu{
 		color: var(--surface-900);
 	}
