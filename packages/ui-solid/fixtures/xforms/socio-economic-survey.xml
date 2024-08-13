@@ -1322,7 +1322,7 @@
         required="true()" />
       <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup" required="true()" />
       <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/languageProficiency"
-        type="string" required="true()" />
+        type="string" />
       <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/readEnglish" type="string"
         required="true()" />
       <bind nodeset="/data/familyMembers/persons/languageProficiencyGroup/writeEnglish"
