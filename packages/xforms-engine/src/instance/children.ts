@@ -54,6 +54,10 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 			}
 
 			case 'repeat-range': {
+				if (child.isControlled()) {
+					throw new Error('TODO');
+				}
+
 				return new RepeatRange(parent, child);
 			}
 

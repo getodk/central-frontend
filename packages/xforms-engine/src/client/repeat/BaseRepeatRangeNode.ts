@@ -1,13 +1,13 @@
-import type { RepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
-import type { BaseNode, BaseNodeState } from './BaseNode.ts';
-import type { NodeAppearances } from './NodeAppearances.ts';
+import type { AnyRepeatRangeDefinition } from '../../model/RepeatRangeDefinition.ts';
+import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
+import type { NodeAppearances } from '../NodeAppearances.ts';
+import type { RootNode } from '../RootNode.ts';
+import type { TextRange } from '../TextRange.ts';
+import type { GeneralParentNode } from '../hierarchy.ts';
+import type { AncestorNodeValidationState } from '../validation.ts';
 import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
-import type { RootNode } from './RootNode.ts';
-import type { TextRange } from './TextRange.ts';
-import type { GeneralParentNode } from './hierarchy.ts';
-import type { AncestorNodeValidationState } from './validation.ts';
 
-export interface RepeatRangeNodeState extends BaseNodeState {
+export interface BaseRepeatRangeNodeState extends BaseNodeState {
 	get hint(): null;
 	get label(): TextRange<'label'> | null;
 
@@ -17,7 +17,7 @@ export interface RepeatRangeNodeState extends BaseNodeState {
 	 * Note: the web-forms engine's representation of this structure differs from
 	 * the underlying XForms specification's primary instance structure.
 	 *
-	 * @see {@link RepeatRangeNode} for additional detail.
+	 * @see {@link BaseRepeatRangeNode} for additional detail.
 	 */
 	get children(): readonly RepeatInstanceNode[];
 
@@ -25,12 +25,17 @@ export interface RepeatRangeNodeState extends BaseNodeState {
 	get value(): null;
 }
 
-export type RepeatRangeNodeAppearances = NodeAppearances<RepeatRangeDefinition>;
+export type RepeatRangeNodeAppearances = NodeAppearances<AnyRepeatRangeDefinition>;
+
+// prettier-ignore
+export type RepeatRangeCountType =
+	| 'controlled'
+	| 'uncontrolled';
 
 /**
  * Represents a contiguous set of zero or more {@link RepeatInstanceNode}s
  * (accessed by its
- * {@link RepeatRangeNodeState.children | `currentState.children`}).
+ * {@link BaseRepeatRangeNodeState.children | `currentState.children`}).
  *
  * This structure is modeled as a node, like any other, in the web-forms engine
  * representation, which notably differs from the corresponding structure in the
@@ -89,18 +94,15 @@ export type RepeatRangeNodeAppearances = NodeAppearances<RepeatRangeDefinition>;
  * Importantly, if the state of a given repeat range has no instances, no aspect
  * of these repeats will be present in the underlying XForms primary instance
  * state, but the web-forms engine's representations **retains a reference** to
- * its {@link RepeatRangeNode}.
+ * its {@link BaseRepeatRangeNode}.
  */
-export interface RepeatRangeNode extends BaseNode {
+export interface BaseRepeatRangeNode extends BaseNode {
 	readonly nodeType: 'repeat-range';
+	readonly countType: RepeatRangeCountType;
 	readonly appearances: RepeatRangeNodeAppearances;
-	readonly definition: RepeatRangeDefinition;
+	readonly definition: AnyRepeatRangeDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
-	readonly currentState: RepeatRangeNodeState;
+	readonly currentState: BaseRepeatRangeNodeState;
 	readonly validationState: AncestorNodeValidationState;
-
-	addInstances(afterIndex?: number, count?: number): RootNode;
-
-	removeInstances(startIndex: number, count?: number): RootNode;
 }

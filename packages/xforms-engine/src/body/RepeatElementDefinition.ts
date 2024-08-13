@@ -19,11 +19,8 @@ export class RepeatElementDefinition extends BodyElementDefinition<'repeat'> {
 	readonly appearances: StructureElementAppearanceDefinition;
 	override readonly label: LabelDefinition | null;
 
-	// TODO: this will fall into the growing category of non-`BindExpression`
-	// cases which have roughly the same design story.
 	readonly countExpression: string | null;
-
-	readonly isFixedCount: boolean;
+	readonly noAddRemoveExpression: string | null;
 
 	readonly children: BodyElementDefinitionArray;
 
@@ -41,6 +38,7 @@ export class RepeatElementDefinition extends BodyElementDefinition<'repeat'> {
 		this.reference = reference;
 		this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
 		this.countExpression = element.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'count');
+		this.noAddRemoveExpression = element.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'noAddRemove');
 
 		const childElements = Array.from(element.children).filter((childElement) => {
 			const { localName } = childElement;
@@ -50,17 +48,6 @@ export class RepeatElementDefinition extends BodyElementDefinition<'repeat'> {
 		const children = BodyDefinition.getChildElementDefinitions(form, this, element, childElements);
 
 		this.children = children;
-
-		// Spec says this can be either `true()` or `false()`. That said, it
-		// could also presumably be `true ( )` or whatever.
-		const noAddRemove =
-			element
-				.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'noAddRemove')
-				?.trim()
-				.replaceAll(/\s+/g, '') ?? 'false()';
-
-		// TODO: **probably** safe to disregard anything else?
-		this.isFixedCount = noAddRemove === 'true()';
 	}
 
 	override toJSON() {

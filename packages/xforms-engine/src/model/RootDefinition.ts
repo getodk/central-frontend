@@ -90,7 +90,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 			const [firstChild, ...restChildren] = children;
 
 			if (bodyElement?.type === 'repeat') {
-				return new RepeatRangeDefinition(parent, bind, bodyElement, children);
+				return RepeatRangeDefinition.from(parent, bind, bodyElement, children);
 			}
 
 			if (restChildren.length) {

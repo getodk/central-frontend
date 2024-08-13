@@ -1,7 +1,7 @@
 import { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { ChildNodeDefinition, NodeDefinition } from './NodeDefinition.ts';
-import type { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
+import type { AnyRepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 
 export class RepeatInstanceDefinition
 	extends DescendentNodeDefinition<'repeat-instance', RepeatElementDefinition>
@@ -15,7 +15,7 @@ export class RepeatInstanceDefinition
 	readonly defaultValue = null;
 
 	constructor(
-		range: RepeatRangeDefinition,
+		range: AnyRepeatRangeDefinition,
 		readonly node: Element
 	) {
 		const { bind, bodyElement, parent, root } = range;

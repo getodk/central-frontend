@@ -2,8 +2,9 @@ import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
 import type { ModelValueNode } from './ModelValueNode.ts';
 import type { NoteNode } from './NoteNode.ts';
-import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
-import type { RepeatRangeNode } from './RepeatRangeNode.ts';
+import type { ControlledRepeatRangeNode } from './repeat/ControlledRepeatRangeNode.ts';
+import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
+import type { RepeatRangeNode } from './repeat/RepeatRangeNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
 import type { StringNode } from './StringNode.ts';
@@ -20,6 +21,21 @@ export type AnyLeafNode =
 	| AnyControlNode
 	| ModelValueNode;
 
+// prettier-ignore
+export type AnyRepeatRangeNode =
+	| ControlledRepeatRangeNode
+	| RepeatRangeNode;
+
+/**
+ * Any of the concrete node types which may be a parent of non-repeat instance
+ * child nodes.
+ */
+export type GeneralParentNode =
+	| RootNode // eslint-disable-line @typescript-eslint/sort-type-constituents
+	| SubtreeNode
+	| GroupNode
+	| RepeatInstanceNode;
+
 /**
  * Any of the concrete node types which may be a parent of any other node.
  *
@@ -29,12 +45,10 @@ export type AnyLeafNode =
  * - Repeat instances should (continue to) specify {@link RepeatRangeNode}.
  * - All other child nodes should specify {@link GeneralParentNode}.
  */
+// prettier-ignore
 export type AnyParentNode =
-	| RootNode // eslint-disable-line @typescript-eslint/sort-type-constituents
-	| SubtreeNode
-	| GroupNode
-	| RepeatRangeNode
-	| RepeatInstanceNode;
+	| AnyRepeatRangeNode
+	| GeneralParentNode;
 
 /**
  * Any of the concrete node types a client may get from the engine's form
@@ -45,12 +59,6 @@ export type AnyParentNode =
  * @see {@link GeneralChildNode}, which is derived from this type
  */
 export type AnyNode = ExpandUnion<AnyLeafNode | AnyParentNode>;
-
-/**
- * Any of the concrete node types which may be a parent of non-repeat instance
- * child nodes.
- */
-export type GeneralParentNode = Exclude<AnyParentNode, RepeatRangeNode>;
 
 /**
  * Any of the concrete node types which may be a child of any other node.

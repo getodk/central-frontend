@@ -4,7 +4,7 @@ import type {
 	RepeatDefinition,
 	RepeatInstanceNode,
 	RepeatInstanceNodeAppearances,
-} from '../client/RepeatInstanceNode.ts';
+} from '../client/repeat/RepeatInstanceNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -17,7 +17,6 @@ import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedN
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { RepeatRange } from './RepeatRange.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
@@ -25,6 +24,7 @@ import type { AnyChildNode, GeneralChildNode } from './hierarchy.ts';
 import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { RepeatRange } from './RepeatRange.ts';
 
 export type { RepeatDefinition };
 

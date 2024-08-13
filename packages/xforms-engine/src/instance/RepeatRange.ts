@@ -1,6 +1,9 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import type { Accessor } from 'solid-js';
-import type { RepeatRangeNode, RepeatRangeNodeAppearances } from '../client/RepeatRangeNode.ts';
+import type {
+	RepeatRangeNode,
+	RepeatRangeNodeAppearances,
+} from '../client/repeat/RepeatRangeNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -14,16 +17,16 @@ import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedN
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { RepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
-import type { RepeatDefinition } from './RepeatInstance.ts';
-import { RepeatInstance } from './RepeatInstance.ts';
-import type { Root } from './Root.ts';
+import type { UncontrolledRepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
+import type { RepeatDefinition } from './RepeatInstance.ts';
+import { RepeatInstance } from './RepeatInstance.ts';
+import type { Root } from './Root.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
@@ -34,7 +37,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 }
 
 export class RepeatRange
-	extends DescendantNode<RepeatRangeDefinition, RepeatRangeStateSpec, RepeatInstance>
+	extends DescendantNode<UncontrolledRepeatRangeDefinition, RepeatRangeStateSpec, RepeatInstance>
 	implements RepeatRangeNode, EvaluationContext, SubscribableDependency
 {
 	/**
@@ -129,6 +132,7 @@ export class RepeatRange
 
 	// RepeatRangeNode
 	readonly nodeType = 'repeat-range';
+	readonly countType = 'uncontrolled';
 
 	/**
 	 * @todo RepeatRange*, RepeatInstance* (and RepeatTemplate*) all share the
@@ -168,7 +172,7 @@ export class RepeatRange
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
 	readonly validationState: AncestorNodeValidationState;
 
-	constructor(parent: GeneralParentNode, definition: RepeatRangeDefinition) {
+	constructor(parent: GeneralParentNode, definition: UncontrolledRepeatRangeDefinition) {
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;

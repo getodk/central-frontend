@@ -14,6 +14,7 @@ import type { DependencyContext } from './DependencyContext.ts';
 const evaluatorMethodsByResultType = {
 	boolean: 'evaluateBoolean',
 	nodes: 'evaluateNodes',
+	number: 'evaluateNumber',
 	string: 'evaluateString',
 } as const;
 

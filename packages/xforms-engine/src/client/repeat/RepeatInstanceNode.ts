@@ -1,11 +1,11 @@
-import type { RepeatInstanceDefinition } from '../model/RepeatInstanceDefinition.ts';
-import type { RepeatTemplateDefinition } from '../model/RepeatTemplateDefinition.ts';
-import type { BaseNode, BaseNodeState } from './BaseNode.ts';
-import type { NodeAppearances } from './NodeAppearances.ts';
+import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
+import type { RepeatTemplateDefinition } from '../../model/RepeatTemplateDefinition.ts';
+import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
+import type { AnyRepeatRangeNode, GeneralChildNode } from '../hierarchy.ts';
+import type { NodeAppearances } from '../NodeAppearances.ts';
+import type { RootNode } from '../RootNode.ts';
+import type { AncestorNodeValidationState } from '../validation.ts';
 import type { RepeatRangeNode } from './RepeatRangeNode.ts';
-import type { RootNode } from './RootNode.ts';
-import type { GeneralChildNode } from './hierarchy.ts';
-import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RepeatInstanceNodeState extends BaseNodeState {
 	// TODO(?): Previous iteration included an `index` getter here. I don't see it
@@ -40,7 +40,7 @@ export interface RepeatInstanceNode extends BaseNode {
 	 *
 	 * @see {@link RepeatRangeNode} for additional detail.
 	 */
-	readonly parent: RepeatRangeNode;
+	readonly parent: AnyRepeatRangeNode;
 
 	readonly currentState: RepeatInstanceNodeState;
 	readonly validationState: AncestorNodeValidationState;
