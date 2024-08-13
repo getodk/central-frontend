@@ -1,24 +1,30 @@
 <script setup lang="ts">
-import type { RepeatRangeNode } from '@getodk/xforms-engine';
+import type { AnyRepeatRangeNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed } from 'vue';
 import FormPanel from './FormPanel.vue';
 import RepeatInstance from './RepeatInstance.vue';
 
-const props = defineProps<{ node: RepeatRangeNode}>();
+const props = defineProps<{ node: AnyRepeatRangeNode }>();
 
 const label = computed(() => props.node.currentState.label?.asString);
 
 </script>
 <template>
 	<FormPanel :title="label" :no-ui="!label" class="repeat" label-icon="icon-repeat">
-		<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" @remove="node.removeInstances(index)" />
+		<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" />
 
-		<div class="flex justify-content-start flex-wrap">
+		<div
+			v-if="node.countType === 'uncontrolled'"
+			class="flex justify-content-start flex-wrap"
+		>
 			<Button rounded outlined class="btn-add" @click="node.addInstances()">
 				<span class="flex justify-content-center p-button-label" data-pc-section="label">
 					<span class="icon-add" />
-					<span class="btn-add-label">Add {{ label }}</span>
+					<span class="btn-add-label">
+						<!-- TODO: translations -->
+						Add {{ label }}
+					</span>
 				</span>
 			</Button>
 		</div>

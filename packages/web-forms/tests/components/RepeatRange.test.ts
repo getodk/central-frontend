@@ -1,18 +1,22 @@
 import FormGroup from '@/components/FormGroup.vue';
 import RepeatInstance from '@/components/RepeatInstance.vue';
 import RepeatRange from '@/components/RepeatRange.vue';
-import { type RepeatRangeNode } from '@getodk/xforms-engine';
+import type { AnyRepeatRangeNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
-
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (formName: string) => {
 	const xform = await getReactiveForm(`repeats/${formName}`);
+	const [node] = xform.currentState.children;
+
+	assert(node.nodeType === 'repeat-range');
+
+	node satisfies AnyRepeatRangeNode;
 
 	return mount(RepeatRange, {
 		props: {
-			node: xform.currentState.children[0] as RepeatRangeNode,
+			node,
 		},
 		global: globalMountOptions,
 	});

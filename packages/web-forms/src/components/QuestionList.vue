@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GeneralChildNode, GroupNode, AnyControlNode as QuestionNode, RepeatRangeNode } from '@getodk/xforms-engine';
+import type { AnyRepeatRangeNode, GeneralChildNode, GroupNode, AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';
 import RepeatRange from './RepeatRange.vue';
@@ -14,7 +14,7 @@ const isGroupNode = (node: GeneralChildNode): node is GroupNode => {
 	return node.nodeType === 'group';
 };
 
-const isRepeatRangeNode = (node: GeneralChildNode): node is RepeatRangeNode => {
+const isRepeatRangeNode = (node: GeneralChildNode): node is AnyRepeatRangeNode => {
 	return node.nodeType === 'repeat-range';
 };
 </script>
