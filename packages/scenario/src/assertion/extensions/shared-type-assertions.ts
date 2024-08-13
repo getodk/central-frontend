@@ -31,7 +31,8 @@ const nonRootNodeTypes = new Set<NonRootNodeType>([
 	'select',
 	'subtree',
 	'group',
-	'repeat-range',
+	'repeat-range:controlled',
+	'repeat-range:uncontrolled',
 	'repeat-instance',
 ]);
 

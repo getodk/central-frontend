@@ -1,9 +1,9 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type {
 	AnyNode,
-	AnyRepeatRangeNode,
-	ControlledRepeatRangeNode,
+	RepeatRangeControlledNode,
 	RepeatRangeNode,
+	RepeatRangeUncontrolledNode,
 	RootNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
@@ -15,6 +15,7 @@ import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
+import { isRepeatRange } from '../client/predicates.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 import { ImplementationPendingError } from '../error/ImplementationPendingError.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
@@ -662,7 +663,7 @@ export class Scenario {
 	countRepeatInstancesOf(reference: string): number {
 		const node = this.getInstanceNode(reference);
 
-		if (node.nodeType !== 'repeat-range') {
+		if (!isRepeatRange(node)) {
 			return -1;
 		}
 
@@ -715,7 +716,7 @@ export class Scenario {
 		try {
 			const ancestorNode = this.getInstanceNode(positionPredicatedReference);
 
-			if (ancestorNode.nodeType !== 'repeat-range') {
+			if (!isRepeatRange(ancestorNode)) {
 				// eslint-disable-next-line no-console
 				console.trace(
 					'Unexpected position predicate for ancestor reference:',
@@ -769,11 +770,11 @@ export class Scenario {
 	}
 
 	/** @todo this should change when we support `jr:count` */
-	private isCountControlled(node: AnyRepeatRangeNode): node is ControlledRepeatRangeNode {
+	private isCountControlled(node: RepeatRangeNode): node is RepeatRangeControlledNode {
 		return node.definition.bodyElement.countExpression != null;
 	}
 
-	private isClientControlled(node: AnyRepeatRangeNode): node is RepeatRangeNode {
+	private isClientControlled(node: RepeatRangeNode): node is RepeatRangeUncontrolledNode {
 		return !this.isCountControlled(node);
 	}
 
@@ -794,7 +795,7 @@ export class Scenario {
 			return false;
 		}
 
-		if (node.nodeType !== 'repeat-range') {
+		if (!isRepeatRange(node)) {
 			throw new Error(
 				`Expected a repeat range with reference ${repeatRangeReference}, found a node of type ${node.nodeType}`
 			);
