@@ -1,4 +1,4 @@
-import type { GroupNode, RepeatRangeNode } from '@getodk/xforms-engine';
+import type { AnyRepeatRangeNode, GroupNode } from '@getodk/xforms-engine';
 import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
 import { NestedGroupBox } from '../../styled/NestedGroupBox.tsx';
 import { XFormQuestionList } from '../XFormQuestionList.tsx';
@@ -7,10 +7,10 @@ import { XFormGroupLabel } from './XFormGroupLabel.tsx';
 import { XFormRepeatList } from './XFormRepeatList.tsx';
 
 export interface XFormGroupProps {
-	readonly node: GroupNode | RepeatRangeNode;
+	readonly node: AnyRepeatRangeNode | GroupNode;
 }
 
-const repeatNode = (node: GroupNode | RepeatRangeNode): RepeatRangeNode | null => {
+const repeatNode = (node: AnyRepeatRangeNode | GroupNode): AnyRepeatRangeNode | null => {
 	if (node.nodeType === 'repeat-range') {
 		return node;
 	}
@@ -18,7 +18,7 @@ const repeatNode = (node: GroupNode | RepeatRangeNode): RepeatRangeNode | null =
 	return null;
 };
 
-const groupNode = (node: GroupNode | RepeatRangeNode): GroupNode | null => {
+const groupNode = (node: AnyRepeatRangeNode | GroupNode): GroupNode | null => {
 	if (node.nodeType === 'group') {
 		return node;
 	}

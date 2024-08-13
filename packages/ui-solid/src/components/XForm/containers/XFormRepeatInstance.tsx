@@ -1,4 +1,4 @@
-import type { RepeatInstanceNode } from '@getodk/xforms-engine';
+import type { RepeatInstanceNode, RepeatRangeNode } from '@getodk/xforms-engine';
 import { Box, Stack, styled } from '@suid/material';
 import { Show, createSignal } from 'solid-js';
 import { TopLevelRepeatInstance } from '../../styled/TopLevelRepeatInstance.tsx';
@@ -22,6 +22,15 @@ export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 
 		return instance.currentState.label ?? instance.parent.currentState.label;
 	};
+	const uncontrolledRepeatRange = (instance: RepeatInstanceNode): RepeatRangeNode | null => {
+		const { parent } = instance;
+
+		if (parent.countType === 'uncontrolled') {
+			return parent;
+		}
+
+		return null;
+	};
 
 	return (
 		<TopLevelRepeatInstance>
@@ -36,9 +45,19 @@ export const XFormRepeatInstance = (props: XFormRepeatInstanceProps) => {
 						/>
 					)}
 				</Show>
-				<RepeatInstanceOptionsMenuContainer justifySelf="flex-end">
-					<RepeatInstanceOptionsMenu index={props.index} instance={props.instance} />
-				</RepeatInstanceOptionsMenuContainer>
+				<Show when={uncontrolledRepeatRange(props.instance)} keyed={true}>
+					{(range) => {
+						return (
+							<RepeatInstanceOptionsMenuContainer justifySelf="flex-end">
+								<RepeatInstanceOptionsMenu
+									range={range}
+									index={props.index}
+									instance={props.instance}
+								/>
+							</RepeatInstanceOptionsMenuContainer>
+						);
+					}}
+				</Show>
 			</Stack>
 			<Show when={isRepeatInstanceVisible()}>
 				<XFormQuestionList node={props.instance} />

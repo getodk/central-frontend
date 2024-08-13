@@ -1,4 +1,5 @@
 import type {
+	AnyRepeatRangeNode,
 	GeneralChildNode,
 	GroupNode,
 	NoteNode,
@@ -25,7 +26,7 @@ const XFormUnknownElement = (_?: XFormUnknownElementProps) => {
 	return <></>;
 };
 
-type GroupLikeNode = GroupNode | RepeatRangeNode;
+type GroupLikeNode = AnyRepeatRangeNode | GroupNode;
 
 const groupLikeNode = (props: XFormBodyElementProps): GroupLikeNode | null => {
 	const { node } = props;
