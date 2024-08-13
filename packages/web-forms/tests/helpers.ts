@@ -13,6 +13,10 @@ const formFixtures = import.meta.glob<true, 'raw', string>(
 	}
 );
 
+export const getFormXml = (formPath: string): string => {
+	return formFixtures[`../../ui-solid/fixtures/xforms/${formPath}`];
+};
+
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
 	const formXml: string = formFixtures[`../../ui-solid/fixtures/xforms/${formPath}`];
 

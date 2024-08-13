@@ -4,14 +4,19 @@ import { DOMWrapper, mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../helpers';
 
-const mountComponent = async (questionNumber: number) => {
-	const xform = await getReactiveForm('select/1-static-selects.xml');
+const mountComponent = async (
+	questionNumber: number,
+	formPath = 'select/1-static-selects.xml',
+	submitPressed = false
+) => {
+	const xform = await getReactiveForm(formPath);
 
 	const component = mount(SelectControl, {
 		props: {
 			question: xform.currentState.children[questionNumber] as SelectNode,
 		},
-		global: globalMountOptions,
+		global: { ...globalMountOptions, provide: { submitPressed } },
+		attachTo: document.body,
 	});
 
 	return { xform, component };
@@ -52,5 +57,35 @@ describe('SelectControl', () => {
 
 		expect(watermelon.element.checked).toBe(true);
 		expect(peach.element.checked).toBe(false);
+	});
+
+	describe('validation', () => {
+		it('does not show validation message on init', async () => {
+			const { component } = await mountComponent(0);
+			expect(component.get('.validation-message').isVisible()).toBe(false);
+		});
+
+		it('shows validation message for invalid state', async () => {
+			const { component } = await mountComponent(4, 'validation/1-validation.xml');
+			const pakistan = component.find('input[id*=_pk]');
+			await pakistan.setValue();
+			expect(component.get('.validation-message').isVisible()).toBe(true);
+			expect(component.get('.validation-message').text()).toBe('It has to be two');
+		});
+
+		it('hides validation message when user enters a valid value', async () => {
+			const { component } = await mountComponent(4, 'validation/1-validation.xml');
+			const pakistan = component.find('input[id*=_pk]');
+			await pakistan.setValue();
+			const canada = component.find('input[id*=_ca]');
+			await canada.setValue();
+			expect(component.get('.validation-message').text()).toBe('');
+		});
+
+		it('shows validation message on submit pressed even when no interaction is made with the component', async () => {
+			const { component } = await mountComponent(4, 'validation/1-validation.xml', true);
+			expect(component.get('.validation-message').isVisible()).toBe(true);
+			expect(component.get('.validation-message').text()).toBe('Condition not satisfied: required');
+		});
 	});
 });

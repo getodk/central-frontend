@@ -60,7 +60,7 @@
         jr:requiredMsg="jr:itext('/data/profession:jr:requiredMsg')" />
       <bind nodeset="/data/favourite_color" type="string" constraint=". = &quot;red&quot;" />
       <bind nodeset="/data/citizen" type="string" constraint="count-selected(.) = 2"
-        jr:constraintMsg="jr:itext('/data/citizen:jr:constraintMsg')" />
+        jr:constraintMsg="jr:itext('/data/citizen:jr:constraintMsg')" required="true()" />
       <bind nodeset="/data/age" type="string" required="true()"
         constraint=". &gt; 18 and . &lt; 100" jr:constraintMsg="Age has to be between 18 and 100" />
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
