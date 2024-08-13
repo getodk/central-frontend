@@ -45,11 +45,11 @@ const children = computed(() => {
 	}
 });
 
-const menuItems = computed((): MenuItem[] => {
+const menuItems = computed((): MenuItem[] | undefined => {
 	const { parent } = props.instance;
 
-	if (parent.countType === 'controlled') {
-		return [];
+	if (parent.nodeType === 'repeat-range:controlled') {
+		return;
 	}
 
 	return [

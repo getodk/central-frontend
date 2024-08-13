@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { AnyRepeatRangeNode } from '@getodk/xforms-engine';
+import type { RepeatRangeNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed } from 'vue';
 import FormPanel from './FormPanel.vue';
 import RepeatInstance from './RepeatInstance.vue';
 
-const props = defineProps<{ node: AnyRepeatRangeNode }>();
+const props = defineProps<{ node: RepeatRangeNode }>();
 
 const label = computed(() => props.node.currentState.label?.asString);
 
@@ -15,7 +15,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 		<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" />
 
 		<div
-			v-if="node.countType === 'uncontrolled'"
+			v-if="node.nodeType === 'repeat-range:uncontrolled'"
 			class="flex justify-content-start flex-wrap"
 		>
 			<Button rounded outlined class="btn-add" @click="node.addInstances()">
