@@ -1,3 +1,10 @@
+export const textWithout = (wrapper, selector) => {
+  const without = wrapper.element.cloneNode(true);
+  for (const descendant of without.querySelectorAll(selector))
+    descendant.remove();
+  return without.textContent.trim();
+};
+
 // Searches a component for a nav tab whose text matches the specified text. The
 // component must contain a PageBody component.
 // eslint-disable-next-line import/prefer-default-export

@@ -15,6 +15,7 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
+import { textWithout } from '../../util/dom';
 
 const mountComponent = (options = undefined) => {
   const entity = testData.extendedEntities.last();
@@ -25,16 +26,18 @@ const mountComponent = (options = undefined) => {
       entityVersions: testData.extendedEntityVersions.sorted()
     })
   });
+  const entry = testData.extendedAudits.last();
+  const { entityVersions } = container.requestData.localResources;
+  const entityVersion = entry.action === 'entity.create'
+    ? entityVersions[0]
+    : (entry.action === 'entity.update.version'
+      ? last(entityVersions)
+      : undefined);
   return mount(EntityFeedEntry, mergeMountOptions(options, {
     global: {
       provide: { projectId: '1', datasetName: 'trees', uuid: entity.uuid }
     },
-    props: {
-      entry: testData.extendedAudits.last(),
-      entityVersion: testData.extendedEntityVersions.size > 1
-        ? last(container.requestData.localResources.entityVersions)
-        : null
-    },
+    props: { entry, entityVersion },
     container
   }));
 };
@@ -192,7 +195,8 @@ describe('EntityFeedEntry', () => {
       });
 
       it('shows the correct text', () => {
-        const text = mountComponent().get('.feed-entry-title').text();
+        const title = mountComponent().get('.feed-entry-title');
+        const text = textWithout(title, '.entity-version-tag');
         text.should.equal('Created Entity dogwood in trees Entity List');
       });
 
@@ -207,7 +211,8 @@ describe('EntityFeedEntry', () => {
       beforeEach(createEntity);
 
       it('shows the correct text', () => {
-        const text = mountComponent().get('.feed-entry-title').text();
+        const title = mountComponent().get('.feed-entry-title');
+        const text = textWithout(title, '.entity-version-tag');
         text.should.equal('Entity dogwood created by Alice');
       });
 
@@ -275,8 +280,8 @@ describe('EntityFeedEntry', () => {
     });
 
     it('shows the correct text', () => {
-      const component = mountComponent();
-      const text = component.get('.feed-entry-title .title').text();
+      const title = mountComponent().get('.feed-entry-title');
+      const text = textWithout(title, '.entity-version-tag');
       text.should.equal('Data updated by Alice');
     });
 
@@ -334,26 +339,29 @@ describe('EntityFeedEntry', () => {
 
     it('shows the correct text with submission instance ID', () => {
       const component = mountComponent({ props: updateEntityFromSubmission() });
-      const text = component.get('.feed-entry-title .title').text();
+      const title = component.get('.feed-entry-title');
+      const text = textWithout(title, '.entity-version-tag');
       text.should.equal('Data updated by Submission s');
     });
 
     it('shows the correct text with submission instance name', () => {
       const component = mountComponent({ props: updateEntityFromSubmission({ meta: { instanceName: 'Some Name' } }) });
-      const text = component.get('.feed-entry-title  .title').text();
+      const title = component.get('.feed-entry-title');
+      const text = textWithout(title, '.entity-version-tag');
       text.should.equal('Data updated by Submission Some Name');
     });
 
     it('links to the submission', () => {
       const component = mountComponent({ props: updateEntityFromSubmission() });
-      const title = component.get('.feed-entry-title .title');
+      const title = component.get('.feed-entry-title');
       const { to } = title.getComponent(RouterLinkStub).props();
       to.should.equal('/projects/1/forms/f/submissions/s');
     });
 
     it('shows the correct text with deleted submission instance id', () => {
       const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
-      const text = component.get('.feed-entry-title .title').text();
+      const title = component.get('.feed-entry-title');
+      const text = textWithout(title, '.entity-version-tag');
       text.should.equal('Data updated by (deleted Submission s)');
     });
 

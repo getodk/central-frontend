@@ -28,23 +28,37 @@ except according to the terms contained in the LICENSE file.
     <tbody>
       <tr v-if="entityVersion.conflict != null" class="comparing">
         <td>{{ $t('comparing') }}</td>
-        <i18n-t tag="td" keypath="version" v-tooltip.text>
-          <template #version>
-            <span class="version-string">{{ $t('common.versionShort', oldVersion) }}</span>
-          </template>
-          <template #source>
-            <entity-version-link :uuid="uuid" :version="oldVersion"/>
-          </template>
-        </i18n-t>
+        <td>
+          <i18n-t tag="div" keypath="version" v-tooltip.text>
+            <template #version>
+              <span class="version-string">{{ $t('common.versionShort', oldVersion) }}</span>
+            </template>
+            <template #source>
+              <entity-version-link :uuid="uuid" :version="oldVersion"/>
+            </template>
+          </i18n-t>
+        </td>
         <td aria-hidden="true"><span class="icon-arrow-circle-right"></span></td>
-        <i18n-t tag="td" keypath="version" v-tooltip.text>
-          <template #version>
-            <span class="version-string">{{ $t('common.versionShort', entityVersion) }}</span>
-          </template>
-          <template #source>
-            <entity-version-link :uuid="uuid" :version="entityVersion"/>
-          </template>
-        </i18n-t>
+        <td>
+          <i18n-t tag="div" keypath="version" v-tooltip.text>
+            <template #version>
+              <span class="version-string">{{ $t('common.versionShort', entityVersion) }}</span>
+            </template>
+            <template #source>
+              <entity-version-link :uuid="uuid" :version="entityVersion"/>
+            </template>
+          </i18n-t>
+          <div v-if="entityVersion.branch != null" class="offline-update">
+            {{ $t('offlineUpdate') }}
+          </div>
+        </td>
+      </tr>
+      <tr v-if="showsAccuracyWarning" class="entity-diff-table-accuracy-warning">
+        <td colspan="4">
+          <p>
+            <span class="icon-warning"></span>{{ $t('accuracyWarning') }}
+          </p>
+        </td>
       </tr>
       <entity-diff-row v-for="name of diff" :key="name"
         :old-version="oldVersion" :name="name"/>
@@ -69,6 +83,7 @@ const props = defineProps({
     required: true
   }
 });
+const uuid = inject('uuid');
 const entityVersion = inject('entityVersion');
 
 // The component assumes that this data will exist when the component is
@@ -83,7 +98,23 @@ const oldVersion = computed(() => {
   return entityVersions[oldVersionNumber - 1];
 });
 
-const uuid = inject('uuid');
+const showsAccuracyWarning = computed(() =>
+  // serverDiff is always accurate.
+  props.diff === entityVersion.baseDiff &&
+  // If there's no conflict, then there's really only one diff: baseDiff has the
+  // same meaning as serverDiff.
+  entityVersion.conflict != null &&
+  // There's only an issue with offline updates.
+  entityVersion.branch != null &&
+  // There's never an issue with the first update from the branch.
+  entityVersion !== entityVersion.branch.first &&
+  /* If the branch stopped being contiguous before the base version, that means
+  that the base version incorporates an update from outside the branch, which
+  means that baseDiff may differ from the true author's view. It's OK if there
+  was an update from outside the branch between the base version and this
+  version, but it's not OK if there was such an update between the trunk version
+  and the base version. */
+  entityVersion.branch.lastContiguous < entityVersion.baseVersion);
 </script>
 
 <style lang="scss">
@@ -106,12 +137,29 @@ const uuid = inject('uuid');
   tr:first-child td { border-top: none; }
 
   .comparing {
-    td { @include text-overflow-ellipsis; }
+    td > div { @include text-overflow-ellipsis; }
     td:first-child, .version-string { font-weight: bold; }
+  }
+  .offline-update {
+    @include italic;
+    font-size: 12px;
   }
 
   td:nth-child(3) { text-align: center; }
   .icon-arrow-circle-right { color: #888; }
+}
+
+.entity-diff-table-accuracy-warning {
+  p {
+    @include italic;
+    margin-bottom: -2px;
+    margin-top: -2px;
+  }
+
+  .icon-warning {
+    color: $color-warning;
+    margin-right: $margin-right-icon;
+  }
 }
 </style>
 
@@ -130,7 +178,12 @@ const uuid = inject('uuid');
     // {version} is a short identifier of an Entity version, for example, "v3".
     // {source} indicates what created the Entity version, for example,
     // "Update by Alice".
-    "version": "{version} ({source})"
+    "version": "{version} ({source})",
+    // @transifexKey component.EntityFeedEntry.offlineUpdate
+    "offlineUpdate": "Offline update",
+    // The author's view is a comparison between two versions of an Entity, from
+    // the point of view of the data collector (the author).
+    "accuracyWarning": "In this case, the author’s view may not be accurate."
   }
 }
 </i18n>

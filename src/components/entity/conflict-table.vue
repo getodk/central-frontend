@@ -17,7 +17,9 @@ except according to the terms contained in the LICENSE file.
     <table v-else ref="table" class="table">
       <thead>
         <tr>
-          <th ref="firstHeader">{{ $t('common.version') }}</th>
+          <th ref="firstHeader">
+            <span aria-hidden="true">{{ $t('common.version') }}</span>
+          </th>
           <th v-for="version of versions" ref="versionHeaders"
             :key="version.version">
             {{ $t('common.versionShort', version) }}
@@ -60,7 +62,7 @@ except according to the terms contained in the LICENSE file.
             {{ data[name] }}
           </td>
         </tr>
-        <tr>
+        <tr id="entity-conflict-table-status-row">
           <th>{{ $t('common.status') }}</th>
           <td v-for="version of versions" :key="version.version">
             <template v-if="version.version < lastGoodVersion">
@@ -80,6 +82,18 @@ except according to the terms contained in the LICENSE file.
               <span class="sr-only">{{ $t('status.hardConflict') }}</span>
             </template>
           </td>
+        </tr>
+        <tr v-if="branches.size !== 0" id="entity-conflict-table-branch-row">
+          <th>
+            <span class="sr-only">{{ $t('offlineUpdate') }}</span>
+          </th>
+          <template v-for="version of versions" :key="version.version">
+            <td v-if="!branches.has(version.branch)"></td>
+            <td v-else-if="version === version.branch.first"
+              :colspan="version.branch.length">
+              <div v-tooltip.text>{{ $t('branch') }}</div>
+            </td>
+          </template>
         </tr>
       </tbody>
     </table>
@@ -116,17 +130,31 @@ const summary = computed(() => {
   let lastGoodVersion;
   // The keys of dataReceived from each unresolved conflict
   const allReceived = new Set();
-  for (const version of props.versions) {
+  // Offline branches to show in the table
+  const branches = new Set();
+  for (const [i, version] of props.versions.entries()) {
     if (version.lastGoodVersion) lastGoodVersion = version.version;
 
     if (version.conflict != null && !version.resolved) {
       for (const name of Object.keys(version.dataReceived))
         allReceived.add(name);
     }
+
+    const { branch } = version;
+    if (branch != null && version === branch.first && branch.length !== 1) {
+      // We only show the branch if it is contiguous, and if all the versions
+      // from the branch are shown in the table. lastIndex is the expected index
+      // of the last version from the branch if both those conditions are true.
+      const lastIndex = i + branch.length - 1;
+      if (lastIndex < props.versions.length &&
+        props.versions[lastIndex] === branch.last)
+        branches.add(branch);
+    }
   }
-  return { lastGoodVersion, allReceived };
+  return { lastGoodVersion, allReceived, branches };
 });
 const lastGoodVersion = computed(() => summary.value.lastGoodVersion);
+const branches = computed(() => summary.value.branches);
 
 // Property names
 // The component assumes that this data will exist when the component is
@@ -221,9 +249,12 @@ defineExpose({ resize });
   thead th { font-size: 14px; }
   th:first-child { text-align: right; }
 
-  tbody tr {
-    background-color: $background-color-feed-entry;
-    &:first-child, &:nth-child(2), &:last-child { background-color: #f4f4f4; }
+  tbody tr { background-color: $background-color-feed-entry; }
+  tbody tr:first-child,
+  tr:nth-child(2),
+  #entity-conflict-table-status-row,
+  #entity-conflict-table-branch-row {
+    background-color: #f4f4f4;
   }
 
   th, td { @include text-overflow-ellipsis; }
@@ -234,9 +265,6 @@ defineExpose({ resize });
       padding-bottom: 12px;
       padding-top: 12px;
     }
-  }
-  tbody tr:last-child {
-    th, td { padding-bottom: 15px; }
   }
 
   .label-header, .property-name {
@@ -260,6 +288,34 @@ defineExpose({ resize });
   .icon-check-circle { color: $color-success; }
   .icon-question-circle { color: $color-warning-dark; }
   .icon-warning { color: $color-danger-dark; }
+}
+
+#entity-conflict-table #entity-conflict-table-status-row {
+  th, td { padding-bottom: 15px; }
+  &:nth-last-child(2) {
+    th, td { padding-bottom: 0; }
+  }
+}
+
+#entity-conflict-table-branch-row {
+  th, td {
+    border-top: none;
+
+    // Increase selector specificity in order to override styles above.
+    #entity-conflict-table & {
+      padding-bottom: 4px;
+      padding-top: 4px;
+    }
+  }
+
+  td > div {
+    @include text-overflow-ellipsis;
+    background-color: #888;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    padding: 1px 3px;
+  }
 }
 </style>
 
@@ -285,7 +341,11 @@ defineExpose({ resize });
       "lastGoodVersion": "This is the most recent version in good agreement. After this update, potentially conflicting updates have been made in parallel.",
       "softConflict": "This version may have been made based on old data.",
       "hardConflict": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
-    }
+    },
+    // @transifexKey component.EntityFeedEntry.offlineUpdate
+    "offlineUpdate": "Offline update",
+    // A chain of updates that were made offline
+    "branch": "Offline update chain"
   }
 }
 </i18n>

@@ -66,6 +66,7 @@ const props = defineProps({
   // Indicates whether the user is able to hide the modal by clicking ×,
   // pressing escape, or clicking outside the modal.
   hideable: Boolean,
+  // 'normal', 'large', or 'full'
   size: {
     type: String,
     default: 'normal'

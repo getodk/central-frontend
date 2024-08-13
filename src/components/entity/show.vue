@@ -27,7 +27,8 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="col-xs-8">
           <entity-activity @delete="deleteModal.show()"
-            @resolve="fetchActivityData"/>
+            @resolve="fetchActivityData"
+            @branch-data="branchData.show({ highlight: $event })"/>
         </div>
       </div>
     </page-body>
@@ -39,6 +40,7 @@ except according to the terms contained in the LICENSE file.
       :label="entity.dataExists ? entity.currentVersion.label : ''"
       :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
       @delete="requestDelete"/>
+    <entity-branch-data v-bind="branchData" @hide="branchData.hide()"/>
   </div>
 </template>
 
@@ -49,6 +51,7 @@ import { useRouter } from 'vue-router';
 
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
+import EntityBranchData from './branch-data.vue';
 import EntityData from './data.vue';
 import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
@@ -153,6 +156,8 @@ const requestDelete = () => {
     })
     .catch(noop);
 };
+
+const branchData = modalData();
 </script>
 
 <i18n lang="json5">
