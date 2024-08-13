@@ -1,12 +1,15 @@
 import type { Group } from './Group.ts';
 import type { ModelValue } from './ModelValue.ts';
 import type { Note } from './Note.ts';
-import type { RepeatInstance } from './RepeatInstance.ts';
-import type { RepeatRange } from './RepeatRange.ts';
+import type { RepeatInstance } from './repeat/RepeatInstance.ts';
+import type { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
+import type { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { Root } from './Root.ts';
 import type { SelectField } from './SelectField.ts';
 import type { StringField } from './StringField.ts';
 import type { Subtree } from './Subtree.ts';
+
+export type RepeatRange = RepeatRangeControlled | RepeatRangeUncontrolled;
 
 // prettier-ignore
 export type AnyNode =

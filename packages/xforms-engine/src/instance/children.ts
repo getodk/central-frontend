@@ -8,7 +8,8 @@ import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import { ModelValue, type ModelValueDefinition } from './ModelValue.ts';
 import { Note } from './Note.ts';
-import { RepeatRange } from './RepeatRange.ts';
+import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
+import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { SelectFieldDefinition } from './SelectField.ts';
 import { SelectField } from './SelectField.ts';
 import type { StringFieldDefinition } from './StringField.ts';
@@ -55,10 +56,10 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 
 			case 'repeat-range': {
 				if (child.isControlled()) {
-					throw new Error('TODO');
+					return new RepeatRangeControlled(parent, child);
 				}
 
-				return new RepeatRange(parent, child);
+				return new RepeatRangeUncontrolled(parent, child);
 			}
 
 			case 'leaf-node': {

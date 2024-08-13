@@ -1,30 +1,34 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
-import type { Accessor } from 'solid-js';
-import type { RepeatRangeNodeAppearances } from '../client/repeat/BaseRepeatRangeNode.ts';
-import type { RepeatRangeUncontrolledNode } from '../client/repeat/RepeatRangeUncontrolledNode.ts';
-import type { TextRange } from '../client/TextRange.ts';
-import type { AncestorNodeValidationState } from '../client/validation.ts';
-import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
-import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
-import { createComputedExpression } from '../lib/reactivity/createComputedExpression.ts';
-import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
-import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
-import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
-import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
-import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
-import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { UncontrolledRepeatRangeDefinition } from '../model/RepeatRangeDefinition.ts';
-import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
-import { DescendantNode } from './abstract/DescendantNode.ts';
-import type { GeneralParentNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
-import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
-import type { RepeatDefinition } from './RepeatInstance.ts';
-import { RepeatInstance } from './RepeatInstance.ts';
-import type { Root } from './Root.ts';
+import { untrack, type Accessor } from 'solid-js';
+import type { NodeAppearances } from '../../client/NodeAppearances.ts';
+import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
+import type { TextRange } from '../../client/TextRange.ts';
+import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
+import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
+import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
+import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
+import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
+import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
+import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createSharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createNodeLabel } from '../../lib/reactivity/text/createNodeLabel.ts';
+import type {
+	AnyRepeatRangeDefinition,
+	ControlledRepeatRangeDefinition,
+} from '../../model/RepeatRangeDefinition.ts';
+import type {
+	AnyDescendantNode,
+	DescendantNodeParent,
+	DescendantNodeSharedStateSpec,
+} from '../abstract/DescendantNode.ts';
+import { DescendantNode } from '../abstract/DescendantNode.ts';
+import type { RepeatRange } from '../hierarchy.ts';
+import type { NodeID } from '../identity.ts';
+import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
+import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
@@ -34,9 +38,15 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly value: null;
 }
 
-export class RepeatRange
-	extends DescendantNode<UncontrolledRepeatRangeDefinition, RepeatRangeStateSpec, RepeatInstance>
-	implements RepeatRangeUncontrolledNode, EvaluationContext, SubscribableDependency
+// prettier-ignore
+type BaseRepeatRangeNodeType<Definition extends AnyRepeatRangeDefinition> =
+	Definition extends ControlledRepeatRangeDefinition
+		? 'repeat-range:controlled'
+		: 'repeat-range:uncontrolled';
+
+export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinition>
+	extends DescendantNode<Definition, RepeatRangeStateSpec, RepeatInstance>
+	implements BaseRepeatRangeNode, EvaluationContext, SubscribableDependency
 {
 	/**
 	 * A repeat range doesn't have a corresponding primary instance element of its
@@ -60,14 +70,24 @@ export class RepeatRange
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/Range | DOM Range}
 	 * instead?
 	 */
-	private readonly anchorNode: Comment;
+	protected readonly anchorNode: Comment;
 
-	private readonly childrenState: ChildrenState<RepeatInstance>;
+	protected readonly childrenState: ChildrenState<RepeatInstance>;
+
+	protected readonly emptyRangeEvaluationContext: EvaluationContext & {
+		readonly contextNode: Comment;
+	};
+
+	/**
+	 * @see {@link isSelfRelevant}
+	 */
+	protected readonly isEmptyRangeSelfRelevant: Accessor<boolean>;
 
 	// InstanceNode
 	protected readonly state: SharedNodeState<RepeatRangeStateSpec>;
 	protected override engineState: EngineState<RepeatRangeStateSpec>;
 
+	// DescendantNode
 	/**
 	 * @todo Should we special case repeat `readonly` state the same way
 	 * we do for `relevant`?
@@ -75,15 +95,6 @@ export class RepeatRange
 	 * @see {@link isSelfRelevant}
 	 */
 	declare isSelfReadonly: Accessor<boolean>;
-
-	private readonly emptyRangeEvaluationContext: EvaluationContext & {
-		readonly contextNode: Comment;
-	};
-
-	/**
-	 * @see {@link isSelfRelevant}
-	 */
-	private readonly isEmptyRangeSelfRelevant: Accessor<boolean>;
 
 	/**
 	 * A repeat range does not exist in the primary instance tree. A `relevant`
@@ -128,8 +139,8 @@ export class RepeatRange
 		return this.isEmptyRangeSelfRelevant();
 	};
 
-	// RepeatRangeNode
-	readonly nodeType = 'repeat-range:uncontrolled';
+	// BaseRepeatRangeNode
+	abstract override readonly nodeType: BaseRepeatRangeNodeType<Definition>;
 
 	/**
 	 * @todo RepeatRange*, RepeatInstance* (and RepeatTemplate*) all share the
@@ -164,17 +175,18 @@ export class RepeatRange
 	 * All of the above creates considerable ambiguity about where "repeat
 	 * appearances" should apply, under which circumstances.
 	 */
-	readonly appearances: RepeatRangeNodeAppearances;
+	abstract override readonly appearances: NodeAppearances<Definition>;
 
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
-	readonly validationState: AncestorNodeValidationState;
 
-	constructor(parent: GeneralParentNode, definition: UncontrolledRepeatRangeDefinition) {
+	abstract override readonly validationState: AncestorNodeValidationState;
+
+	constructor(parent: DescendantNodeParent<Definition>, definition: Definition) {
 		super(parent, definition);
 
-		this.appearances = definition.bodyElement.appearances;
+		const repeatRange = this as AnyDescendantNode as RepeatRange;
 
-		const childrenState = createChildrenState<RepeatRange, RepeatInstance>(this);
+		const childrenState = createChildrenState<RepeatRange, RepeatInstance>(repeatRange);
 
 		this.childrenState = childrenState;
 
@@ -191,7 +203,7 @@ export class RepeatRange
 			contextNode: this.anchorNode,
 
 			getSubscribableDependenciesByReference: (reference) => {
-				return this.getSubscribableDependenciesByReference(reference);
+				return repeatRange.getSubscribableDependenciesByReference(reference);
 			},
 		};
 
@@ -228,16 +240,9 @@ export class RepeatRange
 			state.currentState,
 			childrenState
 		);
-
-		definition.instances.forEach((instanceDefinition, index) => {
-			const afterIndex = index - 1;
-
-			this.addInstances(afterIndex, 1, instanceDefinition);
-		});
-		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 	}
 
-	private getLastIndex(): number {
+	protected getLastIndex(): number {
 		return this.engineState.children.length - 1;
 	}
 
@@ -249,66 +254,59 @@ export class RepeatRange
 		return this.engineState.children.indexOf(instance.nodeId);
 	}
 
-	addInstances(
-		afterIndex = this.getLastIndex(),
-		count = 1,
-		definition: RepeatDefinition = this.definition.template
-	): Root {
+	private createChildren(
+		afterIndex: number,
+		definitions: readonly RepeatDefinition[]
+	): readonly RepeatInstance[] {
 		return this.scope.runTask(() => {
-			let precedingInstance: RepeatInstance | null;
+			let initialPrecedingInstance: RepeatInstance | null;
 
 			if (afterIndex === -1) {
-				precedingInstance = null;
+				initialPrecedingInstance = null;
 			} else {
-				const instance = this.childrenState.getChildren()[afterIndex];
+				const instance = untrack(() => this.childrenState.getChildren()[afterIndex]);
 
 				if (instance == null) {
 					throw new Error(`No repeat instance at index ${afterIndex}`);
 				}
 
-				precedingInstance = instance;
+				initialPrecedingInstance = instance;
 			}
 
-			const precedingPrimaryInstanceNode = precedingInstance?.contextNode ?? this.anchorNode;
+			const repeatRange = this as AnyDescendantNode as RepeatRange;
 
-			const newInstance = new RepeatInstance(this, definition, {
-				precedingPrimaryInstanceNode,
-				precedingInstance,
-			});
-			const initialIndex = afterIndex + 1;
+			return definitions.reduce<RepeatInstance[]>((acc, definition) => {
+				const precedingInstance = acc[acc.length - 1] ?? initialPrecedingInstance;
+				const precedingPrimaryInstanceNode = precedingInstance?.contextNode ?? this.anchorNode;
+				const newInstance = new RepeatInstance(repeatRange, definition, {
+					precedingPrimaryInstanceNode,
+					precedingInstance,
+				});
 
-			this.childrenState.setChildren((currentInstances) => {
-				return insertAtIndex(currentInstances, initialIndex, newInstance);
-			});
+				acc.push(newInstance);
 
-			if (count > 1) {
-				return this.addInstances(initialIndex, count - 1);
-			}
-
-			return this.root;
+				return acc;
+			}, []);
 		});
 	}
 
-	/**
-	 * Removes the {@link RepeatInstance}s corresponding to the specified range of
-	 * indexes, and then removes those repeat instances from the repeat range's
-	 * own children state in that order:
-	 *
-	 * 1. Identify the set of {@link RepeatInstance}s to be removed.
-	 *
-	 * 2. For each {@link RepeatInstance} pending removal, perform that node's
-	 *    removal logic. @see {@link RepeatInstance.remove} for more detail.
-	 *
-	 * 3. Finalize update to the repeat range's own {@link childrenState},
-	 *    omitting those {@link RepeatInstance}s which were removed.
-	 *
-	 * This ordering ensures a consistent representation of state is established
-	 * prior to any downstream reactive updates, and ensures that removed nodes'
-	 * reactivity is cleaned up.
-	 */
-	removeInstances(startIndex: number, count = 1): Root {
+	protected addChildren(
+		afterIndex: number,
+		definitions: readonly RepeatDefinition[]
+	): readonly RepeatInstance[] {
 		return this.scope.runTask(() => {
-			this.childrenState.setChildren((currentInstances) => {
+			const initialIndex = afterIndex + 1;
+			const newInstances = this.createChildren(afterIndex, definitions);
+
+			return this.childrenState.setChildren((currentInstances) => {
+				return insertAtIndex(currentInstances, initialIndex, newInstances);
+			});
+		});
+	}
+
+	protected removeChildren(startIndex: number, count: number): readonly RepeatInstance[] {
+		return this.scope.runTask(() => {
+			return this.childrenState.setChildren((currentInstances) => {
 				const updatedInstances = currentInstances.slice();
 				const removedInstances = updatedInstances.splice(startIndex, count);
 
@@ -318,8 +316,6 @@ export class RepeatRange
 
 				return updatedInstances;
 			});
-
-			return this.root;
 		});
 	}
 

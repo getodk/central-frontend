@@ -4,27 +4,27 @@ import type {
 	RepeatDefinition,
 	RepeatInstanceNode,
 	RepeatInstanceNodeAppearances,
-} from '../client/repeat/RepeatInstanceNode.ts';
-import type { TextRange } from '../client/TextRange.ts';
-import type { AncestorNodeValidationState } from '../client/validation.ts';
-import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
-import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
-import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
-import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
-import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
-import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
-import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
-import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
-import { DescendantNode } from './abstract/DescendantNode.ts';
-import { buildChildren } from './children.ts';
-import type { AnyChildNode, GeneralChildNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
-import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
-import type { RepeatRange } from './RepeatRange.ts';
+} from '../../client/repeat/RepeatInstanceNode.ts';
+import type { TextRange } from '../../client/TextRange.ts';
+import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
+import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
+import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
+import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
+import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
+import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createSharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createNodeLabel } from '../../lib/reactivity/text/createNodeLabel.ts';
+import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
+import type { DescendantNodeSharedStateSpec } from '../abstract/DescendantNode.ts';
+import { DescendantNode } from '../abstract/DescendantNode.ts';
+import { buildChildren } from '../children.ts';
+import type { AnyChildNode, GeneralChildNode, RepeatRange } from '../hierarchy.ts';
+import type { NodeID } from '../identity.ts';
+import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
+import type { RepeatRangeUncontrolled } from './RepeatRangeUncontrolled.ts';
 
 export type { RepeatDefinition };
 
@@ -204,7 +204,7 @@ export class RepeatInstance
 	 *    {@link DescendantNode.remove}.
 	 *
 	 * These removal steps **must also** occur before any update to the parent
-	 * {@link RepeatRange}'s reactive children state.
+	 * {@link RepeatRangeUncontrolled}'s reactive children state.
 	 */
 	override remove(this: AnyChildNode): void {
 		this.contextNode.remove();

@@ -1,7 +1,7 @@
 export const insertAtIndex = <T>(
 	currentValues: readonly T[],
 	insertionIndex: number,
-	newValue: T
+	newValues: readonly T[]
 ): readonly T[] => {
 	const { length } = currentValues;
 
@@ -12,12 +12,12 @@ export const insertAtIndex = <T>(
 	}
 
 	if (insertionIndex === length) {
-		return currentValues.concat(newValue);
+		return currentValues.concat(newValues);
 	}
 
 	return [
 		...currentValues.slice(0, insertionIndex),
-		newValue,
+		...newValues,
 		...currentValues.slice(insertionIndex),
 	];
 };
