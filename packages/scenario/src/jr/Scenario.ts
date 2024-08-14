@@ -472,13 +472,8 @@ export class Scenario {
 
 		const { node } = event;
 
-		// TODO: we should probably remove this when we add support for `jr:count`
-		// and `jr:noAddRemove`. There will likely be other, engine/client API-level
-		// restrictions which address this. For now, this is intended to ensure that
-		// we don't mistakenly introduce new explicit repeat creation calls where
-		// the repeat under test is count/fixed.
-		if (!this.proposed_canCreateNewRepeat(repeatReference)) {
-			throw new Error(`Repeat is/will be engine controlled: ${repeatReference}`);
+		if (!this.isClientControlled(node)) {
+			throw new Error(`Repeat is engine controlled: ${repeatReference}`);
 		}
 
 		const { reference } = node.currentState;
@@ -769,7 +764,6 @@ export class Scenario {
 		return;
 	}
 
-	/** @todo this should change when we support `jr:count` */
 	private isCountControlled(node: RepeatRangeNode): node is RepeatRangeControlledNode {
 		return node.definition.bodyElement.countExpression != null;
 	}
