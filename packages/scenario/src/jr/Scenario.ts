@@ -723,7 +723,7 @@ export class Scenario {
 				return;
 			}
 
-			if (!this.proposed_canCreateNewRepeat(positionPredicatedReference)) {
+			if (!this.proposed_canCreateOrRemoveRepeat(positionPredicatedReference)) {
 				return;
 			}
 
@@ -765,7 +765,7 @@ export class Scenario {
 	}
 
 	private isCountControlled(node: RepeatRangeNode): node is RepeatRangeControlledNode {
-		return node.definition.bodyElement.countExpression != null;
+		return node.nodeType === 'repeat-range:controlled';
 	}
 
 	private isClientControlled(node: RepeatRangeNode): node is RepeatRangeUncontrolledNode {
@@ -782,7 +782,7 @@ export class Scenario {
 	 * question "can I create a repeat instance in this specified
 	 * range/sequence/series?"
 	 */
-	proposed_canCreateNewRepeat(repeatRangeReference: string): boolean {
+	proposed_canCreateOrRemoveRepeat(repeatRangeReference: string): boolean {
 		const node = getNodeForReference(this.instanceRoot, repeatRangeReference);
 
 		if (node == null) {
