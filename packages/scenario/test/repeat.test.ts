@@ -14,7 +14,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { booleanAnswer } from '../src/answer/ExpectedBooleanAnswer.ts';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
@@ -2691,6 +2691,325 @@ describe('Tests ported from JavaRosa - repeats', () => {
 					expect(scenario.answerOf('/test/count_non_empty_value')).toEqualAnswer(intAnswer(2));
 				});
 			});
+		});
+	});
+});
+
+describe('jr:count', () => {
+	describe('static values', () => {
+		interface ConstantValueCase {
+			readonly constantValue: boolean | number | string;
+			readonly expected: number;
+		}
+
+		it.each<ConstantValueCase>([
+			{ constantValue: 1, expected: 1 },
+			{ constantValue: 5, expected: 5 },
+			{ constantValue: '12', expected: 12 },
+			{ constantValue: true, expected: 1 },
+			{ constantValue: false, expected: 0 },
+		])(
+			'produces $expected repeat instances for a count computed to $constantValue',
+			async ({ constantValue: staticValue, expected }) => {
+				let calculateExpression: string;
+
+				switch (typeof staticValue) {
+					case 'boolean':
+						// eslint-disable-next-line no-console
+						console.warn(
+							'TODO: this cast should not be necessary when we properly support non-string data types!'
+						);
+
+						calculateExpression = `number(${staticValue}())`;
+						break;
+
+					case 'number':
+						calculateExpression = `${staticValue}`;
+						break;
+
+					case 'string': {
+						const numericString = Number(staticValue);
+
+						expect(numericString).not.toBeNaN();
+
+						calculateExpression = `'${staticValue}'`;
+						break;
+					}
+
+					default:
+						throw new Error(`Unexpected constant value of type ${typeof staticValue}`);
+				}
+
+				const scenario = await Scenario.init(
+					'Constant count value',
+					// prettier-ignore
+					html(
+						head(
+							title('Constant count value'),
+							model(
+								mainInstance(
+									t(
+										'data id="repeat-count-constant-value"',
+										t('rep-count'),
+										t('rep',
+											t('quest')))
+								),
+								bind('/data/rep-count').type('int').calculate(calculateExpression),
+								bind('/data/rep/quest').type('string')
+							)
+						),
+						body(
+							input('/data/rep-count'),
+							repeat('/data/rep', '/data/rep-count',
+								input('/data/rep/quest')
+							)
+						)
+					)
+				);
+
+				expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(expected);
+			}
+		);
+	});
+
+	describe('count controlled by direct reference', () => {
+		const maxCount = 50;
+
+		let scenario: Scenario;
+		let initialCount: number;
+
+		const randomCount = () => {
+			return Math.floor(Math.random() * maxCount);
+		};
+
+		beforeEach(async () => {
+			initialCount = randomCount();
+
+			scenario = await Scenario.init(
+				'Direct reference count updates',
+				// prettier-ignore
+				html(
+					head(
+						title('Direct reference count updates'),
+						model(
+							mainInstance(
+								t(
+									'data id="direct-reference-count-updates"',
+									t('rep-count', String(initialCount)),
+									t('rep',
+										t('quest')))
+							),
+							bind('/data/rep-count'),
+							bind('/data/rep/quest').type('string')
+						)
+					),
+					body(
+						input('/data/rep-count'),
+						repeat('/data/rep', '/data/rep-count',
+							input('/data/rep/quest')
+						)
+					)
+				)
+			);
+		});
+
+		it('sets the initial count based on the default value', () => {
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount);
+		});
+
+		it('updates based on changes to the directly referenced question', () => {
+			let previousCount = initialCount;
+
+			for (let i = 0; i < 5; i += 1) {
+				let updatedCount: number;
+
+				do {
+					updatedCount = randomCount();
+				} while (updatedCount === previousCount);
+
+				scenario.answer('/data/rep-count', updatedCount);
+
+				expect(scenario.countRepeatInstancesOf('/data/rep')).not.toBe(previousCount);
+				expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(updatedCount);
+
+				previousCount = updatedCount;
+			}
+		});
+
+		it('delays updating count when expression produces blank value', () => {
+			scenario.answer('/data/rep-count', '');
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount);
+
+			scenario.answer('/data/rep-count', initialCount + 1);
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount + 1);
+
+			scenario.answer('/data/rep-count', '');
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount + 1);
+		});
+	});
+
+	describe('indirect computations', () => {
+		let scenario: Scenario;
+
+		beforeEach(async () => {
+			scenario = await Scenario.init(
+				'Direct reference count updates',
+				// prettier-ignore
+				html(
+					head(
+						title('Direct reference count updates'),
+						model(
+							mainInstance(
+								t(
+									'data id="direct-reference-count-updates"',
+									t('a-relevant', 'yes'),
+									t('a'),
+									t('b'),
+									t('c'),
+									t('rep-count'),
+									t('rep',
+										t('quest')))
+							),
+							bind('/data/a-relevant'),
+							bind('/data/a').relevant("/data/a-relevant = 'yes'"),
+							bind('/data/b'),
+							bind('/data/c'),
+							bind('/data/rep-count').calculate('coalesce(/data/a, /data/b + /data/c)'),
+							bind('/data/rep/quest').type('string')
+						)
+					),
+					body(
+						input('/data/a-relevant'),
+						input('/data/a'),
+						input('/data/b'),
+						input('/data/c'),
+						input('/data/rep-count'),
+						repeat('/data/rep', '/data/rep-count',
+							input('/data/rep/quest')
+						)
+					)
+				)
+			);
+		});
+
+		it('updates count based on a single reference', () => {
+			scenario.answer('/data/a', 2);
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(2);
+		});
+
+		it('updates count based on multiple references', () => {
+			// Gut check: initial reference to /data/a is effective
+			scenario.answer('/data/a', 3);
+			expect(scenario.getInstanceNode('/data/a')).toBeRelevant();
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(3);
+
+			// Set /data/b and /data/c, which will be added for count when /data/a
+			// becomes non-relevant
+			scenario.answer('/data/b', 4);
+			scenario.answer('/data/c', 5);
+
+			// Gut check: repeat count hasn't yet changed, /data/a is still relevant
+			expect(scenario.getInstanceNode('/data/a')).toBeRelevant();
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(3);
+
+			// Make /data/a non-relevant to coalesce to the b + c sub-expression
+			scenario.answer('/data/a-relevant', 'no');
+			// Gut check: non-relevance
+			expect(scenario.getInstanceNode('/data/a')).toBeNonRelevant();
+
+			// Ensure count is updated to reflect /data/a's non-relevance
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
+
+			// Check that subsequent updates to b + c are reflected as well
+			scenario.answer('/data/b', 2);
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(7);
+
+			scenario.answer('/data/c', 3);
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(5);
+
+			// Restore /data/a relevance, and its referenced value as count
+			scenario.answer('/data/a-relevant', 'yes');
+
+			expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(3);
+		});
+	});
+
+	describe('form-defined repeat instance defaults', () => {
+		let scenario: Scenario;
+
+		beforeEach(async () => {
+			scenario = await Scenario.init(
+				'Direct reference count updates',
+				// prettier-ignore
+				html(
+					head(
+						title('Direct reference count updates'),
+						model(
+							mainInstance(
+								t(
+									'data id="direct-reference-count-updates"',
+									t('rep-count', '0'),
+									t('rep jr:template=""',
+										t('quest', 'template default value'),
+										t('calc', 'template default (overwritten by calculate)')),
+									t('rep',
+										t('quest', 'first default value'),
+										t('calc', 'first default (overwritten by calculate)')),
+									t('rep',
+										t('quest', 'second default value'),
+										t('calc', 'second default (overwritten by calculate)')))
+							),
+							bind('/data/rep-count'),
+							bind('/data/rep/quest').type('string'),
+							bind('/data/rep/calc').calculate('position(..) * 2')
+						)
+					),
+					body(
+						input('/data/rep-count'),
+						repeat('/data/rep', '/data/rep-count',
+							input('/data/rep/quest'),
+							input('/data/rep/calc')
+						)
+					)
+				)
+			);
+		});
+
+		it('defines count-controlled repeat instances from form-defined defaults where available at that position', () => {
+			scenario.answer('/data/rep-count', 2);
+
+			expect(scenario.answerOf('/data/rep[1]/quest')).toEqualAnswer(
+				stringAnswer('first default value')
+			);
+			expect(scenario.answerOf('/data/rep[2]/quest')).toEqualAnswer(
+				stringAnswer('second default value')
+			);
+		});
+
+		it('defines instances from the repeat template after the last form-defined default position', () => {
+			scenario.answer('/data/rep-count', 4);
+
+			expect(scenario.answerOf('/data/rep[3]/quest')).toEqualAnswer(
+				stringAnswer('template default value')
+			);
+			expect(scenario.answerOf('/data/rep[4]/quest')).toEqualAnswer(
+				stringAnswer('template default value')
+			);
+		});
+
+		it('overwrites all defaults by calculated values based on position', () => {
+			scenario.answer('/data/rep-count', 4);
+
+			expect(scenario.answerOf('/data/rep[1]/calc')).toEqualAnswer(intAnswer(2));
+			expect(scenario.answerOf('/data/rep[2]/calc')).toEqualAnswer(intAnswer(4));
+			expect(scenario.answerOf('/data/rep[3]/calc')).toEqualAnswer(intAnswer(6));
+			expect(scenario.answerOf('/data/rep[4]/calc')).toEqualAnswer(intAnswer(8));
 		});
 	});
 });
