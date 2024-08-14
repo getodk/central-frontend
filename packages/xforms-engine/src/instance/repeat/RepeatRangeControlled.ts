@@ -46,7 +46,15 @@ export class RepeatRangeControlled
 					currentCount = 0;
 				}
 
-				if (Number.isNaN(currentCount) || currentCount === previousCount) {
+				if (
+					currentCount === previousCount ||
+					// TODO: the intent of this check is to defer a count update when the
+					// count expression produces a blank value. This "feels right" when
+					// the count is directly controlled by the user (i.e. entering a
+					// number in an input), but probably does not make sense in every
+					// scenario! For instance, when a referenced node's relevance changes.
+					Number.isNaN(currentCount)
+				) {
 					return previousCount;
 				}
 
