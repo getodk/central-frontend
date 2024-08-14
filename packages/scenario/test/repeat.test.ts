@@ -2063,7 +2063,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				scenario.next('/data/outer[1]');
 				scenario.removeRepeat('/data/outer[1]');
 
-				expect(scenario.proposed_canCreateNewRepeat('/data/outer[1]/inner')).toBe(false);
+				expect(scenario.proposed_canCreateOrRemoveRepeat('/data/outer[1]/inner')).toBe(false);
 			});
 		});
 	});
@@ -3011,5 +3011,112 @@ describe('jr:count', () => {
 			expect(scenario.answerOf('/data/rep[3]/calc')).toEqualAnswer(intAnswer(6));
 			expect(scenario.answerOf('/data/rep[4]/calc')).toEqualAnswer(intAnswer(8));
 		});
+	});
+
+	describe('control of count by engine', () => {
+		let scenario: Scenario;
+
+		beforeEach(async () => {
+			scenario = await Scenario.init(
+				'Direct reference count updates',
+				// prettier-ignore
+				html(
+					head(
+						title('Direct reference count updates'),
+						model(
+							mainInstance(
+								t(
+									'data id="direct-reference-count-updates"',
+									t('rep-count', '2'),
+									t('rep',
+										t('quest')))
+							),
+							bind('/data/rep-count'),
+							bind('/data/rep/quest').type('string')
+						)
+					),
+					body(
+						input('/data/rep-count'),
+						repeat('/data/rep', '/data/rep-count',
+							input('/data/rep/quest')
+						)
+					)
+				)
+			);
+		});
+
+		it('does not allow a client (user) to add or remove instances of a count-controlled repeat', () => {
+			expect(scenario.proposed_canCreateOrRemoveRepeat('/data/rep')).toBe(false);
+		});
+	});
+});
+
+describe('jr:noAddRemove', () => {
+	let scenario: Scenario;
+
+	beforeEach(async () => {
+		scenario = await Scenario.init(
+			'Direct reference count updates',
+			// prettier-ignore
+			html(
+				head(
+					title('Direct reference count updates'),
+					model(
+						mainInstance(
+							t(
+								'data id="direct-reference-count-updates"',
+								t('rep1',
+									t('quest')),
+								t('rep1',
+									t('quest')),
+								t('rep2 jr:template=""',
+									t('quest')),
+								t('rep2',
+									t('quest')),
+								t('rep2',
+									t('quest')),
+								t('rep2',
+									t('quest')),
+								t('rep3 jr:template=""',
+									t('quest')))
+						),
+						bind('/data/rep1/quest').type('string'),
+						bind('/data/rep2/quest').type('string'),
+						bind('/data/rep3/quest').type('string')
+					)
+				),
+				body(
+					t('repeat nodeset="/data/rep1" jr:noAddRemove="true()"',
+						input('/data/rep1/quest')
+					),
+					t('repeat nodeset="/data/rep2" jr:noAddRemove="true()"',
+						input('/data/rep2/quest')
+					),
+					t('repeat nodeset="/data/rep3" jr:noAddRemove="true()"',
+						input('/data/rep3/quest')
+					)
+				)
+			)
+		);
+	});
+
+	it('creates the number of repeats defined in the form', () => {
+		expect(scenario.countRepeatInstancesOf('/data/rep1')).toBe(2);
+	});
+
+	it('does not create a repeat instance for a template where the form defines subsequent repeat instances', () => {
+		expect(scenario.countRepeatInstancesOf('/data/rep2')).toBe(3);
+	});
+
+	// Subjective! Maybe a form design mistake? But it wouldn't ever make sense to
+	// create a fixed set of zero repeat instances.
+	it('create a repeat instance for a template where the form DOES NOT define subsequent repeat instances', () => {
+		expect(scenario.countRepeatInstancesOf('/data/rep3')).toBe(1);
+	});
+
+	it('does not allow a client (user) to add or remove instances of a fixed repeat', () => {
+		expect(scenario.proposed_canCreateOrRemoveRepeat('/data/rep1')).toBe(false);
+		expect(scenario.proposed_canCreateOrRemoveRepeat('/data/rep2')).toBe(false);
+		expect(scenario.proposed_canCreateOrRemoveRepeat('/data/rep3')).toBe(false);
 	});
 });
