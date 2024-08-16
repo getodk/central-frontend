@@ -15,7 +15,7 @@ const submitPressed = inject('submitPressed');
 
 <template>
 	<div
-		:id="question.nodeId + '_container'" 
+		:id="question.nodeId + '_container'"
 		:class="{
 			'question-container': true,
 			'highlight': submitPressed && question.validationState.violation?.valid === false,
@@ -36,7 +36,7 @@ const submitPressed = inject('submitPressed');
 	flex-direction: column;
 	padding: 0.5rem 1rem 0 1rem;
 	scroll-margin-top: 4rem;
-	border-radius: 10px;	
+	border-radius: 10px;
 
 	&.highlight {
 		background-color: var(--error-bg-color);
@@ -44,6 +44,7 @@ const submitPressed = inject('submitPressed');
 }
 
 :global(.p-panel-content .question-container) {
+	// Accommodates the spacing for validation background of questions inside groups/repeat
 	margin-left: -1rem;
 }
 
