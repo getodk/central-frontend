@@ -84,9 +84,7 @@ except according to the terms contained in the LICENSE file.
           </td>
         </tr>
         <tr v-if="branches.size !== 0" id="entity-conflict-table-branch-row">
-          <th>
-            <span class="sr-only">{{ $t('offlineUpdate') }}</span>
-          </th>
+          <th></th>
           <template v-for="version of versions" :key="version.version">
             <td v-if="!branches.has(version.branch)"></td>
             <td v-else-if="version === version.branch.first"
@@ -311,10 +309,10 @@ defineExpose({ resize });
   td > div {
     @include text-overflow-ellipsis;
     background-color: #888;
-    border-radius: 5px;
+    border-radius: 6px;
     color: #fff;
     font-size: 12px;
-    padding: 1px 3px;
+    padding: 2px 4px;
   }
 }
 </style>
@@ -342,8 +340,6 @@ defineExpose({ resize });
       "softConflict": "This version may have been made based on old data.",
       "hardConflict": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
     },
-    // @transifexKey component.EntityFeedEntry.offlineUpdate
-    "offlineUpdate": "Offline update",
     // A chain of updates that were made offline
     "branch": "Offline update chain"
   }

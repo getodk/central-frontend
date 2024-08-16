@@ -13,15 +13,17 @@ import { useRequestData } from './index';
 
 // Offline branch
 class Branch {
-  constructor(firstUpdate, versions) {
+  // firstUpdate is the first offline update (not create) to be processed from
+  // the branch. entityRoot is the first version of the entity.
+  constructor(firstUpdate, entityRoot) {
     if (firstUpdate.trunkVersion != null) {
       // The first version from the branch to be processed (not necessarily the
       // first in branch order).
       this.first = firstUpdate;
       // How many versions that have been processed are from the branch?
       this.length = 1;
-      // Was firstUpdate processed in branch order, or was it processed before
-      // an earlier change in the branch?
+      // Was this.first processed in branch order, or was it processed before an
+      // earlier change in the branch?
       this.firstInOrder = firstUpdate.branchBaseVersion === firstUpdate.trunkVersion;
       /* this.lastContiguous is the version number of the last version from the
       branch for which the branch has been contiguous, i.e., the last version
@@ -31,7 +33,7 @@ class Branch {
       related to branch order: as long as there hasn't been an update from
       outside the branch, the branch is contiguous, regardless of the order of
       the updates within it. */
-      this.lastContiguous = firstUpdate.baseVersion === firstUpdate.trunkVersion
+      this.lastContiguous = firstUpdate.version === firstUpdate.trunkVersion + 1
         ? firstUpdate.version
         : 0;
     } else {
@@ -39,17 +41,14 @@ class Branch {
       // the server, then we treat the creation as part of the same branch as
       // the update(s). The creation doesn't have a branch ID, but we treat it
       // as part of the branch anyway.
-      this.first = versions[0]; // eslint-disable-line prefer-destructuring
+      this.first = entityRoot;
       // If the creating submission was received late and processed out of
-      // order, then firstUpdate === versions[0]. In that case, we can't
-      // reliably determine which entity version corresponds to the entity
-      // creation, so we don't treat the creation as part of the branch.
-      this.length = firstUpdate === versions[0] ? 1 : 2;
-      this.firstInOrder = this.length === 2 &&
-        firstUpdate.branchBaseVersion === 1;
-      this.lastContiguous = this.length === 2 && firstUpdate !== versions[1]
-        ? 1
-        : firstUpdate.version;
+      // order, then firstUpdate.version === 1. In that case, we can't reliably
+      // determine which entity version corresponds to the entity creation, so
+      // we don't treat the creation as part of the branch.
+      this.length = firstUpdate.version === 1 ? 1 : 2;
+      this.firstInOrder = this.length === 2;
+      this.lastContiguous = firstUpdate.version === 2 ? 2 : 1;
     }
 
     this.id = firstUpdate.branchId;
@@ -77,7 +76,7 @@ export default () => {
         if (branchId != null && version.branchBaseVersion != null) {
           const existingBranch = branches.get(branchId);
           if (existingBranch == null) {
-            const newBranch = new Branch(version, versions);
+            const newBranch = new Branch(version, versions[0]);
             branches.set(branchId, newBranch);
             version.branch = newBranch;
             // If the entity was created offline, then add the branch to the

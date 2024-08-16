@@ -142,7 +142,9 @@ const showsAccuracyWarning = computed(() =>
   }
   .offline-update {
     @include italic;
+    color: #888;
     font-size: 12px;
+    margin-bottom: -3px;
   }
 
   td:nth-child(3) { text-align: center; }
