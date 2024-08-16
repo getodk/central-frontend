@@ -16,7 +16,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 
 		<div class="flex justify-content-start flex-wrap">
 			<Button rounded outlined class="btn-add" @click="node.addInstances()">
-				<span class="p-button-label" data-pc-section="label">
+				<span class="flex justify-content-center p-button-label" data-pc-section="label">
 					<span class="icon-add" />
 					<span class="btn-add-label">Add {{ label }}</span>
 				</span>
@@ -53,7 +53,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 
 .repeat {
 	margin-bottom: 1rem;
-	
+
 	.p-button.p-button-outlined.btn-add {
 		margin-left: 25px;
 		margin-bottom: 0rem;
