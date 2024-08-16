@@ -21,6 +21,16 @@ describe('OdkWebForm', () => {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		Element.prototype.scrollIntoView = () => {};
 	}
+	if (!HTMLElement.prototype.showPopover) {
+		HTMLElement.prototype.showPopover = function () {
+			this.style.display = 'block';
+		};
+	}
+	if (!HTMLElement.prototype.hidePopover) {
+		HTMLElement.prototype.hidePopover = function () {
+			this.style.display = 'none';
+		};
+	}
 
 	it('shows validation banner on submit and responds appropriately to the change of validation state of the question', async () => {
 		const component = mountComponent();
@@ -41,7 +51,7 @@ describe('OdkWebForm', () => {
 		await component.get('input.p-inputtext').setValue('ok');
 
 		// Assert no validation banner and no highlighted question
-		expect(component.find('.form-error-message').exists()).toBe(false);
+		expect(component.find('.form-error-message').isVisible()).toBe(false);
 		expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
 		// Empty the textbox to make it invalid again

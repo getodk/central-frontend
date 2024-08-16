@@ -3,7 +3,7 @@ import { initializeForm, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
-import { computed, provide, reactive, ref } from 'vue';
+import { computed, provide, reactive, ref, watchEffect, type ComponentPublicInstance } from 'vue';
 import FormHeader from './FormHeader.vue';
 
 import QuestionList from './QuestionList.vue';
@@ -30,9 +30,11 @@ const handleSubmit = () => {
 	}
 	else{
 		submitPressed.value = true;
-		scrollToFirstInvalidQuestion();
+		window.scrollTo(0,0);
 	}
 }
+
+const errorMessagePopover = ref<ComponentPublicInstance | null>(null);
 
 provide('submitPressed', submitPressed);
 
@@ -45,27 +47,22 @@ const formErrorMessage = computed(() => {
 	else return `${violationLength} questions with errors`;
 });
 
-const isInputElement = (e: HTMLElement): e is HTMLInputElement => e.tagName === 'INPUT';
-
-const scrollToFirstInvalidQuestion = () => {
-	document.getElementById(odkForm.value!.validationState.violations[0].nodeId + '_container')?.scrollIntoView({
-		behavior: 'smooth'
-	});
-
-	// If first invalid element is a textbox then focus it.
-	const firstInvalidElement = document.getElementById(odkForm.value!.validationState.violations[0].nodeId);
-	if(firstInvalidElement && isInputElement(firstInvalidElement) && firstInvalidElement.type === 'text'){
-		firstInvalidElement.focus({preventScroll: true});
+watchEffect(() => {
+	if(submitPressed.value && formErrorMessage.value) {
+		(errorMessagePopover.value?.$el as HTMLElement)?.showPopover();
 	}
-}
+	else{
+		(errorMessagePopover.value?.$el as HTMLElement)?.hidePopover();
+	}
+})
 </script>
 
 <template>
 	<div v-if="odkForm" class="odk-form" :class="{ 'submit-pressed': submitPressed }">
 		<div class="form-wrapper">
-			<PrimeMessage v-if="formErrorMessage" v-show="submitPressed" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
+			<div v-show="submitPressed && formErrorMessage" class="error-banner-placeholder" />
+			<PrimeMessage ref="errorMessagePopover" popover="manual" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
 				{{ formErrorMessage }}
-				<span class="fix-errors" @click="scrollToFirstInvalidQuestion()">Fix errors</span>
 			</PrimeMessage>
 
 			<FormHeader :form="odkForm" />
@@ -94,11 +91,13 @@ const scrollToFirstInvalidQuestion = () => {
 .odk-form {
 	width: 100%;
 	color: var(--text-color);
+	--wf-error-banner-gap: 4rem;
+	--wf-max-form-width: 900px;
 
 	.form-wrapper {
 		display: flex;
 		flex-direction: column;
-		max-width: 900px;
+		max-width: var(--wf-max-form-width);
 		margin: auto;
 		padding-top: 10px;
 		padding-bottom: 20px;
@@ -114,18 +113,18 @@ const scrollToFirstInvalidQuestion = () => {
 			}
 		}
 
+		.error-banner-placeholder {
+			height: calc(var(--wf-error-banner-gap) + 1rem);
+		}
+
 		.form-error-message.p-message.p-message-error {
 			border-radius: 10px;
 			background-color: var(--error-bg-color);
 			border: 1px solid var(--error-text-color);
-			width: 70%;
+			max-width: var(--wf-max-form-width);
+			width: 100%;
 			margin: 0rem auto 1rem auto;
-			position: sticky;
-			top: 0;
-			// Some PrimeVue components use z-index.
-			// Default value for those are either 1000 or 1100
-			// So 5000 here is safe.
-			z-index: 5000;
+			top: 1rem;
 
 			:deep(.p-message-wrapper) {
 				padding: 0.75rem 0.75rem;
@@ -135,11 +134,6 @@ const scrollToFirstInvalidQuestion = () => {
 			:deep(.p-message-text){
 				font-weight: 400;
 				flex-grow: 1;
-
-				.fix-errors {
-					float: right;
-					cursor: pointer;
-				}
 			}
 
 		}
@@ -170,9 +164,13 @@ const scrollToFirstInvalidQuestion = () => {
 				order: 1;
 			}
 
-			.form-error-message.p-message.p-message-error {
-				margin: 1rem 1rem 0 1rem;
+			.error-banner-placeholder {
 				order: 2;
+			}
+
+			.form-error-message.p-message.p-message-error {
+				margin: var(--wf-error-banner-gap) 1rem 0 1rem;
+				max-width: unset;
 				width: calc(100% - 2rem);
 			}
 
