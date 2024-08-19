@@ -30,7 +30,7 @@ const handleSubmit = () => {
 	}
 	else{
 		submitPressed.value = true;
-		window.scrollTo(0,0);
+		document.scrollingElement?.scrollTo(0, 0);
 	}
 }
 
