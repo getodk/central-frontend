@@ -2,11 +2,31 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { fileURLToPath, URL } from 'node:url';
 import { resolve } from 'path';
+import unpluginFonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
+const bundleFonts = () =>
+	unpluginFonts({
+		fontsource: {
+			families: [
+				{
+					/**
+					 * Name of the font family.
+					 * Require the `@fontsource/roboto` package to be installed.
+					 */
+					name: 'Roboto',
+					/**
+					 * Load only a subset of the font family.
+					 */
+					weights: [300],
+				},
+			],
+		},
+	});
+
 export default defineConfig({
-	plugins: [vue(), vueJsx(), cssInjectedByJsPlugin()],
+	plugins: [vue(), vueJsx(), cssInjectedByJsPlugin(), bundleFonts()],
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
