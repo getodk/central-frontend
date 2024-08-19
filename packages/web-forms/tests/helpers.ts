@@ -1,7 +1,9 @@
+import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
 import { initializeForm } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
+import { vi } from 'vitest';
 import { reactive } from 'vue';
 
 const formFixtures = import.meta.glob<true, 'raw', string>(
@@ -41,3 +43,63 @@ export const globalMountOptions: GlobalMountOptions = {
 
 export const fakeUnsupportedControlNode = () =>
 	Object.assign({ nodeType: 'dummy', validationState: {} }, {} as AnyControlNode);
+
+// TODO: how the heck is `undefined` a key of anything?!
+type StringKeyOf<T> = Extract<keyof T, string>;
+
+type StringKeyOfDocument = StringKeyOf<Document>;
+
+// prettier-ignore
+export type DocumentPropertyName = {
+	[PropertyName in StringKeyOfDocument]:
+		Document[PropertyName] extends AnyFunction
+			? never
+			: PropertyName;
+}[StringKeyOfDocument];
+
+export const mockDocumentGetter = <PropertyName extends DocumentPropertyName>(
+	propertyName: PropertyName,
+	mockImplementation: () => Document[PropertyName]
+) => {
+	if (propertyName in document) {
+		return vi.spyOn(document, propertyName, 'get').mockImplementation(mockImplementation);
+	}
+
+	const mock = vi.fn(mockImplementation);
+	Object.defineProperty(document, propertyName, {
+		get: mock,
+		configurable: true,
+	});
+	return mock;
+};
+
+type StringKeyOfHTMLElement = StringKeyOf<HTMLElement>;
+
+// prettier-ignore
+export type ElementMethodName = {
+	[PropertyName in StringKeyOfHTMLElement]:
+		HTMLElement[PropertyName] extends AnyFunction
+			? PropertyName
+			: never;
+}[keyof HTMLElement];
+
+type ElementMethodMock<MethodName extends ElementMethodName> = (
+	this: HTMLElement,
+	...args: Parameters<HTMLElement[MethodName]>
+) => ReturnType<HTMLElement[MethodName]>;
+
+export const mockElementPrototypeMethod = <MethodName extends ElementMethodName>(
+	methodName: MethodName,
+	mockImplementation: ElementMethodMock<MethodName>
+) => {
+	if (methodName in HTMLElement.prototype) {
+		return vi.spyOn(HTMLElement.prototype, methodName).mockImplementation(function (...args) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+			return mockImplementation.apply(this as HTMLElement, args as any);
+		});
+	}
+	const mock = vi.fn(mockImplementation);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+	HTMLElement.prototype[methodName] = mock as any;
+	return mock;
+};
