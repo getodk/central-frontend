@@ -62,12 +62,13 @@ const feed = computed(() => {
   const groups = [];
   let versionIndex = entityVersions.length - 1;
   for (const audit of audits) {
-    if (audit.action === 'entity.update.version') {
+    const { action } = audit;
+    if (action === 'entity.update.version') {
       const { submission } = audit.details.source;
       const entityVersion = entityVersions[versionIndex];
       versionIndex -= 1;
       groups.push([{ entry: audit, submission, entityVersion }]);
-    } else if (audit.action === 'entity.create') {
+    } else if (action === 'entity.create' || action === 'entity.bulk.create') {
       const group = [{ entry: audit, entityVersion: entityVersions[0] }];
       const { details } = audit;
       // this will insert a feed entry for the submission approval event
@@ -102,14 +103,13 @@ watch(() => audits.awaitingResponse, (awaitingResponse) => {
   if (awaitingResponse) scrollTarget.value = null;
 });
 const scrollData = (entryData) => {
-  const { action } = entryData.entry;
-  if (!(action === 'entity.create' || action === 'entity.bulk.create' || action === 'entity.update.version'))
-    return {};
-  const version = (action === 'entity.create' || action === 'entity.bulk.create') ? 1 : entryData.entityVersion.version;
-  return {
-    'data-version': version,
-    class: version === scrollTarget.value ? 'scroll-target' : null
-  };
+  const version = entryData.entityVersion?.version;
+  return version == null
+    ? {}
+    : {
+      'data-version': version,
+      class: version === scrollTarget.value ? 'scroll-target' : null
+    };
 };
 const scrollTo = useScrollBehavior();
 watchEffect(() => {

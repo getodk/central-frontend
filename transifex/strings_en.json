@@ -1750,7 +1750,7 @@
       },
       "branch": {
         "string": "Offline update chain",
-        "developer_comment": "A chain of updates that were made offline"
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {

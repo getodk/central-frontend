@@ -128,7 +128,7 @@ const summary = computed(() => {
   let lastGoodVersion;
   // The keys of dataReceived from each unresolved conflict
   const allReceived = new Set();
-  // Offline branches to show in the table
+  // The offline branches to show in the table
   const branches = new Set();
   for (const [i, version] of props.versions.entries()) {
     if (version.lastGoodVersion) lastGoodVersion = version.version;
@@ -139,10 +139,15 @@ const summary = computed(() => {
     }
 
     const { branch } = version;
-    if (branch != null && version === branch.first && branch.length !== 1) {
-      // We only show the branch if it is contiguous, and if all the versions
-      // from the branch are shown in the table. lastIndex is the expected index
-      // of the last version from the branch if both those conditions are true.
+    if (branch != null && version === branch.first && branch.length !== 1 &&
+      // The versions from the branch must all be contiguous. It's OK if they're
+      // not contiguous with the trunk version.
+      branch.last.version === branch.first.version + branch.length - 1) {
+      // We only show the branch if all the versions from the branch are shown
+      // in the table. Otherwise, it may be unclear how long the branch was and
+      // that there were other versions that were part of it. lastIndex is the
+      // expected index of the last version from the branch if all the versions
+      // from the branch are shown.
       const lastIndex = i + branch.length - 1;
       if (lastIndex < props.versions.length &&
         props.versions[lastIndex] === branch.last)
@@ -247,14 +252,6 @@ defineExpose({ resize });
   thead th { font-size: 14px; }
   th:first-child { text-align: right; }
 
-  tbody tr { background-color: $background-color-feed-entry; }
-  tbody tr:first-child,
-  tr:nth-child(2),
-  #entity-conflict-table-status-row,
-  #entity-conflict-table-branch-row {
-    background-color: #f4f4f4;
-  }
-
   th, td { @include text-overflow-ellipsis; }
   td { border-left: 1px solid #bbb; }
 
@@ -286,6 +283,16 @@ defineExpose({ resize });
   .icon-check-circle { color: $color-success; }
   .icon-question-circle { color: $color-warning-dark; }
   .icon-warning { color: $color-danger-dark; }
+}
+
+#entity-conflict-table tbody tr {
+  background-color: $background-color-feed-entry;
+}
+#entity-conflict-table tbody tr:first-child,
+#entity-conflict-table tr:nth-child(2),
+#entity-conflict-table-status-row,
+#entity-conflict-table-branch-row {
+  background-color: #f4f4f4;
 }
 
 #entity-conflict-table #entity-conflict-table-status-row {
@@ -340,7 +347,7 @@ defineExpose({ resize });
       "softConflict": "This version may have been made based on old data.",
       "hardConflict": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
     },
-    // A chain of updates that were made offline
+    // A series of updates that were made offline
     "branch": "Offline update chain"
   }
 }

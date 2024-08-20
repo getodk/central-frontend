@@ -29,7 +29,8 @@ except according to the terms contained in the LICENSE file.
       <tr v-if="entityVersion.conflict != null" class="comparing">
         <td>{{ $t('comparing') }}</td>
         <td>
-          <i18n-t tag="div" keypath="version" v-tooltip.text>
+          <i18n-t tag="div" keypath="version" class="version-and-source"
+            v-tooltip.text>
             <template #version>
               <span class="version-string">{{ $t('common.versionShort', oldVersion) }}</span>
             </template>
@@ -40,7 +41,8 @@ except according to the terms contained in the LICENSE file.
         </td>
         <td aria-hidden="true"><span class="icon-arrow-circle-right"></span></td>
         <td>
-          <i18n-t tag="div" keypath="version" v-tooltip.text>
+          <i18n-t tag="div" keypath="version" class="version-and-source"
+            v-tooltip.text>
             <template #version>
               <span class="version-string">{{ $t('common.versionShort', entityVersion) }}</span>
             </template>
@@ -53,11 +55,9 @@ except according to the terms contained in the LICENSE file.
           </div>
         </td>
       </tr>
-      <tr v-if="showsAccuracyWarning" class="entity-diff-table-accuracy-warning">
+      <tr v-if="showsAccuracyWarning" class="accuracy-warning">
         <td colspan="4">
-          <p>
-            <span class="icon-warning"></span>{{ $t('accuracyWarning') }}
-          </p>
+          <p><span class="icon-warning"></span>{{ $t('accuracyWarning') }}</p>
         </td>
       </tr>
       <entity-diff-row v-for="name of diff" :key="name"
@@ -106,15 +106,15 @@ const showsAccuracyWarning = computed(() =>
   entityVersion.conflict != null &&
   // There's only an issue with offline updates.
   entityVersion.branch != null &&
-  // There's never an issue with the first update from the branch.
+  // There's never an issue with the first version from the branch.
   entityVersion !== entityVersion.branch.first &&
-  /* If the branch stopped being contiguous before the base version, that means
-  that the base version incorporates an update from outside the branch, which
-  means that baseDiff may differ from the true author's view. It's OK if there
-  was an update from outside the branch between the base version and this
-  version, but it's not OK if there was such an update between the trunk version
-  and the base version. */
-  entityVersion.branch.lastContiguous < entityVersion.baseVersion);
+  /* If the branch stopped being contiguous with the trunk version sometime
+  before the base version, that means that the base version incorporates an
+  update from outside the branch. In that case, baseDiff may differ from the
+  true author's view. It's OK if there was an update from outside the branch
+  between the base version and this version, but it's not OK if there was such
+  an update between the trunk version and the base version. */
+  entityVersion.branch.lastContiguousWithTrunk < entityVersion.baseVersion);
 </script>
 
 <style lang="scss">
@@ -137,9 +137,9 @@ const showsAccuracyWarning = computed(() =>
   tr:first-child td { border-top: none; }
 
   .comparing {
-    td > div { @include text-overflow-ellipsis; }
     td:first-child, .version-string { font-weight: bold; }
   }
+  .version-and-source { @include text-overflow-ellipsis; }
   .offline-update {
     @include italic;
     color: #888;
@@ -149,18 +149,18 @@ const showsAccuracyWarning = computed(() =>
 
   td:nth-child(3) { text-align: center; }
   .icon-arrow-circle-right { color: #888; }
-}
 
-.entity-diff-table-accuracy-warning {
-  p {
-    @include italic;
-    margin-bottom: -2px;
-    margin-top: -2px;
-  }
+  .accuracy-warning {
+    p {
+      @include italic;
+      margin-bottom: -2px;
+      margin-top: -2px;
+    }
 
-  .icon-warning {
-    color: $color-warning;
-    margin-right: $margin-right-icon;
+    .icon-warning {
+      color: $color-warning;
+      margin-right: $margin-right-icon;
+    }
   }
 }
 </style>

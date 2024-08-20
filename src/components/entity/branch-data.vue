@@ -46,8 +46,7 @@ except according to the terms contained in the LICENSE file.
             <td>
               <template v-if="version.branch != null">
                 <a href="#">{{ version.branch.id }}</a>
-                <span v-if="version.branchId == null" class="icon-info-circle" v-tooltip.no-aria="'This branch ID was inferred.'">
-                </span>
+                <span v-if="version.branchId == null" class="icon-info-circle" v-tooltip.no-aria="'This branch ID was inferred.'"></span>
               </template>
             </td>
             <td>
@@ -92,7 +91,7 @@ defineOptions({
 const props = defineProps({
   state: Boolean,
   // The version number of the version to initially highlight
-  highlight: Number,
+  highlight: Number
 });
 const emit = defineEmits(['hide']);
 
@@ -100,6 +99,13 @@ const { entityVersions } = useRequestData();
 
 // The version numbers of the versions to highlight
 const highlighted = reactive(new Set());
+const state = computed(() => props.state);
+watch(state, (newState) => {
+  if (newState)
+    highlighted.add(props.highlight);
+  else
+    highlighted.clear();
+});
 const updateHighlight = (event) => {
   const { target } = event;
   // We never need to update `highlighted` after a button click, and in some
@@ -126,6 +132,7 @@ const asc = ref(true);
 const sorted = computed(() =>
   (asc.value ? entityVersions.data : entityVersions.toReversed()));
 const reverseOrder = () => { asc.value = !asc.value; };
+watch(state, (newState) => { if (!newState) asc.value = true; });
 
 const router = useRouter();
 const view = (event) => {
@@ -133,15 +140,6 @@ const view = (event) => {
   const { version } = event.target.closest('tr').dataset;
   nextTick(() => { router.push(`#v${version}`).catch(noop); });
 };
-
-watch(() => props.state, (state) => {
-  if (state) {
-    if (props.highlight != null) highlighted.add(props.highlight);
-  } else {
-    highlighted.clear();
-    asc.value = true;
-  }
-});
 </script>
 
 <style lang="scss">

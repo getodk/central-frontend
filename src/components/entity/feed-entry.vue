@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <i18n-t v-if="submission.currentVersion != null"
           keypath="title.submission.create.notDeleted">
           <template #instanceName>
-            <router-link :to="creatingSubmissionPath">
+            <router-link :to="sourceSubmissionPath">
               {{ submission.currentVersion.instanceName ?? submission.instanceId }}
             </router-link>
           </template>
@@ -99,7 +99,7 @@ except according to the terms contained in the LICENSE file.
           <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>
-              <router-link :to="creatingSubmissionPath">
+              <router-link :to="sourceSubmissionPath">
                 {{ submission.currentVersion.instanceName ?? submission.instanceId }}
               </router-link>
             </template>
@@ -134,7 +134,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      <entity-diff v-if="entityVersion != null"/>
+      <entity-diff v-if="entityVersion != null && entityVersion.version !== 1"/>
     </template>
   </feed-entry>
 </template>
@@ -181,7 +181,7 @@ const wrapTitle = computed(() => {
 
 // submission.create, entity.update.version
 const { submissionPath, datasetPath } = useRoutes();
-const creatingSubmissionPath = computed(() => submissionPath(
+const sourceSubmissionPath = computed(() => submissionPath(
   projectId,
   props.submission.xmlFormId,
   props.submission.instanceId
@@ -239,7 +239,6 @@ const showBranchData = () => {
   .bulk-event {
     display: inline;
   }
-
   .bulk-source {
     text-indent: 0px;
   }

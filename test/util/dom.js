@@ -1,13 +1,13 @@
+// Returns the text in a Vue Test Utils wrapper, excluding text in elements
+// selected by `selector`.
 export const textWithout = (wrapper, selector) => {
   const without = wrapper.element.cloneNode(true);
-  for (const descendant of without.querySelectorAll(selector))
-    descendant.remove();
+  for (const element of without.querySelectorAll(selector)) element.remove();
   return without.textContent.trim();
 };
 
 // Searches a component for a nav tab whose text matches the specified text. The
 // component must contain a PageBody component.
-// eslint-disable-next-line import/prefer-default-export
 export const findTab = (component, text) => {
   // The component may contain multiple .nav-tabs.
   const navs = component.findAll('.nav-tabs');

@@ -27,12 +27,11 @@ const mountComponent = (options = undefined) => {
     })
   });
   const entry = testData.extendedAudits.last();
+  const { action } = entry;
   const { entityVersions } = container.requestData.localResources;
-  const entityVersion = entry.action === 'entity.create'
+  const entityVersion = action === 'entity.create' || action === 'entity.bulk.create'
     ? entityVersions[0]
-    : (entry.action === 'entity.update.version'
-      ? last(entityVersions)
-      : undefined);
+    : (entityVersions.length > 1 ? last(entityVersions) : undefined);
   return mount(EntityFeedEntry, mergeMountOptions(options, {
     global: {
       provide: { projectId: '1', datasetName: 'trees', uuid: entity.uuid }
@@ -329,7 +328,6 @@ describe('EntityFeedEntry', () => {
         submission
       };
     };
-
 
     it('shows the correct icon', () => {
       const component = mountComponent({ props: updateEntityFromSubmission() });

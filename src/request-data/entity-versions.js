@@ -18,22 +18,25 @@ class Branch {
   constructor(firstUpdate, entityRoot) {
     if (firstUpdate.trunkVersion != null) {
       // The first version from the branch to be processed (not necessarily the
-      // first in branch order).
+      // first in the original branch order)
       this.first = firstUpdate;
+
       // How many versions that have been processed are from the branch?
       this.length = 1;
+
       // Was this.first processed in branch order, or was it processed before an
       // earlier change in the branch?
-      this.firstInOrder = firstUpdate.branchBaseVersion === firstUpdate.trunkVersion;
-      /* this.lastContiguous is the version number of the last version from the
-      branch for which the branch has been contiguous, i.e., the last version
-      since the trunk version for which there has been no update from outside
-      the branch. If the base version of firstUpdate is the trunk version, then
-      the branch is at least partially contiguous. this.lastContinguous is not
-      related to branch order: as long as there hasn't been an update from
-      outside the branch, the branch is contiguous, regardless of the order of
-      the updates within it. */
-      this.lastContiguous = firstUpdate.version === firstUpdate.trunkVersion + 1
+      const { trunkVersion } = firstUpdate;
+      this.firstInOrder = firstUpdate.branchBaseVersion === trunkVersion;
+
+      /* this.lastContiguousWithTrunk is the version number of the last version
+      from the branch that is contiguous with the trunk version. In other words,
+      it is the version number of the last version where there has been no
+      update from outside the branch between the version and the trunk version.
+      this.lastContiguousWithTrunk is not related to branch order: as long as
+      there hasn't been an update from outside the branch, the branch is
+      contiguous, regardless of the order of the updates within it. */
+      this.lastContiguousWithTrunk = firstUpdate.version === trunkVersion + 1
         ? firstUpdate.version
         : 0;
     } else {
@@ -42,13 +45,13 @@ class Branch {
       // the update(s). The creation doesn't have a branch ID, but we treat it
       // as part of the branch anyway.
       this.first = entityRoot;
-      // If the creating submission was received late and processed out of
-      // order, then firstUpdate.version === 1. In that case, we can't reliably
-      // determine which entity version corresponds to the entity creation, so
-      // we don't treat the creation as part of the branch.
+      // If the submission for the entity creation was received late and
+      // processed out of order, then firstUpdate.version === 1. In that case,
+      // we can't reliably determine which entity version corresponds to the
+      // entity creation, so we don't treat the creation as part of the branch.
       this.length = firstUpdate.version === 1 ? 1 : 2;
       this.firstInOrder = this.length === 2;
-      this.lastContiguous = firstUpdate.version === 2 ? 2 : 1;
+      this.lastContiguousWithTrunk = firstUpdate.version === 2 ? 2 : 1;
     }
 
     this.id = firstUpdate.branchId;
@@ -59,9 +62,9 @@ class Branch {
   add(version) {
     this.length += 1;
     this.last = version;
-    if (version.baseVersion === this.lastContiguous &&
+    if (version.baseVersion === this.lastContiguousWithTrunk &&
       version.version === version.baseVersion + 1)
-      this.lastContiguous = version.version;
+      this.lastContiguousWithTrunk = version.version;
   }
 }
 
@@ -81,7 +84,7 @@ export default () => {
             version.branch = newBranch;
             // If the entity was created offline, then add the branch to the
             // entity creation.
-            version.branch.first.branch = newBranch;
+            newBranch.first.branch = newBranch;
           } else {
             existingBranch.add(version);
             version.branch = existingBranch;
