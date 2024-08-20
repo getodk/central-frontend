@@ -1747,6 +1747,10 @@
         "hardConflict": {
           "string": "This version was made in parallel with other updates, some of which attempt to write to the same properties as this update."
         }
+      },
+      "branch": {
+        "string": "Offline update chain",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1833,6 +1837,10 @@
       "version": {
         "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "In this case, the author’s view may not be accurate.",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1892,6 +1900,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "Offline update",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {

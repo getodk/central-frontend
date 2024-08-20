@@ -26,7 +26,8 @@ except according to the terms contained in the LICENSE file.
           @resolve="$emit('resolve')"/>
         <div v-for="(group, i) of feed" :key="feed.length - i"
           class="feed-entry-group" v-bind="scrollData(group[0])">
-          <entity-feed-entry v-for="(data, j) of group" :key="j" v-bind="data"/>
+          <entity-feed-entry v-for="(data, j) of group" :key="j" v-bind="data"
+            @branch-data="$emit('branch-data', $event)"/>
         </div>
       </template>
     </template>
@@ -48,7 +49,7 @@ import { useScrollBehavior } from '../../scroll-behavior';
 defineOptions({
   name: 'EntityActivity'
 });
-defineEmits(['delete', 'resolve']);
+defineEmits(['delete', 'resolve', 'branch-data']);
 
 // The component does not assume that this data will exist when the component is
 // created.
@@ -61,13 +62,14 @@ const feed = computed(() => {
   const groups = [];
   let versionIndex = entityVersions.length - 1;
   for (const audit of audits) {
-    if (audit.action === 'entity.update.version') {
+    const { action } = audit;
+    if (action === 'entity.update.version') {
       const { submission } = audit.details.source;
       const entityVersion = entityVersions[versionIndex];
       versionIndex -= 1;
       groups.push([{ entry: audit, submission, entityVersion }]);
-    } else if (audit.action === 'entity.create') {
-      const group = [{ entry: audit }];
+    } else if (action === 'entity.create' || action === 'entity.bulk.create') {
+      const group = [{ entry: audit, entityVersion: entityVersions[0] }];
       const { details } = audit;
       // this will insert a feed entry for the submission approval event
       if (details.source?.event?.action === 'submission.update')
@@ -101,14 +103,13 @@ watch(() => audits.awaitingResponse, (awaitingResponse) => {
   if (awaitingResponse) scrollTarget.value = null;
 });
 const scrollData = (entryData) => {
-  const { action } = entryData.entry;
-  if (!(action === 'entity.create' || action === 'entity.bulk.create' || action === 'entity.update.version'))
-    return {};
-  const version = (action === 'entity.create' || action === 'entity.bulk.create') ? 1 : entryData.entityVersion.version;
-  return {
-    'data-version': version,
-    class: version === scrollTarget.value ? 'scroll-target' : null
-  };
+  const version = entryData.entityVersion?.version;
+  return version == null
+    ? {}
+    : {
+      'data-version': version,
+      class: version === scrollTarget.value ? 'scroll-target' : null
+    };
 };
 const scrollTo = useScrollBehavior();
 watchEffect(() => {

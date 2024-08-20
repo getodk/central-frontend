@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <i18n-t v-if="submission.currentVersion != null"
           keypath="title.submission.create.notDeleted">
           <template #instanceName>
-            <router-link :to="creatingSubmissionPath">
+            <router-link :to="sourceSubmissionPath">
               {{ submission.currentVersion.instanceName ?? submission.instanceId }}
             </router-link>
           </template>
@@ -26,7 +26,9 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
         <i18n-t v-else keypath="title.submission.create.deleted.full">
           <template #deletedSubmission>
-            <span class="deleted-submission">{{ deletedSubmission }}</span>
+            <span class="deleted-submission">
+              {{ deletedSubmission('title.submission.create.deleted.deletedSubmission') }}
+            </span>
           </template>
           <template #name><actor-link :actor="submission.submitter"/></template>
         </i18n-t>
@@ -59,6 +61,16 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
+        <span class="entity-version-tag">
+          <router-link :to="versionAnchor(1)">
+            {{ $t('common.versionShort', entityVersion) }}
+          </router-link>
+        </span>
+        <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+        <span v-if="entityVersion.branch != null" class="offline-update"
+          @click="showBranchData">
+          {{ $t('offlineUpdate') }}
+        </span>
       </template>
       <template v-else-if="entry.action === 'entity.bulk.create'">
         <span class="icon-cloud-upload"></span>
@@ -83,12 +95,11 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template v-else-if="entry.action === 'entity.update.version'">
         <span class="icon-pencil"></span>
-        <span class="title">
         <template v-if="submission != null">
           <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>
-              <router-link :to="creatingSubmissionPath">
+              <router-link :to="sourceSubmissionPath">
                 {{ submission.currentVersion.instanceName ?? submission.instanceId }}
               </router-link>
             </template>
@@ -96,7 +107,7 @@ except according to the terms contained in the LICENSE file.
           <i18n-t v-else keypath="title.entity.update_version.submission.deleted.full">
             <template #deletedSubmission>
               <span class="deleted-submission">
-                {{ deletedSubmissionEntityEvent }}
+                {{ deletedSubmission('title.entity.update_version.submission.deleted.deletedSubmission') }}
               </span>
             </template>
           </i18n-t>
@@ -104,9 +115,15 @@ except according to the terms contained in the LICENSE file.
         <i18n-t v-else keypath="title.entity.update_version.api">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
-        </span>
         <span class="entity-version-tag">
-          <router-link :to="versionAnchor(entityVersion.version)">{{ $t('common.versionShort', entityVersion) }}</router-link>
+          <router-link :to="versionAnchor(entityVersion.version)">
+            {{ $t('common.versionShort', entityVersion) }}
+          </router-link>
+        </span>
+        <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+        <span v-if="entityVersion.branch != null" class="offline-update"
+          @click="showBranchData">
+          {{ $t('offlineUpdate') }}
         </span>
       </template>
       <template v-else-if="entry.action === 'entity.update.resolve'">
@@ -117,7 +134,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      <entity-diff v-if="entityVersion != null"/>
+      <entity-diff v-if="entityVersion != null && entityVersion.version !== 1"/>
     </template>
   </feed-entry>
 </template>
@@ -145,6 +162,7 @@ const props = defineProps({
   submission: Object,
   entityVersion: Object
 });
+const emit = defineEmits(['branch-data']);
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 // The provided entityVersion won't be reactive, but that should be OK given how
@@ -161,26 +179,24 @@ const wrapTitle = computed(() => {
   return action === 'submission.create' || action === 'entity.create' || action === 'entity.bulk.create' || action === 'entity.update.version';
 });
 
+// submission.create, entity.update.version
 const { submissionPath, datasetPath } = useRoutes();
-const creatingSubmissionPath = computed(() => submissionPath(
+const sourceSubmissionPath = computed(() => submissionPath(
   projectId,
   props.submission.xmlFormId,
   props.submission.instanceId
 ));
 const { t } = useI18n();
+const deletedSubmission = (key) => t(key, { id: props.submission.instanceId });
 
-const deletedSubmission = computed(() => {
-  const id = props.submission.instanceId;
-  return t('title.submission.create.deleted.deletedSubmission', { id });
-});
-
-const deletedSubmissionEntityEvent = computed(() => {
-  const id = props.submission.instanceId;
-  return t('title.entity.update_version.submission.deleted.deletedSubmission', { id });
-});
+// submission.update
 const { reviewStateIcon } = useReviewState();
 
+// entity.create, entity.update.version
 const versionAnchor = (v) => `#v${v}`;
+const showBranchData = () => {
+  emit('branch-data', props.entityVersion.version);
+};
 </script>
 
 <style lang="scss">
@@ -200,23 +216,29 @@ const versionAnchor = (v) => `#v${v}`;
   .deleted-submission { color: $color-danger; }
   .approval { color: $color-success; }
 
-  .entity-version-tag {
-    background-color: #ddd;
+  .entity-version-tag, .feed-entry-title .offline-update {
     font-size: 12px;
-    margin: 5px;
     padding: 3px;
     border-radius: 2px;
+  }
+  .entity-version-tag {
+    background-color: #ddd;
+    margin-left: 5px;
 
     a {
       @include text-link;
       font-weight: bold;
     }
   }
+  .feed-entry-title .offline-update {
+    background-color: #eee;
+    font-weight: normal;
+    margin-left: 5px;
+  }
 
   .bulk-event {
     display: inline;
   }
-
   .bulk-source {
     text-indent: 0px;
   }
@@ -274,7 +296,10 @@ const versionAnchor = (v) => `#v${v}`;
         // User.
         "update_resolve": "Conflict warning resolved by {name}"
       }
-    }
+    },
+    // This is shown for an update to an Entity when the update was made offline
+    // as part of a chain of updates.
+    "offlineUpdate": "Offline update"
   }
 }
 </i18n>

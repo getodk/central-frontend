@@ -170,7 +170,7 @@ describe('EntityActivity', () => {
     resolveConflict();
     mountComponent().findAllComponents(EntityFeedEntry)
       .map(entry => entry.props().entityVersion?.version)
-      .should.eql([undefined, 3, 2, undefined]);
+      .should.eql([undefined, 3, 2, 1]);
   });
 
   describe('scroll behavior', () => {
