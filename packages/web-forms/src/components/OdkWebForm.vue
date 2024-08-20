@@ -114,6 +114,7 @@ watchEffect(() => {
 		flex-direction: column;
 		max-width: var(--wf-max-form-width);
 		min-height: calc(100vh - 5rem);
+		min-height: calc(100dvh - 5rem);
 		margin: auto;
 		padding-top: 10px;
 
