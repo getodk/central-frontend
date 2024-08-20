@@ -82,6 +82,21 @@ watchEffect(() => {
 				<Button label="Send" rounded @click="handleSubmit()" />
 			</div>
 		</div>
+
+		<div class="powered-by-wrapper">
+			<a class="anchor" href="https://getodk.org" target="_blank">
+				<span class="caption">Powered by</span>
+				<img
+					class="logo"
+					srcset="../assets/images/odk-logo-small@1x.png,
+								  ../assets/images/odk-logo-small@2x.png 2x"
+					src="../assets/images/odk-logo-small@2x.png"
+					alt="ODK"
+					height="15"
+					width="28"
+				>
+			</a>
+		</div>
 	</div>
 </template>
 
@@ -98,9 +113,10 @@ watchEffect(() => {
 		display: flex;
 		flex-direction: column;
 		max-width: var(--wf-max-form-width);
+		min-height: calc(100vh - 5rem);
+		min-height: calc(100dvh - 5rem);
 		margin: auto;
 		padding-top: 10px;
-		padding-bottom: 20px;
 
 		.questions-card {
 			border-radius: 10px;
@@ -145,13 +161,37 @@ watchEffect(() => {
 	}
 
 	.footer {
-		margin-top: 20px;
+		margin: 1.5rem 0 0rem 0;
 
 		button {
 			min-width: 160px;
 		}
 	}
 
+	.powered-by-wrapper {
+		margin-top: 3rem;
+		margin-bottom: 0.5rem;
+		margin-left: 0.5rem;
+
+		.anchor {
+			color: var(--gray-500);
+			font-size: 0.85rem;
+			font-weight: 300;
+			text-decoration: none;
+			margin-left: 1rem;
+
+			span.caption {
+				transform: scale(1.1, 1);
+				display: inline-block;
+				margin-right: 3px;
+			}
+
+			img.logo {
+				vertical-align: middle;
+				margin-left: 0.2rem;
+			}
+		}
+	}
 }
 
 @media screen and (max-width: #{$lg - 1}) {
@@ -187,6 +227,11 @@ watchEffect(() => {
 					margin-right: 20px;
 				}
 			}
+
+		}
+		.powered-by-wrapper {
+			padding-bottom: 10px;
+			margin-bottom: 0;
 		}
 	}
 }
