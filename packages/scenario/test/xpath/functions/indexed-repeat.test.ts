@@ -92,6 +92,11 @@ describe('Tests ported from JavaRosa', () => {
 		 *   lets you reference `group` (the class property) and `group` (the
 		 *   imported static method) in the same scope. TypeScript/JavaScript don't
 		 *   let you do that... which is fine, because doing that is really weird!
+		 *
+		 * - `answer` calls updated to omit superfluous position predicate on
+		 *   the non-repeat `some-group` step (we do this lookup by `reference`,
+		 *   not evaluating arbitrary XPath expressions to identify the question
+		 *   being answered).
 		 */
 		it.fails.each<IndexedRepeatRelativeRefsOptions>(parameters)('$testName', async (options) => {
 			const scenario = await Scenario.init(
@@ -134,9 +139,14 @@ describe('Tests ported from JavaRosa', () => {
 				)
 			);
 
-			scenario.answer('/data/some-group[1]/item[1]/value', 11);
-			scenario.answer('/data/some-group[1]/item[2]/value', 22);
-			scenario.answer('/data/some-group[1]/item[3]/value', 33);
+			// scenario.answer('/data/some-group[1]/item[1]/value', 11);
+			scenario.answer('/data/some-group/item[1]/value', 11);
+
+			// scenario.answer('/data/some-group[1]/item[2]/value', 22);
+			scenario.answer('/data/some-group/item[2]/value', 22);
+
+			// scenario.answer('/data/some-group[1]/item[3]/value', 33);
+			scenario.answer('/data/some-group/item[3]/value', 33);
 
 			expect(scenario.answerOf('/data/total-items')).toEqualAnswer(intAnswer(3));
 			expect(scenario.answerOf('/data/some-group/last-value')).toEqualAnswer(intAnswer(33));
