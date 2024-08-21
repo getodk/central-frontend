@@ -93,6 +93,8 @@ describe('Tests ported from JavaRosa', () => {
 		 *   imported static method) in the same scope. TypeScript/JavaScript don't
 		 *   let you do that... which is fine, because doing that is really weird!
 		 *
+		 * - Includes proposed explicit repeat creation.
+		 *
 		 * - `answer` calls updated to omit superfluous position predicate on
 		 *   the non-repeat `some-group` step (we do this lookup by `reference`,
 		 *   not evaluating arbitrary XPath expressions to identify the question
@@ -139,12 +141,21 @@ describe('Tests ported from JavaRosa', () => {
 				)
 			);
 
+			scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
+				explicitRepeatCreation: true,
+			});
 			// scenario.answer('/data/some-group[1]/item[1]/value', 11);
 			scenario.answer('/data/some-group/item[1]/value', 11);
 
+			scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
+				explicitRepeatCreation: true,
+			});
 			// scenario.answer('/data/some-group[1]/item[2]/value', 22);
 			scenario.answer('/data/some-group/item[2]/value', 22);
 
+			scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
+				explicitRepeatCreation: true,
+			});
 			// scenario.answer('/data/some-group[1]/item[3]/value', 33);
 			scenario.answer('/data/some-group/item[3]/value', 33);
 
