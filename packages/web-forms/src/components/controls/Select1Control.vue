@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import type { SelectNode } from '@getodk/xforms-engine';
 import { inject, ref } from 'vue';
-import ControlLabel from '../ControlLabel.vue';
-import ControlHint from '../ControlHint.vue';
+import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 import ColumnarAppearance from '../appearances/ColumnarAppearance.vue';
 import FieldListTable from '../appearances/FieldListTable.vue';
@@ -24,10 +23,7 @@ const submitPressed = inject<boolean>('submitPressed');
 </script>
 
 <template>
-	<div v-if="!hasFieldListRelatedAppearance" class="label-and-hint">
-		<ControlLabel :question="question" />
-		<ControlHint :question="question" />
-	</div>
+	<ControlText v-if="!hasFieldListRelatedAppearance" :question="question" />
 
 	<SearchableDropdown v-if="question.appearances.autocomplete || question.appearances.minimal" :question="question" @change="touched = true" />
 
@@ -35,7 +31,7 @@ const submitPressed = inject<boolean>('submitPressed');
 
 	<FieldListTable v-else-if="hasFieldListRelatedAppearance" :appearances="question.appearances">
 		<template #firstColumn>
-			<ControlLabel :question="question" />
+			<ControlText :question="question" />
 		</template>
 		<template #default>
 			<RadioButton :question="question" @change="touched = true" />
@@ -44,7 +40,7 @@ const submitPressed = inject<boolean>('submitPressed');
 
 	<ColumnarAppearance v-else-if="hasColumnsAppearance" :appearances="question.appearances">
 		<RadioButton :question="question" @change="touched = true" />
-	</ColumnarAppearance>		
+	</ColumnarAppearance>
 
 	<template v-else>
 		<template v-if="question.appearances.map || question.appearances['image-map']">
@@ -55,8 +51,8 @@ const submitPressed = inject<boolean>('submitPressed');
 		</div>
 	</template>
 
-	<ValidationMessage 
-		:message="question.validationState.violation?.message.asString" 
+	<ValidationMessage
+		:message="question.validationState.violation?.message.asString"
 		:show-message="touched || submitPressed"
 		:add-placeholder="!hasFieldListRelatedAppearance"
 	/>
@@ -64,10 +60,6 @@ const submitPressed = inject<boolean>('submitPressed');
 
 <style lang="scss" scoped>
 @import 'primeflex/core/_variables.scss';
-.label-and-hint {
-	margin-bottom: 0.75rem;
-}
-
 .default-appearance {
 	width: 100%;
 	display: flex;

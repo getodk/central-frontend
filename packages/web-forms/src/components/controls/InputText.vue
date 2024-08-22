@@ -2,8 +2,7 @@
 import type { StringNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
 import { computed, inject, ref } from 'vue';
-import ControlLabel from '../ControlLabel.vue';
-import ControlHint from '../ControlHint.vue';
+import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 
 const props = defineProps<{question: StringNode}>();
@@ -18,19 +17,16 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 </script>
 
 <template>
-	<div class="label-and-hint">
-		<ControlLabel :question="question" />
-		<ControlHint :question="question" />
-	</div>
+	<ControlText :question="question" />
 
 	<div class="textbox-container">
 		<InputText
 			:id="question.nodeId"
-			:required="question.currentState.required" 
+			:required="question.currentState.required"
 			:disabled="question.currentState.readonly"
 			:class="{'inside-highlighted': invalid && submitPressed}"
 			variant="filled"
-			:model-value="question.currentState.value"			
+			:model-value="question.currentState.value"
 			@update:model-value="setValue"
 			@input="doneAnswering = false"
 			@blur="doneAnswering = true"
@@ -41,10 +37,6 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 </template>
 
 <style scoped lang="scss">
-.label-and-hint {
-	margin-bottom: 0.75rem;
-}
-
 .textbox-container {
 	position: relative;
 
