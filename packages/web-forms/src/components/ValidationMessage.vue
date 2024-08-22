@@ -20,7 +20,7 @@ withDefaults(defineProps<{message?: string, showMessage: boolean, addPlaceholder
 }
 .validation-message {
 	color: var(--error-text-color);
-	margin-top: 0.4rem;
+	margin-top: 0.6rem;
 	display: block;
 }
 </style>

@@ -14,9 +14,10 @@ const props = defineProps<{question: QuestionNode}>();
 
 label {
 	font-weight: 400;
+	line-height: 1.8rem;
 
 	.required {
-		color: var(--red-500); // TODO/sk danger color should be a variable
+		color: var(--error-text-color);
 	}
 }
 

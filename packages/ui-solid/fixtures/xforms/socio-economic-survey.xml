@@ -302,6 +302,10 @@
           <text id="languageLevel-4">
             <value>don't know</value>
           </text>
+          <text id="/data/formNote:label">
+            <value>Note: this is a demo Form, please review it before using it for conducting
+              real-world surveys.</value>
+          </text>
           <text id="/data/headOfHousehold:label">
             <value>Household Information</value>
           </text>
@@ -682,6 +686,10 @@
           <text id="languageLevel-4">
             <value>je ne sais pas</value>
           </text>
+          <text id="/data/formNote:label">
+            <value>Remarque: il s'agit d'un formulaire de démonstration, veuillez le consulter avant
+              de l'utiliser pour mener des enquêtes dans le monde réel.</value>
+          </text>
           <text id="/data/headOfHousehold:label">
             <value>Informations sur le ménage</value>
           </text>
@@ -770,6 +778,7 @@
       </itext>
       <instance>
         <data id="ses2018" version="0.1">
+          <formNote />
           <headOfHousehold>
             <region />
             <district />
@@ -1296,6 +1305,7 @@
           </item>
         </root>
       </instance>
+      <bind nodeset="/data/formNote" type="string" readonly="true()" />
       <bind nodeset="/data/headOfHousehold/region" type="string" required="true()" />
       <bind nodeset="/data/headOfHousehold/district" type="string" required="true()" />
       <bind nodeset="/data/headOfHousehold/residentialAddress" type="string" required="true()" />
@@ -1336,6 +1346,9 @@
     </model>
   </h:head>
   <h:body>
+    <input ref="/data/formNote">
+      <label ref="jr:itext('/data/formNote:label')" />
+    </input>
     <group appearance="field-list" ref="/data/headOfHousehold">
       <label ref="jr:itext('/data/headOfHousehold:label')" />
       <select1 appearance="minimal" ref="/data/headOfHousehold/region">

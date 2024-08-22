@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Notes</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="notes" version="20240802121047">
+          <group>
+            <intro />
+            <note_w_hint />
+            <note_hint_only />
+            <note_w_default>A value</note_w_default>
+            <note_w_calculation />
+            <note_w_masked_appearance />
+            <note_w_ex_appearance />
+            <read_only_int />
+            <read_only_int_value>3</read_only_int_value>
+          </group>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/group/intro" readonly="true()" type="string" />
+      <bind nodeset="/data/group/note_w_hint" readonly="true()" type="string" />
+      <bind nodeset="/data/group/note_hint_only" readonly="true()" type="string" />
+      <bind nodeset="/data/group/note_w_default" readonly="true()" type="string" />
+      <bind nodeset="/data/group/note_w_calculation" readonly="true()" type="string"
+        calculate="concat(&quot;A &quot;, &quot;value&quot;)" />
+      <bind nodeset="/data/group/note_w_masked_appearance" readonly="true()" type="string" />
+      <bind nodeset="/data/group/note_w_ex_appearance" readonly="true()" type="string" />
+      <bind nodeset="/data/group/read_only_int" type="int" readonly="true()" />
+      <bind nodeset="/data/group/read_only_int_value" type="int" readonly="true()" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <group appearance="field-list" ref="/data/group">
+      <input ref="/data/group/intro">
+        <label>This form illustrates the note concept in ODK. This is not a concept that exists in
+          the underlying ODK XForms spec, it's introduced by XLSForm and discussed informally.
+          Typically a note only has a label.</label>
+      </input>
+      <input ref="/data/group/note_w_hint">
+        <label>A note with a hint</label>
+        <hint>This is a hint</hint>
+      </input>
+      <input ref="/data/group/note_hint_only">
+        <label></label>
+        <hint>Hint-only note</hint>
+      </input>
+      <input ref="/data/group/note_w_default">
+        <label>A note with a default value</label>
+      </input>
+      <input ref="/data/group/note_w_calculation">
+        <label>A note with a calculation</label>
+      </input>
+      <input appearance="masked" ref="/data/group/note_w_masked_appearance">
+        <label>A note with masked appearance</label>
+      </input>
+      <input appearance="ex:my.cool.app()" ref="/data/group/note_w_ex_appearance">
+        <label>A note with external app appearance</label>
+      </input>
+      <input ref="/data/group/read_only_int">
+        <label>A readonly integer</label>
+      </input>
+      <input ref="/data/group/read_only_int_value">
+        <label>A readonly integer with value</label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

@@ -7,7 +7,7 @@ import RepeatRange from './RepeatRange.vue';
 defineProps<{ nodes: readonly GeneralChildNode[]}>();
 
 const isQuestionNode = (node: GeneralChildNode): node is QuestionNode => {
-	return node.nodeType === 'string' || node.nodeType === 'select';
+	return node.nodeType === 'string' || node.nodeType === 'select' || node.nodeType == 'note';
 };
 
 const isGroupNode = (node: GeneralChildNode): node is GroupNode => {
