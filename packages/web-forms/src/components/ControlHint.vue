@@ -13,7 +13,7 @@ defineProps<{question: QuestionNode}>();
 
 .hint {
 	font-size: 0.85rem;
-	color: var(--surface-600);
+	color: var(--text-color-secondary);
 }
 
 </style>
