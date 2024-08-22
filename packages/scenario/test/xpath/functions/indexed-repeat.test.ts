@@ -11,7 +11,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { assert, describe, expect, it } from 'vitest';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { intAnswer } from '../../../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../../src/jr/Scenario.ts';
@@ -330,4 +330,200 @@ describe('Tests ported from JavaRosa', () => {
 			);
 		});
 	});
+});
+
+describe('Nested repeats', () => {
+	let scenario: Scenario;
+
+	beforeEach(async () => {
+		// prettier-ignore
+		scenario = await Scenario.init('indexed-repeat', html(
+			head(
+				title('indexed-repeat'),
+				model(
+					mainInstance(t('data id="indexed-repeat"',
+						t('r1-d1 jr:template=""',
+							t('inside-r1-d1'),
+							t('r1-d2 jr:template=""',
+								t('inside-r1-d2'),
+								t('r1-d3 jr:template=""',
+									t('inside-r1-d3')))),
+
+						t('r2-d1 jr:template=""',
+							t('inside-r2-d1'),
+							t('from-r1-d1'),
+							t('r2-d2 jr:template=""',
+								t('inside-r2-d2'),
+								t('from-r1-d2-a'),
+								t('from-r1-d2-b'),
+								t('r2-d3 jr:template=""',
+									t('inside-r2-d3'),
+									t('from-r1-d3-a'),
+									t('from-r1-d3-b'))))
+					)),
+					bind('/data/r1-d1/inside-r1-d1')
+						.calculate("concat('[', position(..), ']')"),
+					bind('/data/r1-d1/r1-d2/inside-r1-d2')
+						.calculate("concat('[', position(../..), ']', '[', position(..), ']')"),
+					bind('/data/r1-d1/r1-d2/r1-d3/inside-r1-d3')
+						.calculate("concat('[', position(../../..), ']', '[', position(../..), ']', '[', position(..), ']')"),
+					bind('/data/r2-d1/from-r1-d1')
+						.calculate('indexed-repeat(/data/r1-d1/inside-r1-d1, /data/r1-d1, position(..))'),
+					bind('/data/r2-d1/r2-d2/from-r1-d2-a')
+						.calculate('indexed-repeat(/data/r1-d1/r1-d2/inside-r1-d2, /data/r1-d1, position(../..), /data/r1-d1/r1-d2, position(..))'),
+					bind('/data/r2-d1/r2-d2/from-r1-d2-b')
+						// Same as from-r1-d2-a with the repeatN/indexN pairs swapped
+						.calculate('indexed-repeat(/data/r1-d1/r1-d2/inside-r1-d2, /data/r1-d1/r1-d2, position(..), /data/r1-d1, position(../..))'),
+					bind('/data/r2-d1/r2-d2/r2-d3/from-r1-d3-a')
+						.calculate('indexed-repeat(/data/r1-d1/r1-d2/r1-d3/inside-r1-d3, /data/r1-d1, position(../../..), /data/r1-d1/r1-d2, position(../..), /data/r1-d1/r1-d2/r1-d3, position(..))'),
+					bind('/data/r2-d1/r2-d2/r2-d3/from-r1-d3-b')
+					// Same as from-r1-d3-a with the repeatN/indexN pairs reordered
+						.calculate('indexed-repeat(/data/r1-d1/r1-d2/r1-d3/inside-r1-d3, /data/r1-d1/r1-d2, position(../..), /data/r1-d1, position(../../..), /data/r1-d1/r1-d2/r1-d3, position(..))')
+				)
+		),
+		body(
+			repeat('/data/r1-d1',
+				input('/data/r1-d1/inside-r1-d1'),
+				repeat('/data/r1-d1/r1-d2',
+					input('/data/r1-d1/r1-d2/inside-r1-d2'),
+					repeat('/data/r1-d1/r1-d2/r1-d3',
+						input('/data/r1-d1/r1-d2/r1-d3/inside-r1-d3')))),
+
+				repeat('/data/r2-d1',
+					input('/data/r2-d1/inside-r2-d1'),
+					repeat('/data/r2-d1/r2-d2',
+						input('/data/r2-d1/r2-d2/inside-r2-d2'),
+						repeat('/data/r2-d1/r2-d2/r2-d3',
+							input('/data/r2-d1/r2-d2/r2-d3/inside-r2-d3'))))
+		)));
+
+		// Create two r1-d1
+		scenario.createNewRepeat('/data/r1-d1');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]');
+		scenario.createNewRepeat('/data/r1-d1');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]');
+
+		// For each r1-d1, create two r1-d2
+		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]');
+		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]');
+
+		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]');
+		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]');
+
+		// For each r1-d2, create two r1-d3
+		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[1]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]/r1-d3[1]');
+		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[1]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]/r1-d3[2]');
+
+		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[2]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]/r1-d3[1]');
+		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[2]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]/r1-d3[2]');
+
+		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[1]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]/r1-d3[1]');
+		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[1]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]/r1-d3[2]');
+
+		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[2]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]/r1-d3[1]');
+		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[2]/r1-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]/r1-d3[2]');
+
+		// Create two r2-d1
+		scenario.createNewRepeat('/data/r2-d1');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]');
+		scenario.createNewRepeat('/data/r2-d1');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]');
+
+		// For each r2-d1, create two r1-d2
+		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]');
+		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]');
+
+		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]');
+		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]');
+
+		// For each r2-d2, create two r2-d3
+		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[1]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]/r2-d3[1]');
+		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[1]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]/r2-d3[2]');
+
+		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[2]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]/r2-d3[1]');
+		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[2]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]/r2-d3[2]');
+
+		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[1]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]/r2-d3[1]');
+		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[1]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]/r2-d3[2]');
+
+		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[2]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[1]');
+		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[2]/r2-d3');
+		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[2]');
+	});
+
+	it.fails('handles top-level repeats', () => {
+		expect(scenario.answerOf('/data/r2-d1[1]/from-r1-d1')).toEqualAnswer(stringAnswer('[1]'));
+		expect(scenario.answerOf('/data/r2-d1[2]/from-r1-d1')).toEqualAnswer(stringAnswer('[2]'));
+	});
+
+	it.fails.each([{ calculatedField: 'from-r1-d2-a' }, { calculatedField: 'from-r1-d2-b' }])(
+		'handles repeats two deep (field: $calculatedField)',
+		({ calculatedField }) => {
+			expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
+				stringAnswer('[1][1]')
+			);
+			expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/${calculatedField}`)).toEqualAnswer(
+				stringAnswer('[1][2]')
+			);
+			expect(scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
+				stringAnswer('[2][1]')
+			);
+			expect(scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/${calculatedField}`)).toEqualAnswer(
+				stringAnswer('[2][2]')
+			);
+		}
+	);
+
+	it.fails.each([{ calculatedField: 'from-r1-d3-a' }, { calculatedField: 'from-r1-d3-b' }])(
+		'handles repeats three deep (field: $calculatedField)',
+		({ calculatedField }) => {
+			expect(
+				scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/r2-d3[1]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[1][1][1]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/r2-d3[2]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[1][1][2]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/r2-d3[1]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[1][2][1]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/r2-d3[2]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[1][2][2]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/r2-d3[1]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[2][1][1]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/r2-d3[2]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[2][1][2]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/r2-d3[1]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[2][2][1]'));
+			expect(
+				scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/r2-d3[2]/${calculatedField}`)
+			).toEqualAnswer(stringAnswer('[2][2][2]'));
+		}
+	);
 });
