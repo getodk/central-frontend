@@ -38,7 +38,7 @@ const submitPressed = inject('submitPressed');
 .question-container {
 	display: flex;
 	flex-direction: column;
-	padding: 0.5rem 1rem 0 1rem;
+	padding: 0.5rem 1rem;
 	scroll-margin-top: 4rem;
 	border-radius: 10px;
 
