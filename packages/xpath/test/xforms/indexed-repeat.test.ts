@@ -293,7 +293,7 @@ describe('indexed-repeat(...)', () => {
 		}
 
 		const absoluteDepth2Arg = (baseExpression: string) => {
-			return baseExpression.replace(/, \.\/d2,/, ', /data/d1/d2,');
+			return baseExpression.replace(/, \.\/d1\/d2,/, ', /data/d1/d2,');
 		};
 
 		const absoluteDepth3Arg = (baseExpression: string) => {
@@ -353,55 +353,55 @@ describe('indexed-repeat(...)', () => {
 				expected: '',
 			},
 
-			// Depth 2, relative to depth 1, numeric position
+			// Depth 2, numeric position
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 1, ./d2, 1)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, 1, ./d1/d2, 1)',
 				expected: '1.1',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 1, ./d2, 2)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, 1, ./d1/d2, 2)',
 				expected: '1.2',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 1, ./d2, 3)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, 1, ./d1/d2, 3)',
 				expected: '',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 2, ./d2, 2)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, 2, ./d1/d2, 2)',
 				expected: '2.2',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 2, ./d2, 3)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, 2, ./d1/d2, 3)',
 				expected: '',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 3, ./d2, 2)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, 3, ./d1/d2, 2)',
 				expected: '',
 			},
 
 			// Depth 2, mixed numeric string/absolute node-set positions
 			{
-				expression: 'indexed-repeat(./v, /data/d1, "1", ./d2, /data/d0pos1)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, "1", ./d1/d2, /data/d0pos1)',
 				expected: '1.1',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, /data/d0pos1, ./d2, "2")',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, /data/d0pos1, ./d1/d2, "2")',
 				expected: '1.2',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, "1", ./d2, /data/d0pos3)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, "1", ./d1/d2, /data/d0pos3)',
 				expected: '',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, /data/d0pos2, ./d2, "2")',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, /data/d0pos2, ./d1/d2, "2")',
 				expected: '2.2',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, "2", ./d2, /data/d0pos3)',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, "2", ./d1/d2, /data/d0pos3)',
 				expected: '',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, /data/d0pos3, ./d2, "2")',
+				expression: 'indexed-repeat(./d1/d2/v, /data/d1, /data/d0pos3, ./d1/d2, "2")',
 				expected: '',
 			},
 
