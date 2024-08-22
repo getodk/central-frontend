@@ -327,29 +327,29 @@ describe('indexed-repeat(...)', () => {
 		const cases: readonly DepthCase[] = [
 			// Depth 1, numeric position
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 1)',
+				expression: 'indexed-repeat(./d1/v, /data/d1, 1)',
 				expected: '1',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 2)',
+				expression: 'indexed-repeat(./d1/v, /data/d1, 2)',
 				expected: '2',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, 3)',
+				expression: 'indexed-repeat(./d1/v, /data/d1, 3)',
 				expected: '',
 			},
 
 			// Depth 1, absolute node-set position
 			{
-				expression: 'indexed-repeat(./v, /data/d1, /data/d0pos1)',
+				expression: 'indexed-repeat(./d1/v, /data/d1, /data/d0pos1)',
 				expected: '1',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, /data/d0pos2)',
+				expression: 'indexed-repeat(./d1/v, /data/d1, /data/d0pos2)',
 				expected: '2',
 			},
 			{
-				expression: 'indexed-repeat(./v, /data/d1, /data/d0pos3)',
+				expression: 'indexed-repeat(./d1/v, /data/d1, /data/d0pos3)',
 				expected: '',
 			},
 
