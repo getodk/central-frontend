@@ -101,7 +101,7 @@ describe('Tests ported from JavaRosa', () => {
 		 *   not evaluating arbitrary XPath expressions to identify the question
 		 *   being answered).
 		 */
-		it.fails.each<IndexedRepeatRelativeRefsOptions>(parameters)('$testName', async (options) => {
+		it.each<IndexedRepeatRelativeRefsOptions>(parameters)('$testName', async (options) => {
 			const scenario = await Scenario.init(
 				'Some form',
 				html(
@@ -178,6 +178,11 @@ describe('Tests ported from JavaRosa', () => {
 		 * - Bind for `calc` is updated to reference `/data/calc`, as is clearly
 		 *   intended in the original draft PR.
 		 *
+		 * - Failure is due to function implementation in `@getodk/xpath`, which has
+		 *   little if any concept of repeats or what "is" a repeat. Unclear if this
+		 *   failure is meaningful for users, or if the test is mostly demonstrating
+		 *   that aspect of JavaRosa implementation detail.
+		 *
 		 * JR: firstArgNotChildOfRepeat_throwsException
 		 */
 		describe('first argument not child of a repeat', () => {
@@ -222,7 +227,7 @@ describe('Tests ported from JavaRosa', () => {
 		 *
 		 * JR: getsIndexedValueInSingleRepeat
 		 */
-		it.fails('gets an indexed value in a single repeat instance', async () => {
+		it('gets an indexed value in a single repeat instance', async () => {
 			// prettier-ignore
 			const scenario = await Scenario.init('indexed-repeat', html(
 				head(
@@ -280,7 +285,7 @@ describe('Tests ported from JavaRosa', () => {
 		 *
 		 * JR: getsIndexedValueUsingParallelRepeatPosition
 		 */
-		it.fails('gets an indexed value using parallel repeat position', async () => {
+		it('gets an indexed value using parallel repeat position', async () => {
 			// prettier-ignore
 			const scenario = await Scenario.init('indexed-repeat', html(
 				head(
@@ -474,12 +479,12 @@ describe('Nested repeats', () => {
 		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[2]');
 	});
 
-	it.fails('handles top-level repeats', () => {
+	it('handles top-level repeats', () => {
 		expect(scenario.answerOf('/data/r2-d1[1]/from-r1-d1')).toEqualAnswer(stringAnswer('[1]'));
 		expect(scenario.answerOf('/data/r2-d1[2]/from-r1-d1')).toEqualAnswer(stringAnswer('[2]'));
 	});
 
-	it.fails.each([{ calculatedField: 'from-r1-d2-a' }, { calculatedField: 'from-r1-d2-b' }])(
+	it.each([{ calculatedField: 'from-r1-d2-a' }, { calculatedField: 'from-r1-d2-b' }])(
 		'handles repeats two deep (field: $calculatedField)',
 		({ calculatedField }) => {
 			expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
@@ -497,7 +502,7 @@ describe('Nested repeats', () => {
 		}
 	);
 
-	it.fails.each([{ calculatedField: 'from-r1-d3-a' }, { calculatedField: 'from-r1-d3-b' }])(
+	it.each([{ calculatedField: 'from-r1-d3-a' }, { calculatedField: 'from-r1-d3-b' }])(
 		'handles repeats three deep (field: $calculatedField)',
 		({ calculatedField }) => {
 			expect(
