@@ -24,7 +24,6 @@ import type { AnyChildNode, GeneralChildNode, RepeatRange } from '../hierarchy.t
 import type { NodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
-import type { RepeatRangeUncontrolled } from './RepeatRangeUncontrolled.ts';
 
 export type { RepeatDefinition };
 
@@ -204,7 +203,7 @@ export class RepeatInstance
 	 *    {@link DescendantNode.remove}.
 	 *
 	 * These removal steps **must also** occur before any update to the parent
-	 * {@link RepeatRangeUncontrolled}'s reactive children state.
+	 * {@link RepeatRange}'s reactive children state.
 	 */
 	override remove(this: AnyChildNode): void {
 		this.contextNode.remove();

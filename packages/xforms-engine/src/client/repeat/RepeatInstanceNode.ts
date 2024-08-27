@@ -5,7 +5,7 @@ import type { GeneralChildNode, RepeatRangeNode } from '../hierarchy.ts';
 import type { NodeAppearances } from '../NodeAppearances.ts';
 import type { RootNode } from '../RootNode.ts';
 import type { AncestorNodeValidationState } from '../validation.ts';
-import type { RepeatRangeUncontrolledNode } from './RepeatRangeUncontrolledNode.ts';
+import type { BaseRepeatRangeNode } from './BaseRepeatRangeNode.ts';
 
 export interface RepeatInstanceNodeState extends BaseNodeState {
 	// TODO(?): Previous iteration included an `index` getter here. I don't see it
@@ -33,12 +33,12 @@ export interface RepeatInstanceNode extends BaseNode {
 	readonly root: RootNode;
 
 	/**
-	 * A repeat instance may only be a child of a {@link RepeatRangeUncontrolledNode}.
+	 * A repeat instance may only be a child of a {@link RepeatRangeNode}.
 	 *
 	 * Note: the web-forms engine's representation of this structure differs from
 	 * the underlying XForms specification's primary instance structure.
 	 *
-	 * @see {@link RepeatRangeUncontrolledNode} for additional detail.
+	 * @see {@link BaseRepeatRangeNode} for additional detail.
 	 */
 	readonly parent: RepeatRangeNode;
 
