@@ -213,17 +213,23 @@ export const indexedRepeat = new NodeSetFunction(
 		// order by:
 		//
 		// 1. Filtering each set of repeats to include **only** the nodes contained
-		//    by the previously resolved repeat.
+		//    by the previously resolved repeat (where one was resolved for a
+		//    previous pair).
 		//
 		// 2. Selecting the repeat at the specified/evaluated position (of those
 		//    filtered in 1).
 		let repeatContextNode: ContextNode;
 
-		for (const pair of pairs) {
+		for (const [index, pair] of pairs.entries()) {
 			const { position } = pair;
-			const repeats = pair.repeats.filter((repeat) => {
-				return repeatContextNode?.contains(repeat) !== false;
-			});
+
+			let { repeats } = pair;
+
+			if (index > 0) {
+				repeats = pair.repeats.filter((repeat) => {
+					return repeatContextNode.contains(repeat);
+				});
+			}
 
 			// Select next repeat context at the current `repeatN`/`indexN` position.
 			//
