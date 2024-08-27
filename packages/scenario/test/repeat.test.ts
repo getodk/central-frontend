@@ -3182,3 +3182,32 @@ describe('jr:noAddRemove', () => {
 		expect(scenario.proposed_canCreateOrRemoveRepeat('/data/rep3')).toBe(false);
 	});
 });
+
+describe('jr:count and jr:noAddRemove="false()"', () => {
+	it('does not negate engine control of count-controlled repeats', async () => {
+		const scenario = await Scenario.init(
+			'Direct reference count updates',
+			// prettier-ignore
+			html(
+				head(
+					title('Direct reference count updates'),
+					model(
+						mainInstance(
+							t('data id="direct-reference-count-updates"',
+								t('rep',
+									t('quest')))
+						),
+						bind('/data/rep/quest').type('string')
+					)
+				),
+				body(
+					t('repeat nodeset="/data/rep" jr:count="10" jr:noAddRemove="false()"',
+						input('/data/rep1/quest')
+					)
+				)
+			)
+		);
+
+		expect(scenario.proposed_canCreateOrRemoveRepeat('/data/rep')).toBe(false);
+	});
+});
