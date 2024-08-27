@@ -2702,14 +2702,16 @@ describe('jr:count', () => {
 			readonly expected: number;
 		}
 
-		it.each<ConstantValueCase>([
+		const cases: readonly ConstantValueCase[] = [
 			{ constantValue: 1, expected: 1 },
 			{ constantValue: 5, expected: 5 },
 			{ constantValue: '12', expected: 12 },
 			{ constantValue: true, expected: 1 },
 			{ constantValue: false, expected: 0 },
-		])(
-			'produces $expected repeat instances for a count computed to $constantValue',
+		];
+
+		it.each<ConstantValueCase>(cases)(
+			'produces $expected repeat instances for a count computed to $constantValue by a referenced `calculate` expression',
 			async ({ constantValue: staticValue, expected }) => {
 				let calculateExpression: string;
 
@@ -2761,6 +2763,66 @@ describe('jr:count', () => {
 						body(
 							input('/data/rep-count'),
 							repeat('/data/rep', '/data/rep-count',
+								input('/data/rep/quest')
+							)
+						)
+					)
+				);
+
+				expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(expected);
+			}
+		);
+
+		it.each<ConstantValueCase>(cases)(
+			'produces $expected repeat instances for a count computed to $constantValue by a static `jr:count` expression',
+			async ({ constantValue: staticValue, expected }) => {
+				let jrCountExpression: string;
+
+				switch (typeof staticValue) {
+					case 'boolean':
+						// eslint-disable-next-line no-console
+						console.warn(
+							'TODO: this cast should not be necessary when we properly support non-string data types!'
+						);
+
+						jrCountExpression = `number(${staticValue}())`;
+						break;
+
+					case 'number':
+						jrCountExpression = `${staticValue}`;
+						break;
+
+					case 'string': {
+						const numericString = Number(staticValue);
+
+						expect(numericString).not.toBeNaN();
+
+						jrCountExpression = `'${staticValue}'`;
+						break;
+					}
+
+					default:
+						throw new Error(`Unexpected constant value of type ${typeof staticValue}`);
+				}
+
+				const scenario = await Scenario.init(
+					'Constant count value',
+					// prettier-ignore
+					html(
+						head(
+							title('Constant count value'),
+							model(
+								mainInstance(
+									t(
+										'data id="repeat-count-constant-value"',
+										t('rep',
+											t('quest')))
+								),
+								bind('/data/rep/quest').type('string')
+							)
+						),
+						body(
+							repeat('/data/rep', jrCountExpression,
 								input('/data/rep/quest')
 							)
 						)
