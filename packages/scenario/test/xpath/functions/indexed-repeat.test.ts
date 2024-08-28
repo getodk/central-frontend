@@ -532,3 +532,100 @@ describe('Nested repeats', () => {
 		}
 	);
 });
+
+/**
+ * **SPEC NOTES**
+ *
+ * This suite explicitly tests the fact that the `indexed-repeat` implementation
+ * returns a node-set. In review, we discussed the fact that this goes beyond
+ * the
+ * {@link https://getodk.github.io/xforms-spec/#fn:indexed-repeat | ODK XForms spec language},
+ * which currently says that `indexed-repeat`...
+ *
+ * > Returns a single node value from a node-set by selecting the 1-based index
+ * > of a repeat node-set that this node is a child of.
+ *
+ * In the review discussion, a case was made that the mechanism for producing
+ * this "single node value" would be casting the expression's LocationPath
+ * equivalent to string. There was some doubt about whether this is expected,
+ * based on the behavior of other XPath functions operating on a node-set (such
+ * as `count`) or with distinct behavior for node-sets and strings respectively
+ * (such as `concat`).
+ *
+ * These same tests have been run in JavaRosa, confirming that the behavior is
+ * consistent between both implementations. As such, we've decided to keep this
+ * consistent behavior, and to update the spec language accordingly. These tests
+ * further capture the fact that this decision is intentional.
+ */
+describe('Behavior of node-set results', () => {
+	let scenario: Scenario;
+
+	beforeEach(async () => {
+		// prettier-ignore
+		scenario = await Scenario.init('indexed-repeat', html(
+			head(
+				title('indexed-repeat'),
+				model(
+					mainInstance(
+						t('data id="indexed-repeat"',
+							t('repeat1 jr:template=""',
+								t('repeat2 jr:template=""',
+									t('value'))),
+							t('indexed-repeat-concat'),
+							t('indexed-repeat-count'),
+							t('meta',
+								t('instanceID')))),
+
+					bind('/data/repeat1/repeat2/value').type('string'),
+					bind('/data/indexed-repeat-concat')
+						.readonly('true()')
+						.type('string')
+						.calculate('concat(indexed-repeat(  /data/repeat1/repeat2/value  , /data/repeat1 , 1))'),
+					bind('/data/indexed-repeat-count')
+						.readonly('true()')
+						.type('string')
+						.calculate('count(indexed-repeat(  /data/repeat1/repeat2/value  , /data/repeat1 , 1))')
+				)
+			),
+			body(
+				group('/data/repeat1',
+					repeat('/data/repeat1',
+						group('/data/repeat1/repeat2',
+							repeat('/data/repeat1/repeat2',
+								input('/data/repeat1/repeat2/value'))))),
+				input('/data/indexed-repeat-concat'),
+				input('/data/indexed-repeat-count')
+			)));
+	});
+
+	it('includes multiple target nodes in a node-set', () => {
+		scenario.createNewRepeat('/data/repeat1');
+		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+		scenario.answer('/data/repeat1[1]/repeat2[1]/value', 'a');
+		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+		scenario.answer('/data/repeat1[1]/repeat2[2]/value', 'b');
+
+		expect(scenario.answerOf('/data/indexed-repeat-concat')).toEqualAnswer(stringAnswer('ab'));
+		expect(scenario.answerOf('/data/indexed-repeat-count')).toEqualAnswer(intAnswer(2));
+	});
+
+	it('excludes target nodes outside the indexed-repeat subtree', () => {
+		scenario.createNewRepeat('/data/repeat1');
+		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+		scenario.answer('/data/repeat1[1]/repeat2[1]/value', 'a');
+		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+		scenario.answer('/data/repeat1[1]/repeat2[2]/value', 'b');
+
+		// Add second repeat1 and subtree, structurally matching the first. We'll
+		// check that nothing added here is considered (since the `indexed-repeat`
+		// calls are hardcoded to index 1).
+		scenario.createNewRepeat('/data/repeat1');
+		scenario.createNewRepeat('/data/repeat1[2]/repeat2');
+		scenario.answer('/data/repeat1[2]/repeat2[1]/value', 'a');
+		scenario.createNewRepeat('/data/repeat1[2]/repeat2');
+		scenario.answer('/data/repeat1[2]/repeat2[2]/value', 'b');
+
+		expect(scenario.answerOf('/data/indexed-repeat-concat')).toEqualAnswer(stringAnswer('ab'));
+		expect(scenario.answerOf('/data/indexed-repeat-count')).toEqualAnswer(intAnswer(2));
+	});
+});
