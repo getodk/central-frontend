@@ -233,11 +233,22 @@ export abstract class InstanceNode<
 	subscribe(): void {
 		const { engineState } = this;
 
-		if (engineState.relevant) {
-			engineState.reference;
-			engineState.relevant;
-			engineState.children;
-			engineState.value;
-		}
+		// Note: a previous iteration of this default implementation guarded these
+		// reactive reads behind a relevance check. This caused timing issues for
+		// downstream computations referencing a node whose relevance changes.
+		//
+		// That original guard was intended to reduce excessive redundant
+		// computations, and so removing it is intended as a naive compromise of
+		// performance for obvious correctness improvements.
+		//
+		// This compromise, like many others, will be moot if/when we decide to
+		// decouple XPath evaluation from the browser/XML DOM: reactive
+		// subscriptions would be established by evaluation of the expressions
+		// themselves (as they traverse instance state and access values), rather
+		// than this safer/less focused approach.
+		engineState.reference;
+		engineState.relevant;
+		engineState.children;
+		engineState.value;
 	}
 }

@@ -11,7 +11,10 @@ export interface XFormGroupProps {
 }
 
 const repeatNode = (node: GroupNode | RepeatRangeNode): RepeatRangeNode | null => {
-	if (node.nodeType === 'repeat-range') {
+	if (
+		node.nodeType === 'repeat-range:controlled' ||
+		node.nodeType === 'repeat-range:uncontrolled'
+	) {
 		return node;
 	}
 
@@ -28,11 +31,7 @@ const groupNode = (node: GroupNode | RepeatRangeNode): GroupNode | null => {
 
 export const XFormGroup = (props: XFormGroupProps) => {
 	const groupLabel = () => {
-		if (props.node.nodeType === 'repeat-range') {
-			return null;
-		}
-
-		return props.node.currentState.label;
+		return groupNode(props.node)?.currentState.label ?? null;
 	};
 	const isRelevant = createMemo(() => {
 		return props.node.currentState.relevant;

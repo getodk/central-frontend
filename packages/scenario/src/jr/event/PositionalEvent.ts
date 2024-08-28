@@ -48,7 +48,8 @@ const singletons = new Map<AnyEventNode, UnknownPositionalEvent>();
  *     the leaf nodes of a form with a corresponding user-interactive control.
  *   - An artificial landmark, representing the point at which a new <repeat>
  *     instance may be added. This roughly corresponds to a
- *     {@link RepeatRangeNode}, most specifically the end of that range.
+ *     {@link AnyRepeatRangeNode | repeat range}, most specifically the end of
+ *     that range.
  *
  * For those subclasses/"events" corresponding to a specific type of node, the
  * subclass may also implement additional node-specific behavior with which an

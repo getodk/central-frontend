@@ -1,5 +1,12 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import type { AnyNode, RepeatRangeNode, RootNode, SelectNode } from '@getodk/xforms-engine';
+import type {
+	AnyNode,
+	RepeatRangeControlledNode,
+	RepeatRangeNode,
+	RepeatRangeUncontrolledNode,
+	RootNode,
+	SelectNode,
+} from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -8,6 +15,7 @@ import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { TestFormResource } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
+import { isRepeatRange } from '../client/predicates.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
 import { ImplementationPendingError } from '../error/ImplementationPendingError.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
@@ -467,13 +475,8 @@ export class Scenario {
 
 		const { node } = event;
 
-		// TODO: we should probably remove this when we add support for `jr:count`
-		// and `jr:noAddRemove`. There will likely be other, engine/client API-level
-		// restrictions which address this. For now, this is intended to ensure that
-		// we don't mistakenly introduce new explicit repeat creation calls where
-		// the repeat under test is count/fixed.
-		if (!this.proposed_canCreateNewRepeat(repeatReference)) {
-			throw new Error(`Repeat is/will be engine controlled: ${repeatReference}`);
+		if (!this.isClientControlled(node)) {
+			throw new Error(`Repeat is engine controlled: ${repeatReference}`);
 		}
 
 		const { reference } = node.currentState;
@@ -481,6 +484,10 @@ export class Scenario {
 
 		if (repeatRange == null) {
 			throw new Error(`Failed to find closest repeat range to node with reference: ${reference}`);
+		}
+
+		if (!this.isClientControlled(repeatRange)) {
+			throw new Error('Cannot remove repeat instance: repeat range is engine controlled');
 		}
 
 		repeatRange.addInstances();
@@ -654,7 +661,7 @@ export class Scenario {
 	countRepeatInstancesOf(reference: string): number {
 		const node = this.getInstanceNode(reference);
 
-		if (node.nodeType !== 'repeat-range') {
+		if (!isRepeatRange(node)) {
 			return -1;
 		}
 
@@ -707,7 +714,7 @@ export class Scenario {
 		try {
 			const ancestorNode = this.getInstanceNode(positionPredicatedReference);
 
-			if (ancestorNode.nodeType !== 'repeat-range') {
+			if (!isRepeatRange(ancestorNode)) {
 				// eslint-disable-next-line no-console
 				console.trace(
 					'Unexpected position predicate for ancestor reference:',
@@ -719,7 +726,7 @@ export class Scenario {
 				return;
 			}
 
-			if (!this.proposed_canCreateNewRepeat(positionPredicatedReference)) {
+			if (!this.proposed_canCreateOrRemoveRepeat(positionPredicatedReference)) {
 				return;
 			}
 
@@ -760,18 +767,12 @@ export class Scenario {
 		return;
 	}
 
-	/** @todo this should change when we support `jr:count` */
-	private isCountControlled(node: RepeatRangeNode): boolean {
-		return node.definition.bodyElement.countExpression != null;
+	private isCountControlled(node: RepeatRangeNode): node is RepeatRangeControlledNode {
+		return node.nodeType === 'repeat-range:controlled';
 	}
 
-	/** @todo this should change when we support `jr:noAddRemove` */
-	private isFixedCount(node: RepeatRangeNode): boolean {
-		return node.definition.bodyElement.isFixedCount;
-	}
-
-	private isClientControlled(node: RepeatRangeNode): boolean {
-		return !this.isCountControlled(node) && !this.isFixedCount(node);
+	private isClientControlled(node: RepeatRangeNode): node is RepeatRangeUncontrolledNode {
+		return !this.isCountControlled(node);
 	}
 
 	/**
@@ -784,14 +785,14 @@ export class Scenario {
 	 * question "can I create a repeat instance in this specified
 	 * range/sequence/series?"
 	 */
-	proposed_canCreateNewRepeat(repeatRangeReference: string): boolean {
+	proposed_canCreateOrRemoveRepeat(repeatRangeReference: string): boolean {
 		const node = getNodeForReference(this.instanceRoot, repeatRangeReference);
 
 		if (node == null) {
 			return false;
 		}
 
-		if (node.nodeType !== 'repeat-range') {
+		if (!isRepeatRange(node)) {
 			throw new Error(
 				`Expected a repeat range with reference ${repeatRangeReference}, found a node of type ${node.nodeType}`
 			);

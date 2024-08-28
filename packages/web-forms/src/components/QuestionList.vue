@@ -15,7 +15,7 @@ const isGroupNode = (node: GeneralChildNode): node is GroupNode => {
 };
 
 const isRepeatRangeNode = (node: GeneralChildNode): node is RepeatRangeNode => {
-	return node.nodeType === 'repeat-range';
+	return node.nodeType === 'repeat-range:controlled' || node.nodeType === 'repeat-range:uncontrolled';
 };
 </script>
 

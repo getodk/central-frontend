@@ -7,12 +7,11 @@ import type { AnyDescendantNodeDefinition } from '../../model/DescendentNodeDefi
 import type { LeafNodeDefinition } from '../../model/LeafNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
 import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
-import type { RepeatInstance } from '../RepeatInstance.ts';
-import type { RepeatRange } from '../RepeatRange.ts';
-import type { Root } from '../Root.ts';
-import type { AnyChildNode, GeneralParentNode } from '../hierarchy.ts';
+import type { AnyChildNode, GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
+import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
+import type { Root } from '../Root.ts';
 import type { InstanceNodeStateSpec } from './InstanceNode.ts';
 import { InstanceNode } from './InstanceNode.ts';
 

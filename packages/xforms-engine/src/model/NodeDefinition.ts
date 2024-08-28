@@ -3,7 +3,7 @@ import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts
 import type { BindDefinition } from './BindDefinition.ts';
 import type { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
-import type { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
+import type { AnyRepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import type { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 import type { SubtreeDefinition } from './SubtreeDefinition.ts';
@@ -71,7 +71,9 @@ export type ParentNodeDefinition =
 
 // prettier-ignore
 export type ChildNodeDefinition =
-	LeafNodeDefinition | RepeatRangeDefinition | SubtreeDefinition;
+	| AnyRepeatRangeDefinition
+	| LeafNodeDefinition
+	| SubtreeDefinition;
 
 // prettier-ignore
 export type ChildNodeInstanceDefinition =
@@ -135,7 +137,7 @@ export interface NodeDefinition<Type extends NodeDefinitionType> {
 export type AnyNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootDefinition
-	| RepeatRangeDefinition
+	| AnyRepeatRangeDefinition
 	| RepeatTemplateDefinition
 	| RepeatInstanceDefinition
 	| SubtreeDefinition

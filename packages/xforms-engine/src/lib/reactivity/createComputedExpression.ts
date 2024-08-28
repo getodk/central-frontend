@@ -13,6 +13,7 @@ import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 interface ComputedExpressionResults {
 	readonly boolean: boolean;
 	readonly nodes: Node[];
+	readonly number: number;
 	readonly string: string;
 }
 
@@ -43,6 +44,11 @@ const expressionEvaluator = <Type extends DependentExpressionResultType>(
 		case 'nodes':
 			return (() => {
 				return evaluator.evaluateNodes(expression, options);
+			}) as ExpressionEvaluator<Type>;
+
+		case 'number':
+			return (() => {
+				return evaluator.evaluateNumber(expression, options);
 			}) as ExpressionEvaluator<Type>;
 
 		case 'string':

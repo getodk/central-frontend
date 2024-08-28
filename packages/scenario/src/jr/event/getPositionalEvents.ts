@@ -58,7 +58,8 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 				case 'repeat-instance':
 					return RepeatInstanceEvent.from(node);
 
-				case 'repeat-range':
+				case 'repeat-range:controlled':
+				case 'repeat-range:uncontrolled':
 					return PromptNewRepeatEvent.from(node);
 
 				case 'group':

@@ -20,7 +20,8 @@ export const collectFlatNodeList = (currentNode: AnyNode): readonly AnyNode[] =>
 		case 'subtree':
 			return [currentNode, currentNode.currentState.children.map(collectFlatNodeList)].flat(2);
 
-		case 'repeat-range':
+		case 'repeat-range:controlled':
+		case 'repeat-range:uncontrolled':
 			return [currentNode.currentState.children.map(collectFlatNodeList), currentNode].flat(2);
 
 		case 'model-value':
@@ -46,7 +47,8 @@ export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | n
 		case 'root':
 			return null;
 
-		case 'repeat-range':
+		case 'repeat-range:controlled':
+		case 'repeat-range:uncontrolled':
 			return currentNode;
 
 		case 'repeat-instance':

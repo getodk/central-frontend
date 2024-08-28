@@ -1,8 +1,13 @@
 // prettier-ignore
+export type RepeatRangeNodeType =
+	| 'repeat-range:controlled'
+	| 'repeat-range:uncontrolled'
+
+// prettier-ignore
 export type InstanceNodeType =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| 'root'
-	| 'repeat-range'
+	| RepeatRangeNodeType
 	| 'repeat-instance'
 	| 'group'
 	| 'subtree'

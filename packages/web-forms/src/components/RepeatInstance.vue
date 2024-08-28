@@ -7,8 +7,6 @@ import QuestionList from './QuestionList.vue';
 
 const props = defineProps<{ instance: RepeatInstanceNode, instanceIndex: number }>();
 
-const emit = defineEmits(['remove']);
-
 const isGroup = (child: GeneralChildNode) => {
 	return (
 		child.definition.bodyElement?.type === 'logical-group' ||
@@ -26,7 +24,7 @@ const label = computed(() => {
 		return props.instance.currentState.children[0].currentState.label?.asString
 	}
 
-	// Use RepeatRangeNode label if it's there
+	// Use parent (repeat range) label if it's there
 	// TODO/sk: use state.label.asString
 	if(props.instance.parent.definition.bodyElement.label?.chunks[0]?.stringValue){
 		return `${props.instance.parent.definition.bodyElement.label?.chunks[0].stringValue}`;
@@ -47,14 +45,24 @@ const children = computed(() => {
 	}
 });
 
-const menuItems: MenuItem[] = [
-	{
-		// TODO: translations
-		label: 'Remove',
-		icon: 'icon-delete',
-		command: () => emit("remove")
+const menuItems = computed((): MenuItem[] | undefined => {
+	const { parent } = props.instance;
+
+	if (parent.nodeType === 'repeat-range:controlled') {
+		return;
 	}
-];
+
+	return [
+		{
+			/* TODO: translations */
+			label: 'Remove',
+			icon: 'icon-delete',
+			command: () => {
+				return parent.removeInstances(props.instanceIndex);
+			},
+		},
+	];
+});
 
 </script>
 <template>

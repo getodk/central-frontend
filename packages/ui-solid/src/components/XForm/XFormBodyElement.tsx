@@ -32,7 +32,8 @@ const groupLikeNode = (props: XFormBodyElementProps): GroupLikeNode | null => {
 
 	switch (node.nodeType) {
 		case 'group':
-		case 'repeat-range':
+		case 'repeat-range:controlled':
+		case 'repeat-range:uncontrolled':
 			return node;
 
 		default:

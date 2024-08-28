@@ -15,13 +15,15 @@ export type {
 	AnyParentNode,
 	GeneralChildNode,
 	GeneralParentNode,
+	RepeatRangeNode,
 } from './client/hierarchy.ts';
 export type * from './client/index.ts';
 export type * from './client/ModelValueNode.ts';
 export type * from './client/NoteNode.ts';
 export type * from './client/OpaqueReactiveObjectFactory.ts';
-export type * from './client/RepeatInstanceNode.ts';
-export type * from './client/RepeatRangeNode.ts';
+export type * from './client/repeat/RepeatInstanceNode.ts';
+export type * from './client/repeat/RepeatRangeControlledNode.ts';
+export type * from './client/repeat/RepeatRangeUncontrolledNode.ts';
 export type * from './client/RootNode.ts';
 export type * from './client/SelectNode.ts';
 export type * from './client/StringNode.ts';
