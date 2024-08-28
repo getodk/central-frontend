@@ -4,7 +4,6 @@ set -o pipefail
 output=$(mktemp)
 trap 'rm -- "$output"' EXIT
 NODE_ENV=test karma start | tee "$output"
-exit
 
 # Search for: warnings from console.warn(), including Vue warnings; Sass
 # warnings; and warnings from Karma.
