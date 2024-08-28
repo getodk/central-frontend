@@ -71,4 +71,90 @@ describe('EntityConflictTable', () => {
       rowData(component, 0).should.eql(['', 'v1', 'v1']);
     });
   });
+
+  describe('offline branch', () => {
+    it('shows branches', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions
+        .createPast(1)
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 1, baseVersion: 1 })
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2 })
+        .createPast(1, { branchId: 'b2', trunkVersion: 1, branchBaseVersion: 1, baseVersion: 1 })
+        .createPast(1, { branchId: 'b2', trunkVersion: 1, branchBaseVersion: 2 })
+        .createPast(1, { branchId: 'b2', trunkVersion: 1, branchBaseVersion: 3 });
+      const component = mountComponent();
+      const td = component.findAll('#entity-conflict-table-branch-row td');
+      td.length.should.equal(4);
+
+      // v1
+      td[0].text().should.equal('');
+      should.not.exist(td[1].attributes().colspan);
+
+      // v2
+      td[1].text().should.equal('');
+      should.not.exist(td[1].attributes().colspan);
+
+      // b1
+      td[2].text().should.equal('Offline update chain');
+      td[2].attributes().colspan.should.equal('2');
+
+      // b2
+      td[3].text().should.equal('Offline update chain');
+      td[3].attributes().colspan.should.equal('3');
+    });
+
+    it('does not show a branch made up of one update', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions
+        .createPast(1)
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2, baseVersion: 1 });
+      const component = mountComponent();
+      const { requestData } = component.vm.$container;
+      should.exist(requestData.localResources.entityVersions[2].branch);
+      const tr = component.find('#entity-conflict-table-branch-row');
+      tr.exists().should.be.false;
+    });
+
+    it('does not show a branch that is not contiguous', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions
+        .createPast(1)
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 1, baseVersion: 1 })
+        .createPast(1)
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2, baseVersion: 3 });
+      const tr = mountComponent().find('#entity-conflict-table-branch-row');
+      tr.exists().should.be.false;
+    });
+
+    it('shows a branch that is contiguous, but not with trunk version', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions
+        .createPast(1)
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 1, baseVersion: 1 })
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2 });
+      const component = mountComponent();
+      const td = component.findAll('#entity-conflict-table-branch-row td');
+      td.length.should.equal(3);
+      td[0].text().should.equal('');
+      td[1].text().should.equal('');
+      td[2].text().should.equal('Offline update chain');
+      td[2].attributes().colspan.should.equal('2');
+    });
+
+    it('does not show a branch unless all its versions are shown', () => {
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntityVersions
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 1 })
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2 })
+        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 3 })
+        .createPast(1, { baseVersion: 2 })
+        .createPast(1);
+      const component = mountComponent();
+      headers(component).should.eql(['v2', 'v4', 'v5', 'v6']);
+      const tr = mountComponent().find('#entity-conflict-table-branch-row');
+      // v2 and v4 are part of a contiguous branch, but because v3 is not shown,
+      // the branch is not shown.
+      tr.exists().should.be.false;
+    });
+  });
 });

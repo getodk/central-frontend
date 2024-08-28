@@ -77,9 +77,6 @@ class Collection {
     return -1;
   }
 
-  indexOf(obj) { return this.findIndex(o => o === obj); }
-  lastIndexOf(obj) { return this.findLastIndex(o => o === obj); }
-
   find(f) {
     const index = this.findIndex(f);
     return index !== -1 ? this.get(index) : null;
@@ -198,6 +195,9 @@ class Store extends Collection {
     this._objects[normalizedIndex] = updated;
     return updated;
   }
+
+  indexOf(obj) { return this.findIndex(o => o === obj); }
+  lastIndexOf(obj) { return this.findLastIndex(o => o === obj); }
 }
 
 // A view/transformation of a Store

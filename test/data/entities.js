@@ -33,6 +33,9 @@ const entityVersions = dataStore({
     baseVersion: baseVersionOption = undefined,
     label = undefined,
     data = {},
+    branchId = null,
+    trunkVersion = null,
+    branchBaseVersion = null,
     conflictingProperties = undefined,
     source = {},
     creator = extendedUsers.first(),
@@ -62,13 +65,38 @@ const entityVersions = dataStore({
         if (version.version === baseVersionOption) baseVersionIndex = i;
       }
     }
-    const lastVersion = entityVersions.get(lastVersionIndex);
+    const lastVersion = lastVersionIndex != null
+      ? entityVersions.get(lastVersionIndex)
+      : null;
     if (baseVersionOption != null) {
       if (baseVersionIndex == null) throw new Error('base version not found');
-    } else {
+    } else if (branchId == null) {
       baseVersionIndex = lastVersionIndex;
+    // If it is an offline update, but baseVersion wasn't specified, see if
+    // lastVersion is the correct base version.
+    } else if (lastVersion != null) {
+      if (
+        // If there's only one version on the server, the new version will have
+        // to based on it.
+        lastVersion.version === 1 ||
+
+        // First update from the branch, with a trunk version (not following an
+        // offline create). An offline update without a trunk version (one
+        // following an offline create) is handled by the condition above.
+        ((trunkVersion != null && branchBaseVersion === trunkVersion &&
+        lastVersion.version === trunkVersion) ||
+
+        // Later update from the branch (either after an offline create or not)
+        (branchBaseVersion > (trunkVersion ?? 1) &&
+        lastVersion.branchId === branchId &&
+        lastVersion.branchBaseVersion === branchBaseVersion - 1)))
+        baseVersionIndex = lastVersionIndex;
+      else
+        throw new Error('baseVersion is required for this offline update');
     }
-    const baseVersion = entityVersions.get(baseVersionIndex);
+    const baseVersion = baseVersionIndex != null
+      ? entityVersions.get(baseVersionIndex)
+      : null;
 
     // Update the last version and the base version.
     if (lastVersion != null) {
@@ -109,6 +137,9 @@ const entityVersions = dataStore({
       label: label ?? lastVersion.label,
       data: { ...lastVersion?.data, ...data },
       dataReceived,
+      branchId,
+      trunkVersion,
+      branchBaseVersion,
       conflict: baseVersion === lastVersion
         ? null
         : (conflictingProperties != null && conflictingProperties.length !== 0
@@ -148,6 +179,9 @@ entities = dataStore({
     version = 1,
     label = faker.random.word(),
     data = undefined,
+    branchId = undefined,
+    trunkVersion = undefined,
+    branchBaseVersion = undefined,
     source = undefined,
     creator: creatorOption = undefined
   }) => {
@@ -183,6 +217,9 @@ entities = dataStore({
       _entity: entity,
       label,
       data: data ?? randomData(dataset.properties),
+      branchId,
+      trunkVersion,
+      branchBaseVersion,
       source,
       creator
     });

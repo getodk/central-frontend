@@ -188,6 +188,21 @@ describe('EntityFeedEntry', () => {
       icon.exists().should.be.true;
     });
 
+    it('shows the version number', () => {
+      createEntity();
+      const tag = mountComponent().get('.entity-version-tag');
+      tag.text().should.equal('v1');
+      tag.getComponent(RouterLinkStub).props().to.should.equal('#v1');
+    });
+
+    it('indicates if the entity was created offline', () => {
+      testData.extendedEntityVersions
+        .createPast(1, { branchId: 'b1', trunkVersion: null, branchBaseVersion: 1 });
+      createEntity();
+      const title = mountComponent().get('.feed-entry-title');
+      title.find('.offline-update').exists().should.be.true;
+    });
+
     describe('entity was created from a submission', () => {
       beforeEach(() => {
         createEntity({ submission: true });
@@ -263,59 +278,31 @@ describe('EntityFeedEntry', () => {
     });
   });
 
-  describe('entity.update.version (via API) audit event', () => {
-    beforeEach(() => {
+  describe('entity.update.version audit event', () => {
+    const updateViaAPI = () => {
       testData.extendedEntityVersions.createPast(1);
       testData.extendedAudits.createPast(1, {
         action: 'entity.update.version',
         details: { source: {} }
       });
-    });
-
-    it('shows the correct icon', () => {
-      const component = mountComponent();
-      const icon = component.find('.feed-entry-title .icon-pencil');
-      icon.exists().should.be.true;
-    });
-
-    it('shows the correct text', () => {
-      const title = mountComponent().get('.feed-entry-title');
-      const text = textWithout(title, '.entity-version-tag');
-      text.should.equal('Data updated by Alice');
-    });
-
-    it('links to the user', () => {
-      const component = mountComponent();
-      const title = component.get('.feed-entry-title');
-      const actorLink = title.getComponent(ActorLink);
-      actorLink.props().actor.displayName.should.equal('Alice');
-    });
-
-    it('shows the version number', () => {
-      const component = mountComponent();
-      const version = component.get('.feed-entry-title .entity-version-tag').text();
-      version.should.equal('v2');
-    });
-  });
-
-  describe('entity.update.version (via submission) audit event', () => {
-    const updateEntityFromSubmission = ({ deleted = false, ...options } = {}) => {
+    };
+    const updateEntityFromSubmission = ({ deleted = false, ...submissionOptions } = {}) => {
       // create the submission this event is based on
       const fullSubmission = testData.extendedSubmissions
-        .createPast(1, { instanceId: 's', ...options })
+        .createPast(1, { instanceId: 's', ...submissionOptions })
         .last();
-
       // return either full or partial submission info depending on if submission was deleted
       const submission = (deleted)
         ? { instanceId: fullSubmission.instanceId, submitter: fullSubmission.submitter, createdAt: fullSubmission.createdAt }
         : { ...fullSubmission, xmlFormId: 'f' }; // full submission augmented with form id
 
+      if (testData.extendedEntityVersions.size === 1)
+        testData.extendedEntityVersions.createPast(1);
+
       const details = {
         entity: { uuid: 'e' },
         source: { submission } // source would also have `event` but that is not used in this component
       };
-
-      testData.extendedEntityVersions.createPast(1);
       const audit = testData.extendedAudits
         .createPast(1, {
           action: 'entity.update.version',
@@ -330,61 +317,89 @@ describe('EntityFeedEntry', () => {
     };
 
     it('shows the correct icon', () => {
-      const component = mountComponent({ props: updateEntityFromSubmission() });
+      updateViaAPI();
+      const component = mountComponent();
       const icon = component.find('.feed-entry-title .icon-pencil');
       icon.exists().should.be.true;
     });
 
-    it('shows the correct text with submission instance ID', () => {
-      const component = mountComponent({ props: updateEntityFromSubmission() });
-      const title = component.get('.feed-entry-title');
-      const text = textWithout(title, '.entity-version-tag');
-      text.should.equal('Data updated by Submission s');
-    });
-
-    it('shows the correct text with submission instance name', () => {
-      const component = mountComponent({ props: updateEntityFromSubmission({ meta: { instanceName: 'Some Name' } }) });
-      const title = component.get('.feed-entry-title');
-      const text = textWithout(title, '.entity-version-tag');
-      text.should.equal('Data updated by Submission Some Name');
-    });
-
-    it('links to the submission', () => {
-      const component = mountComponent({ props: updateEntityFromSubmission() });
-      const title = component.get('.feed-entry-title');
-      const { to } = title.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/submissions/s');
-    });
-
-    it('shows the correct text with deleted submission instance id', () => {
-      const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
-      const title = component.get('.feed-entry-title');
-      const text = textWithout(title, '.entity-version-tag');
-      text.should.equal('Data updated by (deleted Submission s)');
-    });
-
-    it('does not link to the deleted submission', () => {
-      const component = mountComponent({
-        props: updateEntityFromSubmission({ deleted: true })
-      });
-      const links = component.findAllComponents(RouterLinkStub);
-      links.length.should.equal(1); // only link is anchor link on version tag
-    });
-
     it('shows the version number', () => {
-      const component = mountComponent({ props: updateEntityFromSubmission() });
-      const version = component.get('.feed-entry-title .entity-version-tag').text();
-      version.should.equal('v2');
+      updateViaAPI();
+      const tag = mountComponent().get('.entity-version-tag');
+      tag.text().should.equal('v2');
+      tag.getComponent(RouterLinkStub).props().to.should.equal('#v2');
     });
-  });
 
-  it('renders a diff for an entity.update.version event', () => {
-    testData.extendedEntityVersions.createPast(1);
-    testData.extendedAudits.createPast(1, {
-      action: 'entity.update.version',
-      details: {}
+    it('indicates if the update was an offline update', () => {
+      testData.extendedEntityVersions
+        .createPast(1, { branchId: 'b1', trunkVersion: null, branchBaseVersion: 1 });
+      const component = mountComponent({ props: updateEntityFromSubmission() });
+      const title = component.get('.feed-entry-title');
+      title.find('.offline-update').exists().should.be.true;
     });
-    mountComponent().findComponent(EntityDiff).exists().should.be.true;
+
+    it('renders a diff', () => {
+      updateViaAPI();
+      mountComponent().findComponent(EntityDiff).exists().should.be.true;
+    });
+
+    describe('update via API', () => {
+      it('shows the correct text', () => {
+        updateViaAPI();
+        const title = mountComponent().get('.feed-entry-title');
+        const text = textWithout(title, '.entity-version-tag');
+        text.should.equal('Data updated by Alice');
+      });
+
+      it('links to the user', () => {
+        updateViaAPI();
+        const title = mountComponent().get('.feed-entry-title');
+        const actorLink = title.getComponent(ActorLink);
+        actorLink.props().actor.displayName.should.equal('Alice');
+      });
+    });
+
+    describe('update via submission', () => {
+      it('shows the correct text with submission instance ID', () => {
+        const component = mountComponent({ props: updateEntityFromSubmission() });
+        const title = component.get('.feed-entry-title');
+        const text = textWithout(title, '.entity-version-tag');
+        text.should.equal('Data updated by Submission s');
+      });
+
+      it('shows the correct text with submission instance name', () => {
+        const component = mountComponent({
+          props: updateEntityFromSubmission({
+            meta: { instanceName: 'Some Name' }
+          })
+        });
+        const title = component.get('.feed-entry-title');
+        const text = textWithout(title, '.entity-version-tag');
+        text.should.equal('Data updated by Submission Some Name');
+      });
+
+      it('links to the submission', () => {
+        const component = mountComponent({ props: updateEntityFromSubmission() });
+        const title = component.get('.feed-entry-title');
+        const { to } = title.getComponent(RouterLinkStub).props();
+        to.should.equal('/projects/1/forms/f/submissions/s');
+      });
+
+      it('shows the correct text with deleted submission instance id', () => {
+        const component = mountComponent({ props: updateEntityFromSubmission({ deleted: true }) });
+        const title = component.get('.feed-entry-title');
+        const text = textWithout(title, '.entity-version-tag');
+        text.should.equal('Data updated by (deleted Submission s)');
+      });
+
+      it('does not link to the deleted submission', () => {
+        const component = mountComponent({
+          props: updateEntityFromSubmission({ deleted: true })
+        });
+        const links = component.findAllComponents(RouterLinkStub);
+        links.length.should.equal(1); // only link is anchor link on version tag
+      });
+    });
   });
 
   describe('entity.update.resolve audit event', () => {
