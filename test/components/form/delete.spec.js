@@ -31,7 +31,7 @@ describe('FormDelete', () => {
       const modal = mount(FormDelete, mountOptions());
       const p = modal.findAll('.modal-introduction p');
       p.length.should.equal(3);
-      p[2].text().should.containEql('Entities');
+      p[2].text().should.include('Entities');
     });
 
     it('shows the correct text if the form does not create entities', () => {

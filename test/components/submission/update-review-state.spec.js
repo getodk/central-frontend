@@ -26,15 +26,15 @@ describe('SubmissionUpdateReviewState', () => {
     radios.length.should.equal(3);
 
     radios[0].get('input').attributes().value.should.equal('approved');
-    radios[0].find('.icon-check-circle').exists().should.be.true();
+    radios[0].find('.icon-check-circle').exists().should.be.true;
     radios[0].text().should.equal('Approved');
 
     radios[1].get('input').attributes().value.should.equal('hasIssues');
-    radios[1].find('.icon-comments').exists().should.be.true();
+    radios[1].find('.icon-comments').exists().should.be.true;
     radios[1].text().should.equal('Has issues');
 
     radios[2].get('input').attributes().value.should.equal('rejected');
-    radios[2].find('.icon-times-circle').exists().should.be.true();
+    radios[2].find('.icon-times-circle').exists().should.be.true;
     radios[2].text().should.equal('Rejected');
   });
 
@@ -43,21 +43,21 @@ describe('SubmissionUpdateReviewState', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
       const modal = mount(SubmissionUpdateReviewState, mountOptions());
       await modal.setProps({ state: true });
-      modal.get('input[value="hasIssues"]').element.checked.should.be.true();
+      modal.get('input[value="hasIssues"]').element.checked.should.be.true;
     });
 
     it('sets selection to approved if current review state is null', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
       const modal = mount(SubmissionUpdateReviewState, mountOptions());
       await modal.setProps({ state: true });
-      modal.get('input[value="approved"]').element.checked.should.be.true();
+      modal.get('input[value="approved"]').element.checked.should.be.true;
     });
 
     it('sets selection to approved if current review state is edited', async () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
       const modal = mount(SubmissionUpdateReviewState, mountOptions());
       await modal.setProps({ state: true });
-      modal.get('input[value="approved"]').element.checked.should.be.true();
+      modal.get('input[value="approved"]').element.checked.should.be.true;
     });
   });
 
@@ -86,7 +86,7 @@ describe('SubmissionUpdateReviewState', () => {
     await modal.setData({ notes: 'Some notes' });
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
-    modal.get('input[value="hasIssues"]').element.checked.should.be.true();
+    modal.get('input[value="hasIssues"]').element.checked.should.be.true;
     modal.getComponent(MarkdownTextarea).props().modelValue.should.equal('');
   });
 
@@ -156,7 +156,7 @@ describe('SubmissionUpdateReviewState', () => {
         })
         .beforeAnyResponse(async (modal) => {
           await modal.setData({ notes: '' }); // Linked to child's 'value' prop and textarea
-          modal.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+          modal.getComponent(MarkdownTextarea).props().showFooter.should.be.true;
         })
         .respondWithProblem();
     });

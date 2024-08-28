@@ -48,7 +48,7 @@ describe('EntityUploadHeaderErrors', () => {
       const component = mountComponent({
         props: { header: 'label', missingProperty: true }
       });
-      component.find('#entity-upload-header-errors-suggestions').exists().should.be.false();
+      component.find('#entity-upload-header-errors-suggestions').exists().should.be.false;
     });
 
     describe('delimiter is not a comma', () => {

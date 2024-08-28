@@ -65,7 +65,7 @@ describe('FormNew', () => {
       it('renders the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         const text = modal.findAll('.modal-introduction p')[1].text();
-        text.should.containEql('Form Attachments');
+        text.should.include('Form Attachments');
       });
     });
   });
@@ -247,7 +247,7 @@ describe('FormNew', () => {
       .request(upload)
       .beforeEachResponse(modal => {
         const dropZone = modal.getComponent(FileDropZone);
-        dropZone.props().disabled.should.be.true();
+        dropZone.props().disabled.should.be.true;
         const button = dropZone.get('.btn-primary');
         button.attributes('aria-disabled').should.equal('true');
       })
@@ -314,7 +314,7 @@ describe('FormNew', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          app.getComponent(FormNew).props().state.should.be.false();
+          app.getComponent(FormNew).props().state.should.be.false;
         });
     });
 
@@ -544,7 +544,7 @@ describe('FormNew', () => {
           items[0].get('span').text().should.eql('Fields: Name, Age');
 
           items[1].text().should.startWith('There is a form with ID "simple" in the Trash');
-          items[1].find('span').exists().should.be.false();
+          items[1].find('span').exists().should.be.false;
         });
     });
 
@@ -566,7 +566,7 @@ describe('FormNew', () => {
           items[2].get('span').text().should.eql('Fields: Name, Age');
 
           items[3].text().should.startWith('There is a form with ID "simple" in the Trash');
-          items[3].find('span').exists().should.be.false();
+          items[3].find('span').exists().should.be.false;
         });
     });
 
@@ -654,7 +654,7 @@ describe('FormNew', () => {
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
             const text = component.findAll('.modal-warnings p')[3].text();
-            text.should.containEql('create the Form');
+            text.should.include('create the Form');
           });
       });
 
@@ -666,7 +666,7 @@ describe('FormNew', () => {
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
             const text = component.findAll('.modal-warnings p')[3].text();
-            text.should.containEql('update the Draft');
+            text.should.include('update the Draft');
           });
       });
     });

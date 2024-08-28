@@ -231,7 +231,7 @@ describe('App', () => {
       mockLogin();
 
       const app = await load('/', { container });
-      app.findComponent(FeedbackButton).exists().should.be.true();
+      app.findComponent(FeedbackButton).exists().should.be.true;
     });
 
     it('is hidden if a user is logged in and config is false', async () => {
@@ -241,7 +241,7 @@ describe('App', () => {
       mockLogin();
 
       const app = await load('/', { container });
-      app.findComponent(FeedbackButton).exists().should.be.false();
+      app.findComponent(FeedbackButton).exists().should.be.false;
     });
 
     it('is hidden if no user is logged in and config is true', async () => {
@@ -250,7 +250,7 @@ describe('App', () => {
       };
 
       const app = await load('/login', { container }).restoreSession(false);
-      app.findComponent(FeedbackButton).exists().should.be.false();
+      app.findComponent(FeedbackButton).exists().should.be.false;
     });
   });
 });

@@ -23,7 +23,7 @@ describe('FormSubmissions', () => {
       const component = await load('/projects/1/forms/f/submissions', {
         root: false
       });
-      component.findComponent(EnketoFill).exists().should.be.false();
+      component.findComponent(EnketoFill).exists().should.be.false;
     });
   });
 

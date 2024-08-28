@@ -15,20 +15,21 @@ describe('createResources()', () => {
         home: { title: 'Some Title' }
       });
       // Make assertions about a top-level property and a nested property.
-      config.data.should.containEql({
-        oidcEnabled: false,
+      config.oidcEnabled.should.be.false;
+      config.home.should.eql({
+        title: 'Some Title',
         // `body` is still present even though the response returned `home`
         // without `body`.
-        home: { title: 'Some Title', body: null }
+        body: null
       });
     });
 
     it('falls back to the defaults for completely invalid JSON', () => {
-      createResource('{]').data.should.containEql({ oidcEnabled: false });
+      createResource('{]').data.should.include({ oidcEnabled: false });
     });
 
     it('falls back to the defaults for a JSON number', () => {
-      createResource(1).data.should.containEql({ oidcEnabled: false });
+      createResource(1).data.should.include({ oidcEnabled: false });
     });
   });
 

@@ -141,7 +141,7 @@ describe('SubmissionList', () => {
         const rows = component.findAllComponents(SubmissionDataRow);
         rows.length.should.equal(count);
         const submissions = testData.extendedSubmissions.sorted();
-        submissions.length.should.be.aboveOrEqual(count + offset);
+        submissions.length.should.be.at.least(count + offset);
         for (let i = 0; i < rows.length; i += 1) {
           const text = rows[i].get('td:last-child').text();
           text.should.equal(submissions[i + offset].instanceId);
@@ -157,7 +157,7 @@ describe('SubmissionList', () => {
 
           const spinner = component.findAllComponents(Spinner).find(wrapper =>
             message.element.contains(wrapper.element));
-          spinner.props().state.should.be.true();
+          spinner.props().state.should.be.true;
         }
       };
 
@@ -389,7 +389,7 @@ describe('SubmissionList', () => {
             .request(async (app) => {
               await app.get('#submission-download-button').trigger('click');
               const modal = app.getComponent(SubmissionDownload);
-              await modal.find('input[type="password"]').exists().should.be.false();
+              await modal.find('input[type="password"]').exists().should.be.false;
               return app.get('#submission-list-refresh-button').trigger('click');
             })
             .beforeAnyResponse(() => {
@@ -401,7 +401,7 @@ describe('SubmissionList', () => {
             .request(async (app) => {
               await app.get('#submission-download-button').trigger('click');
               const modal = app.getComponent(SubmissionDownload);
-              await modal.find('input[type="password"]').exists().should.be.true();
+              await modal.find('input[type="password"]').exists().should.be.true;
             });
         });
 

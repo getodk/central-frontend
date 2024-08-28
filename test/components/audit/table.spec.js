@@ -108,10 +108,10 @@ describe('AuditTable', () => {
         actee: deletedUser
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('User Name');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -149,10 +149,10 @@ describe('AuditTable', () => {
         actee: deletedProject
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My Project');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -199,10 +199,10 @@ describe('AuditTable', () => {
         actee: deletedForm
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My Form');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
 
@@ -265,10 +265,10 @@ describe('AuditTable', () => {
         actee: deletedActor
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My Public Link');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -330,10 +330,10 @@ describe('AuditTable', () => {
         actee: deletedActor
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My App User');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -409,7 +409,7 @@ describe('AuditTable', () => {
         actee: testData.toActor(testData.extendedUsers.first())
       });
       const row = mountComponent();
-      row.findComponent(ActorLink).exists().should.be.true();
+      row.findComponent(ActorLink).exists().should.be.true;
       const icon = row.get('.initiator .icon-trash');
       await icon.should.have.tooltip('This resource has been deleted.');
     });
@@ -448,10 +448,10 @@ describe('AuditTable', () => {
       details: { some: 'json' }
     });
     const target = mountComponent().get('.target');
-    target.find('a').exists().should.be.false();
+    target.find('a').exists().should.be.false;
     target.get('span:nth-child(2)').text().should.equal('Purged Form');
     const icon = target.find('.icon-trash');
-    icon.exists().should.be.true();
+    icon.exists().should.be.true;
     await icon.should.have.tooltip('This resource has been purged.');
     // The purged details aren't part of the audit and don't show up here
     // but the original details of the audit do

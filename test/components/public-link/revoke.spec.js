@@ -62,7 +62,7 @@ describe('PublicLinkRevoke', () => {
         .modify(revoke)
         .afterResponses(app => {
           app.should.alert('success', (message) => {
-            message.should.containEql('My Public Link');
+            message.should.include('My Public Link');
           });
         }));
 
@@ -101,7 +101,7 @@ describe('PublicLinkRevoke', () => {
         .complete()
         .modify(revoke)
         .afterResponses(app => {
-          app.find('.public-link-row.success').exists().should.be.false();
+          app.find('.public-link-row.success').exists().should.be.false;
         }));
   });
 });

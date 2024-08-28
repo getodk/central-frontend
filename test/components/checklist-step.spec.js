@@ -11,21 +11,21 @@ describe('ChecklistStep', () => {
       const component = mount(ChecklistStep, {
         props: { stage: 'complete' }
       });
-      component.classes('checklist-step-complete').should.be.true();
+      component.classes('checklist-step-complete').should.be.true;
     });
 
     it('has the correct class for a step marked as a current step', () => {
       const component = mount(ChecklistStep, {
         props: { stage: 'current' }
       });
-      component.classes('checklist-step-current').should.be.true();
+      component.classes('checklist-step-current').should.be.true;
     });
 
     it('has the correct class for a step marked as a later step', () => {
       const component = mount(ChecklistStep, {
         props: { stage: 'later' }
       });
-      component.classes('checklist-step-later').should.be.true();
+      component.classes('checklist-step-later').should.be.true;
     });
   });
 

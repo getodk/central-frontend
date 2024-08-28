@@ -16,7 +16,7 @@ describe('OdataDataAccess', () => {
         config: { oidcEnabled: true }
       }
     });
-    component.find('*').exists().should.be.false();
+    component.find('*').exists().should.be.false;
   });
 
   describe('"Analyze via OData" button', () => {

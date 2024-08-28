@@ -38,17 +38,17 @@ describe('EntityConflictSummary', () => {
     testData.extendedEntities.createPast(1);
     testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
     const component = mountComponent();
-    component.find('.panel-footer').exists().should.be.false();
-    component.find('.btn-default').exists().should.be.false();
+    component.find('.panel-footer').exists().should.be.false;
+    component.find('.btn-default').exists().should.be.false;
   });
 
   it('show the confirmation modal', async () => {
     testData.extendedEntities.createPast(1);
     testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
     const component = mountComponent();
-    component.getComponent(Confirmation).props().state.should.be.false();
+    component.getComponent(Confirmation).props().state.should.be.false;
     await component.get('.btn-default').trigger('click');
-    component.getComponent(Confirmation).props().state.should.be.true();
+    component.getComponent(Confirmation).props().state.should.be.true;
   });
 
   it('sends the correct request', async () => {
@@ -100,7 +100,7 @@ describe('EntityConflictSummary', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       const component = await resolve();
-      component.getComponent(Confirmation).props().state.should.be.false();
+      component.getComponent(Confirmation).props().state.should.be.false;
     });
 
     describe('custom alert messages', () => {

@@ -183,11 +183,11 @@ describe('EntityList', () => {
           component.get('#entity-list-refresh-button').trigger('click'))
         .beforeEachResponse(async (component) => {
           await component.get('.entity-metadata-row .update-button').trigger('click');
-          component.getComponent(EntityUpdate).props().state.should.be.false();
+          component.getComponent(EntityUpdate).props().state.should.be.false;
         })
         .respondWithData(testData.entityOData)
         .afterResponse(component => {
-          component.getComponent(EntityUpdate).props().state.should.be.false();
+          component.getComponent(EntityUpdate).props().state.should.be.false;
         });
     });
 
@@ -230,7 +230,7 @@ describe('EntityList', () => {
 
       it('hides the modal', async () => {
         const component = await submit();
-        component.getComponent(EntityUpdate).props().state.should.be.false();
+        component.getComponent(EntityUpdate).props().state.should.be.false;
       });
 
       it('shows a success alert', async () => {
@@ -313,11 +313,11 @@ describe('EntityList', () => {
           component.get('#entity-list-refresh-button').trigger('click'))
         .beforeEachResponse(async (component) => {
           await component.get('.entity-metadata-row .resolve-button').trigger('click');
-          component.getComponent(EntityResolve).props().state.should.be.false();
+          component.getComponent(EntityResolve).props().state.should.be.false;
         })
         .respondWithData(testData.entityOData)
         .afterResponse(component => {
-          component.getComponent(EntityResolve).props().state.should.be.false();
+          component.getComponent(EntityResolve).props().state.should.be.false;
         });
     });
 
@@ -327,7 +327,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component => {
-          component.get('.wrap-circle').exists().should.be.true();
+          component.get('.wrap-circle').exists().should.be.true;
           return component.get('.entity-metadata-row .resolve-button').trigger('click');
         })
         .respondWithData(relevantToConflict)
@@ -339,8 +339,8 @@ describe('EntityList', () => {
           return testData.standardEntities.last();
         })
         .afterResponse(component => {
-          component.find('.wrap-circle').exists().should.be.false();
-          component.find('.resolve-button').exists().should.be.false();
+          component.find('.wrap-circle').exists().should.be.false;
+          component.find('.resolve-button').exists().should.be.false;
         });
     });
 
@@ -369,8 +369,8 @@ describe('EntityList', () => {
 
       it('toggles the modals', async () => {
         const { resolveModal, updateModal } = await openUpdateFromResolve();
-        resolveModal.props().state.should.be.false();
-        updateModal.props().state.should.be.true();
+        resolveModal.props().state.should.be.false;
+        updateModal.props().state.should.be.true;
       });
 
       describe('after a successful update', () => {
@@ -403,8 +403,8 @@ describe('EntityList', () => {
         it('comes back to the resolve modal', async () => {
           const { mockHttp, resolveModal, updateModal } = await openUpdateFromResolve();
           await mockHttp.modify(update(updateModal));
-          resolveModal.props().state.should.be.true();
-          updateModal.props().state.should.be.false();
+          resolveModal.props().state.should.be.true;
+          updateModal.props().state.should.be.false;
         });
 
         it('shows the updated entity', async () => {
@@ -426,8 +426,8 @@ describe('EntityList', () => {
 
           await updateModal.get('.close').trigger('click');
 
-          resolveModal.props().state.should.be.true();
-          updateModal.props().state.should.be.false();
+          resolveModal.props().state.should.be.true;
+          updateModal.props().state.should.be.false;
         });
       });
     });
@@ -497,7 +497,7 @@ describe('EntityList', () => {
 
       it('hides the modal', async () => {
         const component = await del();
-        component.getComponent(EntityDelete).props().state.should.be.false();
+        component.getComponent(EntityDelete).props().state.should.be.false;
       });
 
       it('shows a success alert', async () => {
@@ -570,7 +570,7 @@ describe('EntityList', () => {
         .respondWithSuccess()
         .afterResponse(async (component) => {
           await component.get('.entity-metadata-row .delete-button').trigger('click');
-          component.getComponent(EntityDelete).props().state.should.be.true();
+          component.getComponent(EntityDelete).props().state.should.be.true;
         });
     });
 
@@ -606,7 +606,7 @@ describe('EntityList', () => {
         delAndCheck()
           .request(async (component) => {
             await component.get('.entity-metadata-row .delete-button').trigger('click');
-            component.getComponent(EntityDelete).props().state.should.be.false();
+            component.getComponent(EntityDelete).props().state.should.be.false;
           })
           .respondWithProblem());
 
@@ -638,7 +638,7 @@ describe('EntityList', () => {
             // still be shown.
             component.get('#entity-table').should.be.visible();
             // No row should be hidden.
-            component.find('[data-mark-rows-deleted]').exists().should.be.false();
+            component.find('[data-mark-rows-deleted]').exists().should.be.false;
           })
           .request(component =>
             component.get('.entity-metadata-row .delete-button').trigger('click'))
@@ -666,7 +666,7 @@ describe('EntityList', () => {
       const rows = component.findAllComponents(EntityDataRow);
       rows.length.should.equal(count);
       const entities = testData.extendedEntities.sorted();
-      entities.length.should.be.aboveOrEqual(count + offset);
+      entities.length.should.be.at.least(count + offset);
       for (let i = 0; i < rows.length; i += 1) {
         const text = rows[i].get('td:last-child').text();
         text.should.equal(entities[i + offset].uuid);
@@ -682,7 +682,7 @@ describe('EntityList', () => {
 
         const spinner = component.findAllComponents(Spinner).find(wrapper =>
           message.element.contains(wrapper.element));
-        spinner.props().state.should.be.true();
+        spinner.props().state.should.be.true;
       }
     };
 

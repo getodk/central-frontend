@@ -12,7 +12,7 @@ describe('SubmissionShow', () => {
     const component = await load('/projects/p/forms/f/submissions/s', {
       root: false
     });
-    component.findComponent(NotFound).exists().should.be.true();
+    component.findComponent(NotFound).exists().should.be.true;
   });
 
   it('renders a back link', async () => {

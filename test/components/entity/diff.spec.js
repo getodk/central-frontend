@@ -39,13 +39,13 @@ describe('EntityDiff', () => {
         label: 'baz',
         conflictingProperties: ['label']
       });
-      mountComponent().classes('hard-conflict').should.be.true();
+      mountComponent().classes('hard-conflict').should.be.true;
     });
 
     it('has the correct class if the version is a soft conflict', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-      mountComponent().classes('soft-conflict').should.be.true();
+      mountComponent().classes('soft-conflict').should.be.true;
     });
 
     it('has the correct class if the version is not a conflict', () => {
@@ -58,7 +58,7 @@ describe('EntityDiff', () => {
   it('renders EntityDiffHead if the version is a conflict', () => {
     testData.extendedEntities.createPast(1);
     testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-    mountComponent().findComponent(EntityDiffHead).exists().should.be.true();
+    mountComponent().findComponent(EntityDiffHead).exists().should.be.true;
   });
 
   it('passes the correct diff to EntityDiffTable', async () => {
@@ -84,7 +84,7 @@ describe('EntityDiff', () => {
   it('does not render the table if there is no change or conflict', () => {
     testData.extendedEntities.createPast(1);
     testData.extendedEntityVersions.createPast(1);
-    mountComponent().findComponent(EntityDiffTable).exists().should.be.false();
+    mountComponent().findComponent(EntityDiffTable).exists().should.be.false;
   });
 
   it('shows a message for an empty diff if the version is a conflict', () => {

@@ -211,7 +211,7 @@ describe('DateRangePicker', () => {
       const component = mountComponent({
         props: { modelValue: ['1970-01-02', '1970-01-03'], required: true }
       });
-      component.find('.close').exists().should.be.false();
+      component.find('.close').exists().should.be.false;
     });
 
     it('hides the button if the modelValue prop is an empty array', () => {
@@ -272,7 +272,7 @@ describe('DateRangePicker', () => {
     const component = mountComponent({
       props: { required: true }
     });
-    component.get('input').classes('required').should.be.true();
+    component.get('input').classes('required').should.be.true;
   });
 
   describe('i18n', () => {

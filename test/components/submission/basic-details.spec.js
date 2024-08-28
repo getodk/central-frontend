@@ -50,7 +50,7 @@ describe('SubmissionBasicDetails', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
       const component = mountComponent();
       const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-dot-circle-o').exists().should.be.true();
+      dd.find('.icon-dot-circle-o').exists().should.be.true;
       dd.text().should.equal('Received');
     });
 
@@ -58,7 +58,7 @@ describe('SubmissionBasicDetails', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
       const component = mountComponent();
       const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-comments').exists().should.be.true();
+      dd.find('.icon-comments').exists().should.be.true;
       dd.text().should.equal('Has issues');
     });
 
@@ -66,7 +66,7 @@ describe('SubmissionBasicDetails', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
       const component = mountComponent();
       const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-pencil').exists().should.be.true();
+      dd.find('.icon-pencil').exists().should.be.true;
       dd.text().should.equal('Edited');
     });
 
@@ -74,7 +74,7 @@ describe('SubmissionBasicDetails', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
       const component = mountComponent();
       const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-check-circle').exists().should.be.true();
+      dd.find('.icon-check-circle').exists().should.be.true;
       dd.text().should.equal('Approved');
     });
 
@@ -82,7 +82,7 @@ describe('SubmissionBasicDetails', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'rejected' });
       const component = mountComponent();
       const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-times-circle').exists().should.be.true();
+      dd.find('.icon-times-circle').exists().should.be.true;
       dd.text().should.equal('Rejected');
     });
   });
@@ -143,7 +143,7 @@ describe('SubmissionBasicDetails', () => {
       });
       const spans = mountComponent().findAll('dl :nth-child(6) dd span');
       spans.length.should.equal(3);
-      spans[1].classes('icon-exclamation-triangle').should.be.true();
+      spans[1].classes('icon-exclamation-triangle').should.be.true;
       spans[2].text().should.equal('Missing Attachment');
     });
 

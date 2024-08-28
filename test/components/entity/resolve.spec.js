@@ -163,7 +163,7 @@ describe('EntityResolve', () => {
         })
         .respondWithData(relevantToConflict)
         .afterResponse(modal => {
-          modal.find('.success-msg').exists().should.be.false();
+          modal.find('.success-msg').exists().should.be.false;
         });
     });
   });
@@ -185,7 +185,7 @@ describe('EntityResolve', () => {
       const modal = await showModal();
       const btns = modal.findAll('#entity-resolve-table-toggle ~ .btn');
       btns.length.should.equal(1);
-      btns[0].classes('more-details').should.be.true();
+      btns[0].classes('more-details').should.be.true;
     });
   });
 });

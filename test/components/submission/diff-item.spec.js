@@ -42,7 +42,7 @@ describe('SubmissionDiffItem', () => {
     const props = mountComponent(diff).getComponent(DiffItem).props();
     props.new.should.equal('17');
     props.old.should.equal('15');
-    props.path.should.eql(['age']);
+    expect(props.path).to.eql(['age']);
   });
 
   it('shows values as-is by default', () => {
@@ -55,10 +55,10 @@ describe('SubmissionDiffItem', () => {
     const dataOld = component.get('.data-old');
     dataOld.text().should.equal('15');
     // There should just be text, no child elements.
-    dataOld.find('*').exists().should.be.false();
+    dataOld.find('*').exists().should.be.false;
     const dataNew = component.get('.data-new');
     dataNew.text().should.equal('17');
-    dataNew.find('*').exists().should.be.false();
+    dataNew.find('*').exists().should.be.false;
   });
 
   it('shows media download links for binary files', () => {

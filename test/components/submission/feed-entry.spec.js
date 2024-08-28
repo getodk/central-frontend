@@ -67,7 +67,7 @@ describe('SubmissionFeedEntry', () => {
     it('renders correctly for a submission.create audit', () => {
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const title = mountComponent().get('.feed-entry-title');
-      title.find('.icon-cloud-upload').exists().should.be.true();
+      title.find('.icon-cloud-upload').exists().should.be.true;
       title.text().should.equal('Submitted by Alice');
     });
 
@@ -81,7 +81,7 @@ describe('SubmissionFeedEntry', () => {
         title.text().should.equal('Received per Alice');
         const reviewState = title.get('.review-state');
         reviewState.attributes().class.should.equal('review-state');
-        reviewState.find('.icon-dot-circle-o').exists().should.be.true();
+        reviewState.find('.icon-dot-circle-o').exists().should.be.true;
         reviewState.text().should.equal('Received');
       });
 
@@ -93,8 +93,8 @@ describe('SubmissionFeedEntry', () => {
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Has Issues per Alice');
         const reviewState = title.get('.review-state');
-        reviewState.classes('hasIssues').should.be.true();
-        reviewState.find('.icon-comments').exists().should.be.true();
+        reviewState.classes('hasIssues').should.be.true;
+        reviewState.find('.icon-comments').exists().should.be.true;
         reviewState.text().should.equal('Has Issues');
       });
 
@@ -106,8 +106,8 @@ describe('SubmissionFeedEntry', () => {
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Edited by Alice');
         const reviewState = title.get('.review-state');
-        reviewState.classes('edited').should.be.true();
-        reviewState.find('.icon-pencil').exists().should.be.true();
+        reviewState.classes('edited').should.be.true;
+        reviewState.find('.icon-pencil').exists().should.be.true;
         reviewState.text().should.equal('Edited');
       });
 
@@ -119,8 +119,8 @@ describe('SubmissionFeedEntry', () => {
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Approved by Alice');
         const reviewState = title.get('.review-state');
-        reviewState.classes('approved').should.be.true();
-        reviewState.find('.icon-check-circle').exists().should.be.true();
+        reviewState.classes('approved').should.be.true;
+        reviewState.find('.icon-check-circle').exists().should.be.true;
         reviewState.text().should.equal('Approved');
       });
 
@@ -132,8 +132,8 @@ describe('SubmissionFeedEntry', () => {
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Rejected by Alice');
         const reviewState = title.get('.review-state');
-        reviewState.classes('rejected').should.be.true();
-        reviewState.find('.icon-times-circle').exists().should.be.true();
+        reviewState.classes('rejected').should.be.true;
+        reviewState.find('.icon-times-circle').exists().should.be.true;
         reviewState.text().should.equal('Rejected');
       });
     });
@@ -145,15 +145,15 @@ describe('SubmissionFeedEntry', () => {
       const title = mountComponent().get('.feed-entry-title');
       title.text().should.equal('Edited by Alice');
       const reviewState = title.get('.review-state');
-      reviewState.classes('edited').should.be.true();
-      reviewState.find('.icon-pencil').exists().should.be.true();
+      reviewState.classes('edited').should.be.true;
+      reviewState.find('.icon-pencil').exists().should.be.true;
       reviewState.text().should.equal('Edited');
     });
 
     it('renders correctly for a comment', () => {
       testData.extendedComments.createPast(1);
       const title = mountComponent().get('.feed-entry-title');
-      title.find('.icon-comment').exists().should.be.true();
+      title.find('.icon-comment').exists().should.be.true;
       title.text().should.equal('Comment by Alice');
     });
 

@@ -36,7 +36,7 @@ describe('SubmissionMetadataRow', () => {
     testData.extendedForms.createPast(1, { submissions: 1000 });
     testData.extendedSubmissions.createPast(1);
     const td = mountComponent({ rowNumber: 1000 }).get('td');
-    td.classes('row-number').should.be.true();
+    td.classes('row-number').should.be.true;
     td.text().should.equal('1000');
   });
 
@@ -46,7 +46,7 @@ describe('SubmissionMetadataRow', () => {
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ draft: false });
       const td = row.findAll('td')[1];
-      td.classes('submitter-name').should.be.true();
+      td.classes('submitter-name').should.be.true;
       td.text().should.equal('Alice Allison');
       await td.get('span').should.have.textTooltip();
     });
@@ -55,7 +55,7 @@ describe('SubmissionMetadataRow', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ draft: true });
-      row.find('.submitter-name').exists().should.be.false();
+      row.find('.submitter-name').exists().should.be.false;
     });
   });
 
@@ -68,35 +68,35 @@ describe('SubmissionMetadataRow', () => {
     it('renders correctly for a review state that is null', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: null });
       const state = mountComponent().get('.state');
-      state.find('.icon-dot-circle-o').exists().should.be.true();
+      state.find('.icon-dot-circle-o').exists().should.be.true;
       state.text().should.equal('Received');
     });
 
     it('renders correctly for a review state of hasIssues', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
       const state = mountComponent().get('.state');
-      state.find('.icon-comments').exists().should.be.true();
+      state.find('.icon-comments').exists().should.be.true;
       state.text().should.equal('Has issues');
     });
 
     it('renders correctly for a review state of edited', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
       const state = mountComponent().get('.state');
-      state.find('.icon-pencil').exists().should.be.true();
+      state.find('.icon-pencil').exists().should.be.true;
       state.text().should.equal('Edited');
     });
 
     it('renders correctly for a review state of approved', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
       const state = mountComponent().get('.state');
-      state.find('.icon-check-circle').exists().should.be.true();
+      state.find('.icon-check-circle').exists().should.be.true;
       state.text().should.equal('Approved');
     });
 
     it('renders correctly for a review state of rejected', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'rejected' });
       const state = mountComponent().get('.state');
-      state.find('.icon-times-circle').exists().should.be.true();
+      state.find('.icon-times-circle').exists().should.be.true;
       state.text().should.equal('Rejected');
     });
 
@@ -107,7 +107,7 @@ describe('SubmissionMetadataRow', () => {
         reviewState: null
       });
       const state = mountComponent().get('.state');
-      state.find('.icon-circle-o').exists().should.be.true();
+      state.find('.icon-circle-o').exists().should.be.true;
       state.text().should.equal('Missing Attachment');
     });
 
@@ -118,7 +118,7 @@ describe('SubmissionMetadataRow', () => {
         reviewState: 'approved'
       });
       const state = mountComponent().get('.state');
-      state.find('.icon-check-circle').exists().should.be.true();
+      state.find('.icon-check-circle').exists().should.be.true;
       state.text().should.equal('Approved');
     });
   });
@@ -172,7 +172,7 @@ describe('SubmissionMetadataRow', () => {
       it('hides the modal', async () => {
         const component = await submit();
         const modal = component.getComponent(SubmissionUpdateReviewState);
-        modal.props().state.should.be.false();
+        modal.props().state.should.be.false;
       });
 
       it('shows a success alert', async () => {
@@ -238,6 +238,6 @@ describe('SubmissionMetadataRow', () => {
     testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
     testData.extendedSubmissions.createPast(1);
     const row = mountComponent({ draft: true });
-    row.find('.state-and-actions').exists().should.be.false();
+    row.find('.state-and-actions').exists().should.be.false;
   });
 });

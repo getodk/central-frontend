@@ -8,7 +8,7 @@ describe('DatasetOverview', () => {
       mockLogin({ role: 'admin' });
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       const app = await load('/projects/1/entity-lists/trees');
-      app.find('#dataset-property-new-button').exists().should.be.true();
+      app.find('#dataset-property-new-button').exists().should.be.true;
     });
 
     it('does not allow project viewers to see new property button', async () => {
@@ -16,7 +16,7 @@ describe('DatasetOverview', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       const app = await load('/projects/1/entity-lists/trees');
-      app.find('#dataset-property-new-button').exists().should.be.false();
+      app.find('#dataset-property-new-button').exists().should.be.false;
     });
   });
 });

@@ -1,53 +1,100 @@
-import should from 'should';
+import chaiAsPromised from 'chai-as-promised';
+import { Assertion, AssertionError, use, util } from 'chai';
+import { BaseWrapper, VueWrapper } from '@vue/test-utils';
 
 import { wait } from './util/util';
+
+use(chaiAsPromised);
+
+// addAsyncMethod() is similar to Assertion.addMethod(), but the specified
+// function can be async.
+const addAsyncMethod = (name, f) => { Assertion.prototype[name] = f; };
+
+// Throws if the assertion was negated.
+const noNegate = (assertion) => {
+  if (util.flag(assertion, 'negate'))
+    throw new Error('this assertion cannot be negated');
+};
+// Returns `true` if the assertion was negated and `false` if not. Throws if the
+// assertion was called with arguments when it was negated.
+const checkNegate = (assertion, args) => {
+  const negate = util.flag(assertion, 'negate');
+  if (negate && args.some(arg => arg != null))
+    throw new Error('this negative assertion does not support arguments');
+  return negate;
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// STRINGS
+
+Assertion.addMethod('startWith', function startWith(str) {
+  expect(this._obj).to.be.a('string');
+  this.assert(
+    this._obj.startsWith(str),
+    'expected #{this} to start with #{exp}',
+    'expected #{this} not to start with #{exp}',
+    str
+  );
+});
+
+Assertion.addMethod('endWith', function endWith(str) {
+  expect(this._obj).to.be.a('string');
+  this.assert(
+    this._obj.endsWith(str),
+    'expected #{this} to end with #{exp}',
+    'expected #{this} not to end with #{exp}',
+    str
+  );
+});
+
+// Similar to match() in Should.js when called on a string.
+Assertion.addMethod('stringMatch', function stringMatch(expected) {
+  expect(this._obj).to.be.a('string');
+  if (typeof expected === 'string') {
+    this.assert(
+      this._obj === expected,
+      '#{this} to equal #{exp}',
+      '#{this} not to equal #{exp}',
+      expected
+    );
+  } else if (expected instanceof RegExp) {
+    this.assert(
+      expected.test(this._obj),
+      '#{this} to match',
+      '#{this} not to match'
+    );
+  } else if (typeof expected === 'function') {
+    let match;
+    try {
+      match = expected(this._obj) !== false;
+    } catch (error) {
+      if (error instanceof AssertionError)
+        match = false;
+      else
+        throw error;
+    }
+    this.assert(match, '#{this} to match', '#{this} not to match');
+  } else {
+    throw new Error('expected is invalid');
+  }
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// DOM
 
 // Takes an object that is either a native HTMLElement or a Vue Test Utils
 // wrapper, then consistently returns an HTMLElement. If the object is a
 // wrapper, its HTMLElement is returned.
 const unwrapElement = (elementOrWrapper) => {
   if (elementOrWrapper instanceof HTMLElement) return elementOrWrapper;
-  // If elementOrWrapper isn't an element, then it's a wrapper.
+  expect(elementOrWrapper).to.be.instanceof(BaseWrapper);
   const wrapper = elementOrWrapper;
-  wrapper.exists().should.be.true();
+  wrapper.exists().should.be.true;
   return wrapper.element;
-};
-
-// Assertion.addSync() is like Assertion.add(), but the specified function can
-// be async.
-const { Assertion, AssertionError } = should;
-Assertion.addAsync = (name, f) => {
-  // Add a simple synchronous version of the assertion in order to surface
-  // this.params and `name` if the assertion fails.
-  const syncName = `${name}_`;
-  // eslint-disable-next-line func-names
-  Assertion.add(syncName, function(params, error = undefined) {
-    if (params != null) this.params = params;
-    if (error != null) throw error;
-  });
-
-  // eslint-disable-next-line func-names
-  Assertion.prototype[name] = async function(...args) {
-    // We will pass `context` to f() rather than `this` so that f() doesn't
-    // mutate `this`.
-    const context = { obj: this.obj };
-    try {
-      should.exist(this.obj);
-      await f.apply(context, args);
-    } catch (error) {
-      if (!(error instanceof AssertionError)) throw error;
-      if (this.negate) return this;
-      // There has been an unexpected AssertionError, so the function will
-      // return a rejected promise. Rather than re-throwing the AssertionError,
-      // we pass the error to the synchronous version of the assertion above.
-      this.obj.should[syncName](context.params, error);
-    }
-    if (this.negate) this.obj.should.not[syncName](context.params);
-    return this;
-  };
-  // Name the function according to the specified name, since the function's
-  // name will be shown in the stack trace.
-  Object.defineProperty(Assertion.prototype[name], 'name', { value: name });
 };
 
 const verifyAttached = (elementOrWrapper) => {
@@ -58,13 +105,16 @@ const verifyAttached = (elementOrWrapper) => {
 // Asserts that an element is not individually hidden and that all its ancestors
 // are also not hidden. To test style-based visibility, attach the component to
 // the document, and specify `true` for `computed`.
-Assertion.add('visible', function visible(computed = false) {
-  this.params = { operator: 'to be visible' };
-  if (computed) verifyAttached(this.obj);
-  let element = unwrapElement(this.obj);
+Assertion.addMethod('visible', function visible(computed = false) {
+  if (computed) verifyAttached(this._obj);
+  let element = unwrapElement(this._obj);
   while (element !== document.body && element != null) {
     const { display } = computed ? getComputedStyle(element) : element.style;
-    display.should.not.equal('none');
+    this.assert(
+      display !== 'none',
+      'expected the element to be visible',
+      'expected the element not to be visible'
+    );
     element = element.parentNode;
   }
 });
@@ -72,27 +122,36 @@ Assertion.add('visible', function visible(computed = false) {
 // Asserts that an element is individually hidden. To test style-based
 // visibility, attach the component to the document, and specify `true` for
 // `computed`.
-Assertion.add('hidden', function hidden(computed = false) {
-  this.params = { operator: 'to be hidden' };
-  if (computed) verifyAttached(this.obj);
-  const element = unwrapElement(this.obj);
+Assertion.addMethod('hidden', function hidden(computed = false) {
+  if (computed) verifyAttached(this._obj);
+  const element = unwrapElement(this._obj);
   const { display } = computed ? getComputedStyle(element) : element.style;
-  display.should.equal('none');
+  this.assert(
+    display === 'none',
+    'expected the element to be hidden',
+    'expected the element not to be hidden'
+  );
 });
 
-// If a test does not attach the component to the document, then uses this
-// assertion, it may time out rather than fail. (I am not sure why.)
-Assertion.add('focused', function focused() {
-  this.params = { operator: 'to be focused' };
-  verifyAttached(this.obj);
-  unwrapElement(this.obj).should.equal(document.activeElement);
+Assertion.addMethod('focused', function focused() {
+  verifyAttached(this._obj);
+  this.assert(
+    unwrapElement(this._obj) === document.activeElement,
+    'expected the element to be focused',
+    'expected the element not to be focused'
+  );
 });
 
-Assertion.add('ariaDescription', function ariaDescription(description = undefined) {
-  this.params = { operator: 'to be described by one element' };
-  const element = unwrapElement(this.obj);
+Assertion.addMethod('ariaDescription', function ariaDescription(description = undefined) {
+  const element = unwrapElement(this._obj);
   const describedBy = element.getAttribute('aria-describedby');
-  should.exist(describedBy);
+  this.assert(
+    describedBy != null,
+    'expected the element to have an aria-describedby attribute',
+    'expected the element not to have an aria-describedby attribute'
+  );
+  if (checkNegate(this, [description])) return;
+
   const ids = describedBy.split(' ');
   ids.length.should.equal(1);
   const id = ids[0];
@@ -102,18 +161,24 @@ Assertion.add('ariaDescription', function ariaDescription(description = undefine
   const describer = element.getRootNode().querySelector(`#${id}`) ??
     document.getElementById(id);
   should.exist(describer);
+
   const text = describer.textContent.trim();
   if (description != null)
-    text.should.match(description);
+    text.should.stringMatch(description);
   else
     text.should.not.equal('');
 });
 
-Assertion.add('ariaDescriptions', function ariaDescriptions(descriptions = undefined) {
-  this.params = { operator: 'to be described by multiple elements' };
-  const element = unwrapElement(this.obj);
+Assertion.addMethod('ariaDescriptions', function ariaDescriptions(descriptions = undefined) {
+  const element = unwrapElement(this._obj);
   const describedBy = element.getAttribute('aria-describedby');
-  should.exist(describedBy);
+  this.assert(
+    describedBy != null,
+    'expected the element to have an aria-describedby attribute',
+    'expected the not to have an aria-describedby attribute'
+  );
+  if (checkNegate(this, [descriptions])) return;
+
   const ids = describedBy.split(' ');
   ids.length.should.be.above(1);
   const text = ids.map(id => {
@@ -126,28 +191,40 @@ Assertion.add('ariaDescriptions', function ariaDescriptions(descriptions = undef
   if (descriptions != null) {
     text.length.should.equal(descriptions.length);
     for (let i = 0; i < text.length; i += 1)
-      text[i].should.match(descriptions[i]);
+      text[i].should.stringMatch(descriptions[i]);
   } else {
     for (const s of text) s.should.not.equal('');
   }
 });
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TOOLTIPS
+
 // Asserts that an element shows a tooltip on mouseenter and hides it on
 // mouseleave. If `text` is specified, asserts that the text of the tooltip
 // matches `text`.
-Assertion.addAsync('tooltip', async function tooltip(text = undefined) {
-  this.params = { operator: 'to have a tooltip' };
+addAsyncMethod('tooltip', async function tooltip(text = undefined) {
   document.querySelectorAll('.tooltip.in').length.should.equal(0);
-  const element = unwrapElement(this.obj);
+  const element = unwrapElement(this._obj);
   element.dispatchEvent(new MouseEvent('mouseenter'));
   await wait();
   const tooltips = document.querySelectorAll('.tooltip.in');
+  this.assert(
+    tooltips.length !== 0,
+    'expected the element to have a tooltip',
+    'expected the element not to have a tooltip'
+  );
+  if (checkNegate(this, [text])) return;
   tooltips.length.should.equal(1);
+
   const actualText = tooltips[0].textContent.trim();
   if (text != null)
-    actualText.should.match(text);
+    actualText.should.stringMatch(text);
   else
     actualText.should.not.equal('');
+
   element.dispatchEvent(new MouseEvent('mouseleave'));
   document.querySelectorAll('.tooltip.in').length.should.equal(0);
 });
@@ -165,10 +242,10 @@ not have an ancestor that truncates its text, the assertion will try to insert a
 new ancestor to truncate its text. In other words, the assertion does not test
 that the element has truncated text, only that if it has truncated text, it will
 show that text in a tooltip. */
-Assertion.addAsync('textTooltip', async function textTooltip() {
-  this.params = { operator: 'to show a tooltip if its text overflows' };
+addAsyncMethod('textTooltip', async function textTooltip() {
+  noNegate(this);
 
-  const element = unwrapElement(this.obj);
+  const element = unwrapElement(this._obj);
   if (element.children.length !== 0)
     throw new Error('The element cannot have children because its content will be temporarily overwritten.');
 
@@ -234,10 +311,20 @@ Assertion.addAsync('textTooltip', async function textTooltip() {
   }
 });
 
-Assertion.add('alert', function assertAlert(type = undefined, message = undefined) {
-  this.params = { operator: 'to show an alert' };
-  const { alert } = this.obj.vm.$container;
-  alert.state.should.be.true();
+
+
+////////////////////////////////////////////////////////////////////////////////
+// OTHER
+
+Assertion.addMethod('alert', function assertAlert(type = undefined, message = undefined) {
+  expect(this._obj).to.be.instanceof(VueWrapper);
+  const { alert } = this._obj.vm.$container;
+  this.assert(
+    alert.state,
+    'expected the component to show an alert',
+    'expected the component not to show an alert'
+  );
+  if (checkNegate(this, [type, message])) return;
   if (type != null) alert.type.should.equal(type);
-  if (message != null) alert.message.should.match(message);
+  if (message != null) alert.message.should.stringMatch(message);
 });

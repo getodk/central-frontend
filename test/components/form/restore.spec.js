@@ -114,7 +114,7 @@ describe('FormRestore', () => {
         111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }
       };
       const app = await restore(trashedForms, 111);
-      app.find('#form-trash-list').exists().should.be.false();
+      app.find('#form-trash-list').exists().should.be.false;
       app.findAllComponents(FormRow).length.should.equal(1);
     });
 

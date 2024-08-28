@@ -33,7 +33,7 @@ describe('ProjectOverviewDescription', () => {
 
   it('shows nothing if empty description and cannot update', () => {
     const component = mountComponent({ canUpdate: false });
-    component.find('*').exists().should.be.false(); // component is empty
+    component.find('*').exists().should.be.false; // component is empty
   });
 
   it('renders router link to project settings', () => {

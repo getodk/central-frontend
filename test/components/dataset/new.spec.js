@@ -37,15 +37,15 @@ describe('DatasetNew', () => {
 
   it('does not shows message about entity manipulation if project is not encrypted', () => {
     const modal = mount(DatasetNew, mountOptions({ attachTo: document.body }));
-    modal.find('.icon-exclamation-triangle').exists().should.be.false();
+    modal.find('.icon-exclamation-triangle').exists().should.be.false;
   });
 
   it('shows message about entity manipulation in encrypted project', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     testData.extendedProjects.createPast(1, { key });
     const modal = mount(DatasetNew, mountOptions({ attachTo: document.body }));
-    modal.find('.icon-exclamation-triangle').exists().should.be.true();
-    modal.get('.modal-introduction').text().should.containEql('This Project is encrypted');
+    modal.find('.icon-exclamation-triangle').exists().should.be.true;
+    modal.get('.modal-introduction').text().should.include('This Project is encrypted');
   });
 
   it('implements some standard button things', () =>
@@ -86,7 +86,7 @@ describe('DatasetNew', () => {
     it('shows new name on second screen of modal', async () => {
       const app = await submit('MyNewDataset');
       const p = app.findComponent(DatasetNew).find('#dataset-new-success');
-      p.text().should.containEql('MyNewDataset');
+      p.text().should.include('MyNewDataset');
     });
 
     it('redirects to new entity list page after clicking done', () =>

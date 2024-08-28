@@ -20,7 +20,7 @@ describe('ProjectEnableEncryption', () => {
       testData.extendedProjects.createPast(1);
       const component = await load('/projects/1/settings', { root: false });
       const button = component.find('#project-settings-enable-encryption-button');
-      button.exists().should.be.true();
+      button.exists().should.be.true;
     });
 
     it('does not render the button if managed encryption is enabled', async () => {
@@ -28,7 +28,7 @@ describe('ProjectEnableEncryption', () => {
       testData.extendedProjects.createPast(1, { key });
       const component = await load('/projects/1/settings', { root: false });
       const button = component.find('#project-settings-enable-encryption-button');
-      button.exists().should.be.false();
+      button.exists().should.be.false;
     });
   });
 
@@ -44,7 +44,7 @@ describe('ProjectEnableEncryption', () => {
   it('first shows information in the modal', () => {
     testData.extendedProjects.createPast(1);
     const modal = mount(ProjectEnableEncryption, mountOptions());
-    modal.find('.info-item').exists().should.be.true();
+    modal.find('.info-item').exists().should.be.true;
   });
 
   it('focuses the passphrase input', async () => {
@@ -72,7 +72,7 @@ describe('ProjectEnableEncryption', () => {
     await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
-    modal.find('.info-item').exists().should.be.true();
+    modal.find('.info-item').exists().should.be.true;
     await modal.get('.btn-primary').trigger('click');
     modal.get('input[placeholder="Passphrase *"]').element.value.should.equal('');
   });
@@ -144,7 +144,7 @@ describe('ProjectEnableEncryption', () => {
         })
         .respondWithSuccess()
         .afterResponse(modal => {
-          modal.find('.icon-check-circle').exists().should.be.true();
+          modal.find('.icon-check-circle').exists().should.be.true;
         }));
 
     it('hides an alert about the passphrase length', () =>
@@ -185,7 +185,7 @@ describe('ProjectEnableEncryption', () => {
         .respondWithData(() => testData.extendedProjects.last())
         .afterResponse(app => {
           const button = app.find('#project-settings-enable-encryption-button');
-          button.exists().should.be.false();
+          button.exists().should.be.false;
         }));
   });
 });
