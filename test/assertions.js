@@ -8,12 +8,7 @@ use(chaiAsPromised);
 
 // addAsyncMethod() is similar to Assertion.addMethod(), but the specified
 // function can be async.
-const addAsyncMethod = (name, f) => {
-  // eslint-disable-next-line func-names
-  const named = function(...args) { return f.apply(this, args); };
-  Object.defineProperty(named, 'name', { value: name });
-  Assertion.prototype[name] = named;
-};
+const addAsyncMethod = (name, f) => { Assertion.prototype[name] = f; };
 
 // Throws if the assertion was negated.
 const noNegate = (assertion) => {
@@ -44,7 +39,7 @@ Assertion.addMethod('startWith', function startWith(str) {
   );
 });
 
-Assertion.addMethod('endWith', function startWith(str) {
+Assertion.addMethod('endWith', function endWith(str) {
   expect(this._obj).to.be.a('string');
   this.assert(
     this._obj.endsWith(str),
