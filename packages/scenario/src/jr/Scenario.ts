@@ -143,7 +143,9 @@ export class Scenario {
 	readonly formName: string;
 	readonly instanceRoot: RootNode;
 
-	private readonly getPositionalEvents: Accessor<PositionalEvents>;
+	protected readonly getPositionalEvents: Accessor<PositionalEvents>;
+
+	protected readonly getEventPosition: Accessor<number>;
 	private readonly setEventPosition: Setter<number>;
 
 	protected readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
@@ -154,14 +156,15 @@ export class Scenario {
 		this.formName = formName;
 		this.instanceRoot = instanceRoot;
 
-		const [eventPosition, setEventPosition] = createSignal(0);
+		const [getEventPosition, setEventPosition] = createSignal(0);
 
 		this.getPositionalEvents = () => getPositionalEvents(instanceRoot);
+		this.getEventPosition = getEventPosition;
 		this.setEventPosition = setEventPosition;
 
 		this.getSelectedPositionalEvent = createMemo(() => {
 			const events = getPositionalEvents(instanceRoot);
-			const position = eventPosition();
+			const position = getEventPosition();
 			const event = events[position];
 
 			if (event == null) {
@@ -386,7 +389,7 @@ export class Scenario {
 		const node = getNodeForReference(this.instanceRoot, reference);
 
 		if (node == null) {
-			throw new Error(`No "answer" node for reference: ${reference}`);
+			throw new Error(`No instance node for reference: ${reference}`);
 		}
 
 		return node;

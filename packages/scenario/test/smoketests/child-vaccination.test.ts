@@ -13,6 +13,17 @@ import type {
 import { JRTreeReference as BaseJRTreeReference } from '../../src/jr/xpath/JRTreeReference.ts';
 
 /**
+ * Intentionally naive. The scope of expressions we expect to handle in this
+ * test suite is narrow enough that we don't need to do more robust static
+ * analysis and serialization. There is more complete logic in
+ * `@getodk/xforms-engine` to do this, but it's intentionally project-private
+ * (at least it is at time of writing).
+ */
+const naiveStripPositionalPredicates = (expression: string): string => {
+	return expression.replaceAll(/\[\d+\]/g, '');
+};
+
+/**
  * **PORTING NOTES**
  *
  * This smoke test is intentionally ported in an incomplete state, pending
@@ -54,7 +65,9 @@ const refSingletons = new UpsertableMap<string, JRTreeReference>();
 
 class JRTreeReference extends BaseJRTreeReference {
 	genericize(): JRTreeReference {
-		throw new IncompleteTestPortError('TreeReference.genericize');
+		const reference = naiveStripPositionalPredicates(this.xpathReference);
+
+		return new JRTreeReference(reference);
 	}
 
 	equals(other: JRTreeReference): boolean {
@@ -123,6 +136,24 @@ class Scenario extends BaseScenario {
 		/* eslint-enable no-console */
 	}
 
+	private getNextEventPosition(): AnyPositionalEvent {
+		const currentPosition = this.getSelectedPositionalEvent();
+
+		if (currentPosition.eventType === 'END_OF_FORM') {
+			throw 'todo';
+		}
+
+		const events = this.getPositionalEvents();
+		const position = this.getEventPosition();
+		const next = events[position + 1];
+
+		if (next == null) {
+			throw new Error(`No question at position: ${position}`);
+		}
+
+		return next;
+	}
+
 	/**
 	 * @deprecated
 	 *
@@ -142,7 +173,13 @@ class Scenario extends BaseScenario {
 	 * increased clarity of intent.
 	 */
 	nextRef(): JRTreeReference {
-		throw new IncompleteTestPortError('Extended Scenario.nextRef');
+		const next = this.getNextEventPosition();
+
+		if (next.eventType === 'END_OF_FORM') {
+			throw 'todo';
+		}
+
+		return new JRTreeReference(next.node.currentState.reference);
 	}
 
 	/**
@@ -549,54 +586,9 @@ describe('ChildVaccinationTest.java', () => {
 	});
 
 	it.fails('[smoke test]', async () => {
-		let scenario: Scenario | null = null;
-
-		try {
-			scenario = await Scenario.init('child_vaccination_VOL_tool_v12.xml');
-
-			expect.fail('Update `child-vaccination.test.ts`, known failure mode has changed');
-		} catch (error) {
-			expect(error).toBeInstanceOf(Error);
-
-			// Failure of this assertion likely means that we've implemented the
-			// `indexed-repeat` XPath function. When that occurs, these error
-			// condition assertions should be removed, and the `Scenario.init` call
-			// should be treated normally.
-			//
-			// If a new failure occurs after that point, and that failure cannot be
-			// addressed by updating the test to be more complete (e.g. by specifying
-			// more of the expected references in `scenario.next` calls, or
-			// implementing other aspects of the test which are currently deferred),
-			// consider adding a similar function/assertion/comment to this effect,
-			// asserting that new known failure condition and prompting the test to be
-			// updated again once it is resolved.
-			expect((error as Error).message).toContain('function not defined: indexed-repeat');
-		}
-
-		if (scenario == null) {
-			return;
-		}
+		const scenario = await Scenario.init('child_vaccination_VOL_tool_v12.xml');
 
 		scenario.next('/data/building_type');
-
-		const currentExpectedPointOfFailure = () => {
-			scenario.answer('multi');
-		};
-
-		try {
-			expect(currentExpectedPointOfFailure).toThrowError('function not defined: indexed-repeat');
-
-			if (typeof currentExpectedPointOfFailure === 'function') {
-				scenario.trace(
-					'Early exit of child-vaccination.test.ts smoke test: known failure point has been reached'
-				);
-
-				return;
-			}
-		} catch {
-			throw new Error();
-		}
-
 		scenario.answer('multi');
 		scenario.next('/data/not_single');
 		scenario.next('/data/not_single/gps');
@@ -607,6 +599,42 @@ describe('ChildVaccinationTest.java', () => {
 		scenario.answer('Some address, some location');
 
 		// endregion
+
+		const currentExpectedPointOfFailure = () => {
+			expect(scenario.answerOf('/data/household_count').toString()).toBe('2');
+
+			const secondHouseholdControlledByRepeatCount = scenario.getInstanceNode('/data/household[2]');
+
+			expect(secondHouseholdControlledByRepeatCount).not.toBeNull();
+		};
+
+		try {
+			expect(currentExpectedPointOfFailure).toThrowError(
+				'No instance node for reference: /data/household[2]'
+			);
+
+			if (typeof currentExpectedPointOfFailure === 'function') {
+				scenario.trace(
+					'Early exit of child-vaccination.test.ts smoke test: known failure point has been reached'
+				);
+
+				return;
+			}
+		} catch (error) {
+			// Failure of this assertion likely means that we've implemented
+			// `jr:count`. When that occurs, these error condition assertions should
+			// be removed, and the test should be updated to add expected node-set
+			// reference assertions in the `scenario.next` calls, and so on, either
+			// until the test passes or a new known point of failure is identified.
+
+			expect(error).toBeInstanceOf(Error);
+
+			const { message } = error as Error;
+
+			expect.fail(
+				`Update \`child-vaccination.test.ts\`, known failure mode has changed: ${message}`
+			);
+		}
 
 		// region Answer all household repeats
 
