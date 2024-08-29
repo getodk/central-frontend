@@ -196,9 +196,9 @@ describe('EntityFeedEntry', () => {
     });
 
     it('indicates if the entity was created offline', () => {
+      createEntity();
       testData.extendedEntityVersions
         .createPast(1, { branchId: 'b1', trunkVersion: null, branchBaseVersion: 1 });
-      createEntity();
       const title = mountComponent().get('.feed-entry-title');
       title.find('.offline-update').exists().should.be.true;
     });

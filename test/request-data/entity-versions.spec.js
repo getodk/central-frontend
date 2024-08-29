@@ -13,7 +13,7 @@ const createResource = () => {
   return requestData.localResources.entityVersions;
 };
 
-describe('useRequestData()', () => {
+describe('useEntityVersions()', () => {
   describe('offline branches', () => {
     it('adds a branch property to each offline update', () => {
       testData.extendedEntities.createPast(1);

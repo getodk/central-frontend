@@ -79,9 +79,9 @@ describe('EntityConflictTable', () => {
         .createPast(1)
         .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 1, baseVersion: 1 })
         .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2 })
-        .createPast(1, { branchId: 'b2', trunkVersion: 1, branchBaseVersion: 1, baseVersion: 1 })
-        .createPast(1, { branchId: 'b2', trunkVersion: 1, branchBaseVersion: 2 })
-        .createPast(1, { branchId: 'b2', trunkVersion: 1, branchBaseVersion: 3 });
+        .createPast(1, { branchId: 'b2', trunkVersion: 4, branchBaseVersion: 4, baseVersion: 4 })
+        .createPast(1, { branchId: 'b2', trunkVersion: 4, branchBaseVersion: 5 })
+        .createPast(1, { branchId: 'b2', trunkVersion: 4, branchBaseVersion: 6 });
       const component = mountComponent();
       const td = component.findAll('#entity-conflict-table-branch-row td');
       td.length.should.equal(4);
@@ -106,11 +106,11 @@ describe('EntityConflictTable', () => {
     it('does not show a branch made up of one update', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions
-        .createPast(1)
-        .createPast(1, { branchId: 'b1', trunkVersion: 1, branchBaseVersion: 2, baseVersion: 1 });
+        .createPast(2, { baseVersion: 1 }) // Cause a conflict.
+        .createPast(1, { branchId: 'b1', trunkVersion: 3, branchBaseVersion: 4, baseVersion: 3 });
       const component = mountComponent();
       const { requestData } = component.vm.$container;
-      should.exist(requestData.localResources.entityVersions[2].branch);
+      should.exist(requestData.localResources.entityVersions[3].branch);
       const tr = component.find('#entity-conflict-table-branch-row');
       tr.exists().should.be.false;
     });

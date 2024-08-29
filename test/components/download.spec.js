@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 
-import Download from '../../src/components/download.vue';
 import NotFound from '../../src/components/not-found.vue';
 
 import { load } from '../util/http';
@@ -11,8 +10,7 @@ const loadComponent = (path) => {
   const preventDefault = (event) => { event.preventDefault(); };
   document.body.addEventListener('click', preventDefault);
 
-  return load(path, { attachTo: document.body })
-    .then(app => app.getComponent(Download))
+  return load(path, { root: false, attachTo: document.body })
     .finally(() => {
       document.body.removeEventListener('click', preventDefault);
     });
@@ -39,13 +37,17 @@ describe('Download', () => {
     component.get('strong').text().should.equal('e f');
   });
 
-  it('clicks the download link', async () => {
+  it('clicks the download link', () => {
     const handler = sinon.fake();
     document.body.addEventListener('click', handler);
-    const component = await loadComponent('/dl/projects/1/forms/f/submissions/s/attachments/a');
-    document.body.removeEventListener('click', handler);
-    handler.called.should.be.true;
-    const { target } = handler.getCall(0).args[0];
-    target.should.equal(component.get('a').element);
+    return loadComponent('/dl/projects/1/forms/f/submissions/s/attachments/a')
+      .then(component => {
+        handler.called.should.be.true;
+        const { target } = handler.getCall(0).args[0];
+        target.should.equal(component.get('a').element);
+      })
+      .finally(() => {
+        document.body.removeEventListener('click', handler);
+      });
   });
 });
