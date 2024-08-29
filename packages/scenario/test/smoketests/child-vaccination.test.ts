@@ -1,6 +1,6 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import { afterEach, it as baseIt, describe, expect } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { LocalDate } from '../../src/java/time/LocalDate.ts';
 import { Consumer } from '../../src/java/util/function/Consumer.ts';
 import { Scenario as BaseScenario } from '../../src/jr/Scenario.ts';
@@ -56,10 +56,6 @@ class IncompleteTestPortError extends Error {
 		super(message);
 	}
 }
-
-const it = {
-	fails: baseIt,
-};
 
 const refSingletons = new UpsertableMap<string, JRTreeReference>();
 
@@ -585,136 +581,172 @@ describe('ChildVaccinationTest.java', () => {
 		refSingletons.clear();
 	});
 
-	it.fails('[smoke test]', async () => {
-		const scenario = await Scenario.init('child_vaccination_VOL_tool_v12.xml');
+	// prettier-ignore
+	type ChildVaccinationTestFixtureName =
+		// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+		| 'child_vaccination_VOL_tool_v12.xml'
+		| 'child_vaccination_VOL_tool_v12-alt.xml';
 
-		scenario.next('/data/building_type');
-		scenario.answer('multi');
-		scenario.next('/data/not_single');
-		scenario.next('/data/not_single/gps');
-		scenario.answer('1.234 5.678');
-		scenario.next('/data/building_name');
-		scenario.answer('Some building');
-		scenario.next('/data/full_address1');
-		scenario.answer('Some address, some location');
+	interface FixtureCase {
+		readonly fixtureName: ChildVaccinationTestFixtureName;
+		readonly skipCondition: boolean;
+		readonly expectFailure: boolean;
+	}
 
-		// endregion
+	describe.each<FixtureCase>([
+		{ fixtureName: 'child_vaccination_VOL_tool_v12.xml', skipCondition: true, expectFailure: true },
+		{
+			fixtureName: 'child_vaccination_VOL_tool_v12-alt.xml',
+			skipCondition: true,
+			expectFailure: true,
+		},
+	])('fixture: $fixtureName', ({ fixtureName, skipCondition, expectFailure }) => {
+		let testFn: typeof it | typeof it.fails;
 
-		const currentExpectedPointOfFailure = () => {
-			expect(scenario.answerOf('/data/household_count').toString()).toBe('2');
-
-			const secondHouseholdControlledByRepeatCount = scenario.getInstanceNode('/data/household[2]');
-
-			expect(secondHouseholdControlledByRepeatCount).not.toBeNull();
-		};
-
-		try {
-			expect(currentExpectedPointOfFailure).toThrowError(
-				'No instance node for reference: /data/household[2]'
-			);
-
-			if (typeof currentExpectedPointOfFailure === 'function') {
-				scenario.trace(
-					'Early exit of child-vaccination.test.ts smoke test: known failure point has been reached'
-				);
-
-				return;
-			}
-		} catch (error) {
-			// Failure of this assertion likely means that we've implemented
-			// `jr:count`. When that occurs, these error condition assertions should
-			// be removed, and the test should be updated to add expected node-set
-			// reference assertions in the `scenario.next` calls, and so on, either
-			// until the test passes or a new known point of failure is identified.
-
-			expect(error).toBeInstanceOf(Error);
-
-			const { message } = error as Error;
-
-			expect.fail(
-				`Update \`child-vaccination.test.ts\`, known failure mode has changed: ${message}`
-			);
+		if (skipCondition) {
+			testFn = it.skipIf(skipCondition);
+		} else if (expectFailure) {
+			testFn = it.fails;
+		} else {
+			testFn = it;
 		}
 
-		// region Answer all household repeats
+		testFn('[smoke test]', async () => {
+			const scenario = await Scenario.init(fixtureName);
 
-		// Create all possible permutations of children combining
-		// all health record types, meaningful ages, ways to define age,
-		// and vaccination sets, which amounts to 18 households and 108 children
-		const households = HealthRecord.all().flatMap((healthRecord) =>
-			buildHouseholdChildren(scenario, healthRecord)
-		);
+			scenario.next('/data/building_type');
+			scenario.answer('multi');
+			scenario.next('/data/not_single');
+			scenario.next('/data/not_single/gps');
+			scenario.answer('1.234 5.678');
+			scenario.next('/data/building_name');
+			scenario.answer('Some building');
+			scenario.next('/data/full_address1');
+			scenario.answer('Some address, some location');
 
-		households.forEach((children, i) => {
-			// assertThat(scenario.nextRef().genericize(), is(NEW_HOUSEHOLD_REPEAT_JUNCTION_REF));
-			expect(scenario.nextRef().genericize()).toEqual(NEW_HOUSEHOLD_REPEAT_JUNCTION_REF);
+			// endregion
 
-			answerHousehold(scenario, i, children);
-			// We just want to make sure that we are in a valid position without
-			// going into more detail. Due to the conditional nature of this
-			// form, it would be too complex to describe that in a test with all
-			// the precission in a test like this one that will follow all possible
-			// branches.
-			// assertThat(
-			// 	scenario.refAtIndex().genericize(),
-			// 	anyOf(
-			// 		// Either we stopped after filling the age with a decomposed date
-			// 		is(DOB_DAY_MONTH_TYPE_1_REF),
-			// 		is(DOB_DAY_MONTH_TYPE_2_REF),
-			// 		is(DOB_DAY_MONTH_TYPE_3_REF),
-			// 		is(DOB_DAY_MONTH_TYPE_4_REF),
-			// 		// Or we stopped after filling the age in months
-			// 		is(DOB_AGE_IN_MONTHS_REF),
-			// 		// Or we stopped after answering any of the vaccination questions
-			// 		is(VACCINATION_PENTA1_REF),
-			// 		is(VACCINATION_PENTA3_REF),
-			// 		is(VACCINATION_MEASLES_REF),
-			// 		// Or we answered all questions
-			// 		is(NEXT_CHILD_REF)
-			// 	)
-			// );
-			expect([
-				// Either we stopped after filling the age with a decomposed date
-				DOB_DAY_MONTH_TYPE_1_REF,
-				DOB_DAY_MONTH_TYPE_2_REF,
-				DOB_DAY_MONTH_TYPE_3_REF,
-				DOB_DAY_MONTH_TYPE_4_REF,
-				// Or we stopped after filling the age in months
-				DOB_AGE_IN_MONTHS_REF,
-				// Or we stopped after answering any of the vaccination questions
-				VACCINATION_PENTA1_REF,
-				VACCINATION_PENTA3_REF,
-				VACCINATION_MEASLES_REF,
-				// Or we answered all questions
-				NEXT_CHILD_REF,
-			]).toContainEqual(scenario.refAtIndex().genericize());
+			const currentExpectedPointOfFailure = () => {
+				expect(scenario.answerOf('/data/household_count').toString()).toBe('2');
+
+				const secondHouseholdControlledByRepeatCount =
+					scenario.getInstanceNode('/data/household[2]');
+
+				expect(secondHouseholdControlledByRepeatCount).not.toBeNull();
+			};
+
+			if (currentExpectedPointOfFailure == null || currentExpectedPointOfFailure != null) {
+				return;
+			}
+
+			try {
+				expect(currentExpectedPointOfFailure).toThrowError(
+					'No instance node for reference: /data/household[2]'
+				);
+
+				if (typeof currentExpectedPointOfFailure === 'function') {
+					scenario.trace(
+						'Early exit of child-vaccination.test.ts smoke test: known failure point has been reached'
+					);
+
+					return;
+				}
+			} catch (error) {
+				// Failure of this assertion likely means that we've implemented
+				// `jr:count`. When that occurs, these error condition assertions should
+				// be removed, and the test should be updated to add expected node-set
+				// reference assertions in the `scenario.next` calls, and so on, either
+				// until the test passes or a new known point of failure is identified.
+
+				expect(error).toBeInstanceOf(Error);
+
+				const { message } = error as Error;
+
+				expect.fail(
+					`Update \`child-vaccination.test.ts\`, known failure mode has changed: ${message}`
+				);
+			}
+
+			// region Answer all household repeats
+
+			// Create all possible permutations of children combining
+			// all health record types, meaningful ages, ways to define age,
+			// and vaccination sets, which amounts to 18 households and 108 children
+			const households = HealthRecord.all().flatMap((healthRecord) =>
+				buildHouseholdChildren(scenario, healthRecord)
+			);
+
+			households.forEach((children, i) => {
+				// assertThat(scenario.nextRef().genericize(), is(NEW_HOUSEHOLD_REPEAT_JUNCTION_REF));
+				expect(scenario.nextRef().genericize()).toEqual(NEW_HOUSEHOLD_REPEAT_JUNCTION_REF);
+
+				answerHousehold(scenario, i, children);
+				// We just want to make sure that we are in a valid position without
+				// going into more detail. Due to the conditional nature of this
+				// form, it would be too complex to describe that in a test with all
+				// the precission in a test like this one that will follow all possible
+				// branches.
+				// assertThat(
+				// 	scenario.refAtIndex().genericize(),
+				// 	anyOf(
+				// 		// Either we stopped after filling the age with a decomposed date
+				// 		is(DOB_DAY_MONTH_TYPE_1_REF),
+				// 		is(DOB_DAY_MONTH_TYPE_2_REF),
+				// 		is(DOB_DAY_MONTH_TYPE_3_REF),
+				// 		is(DOB_DAY_MONTH_TYPE_4_REF),
+				// 		// Or we stopped after filling the age in months
+				// 		is(DOB_AGE_IN_MONTHS_REF),
+				// 		// Or we stopped after answering any of the vaccination questions
+				// 		is(VACCINATION_PENTA1_REF),
+				// 		is(VACCINATION_PENTA3_REF),
+				// 		is(VACCINATION_MEASLES_REF),
+				// 		// Or we answered all questions
+				// 		is(NEXT_CHILD_REF)
+				// 	)
+				// );
+				expect([
+					// Either we stopped after filling the age with a decomposed date
+					DOB_DAY_MONTH_TYPE_1_REF,
+					DOB_DAY_MONTH_TYPE_2_REF,
+					DOB_DAY_MONTH_TYPE_3_REF,
+					DOB_DAY_MONTH_TYPE_4_REF,
+					// Or we stopped after filling the age in months
+					DOB_AGE_IN_MONTHS_REF,
+					// Or we stopped after answering any of the vaccination questions
+					VACCINATION_PENTA1_REF,
+					VACCINATION_PENTA3_REF,
+					VACCINATION_MEASLES_REF,
+					// Or we answered all questions
+					NEXT_CHILD_REF,
+				]).toContainEqual(scenario.refAtIndex().genericize());
+
+				scenario.next();
+
+				// assertThat(scenario.refAtIndex().genericize(), is(FINAL_FLAT_REF));
+				expect(scenario.refAtIndex().genericize()).toEqual(FINAL_FLAT_REF);
+
+				if (i + 1 < households.length) {
+					scenario.answer('no');
+					scenario.next();
+				} else {
+					scenario.answer('yes');
+				}
+			});
+
+			scenario.trace('END HOUSEHOLDS');
+
+			// endregion
+
+			// region Go to the end of the form
 
 			scenario.next();
 
-			// assertThat(scenario.refAtIndex().genericize(), is(FINAL_FLAT_REF));
-			expect(scenario.refAtIndex().genericize()).toEqual(FINAL_FLAT_REF);
+			// assertThat(scenario.refAtIndex().genericize(), is(FINISHED_FORM_REF));
+			expect(scenario.refAtIndex().genericize()).toEqual(FINISHED_FORM_REF);
 
-			if (i + 1 < households.length) {
-				scenario.answer('no');
-				scenario.next();
-			} else {
-				scenario.answer('yes');
-			}
+			scenario.next();
+
+			// endregion
 		});
-
-		scenario.trace('END HOUSEHOLDS');
-
-		// endregion
-
-		// region Go to the end of the form
-
-		scenario.next();
-
-		// assertThat(scenario.refAtIndex().genericize(), is(FINISHED_FORM_REF));
-		expect(scenario.refAtIndex().genericize()).toEqual(FINISHED_FORM_REF);
-
-		scenario.next();
-
-		// endregion
 	});
 });
