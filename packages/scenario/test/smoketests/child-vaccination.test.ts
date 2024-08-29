@@ -449,6 +449,29 @@ const answerChild_dob = (
 		const ageInMonths = dob.until(TODAY).months(); /* .getMonths() */
 		const name = `CHILD ${i} - Age ${ageInMonths} months - ${sex.getName()}`;
 
+		const currentQuestion = scenario.getQuestionAtIndex();
+		const currentNode = currentQuestion.node;
+		const currentHousehold = currentNode.parent;
+
+		expect(currentHousehold.nodeType).toBe('repeat-instance');
+
+		const currentHouseholdPath = currentHousehold.currentState.reference;
+
+		expect(currentHouseholdPath).toMatch(/^\/data\/household\[\d+\]$/);
+
+		const childRepeatPosition = i + 1;
+		const childRepeatPath = `${currentHouseholdPath}/child_repeat[${childRepeatPosition}]`;
+
+		try {
+			scenario.getInstanceNode(childRepeatPath);
+		} catch {
+			throw KnownFailureError.from(
+				new Error(
+					"Count-controlled repeat with relative `jr:count` expression produces no instances. Expression is evaluated in context of repeat range's parent element."
+				)
+			);
+		}
+
 		scenario.trace(name);
 		scenario.next();
 		scenario.next();
