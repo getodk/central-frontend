@@ -209,7 +209,7 @@
                         /data/building_type = 'single',
                         1,
                         if(
-                            /data/flatcount = 0 or indexed-repeat(/data/household/finalflat, /data/household, /data/flatcount) != 'yes',
+                            /data/flatcount = 0 or indexed-repeat(/data/household/finalflat, /data/household, /data/flatcount) = 'no',
                             /data/flatcount + 1,
                             /data/flatcount
                         )
