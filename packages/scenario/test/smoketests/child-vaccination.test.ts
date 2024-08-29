@@ -1,6 +1,6 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, assert, describe, expect, it } from 'vitest';
 import { LocalDate } from '../../src/java/time/LocalDate.ts';
 import { Consumer } from '../../src/java/util/function/Consumer.ts';
 import { Scenario as BaseScenario } from '../../src/jr/Scenario.ts';
@@ -576,6 +576,24 @@ const answerHousehold = (
 	scenario.trace('END CHILDREN');
 };
 
+class KnownFailureError extends Error {
+	static from(cause: Error) {
+		return new this(cause);
+	}
+
+	private constructor(override readonly cause: Error) {
+		super('Known failure', { cause });
+	}
+
+	reportKnownFailure() {
+		return this.cause.message;
+	}
+}
+
+type KnownFailureTest = () => Promise<void>;
+
+type KnownFailureTestAPI = (description: string, fn: KnownFailureTest) => void;
+
 describe('ChildVaccinationTest.java', () => {
 	afterEach(() => {
 		refSingletons.clear();
@@ -597,16 +615,45 @@ describe('ChildVaccinationTest.java', () => {
 		{ fixtureName: 'child_vaccination_VOL_tool_v12.xml', skipCondition: true, expectFailure: true },
 		{
 			fixtureName: 'child_vaccination_VOL_tool_v12-alt.xml',
-			skipCondition: true,
+			skipCondition: false,
 			expectFailure: true,
 		},
 	])('fixture: $fixtureName', ({ fixtureName, skipCondition, expectFailure }) => {
-		let testFn: typeof it | typeof it.fails;
+		let testFn: KnownFailureTestAPI;
 
 		if (skipCondition) {
-			testFn = it.skipIf(skipCondition);
+			testFn = (description, fn) => {
+				return it.skipIf(skipCondition)(description, fn);
+			};
 		} else if (expectFailure) {
-			testFn = it.fails;
+			testFn = (description, fn) => {
+				return it(description, async () => {
+					let unexpectedFailureMessage: string | null = null;
+
+					try {
+						await fn();
+
+						expect.fail('Update `child-vaccination.test.ts`, test is passing!');
+					} catch (error) {
+						if (error instanceof KnownFailureError) {
+							// eslint-disable-next-line no-console
+							console.log(
+								'Early exit of child-vaccination.test.ts smoke test: known failure point has been reached. Known failure:',
+								error.reportKnownFailure()
+							);
+
+							return;
+						}
+
+						assert(error instanceof Error);
+						unexpectedFailureMessage = error.message;
+					}
+
+					expect.fail(
+						`Update \`child-vaccination.test.ts\`, known failure mode has changed: ${unexpectedFailureMessage}`
+					);
+				});
+			};
 		} else {
 			testFn = it;
 		}
@@ -627,44 +674,15 @@ describe('ChildVaccinationTest.java', () => {
 			// endregion
 
 			const currentExpectedPointOfFailure = () => {
-				expect(scenario.answerOf('/data/household_count').toString()).toBe('2');
-
-				const secondHouseholdControlledByRepeatCount =
-					scenario.getInstanceNode('/data/household[2]');
-
-				expect(secondHouseholdControlledByRepeatCount).not.toBeNull();
+				throw new Error('Test is pending update to determine new known failure mode (if any)');
 			};
 
-			if (currentExpectedPointOfFailure == null || currentExpectedPointOfFailure != null) {
-				return;
-			}
-
 			try {
-				expect(currentExpectedPointOfFailure).toThrowError(
-					'No instance node for reference: /data/household[2]'
-				);
-
-				if (typeof currentExpectedPointOfFailure === 'function') {
-					scenario.trace(
-						'Early exit of child-vaccination.test.ts smoke test: known failure point has been reached'
-					);
-
-					return;
-				}
+				expect(currentExpectedPointOfFailure).not.toThrow();
 			} catch (error) {
-				// Failure of this assertion likely means that we've implemented
-				// `jr:count`. When that occurs, these error condition assertions should
-				// be removed, and the test should be updated to add expected node-set
-				// reference assertions in the `scenario.next` calls, and so on, either
-				// until the test passes or a new known point of failure is identified.
+				assert(error instanceof Error);
 
-				expect(error).toBeInstanceOf(Error);
-
-				const { message } = error as Error;
-
-				expect.fail(
-					`Update \`child-vaccination.test.ts\`, known failure mode has changed: ${message}`
-				);
+				throw KnownFailureError.from(error);
 			}
 
 			// region Answer all household repeats
