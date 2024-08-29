@@ -539,34 +539,36 @@ const answerHousehold = (
 	children: ReadonlyArray<Consumer<number>>
 ): void => {
 	// region Answer info about the household
+	const householdRepeatPosition = number + 1;
+	const householdRepeatPath = `/data/household[${householdRepeatPosition}]`;
 
 	scenario.trace('HOUSEHOLD ' + number);
-	scenario.next();
-	scenario.next();
+	scenario.next(householdRepeatPath);
+	scenario.next(`${householdRepeatPath}/flatNumber`);
 	scenario.answer(number);
 	// Does someone answer the door?
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/inHome`);
 	scenario.answer('yes');
 	// Is there an adult
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/adultPresence`);
 	scenario.answer('yes');
 	// Do children under 2 live in the house?
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/childPresent`);
 	scenario.answer('yes');
 	// What's the mother's or caregiver's name
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/motherName`);
 	scenario.answer('Foo');
 	// Is the mother or caregiver present?
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/motherPresent`);
 	scenario.answer('yes');
 	// Give consent
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/consent`);
 	scenario.answer('yes');
 
 	// endregion
 
 	// How many children under 2?
-	scenario.next();
+	scenario.next(`${householdRepeatPath}/childNum`);
 	scenario.answer(children.length);
 
 	children.forEach((child, i) => {
