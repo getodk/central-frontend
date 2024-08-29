@@ -673,18 +673,6 @@ describe('ChildVaccinationTest.java', () => {
 
 			// endregion
 
-			const currentExpectedPointOfFailure = () => {
-				throw new Error('Test is pending update to determine new known failure mode (if any)');
-			};
-
-			try {
-				expect(currentExpectedPointOfFailure).not.toThrow();
-			} catch (error) {
-				assert(error instanceof Error);
-
-				throw KnownFailureError.from(error);
-			}
-
 			// region Answer all household repeats
 
 			// Create all possible permutations of children combining
