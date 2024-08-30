@@ -2073,26 +2073,25 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * - Rephrase?
+			 * - Rephrase? The word "single" here seems to be referencing depth, not
+			 *   total count of repeat instances.
 			 *
-			 *     - The word "single" here seems to be referencing depth, not total
-			 *       count of repeat instnaces.
+			 * - When this test was originally ported, I had included commentary about
+			 *   finding the phrasing "until condition met" confusing. Since then, I
+			 *   believe that I used very similar phrasing (if not exactly the same)
+			 *   to describe the functionality. So I take that commentary back! That's
+			 *   exactly how I would describe the functionality under test.
 			 *
-			 *     - The phrase "until condition met" is confusing: the condition is
-			 *       an `if` predicate in the `jr:count` expression. It's not clear
-			 *       how this could be better conveyed in a test description, but my
-			 *       main concern is that I'd probably find it difficult to discover
-			 *       this test if I were looking.
-			 *
-			 * - Test fails pending `jr:count` feature support.
-			 *
-			 * - When we do get around to repeat count functionality, it seems highly
-			 *   likely our positional event filtering will need to skip
-			 *   count-controlled repeat "prompts", given the sequence of `next` calls
-			 *   and the apparent references they should correspond to.
+			 * - I also wish I had looked here before filing issues about the
+			 *   functionality under test. The containing suite's "indefinite repeat"
+			 *   terminology also seems like an excellent way to describe this form
+			 *   design pattern... whereas I had struggled to find terminology for it
+			 *   other than the language used in documentation (which may well be
+			 *   better suited for users, I can't comment on that without giving it
+			 *   some more thought).
 			 */
 			describe('in single[-depth] repeat', () => {
-				it.fails('adds repeats until condition met', async () => {
+				it('adds repeats until condition met', async () => {
 					const scenario = await Scenario.init(
 						'indefinite repeat',
 						html(
@@ -2135,13 +2134,18 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 			});
 
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * All of the same notes from the previous (single-depth) test apply to
-			 * these, other than commentary about "single" phrasing.
-			 */
 			describe('in nested repeat', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * This and the following "with relative paths" test are exercising
+				 * similar logic. As the following test suggests, the main difference is
+				 * that this test's fixture uses absolute paths throughout, whereas that
+				 * one updates references within/between repeats to use relative paths.
+				 *
+				 * For now we'll leave this test failing because we are explicitly not
+				 * targeting support for the absolute path usage.
+				 */
 				it.fails('adds repeats until condition met', async () => {
 					const scenario = await Scenario.init(
 						'nested indefinite repeat',
@@ -2212,73 +2216,107 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 
 				describe('with relative paths', () => {
-					it.fails('adds repeats until condition met', async () => {
-						const scenario = await Scenario.init(
-							'nested indefinite repeat',
-							html(
-								head(
-									title('Indefinite repeat in nested repeat'),
-									model(
-										mainInstance(
-											t(
-												'data id="indefinite-nested-repeat"',
+					interface PathCorrectionOptions {
+						/**
+						 * **PORTING NOTES**
+						 *
+						 * - If specified as 'jr', we run this test as directly ported from
+						 *   JavaRosa. Failure is expected because the `jr:count` expression
+						 *   is a reference to a node's name; we (correctly, I believe!)
+						 *   interpret this expression as a Step > [abbreviated] child Axis
+						 *   NameTest; it seems JavaRosa may interpret bare NameTest
+						 *   expressions as effectively a query at any hierarchy (e.g. for
+						 *   this NameTest `target_count`, it is intepreted as
+						 *   `//target_count`).
+						 *
+						 * - If specified as 'relative', we alter the test as ported from
+						 *   JavaRosa so the `jr:count` expression references the
+						 *   `target_count` at its hierarchy relative to the repeat's
+						 *   `nodeset` (i.e. as a sibling, `../target_count`).
+						 */
+						readonly countExpressionVariant: 'jr' | 'relative';
+					}
+
+					describe.each<PathCorrectionOptions>([
+						{ countExpressionVariant: 'jr' },
+						{ countExpressionVariant: 'relative' },
+					])('count expression variant: $countExpressionVariant', ({ countExpressionVariant }) => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (countExpressionVariant === 'jr') {
+							testFn = it.fails;
+						} else {
+							testFn = it;
+						}
+
+						testFn('adds repeats until condition met', async () => {
+							const scenario = await Scenario.init(
+								'nested indefinite repeat',
+								html(
+									head(
+										title('Indefinite repeat in nested repeat'),
+										model(
+											mainInstance(
 												t(
-													'outer_repeat',
-													t('inner_count'),
-													t('target_count'),
-													t('inner_repeat', t('add_more'))
+													'data id="indefinite-nested-repeat"',
+													t(
+														'outer_repeat',
+														t('inner_count'),
+														t('target_count'),
+														t('inner_repeat', t('add_more'))
+													)
 												)
-											)
-										),
-										bind('/data/outer_repeat/inner_count')
-											.type('int')
-											.calculate('count(../inner_repeat)'),
-										bind('/data/outer_repeat/target_count')
-											.type('int')
-											.calculate(
-												'if(../inner_count = 0' +
-													"or ../inner_repeat[position() = ../inner_count]/add_more = 'yes', " +
-													'../inner_count + 1, ../inner_count)'
-											)
-									)
-								),
-								body(
-									repeat(
-										'/data/outer_repeat',
+											),
+											bind('/data/outer_repeat/inner_count')
+												.type('int')
+												.calculate('count(../inner_repeat)'),
+											bind('/data/outer_repeat/target_count')
+												.type('int')
+												.calculate(
+													'if(../inner_count = 0' +
+														"or ../inner_repeat[position() = ../inner_count]/add_more = 'yes', " +
+														'../inner_count + 1, ../inner_count)'
+												)
+										)
+									),
+									body(
 										repeat(
-											'/data/outer_repeat/inner_repeat',
-											'target_count',
-											input('/data/outer_repeat/inner_repeat/add_more')
+											'/data/outer_repeat',
+											repeat(
+												'/data/outer_repeat/inner_repeat',
+												countExpressionVariant === 'jr' ? 'target_count' : '../target_count',
+												input('/data/outer_repeat/inner_repeat/add_more')
+											)
 										)
 									)
 								)
-							)
-						);
+							);
 
-						scenario.next('/data/outer_repeat[1]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[1]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[1]/add_more');
-						scenario.answer('yes');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[2]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[2]/add_more');
-						scenario.answer('yes');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[3]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[3]/add_more');
-						scenario.answer('no');
-						scenario.next('/data/outer_repeat');
-						scenario.createNewRepeat({
-							assertCurrentReference: '/data/outer_repeat',
+							scenario.next('/data/outer_repeat[1]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[1]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[1]/add_more');
+							scenario.answer('yes');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[2]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[2]/add_more');
+							scenario.answer('yes');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[3]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[3]/add_more');
+							scenario.answer('no');
+							scenario.next('/data/outer_repeat');
+							scenario.createNewRepeat({
+								assertCurrentReference: '/data/outer_repeat',
+							});
+							scenario.next('/data/outer_repeat[2]/inner_repeat[1]');
+							scenario.next('/data/outer_repeat[2]/inner_repeat[1]/add_more');
+							scenario.answer('yes');
+							scenario.next('/data/outer_repeat[2]/inner_repeat[2]');
+							scenario.next('/data/outer_repeat[2]/inner_repeat[2]/add_more');
+							scenario.answer('no');
+							scenario.next('/data/outer_repeat');
+							scenario.next('END_OF_FORM');
+
+							expect(scenario.atTheEndOfForm()).toBe(true);
 						});
-						scenario.next('/data/outer_repeat[2]/inner_repeat[1]');
-						scenario.next('/data/outer_repeat[2]/inner_repeat[1]/add_more');
-						scenario.answer('yes');
-						scenario.next('/data/outer_repeat[2]/inner_repeat[2]');
-						scenario.next('/data/outer_repeat[2]/inner_repeat[2]/add_more');
-						scenario.answer('no');
-						scenario.next('/data/outer_repeat');
-						scenario.next('END_OF_FORM');
-
-						expect(scenario.atTheEndOfForm()).toBe(true);
 					});
 				});
 			});

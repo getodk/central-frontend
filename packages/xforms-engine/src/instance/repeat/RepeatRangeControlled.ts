@@ -37,7 +37,7 @@ export class RepeatRangeControlled
 	private initializeControlledChildrenState(definition: ControlledRepeatRangeDefinition): void {
 		this.scope.runTask(() => {
 			const { count, instances, template } = definition;
-			const computeCount = createComputedExpression(this, count);
+			const computeCount = createComputedExpression(this.selfEvaluationContext, count);
 
 			createComputed<number>((previousCount) => {
 				let currentCount = computeCount();

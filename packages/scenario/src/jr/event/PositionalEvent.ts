@@ -3,7 +3,7 @@ import type {
 	GroupNode,
 	NoteNode,
 	RepeatInstanceNode,
-	RepeatRangeNode,
+	RepeatRangeUncontrolledNode,
 	RootNode,
 	SelectNode,
 	StringNode,
@@ -16,7 +16,7 @@ export interface PositionalEventTypeMapping {
 	readonly GROUP: GroupNode;
 	readonly REPEAT: RepeatInstanceNode;
 	readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored
-	readonly PROMPT_NEW_REPEAT: RepeatRangeNode;
+	readonly PROMPT_NEW_REPEAT: RepeatRangeUncontrolledNode;
 	readonly END_OF_FORM: null;
 }
 

@@ -74,7 +74,19 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	protected readonly childrenState: ChildrenState<RepeatInstance>;
 
-	protected readonly emptyRangeEvaluationContext: EvaluationContext & {
+	/**
+	 * Provides an {@link EvaluationContext} from which to evaluate expressions
+	 * where some LocationPath sub-expressions may be **relative to the repeat
+	 * range itself**. This is useful for evaluation of expressions where:
+	 *
+	 * - the expression is typically contextualized to any of its
+	 *   {@link RepeatInstance} children, but it presently has none (i.e.
+	 *   `relevant`)
+	 *
+	 * - the expression is conceptually intended to be evaluated in the context of
+	 *   the repeat range itself (i.e. `jr:count`)
+	 */
+	protected readonly selfEvaluationContext: EvaluationContext & {
 		readonly contextNode: Comment;
 	};
 
@@ -195,7 +207,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		);
 		this.contextNode.append(this.anchorNode);
 
-		this.emptyRangeEvaluationContext = {
+		this.selfEvaluationContext = {
 			scope: this.scope,
 			evaluator: this.evaluator,
 			root: this.root,
@@ -208,7 +220,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		};
 
 		this.isEmptyRangeSelfRelevant = createComputedExpression(
-			this.emptyRangeEvaluationContext,
+			this.selfEvaluationContext,
 			definition.bind.relevant
 		);
 
