@@ -1,5 +1,6 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { AnyNode, RepeatInstanceNode } from '@getodk/xforms-engine';
 import { afterEach, assert, describe, expect, it } from 'vitest';
 import { LocalDate } from '../../src/java/time/LocalDate.ts';
 import { Consumer } from '../../src/java/util/function/Consumer.ts';
@@ -244,12 +245,12 @@ class HealthRecord {
 
 	constructor(readonly value: HealthRecordValue) {}
 
-	visit(scenario: Scenario): void {
+	visit(scenario: Scenario, childRepeatPath: string): void {
 		const { value } = this;
 
 		switch (value) {
 			case HealthRecordValue.HEALTH_HANDBOOK:
-				scenario.next();
+				scenario.next(`${childRepeatPath}/health_card`);
 				scenario.answer('yes');
 				break;
 
@@ -378,13 +379,17 @@ const DIPHTERIA_AND_MEASLES = new Vaccine({
 	measles: true,
 });
 
-const answerAgeInMonths = (scenario: Scenario, ageInMonths: number): void => {
+const answerAgeInMonths = (
+	scenario: Scenario,
+	childRepeatPath: string,
+	ageInMonths: number
+): void => {
 	// Is DoB known?
-	scenario.next();
+	scenario.next(`${childRepeatPath}/dobknown`);
 	scenario.answer('no');
 
 	// Age in months
-	scenario.next();
+	scenario.next(`${childRepeatPath}/age_months`);
 	scenario.answer(ageInMonths);
 };
 
@@ -398,15 +403,17 @@ const answerChild_ageInMonths = (
 	return new Consumer((i) => {
 		const name = `CHILD ${i} - Age ${ageInMonths} months - ${sex.getName()}`;
 
+		const childRepeatPath = getChildRepeatPath(scenario, i);
+
 		scenario.trace(name);
-		scenario.next();
-		scenario.next();
+		scenario.next(childRepeatPath);
+		scenario.next(`${childRepeatPath}/childName`);
 		scenario.answer(name);
-		healthRecord.visit(scenario);
-		scenario.next();
+		healthRecord.visit(scenario, childRepeatPath);
+		scenario.next(`${childRepeatPath}/sex`);
 		scenario.answer(sex.getName());
 
-		answerAgeInMonths(scenario, ageInMonths);
+		answerAgeInMonths(scenario, childRepeatPath, ageInMonths);
 
 		if (scenario.nextRef().genericize().equals(VACCINATION_PENTA1_REF)) {
 			vaccines.visit(scenario);
@@ -420,22 +427,100 @@ const answerChild_ageInMonths = (
 	});
 };
 
-const answerDateOfBirth = (scenario: Scenario, dob: LocalDate): void => {
+const answerDateOfBirth = (scenario: Scenario, childRepeatPath: string, dob: LocalDate): void => {
 	// Is DoB known?
-	scenario.next();
+	scenario.next(`${childRepeatPath}/dobknown`);
 	scenario.answer('yes');
 
 	// Year in DoB
-	scenario.next();
+	scenario.next(`${childRepeatPath}/dob_year`);
 	scenario.answer(dob.year() /* .getYear() */);
 
 	// Month in DoB
-	scenario.next();
+	scenario.next(`${childRepeatPath}/dob_month`);
 	scenario.answer(dob.monthValue() /* .getMonthValue() */);
 
+	let dobDayPath: string;
+
+	// Reproduce relevance logic from form to determine DoB field
+	switch (dob.monthValue()) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+			dobDayPath = `${childRepeatPath}/dob_day_1`;
+			break;
+
+		case 4:
+		case 6:
+		case 9:
+			dobDayPath = `${childRepeatPath}/dob_day_2`;
+			break;
+
+		default: {
+			const dobYear = dob.year();
+			const leap = dobYear === 2016 || dobYear === 2020 || dobYear === 2024 || dobYear === 2028;
+
+			if (leap) {
+				dobDayPath = `${childRepeatPath}/dob_day_3`;
+			} else {
+				dobDayPath = `${childRepeatPath}/dob_day_4`;
+			}
+		}
+	}
+
 	// Day in DoB
-	scenario.next();
+	scenario.next(dobDayPath);
 	scenario.answer(dob.dayOfMonth() /* .getDayOfMonth() */);
+};
+
+const getChildRepeatPath = (scenario: Scenario, childIndex: number): string => {
+	const currentQuestion = scenario.getQuestionAtIndex();
+
+	let currentNode: AnyNode | null = currentQuestion.node;
+	let currentHousehold: RepeatInstanceNode | null = null;
+
+	while (currentHousehold == null) {
+		currentNode = currentNode.parent;
+
+		if (currentNode == null) {
+			break;
+		}
+
+		if (
+			currentNode.nodeType === 'repeat-instance' &&
+			/^\/data\/household\[\d+\]$/.test(currentNode.currentState.reference)
+		) {
+			currentHousehold = currentNode;
+		}
+	}
+
+	assert(currentHousehold != null);
+
+	const currentHouseholdPath = currentHousehold.currentState.reference;
+
+	expect(currentHouseholdPath).toMatch(/^\/data\/household\[\d+\]$/);
+
+	const childRepeatPosition = childIndex + 1;
+
+	return `${currentHouseholdPath}/child_repeat[${childRepeatPosition}]`;
+};
+
+const checkKnownFailure = (scenario: Scenario, childRepeatPath: string) => {
+	const repeatInstance = scenario.getInstanceNode(childRepeatPath);
+
+	assert(repeatInstance.nodeType === 'repeat-instance');
+
+	if (!repeatInstance.currentState.relevant) {
+		throw KnownFailureError.from(
+			new Error(
+				`Repeat ${childRepeatPath} should be relevant. Failure here occurs due to evaluation of relevant expression before repeat instance node is attached to the DOM backing store, and not rerun once attached. This is HIGHLY LIKELY to be solved when we decouple from the browser/XML/WHATWG DOM.`
+			)
+		);
+	}
 };
 
 const answerChild_dob = (
@@ -449,38 +534,19 @@ const answerChild_dob = (
 		const ageInMonths = dob.until(TODAY).months(); /* .getMonths() */
 		const name = `CHILD ${i} - Age ${ageInMonths} months - ${sex.getName()}`;
 
-		const currentQuestion = scenario.getQuestionAtIndex();
-		const currentNode = currentQuestion.node;
-		const currentHousehold = currentNode.parent;
+		const childRepeatPath = getChildRepeatPath(scenario, i);
 
-		expect(currentHousehold.nodeType).toBe('repeat-instance');
-
-		const currentHouseholdPath = currentHousehold.currentState.reference;
-
-		expect(currentHouseholdPath).toMatch(/^\/data\/household\[\d+\]$/);
-
-		const childRepeatPosition = i + 1;
-		const childRepeatPath = `${currentHouseholdPath}/child_repeat[${childRepeatPosition}]`;
-
-		try {
-			scenario.getInstanceNode(childRepeatPath);
-		} catch {
-			throw KnownFailureError.from(
-				new Error(
-					"Count-controlled repeat with relative `jr:count` expression produces no instances. Expression is evaluated in context of repeat range's parent element."
-				)
-			);
-		}
+		checkKnownFailure(scenario, childRepeatPath);
 
 		scenario.trace(name);
-		scenario.next();
-		scenario.next();
+		scenario.next(childRepeatPath);
+		scenario.next(`${childRepeatPath}/childName`);
 		scenario.answer(name);
-		healthRecord.visit(scenario);
-		scenario.next();
+		healthRecord.visit(scenario, childRepeatPath);
+		scenario.next(`${childRepeatPath}/sex`);
 		scenario.answer(sex.getName());
 
-		answerDateOfBirth(scenario, dob);
+		answerDateOfBirth(scenario, childRepeatPath, dob);
 
 		if (scenario.nextRef().genericize().equals(NOT_ELIG_NOTE_REF)) {
 			scenario.next();
@@ -488,8 +554,12 @@ const answerChild_dob = (
 			vaccines.visit(scenario);
 		}
 
-		if ([NEXT_CHILD_REF, NEXT_CHILD_NO_MOTHER_REF].includes(scenario.nextRef().genericize())) {
-			scenario.next();
+		const nextRef = scenario.nextRef().genericize();
+
+		if (nextRef.equals(NEXT_CHILD_REF)) {
+			scenario.next(`${childRepeatPath}/nextChild`);
+		} else if (nextRef.equals(NEXT_CHILD_NO_MOTHER_REF)) {
+			scenario.next(`${childRepeatPath}/nextChild_no_mother`);
 		} else if (!scenario.nextRef().genericize().equals(FINAL_FLAT_REF)) {
 			expect.fail('Unexpected next ref ' + scenario.nextRef().toString(true, true) + ' at index');
 		}
@@ -751,14 +821,17 @@ describe('ChildVaccinationTest.java', () => {
 					NEXT_CHILD_REF,
 				]).toContainEqual(scenario.refAtIndex().genericize());
 
-				scenario.next();
+				const householdPosition = i + 1;
+				const householdPath = `/data/household[${householdPosition}]`;
+
+				scenario.next(`${householdPath}/finalflat`);
 
 				// assertThat(scenario.refAtIndex().genericize(), is(FINAL_FLAT_REF));
 				expect(scenario.refAtIndex().genericize()).toEqual(FINAL_FLAT_REF);
 
 				if (i + 1 < households.length) {
 					scenario.answer('no');
-					scenario.next();
+					scenario.next(`${householdPath}/finished2`);
 				} else {
 					scenario.answer('yes');
 				}
