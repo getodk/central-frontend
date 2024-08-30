@@ -59,6 +59,8 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 					return RepeatInstanceEvent.from(node);
 
 				case 'repeat-range:controlled':
+					return [];
+
 				case 'repeat-range:uncontrolled':
 					return PromptNewRepeatEvent.from(node);
 
