@@ -2073,26 +2073,25 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * - Rephrase?
+			 * - Rephrase? The word "single" here seems to be referencing depth, not
+			 *   total count of repeat instances.
 			 *
-			 *     - The word "single" here seems to be referencing depth, not total
-			 *       count of repeat instnaces.
+			 * - When this test was originally ported, I had included commentary about
+			 *   finding the phrasing "until condition met" confusing. Since then, I
+			 *   believe that I used very similar phrasing (if not exactly the same)
+			 *   to describe the functionality. So I take that commentary back! That's
+			 *   exactly how I would describe the functionality under test.
 			 *
-			 *     - The phrase "until condition met" is confusing: the condition is
-			 *       an `if` predicate in the `jr:count` expression. It's not clear
-			 *       how this could be better conveyed in a test description, but my
-			 *       main concern is that I'd probably find it difficult to discover
-			 *       this test if I were looking.
-			 *
-			 * - Test fails pending `jr:count` feature support.
-			 *
-			 * - When we do get around to repeat count functionality, it seems highly
-			 *   likely our positional event filtering will need to skip
-			 *   count-controlled repeat "prompts", given the sequence of `next` calls
-			 *   and the apparent references they should correspond to.
+			 * - I also wish I had looked here before filing issues about the
+			 *   functionality under test. The containing suite's "indefinite repeat"
+			 *   terminology also seems like an excellent way to describe this form
+			 *   design pattern... whereas I had struggled to find terminology for it
+			 *   other than the language used in documentation (which may well be
+			 *   better suited for users, I can't comment on that without giving it
+			 *   some more thought).
 			 */
 			describe('in single[-depth] repeat', () => {
-				it.fails('adds repeats until condition met', async () => {
+				it('adds repeats until condition met', async () => {
 					const scenario = await Scenario.init(
 						'indefinite repeat',
 						html(
@@ -2135,12 +2134,6 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 			});
 
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * All of the same notes from the previous (single-depth) test apply to
-			 * these, other than commentary about "single" phrasing.
-			 */
 			describe('in nested repeat', () => {
 				it.fails('adds repeats until condition met', async () => {
 					const scenario = await Scenario.init(
