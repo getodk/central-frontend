@@ -3,6 +3,12 @@ import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { FormNodeID } from '../client/identity.ts';
+import type {
+	SubmissionChunkedType,
+	SubmissionOptions,
+} from '../client/submission/SubmissionOptions.ts';
+import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -19,7 +25,6 @@ import type { XFormDOM } from '../parse/XFormDOM.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
 import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
@@ -32,7 +37,7 @@ interface RootStateSpec {
 	readonly required: boolean;
 	readonly label: null;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 
@@ -215,6 +220,12 @@ export class Root
 		this.state.setProperty('activeLanguage', activeLanguage);
 
 		return this;
+	}
+
+	prepareSubmission<ChunkedType extends SubmissionChunkedType>(
+		_options?: SubmissionOptions<ChunkedType>
+	): Promise<SubmissionResult<ChunkedType>> {
+		throw new Error('Not implemented');
 	}
 
 	// SubscribableDependency

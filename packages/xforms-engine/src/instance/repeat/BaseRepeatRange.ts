@@ -1,5 +1,6 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import { untrack, type Accessor } from 'solid-js';
+import type { FormNodeID } from '../../client/identity.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { TextRange } from '../../client/TextRange.ts';
@@ -25,7 +26,6 @@ import type {
 } from '../abstract/DescendantNode.ts';
 import { DescendantNode } from '../abstract/DescendantNode.ts';
 import type { RepeatRange } from '../hierarchy.ts';
-import type { NodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
@@ -33,7 +33,7 @@ import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
 	readonly label: Accessor<TextRange<'label'> | null>;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }

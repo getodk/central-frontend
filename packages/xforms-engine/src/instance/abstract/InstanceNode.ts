@@ -2,6 +2,7 @@ import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
+import type { FormNodeID } from '../../client/identity.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
 import type { TextRange } from '../../index.ts';
@@ -15,8 +16,7 @@ import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { Root } from '../Root.ts';
 import type { AnyChildNode, AnyNode, AnyParentNode } from '../hierarchy.ts';
-import type { NodeID } from '../identity.ts';
-import { declareNodeID } from '../identity.ts';
+import { nodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -28,7 +28,7 @@ export interface InstanceNodeStateSpec<Value = never> {
 	readonly required: Accessor<boolean> | boolean;
 	readonly label: Accessor<TextRange<'label'> | null> | null;
 	readonly hint: Accessor<TextRange<'hint'> | null> | null;
-	readonly children: Accessor<readonly NodeID[]> | null;
+	readonly children: Accessor<readonly FormNodeID[]> | null;
 	readonly valueOptions: Accessor<null> | Accessor<readonly unknown[]> | null;
 	readonly value: Signal<Value> | SimpleAtomicState<Value> | null;
 }
@@ -109,7 +109,7 @@ export abstract class InstanceNode<
 	abstract readonly isRelevant: Accessor<boolean>;
 
 	// BaseNode: identity
-	readonly nodeId: NodeID;
+	readonly nodeId: FormNodeID;
 
 	// BaseNode: node types and variants (e.g. for narrowing)
 	abstract readonly nodeType: InstanceNodeType;
@@ -161,7 +161,7 @@ export abstract class InstanceNode<
 
 		this.scope = createReactiveScope();
 		this.engineConfig = engineConfig;
-		this.nodeId = declareNodeID(engineConfig.createUniqueId());
+		this.nodeId = nodeID(engineConfig.createUniqueId());
 		this.definition = definition;
 	}
 

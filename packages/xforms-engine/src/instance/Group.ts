@@ -1,5 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { GroupDefinition, GroupNode, GroupNodeAppearances } from '../client/GroupNode.ts';
+import type { FormNodeID } from '../client/identity.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -16,7 +17,6 @@ import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
@@ -24,7 +24,7 @@ import type { SubscribableDependency } from './internal-api/SubscribableDependen
 interface GroupStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }

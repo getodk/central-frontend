@@ -1,5 +1,5 @@
-import type { NodeID } from '../instance/identity.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { FormNodeID } from './identity.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
@@ -176,7 +176,7 @@ export interface LeafNodeValidationState {
  * each property will be directly computed from the affected node.
  */
 export interface DescendantNodeViolationReference {
-	readonly nodeId: NodeID;
+	readonly nodeId: FormNodeID;
 
 	get reference(): string;
 	get violation(): AnyViolation;

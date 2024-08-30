@@ -3,6 +3,7 @@ import type { AnyNodeDefinition } from '../parse/model/NodeDefinition.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
+import type { FormNodeID } from './identity.ts';
 import type { InstanceNodeType } from './node-types.ts';
 import type {
 	AncestorNodeValidationState,
@@ -128,8 +129,6 @@ export interface BaseNodeState {
 	 */
 	get value(): unknown;
 }
-
-type FormNodeID = string;
 
 /**
  * Base interface for common/shared aspects of any node type.

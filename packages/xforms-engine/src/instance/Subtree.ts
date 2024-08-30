@@ -1,4 +1,5 @@
 import { type Accessor } from 'solid-js';
+import type { FormNodeID } from '../client/identity.ts';
 import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -14,14 +15,13 @@ import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
 interface SubtreeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: null;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }

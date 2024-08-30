@@ -1,13 +1,13 @@
+import type { FormNodeID } from '../../client/identity.ts';
 import type { AnyChildNode } from '../../instance/hierarchy.ts';
-import type { NodeID } from '../../instance/identity.ts';
 import type { ChildrenState, createChildrenState } from './createChildrenState.ts';
 import type { ClientState } from './node-state/createClientState.ts';
 import type { CurrentState } from './node-state/createCurrentState.ts';
 import type { ReactiveScope } from './scope.ts';
 
 interface InconsistentChildrenStateDetails {
-	readonly missingIds: readonly NodeID[];
-	readonly unexpectedIds: readonly NodeID[];
+	readonly missingIds: readonly FormNodeID[];
+	readonly unexpectedIds: readonly FormNodeID[];
 }
 
 class InconsistentChildrenStateError extends Error {
@@ -37,7 +37,7 @@ class InconsistentChildrenStateError extends Error {
 }
 
 export interface EncodedParentState {
-	readonly children: readonly NodeID[];
+	readonly children: readonly FormNodeID[];
 }
 
 /**
@@ -58,7 +58,7 @@ export interface EncodedParentState {
  * @todo should we throw rather than warn until we have this confidence?
  */
 const reportInconsistentChildrenState = (
-	expectedClientIds: readonly NodeID[],
+	expectedClientIds: readonly FormNodeID[],
 	actualNodes: readonly AnyChildNode[]
 ): void => {
 	const actualIds = actualNodes.map((node) => node.nodeId);
@@ -88,8 +88,8 @@ export type MaterializedChildren<
 /**
  * Creates a wrapper proxy around a parent node's {@link CurrentState} to map
  * `children` state, which is written to the node's (internal, synchronized)
- * {@link ClientState} as an array of {@link NodeID}s, back to the node objects
- * corresponding to those IDs.
+ * {@link ClientState} as an array of {@link FormNodeID}s, back to the node
+ * objects corresponding to those IDs.
  *
  * @see {@link createChildrenState} for further detail.
  */

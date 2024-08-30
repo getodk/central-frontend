@@ -1,5 +1,6 @@
 import type { Accessor } from 'solid-js';
 import { createComputed, createSignal, on } from 'solid-js';
+import type { FormNodeID } from '../../client/identity.ts';
 import type {
 	RepeatDefinition,
 	RepeatInstanceNode,
@@ -21,7 +22,6 @@ import type { DescendantNodeSharedStateSpec } from '../abstract/DescendantNode.t
 import { DescendantNode } from '../abstract/DescendantNode.ts';
 import { buildChildren } from '../children.ts';
 import type { AnyChildNode, GeneralChildNode, RepeatRange } from '../hierarchy.ts';
-import type { NodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 
@@ -30,7 +30,7 @@ export type { RepeatDefinition };
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
