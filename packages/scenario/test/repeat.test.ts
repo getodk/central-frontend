@@ -2135,6 +2135,17 @@ describe('Tests ported from JavaRosa - repeats', () => {
 			});
 
 			describe('in nested repeat', () => {
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * This and the following "with relative paths" test are exercising
+				 * similar logic. As the following test suggests, the main difference is
+				 * that this test's fixture uses absolute paths throughout, whereas that
+				 * one updates references within/between repeats to use relative paths.
+				 *
+				 * For now we'll leave this test failing because we are explicitly not
+				 * targeting support for the absolute path usage.
+				 */
 				it.fails('adds repeats until condition met', async () => {
 					const scenario = await Scenario.init(
 						'nested indefinite repeat',
@@ -2205,73 +2216,107 @@ describe('Tests ported from JavaRosa - repeats', () => {
 				});
 
 				describe('with relative paths', () => {
-					it.fails('adds repeats until condition met', async () => {
-						const scenario = await Scenario.init(
-							'nested indefinite repeat',
-							html(
-								head(
-									title('Indefinite repeat in nested repeat'),
-									model(
-										mainInstance(
-											t(
-												'data id="indefinite-nested-repeat"',
+					interface PathCorrectionOptions {
+						/**
+						 * **PORTING NOTES**
+						 *
+						 * - If specified as 'jr', we run this test as directly ported from
+						 *   JavaRosa. Failure is expected because the `jr:count` expression
+						 *   is a reference to a node's name; we (correctly, I believe!)
+						 *   interpret this expression as a Step > [abbreviated] child Axis
+						 *   NameTest; it seems JavaRosa may interpret bare NameTest
+						 *   expressions as effectively a query at any hierarchy (e.g. for
+						 *   this NameTest `target_count`, it is intepreted as
+						 *   `//target_count`).
+						 *
+						 * - If specified as 'relative', we alter the test as ported from
+						 *   JavaRosa so the `jr:count` expression references the
+						 *   `target_count` at its hierarchy relative to the repeat's
+						 *   `nodeset` (i.e. as a sibling, `../target_count`).
+						 */
+						readonly countExpressionVariant: 'jr' | 'relative';
+					}
+
+					describe.each<PathCorrectionOptions>([
+						{ countExpressionVariant: 'jr' },
+						{ countExpressionVariant: 'relative' },
+					])('count expression variant: $countExpressionVariant', ({ countExpressionVariant }) => {
+						let testFn: typeof it | typeof it.fails;
+
+						if (countExpressionVariant === 'jr') {
+							testFn = it.fails;
+						} else {
+							testFn = it;
+						}
+
+						testFn('adds repeats until condition met', async () => {
+							const scenario = await Scenario.init(
+								'nested indefinite repeat',
+								html(
+									head(
+										title('Indefinite repeat in nested repeat'),
+										model(
+											mainInstance(
 												t(
-													'outer_repeat',
-													t('inner_count'),
-													t('target_count'),
-													t('inner_repeat', t('add_more'))
+													'data id="indefinite-nested-repeat"',
+													t(
+														'outer_repeat',
+														t('inner_count'),
+														t('target_count'),
+														t('inner_repeat', t('add_more'))
+													)
 												)
-											)
-										),
-										bind('/data/outer_repeat/inner_count')
-											.type('int')
-											.calculate('count(../inner_repeat)'),
-										bind('/data/outer_repeat/target_count')
-											.type('int')
-											.calculate(
-												'if(../inner_count = 0' +
-													"or ../inner_repeat[position() = ../inner_count]/add_more = 'yes', " +
-													'../inner_count + 1, ../inner_count)'
-											)
-									)
-								),
-								body(
-									repeat(
-										'/data/outer_repeat',
+											),
+											bind('/data/outer_repeat/inner_count')
+												.type('int')
+												.calculate('count(../inner_repeat)'),
+											bind('/data/outer_repeat/target_count')
+												.type('int')
+												.calculate(
+													'if(../inner_count = 0' +
+														"or ../inner_repeat[position() = ../inner_count]/add_more = 'yes', " +
+														'../inner_count + 1, ../inner_count)'
+												)
+										)
+									),
+									body(
 										repeat(
-											'/data/outer_repeat/inner_repeat',
-											'target_count',
-											input('/data/outer_repeat/inner_repeat/add_more')
+											'/data/outer_repeat',
+											repeat(
+												'/data/outer_repeat/inner_repeat',
+												countExpressionVariant === 'jr' ? 'target_count' : '../target_count',
+												input('/data/outer_repeat/inner_repeat/add_more')
+											)
 										)
 									)
 								)
-							)
-						);
+							);
 
-						scenario.next('/data/outer_repeat[1]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[1]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[1]/add_more');
-						scenario.answer('yes');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[2]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[2]/add_more');
-						scenario.answer('yes');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[3]');
-						scenario.next('/data/outer_repeat[1]/inner_repeat[3]/add_more');
-						scenario.answer('no');
-						scenario.next('/data/outer_repeat');
-						scenario.createNewRepeat({
-							assertCurrentReference: '/data/outer_repeat',
+							scenario.next('/data/outer_repeat[1]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[1]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[1]/add_more');
+							scenario.answer('yes');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[2]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[2]/add_more');
+							scenario.answer('yes');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[3]');
+							scenario.next('/data/outer_repeat[1]/inner_repeat[3]/add_more');
+							scenario.answer('no');
+							scenario.next('/data/outer_repeat');
+							scenario.createNewRepeat({
+								assertCurrentReference: '/data/outer_repeat',
+							});
+							scenario.next('/data/outer_repeat[2]/inner_repeat[1]');
+							scenario.next('/data/outer_repeat[2]/inner_repeat[1]/add_more');
+							scenario.answer('yes');
+							scenario.next('/data/outer_repeat[2]/inner_repeat[2]');
+							scenario.next('/data/outer_repeat[2]/inner_repeat[2]/add_more');
+							scenario.answer('no');
+							scenario.next('/data/outer_repeat');
+							scenario.next('END_OF_FORM');
+
+							expect(scenario.atTheEndOfForm()).toBe(true);
 						});
-						scenario.next('/data/outer_repeat[2]/inner_repeat[1]');
-						scenario.next('/data/outer_repeat[2]/inner_repeat[1]/add_more');
-						scenario.answer('yes');
-						scenario.next('/data/outer_repeat[2]/inner_repeat[2]');
-						scenario.next('/data/outer_repeat[2]/inner_repeat[2]/add_more');
-						scenario.answer('no');
-						scenario.next('/data/outer_repeat');
-						scenario.next('END_OF_FORM');
-
-						expect(scenario.atTheEndOfForm()).toBe(true);
 					});
 				});
 			});
