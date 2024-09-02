@@ -86,7 +86,8 @@ export default ({ i18n }, createResource) => {
       // Thus superfluous requests are not 100% guaranteed to be filtered out, but we can live with that (it keeps things simple).
       const haschanged = JSON.stringify(self.data[k]) !== JSON.stringify(v);
       if (haschanged) {
-        self.patch(Object.fromEntries(new Map([[k, v]])));
+        // eslint-disable-next-line no-param-reassign
+        self[k] = v;
         const headers = { 'Content-Type': 'application/json' };
         self.request({
           method: 'POST',
