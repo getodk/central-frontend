@@ -83,7 +83,7 @@ export default ({ i18n }, createResource) => {
     set: (k, v) => {
       // Avoid posting prefs to the server when they haven't changed.
       // This stringify-inequality-test may yield false positives, for instance when object field sort order changes.
-      // Thus superfluous requests are not 100% guaranteed to be filtered out.
+      // Thus superfluous requests are not 100% guaranteed to be filtered out, but we can live with that (it keeps things simple).
       const haschanged = JSON.stringify(self.data[k]) !== JSON.stringify(v);
       if (haschanged) {
         self.patch(Object.fromEntries(new Map([[k, v]])));
