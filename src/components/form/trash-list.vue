@@ -57,11 +57,6 @@ export default {
     const { project, deletedForms, userPreferences } = useRequestData();
     return { project, deletedForms, userPreferences, restoreForm: modalData() };
   },
-  data() {
-    return {
-      isFormTrashCollapsed: this.userPreferences.data?.isFormTrashCollapsed
-    };
-  },
   computed: {
     count() {
       return (this.deletedForms.dataExists ? this.deletedForms.length : 0);
@@ -69,7 +64,10 @@ export default {
     sortedDeletedForms() {
       const sortByDeletedAt = sortWith([ascend(entry => entry.deletedAt)]);
       return sortByDeletedAt(this.deletedForms.data);
-    }
+    },
+    isFormTrashCollapsed() {
+      return (this.userPreferences.dataExists && (this.userPreferences.formTrashCollapsed || []).includes(this.project.id));
+    },
   },
   created() {
     this.fetchDeletedForms(false);
@@ -98,14 +96,14 @@ export default {
       this.userPreferences.request({
         url: apiPaths.userPreferences(),
         resend: false,
-      }).then(() => {
-        this.isFormTrashCollapsed = this.userPreferences.data.formTrashCollapsed;
       });
     },
     toggleTrashExpansion(evt) {
-      const isClosed = (evt.newState === 'closed');
-      this.userPreferences.set('formTrashCollapsed', isClosed);
-      this.isFormTrashCollapsed = isClosed;
+      this.userPreferences.mutateSet(
+        'formTrashCollapsed',
+        this.project.id,
+        (evt.newState === 'closed') ? 'add' : 'delete',
+      );
     }
   }
 };

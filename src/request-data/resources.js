@@ -79,6 +79,7 @@ export default ({ i18n }, createResource) => {
   }));
 
   createResource('userPreferences', (self) => ({
+    transformResponse: ({ data }) => shallowReactive(data),
     set: (k, v) => {
       // Avoid posting prefs to the server when they haven't changed.
       // This stringify-inequality-test may yield false positives, for instance when object field sort order changes.
@@ -96,6 +97,22 @@ export default ({ i18n }, createResource) => {
         });
       }
     },
+    mutateSet: (k, v, op) => {
+      const prefSet = new Set(self.data[k] instanceof Array ? self.data[k] : []); // ignore/overwrite set-incompatible data (as may have been left behind by an older version with a different implicit preferences schema)
+      switch (op) {
+        case 'add':
+          prefSet.add(v);
+          break;
+        case 'delete':
+          prefSet.delete(v);
+          break;
+        default:
+          throw new Error(`Unsupported set operation: "${op}"`);
+      }
+      self.set(k, Array.from(prefSet).sort());
+    },
+    addToSet: (k, v) => self.mutateSet(k, v, 'add'),
+    deleteFromSet: (k, v) => self.mutateSet(k, v, 'delete'),
   }));
 
   const formDraft = createResource('formDraft', () =>
