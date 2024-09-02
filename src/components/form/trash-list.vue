@@ -93,7 +93,7 @@ export default {
       this.$emit('restore');
     },
     fetchUserPreferences() {
-      this.userPreferences.request({
+      if (!this.userPreferences.dataExists) this.userPreferences.request({
         url: apiPaths.userPreferences(),
         resend: false,
       });
