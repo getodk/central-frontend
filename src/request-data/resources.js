@@ -114,6 +114,12 @@ export default ({ i18n }, createResource) => {
     },
     addToSet: (k, v) => self.mutateSet(k, v, 'add'),
     deleteFromSet: (k, v) => self.mutateSet(k, v, 'delete'),
+    fetchOnce: () => {
+      if (!self.dataExists) self.request({
+        url: apiPaths.userPreferences(),
+        resend: false,
+      });
+    },
   }));
 
   const formDraft = createResource('formDraft', () =>

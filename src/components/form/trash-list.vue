@@ -71,7 +71,7 @@ export default {
   },
   created() {
     this.fetchDeletedForms(false);
-    this.fetchUserPreferences();
+    this.userPreferences.fetchOnce();
   },
   methods: {
     fetchDeletedForms(resend) {
@@ -91,12 +91,6 @@ export default {
       // tell parent component (ProjectOverview) to refresh regular forms list
       // (by emitting event to that component's parent)
       this.$emit('restore');
-    },
-    fetchUserPreferences() {
-      if (!this.userPreferences.dataExists) this.userPreferences.request({
-        url: apiPaths.userPreferences(),
-        resend: false,
-      });
     },
     toggleTrashExpansion(evt) {
       this.userPreferences.mutateSet(
