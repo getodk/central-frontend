@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
           @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
-        <project-sort v-model="sortMode"/>
+        <project-sort v-model="sortMode" @update:model-value="onSortModeChange"/>
       </template>
       <template #body>
         <div v-if="projects.dataExists">
@@ -93,9 +93,9 @@ export default {
   },
   inject: ['alert'],
   setup() {
-    const { currentUser, projects } = useRequestData();
+    const { currentUser, projects, userPreferences } = useRequestData();
 
-    const sortMode = ref('latest');
+    const sortMode = computed(() => userPreferences.projectSortMode || 'latest');
     const sortFunction = computed(() => sortFunctions[sortMode.value]);
 
     const activeProjects = ref(null);
@@ -109,7 +109,7 @@ export default {
 
     const { projectPath } = useRoutes();
     return {
-      currentUser, projects,
+      currentUser, projects, userPreferences,
       sortMode, sortFunction,
       activeProjects, chunkyProjects,
       createModal: modalData(),
@@ -159,12 +159,18 @@ export default {
       return dsShown > 15 && limit > 3 ? limit - 1 : limit;
     }
   },
+  created() {
+    this.userPreferences.fetchOnce();
+  },
   methods: {
     afterCreate(project) {
       const message = this.$t('alert.create');
       this.$router.push(this.projectPath(project.id))
         .then(() => { this.alert.success(message); });
-    }
+    },
+    onSortModeChange(sortMode) {
+      this.userPreferences.set('projectSortMode', sortMode);
+    },
   }
 };
 </script>
