@@ -110,6 +110,12 @@ export default {
   display: flex;
   align-items: baseline;
 
+  #form-trash-expander {
+    // Fixate the width as icon-chevron-down and icon-chevron-right have unequal width :-(
+    display: inline-block;
+    width: 1em;
+  }
+
   .icon-trash {
     padding-right: 8px;
   }
