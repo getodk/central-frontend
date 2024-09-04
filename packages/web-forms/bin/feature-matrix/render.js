@@ -2,7 +2,9 @@
 // @ts-nocheck
 
 import Mustache from 'mustache';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 
 const rootUrl = new URL('../..', import.meta.url);
 const featureMatrix = JSON.parse(
@@ -73,3 +75,7 @@ const regex = new RegExp(`(${autogenOpen})[\\s\\S]*?(${autogenClose})`, 'm');
 const updatedReadme = readmeFile.replace(regex, `$1\n${featureMatrixMd}\n$2`);
 
 await fs.writeFile(new URL('./README.md', rootUrl), updatedReadme, { encoding: 'utf-8' });
+
+const rootDir = fileURLToPath(rootUrl);
+
+spawnSync('yarn', ['format:readme-only'], { cwd: rootDir });
