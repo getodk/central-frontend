@@ -1,5 +1,11 @@
 # @getodk/tree-sitter-xpath
 
+## 0.1.2
+
+### Patch Changes
+
+- 03305c1: Fix: parse `child` and other axis names as (abbreviated) child name test
+
 ## 0.1.1
 
 ### Patch Changes

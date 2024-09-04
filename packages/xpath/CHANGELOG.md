@@ -1,5 +1,17 @@
 # @getodk/xpath
 
+## 0.2.0
+
+### Minor Changes
+
+- 746aa8a: Support for `indexed-repeat` XPath function
+
+### Patch Changes
+
+- Updated dependencies [7b63159]
+- Updated dependencies [573b06b]
+  - @getodk/common@0.3.0
+
 ## 0.1.2
 
 ### Patch Changes

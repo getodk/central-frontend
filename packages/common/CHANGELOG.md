@@ -1,5 +1,12 @@
 # @getodk/common
 
+## 0.3.0
+
+### Minor Changes
+
+- 7b63159: Add support for count-controlled (`jr:count`) and fixed (`jr:noAddRemove`) repeat ranges.
+- 573b06b: Engine support for `constraint`, `required` validation
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xpath",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "description": "XPath implementation for ODK Web Forms",
   "type": "module",
@@ -53,13 +53,13 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
-    "@getodk/common": "0.2.0",
+    "@getodk/common": "0.3.0",
     "crypto-js": "^4.2.0",
     "itertools-ts": "^1.27.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.8",
-    "@getodk/tree-sitter-xpath": "0.1.1",
+    "@getodk/tree-sitter-xpath": "0.1.2",
     "@playwright/test": "^1.45.1",
     "@types/crypto-js": "^4.2.2",
     "@vitest/browser": "^2.0.2",

@@ -1,5 +1,27 @@
 # @getodk/xforms-engine
 
+## 0.3.0
+
+### Minor Changes
+
+- 596c1fe: Add engine support for 'note' nodes
+- 0c1534d: Improve path resolution and updating computations
+  - Support tracking `current()` references in computations
+  - Support tracking references in computations where path references include predicates
+  - Improve support for repeat-based itemsets
+  - Improve relative path resolution across the board, fixing many computation update edge cases where expressions include complex path expressions
+  - Support relative `ref`/`nodeset` body attributes, as well as those with a `current()/` prefix
+  - Improve function call analysis in XPath expressions, particularly identification of functions called with no arguments
+  - Lay more mature foundation for general syntax analysis of XPath expressions
+- 7b63159: Add support for count-controlled (`jr:count`) and fixed (`jr:noAddRemove`) repeat ranges.
+- 573b06b: Engine support for `constraint`, `required` validation
+
+### Patch Changes
+
+- e81aa43: Fix: reactive aggregation of validation violations from selects
+- 1e72854: Fix: reactivity of aggregated validation violations on deep descendants
+- aa3a84a: Fix: evaluate `jr:count` in context of affected repeat
+
 ## 0.2.0
 
 ### Minor Changes
