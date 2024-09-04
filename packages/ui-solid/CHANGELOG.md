@@ -1,5 +1,30 @@
 # @getodk/ui-solid
 
+## 0.2.0
+
+### Minor Changes
+
+- 596c1fe: Add engine support for 'note' nodes
+- 7b63159: Add support for count-controlled (`jr:count`) and fixed (`jr:noAddRemove`) repeat ranges.
+
+### Patch Changes
+
+- 82d35d0: - Show message when required or other constrainst are not satisfied.
+  - Show error message banner at the top of the Form when "Send" button is pressed and the Form is invalid
+  - Various design/UI tweaks to beautify the Form
+- aa3a84a: Fix: evaluate `jr:count` in context of affected repeat
+- 5aa7ebc: - Display Notes fields on the UI
+  - Show hint for the fields if defined in the Form
+- Updated dependencies [e81aa43]
+- Updated dependencies [596c1fe]
+- Updated dependencies [0c1534d]
+- Updated dependencies [1e72854]
+- Updated dependencies [aa3a84a]
+- Updated dependencies [7b63159]
+- Updated dependencies [573b06b]
+  - @getodk/xforms-engine@0.3.0
+  - @getodk/common@0.3.0
+
 ## 0.1.2
 
 ### Patch Changes

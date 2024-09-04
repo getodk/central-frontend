@@ -1,6 +1,6 @@
 {
   "name": "@getodk/ui-solid",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "description": "Solid UI client for ODK Web Forms",
   "type": "module",
@@ -46,8 +46,8 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.13",
-    "@getodk/common": "0.2.0",
-    "@getodk/xforms-engine": "0.2.0",
+    "@getodk/common": "0.3.0",
+    "@getodk/xforms-engine": "0.3.0",
     "@solidjs/router": "^0.14.1",
     "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.16.0",

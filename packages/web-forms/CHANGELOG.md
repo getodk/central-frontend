@@ -1,5 +1,23 @@
 # @getodk/web-forms
 
+## 0.3.0
+
+### Minor Changes
+
+- 82d35d0: - Show message when required or other constrainst are not satisfied.
+  - Show error message banner at the top of the Form when "Send" button is pressed and the Form is invalid
+  - Various design/UI tweaks to beautify the Form
+- 7b63159: Add support for count-controlled (`jr:count`) and fixed (`jr:noAddRemove`) repeat ranges.
+- 573b06b: Engine support for `constraint`, `required` validation
+
+### Patch Changes
+
+- 596c1fe: Add engine support for 'note' nodes
+- 53d5f02: Added "Powered by ODK" caption at the bottom of the Form
+- aa3a84a: Fix: evaluate `jr:count` in context of affected repeat
+- 5aa7ebc: - Display Notes fields on the UI
+  - Show hint for the fields if defined in the Form
+
 ## 0.2.0
 
 ### Minor Changes
