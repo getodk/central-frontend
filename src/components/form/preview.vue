@@ -92,6 +92,7 @@ const handleSubmit = () => {
 }
 html, body {
   background-color: var(--gray-200);
+  box-shadow: none;
 }
 </style>
 
