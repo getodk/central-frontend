@@ -94,6 +94,7 @@ export default ({ i18n }, createResource) => {
           url: apiPaths.userPreferences(),
           headers,
           data: self.data,
+          alert: false,
           patch: noop,
         });
       }
