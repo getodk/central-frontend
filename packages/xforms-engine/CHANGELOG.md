@@ -5,7 +5,8 @@
 ### Minor Changes
 
 - 596c1fe: Add engine support for 'note' nodes
-- 0c1534d: - Support tracking `current()` references in computations
+- 0c1534d: Improve path resolution and updating computations
+  - Support tracking `current()` references in computations
   - Support tracking references in computations where path references include predicates
   - Improve support for repeat-based itemsets
   - Improve relative path resolution across the board, fixing many computation update edge cases where expressions include complex path expressions
