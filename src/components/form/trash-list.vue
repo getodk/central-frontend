@@ -71,7 +71,6 @@ export default {
   },
   created() {
     this.fetchDeletedForms(false);
-    this.userPreferences.fetchOnce();
   },
   methods: {
     fetchDeletedForms(resend) {

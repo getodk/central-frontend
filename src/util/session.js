@@ -247,7 +247,7 @@ the request for the current user should result in an error. If there is a logout
 during a request to create a session, then the new session will be used. */
 export const logIn = (container, newSession) => {
   const { requestData, config } = container;
-  const { session, currentUser, analyticsConfig } = requestData;
+  const { session, currentUser, analyticsConfig, userPreferences } = requestData;
   if (newSession) {
     /*
     If two tabs submit the login form at the same time, then both will end up
@@ -277,13 +277,18 @@ export const logIn = (container, newSession) => {
           throw error;
         });
     })
-    .then(() => {
-      if (config.showsAnalytics && currentUser.can('config.read')) {
-        analyticsConfig.request({
-          url: '/v1/config/analytics',
-          fulfillProblem: ({ code }) => code === 404.1,
-          alert: false
-        }).catch(noop);
-      }
-    });
+    .then(
+      Promise.all([
+        userPreferences.fetchOnce(),
+        () => {
+          if (config.showsAnalytics && currentUser.can('config.read')) {
+            analyticsConfig.request({
+              url: '/v1/config/analytics',
+              fulfillProblem: ({ code }) => code === 404.1,
+              alert: false
+            }).catch(noop);
+          }
+        },
+      ])
+    );
 };

@@ -159,9 +159,6 @@ export default {
       return dsShown > 15 && limit > 3 ? limit - 1 : limit;
     }
   },
-  created() {
-    this.userPreferences.fetchOnce();
-  },
   methods: {
     afterCreate(project) {
       const message = this.$t('alert.create');
