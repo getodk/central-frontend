@@ -54,22 +54,22 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "solid-js": "^1.8.18"
+    "solid-js": "^1.8.22"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.8",
+    "@babel/core": "^7.25.2",
     "@getodk/tree-sitter-xpath": "0.1.2",
     "@getodk/xpath": "0.2.0",
-    "@playwright/test": "^1.45.1",
-    "@vitest/browser": "^2.0.2",
+    "@playwright/test": "^1.46.1",
+    "@vitest/browser": "^2.0.5",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.0",
     "http-server": "^14.1.1",
-    "jsdom": "^24.1.0",
-    "typedoc": "^0.26.4",
-    "vite": "^5.3.3",
-    "vite-plugin-dts": "^3.9.1",
+    "jsdom": "^25.0.0",
+    "typedoc": "^0.26.6",
+    "vite": "^5.4.3",
+    "vite-plugin-dts": "^4.1.0",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "^2.0.2"
+    "vitest": "^2.0.5"
   },
   "peerDependencies": {
     "solid-js": "^1.8.18"

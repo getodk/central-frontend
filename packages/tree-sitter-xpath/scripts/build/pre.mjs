@@ -13,6 +13,7 @@ const buildArtifacts = [
 	'types/tree-sitter-xpath-parser.d.ts',
 	'binding.gyp',
 	'Cargo.toml',
+	'go.mod',
 	'grammar.js',
 	'grammar.js.map',
 ];

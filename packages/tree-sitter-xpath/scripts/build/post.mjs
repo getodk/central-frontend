@@ -1,6 +1,6 @@
 // @ts-check
 
-import { checkTreeSitterVersion, removeFiles, restorePackageJSON } from './shared.mjs';
+import { checkTreeSitterVersion, removeFiles } from './shared.mjs';
 
 checkTreeSitterVersion();
 
@@ -22,4 +22,3 @@ const extraneousGeneratedFiles = [
 ];
 
 removeFiles(extraneousGeneratedFiles);
-restorePackageJSON();
