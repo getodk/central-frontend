@@ -1,5 +1,5 @@
 import { Box, styled } from '@suid/material';
-import type { JSX } from 'solid-js';
+import type { Component, JSX } from 'solid-js';
 import { Show } from 'solid-js';
 
 interface XFormRelevanceGuardProps {
@@ -8,9 +8,7 @@ interface XFormRelevanceGuardProps {
 	readonly children: JSX.Element;
 }
 
-const BaseXFormRelevanceGuardBox = (props: XFormRelevanceGuardProps) => <Box>{props.children}</Box>;
-
-const XFormRelevanceGuardBox = styled<typeof BaseXFormRelevanceGuardBox>(Box)(({
+const XFormRelevanceGuardBox = styled<Component<XFormRelevanceGuardProps>>(Box)(({
 	props,
 	theme,
 }) => {

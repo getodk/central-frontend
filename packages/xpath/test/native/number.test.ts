@@ -15,8 +15,8 @@ describe('native number functions', () => {
 		testContext.assertNumberValue('number(1)', 1);
 		testContext.assertNumberValue('number(0.199999)', 0.199999);
 		testContext.assertNumberValue('number(-0.199999)', -0.199999);
-		testContext.assertNumberValue('number(- 0.199999)', -0.199999),
-			testContext.assertNumberValue('number(0.0)', 0);
+		testContext.assertNumberValue('number(- 0.199999)', -0.199999);
+		testContext.assertNumberValue('number(0.0)', 0);
 		testContext.assertNumberValue('number(.0)', 0);
 		testContext.assertNumberValue('number(0.)', 0);
 

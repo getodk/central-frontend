@@ -246,9 +246,17 @@ export abstract class InstanceNode<
 		// subscriptions would be established by evaluation of the expressions
 		// themselves (as they traverse instance state and access values), rather
 		// than this safer/less focused approach.
+
+		// TODO: typescript-eslint is right to object to these! We should _at least_
+		// make internal reactive reads obvious, i.e. function calls.
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		engineState.reference;
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		engineState.relevant;
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		engineState.children;
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		engineState.value;
 	}
 }

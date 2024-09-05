@@ -80,7 +80,7 @@ export type ComputedPropertySpec<T> = Accessor<T>;
 /**
  * @see {@link StaticPropertySpec}
  */
-// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type, @typescript-eslint/no-explicit-any
 type NonStaticValue = Function | Signal<any> | SimpleAtomicState<any>;
 
 /**

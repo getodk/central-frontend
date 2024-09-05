@@ -5,7 +5,7 @@ import { computed } from 'vue';
 const props = defineProps<{ appearances: SelectNodeAppearances}>();
 
 const nColumnstyle = computed(() => {
-	const numberOfColumns = [...props.appearances].find(a => a.match(/columns-\d+/))?.match(/\d+/)?.[0];
+	const numberOfColumns = [...props.appearances].find(a => /columns-\d+/.exec(a))?.match(/\d+/)?.[0];
 	return numberOfColumns ? `grid-template-columns: repeat(${numberOfColumns}, 1fr);` : '';
 });
 </script>
@@ -23,7 +23,7 @@ const nColumnstyle = computed(() => {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px 20px;
-	
+
 }
 
 .columns {

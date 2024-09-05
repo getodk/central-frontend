@@ -15,7 +15,7 @@ import { JRTreeReference } from '../../jr/xpath/JRTreeReference.ts';
 
 const assertJRTreeReference = instanceAssertion(JRTreeReference);
 
-const treeReferenceExtensions = extendExpect(expect, {
+export const treeReferenceExtensions = extendExpect(expect, {
 	/**
 	 * **PORTING NOTES**
 	 *

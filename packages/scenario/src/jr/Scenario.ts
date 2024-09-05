@@ -693,7 +693,7 @@ export class Scenario {
 		}
 
 		const [, positionPredicatedReference, positionExpression] =
-			reference.match(/^(.*\/[^/[]+)\[(\d+)\]\/[^[]+$/) ?? [];
+			/^(.*\/[^/[]+)\[(\d+)\]\/[^[]+$/.exec(reference) ?? [];
 
 		if (positionPredicatedReference == null || positionExpression == null) {
 			return;

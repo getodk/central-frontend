@@ -221,6 +221,10 @@ export class Root
 	override subscribe(): void {
 		super.subscribe();
 
+		// TODO: typescript-eslint is right to object to this! We should _at least_
+		// make internal reactive reads obvious, i.e. function calls.
+		//
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 		this.engineState.activeLanguage;
 	}
 }
