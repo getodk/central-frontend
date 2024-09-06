@@ -102,7 +102,7 @@ const getContainsChoicesResult = (
 	return error == null || error;
 };
 
-const choiceExtensions = extendExpect(expect, {
+export const choiceExtensions = extendExpect(expect, {
 	toContainChoices: new AsymmetricTypedExpectExtension(
 		assertSelectList,
 		assertExpectedChoicesArray,

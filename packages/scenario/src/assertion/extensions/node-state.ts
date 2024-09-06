@@ -6,7 +6,7 @@ import {
 import { expect } from 'vitest';
 import { assertEngineNode } from './shared-type-assertions.ts';
 
-const nodeStateExtensions = extendExpect(expect, {
+export const nodeStateExtensions = extendExpect(expect, {
 	toBeRelevant: new StaticConditionExpectExtension(assertEngineNode, {
 		currentState: { relevant: true },
 	}),

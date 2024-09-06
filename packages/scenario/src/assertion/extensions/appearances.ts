@@ -11,7 +11,7 @@ const hasAppearance = (node: AnyNode, appearance: string): boolean => {
 	return node.appearances?.[appearance] === true;
 };
 
-const appearanceExtensions = extendExpect(expect, {
+export const appearanceExtensions = extendExpect(expect, {
 	toHaveAppearance: new AsymmetricTypedExpectExtension(
 		assertEngineNode,
 		assertString,

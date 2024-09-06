@@ -32,6 +32,7 @@ describe('Internal minimal reactivity implementation (itself currently for use i
 			effect(() => {
 				effectReactions += 1;
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 				object.a;
 			});
 
@@ -57,6 +58,7 @@ describe('Internal minimal reactivity implementation (itself currently for use i
 			effect(() => {
 				effectReactions += 1;
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 				object.a;
 			});
 
@@ -89,12 +91,14 @@ describe('Internal minimal reactivity implementation (itself currently for use i
 			effect(() => {
 				effectReactions.a += 1;
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 				object.a;
 			});
 
 			effect(() => {
 				effectReactions.b += 1;
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 				object.b;
 			});
 
@@ -186,6 +190,7 @@ describe('Internal minimal reactivity implementation (itself currently for use i
 			effect(() => {
 				effectReactions += 1;
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 				object.b;
 			});
 

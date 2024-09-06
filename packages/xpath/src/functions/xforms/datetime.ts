@@ -268,7 +268,7 @@ export const date = new FunctionImplementation(
 				}
 
 				if (!DATE_OR_DATE_TIME_PATTERN.test(string)) {
-					const unpaddedMatches = string.match(UNPADDED_MONTH_DAY_PATTERN);
+					const unpaddedMatches = UNPADDED_MONTH_DAY_PATTERN.exec(string);
 
 					if (unpaddedMatches == null) {
 						return new DateTimeLikeEvaluation(context, null);

@@ -11,7 +11,7 @@ const hasClass = (node: RootNode, className: string): boolean => {
 	return node.classes?.[className] === true;
 };
 
-const bodyClassesExtensions = extendExpect(expect, {
+export const bodyClassesExtensions = extendExpect(expect, {
 	toHaveClass: new AsymmetricTypedExpectExtension(
 		assertRootNode,
 		assertString,

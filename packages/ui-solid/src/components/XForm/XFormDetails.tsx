@@ -65,6 +65,7 @@ const serializeNode = (node: AnyNode, depth = 0): string => {
 
 	if (children == null) {
 		// Just read it to make it reactive...
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
 		currentState.value;
 
 		const serializedLeafNode = `<${nodeName}>${escapeXMLText((node as FakeSerializationInterface).contextNode.textContent ?? '')}</${nodeName}>`;

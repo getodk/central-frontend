@@ -60,7 +60,7 @@ const matchDefaultMessage = (condition: ValidationCondition) => {
 	};
 };
 
-const answerExtensions = extendExpect(expect, {
+export const answerExtensions = extendExpect(expect, {
 	toEqualAnswer: new SymmetricTypedExpectExtension(assertComparableAnswer, (actual, expected) => {
 		const pass = actual.stringValue === expected.stringValue;
 

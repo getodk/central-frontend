@@ -11,7 +11,7 @@ type AssertJRFormDef = (value: unknown) => asserts value is JRFormDef;
 
 const assertJRFormDef: AssertJRFormDef = (value) => assertInstanceType(JRFormDef, value);
 
-const formStateExtensions = extendExpect(expect, {
+export const formStateExtensions = extendExpect(expect, {
 	/**
 	 * **PORTING NOTES**
 	 *

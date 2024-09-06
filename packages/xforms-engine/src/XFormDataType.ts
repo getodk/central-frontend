@@ -10,9 +10,7 @@ export type UnsupportedDataType = typeof UNSUPPORTED_DATA_TYPE;
 /**
  * Like JavaRosa. Presumably for e.g. groups with explicit binds (`relevant` etc)?
  */
-const NULL_DATA_TYPE = 'NULL';
-
-export type NullDataType = typeof NULL_DATA_TYPE;
+export type NullDataType = 'NULL';
 
 /**
  * As in ODK XForms Spec.

@@ -45,108 +45,28 @@ const unprefixNodeFileSystemPath = (resourcePath: string) => {
 	return resourcePath;
 };
 
-type ResourceType = 'binary' | 'locator';
-
-type ResolvedResourceType<T extends ResourceType> = T extends 'binary' ? Uint8Array : string;
-
-class ResourceResolutionError extends Error {
-	constructor(resource: string, resourceType: ResourceType) {
-		// Prevent spewing enormous `data:` URLs in error logging
-		const truncatedResource = resource.substring(0, 100);
-		const message = `Could not resolve resource to type ${resourceType}: ${truncatedResource}`;
-
-		super(message);
-	}
-}
-
 const WEB_ASSEMBLY_DATA_URL_PREFIX = 'data:application/wasm;base64,';
 
-/**
- * Node-specific: convert a `data:` URL resource to binary data. This will be
- * encountered when `@getodk/xpath` is built/bundled, and downstream packages
- * (like `@getodk/xforms-engine` and its clients) initialize a tree-sitter
- * {@link Parser}.
- */
-const resolveWebAssemblyDataURL = (resource: string): Uint8Array | null => {
-	const base64 = resource.replace(WEB_ASSEMBLY_DATA_URL_PREFIX, '');
+type WebAssemblyDataURL = `${typeof WEB_ASSEMBLY_DATA_URL_PREFIX}${string}`;
 
-	if (base64 === resource) {
-		throw new ResourceResolutionError(resource, 'binary');
-	}
-
-	// Node's `Buffer` is supposed to be a Uint8Array. web-tree-sitter disagrees!
-	const buffer = Buffer.from(base64, 'base64');
-	const u8a = new Uint8Array(buffer);
-
-	return u8a;
+const isWebAssemblyDataURL = (resource: string): resource is WebAssemblyDataURL => {
+	return resource.startsWith(WEB_ASSEMBLY_DATA_URL_PREFIX);
 };
 
-/**
- * Resolves tree-sitter and @getodk/tree-sitter-xpath WASM resources in all
- * supported environments. The following cases are handled:
- *
- * - web-tree-sitter `Parser.init` expects its WASM resource to be specified by
- *   URL in a web environment, but it expects a file system path in a Node
- *   environment.
- *
- * - web-tree-sitter `Parser.Language.load` accepts a URL in either environment,
- *   but large `data:` URLs may fail to load without first converting them to a
- *   shorter `blob:` URL.
- *
- * Where:
- *
- * - `resource` is a URL (likely a path relative to the server host), as
- *   provided by Vite in an import like `package-name/file-name.wasm?url`
- *   (typically `@getodk/xpath` test mode)
- *
- * - `resource` is a `data:` URL which may be provided by a bundled build, which
- *   in turn is:
- *
- *     - Converted to a `Uint8Array` (Node)
- *     - pre-fetched and stored as a `blob:` object URL for fetching the
- *       @getodk/tree-sitter-xpath language WASM asset (Browser)
- *
- * - `resource` is an arbitrary URL, as provided by a downstream user of
- *   @getodk/xpath as a library.
- */
-const resolveWebAssemblyResource = async <T extends ResourceType>(
-	resource: string,
-	resourceType: T
-): Promise<ResolvedResourceType<T>> => {
-	if (IS_NODE_RUNTIME && resourceType === 'binary' && resource.startsWith('data:')) {
-		const binary = resolveWebAssemblyDataURL(resource);
+const dataURLToUInt8Array = (resource: WebAssemblyDataURL): Uint8Array => {
+	const base64 = resource.replace(WEB_ASSEMBLY_DATA_URL_PREFIX, '');
+	const binaryChars = atob(base64);
+	const mapBinaryChar = (character: string) => character.charCodeAt(0);
 
-		if (binary != null) {
-			return binary as ResolvedResourceType<T>;
-		}
+	return Uint8Array.from(binaryChars, mapBinaryChar);
+};
+
+const resolveWASMResource = (resource: string): Uint8Array | string => {
+	if (isWebAssemblyDataURL(resource)) {
+		return dataURLToUInt8Array(resource);
 	}
 
-	const baseResult = unprefixNodeFileSystemPath(resource);
-
-	if (resourceType === 'locator' && !baseResult.startsWith('data:')) {
-		return baseResult as ResolvedResourceType<T>;
-	}
-
-	// This generally won't be supported in Node downstream
-	if (typeof URL.createObjectURL !== 'function') {
-		if (resourceType === 'locator') {
-			return baseResult as ResolvedResourceType<T>;
-		}
-
-		throw new ResourceResolutionError(resource, resourceType);
-	}
-
-	const response = await fetch(resource);
-
-	if (resourceType === 'binary') {
-		const data = await response.arrayBuffer();
-
-		return new Uint8Array(data) as ResolvedResourceType<T>;
-	}
-
-	const blob = await response.blob();
-
-	return URL.createObjectURL(blob) as ResolvedResourceType<T>;
+	return unprefixNodeFileSystemPath(resource);
 };
 
 export interface WebAssemblyResourceSpecifiers {
@@ -155,7 +75,27 @@ export interface WebAssemblyResourceSpecifiers {
 }
 
 interface WebTreeSitterInitOptions {
+	/**
+	 * Usage: Node, unbundled (`xpath` dev/test). Vite will have resolved the
+	 * import `web-tree-sitter/tree-sitter.wasm?url` to a file system path.
+	 *
+	 * Providing this init option to web-tree-sitter will direct it to the
+	 * WASM resource on disk.
+	 */
 	readonly locateFile?: () => string;
+
+	/**
+	 * Usage: Any runtime, bundled (`xpath` build -> downstream). Vite will have
+	 * resolved the import `web-tree-sitter/tree-sitter.wasm?url` to its path in
+	 * the file system, and then bundled the file's binary data as a `data:` URL.
+	 * We cannot pass this to web-tree-sitter directly, as we do with
+	 * {@link locateFile}: this must always produce a file system path.
+	 *
+	 * Instead, we "preload" the binary data by converting the bundled `data:`
+	 * URL to a {@link Uint8Array}. Providing that binary representation as
+	 * {@link wasmBinary} bypasses web-tree-sitter's file system access.
+	 */
+	readonly wasmBinary?: Uint8Array;
 }
 
 /**
@@ -183,38 +123,27 @@ interface WebTreeSitterInitOptions {
  */
 export class TreeSitterXPathParser {
 	static async init(resources: WebAssemblyResourceSpecifiers): Promise<TreeSitterXPathParser> {
-		const { webTreeSitter: webTreeSitterResource, xpathLanguage: xpathLanguageResource } =
-			resources;
+		const { webTreeSitter, xpathLanguage } = resources;
 
 		let webTreeSitterInitOptions: WebTreeSitterInitOptions = {};
 
-		if (webTreeSitterResource != null) {
-			const webTreeSitterLocator = await resolveWebAssemblyResource(
-				webTreeSitterResource,
-				'locator'
-			);
+		if (webTreeSitter != null) {
+			const webTreeSitterResource = resolveWASMResource(webTreeSitter);
 
-			webTreeSitterInitOptions = {
-				locateFile: () => webTreeSitterLocator,
-			};
+			if (typeof webTreeSitterResource === 'string') {
+				webTreeSitterInitOptions = {
+					locateFile: () => webTreeSitterResource,
+				};
+			} else {
+				webTreeSitterInitOptions = { wasmBinary: webTreeSitterResource };
+			}
 		}
-
-		let xpathLanguageResourceType: ResourceType;
-
-		if (IS_NODE_RUNTIME && !xpathLanguageResource.startsWith('data:')) {
-			xpathLanguageResourceType = 'locator';
-		} else {
-			xpathLanguageResourceType = 'binary';
-		}
-
-		const xpathLanguageBinary = await resolveWebAssemblyResource(
-			xpathLanguageResource,
-			xpathLanguageResourceType
-		);
 
 		await Parser.init(webTreeSitterInitOptions);
 
-		const language = await Parser.Language.load(xpathLanguageBinary);
+		const xpathLanguageResource = resolveWASMResource(xpathLanguage);
+
+		const language = await Parser.Language.load(xpathLanguageResource);
 
 		const parser = new Parser();
 

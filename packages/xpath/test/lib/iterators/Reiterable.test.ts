@@ -1,13 +1,8 @@
-import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { describe, expect, it } from 'vitest';
 import { Reiterable } from '../../../src/lib/iterators/Reiterable.ts';
 
 describe('Reiterable', () => {
-	const sourceItems = ['a', 'b', 'c'] as const;
-
-	type SourceItems = typeof sourceItems;
-
-	type SourceItem = CollectionValues<SourceItems>;
+	type SourceItem = 'a' | 'b' | 'c';
 
 	type Source = Iterable<SourceItem> | Iterator<SourceItem> | readonly SourceItem[];
 
@@ -144,19 +139,19 @@ describe('Reiterable', () => {
 		const cases = [
 			{
 				sourceType: 'array',
-				source(): readonly SourceItem[] {
+				source: (): readonly SourceItem[] => {
 					return getSourceArray();
 				},
 			},
 			{
 				sourceType: 'iterable',
-				source(): Iterable<SourceItem> {
+				source: (): Iterable<SourceItem> => {
 					return getSourceIterable();
 				},
 			},
 			{
 				sourceType: 'iterator',
-				source(): Iterator<SourceItem> {
+				source: (): Iterator<SourceItem> => {
 					return getSourceIterator();
 				},
 			},
@@ -255,7 +250,7 @@ describe('Reiterable', () => {
 			interface BeforeCase {
 				readonly beforeDescription: string;
 
-				before?(reiterable: Reiterable<SourceItem>): void;
+				before?: (reiterable: Reiterable<SourceItem>) => void;
 			}
 
 			const beforeCases: readonly BeforeCase[] = [

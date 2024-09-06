@@ -3,6 +3,7 @@ import type { AnyConstructor, AnyFunction } from '../../../types/helpers.d.ts';
 /**
  * @see {@link Typeof}
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- this is purposefully derived, as described in `Typeof` JSDoc.
 const TYPEOF = typeof ('' as unknown);
 
 /**
@@ -31,7 +32,7 @@ type Typeof = typeof TYPEOF;
  * this more expanded type, but in many cases it would fail to do so if we only
  * specify {@link Function}.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 type TypeofFunction = AnyConstructor | AnyFunction | Function;
 
 /**

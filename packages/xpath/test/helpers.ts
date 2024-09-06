@@ -266,10 +266,6 @@ export class TestContext<XForms extends boolean = false> {
 
 		expect(stringValue, message).toMatch(pattern);
 	}
-
-	assertThrows(): never {
-		throw '';
-	}
 }
 
 export const createTestContext = (xml?: string, options: TestContextOptions = {}): TestContext => {

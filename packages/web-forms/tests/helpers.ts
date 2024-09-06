@@ -3,6 +3,7 @@ import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
 import { initializeForm } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
+import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
 import { reactive } from 'vue';
 
@@ -93,10 +94,12 @@ export const mockElementPrototypeMethod = <MethodName extends ElementMethodName>
 	mockImplementation: ElementMethodMock<MethodName>
 ) => {
 	if (methodName in HTMLElement.prototype) {
-		return vi.spyOn(HTMLElement.prototype, methodName).mockImplementation(function (...args) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-			return mockImplementation.apply(this as HTMLElement, args as any);
-		});
+		const mock = vi.spyOn<HTMLElement, MethodName>(
+			HTMLElement.prototype,
+			methodName
+		) as MockInstance<HTMLElement[MethodName]>;
+
+		return mock.mockImplementation(mockImplementation);
 	}
 	const mock = vi.fn(mockImplementation);
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any

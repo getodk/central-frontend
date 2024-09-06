@@ -76,9 +76,11 @@ const xpathGrammar = grammar({
 		_location_path: ($) => choice($.relative_location_path, $.absolute_location_path),
 
 		absolute_location_path: ($) =>
-			choice(
-				seq($.absolute_root_location_path, optional($._relative_location_path)),
-				$.abbreviated_absolute_location_path
+			prec.right(
+				choice(
+					seq($.absolute_root_location_path, optional($._relative_location_path)),
+					$.abbreviated_absolute_location_path
+				)
 			),
 
 		absolute_root_location_path: ($) => $._slash,
@@ -190,10 +192,10 @@ const xpathGrammar = grammar({
 			),
 
 		/**
-		 * Should be `optional('@')`, but tree-sitter objects (probably rightly) that it
-		 * matches the empty string. Its optionality is pushed up to `step`.
+		 * Should be `optional(/@/)`, but tree-sitter objects (probably rightly)
+		 * that it matches the empty string. Its optionality is pushed up to `step`.
 		 */
-		_abbreviated_axis_specifier: () => '@',
+		_abbreviated_axis_specifier: () => /@/,
 
 		/* 3 Expressions */
 
@@ -230,7 +232,7 @@ const xpathGrammar = grammar({
 
 		_path_expr: ($) => choice($._location_path, $.filter_path_expr),
 
-		_slash: () => token('/'),
+		_slash: () => token(/\//),
 
 		filter_path_expr: ($) => $._filter_path_expr,
 
@@ -312,7 +314,7 @@ const xpathGrammar = grammar({
 
 		unprefixed_wildcard_name_test: ($) => $._wildcard_name_test,
 		prefixed_wildcard_name_test: ($) => seq($.prefix, /:/, $._wildcard_name_test),
-		_wildcard_name_test: () => '*',
+		_wildcard_name_test: () => /\*/,
 
 		/* --- definitions from Namespaces in XML 1.0 spec --- */
 
