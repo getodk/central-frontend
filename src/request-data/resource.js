@@ -51,7 +51,7 @@ class BaseResource {
   }
 }
 
-const _container = Symbol('container');
+export const _container = Symbol('container');
 const _abortController = Symbol('abortController');
 class Resource extends BaseResource {
   constructor(container, name, store) {

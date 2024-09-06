@@ -14,8 +14,9 @@ import { mergeDeepLeft } from 'ramda';
 
 import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
-import { noargs, noop } from '../util/util';
-import { apiPaths } from '../util/request';
+import { noargs } from '../util/util';
+import { apiPaths, withAuth } from '../util/request';
+import { _container } from './resource';
 
 export default ({ i18n }, createResource) => {
   // Resources related to the session
@@ -79,25 +80,31 @@ export default ({ i18n }, createResource) => {
   }));
 
   createResource('userPreferences', (self) => ({
+    _container,
     transformResponse: ({ data }) => shallowReactive(data),
-    set: (k, v) => {
-      // Avoid posting prefs to the server when they haven't changed.
-      // This stringify-inequality-test may yield false positives, for instance when object field sort order changes.
-      // Thus superfluous requests are not 100% guaranteed to be filtered out, but we can live with that (it keeps things simple).
-      const haschanged = JSON.stringify(self.data[k]) !== JSON.stringify(v);
-      if (haschanged) {
-        // eslint-disable-next-line no-param-reassign
-        self[k] = v;
-        const headers = { 'Content-Type': 'application/json' };
-        self.request({
-          method: 'POST',
-          url: apiPaths.userPreferences(),
-          headers,
-          data: self.data,
-          alert: false,
-          patch: noop,
-        });
-      }
+    patchServerside: (k, v) => {
+      // As we need to be able to have multiple requests in-flight, we can't use resource.request() here.
+      const { requestData, http } = self[self._container];
+      return http.request(
+        withAuth(
+          {
+            method: 'PATCH',
+            url: apiPaths.userPreferences(),
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Extended-Metadata': 'true',
+            },
+            data: Object.fromEntries(new Map([[k, v]])),
+          },
+          requestData.session.token
+        )
+      );
+    },
+    set: (k, v, propagate = true) => {
+      // eslint-disable-next-line no-param-reassign
+      self[k] = v;
+      if (propagate) return self.patchServerside(k, v);
+      return null;
     },
     mutateSet: (k, v, op) => {
       const prefSet = new Set(self.data[k] instanceof Array ? self.data[k] : []); // ignore/overwrite set-incompatible data (as may have been left behind by an older version with a different implicit preferences schema)
