@@ -81,9 +81,44 @@ export default ({ i18n }, createResource) => {
 
   createResource('userPreferences', (self) => ({
     _container,
+    abortControllers: {},
+    instanceID: crypto.randomUUID(),
     transformResponse: ({ data }) => shallowReactive(data),
     patchServerside: (k, v) => {
       // As we need to be able to have multiple requests in-flight, we can't use resource.request() here.
+      // However, we want to avoid stacking requests for the same key, so we abort preceding requests for the same key, if any.
+      // Note that because locks are origin-scoped, we use a store instantiation identifier to scope them to this app instance.
+      const keyLockName = `userPreferences-${self.instanceID}-keystack-${k}`;
+      navigator.locks.request(
+        `userPreferences-${self.instanceID}-lockops`,
+        () => {
+          navigator.locks.request(
+            keyLockName,
+            { ifAvailable: true },
+            (lockForKey) => {
+              const aborter = new AbortController();
+              if (!lockForKey) {
+                // Cancel the preceding request, a new one supersedes it.
+                self.abortControllers[k].abort();
+                return navigator.locks.request(
+                  keyLockName,
+                  () => {
+                    // eslint-disable-next-line no-param-reassign
+                    self.abortControllers[k] = aborter;
+                    return self.requestPatchServerside(k, v, aborter);
+                  }
+                );
+              }
+              // eslint-disable-next-line no-param-reassign
+              self.abortControllers[k] = aborter;
+              return self.requestPatchServerside(k, v, aborter);
+            },
+          );
+          return Promise.resolve(); // return asap with a resolved promise so the outer lockops lock gets released; we don't wan't to wait here for the inner keylock-enveloped requests.
+        }
+      );
+    },
+    requestPatchServerside: (k, v, aborter) => {
       const { requestData, http } = self[self._container];
       return http.request(
         withAuth(
@@ -95,6 +130,7 @@ export default ({ i18n }, createResource) => {
               'X-Extended-Metadata': 'true',
             },
             data: Object.fromEntries(new Map([[k, v]])),
+            signal: aborter.signal,
           },
           requestData.session.token
         )
