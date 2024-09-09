@@ -3,7 +3,7 @@ import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import ControlHint from './ControlHint.vue';
 import ControlLabel from './ControlLabel.vue';
 
-defineProps<{question: QuestionNode}>();
+defineProps<{ question: QuestionNode }>();
 </script>
 
 <template>

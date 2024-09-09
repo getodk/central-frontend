@@ -20,26 +20,25 @@ const props = withDefaults(defineProps<PanelProps>(), {
 	noUi: false,
 	class: undefined,
 	labelIcon: undefined,
-	labelNumber: undefined
+	labelNumber: undefined,
 });
 
 const panelClass = computed(() => [
 	props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menu',
-	props.class
+	props.class,
 ]);
 
 const panelState = ref(false);
 
 const toggle = () => {
 	panelState.value = !panelState.value;
-}
+};
 
 const menu = ref<Menu & MenuState>();
 
-const toggleMenu = (event:  Event) => {
+const toggleMenu = (event: Event) => {
 	menu.value?.toggle(event);
 };
-
 </script>
 <template>
 	<Panel v-if="!noUi" :class="panelClass" :toggleable="true" :collapsed="panelState">
@@ -97,8 +96,10 @@ h2 {
 .btn-context {
 	margin-top: -10px;
 
-	&.p-button.p-button-secondary:not(:disabled){
-		&:active, &:focus, &.p-focus {
+	&.p-button.p-button-secondary:not(:disabled) {
+		&:active,
+		&:focus,
+		&.p-focus {
 			background: var(--primary-50);
 		}
 
@@ -112,7 +113,7 @@ h2 {
 	}
 }
 
-.p-panel.p-panel-toggleable {	
+.p-panel.p-panel-toggleable {
 	background: var(--surface-0);
 	box-shadow: none;
 
@@ -134,10 +135,9 @@ h2 {
 		padding: 0 0 0 1.5rem;
 	}
 
-	:deep(.p-panel-toggler){
+	:deep(.p-panel-toggler) {
 		display: none;
 	}
-	
 }
 
 .content-wrapper {

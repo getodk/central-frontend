@@ -8,7 +8,6 @@ import RepeatInstance from './RepeatInstance.vue';
 const props = defineProps<{ node: RepeatRangeNode }>();
 
 const label = computed(() => props.node.currentState.label?.asString);
-
 </script>
 <template>
 	<FormPanel :title="label" :no-ui="!label" class="repeat" label-icon="icon-repeat">
@@ -32,7 +31,6 @@ const label = computed(() => props.node.currentState.label?.asString);
 </template>
 
 <style scoped lang="scss">
-
 .p-button.p-button-outlined.btn-add {
 	box-shadow: inset 0 0 0 1px #cbcacc;
 	margin-left: 36px;
@@ -45,7 +43,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 		background: var(--primary-100);
 	}
 
-	.btn-add-label{
+	.btn-add-label {
 		vertical-align: middle;
 		margin-right: 0.5rem;
 	}

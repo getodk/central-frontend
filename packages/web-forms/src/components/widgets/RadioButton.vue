@@ -2,13 +2,12 @@
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeRadioButton from 'primevue/radiobutton';
 
-const props = defineProps<{ question: SelectNode}>();
+const props = defineProps<{ question: SelectNode }>();
 defineEmits(['update:modelValue', 'change']);
 
 const setSelect1Value = (item: SelectItem) => {
 	props.question.select(item);
-}
-
+};
 </script>
 
 <template>
@@ -39,22 +38,20 @@ const setSelect1Value = (item: SelectItem) => {
 </template>
 
 <style lang="scss" scoped>
-
 .value-option {
-  display: flex;
+	display: flex;
 	align-items: center;
-  outline: 1px solid var(--surface-300);
+	outline: 1px solid var(--surface-300);
 	border-radius: 10px;
-  padding: 15px;
-  cursor: pointer;
+	padding: 15px;
+	cursor: pointer;
 	background: var(--surface-0);
 
-
-  .label-text {
+	.label-text {
 		margin-left: 10px;
 	}
 
-  &:has(.p-radiobutton-input:hover),
+	&:has(.p-radiobutton-input:hover),
 	&:has(.p-radiobutton-input:focus-visible) {
 		outline-color: var(--primary-500);
 		background-color: var(--primary-100);
@@ -66,7 +63,7 @@ const setSelect1Value = (item: SelectItem) => {
 	}
 
 	&:deep(:has(.p-radiobutton-input:focus-visible)),
-	&:hover{
+	&:hover {
 		outline-color: var(--primary-500);
 		background-color: var(--primary-50);
 	}
@@ -76,7 +73,7 @@ const setSelect1Value = (item: SelectItem) => {
 		background-color: var(--primary-50);
 	}
 
-  &.disabled,
+	&.disabled,
 	&.disabled label {
 		cursor: not-allowed;
 	}

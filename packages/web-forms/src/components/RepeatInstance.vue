@@ -5,28 +5,29 @@ import { computed } from 'vue';
 import FormPanel from './FormPanel.vue';
 import QuestionList from './QuestionList.vue';
 
-const props = defineProps<{ instance: RepeatInstanceNode, instanceIndex: number }>();
+const props = defineProps<{ instance: RepeatInstanceNode; instanceIndex: number }>();
 
 const isGroup = (child: GeneralChildNode) => {
 	return (
 		child.definition.bodyElement?.type === 'logical-group' ||
 		child.definition.bodyElement?.type === 'presentation-group'
 	);
-}
+};
 
 const label = computed(() => {
 	// It has just one child and that is a group with label
 	// then we use label of that group
-	if( props.instance.currentState.children.length === 1 &&
+	if (
+		props.instance.currentState.children.length === 1 &&
 		isGroup(props.instance.currentState.children[0]) &&
 		props.instance.currentState.children[0].currentState.label
 	) {
-		return props.instance.currentState.children[0].currentState.label?.asString
+		return props.instance.currentState.children[0].currentState.label?.asString;
 	}
 
 	// Use parent (repeat range) label if it's there
 	// TODO/sk: use state.label.asString
-	if(props.instance.parent.definition.bodyElement.label?.chunks[0]?.stringValue){
+	if (props.instance.parent.definition.bodyElement.label?.chunks[0]?.stringValue) {
 		return `${props.instance.parent.definition.bodyElement.label?.chunks[0].stringValue}`;
 	}
 
@@ -37,10 +38,12 @@ const label = computed(() => {
 const children = computed(() => {
 	// It has just one child and that is a group
 	// then we use its children - essentially coalesce RepeatInstance and Group into one.
-	if(props.instance.currentState.children.length === 1 && isGroup(props.instance.currentState.children[0])){
+	if (
+		props.instance.currentState.children.length === 1 &&
+		isGroup(props.instance.currentState.children[0])
+	) {
 		return (props.instance.currentState.children[0] as GroupNode).currentState.children;
-	}
-	else{
+	} else {
 		return props.instance.currentState.children;
 	}
 });
@@ -63,7 +66,6 @@ const menuItems = computed((): MenuItem[] | undefined => {
 		},
 	];
 });
-
 </script>
 <template>
 	<FormPanel :title="label" :menu-items="menuItems" class="repeat-instance" :label-number="instanceIndex + 1">

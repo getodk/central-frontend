@@ -5,7 +5,7 @@ import { computed, inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 
-const props = defineProps<{question: StringNode}>();
+const props = defineProps<{ question: StringNode }>();
 
 const setValue = (value = '') => {
 	props.question.setValue(value);

@@ -2,27 +2,26 @@
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeMultiSelect from 'primevue/multiselect';
 
-const props = defineProps<{ question: SelectNode, style?: string}>();
+const props = defineProps<{ question: SelectNode; style?: string }>();
 defineEmits(['update:modelValue', 'change']);
 
 const setSelectNValue = (values: SelectItem[]) => {
-	for(const v of props.question.currentState.value){
+	for (const v of props.question.currentState.value) {
 		props.question.deselect(v);
 	}
-	for(const v of values) {
+	for (const v of values) {
 		props.question.select(v);
 	}
-}
+};
 
-const getOptionLabel = (o:SelectItem) => {
+const getOptionLabel = (o: SelectItem) => {
 	return o.label?.asString;
-}
+};
 
 let panelClass = 'multi-select-dropdown-panel';
-if(props.question.appearances['no-buttons']) {
+if (props.question.appearances['no-buttons']) {
 	panelClass += ' no-buttons';
 }
-
 </script>
 
 <template>
@@ -64,26 +63,24 @@ if(props.question.appearances['no-buttons']) {
 
 <style lang="scss">
 .multi-select-dropdown-panel.no-buttons {
-		.p-checkbox-box {
-			display: none;
-		}
-
-		.p-checkbox {
-			margin-left: -20px;
-		}
-
-		.p-multiselect-item {
-		
-			&[aria-selected=true]::after {
-					content: '\e916';
-					font-family: 'owf-icomoon';
-					color: var(--primary-500);
-			}
-
-			span {
-				flex: 1;
-			}			
-		}		
+	.p-checkbox-box {
+		display: none;
 	}
 
+	.p-checkbox {
+		margin-left: -20px;
+	}
+
+	.p-multiselect-item {
+		&[aria-selected='true']::after {
+			content: '\e916';
+			font-family: 'owf-icomoon';
+			color: var(--primary-500);
+		}
+
+		span {
+			flex: 1;
+		}
+	}
+}
 </style>

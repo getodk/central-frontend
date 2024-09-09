@@ -2,18 +2,17 @@
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeCheckbox from 'primevue/checkbox';
 
-const props = defineProps<{ question: SelectNode, style?: string}>();
+const props = defineProps<{ question: SelectNode; style?: string }>();
 defineEmits(['update:modelValue', 'change']);
 
 const setSelectNValue = (values: SelectItem[]) => {
-	for(const v of props.question.currentState.value){
+	for (const v of props.question.currentState.value) {
 		props.question.deselect(v);
 	}
-	for(const v of values) {
+	for (const v of values) {
 		props.question.select(v);
 	}
-}
-
+};
 </script>
 
 <template>
@@ -52,7 +51,7 @@ const setSelectNValue = (values: SelectItem[]) => {
 	background: var(--surface-0);
 	cursor: pointer;
 
-  &:has(.p-checkbox-input:hover),
+	&:has(.p-checkbox-input:hover),
 	&:has(.p-checkbox-input:focus-visible) {
 		outline-color: var(--primary-500);
 		background-color: var(--primary-100);

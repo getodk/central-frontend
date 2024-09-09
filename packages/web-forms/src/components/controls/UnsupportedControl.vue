@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { AnyControlNode } from '@getodk/xforms-engine';
 
-defineProps<{question: AnyControlNode}>();
+defineProps<{ question: AnyControlNode }>();
 
 const isDev = () => {
 	return import.meta.env.DEV;
-}
+};
 </script>
 <template>
 	<div v-if="isDev()">

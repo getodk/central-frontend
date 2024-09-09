@@ -1,22 +1,25 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-const formFixtureGlobImports = import.meta.glob<true, 'raw', string>('../../../ui-solid/fixtures/xforms/**/*.xml', {
-	query: '?raw'
-});
+const formFixtureGlobImports = import.meta.glob<true, 'raw', string>(
+	'../../../ui-solid/fixtures/xforms/**/*.xml',
+	{
+		query: '?raw',
+	}
+);
 
 type CategoryType = Record<string, string[]>;
 
 const categories = Object.keys(formFixtureGlobImports)
-	.map(f => f.replace('../../../ui-solid/fixtures/xforms/', ''))
-	.reduce((result: CategoryType, f:string) => {
+	.map((f) => f.replace('../../../ui-solid/fixtures/xforms/', ''))
+	.reduce((result: CategoryType, f: string) => {
 		// TODO! These would normally be inferred as `string | undefined`, but the
 		// current TypeScript configuration is overly lax. See
 		// https://github.com/getodk/web-forms/issues/212
 		const [categoryName, formName] = f.split('/');
 
 		result[categoryName] ??= [];
-		result[categoryName].push(formName)
+		result[categoryName].push(formName);
 
 		return result;
 	}, {});
@@ -94,7 +97,7 @@ h1 {
 					color: var(--gray-900);
 
 					&:visited {
-						color: var(--gray-900)
+						color: var(--gray-900);
 					}
 				}
 			}
@@ -105,5 +108,4 @@ h1 {
 		}
 	}
 }
-
 </style>

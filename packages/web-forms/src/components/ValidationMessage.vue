@@ -1,5 +1,5 @@
 <script setup lang="ts">
-withDefaults(defineProps<{message?: string, showMessage: boolean, addPlaceholder?: boolean}>(), {
+withDefaults(defineProps<{ message?: string; showMessage: boolean; addPlaceholder?: boolean }>(), {
 	message: undefined,
 	showMessage: false,
 	addPlaceholder: true,
@@ -15,7 +15,7 @@ withDefaults(defineProps<{message?: string, showMessage: boolean, addPlaceholder
 </template>
 
 <style scoped lang="scss">
-.validation-placeholder{
+.validation-placeholder {
 	min-height: 2rem;
 }
 .validation-message {

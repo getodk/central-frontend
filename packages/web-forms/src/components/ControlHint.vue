@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
-defineProps<{question: QuestionNode}>();
+defineProps<{ question: QuestionNode }>();
 </script>
 
 <template>
@@ -10,10 +10,8 @@ defineProps<{question: QuestionNode}>();
 </template>
 
 <style scoped lang="scss">
-
 .hint {
 	font-size: 0.85rem;
 	color: var(--text-color-secondary);
 }
-
 </style>

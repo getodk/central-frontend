@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
-const props = defineProps<{question: QuestionNode}>();
+const props = defineProps<{ question: QuestionNode }>();
 </script>
 
 <template>
@@ -11,7 +11,6 @@ const props = defineProps<{question: QuestionNode}>();
 </template>
 
 <style scoped lang="scss">
-
 label {
 	font-weight: 400;
 	line-height: 1.8rem;
@@ -20,5 +19,4 @@ label {
 		color: var(--error-text-color);
 	}
 }
-
 </style>
