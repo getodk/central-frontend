@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
           @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
-        <project-sort v-model="sortMode" @update:model-value="onSortModeChange"/>
+        <project-sort v-model="sortMode"/>
       </template>
       <template #body>
         <div v-if="projects.dataExists">
@@ -95,7 +95,15 @@ export default {
   setup() {
     const { currentUser, projects, userPreferences } = useRequestData();
 
-    const sortMode = computed(() => userPreferences.projectSortMode || 'latest');
+    const sortMode = computed({
+      get() {
+        return userPreferences.projectSortMode || 'latest';
+      },
+      set(val) {
+        userPreferences.set('projectSortMode', val);
+      },
+    });
+
     const sortFunction = computed(() => sortFunctions[sortMode.value]);
 
     const activeProjects = ref(null);
@@ -164,9 +172,6 @@ export default {
       const message = this.$t('alert.create');
       this.$router.push(this.projectPath(project.id))
         .then(() => { this.alert.success(message); });
-    },
-    onSortModeChange(sortMode) {
-      this.userPreferences.set('projectSortMode', sortMode);
     },
   }
 };
