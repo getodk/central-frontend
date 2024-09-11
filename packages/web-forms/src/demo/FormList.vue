@@ -57,20 +57,21 @@ const toggleCategory = (category:string) => {
 </template>
 
 <style scoped>
-	.component-root {
-		background: white;
-		height: 100vh;
-		margin-top: -25px;
-	}
+.component-root {
+	background: white;
+	height: 100vh;
+	margin-top: -25px;
+}
 
-	h1 {
-		margin-left: 10px;
-		padding-top: 20px;
-	}
-	.category-list {
-		padding: 0;
+h1 {
+	margin-left: 10px;
+	padding-top: 20px;
+}
 
-		> li {
+.category-list {
+	padding: 0;
+
+	> li {
 		list-style: none;
 		cursor: pointer;
 		margin: 10px;
