@@ -8,14 +8,16 @@ const formFixtureGlobImports = import.meta.glob<true, 'raw', string>('../../../u
 type CategoryType = Record<string, string[]>;
 
 const categories = Object.keys(formFixtureGlobImports)
-	.map(f => f.replace('../../../ui-solid/fixtures/xforms/', '').replace('.xml', ''))
+	.map(f => f.replace('../../../ui-solid/fixtures/xforms/', ''))
 	.reduce((result: CategoryType, f:string) => {
-		const parts = f.split('/');
-		const category = parts.length == 2 ? parts[0] : 'Other';
-		if(!result[category]){
-			result[category] = [];
-		}
-		result[category].push(parts.length == 2 ? parts[1]: parts[0])
+		// TODO! These would normally be inferred as `string | undefined`, but the
+		// current TypeScript configuration is overly lax. See
+		// https://github.com/getodk/web-forms/issues/212
+		const [categoryName, formName] = f.split('/');
+
+		result[categoryName] ??= [];
+		result[categoryName].push(formName)
+
 		return result;
 	}, {});
 </script>

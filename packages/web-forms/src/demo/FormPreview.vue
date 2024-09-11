@@ -13,19 +13,19 @@ const formFixtureGlobImports = import.meta.glob<false, 'raw', string>('../../../
 
 const categoryParam = route.params.category as string;
 const formParam = route.params.form as string;
-const formPath = '../../../ui-solid/fixtures/xforms/' + (route.params.category != 'Other' ? `${categoryParam}/${formParam}` : formParam) + '.xml';
+const formPath = `../../../ui-solid/fixtures/xforms/${categoryParam}/${formParam}`;
 
 const form = ref();
 formFixtureGlobImports[formPath]()
 	.then((xml:string) => {
 		form.value = xml;
 	})
-	.catch(() => { 
+	.catch(() => {
 		alert('Failed to load the Form XML');
 	});
 
 const handleSubmit = () => {
-	alert(`Submit button was pressed`);  
+	alert(`Submit button was pressed`);
 }
 
 </script>
@@ -34,5 +34,5 @@ const handleSubmit = () => {
 	<OdkWebForm v-if="form" :form-xml="form" @submit="handleSubmit" />
 	<div v-else>
 		Loading...
-	</div>  
+	</div>
 </template>
