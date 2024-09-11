@@ -112,7 +112,7 @@ export default defineConfig({
 		 * aspects of build product we wish to validate.
 		 */
 		{
-			command: 'yarn vite build-preview',
+			command: 'yarn dist-demo',
 			port: 5174,
 			reuseExistingServer: false,
 		},
