@@ -32,9 +32,9 @@ const categories = Object.keys(formFixtureGlobImports)
 					<summary>{{ categoryName }}</summary>
 
 					<ul class="form-list">
-						<li v-for="form in category" :key="form">
-							<RouterLink :to="`/form/${categoryName}/${form}`">
-								{{ form }}
+						<li v-for="formName in category" :key="formName">
+							<RouterLink :to="`/form/${categoryName}/${formName}`">
+								{{ formName }}
 							</RouterLink>
 						</li>
 					</ul>
