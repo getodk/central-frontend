@@ -4,8 +4,7 @@
 // TODO: much of this may be a good candidate for sharing from this internal package!
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
-import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => {
 	const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
@@ -69,6 +68,6 @@ export default defineConfig(() => {
 
 			exclude: ['e2e/**/*'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		} satisfies VitestTestConfig,
+		},
 	};
 });

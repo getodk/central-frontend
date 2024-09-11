@@ -2,11 +2,10 @@
 /// <reference types="vitest" />
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
-import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { resolve as resolvePath } from 'node:path';
-import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
 import dts from 'vite-plugin-dts';
+import { defineConfig } from 'vitest/config';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -128,6 +127,6 @@ export default defineConfig(({ mode }) => {
 			globals: false,
 			include: ['test/**/*.test.ts'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		} satisfies VitestTestConfig,
+		},
 	};
 });
