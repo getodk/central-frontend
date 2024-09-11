@@ -64,10 +64,13 @@ h1 {
 		cursor: pointer;
 		margin: 10px;
 		font-size: 20px;
-		padding: 10px;
 
-		&:hover {
-			background-color: var(--gray-100);
+		summary {
+			padding: 0.5rem;
+
+			&:hover {
+				background-color: var(--gray-100);
+			}
 		}
 
 		ul.form-list {
