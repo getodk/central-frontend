@@ -52,10 +52,10 @@ const formErrorMessage = computed(() => {
 
 watchEffect(() => {
 	if(submitPressed.value && formErrorMessage.value) {
-		(errorMessagePopover.value?.$el as HTMLElement)?.showPopover();
+		(errorMessagePopover.value?.$el as HTMLElement)?.showPopover?.();
 	}
 	else{
-		(errorMessagePopover.value?.$el as HTMLElement)?.hidePopover();
+		(errorMessagePopover.value?.$el as HTMLElement)?.hidePopover?.();
 	}
 })
 </script>
