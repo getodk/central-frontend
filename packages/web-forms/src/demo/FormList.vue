@@ -75,7 +75,6 @@ h1 {
 		list-style: none;
 		cursor: pointer;
 		margin: 10px;
-		text-transform: capitalize;
 		font-size: 20px;
 		padding: 10px;
 
