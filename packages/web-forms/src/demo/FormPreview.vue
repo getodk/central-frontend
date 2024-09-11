@@ -21,7 +21,10 @@ formFixtureGlobImports[formPath]()
 	.then((xml:string) => {
 		formXML.value = xml;
 	})
-	.catch(() => {
+	.catch((error) => {
+		// eslint-disable-next-line no-console
+		console.error('Failed to load the Form XML', error);
+
 		alert('Failed to load the Form XML');
 	});
 
