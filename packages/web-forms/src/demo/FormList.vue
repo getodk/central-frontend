@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 const formFixtureGlobImports = import.meta.glob<true, 'raw', string>('../../../ui-solid/fixtures/xforms/**/*.xml', {
@@ -19,18 +18,6 @@ const categories = Object.keys(formFixtureGlobImports)
 		result[category].push(parts.length == 2 ? parts[1]: parts[0])
 		return result;
 	}, {});
-
-const expandedCategories = ref(new Set());
-
-const toggleCategory = (category:string) => {
-	if(expandedCategories.value.has(category)) {
-		expandedCategories.value.delete(category);
-	}
-	else {
-		expandedCategories.value.add(category);
-	}
-}
-
 </script>
 
 <template>
@@ -40,17 +27,18 @@ const toggleCategory = (category:string) => {
 			<li
 				v-for="(category,categoryName) in categories"
 				:key="categoryName"
-				:class="{ 'expanded': expandedCategories.has(categoryName) }"
-				@click="toggleCategory(categoryName)"
 			>
-				{{ categoryName }}
-				<ul class="form-list">
-					<li v-for="form in category" :key="form">
-						<RouterLink :to="`/form/${categoryName}/${form}`">
-							{{ form }}
-						</RouterLink>
-					</li>
-				</ul>
+				<details>
+					<summary>{{ categoryName }}</summary>
+
+					<ul class="form-list">
+						<li v-for="form in category" :key="form">
+							<RouterLink :to="`/form/${categoryName}/${form}`">
+								{{ form }}
+							</RouterLink>
+						</li>
+					</ul>
+				</details>
 			</li>
 		</ul>
 	</div>
@@ -82,13 +70,7 @@ h1 {
 			background-color: var(--gray-100);
 		}
 
-		&::before {
-			content: '▶︎';
-			margin-right: 10px;
-		}
-
 		ul.form-list {
-			display: none;
 			padding: 0 0 0 20px;
 
 			li {
@@ -114,15 +96,6 @@ h1 {
 
 			li:hover {
 				background-color: var(--primary-50);
-			}
-		}
-
-		&.expanded {
-			&::before {
-				content: '▼';
-			}
-		 	ul.form-list {
-				display: block;
 			}
 		}
 	}

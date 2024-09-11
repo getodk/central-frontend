@@ -3,9 +3,14 @@ import { expect, Page, test } from '@playwright/test';
 
 const expandAllCategories = async (page: Page) => {
 	await page.evaluate(() => {
-		document.querySelectorAll('ul.category-list > li').forEach((c) => c.classList.add('expanded'));
+		const collapsedDetails = document.querySelectorAll<HTMLDetailsElement>('details:not([open])');
+
+		collapsedDetails.forEach((details) => {
+			details.open = true;
+		});
 	});
 };
+
 test('All forms are rendered and there is no console error', async ({ page, browserName }) => {
 	let consoleErrors = 0;
 
