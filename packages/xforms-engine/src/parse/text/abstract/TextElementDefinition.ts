@@ -2,10 +2,10 @@ import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts'
 import type { ElementTextRole } from '../../../client/TextRange.ts';
 import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
 import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';
-import { TextLiteralExpression } from '../../expression/text/TextLiteralExpression.ts';
-import { TextOutputExpression } from '../../expression/text/TextOutputExpression.ts';
-import { TextReferenceExpression } from '../../expression/text/TextReferenceExpression.ts';
-import { TextTranslationExpression } from '../../expression/text/TextTranslationExpression.ts';
+import { TextLiteralExpression } from '../../expression/TextLiteralExpression.ts';
+import { TextOutputExpression } from '../../expression/TextOutputExpression.ts';
+import { TextReferenceExpression } from '../../expression/TextReferenceExpression.ts';
+import { TextTranslationExpression } from '../../expression/TextTranslationExpression.ts';
 import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
 import type { HintDefinition } from '../HintDefinition.ts';
 import type { ItemLabelDefinition } from '../ItemLabelDefinition.ts';

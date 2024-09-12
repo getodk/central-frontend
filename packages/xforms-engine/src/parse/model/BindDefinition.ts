@@ -1,6 +1,6 @@
+import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
+import type { DependentExpression } from '../expression/abstract/DependentExpression.ts';
 import { BindComputation } from '../expression/BindComputation.ts';
-import { DependencyContext } from '../expression/DependencyContext.ts';
-import type { DependentExpression } from '../expression/DependentExpression.ts';
 import { MessageDefinition } from '../text/MessageDefinition.ts';
 import type { XFormDataType } from '../XFormDataType.ts';
 import { bindDataType } from '../XFormDataType.ts';

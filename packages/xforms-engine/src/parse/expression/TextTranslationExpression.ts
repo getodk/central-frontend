@@ -1,8 +1,8 @@
 import { expressionParser } from '@getodk/xpath/expressionParser.js';
-import type { AnyTextRangeDefinition } from '../../text/abstract/TextRangeDefinition.ts';
-import type { TranslationExpression } from '../../xpath/semantic-analysis.ts';
-import { isTranslationExpression } from '../../xpath/semantic-analysis.ts';
-import { TextChunkExpression } from './TextChunkExpression.ts';
+import type { AnyTextRangeDefinition } from '../text/abstract/TextRangeDefinition.ts';
+import type { TranslationExpression } from '../xpath/semantic-analysis.ts';
+import { isTranslationExpression } from '../xpath/semantic-analysis.ts';
+import { TextChunkExpression } from './abstract/TextChunkExpression.ts';
 
 export class TextTranslationExpression extends TextChunkExpression<'translation'> {
 	static fromMessage(

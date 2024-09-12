@@ -1,11 +1,14 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
-import { resolveDependencyNodesets } from '../xpath/dependency-analysis.ts';
-import type { ConstantExpression, ConstantTruthyExpression } from '../xpath/semantic-analysis.ts';
+import { resolveDependencyNodesets } from '../../xpath/dependency-analysis.ts';
+import type {
+	ConstantExpression,
+	ConstantTruthyExpression,
+} from '../../xpath/semantic-analysis.ts';
 import {
 	isConstantExpression,
 	isConstantTruthyExpression,
 	isTranslationExpression,
-} from '../xpath/semantic-analysis.ts';
+} from '../../xpath/semantic-analysis.ts';
 import type { DependencyContext } from './DependencyContext.ts';
 
 const evaluatorMethodsByResultType = {
@@ -51,7 +54,7 @@ export interface ConstantTruthyDependentExpression extends ConstantDependentExpr
 	readonly expression: ConstantTruthyExpression;
 }
 
-export class DependentExpression<Type extends DependentExpressionResultType> {
+export abstract class DependentExpression<Type extends DependentExpressionResultType> {
 	readonly dependencyReferences: ReadonlySet<string> = new Set();
 	readonly isTranslated: boolean = false;
 	readonly evaluatorMethod: DependentExpressionEvaluatorMethod<Type>;

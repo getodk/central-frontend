@@ -2,7 +2,7 @@ import type { NoteNode } from '../client/NoteNode.ts';
 import type { AnyBodyElementDefinition } from '../parse/body/BodyDefinition.ts';
 import type { InputDefinition } from './body/control/InputDefinition.ts';
 import { BindComputation } from './expression/BindComputation.ts';
-import type { ConstantTruthyDependentExpression } from './expression/DependentExpression.ts';
+import type { ConstantTruthyDependentExpression } from './expression/abstract/DependentExpression.ts';
 import type { BindDefinition } from './model/BindDefinition.ts';
 import { LeafNodeDefinition } from './model/LeafNodeDefinition.ts';
 import type { ParentNodeDefinition } from './model/NodeDefinition.ts';

@@ -1,7 +1,7 @@
 import type { ParsedTokenList } from '../../lib/TokenListParser.ts';
 import { TokenListParser } from '../../lib/TokenListParser.ts';
 import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
-import { DependencyContext } from '../expression/DependencyContext.ts';
+import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import { ControlDefinition } from './control/ControlDefinition.ts';
 import { InputDefinition } from './control/InputDefinition.ts';
 import type { AnySelectDefinition } from './control/select/SelectDefinition.ts';

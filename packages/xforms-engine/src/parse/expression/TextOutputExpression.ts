@@ -1,6 +1,6 @@
 import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
-import type { AnyTextRangeDefinition } from '../../text/abstract/TextRangeDefinition.ts';
-import { TextChunkExpression } from './TextChunkExpression.ts';
+import type { AnyTextRangeDefinition } from '../text/abstract/TextRangeDefinition.ts';
+import { TextChunkExpression } from './abstract/TextChunkExpression.ts';
 
 interface OutputElement extends KnownAttributeLocalNamedElement<'output', 'value'> {}
 

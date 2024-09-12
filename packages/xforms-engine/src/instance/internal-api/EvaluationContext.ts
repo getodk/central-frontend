@@ -1,7 +1,7 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
-import type { DependentExpression } from '../../parse/expression/DependentExpression.ts';
+import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';
 import type { TranslationContext } from './TranslationContext.ts';
 

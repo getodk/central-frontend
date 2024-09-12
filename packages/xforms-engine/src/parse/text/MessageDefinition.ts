@@ -1,6 +1,6 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import { TextLiteralExpression } from '../expression/text/TextLiteralExpression.ts';
-import { TextTranslationExpression } from '../expression/text/TextTranslationExpression.ts';
+import { TextLiteralExpression } from '../expression/TextLiteralExpression.ts';
+import { TextTranslationExpression } from '../expression/TextTranslationExpression.ts';
 import type { BindDefinition } from '../model/BindDefinition.ts';
 import type { TextBindAttributeLocalName, TextSourceNode } from './abstract/TextRangeDefinition.ts';
 import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';

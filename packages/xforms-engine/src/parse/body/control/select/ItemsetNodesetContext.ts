@@ -1,5 +1,5 @@
-import { DependencyContext } from '../../../expression/DependencyContext.ts';
-import type { AnyDependentExpression } from '../../../expression/DependentExpression.ts';
+import { DependencyContext } from '../../../expression/abstract/DependencyContext.ts';
+import type { AnyDependentExpression } from '../../../expression/abstract/DependentExpression.ts';
 import type { ItemsetDefinition } from './ItemsetDefinition.ts';
 
 export class ItemsetNodesetContext extends DependencyContext {

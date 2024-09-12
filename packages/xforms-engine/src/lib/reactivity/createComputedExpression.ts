@@ -7,7 +7,7 @@ import type { SubscribableDependency } from '../../instance/internal-api/Subscri
 import type {
 	DependentExpression,
 	DependentExpressionResultType,
-} from '../../parse/expression/DependentExpression.ts';
+} from '../../parse/expression/abstract/DependentExpression.ts';
 import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
 interface ComputedExpressionResults {

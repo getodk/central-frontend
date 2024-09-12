@@ -1,5 +1,5 @@
 import type { ItemsetDefinition } from '../body/control/select/ItemsetDefinition.ts';
-import { DependentExpression } from './DependentExpression.ts';
+import { DependentExpression } from './abstract/DependentExpression.ts';
 
 export class ItemsetValueExpression extends DependentExpression<'string'> {
 	constructor(

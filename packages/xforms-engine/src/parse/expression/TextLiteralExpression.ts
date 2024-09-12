@@ -1,5 +1,5 @@
-import type { AnyTextRangeDefinition } from '../../text/abstract/TextRangeDefinition.ts';
-import { TextChunkExpression } from './TextChunkExpression.ts';
+import type { AnyTextRangeDefinition } from '../text/abstract/TextRangeDefinition.ts';
+import { TextChunkExpression } from './abstract/TextChunkExpression.ts';
 
 export type TextLiteralSourceNode = Attr | Text;
 

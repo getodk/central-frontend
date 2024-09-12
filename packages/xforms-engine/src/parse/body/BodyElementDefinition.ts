@@ -1,4 +1,4 @@
-import { DependencyContext } from '../expression/DependencyContext.ts';
+import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import type { HintDefinition } from '../text/HintDefinition.ts';
 import type { ItemLabelDefinition } from '../text/ItemLabelDefinition.ts';
 import type { LabelDefinition } from '../text/LabelDefinition.ts';

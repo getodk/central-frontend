@@ -1,10 +1,10 @@
 import type { TextChunkSource } from '../../../client/TextRange.ts';
 import type { AnyTextRangeDefinition } from '../../text/abstract/TextRangeDefinition.ts';
-import { DependentExpression } from '../DependentExpression.ts';
-import type { TextLiteralExpression } from './TextLiteralExpression.ts';
-import type { TextOutputExpression } from './TextOutputExpression.ts';
-import type { TextReferenceExpression } from './TextReferenceExpression.ts';
-import type { TextTranslationExpression } from './TextTranslationExpression.ts';
+import type { TextLiteralExpression } from '../TextLiteralExpression.ts';
+import type { TextOutputExpression } from '../TextOutputExpression.ts';
+import type { TextReferenceExpression } from '../TextReferenceExpression.ts';
+import type { TextTranslationExpression } from '../TextTranslationExpression.ts';
+import { DependentExpression } from './DependentExpression.ts';
 
 interface TextChunkExpressionOptions {
 	readonly isTranslated?: true;
