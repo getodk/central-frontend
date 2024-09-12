@@ -1,15 +1,9 @@
 /// <reference types="vite/client" />
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
-import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import { resolve as resolvePath } from 'node:path';
-import type { UserConfig } from 'vite';
-import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import type { UserConfig as VitestConfig } from 'vitest/config';
-
-// TODO: this will hopefully be unnecessary when we update Vite/Vitest.
-interface ViteConfig extends UserConfig, Pick<VitestConfig, 'test'> {}
+import { defineConfig } from 'vitest/config';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -132,6 +126,6 @@ export default defineConfig(({ mode }) => {
 			include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
 			exclude: ['src/**/*.tsx', 'test/**/*.tsx'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		} satisfies VitestTestConfig,
-	} satisfies ViteConfig;
+		},
+	};
 });

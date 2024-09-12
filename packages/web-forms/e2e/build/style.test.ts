@@ -4,7 +4,7 @@ test('Build includes component-defined styles', async ({ page }) => {
 	await page.goto('http://localhost:5174/');
 
 	// This ensures that the application is loaded before proceeding forward.
-	await expect(page.getByText('Calculate (simple)').first()).toBeVisible();
+	await expect(page.getByText('Demo Forms').first()).toBeVisible();
 
 	// Get the (Sass-defined) large breakpoint size
 	// [In theory, if we can get this and it's not a number, we've already validated styles. Below expands on that to leave some breadcrumbs]

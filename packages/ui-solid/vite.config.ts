@@ -4,13 +4,12 @@
 // TODO: share Vite config where makes sense
 
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
-import type { VitestTestConfig } from '@getodk/common/types/vitest-config.ts';
 import suidPlugin from '@suid/vite-plugin';
 import { resolve as resolvePath } from 'node:path';
 import unpluginFonts from 'unplugin-fonts/vite';
-import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import solidPlugin from 'vite-plugin-solid';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig(({ mode }) => {
 	const isDev = mode === 'development';
@@ -179,6 +178,6 @@ export default defineConfig(({ mode }) => {
 			globals: false,
 			exclude: ['e2e/**/*'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		} satisfies VitestTestConfig,
+		},
 	};
 });
