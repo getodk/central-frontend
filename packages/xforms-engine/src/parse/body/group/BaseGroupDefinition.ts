@@ -6,7 +6,6 @@ import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
 import type { StructureElementAppearanceDefinition } from '../appearance/structureElementAppearanceParser.ts';
 import { structureElementAppearanceParser } from '../appearance/structureElementAppearanceParser.ts';
 import {
-	BodyDefinition,
 	type BodyElementDefinitionArray,
 	type BodyElementParentContext,
 } from '../BodyDefinition.ts';
@@ -73,28 +72,18 @@ export abstract class BaseGroupDefinition<
 	readonly appearances: StructureElementAppearanceDefinition;
 	override readonly label: LabelDefinition | null;
 
-	constructor(
-		form: XFormDefinition,
-		parent: BodyElementParentContext,
-		element: Element,
-		children?: BodyElementDefinitionArray
-	) {
+	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
 		super(form, parent, element);
 
-		this.children = children ?? this.getChildren(element);
-		this.reference = parseNodesetReference(parent, element, 'ref');
-		this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
-		this.label = LabelDefinition.forGroup(form, this);
-	}
-
-	getChildren(element: Element): BodyElementDefinitionArray {
-		const { form } = this;
-		const children = Array.from(element.children).filter((child) => {
+		const childElements = Array.from(element.children).filter((child) => {
 			const childName = child.localName;
 
 			return childName !== 'label';
 		});
 
-		return BodyDefinition.getChildElementDefinitions(form, this, element, children);
+		this.children = this.body.getChildElementDefinitions(form, this, element, childElements);
+		this.reference = parseNodesetReference(parent, element, 'ref');
+		this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
+		this.label = LabelDefinition.forGroup(form, this);
 	}
 }

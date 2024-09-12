@@ -3,7 +3,7 @@ import type { HintDefinition } from '../text/HintDefinition.ts';
 import type { ItemLabelDefinition } from '../text/ItemLabelDefinition.ts';
 import type { LabelDefinition } from '../text/LabelDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { BodyElementParentContext } from './BodyDefinition.ts';
+import type { BodyDefinition, BodyElementParentContext } from './BodyDefinition.ts';
 
 /**
  * These category names roughly correspond to each of the ODK XForms spec's
@@ -12,13 +12,18 @@ import type { BodyElementParentContext } from './BodyDefinition.ts';
  */
 type BodyElementCategory = 'control' | 'structure' | 'support' | 'UNSUPPORTED';
 
-export abstract class BodyElementDefinition<Type extends string> extends DependencyContext {
+export abstract class BodyElementDefinition<Type extends string>
+	extends DependencyContext
+	implements BodyElementParentContext
+{
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	static isCompatible(localName: string, element: Element): boolean {
 		throw new Error('Must be overridden by BodyElementDefinition subclass');
 	}
+
+	readonly body: BodyDefinition;
 
 	abstract readonly category: BodyElementCategory;
 	abstract readonly type: Type;
@@ -34,6 +39,7 @@ export abstract class BodyElementDefinition<Type extends string> extends Depende
 		readonly element: Element
 	) {
 		super();
+		this.body = parent.body;
 		this.parentReference = parent.reference;
 	}
 

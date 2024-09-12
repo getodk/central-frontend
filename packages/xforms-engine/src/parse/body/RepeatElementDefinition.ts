@@ -4,7 +4,6 @@ import type {
 	BodyElementDefinitionArray,
 	BodyElementParentContext,
 } from '../body/BodyDefinition.ts';
-import { BodyDefinition } from '../body/BodyDefinition.ts';
 import { LabelDefinition } from '../text/LabelDefinition.ts';
 import { parseNodesetReference } from '../xpath/reference-parsing.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';
@@ -48,7 +47,7 @@ export class RepeatElementDefinition extends BodyElementDefinition<'repeat'> {
 
 			return localName !== 'label' && localName !== 'group-label';
 		});
-		const children = BodyDefinition.getChildElementDefinitions(form, this, element, childElements);
+		const children = this.body.getChildElementDefinitions(form, this, element, childElements);
 
 		this.children = children;
 	}

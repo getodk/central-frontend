@@ -13,6 +13,7 @@ import { RepeatElementDefinition } from './RepeatElementDefinition.ts';
 import { UnsupportedBodyElementDefinition } from './UnsupportedBodyElementDefinition.ts';
 
 export interface BodyElementParentContext {
+	readonly body: BodyDefinition;
 	readonly reference: string | null;
 	readonly element: Element;
 }
@@ -145,25 +146,8 @@ const bodyClassParser = new TokenListParser(['pages' /*, 'theme-grid' */]);
 
 export type BodyClassList = ParsedTokenList<typeof bodyClassParser>;
 
-export class BodyDefinition extends DependencyContext {
-	static getChildElementDefinitions(
-		form: XFormDefinition,
-		parent: BodyElementParentContext,
-		parentElement: Element,
-		children: readonly Element[] = Array.from(parentElement.children)
-	): readonly AnyBodyElementDefinition[] {
-		return Array.from(children).map((element) => {
-			const { localName } = element;
-
-			for (const Constructor of BodyElementDefinitionConstructors) {
-				if (Constructor.isCompatible(localName, element)) {
-					return new Constructor(form, parent, element);
-				}
-			}
-
-			return new UnsupportedBodyElementDefinition(form, parent, element);
-		});
-	}
+export class BodyDefinition extends DependencyContext implements BodyElementParentContext {
+	readonly body: BodyDefinition;
 
 	readonly element: Element;
 
@@ -196,17 +180,38 @@ export class BodyDefinition extends DependencyContext {
 	constructor(protected readonly form: XFormDefinition) {
 		super();
 
+		this.body = this;
+
 		const { body: element } = form.xformDOM;
 
 		this.reference = form.rootReference;
 		this.element = element;
 		this.classes = bodyClassParser.parseFrom(element, 'class');
-		this.elements = BodyDefinition.getChildElementDefinitions(form, this, element);
+		this.elements = this.getChildElementDefinitions(form, this, element);
 		this.elementsByReference = new BodyElementMap(this.elements);
 	}
 
 	getBodyElement(reference: string): AnyBodyElementDefinition | null {
 		return this.elementsByReference.get(reference) ?? null;
+	}
+
+	getChildElementDefinitions(
+		form: XFormDefinition,
+		parent: BodyElementParentContext,
+		parentElement: Element,
+		children: readonly Element[] = Array.from(parentElement.children)
+	): readonly AnyBodyElementDefinition[] {
+		return Array.from(children).map((element) => {
+			const { localName } = element;
+
+			for (const Constructor of BodyElementDefinitionConstructors) {
+				if (Constructor.isCompatible(localName, element)) {
+					return new Constructor(form, parent, element);
+				}
+			}
+
+			return new UnsupportedBodyElementDefinition(form, parent, element);
+		});
 	}
 
 	toJSON() {
