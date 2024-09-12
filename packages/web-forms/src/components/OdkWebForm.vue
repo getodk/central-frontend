@@ -91,8 +91,7 @@ watchEffect(() => {
 				<span class="caption">Powered by</span>
 				<img
 					class="logo"
-					srcset="../assets/images/odk-logo-small@1x.png,
-								  ../assets/images/odk-logo-small@2x.png 2x"
+					srcset="../assets/images/odk-logo-small@1x.png, ../assets/images/odk-logo-small@2x.png 2x"
 					src="../assets/images/odk-logo-small@2x.png"
 					alt="ODK"
 					height="15"

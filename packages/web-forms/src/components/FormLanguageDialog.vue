@@ -27,10 +27,10 @@ const handleCancel = () => {
 
 <template>
 	<PrimeDialog :visible="state" modal header="Change language" class="language-dialog" :closable="false" @update:visible="handleCancel()">
-		<label 
-			v-for="lang in languages" 
-			:key="lang.language" 
-			:for="lang.language" 
+		<label
+			v-for="lang in languages"
+			:key="lang.language"
+			:for="lang.language"
 			class="lang-options"
 		>
 			<PrimeRadioButton

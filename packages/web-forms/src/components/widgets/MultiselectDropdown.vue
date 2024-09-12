@@ -25,16 +25,16 @@ if (props.question.appearances['no-buttons']) {
 </script>
 
 <template>
-	<PrimeMultiSelect 
+	<PrimeMultiSelect
 		class="multi-select-dropdown"
 		:input-id="question.nodeId"
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
-		:show-toggle-all="false"				
-		:options="question.currentState.valueOptions" 
-		:option-label="getOptionLabel" 
+		:show-toggle-all="false"
+		:options="question.currentState.valueOptions"
+		:option-label="getOptionLabel"
 		:panel-class="panelClass"
-		:model-value="question.currentState.value"		
+		:model-value="question.currentState.value"
 		@update:model-value="setSelectNValue"
 		@change="$emit('change')"
 	/>

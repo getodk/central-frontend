@@ -14,7 +14,7 @@ const setSelect1Value = (item: SelectItem) => {
 	<label
 		v-for="option in question.currentState.valueOptions"
 		:key="option.value"
-		:for="question.nodeId + '_' + option.value" 
+		:for="question.nodeId + '_' + option.value"
 		:class="{
 			'value-option': true,
 			active: question.currentState.value[0] === option,
@@ -32,7 +32,7 @@ const setSelect1Value = (item: SelectItem) => {
 			@change="$emit('change')"
 		/>
 		<span class="label-text">
-			{{ option.label?.asString }} 
+			{{ option.label?.asString }}
 		</span>
 	</label>
 </template>

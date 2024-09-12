@@ -14,14 +14,14 @@ const getOptionLabel = (o: SelectItem) => {
 </script>
 
 <template>
-	<PrimeDropdown 
+	<PrimeDropdown
 		:id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
-		:model-value="question.currentState.value[0]" 
-		:options="question.currentState.valueOptions" 
-		:option-label="getOptionLabel" 
+		:model-value="question.currentState.value[0]"
+		:options="question.currentState.valueOptions"
+		:option-label="getOptionLabel"
 		@update:model-value="setSelect1Value"
 		@change="$emit('change')"
 	/>

@@ -16,12 +16,12 @@ const setSelectNValue = (values: SelectItem[]) => {
 </script>
 
 <template>
-	<label 
+	<label
 		v-for="option of question.currentState.valueOptions"
 		:key="option.value"
-		:class="[{ 
+		:class="[{
 			'value-option': true,
-			active: question.currentState.value.find(v => v.value === option.value), 
+			active: question.currentState.value.find(v => v.value === option.value),
 			disabled: question.currentState.readonly,
 			'no-buttons': question.appearances['no-buttons'] }]"
 		:for="question.nodeId + '_' + option.value"

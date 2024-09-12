@@ -45,7 +45,7 @@ const toggleMenu = (event: Event) => {
 		<template #header>
 			<div class="panel-title" role="button" @click="toggle">
 				<h2>
-					<span class="chevron" :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" /> 
+					<span class="chevron" :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" />
 					<span v-if="labelNumber" class="label-number">{{ labelNumber }}</span>
 					<span>{{ title }}</span>
 					<span v-if="labelIcon" class="ml-2" :class="labelIcon" />
