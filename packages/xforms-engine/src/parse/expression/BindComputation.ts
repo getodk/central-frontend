@@ -1,5 +1,5 @@
-import { DependentExpression } from '../expression/DependentExpression.ts';
-import type { BindDefinition } from './BindDefinition.ts';
+import type { BindDefinition } from '../model/BindDefinition.ts';
+import { DependentExpression } from './DependentExpression.ts';
 
 const defaultBindComputationExpressions = {
 	calculate: null,

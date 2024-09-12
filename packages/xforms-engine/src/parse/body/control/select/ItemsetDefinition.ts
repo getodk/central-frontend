@@ -1,10 +1,10 @@
 import { getValueElement, type ItemsetElement } from '../../../../lib/dom/query.ts';
+import { ItemsetNodesetExpression } from '../../../expression/ItemsetNodesetExpression.ts';
+import { ItemsetValueExpression } from '../../../expression/ItemsetValueExpression.ts';
 import { ItemsetLabelDefinition } from '../../../text/ItemsetLabelDefinition.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
 import { parseNodesetReference } from '../../../xpath/reference-parsing.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
-import { ItemsetNodesetExpression } from './ItemsetNodesetExpression.ts';
-import { ItemsetValueExpression } from './ItemsetValueExpression.ts';
 import type { AnySelectDefinition } from './SelectDefinition.ts';
 
 export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {

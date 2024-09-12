@@ -1,10 +1,10 @@
+import { BindComputation } from '../expression/BindComputation.ts';
 import { DependencyContext } from '../expression/DependencyContext.ts';
 import type { DependentExpression } from '../expression/DependentExpression.ts';
 import { MessageDefinition } from '../text/MessageDefinition.ts';
 import type { XFormDataType } from '../XFormDataType.ts';
 import { bindDataType } from '../XFormDataType.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import { BindComputation } from './BindComputation.ts';
 import type { BindElement } from './BindElement.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 

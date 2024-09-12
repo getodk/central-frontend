@@ -1,4 +1,4 @@
-import type { BindComputation } from '../../parse/model/BindComputation.ts';
+import type { BindComputation } from '../../parse/expression/BindComputation.ts';
 import type { MessageDefinition } from '../../parse/text/MessageDefinition.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';

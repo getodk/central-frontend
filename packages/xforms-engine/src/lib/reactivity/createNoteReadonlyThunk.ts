@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
-import type { BindComputation } from '../../parse/model/BindComputation.ts';
+import type { BindComputation } from '../../parse/expression/BindComputation.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 
 export const createNoteReadonlyThunk = (

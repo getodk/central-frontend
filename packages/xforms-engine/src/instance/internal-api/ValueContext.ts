@@ -1,5 +1,5 @@
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
-import type { BindComputation } from '../../parse/model/BindComputation.ts';
+import type { BindComputation } from '../../parse/expression/BindComputation.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 
 export type InstanceValue = string;
