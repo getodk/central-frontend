@@ -1,14 +1,14 @@
 import { expressionParser } from '@getodk/xpath/expressionParser.js';
-import type { TranslationExpression } from '../xpath/semantic-analysis.ts';
-import { isTranslationExpression } from '../xpath/semantic-analysis.ts';
-import { TextChunkDefinition } from './abstract/TextChunkDefinition.ts';
-import type { AnyTextRangeDefinition } from './abstract/TextRangeDefinition.ts';
+import type { AnyTextRangeDefinition } from '../../text/abstract/TextRangeDefinition.ts';
+import type { TranslationExpression } from '../../xpath/semantic-analysis.ts';
+import { isTranslationExpression } from '../../xpath/semantic-analysis.ts';
+import { TextChunkExpression } from './TextChunkExpression.ts';
 
-export class TranslationChunkDefinition extends TextChunkDefinition<'translation'> {
+export class TextTranslationExpression extends TextChunkExpression<'translation'> {
 	static fromMessage(
 		context: AnyTextRangeDefinition,
 		maybeExpression: string
-	): TranslationChunkDefinition | null {
+	): TextTranslationExpression | null {
 		try {
 			expressionParser.parse(maybeExpression);
 		} catch {

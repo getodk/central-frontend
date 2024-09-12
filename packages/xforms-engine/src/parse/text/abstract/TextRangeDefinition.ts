@@ -3,8 +3,8 @@ import type { TextRole } from '../../../client/TextRange.ts';
 import { DependencyContext } from '../../../parse/expression/DependencyContext.ts';
 import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
 import type { AnyDependentExpression } from '../../expression/DependentExpression.ts';
+import type { AnyTextChunkExpression } from '../../expression/text/TextChunkExpression.ts';
 import type { AnyMessageDefinition } from '../MessageDefinition.ts';
-import type { AnyTextChunkDefinition } from './TextChunkDefinition.ts';
 import type { AnyTextElementDefinition } from './TextElementDefinition.ts';
 
 export type TextBindAttributeLocalName = 'constraintMsg' | 'requiredMsg';
@@ -25,7 +25,7 @@ export abstract class TextRangeDefinition<Role extends TextRole> extends Depende
 	readonly parentReference: string | null;
 	readonly reference: string | null;
 
-	abstract readonly chunks: readonly AnyTextChunkDefinition[];
+	abstract readonly chunks: readonly AnyTextChunkExpression[];
 
 	override get isTranslated(): boolean {
 		return (

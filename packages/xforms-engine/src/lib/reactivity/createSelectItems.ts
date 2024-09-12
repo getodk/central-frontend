@@ -21,7 +21,7 @@ import { createTextRange } from './text/createTextRange.ts';
 type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
 
 const derivedItemLabel = (context: EvaluationContext, value: string): DerivedItemLabel => {
-	const chunk = new TextChunk(context.root, 'static', value);
+	const chunk = new TextChunk(context.root, 'literal', value);
 
 	return new TextRange('form-derived', 'item-label', [chunk]);
 };

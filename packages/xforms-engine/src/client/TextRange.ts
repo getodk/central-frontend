@@ -24,7 +24,7 @@ import type { RootNodeState } from './RootNode.ts';
  *       Here, `is-translation-expr()` is a fictional shorthand for checking
  *       that the attribute's value is a valid `jr:itext(...)` FunctionCall
  *       expression. Note that, per spec, these attributes **do not accept
- *       arbitrary XPath expressions**! The non-translation case is  treated as
+ *       arbitrary XPath expressions**! The non-translation case is treated as
  *       static text, not parsed for e.g. an XPath [string] Literal expression.
  *       This is why we have introduced this 'translation' case, distinct from
  *       'reference', which previously handled translated labels and hints.
@@ -34,7 +34,7 @@ import type { RootNodeState } from './RootNode.ts';
  *
  *     - `h:body//label/@ref[is-translation-expr()]`
  *
- * - 'static':
+ * - 'literal':
  *   - `h:head//bind/@jr:constraintMsg[not(is-translation-expr())]`
  *   - `h:head//bind/@jr:requiredMsg[not(is-translation-expr())]`
  *   - `h:body//label/text()`
@@ -60,11 +60,10 @@ import type { RootNodeState } from './RootNode.ts';
  */
 // prettier-ignore
 export type TextChunkSource =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| 'literal'
 	| 'output'
 	| 'reference'
-	| 'translation'
-	| 'static';
+	| 'translation';
 
 /**
  * @todo This (and everything else to do with {@link TextRange}s is for

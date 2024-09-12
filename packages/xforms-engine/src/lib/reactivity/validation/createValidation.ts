@@ -33,7 +33,7 @@ const engineViolationMessage = <Role extends ValidationTextRole>(
 	role: Role
 ): Accessor<EngineViolationMessage<Role>> => {
 	const messageText = VALIDATION_TEXT[role];
-	const chunk = new TextChunk(context.root, 'static', messageText);
+	const chunk = new TextChunk(context.root, 'literal', messageText);
 	const message = new TextRange('engine', role, [chunk]);
 
 	return () => message;
