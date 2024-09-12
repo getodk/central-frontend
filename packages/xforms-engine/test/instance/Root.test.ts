@@ -11,7 +11,6 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../../src/XFormDefinition.ts';
 import type { FetchResource } from '../../src/client/EngineConfig.ts';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
@@ -20,6 +19,7 @@ import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 import { createReactiveScope, type ReactiveScope } from '../../src/lib/reactivity/scope.ts';
 import { createUniqueId } from '../../src/lib/unique-id.ts';
+import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
 import { reactiveTestScope } from '../helpers/reactive/internal.ts';
 
 describe('Instance root', () => {

@@ -1,7 +1,7 @@
-import { RepeatElementDefinition } from '../../body/RepeatElementDefinition.ts';
 import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeControlledNode.ts';
-import { DependentExpression } from '../../expression/DependentExpression.ts';
+import { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { isConstantTruthyExpression } from '../xpath/semantic-analysis.ts';
+import { DependentExpression } from './abstract/DependentExpression.ts';
 
 /**
  * Represents either of these

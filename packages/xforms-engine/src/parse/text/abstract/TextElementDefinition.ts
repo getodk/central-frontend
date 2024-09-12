@@ -1,28 +1,28 @@
 import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
-import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import type { ItemDefinition } from '../../../body/control/select/ItemDefinition.ts';
 import type { ElementTextRole } from '../../../client/TextRange.ts';
+import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
+import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';
+import { TextLiteralExpression } from '../../expression/TextLiteralExpression.ts';
+import { TextOutputExpression } from '../../expression/TextOutputExpression.ts';
+import { TextReferenceExpression } from '../../expression/TextReferenceExpression.ts';
+import { TextTranslationExpression } from '../../expression/TextTranslationExpression.ts';
 import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
 import type { HintDefinition } from '../HintDefinition.ts';
 import type { ItemLabelDefinition } from '../ItemLabelDefinition.ts';
 import type { ItemsetLabelDefinition } from '../ItemsetLabelDefinition.ts';
 import type { LabelDefinition, LabelOwner } from '../LabelDefinition.ts';
-import { OutputChunkDefinition } from '../OutputChunkDefinition.ts';
-import { ReferenceChunkDefinition } from '../ReferenceChunkDefinition.ts';
-import { StaticTextChunkDefinition } from '../StaticTextChunkDefinition.ts';
-import { TranslationChunkDefinition } from '../TranslationChunkDefinition.ts';
 import type { TextSourceNode } from './TextRangeDefinition.ts';
 import { TextRangeDefinition } from './TextRangeDefinition.ts';
 
 // prettier-ignore
 export type RefAttributeChunk =
-	| ReferenceChunkDefinition
-	| TranslationChunkDefinition;
+	| TextReferenceExpression
+	| TextTranslationExpression;
 
 // prettier-ignore
 type TextElementChildChunk =
-	| OutputChunkDefinition
-	| StaticTextChunkDefinition;
+	| TextOutputExpression
+	| TextLiteralExpression;
 
 // prettier-ignore
 type TextElementChunks =
@@ -45,19 +45,19 @@ export abstract class TextElementDefinition<
 		if (refExpression == null) {
 			this.chunks = Array.from(sourceNode.childNodes).flatMap((childNode) => {
 				if (isElementNode(childNode)) {
-					return OutputChunkDefinition.from(context, childNode) ?? [];
+					return TextOutputExpression.from(context, childNode) ?? [];
 				}
 
 				if (isTextNode(childNode)) {
-					return StaticTextChunkDefinition.from(context, childNode.data);
+					return TextLiteralExpression.from(context, childNode.data);
 				}
 
 				return [];
 			});
 		} else {
 			const refChunk =
-				TranslationChunkDefinition.from(context, refExpression) ??
-				ReferenceChunkDefinition.from(context, refExpression);
+				TextTranslationExpression.from(context, refExpression) ??
+				TextReferenceExpression.from(context, refExpression);
 			this.chunks = [refChunk];
 		}
 	}

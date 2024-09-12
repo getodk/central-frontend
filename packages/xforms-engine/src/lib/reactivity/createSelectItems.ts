@@ -2,8 +2,6 @@ import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
-import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';
-import type { ItemsetDefinition } from '../../body/control/select/ItemsetDefinition.ts';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
 import type { SelectItem } from '../../index.ts';
 import type { SelectField } from '../../instance/SelectField.ts';
@@ -14,6 +12,8 @@ import type {
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
+import type { ItemDefinition } from '../../parse/body/control/select/ItemDefinition.ts';
+import type { ItemsetDefinition } from '../../parse/body/control/select/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
@@ -21,7 +21,7 @@ import { createTextRange } from './text/createTextRange.ts';
 type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
 
 const derivedItemLabel = (context: EvaluationContext, value: string): DerivedItemLabel => {
-	const chunk = new TextChunk(context.root, 'static', value);
+	const chunk = new TextChunk(context.root, 'literal', value);
 
 	return new TextRange('form-derived', 'item-label', [chunk]);
 };

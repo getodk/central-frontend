@@ -1,5 +1,5 @@
-import type { RepeatInstanceDefinition } from '../../model/RepeatInstanceDefinition.ts';
-import type { RepeatTemplateDefinition } from '../../model/RepeatTemplateDefinition.ts';
+import type { RepeatInstanceDefinition } from '../../parse/model/RepeatInstanceDefinition.ts';
+import type { RepeatTemplateDefinition } from '../../parse/model/RepeatTemplateDefinition.ts';
 import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
 import type { GeneralChildNode, RepeatRangeNode } from '../hierarchy.ts';
 import type { NodeAppearances } from '../NodeAppearances.ts';

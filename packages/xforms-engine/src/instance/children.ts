@@ -1,9 +1,9 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
-import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
-import type { SubtreeDefinition as ModelSubtreeDefinition } from '../model/SubtreeDefinition.ts';
-import { NoteNodeDefinition } from '../parse/NoteNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
+import type { SubtreeDefinition as ModelSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import { ModelValue, type ModelValueDefinition } from './ModelValue.ts';

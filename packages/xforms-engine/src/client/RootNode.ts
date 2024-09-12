@@ -1,5 +1,5 @@
-import type { BodyClassList } from '../body/BodyDefinition.ts';
-import type { RootDefinition } from '../model/RootDefinition.ts';
+import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
+import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';

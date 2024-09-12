@@ -17,7 +17,7 @@ import { createNodeLabel } from '../../lib/reactivity/text/createNodeLabel.ts';
 import type {
 	AnyRepeatRangeDefinition,
 	ControlledRepeatRangeDefinition,
-} from '../../model/RepeatRangeDefinition.ts';
+} from '../../parse/model/RepeatRangeDefinition.ts';
 import type {
 	AnyDescendantNode,
 	DescendantNodeParent,

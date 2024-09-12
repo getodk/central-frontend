@@ -1,4 +1,4 @@
-import type { AnyRepeatRangeDefinition } from '../../model/RepeatRangeDefinition.ts';
+import type { AnyRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
 import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
 import type { NodeAppearances } from '../NodeAppearances.ts';
 import type { RootNode } from '../RootNode.ts';

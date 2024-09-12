@@ -2,7 +2,7 @@ import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatR
 import type { RepeatRangeUncontrolledNode } from '../../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
 import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { UncontrolledRepeatRangeDefinition } from '../../model/RepeatRangeDefinition.ts';
+import type { UncontrolledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';

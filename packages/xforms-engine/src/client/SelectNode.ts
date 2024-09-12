@@ -1,5 +1,5 @@
-import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
-import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
+import type { AnySelectDefinition } from '../parse/body/control/select/SelectDefinition.ts';
+import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';

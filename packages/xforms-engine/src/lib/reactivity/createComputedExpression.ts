@@ -2,12 +2,12 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
+import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
+import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import type {
 	DependentExpression,
 	DependentExpressionResultType,
-} from '../../expression/DependentExpression.ts';
-import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
+} from '../../parse/expression/abstract/DependentExpression.ts';
 import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
 interface ComputedExpressionResults {

@@ -1,5 +1,5 @@
-import type { InputDefinition } from '../body/control/InputDefinition.ts';
-import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
+import type { InputDefinition } from '../parse/body/control/InputDefinition.ts';
+import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';

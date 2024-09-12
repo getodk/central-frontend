@@ -1,12 +1,12 @@
-import type { BindComputation } from '../../model/BindComputation.ts';
+import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
 import type { MessageDefinition } from '../../parse/text/MessageDefinition.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';
 
 interface ValidationContextDefinitionBind {
-	readonly constraint: BindComputation<'constraint'>;
+	readonly constraint: BindComputationExpression<'constraint'>;
 	readonly constraintMsg: MessageDefinition<'constraintMsg'> | null;
-	readonly required: BindComputation<'required'>;
+	readonly required: BindComputationExpression<'required'>;
 	readonly requiredMsg: MessageDefinition<'requiredMsg'> | null;
 }
 

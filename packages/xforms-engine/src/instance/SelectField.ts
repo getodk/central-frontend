@@ -1,7 +1,6 @@
 import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace.ts';
 import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
-import type { AnySelectDefinition } from '../body/control/select/SelectDefinition.ts';
 import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
@@ -16,7 +15,8 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
+import type { AnySelectDefinition } from '../parse/body/control/select/SelectDefinition.ts';
+import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';

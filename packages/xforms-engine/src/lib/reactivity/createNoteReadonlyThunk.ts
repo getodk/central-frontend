@@ -1,11 +1,11 @@
 import type { Accessor } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
-import type { BindComputation } from '../../model/BindComputation.ts';
+import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 
 export const createNoteReadonlyThunk = (
 	context: EvaluationContext,
-	readonlyDefinition: BindComputation<'readonly'>
+	readonlyDefinition: BindComputationExpression<'readonly'>
 ): Accessor<true> => {
 	if (!readonlyDefinition.isConstantTruthyExpression()) {
 		throw new Error('Expected a static readonly expression');

@@ -1,4 +1,4 @@
-import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { RootNode } from './RootNode.ts';

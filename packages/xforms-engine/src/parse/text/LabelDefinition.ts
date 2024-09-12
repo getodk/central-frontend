@@ -1,10 +1,10 @@
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import type { XFormDefinition } from '../../XFormDefinition.ts';
-import type { AnyGroupElementDefinition } from '../../body/BodyDefinition.ts';
-import type { RepeatElementDefinition } from '../../body/RepeatElementDefinition.ts';
-import type { AnyControlDefinition } from '../../body/control/ControlDefinition.ts';
-import type { BaseGroupDefinition } from '../../body/group/BaseGroupDefinition.ts';
 import { getLabelElement, getRepeatGroupLabelElement } from '../../lib/dom/query.ts';
+import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
+import type { AnyGroupElementDefinition } from '../../parse/body/BodyDefinition.ts';
+import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
+import type { AnyControlDefinition } from '../body/control/ControlDefinition.ts';
+import type { BaseGroupDefinition } from '../body/group/BaseGroupDefinition.ts';
 import { TextElementDefinition } from './abstract/TextElementDefinition.ts';
 
 // prettier-ignore

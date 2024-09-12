@@ -1,4 +1,4 @@
-import type { UncontrolledRepeatRangeDefinition } from '../../model/RepeatRangeDefinition.ts';
+import type { UncontrolledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
 import type { RootNode } from '../RootNode.ts';
 import type { BaseRepeatRangeNode, BaseRepeatRangeNodeState } from './BaseRepeatRangeNode.ts';
 

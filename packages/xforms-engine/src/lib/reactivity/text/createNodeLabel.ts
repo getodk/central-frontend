@@ -1,7 +1,7 @@
 import { type Accessor } from 'solid-js';
 import type { TextRange } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
-import type { AnyNodeDefinition } from '../../../model/NodeDefinition.ts';
+import type { AnyNodeDefinition } from '../../../parse/model/NodeDefinition.ts';
 import { createTextRange } from './createTextRange.ts';
 
 export const createNodeLabel = (

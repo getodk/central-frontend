@@ -39,4 +39,4 @@ export type * from './client/validation.ts';
 export type {
 	AnySelectDefinition,
 	SelectDefinition,
-} from './body/control/select/SelectDefinition.ts';
+} from './parse/body/control/select/SelectDefinition.ts';

@@ -2,7 +2,7 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { Accessor } from 'solid-js';
 import type { TextRange } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
-import type { NoteTextDefinition } from '../../../parse/NoteNodeDefinition.ts';
+import type { NoteTextDefinition } from '../../../parse/model/NoteNodeDefinition.ts';
 import { createTextRange } from './createTextRange.ts';
 
 // eslint-disable-next-line @typescript-eslint/sort-type-constituents

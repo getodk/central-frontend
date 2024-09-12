@@ -1,7 +1,7 @@
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import type { XFormDefinition } from '../../XFormDefinition.ts';
-import type { AnyControlDefinition } from '../../body/control/ControlDefinition.ts';
 import { getHintElement } from '../../lib/dom/query.ts';
+import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
+import type { AnyControlDefinition } from '../body/control/ControlDefinition.ts';
 import { TextElementDefinition } from './abstract/TextElementDefinition.ts';
 
 interface HintElement extends LocalNamedElement<'hint'> {}
