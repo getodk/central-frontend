@@ -1,6 +1,6 @@
 import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import type { DependentExpression } from '../expression/abstract/DependentExpression.ts';
-import { BindComputation } from '../expression/BindComputation.ts';
+import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
 import { MessageDefinition } from '../text/MessageDefinition.ts';
 import type { XFormDataType } from '../XFormDataType.ts';
 import { bindDataType } from '../XFormDataType.ts';
@@ -13,27 +13,28 @@ export class BindDefinition extends DependencyContext {
 	readonly dataType: XFormDataType;
 	readonly parentNodeset: string | null;
 
-	readonly calculate: BindComputation<'calculate'> | null;
-	readonly readonly: BindComputation<'readonly'>;
-	readonly relevant: BindComputation<'relevant'>;
-	readonly required: BindComputation<'required'>;
+	readonly calculate: BindComputationExpression<'calculate'> | null;
+	readonly readonly: BindComputationExpression<'readonly'>;
+	readonly relevant: BindComputationExpression<'relevant'>;
+	readonly required: BindComputationExpression<'required'>;
 
-	// According to
-	//
-	// this is not stored in the DAG. In contrast, we do compute constraint
-	// dependencies, but self-references are ignored (handled by `BindComputation`
-	// and its `DependentExpression` parent class).
 	/**
-	 * Diverges from {@link https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md | JavaRosa's}, which excludes `constraint` expressions. We compute `constraint` dependencies like the other <bind> computation expressions, but explicitly ignore self-references (this is currently handled by {@link BindComputation}, via its {@link DependentExpression} parent class).
+	 * Diverges from
+	 * {@link https://github.com/getodk/javarosa/blob/059321160e6f8dbb3e81d9add61d68dd35b13cc8/dag.md | JavaRosa's},
+	 * which excludes `constraint` expressions. We compute `constraint`
+	 * dependencies like the other <bind> computation expressions, but explicitly
+	 * ignore self-references (this is currently handled by
+	 * {@link BindComputationExpression}, via its {@link DependentExpression}
+	 * super class).
 	 */
-	readonly constraint: BindComputation<'constraint'>;
+	readonly constraint: BindComputationExpression<'constraint'>;
 
 	readonly constraintMsg: MessageDefinition<'constraintMsg'> | null;
 	readonly requiredMsg: MessageDefinition<'requiredMsg'> | null;
 
 	// TODO: it is unclear whether this will need to be supported.
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.
-	readonly saveIncomplete: BindComputation<'saveIncomplete'>;
+	readonly saveIncomplete: BindComputationExpression<'saveIncomplete'>;
 
 	// TODO: these are deferred until prioritized
 	// readonly preload: string | null;
@@ -84,12 +85,12 @@ export class BindDefinition extends DependencyContext {
 		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 
 		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
-		this.calculate = BindComputation.forExpression(this, 'calculate');
-		this.readonly = BindComputation.forExpression(this, 'readonly');
-		this.relevant = BindComputation.forExpression(this, 'relevant');
-		this.required = BindComputation.forExpression(this, 'required');
-		this.constraint = BindComputation.forExpression(this, 'constraint');
-		this.saveIncomplete = BindComputation.forExpression(this, 'saveIncomplete');
+		this.calculate = BindComputationExpression.forComputation(this, 'calculate');
+		this.readonly = BindComputationExpression.forComputation(this, 'readonly');
+		this.relevant = BindComputationExpression.forComputation(this, 'relevant');
+		this.required = BindComputationExpression.forComputation(this, 'required');
+		this.constraint = BindComputationExpression.forComputation(this, 'constraint');
+		this.saveIncomplete = BindComputationExpression.forComputation(this, 'saveIncomplete');
 		this.constraintMsg = MessageDefinition.from(this, 'constraintMsg');
 		this.requiredMsg = MessageDefinition.from(this, 'requiredMsg');
 

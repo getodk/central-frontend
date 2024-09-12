@@ -1,7 +1,7 @@
 import type { NoteNode } from '../client/NoteNode.ts';
 import type { AnyBodyElementDefinition } from '../parse/body/BodyDefinition.ts';
 import type { InputDefinition } from './body/control/InputDefinition.ts';
-import { BindComputation } from './expression/BindComputation.ts';
+import { BindComputationExpression } from './expression/BindComputationExpression.ts';
 import type { ConstantTruthyDependentExpression } from './expression/abstract/DependentExpression.ts';
 import type { BindDefinition } from './model/BindDefinition.ts';
 import { LeafNodeDefinition } from './model/LeafNodeDefinition.ts';
@@ -11,7 +11,7 @@ import type { LabelDefinition } from './text/LabelDefinition.ts';
 
 // prettier-ignore
 export type NoteReadonlyDefinition =
-	&	BindComputation<'readonly'>
+	&	BindComputationExpression<'readonly'>
 	& ConstantTruthyDependentExpression;
 
 export interface NoteBindDefinition extends BindDefinition {

@@ -16,8 +16,8 @@ export type BindComputationType = keyof DefaultBindComputationExpressions;
 
 type BindComputationFactoryResult<Type extends BindComputationType> =
 	DefaultBindComputationExpressions[Type] extends null
-		? BindComputation<Type> | null
-		: BindComputation<Type>;
+		? BindComputationExpression<Type> | null
+		: BindComputationExpression<Type>;
 
 const bindComputationResultTypes = {
 	calculate: 'string',
@@ -33,10 +33,10 @@ type BindComputationResultTypes = typeof bindComputationResultTypes;
 export type BindComputationResultType<Computation extends BindComputationType> =
 	BindComputationResultTypes[Computation];
 
-export class BindComputation<Computation extends BindComputationType> extends DependentExpression<
-	BindComputationResultType<Computation>
-> {
-	static forExpression<Type extends BindComputationType>(
+export class BindComputationExpression<
+	Computation extends BindComputationType,
+> extends DependentExpression<BindComputationResultType<Computation>> {
+	static forComputation<Type extends BindComputationType>(
 		bind: BindDefinition,
 		computation: Type
 	): BindComputationFactoryResult<Type> {

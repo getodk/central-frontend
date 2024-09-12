@@ -1,7 +1,7 @@
 import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import type { ValueContext } from '../../instance/internal-api/ValueContext.ts';
-import type { BindComputation } from '../../parse/expression/BindComputation.ts';
+import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
 import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
@@ -209,7 +209,7 @@ const guardDownstreamReadonlyWrites = <RuntimeValue>(
 const createCalculation = <RuntimeValue>(
 	context: ValueContext<RuntimeValue>,
 	setValue: SimpleAtomicStateSetter<RuntimeValue>,
-	calculateDefinition: BindComputation<'calculate'>
+	calculateDefinition: BindComputationExpression<'calculate'>
 ): void => {
 	context.scope.runTask(() => {
 		const calculate = createComputedExpression(context, calculateDefinition);

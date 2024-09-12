@@ -1,12 +1,12 @@
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
-import type { BindComputation } from '../../parse/expression/BindComputation.ts';
+import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 
 export type InstanceValue = string;
 
 interface ValueContextDefinitionBind {
-	readonly calculate: BindComputation<'calculate'> | null;
-	readonly readonly: BindComputation<'readonly'>;
+	readonly calculate: BindComputationExpression<'calculate'> | null;
+	readonly readonly: BindComputationExpression<'readonly'>;
 }
 
 export interface ValueContextDefinition {
