@@ -1,8 +1,8 @@
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import type { XFormDefinition } from '../../XFormDefinition.ts';
-import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';
-import type { ItemsetDefinition } from '../../body/control/select/ItemsetDefinition.ts';
 import { getLabelElement } from '../../lib/dom/query.ts';
+import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
+import type { ItemDefinition } from '../body/control/select/ItemDefinition.ts';
+import type { ItemsetDefinition } from '../body/control/select/ItemsetDefinition.ts';
 import { ReferenceChunkDefinition } from './ReferenceChunkDefinition.ts';
 import { TranslationChunkDefinition } from './TranslationChunkDefinition.ts';
 import type { RefAttributeChunk } from './abstract/TextElementDefinition.ts';

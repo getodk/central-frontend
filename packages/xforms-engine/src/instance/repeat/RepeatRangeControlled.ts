@@ -4,7 +4,7 @@ import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeC
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { ControlledRepeatRangeDefinition } from '../../model/RepeatRangeDefinition.ts';
+import type { ControlledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';

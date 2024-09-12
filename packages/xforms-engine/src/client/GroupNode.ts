@@ -1,5 +1,5 @@
-import type { AnyGroupElementDefinition } from '../body/BodyDefinition.ts';
-import type { SubtreeDefinition } from '../model/SubtreeDefinition.ts';
+import type { AnyGroupElementDefinition } from '../parse/body/BodyDefinition.ts';
+import type { SubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';

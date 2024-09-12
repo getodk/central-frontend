@@ -1,16 +1,16 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
+import { getLabelElement } from '../../../lib/dom/query.ts';
+import { LabelDefinition } from '../../text/LabelDefinition.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { getLabelElement } from '../../lib/dom/query.ts';
-import { LabelDefinition } from '../../parse/text/LabelDefinition.ts';
-import { parseNodesetReference } from '../../parse/xpath/reference-parsing.ts';
+import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
+import type { StructureElementAppearanceDefinition } from '../appearance/structureElementAppearanceParser.ts';
+import { structureElementAppearanceParser } from '../appearance/structureElementAppearanceParser.ts';
 import {
 	BodyDefinition,
 	type BodyElementDefinitionArray,
 	type BodyElementParentContext,
 } from '../BodyDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
-import type { StructureElementAppearanceDefinition } from '../appearance/structureElementAppearanceParser.ts';
-import { structureElementAppearanceParser } from '../appearance/structureElementAppearanceParser.ts';
 
 /**
  * These type names are derived from **and expand upon** the language used in

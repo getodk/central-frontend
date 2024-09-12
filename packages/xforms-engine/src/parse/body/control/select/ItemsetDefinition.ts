@@ -1,7 +1,7 @@
+import { getValueElement, type ItemsetElement } from '../../../../lib/dom/query.ts';
+import { ItemsetLabelDefinition } from '../../../text/ItemsetLabelDefinition.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import { getValueElement, type ItemsetElement } from '../../../lib/dom/query.ts';
-import { ItemsetLabelDefinition } from '../../../parse/text/ItemsetLabelDefinition.ts';
-import { parseNodesetReference } from '../../../parse/xpath/reference-parsing.ts';
+import { parseNodesetReference } from '../../../xpath/reference-parsing.ts';
 import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
 import { ItemsetNodesetExpression } from './ItemsetNodesetExpression.ts';
 import { ItemsetValueExpression } from './ItemsetValueExpression.ts';

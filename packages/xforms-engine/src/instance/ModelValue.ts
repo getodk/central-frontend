@@ -9,7 +9,7 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { LeafNodeDefinition } from '../model/LeafNodeDefinition.ts';
+import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';

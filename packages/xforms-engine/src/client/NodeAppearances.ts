@@ -1,5 +1,5 @@
 import type { ParsedTokenList } from '../lib/TokenListParser.ts';
-import type { NodeDefinition } from '../model/NodeDefinition.ts';
+import type { NodeDefinition } from '../parse/model/NodeDefinition.ts';
 
 /**
  * - Provides a means to distinguish between internal and client-facing names

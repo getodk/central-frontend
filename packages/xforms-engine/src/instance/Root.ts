@@ -1,8 +1,6 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
-import type { XFormDOM } from '../XFormDOM.ts';
-import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
@@ -15,7 +13,9 @@ import type { EngineState } from '../lib/reactivity/node-state/createEngineState
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { RootDefinition } from '../model/RootDefinition.ts';
+import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
+import type { RootDefinition } from '../parse/model/RootDefinition.ts';
+import type { XFormDOM } from '../parse/XFormDOM.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';

@@ -9,7 +9,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../../src/XFormDefinition.ts';
+import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
 
 describe('BindDefinition', () => {
 	it.each([

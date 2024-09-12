@@ -11,7 +11,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { XFormDOM } from '../src/XFormDOM.ts';
+import { XFormDOM } from '../../src/parse/XFormDOM.ts';
 
 describe('XFormDOM', () => {
 	let xform: HtmlXFormsElement;

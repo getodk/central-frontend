@@ -13,8 +13,8 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../../src/XFormDefinition.ts';
-import type { BodyDefinition } from '../../src/body/BodyDefinition.ts';
+import type { BodyDefinition } from '../../../src/parse/body/BodyDefinition.ts';
+import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
 
 describe('BodyDefinition', () => {
 	let bodyDefinition: BodyDefinition;

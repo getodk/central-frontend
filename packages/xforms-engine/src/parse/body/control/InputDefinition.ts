@@ -1,9 +1,9 @@
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import {
 	inputAppearanceParser,
 	type InputAppearanceDefinition,
 } from '../appearance/inputAppearanceParser.ts';
+import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { ControlDefinition } from './ControlDefinition.ts';
 
 export class InputDefinition extends ControlDefinition<'input'> {

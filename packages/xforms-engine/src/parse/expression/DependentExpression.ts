@@ -1,14 +1,11 @@
 import type { XFormsXPathEvaluator } from '@getodk/xpath';
-import { resolveDependencyNodesets } from '../parse/xpath/dependency-analysis.ts';
-import type {
-	ConstantExpression,
-	ConstantTruthyExpression,
-} from '../parse/xpath/semantic-analysis.ts';
+import { resolveDependencyNodesets } from '../xpath/dependency-analysis.ts';
+import type { ConstantExpression, ConstantTruthyExpression } from '../xpath/semantic-analysis.ts';
 import {
 	isConstantExpression,
 	isConstantTruthyExpression,
 	isTranslationExpression,
-} from '../parse/xpath/semantic-analysis.ts';
+} from '../xpath/semantic-analysis.ts';
 import type { DependencyContext } from './DependencyContext.ts';
 
 const evaluatorMethodsByResultType = {

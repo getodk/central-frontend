@@ -1,4 +1,4 @@
-import type { SubtreeDefinition as BaseSubtreeDefinition } from '../model/SubtreeDefinition.ts';
+import type { SubtreeDefinition as BaseSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';

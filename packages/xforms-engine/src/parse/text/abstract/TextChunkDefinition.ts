@@ -1,5 +1,5 @@
 import type { TextChunkSource } from '../../../client/TextRange.ts';
-import { DependentExpression } from '../../../expression/DependentExpression.ts';
+import { DependentExpression } from '../../expression/DependentExpression.ts';
 import type { OutputChunkDefinition } from '../OutputChunkDefinition.ts';
 import type { ReferenceChunkDefinition } from '../ReferenceChunkDefinition.ts';
 import type { StaticTextChunkDefinition } from '../StaticTextChunkDefinition.ts';

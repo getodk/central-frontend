@@ -1,9 +1,12 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import { LabelDefinition } from '../parse/text/LabelDefinition.ts';
-import { parseNodesetReference } from '../parse/xpath/reference-parsing.ts';
-import type { BodyElementDefinitionArray, BodyElementParentContext } from './BodyDefinition.ts';
-import { BodyDefinition } from './BodyDefinition.ts';
+import type {
+	BodyElementDefinitionArray,
+	BodyElementParentContext,
+} from '../body/BodyDefinition.ts';
+import { BodyDefinition } from '../body/BodyDefinition.ts';
+import { LabelDefinition } from '../text/LabelDefinition.ts';
+import { parseNodesetReference } from '../xpath/reference-parsing.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';
 import type { StructureElementAppearanceDefinition } from './appearance/structureElementAppearanceParser.ts';
 import { structureElementAppearanceParser } from './appearance/structureElementAppearanceParser.ts';

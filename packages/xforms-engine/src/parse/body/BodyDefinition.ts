@@ -1,9 +1,7 @@
-import type { XFormDefinition } from '../XFormDefinition.ts';
+import type { ParsedTokenList } from '../../lib/TokenListParser.ts';
+import { TokenListParser } from '../../lib/TokenListParser.ts';
+import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
 import { DependencyContext } from '../expression/DependencyContext.ts';
-import type { ParsedTokenList } from '../lib/TokenListParser.ts';
-import { TokenListParser } from '../lib/TokenListParser.ts';
-import { RepeatElementDefinition } from './RepeatElementDefinition.ts';
-import { UnsupportedBodyElementDefinition } from './UnsupportedBodyElementDefinition.ts';
 import { ControlDefinition } from './control/ControlDefinition.ts';
 import { InputDefinition } from './control/InputDefinition.ts';
 import type { AnySelectDefinition } from './control/select/SelectDefinition.ts';
@@ -11,6 +9,8 @@ import { SelectDefinition } from './control/select/SelectDefinition.ts';
 import { LogicalGroupDefinition } from './group/LogicalGroupDefinition.ts';
 import { PresentationGroupDefinition } from './group/PresentationGroupDefinition.ts';
 import { StructuralGroupDefinition } from './group/StructuralGroupDefinition.ts';
+import { RepeatElementDefinition } from './RepeatElementDefinition.ts';
+import { UnsupportedBodyElementDefinition } from './UnsupportedBodyElementDefinition.ts';
 
 export interface BodyElementParentContext {
 	readonly reference: string | null;

@@ -1,5 +1,5 @@
 import type { TokenListParser } from '../lib/TokenListParser.ts';
-import type { AnyNodeDefinition } from '../model/NodeDefinition.ts';
+import type { AnyNodeDefinition } from '../parse/model/NodeDefinition.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';

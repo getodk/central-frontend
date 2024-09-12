@@ -12,7 +12,7 @@ import type { SharedNodeState } from '../../lib/reactivity/node-state/createShar
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { createReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
-import type { AnyNodeDefinition } from '../../model/NodeDefinition.ts';
+import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { Root } from '../Root.ts';
 import type { AnyChildNode, AnyNode, AnyParentNode } from '../hierarchy.ts';
 import type { NodeID } from '../identity.ts';

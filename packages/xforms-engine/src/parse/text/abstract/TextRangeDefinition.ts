@@ -1,8 +1,8 @@
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import type { XFormDefinition } from '../../../XFormDefinition.ts';
 import type { TextRole } from '../../../client/TextRange.ts';
-import { DependencyContext } from '../../../expression/DependencyContext.ts';
-import type { AnyDependentExpression } from '../../../expression/DependentExpression.ts';
+import { DependencyContext } from '../../../parse/expression/DependencyContext.ts';
+import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
+import type { AnyDependentExpression } from '../../expression/DependentExpression.ts';
 import type { AnyMessageDefinition } from '../MessageDefinition.ts';
 import type { AnyTextChunkDefinition } from './TextChunkDefinition.ts';
 import type { AnyTextElementDefinition } from './TextElementDefinition.ts';

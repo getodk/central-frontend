@@ -1,8 +1,8 @@
 import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
-import type { DependentExpression } from '../../expression/DependentExpression.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import type { ValueContext } from '../../instance/internal-api/ValueContext.ts';
-import type { BindComputation } from '../../model/BindComputation.ts';
+import type { DependentExpression } from '../../parse/expression/DependentExpression.ts';
+import type { BindComputation } from '../../parse/model/BindComputation.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 

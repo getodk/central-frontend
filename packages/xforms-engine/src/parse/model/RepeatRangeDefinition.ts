@@ -1,5 +1,5 @@
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
-import { RepeatCountControlExpression } from '../parse/expression/RepeatCountControlExpression.ts';
+import { RepeatCountControlExpression } from '../expression/RepeatCountControlExpression.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';

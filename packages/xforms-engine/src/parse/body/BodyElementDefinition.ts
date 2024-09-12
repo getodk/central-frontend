@@ -1,8 +1,8 @@
-import type { XFormDefinition } from '../XFormDefinition.ts';
 import { DependencyContext } from '../expression/DependencyContext.ts';
-import type { HintDefinition } from '../parse/text/HintDefinition.ts';
-import type { ItemLabelDefinition } from '../parse/text/ItemLabelDefinition.ts';
-import type { LabelDefinition } from '../parse/text/LabelDefinition.ts';
+import type { HintDefinition } from '../text/HintDefinition.ts';
+import type { ItemLabelDefinition } from '../text/ItemLabelDefinition.ts';
+import type { LabelDefinition } from '../text/LabelDefinition.ts';
+import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BodyElementParentContext } from './BodyDefinition.ts';
 
 /**

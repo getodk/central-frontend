@@ -11,9 +11,9 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { XFormDefinition } from '../src/XFormDefinition.ts';
-import { BodyDefinition } from '../src/body/BodyDefinition.ts';
-import { ModelDefinition } from '../src/model/ModelDefinition.ts';
+import { BodyDefinition } from '../../src/parse/body/BodyDefinition.ts';
+import { ModelDefinition } from '../../src/parse/model/ModelDefinition.ts';
+import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
 
 describe('XFormDefinition', () => {
 	const FORM_TITLE = 'Minimal XForm';

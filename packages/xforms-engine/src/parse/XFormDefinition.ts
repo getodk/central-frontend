@@ -1,6 +1,6 @@
-import { XFormDOM } from './XFormDOM.ts';
-import { BodyDefinition } from './body/BodyDefinition.ts';
+import { BodyDefinition } from '../parse/body/BodyDefinition.ts';
 import { ModelDefinition } from './model/ModelDefinition.ts';
+import { XFormDOM } from './XFormDOM.ts';
 
 export class XFormDefinition {
 	readonly xformDOM: XFormDOM;

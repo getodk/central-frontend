@@ -1,5 +1,5 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import type { BindDefinition } from '../../model/BindDefinition.ts';
+import type { BindDefinition } from '../model/BindDefinition.ts';
 import { StaticTextChunkDefinition } from './StaticTextChunkDefinition.ts';
 import { TranslationChunkDefinition } from './TranslationChunkDefinition.ts';
 import type { TextBindAttributeLocalName, TextSourceNode } from './abstract/TextRangeDefinition.ts';

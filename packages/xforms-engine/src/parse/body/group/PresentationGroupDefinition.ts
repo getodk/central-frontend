@@ -1,5 +1,5 @@
+import { LabelDefinition } from '../../text/LabelDefinition.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import { LabelDefinition } from '../../parse/text/LabelDefinition.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { BaseGroupDefinition } from './BaseGroupDefinition.ts';
 

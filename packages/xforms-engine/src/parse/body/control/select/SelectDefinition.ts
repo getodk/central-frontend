@@ -1,10 +1,10 @@
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
+import { getItemElements, getItemsetElement } from '../../../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import { getItemElements, getItemsetElement } from '../../../lib/dom/query.ts';
-import type { AnyBodyElementDefinition, BodyElementParentContext } from '../../BodyDefinition.ts';
 import type { SelectAppearanceDefinition } from '../../appearance/selectAppearanceParser.ts';
 import { selectAppearanceParser } from '../../appearance/selectAppearanceParser.ts';
+import type { AnyBodyElementDefinition, BodyElementParentContext } from '../../BodyDefinition.ts';
 import { ControlDefinition } from '../ControlDefinition.ts';
 import { ItemDefinition } from './ItemDefinition.ts';
 import { ItemsetDefinition } from './ItemsetDefinition.ts';

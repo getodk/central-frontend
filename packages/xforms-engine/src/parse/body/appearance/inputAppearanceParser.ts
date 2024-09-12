@@ -1,4 +1,4 @@
-import { TokenListParser, type ParsedTokenList } from '../../lib/TokenListParser.ts';
+import { TokenListParser, type ParsedTokenList } from '../../../lib/TokenListParser.ts';
 
 export const inputAppearanceParser = new TokenListParser([
 	'multiline',
