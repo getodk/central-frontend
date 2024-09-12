@@ -1,13 +1,13 @@
-import type { NoteNode } from '../client/NoteNode.ts';
-import type { AnyBodyElementDefinition } from '../parse/body/BodyDefinition.ts';
-import type { InputDefinition } from './body/control/InputDefinition.ts';
-import { BindComputationExpression } from './expression/BindComputationExpression.ts';
-import type { ConstantTruthyDependentExpression } from './expression/abstract/DependentExpression.ts';
-import type { BindDefinition } from './model/BindDefinition.ts';
-import { LeafNodeDefinition } from './model/LeafNodeDefinition.ts';
-import type { ParentNodeDefinition } from './model/NodeDefinition.ts';
-import type { HintDefinition } from './text/HintDefinition.ts';
-import type { LabelDefinition } from './text/LabelDefinition.ts';
+import type { NoteNode } from '../../client/NoteNode.ts';
+import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
+import type { InputDefinition } from '../body/control/InputDefinition.ts';
+import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
+import type { ConstantTruthyDependentExpression } from '../expression/abstract/DependentExpression.ts';
+import type { HintDefinition } from '../text/HintDefinition.ts';
+import type { LabelDefinition } from '../text/LabelDefinition.ts';
+import type { BindDefinition } from './BindDefinition.ts';
+import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
+import type { ParentNodeDefinition } from './NodeDefinition.ts';
 
 // prettier-ignore
 export type NoteReadonlyDefinition =

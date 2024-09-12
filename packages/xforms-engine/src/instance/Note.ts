@@ -16,7 +16,7 @@ import { createNoteText, type ComputedNoteText } from '../lib/reactivity/text/cr
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { NoteNodeDefinition } from '../parse/NoteNodeDefinition.ts';
+import type { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';

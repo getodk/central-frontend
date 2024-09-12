@@ -1,5 +1,4 @@
 import type { BodyClassList } from '../body/BodyDefinition.ts';
-import { NoteNodeDefinition } from '../NoteNodeDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
@@ -9,6 +8,7 @@ import type {
 	NodeDefinition,
 	ParentNodeDefinition,
 } from './NodeDefinition.ts';
+import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
