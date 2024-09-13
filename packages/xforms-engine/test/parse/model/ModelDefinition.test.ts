@@ -15,11 +15,11 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { BindDefinition } from '../../src/parse/model/BindDefinition.ts';
-import type { LeafNodeDefinition } from '../../src/parse/model/LeafNodeDefinition.ts';
-import { ModelDefinition } from '../../src/parse/model/ModelDefinition.ts';
-import type { RepeatRangeDefinition } from '../../src/parse/model/RepeatRangeDefinition.ts';
-import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
+import { BindDefinition } from '../../../src/parse/model/BindDefinition.ts';
+import type { LeafNodeDefinition } from '../../../src/parse/model/LeafNodeDefinition.ts';
+import { ModelDefinition } from '../../../src/parse/model/ModelDefinition.ts';
+import type { RepeatRangeDefinition } from '../../../src/parse/model/RepeatRangeDefinition.ts';
+import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
 
 describe('ModelDefinition', () => {
 	let modelDefinition: ModelDefinition;
