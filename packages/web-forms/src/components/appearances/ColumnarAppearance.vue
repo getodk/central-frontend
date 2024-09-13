@@ -2,10 +2,12 @@
 import type { SelectNodeAppearances } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 
-const props = defineProps<{ appearances: SelectNodeAppearances}>();
+const props = defineProps<{ appearances: SelectNodeAppearances }>();
 
 const nColumnstyle = computed(() => {
-	const numberOfColumns = [...props.appearances].find(a => /columns-\d+/.exec(a))?.match(/\d+/)?.[0];
+	const numberOfColumns = [...props.appearances]
+		.find((a) => /columns-\d+/.exec(a))
+		?.match(/\d+/)?.[0];
 	return numberOfColumns ? `grid-template-columns: repeat(${numberOfColumns}, 1fr);` : '';
 });
 </script>
@@ -23,7 +25,6 @@ const nColumnstyle = computed(() => {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px 20px;
-
 }
 
 .columns {
@@ -32,13 +33,13 @@ const nColumnstyle = computed(() => {
 	grid-template-columns: repeat(2, 1fr);
 
 	@media screen and (min-width: #{$md}) {
-			grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 	}
 	@media screen and (min-width: #{$lg}) {
-			grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 	}
 	@media screen and (min-width: #{$xl}) {
-			grid-template-columns: repeat(5, 1fr);
+		grid-template-columns: repeat(5, 1fr);
 	}
 }
 </style>

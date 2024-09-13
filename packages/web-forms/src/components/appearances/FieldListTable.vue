@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import type { SelectNodeAppearances } from '@getodk/xforms-engine';
 
-defineProps<{ appearances: SelectNodeAppearances}>();
-
+defineProps<{ appearances: SelectNodeAppearances }>();
 </script>
 
 <template>
@@ -15,13 +14,11 @@ defineProps<{ appearances: SelectNodeAppearances}>();
 </template>
 
 <style lang="scss" scoped>
-
-
 .table-row {
 	display: table-row;
-  padding-left: 10px;
-  margin-left: -10px;
-  border-radius: 15px;
+	padding-left: 10px;
+	margin-left: -10px;
+	border-radius: 15px;
 
 	.first-col {
 		display: table-cell;
@@ -38,12 +35,12 @@ defineProps<{ appearances: SelectNodeAppearances}>();
 		padding: 15px 5px;
 		outline: none;
 
-    &.active {
-      background-color: unset;
-      outline: none;
-    }
+		&.active {
+			background-color: unset;
+			outline: none;
+		}
 
-		&:hover{
+		&:hover {
 			background: unset;
 		}
 
@@ -55,62 +52,59 @@ defineProps<{ appearances: SelectNodeAppearances}>();
 }
 
 .table-row.list-nolabel {
+	&:hover {
+		background-color: var(--surface-100);
+	}
 
-  &:hover {
-    background-color: var(--surface-100);
-  }
-
-  :deep(.value-option){
-    border-radius: 35px;
-    background-color: transparent;
-    .label-text {
-      display: none;
-    }
-  }
+	:deep(.value-option) {
+		border-radius: 35px;
+		background-color: transparent;
+		.label-text {
+			display: none;
+		}
+	}
 }
-	
-.table-row.label{
-  :deep(.value-option) {
-    cursor: default;
 
-    .p-radiobutton {
-      display: none;
-    }
-    .p-checkbox {
-      display: none;
-    }
+.table-row.label {
+	:deep(.value-option) {
+		cursor: default;
 
-    &:has(.p-checkbox-input:hover),
-    &:has(.p-radiobutton-input:hover) {
-      background-color: unset;
-      outline: none;
-    }
-  }
+		.p-radiobutton {
+			display: none;
+		}
+		.p-checkbox {
+			display: none;
+		}
+
+		&:has(.p-checkbox-input:hover),
+		&:has(.p-radiobutton-input:hover) {
+			background-color: unset;
+			outline: none;
+		}
+	}
 }
 
 .table-row.list {
-  margin-top: -30px;
+	margin-top: -30px;
 
-  &:hover {
-    background-color: var(--surface-100);
-  }
+	&:hover {
+		background-color: var(--surface-100);
+	}
 
-  :deep(.value-option) {
-    position: relative;
+	:deep(.value-option) {
+		position: relative;
 
-    .p-checkbox,
-    .p-radiobutton {
-      position: relative;
-      top: 20px;
-    }
+		.p-checkbox,
+		.p-radiobutton {
+			position: relative;
+			top: 20px;
+		}
 
-    .label-text {
-      position: relative;
-      top: -20px;
-      margin-bottom: 10px;
-    }
-  }
+		.label-text {
+			position: relative;
+			top: -20px;
+			margin-bottom: 10px;
+		}
+	}
 }
-
-
 </style>

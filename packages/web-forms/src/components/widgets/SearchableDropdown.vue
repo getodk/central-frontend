@@ -2,26 +2,26 @@
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeDropdown from 'primevue/dropdown';
 
-const props = defineProps<{ question: SelectNode, style?: string}>();
+const props = defineProps<{ question: SelectNode; style?: string }>();
 defineEmits(['update:modelValue', 'change']);
 
 const setSelect1Value = (item: SelectItem) => {
-	props.question.select(item);	
-}
-const getOptionLabel = (o:SelectItem) => {
+	props.question.select(item);
+};
+const getOptionLabel = (o: SelectItem) => {
 	return o.label?.asString;
-}
+};
 </script>
 
 <template>
-	<PrimeDropdown 
+	<PrimeDropdown
 		:id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
-		:model-value="question.currentState.value[0]" 
-		:options="question.currentState.valueOptions" 
-		:option-label="getOptionLabel" 
+		:model-value="question.currentState.value[0]"
+		:options="question.currentState.valueOptions"
+		:option-label="getOptionLabel"
 		@update:model-value="setSelect1Value"
 		@change="$emit('change')"
 	/>

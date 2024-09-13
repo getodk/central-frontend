@@ -2,7 +2,7 @@
 import type { NoteNode } from '@getodk/xforms-engine';
 import ControlText from '../ControlText.vue';
 
-defineProps<{question: NoteNode}>();
+defineProps<{ question: NoteNode }>();
 </script>
 
 <template>
@@ -16,7 +16,7 @@ defineProps<{question: NoteNode}>();
 </template>
 
 <style scoped lang="scss">
-	:deep(.control-text) {
-		margin-bottom: 0;
-	}
+:deep(.control-text) {
+	margin-bottom: 0;
+}
 </style>

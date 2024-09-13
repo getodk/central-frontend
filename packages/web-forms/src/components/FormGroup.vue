@@ -9,10 +9,12 @@ const props = defineProps<{ node: GroupNode }>();
 const classes = ['group'];
 
 const tableLayout = computed(() => {
-	return !!props.node.currentState.children.find(c => 
-		c.nodeType === "select" && 
-		(c.appearances.label || c.appearances['list-nolabel'] || c.appearances.list))
-})
+	return !!props.node.currentState.children.find(
+		(c) =>
+			c.nodeType === 'select' &&
+			(c.appearances.label || c.appearances['list-nolabel'] || c.appearances.list)
+	);
+});
 </script>
 
 <template>

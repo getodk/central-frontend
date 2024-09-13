@@ -10,16 +10,18 @@ import RadioButton from '../widgets/RadioButton.vue';
 import SearchableDropdown from '../widgets/SearchableDropdown.vue';
 import UnsupportedAppearance from './UnsupportedAppearance.vue';
 
-const props = defineProps<{question: SelectNode}>();
+const props = defineProps<{ question: SelectNode }>();
 
-const hasColumnsAppearance = [...props.question.appearances].filter(a => a.startsWith('columns')).length > 0;
+const hasColumnsAppearance =
+	[...props.question.appearances].filter((a) => a.startsWith('columns')).length > 0;
 
 const fieldListRelatedAppearances = new Set(['label', 'list-nolabel', 'list']);
-const hasFieldListRelatedAppearance = !![...props.question.appearances].find(a => fieldListRelatedAppearances.has(a));
+const hasFieldListRelatedAppearance = !![...props.question.appearances].find((a) =>
+	fieldListRelatedAppearances.has(a)
+);
 
 const touched = ref(false);
 const submitPressed = inject<boolean>('submitPressed');
-
 </script>
 
 <template>

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
-defineProps<{nodeType: string, appearance: string}>();
+defineProps<{ nodeType: string; appearance: string }>();
 
 const isDev = () => {
 	return import.meta.env.DEV;
-}
+};
 </script>
 <template>
 	<div v-if="isDev()">

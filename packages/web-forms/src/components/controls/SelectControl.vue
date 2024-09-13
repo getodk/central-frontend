@@ -3,7 +3,7 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import Select1Control from './Select1Control.vue';
 import SelectNControl from './SelectNControl.vue';
 
-defineProps<{question: SelectNode}>();
+defineProps<{ question: SelectNode }>();
 </script>
 
 <template>

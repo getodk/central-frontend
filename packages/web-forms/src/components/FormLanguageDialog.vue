@@ -5,30 +5,32 @@ import PrimeDialog from 'primevue/dialog';
 import PrimeRadioButton from 'primevue/radiobutton';
 import { ref } from 'vue';
 
-const props = defineProps<{ state: boolean, languages: FormLanguage[], activeLanguage: ActiveLanguage }>();
+const props = defineProps<{
+	state: boolean;
+	languages: FormLanguage[];
+	activeLanguage: ActiveLanguage;
+}>();
 const emit = defineEmits(['update:state', 'update:activeLanguage']);
-
 
 const selectedLanguage = ref<ActiveLanguage>(props.activeLanguage);
 
 const handleSave = () => {
 	emit('update:activeLanguage', selectedLanguage.value);
-	emit('update:state',false);
+	emit('update:state', false);
 };
 
 const handleCancel = () => {
 	selectedLanguage.value = props.activeLanguage;
-	emit('update:state',false);
-}
-
+	emit('update:state', false);
+};
 </script>
 
 <template>
 	<PrimeDialog :visible="state" modal header="Change language" class="language-dialog" :closable="false" @update:visible="handleCancel()">
-		<label 
-			v-for="lang in languages" 
-			:key="lang.language" 
-			:for="lang.language" 
+		<label
+			v-for="lang in languages"
+			:key="lang.language"
+			:for="lang.language"
 			class="lang-options"
 		>
 			<PrimeRadioButton
@@ -47,23 +49,21 @@ const handleCancel = () => {
 </template>
 
 <style scoped lang="scss">
-
-
 .lang-options {
-		width: 100%;
-    display: block;
-		border: 1px solid #E6E1E5;
-    padding: 10px 0 10px 8px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    cursor: pointer;
+	width: 100%;
+	display: block;
+	border: 1px solid #e6e1e5;
+	padding: 10px 0 10px 8px;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	cursor: pointer;
 
-		&:hover {
-			border-color: var(--primary-500);
-		}
-		> div {
-			margin-right: 10px;
-		}
+	&:hover {
+		border-color: var(--primary-500);
+	}
+	> div {
+		margin-right: 10px;
+	}
 }
 
 button {
@@ -85,7 +85,7 @@ button {
 
 	.p-dialog-content:last-of-type {
 		border-bottom-right-radius: var(--radius);
-    border-bottom-left-radius: var(--radius);
+		border-bottom-left-radius: var(--radius);
 	}
 }
 </style>

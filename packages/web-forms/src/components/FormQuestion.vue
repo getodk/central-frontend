@@ -6,7 +6,7 @@ import NoteControl from './controls/NoteControl.vue';
 import SelectControl from './controls/SelectControl.vue';
 import UnsupportedControl from './controls/UnsupportedControl.vue';
 
-defineProps<{question: AnyControlNode}>();
+defineProps<{ question: AnyControlNode }>();
 
 const isStringNode = (n: AnyControlNode): n is StringNode => n.nodeType === 'string';
 const isSelectNode = (n: AnyControlNode): n is SelectNode => n.nodeType === 'select';
@@ -34,7 +34,6 @@ const submitPressed = inject('submitPressed');
 </template>
 
 <style scoped lang="scss">
-
 .question-container {
 	display: flex;
 	flex-direction: column;
@@ -51,6 +50,4 @@ const submitPressed = inject('submitPressed');
 	// Accommodates the spacing for validation background of questions inside groups/repeat
 	margin-left: -1rem;
 }
-
-
 </style>

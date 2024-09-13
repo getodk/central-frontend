@@ -2,10 +2,9 @@
 import type { ActiveLanguage, FormLanguage } from '@getodk/xforms-engine';
 import Dropdown from 'primevue/dropdown';
 
-defineProps<{ languages: FormLanguage[], activeLanguage: ActiveLanguage }>();
+defineProps<{ languages: FormLanguage[]; activeLanguage: ActiveLanguage }>();
 
-defineEmits(['update:activeLanguage'])
-
+defineEmits(['update:activeLanguage']);
 </script>
 
 <template>
@@ -61,7 +60,6 @@ defineEmits(['update:activeLanguage'])
 </style>
 
 <style>
-
 @media print {
 	.p-menu {
 		display: none;

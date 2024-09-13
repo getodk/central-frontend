@@ -18,24 +18,25 @@ const emit = defineEmits(['submit']);
 
 initializeForm(props.formXml, {
 	config: {
-		stateFactory: reactive
+		stateFactory: reactive,
 	},
-}).then((f) => {
-	odkForm.value = f;
-}).catch((error) => {
-	// eslint-disable-next-line no-console
-	console.error(error);
-});
+})
+	.then((f) => {
+		odkForm.value = f;
+	})
+	.catch((error) => {
+		// eslint-disable-next-line no-console
+		console.error(error);
+	});
 
 const handleSubmit = () => {
-	if(odkForm.value?.validationState.violations?.length === 0){
+	if (odkForm.value?.validationState.violations?.length === 0) {
 		emit('submit');
-	}
-	else{
+	} else {
 		submitPressed.value = true;
 		document.scrollingElement?.scrollTo(0, 0);
 	}
-}
+};
 
 const errorMessagePopover = ref<ComponentPublicInstance | null>(null);
 
@@ -45,19 +46,18 @@ const formErrorMessage = computed(() => {
 	const violationLength = odkForm.value!.validationState.violations.length;
 
 	// TODO: translations
-	if(violationLength === 0) return '';
-	else if(violationLength === 1) return '1 question with error';
+	if (violationLength === 0) return '';
+	else if (violationLength === 1) return '1 question with error';
 	else return `${violationLength} questions with errors`;
 });
 
 watchEffect(() => {
-	if(submitPressed.value && formErrorMessage.value) {
+	if (submitPressed.value && formErrorMessage.value) {
 		(errorMessagePopover.value?.$el as HTMLElement)?.showPopover?.();
-	}
-	else{
+	} else {
 		(errorMessagePopover.value?.$el as HTMLElement)?.hidePopover?.();
 	}
-})
+});
 </script>
 
 <template>
@@ -91,8 +91,7 @@ watchEffect(() => {
 				<span class="caption">Powered by</span>
 				<img
 					class="logo"
-					srcset="../assets/images/odk-logo-small@1x.png,
-								  ../assets/images/odk-logo-small@2x.png 2x"
+					srcset="../assets/images/odk-logo-small@1x.png, ../assets/images/odk-logo-small@2x.png 2x"
 					src="../assets/images/odk-logo-small@2x.png"
 					alt="ODK"
 					height="15"
@@ -150,11 +149,10 @@ watchEffect(() => {
 				flex-grow: 1;
 			}
 
-			:deep(.p-message-text){
+			:deep(.p-message-text) {
 				font-weight: 400;
 				flex-grow: 1;
 			}
-
 		}
 	}
 
@@ -203,7 +201,7 @@ watchEffect(() => {
 			max-width: unset;
 			padding-top: unset;
 
-			:deep(.title-bar){
+			:deep(.title-bar) {
 				order: 1;
 			}
 
@@ -230,7 +228,6 @@ watchEffect(() => {
 					margin-right: 20px;
 				}
 			}
-
 		}
 		.powered-by-wrapper {
 			padding-bottom: 10px;

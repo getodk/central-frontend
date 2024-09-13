@@ -2,9 +2,8 @@
 import type { SelectNode } from '@getodk/xforms-engine';
 import RadioButton from '../widgets/RadioButton.vue';
 
-defineProps<{question: SelectNode}>();
+defineProps<{ question: SelectNode }>();
 defineEmits(['change']);
-
 </script>
 
 <template>
@@ -41,7 +40,7 @@ defineEmits(['change']);
 			left: max(20px, calc(50% - 20px));
 		}
 
-		&::before{
+		&::before {
 			content: '';
 			display: block;
 			position: relative;
@@ -64,7 +63,6 @@ defineEmits(['change']);
 			}
 		}
 
-
 		.p-radiobutton {
 			position: relative;
 			z-index: 10;
@@ -80,7 +78,6 @@ defineEmits(['change']);
 			display: block;
 			word-break: break-word;
 		}
-
 	}
 }
 </style>
