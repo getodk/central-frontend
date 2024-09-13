@@ -10,6 +10,7 @@ import { inject } from 'vue';
 import InputText from './controls/InputText.vue';
 import NoteControl from './controls/NoteControl.vue';
 import SelectControl from './controls/SelectControl.vue';
+import TriggerControl from './controls/TriggerControl.vue';
 import UnsupportedControl from './controls/UnsupportedControl.vue';
 
 type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
@@ -19,6 +20,7 @@ defineProps<{ question: ControlNode }>();
 const isStringNode = (n: ControlNode): n is StringNode => n.nodeType === 'string';
 const isSelectNode = (n: ControlNode): n is SelectNode => n.nodeType === 'select';
 const isNoteNode = (n: ControlNode): n is NoteNode => n.nodeType === 'note';
+const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
 
 const submitPressed = inject('submitPressed');
 </script>
@@ -36,6 +38,8 @@ const submitPressed = inject('submitPressed');
 		<SelectControl v-else-if="isSelectNode(question)" :question="question" />
 
 		<NoteControl v-else-if="isNoteNode(question)" :question="question" />
+
+		<TriggerControl v-else-if="isTriggerNode(question)" :question="question" />
 
 		<UnsupportedControl v-else :question="question" />
 	</div>
