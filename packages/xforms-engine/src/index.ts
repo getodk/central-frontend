@@ -30,9 +30,9 @@ export type * from './client/SelectNode.ts';
 export type * from './client/StringNode.ts';
 export type * from './client/SubtreeNode.ts';
 export type * from './client/TextRange.ts';
+export type * from './client/TriggerNode.ts';
 export type * from './client/unsupported/RangeNode.ts';
 export type * from './client/unsupported/RankNode.ts';
-export type * from './client/unsupported/TriggerNode.ts';
 export type * from './client/unsupported/UploadNode.ts';
 export type * from './client/validation.ts';
 
