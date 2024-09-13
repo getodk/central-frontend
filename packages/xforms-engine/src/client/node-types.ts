@@ -1,4 +1,11 @@
 // prettier-ignore
+export type UnsupportedControlNodeType =
+	| 'range'
+	| 'rank'
+	| 'trigger'
+	| 'upload';
+
+// prettier-ignore
 export type RepeatRangeNodeType =
 	| 'repeat-range:controlled'
 	| 'repeat-range:uncontrolled'
@@ -14,4 +21,5 @@ export type InstanceNodeType =
 	| 'model-value'
 	| 'note'
 	| 'select'
-	| 'string';
+	| 'string'
+	| UnsupportedControlNodeType;

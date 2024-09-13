@@ -126,11 +126,11 @@ export class Note
 		this.validation = createValidationState(this, sharedStateOptions);
 	}
 
+	// ValidationContext
 	getViolation(): AnyViolation | null {
 		return this.validation.engineState.violation;
 	}
 
-	// ValidationContext
 	isBlank(): boolean {
 		return this.engineState.value === '';
 	}

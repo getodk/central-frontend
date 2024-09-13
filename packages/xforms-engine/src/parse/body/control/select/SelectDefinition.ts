@@ -9,15 +9,7 @@ import { ControlDefinition } from '../ControlDefinition.ts';
 import { ItemDefinition } from './ItemDefinition.ts';
 import { ItemsetDefinition } from './ItemsetDefinition.ts';
 
-/**
- * @todo We were previously a bit overzealous about introducing `<rank>` support
- * here. It'll likely still fit, but we should approach it with more intention.
- *
- * @todo `<trigger>` is *almost* reasonable to support here too. The main
- * hesitation is that its single, implicit "item" does not have a distinct
- * <label>, and presumably has different UX **and translation** considerations.
- */
-const selectLocalNames = new Set([/* 'rank', */ 'select', 'select1'] as const);
+const selectLocalNames = new Set(['select', 'select1'] as const);
 
 export type SelectType = CollectionValues<typeof selectLocalNames>;
 
