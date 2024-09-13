@@ -3,12 +3,16 @@ import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 import { ModelValueNodeAnswer } from '../answer/ModelValueNodeAnswer.ts.ts';
 import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
 import { StringNodeAnswer } from '../answer/StringNodeAnswer.ts';
+import { TriggerNodeAnswer } from '../answer/TriggerNodeAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { getNodeForReference } from './traversal.ts';
 
 const isValueNode = (node: AnyNode) => {
 	return (
-		node.nodeType === 'model-value' || node.nodeType === 'select' || node.nodeType === 'string'
+		node.nodeType === 'model-value' ||
+		node.nodeType === 'select' ||
+		node.nodeType === 'string' ||
+		node.nodeType === 'trigger'
 	);
 };
 
@@ -28,6 +32,9 @@ export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAn
 
 		case 'string':
 			return new StringNodeAnswer(node);
+
+		case 'trigger':
+			return new TriggerNodeAnswer(node);
 
 		default:
 			throw new UnreachableError(node);

@@ -8,6 +8,7 @@ import {
 	extendExpect,
 	instanceAssertion,
 } from '@getodk/common/test/assertions/helpers.ts';
+import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import { constants, type ValidationCondition } from '@getodk/xforms-engine';
 import { expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
@@ -62,9 +63,23 @@ const matchDefaultMessage = (condition: ValidationCondition) => {
 
 export const answerExtensions = extendExpect(expect, {
 	toEqualAnswer: new SymmetricTypedExpectExtension(assertComparableAnswer, (actual, expected) => {
-		const pass = actual.stringValue === expected.stringValue;
+		let result: SimpleAssertionResult | null = null;
 
-		return pass || new InspectableComparisonError(actual, expected, 'equal');
+		if (typeof expected.equals === 'function') {
+			result = expected.equals(actual);
+		}
+
+		if (result == null && typeof actual.equals === 'function') {
+			result = actual.equals(expected);
+		}
+
+		if (result == null) {
+			const pass = actual.stringValue === expected.stringValue;
+
+			result = pass || new InspectableComparisonError(actual, expected, 'equal');
+		}
+
+		return result;
 	}),
 
 	toHaveAnswerCloseTo: new AsymmetricTypedExpectExtension(
