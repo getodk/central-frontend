@@ -1,5 +1,6 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
+	AnyUnsupportedControlNode,
 	GroupNode,
 	NoteNode,
 	RepeatInstanceNode,
@@ -10,9 +11,17 @@ import type {
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
 
+// prettier-ignore
+export type QuestionPositionalEventNode =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| NoteNode
+	| SelectNode
+	| StringNode
+	| AnyUnsupportedControlNode;
+
 export interface PositionalEventTypeMapping {
 	readonly BEGINNING_OF_FORM: RootNode;
-	readonly QUESTION: NoteNode | SelectNode | StringNode;
+	readonly QUESTION: QuestionPositionalEventNode;
 	readonly GROUP: GroupNode;
 	readonly REPEAT: RepeatInstanceNode;
 	readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored
