@@ -39,10 +39,10 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('enabled.true[0].weWillShare') }}</strong>
           </template>
           <template #termsOfService>
-            <a href="https://getodk.org/legal/tos.html" target="_blank">{{ $t('enabled.true[0].termsOfService') }}</a>
+            <a href="https://getodk.org/tos" target="_blank">{{ $t('enabled.true[0].termsOfService') }}</a>
           </template>
           <template #privacyPolicy>
-            <a href="https://getodk.org/legal/privacy.html" target="_blank">{{ $t('enabled.true[0].privacyPolicy') }}</a>
+            <a href="https://getodk.org/privacy" target="_blank">{{ $t('enabled.true[0].privacyPolicy') }}</a>
           </template>
         </i18n-t>
       </label>
