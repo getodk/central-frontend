@@ -9,12 +9,14 @@ import { PromptNewRepeatEvent } from './PromptNewRepeatEvent.ts';
 import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
 import { StringInputQuestionEvent } from './StringInputQuestionEvent.ts';
+import { UnsupportedControlQuestionEvent } from './UnsupportedControlQuestionEvent.ts';
 
 // prettier-ignore
 export type AnyQuestionEvent =
 	| NoteQuestionEvent
 	| SelectQuestionEvent
-	| StringInputQuestionEvent;
+	| StringInputQuestionEvent
+	| UnsupportedControlQuestionEvent;
 
 // prettier-ignore
 export type NonTerminalPositionalEvent =
@@ -78,6 +80,12 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 
 				case 'string':
 					return StringInputQuestionEvent.from(node);
+
+				case 'range':
+				case 'rank':
+				case 'trigger':
+				case 'upload':
+					return UnsupportedControlQuestionEvent.from(node);
 
 				default:
 					throw new UnreachableError(node);

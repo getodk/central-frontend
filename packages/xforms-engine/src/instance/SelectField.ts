@@ -127,10 +127,6 @@ export class SelectField
 		this.validation = createValidationState(this, sharedStateOptions);
 	}
 
-	getViolation(): AnyViolation | null {
-		return this.validation.engineState.violation;
-	}
-
 	protected getSelectItemsByValue(
 		valueOptions: readonly SelectItem[] = this.getValueOptions()
 	): ReadonlyMap<string, SelectItem> {
@@ -220,6 +216,10 @@ export class SelectField
 	}
 
 	// ValidationContext
+	getViolation(): AnyViolation | null {
+		return this.validation.engineState.violation;
+	}
+
 	isBlank(): boolean {
 		return this.engineState.value.length === 0;
 	}

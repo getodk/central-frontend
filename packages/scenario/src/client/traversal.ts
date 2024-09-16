@@ -28,6 +28,10 @@ export const collectFlatNodeList = (currentNode: AnyNode): readonly AnyNode[] =>
 		case 'note':
 		case 'select':
 		case 'string':
+		case 'range':
+		case 'rank':
+		case 'trigger':
+		case 'upload':
 			return [currentNode];
 
 		default:
@@ -60,6 +64,10 @@ export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | n
 		case 'note':
 		case 'string':
 		case 'select':
+		case 'range':
+		case 'rank':
+		case 'trigger':
+		case 'upload':
 			return getClosestRepeatRange(currentNode.parent);
 
 		default:

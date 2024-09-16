@@ -4,8 +4,12 @@ import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
 import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import { ControlDefinition } from './control/ControlDefinition.ts';
 import { InputDefinition } from './control/InputDefinition.ts';
+import { RangeControlDefinition } from './control/RangeControlDefinition.ts';
+import { RankControlDefinition } from './control/RankControlDefinition.ts';
 import type { AnySelectDefinition } from './control/select/SelectDefinition.ts';
 import { SelectDefinition } from './control/select/SelectDefinition.ts';
+import { TriggerControlDefinition } from './control/TriggerControlDefinition.ts';
+import { UploadControlDefinition } from './control/UploadControlDefinition.ts';
 import { LogicalGroupDefinition } from './group/LogicalGroupDefinition.ts';
 import { PresentationGroupDefinition } from './group/PresentationGroupDefinition.ts';
 import { StructuralGroupDefinition } from './group/StructuralGroupDefinition.ts';
@@ -21,7 +25,11 @@ export interface BodyElementParentContext {
 // prettier-ignore
 export type ControlElementDefinition =
 	| AnySelectDefinition
-	| InputDefinition;
+	| InputDefinition
+	| RangeControlDefinition
+	| RankControlDefinition
+	| TriggerControlDefinition
+	| UploadControlDefinition;
 
 type SupportedBodyElementDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
@@ -41,6 +49,10 @@ const BodyElementDefinitionConstructors = [
 	StructuralGroupDefinition,
 	InputDefinition,
 	SelectDefinition,
+	RangeControlDefinition,
+	RankControlDefinition,
+	TriggerControlDefinition,
+	UploadControlDefinition,
 ] as const satisfies readonly BodyElementDefinitionConstructor[];
 
 export type AnyBodyElementDefinition =

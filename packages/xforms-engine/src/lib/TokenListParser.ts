@@ -11,16 +11,20 @@ type TokenListIterator<CanonicalToken extends string> = IterableIterator<
 	PartiallyKnownString<CanonicalToken>
 >;
 
+type PassthroughTokenList = Readonly<Record<string, boolean>>;
+
 /**
  * @see {@link TokenListParser}
  */
 // prettier-ignore
-export type TokenList<CanonicalToken extends string = string> = {
-	readonly [Key in TokenListKey<CanonicalToken>]:
-		Key extends SymbolIterator
-			? () => TokenListIterator<CanonicalToken>
-			: boolean;
-};
+export type TokenList<CanonicalToken extends string = string> =
+	& PassthroughTokenList
+	& {
+		readonly [Key in TokenListKey<CanonicalToken>]:
+			Key extends SymbolIterator
+				? () => TokenListIterator<CanonicalToken>
+				: boolean;
+	};
 
 interface TokenListAlias<CanonicalToken extends string> {
 	readonly fromAlias: string;
@@ -101,7 +105,7 @@ export class TokenListParser<
 	private readonly aliases: ReadonlyMap<string, CanonicalToken>;
 
 	constructor(
-		readonly canonicalTokens: readonly CanonicalToken[],
+		readonly canonicalTokens: readonly CanonicalToken[] = [],
 		options?: TokenListParserOptions<TokenAlias>
 	) {
 		this.aliases = new Map(

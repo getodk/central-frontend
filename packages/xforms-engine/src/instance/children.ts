@@ -1,6 +1,11 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
+import type { RangeNodeDefinition } from '../client/unsupported/RangeNode.ts';
+import type { RankNodeDefinition } from '../client/unsupported/RankNode.ts';
+import type { TriggerNodeDefinition } from '../client/unsupported/TriggerNode.ts';
+import type { UnsupportedControlDefinition } from '../client/unsupported/UnsupportedControlNode.ts';
+import type { UploadNodeDefinition } from '../client/unsupported/UploadNode.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
@@ -15,6 +20,10 @@ import { SelectField } from './SelectField.ts';
 import type { StringFieldDefinition } from './StringField.ts';
 import { StringField } from './StringField.ts';
 import { Subtree } from './Subtree.ts';
+import { RangeControl } from './unsupported/RangeControl.ts';
+import { RankControl } from './unsupported/RankControl.ts';
+import { TriggerControl } from './unsupported/TriggerControl.ts';
+import { UploadControl } from './unsupported/UploadControl.ts';
 
 const isSubtreeDefinition = (
 	definition: ModelSubtreeDefinition
@@ -22,7 +31,18 @@ const isSubtreeDefinition = (
 	return definition.bodyElement == null;
 };
 
-type ControlNodeDefinition = SelectFieldDefinition | StringFieldDefinition;
+type AnyUnsupportedControlDefinition =
+	| RangeNodeDefinition
+	| RankNodeDefinition
+	| TriggerNodeDefinition
+	| UploadNodeDefinition;
+
+// prettier-ignore
+type ControlNodeDefinition =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| SelectFieldDefinition
+	| StringFieldDefinition
+	| AnyUnsupportedControlDefinition;
 
 type AnyLeafNodeDefinition = ControlNodeDefinition | ModelValueDefinition;
 
@@ -36,6 +56,36 @@ const isStringFieldDefinition = (
 	definition: ControlNodeDefinition
 ): definition is StringFieldDefinition => {
 	return definition.bodyElement.type === 'input';
+};
+
+const isSelectFieldDefinition = (
+	definition: ControlNodeDefinition
+): definition is SelectFieldDefinition => {
+	return definition.bodyElement.type === 'select' || definition.bodyElement.type === 'select1';
+};
+
+const isRangeNodeDefinition = (
+	definition: UnsupportedControlDefinition
+): definition is RangeNodeDefinition => {
+	return definition.bodyElement.type === 'range';
+};
+
+const isRankNodeDefinition = (
+	definition: UnsupportedControlDefinition
+): definition is RankNodeDefinition => {
+	return definition.bodyElement.type === 'rank';
+};
+
+const isTriggerNodeDefinition = (
+	definition: ControlNodeDefinition
+): definition is TriggerNodeDefinition => {
+	return definition.bodyElement.type === 'trigger';
+};
+
+const isUploadNodeDefinition = (
+	definition: ControlNodeDefinition
+): definition is UploadNodeDefinition => {
+	return definition.bodyElement.type === 'range';
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
@@ -78,7 +128,27 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 					return new StringField(parent, leafChild);
 				}
 
-				return new SelectField(parent, leafChild);
+				if (isSelectFieldDefinition(leafChild)) {
+					return new SelectField(parent, leafChild);
+				}
+
+				if (isRangeNodeDefinition(leafChild)) {
+					return new RangeControl(parent, leafChild);
+				}
+
+				if (isRankNodeDefinition(leafChild)) {
+					return new RankControl(parent, leafChild);
+				}
+
+				if (isTriggerNodeDefinition(leafChild)) {
+					return new TriggerControl(parent, leafChild);
+				}
+
+				if (isUploadNodeDefinition(leafChild)) {
+					return new UploadControl(parent, leafChild);
+				}
+
+				throw new UnreachableError(leafChild);
 			}
 
 			default: {

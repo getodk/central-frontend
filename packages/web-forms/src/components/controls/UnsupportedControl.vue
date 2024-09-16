@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { AnyControlNode } from '@getodk/xforms-engine';
+import type { AnyUnsupportedControlNode } from '@getodk/xforms-engine';
 
-defineProps<{ question: AnyControlNode }>();
-
-const isDev = () => {
-	return import.meta.env.DEV;
-};
+defineProps<{ question: AnyUnsupportedControlNode }>();
 </script>
+
 <template>
-	<div v-if="isDev()">
+	<div>
 		Unsupported field {<strong>{{ question.nodeType }}</strong>} in the form definition.
 	</div>
 </template>
