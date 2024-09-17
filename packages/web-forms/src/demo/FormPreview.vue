@@ -3,6 +3,7 @@ import { xformFixturesByCategory, XFormResource } from '@getodk/common/fixtures/
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import OdkWebForm from '../components/OdkWebForm.vue';
+import FeedbackButton from './FeedbackButton.vue';
 
 const route = useRoute();
 
@@ -37,9 +38,11 @@ const handleSubmit = () => {
 	alert(`Submit button was pressed`);
 };
 </script>
-
 <template>
-	<OdkWebForm v-if="formXML" :form-xml="formXML" @submit="handleSubmit" />
+	<template v-if="formXML">
+		<OdkWebForm :form-xml="formXML" @submit="handleSubmit" />
+		<FeedbackButton />
+	</template>
 	<div v-else>
 		Loading...
 	</div>
