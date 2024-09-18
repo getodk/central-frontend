@@ -1,4 +1,5 @@
-import { XHTML_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import type { XFormFixture } from '@getodk/common/fixtures/xforms.ts';
+import { xformFixtures } from '@getodk/common/fixtures/xforms.ts';
 import Assignment from '@suid/icons-material/Assignment';
 import ChevronLeft from '@suid/icons-material/ChevronLeft';
 import {
@@ -12,90 +13,36 @@ import {
 	Typography,
 	styled,
 } from '@suid/material';
-import { For, Show, createComputed, createMemo, createSignal } from 'solid-js';
+import { For, Show, createComputed, createSignal } from 'solid-js';
 
 const DemoBackButton = styled(Button)(({ theme }) => ({
 	marginBlockEnd: theme.spacing(2),
 }));
 
-const formFixtureGlobImports = import.meta.glob('../../../fixtures/xforms/**/*.xml', {
-	as: 'raw',
-	eager: true,
-});
-
-export interface SelectedDemoFixture {
-	readonly key: string;
-	readonly name: string;
-	readonly title: string;
-	readonly url: string;
-	readonly xml: string;
-}
-
 interface DemoFixturesListProps {
-	setDemoFixture(selected: SelectedDemoFixture | null): void;
+	setDemoFixture(selected: XFormFixture | null): void;
 }
-
-const domParser = new DOMParser();
 
 export const DemoFixturesList = (props: DemoFixturesListProps) => {
-	const [selectedFixtureKey, setSelectedFixtureKey] = createSignal<string>();
-	const getFixtures = () => {
-		const baseEntries = Object.entries(formFixtureGlobImports);
-
-		const entries = baseEntries.map(([key, xml]): readonly [string, SelectedDemoFixture] => {
-			const name = key.replace(/^.*\/([^/]+)$/, '$1');
-			const url = new URL(key, import.meta.url).pathname;
-			const parsed: XMLDocument = domParser.parseFromString(xml, 'text/xml');
-			const title =
-				parsed.getElementsByTagNameNS(XHTML_NAMESPACE_URI, 'title')[0]?.textContent ?? name;
-
-			return [
-				key,
-				{
-					key,
-					name,
-					title,
-					url,
-					xml,
-				} as const,
-			];
-		});
-
-		return new Map(entries);
-	};
-
-	const isDemoFixture = (fixtureKey: string) =>
-		fixtureKey.includes('/notes/') ||
-		fixtureKey.includes('/computations-demo/') ||
-		fixtureKey.includes('/repeats/') ||
-		fixtureKey.includes('/performance/') ||
-		fixtureKey.includes('/itext/') ||
-		fixtureKey.includes('/select/') ||
-		fixtureKey.includes('/smoke-tests/');
-	const demoFixtures = createMemo(() =>
-		Array.from(getFixtures().values()).filter(({ key }) => isDemoFixture(key))
-	);
+	const [selectedFixture, setSelectedFixture] = createSignal<XFormFixture>();
 
 	createComputed(() => {
-		const key = selectedFixtureKey();
-		const fixtures = getFixtures();
+		const fixture = selectedFixture();
 
-		if (key == null) {
+		if (fixture == null) {
 			props.setDemoFixture(null);
 
 			return;
 		}
-
-		const fixture = fixtures.get(key);
 
 		props.setDemoFixture(fixture ?? null);
 	});
 
 	return (
 		<Show
-			when={selectedFixtureKey() == null}
+			when={selectedFixture() == null}
 			fallback={
-				<DemoBackButton onClick={() => setSelectedFixtureKey()}>
+				<DemoBackButton onClick={() => setSelectedFixture()}>
 					<ChevronLeft />
 					Demo forms
 				</DemoBackButton>
@@ -104,18 +51,20 @@ export const DemoFixturesList = (props: DemoFixturesListProps) => {
 			<Stack spacing={2}>
 				<Typography variant="h1">Demo forms</Typography>
 				<List>
-					<For each={demoFixtures()}>
+					<For each={xformFixtures}>
 						{(demoFixture) => (
 							<ListItem>
 								<ListItemButton
 									onClick={() => {
-										setSelectedFixtureKey(demoFixture.key);
+										setSelectedFixture(demoFixture);
 									}}
 								>
 									<ListItemIcon>
 										<Assignment />
 									</ListItemIcon>
-									<ListItemText>{demoFixture.title}</ListItemText>
+									<ListItemText>
+										{demoFixture.category} &rsaquo; {demoFixture.identifier}
+									</ListItemText>
 								</ListItemButton>
 							</ListItem>
 						)}

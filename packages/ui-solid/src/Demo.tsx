@@ -1,13 +1,14 @@
+import type { XFormFixture } from '@getodk/common/fixtures/xforms.ts';
 import { initializeForm } from '@getodk/xforms-engine';
 import { createEffect, createMemo, createResource, createSignal, on } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 import { App } from './App.tsx';
-import { DemoFixturesList, type SelectedDemoFixture } from './components/Demo/DemoFixturesList.tsx';
+import { DemoFixturesList } from './components/Demo/DemoFixturesList.tsx';
 
 export const Demo = () => {
-	const [fixture, setFixture] = createSignal<SelectedDemoFixture | null>(null);
+	const [fixture, setFixture] = createSignal<XFormFixture | null>(null);
 	const [fixtureForm, { refetch }] = createResource(async () => {
-		const sourceXML = fixture()?.xml;
+		const sourceXML = await fixture()?.loadXML();
 
 		if (sourceXML != null) {
 			return initializeForm(sourceXML, {
@@ -19,7 +20,7 @@ export const Demo = () => {
 
 		return null;
 	});
-	const entry = createMemo(() => {
+	const root = createMemo(() => {
 		return fixtureForm() ?? null;
 	});
 
@@ -29,5 +30,5 @@ export const Demo = () => {
 		})
 	);
 
-	return <App extras={<DemoFixturesList setDemoFixture={setFixture} />} root={entry()} />;
+	return <App extras={<DemoFixturesList setDemoFixture={setFixture} />} root={root()} />;
 };
