@@ -85,7 +85,7 @@ const isTriggerNodeDefinition = (
 const isUploadNodeDefinition = (
 	definition: ControlNodeDefinition
 ): definition is UploadNodeDefinition => {
-	return definition.bodyElement.type === 'range';
+	return definition.bodyElement.type === 'upload';
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
