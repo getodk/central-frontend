@@ -5,7 +5,7 @@ import { getReactiveForm } from '../helpers';
 
 describe('FormHeader', () => {
 	it('shows form title', async () => {
-		const xform = await getReactiveForm('computations-demo/1-calculate-simple.xform.xml');
+		const xform = await getReactiveForm('1-calculate-simple.xform.xml');
 
 		const component = mount(FormHeader, {
 			props: {

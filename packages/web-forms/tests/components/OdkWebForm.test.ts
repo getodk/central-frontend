@@ -8,8 +8,8 @@ import {
 	type ElementMethodName,
 } from '../helpers';
 
-const mountComponent = () => {
-	const xform = getFormXml('validation/2-simple-required.xml');
+const mountComponent = async () => {
+	const xform = await getFormXml('2-simple-required.xml');
 
 	const component = mount(OdkWebForm, {
 		props: {
@@ -46,7 +46,7 @@ describe('OdkWebForm', () => {
 	});
 
 	it('shows validation banner and highlights on submit and hide once valid value(s) are set', async () => {
-		const component = mountComponent();
+		const component = await mountComponent();
 		await flushPromises();
 
 		// Assert no validation banner and no highlighted question
@@ -69,7 +69,7 @@ describe('OdkWebForm', () => {
 	});
 
 	it('shows validation banner and highlights again if any question becomes invalid again', async () => {
-		const component = mountComponent();
+		const component = await mountComponent();
 		await flushPromises();
 
 		// Assert no validation banner and no highlighted question

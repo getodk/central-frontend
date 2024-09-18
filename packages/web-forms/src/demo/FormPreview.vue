@@ -1,28 +1,24 @@
 <script setup lang="ts">
+import { xformFixturesByCategory } from '@getodk/common/fixtures/xforms.ts';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import OdkWebForm from '../components/OdkWebForm.vue';
 
 const route = useRoute();
 
-const formFixtureGlobImports = import.meta.glob<false, 'raw', string>(
-	'../../../ui-solid/fixtures/xforms/**/*.xml',
-	{
-		query: '?raw',
-		import: 'default',
-		eager: false,
-	}
-);
-
 const categoryParam = route.params.category as string;
 const formParam = route.params.form as string;
-const formPath = `../../../ui-solid/fixtures/xforms/${categoryParam}/${formParam}`;
 
 const formXML = ref<string>();
 
-formFixtureGlobImports[formPath]()
-	.then((xml: string) => {
-		formXML.value = xml;
+const demoFixture = xformFixturesByCategory.get(categoryParam)?.find((fixture) => {
+	return fixture.identifier === formParam;
+});
+
+demoFixture
+	?.loadXML()
+	.then((fixtureXML) => {
+		formXML.value = fixtureXML;
 	})
 	.catch((error) => {
 		// eslint-disable-next-line no-console

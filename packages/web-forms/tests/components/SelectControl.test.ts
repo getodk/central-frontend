@@ -6,7 +6,7 @@ import { getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (
 	questionNumber: number,
-	formPath = 'select/1-static-selects.xml',
+	formPath = '1-static-selects.xml',
 	submitPressed = false
 ) => {
 	const xform = await getReactiveForm(formPath);
@@ -66,7 +66,7 @@ describe('SelectControl', () => {
 		});
 
 		it('shows validation message for invalid state', async () => {
-			const { component } = await mountComponent(4, 'validation/1-validation.xml');
+			const { component } = await mountComponent(4, '1-validation.xml');
 			const pakistan = component.find('input[id*=_pk]');
 			await pakistan.setValue();
 			expect(component.get('.validation-message').isVisible()).toBe(true);
@@ -74,7 +74,7 @@ describe('SelectControl', () => {
 		});
 
 		it('hides validation message when user enters a valid value', async () => {
-			const { component } = await mountComponent(4, 'validation/1-validation.xml');
+			const { component } = await mountComponent(4, '1-validation.xml');
 			const pakistan = component.find('input[id*=_pk]');
 			await pakistan.setValue();
 			const canada = component.find('input[id*=_ca]');
@@ -83,7 +83,7 @@ describe('SelectControl', () => {
 		});
 
 		it('shows validation message on submit pressed even when no interaction is made with the component', async () => {
-			const { component } = await mountComponent(4, 'validation/1-validation.xml', true);
+			const { component } = await mountComponent(4, '1-validation.xml', true);
 			expect(component.get('.validation-message').isVisible()).toBe(true);
 			expect(component.get('.validation-message').text()).toBe('Condition not satisfied: required');
 		});

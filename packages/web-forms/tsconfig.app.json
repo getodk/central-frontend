@@ -1,17 +1,32 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": ["node_modules", "../../node_modules", "src/**/__tests__/*"],
+  "include": [
+    "../common/src/**/*.ts",
+    "../common/types/**/*.ts",
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+    "../common/src/test/**/*.ts",
+    "node_modules",
+    "../../node_modules",
+    "src/**/__tests__/*"
+  ],
   "compilerOptions": {
     "composite": true,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "emitDeclarationOnly": true,
     // `vue-tsc` errors without this, regardless of whether it's specified on
     // the CLI. Ugh.
     "noEmit": false,
     "baseUrl": ".",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@getodk/common/types/*": ["../common/types/*"],
+      "@getodk/common/*": ["../common/src/*"]
     },
     "skipLibCheck": true,
     "plugins": [{ "name": "ts-vue-plugin" }]

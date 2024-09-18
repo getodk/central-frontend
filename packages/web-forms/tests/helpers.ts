@@ -1,3 +1,4 @@
+import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
 import { initializeForm } from '@getodk/xforms-engine';
@@ -7,21 +8,18 @@ import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
 import { reactive } from 'vue';
 
-const formFixtures = import.meta.glob<true, 'raw', string>(
-	'../../ui-solid/fixtures/xforms/**/*.xml',
-	{
-		query: '?raw',
-		import: 'default',
-		eager: true,
-	}
-);
+export const getFormXml = (fileName: string): Promise<string> => {
+	const fixture = xformFixturesByIdentifier.get(fileName);
 
-export const getFormXml = (formPath: string): string => {
-	return formFixtures[`../../ui-solid/fixtures/xforms/${formPath}`];
+	if (fixture == null) {
+		throw new Error(`Could not find fixture with file name: ${fileName}`);
+	}
+
+	return fixture.loadXML();
 };
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
-	const formXml: string = formFixtures[`../../ui-solid/fixtures/xforms/${formPath}`];
+	const formXml = await getFormXml(formPath);
 
 	return await initializeForm(formXml, {
 		config: {

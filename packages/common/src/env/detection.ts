@@ -1,3 +1,15 @@
+interface AmbiguousRuntimeEnvironmentGlobalThis {
+	readonly process?: unknown;
+}
+
+const ambiguousGlobalThis = globalThis as unknown as AmbiguousRuntimeEnvironmentGlobalThis;
+
+interface MaybeNodeJSProcess {
+	readonly versions?: {
+		readonly node?: string;
+	};
+}
+
 /**
  * Specifies detection of Node runtime environment.
  */
@@ -7,7 +19,7 @@
 // prettier-ignore
 export const IS_NODE_RUNTIME =
 	// Previously we only checked that this global object is defined...
-	typeof process === 'object' && process !== null &&
+	typeof ambiguousGlobalThis.process === 'object' && ambiguousGlobalThis.process !== null &&
 
 	// ... we have added this heuristic to adapt to a change in Vitest's browser
 	// mode, which began poulating `process.env` (via Vite's `define` config) with
@@ -16,4 +28,4 @@ export const IS_NODE_RUNTIME =
 	// itself (though it appears there is some guidance to use it and/or its
 	// framework-specific variants for certain browser testing scenarios since
 	// @vitest/browser v2).
-	typeof (process as Partial<NodeJS.Process>).versions?.node === 'string';
+	typeof (ambiguousGlobalThis.process as MaybeNodeJSProcess).versions?.node === 'string';
