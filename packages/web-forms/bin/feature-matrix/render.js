@@ -17,14 +17,14 @@ const template = await fs.readFile(
 const readmeFile = await fs.readFile(new URL('./README.md', rootUrl), 'utf-8');
 
 // Modified version of https://gist.github.com/rougier/c0d31f5cbdaac27b876c?permalink_comment_id=2269298#gistcomment-2269298
-const progress = ({ value, length = 20 }) => {
+const progress = ({ value, length = 15 }) => {
 	const v = (value / 100) * length;
 	const x = v < 1 ? 1 : Math.floor(v);
 	const bar = Array(x).fill('█').join('');
 	const remaining = Array(length - bar.length)
 		.fill('█')
 		.join('');
-	return `\\color{green}${bar}\\color{LightGray}${remaining} \\space \\color{initial} ${value}\\%`;
+	return `\\color{green}${bar}\\color{LightGray}${remaining} \\color{initial} ${value}\\\\%`;
 };
 
 // Not so smart, blindly breaks the word. Okay for now.
@@ -35,6 +35,18 @@ const wrapString = (str, maxLength) => {
 	}
 	return parts.join('<br/>');
 };
+
+// prettier-ignore
+const categoryPaddings = {
+	'Question types (basic functionality)': 5,
+	'Appearances': 41,
+	'Parameters': 43,
+	'Form Logic': 43,
+	'Descriptions and Annotations': 14,
+	'Theme and Layouts': 30,
+	'Offline capabilities': 31,
+	'XPath': 51,
+}
 
 // Transform feature-matrix.json object into array
 const featureCategories = Object.keys(featureMatrix).map((featureCategory) => {
@@ -50,17 +62,16 @@ const featureCategories = Object.keys(featureMatrix).map((featureCategory) => {
 		(features.filter((f) => f.status === '✅').length / features.length) * 100
 	);
 
-	// hack: Space character in Latex monospace font is not same size as other characters.
-	//       Using '=' sign with transparent color for padding. 🙃
-	let label = `${featureCategory}`.padEnd(40, '=').replaceAll(' ', ' \\space \\space ');
-	label = label.replace('=', '\\color{transparent}=');
+	// hack: Characters in GitHub Latex monospace font is not same size.
+	//       Hardcoding padding 🙃
+	let label = `${featureCategory}\\hspace{${categoryPaddings[featureCategory]}mm}`;
 
 	const progressOutput = progress({ value: progressPercentage });
 
 	return {
 		// Using Latex for <summary> of collapsible - this allows using colored text in MD.
 		// mathtt is for monospace.
-		label: '${\\mathtt{' + label + ' ' + progressOutput + '}}$',
+		label: '#####  $\\texttt{' + label + '' + progressOutput + '}$',
 		features,
 	};
 });

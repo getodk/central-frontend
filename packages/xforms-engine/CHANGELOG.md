@@ -1,5 +1,17 @@
 # @getodk/xforms-engine
 
+## 0.4.0
+
+### Minor Changes
+
+- 6fb1054: Engine support for `<trigger>`
+
+### Patch Changes
+
+- c3b7165: - Fix: unsupported controls treated as `ModelValueNode`
+  - Stub unsupported control nodes: `range`, `odk:rank`, `upload`
+- 5f50bd3: Fixed the name of upload node for parsing the Form
+
 ## 0.3.0
 
 ### Minor Changes
