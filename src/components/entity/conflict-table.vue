@@ -384,7 +384,8 @@ defineExpose({ resize });
       "lastGoodVersion": "Dies ist die aktuellste Version in guter Übereinstimmung. Nach diesem Update wurden potenziell widersprüchliche Updates parallel durchgeführt.",
       "softConflict": "Diese Version könnte auf alten Daten basieren.",
       "hardConflict": "Diese Version wurde parallel zu anderen Updates erstellt, von denen einige versuchen, auf dieselben Eigenschaften wie dieses Update zu schreiben."
-    }
+    },
+    "branch": "Offline-Aktualisierungskette"
   },
   "es": {
     "noConflicts": "No hay conflictos para mostrar.",
@@ -401,7 +402,8 @@ defineExpose({ resize });
       "lastGoodVersion": "Esta es la versión más reciente en buen acuerdo. Después de esta actualización, se han realizado actualizaciones potencialmente conflictivas en paralelo.",
       "softConflict": "Esta versión puede haber sido creada en base a datos antiguos.",
       "hardConflict": "Esta versión se realizó en paralelo con otras actualizaciones, algunas de las cuales intentan escribir en las mismas propiedades que esta actualización."
-    }
+    },
+    "branch": "Cadena de actualización offline"
   },
   "fr": {
     "noConflicts": "Il n'y a pas de conflit à afficher.",
@@ -418,7 +420,8 @@ defineExpose({ resize });
       "lastGoodVersion": "Ceci est la version cohérente la plus récente. Après cette mise à jour, des mises à jour potentiellement contradictoires ont été effectuées en parallèle.",
       "softConflict": "Cette version pourrait avoir été faite sur la base d'une vieille donnée.",
       "hardConflict": "Cette version a été faite en parallèle avec d'autres, certaines tentent d'écrire les mêmes propriétés que cette mise à jour."
-    }
+    },
+    "branch": "Chaîne de mise à jour hors ligne"
   },
   "it": {
     "noConflicts": "Non ci sono conflitti da mostrare.",
@@ -435,7 +438,8 @@ defineExpose({ resize });
       "lastGoodVersion": "Questa è la versione più recente in buon accordo. Dopo questo aggiornamento, sono state effettuate aggiornamenti potenzialmente in contrasto in parallelo.",
       "softConflict": "Questa versione potrebbe essere stata creata basandosi su dati vecchi.",
       "hardConflict": "Questa versione è stata realizzata parallelamente ad altri aggiornamenti, alcuni dei quali cercano di scrivere sulle stesse proprietà di questo aggiornamento."
-    }
+    },
+    "branch": "Catena di aggiornamento offline"
   },
   "zh-Hant": {
     "noConflicts": "沒有可顯示的衝突。",
@@ -452,7 +456,8 @@ defineExpose({ resize });
       "lastGoodVersion": "這是吻合良好的最新版本。在此更新之後，同時進行了可能存在衝突的更新。",
       "softConflict": "這個版本可能是根據舊數據製作的。",
       "hardConflict": "此版本是與其他更新並行進行的，其中一些更新嘗試寫入與此更新相同的屬性。"
-    }
+    },
+    "branch": "離線更新鏈"
   }
 }
 </i18n>

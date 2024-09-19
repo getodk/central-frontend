@@ -202,7 +202,7 @@ if (currentUser.can('user.list'))
   },
   "zh-Hant": {
     "projects": {
-      "body": "Central 被組織成多個項目，每個項目都包含自己的表單和相關資料。"
+      "body": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
     },
     "users": {
       "body": "可以將使用者指派到專案來管理它們，或收集或審查提交的資料。"

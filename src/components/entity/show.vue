@@ -190,12 +190,18 @@ const branchData = modalData();
     "back": {
       "title": "Entitätsdetail",
       "back": "Zurück zu {datasetName} Tabelle"
+    },
+    "alert": {
+      "delete": "Die Entität \"{label}“ wurde gelöscht."
     }
   },
   "es": {
     "back": {
       "title": "Detalles de la entidad",
       "back": "Volver a la tabla {datasetName}"
+    },
+    "alert": {
+      "delete": "Entidad “{label}” se ha eliminado."
     }
   },
   "fr": {

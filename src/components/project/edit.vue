@@ -198,7 +198,7 @@ const submit = () => {
     "field": {
       "name": "專案名稱",
       "description": "專案描述",
-      "note": "在此處新增註釋、連結、說明和其他資源。"
+      "note": "在此處新增註釋、連結、指示和其他資源。"
     },
     "alert": {
       "success": "專案設定已儲存！"

@@ -414,7 +414,7 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "newPreview": {
-      "string": "",
+      "string": "Nuova anteprima",
       "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
     },
     "expand": {
@@ -670,7 +670,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formPreview": {
-      "string": "",
+      "string": "Anteprima formulario",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -909,14 +909,6 @@
         "entityTooLarge": {
           "string": "I dati che stai tentando di caricare sono troppo grandi."
         }
-      }
-    }
-  },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (archiviato)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   },
@@ -1412,6 +1404,15 @@
         }
       }
     },
+    "ConfigError": {
+      "title": {
+        "string": "Errore nel caricamento di Central",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": "C'è stato un errore nel caricamento di Central."
+      }
+    },
     "DatasetEntities": {
       "alert": {
         "upload": {
@@ -1746,6 +1747,10 @@
         "hardConflict": {
           "string": "Questa versione è stata realizzata parallelamente ad altri aggiornamenti, alcuni dei quali cercano di scrivere sulle stesse proprietà di questo aggiornamento."
         }
+      },
+      "branch": {
+        "string": "Catena di aggiornamento offline",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1832,6 +1837,10 @@
       "version": {
         "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "In questo caso, l'opinione dell'autore potrebbe non essere accurata.",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1891,6 +1900,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "Aggiornamento offline",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -3155,11 +3168,11 @@
       "webFormPreview": {
         "submissionModal": {
           "title": {
-            "string": "",
+            "string": "Anteprima di ODK Web Forms",
             "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           },
           "body": {
-            "string": "",
+            "string": "Il formulario è stato compilato utilizzando una prima versione del nuovo ODK Web Forms. L'invio non è stato inviato: attualmente è possibile visualizzare i formulari solo in ODK Web Forms.",
             "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           }
         }
@@ -4803,6 +4816,14 @@
           "string": "Ritira utente",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (archiviato)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

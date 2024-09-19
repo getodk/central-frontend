@@ -471,7 +471,7 @@ export default {
   },
   "zh-Hant": {
     "draftChecklist": {
-      "title": "清單草案"
+      "title": "草案清單"
     },
     "currentDraft": {
       "versionCaption": {
@@ -491,7 +491,7 @@ export default {
     },
     "alert": {
       "upload": "成功！新的表單定義已儲存為您的草稿。",
-      "publish": "您的草稿現已發布。任何檢索該項目表單的裝置現在都將收到新的表單定義和表單附件。",
+      "publish": "您的草稿現已發布。任何檢索該專案表單的裝置現在都將收到新的表單定義和表單附件。",
       "abandon": "此表格的草稿版本已成功刪除。",
       "delete": "表單「{name}」已刪除。"
     }

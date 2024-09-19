@@ -312,11 +312,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archivováno)"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
@@ -333,5 +328,10 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivováno)"
+    }
   }
 }

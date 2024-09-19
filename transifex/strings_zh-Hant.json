@@ -82,7 +82,7 @@
       "developer_comment": "This is the name of a user Role."
     },
     "manager": {
-      "string": "專案經理",
+      "string": "專案管理員",
       "developer_comment": "This is the name of a user Role."
     },
     "viewer": {
@@ -108,7 +108,7 @@
       "developer_comment": "Form States control the lifecycle state of each Form. \"Closed\" is one Form State."
     },
     "unpublished": {
-      "string": "尚未發佈",
+      "string": "尚未發布",
       "developer_comment": "This is a note about a Form that is not yet published."
     }
   },
@@ -208,7 +208,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
-          "string": "發佈",
+          "string": "發布",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
@@ -228,7 +228,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
-          "string": "發佈草稿",
+          "string": "發布草稿",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_draft_delete": {
@@ -561,7 +561,7 @@
       "string": "{count, plural, other {專案}}"
     },
     "submission": {
-      "string": "{count, plural, other {提交項目}}"
+      "string": "{count, plural, other {提交清單}}"
     },
     "user": {
       "string": "{count, plural, other {使用者}}"
@@ -610,7 +610,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
-      "string": "實體項目",
+      "string": "實體",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -691,7 +691,7 @@
   "moreInfo": {
     "clickHere": {
       "full": {
-        "string": "了解更多訊息, {clickHere}.",
+        "string": "可以{clickHere}了解更多訊息。",
         "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
       },
       "clickHere": {
@@ -808,7 +808,7 @@
       "developer_comment": "This is a title shown above a section of the page."
     },
     "dangerZone": {
-      "string": "危險區",
+      "string": "危險區域",
       "developer_comment": "This is a title shown above a section of the page."
     },
     "data": {
@@ -909,14 +909,6 @@
         "entityTooLarge": {
           "string": "您嘗試上傳的資料太大。"
         }
-      }
-    }
-  },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (已歸檔)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   },
@@ -1157,7 +1149,7 @@
           "string": "管理員人數"
         },
         "num_projects_encryption": {
-          "string": "啟用加密的項目數量"
+          "string": "啟用加密的專案數量"
         },
         "num_questions_biggest_form": {
           "string": "最大表格的問題數量"
@@ -1166,10 +1158,10 @@
           "string": "審核日誌條目數"
         },
         "num_archived_projects": {
-          "string": "已歸檔項目數量"
+          "string": "已歸檔專案數量"
         },
         "num_unique_managers": {
-          "string": "專案經理唯一數量"
+          "string": "專案管理員唯一數量"
         },
         "num_unique_viewers": {
           "string": "專案瀏覽者唯一數量"
@@ -1184,7 +1176,7 @@
           "string": "伺服器使用外部資料庫"
         },
         "num_managers": {
-          "string": "專案經理人數"
+          "string": "專案管理員人數"
         },
         "num_viewers": {
           "string": "專案瀏覽者數量"
@@ -1259,10 +1251,10 @@
           "string": "網路使用者提交的數量"
         },
         "has_description": {
-          "string": "項目有描述"
+          "string": "專案已有描述"
         },
         "description_length": {
-          "string": "項目描述的長度"
+          "string": "專案描述的長度"
         },
         "num_properties": {
           "string": "特性數量"
@@ -1348,7 +1340,7 @@
           "developer_comment": "This is the title shown above a series of metrics about Project usage."
         },
         "subtitle": {
-          "string": "{count, plural, other {(顯示 {count} 個項目中最活躍的項目)}}"
+          "string": "{count, plural, other {(顯示 {count} 個專案中最活躍的專案)}}"
         }
       },
       "submissionStates": {
@@ -1379,7 +1371,7 @@
     "AuditList": {
       "heading": {
         "0": {
-          "string": "在這裡您將找到在此伺服器上執行的重要操作的日誌。可以在此處找到對使用者、項目或表單設定所做的變更。"
+          "string": "在這裡您將找到在此伺服器上執行的重要操作的日誌。可以在此處找到對使用者、專案或表單設定所做的變更。"
         }
       },
       "emptyTable": {
@@ -1412,6 +1404,15 @@
         }
       }
     },
+    "ConfigError": {
+      "title": {
+        "string": "載入 Central 時出錯",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": "載入 Central 時發生錯誤。"
+      }
+    },
     "DatasetEntities": {
       "alert": {
         "upload": {
@@ -1422,7 +1423,7 @@
     "DatasetList": {
       "heading": {
         "0": {
-          "string": "實體允許您在表單之間共用訊息，以便您可以收集縱向資料、隨時間管理案例並透過多個步驟表示其他工作流程。",
+          "string": "實體清單允許您在表單之間共用資訊，以便收集縱向資料、隨時間管理案例，並透過多個步驟表示其他工作流程。",
           "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
@@ -1440,7 +1441,7 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "encrypted": {
-        "string": "該項目已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",
+        "string": "該專案已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",
         "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
       },
       "entityListName": {
@@ -1452,12 +1453,12 @@
           "string": "實體清單「{name}」已建立。"
         },
         "1": {
-          "string": "您可以透過直接在此頁面上新增其資料屬性或上傳使用它的表單來開始使用它。在這種情況下，當您發佈表單時，表單呼叫的任何屬性都會自動建立。"
+          "string": "您可以透過直接在此頁面上新增其資料屬性或上傳使用它的表單來開始使用它。在這種情況下，當您發布表單時，表單呼叫的任何屬性都會自動建立。"
         }
       },
       "problem": {
         "409_3": {
-          "string": "該項目中已存在名稱為「{datasetName}」的實體清單。"
+          "string": "該專案中已存在名稱為「{datasetName}」的實體清單。"
         }
       }
     },
@@ -1506,7 +1507,7 @@
           "string": "若要新增實體屬性，請在下方選個唯一屬性名稱。"
         },
         "1": {
-          "string": "您也可以透過上傳引用新屬性的表單來新增屬性，在這種情況下，屬性會在發佈表單時建立。"
+          "string": "您也可以透過上傳引用新屬性的表單來新增屬性，在這種情況下，屬性會在發布表單時建立。"
         }
       },
       "newPropertyName": {
@@ -1746,6 +1747,10 @@
         "hardConflict": {
           "string": "此版本是與其他更新並行進行的，其中一些更新嘗試寫入與此更新相同的屬性。"
         }
+      },
+      "branch": {
+        "string": "離線更新鏈",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1832,6 +1837,10 @@
       "version": {
         "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "在這種情況下，作者的觀點可能並不準確。",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1891,6 +1900,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "離線更新",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -2134,7 +2147,7 @@
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "unknownProperty": {
-          "string": "如果您想要向此實體清單新增屬性，您可以在此實體清單的概述頁面上的實體屬性部分中執行此操作，也可以上傳並發佈引用該屬性的表單。"
+          "string": "如果您想要向此實體清單新增屬性，您可以在此實體清單的概述頁面上的實體屬性部分中執行此操作，也可以上傳並發布引用該屬性的表單。"
         },
         "duplicateColumn": {
           "string": "看起來兩個或更多列具有相同的標題。請確保列標題是唯一的。"
@@ -2265,7 +2278,7 @@
         },
         "2": {
           "full": {
-            "string": "您可能想要存取此項目的 {formAccessSettings} 以授予此使用者對表單的存取權限。",
+            "string": "您可能想要存取此專案的 {formAccessSettings} 以授予此使用者對表單的存取權限。",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
@@ -2764,7 +2777,7 @@
           "body": {
             "0": {
               "status": {
-                "string": "當您確定草稿已準備好並且希望將其發佈到現場設備時，您可以使用右側的按鈕發布它。"
+                "string": "當您確定草稿已準備好並且希望將其發布到現場設備時，您可以使用右側的按鈕發布它。"
               },
               "link": {
                 "full": {
@@ -2772,7 +2785,7 @@
                   "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
                 },
                 "publish": {
-                  "string": "發佈",
+                  "string": "發布",
                   "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
                 }
               }
@@ -2783,7 +2796,7 @@
     },
     "FormDraftPublish": {
       "title": {
-        "string": "發佈草稿",
+        "string": "發布草稿",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "warnings": {
@@ -2849,7 +2862,7 @@
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
-          "string": "清單草案",
+          "string": "草案清單",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -2892,7 +2905,7 @@
           "string": "成功！新的表單定義已儲存為您的草稿。"
         },
         "publish": {
-          "string": "您的草稿現已發布。任何檢索該項目表單的裝置現在都將收到新的表單定義和表單附件。"
+          "string": "您的草稿現已發布。任何檢索該專案表單的裝置現在都將收到新的表單定義和表單附件。"
         },
         "abandon": {
           "string": "此表格的草稿版本已成功刪除。"
@@ -2909,10 +2922,10 @@
       },
       "body": {
         "0": {
-          "string": "您可以使用右側的設定代碼設定行動裝置來下載此草稿。您也可以點擊上面的「新建」按鈕，從網頁瀏覽器建立新的提交內容。"
+          "string": "您可以使用右側的設定代碼設定行動裝置來下載此草稿。您也可以點擊上面的「新增」按鈕，從網頁瀏覽器建立新的提交內容。"
         },
         "1": {
-          "string": "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發佈此表單草稿時，其測試提交內容將會永久刪除。"
+          "string": "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發布此表單草稿時，其測試提交內容將會永久刪除。"
         }
       },
       "collectProjectName": {
@@ -2977,7 +2990,7 @@
       },
       "alert": {
         "create": {
-          "string": "您的新表單「{name}」已建立為草稿。查看下面的清單，當您認為準備就緒時，您可以發佈表單以供使用。"
+          "string": "您的新表單「{name}」已建立為草稿。查看下面的清單，當您認為準備就緒時，您可以發發布單以供使用。"
         }
       }
     },
@@ -3014,7 +3027,7 @@
           }
         },
         "2": {
-          "string": "如果您有表單附件，則可以在建立表單後在下一頁上提供這些附件。"
+          "string": "如果您有表單附件，則可以在建立表單後，於下個頁面提供這些附件。"
         }
       },
       "dropZone": {
@@ -3051,7 +3064,7 @@
           "developer_comment": "The word \"XLSForm\" should not be translated."
         },
         "409_3": {
-          "string": "此項目中已存在表單 ID 為「{xmlFormId}」的表單。"
+          "string": "此專案中已存在表單 ID 為「{xmlFormId}」的表單。"
         }
       },
       "fields": {
@@ -3121,7 +3134,7 @@
           "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
         },
         "publishedVersion": {
-          "string": "已發佈版本",
+          "string": "已發布版本",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
         }
       },
@@ -3205,7 +3218,7 @@
         },
         "body": {
           "full": {
-            "string": "若要設定此表單的狀態，請存取項目 {formAccessSettings}。",
+            "string": "若要設定此表單的狀態，請存取專案 {formAccessSettings}。",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
@@ -3233,7 +3246,7 @@
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         },
         "newest": {
-          "string": "最新優先",
+          "string": "新表單優先",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
       }
@@ -3326,7 +3339,7 @@
     "FormVersionTable": {
       "header": {
         "published": {
-          "string": "已發佈",
+          "string": "已發布",
           "developer_comment": "This is the text of a table column header. The column shows who published the version of the Form, as well as when they did so."
         },
         "definition": {
@@ -3357,7 +3370,7 @@
     "HomeSummary": {
       "projects": {
         "body": {
-          "string": "Central 被組織成多個項目，每個項目都包含自己的表單和相關資料。"
+          "string": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
         }
       },
       "users": {
@@ -3538,16 +3551,16 @@
     },
     "ProjectArchive": {
       "title": {
-        "string": "歸檔項目",
+        "string": "歸檔專案",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "您即將歸檔項目「{name}」。它仍一樣工作，但它將被排序到 Central 主頁項目清單的底部。"
+          "string": "您即將歸檔「{name}」專案。它仍一樣工作，但它將被排序到 Central 主頁項目清單的底部。"
         },
         "1": {
           "full": {
-            "string": "{noUndo}，但計劃在未來版本中提供取消存檔項目的功能。",
+            "string": "{noUndo}，但計劃在未來版本中提供取消專案歸檔的功能。",
             "developer_comment": "{noUndo} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nThis action cannot be undone"
           },
           "noUndo": {
@@ -3572,7 +3585,7 @@
           "developer_comment": "This is the text of a form field."
         },
         "note": {
-          "string": "在此處新增註釋、連結、說明和其他資源。",
+          "string": "在此處新增註釋、連結、指示和其他資源。",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -3625,7 +3638,7 @@
             },
             "1": {
               "0": {
-                "string": "繁體)此外，在此版本的 ODK Central 中，以下內容均屬正確：",
+                "string": "此外，在此版本的 ODK Central 中，以下內容均屬正確：",
                 "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
@@ -3674,7 +3687,7 @@
       },
       "success": {
         "0": {
-          "string": "已為此項目配置加密。任何行動裝置都必須取得或重新取得最新的表單才能進行加密。"
+          "string": "已為此專案配置加密。任何行動裝置都必須取得或重新取得最新的表單才能進行加密。"
         }
       },
       "field": {
@@ -3692,7 +3705,7 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": "使用者只能查看並填寫下表中，明確授予他們存取權限的表格。專案經理和資料收集者可以使用 Web 瀏覽器填寫專案中，處於開啟狀態的任何表格。\n"
+          "string": "於下表中，明確授予 APP使用者 只能查看並填寫表格的存取權限。專案管理員和資料收集者可以使用 Web 瀏覽器填寫，於專案處於公開狀態的任何表格。"
         }
       },
       "emptyTable": {
@@ -3706,7 +3719,7 @@
     },
     "ProjectFormAccessRow": {
       "draftTitle": {
-        "string": "該表單尚無發佈版本。在草稿發佈之前，它不會出現在裝置上。發佈表單後，將使用此處顯示的設定。"
+        "string": "該表單尚無發布版本。在草稿發布之前，它不會出現在裝置上。發布表單後，將使用此處顯示的設定。"
       },
       "field": {
         "state": {
@@ -3726,7 +3739,7 @@
       },
       "introduction": {
         "0": {
-          "string": "表單狀態，可控制每個表單的生命週期狀態。通常（但並非總是如此），表單將起始於「公開」狀態，並在不需使用時，從「結案中」繼續到「已結案」。"
+          "string": "表單狀態，可控制每個表單的生命週期狀態。 通常，但不總是，表單會從「公開」（Open）狀態開始，當表單不再需要時，經過「結案中」（Closing）狀態，最後變為「已結案」（Closed）狀態。"
         },
         "1": {
           "full": {
@@ -3815,7 +3828,7 @@
     },
     "ProjectList": {
       "archived": {
-        "string": "備存專案",
+        "string": "已歸檔專案",
         "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
       },
       "action": {
@@ -3829,7 +3842,7 @@
           "string": "首先，創建一個專案。專案可透過對相關表單和使用者分組來幫助您組織資料。"
         },
         "cannotCreate": {
-          "string": "沒有可顯示的項目。如果您希望在此處看到項目，請與向您提供此帳戶的人員聯絡。他們可能需要為您應該看到的項目分配專案角色。"
+          "string": "沒有可顯示的專案。如果您希望在此處看到專案，請與向您提供此帳戶的人員聯絡。他們可能需要為您應該看到的專案分配專案角色。"
         }
       },
       "alert": {
@@ -3852,7 +3865,7 @@
     "ProjectOverviewDescription": {
       "instructions": {
         "full": {
-          "string": "將項目註釋、連結、說明和其他資源新增至 {projectSettings} 中的此空間。",
+          "string": "可由 {projectSettings} ，新增專案註釋、連結、指示和其他資源至以下空間。",
           "developer_comment": "This is shown in place of an empty project description and serves as a guide for where and how to change the description.\n\n{projectSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Settings"
         },
         "projectSettings": {
@@ -3861,7 +3874,7 @@
         }
       },
       "note": {
-        "string": "只有專案經理才能看到此建議。",
+        "string": "只有專案管理員才能看到此建議。",
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
       }
     },
@@ -3903,22 +3916,22 @@
       "dangerZone": {
         "action": {
           "archive": {
-            "string": "備存該專案",
+            "string": "歸檔該專案",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         },
         "archived": {
           "0": {
-            "string": "該項目已備存。"
+            "string": "該專案已歸檔。"
           },
           "1": {
-            "string": "在此版本的 ODK Central 中，您無法取消專案的備存。但是，計劃在未來版本中提供取消備存專案的功能。"
+            "string": "在此版本的 ODK Central 中，您無法取消專案的歸檔。但是，計劃在未來版本中提供專案取消歸檔的功能。"
           }
         }
       },
       "alert": {
         "archive": {
-          "string": "項目「{name}」已存檔。"
+          "string": "項目「{name}」已歸檔。"
         }
       }
     },
@@ -3929,7 +3942,7 @@
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         },
         "newest": {
-          "string": "最新優先",
+          "string": "新專案優先",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Projects."
         }
       }
@@ -3966,7 +3979,7 @@
         },
         "3": {
           "full": {
-            "string": "為每個要收集資料的人建立一個角色為 {dataCollector} 的 {webUser}。這些使用者將登入 Central 以在網頁瀏覽器中填寫此表格。專案經理也可以從網頁瀏覽器建立提交。",
+            "string": "為每個要收集資料的人建立一個角色為 {dataCollector} 的 {webUser}。這些使用者將登入 Central 以在網頁瀏覽器中填寫此表格。專案管理員也可以從網頁瀏覽器建立提交。",
             "developer_comment": "This text is shown in a list of options for submitting data.\n\nThe following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {webUser} has the text: Web User\n- {dataCollector} has the text: Data Collector"
           },
           "webUser": {
@@ -3983,7 +3996,7 @@
     "ProjectUserList": {
       "heading": {
         "0": {
-          "string": "網站管理員自動被視為每個專案的經理。其他使用者可以擁有特定於此項目的角色：",
+          "string": "網站管理員自動被視為每個專案的管理者。其他使用者可以擁有特定於此專案的角色：",
           "developer_comment": "This text is shown above a list of Roles."
         },
         "1": {
@@ -4008,7 +4021,7 @@
         },
         "3": {
           "full": {
-            "string": "繁體){dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
+            "string": "{dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
             "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
           },
           "dataCollectors": {
@@ -4046,7 +4059,7 @@
         }
       },
       "emptyTable": {
-        "string": "文 (繁體)尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶配任何使用者。"
+        "string": "尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶。"
       },
       "alert": {
         "unassignWithoutReassign": {
@@ -4289,7 +4302,7 @@
           "developer_comment": "This is the text of a form field."
         },
         "deletedFields": {
-          "string": "包含已發佈表單中未包含的字段",
+          "string": "包含已發布表單中未包含的字段",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -4459,12 +4472,12 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{selected} /{total}",
+        "string": "{selected}/{total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
         "columns": {
-          "string": "顯示的列",
+          "string": "顯示欄位",
           "developer_comment": "This is shown beneath text that indicates the number of columns that the user has selected to display in a table. For example, that text may read \"10 of 100\", where 10 is the number of columns selected, and 100 is the total number of columns."
         },
         "search": {
@@ -4491,7 +4504,7 @@
     "SubmissionFilters": {
       "field": {
         "submissionDate": {
-          "string": "",
+          "string": "提交於",
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       }
@@ -4803,6 +4816,14 @@
           "string": "停用使用者",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (已歸檔)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

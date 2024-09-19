@@ -912,14 +912,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (iliyohifadhiwa)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
-      }
-    }
-  },
   "util": {
     "csv": {
       "readError": {
@@ -1412,6 +1404,15 @@
         }
       }
     },
+    "ConfigError": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": ""
+      }
+    },
     "DatasetEntities": {
       "alert": {
         "upload": {
@@ -1746,6 +1747,10 @@
         "hardConflict": {
           "string": ""
         }
+      },
+      "branch": {
+        "string": "",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1832,6 +1837,10 @@
       "version": {
         "string": "",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1891,6 +1900,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -4803,6 +4816,14 @@
           "string": "Staafu mtumiaji",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (iliyohifadhiwa)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

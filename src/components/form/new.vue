@@ -691,7 +691,7 @@ export default {
         "full": "如果您還沒有，可以使用{tools}來幫助您設計表單。",
         "tools": "可用的工具"
       },
-      "如果您有表單附件，則可以在建立表單後在下一頁上提供這些附件。"
+      "如果您有表單附件，則可以在建立表單後，於下個頁面提供這些附件。"
     ],
     "dropZone": {
       "full": "將檔案拖曳到此處，或{chooseOne} 上傳。",
@@ -706,7 +706,7 @@ export default {
     "problem": {
       "400_8": "您上傳的表單定義似乎不適用於此表單。它的 formId (表單 ID)錯誤（預期為“{expected}”，得到“{actual}”）。",
       "400_15": "無法轉換 XLSForm：{error}",
-      "409_3": "此項目中已存在表單 ID 為「{xmlFormId}」的表單。"
+      "409_3": "此專案中已存在表單 ID 為「{xmlFormId}」的表單。"
     },
     "fields": "欄位：",
     "warningsText": [

@@ -312,7 +312,7 @@ export default {
   "zh-Hant": {
     "version": {
       "full": "表格的{publishedVersion}",
-      "publishedVersion": "已發佈版本"
+      "publishedVersion": "已發布版本"
     },
     "stateCaption": {
       "open": "該表格可供下載並接受提交。",

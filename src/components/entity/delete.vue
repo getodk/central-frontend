@@ -97,10 +97,19 @@ const del = () => {
 <i18n>
 {
   "de": {
-    "title": "Löschen {label}"
+    "title": "Löschen {label}",
+    "introduction": [
+      "Sind Sie sicher, dass Sie “{label}” löschen wollen?"
+    ],
+    "field": {
+      "noConfirm": "Sofortiges Löschen ohne Bestätigung, bis ich die Seite verlasse"
+    }
   },
   "es": {
     "title": "Borrar {label}",
+    "introduction": [
+      "¿Estás seguro de que quieres borrar “{label}”?"
+    ],
     "field": {
       "noConfirm": "Borrar inmediatamente sin confirmación hasta que salga de la página"
     }

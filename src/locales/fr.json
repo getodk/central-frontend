@@ -156,6 +156,7 @@
     "yesProceed": "Oui, continuer",
     "showPreview": "Aperçu",
     "hidePreview": "Cacher l'aperçu",
+    "newPreview": "Nouvel Aperçu",
     "expand": "Déplier",
     "collapse": "Replier",
     "reviewParallelUpdates": "Examiner les mises à jour parallèles",
@@ -230,6 +231,7 @@
     "session": "Session",
     "submissions": "Soumissions",
     "projectRoles": "Rôles du projet",
+    "formPreview": "Aperçu du Formulaire",
     "draft": "Ébauche"
   },
   "alert": {
@@ -321,11 +323,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archivé)"
-    }
-  },
   "util": {
     "csv": {
       "readError": "Il y a eu un problème à la lecture de votre fichier : {message}",
@@ -353,5 +350,10 @@
   },
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivé)"
+    }
   }
 }

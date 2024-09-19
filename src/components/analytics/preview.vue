@@ -341,7 +341,7 @@ export default {
     ],
     "projects": {
       "title": "專案概要",
-      "subtitle": "(顯示 {count} 個項目中最活躍的項目)"
+      "subtitle": "(顯示 {count} 個專案中最活躍的專案)"
     },
     "submissionStates": "提交狀態",
     "entities": {

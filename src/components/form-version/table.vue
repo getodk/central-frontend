@@ -118,7 +118,7 @@ const { formVersions } = useRequestData();
   },
   "zh-Hant": {
     "header": {
-      "published": "已發佈",
+      "published": "已發布",
       "definition": "定義"
     }
   }
