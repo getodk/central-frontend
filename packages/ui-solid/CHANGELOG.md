@@ -1,5 +1,14 @@
 # @getodk/ui-solid
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [6fb1054]
+- Updated dependencies [c3b7165]
+- Updated dependencies [5f50bd3]
+  - @getodk/xforms-engine@0.4.0
+
 ## 0.2.0
 
 ### Minor Changes
