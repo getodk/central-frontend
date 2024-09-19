@@ -1,7 +1,6 @@
 import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/unknownAppearanceParser.ts';
 import type { RangeControlDefinition } from '../../parse/body/control/RangeControlDefinition.ts';
 import type { RankControlDefinition } from '../../parse/body/control/RankControlDefinition.ts';
-import type { TriggerControlDefinition } from '../../parse/body/control/TriggerControlDefinition.ts';
 import type { UploadControlDefinition } from '../../parse/body/control/UploadControlDefinition.ts';
 import type { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
@@ -19,7 +18,6 @@ export interface UnsupportedControlNodeState extends BaseNodeState {
 export type UnsupportedControlElementDefinition =
 	| RangeControlDefinition
 	| RankControlDefinition
-	| TriggerControlDefinition
 	| UploadControlDefinition;
 
 export interface UnsupportedControlDefinition extends LeafNodeDefinition {

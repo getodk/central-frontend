@@ -72,6 +72,16 @@ export class UntypedAnswer extends ComparableAnswer {
 		super();
 	}
 
+	override get booleanValue(): boolean {
+		const { unknownValue } = this;
+
+		if (typeof unknownValue === 'boolean') {
+			return unknownValue;
+		}
+
+		throw new Error(`Conversion of type ${typeof unknownValue} to boolean not currently supported`);
+	}
+
 	get stringValue(): string {
 		const { unknownValue } = this;
 

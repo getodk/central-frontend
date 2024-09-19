@@ -2,7 +2,6 @@
 export type UnsupportedControlNodeType =
 	| 'range'
 	| 'rank'
-	| 'trigger'
 	| 'upload';
 
 // prettier-ignore
@@ -22,4 +21,5 @@ export type InstanceNodeType =
 	| 'note'
 	| 'select'
 	| 'string'
+	| 'trigger'
 	| UnsupportedControlNodeType;

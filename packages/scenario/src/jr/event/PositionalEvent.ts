@@ -8,6 +8,7 @@ import type {
 	RootNode,
 	SelectNode,
 	StringNode,
+	TriggerNode,
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
 
@@ -17,6 +18,7 @@ export type QuestionPositionalEventNode =
 	| NoteNode
 	| SelectNode
 	| StringNode
+	| TriggerNode
 	| AnyUnsupportedControlNode;
 
 export interface PositionalEventTypeMapping {
