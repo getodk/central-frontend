@@ -229,7 +229,7 @@ export default {
     "state": {
       "title": "表單狀態",
       "body": {
-        "full": "若要設定此表單的狀態，請存取項目 {formAccessSettings}。",
+        "full": "若要設定此表單的狀態，請存取專案 {formAccessSettings}。",
         "formAccessSettings": "表單存取設定"
       }
     },

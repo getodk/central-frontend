@@ -284,7 +284,7 @@ const { projectPath, formPath } = useRoutes();
         "publicLinks": "公共訪問連結"
       },
       {
-        "full": "為每個要收集資料的人建立一個角色為 {dataCollector} 的 {webUser}。這些使用者將登入 Central 以在網頁瀏覽器中填寫此表格。專案經理也可以從網頁瀏覽器建立提交。",
+        "full": "為每個要收集資料的人建立一個角色為 {dataCollector} 的 {webUser}。這些使用者將登入 Central 以在網頁瀏覽器中填寫此表格。專案管理員也可以從網頁瀏覽器建立提交。",
         "webUser": "網路使用者",
         "dataCollector": "資料收集者"
       }

@@ -571,7 +571,7 @@ export default {
   },
   "zh-Hant": {
     "heading": [
-      "網站管理員自動被視為每個專案的經理。其他使用者可以擁有特定於此項目的角色：",
+      "網站管理員自動被視為每個專案的管理者。其他使用者可以擁有特定於此專案的角色：",
       {
         "full": "{projectManagers}可以執行與該專案相關的任何管理任務，並可以在網頁瀏覽器中填寫表格",
         "projectManagers": "專案管理員"
@@ -581,7 +581,7 @@ export default {
         "projectViewers": "專案瀏覽者"
       },
       {
-        "full": "繁體){dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
+        "full": "{dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
         "dataCollectors": "資料收集者"
       }
     ],
@@ -598,7 +598,7 @@ export default {
       "user": "使用者",
       "projectRole": "專案角色"
     },
-    "emptyTable": "文 (繁體)尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶配任何使用者。",
+    "emptyTable": "尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶。",
     "alert": {
       "unassignWithoutReassign": "出了些問題。 「{displayName}」已從專案中刪除。",
       "assignRole": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。",

@@ -312,11 +312,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (iliyohifadhiwa)"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "Hitilafu fulani imetokea: hakukuwa na ombi.",
@@ -333,5 +328,10 @@
   },
   "router": {
     "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (iliyohifadhiwa)"
+    }
   }
 }

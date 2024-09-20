@@ -207,7 +207,9 @@ const showsAccuracyWarning = computed(() =>
       "newValue": "Neuer Wert"
     },
     "comparing": "Vergleichen",
-    "version": "{version} ({source})"
+    "version": "{version} ({source})",
+    "accuracyWarning": "In diesem Fall ist die Ansicht des Autors möglicherweise nicht korrekt.",
+    "offlineUpdate": "Offline-Aktualisierung"
   },
   "es": {
     "header": {
@@ -215,7 +217,9 @@ const showsAccuracyWarning = computed(() =>
       "newValue": "Nuevo valor"
     },
     "comparing": "Comparando",
-    "version": "{version} ({source})"
+    "version": "{version} ({source})",
+    "accuracyWarning": "En este caso, la opinión del autor puede no ser exacta.",
+    "offlineUpdate": "Actualización offline"
   },
   "fr": {
     "header": {
@@ -223,7 +227,9 @@ const showsAccuracyWarning = computed(() =>
       "newValue": "Nouvelle valeur"
     },
     "comparing": "Comparaison",
-    "version": "{version} ({source})"
+    "version": "{version} ({source})",
+    "accuracyWarning": "Dans ce cas, la vue de l'auteur peut ne pas être exacte.",
+    "offlineUpdate": "Mise à jour Hors Ligne"
   },
   "it": {
     "header": {
@@ -231,7 +237,9 @@ const showsAccuracyWarning = computed(() =>
       "newValue": "Nuovo valore"
     },
     "comparing": "Paragonando",
-    "version": "{version} ({source})"
+    "version": "{version} ({source})",
+    "accuracyWarning": "In questo caso, l'opinione dell'autore potrebbe non essere accurata.",
+    "offlineUpdate": "Aggiornamento offline"
   },
   "zh-Hant": {
     "header": {
@@ -239,7 +247,9 @@ const showsAccuracyWarning = computed(() =>
       "newValue": "新值"
     },
     "comparing": "比較",
-    "version": "{version} ({source})"
+    "version": "{version} ({source})",
+    "accuracyWarning": "在這種情況下，作者的觀點可能並不準確。",
+    "offlineUpdate": "離線更新"
   }
 }
 </i18n>

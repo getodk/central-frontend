@@ -393,7 +393,11 @@ export default {
             [
               "Formulare, die mit manuellen {submission} Schlüsseln konfiguriert wurden, werden diese Schlüssel weiterhin verwenden und müssen manuell entschlüsselt werden.",
               "Um den automatischen Central-Verschlüsselungsprozess für diese Formulare zu nutzen, entfernen Sie die {base64RsaPublicKey} Konfiguration."
-            ]
+            ],
+            "Sie können die Übermittlungsdaten nicht mehr online bearbeiten oder anschauen.",
+            "Sie werden nicht mehr in der Lage sein, Daten über OData zu analysieren.",
+            "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten.",
+            "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
@@ -745,7 +749,7 @@ export default {
             "新提交的內容將不再被處理為實體。"
           ],
           [
-            "繁體)此外，在此版本的 ODK Central 中，以下內容均屬正確：",
+            "此外，在此版本的 ODK Central 中，以下內容均屬正確：",
             [
               "現有提交內容將保持未加密狀態。"
             ],
@@ -771,7 +775,7 @@ export default {
       }
     ],
     "success": [
-      "已為此項目配置加密。任何行動裝置都必須取得或重新取得最新的表單才能進行加密。"
+      "已為此專案配置加密。任何行動裝置都必須取得或重新取得最新的表單才能進行加密。"
     ],
     "field": {
       "hint": "密碼提示（可選）"

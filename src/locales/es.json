@@ -156,6 +156,7 @@
     "yesProceed": "Sí, continuar",
     "showPreview": "Vista previa",
     "hidePreview": "Ocultar vista previa",
+    "newPreview": "Nuevo Avance",
     "expand": "Expandir",
     "collapse": "Contraer",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
@@ -206,7 +207,8 @@
   "count": {
     "appUser": "{count} usuario móvil | {count} usuarios móviles | {count} usuarios móviles",
     "form": "{count} formulario | {count} formularios | {count} formularios",
-    "submission": "{count} Envío | {count} envíos | {count} envíos"
+    "submission": "{count} Envío | {count} envíos | {count} envíos",
+    "warning": "{count} advertencia | {count} advertencias | {count} advertencias"
   },
   "resource": {
     "appUser": "Usuario móvil",
@@ -229,6 +231,7 @@
     "session": "Sesión",
     "submissions": "Envíos",
     "projectRoles": "Roles del proyecto",
+    "formPreview": "Vista previa del formulario",
     "draft": "Borrador"
   },
   "alert": {
@@ -308,6 +311,7 @@
     "new": "Nuevo!",
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
+    "warning": "Advertencia",
     "status": "Estado",
     "version": "Versión"
   },
@@ -319,19 +323,22 @@
       }
     }
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (archivado)"
-    }
-  },
   "util": {
     "csv": {
-      "emptyRow": "La fila está vacía."
+      "readError": "Hubo un problema al leer tu archivo: {message}",
+      "invalidCSV": "El archivo “{name}” no es un archivo .csv válido. No se puede leer.",
+      "rowError": "Hay un problema en la fila {row} del archivo: {message}",
+      "invalidQuotes": "Un campo citado no es válido. Compruebe la fila de su archivo para ver si hay algún valor inusual.",
+      "emptyRow": "La fila está vacía.",
+      "dataWithoutHeader": "Se esperaba {expected} columna, pero se encontró {actual}. | Se esperaban {expected} columnas, pero se encontraron {actual}. | Se esperaba {expected} columna, pero se encontró {actual}."
     },
     "request": {
       "noRequest": "Algo salió mal: no hubo solicitud.",
       "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
-      "errorNotProblem": "Algo salió mal: error de código {status}"
+      "errorNotProblem": "Algo salió mal: error de código {status}",
+      "problem": {
+        "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado."
+      }
     },
     "session": {
       "alert": {
@@ -343,5 +350,10 @@
   },
   "router": {
     "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivado)"
+    }
   }
 }

@@ -156,6 +156,7 @@
     "yesProceed": "Ja, fortfahren",
     "showPreview": "Vorschau",
     "hidePreview": "Vorschau ausblenden",
+    "newPreview": "Neue Vorschau",
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
     "reviewParallelUpdates": "Parallele Updates überprüfen",
@@ -230,6 +231,7 @@
     "session": "Sitzung",
     "submissions": "Übermittlungen",
     "projectRoles": "Projektrollen",
+    "formPreview": "Formular Vorschau",
     "draft": "Entwurf"
   },
   "alert": {
@@ -321,16 +323,14 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archiviert)"
-    }
-  },
   "util": {
     "csv": {
       "readError": "Beim Lesen Ihrer Datei ist ein Problem aufgetreten: {message}",
       "invalidCSV": "Die Datei “{name}” ist keine gültige .csv-Datei. Sie kann nicht gelesen werden.",
-      "emptyRow": "Die Reihe ist leer."
+      "rowError": "Es gibt ein Problem in Zeile {row} der Datei: {message}",
+      "invalidQuotes": "Ein angegebenes Feld ist ungültig. Überprüfen Sie die Zeile, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt.",
+      "emptyRow": "Die Reihe ist leer.",
+      "dataWithoutHeader": "Erwartet {expected} column, but found {actual}. | Erwartet {expected} Spalte, aber {actual} gefunden."
     },
     "request": {
       "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
@@ -350,5 +350,10 @@
   },
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archiviert)"
+    }
   }
 }

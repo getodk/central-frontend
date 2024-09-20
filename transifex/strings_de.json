@@ -414,7 +414,7 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "newPreview": {
-      "string": "",
+      "string": "Neue Vorschau",
       "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
     },
     "expand": {
@@ -670,7 +670,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formPreview": {
-      "string": "",
+      "string": "Formular Vorschau",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -912,14 +912,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (archiviert)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
-      }
-    }
-  },
   "util": {
     "csv": {
       "readError": {
@@ -930,18 +922,18 @@
         "string": "Die Datei “{name}” ist keine gültige .csv-Datei. Sie kann nicht gelesen werden."
       },
       "rowError": {
-        "string": "",
+        "string": "Es gibt ein Problem in Zeile {row} der Datei: {message}",
         "developer_comment": "{row} is a row number. {message} is a description of the problem."
       },
       "invalidQuotes": {
-        "string": "",
+        "string": "Ein angegebenes Feld ist ungültig. Überprüfen Sie die Zeile, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt.",
         "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
       },
       "emptyRow": {
         "string": "Die Reihe ist leer."
       },
       "dataWithoutHeader": {
-        "string": "{count, plural, one {} other {}}",
+        "string": "{count, plural, one {Erwartet {expected} column, but found {actual}.} other {Erwartet {expected} Spalte, aber {actual} gefunden.}}",
         "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."
       }
     },
@@ -1412,6 +1404,15 @@
         }
       }
     },
+    "ConfigError": {
+      "title": {
+        "string": "Fehler beim Laden Central",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": "Es ist ein Fehler beim Laden Central aufgetreten."
+      }
+    },
     "DatasetEntities": {
       "alert": {
         "upload": {
@@ -1440,7 +1441,7 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "encrypted": {
-        "string": "",
+        "string": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Entitäten in dieser Liste zu ändern. Entitäten müssen über Central oder die API verwaltet werden.",
         "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
       },
       "entityListName": {
@@ -1449,15 +1450,15 @@
       },
       "success": {
         "0": {
-          "string": ""
+          "string": "Die Entitätsliste \"{name}\" ist erstellt worden."
         },
         "1": {
-          "string": ""
+          "string": "Sie können damit beginnen, indem Sie die Dateneigenschaften direkt auf dieser Seite hinzufügen oder indem Sie Formulare hochladen, die sie verwenden. In diesem Fall werden alle Eigenschaften, die das Formular aufruft, automatisch erstellt, wenn Sie das Formular veröffentlichen."
         }
       },
       "problem": {
         "409_3": {
-          "string": ""
+          "string": "In diesem Projekt existiert bereits eine Entitätsliste mit dem Namen “{datasetName}”."
         }
       }
     },
@@ -1503,10 +1504,10 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Um eine Entitätseigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen."
         },
         "1": {
-          "string": ""
+          "string": "Sie können auch neue Eigenschaften hinzufügen, indem Sie ein Formular hochladen, das auf sie verweist. In diesem Fall werden die Eigenschaften erstellt, wenn das Formular veröffentlicht wird."
         }
       },
       "newPropertyName": {
@@ -1514,7 +1515,7 @@
       },
       "problem": {
         "409_3": {
-          "string": ""
+          "string": "In dieser Entitätsliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
         }
       }
     },
@@ -1746,6 +1747,10 @@
         "hardConflict": {
           "string": "Diese Version wurde parallel zu anderen Updates erstellt, von denen einige versuchen, auf dieselben Eigenschaften wie dieses Update zu schreiben."
         }
+      },
+      "branch": {
+        "string": "Offline-Aktualisierungskette",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1761,13 +1766,13 @@
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "Sind Sie sicher, dass Sie “{label}”  löschen wollen?",
           "developer_comment": "{label} is the label of an Entity."
         }
       },
       "field": {
         "noConfirm": {
-          "string": "",
+          "string": "Sofortiges Löschen ohne Bestätigung, bis ich die Seite verlasse",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -1832,6 +1837,10 @@
       "version": {
         "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "In diesem Fall ist die Ansicht des Autors möglicherweise nicht korrekt.",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1861,7 +1870,7 @@
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             },
             "bulkSource": {
-              "string": "",
+              "string": "Datei {name} hochgeladen von {actor}",
               "developer_comment": "This text is shown in a list of events. {name} is a filename, e.g. myfile.csv, and {actor} is a name/link to a Web User."
             }
           },
@@ -1891,6 +1900,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "Offline-Aktualisierung ",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -1937,7 +1950,7 @@
       },
       "alert": {
         "delete": {
-          "string": ""
+          "string": "Die Entität \"{label}“ wurde gelöscht."
         }
       },
       "action": {
@@ -2054,39 +2067,39 @@
     },
     "EntityUpload": {
       "title": {
-        "string": "",
+        "string": "Daten aus Datei importieren",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "table": {
         "server": {
-          "string": "",
+          "string": "{name} Serverdaten",
           "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
         },
         "file": {
-          "string": ""
+          "string": "Zu importierende Daten"
         }
       },
       "action": {
         "append": {
-          "string": "",
+          "string": "Daten hinzufügen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
         "blankLabel": {
-          "string": ""
+          "string": "Das Etikett fehlt."
         },
         "noData": {
-          "string": ""
+          "string": "Ihre Datei enthält keine Daten."
         }
       },
       "headersNote": {
-        "string": ""
+        "string": "Die erste Zeile in Ihrer Datendatei muss genau mit dem Tabellenkopf übereinstimmen, den Sie oben sehen."
       }
     },
     "EntityUploadDataError": {
       "title": {
-        "string": ""
+        "string": "Datenfehler"
       }
     },
     "EntityUploadDataTemplate": {
@@ -2104,7 +2117,7 @@
     "EntityUploadFileSelect": {
       "text": {
         "full": {
-          "string": "",
+          "string": "Fügen Sie hier eine Datei mit Drag-and-Drop ein, oder {chooseOne} zum Hochladen.",
           "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
         },
         "chooseOne": {
@@ -2113,51 +2126,51 @@
         }
       },
       "parsing": {
-        "string": ""
+        "string": "Daten lesen..."
       }
     },
     "EntityUploadHeaderErrors": {
       "expectedHeader": {
-        "string": "",
+        "string": "Erwartete Kopfzeile",
         "developer_comment": "This refers to the header row of a spreadsheet."
       },
       "suggestions": {
         "title": {
-          "string": "",
+          "string": "Vorschläge",
           "developer_comment": "Suggestions to fix an error"
         },
         "invalidQuotes": {
-          "string": ""
+          "string": "Ein zitiertes Feld ist ungültig. Überprüfen Sie die Kopfzeile Ihrer Datei, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt."
         },
         "missingLabel": {
-          "string": "",
+          "string": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jede Entität in Central und anderswo zu verwenden ist.",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "unknownProperty": {
-          "string": ""
+          "string": "Wenn Sie Eigenschaften zu dieser Entitätsliste hinzufügen möchten, können Sie dies im Abschnitt Entitätseigenschaften auf der Übersichtsseite dieser Entitätsliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist."
         },
         "duplicateColumn": {
-          "string": ""
+          "string": "Es sieht so aus, als hätten zwei oder mehr Spalten die gleiche Überschrift. Bitte stellen Sie sicher, dass die Spaltenüberschriften eindeutig sind."
         },
         "emptyColumn": {
-          "string": ""
+          "string": "Es sieht so aus, als ob Sie eine leere Zelle in der Kopfzeile haben. Bitte entfernen Sie alle leeren Spalten in Ihrer Datei."
         },
         "delimiterNotComma": {
-          "string": ""
+          "string": "Das könnte daran liegen, dass wir das Zellentrennzeichen falsch gesetzt haben. Wir haben {delimiter} benutzt."
         }
       }
     },
     "EntityUploadPopup": {
       "rowCount": {
-        "string": "{count, plural, one {} other {}}"
+        "string": "{count, plural, one {{count} Datenzeile gefunden} other {{count} Datenzeilen gefunden}}"
       },
       "status": {
         "sending": {
-          "string": "",
+          "string": "Datei senden... ({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
         },
         "processing": {
-          "string": "",
+          "string": "Datei verarbeiten...",
           "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
         }
       }
@@ -2165,11 +2178,11 @@
     "EntityUploadWarnings": {
       "row": {
         "raggedRows": {
-          "string": "",
+          "string": "In einigen Zeilen wurden weniger Spalten als erwartet gefunden:",
           "developer_comment": "This is a warning that is followed by a list of rows."
         },
         "largeCell": {
-          "string": "",
+          "string": "Einige Zellen sind ungewöhnlich groß, was auf Schwierigkeiten beim Lesen Ihrer Datei hinweisen kann:",
           "developer_comment": "This is a warning that is followed by a list of rows."
         }
       }
@@ -2184,7 +2197,7 @@
         "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
       },
       "bulk": {
-        "string": "",
+        "string": "Datei {filename} hochgeladen von {name}",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
@@ -3155,11 +3168,11 @@
       "webFormPreview": {
         "submissionModal": {
           "title": {
-            "string": "",
+            "string": "ODK Web Forms Vorschau",
             "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           },
           "body": {
-            "string": "",
+            "string": "Sie haben das Formular mit einer frühen Version der neuen ODK Web Forms ausgefüllt. Die Übermittlung wurde nicht gesendet: Derzeit können Sie Ihre Formulare nur in ODK Web Forms ansehen.",
             "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           }
         }
@@ -3509,15 +3522,15 @@
     "Pagination": {
       "action": {
         "first": {
-          "string": "",
+          "string": "Erste Seite",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "previous": {
-          "string": "",
+          "string": "Vorherige Seite",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "next": {
-          "string": "",
+          "string": "Nächste Seite",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "last": {
@@ -3526,12 +3539,12 @@
         }
       },
       "rows": {
-        "string": "{count, plural, one {} other {}}",
+        "string": "{count, plural, one {Reihe {range} von {count}} other {Reihen {range} von {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
       "field": {
         "size": {
-          "string": "",
+          "string": "pro Seite",
           "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
         }
       }
@@ -3611,10 +3624,10 @@
                 }
               },
               "4": {
-                "string": ""
+                "string": "Sie können die Übermittlungsdaten nicht mehr online bearbeiten oder anschauen."
               },
               "5": {
-                "string": ""
+                "string": "Sie werden nicht mehr in der Lage sein, Daten über OData zu analysieren."
               },
               "6": {
                 "string": "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten."
@@ -4803,6 +4816,14 @@
           "string": "User deaktivieren",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (archiviert)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

@@ -461,11 +461,24 @@ watch(() => props.state, (state) => {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
   },
   "de": {
+    "title": "Daten aus Datei importieren",
+    "table": {
+      "server": "{name} Serverdaten",
+      "file": "Zu importierende Daten"
+    },
+    "action": {
+      "append": "Daten hinzufügen"
+    },
+    "alert": {
+      "blankLabel": "Das Etikett fehlt.",
+      "noData": "Ihre Datei enthält keine Daten."
+    },
     "noEntities": "Es gibt keine Entitäten zum Anzeigen."
   },
   "es": {
     "title": "Importar datos de un archivo",
     "table": {
+      "server": "{name} datos del servidor",
       "file": "Datos a importar"
     },
     "action": {
