@@ -1,6 +1,7 @@
 import { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import { execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
@@ -9,6 +10,11 @@ import type { LibraryOptions, PluginOption } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { defineConfig } from 'vitest/config';
+
+const currentVersion = execSync(
+	'git describe --tags --dirty --always --match "@getodk/web-forms*" | cut -d "@" -f 3',
+	{ encoding: 'utf-8' }
+).trim();
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -90,6 +96,9 @@ export default defineConfig(({ mode }) => {
 	}
 
 	return {
+		define: {
+			__WEB_FORMS_VERSION__: `"v${currentVersion}"`,
+		},
 		base: './',
 		plugins: [
 			vue(),

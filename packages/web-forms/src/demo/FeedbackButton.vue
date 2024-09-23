@@ -10,9 +10,10 @@ const route = useRoute();
 
 const surveyLink = computed(() => {
 	const query: Record<string, string> = {
-		st: '9hflqGrodnpWyS8g69dbORJ3RD8jSQChTBMaf7zpE5gaPElyDtKgAjI79y$zqctG',
+		st: '1jPMSRgwyUHS2ec4zY5XxSWnx!JqCJx96jfpzyTWjFWK6ZR2FT!w98T5zpEfIuNp',
 		'd[/data/host]': window.location.host,
 		'd[/data/page]': route.fullPath,
+		'd[/data/version]': __WEB_FORMS_VERSION__,
 	};
 	const params = new URLSearchParams(query);
 	return `https://data.getodk.cloud/-/single/JLdODTs84WWsgibw4JOh0krbDenObgi?${params.toString()}`;

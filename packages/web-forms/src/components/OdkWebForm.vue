@@ -8,6 +8,8 @@ import FormHeader from './FormHeader.vue';
 
 import QuestionList from './QuestionList.vue';
 
+const webFormsVersion = __WEB_FORMS_VERSION__;
+
 const props = defineProps<{ formXml: string }>();
 
 const odkForm = ref<RootNode>();
@@ -98,6 +100,9 @@ watchEffect(() => {
 					width="28"
 				>
 			</a>
+			<div class="version">
+				{{ webFormsVersion }}
+			</div>
 		</div>
 	</div>
 </template>
@@ -170,7 +175,7 @@ watchEffect(() => {
 	}
 
 	.powered-by-wrapper {
-		margin-top: 3rem;
+		margin-top: 2rem;
 		margin-bottom: 0.5rem;
 		margin-left: 0.5rem;
 
@@ -191,6 +196,12 @@ watchEffect(() => {
 				vertical-align: middle;
 				margin-left: 0.2rem;
 			}
+		}
+
+		.version {
+			font-size: 0.7rem;
+			margin: 0.5rem 0 0 1rem;
+			color: var(--gray-500);
 		}
 	}
 }
