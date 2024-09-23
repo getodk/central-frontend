@@ -1,6 +1,6 @@
-import type { AnyNode, RootNode } from '@getodk/xforms-engine';
+import type { RootNode } from '@getodk/xforms-engine';
 import { styled } from '@suid/material';
-import { Show, createMemo, createSignal } from 'solid-js';
+import { Show, createSignal } from 'solid-js';
 
 const Details = styled('details')({
 	position: 'relative',
@@ -24,66 +24,6 @@ export interface XFormDetailsProps {
 	readonly root: RootNode;
 }
 
-let xmlEscaper: Element | null = null;
-
-const getEscaper = (): Element => {
-	xmlEscaper = xmlEscaper ?? document.createElement('esc-aper');
-
-	return xmlEscaper;
-};
-
-const escapeXMLText = (value: string) => {
-	const escaper = getEscaper();
-
-	escaper.textContent = value;
-
-	const { innerHTML } = escaper;
-
-	escaper.textContent = '';
-
-	return innerHTML;
-};
-
-type FakeSerializationInterface = AnyNode & {
-	readonly contextNode: {
-		readonly textContent: string | null;
-	};
-};
-
-const indentLine = (depth: number, line: string) => {
-	const indentation = ''.padStart(depth, '  ');
-
-	return `${indentation}${line}`;
-};
-
-const serializeNode = (node: AnyNode, depth = 0): string => {
-	node = node as FakeSerializationInterface;
-
-	const { currentState, definition } = node;
-	const { children } = currentState;
-	const { nodeName } = definition;
-
-	if (children == null) {
-		// Just read it to make it reactive...
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
-		currentState.value;
-
-		const serializedLeafNode = `<${nodeName}>${escapeXMLText((node as FakeSerializationInterface).contextNode.textContent ?? '')}</${nodeName}>`;
-
-		return indentLine(depth, serializedLeafNode);
-	}
-
-	return [
-		indentLine(depth, `<${nodeName}>`),
-		children.map((child) => {
-			return serializeNode(child, depth + 1);
-		}),
-		indentLine(depth, `</${nodeName}>`),
-	]
-		.flat()
-		.join('\n');
-};
-
 export const XFormDetails = (props: XFormDetailsProps) => {
 	const [showSubmissionState, setShowSubmissionState] = createSignal(false);
 
@@ -97,11 +37,7 @@ export const XFormDetails = (props: XFormDetailsProps) => {
 				<Summary>Submission state (XML)</Summary>
 				<Show when={showSubmissionState()}>
 					{(_) => {
-						const submissionState = createMemo(() => {
-							return serializeNode(props.root);
-						});
-
-						return <Pre>{submissionState()}</Pre>;
+						return <Pre>{props.root.submissionState.submissionXML}</Pre>;
 					}}
 				</Show>
 			</Details>
