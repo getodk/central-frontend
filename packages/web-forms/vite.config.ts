@@ -5,8 +5,9 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import unpluginFonts from 'unplugin-fonts/vite';
-import type { LibraryOptions } from 'vite';
+import type { LibraryOptions, PluginOption } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { defineConfig } from 'vitest/config';
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
@@ -50,19 +51,35 @@ if (webkitFlakinessMitigations) {
 	globalSetup.push('./tests/globalSetup/mitigate-webkit-flakiness.ts');
 }
 
+const copyConfigFile = viteStaticCopy({
+	targets: [
+		{
+			src: 'src/demo/config.json',
+			dest: '', // root
+		},
+	],
+});
+
 export default defineConfig(({ mode }) => {
 	const isVueBundled = mode === 'demo';
+	const isDev = mode === 'development';
 
 	let lib: LibraryOptions | undefined;
 	let external: string[];
 	let globals: Record<string, string>;
+	const extraPlugins: PluginOption[] = [];
 
 	if (isVueBundled) {
 		external = [];
 		globals = {};
+		extraPlugins.push(copyConfigFile);
 	} else {
 		external = ['vue'];
 		globals = { vue: 'Vue' };
+
+		if (isDev) {
+			extraPlugins.push(copyConfigFile);
+		}
 
 		lib = {
 			formats: ['es'],
@@ -95,6 +112,7 @@ export default defineConfig(({ mode }) => {
 					],
 				},
 			}),
+			...extraPlugins,
 		],
 		resolve: {
 			alias: {

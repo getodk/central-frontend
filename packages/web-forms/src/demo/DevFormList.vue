@@ -4,8 +4,8 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-	<div class="component-root">
-		<h1>Demo Forms</h1>
+	<div class="dev-form-list-component">
+		<h1>Demo Forms for DEV</h1>
 		<ul class="category-list">
 			<li
 				v-for="[groupName, fixtures] of xformFixturesByCategory"
@@ -28,12 +28,6 @@ import { RouterLink } from 'vue-router';
 </template>
 
 <style scoped>
-.component-root {
-	background: white;
-	height: 100vh;
-	margin-top: -25px;
-}
-
 h1 {
 	margin-left: 10px;
 	padding-top: 20px;

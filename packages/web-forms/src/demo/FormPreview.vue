@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { xformFixturesByCategory } from '@getodk/common/fixtures/xforms.ts';
+import { xformFixturesByCategory, XFormResource } from '@getodk/common/fixtures/xforms.ts';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import OdkWebForm from '../components/OdkWebForm.vue';
@@ -11,11 +11,17 @@ const formParam = route.params.form as string;
 
 const formXML = ref<string>();
 
-const demoFixture = xformFixturesByCategory.get(categoryParam)?.find((fixture) => {
-	return fixture.identifier === formParam;
-});
+let xformResource;
 
-demoFixture
+if (route.query.url) {
+	xformResource = XFormResource.fromRemoteURL(route.query.url.toString());
+} else if (formParam) {
+	xformResource = xformFixturesByCategory.get(categoryParam)?.find((fixture) => {
+		return fixture.identifier === formParam;
+	});
+}
+
+xformResource
 	?.loadXML()
 	.then((fixtureXML) => {
 		formXML.value = fixtureXML;
