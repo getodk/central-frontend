@@ -76,11 +76,12 @@
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",
-      "dataset": "Entity List Actions",
       "field_key": "App User Actions",
       "public_link": "Public Access Link Actions",
+      "dataset": "Entity List Actions",
       "config": "Server Configuration Actions",
-      "upgrade": "Server Upgrade"
+      "upgrade": "Server Upgrade",
+      "task": "System Operation"
     },
     "action": {
       // This is shown in the log of actions performed on the server. It is a
@@ -93,6 +94,11 @@
       },
       // This is shown in the log of actions performed on the server.
       "analytics": "Report Usage",
+      // This is shown in the log of actions performed on the server.
+      "blobs": {
+        "s3_upload": "Upload Files to Storage",
+        "s3_failed_to_pending": "Mark Files for Re-Upload to Storage"
+      },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Server Configuration.
       "config": {
@@ -143,6 +149,10 @@
         "assignment_delete": "Remove Access",
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server.
+      "submission": {
+        "purge": "Purge Submissions"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that the server performs when it is upgraded.
