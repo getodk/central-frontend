@@ -20,7 +20,7 @@ const mountComponent = async (formPath: string, questionNumber: number) => {
 
 describe('FormQuestion', () => {
 	it('shows InputText control for string nodes', async () => {
-		const component = await mountComponent('other/minimal.xform.xml', 0);
+		const component = await mountComponent('minimal.xform.xml', 0);
 
 		const inputText = component.findComponent(InputText);
 
@@ -30,7 +30,7 @@ describe('FormQuestion', () => {
 	});
 
 	it('shows Select control for select nodes', async () => {
-		const component = await mountComponent('select/1-static-selects.xml', 0);
+		const component = await mountComponent('1-static-selects.xml', 0);
 
 		const selectControl = component.findComponent(SelectControl);
 

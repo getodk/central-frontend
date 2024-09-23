@@ -98,6 +98,7 @@ export default defineConfig(({ mode }) => {
 		],
 		resolve: {
 			alias: {
+				'@getodk/common': resolve(__dirname, '../common/src'),
 				'@': fileURLToPath(new URL('./src', import.meta.url)),
 				'primevue/menuitem': 'primevue/menu',
 				// With following lines, fonts byte array are copied into css file

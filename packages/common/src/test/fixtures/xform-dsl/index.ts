@@ -25,7 +25,7 @@ const parseAttributes = (name: string): Map<string, string> => {
 	const words = name.split(' ');
 
 	for (const word of words.slice(1)) {
-		const parts = word.match(/^(.*)(?<!\\)=(["'].*)/);
+		const parts = /^(.*)(?<!\\)=(["'].*)/.exec(word);
 
 		if (parts == null) {
 			continue;
@@ -141,6 +141,7 @@ export const select1 = (ref: string, ...children: XFormsElement[]): XFormsElemen
 };
 
 type Select1DynamicParameters =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| readonly [ref: string, nodesetRef: string]
 	| readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
 
@@ -150,19 +151,19 @@ export const select1Dynamic: select1Dynamic = (
 	...[ref, nodesetRef, valueRef, labelRef]: Select1DynamicParameters
 ): XFormsElement => {
 	if (valueRef == null && labelRef == null) {
-		const value = t("value ref=\"value\"");
-		const label = t("label ref=\"label\"");
+		const value = t('value ref="value"');
+		const label = t('label ref="label"');
 
 		const itemsetAttributes = new Map<string, string>();
 
-		itemsetAttributes.set("nodeset", nodesetRef);
+		itemsetAttributes.set('nodeset', nodesetRef);
 
-		const itemset = new TagXFormsElement("itemset", itemsetAttributes, [value, label]);
+		const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
 		const select1Attributes = new Map<string, string>();
 
-		select1Attributes.set("ref", ref);
+		select1Attributes.set('ref', ref);
 
-		return new TagXFormsElement("select1", select1Attributes, [itemset]);
+		return new TagXFormsElement('select1', select1Attributes, [itemset]);
 	}
 
 	return t(
@@ -222,8 +223,9 @@ export const label = (innerHtml: string): XFormsElement => {
  */
 export const labelRef = (ref: string) => {
 	return new TagXFormsElement('label', new Map([['ref', ref]]), []);
-}
+};
 
+// eslint-disable-next-line @typescript-eslint/no-shadow
 export const item = (value: Int | string, label: string): XFormsElement => {
 	return t('item', t('label', label), t('value', String(value)));
 };

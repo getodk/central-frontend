@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../../helpers';
 
 const mountComponent = async (questionNumber: number, submitPressed = false) => {
-	const xform = await getReactiveForm('validation/1-validation.xml');
+	const xform = await getReactiveForm('1-validation.xml');
 
 	return mount(InputText, {
 		props: {

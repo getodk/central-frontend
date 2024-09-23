@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.app.json",
   "include": [
+    "../common/src/**/*.ts",
+    "../common/types/**/*.ts",
     "env.d.ts",
     "src/components/__tests__",
     "tests",
@@ -8,10 +10,9 @@
     "src/components/**/*.vue",
     "src/directives/**/*.ts"
   ],
-  "exclude": [],
+  "exclude": ["../common/src/test/**/*.ts"],
   "compilerOptions": {
     "composite": true,
-    "lib": [],
     "types": ["node", "jsdom", "vite/client"]
   }
 }

@@ -26,8 +26,8 @@ const escapeAttributeValueXMLCharacters = (attributeValue: string) => {
 			default:
 				throw new Error(`Unexpected unescaped character: ${char}`);
 		}
-	})
-}
+	});
+};
 
 export function buildAttributesString(attributes: ReadonlyMap<string, string>): string {
 	const entries = Array.from(attributes.entries());

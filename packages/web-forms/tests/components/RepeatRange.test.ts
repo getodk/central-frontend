@@ -6,8 +6,8 @@ import { mount } from '@vue/test-utils';
 import { assert, describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../helpers';
 
-const mountComponent = async (formName: string) => {
-	const xform = await getReactiveForm(`repeats/${formName}`);
+const mountComponent = async (fileName: string) => {
+	const xform = await getReactiveForm(fileName);
 	const [node] = xform.currentState.children;
 
 	assert(

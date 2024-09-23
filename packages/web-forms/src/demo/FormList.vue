@@ -1,28 +1,6 @@
 <script lang="ts" setup>
+import { xformFixturesByCategory } from '@getodk/common/fixtures/xforms.ts';
 import { RouterLink } from 'vue-router';
-
-const formFixtureGlobImports = import.meta.glob<true, 'raw', string>(
-	'../../../ui-solid/fixtures/xforms/**/*.xml',
-	{
-		query: '?raw',
-	}
-);
-
-type CategoryType = Record<string, string[]>;
-
-const categories = Object.keys(formFixtureGlobImports)
-	.map((f) => f.replace('../../../ui-solid/fixtures/xforms/', ''))
-	.reduce((result: CategoryType, f: string) => {
-		// TODO! These would normally be inferred as `string | undefined`, but the
-		// current TypeScript configuration is overly lax. See
-		// https://github.com/getodk/web-forms/issues/212
-		const [categoryName, formName] = f.split('/');
-
-		result[categoryName] ??= [];
-		result[categoryName].push(formName);
-
-		return result;
-	}, {});
 </script>
 
 <template>
@@ -30,16 +8,16 @@ const categories = Object.keys(formFixtureGlobImports)
 		<h1>Demo Forms</h1>
 		<ul class="category-list">
 			<li
-				v-for="(category,categoryName) in categories"
-				:key="categoryName"
+				v-for="[groupName, fixtures] of xformFixturesByCategory"
+				:key="groupName"
 			>
 				<details>
-					<summary>{{ categoryName }}</summary>
+					<summary>{{ groupName }}</summary>
 
 					<ul class="form-list">
-						<li v-for="formName in category" :key="formName">
-							<RouterLink :to="`/form/${categoryName}/${formName}`">
-								{{ formName }}
+						<li v-for="fixture in fixtures" :key="fixture.resourceURL.href">
+							<RouterLink :to="`/form/${groupName}/${fixture.identifier}`">
+								{{ fixture.identifier }}
 							</RouterLink>
 						</li>
 					</ul>

@@ -25,9 +25,7 @@ const mountComponent = async (formPath: string) => {
 
 describe('LanguageChanger', () => {
 	it('does not show the dropdown when there is no user defined lang in the form', async () => {
-		const { xform, component } = await mountComponent(
-			'computations-demo/1-calculate-simple.xform.xml'
-		);
+		const { xform, component } = await mountComponent('1-calculate-simple.xform.xml');
 
 		expect(xform.currentState.activeLanguage.isSyntheticDefault).toBe(true);
 		expect(xform.languages.filter(isFormLanguage).length).toBe(0);
@@ -36,7 +34,7 @@ describe('LanguageChanger', () => {
 	});
 
 	it('changes the language', async () => {
-		const { xform, component } = await mountComponent('itext/01-itext-basic.xml');
+		const { xform, component } = await mountComponent('01-itext-basic.xml');
 
 		expect(component.find('.p-dropdown-label').text()).toEqual('English');
 		expect(xform.currentState.activeLanguage.language).toEqual('English');
