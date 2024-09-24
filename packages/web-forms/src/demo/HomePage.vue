@@ -79,7 +79,7 @@ const isDev = import.meta.env.DEV;
 					<div class="col">
 						<DemoForm
 							form-title="WHO Verbal Autopsy survey"
-							form-identifier="who-va-v1_5_2"
+							form-identifier="whova_form"
 							image-name="who-va"
 						>
 							<template #description>

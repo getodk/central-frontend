@@ -22,7 +22,7 @@ Two of the sub-directories in particular serve an important purpose:
 
 - [`test-scenario`](./test-scenario): Fixtures in this directory are _derived from_ those in `test-javarosa`, with a naming convention appending `-alt` as a suffix to their base name. These fixtures are intended to have only minor modifications from their counterparts in the upstream `test-javarosa` directory. They should also not be modified, except to either reflect changes from JavaRosa upstream, or to demonstrate key behavioral differences in the tests referencing them.
 
-- [`preview-service`](./preview-service/): Fixtures in this directory are used as real world Forms in the Web Form preview service. It contains XLSForms to be serve as downloadable resource from the service. XForms are generated using [pyxform](https://github.com/XLSForm/pyxform) / [xlsform-online](https://getodk.org/xlsform/) service and should not be manually modified.
+- [`preview-service`](./preview-service/): Fixtures in this directory are used as real world Forms in the Web Form preview service. It contains XLSForms to be serve as downloadable resource from the service. XForms are generated using [pyxform](https://github.com/XLSForm/pyxform) / [xlsform-online](https://getodk.org/xlsform/) service and should not be manually modified. Note: XForm (xml) for WHO Verbal Autopsy is not placed in the `xform` subdirectory as it is already present in the [`smoketests`](./test-javarosa/resources//smoketests/)
 
 All other sub-directories are intended to provide ad hoc categorization of the rest of the project's XForms fixtures. The fixtures they contain may be referenced for general purpose across the project's packages.
 
