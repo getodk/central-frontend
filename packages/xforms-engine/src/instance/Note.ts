@@ -2,8 +2,10 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { identity } from '@getodk/common/lib/identity.ts';
 import type { Accessor } from 'solid-js';
 import type { NoteNode, NoteNodeAppearances } from '../client/NoteNode.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createNoteReadonlyThunk } from '../lib/reactivity/createNoteReadonlyThunk.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -21,6 +23,7 @@ import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
+import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
@@ -42,7 +45,8 @@ export class Note
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
-		ValueContext<string>
+		ValueContext<string>,
+		ClientReactiveSubmittableLeafNode<string>
 {
 	private readonly validation: SharedValidationState;
 	protected readonly state: SharedNodeState<NoteStateSpec>;
@@ -58,6 +62,8 @@ export class Note
 	get validationState(): LeafNodeValidationState {
 		return this.validation.currentState;
 	}
+
+	readonly submissionState: SubmissionState;
 
 	// ValueContext
 	readonly encodeValue = identity<string>;
@@ -124,6 +130,7 @@ export class Note
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
+		this.submissionState = createLeafNodeSubmissionState(this);
 	}
 
 	// ValidationContext

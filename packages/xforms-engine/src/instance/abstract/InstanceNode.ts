@@ -4,6 +4,7 @@ import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
+import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
 import type { TextRange } from '../../index.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -119,6 +120,8 @@ export abstract class InstanceNode<
 	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
 
 	abstract readonly validationState: NodeValidationState;
+
+	abstract readonly submissionState: SubmissionState;
 
 	// BaseNode: structural
 	abstract readonly root: Root;

@@ -3,8 +3,10 @@ import { untrack, type Accessor } from 'solid-js';
 import type { FormNodeID } from '../../client/identity.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
+import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import { createNodeRangeSubmissionState } from '../../lib/client-reactivity/submission/createNodeRangeSubmissionState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
@@ -27,6 +29,7 @@ import type {
 import { DescendantNode } from '../abstract/DescendantNode.ts';
 import type { RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
 
@@ -46,7 +49,11 @@ type BaseRepeatRangeNodeType<Definition extends AnyRepeatRangeDefinition> =
 
 export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinition>
 	extends DescendantNode<Definition, RepeatRangeStateSpec, RepeatInstance>
-	implements BaseRepeatRangeNode, EvaluationContext, SubscribableDependency
+	implements
+		BaseRepeatRangeNode,
+		EvaluationContext,
+		SubscribableDependency,
+		ClientReactiveSubmittableParentNode<RepeatInstance>
 {
 	/**
 	 * A repeat range doesn't have a corresponding primary instance element of its
@@ -193,6 +200,8 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	abstract override readonly validationState: AncestorNodeValidationState;
 
+	readonly submissionState: SubmissionState;
+
 	constructor(parent: DescendantNodeParent<Definition>, definition: Definition) {
 		super(parent, definition);
 
@@ -252,6 +261,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 			state.currentState,
 			childrenState
 		);
+		this.submissionState = createNodeRangeSubmissionState(this);
 	}
 
 	protected getLastIndex(): number {

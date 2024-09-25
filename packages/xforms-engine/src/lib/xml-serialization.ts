@@ -1,6 +1,6 @@
 declare const ESCAPED_XML_TEXT_BRAND: unique symbol;
 
-type EscapedXMLText = string & { readonly [ESCAPED_XML_TEXT_BRAND]: true };
+export type EscapedXMLText = string & { readonly [ESCAPED_XML_TEXT_BRAND]: true };
 
 const ATTR_REGEX = /[&<>"]/;
 const CONTENT_REGEX = /[&<>]/;
@@ -73,4 +73,24 @@ export const escapeXMLText = <Text extends string>(
 	return lastIndex !== index
 		? ((out + text.substring(lastIndex, index)) as EscapedXMLText)
 		: (out as EscapedXMLText);
+};
+
+const serializeElementXML = (nodeName: string, children: string): string => {
+	if (children === '') {
+		return `<${nodeName}/>`;
+	}
+
+	// TODO: attributes
+	return `<${nodeName}>${children}</${nodeName}>`;
+};
+
+export const serializeParentElementXML = (
+	nodeName: string,
+	serializedChildren: readonly string[]
+): string => {
+	return serializeElementXML(nodeName, serializedChildren.join(''));
+};
+
+export const serializeLeafElementXML = (nodeName: string, xmlValue: EscapedXMLText): string => {
+	return serializeElementXML(nodeName, xmlValue);
 };

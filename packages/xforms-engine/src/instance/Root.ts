@@ -2,14 +2,16 @@ import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
-import type { RootNode } from '../client/RootNode.ts';
 import type { FormNodeID } from '../client/identity.ts';
+import type { RootNode } from '../client/RootNode.ts';
 import type {
 	SubmissionChunkedType,
 	SubmissionOptions,
 } from '../client/submission/SubmissionOptions.ts';
 import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -27,6 +29,7 @@ import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
+import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 
@@ -104,7 +107,8 @@ export class Root
 		EvaluationContext,
 		EvaluationContextRoot,
 		SubscribableDependency,
-		TranslationContext
+		TranslationContext,
+		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
@@ -122,6 +126,7 @@ export class Root
 	readonly classes: BodyClassList;
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
+	readonly submissionState: SubmissionState;
 
 	protected readonly instanceDOM: XFormDOM;
 
@@ -200,6 +205,7 @@ export class Root
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
+		this.submissionState = createParentNodeSubmissionState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

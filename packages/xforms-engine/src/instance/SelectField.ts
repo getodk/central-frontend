@@ -3,7 +3,9 @@ import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
 import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -25,6 +27,7 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
+import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
 
 export interface SelectFieldDefinition extends LeafNodeDefinition {
 	readonly bodyElement: AnySelectDefinition;
@@ -45,7 +48,8 @@ export class SelectField
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
-		ValueContext<readonly SelectItem[]>
+		ValueContext<readonly SelectItem[]>,
+		ClientReactiveSubmittableLeafNode<readonly SelectItem[]>
 {
 	private readonly selectExclusive: boolean;
 	private readonly validation: SharedValidationState;
@@ -62,6 +66,8 @@ export class SelectField
 	get validationState(): LeafNodeValidationState {
 		return this.validation.currentState;
 	}
+
+	readonly submissionState: SubmissionState;
 
 	// ValueContext
 	readonly encodeValue = (runtimeValue: readonly SelectItem[]): string => {
@@ -125,6 +131,7 @@ export class SelectField
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
+		this.submissionState = createLeafNodeSubmissionState(this);
 	}
 
 	protected getSelectItemsByValue(
