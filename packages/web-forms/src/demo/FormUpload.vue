@@ -112,7 +112,7 @@ const reset = () => {
 	xformUrl.value = null;
 };
 
-// Optional: Prevent file drop on rest of the page
+// Prevent file drop on rest of the page
 document.addEventListener(
 	'dragover',
 	function (e) {

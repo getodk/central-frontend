@@ -130,7 +130,7 @@ const isDev = import.meta.env.DEV;
 <style scoped lang="scss">
 @import 'primeflex/core/_variables.scss';
 .home-page-component {
-	--font-family: 'Hanken Grotesk', sans-serif;
+	--font-family: 'Hanken Grotesk', Roboto, sans-serif;
 	--primary-color: #009ecc;
 	--primary-button-background-color: var(--primary-color);
 	--primary-button-text-color: #ffffff;

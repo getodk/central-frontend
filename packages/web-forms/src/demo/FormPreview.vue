@@ -12,7 +12,7 @@ const formParam = route.params.form as string;
 
 const formXML = ref<string>();
 
-let xformResource;
+let xformResource: XFormResource<'local'> | XFormResource<'remote'> | undefined;
 
 if (route.query.url) {
 	xformResource = XFormResource.fromRemoteURL(route.query.url.toString());
