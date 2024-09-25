@@ -1,7 +1,7 @@
 import { webFormsPlugin } from './WebFormsPlugin';
 import OdkWebForm from './components/OdkWebForm.vue';
 
-import 'unfonts.css';
+import '@fontsource/roboto/300.css';
 import './assets/css/icomoon.css';
 import './themes/2024-light/theme.scss';
 

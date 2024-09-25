@@ -5,8 +5,6 @@ import { execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
-import { FontsourceFontFamily } from 'unplugin-fonts/types';
-import unpluginFonts from 'unplugin-fonts/vite';
 import type { LibraryOptions, PluginOption } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
@@ -75,26 +73,17 @@ export default defineConfig(({ mode }) => {
 	let external: string[];
 	let globals: Record<string, string>;
 	const extraPlugins: PluginOption[] = [];
-	const extraFonts: FontsourceFontFamily[] = [];
 
 	if (isVueBundled) {
 		external = [];
 		globals = {};
 		extraPlugins.push(copyConfigFile);
-		extraFonts.push({
-			name: 'Hanken Grotesk',
-			weights: [400, 600, 700],
-		});
 	} else {
 		external = ['vue'];
 		globals = { vue: 'Vue' };
 
 		if (isDev) {
 			extraPlugins.push(copyConfigFile);
-			extraFonts.push({
-				name: 'Hanken Grotesk',
-				weights: [400, 600, 700],
-			});
 		}
 
 		lib = {
@@ -110,30 +99,7 @@ export default defineConfig(({ mode }) => {
 			__WEB_FORMS_VERSION__: `"v${currentVersion}"`,
 		},
 		base: './',
-		plugins: [
-			vue(),
-			vueJsx(),
-			cssInjectedByJsPlugin(),
-			unpluginFonts({
-				fontsource: {
-					families: [
-						{
-							/**
-							 * Name of the font family.
-							 * Require the `@fontsource/roboto` package to be installed.
-							 */
-							name: 'Roboto',
-							/**
-							 * Load only a subset of the font family.
-							 */
-							weights: [300],
-						},
-						...extraFonts,
-					],
-				},
-			}),
-			...extraPlugins,
-		],
+		plugins: [vue(), vueJsx(), cssInjectedByJsPlugin(), ...extraPlugins],
 		resolve: {
 			alias: {
 				'@getodk/common': resolve(__dirname, '../common/src'),
