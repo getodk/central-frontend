@@ -120,8 +120,8 @@ watchEffect(() => {
 		display: flex;
 		flex-direction: column;
 		max-width: var(--wf-max-form-width);
-		min-height: calc(100vh - 5rem);
-		min-height: calc(100dvh - 5rem);
+		min-height: calc(100vh - 5.5rem);
+		min-height: calc(100dvh - 5.5rem);
 		margin: auto;
 		padding-top: 10px;
 
@@ -176,7 +176,7 @@ watchEffect(() => {
 
 	.powered-by-wrapper {
 		margin-top: 2rem;
-		margin-bottom: 0.5rem;
+		margin-bottom: 1rem;
 		margin-left: 0.5rem;
 
 		.anchor {
@@ -200,7 +200,7 @@ watchEffect(() => {
 
 		.version {
 			font-size: 0.7rem;
-			margin: 0.5rem 0 0 1rem;
+			margin: 0.5rem 0 0 0.85rem;
 			color: var(--gray-500);
 		}
 	}
