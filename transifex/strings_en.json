@@ -1335,6 +1335,21 @@
         },
         "num_audits_unprocessed": {
           "string": "Number of Audit Log Events whose processing has been delayed"
+        },
+        "num_offline_entity_branches": {
+          "string": "Number of Offline Entity branches"
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": "Number of interrupted Offline Entity branches"
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": "Number of reordered Offline Entity submissions"
+        },
+        "max_entity_submission_delay": {
+          "string": "Maximum Entity Submission processing delay"
+        },
+        "avg_entity_submission_delay": {
+          "string": "Average Entity Submission processing delay"
         }
       }
     },

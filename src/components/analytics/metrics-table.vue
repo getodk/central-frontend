@@ -128,6 +128,11 @@ export default {
       "num_audits_failed": "Number of Audit Log Events that failed at least once",
       "num_audits_failed5": "Number of Audit Log Events that failed completely",
       "num_audits_unprocessed": "Number of Audit Log Events whose processing has been delayed",
+      "num_offline_entity_branches": "Number of Offline Entity branches",
+      "num_offline_entity_interrupted_branches": "Number of interrupted Offline Entity branches",
+      "num_offline_entity_submissions_reprocessed": "Number of reordered Offline Entity submissions",
+      "max_entity_submission_delay": "Maximum Entity Submission processing delay",
+      "avg_entity_submission_delay": "Average Entity Submission processing delay",
     }
   }
 }
