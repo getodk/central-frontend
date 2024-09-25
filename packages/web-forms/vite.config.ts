@@ -5,6 +5,7 @@ import { execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
+import { FontsourceFontFamily } from 'unplugin-fonts/types';
 import unpluginFonts from 'unplugin-fonts/vite';
 import type { LibraryOptions, PluginOption } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
@@ -74,17 +75,26 @@ export default defineConfig(({ mode }) => {
 	let external: string[];
 	let globals: Record<string, string>;
 	const extraPlugins: PluginOption[] = [];
+	const extraFonts: FontsourceFontFamily[] = [];
 
 	if (isVueBundled) {
 		external = [];
 		globals = {};
 		extraPlugins.push(copyConfigFile);
+		extraFonts.push({
+			name: 'Hanken Grotesk',
+			weights: [400, 600, 700],
+		});
 	} else {
 		external = ['vue'];
 		globals = { vue: 'Vue' };
 
 		if (isDev) {
 			extraPlugins.push(copyConfigFile);
+			extraFonts.push({
+				name: 'Hanken Grotesk',
+				weights: [400, 600, 700],
+			});
 		}
 
 		lib = {
@@ -118,6 +128,7 @@ export default defineConfig(({ mode }) => {
 							 */
 							weights: [300],
 						},
+						...extraFonts,
 					],
 				},
 			}),
