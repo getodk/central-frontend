@@ -55,8 +55,10 @@ const pathToFileName = (localPath: string): string => {
 	return localPath.replace(/^.*\/([^/]+)$/, '$1');
 };
 
-const extractURLIdentifier = (_: URL): string => {
-	throw new Error('TODO!');
+const extractURLIdentifier = (remoteUrl: URL): string => {
+	const match = /\/([^/]+\/[^/]+)\.[^/]+$/.exec(remoteUrl.pathname);
+
+	return match?.[1] ?? '';
 };
 
 type LoadXFormXML = () => Promise<string>;
@@ -69,7 +71,7 @@ const xformURLLoader = (url: URL): LoadXFormXML => {
 	};
 };
 
-class XFormResource<Type extends XFormResourceType> {
+export class XFormResource<Type extends XFormResourceType> {
 	static forLocalFixture(
 		importerURL: string,
 		relativePath: string,

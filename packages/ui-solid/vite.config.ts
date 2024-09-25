@@ -6,7 +6,6 @@
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import suidPlugin from '@suid/vite-plugin';
 import { resolve as resolvePath } from 'node:path';
-import unpluginFonts from 'unplugin-fonts/vite';
 import dts from 'vite-plugin-dts';
 import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
@@ -87,24 +86,6 @@ export default defineConfig(({ mode }) => {
 			force: true,
 		},
 		plugins: [
-			unpluginFonts({
-				fontsource: {
-					families: [
-						{
-							/**
-							 * Name of the font family.
-							 * Require the `@fontsource/roboto` package to be installed.
-							 */
-							name: 'Roboto',
-							/**
-							 * Load only a subset of the font family.
-							 */
-							weights: [400, 500, 700],
-						},
-					],
-				},
-			}),
-
 			// SUID = Solid MUI component library
 			suidPlugin(),
 

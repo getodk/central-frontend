@@ -580,6 +580,78 @@
       "setIdx": 0,
       "setId": 0,
       "iconIdx": 24
+    },
+    {
+      "icon": {
+        "paths": ["M810 554h-256v256h-84v-256h-256v-84h256v-256h84v256h256v84z"],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": ["add"],
+        "grid": 24,
+        "defaultCode": 59673
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "add",
+        "id": 79,
+        "order": 83,
+        "prevSize": 48,
+        "name": "add",
+        "code": 59673
+      },
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 25
+    },
+    {
+      "icon": {
+        "paths": [
+          "M554 384h236l-236-234v234zM256 86h342l256 256v512q0 34-26 59t-60 25h-512q-34 0-60-25t-26-59l2-684q0-34 25-59t59-25z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": ["insert_drive_file"],
+        "grid": 24,
+        "defaultCode": 59680
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "insert_drive_file",
+        "id": 80,
+        "order": 84,
+        "prevSize": 48,
+        "name": "insert_drive_file",
+        "code": 59680
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 26
+    },
+    {
+      "icon": {
+        "paths": [
+          "M512 384q52 0 90 38t38 90-38 90-90 38-90-38-38-90 38-90 90-38zM512 726q88 0 151-63t63-151-63-151-151-63-151 63-63 151 63 151 151 63zM512 192q158 0 286 88t184 232q-56 144-184 232t-286 88-286-88-184-232q56-144 184-232t286-88z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": ["remove_red_eye", "visibility"],
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "remove_red_eye, visibility",
+        "id": 53,
+        "order": 85,
+        "prevSize": 48,
+        "code": 59674,
+        "name": "remove_red_eye"
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 27
     }
   ],
   "height": 1024,

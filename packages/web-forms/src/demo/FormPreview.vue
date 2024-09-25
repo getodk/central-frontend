@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { xformFixturesByCategory } from '@getodk/common/fixtures/xforms.ts';
+import { xformFixturesByCategory, XFormResource } from '@getodk/common/fixtures/xforms.ts';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import OdkWebForm from '../components/OdkWebForm.vue';
+import FeedbackButton from './FeedbackButton.vue';
 
 const route = useRoute();
 
@@ -11,11 +12,17 @@ const formParam = route.params.form as string;
 
 const formXML = ref<string>();
 
-const demoFixture = xformFixturesByCategory.get(categoryParam)?.find((fixture) => {
-	return fixture.identifier === formParam;
-});
+let xformResource: XFormResource<'local'> | XFormResource<'remote'> | undefined;
 
-demoFixture
+if (route.query.url) {
+	xformResource = XFormResource.fromRemoteURL(route.query.url.toString());
+} else if (formParam) {
+	xformResource = xformFixturesByCategory.get(categoryParam)?.find((fixture) => {
+		return fixture.identifier === formParam;
+	});
+}
+
+xformResource
 	?.loadXML()
 	.then((fixtureXML) => {
 		formXML.value = fixtureXML;
@@ -31,9 +38,11 @@ const handleSubmit = () => {
 	alert(`Submit button was pressed`);
 };
 </script>
-
 <template>
-	<OdkWebForm v-if="formXML" :form-xml="formXML" @submit="handleSubmit" />
+	<template v-if="formXML">
+		<OdkWebForm :form-xml="formXML" @submit="handleSubmit" />
+		<FeedbackButton />
+	</template>
 	<div v-else>
 		Loading...
 	</div>
