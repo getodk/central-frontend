@@ -24,7 +24,7 @@
     "datetime": "",
     "rank": "",
     "csv-external": "",
-    "acknowledge": "",
+    "acknowledge": "🚧",
     "start": "",
     "end": "",
     "today": "",
@@ -70,13 +70,12 @@
     "columns-n": "✅",
     "no-buttons": "✅",
     "image-map": "",
-    "likert": "",
+    "likert": "✅",
     "map": "",
     "field-list": "✅",
     "label": "✅",
     "list-nolabel": "✅",
-    "list": "✅",
-    "table-list": ""
+    "list": "✅"
   },
   "Parameters": {
     "randomize": "✅",
@@ -97,7 +96,7 @@
     "custom constraint": "✅",
     "constraint message": "✅",
     "read only": "✅",
-    "trigger": "🚧",
+    "trigger": "",
     "choice filter": "✅",
     "default": "✅",
     "query parameter": "",
