@@ -57,9 +57,9 @@
       "user": "Azioni utente web",
       "project": "Azioni di progetto",
       "form": "Azioni del form",
-      "dataset": "Azioni dell'elenco delle entità",
       "field_key": "Azioni utente applicazione",
       "public_link": "Azioni del link di accesso pubblico",
+      "dataset": "Azioni dell'elenco delle entità",
       "config": "Azioni di configurazione del server",
       "upgrade": "Aggiornamento del server"
     },

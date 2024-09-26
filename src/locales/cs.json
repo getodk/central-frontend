@@ -57,9 +57,9 @@
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
-      "dataset": "Seznam akcí entit",
       "field_key": "Akce uživatelů aplikace",
       "public_link": "Akce s veřejným přístupem",
+      "dataset": "Seznam akcí entit",
       "config": "Akce konfigurace serveru",
       "upgrade": "Upgrade serveru"
     },

@@ -57,9 +57,9 @@
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
-      "dataset": "Entitätslistenaktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
+      "dataset": "Entitätslistenaktionen",
       "config": "Server-Konfigurationsaktionen",
       "upgrade": "Server-Aktualisierung"
     },
