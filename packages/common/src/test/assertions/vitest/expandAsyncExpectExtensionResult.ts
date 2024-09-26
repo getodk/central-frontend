@@ -1,17 +1,16 @@
 import type { SyncExpectationResult } from 'vitest';
+import type { expandSimpleExpectExtensionResult } from './expandSimpleExpectExtensionResult.ts';
 import { isErrorLike } from './isErrorLike.ts';
 import type { ExpectExtensionMethod, SimpleAssertionResult } from './shared-extension-types.ts';
 
 /**
- * Where Vitest assertion extends may be defined to return a
- * {@link SimpleAssertionResult}, expands that result value to the complete
- * interface expected by Vitest for reporting assertion results.
+ * Asynchronous counterpart to {@link expandSimpleExpectExtensionResult}
  */
-export const expandSimpleExpectExtensionResult = <Actual, Expected>(
-	simpleMethod: ExpectExtensionMethod<Actual, Expected, SimpleAssertionResult>
-): ExpectExtensionMethod<Actual, Expected, SyncExpectationResult> => {
-	return (actual, expected) => {
-		const simpleResult = simpleMethod(actual, expected);
+export const expandAsyncExpectExtensionResult = <Actual, Expected>(
+	simpleMethod: ExpectExtensionMethod<Actual, Expected, Promise<SimpleAssertionResult>>
+): ExpectExtensionMethod<Actual, Expected, Promise<SyncExpectationResult>> => {
+	return async (actual, expected) => {
+		const simpleResult = await simpleMethod(actual, expected);
 
 		const pass = simpleResult === true;
 

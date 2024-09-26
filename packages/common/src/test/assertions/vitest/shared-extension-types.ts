@@ -3,6 +3,7 @@ import type { JSONValue } from '../../../../types/JSONValue.ts';
 import type { Primitive } from '../../../../types/Primitive.ts';
 import type { ArbitraryConditionExpectExtension } from './ArbitraryConditionExpectExtension.ts';
 import type { AsymmetricTypedExpectExtension } from './AsymmetricTypedExpectExtension.ts';
+import type { AsyncAsymmetricTypedExpectExtension } from './AsyncAsymmetricTypedExpectExtension.ts';
 import type { StaticConditionExpectExtension } from './StaticConditionExpectExtension.ts';
 import type { SymmetricTypedExpectExtension } from './SymmetricTypedExpectExtension.ts';
 
@@ -37,13 +38,25 @@ export type ExpectExtensionMethod<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TypedExpectExtension<Actual = any, Expected = Actual> =
 	| AsymmetricTypedExpectExtension<Actual, Expected>
+	| AsyncAsymmetricTypedExpectExtension<Actual, Expected>
 	| SymmetricTypedExpectExtension<Expected>;
 
-export type UntypedExpectExtensionFunction = ExpectExtensionMethod<
+type AsyncUntypedExpectExtensionFunction = ExpectExtensionMethod<
+	unknown,
+	unknown,
+	Promise<SyncExpectationResult>
+>;
+
+type SyncUntypedExpectExtensionFunction = ExpectExtensionMethod<
 	unknown,
 	unknown,
 	SyncExpectationResult
 >;
+
+// prettier-ignore
+export type UntypedExpectExtensionFunction =
+	| AsyncUntypedExpectExtensionFunction
+	| SyncUntypedExpectExtensionFunction;
 
 export interface UntypedExpectExtensionObject {
 	readonly extensionMethod: UntypedExpectExtensionFunction;
@@ -54,7 +67,10 @@ export type UntypedExpectExtension =
 	| UntypedExpectExtensionFunction
 	| UntypedExpectExtensionObject;
 
-export type ExpectExtension = TypedExpectExtension | UntypedExpectExtension;
+// prettier-ignore
+export type ExpectExtension =
+	| TypedExpectExtension
+	| UntypedExpectExtension;
 
 export type ExpectExtensionRecord<MethodName extends string> = {
 	[K in MethodName]: ExpectExtension;
@@ -68,7 +84,10 @@ export type DeriveStaticVitestExpectExtension<
 > = {
 	[K in keyof Implementation]:
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Implementation[K] extends ArbitraryConditionExpectExtension<any>
+		Implementation[K] extends AsyncAsymmetricTypedExpectExtension<any, infer Expected>
+			? (expected: Expected) => Promise<VitestParameterizedReturn>
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		: Implementation[K] extends ArbitraryConditionExpectExtension<any>
 			? () => VitestParameterizedReturn
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		: Implementation[K] extends StaticConditionExpectExtension<any, any>
