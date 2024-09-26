@@ -14,8 +14,12 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+import { TagXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/TagXFormsElement.ts';
+import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
+import { createUniqueId } from 'solid-js';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
+import { ANSWER_OK, ANSWER_REQUIRED_BUT_EMPTY } from '../src/jr/validation/ValidateOutcome.ts';
 import { ReactiveScenario } from '../src/reactive/ReactiveScenario.ts';
 
 describe('Form submission', () => {
@@ -589,5 +593,206 @@ describe('Form submission', () => {
 				);
 			});
 		});
+	});
+
+	describe('submission payload', () => {
+		const DEFAULT_INSTANCE_ID = 'uuid:TODO-mock-xpath-functions';
+
+		// prettier-ignore
+		type SubmissionFixtureElements =
+			| readonly []
+			| readonly [XFormsElement];
+
+		interface BuildSubmissionPayloadScenario {
+			readonly submissionElements?: SubmissionFixtureElements;
+		}
+
+		const buildSubmissionPayloadScenario = async (
+			options?: BuildSubmissionPayloadScenario
+		): Promise<Scenario> => {
+			const scenario = await Scenario.init(
+				'Prepare for submission',
+				html(
+					head(
+						title('Prepare for submission'),
+						model(
+							mainInstance(
+								t(
+									'data id="prepare-for-submission"',
+									t('rep', t('inp')),
+									t('meta', t('instanceID'))
+								)
+							),
+							...(options?.submissionElements ?? []),
+							bind('/data/rep/inp').required(),
+							bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
+						)
+					),
+					body(repeat('/data/rep', label('rep'), input('/data/rep/inp', label('inp'))))
+				)
+			);
+
+			return scenario;
+		};
+
+		describe('submission definition', () => {
+			it('includes a default submission definition', async () => {
+				const scenario = await buildSubmissionPayloadScenario();
+				const submissionResult = await scenario.prepareWebFormsSubmission();
+
+				expect(submissionResult.definition).toMatchObject({
+					submissionAction: null,
+					submissionMethod: 'post',
+					encryptionKey: null,
+				});
+			});
+
+			it('includes a form-specified submission definition URL', async () => {
+				const submissionAction = 'https://example.org';
+				const scenario = await buildSubmissionPayloadScenario({
+					submissionElements: [t(`submission action="${submissionAction}"`)],
+				});
+				const submissionResult = await scenario.prepareWebFormsSubmission();
+
+				expect(submissionResult.definition).toMatchObject({
+					submissionAction: new URL(submissionAction),
+				});
+			});
+
+			it('accepts an explicit method="post" as post', async () => {
+				const scenario = await buildSubmissionPayloadScenario({
+					submissionElements: [t('submission method="post"')],
+				});
+				const submissionResult = await scenario.prepareWebFormsSubmission();
+
+				expect(submissionResult.definition).toMatchObject({
+					submissionMethod: 'post',
+				});
+			});
+
+			it('treats method="form-data-post" as method="post"', async () => {
+				const scenario = await buildSubmissionPayloadScenario({
+					submissionElements: [t('submission method="form-data-post"')],
+				});
+				const submissionResult = await scenario.prepareWebFormsSubmission();
+
+				expect(submissionResult.definition).toMatchObject({
+					submissionMethod: 'post',
+				});
+			});
+
+			it.each(['nope', 'not-this-either', 'poast'])(
+				'fails to load when form specifies unsupported submission method',
+				async (otherMethod) => {
+					const init = async () => {
+						await buildSubmissionPayloadScenario({
+							submissionElements: [t(`submission method="${otherMethod}"`)],
+						});
+					};
+
+					await expect(init).rejects.toThrow();
+				}
+			);
+
+			it('includes a form-specified `base64RsaPublicKey` as encryptionKey', async () => {
+				const base64RsaPublicKey = btoa(createUniqueId());
+				const scenario = await buildSubmissionPayloadScenario({
+					submissionElements: [
+						// Note: `t()` fails here, presumably because the ported JavaRosa
+						// `parseAttributes` doesn't expect equals signs as produced in
+						// the trailing base64 value.
+						new TagXFormsElement(
+							'submission',
+							new Map([['base64RsaPublicKey', base64RsaPublicKey]]),
+							[]
+						),
+					],
+				});
+				const submissionResult = await scenario.prepareWebFormsSubmission();
+
+				expect(submissionResult.definition).toMatchObject({
+					encryptionKey: base64RsaPublicKey,
+				});
+			});
+		});
+
+		describe('for a single (monolithic) request', () => {
+			describe('valid submission state', () => {
+				let scenario: Scenario;
+				let validSubmissionXML: string;
+
+				beforeEach(async () => {
+					scenario = await buildSubmissionPayloadScenario();
+
+					scenario.answer('/data/rep[1]/inp', 'rep 1 inp');
+					scenario.createNewRepeat('/data/rep');
+					scenario.answer('/data/rep[2]/inp', 'rep 2 inp');
+
+					// Check assumption: form state is valid
+					expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
+
+					// prettier-ignore
+					validSubmissionXML = t('data',
+						t('rep',
+							t('inp', 'rep 1 inp')),
+						t('rep',
+							t('inp', 'rep 2 inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))
+					).asXml();
+				});
+
+				it('is ready for submission when instance state is valid', async () => {
+					const submissionResult = await scenario.prepareWebFormsSubmission();
+
+					expect(submissionResult).toBeReadyForSubmission();
+				});
+
+				it('includes submission instance XML file data', async () => {
+					const submissionResult = await scenario.prepareWebFormsSubmission();
+
+					await expect(submissionResult).toHavePreparedSubmissionXML(validSubmissionXML);
+				});
+			});
+
+			describe('invalid submission state', () => {
+				let scenario: Scenario;
+				let invalidSubmissionXML: string;
+
+				beforeEach(async () => {
+					scenario = await buildSubmissionPayloadScenario();
+
+					scenario.answer('/data/rep[1]/inp', 'rep 1 inp');
+					scenario.createNewRepeat('/data/rep');
+
+					// Check assumption: form state is valid
+					expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
+
+					// prettier-ignore
+					invalidSubmissionXML = t('data',
+						t('rep',
+							t('inp', 'rep 1 inp')),
+						t('rep',
+							t('inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))
+					).asXml();
+				});
+
+				it('is pending submission with violations', async () => {
+					const submissionResult = await scenario.prepareWebFormsSubmission();
+
+					expect(submissionResult).toBePendingSubmissionWithViolations();
+				});
+
+				it('produces submission instance XML file data even when current instance state is invalid', async () => {
+					const submissionResult = await scenario.prepareWebFormsSubmission();
+
+					await expect(submissionResult).toHavePreparedSubmissionXML(invalidSubmissionXML);
+				});
+			});
+		});
+
+		describe.todo('for multiple requests, chunked by maximum size');
 	});
 });
