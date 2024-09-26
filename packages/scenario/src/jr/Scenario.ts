@@ -7,6 +7,9 @@ import type {
 	RepeatRangeUncontrolledNode,
 	RootNode,
 	SelectNode,
+	SubmissionChunkedType,
+	SubmissionOptions,
+	SubmissionResult,
 } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
@@ -942,6 +945,19 @@ export class Scenario {
 
 	proposed_serializeInstance(): string {
 		return this.instanceRoot.submissionState.submissionXML;
+	}
+
+	/**
+	 * @todo Name is currently Web Forms-specific, pending question on whether
+	 * this feature set is novel to Web Forms. If it is novel, isn't clear whether
+	 * it would be appropriate to propose an equivalent JavaRosa method. Find out
+	 * more about Collect's responsibility for submission (beyond serialization,
+	 * already handled by {@link proposed_serializeInstance}).
+	 */
+	prepareWebFormsSubmission<ChunkedType extends SubmissionChunkedType>(
+		options?: SubmissionOptions<ChunkedType>
+	): Promise<SubmissionResult<ChunkedType>> {
+		return this.instanceRoot.prepareSubmission<ChunkedType>(options);
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
