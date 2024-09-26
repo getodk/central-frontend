@@ -19,7 +19,7 @@ const isDev = import.meta.env.DEV;
 							</div>
 
 							<h1 class="pape-title">
-								Try ODK Web Forms
+								ODK Web Forms Preview
 							</h1>
 
 							<p class="page-description">
@@ -62,12 +62,12 @@ const isDev = import.meta.env.DEV;
 		<section class="demo-forms">
 			<div class="container">
 				<h1 class="demo-form-heading">
-					Try real Forms
+					Try real forms
 				</h1>
 				<div class="row">
 					<div class="col">
 						<DemoForm
-							form-title="Socio-economic Survey"
+							form-title="Socio-economic survey"
 							form-identifier="socio-economic-survey-v20240515"
 							image-name="socio-economic"
 						>
@@ -78,7 +78,7 @@ const isDev = import.meta.env.DEV;
 					</div>
 					<div class="col">
 						<DemoForm
-							form-title="WHO Verbal Autopsy survey"
+							form-title="WHO Verbal Autopsy"
 							form-identifier="whova_form"
 							image-name="who-va"
 						>
@@ -91,7 +91,7 @@ const isDev = import.meta.env.DEV;
 				<div class="row">
 					<div class="col">
 						<DemoForm
-							form-title="PhilSA Disaster Incidence"
+							form-title="PhilSA Disaster Incidence report"
 							form-identifier="philsa-disaster-incidence-v20240917"
 							image-name="philsa"
 						>
