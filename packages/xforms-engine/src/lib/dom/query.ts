@@ -15,6 +15,7 @@ const repeatGroupLabelLookup = new ScopedElementLookup(
 );
 const repeatLookup = new ScopedElementLookup(':scope > repeat[nodeset]', 'repeat[nodeset]');
 const valueLookup = new ScopedElementLookup(':scope > value', 'value');
+const submissionLookup = new ScopedElementLookup(':scope > submission', 'submission');
 
 export interface HintElement extends LocalNamedElement<'hint'> {}
 
@@ -59,4 +60,10 @@ export const getRepeatElement = (parent: Element): RepeatElement | null => {
 
 export const getValueElement = (parent: ItemElement | ItemsetElement): ValueElement | null => {
 	return valueLookup.getElement<ValueElement>(parent);
+};
+
+export interface SubmissionElement extends LocalNamedElement<'submission'> {}
+
+export const getSubmissionElement = (parent: Element): SubmissionElement | null => {
+	return submissionLookup.getElement<SubmissionElement>(parent);
 };

@@ -1,6 +1,7 @@
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import type { FormSubmissionDefinition } from './FormSubmissionDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 import type {
@@ -31,6 +32,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 	constructor(
 		protected readonly form: XFormDefinition,
 		protected readonly model: ModelDefinition,
+		readonly submission: FormSubmissionDefinition,
 		readonly classes: BodyClassList
 	) {
 		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
