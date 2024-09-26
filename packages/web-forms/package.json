@@ -49,27 +49,27 @@
     "test:types:vitest": "vue-tsc --project ./tsconfig.vitest.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
-    "@fontsource/hanken-grotesk": "^5.0.13",
-    "@fontsource/roboto": "^5.0.14",
+    "@faker-js/faker": "^9.0.2",
+    "@fontsource/hanken-grotesk": "^5.1.0",
+    "@fontsource/roboto": "^5.1.0",
     "@getodk/xforms-engine": "0.4.0",
-    "@playwright/test": "^1.46.1",
+    "@playwright/test": "^1.47.2",
     "@types/ramda": "^0.30.2",
-    "@vitejs/plugin-vue": "^5.1.3",
+    "@vitejs/plugin-vue": "^5.1.4",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "@vue/test-utils": "^2.4.6",
-    "jsdom": "^25.0.0",
+    "jsdom": "^25.0.1",
     "primeflex": "^3.3.1",
     "primevue": "^3.53.0",
     "primevue-sass-theme": "https://github.com/primefaces/primevue-sass-theme.git#3.52.0",
     "ramda": "^0.30.1",
-    "sass": "^1.77.2",
-    "vite": "^5.4.3",
+    "sass": "^1.79.3",
+    "vite": "^5.4.8",
     "vite-plugin-css-injected-by-js": "^3.5.1",
     "vite-plugin-static-copy": "^1.0.6",
-    "vitest": "^2.0.5",
+    "vitest": "^2.1.1",
     "vue": "3.3.4",
-    "vue-router": "^4.4.3"
+    "vue-router": "^4.4.5"
   },
   "peerDependencies": {
     "vue": "^3.3.4"
