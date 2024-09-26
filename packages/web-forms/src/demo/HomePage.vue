@@ -110,7 +110,7 @@ const isDev = import.meta.env.DEV;
 								See all question types available in ODK! Track our
 								<a
 									class="inline-anchor"
-									href="https://github.com/getodk/web-forms#project-status"
+									href="https://github.com/getodk/web-forms#feature-matrix"
 									target="_blank"
 								>feature progress</a>
 								to learn about which are supported in Web Forms.
