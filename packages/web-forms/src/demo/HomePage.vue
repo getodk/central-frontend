@@ -189,7 +189,7 @@ const isDev = import.meta.env.DEV;
 			.beta-chip {
 				background-color: var(--blue-50);
 				font-size: 14px;
-				padding: 5.25px 10.5px;
+				padding: 5.25px 16px;
 
 				:deep(.p-chip-text) {
 					margin: 0;
@@ -199,15 +199,18 @@ const isDev = import.meta.env.DEV;
 			h1.pape-title {
 				margin: 0;
 				font-size: 2.25rem;
-				font-weight: 600;
+				font-weight: 400;
 			}
 
 			p.page-description {
 				margin: 0;
+				font-size: 1.1875rem;
+				font-weight: 300;
 			}
 
 			p.xls-tutorial-text {
 				margin: 0;
+				font-weight: 300;
 			}
 		}
 	}
@@ -224,7 +227,7 @@ const isDev = import.meta.env.DEV;
 
 	h1.demo-form-heading {
 		font-size: 2.25rem;
-		font-weight: 600;
+		font-weight: 400;
 		margin: 0;
 		padding: 0 1rem;
 	}

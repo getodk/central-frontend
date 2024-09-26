@@ -209,6 +209,8 @@ document.addEventListener(
 		text-align: center;
 		gap: 1rem;
 		padding: 0 1rem;
+		font-size: 1.1875rem;
+		font-weight: 300;
 	}
 
 	.dropbox.highlighted {
@@ -217,7 +219,7 @@ document.addEventListener(
 	}
 
 	a.upload-file-link {
-		font-weight: 700;
+		font-weight: 400;
 		color: var(--primary-color);
 	}
 

@@ -79,7 +79,7 @@ const formXls = computed(() => {
 	h2 {
 		margin: 0.5rem 0;
 		font-size: 1.5rem;
-		font-weight: 700;
+		font-weight: 400;
 	}
 
 	.details {
@@ -88,6 +88,7 @@ const formXls = computed(() => {
 
 	.description {
 		min-height: 4rem;
+		font-weight: 300;
 	}
 	.actions {
 		display: flex;
