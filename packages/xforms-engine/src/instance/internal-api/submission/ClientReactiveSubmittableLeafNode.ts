@@ -1,5 +1,9 @@
 import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
 import type { EscapedXMLText } from '../../../lib/xml-serialization.ts';
+import type {
+	ClientReactiveSubmittableChildNode,
+	ClientReactiveSubmittableParentNode,
+} from './ClientReactiveSubmittableParentNode.ts';
 
 interface ClientReactiveSubmittableLeafNodeCurrentState<RuntimeValue> {
 	get relevant(): boolean;
@@ -14,6 +18,7 @@ interface ClientReactiveSubmittableLeafNodeDefinition {
 
 export interface ClientReactiveSubmittableLeafNode<RuntimeValue> {
 	readonly definition: ClientReactiveSubmittableLeafNodeDefinition;
+	readonly parent: ClientReactiveSubmittableParentNode<ClientReactiveSubmittableChildNode>;
 	readonly currentState: ClientReactiveSubmittableLeafNodeCurrentState<RuntimeValue>;
 
 	/**

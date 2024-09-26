@@ -11,7 +11,7 @@ interface ClientReactiveSubmittableParentNodeCurrentState<
 	get children(): readonly Child[];
 }
 
-interface ClientReactiveSubmittableParentNodeDefinition {
+export interface ClientReactiveSubmittableParentNodeDefinition {
 	readonly nodeName: string;
 }
 
@@ -19,6 +19,7 @@ export interface ClientReactiveSubmittableParentNode<
 	Child extends ClientReactiveSubmittableChildNode,
 > {
 	readonly definition: ClientReactiveSubmittableParentNodeDefinition;
+	readonly parent: ClientReactiveSubmittableParentNode<ClientReactiveSubmittableChildNode> | null;
 	readonly currentState: ClientReactiveSubmittableParentNodeCurrentState<Child>;
 	readonly submissionState: SubmissionState;
 }

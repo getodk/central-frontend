@@ -4,6 +4,7 @@ import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { SubmissionDefinition } from '../client/submission/SubmissionDefinition.ts';
 import type {
 	SubmissionChunkedType,
 	SubmissionOptions,
@@ -12,6 +13,7 @@ import type { SubmissionResult } from '../client/submission/SubmissionResult.ts'
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
+import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -29,7 +31,7 @@ import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
-import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
+import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 
@@ -108,7 +110,7 @@ export class Root
 		EvaluationContextRoot,
 		SubscribableDependency,
 		TranslationContext,
-		ClientReactiveSubmittableParentNode<GeneralChildNode>
+		ClientReactiveSubmittableInstance
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
@@ -127,6 +129,11 @@ export class Root
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
 	readonly submissionState: SubmissionState;
+
+	// ClientReactiveSubmittableInstance
+	get submissionDefinition(): SubmissionDefinition {
+		return this.definition.submission;
+	}
 
 	protected readonly instanceDOM: XFormDOM;
 
@@ -228,10 +235,15 @@ export class Root
 		return this;
 	}
 
-	prepareSubmission<ChunkedType extends SubmissionChunkedType>(
-		_options?: SubmissionOptions<ChunkedType>
+	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
+		options?: SubmissionOptions<ChunkedType>
 	): Promise<SubmissionResult<ChunkedType>> {
-		throw new Error('Not implemented');
+		const result = prepareSubmission(this, {
+			chunked: (options?.chunked ?? 'monolithic') as ChunkedType,
+			maxSize: options?.maxSize ?? Infinity,
+		});
+
+		return Promise.resolve(result);
 	}
 
 	// SubscribableDependency
