@@ -92,5 +92,5 @@ export const serializeParentElementXML = (
 };
 
 export const serializeLeafElementXML = (nodeName: string, xmlValue: EscapedXMLText): string => {
-	return serializeElementXML(nodeName, xmlValue);
+	return serializeElementXML(nodeName, xmlValue.normalize());
 };
