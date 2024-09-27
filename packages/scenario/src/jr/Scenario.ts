@@ -901,7 +901,7 @@ export class Scenario {
 	}
 
 	proposed_serializeInstance(): string {
-		throw new ImplementationPendingError('instance serialization');
+		return this.instanceRoot.submissionState.submissionXML;
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
