@@ -870,7 +870,10 @@ becomes more complicated.
     }
   }
 
-  .badge { vertical-align: baseline; }
+  .badge {
+    background-color: #999;
+    vertical-align: baseline;
+  }
 }
 
 .chip {
