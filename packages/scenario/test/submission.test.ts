@@ -17,18 +17,12 @@ describe('Form submission', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * - JavaRosa provides this method on an `XFormSerializingVisitor` class. We
-		 *   add a proposed API equivalent on {@link Scenario}. (Direct ported code
-		 *   is preserved, commented out above the proposed API usage.)
-		 *
-		 * - Test currently fails pending feature support.
-		 *
-		 * - This test is valuable, but we should expand the suite to cover at least
-		 *   general serialization, as well as any other potential edge cases we
-		 *   might anticipate.
+		 * JavaRosa provides this method on an `XFormSerializingVisitor` class. We
+		 * add a proposed API equivalent on {@link Scenario}. (Direct ported code is
+		 * preserved, commented out above the proposed API usage.)
 		 */
 		describe('`serializeInstance`', () => {
-			it.fails('preserves unicode characters', async () => {
+			it('preserves unicode characters', async () => {
 				const formDef = html(
 					head(
 						title('Some form'),
