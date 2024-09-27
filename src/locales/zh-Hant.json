@@ -57,9 +57,9 @@
       "user": "網頁使用者活動",
       "project": "專案活動",
       "form": "表單活動",
-      "dataset": "實體清單活動",
       "field_key": "手機軟體使用者活動",
       "public_link": "公共連結活動",
+      "dataset": "實體清單活動",
       "config": "伺服器設定活動",
       "upgrade": "伺服器更新"
     },

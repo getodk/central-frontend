@@ -57,9 +57,9 @@
       "user": "Acciones de usuarios web",
       "project": "Acciones de proyectos",
       "form": "Acciones de formulario",
-      "dataset": "Acciones de la lista de entidades",
       "field_key": "Acciones de usuarios móviles",
       "public_link": "Acciones de enlace de acceso público",
+      "dataset": "Acciones de la lista de entidades",
       "config": "Acciones de configuración del servidor",
       "upgrade": "Actualización de servidor"
     },

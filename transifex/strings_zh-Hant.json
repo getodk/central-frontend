@@ -152,10 +152,6 @@
         "string": "表單活動",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "dataset": {
-        "string": "實體清單活動",
-        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
-      },
       "field_key": {
         "string": "手機軟體使用者活動",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -164,12 +160,20 @@
         "string": "公共連結活動",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "dataset": {
+        "string": "實體清單活動",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "config": {
         "string": "伺服器設定活動",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
         "string": "伺服器更新",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "task": {
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -195,6 +199,16 @@
       "analytics": {
         "string": "報告使用情況",
         "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "blobs": {
+        "s3_upload": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        },
+        "s3_failed_to_pending": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
       },
       "config": {
         "set": {
@@ -260,6 +274,12 @@
         "assignment_delete": {
           "string": "移除存取",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
+      "submission": {
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
       "upgrade": {
@@ -1315,6 +1335,21 @@
         },
         "num_audits_unprocessed": {
           "string": "處理已延遲的審核日誌事件數"
+        },
+        "num_offline_entity_branches": {
+          "string": ""
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": ""
+        },
+        "max_entity_submission_delay": {
+          "string": ""
+        },
+        "avg_entity_submission_delay": {
+          "string": ""
         }
       }
     },
