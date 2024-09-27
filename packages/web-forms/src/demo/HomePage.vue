@@ -19,7 +19,7 @@ const isDev = import.meta.env.DEV;
 							</div>
 
 							<h1 class="pape-title">
-								Try ODK Web Forms
+								ODK Web Forms Preview
 							</h1>
 
 							<p class="page-description">
@@ -62,12 +62,12 @@ const isDev = import.meta.env.DEV;
 		<section class="demo-forms">
 			<div class="container">
 				<h1 class="demo-form-heading">
-					Try real Forms
+					Try real forms
 				</h1>
 				<div class="row">
 					<div class="col">
 						<DemoForm
-							form-title="Socio-economic Survey"
+							form-title="Socio-economic survey"
 							form-identifier="socio-economic-survey-v20240515"
 							image-name="socio-economic"
 						>
@@ -78,7 +78,7 @@ const isDev = import.meta.env.DEV;
 					</div>
 					<div class="col">
 						<DemoForm
-							form-title="WHO Verbal Autopsy survey"
+							form-title="WHO Verbal Autopsy"
 							form-identifier="whova_form"
 							image-name="who-va"
 						>
@@ -91,7 +91,7 @@ const isDev = import.meta.env.DEV;
 				<div class="row">
 					<div class="col">
 						<DemoForm
-							form-title="PhilSA Disaster Incidence"
+							form-title="PhilSA Disaster Incidence report"
 							form-identifier="philsa-disaster-incidence-v20240917"
 							image-name="philsa"
 						>
@@ -110,7 +110,7 @@ const isDev = import.meta.env.DEV;
 								See all question types available in ODK! Track our
 								<a
 									class="inline-anchor"
-									href="https://github.com/getodk/web-forms#project-status"
+									href="https://github.com/getodk/web-forms#feature-matrix"
 									target="_blank"
 								>feature progress</a>
 								to learn about which are supported in Web Forms.
@@ -189,7 +189,7 @@ const isDev = import.meta.env.DEV;
 			.beta-chip {
 				background-color: var(--blue-50);
 				font-size: 14px;
-				padding: 5.25px 10.5px;
+				padding: 5.25px 16px;
 
 				:deep(.p-chip-text) {
 					margin: 0;
@@ -199,15 +199,18 @@ const isDev = import.meta.env.DEV;
 			h1.pape-title {
 				margin: 0;
 				font-size: 2.25rem;
-				font-weight: 600;
+				font-weight: 400;
 			}
 
 			p.page-description {
 				margin: 0;
+				font-size: 1.1875rem;
+				font-weight: 300;
 			}
 
 			p.xls-tutorial-text {
 				margin: 0;
+				font-weight: 300;
 			}
 		}
 	}
@@ -224,7 +227,7 @@ const isDev = import.meta.env.DEV;
 
 	h1.demo-form-heading {
 		font-size: 2.25rem;
-		font-weight: 600;
+		font-weight: 400;
 		margin: 0;
 		padding: 0 1rem;
 	}
