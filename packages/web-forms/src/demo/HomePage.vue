@@ -151,7 +151,7 @@ const isDev = import.meta.env.DEV;
 
 	.container {
 		width: 100%;
-		max-width: 540px;
+		max-width: min(100%, 540px);
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
@@ -167,7 +167,7 @@ const isDev = import.meta.env.DEV;
 			.col {
 				flex: 0 0 100%;
 				padding: 0;
-				max-width: 500px;
+				max-width: min(100%, 500px);
 			}
 		}
 	}
