@@ -16,6 +16,7 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
+import { ReactiveScenario } from '../src/reactive/ReactiveScenario.ts';
 
 describe('Form submission', () => {
 	describe('XFormSerializingVisitorTest.java', () => {
@@ -345,6 +346,244 @@ describe('Form submission', () => {
 					t('data',
 						t('grp-rel', '0'),
 						t('inp-rel', '1'),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+			});
+		});
+
+		describe('client reactivity', () => {
+			let scenario: ReactiveScenario;
+
+			beforeEach(async () => {
+				scenario = await ReactiveScenario.init(
+					'XML serialization - client reactivity',
+					// prettier-ignore
+					html(
+						head(
+							title('Relevance XML serialization'),
+							model(
+								mainInstance(
+									t('data id="relevance-xml-serialization"',
+										t('rep-inp-rel'),
+										t('rep',
+											t('inp')),
+											t('meta', t('instanceID')))
+								),
+								bind('/data/rep-inp-rel'),
+								bind('/data/rep/inp').relevant("/data/rep-inp-rel = '' or /data/rep-inp-rel = position(..)"),
+								bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
+							)
+						),
+						body(
+							input('/data/rep-inp-rel',
+								label('Each /data/rep/inp is relevant when this value is 1')),
+							repeat('/data/rep',
+								label('rep'),
+								input('/data/rep/inp',
+									label('inp'))))
+					)
+				);
+			});
+
+			it('updates XML serialization state on change to string node', () => {
+				let serialized: string | null = null;
+
+				scenario.createEffect(() => {
+					serialized = scenario.proposed_serializeInstance();
+				});
+
+				// Default serialization before any state change
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				// Check reactive update for repeated changes
+				for (let i = 0; i < 10; i += 1) {
+					scenario.answer('/data/rep[1]/inp', `${i}`);
+
+					// After first value change
+					expect(serialized).toBe(
+						// prettier-ignore
+						t('data',
+							t('rep-inp-rel'),
+							t('rep',
+								t('inp', `${i}`)),
+							t('meta',
+								t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+					);
+				}
+			});
+
+			it('updates XML serialization state when adding and removing repeat instances', () => {
+				let serialized: string | null = null;
+
+				scenario.createEffect(() => {
+					serialized = scenario.proposed_serializeInstance();
+				});
+
+				// Default serialization before any state change
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.createNewRepeat('/data/rep');
+
+				// First repeat instance added
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp')),
+						t('rep',
+							t('inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.createNewRepeat('/data/rep');
+
+				// Second repeat instance added
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp')),
+						t('rep',
+							t('inp')),
+						t('rep',
+							t('inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.answer('/data/rep[1]/inp', 'rep 1 inp');
+				scenario.answer('/data/rep[2]/inp', 'rep 2 inp');
+				scenario.answer('/data/rep[3]/inp', 'rep 3 inp');
+
+				// Each of the above values set
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp', 'rep 1 inp')),
+						t('rep',
+							t('inp', 'rep 2 inp')),
+						t('rep',
+							t('inp', 'rep 3 inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.removeRepeat('/data/rep[3]');
+
+				// Last repeat instance removed
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp', 'rep 1 inp')),
+						t('rep',
+							t('inp', 'rep 2 inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.removeRepeat('/data/rep[1]');
+
+				// First repeat instance removed
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp', 'rep 2 inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.removeRepeat('/data/rep[1]');
+
+				// All repeat instances removed
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+			});
+
+			it('updates XML serialization state when relevance changes', () => {
+				let serialized: string | null = null;
+
+				scenario.createEffect(() => {
+					serialized = scenario.proposed_serializeInstance();
+				});
+
+				scenario.createNewRepeat('/data/rep');
+				scenario.createNewRepeat('/data/rep');
+				scenario.answer('/data/rep[1]/inp', 'rep 1 inp');
+				scenario.answer('/data/rep[2]/inp', 'rep 2 inp');
+				scenario.answer('/data/rep[3]/inp', 'rep 3 inp');
+
+				// Current serialization before any relevance change
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel'),
+						t('rep',
+							t('inp', 'rep 1 inp')),
+						t('rep',
+							t('inp', 'rep 2 inp')),
+						t('rep',
+							t('inp', 'rep 3 inp')),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.answer('/data/rep-inp-rel', '1');
+
+				// Non-relevant /data/rep[position() != '1']/inp omitted
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel', '1'),
+						t('rep',
+							t('inp', 'rep 1 inp')),
+						t('rep'),
+						t('rep'),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+
+				scenario.answer('/data/rep-inp-rel', '3');
+
+				// Non-relevant /data/rep[position() != '3']/inp omitted
+				expect(serialized).toBe(
+					// prettier-ignore
+					t('data',
+						t('rep-inp-rel', '3'),
+						t('rep'),
+						t('rep'),
+						t('rep',
+							t('inp', 'rep 3 inp')),
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
 				);
