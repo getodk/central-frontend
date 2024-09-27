@@ -143,7 +143,7 @@ document.addEventListener(
 					<input ref="fileInput" type="file" hidden accept=".xls, .xlsx, .xml" @change="fileChangeHandler">
 					<span>
 						<span class="icon-insert_drive_file" />
-						Drag and drop XLSForm or <a href="javascript:;" class="upload-file-link" @click="fileInput.click()">upload file</a>
+						Drag and drop XLSForm or <a href="javascript:;" class="upload-file-link" @click="fileInput.click()">upload form</a>
 					</span>
 				</template>
 				<template v-else>

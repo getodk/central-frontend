@@ -30,7 +30,7 @@ const isDev = import.meta.env.DEV;
 									class="inline-anchor"
 									href="https://forum.getodk.org/t/web-forms-whats-next-and-our-plan-for-releasing/48146"
 									target="_blank"
-								>forum.</a>
+								>forum</a>.
 							</p>
 
 							<FormUpload />
@@ -41,7 +41,7 @@ const isDev = import.meta.env.DEV;
 									class="inline-anchor"
 									href="https://docs.getodk.org/tutorial-first-form/"
 									target="_blank"
-								> Try this tutorial </a>
+								> Try this tutorial</a>.
 							</p>
 						</div>
 					</div>
@@ -96,7 +96,7 @@ const isDev = import.meta.env.DEV;
 							image-name="philsa"
 						>
 							<template #description>
-								Public form used for citizen science by The Philippines Space Agency.
+								Public form used for citizen science by the Philippines Space Agency.
 							</template>
 						</DemoForm>
 					</div>
