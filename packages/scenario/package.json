@@ -26,7 +26,7 @@
     "./types/do-not-import.d.ts"
   ],
   "engines": {
-    "node": "^18.20.4 || ^20.17.0 || ^22.8.0",
+    "node": "^18.20.4 || ^20.17.0 || ^22.9.0",
     "yarn": "1.22.22"
   },
   "scripts": {
@@ -49,10 +49,10 @@
   "devDependencies": {
     "@getodk/xforms-engine": "0.4.0",
     "@js-joda/core": "^5.6.3",
-    "@vitest/browser": "^2.0.5",
-    "jsdom": "^25.0.0",
-    "solid-js": "^1.8.22",
-    "vite": "^5.4.3",
-    "vitest": "^2.0.5"
+    "@vitest/browser": "^2.1.1",
+    "jsdom": "^25.0.1",
+    "solid-js": "^1.9.1",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.1"
   }
 }

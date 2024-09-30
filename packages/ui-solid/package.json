@@ -24,7 +24,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.20.4 || ^20.17.0 || ^22.8.0",
+    "node": "^18.20.4 || ^20.17.0 || ^22.9.0",
     "yarn": "1.22.22"
   },
   "scripts": {
@@ -45,27 +45,27 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "@fontsource/roboto": "^5.0.14",
+    "@fontsource/roboto": "^5.1.0",
     "@getodk/common": "0.3.0",
     "@getodk/xforms-engine": "0.4.0",
-    "@solidjs/router": "^0.14.3",
-    "@suid/icons-material": "^0.8.0",
-    "@suid/material": "^0.17.0",
-    "solid-js": "^1.8.22"
+    "@solidjs/router": "^0.14.5",
+    "@suid/icons-material": "^0.8.1",
+    "@suid/material": "^0.18.0",
+    "solid-js": "^1.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@playwright/test": "^1.46.1",
-    "@suid/vite-plugin": "^0.3.0",
-    "@vitest/browser": "^2.0.5",
-    "@vitest/ui": "^2.0.5",
+    "@playwright/test": "^1.47.2",
+    "@suid/vite-plugin": "^0.3.1",
+    "@vitest/browser": "^2.1.1",
+    "@vitest/ui": "^2.1.1",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.0",
-    "jsdom": "^25.0.0",
-    "vite": "^5.4.3",
+    "jsdom": "^25.0.1",
+    "vite": "^5.4.8",
     "vite-plugin-babel": "^1.2.0",
-    "vite-plugin-dts": "^4.1.0",
+    "vite-plugin-dts": "^4.2.2",
     "vite-plugin-no-bundle": "^4.0.0",
     "vite-plugin-solid": "^2.10.2",
-    "vitest": "^2.0.5"
+    "vitest": "^2.1.1"
   }
 }

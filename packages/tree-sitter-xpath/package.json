@@ -20,7 +20,7 @@
     "tree-sitter-xpath.wasm"
   ],
   "engines": {
-    "node": "^18.20.4 || ^20.17.0 || ^22.8.0",
+    "node": "^18.20.4 || ^20.17.0 || ^22.9.0",
     "yarn": "1.22.22"
   },
   "scripts": {
@@ -42,7 +42,7 @@
     "node-gyp": "10.2.0",
     "tree-sitter": "0.21.1",
     "tree-sitter-cli": "0.23.0",
-    "vite": "^5.4.3",
+    "vite": "^5.4.8",
     "web-tree-sitter": "0.23.0"
   },
   "peerDependencies": {

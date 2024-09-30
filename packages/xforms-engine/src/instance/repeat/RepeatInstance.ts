@@ -166,7 +166,7 @@ export class RepeatInstance
 			// other reactive implementations of specific XForms semantics)?
 			const computeCurrentIndex = parent.getInstanceIndex.bind(parent, this);
 
-			createComputed(on(computeCurrentIndex, setCurrentIndex, { defer: true }));
+			createComputed(on<number, number>(computeCurrentIndex, setCurrentIndex, { defer: true }));
 		});
 
 		childrenState.setChildren(buildChildren(this));
