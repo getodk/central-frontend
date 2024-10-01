@@ -97,7 +97,8 @@ export default {
 
     const sortMode = computed({
       get() {
-        return currentUser.preferences.site.projectSortMode || 'latest';
+        // currentUser.preferences goes missing on logout, see https://github.com/getodk/central-frontend/pull/1024#pullrequestreview-2332522640
+        return currentUser.preferences?.site?.projectSortMode || 'latest';
       },
       set(val) {
         currentUser.preferences.site.projectSortMode = val;
