@@ -111,7 +111,7 @@ export default () => {
       name: 'Data Collector',
       system: 'formfill',
       verbs: [
-        'open_form.list',
+        'form.list_open',
         'form.read',
         'submission.create'
       ]

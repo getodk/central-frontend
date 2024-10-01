@@ -280,7 +280,7 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: () => project.permits('form.list') || project.permits('open_form.list')
+            project: () => project.permits('form.list') || project.permits('form.list_open')
           },
           title: () => [i18n.t('resource.forms'), project.name]
         }
