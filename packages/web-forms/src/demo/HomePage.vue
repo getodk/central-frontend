@@ -15,7 +15,7 @@ const isDev = import.meta.env.DEV;
 					<div class="col intro-wrapper">
 						<div class="intro-block">
 							<div>
-								<PrimeChip class="beta-chip" label="BETA" />
+								<PrimeChip class="beta-chip" label="PREVIEW" />
 							</div>
 
 							<h1 class="pape-title">
@@ -24,11 +24,11 @@ const isDev = import.meta.env.DEV;
 
 							<p class="page-description">
 								We're building a new web forms experience designed from the
-								ground up to be fast and user-friendly. Try a preview below! You
+								ground up to be fast and user-friendly. Try the preview below! You
 								can learn more and let us know what you think on the
 								<a
 									class="inline-anchor"
-									href="https://forum.getodk.org/t/web-forms-whats-next-and-our-plan-for-releasing/48146"
+									href="https://forum.getodk.org/t/web-forms-preview-xlsforms-in-odk-web-forms/49817"
 									target="_blank"
 								>forum</a>.
 							</p>
@@ -67,6 +67,40 @@ const isDev = import.meta.env.DEV;
 				<div class="row">
 					<div class="col">
 						<DemoForm
+							form-title="WHO Verbal Autopsy"
+							form-identifier="whova_form"
+							image-name="who-va"
+						>
+							<template #description>
+								500-question form to identify likely cause of death. Uses selects, required, and relevance.
+								<a
+									class="inline-anchor"
+									href="https://www.who.int/standards/classifications/other-classifications/verbal-autopsy-standards-ascertaining-and-attributing-causes-of-death-tool"
+									target="_blank"
+								>Source</a>.
+							</template>
+						</DemoForm>
+					</div>
+					<div class="col">
+						<DemoForm
+							form-title="IFRC Distribution Site Assessment"
+							form-identifier="ifrc-distribution-site-assessment-v1"
+							image-name="ifrc-dsa"
+						>
+							<template #description>
+								Assessing places where Red Cross and Red Crescent provide cash aid. Uses multiple languages, images, and groups.
+								<a
+									class="inline-anchor"
+									href="https://cash-hub.org/resource/odk-distribution-site-assessment-xls-form"
+									target="_blank"
+								>Source</a>.
+							</template>
+						</DemoForm>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<DemoForm
 							form-title="Socio-economic survey"
 							form-identifier="socio-economic-survey-v20240515"
 							image-name="socio-economic"
@@ -78,42 +112,18 @@ const isDev = import.meta.env.DEV;
 					</div>
 					<div class="col">
 						<DemoForm
-							form-title="WHO Verbal Autopsy"
-							form-identifier="whova_form"
-							image-name="who-va"
-						>
-							<template #description>
-								Questions about the interviewer, HIV-Malaria mortality, and background information.
-							</template>
-						</DemoForm>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<DemoForm
-							form-title="Distribution Site Assessment"
-							form-identifier="ifrc-distribution-site-assessment-v1"
-							image-name="ifrc-dsa"
-						>
-							<template #description>
-								Questions about the places where Red Cross and Red Crescent can distribute aid.
-							</template>
-						</DemoForm>
-					</div>
-					<div class="col">
-						<DemoForm
 							form-title="All question types"
 							form-identifier="all-question-types-v2024091201"
 							image-name="all-questions"
 						>
 							<template #description>
-								See all question types available in ODK! Track our
+								All question types available in ODK! Track our
 								<a
 									class="inline-anchor"
 									href="https://github.com/getodk/web-forms#feature-matrix"
 									target="_blank"
 								>feature progress</a>
-								to learn about which are supported in Web Forms.
+								to learn about which questions are supported in Web Forms.
 							</template>
 						</DemoForm>
 					</div>
