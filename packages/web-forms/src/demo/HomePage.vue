@@ -91,12 +91,12 @@ const isDev = import.meta.env.DEV;
 				<div class="row">
 					<div class="col">
 						<DemoForm
-							form-title="PhilSA Disaster Incidence report"
-							form-identifier="philsa-disaster-incidence-v20240917"
-							image-name="philsa"
+							form-title="Distribution Site Assessment"
+							form-identifier="ifrc-distribution-site-assessment-v1"
+							image-name="ifrc-dsa"
 						>
 							<template #description>
-								Public form used for citizen science by the Philippines Space Agency.
+								Questions about the places where Red Cross and Red Crescent can distribute aid.
 							</template>
 						</DemoForm>
 					</div>
