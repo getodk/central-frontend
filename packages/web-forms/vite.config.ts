@@ -116,6 +116,26 @@ export default defineConfig(({ mode }) => {
 		},
 		build: {
 			target: 'esnext',
+			/**
+			 * Prevent bundling XForm fixture assets as inlined `data:` URLs.
+			 *
+			 * Per Vite's documentation, returning `false` opts out of inlining for
+			 * assets with a `.xml` extension; for all other assets, we do not return
+			 * a value, deferring to Vite's default behavior. We'll generally want the
+			 * default behavior, but this comment should serve as a breadcrumb if we
+			 * need to reconsider that assumption.
+			 *
+			 * @see
+			 * {@link https://vite.dev/config/build-options.html#build-assetsinlinelimit}
+			 */
+			assetsInlineLimit: (filePath) => {
+				// Prevent inlining XML form fixture assets as `data:` URLs.
+				if (filePath.endsWith('.xml')) {
+					return false;
+				}
+
+				// Per Vite docs
+			},
 			lib,
 			rollupOptions: {
 				external,
