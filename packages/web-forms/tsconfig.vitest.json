@@ -8,7 +8,8 @@
     "tests",
     "tests-examples",
     "src/components/**/*.vue",
-    "src/directives/**/*.ts"
+    "src/directives/**/*.ts",
+    "src/lib/**/*.ts"
   ],
   "exclude": ["../common/src/test/**/*.ts"],
   "compilerOptions": {
