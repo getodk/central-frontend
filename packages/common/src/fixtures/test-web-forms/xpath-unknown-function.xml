@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Form design problem: unknown XPath function</h:title>
+    <model>
+      <instance>
+        <root id="xpath-unknown-function">
+          <first-question />
+          <second-question />
+          <meta>
+            <instanceID />
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/first-question" calculate="nope(1)" />
+      <bind nodeset="/root/meta/instanceID" type="string" />
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/first-question">
+      <label>Calculate calls an XPath function `nope`, which does not exist!</label>
+    </input>
+  </h:body>
+</h:html>
