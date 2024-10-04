@@ -142,7 +142,10 @@ describe('OdkWebForm', () => {
 			const formLoadFailureDialog = component.get('.form-load-failure-dialog');
 
 			expect(formLoadFailureDialog.isVisible()).toBe(true);
-			expect(formLoadFailureDialog.text()).toMatch(/\bnope\b/);
+
+			const message = formLoadFailureDialog.get('.message');
+
+			expect(message.text()).toMatch(/\bnope\b/);
 		});
 	});
 });
