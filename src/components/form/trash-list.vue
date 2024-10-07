@@ -66,7 +66,7 @@ export default {
       return sortByDeletedAt(this.deletedForms.data);
     },
     isFormTrashCollapsed() {
-      return (this.currentUser.dataExists && this.currentUser.preferences.projects[this.project.id].formTrashCollapsed);
+      return this.currentUser.preferences.projects[this.project.id].formTrashCollapsed;
     },
   },
   created() {
