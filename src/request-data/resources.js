@@ -9,14 +9,14 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, reactive, shallowReactive, watchSyncEffect, isReactive } from 'vue';
+import { computed, reactive, shallowReactive, watchSyncEffect } from 'vue';
 import { mergeDeepLeft } from 'ramda';
 
 import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
-import { apiPaths, withAuth } from '../util/request';
 import { _container } from './resource';
+import UserPreferences from './user-preferences';
 
 export default ({ i18n }, createResource) => {
   // Resources related to the session
@@ -26,117 +26,10 @@ export default ({ i18n }, createResource) => {
     transformResponse: ({ data }) => {
       data.verbs = new Set(data.verbs);
       data.can = hasVerbs;
-      data.preferences = {
-        site: new Proxy(
-          shallowReactive(data.preferences.site),
-          {
-            deleteProperty(target, prop) {
-              const retval = (delete target[prop]);
-              self.preferenceOps.propagate(prop, null, null); // DELETE to backend
-              return retval;
-            },
-            set(target, prop, value) {
-              // eslint-disable-next-line no-multi-assign
-              const retval = (target[prop] = value);
-              self.preferenceOps.propagate(prop, value, null); // PUT to backend
-              return retval;
-            },
-          },
-        ),
-        projects: new Proxy(
-          data.preferences.projects,
-          {
-            deleteProperty() {
-              throw new Error('Deleting a project\'s whole property collection is not supported. Delete each property individually, eg "delete preferences.projects[3].foo".');
-            },
-            set() {
-              throw new Error('Directly setting a project\'s whole property collection is not supported. Set each property individually, eg "preferences.projects[3].foo = \'bar\'"');
-            },
-            get(target, projectId) {
-              if (Number.isNaN(parseInt(projectId, 10))) throw new TypeError(`Not an integer project ID: "${projectId}"`);
-              const projectProps = target[projectId];
-              if (projectProps === undefined || (!isReactive(projectProps))) { // not reentrant (TOCTOU issue) but there's no real way to solve it — as this is supposed to be a synchronous method we can't simply wrap it in a Lock
-                target[projectId] = new Proxy(
-                  // make (potentially autovivicated) props reactive, and front them with a proxy to enable our setters/deleters
-                  shallowReactive(projectProps === undefined ? {} : projectProps),
-                  {
-                    deleteProperty(from, prop) {
-                      const retval = (delete from[prop]);
-                      self.preferenceOps.propagate(prop, null, projectId); // DELETE to backend
-                      return retval;
-                    },
-                    set(from, prop, propval) {
-                      // eslint-disable-next-line no-multi-assign
-                      const retval = (from[prop] = propval);
-                      self.preferenceOps.propagate(prop, propval, projectId); // PUT to backend
-                      return retval;
-                    },
-                  }
-                );
-              }
-              return target[projectId];
-            },
-          }
-        ),
-      };
+      const { requestData, http } = self[_container];
+      data.preferences = new UserPreferences(data.preferences, requestData.session, http);
       return shallowReactive(data);
-    },
-    preferenceOps: {
-      self,
-      _container,
-      abortControllers: {},
-      instanceID: crypto.randomUUID(),
-      propagate: (k, v, projectId) => {
-        // As we need to be able to have multiple requests in-flight (not canceling eachother), we can't use resource.request() here.
-        // However, we want to avoid stacking requests for the same key, so we abort preceding requests for the same key, if any.
-        // Note that because locks are origin-scoped, we use a store instantiation identifier to scope them to this app instance.
-        const keyLockName = `userPreferences-${self.instanceID}-keystack-${projectId}-${k}`;
-        navigator.locks.request(
-          `userPreferences-${self.instanceID}-lockops`,
-          () => {
-            navigator.locks.request(
-              keyLockName,
-              { ifAvailable: true },
-              (lockForKey) => {
-                const aborter = new AbortController();
-                if (!lockForKey) {
-                  // Cancel the preceding request, a new one supersedes it.
-                  self.preferenceOps.abortControllers[k].abort();
-                  return navigator.locks.request(
-                    keyLockName,
-                    () => {
-                      self.preferenceOps.abortControllers[k] = aborter;
-                      return self.preferenceOps.request(k, v, projectId, aborter);
-                    }
-                  );
-                }
-                self.preferenceOps.abortControllers[k] = aborter;
-                return self.preferenceOps.request(k, v, projectId, aborter);
-              },
-            );
-            return Promise.resolve(); // return asap with a resolved promise so the outer lockops lock gets released; we don't wan't to wait here for the inner keylock-enveloped requests.
-          }
-        );
-      },
-      request: (k, v, projectId, aborter) => {
-        const { requestData, http } = self[self.preferenceOps._container];
-        return http.request(
-          withAuth(
-            {
-              method: (v === null) ? 'DELETE' : 'PUT',
-              url: (projectId === null) ? `${apiPaths.userSitePreferences(k)}` : `${apiPaths.userProjectPreferences(projectId, k)}`,
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              data: (v === null) ? undefined : { propertyValue: v },
-              signal: aborter.signal,
-            },
-            requestData.session.token
-          )
-        );
-      },
     }
-    /* eslint-enable no-param-reassign */
   }));
 
   // Resources related to the system
