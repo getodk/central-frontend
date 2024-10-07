@@ -385,11 +385,17 @@ export default {
   },
   "de": {
     "noEntities": "Es gibt keine Entitäten zum Anzeigen.",
-    "noMatching": "Es gibt keine passenden Entitäten."
+    "noMatching": "Es gibt keine passenden Entitäten.",
+    "alert": {
+      "delete": "Die Entität \"{label}“ wurde gelöscht."
+    }
   },
   "es": {
     "noEntities": "No hay Entidades para mostrar.",
-    "noMatching": "No hay entidades coincidentes."
+    "noMatching": "No hay entidades coincidentes.",
+    "alert": {
+      "delete": "Entidad “{label}” se ha eliminado."
+    }
   },
   "fr": {
     "noEntities": "Pas d'entités à montrer.",

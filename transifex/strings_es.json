@@ -152,10 +152,6 @@
         "string": "Acciones de formulario",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "dataset": {
-        "string": "Acciones de la lista de entidades",
-        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
-      },
       "field_key": {
         "string": "Acciones de usuarios móviles",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -164,12 +160,20 @@
         "string": "Acciones de enlace de acceso público",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "dataset": {
+        "string": "Acciones de la lista de entidades",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "config": {
         "string": "Acciones de configuración del servidor",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
         "string": "Actualización de servidor",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "task": {
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -195,6 +199,16 @@
       "analytics": {
         "string": "Informe de uso",
         "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "blobs": {
+        "s3_upload": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        },
+        "s3_failed_to_pending": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
       },
       "config": {
         "set": {
@@ -260,6 +274,12 @@
         "assignment_delete": {
           "string": "Remover el acceso",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
+      "submission": {
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
       "upgrade": {
@@ -414,7 +434,7 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "newPreview": {
-      "string": "",
+      "string": "Nuevo Avance",
       "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
     },
     "expand": {
@@ -584,7 +604,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "warning": {
-      "string": "{count, plural, one {} many {} other {}}",
+      "string": "{count, plural, one {{count} advertencia} many {{count} advertencias} other {{count} advertencias}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
@@ -670,7 +690,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formPreview": {
-      "string": "",
+      "string": "Vista previa del formulario",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -896,7 +916,7 @@
       "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
     },
     "warning": {
-      "string": "",
+      "string": "Advertencia",
       "developer_comment": "This text is shown on its own before details about a warning."
     }
   },
@@ -912,36 +932,28 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (archivado)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
-      }
-    }
-  },
   "util": {
     "csv": {
       "readError": {
-        "string": "",
+        "string": "Hubo un problema al leer tu archivo: {message}",
         "developer_comment": "{message} is a description of the problem."
       },
       "invalidCSV": {
-        "string": ""
+        "string": " El archivo “{name}”  no es un archivo .csv válido. No se puede leer."
       },
       "rowError": {
-        "string": "",
+        "string": "Hay un problema en la fila {row} del archivo: {message}",
         "developer_comment": "{row} is a row number. {message} is a description of the problem."
       },
       "invalidQuotes": {
-        "string": "",
+        "string": "Un campo citado no es válido. Compruebe la fila de su archivo para ver si hay algún valor inusual.",
         "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
       },
       "emptyRow": {
         "string": "La fila está vacía."
       },
       "dataWithoutHeader": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{count, plural, one {Se esperaba {expected} columna, pero se encontró {actual}.} many {Se esperaban {expected} columnas, pero se encontraron {actual}.} other {Se esperaba {expected} columna, pero se encontró {actual}.}}",
         "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."
       }
     },
@@ -958,7 +970,7 @@
       },
       "problem": {
         "404_1": {
-          "string": "",
+          "string": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
         }
       }
@@ -1298,10 +1310,10 @@
           "string": "Número de entidades con conflicto ahora marcadas como resueltas"
         },
         "num_bulk_create_events": {
-          "string": ""
+          "string": "Número de cargas masivas"
         },
         "biggest_bulk_upload": {
-          "string": ""
+          "string": "Número de filas en la mayor carga masiva"
         },
         "sso_enabled": {
           "string": "SSO habilitado en el servidor"
@@ -1323,6 +1335,21 @@
         },
         "num_audits_unprocessed": {
           "string": "Número de eventos del registro de auditoría cuyo procesamiento se ha retrasado"
+        },
+        "num_offline_entity_branches": {
+          "string": ""
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": ""
+        },
+        "max_entity_submission_delay": {
+          "string": ""
+        },
+        "avg_entity_submission_delay": {
+          "string": ""
         }
       }
     },
@@ -1412,6 +1439,15 @@
         }
       }
     },
+    "ConfigError": {
+      "title": {
+        "string": "Error al cargar Central",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": "Se ha producido un error al cargar Central."
+      }
+    },
     "DatasetEntities": {
       "alert": {
         "upload": {
@@ -1440,24 +1476,24 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "encrypted": {
-        "string": "",
+        "string": "Este Proyecto está encriptado. Los Formularios y Envíos no podrán modificar ninguna Entidad de esta Lista. Las Entidades deben gestionarse a través de Central o de la API.",
         "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
       },
       "entityListName": {
-        "string": "",
+        "string": "Nombre de la lista de entidades",
         "developer_comment": "This appears above a text input field for the name of an Entity List"
       },
       "success": {
         "0": {
-          "string": ""
+          "string": "La lista de entidades “{name}”  se ha creado."
         },
         "1": {
-          "string": ""
+          "string": "Puedes empezar a utilizarlo añadiendo sus propiedades de datos directamente en esta página, o subiendo Formularios que lo utilicen. En este caso, cualquier propiedad que el Formulario llame se creará automáticamente cuando publiques el Formulario."
         }
       },
       "problem": {
         "409_3": {
-          "string": ""
+          "string": "Ya existe una Lista de Entidades en este Proyecto con el nombre de “{datasetName}”."
         }
       }
     },
@@ -1514,7 +1550,7 @@
       },
       "problem": {
         "409_3": {
-          "string": ""
+          "string": "Ya existe una propiedad en esta lista de entidades con el nombre “{propertyName}”."
         }
       }
     },
@@ -1746,6 +1782,10 @@
         "hardConflict": {
           "string": "Esta versión se realizó en paralelo con otras actualizaciones, algunas de las cuales intentan escribir en las mismas propiedades que esta actualización."
         }
+      },
+      "branch": {
+        "string": "Cadena de actualización offline",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1761,7 +1801,7 @@
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "¿Estás seguro de que quieres borrar “{label}”?",
           "developer_comment": "{label} is the label of an Entity."
         }
       },
@@ -1832,6 +1872,10 @@
       "version": {
         "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "En este caso, la opinión del autor puede no ser exacta.",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1861,7 +1905,7 @@
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             },
             "bulkSource": {
-              "string": "",
+              "string": "Archivo {name} subido por {actor}",
               "developer_comment": "This text is shown in a list of events. {name} is a filename, e.g. myfile.csv, and {actor} is a name/link to a Web User."
             }
           },
@@ -1891,6 +1935,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "Actualización offline",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -1937,7 +1985,7 @@
       },
       "alert": {
         "delete": {
-          "string": ""
+          "string": "Entidad “{label}” se ha eliminado."
         }
       },
       "action": {
@@ -2059,7 +2107,7 @@
       },
       "table": {
         "server": {
-          "string": "",
+          "string": "{name} datos del servidor",
           "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
         },
         "file": {
@@ -2104,7 +2152,7 @@
     "EntityUploadFileSelect": {
       "text": {
         "full": {
-          "string": "",
+          "string": "Arrastre un archivo .csv aquí, o {chooseOne} para subir.",
           "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
         },
         "chooseOne": {
@@ -2130,7 +2178,7 @@
           "string": "Un campo citado no es válido. Compruebe la fila de cabecera de su archivo para ver si hay algún valor inusual."
         },
         "missingLabel": {
-          "string": "",
+          "string": "Se requiere una propiedad {label}. La etiqueta indica el nombre a utilizar para cada Entidad en toda la Central y en otros lugares.",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "unknownProperty": {
@@ -2143,17 +2191,17 @@
           "string": "Parece que tiene una celda vacía en la cabecera. Elimine las columnas vacías de su archivo."
         },
         "delimiterNotComma": {
-          "string": ""
+          "string": "Esto puede deberse a que nos equivocamos al delimitar las celdas. Hemos utilizado {delimiter}."
         }
       }
     },
     "EntityUploadPopup": {
       "rowCount": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {{count} fila de datos encontradas} many {{count} filas de datos encontradas} other {{count} filas de datos encontradas}}"
       },
       "status": {
         "sending": {
-          "string": "",
+          "string": "Enviando archivo… ({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
         },
         "processing": {
@@ -3155,11 +3203,11 @@
       "webFormPreview": {
         "submissionModal": {
           "title": {
-            "string": "",
+            "string": "Vista previa de ODK Web Forms",
             "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           },
           "body": {
-            "string": "",
+            "string": "Ha rellenado el formulario utilizando una versión provisional del nuevo ODK Web Forms. El Envío no se ha enviado: actualmente, sólo puedes ver tus Formularios en ODK Web Forms.",
             "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           }
         }
@@ -4803,6 +4851,14 @@
           "string": "Retirar usuario",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (archivado)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

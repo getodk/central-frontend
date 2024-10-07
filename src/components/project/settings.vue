@@ -447,15 +447,15 @@ export default {
     },
     "dangerZone": {
       "action": {
-        "archive": "備存該專案"
+        "archive": "歸檔該專案"
       },
       "archived": [
-        "該項目已備存。",
-        "在此版本的 ODK Central 中，您無法取消專案的備存。但是，計劃在未來版本中提供取消備存專案的功能。"
+        "該專案已歸檔。",
+        "在此版本的 ODK Central 中，您無法取消專案的歸檔。但是，計劃在未來版本中提供專案取消歸檔的功能。"
       ]
     },
     "alert": {
-      "archive": "項目「{name}」已存檔。"
+      "archive": "項目「{name}」已歸檔。"
     }
   }
 }

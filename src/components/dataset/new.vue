@@ -198,13 +198,30 @@ const hideOrComplete = () => {
   },
   "de": {
     "title": "Entitätsliste erstellen",
+    "encrypted": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Entitäten in dieser Liste zu ändern. Entitäten müssen über Central oder die API verwaltet werden.",
     "entityListName": "Name der Entitätsliste",
+    "success": [
+      "Die Entitätsliste \"{name}\" ist erstellt worden.",
+      "Sie können damit beginnen, indem Sie die Dateneigenschaften direkt auf dieser Seite hinzufügen oder indem Sie Formulare hochladen, die sie verwenden. In diesem Fall werden alle Eigenschaften, die das Formular aufruft, automatisch erstellt, wenn Sie das Formular veröffentlichen."
+    ],
+    "problem": {
+      "409_3": "In diesem Projekt existiert bereits eine Entitätsliste mit dem Namen “{datasetName}”."
+    },
     "introduction": [
       "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
     ]
   },
   "es": {
     "title": "Crear lista de entidades",
+    "encrypted": "Este Proyecto está encriptado. Los Formularios y Envíos no podrán modificar ninguna Entidad de esta Lista. Las Entidades deben gestionarse a través de Central o de la API.",
+    "entityListName": "Nombre de la lista de entidades",
+    "success": [
+      "La lista de entidades “{name}” se ha creado.",
+      "Puedes empezar a utilizarlo añadiendo sus propiedades de datos directamente en esta página, o subiendo Formularios que lo utilicen. En este caso, cualquier propiedad que el Formulario llame se creará automáticamente cuando publiques el Formulario."
+    ],
+    "problem": {
+      "409_3": "Ya existe una Lista de Entidades en este Proyecto con el nombre de “{datasetName}”."
+    },
     "introduction": [
       "Las entidades le permiten compartir información entre formularios para que pueda recopilar datos longitudinales, gestionar casos a lo largo del tiempo y representar otros flujos de trabajo con varios pasos."
     ]
@@ -246,17 +263,17 @@ const hideOrComplete = () => {
   },
   "zh-Hant": {
     "title": "建立實體列表",
-    "encrypted": "該項目已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",
+    "encrypted": "該專案已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",
     "entityListName": "實體清單名稱",
     "success": [
       "實體清單「{name}」已建立。",
-      "您可以透過直接在此頁面上新增其資料屬性或上傳使用它的表單來開始使用它。在這種情況下，當您發佈表單時，表單呼叫的任何屬性都會自動建立。"
+      "您可以透過直接在此頁面上新增其資料屬性或上傳使用它的表單來開始使用它。在這種情況下，當您發布表單時，表單呼叫的任何屬性都會自動建立。"
     ],
     "problem": {
-      "409_3": "該項目中已存在名稱為「{datasetName}」的實體清單。"
+      "409_3": "該專案中已存在名稱為「{datasetName}」的實體清單。"
     },
     "introduction": [
-      "實體允許您在表單之間共用訊息，以便您可以收集縱向資料、隨時間管理案例並透過多個步驟表示其他工作流程。"
+      "實體清單允許您在表單之間共用資訊，以便收集縱向資料、隨時間管理案例，並透過多個步驟表示其他工作流程。"
     ]
   }
 }

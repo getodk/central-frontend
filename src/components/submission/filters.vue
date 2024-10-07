@@ -108,6 +108,11 @@ export default {
     "field": {
       "submissionDate": "Imewasilishwa kwa"
     }
+  },
+  "zh-Hant": {
+    "field": {
+      "submissionDate": "提交於"
+    }
   }
 }
 </i18n>

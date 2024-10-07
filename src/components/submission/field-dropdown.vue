@@ -227,9 +227,9 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
   },
   "zh-Hant": {
-    "placeholder": "{selected} /{total}",
+    "placeholder": "{selected}/{total}",
     "field": {
-      "columns": "顯示的列",
+      "columns": "顯示欄位",
       "search": "搜尋欄位..."
     },
     "action": {

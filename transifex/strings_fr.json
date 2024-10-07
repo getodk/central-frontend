@@ -152,10 +152,6 @@
         "string": "Actions de formulaire",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "dataset": {
-        "string": "Actions de listes d'entités",
-        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
-      },
       "field_key": {
         "string": "Actions d'utilisateurs mobiles",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -164,12 +160,20 @@
         "string": "Actions de liens d'accès public",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "dataset": {
+        "string": "Actions de listes d'entités",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "config": {
         "string": "Actions de configuration du serveur",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
         "string": "Mise à jour du serveur",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "task": {
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -195,6 +199,16 @@
       "analytics": {
         "string": "Rapport d'utilisation",
         "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "blobs": {
+        "s3_upload": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        },
+        "s3_failed_to_pending": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
       },
       "config": {
         "set": {
@@ -260,6 +274,12 @@
         "assignment_delete": {
           "string": "Retirer accès",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
+      "submission": {
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
       "upgrade": {
@@ -414,7 +434,7 @@
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
     "newPreview": {
-      "string": "",
+      "string": "Nouvel Aperçu",
       "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
     },
     "expand": {
@@ -670,7 +690,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formPreview": {
-      "string": "",
+      "string": "Aperçu du Formulaire",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
@@ -909,14 +929,6 @@
         "entityTooLarge": {
           "string": "Les données que vous essayez d'envoyer sont trop volumineuses."
         }
-      }
-    }
-  },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (archivé)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   },
@@ -1323,6 +1335,21 @@
         },
         "num_audits_unprocessed": {
           "string": "Nombre d'événements du journal d'audit qui ont été traités à retardement"
+        },
+        "num_offline_entity_branches": {
+          "string": ""
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": ""
+        },
+        "max_entity_submission_delay": {
+          "string": ""
+        },
+        "avg_entity_submission_delay": {
+          "string": ""
         }
       }
     },
@@ -1410,6 +1437,15 @@
           "string": "Détails",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "ConfigError": {
+      "title": {
+        "string": "Erreur au chargement de Central",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": "Il y a eu des erreurs au chargement de Central"
       }
     },
     "DatasetEntities": {
@@ -1746,6 +1782,10 @@
         "hardConflict": {
           "string": "Cette version a été faite en parallèle avec d'autres, certaines tentent d'écrire les mêmes  propriétés que cette mise à jour."
         }
+      },
+      "branch": {
+        "string": "Chaîne de mise à jour hors ligne",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1832,6 +1872,10 @@
       "version": {
         "string": "{version} ({source})",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "Dans ce cas, la vue de l'auteur peut ne pas être exacte.",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1891,6 +1935,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "Mise à jour Hors Ligne",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -3155,11 +3203,11 @@
       "webFormPreview": {
         "submissionModal": {
           "title": {
-            "string": "",
+            "string": "Aperçu avec ODK Web forms",
             "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           },
           "body": {
-            "string": "",
+            "string": "Vous avez renseigné le formulaire avec une version préliminaire d'ODK Web Forms. La soumission n'a pas été envoyée : pour le moment, vous ne pouvez que visualiser vos formulaires avec ODK Web Forms. ",
             "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
           }
         }
@@ -4803,6 +4851,14 @@
           "string": "Supprimer l'utilisateur",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (archivé)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

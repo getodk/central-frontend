@@ -33,7 +33,7 @@
   "role": {
     "none": "無",
     "admin": "管理者",
-    "manager": "專案經理",
+    "manager": "專案管理員",
     "viewer": "專案檢視人員",
     "formfill": "資料收集人員"
   },
@@ -41,7 +41,7 @@
     "open": "開放",
     "closing": "結案中",
     "closed": "關閉",
-    "unpublished": "尚未發佈"
+    "unpublished": "尚未發布"
   },
   "reviewState": {
     "received": "已收到",
@@ -57,9 +57,9 @@
       "user": "網頁使用者活動",
       "project": "專案活動",
       "form": "表單活動",
-      "dataset": "實體清單活動",
       "field_key": "手機軟體使用者活動",
       "public_link": "公共連結活動",
+      "dataset": "實體清單活動",
       "config": "伺服器設定活動",
       "upgrade": "伺服器更新"
     },
@@ -76,7 +76,7 @@
       },
       "dataset": {
         "update": "更新",
-        "update_publish": "發佈",
+        "update_publish": "發布",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -88,7 +88,7 @@
       },
       "form": {
         "update_draft_set": "建立或更新草稿",
-        "update_publish": "發佈草稿",
+        "update_publish": "發布草稿",
         "update_draft_delete": "放棄草稿",
         "attachment_update": "更新附件",
         "submission_export": "下載提交內容",
@@ -200,7 +200,7 @@
     "appUser": "APP 使用者",
     "form": "表單",
     "project": "專案",
-    "submission": "提交項目",
+    "submission": "提交清單",
     "user": "使用者",
     "webUser": "網頁使用者"
   },
@@ -216,7 +216,7 @@
     "config": "伺服器設置",
     "entityList": "實體清單",
     "entityLists": "實體清單",
-    "entities": "實體項目",
+    "entities": "實體",
     "form": "表單",
     "forms": "表單",
     "formAttachments": "表單附件",
@@ -242,7 +242,7 @@
   },
   "moreInfo": {
     "clickHere": {
-      "full": "了解更多訊息, {clickHere}.",
+      "full": "可以{clickHere}了解更多訊息。",
       "clickHere": "點選這裡"
     },
     "helpArticle": {
@@ -285,7 +285,7 @@
     "conflict": "衝突",
     "conflicts": "衝突",
     "currentDraft": "您目前的草稿",
-    "dangerZone": "危險區",
+    "dangerZone": "危險區域",
     "data": "資料",
     "docs": "文件",
     "emptyValue": "(空)",
@@ -323,11 +323,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (已歸檔)"
-    }
-  },
   "util": {
     "csv": {
       "readError": "讀取您的文件時出現問題：{message}",
@@ -355,5 +350,10 @@
   },
   "router": {
     "unsavedChanges": "您確定要離開此頁面嗎？您的變更可能不會儲存。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (已歸檔)"
+    }
   }
 }

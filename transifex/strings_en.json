@@ -152,10 +152,6 @@
         "string": "Form Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "dataset": {
-        "string": "Entity List Actions",
-        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
-      },
       "field_key": {
         "string": "App User Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -164,12 +160,20 @@
         "string": "Public Access Link Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "dataset": {
+        "string": "Entity List Actions",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "config": {
         "string": "Server Configuration Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
         "string": "Server Upgrade",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "task": {
+        "string": "System Operation",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -195,6 +199,16 @@
       "analytics": {
         "string": "Report Usage",
         "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "blobs": {
+        "s3_upload": {
+          "string": "Upload Files to Storage",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        },
+        "s3_failed_to_pending": {
+          "string": "Mark Files for Re-Upload to Storage",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
       },
       "config": {
         "set": {
@@ -260,6 +274,12 @@
         "assignment_delete": {
           "string": "Remove Access",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
+      "submission": {
+        "purge": {
+          "string": "Purge Submissions",
+          "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
       "upgrade": {
@@ -1315,6 +1335,21 @@
         },
         "num_audits_unprocessed": {
           "string": "Number of Audit Log Events whose processing has been delayed"
+        },
+        "num_offline_entity_branches": {
+          "string": "Number of Offline Entity branches"
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": "Number of interrupted Offline Entity branches"
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": "Number of reordered Offline Entity submissions"
+        },
+        "max_entity_submission_delay": {
+          "string": "Maximum Entity Submission processing delay"
+        },
+        "avg_entity_submission_delay": {
+          "string": "Average Entity Submission processing delay"
         }
       }
     },

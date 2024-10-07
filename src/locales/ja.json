@@ -267,11 +267,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name}（アーカイブ済）"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "問題発生：リクエストがありません。",
@@ -288,5 +283,10 @@
   },
   "router": {
     "unsavedChanges": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name}（アーカイブ済）"
+    }
   }
 }

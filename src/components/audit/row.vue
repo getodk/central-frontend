@@ -54,14 +54,25 @@ import Selectable from '../selectable.vue';
 import useAudit from '../../composables/audit';
 import useRoutes from '../../composables/routes';
 
-const typeByCategory = {
+// If the Type column for an audit log entry has two parts, typeByFirstPart
+// indicates the i18n path to use for the first part. typeByFirstPart is keyed
+// by the first part/segment of the audit log action.
+const typeByFirstPart = {
+  // Resources for which filtering is available
   user: 'resource.user',
   project: 'resource.project',
   form: 'resource.form',
-  dataset: 'resource.entityList',
-  public_link: 'resource.publicLink',
   field_key: 'resource.appUser',
+  public_link: 'resource.publicLink',
+  dataset: 'resource.entityList',
   config: 'resource.config',
+
+  // System Operation
+  analytics: 'audit.category.task',
+  blobs: 'audit.category.task',
+  submission: 'audit.category.task',
+
+  // Server Upgrade
   upgrade: 'audit.category.upgrade'
 };
 
@@ -109,16 +120,25 @@ export default {
     return { actionMessage, projectPath, primaryFormPath, userPath };
   },
   computed: {
+    // When an audit log action has multiple parts/segments, we treat it as
+    // having a "category" indicated by the first part. For example, the
+    // category of project.create is project.
     category() {
       const index = this.audit.action.indexOf('.');
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
     type() {
-      const actionMessage = this.actionMessage(this.audit.action);
-      if (actionMessage == null) return [this.audit.action];
-      return this.category != null
-        ? [this.$t(typeByCategory[this.category]), actionMessage]
-        : [actionMessage];
+      const { action } = this.audit;
+      const actionMessage = this.actionMessage(action);
+      if (actionMessage == null) return [action];
+      const result = [actionMessage];
+
+      // The first part/segment of `action`.
+      const firstPart = this.category ?? action;
+      const typeOfFirstPart = typeByFirstPart[firstPart];
+      if (typeOfFirstPart != null) result.unshift(this.$t(typeOfFirstPart));
+
+      return result;
     },
     target() {
       if (this.category == null) return null;

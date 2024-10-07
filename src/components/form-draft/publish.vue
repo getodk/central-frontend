@@ -469,7 +469,7 @@ export default {
     }
   },
   "zh-Hant": {
-    "title": "發佈草稿",
+    "title": "發布草稿",
     "warnings": {
       "attachments": {
         "full": "您尚未提供表單所需的所有 {formAttachments}。如果您願意，可以忽略此內容，但您需要製作新的草稿版本才能稍後提供這些附件。",

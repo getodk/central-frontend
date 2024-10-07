@@ -300,11 +300,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (diarsipkan)"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
@@ -320,5 +315,10 @@
   },
   "router": {
     "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (diarsipkan)"
+    }
   }
 }

@@ -57,9 +57,9 @@
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
-      "dataset": "Seznam akcí entit",
       "field_key": "Akce uživatelů aplikace",
       "public_link": "Akce s veřejným přístupem",
+      "dataset": "Seznam akcí entit",
       "config": "Akce konfigurace serveru",
       "upgrade": "Upgrade serveru"
     },
@@ -312,11 +312,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archivováno)"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
@@ -333,5 +328,10 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivováno)"
+    }
   }
 }

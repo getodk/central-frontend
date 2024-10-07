@@ -358,6 +358,7 @@ const showBranchData = () => {
       "entity": {
         "create": {
           "api": "Entität {label} erstellt von {name}",
+          "bulkSource": "Datei {name} hochgeladen von {actor}",
           "submission": "Entität {label} in {dataset} Entitätsliste erzeugt"
         },
         "update_version": {
@@ -372,7 +373,8 @@ const showBranchData = () => {
         },
         "update_resolve": "Konfliktwarnung gelöst von {name}"
       }
-    }
+    },
+    "offlineUpdate": "Offline-Aktualisierung"
   },
   "es": {
     "title": {
@@ -392,6 +394,7 @@ const showBranchData = () => {
       "entity": {
         "create": {
           "api": "Entidad {label} creada por {name}",
+          "bulkSource": "Archivo {name} subido por {actor}",
           "submission": "Entidad creada {label} en {dataset} Lista de entidades"
         },
         "update_version": {
@@ -406,7 +409,8 @@ const showBranchData = () => {
         },
         "update_resolve": "Advertencia de conflicto resuelto por {name}"
       }
-    }
+    },
+    "offlineUpdate": "Actualización offline"
   },
   "fr": {
     "title": {
@@ -441,7 +445,8 @@ const showBranchData = () => {
         },
         "update_resolve": "Avertissement de conflit résolu par {name}"
       }
-    }
+    },
+    "offlineUpdate": "Mise à jour Hors Ligne"
   },
   "id": {
     "title": {
@@ -494,7 +499,8 @@ const showBranchData = () => {
         },
         "update_resolve": "Avviso di conflitto risolto da {name}"
       }
-    }
+    },
+    "offlineUpdate": "Aggiornamento offline"
   },
   "ja": {
     "title": {
@@ -573,7 +579,8 @@ const showBranchData = () => {
         },
         "update_resolve": "衝突警告已由{name}解決"
       }
-    }
+    },
+    "offlineUpdate": "離線更新"
   }
 }
 </i18n>

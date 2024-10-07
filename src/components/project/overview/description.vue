@@ -160,10 +160,10 @@ export default {
   },
   "zh-Hant": {
     "instructions": {
-      "full": "將項目註釋、連結、說明和其他資源新增至 {projectSettings} 中的此空間。",
+      "full": "可由 {projectSettings} ，新增專案註釋、連結、指示和其他資源至以下空間。",
       "projectSettings": "專案設定"
     },
-    "note": "只有專案經理才能看到此建議。"
+    "note": "只有專案管理員才能看到此建議。"
   }
 }
 </i18n>

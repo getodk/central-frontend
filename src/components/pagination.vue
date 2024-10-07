@@ -214,7 +214,14 @@ const sizeModel = computed({
 {
   "de": {
     "action": {
+      "first": "Erste Seite",
+      "previous": "Vorherige Seite",
+      "next": "Nächste Seite",
       "last": "Letzte Seite"
+    },
+    "rows": "Reihe {range} von {count} | Reihen {range} von {count}",
+    "field": {
+      "size": "pro Seite"
     }
   },
   "es": {

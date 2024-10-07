@@ -152,10 +152,6 @@
         "string": "Vitendo vya fomu",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "dataset": {
-        "string": "Vitendo vya Orodha ya Huluki",
-        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
-      },
       "field_key": {
         "string": "Vitendo vya mtumiaji wa programu",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -164,12 +160,20 @@
         "string": "vitendo vya kiungo cha ufikiaji wa umma",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "dataset": {
+        "string": "Vitendo vya Orodha ya Huluki",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "config": {
         "string": "vitendo vya usanidi wa seva",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
         "string": "uboreshaji wa seva",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "task": {
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -195,6 +199,16 @@
       "analytics": {
         "string": "Ripoti matumizi",
         "developer_comment": "This is shown in the log of actions performed on the server."
+      },
+      "blobs": {
+        "s3_upload": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        },
+        "s3_failed_to_pending": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
       },
       "config": {
         "set": {
@@ -260,6 +274,12 @@
         "assignment_delete": {
           "string": "Ondoa ufikiaji",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        }
+      },
+      "submission": {
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
       "upgrade": {
@@ -912,14 +932,6 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (iliyohifadhiwa)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
-      }
-    }
-  },
   "util": {
     "csv": {
       "readError": {
@@ -1323,6 +1335,21 @@
         },
         "num_audits_unprocessed": {
           "string": "Idadi ya Matukio ya Rekodi za Ukaguzi ambayo uchakataji wake umecheleweshwa"
+        },
+        "num_offline_entity_branches": {
+          "string": ""
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": ""
+        },
+        "max_entity_submission_delay": {
+          "string": ""
+        },
+        "avg_entity_submission_delay": {
+          "string": ""
         }
       }
     },
@@ -1410,6 +1437,15 @@
           "string": "Maelezo",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "ConfigError": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a panel."
+      },
+      "body": {
+        "string": ""
       }
     },
     "DatasetEntities": {
@@ -1746,6 +1782,10 @@
         "hardConflict": {
           "string": ""
         }
+      },
+      "branch": {
+        "string": "",
+        "developer_comment": "A series of updates that were made offline"
       }
     },
     "EntityData": {
@@ -1832,6 +1872,10 @@
       "version": {
         "string": "",
         "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1891,6 +1935,10 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
+      },
+      "offlineUpdate": {
+        "string": "",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
     "EntityFiltersConflict": {
@@ -4803,6 +4851,14 @@
           "string": "Staafu mtumiaji",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (iliyohifadhiwa)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

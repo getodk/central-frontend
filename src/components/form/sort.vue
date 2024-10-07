@@ -109,7 +109,7 @@ defineEmits(['update:modelValue']);
   "zh-Hant": {
     "sortOptions": {
       "alphabetical": "按字母順序",
-      "newest": "最新優先"
+      "newest": "新表單優先"
     }
   }
 }

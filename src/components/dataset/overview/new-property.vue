@@ -113,7 +113,14 @@ const submit = () => {
 {
   "de": {
     "title": "Entitätseigenschaft hinzufügen",
-    "newPropertyName": "Neuer Eigenschaftsname"
+    "introduction": [
+      "Um eine Entitätseigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen.",
+      "Sie können auch neue Eigenschaften hinzufügen, indem Sie ein Formular hochladen, das auf sie verweist. In diesem Fall werden die Eigenschaften erstellt, wenn das Formular veröffentlicht wird."
+    ],
+    "newPropertyName": "Neuer Eigenschaftsname",
+    "problem": {
+      "409_3": "In dieser Entitätsliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
+    }
   },
   "es": {
     "title": "Añadir propiedad de entidad",
@@ -121,7 +128,10 @@ const submit = () => {
       "Para añadir una propiedad de Entidad, elija un nombre de propiedad único a continuación.",
       "También puede añadir nuevas propiedades cargando un Formulario que haga referencia a ellas, en cuyo caso las propiedades se crean cuando se publica el Formulario."
     ],
-    "newPropertyName": "Nuevo nombre de propiedad"
+    "newPropertyName": "Nuevo nombre de propiedad",
+    "problem": {
+      "409_3": "Ya existe una propiedad en esta lista de entidades con el nombre “{propertyName}”."
+    }
   },
   "fr": {
     "title": "Ajouter une Propriété d'Entité",
@@ -149,7 +159,7 @@ const submit = () => {
     "title": "新增實體屬性",
     "introduction": [
       "若要新增實體屬性，請在下方選個唯一屬性名稱。",
-      "您也可以透過上傳引用新屬性的表單來新增屬性，在這種情況下，屬性會在發佈表單時建立。"
+      "您也可以透過上傳引用新屬性的表單來新增屬性，在這種情況下，屬性會在發布表單時建立。"
     ],
     "newPropertyName": "新屬性名稱",
     "problem": {

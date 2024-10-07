@@ -634,7 +634,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "field": {
       "splitSelectMultiples": "將「選擇多個」選項拆分為列",
       "removeGroupNames": "刪除群組名稱",
-      "deletedFields": "包含已發佈表單中未包含的字段"
+      "deletedFields": "包含已發布表單中未包含的字段"
     },
     "deletedFieldsHelp": "如果您需要查看先前的表單版本中引用的字段，請使用此選項。",
     "noSelectMultiple": "此表單沒有任何選擇多個欄位。",

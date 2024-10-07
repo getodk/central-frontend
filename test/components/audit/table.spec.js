@@ -345,11 +345,36 @@ describe('AuditTable', () => {
     await testTarget(row, '');
   });
 
-  it('renders an analytics audit correctly', async () => {
-    testData.extendedAudits.createPast(1, { action: 'analytics' });
-    const row = mountComponent();
-    testType(row, ['Report Usage']);
-    await testTarget(row, '');
+  describe('system operation', () => {
+    it('renders an analytics audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'analytics' });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Report Usage']);
+      await testTarget(row, '');
+    });
+
+    it('renders a submission.purge audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'submission.purge' });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Purge Submissions']);
+      await testTarget(row, '');
+    });
+
+    it('renders a blobs.s3.upload audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'blobs.s3.upload' });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Upload Files to Storage']);
+      await testTarget(row, '');
+    });
+
+    it('renders a blobs.s3.failed-to-pending audit correctly', async () => {
+      testData.extendedAudits.createPast(1, {
+        action: 'blobs.s3.failed-to-pending'
+      });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Mark Files for Re-Upload to Storage']);
+      await testTarget(row, '');
+    });
   });
 
   it('renders an audit with an unknown action correctly', () => {
@@ -436,7 +461,7 @@ describe('AuditTable', () => {
     selectable.text().should.equal('{"some":"json"}');
   });
 
-  it('renders a purged form row correctly', async () => {
+  it('renders a purged target correctly', async () => {
     testData.extendedAudits.createPast(1, {
       actor: testData.extendedUsers.first(),
       action: 'form.purge',
@@ -447,15 +472,18 @@ describe('AuditTable', () => {
       },
       details: { some: 'json' }
     });
-    const target = mountComponent().get('.target');
+    const component = mountComponent();
+
+    const target = component.get('.target');
     target.find('a').exists().should.be.false;
     target.get('span:nth-child(2)').text().should.equal('Purged Form');
     const icon = target.find('.icon-trash');
     icon.exists().should.be.true;
     await icon.should.have.tooltip('This resource has been purged.');
+
     // The purged details aren't part of the audit and don't show up here
     // but the original details of the audit do
-    const selectable = mountComponent().getComponent(Selectable);
+    const selectable = component.getComponent(Selectable);
     selectable.text().should.equal('{"some":"json"}');
   });
 });
