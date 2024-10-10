@@ -1,75 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { shallowReactive, isReactive } from 'vue';
-import { apiPaths, withAuth } from '../util/request';
-
-
-// The SitePreferenceNormalizer and ProjectPreferenceNormalizer classes are used to:
-//  a)  verify that the preference key has been declared here.
-//      Such might seem persnickety, but it allows us to have a central
-//      registry of which keys are in use.
-//  b)  normalize the value as per the normalization function with the name
-//      of the preference. This also allows supplying a default.
-//      Preferences serverside may have been created by some frontend version that
-//      used different semantics (different values, perhaps differently typed).
-//      Writing a validator function here makes it so one does not have to be defensive
-//      for that eventuality in *every single usage site of the setting*.
-//
-// As such, any newly introduced preference will need a normalization function added
-// to one of those classes, even if it's just a straight passthrough.
-// Furthermore, the answer to "why can't I set an arbitrary value for a certain preference"
-// can be found there.
-
-
-const VUE_PROPERTY_PREFIX = '__v_'; // Empirically established. I couldn't find documentation on it.
-
-
-class PreferenceNotRegisteredError extends Error {
-  constructor(prop, whatclass, ...params) {
-    super(...params);
-    this.name = 'PreferencesNotRegisteredError';
-    this.message = `Property "${prop}" has not been registered in ${whatclass.name}`;
-  }
-}
-
-
-class PreferenceNormalizer {
-  static _normalize(target, prop, val) {
-    const normalizer = this.normalizeFn(prop);
-    const theVal = (target === undefined ? val : target[prop]);
-    return normalizer(theVal);
-  }
-
-  static normalizeFn(prop) {
-    const normalizer = Object.prototype.hasOwnProperty.call(this, prop) ? this[prop] : undefined;
-    if (normalizer !== undefined) return normalizer;
-    throw new PreferenceNotRegisteredError(prop, this);
-  }
-
-  static normalize(prop, val) {
-    return this._normalize(undefined, prop, val);
-  }
-
-  static getProp(target, prop) {
-    if (typeof (prop) === 'string' && !prop.startsWith(VUE_PROPERTY_PREFIX)) {
-      return this._normalize(target, prop);
-    }
-    return target[prop];
-  }
-}
-
-
-class SitePreferenceNormalizer extends PreferenceNormalizer {
-  static projectSortMode(val) {
-    return ['alphabetical', 'latest', 'newest'].includes(val) ? val : 'latest';
-  }
-}
-
-
-class ProjectPreferenceNormalizer extends PreferenceNormalizer {
-  static formTrashCollapsed(val) {
-    return Boolean(val);
-  }
-}
+import { apiPaths, withAuth } from '../../util/request';
+import { SitePreferenceNormalizer, ProjectPreferenceNormalizer } from './normalizers';
 
 
 export default class UserPreferences {

@@ -16,7 +16,7 @@ import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
 import { _container } from './resource';
-import UserPreferences from './user-preferences';
+import UserPreferences from './user-preferences/preferences';
 
 export default ({ i18n }, createResource) => {
   // Resources related to the session
