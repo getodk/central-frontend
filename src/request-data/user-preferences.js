@@ -26,10 +26,6 @@ const VUE_PROPERTY_PREFIX = '__v_'; // Empirically established. I couldn't find 
 class PreferenceNotRegisteredError extends Error {
   constructor(prop, whatclass, ...params) {
     super(...params);
-    if (Error.captureStackTrace) {
-      // on V8, we can have the stack trace start from where the error was thrown
-      Error.captureStackTrace(this, PreferenceNotRegisteredError);
-    }
     this.name = 'PreferencesNotRegisteredError';
     this.message = `Property "${prop}" has not been registered in ${whatclass.name}`;
   }
