@@ -27,3 +27,4 @@ npm-debug.log*
 !/.nginx/.gitkeep
 
 /.eslintcache
+/public/client-config.json
