@@ -46,6 +46,11 @@ First, run ODK Central Backend.
 
 Next, build ODK Central Frontend files for development by running `npm run dev`.  The files will be outputted to `dist/`.  As you update the source code, the files will be automatically rebuilt.  `npm run dev` will also start NGINX, which will serve the files. NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests.
 
+Alternatively, you can run ODK Central Frontend using Docker. This allows for an isolated and consistent development environment. To do so, please make sure you have docker and docker-compose installed then simply run the following command:
+
+```bash
+docker-compose up --build
+```
 ODK Central Frontend will be available on port 8989.
 
 ODK Central Frontend communicates with ODK Central Backend in part using a session cookie. The cookie is `Secure`, but will be sent over HTTP on localhost. ODK Central Frontend also interacts with data collection clients and with services:
