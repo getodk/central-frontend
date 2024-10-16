@@ -241,6 +241,10 @@
           "string": "Create or Update Draft",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
+        "update_draft_replace": {
+          "string": "Replace Draft",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
         "update_publish": {
           "string": "Publish Draft",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
@@ -289,6 +293,10 @@
         },
         "process_form_draft": {
           "string": "Process Form Draft",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_entities_version": {
+          "string": "Flag Form for Upgrade",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },

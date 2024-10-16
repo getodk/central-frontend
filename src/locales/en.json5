@@ -126,6 +126,7 @@
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "update_draft_set": "Create or Update Draft",
+        "update_draft_replace": "Replace Draft",
         "update_publish": "Publish Draft",
         "update_draft_delete": "Abandon Draft",
         "attachment_update": "Update Attachments",
@@ -158,7 +159,8 @@
       // type of action that the server performs when it is upgraded.
       "upgrade": {
         "process_form": "Process Form",
-        "process_form_draft": "Process Form Draft"
+        "process_form_draft": "Process Form Draft",
+        "process_form_entities_version": "Flag Form for Upgrade"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on or for a Web User.

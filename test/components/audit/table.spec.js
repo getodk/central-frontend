@@ -162,6 +162,7 @@ describe('AuditTable', () => {
       ['form.create', ['Form', 'Create']],
       ['form.update', ['Form', 'Update Details']],
       ['form.update.draft.set', ['Form', 'Create or Update Draft']],
+      ['form.update.draft.replace', ['Form', 'Replace Draft']],
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
@@ -170,7 +171,8 @@ describe('AuditTable', () => {
       ['form.restore', ['Form', 'Undelete']],
       ['form.purge', ['Form', 'Purge']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
-      ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']]
+      ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']],
+      ['upgrade.process.form.entities_version', ['Server Upgrade', 'Flag Form for Upgrade']]
     ];
 
     for (const [action, type] of cases) {
