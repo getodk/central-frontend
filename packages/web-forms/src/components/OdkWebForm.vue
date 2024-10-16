@@ -4,19 +4,19 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
 import { computed, provide, reactive, ref, watchEffect, type ComponentPublicInstance } from 'vue';
+import { FormInitializationError } from '../lib/error/FormInitializationError.ts';
+import FormLoadFailureDialog from './Form/FormLoadFailureDialog.vue';
 import FormHeader from './FormHeader.vue';
-
 import QuestionList from './QuestionList.vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 
 const props = defineProps<{ formXml: string }>();
+const emit = defineEmits(['submit']);
 
 const odkForm = ref<RootNode>();
-
 const submitPressed = ref(false);
-
-const emit = defineEmits(['submit']);
+const initializeFormError = ref<FormInitializationError | null>();
 
 initializeForm(props.formXml, {
 	config: {
@@ -26,9 +26,8 @@ initializeForm(props.formXml, {
 	.then((f) => {
 		odkForm.value = f;
 	})
-	.catch((error) => {
-		// eslint-disable-next-line no-console
-		console.error(error);
+	.catch((cause) => {
+		initializeFormError.value = new FormInitializationError(cause);
 	});
 
 const handleSubmit = () => {
@@ -40,11 +39,11 @@ const handleSubmit = () => {
 	}
 };
 
-const errorMessagePopover = ref<ComponentPublicInstance | null>(null);
+const validationErrorMessagePopover = ref<ComponentPublicInstance | null>(null);
 
 provide('submitPressed', submitPressed);
 
-const formErrorMessage = computed(() => {
+const validationErrorMessage = computed(() => {
 	const violationLength = odkForm.value!.validationState.violations.length;
 
 	// TODO: translations
@@ -54,20 +53,37 @@ const formErrorMessage = computed(() => {
 });
 
 watchEffect(() => {
-	if (submitPressed.value && formErrorMessage.value) {
-		(errorMessagePopover.value?.$el as HTMLElement)?.showPopover?.();
+	if (submitPressed.value && validationErrorMessage.value) {
+		(validationErrorMessagePopover.value?.$el as HTMLElement)?.showPopover?.();
 	} else {
-		(errorMessagePopover.value?.$el as HTMLElement)?.hidePopover?.();
+		(validationErrorMessagePopover.value?.$el as HTMLElement)?.hidePopover?.();
 	}
 });
 </script>
-
+<!--
+	TODO: consider handling all template control flow on `<template>` tags! While
+	`v-if` and similar Vue directives are available on HTML and component tags,
+	using `<template>` could help make it much more clear where control flow
+	exists. And it could help make it much more clear what props are actually
+	applicable for usage of a given tag.
+-->
 <template>
-	<div v-if="odkForm" class="odk-form" :class="{ 'submit-pressed': submitPressed }">
+	<template v-if="initializeFormError != null">
+		<FormLoadFailureDialog
+			severity="error"
+			:error="initializeFormError"
+		/>
+	</template>
+
+	<div
+		v-else-if="odkForm"
+		class="odk-form"
+		:class="{ 'submit-pressed': submitPressed }"
+	>
 		<div class="form-wrapper">
-			<div v-show="submitPressed && formErrorMessage" class="error-banner-placeholder" />
-			<PrimeMessage ref="errorMessagePopover" popover="manual" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
-				{{ formErrorMessage }}
+			<div v-show="submitPressed && validationErrorMessage" class="error-banner-placeholder" />
+			<PrimeMessage ref="validationErrorMessagePopover" popover="manual" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
+				{{ validationErrorMessage }}
 			</PrimeMessage>
 
 			<FormHeader :form="odkForm" />

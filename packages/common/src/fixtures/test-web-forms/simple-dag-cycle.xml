@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms"
+  xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Form design problem: computation cycle</h:title>
+    <model>
+      <instance>
+        <data id="simple-dag-cycle">
+          <group>
+            <a>1</a>
+          </group>
+        </data>
+      </instance>
+      <bind nodeset="/data/group/a" type="int" calculate="../a + 1" />
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/group">
+      <repeat nodeset="/data/group">
+        <input ref="/data/group/a" />
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

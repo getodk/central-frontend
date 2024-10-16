@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xpath",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "Apache-2.0",
   "description": "XPath implementation for ODK Web Forms",
   "type": "module",
@@ -52,7 +52,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "@getodk/common": "0.3.0",
+    "@getodk/common": "0.4.0",
     "@js-temporal/polyfill": "^0.4.4",
     "crypto-js": "^4.2.0",
     "itertools-ts": "^1.27.1"

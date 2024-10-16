@@ -8,6 +8,31 @@ import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
 import { reactive } from 'vue';
 
+/**
+ * @todo this does roughly the same thing as {@link getFormXml}, except it
+ * conveys a clearer intent that the fixture being loaded is specifically
+ * associated with one or more `@getodk/web-forms` tests. However, it's worth
+ * considering whether it would be more useful to reference such fixtures by
+ * `import`, e.g.:
+ *
+ * ```ts
+ * import(`@getodk/common/fixtures/test-web-forms/${identifier}?raw`);
+ * ```
+ *
+ * Even more useful might be to wrap such directly referenced fixtures in a
+ * basic `.ts` module, so such imports can actually be statically analyzed like
+ * any other real module import.
+ */
+export const getWebFormsTestFixture = (identifier: string): Promise<string> => {
+	const fixture = xformFixturesByIdentifier.get(identifier);
+
+	if (fixture?.category !== 'test-web-forms') {
+		throw new Error(`Could not find web-forms test fixture with identifier: ${identifier}`);
+	}
+
+	return fixture.loadXML();
+};
+
 export const getFormXml = (fileName: string): Promise<string> => {
 	const fixture = xformFixturesByIdentifier.get(fileName);
 
