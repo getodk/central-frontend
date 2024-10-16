@@ -81,8 +81,11 @@ const UNKNOWN_ERROR_MESSAGE = 'Unknown error';
  *   by {@link JSON.stringify}, we assign that serialization to
  *   {@link unknownCauseDetail}, in hopes it will provide further clarification
  *   of unknown failure conditions.
+ *
+ * @todo The name of this class may change soon! It may also move up the stack
+ * to `@getodk/xforms-engine`.
  */
-export class InitializeFormFailure extends Error {
+export class FormInitializationError extends Error {
 	readonly unknownCauseDetail: string | null;
 	readonly stack?: string | undefined;
 

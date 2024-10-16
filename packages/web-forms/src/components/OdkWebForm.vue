@@ -4,7 +4,7 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
 import { computed, provide, reactive, ref, watchEffect, type ComponentPublicInstance } from 'vue';
-import { InitializeFormFailure } from '../lib/error/FormLoadFailure.ts';
+import { FormInitializationError } from '../lib/error/FormInitializationError.ts';
 import FormLoadFailureDialog from './Form/FormLoadFailureDialog.vue';
 import FormHeader from './FormHeader.vue';
 import QuestionList from './QuestionList.vue';
@@ -16,7 +16,7 @@ const emit = defineEmits(['submit']);
 
 const odkForm = ref<RootNode>();
 const submitPressed = ref(false);
-const initializeFormError = ref<InitializeFormFailure | null>();
+const initializeFormError = ref<FormInitializationError | null>();
 
 initializeForm(props.formXml, {
 	config: {
@@ -27,7 +27,7 @@ initializeForm(props.formXml, {
 		odkForm.value = f;
 	})
 	.catch((cause) => {
-		initializeFormError.value = new InitializeFormFailure(cause);
+		initializeFormError.value = new FormInitializationError(cause);
 	});
 
 const handleSubmit = () => {

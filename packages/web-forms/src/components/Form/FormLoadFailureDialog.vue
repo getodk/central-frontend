@@ -2,7 +2,7 @@
 import Dialog from 'primevue/dialog';
 import Message from 'primevue/message';
 import { computed } from 'vue';
-import type { InitializeFormFailure } from '../../lib/error/FormLoadFailure.ts';
+import type { FormInitializationError } from '../../lib/error/FormInitializationError.ts';
 
 /**
  * @todo translations
@@ -13,7 +13,7 @@ const FORM_LOAD_ERROR_TEXT = {
 };
 
 interface FormLoadErrorProps {
-	readonly error: InitializeFormFailure;
+	readonly error: FormInitializationError;
 }
 
 const props = defineProps<FormLoadErrorProps>();
