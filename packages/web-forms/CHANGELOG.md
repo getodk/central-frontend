@@ -1,5 +1,12 @@
 # @getodk/web-forms
 
+## 0.5.0
+
+### Minor Changes
+
+- 27c440d: Basic presentation of form load failures
+- 1cae631: Show web-forms version in the footer.
+
 ## 0.4.0
 
 ### Minor Changes

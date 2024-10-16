@@ -59,7 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@getodk/tree-sitter-xpath": "0.1.2",
-    "@getodk/xpath": "0.2.0",
+    "@getodk/xpath": "0.2.1",
     "@playwright/test": "^1.47.2",
     "@vitest/browser": "^2.1.1",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.0",

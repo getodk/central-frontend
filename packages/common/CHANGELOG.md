@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.4.0
+
+### Minor Changes
+
+- 27c440d: Basic presentation of form load failures
+
 ## 0.3.0
 
 ### Minor Changes
