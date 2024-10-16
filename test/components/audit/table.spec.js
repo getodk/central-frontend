@@ -172,7 +172,7 @@ describe('AuditTable', () => {
       ['form.purge', ['Form', 'Purge']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
       ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']],
-      ['upgrade.process.form.entities_version', ['Server Upgrade', 'Flag Entity Form for Upgrade']]
+      ['upgrade.process.form.entities_version', ['Server Upgrade', 'Flag Form for Upgrade']]
     ];
 
     for (const [action, type] of cases) {

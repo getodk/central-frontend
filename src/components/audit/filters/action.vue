@@ -59,6 +59,7 @@ export default {
         this.actionOption('form.update.draft.set'),
         this.actionOption('form.update.publish'),
         this.actionOption('form.update.draft.delete'),
+        this.actionOption('form.update.draft.replace'),
         this.actionOption('form.attachment.update'),
         this.actionOption('form.submission.export'),
         this.actionOption('form.delete'),
