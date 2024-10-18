@@ -65,7 +65,11 @@ export default ({ fromQuery, toQuery }) => {
   the same -- something we want to avoid.
   */
   let ignoreNextRouteChange = false;
-  watch(router.currentRoute, ({ query: newQuery }, { query: oldQuery }) => {
+  watch(router.currentRoute, ({ query: newQuery, name: oldRouteName }, { query: oldQuery, name: newRouteName }) => {
+    // If route is different then we don't need to set value from the query, it
+    // will be set during setup phase
+    if (oldRouteName !== newRouteName) return;
+
     if (ignoreNextRouteChange) {
       ignoreNextRouteChange = false;
       return;
