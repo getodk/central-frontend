@@ -378,7 +378,7 @@ describe('Actions/Events', () => {
 				// expectedException.expectMessage("An action was registered for unsupported events: odk-inftance-first-load, my-fake-event");
 
 				const init = async () => {
-					return Scenario.init('invalid-events.xml');
+					await Scenario.init('invalid-events.xml');
 				};
 
 				await expect(init).rejects.toThrowError(

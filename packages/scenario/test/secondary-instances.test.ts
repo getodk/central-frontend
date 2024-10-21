@@ -588,7 +588,7 @@ describe('Secondary instances', () => {
 					configureReferenceManagerCorrectly();
 
 					const init = async () => {
-						return Scenario.init(
+						await Scenario.init(
 							'Some form',
 							html(
 								head(
