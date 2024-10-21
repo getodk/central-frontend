@@ -3,7 +3,9 @@ import type { AnyNodeDefinition } from '../parse/model/NodeDefinition.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
+import type { FormNodeID } from './identity.ts';
 import type { InstanceNodeType } from './node-types.ts';
+import type { SubmissionState } from './submission/SubmissionState.ts';
 import type {
 	AncestorNodeValidationState,
 	LeafNodeValidationState,
@@ -129,8 +131,6 @@ export interface BaseNodeState {
 	get value(): unknown;
 }
 
-type FormNodeID = string;
-
 /**
  * Base interface for common/shared aspects of any node type.
  */
@@ -251,4 +251,16 @@ export interface BaseNode {
 	 * clients to explicitly pause and resume recomputation.
 	 */
 	readonly validationState: NodeValidationState;
+
+	/**
+	 * Represents the current submission state of the node.
+	 *
+	 * @see {@link SubmissionState.submissionXML} for additional detail.
+	 *
+	 * @todo Consider whether this can (should) be merged with
+	 * {@link currentState}, while providing the same client-reactivity
+	 * guarantees. (The challenge there is in defining client-reactive state which
+	 * self-referentially derives state from its own definition.)
+	 */
+	readonly submissionState: SubmissionState;
 }

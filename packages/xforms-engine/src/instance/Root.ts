@@ -2,8 +2,18 @@ import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
+import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { SubmissionDefinition } from '../client/submission/SubmissionDefinition.ts';
+import type {
+	SubmissionChunkedType,
+	SubmissionOptions,
+} from '../client/submission/SubmissionOptions.ts';
+import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
+import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -19,9 +29,9 @@ import type { XFormDOM } from '../parse/XFormDOM.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
 import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
+import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 
@@ -32,7 +42,7 @@ interface RootStateSpec {
 	readonly required: boolean;
 	readonly label: null;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 
@@ -99,7 +109,8 @@ export class Root
 		EvaluationContext,
 		EvaluationContextRoot,
 		SubscribableDependency,
-		TranslationContext
+		TranslationContext,
+		ClientReactiveSubmittableInstance
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
@@ -117,6 +128,12 @@ export class Root
 	readonly classes: BodyClassList;
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
+	readonly submissionState: SubmissionState;
+
+	// ClientReactiveSubmittableInstance
+	get submissionDefinition(): SubmissionDefinition {
+		return this.definition.submission;
+	}
 
 	protected readonly instanceDOM: XFormDOM;
 
@@ -195,6 +212,7 @@ export class Root
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
+		this.submissionState = createParentNodeSubmissionState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {
@@ -215,6 +233,17 @@ export class Root
 		this.state.setProperty('activeLanguage', activeLanguage);
 
 		return this;
+	}
+
+	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
+		options?: SubmissionOptions<ChunkedType>
+	): Promise<SubmissionResult<ChunkedType>> {
+		const result = prepareSubmission(this, {
+			chunked: (options?.chunked ?? 'monolithic') as ChunkedType,
+			maxSize: options?.maxSize ?? Infinity,
+		});
+
+		return Promise.resolve(result);
 	}
 
 	// SubscribableDependency

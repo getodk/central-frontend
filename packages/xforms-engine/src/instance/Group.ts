@@ -1,7 +1,10 @@
 import type { Accessor } from 'solid-js';
 import type { GroupDefinition, GroupNode, GroupNodeAppearances } from '../client/GroupNode.ts';
+import type { FormNodeID } from '../client/identity.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -16,22 +19,26 @@ import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
-import type { NodeID } from './identity.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
+import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
 // prettier-ignore
 interface GroupStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
 
 export class Group
 	extends DescendantNode<GroupDefinition, GroupStateSpec, GeneralChildNode>
-	implements GroupNode, EvaluationContext, SubscribableDependency
+	implements
+		GroupNode,
+		EvaluationContext,
+		SubscribableDependency,
+		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
@@ -44,6 +51,7 @@ export class Group
 	readonly appearances: GroupNodeAppearances;
 	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
+	readonly submissionState: SubmissionState;
 
 	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
 		super(parent, definition);
@@ -85,6 +93,7 @@ export class Group
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
+		this.submissionState = createParentNodeSubmissionState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

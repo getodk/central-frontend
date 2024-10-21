@@ -3,6 +3,8 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
+import type { SubmissionChunkedType, SubmissionOptions } from './submission/SubmissionOptions.ts';
+import type { SubmissionResult } from './submission/SubmissionResult.ts';
 import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
@@ -57,4 +59,35 @@ export interface RootNode extends BaseNode {
 	readonly languages: FormLanguages;
 
 	setLanguage(language: FormLanguage): RootNode;
+
+	/**
+	 * Prepares the current form instance state for submission.
+	 *
+	 * A {@link SubmissionResult} will be prepared even if the current form state
+	 * includes `constraint` or `required` violations. This is intended to serve
+	 * two purposes:
+	 *
+	 * - A client may effectively use this method as a part of its own "submit"
+	 *   routine, and use any violations included in the {@link SubmissionResult}
+	 *   to prompt users to address those violations.
+	 *
+	 * - A client may inspect the submission state of a form at any time.
+	 *   Depending on the client and use case, this may be a convenience (e.g. for
+	 *   developers to inspect that form state at a current point in time); or it
+	 *   may provide necessary functionality (e.g. for test or tooling clients).
+	 *
+	 * Note on asynchrony: preparing a {@link SubmissionResult} is expected to be
+	 * a fast operation. It may even be nearly instantaneous, or roughly
+	 * proportionate to the size of the form itself. However, this method is
+	 * designed to be asynchronous out of an abundance of caution, anticipating
+	 * that some as-yet undeveloped operations on binary data (e.g. form
+	 * attachments) may themselves impose asynchrony (i.e. by interfaces provided
+	 * by the platform and/or external dependencies).
+	 *
+	 * A client may specify {@link SubmissionOptions<'chunked'>}, in which case a
+	 * {@link SubmissionResult<'chunked'>} will be produced, with form attachments
+	 */
+	prepareSubmission<ChunkedType extends SubmissionChunkedType>(
+		options?: SubmissionOptions<ChunkedType>
+	): Promise<SubmissionResult<ChunkedType>>;
 }

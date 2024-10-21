@@ -1,6 +1,7 @@
 import { identity } from '@getodk/common/lib/identity.ts';
 import type { Accessor } from 'solid-js';
 import type { UnsupportedControlNodeType } from '../../client/node-types.ts';
+import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type {
 	UnsupportedControlDefinition,
@@ -8,6 +9,7 @@ import type {
 	UnsupportedControlNode,
 } from '../../client/unsupported/UnsupportedControlNode.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
+import { createLeafNodeSubmissionState } from '../../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createValueState } from '../../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -25,6 +27,7 @@ import {
 import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/unknownAppearanceParser.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { ClientReactiveSubmittableLeafNode } from '../internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { ValueContext } from '../internal-api/ValueContext.ts';
@@ -67,7 +70,8 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
-		ValueContext<unknown>
+		ValueContext<unknown>,
+		ClientReactiveSubmittableLeafNode<unknown>
 {
 	private readonly validation: SharedValidationState;
 	protected readonly state: SharedNodeState<UnsupportedControlStateSpec>;
@@ -84,6 +88,8 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 	get validationState(): LeafNodeValidationState {
 		return this.validation.currentState;
 	}
+
+	readonly submissionState: SubmissionState;
 
 	// ValueContext
 	readonly encodeValue = (instanceValue: unknown): string => {
@@ -128,6 +134,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
+		this.submissionState = createLeafNodeSubmissionState(this);
 	}
 
 	// ValidationContext

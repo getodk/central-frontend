@@ -9,9 +9,9 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { BindDefinition } from '../../src/parse/model/BindDefinition.ts';
-import type { ModelBindMap } from '../../src/parse/model/ModelBindMap.ts';
-import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
+import { BindDefinition } from '../../../src/parse/model/BindDefinition.ts';
+import type { ModelBindMap } from '../../../src/parse/model/ModelBindMap.ts';
+import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
 
 describe('ModelBindMap', () => {
 	let binds: ModelBindMap;

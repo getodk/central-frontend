@@ -1,7 +1,9 @@
 import type { Accessor } from 'solid-js';
 import type { TextRange } from '../client/TextRange.ts';
 import type { TriggerNode, TriggerNodeDefinition } from '../client/TriggerNode.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -21,6 +23,7 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
+import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
 
 interface TriggerControlStateSpec extends DescendantNodeStateSpec<boolean> {
 	readonly label: Accessor<TextRange<'label'> | null>;
@@ -39,7 +42,8 @@ export class TriggerControl
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
-		ValueContext<boolean>
+		ValueContext<boolean>,
+		ClientReactiveSubmittableLeafNode<boolean>
 {
 	private readonly validation: SharedValidationState;
 	protected readonly state: SharedNodeState<TriggerControlStateSpec>;
@@ -55,6 +59,8 @@ export class TriggerControl
 	get validationState(): LeafNodeValidationState {
 		return this.validation.currentState;
 	}
+
+	readonly submissionState: SubmissionState;
 
 	// ValueContext
 	readonly encodeValue: (runtimeValue: boolean) => string;
@@ -109,6 +115,7 @@ export class TriggerControl
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
+		this.submissionState = createLeafNodeSubmissionState(this);
 	}
 
 	// ValidationContext

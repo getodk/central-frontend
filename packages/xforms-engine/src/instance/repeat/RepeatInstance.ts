@@ -1,12 +1,15 @@
 import type { Accessor } from 'solid-js';
 import { createComputed, createSignal, on } from 'solid-js';
+import type { FormNodeID } from '../../client/identity.ts';
 import type {
 	RepeatDefinition,
 	RepeatInstanceNode,
 	RepeatInstanceNodeAppearances,
 } from '../../client/repeat/RepeatInstanceNode.ts';
+import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import { createParentNodeSubmissionState } from '../../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -21,8 +24,8 @@ import type { DescendantNodeSharedStateSpec } from '../abstract/DescendantNode.t
 import { DescendantNode } from '../abstract/DescendantNode.ts';
 import { buildChildren } from '../children.ts';
 import type { AnyChildNode, GeneralChildNode, RepeatRange } from '../hierarchy.ts';
-import type { NodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 
 export type { RepeatDefinition };
@@ -30,7 +33,7 @@ export type { RepeatDefinition };
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
-	readonly children: Accessor<readonly NodeID[]>;
+	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
@@ -42,7 +45,11 @@ interface RepeatInstanceOptions {
 
 export class RepeatInstance
 	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec, GeneralChildNode>
-	implements RepeatInstanceNode, EvaluationContext, SubscribableDependency
+	implements
+		RepeatInstanceNode,
+		EvaluationContext,
+		SubscribableDependency,
+		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 	private readonly currentIndex: Accessor<number>;
@@ -89,6 +96,7 @@ export class RepeatInstance
 		GeneralChildNode
 	>;
 	readonly validationState: AncestorNodeValidationState;
+	readonly submissionState: SubmissionState;
 
 	constructor(
 		override readonly parent: RepeatRange,
@@ -171,6 +179,7 @@ export class RepeatInstance
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
+		this.submissionState = createParentNodeSubmissionState(this);
 	}
 
 	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {
