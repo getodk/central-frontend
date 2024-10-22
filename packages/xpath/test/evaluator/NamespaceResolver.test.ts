@@ -1,5 +1,6 @@
 import { xml } from '@getodk/common/test/factories/xml.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
+import { Evaluator } from '../../src/evaluator/Evaluator.ts';
 import { NamespaceResolver, staticNamespaces } from '../../src/evaluator/NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
@@ -25,10 +26,18 @@ describe('NamespaceResolver', () => {
 			/>
 		</root>
 	`;
-	const UNPREFIXED_ELEMENT = TEST_DOCUMENT.documentElement.firstElementChild;
+	const { firstElementChild } = TEST_DOCUMENT.documentElement;
+
+	assert(firstElementChild);
+
+	const UNPREFIXED_ELEMENT = firstElementChild;
 
 	beforeEach(() => {
-		resolver = new NamespaceResolver(TEST_DOCUMENT);
+		const rootNode = TEST_DOCUMENT;
+		const evaluator = new Evaluator({ rootNode });
+		const context = evaluator.getEvaluationContext(rootNode, rootNode);
+
+		resolver = context.namespaceResolver;
 	});
 
 	it('resolves the default namespace of the document', () => {
@@ -65,7 +74,7 @@ describe('NamespaceResolver', () => {
 
 	describe('nested element context', () => {
 		beforeEach(() => {
-			resolver = new NamespaceResolver(TEST_DOCUMENT, UNPREFIXED_ELEMENT);
+			resolver = NamespaceResolver.from(TEST_DOCUMENT, UNPREFIXED_ELEMENT);
 		});
 
 		const nestedCases = [

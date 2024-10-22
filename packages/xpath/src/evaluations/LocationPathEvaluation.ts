@@ -4,6 +4,7 @@ import type { Temporal } from '@js-temporal/polyfill';
 import type { Context } from '../context/Context.ts';
 import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
+import type { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
 import type { FilterPathExpressionEvaluator } from '../evaluator/expression/FilterPathExpressionEvaluator.ts';
 import type { LocationPathEvaluator } from '../evaluator/expression/LocationPathEvaluator.ts';
 import type { LocationPathExpressionEvaluator } from '../evaluator/expression/LocationPathExpressionEvaluator.ts';
@@ -31,7 +32,6 @@ import type {
 } from '../lib/dom/types.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
 import { distinct, filter, tee } from '../lib/iterators/common.ts';
-import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 import type { Evaluation } from './Evaluation.ts';
 import { NodeEvaluation } from './NodeEvaluation.ts';
 
@@ -424,7 +424,7 @@ type ArbitraryNodesTemporaryCallee =
 // sub-structures to satisfy the various interfaces expecting some or all of
 // this behavior/structure.
 export class LocationPathEvaluation
-	implements Evaluation<'NODE'>, Context, Iterable<LocationPathEvaluation>
+	implements Evaluation<'NODE'>, Context, EvaluationContext, Iterable<LocationPathEvaluation>
 {
 	// --- Evaluation ---
 	readonly type = 'NODE';
@@ -463,7 +463,7 @@ export class LocationPathEvaluation
 	protected readonly initializedContextPosition: number;
 
 	readonly functions: FunctionLibraryCollection;
-	readonly namespaceResolver: XPathNamespaceResolverObject;
+	readonly namespaceResolver: NamespaceResolver;
 
 	readonly timeZone: Temporal.TimeZone;
 

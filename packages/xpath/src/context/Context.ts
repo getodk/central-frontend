@@ -1,8 +1,8 @@
 import type { Temporal } from '@js-temporal/polyfill';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
+import type { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
 import type { ContextDocument, ContextNode, ContextParentNode } from '../lib/dom/types.ts';
-import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
 
 /**
  * The context in which any XPath expression *or sub-expression* is evaluated.
@@ -29,6 +29,6 @@ export interface Context {
 	contextSize(): number;
 
 	readonly functions: FunctionLibraryCollection;
-	readonly namespaceResolver: XPathNamespaceResolverObject;
+	readonly namespaceResolver: NamespaceResolver;
 	readonly timeZone: Temporal.TimeZone;
 }

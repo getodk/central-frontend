@@ -20,8 +20,7 @@ import {
 	XMLNS_PREFIX,
 } from '@getodk/common/constants/xmlns.ts';
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { ContextParentNode } from '../lib/dom/types.ts';
-import type { XPathNamespaceResolverObject } from '../shared/interface.ts';
+import type { ContextNode, ContextParentNode } from '../lib/dom/types.ts';
 
 export {
 	ENKETO_NAMESPACE_URI,
@@ -101,18 +100,53 @@ export const staticNamespaces = new StaticNamespaces('xf', XFORMS_NAMESPACE_URI,
 });
 
 const namespaceURIs = new UpsertableMap<
-	XPathNamespaceResolverObject,
+	XPathNSResolver,
 	UpsertableMap<string | null, string | null>
 >();
 
-export class NamespaceResolver implements XPathNamespaceResolverObject {
-	protected readonly contextResolver: XPathNamespaceResolverObject;
+type XPathNSResolverFunction = (prefix: string | null) => string | null;
 
-	constructor(
+interface XPathNSResolverObject {
+	readonly lookupNamespaceURI: XPathNSResolverFunction;
+}
+
+export class NamespaceResolver implements XPathNSResolverObject {
+	private static isInstance(
+		rootNode: ContextParentNode,
+		value: unknown
+	): value is NamespaceResolver {
+		return value instanceof NamespaceResolver && value.rootNode === rootNode;
+	}
+
+	static from(
+		rootNode: ContextParentNode,
+		referenceNode?: ContextNode | null,
+		contextResolver?: XPathNSResolver | null
+	): NamespaceResolver {
+		if (this.isInstance(rootNode, contextResolver)) {
+			return contextResolver;
+		}
+
+		return new this(rootNode, referenceNode ?? null, contextResolver);
+	}
+	protected readonly contextResolver: XPathNSResolverFunction;
+
+	private constructor(
 		protected readonly rootNode: ContextParentNode,
-		protected readonly referenceNode?: XPathNamespaceResolverObject | null
+		protected readonly referenceNode?: Node | null,
+		contextResolver?: XPathNSResolver | null
 	) {
-		this.contextResolver = referenceNode ?? rootNode;
+		const contextResolverNode = referenceNode ?? rootNode;
+
+		if (contextResolver == null) {
+			this.contextResolver = (prefix) => {
+				return contextResolverNode.lookupNamespaceURI(prefix);
+			};
+		} else if (typeof contextResolver === 'function') {
+			this.contextResolver = contextResolver;
+		} else {
+			this.contextResolver = (prefix) => contextResolver.lookupNamespaceURI(prefix);
+		}
 	}
 
 	protected lookupNodeNamespaceURI = (node: Node, prefix: string | null) => {
@@ -135,9 +169,7 @@ export class NamespaceResolver implements XPathNamespaceResolverObject {
 		return namespaceURIs
 			.upsert(this.contextResolver, () => new UpsertableMap())
 			.upsert(prefix, () => {
-				return (
-					this.contextResolver.lookupNamespaceURI(prefix) ?? staticNamespaces.get(prefix) ?? null
-				);
+				return this.contextResolver(prefix) ?? staticNamespaces.get(prefix) ?? null;
 			});
 	}
 }

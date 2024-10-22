@@ -4,7 +4,6 @@ import { EvaluationContext } from '../context/EvaluationContext.ts';
 import { expressionParser } from '../expressionParser.ts';
 import { fn } from '../functions/fn/index.ts';
 import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
-import type { XPathNSResolver, XPathNamespaceResolverObject } from '../shared/index.ts';
 import type { ExpressionParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection.ts';
@@ -81,6 +80,21 @@ export class Evaluator {
 		this.timeZone = new Temporal.TimeZone(timeZoneId ?? Temporal.Now.timeZoneId());
 	}
 
+	/**
+	 * @package - exposed for testing
+	 */
+	getEvaluationContext(
+		contextNode: Node,
+		namespaceResolver: Extract<Node, XPathNSResolver> | XPathNSResolver | null
+	): EvaluationContext {
+		const contextOptions = {
+			rootNode: this.rootNode,
+			namespaceResolver,
+		};
+
+		return new EvaluationContext(this, contextNode as ContextNode, contextOptions);
+	}
+
 	evaluate(
 		expression: string,
 		contextNode: Node,
@@ -88,22 +102,9 @@ export class Evaluator {
 		resultType: XPathEvaluationResultType | null
 	) {
 		const tree = this.parser.parse(expression, this.parseOptions);
-
-		const evaluationContextNamespaceResolver: XPathNamespaceResolverObject | null =
-			typeof namespaceResolver === 'function'
-				? {
-						lookupNamespaceURI: namespaceResolver,
-					}
-				: namespaceResolver;
-
-		const contextOptions = partialOmitNullish({
-			...this.sharedContextOptions,
-			namespaceResolver: evaluationContextNamespaceResolver,
-		});
-
 		const expr = createExpression(tree.rootNode);
-		const context = new EvaluationContext(this, contextNode as ContextNode, contextOptions);
-		const results = expr.evaluate(context);
+		const evaluationContext = this.getEvaluationContext(contextNode, namespaceResolver);
+		const results = expr.evaluate(evaluationContext);
 
 		return toXPathEvaluationResult(resultType ?? XPATH_EVALUATION_RESULT.ANY_TYPE, results);
 	}
