@@ -1,5 +1,4 @@
 import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
-import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
 import type {
 	KnownAttributeLocalNamedElement,
 	LocalNamedElement,
@@ -8,18 +7,15 @@ import type { ModelElement, XFormsXPathEvaluator } from './XFormsXPathEvaluator.
 
 export interface ItextRootElement extends LocalNamedElement<'itext'> {}
 
-const itextRootLookup = new ScopedElementLookup(':scope > itext', 'itext');
-
 export const getItextRoot = (modelElement: ModelElement): ItextRootElement | null => {
-	return itextRootLookup.getElement<ItextRootElement>(modelElement);
+	return (
+		Array.from(modelElement.children).find((child): child is ItextRootElement => {
+			return child.localName === 'itext';
+		}) ?? null
+	);
 };
 
 interface TranslationElement extends KnownAttributeLocalNamedElement<'translation', 'lang'> {}
-
-const translationLookup = new ScopedElementLookup(
-	':scope > translation[lang]',
-	'translation[lang]'
-);
 
 type TranslationLanguage = string;
 
@@ -38,8 +34,10 @@ const getTranslationElementMap = (modelElement: ModelElement): TranslationElemen
 			return new Map();
 		}
 
-		const translationElements = Array.from(
-			translationLookup.getElements<TranslationElement>(itextRoot)
+		const translationElements = Array.from(itextRoot.children).filter(
+			(child): child is TranslationElement => {
+				return child.localName === 'translation' && child.hasAttribute('lang');
+			}
 		);
 
 		return new Map(
@@ -60,8 +58,6 @@ const getTranslationElement = (
 };
 
 interface TranslationTextElement extends KnownAttributeLocalNamedElement<'text', 'id'> {}
-
-const translationTextLookup = new ScopedElementLookup(':scope > text[id]', 'text[id]');
 
 type ItextID = string;
 
@@ -87,8 +83,10 @@ export const getTranslationTextByLanguage = (
 		return new UpsertableWeakMap();
 	});
 	const textMap = textMaps.upsert(translationElement, () => {
-		const textElements = Array.from(
-			translationTextLookup.getElements<TranslationTextElement>(translationElement)
+		const textElements = Array.from(translationElement.children).filter(
+			(child): child is TranslationTextElement => {
+				return child.localName === 'text' && child.hasAttribute('id');
+			}
 		);
 
 		return new Map(
@@ -106,15 +104,14 @@ interface DefaultTextValueElement extends LocalNamedElement<'value'> {
 	getAttribute(name: string): string | null;
 }
 
-const defaultTextValueLookup = new ScopedElementLookup(
-	':scope > value:not([form])',
-	'value:not([form])'
-);
-
 export const getDefaultTextValueElement = (
 	textElement: TranslationTextElement
 ): DefaultTextValueElement | null => {
-	return defaultTextValueLookup.getElement<DefaultTextValueElement>(textElement);
+	return (
+		Array.from(textElement.children).find((child): child is DefaultTextValueElement => {
+			return child.localName === 'value' && !child.hasAttribute('form');
+		}) ?? null
+	);
 };
 
 interface TranslationMetadata {

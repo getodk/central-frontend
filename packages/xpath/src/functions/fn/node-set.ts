@@ -6,7 +6,12 @@ import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { isNamespaceNode, isProcessingInstructionNode } from '../../lib/dom/predicates.ts';
 import { sortDocumentOrder } from '../../lib/dom/sort.ts';
-import type { MaybeNamedNode } from '../../lib/dom/types.ts';
+import {
+	ATTRIBUTE_NODE,
+	ELEMENT_NODE,
+	PROCESSING_INSTRUCTION_NODE,
+	type MaybeNamedNode,
+} from '../../lib/dom/types.ts';
 
 const { toCount } = reduce;
 
@@ -80,9 +85,9 @@ export const localName = new StringFunction(
 		}
 
 		if (
-			node.nodeType !== Node.ELEMENT_NODE &&
-			node.nodeType !== Node.ATTRIBUTE_NODE &&
-			node.nodeType !== Node.PROCESSING_INSTRUCTION_NODE
+			node.nodeType !== ELEMENT_NODE &&
+			node.nodeType !== ATTRIBUTE_NODE &&
+			node.nodeType !== PROCESSING_INSTRUCTION_NODE
 		) {
 			return '';
 		}
@@ -116,9 +121,9 @@ export const name = new StringFunction(
 		}
 
 		if (
-			node.nodeType !== Node.ELEMENT_NODE &&
-			node.nodeType !== Node.ATTRIBUTE_NODE &&
-			node.nodeType !== Node.PROCESSING_INSTRUCTION_NODE
+			node.nodeType !== ELEMENT_NODE &&
+			node.nodeType !== ATTRIBUTE_NODE &&
+			node.nodeType !== PROCESSING_INSTRUCTION_NODE
 		) {
 			return '';
 		}

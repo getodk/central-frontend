@@ -1,7 +1,7 @@
-import type { XPathResult, XPathResultType } from '../../shared/index.ts';
 import { Reiterable, tee } from '../../lib/iterators/index.ts';
 import type { NodeSetResultType } from './BaseResult.ts';
 import { BaseResult } from './BaseResult.ts';
+import type { XPathEvaluationResult } from './XPathEvaluationResult.ts';
 
 interface ComputedNodeSetResult {
 	readonly computedBooleanValue: boolean;
@@ -9,9 +9,7 @@ interface ComputedNodeSetResult {
 	readonly computedStringValue: string;
 }
 
-export abstract class NodeSetResult extends BaseResult implements XPathResult {
-	readonly isIntermediateResult: boolean = false;
-	protected readonly type: NodeSetResultType = BaseResult.NODE_SET_RESULT_TYPE;
+export abstract class NodeSetResult extends BaseResult implements XPathEvaluationResult {
 	protected readonly nodes: Iterable<Node>;
 
 	protected computedBooleanValue: boolean | null = null;
@@ -38,10 +36,7 @@ export abstract class NodeSetResult extends BaseResult implements XPathResult {
 
 	protected computedSnapshotValue: readonly Node[] | null = null;
 
-	abstract readonly resultType: XPathResultType;
-	abstract readonly invalidIteratorState: boolean;
-	abstract readonly singleNodeValue: Node | null;
-	abstract readonly snapshotLength: number;
+	abstract override readonly resultType: NodeSetResultType;
 
 	constructor(protected readonly value: Iterable<Node>) {
 		super();
@@ -70,9 +65,6 @@ export abstract class NodeSetResult extends BaseResult implements XPathResult {
 			computedStringValue,
 		};
 	}
-
-	abstract iterateNext(): Node | null;
-	abstract snapshotItem(index: number): Node | null;
 }
 
 export class NodeSetSnapshotResult extends NodeSetResult {
@@ -89,7 +81,7 @@ export class NodeSetSnapshotResult extends NodeSetResult {
 	readonly singleNodeValue: Node | null;
 
 	constructor(
-		readonly resultType: XPathResultType,
+		readonly resultType: NodeSetResultType,
 		nodes: Iterable<Node>
 	) {
 		const snapshot = [...Reiterable.from(nodes)];
@@ -156,7 +148,7 @@ export class NodeSetIteratorResult extends NodeSetResult {
 	}
 
 	constructor(
-		readonly resultType: XPathResultType,
+		readonly resultType: NodeSetResultType,
 		nodes: Iterable<Node>
 	) {
 		super(nodes);

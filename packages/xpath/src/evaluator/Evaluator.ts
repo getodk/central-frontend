@@ -4,17 +4,15 @@ import { EvaluationContext } from '../context/EvaluationContext.ts';
 import { expressionParser } from '../expressionParser.ts';
 import { fn } from '../functions/fn/index.ts';
 import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
-import type {
-	AnyXPathEvaluator,
-	XPathNSResolver,
-	XPathNamespaceResolverObject,
-	XPathResultType,
-} from '../shared/index.ts';
+import type { XPathNSResolver, XPathNamespaceResolverObject } from '../shared/index.ts';
 import type { ExpressionParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection.ts';
-import { ResultTypes } from './result/ResultType.ts';
-import { toXPathResult } from './result/index.ts';
+import { toXPathEvaluationResult } from './result/toXPathEvaluationResult.ts';
+import {
+	XPATH_EVALUATION_RESULT,
+	type XPathEvaluationResultType,
+} from './result/XPathEvaluationResult.ts';
 
 const functions = new FunctionLibraryCollection([fn]);
 
@@ -53,14 +51,13 @@ type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists 
 	? T
 	: T | null;
 
-export class Evaluator implements AnyXPathEvaluator {
+export class Evaluator {
 	// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
 	// if this usage changes in a way that addresses concerns expressed there.
 	protected readonly parser: ExpressionParser;
 
 	readonly functions: FunctionLibraryCollection;
 	readonly parseOptions: ParseOptions;
-	readonly resultTypes: ResultTypes = ResultTypes;
 	readonly rootNodeDocument: Document | XMLDocument | null = null;
 	readonly rootNode: AnyParentNode | null;
 	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
@@ -88,7 +85,7 @@ export class Evaluator implements AnyXPathEvaluator {
 		expression: string,
 		contextNode: Node,
 		namespaceResolver: XPathNSResolver | null,
-		resultType: XPathResultType | null
+		resultType: XPathEvaluationResultType | null
 	) {
 		const tree = this.parser.parse(expression, this.parseOptions);
 
@@ -108,7 +105,7 @@ export class Evaluator implements AnyXPathEvaluator {
 		const context = new EvaluationContext(this, contextNode as ContextNode, contextOptions);
 		const results = expr.evaluate(context);
 
-		return toXPathResult(resultType ?? XPathResult.ANY_TYPE, results);
+		return toXPathEvaluationResult(resultType ?? XPATH_EVALUATION_RESULT.ANY_TYPE, results);
 	}
 
 	protected getContextNode(options: EvaluatorConvenienceMethodOptions): Node {
@@ -126,19 +123,22 @@ export class Evaluator implements AnyXPathEvaluator {
 	evaluateBoolean(expression: string, options: EvaluatorConvenienceMethodOptions = {}): boolean {
 		const contextNode = this.getContextNode(options);
 
-		return this.evaluate(expression, contextNode, null, XPathResult.BOOLEAN_TYPE).booleanValue;
+		return this.evaluate(expression, contextNode, null, XPATH_EVALUATION_RESULT.BOOLEAN_TYPE)
+			.booleanValue;
 	}
 
 	evaluateNumber(expression: string, options: EvaluatorConvenienceMethodOptions = {}): number {
 		const contextNode = this.getContextNode(options);
 
-		return this.evaluate(expression, contextNode, null, XPathResult.NUMBER_TYPE).numberValue;
+		return this.evaluate(expression, contextNode, null, XPATH_EVALUATION_RESULT.NUMBER_TYPE)
+			.numberValue;
 	}
 
 	evaluateString(expression: string, options: EvaluatorConvenienceMethodOptions = {}): string {
 		const contextNode = this.getContextNode(options);
 
-		return this.evaluate(expression, contextNode, null, XPathResult.STRING_TYPE).stringValue;
+		return this.evaluate(expression, contextNode, null, XPATH_EVALUATION_RESULT.STRING_TYPE)
+			.stringValue;
 	}
 
 	evaluateNode<T extends Node, AssertExists extends boolean = false>(
@@ -148,8 +148,12 @@ export class Evaluator implements AnyXPathEvaluator {
 		const contextNode = this.getContextNode(options);
 
 		// TODO: unsafe cast
-		const node = this.evaluate(expression, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE)
-			.singleNodeValue as T | null;
+		const node = this.evaluate(
+			expression,
+			contextNode,
+			null,
+			XPATH_EVALUATION_RESULT.FIRST_ORDERED_NODE_TYPE
+		).singleNodeValue as T | null;
 
 		if (!options.assertExists) {
 			return node as EvaluatedNode<AssertExists, T>;
@@ -189,7 +193,7 @@ export class Evaluator implements AnyXPathEvaluator {
 			expression,
 			contextNode,
 			null,
-			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+			XPATH_EVALUATION_RESULT.ORDERED_NODE_SNAPSHOT_TYPE
 		);
 		const { snapshotLength } = snapshotResult;
 		const nodes: T[] = [];

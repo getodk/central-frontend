@@ -1,3 +1,27 @@
+export type DOCUMENT_NODE = Node['DOCUMENT_NODE'];
+export const DOCUMENT_NODE: DOCUMENT_NODE = 9;
+
+export type ELEMENT_NODE = Node['ELEMENT_NODE'];
+export const ELEMENT_NODE: ELEMENT_NODE = 1;
+
+export type ATTRIBUTE_NODE = Node['ATTRIBUTE_NODE'];
+export const ATTRIBUTE_NODE: ATTRIBUTE_NODE = 2;
+
+export type TEXT_NODE = Node['TEXT_NODE'];
+export const TEXT_NODE: TEXT_NODE = 3;
+
+export type CDATA_SECTION_NODE = Node['CDATA_SECTION_NODE'];
+export const CDATA_SECTION_NODE: CDATA_SECTION_NODE = 4;
+
+export type COMMENT_NODE = Node['COMMENT_NODE'];
+export const COMMENT_NODE: COMMENT_NODE = 8;
+
+export type PROCESSING_INSTRUCTION_NODE = Node['PROCESSING_INSTRUCTION_NODE'];
+export const PROCESSING_INSTRUCTION_NODE: PROCESSING_INSTRUCTION_NODE = 7;
+
+export type DOCUMENT_TYPE_NODE = Node['DOCUMENT_TYPE_NODE'];
+export const DOCUMENT_TYPE_NODE: DOCUMENT_TYPE_NODE = 10;
+
 // TODO: replace named references to `document` with `contextDocument`
 // (or other name[s] where appropriate), to minimize accidental reference
 // to `globalThis.document` (which is almost never what we actually want).

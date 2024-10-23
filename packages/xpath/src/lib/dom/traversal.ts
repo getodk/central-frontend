@@ -1,9 +1,10 @@
 import { assertParentNode } from './assertions.ts';
 import { isAttributeNode, isDocumentNode, isElementNode } from './predicates.ts';
 import type { ContextNode, ContextParentNode } from './types.ts';
+import { DOCUMENT_NODE } from './types.ts';
 
 export const getDocument = (node: Node): Document =>
-	node.nodeType === Node.DOCUMENT_NODE ? (node as Document) : node.ownerDocument!;
+	node.nodeType === DOCUMENT_NODE ? (node as Document) : node.ownerDocument!;
 
 export const getRootNode = (node: ContextNode): ContextParentNode => {
 	if (isDocumentNode(node)) {

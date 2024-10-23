@@ -1,6 +1,5 @@
 import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
-import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
-import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
+import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
@@ -255,22 +254,26 @@ export const indexedRepeat = new NodeSetFunction(
 	}
 );
 
-interface InstanceElement extends LocalNamedElement<'instance'> {}
+interface IdentifiedInstanceElement extends KnownAttributeLocalNamedElement<'instance', 'id'> {}
 
-const identifiedInstanceLookup = new ScopedElementLookup(':scope > instance[id]', 'instance[id]');
+const identifiedInstanceLookup = {
+	getElements: (contextNode: ParentNode): readonly IdentifiedInstanceElement[] => {
+		return Array.from(contextNode.children).filter((child): child is IdentifiedInstanceElement => {
+			return child.localName === 'instance' && child.hasAttribute('id');
+		});
+	},
+};
 
 type InstanceID = string;
 
 const instancesCache = new UpsertableWeakMap<
 	ModelElement,
-	ReadonlyMap<InstanceID | null, InstanceElement>
+	ReadonlyMap<InstanceID | null, IdentifiedInstanceElement>
 >();
 
 const getInstanceElementByID = (modelElement: ModelElement, id: string): Element | null => {
 	const instances = instancesCache.upsert(modelElement, () => {
-		const instanceElements = Array.from(
-			identifiedInstanceLookup.getElements<InstanceElement>(modelElement)
-		);
+		const instanceElements = Array.from(identifiedInstanceLookup.getElements(modelElement));
 
 		return new Map(
 			instanceElements.map((element) => {

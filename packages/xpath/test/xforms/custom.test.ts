@@ -1,10 +1,20 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { AnyXPathEvaluator } from '../../src/shared/interface.ts';
+import type {
+	XPathEvaluationResult,
+	XPathEvaluationResultType,
+} from '../../src/evaluator/result/XPathEvaluationResult.ts';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
 describe.skip('custom XPath functions', () => {
-	interface CustomFunctionEvaluator extends AnyXPathEvaluator {
+	interface CustomFunctionEvaluator {
+		evaluate(
+			expression: string,
+			contextNode: Node,
+			namespaceResolver: XPathNSResolver | null,
+			resultType: XPathEvaluationResultType | null
+		): XPathEvaluationResult;
+
 		readonly customXPathFunction?: {
 			add(...args: unknown[]): unknown;
 		};

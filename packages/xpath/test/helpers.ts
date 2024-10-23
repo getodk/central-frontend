@@ -1,7 +1,7 @@
 import { expect } from 'vitest';
+import type { XPathEvaluationResultType } from '../src/evaluator/result/XPathEvaluationResult.ts';
 import { Evaluator } from '../src/index.ts';
 import type { AnyParentNode } from '../src/lib/dom/types.ts';
-import type { XPathResultType } from '../src/shared/interface.ts';
 import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
 
 declare global {
@@ -88,7 +88,7 @@ export class TestContext<XForms extends boolean = false> {
 	evaluate(
 		expression: string,
 		contextNode?: Nullish<Node>,
-		resultType?: Nullish<XPathResultType>,
+		resultType?: Nullish<XPathEvaluationResultType>,
 		// eslint-disable-next-line @typescript-eslint/no-shadow
 		namespaceResolver?: Nullish<XPathNSResolver>
 	): XPathResult {

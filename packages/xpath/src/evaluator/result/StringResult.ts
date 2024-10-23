@@ -1,12 +1,11 @@
-import type { XPathResult } from '../../shared/index.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { PrimitiveResult } from './PrimitiveResult.ts';
+import type { XPathEvaluationResult } from './XPathEvaluationResult.ts';
 
-export class StringResult extends PrimitiveResult implements XPathResult {
-	readonly isIntermediateResult = false;
-	protected readonly type = PrimitiveResult.STRING_TYPE;
+export class StringResult extends PrimitiveResult implements XPathEvaluationResult {
 	protected readonly nodes = null;
 
+	readonly resultType = PrimitiveResult.STRING_TYPE;
 	readonly booleanValue: boolean;
 	readonly numberValue: number;
 	readonly stringValue: string;

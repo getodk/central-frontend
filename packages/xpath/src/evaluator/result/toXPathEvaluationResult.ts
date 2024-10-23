@@ -1,10 +1,14 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
-import type { XPathResultType } from '../../shared/index.ts';
-import { BooleanResult } from './BooleanResult';
-import { NodeSetIteratorResult, NodeSetSnapshotResult } from './NodeSetResult';
-import { NumberResult } from './NumberResult';
-import { StringResult } from './StringResult';
+import { BooleanResult } from './BooleanResult.ts';
+import { NodeSetIteratorResult, NodeSetSnapshotResult } from './NodeSetResult.ts';
+import { NumberResult } from './NumberResult.ts';
+import { StringResult } from './StringResult.ts';
+import {
+	XPATH_EVALUATION_RESULT,
+	type XPathEvaluationResult,
+	type XPathEvaluationResultType,
+} from './XPathEvaluationResult.ts';
 
 const {
 	ANY_TYPE,
@@ -17,9 +21,12 @@ const {
 	ORDERED_NODE_SNAPSHOT_TYPE,
 	ANY_UNORDERED_NODE_TYPE,
 	FIRST_ORDERED_NODE_TYPE,
-} = globalThis.XPathResult;
+} = XPATH_EVALUATION_RESULT;
 
-export const toXPathResult = (resultType: XPathResultType, evaluation: Evaluation) => {
+export const toXPathEvaluationResult = (
+	resultType: XPathEvaluationResultType,
+	evaluation: Evaluation
+): XPathEvaluationResult => {
 	const { nodes } = evaluation;
 
 	switch (resultType) {

@@ -1,13 +1,32 @@
-const NODE_SET_RESULT_TYPE = -1;
+import type {
+	ANY_UNORDERED_NODE_TYPE,
+	BOOLEAN_TYPE,
+	FIRST_ORDERED_NODE_TYPE,
+	NUMBER_TYPE,
+	ORDERED_NODE_ITERATOR_TYPE,
+	ORDERED_NODE_SNAPSHOT_TYPE,
+	STRING_TYPE,
+	UNORDERED_NODE_ITERATOR_TYPE,
+	UNORDERED_NODE_SNAPSHOT_TYPE,
+	XPathEvaluationResult,
+	XPathEvaluationResultType,
+} from './XPathEvaluationResult.ts';
+import { XPATH_EVALUATION_RESULT } from './XPathEvaluationResult.ts';
 
-export type NodeSetResultType = typeof NODE_SET_RESULT_TYPE;
-
+// prettier-ignore
 export type PrimitiveResultType =
-	| BaseResult['BOOLEAN_TYPE']
-	| BaseResult['NUMBER_TYPE']
-	| BaseResult['STRING_TYPE'];
+	| BOOLEAN_TYPE
+	| NUMBER_TYPE
+	| STRING_TYPE;
 
-type BaseResultType = NodeSetResultType | PrimitiveResultType;
+// prettier-ignore
+export type NodeSetResultType =
+	| ANY_UNORDERED_NODE_TYPE
+	| FIRST_ORDERED_NODE_TYPE
+	| ORDERED_NODE_ITERATOR_TYPE
+	| ORDERED_NODE_SNAPSHOT_TYPE
+	| UNORDERED_NODE_ITERATOR_TYPE
+	| UNORDERED_NODE_SNAPSHOT_TYPE;
 
 const {
 	ANY_TYPE,
@@ -20,14 +39,9 @@ const {
 	ORDERED_NODE_SNAPSHOT_TYPE,
 	ANY_UNORDERED_NODE_TYPE,
 	FIRST_ORDERED_NODE_TYPE,
-} = XPathResult;
+} = XPATH_EVALUATION_RESULT;
 
-export abstract class BaseResult {
-	protected abstract readonly type: BaseResultType;
-	protected abstract readonly nodes: Iterable<Node> | null;
-
-	abstract readonly isIntermediateResult: boolean;
-
+export abstract class BaseResult implements XPathEvaluationResult {
 	static readonly ANY_TYPE = ANY_TYPE;
 	static readonly NUMBER_TYPE = NUMBER_TYPE;
 	static readonly STRING_TYPE = STRING_TYPE;
@@ -50,9 +64,17 @@ export abstract class BaseResult {
 	readonly ANY_UNORDERED_NODE_TYPE = ANY_UNORDERED_NODE_TYPE;
 	readonly FIRST_ORDERED_NODE_TYPE = FIRST_ORDERED_NODE_TYPE;
 
-	protected static readonly NODE_SET_RESULT_TYPE = NODE_SET_RESULT_TYPE;
+	protected abstract readonly nodes: Iterable<Node> | null;
+
+	abstract readonly resultType: XPathEvaluationResultType;
+	abstract readonly invalidIteratorState: boolean;
+	abstract readonly singleNodeValue: Node | null;
+	abstract readonly snapshotLength: number;
 
 	abstract readonly booleanValue: boolean;
 	abstract readonly numberValue: number;
 	abstract readonly stringValue: string;
+
+	abstract iterateNext(): Node | null;
+	abstract snapshotItem(index: number): Node | null;
 }

@@ -1,6 +1,6 @@
-import type { XPathResult, XPathResultType } from '../../shared/index.ts';
 import type { PrimitiveResultType } from './BaseResult.ts';
 import { BaseResult } from './BaseResult.ts';
+import type { XPathEvaluationResult } from './XPathEvaluationResult.ts';
 
 class InvalidNodeSetResultError extends Error {
 	constructor() {
@@ -8,12 +8,8 @@ class InvalidNodeSetResultError extends Error {
 	}
 }
 
-export abstract class PrimitiveResult extends BaseResult implements XPathResult {
-	protected abstract override readonly type: PrimitiveResultType;
-
-	get resultType(): XPathResultType {
-		return this.type;
-	}
+export abstract class PrimitiveResult extends BaseResult implements XPathEvaluationResult {
+	abstract override readonly resultType: PrimitiveResultType;
 
 	get singleNodeValue(): Node | null {
 		throw new InvalidNodeSetResultError();
