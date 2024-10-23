@@ -44,6 +44,21 @@ describe('useQueryRef()', () => {
     result.value.should.equal('c,d');
   });
 
+  it('should not changes value of ref after a change of route name', async () => {
+    let result;
+    return load('/?x=a&y=b')
+      .afterResponses(app => {
+        result = withSetup(() => useQueryRef(options.comma), {
+          container: app.vm.$container
+        });
+        result.value.should.equal('a,b');
+      })
+      .load('/users?x=c&y=d')
+      .afterResponses(() => {
+        result.value.should.equal('a,b');
+      });
+  });
+
   describe('change to an irrelevant query parameter', () => {
     it('does not change the value of the ref', async () => {
       // `z` is the irrelevant query parameter that the ref doesn't use.
