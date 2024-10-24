@@ -165,3 +165,32 @@ export type XPathNode =
 	| XPathText
 	| XPathComment
 	| XPathProcessingInstruction;
+
+/**
+ * **HERE BE DRAGONS!**
+ *
+ * In practice, real world XPathEvaluator implementations may produce a
+ * {@link https://www.w3.org/TR/xml/#dtd | Document Type Declaration (DTD)} node
+ * for certain expressions. (Most trivially: common browser implementations will
+ * return a DTD, if present in the context document, for the expression
+ * `/node()`!) Importantly, this behavior is **NOT SUPPORTED** by the XPath 1.0
+ * specification.
+ *
+ * We provide this type as an accommodation for {@link XPathDOMAdapter}
+ * implementations which opt to support this common-but-unspecified behavior. It
+ * is intentionally distinct from the other members of {@link XPathNodeKind}, in
+ * order to convey that:
+ *
+ * 1. If an adapter implementation produces a node associated with this kind, it
+ *    will not be regarded as any of the node kinds explicitly supported by
+ *    XPath.
+ *
+ * 2. Following from that: nodes of this kind cannot be accessed by any
+ *    (implicit or explicit) XPath syntax which should produce a node type more
+ *    specific than the `node()`
+ *    {@link https://www.w3.org/TR/1999/REC-xpath-19991116/#NT-NodeTest | NodeTest}
+ *    sub-expression.
+ *
+ * 3. Adapters implementing this node kind should **USE WITH CAUTION**!
+ */
+export type UnspecifiedNonXPathNodeKind = 'UNSPECIFIED_NON_XPATH_NODE';
