@@ -321,4 +321,31 @@ describe('DateRangePicker', () => {
       });
     });
   });
+
+  describe('disabled', () => {
+    it('does not show calendar on click', async () => {
+      const component = mountComponent({
+        props: { modelValue: [], disabled: true }
+      });
+      const flatpickr = component.getComponent('.form-control');
+      await flatpickr.trigger('click');
+      flatpickr.classes().should.not.contain('active');
+    });
+
+    it('does not show calendar on focus', async () => {
+      const component = mountComponent({
+        props: { modelValue: [], disabled: true }
+      });
+      const flatpickr = component.getComponent('.form-control');
+      await flatpickr.trigger('focus');
+      flatpickr.classes().should.not.contain('active');
+    });
+
+    it('should not display clear button', async () => {
+      const component = mountComponent({
+        props: { modelValue: ['1970-01-02', '1970-01-03'], disabled: true }
+      });
+      component.find('.close').should.be.hidden();
+    });
+  });
 });
