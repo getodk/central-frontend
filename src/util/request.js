@@ -126,6 +126,7 @@ export const apiPaths = {
   submissionKeys: formOrDraftPath('/submissions/keys'),
   submitters: formOrDraftPath('/submissions/submitters'),
   submission: submissionPath(''),
+  restoreSubmission: submissionPath('/restore'),
   odataSubmission: (projectId, xmlFormId, instanceId, query = undefined) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(odataLiteral(instanceId));

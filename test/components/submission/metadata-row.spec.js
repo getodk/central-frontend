@@ -147,6 +147,18 @@ describe('SubmissionMetadataRow', () => {
     mountComponent().find('.delete-button').exists().should.be.false;
   });
 
+  it('shows the restore button', async () => {
+    testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+    mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Undelete');
+  });
+
+  it('does not show the restore button if user does not have submission restore permission', async () => {
+    mockLogin({ role: 'none' });
+    testData.extendedProjects.createPast(1, { role: 'viewer' });
+    testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+    mountComponent({ deleted: true }).find('.restore-button').exists().should.be.false;
+  });
+
   describe('review button', () => {
     beforeEach(mockLogin);
 
@@ -262,6 +274,11 @@ describe('SubmissionMetadataRow', () => {
     it('does not have delete button', () => {
       testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
       mountComponent({ deleted: true }).find('.delete-button').exists().should.be.false;
+    });
+
+    it('shows restore button', () => {
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
+      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Undelete');
     });
   });
 });

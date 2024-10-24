@@ -62,6 +62,13 @@ except according to the terms contained in the LICENSE file.
       <div class="col-content">
         <date-time :iso="submission.__system.deletedAt"/>
       </div>
+      <div v-if="verbs.has('submission.restore')" class="btn-group">
+        <button type="button"
+          class="restore-button btn btn-default"
+          :aria-label="$t('action.restore')" v-tooltip.aria-label>
+          <span class="icon-recycle"></span>
+        </button>
+      </div>
     </td>
   </tr>
 </template>

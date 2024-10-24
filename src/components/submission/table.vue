@@ -71,7 +71,7 @@ defineProps({
   draft: Boolean,
   fields: Array
 });
-const emit = defineEmits(['review', 'delete']);
+const emit = defineEmits(['review', 'delete', 'restore']);
 
 // The component does not assume that this data will exist when the component is
 // created.
@@ -82,6 +82,7 @@ const chunkyOData = useChunkyArray(computed(() => odata.value));
 const handleActions = ({ target, data }) => {
   if (target.classList.contains('review-button')) emit('review', data);
   if (target.classList.contains('delete-button')) emit('delete', data);
+  if (target.classList.contains('restore-button')) emit('restore', data);
 };
 const table = ref(null);
 const afterReview = (index) => { markRowsChanged(table.value.getRowPair(index)); };

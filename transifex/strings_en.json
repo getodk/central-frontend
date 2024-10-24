@@ -717,6 +717,9 @@
     },
     "submissionDeleted": {
       "string": "The Submission has been deleted."
+    },
+    "submissionRestored": {
+      "string": "The Submission has been undeleted."
     }
   },
   "moreInfo": {
@@ -3352,12 +3355,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Undelete",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Deleted {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3365,6 +3362,12 @@
       "disabled": {
         "conflict": {
           "string": "This Form cannot be undeleted because an active Form with the same ID exists."
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "Undelete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4686,6 +4689,29 @@
               "string": "Loading the last matching Submission…"
             }
           }
+        }
+      }
+    },
+    "SubmissionRestore": {
+      "title": {
+        "string": "Undelete Submission",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to undelete this Submission?"
+        },
+        "1": {
+          "string": "The Submission will be restored to its previous state, including associated data like comments."
+        },
+        "2": {
+          "string": "If the Submission is deleted again, it will be another 30 days before it is removed."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "Undelete immediately without confirmation until I leave the page",
+          "developer_comment": "This is the text of a form field."
         }
       }
     },

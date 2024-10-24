@@ -38,7 +38,8 @@ except according to the terms contained in the LICENSE file.
         :draft="draft" :fields="selectedFields"
         :deleted="deleted"
         @review="reviewModal.show({ submission: $event })"
-        @delete="showDelete"/>
+        @delete="showDelete"
+        @restore="showRestore"/>
       <p v-show="odata.dataExists && (odata.value.length === 0 || odata.removedCount === odata.value.length)"
         class="empty-table-message">
         <template v-if="deleted">
@@ -63,6 +64,8 @@ except according to the terms contained in the LICENSE file.
       @success="afterReview"/>
     <submission-delete v-bind="deleteModal" checkbox @hide="deleteModal.hide()"
       @delete="requestDelete"/>
+    <submission-restore v-bind="restoreModal" checkbox @hide="restoreModal.hide()"
+      @restore="requestRestore"/>
   </div>
 </template>
 
@@ -80,6 +83,7 @@ import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 import SubmissionDelete from './delete.vue';
+import SubmissionRestore from './restore.vue';
 
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
@@ -102,6 +106,7 @@ export default {
     SubmissionDownloadButton,
     SubmissionFieldDropdown,
     SubmissionFilters,
+    SubmissionRestore,
     SubmissionTable,
     SubmissionUpdateReviewState,
     OdataLoadingMessage
@@ -207,8 +212,12 @@ export default {
       downloadModal: modalData(),
       reviewModal: modalData(),
       deleteModal: modalData(),
+      restoreModal: modalData(),
+
       // state that indicates whether we need to show delete confirmation dialog
-      confirmDelete: true
+      confirmDelete: true,
+      // state that indicates whether we need to show restore confirmation dialog
+      confirmRestore: true,
     };
   },
   computed: {
@@ -368,6 +377,13 @@ export default {
         this.requestDelete([submission, this.confirmDelete]);
       }
     },
+    showRestore(submission) {
+      if (this.confirmRestore) {
+        this.restoreModal.show({ submission });
+      } else {
+        this.requestRestore([submission, this.confirmRestore]);
+      }
+    },
     requestDelete(event) {
       const [{ __id: instanceId }, confirm] = event;
 
@@ -403,6 +419,37 @@ export default {
         })
         .catch(() => {
           this.deleteModal.awaitingResponse = false;
+        });
+    },
+    requestRestore(e) {
+      const [{ __id: instanceId }, confirm] = e;
+
+      if (this.restoreModal.state) this.restoreModal.awaitingResponse = true;
+
+      this.request({
+        method: 'POST',
+        url: apiPaths.restoreSubmission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.restoreModal.hide();
+          if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0) {
+            this.deletedSubmissionCount.value -= 1;
+          }
+
+          this.alert.success(this.$t('alert.submissionRestored'));
+          if (confirm != null) this.confirmRestore = confirm;
+
+          // See the comments in requestDelete().
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.odata.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(() => {
+          this.restoreModal.awaitingResponse = false;
         });
     }
   }
