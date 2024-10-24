@@ -17,7 +17,8 @@ except according to the terms contained in the LICENSE file.
         <form class="form-inline" @submit.prevent>
           <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
-            v-model:reviewState="reviewStates"/>
+            v-model:reviewState="reviewStates"
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
@@ -29,15 +30,22 @@ except according to the terms contained in the LICENSE file.
           </button>
         </form>
         <submission-download-button :form-version="formVersion"
-          :filtered="odataFilter != null" @download="downloadModal.show()"/>
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+          :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
       </div>
       <submission-table v-show="odata.dataExists && odata.value.length !== 0"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields"
+        :deleted="deleted"
         @review="reviewModal.show({ submission: $event })"/>
       <p v-show="odata.dataExists && odata.value.length === 0"
         class="empty-table-message">
-        {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        <template v-if="deleted">
+          {{ $t('deletedSubmission.emptyTable') }}
+        </template>
+        <template v-else>
+          {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        </template>
       </p>
       <odata-loading-message type="submission"
         :top="top(odata.dataExists ? odata.value.length : 0)"
@@ -57,7 +65,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watch, watchEffect } from 'vue';
+import { shallowRef, watch, watchEffect, reactive } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
@@ -72,7 +80,6 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
-import useSubmissions from '../../request-data/submissions';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
 import { modalData } from '../../util/reactivity';
@@ -104,20 +111,24 @@ export default {
       required: true
     },
     draft: Boolean,
+    deleted: {
+      type: Boolean,
+      required: false
+    },
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
-  emits: ['fetch-keys'],
+  emits: ['fetch-keys', 'fetch-deleted-count'],
   setup(props) {
-    const { form, keys, resourceView } = useRequestData();
+    const { form, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
     const formVersion = props.draft
       ? resourceView('formDraft', (data) => data.get())
       : form;
     const fields = useFields();
-    const { odata, submitters } = useSubmissions();
+
     // We do not reconcile `odata` with either form.lastSubmission or
     // project.lastSubmission.
     watchEffect(() => {
@@ -172,7 +183,8 @@ export default {
 
     return {
       form, keys, fields, formVersion, odata, submitters,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      deletedSubmissionCount
     };
   },
   data() {
@@ -199,6 +211,8 @@ export default {
     },
     odataFilter() {
       if (this.draft) return null;
+      if (this.deleted) return '__system/deletedAt ne null';
+
       const conditions = [];
       if (this.filtersOnSubmitterId) {
         const condition = this.submitterIds
@@ -270,8 +284,22 @@ export default {
           ? (response) => this.odata.addChunk(response.data)
           : null
       })
+        .then(() => {
+          if (this.deleted) {
+            this.deletedSubmissionCount.cancelRequest();
+            if (!this.deletedSubmissionCount.dataExists) {
+              this.deletedSubmissionCount.data = reactive({});
+            }
+            this.deletedSubmissionCount.value = this.odata.originalCount;
+          }
+        })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // emit event to parent component to re-fetch deleted Submissions count
+      if (refresh && !this.deleted && !this.draft) {
+        this.$emit('fetch-deleted-count');
+      }
 
       // emit event to parent component to re-fetch keys if needed
       if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
@@ -365,7 +393,9 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "noMatching": "There are no matching Submissions."
+    "noMatching": "There are no matching Submissions.",
+    "downloadDisabled": "Download is unavailable for deleted Submissions",
+    "filterDisabledMessage": "Filters are unavailable for deleted Submissions"
   }
 }
 </i18n>

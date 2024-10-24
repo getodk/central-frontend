@@ -67,6 +67,20 @@ describe('SubmissionTable', () => {
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql(['Row', 'Submitted at']);
     });
+
+    it('renders the correct headers for deleted submissions', () => {
+      testData.extendedSubmissions.createPast(1);
+      const component = mountComponent({
+        props: { draft: false, deleted: true }
+      });
+      const table = component.get('.table-freeze-frozen');
+      headers(table).should.eql([
+        'Row',
+        'Submitted by',
+        'Submitted at',
+        'Deleted at'
+      ]);
+    });
   });
 
   describe('field headers', () => {

@@ -86,6 +86,7 @@ export const extendedSubmissions = dataStore({
     reviewState = null,
     deviceId = null,
     edits = 0,
+    deletedAt = null,
 
     ...partialOData
   }) => {
@@ -123,6 +124,7 @@ export const extendedSubmissions = dataStore({
       __system: {
         submissionDate: createdAt,
         updatedAt: null,
+        deletedAt,
         submitterId: submitter.id.toString(),
         submitterName: submitter.displayName,
         attachmentsPresent,
@@ -142,6 +144,7 @@ export const extendedSubmissions = dataStore({
       submitter: toActor(submitter),
       createdAt,
       updatedAt: null,
+      deletedAt,
       currentVersion: {
         instanceId,
         instanceName: hasInstanceName ? odata.meta.instanceName : null,
@@ -173,9 +176,16 @@ export const standardSubmissions = view(extendedSubmissions, (extended) => {
 
 // Converts submission response objects to OData. Returns all data even for
 // encrypted submissions.
-export const submissionOData = (top = 250, skip = 0) => ({
-  '@odata.count': extendedSubmissions.size,
-  value: extendedSubmissions.sorted().slice(skip, skip + top)
-    .map(submission => submission._odata),
-  '@odata.nextLink': top > 0 && (top + skip < extendedSubmissions.size) ? `https://test/Submissions?$top=${top}&$skipToken=thetoken` : undefined
-});
+const restToOData = (filterExpression) => (top = 250, skip = 0) => {
+  const data = extendedSubmissions.sorted().filter(filterExpression);
+  return {
+    '@odata.count': data.length,
+    value: data.slice(skip, skip + top)
+      .map(submission => submission._odata),
+    '@odata.nextLink': top > 0 && (top + skip < data.length) ? `https://test/Submissions?$top=${top}&$skipToken=thetoken` : undefined
+  };
+};
+
+export const submissionOData = restToOData(submission => submission.deletedAt == null);
+
+export const submissionDeletedOData = restToOData(submission => submission.deletedAt != null);

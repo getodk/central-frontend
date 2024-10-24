@@ -16,7 +16,7 @@ const mountComponent = (props = undefined) => {
     projectId: '1',
     xmlFormId,
     draft: false,
-    submission: testData.submissionOData().value[0],
+    submission: props?.deleted ? testData.submissionDeletedOData().value[0] : testData.submissionOData().value[0],
     rowNumber: 1,
     canUpdate: true,
     ...props
@@ -239,5 +239,12 @@ describe('SubmissionMetadataRow', () => {
     testData.extendedSubmissions.createPast(1);
     const row = mountComponent({ draft: true });
     row.find('.state-and-actions').exists().should.be.false;
+  });
+
+  describe('deleted', () => {
+    it('shows the deleted date', () => {
+      const { deletedAt } = testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
+      mountComponent({ deleted: true }).get('.state-and-actions').getComponent(DateTime).props().iso.should.equal(deletedAt);
+    });
   });
 });

@@ -75,6 +75,7 @@ import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
+import useSubmissions from '../../request-data/submissions';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -104,6 +105,9 @@ export default {
   },
   setup() {
     const { resourceView, createResource } = useRequestData();
+
+    // SubmissionList expects submission stores to be created!
+    useSubmissions();
     const formDraft = resourceView('formDraft', (data) => data.get());
     const keys = createResource('keys');
     return { formDraft, keys };

@@ -11,6 +11,7 @@ import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
 import { mockResponse } from '../../util/axios';
 import { relativeUrl } from '../../util/request';
+import { testRouter } from '../../util/router';
 
 // Create submissions along with the associated project and form.
 const createSubmissions = (count, factoryOptions = {}) => {
@@ -86,9 +87,11 @@ describe('SubmissionList', () => {
     describe('after the refresh button is clicked', () => {
       it('completes a background refresh', () => {
         testData.extendedSubmissions.createPast(1);
-        const assertRowCount = (count) => (component) => {
-          component.findAllComponents(SubmissionMetadataRow).length.should.equal(count);
-          component.findAllComponents(SubmissionDataRow).length.should.equal(count);
+        const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
+          if (i === responseIndex) {
+            component.findAllComponents(SubmissionMetadataRow).length.should.equal(count);
+            component.findAllComponents(SubmissionDataRow).length.should.equal(count);
+          }
         };
         return load('/projects/1/forms/f/submissions', { root: false })
           .afterResponses(assertRowCount(1))
@@ -99,6 +102,7 @@ describe('SubmissionList', () => {
             testData.extendedSubmissions.createNew();
             return testData.submissionOData();
           })
+          .respondWithData(() => testData.submissionDeletedOData())
           .afterResponse(assertRowCount(2));
       });
 
@@ -396,6 +400,7 @@ describe('SubmissionList', () => {
               testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
             })
             .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.submissionDeletedOData())
             .respondWithData(() => testData.standardKeys.sorted())
             .complete()
             .request(async (app) => {
@@ -444,8 +449,10 @@ describe('SubmissionList', () => {
               testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
             })
             .respondWithData(() => testData.submissionOData(1, 0))
+            .respondWithData(() => testData.submissionDeletedOData())
             .respondWithData(() => testData.standardKeys.sorted())
             .testRequests([
+              null,
               null,
               { url: '/v1/projects/1/forms/f/submissions/keys' }
             ]);
@@ -599,5 +606,66 @@ describe('SubmissionList', () => {
           $select(url).should.equal('__id,__system');
         })
         .respondWithData(testData.submissionOData));
+  });
+
+  describe('deleted submissions', () => {
+    it('show deleted submissions', () => {
+      testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'live' } });
+      testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'deleted 1' }, deletedAt: new Date().toISOString() });
+      testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'deleted 2' }, deletedAt: new Date().toISOString() });
+      return loadSubmissionList({ props: { deleted: true } })
+        .afterResponse(component => {
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
+          component.findAll('.table-freeze-scrolling tbody tr').forEach((r, i) => {
+            r.find('td').text().should.be.equal(`deleted ${2 - i}`);
+          });
+        });
+    });
+
+    it('emits event to refresh deleted count when live submissions are on display', () => {
+      testData.extendedSubmissions.createPast(1);
+      return loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.get('#submission-list-refresh-button').trigger('click'))
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          component.emitted().should.have.property('fetch-deleted-count');
+        });
+    });
+
+    it('updates the deleted count', () => {
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(testData.submissionDeletedOData)
+        .afterResponses((component) => {
+          component.find('.toggle-deleted-submissions').text().should.equal('1 deleted Submission');
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
+        })
+        .request(component =>
+          component.get('#submission-list-refresh-button').trigger('click'))
+        .beforeAnyResponse(() => {
+          testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+        })
+        .respondWithData(testData.submissionDeletedOData)
+        .afterResponses((component) => {
+          component.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
+        });
+    });
+
+    it('disables filters and download button', () => {
+      testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'live' } });
+      testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'deleted 1' }, deletedAt: new Date().toISOString() });
+      testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'deleted 2' }, deletedAt: new Date().toISOString() });
+      return loadSubmissionList({ props: { deleted: true } })
+        .afterResponse(component => {
+          component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
+          component.getComponent('#submission-filters').props().disabled.should.be.true;
+        });
+    });
   });
 });

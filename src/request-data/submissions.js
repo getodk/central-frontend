@@ -46,5 +46,11 @@ export default () => {
     ids: computeIfExists(() =>
       submitters.reduce((set, { id }) => set.add(id), new Set()))
   }));
-  return { odata, submitters };
+  const deletedSubmissionCount = createResource('deletedSubmissionCount', () => ({
+    transformResponse: ({ data }) => reactive({
+      value: data['@odata.count']
+    })
+  }));
+
+  return { odata, submitters, deletedSubmissionCount };
 };

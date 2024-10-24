@@ -63,4 +63,85 @@ describe('FormSubmissions', () => {
         });
     });
   });
+
+  describe('deleted submissions', () => {
+    beforeEach(mockLogin);
+
+    it('does not show deleted submission button', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedSubmissions.createPast(1);
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+      component.find('.toggle-deleted-submissions').exists().should.be.false;
+    });
+
+    it('shows deleted submission button', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      const component = await load('/projects/1/forms/f/submissions', {
+        root: false
+      });
+      const showDeletedButton = component.find('.toggle-deleted-submissions');
+      showDeletedButton.exists().should.be.true;
+      showDeletedButton.text().should.equal('1 deleted Submission');
+    });
+
+    it('updates the deleted count on refresh', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions', {
+        root: false
+      })
+        .afterResponses((component) => {
+          const showDeletedButton = component.find('.toggle-deleted-submissions');
+          showDeletedButton.text().should.equal('1 deleted Submission');
+        })
+        .request((component) => {
+          component.find('#submission-list-refresh-button').trigger('click');
+        })
+        .beforeAnyResponse(() => {
+          testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+        })
+        .respondWithData(() => testData.submissionOData())
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponses((component) => {
+          const showDeletedButton = component.find('.toggle-deleted-submissions');
+          showDeletedButton.text().should.equal('2 deleted Submissions');
+        });
+    });
+
+    it('updates the url when deleted submissions are shown', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions')
+        .complete()
+        .request((component) => {
+          const showDeletedButton = component.find('.toggle-deleted-submissions');
+          showDeletedButton.trigger('click');
+        })
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponses((component) => {
+          const { deleted } = component.vm.$route.query;
+          deleted.should.be.equal('true');
+        });
+    });
+
+    it('disables the odata access button when deleted submissions are shown', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions')
+        .complete()
+        .request((component) =>
+          component.find('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponses((component) => {
+          component.getComponent('#odata-data-access').props().analyzeDisabled.should.be.true;
+        });
+    });
+  });
 });

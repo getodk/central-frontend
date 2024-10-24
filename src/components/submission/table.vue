@@ -17,7 +17,8 @@ except according to the terms contained in the LICENSE file.
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
       <th>{{ $t('header.submissionDate') }}</th>
-      <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && !deleted">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && deleted">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
       <template v-if="fields != null">
@@ -30,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 
     <template #data-frozen="{ data, index }">
       <submission-metadata-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data"
+        :draft="draft" :submission="data" :deleted="deleted"
         :row-number="odata.originalCount - index" :can-update="canUpdate"/>
     </template>
     <template #data-scrolling="{ data }">
@@ -62,6 +63,10 @@ defineProps({
   xmlFormId: {
     type: String,
     required: true
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   },
   draft: Boolean,
   fields: Array
@@ -100,7 +105,9 @@ defineExpose({ afterReview });
 {
   "en": {
     "header": {
-      "stateAndActions": "State and actions"
+      "stateAndActions": "State and actions",
+      // Heading of the column that shows Submission deletion timestamp
+      "deletedAt": "Deleted at"
     }
   }
 }

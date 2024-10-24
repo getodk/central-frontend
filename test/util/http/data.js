@@ -91,6 +91,7 @@ const responsesByComponent = {
   FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
     keys: true,
+    deletedSubmissionCount: () => testData.submissionDeletedOData(0),
     fields: true,
     odata: true,
     submitters: () => testData.extendedFieldKeys

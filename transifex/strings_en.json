@@ -3297,6 +3297,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "OData access is unavailable for deleted Submissions"
+      },
+      "purgeDescription": {
+        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -4605,6 +4617,12 @@
       "noMatching": {
         "string": "There are no matching Submissions."
       },
+      "downloadDisabled": {
+        "string": "Download is unavailable for deleted Submissions"
+      },
+      "filterDisabledMessage": {
+        "string": "Filters are unavailable for deleted Submissions"
+      },
       "loading": {
         "withoutCount": {
           "string": "Loading Submissions…",
@@ -4666,6 +4684,10 @@
         "stateAndActions": {
           "string": "State and actions",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "Deleted at",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

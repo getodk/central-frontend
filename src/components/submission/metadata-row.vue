@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
     </td>
     <td><date-time :iso="submission.__system.submissionDate"/></td>
-    <td v-if="!draft" class="state-and-actions">
+    <td v-if="!draft && !deleted" class="state-and-actions">
       <div class="col-content">
         <span class="state"><span :class="stateIcon"></span>{{ stateText }}</span>
         <span class="edits">
@@ -53,6 +53,11 @@ except according to the terms contained in the LICENSE file.
         </router-link>
       </div>
     </td>
+    <td v-if="!draft && deleted" class="state-and-actions">
+      <div class="col-content">
+        <date-time :iso="submission.__system.deletedAt"/>
+      </div>
+    </td>
   </tr>
 </template>
 
@@ -83,6 +88,10 @@ export default {
     rowNumber: {
       type: Number,
       required: true
+    },
+    deleted: {
+      type: Boolean,
+      default: false
     },
     canUpdate: Boolean
   },
