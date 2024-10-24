@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 
     <template #data-frozen="{ data, index }">
       <submission-metadata-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data" :deleted="deleted"
+        :draft="draft" :submission="data" :deleted="deleted" :awaiting-response="awaitingDeletedResponses.has(data.__id)"
         :row-number="odata.originalCount - index" :verbs="project.verbs"/>
     </template>
     <template #data-scrolling="{ data }">
@@ -69,7 +69,11 @@ defineProps({
     default: false
   },
   draft: Boolean,
-  fields: Array
+  fields: Array,
+  awaitingDeletedResponses: {
+    type: Set,
+    required: true
+  }
 });
 const emit = defineEmits(['review', 'delete', 'restore']);
 

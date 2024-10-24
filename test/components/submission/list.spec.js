@@ -842,6 +842,20 @@ describe('SubmissionList', () => {
           })
           .respondWithProblem());
 
+      it('shows spinner', () =>
+        delAndCheck()
+          .request(async (component) => {
+            await component.get('.submission-metadata-row .delete-button').trigger('click');
+            component.getComponent(SubmissionDelete).props().state.should.be.false;
+          })
+          .beforeAnyResponse(component => {
+            component.find('.delete-button .spinner').classes().should.contain('active');
+          })
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.find('.delete-button .spinner').classes().should.not.contain('active');
+          }));
+
       it('shows the correct alert', () =>
         delAndCheck()
           .request(component =>
@@ -1065,6 +1079,20 @@ describe('SubmissionList', () => {
             component.getComponent(SubmissionRestore).props().state.should.be.false;
           })
           .respondWithProblem());
+
+      it('shows spinner', () =>
+        restoreAndCheck()
+          .request(async (component) => {
+            await component.get('.submission-metadata-row .restore-button').trigger('click');
+            component.getComponent(SubmissionDelete).props().state.should.be.false;
+          })
+          .beforeAnyResponse(component => {
+            component.find('.restore-button .spinner').classes().should.contain('active');
+          })
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.find('.restore-button .spinner').classes().should.not.contain('active');
+          }));
 
       it('shows the correct alert', () =>
         restoreAndCheck()

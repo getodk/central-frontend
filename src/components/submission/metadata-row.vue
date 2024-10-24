@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         <button v-if="verbs.has('submission.delete')" type="button"
           class="delete-button btn btn-default"
           :aria-label="$t('action.delete')" v-tooltip.aria-label>
-          <span class="icon-trash"></span>
+          <span class="icon-trash"></span><spinner :state="awaitingResponse"/>
         </button>
         <template v-if="verbs.has('submission.update')">
           <button type="button" class="review-button btn btn-default"
@@ -65,8 +65,9 @@ except according to the terms contained in the LICENSE file.
       <div v-if="verbs.has('submission.restore')" class="btn-group">
         <button type="button"
           class="restore-button btn btn-default"
+          :aria-disabled="awaitingResponse"
           :aria-label="$t('action.restore')" v-tooltip.aria-label>
-          <span class="icon-recycle"></span>
+          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
         </button>
       </div>
     </td>
@@ -79,10 +80,11 @@ import DateTime from '../date-time.vue';
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import Spinner from '../spinner.vue';
 
 export default {
   name: 'SubmissionMetadataRow',
-  components: { DateTime },
+  components: { DateTime, Spinner },
   props: {
     projectId: {
       type: String,
@@ -108,7 +110,8 @@ export default {
     verbs: {
       type: Set,
       required: true
-    }
+    },
+    awaitingResponse: Boolean
   },
   setup() {
     const { reviewStateIcon } = useReviewState();

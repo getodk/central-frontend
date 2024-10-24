@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
       <submission-table v-show="odata.dataExists && odata.value.length !== 0 && odata.removedCount < odata.value.length"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields"
-        :deleted="deleted"
+        :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
         @review="reviewModal.show({ submission: $event })"
         @delete="showDelete"
         @restore="showRestore"/>
@@ -62,10 +62,12 @@ except according to the terms contained in the LICENSE file.
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
-    <submission-delete v-bind="deleteModal" checkbox @hide="deleteModal.hide()"
-      @delete="requestDelete"/>
-    <submission-restore v-bind="restoreModal" checkbox @hide="restoreModal.hide()"
-      @restore="requestRestore"/>
+    <submission-delete v-bind="deleteModal" checkbox
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.submission.__id)"
+      @hide="deleteModal.hide()" @delete="requestDelete"/>
+    <submission-restore v-bind="restoreModal" checkbox
+      :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.submission.__id)"
+      @hide="restoreModal.hide()" @restore="requestRestore"/>
   </div>
 </template>
 
@@ -218,6 +220,8 @@ export default {
       confirmDelete: true,
       // state that indicates whether we need to show restore confirmation dialog
       confirmRestore: true,
+
+      awaitingResponses: new Set()
     };
   },
   computed: {
@@ -387,7 +391,7 @@ export default {
     requestDelete(event) {
       const [{ __id: instanceId }, confirm] = event;
 
-      if (this.deleteModal.state) this.deleteModal.awaitingResponse = true;
+      this.awaitingResponses.add(instanceId);
 
       this.request({
         method: 'DELETE',
@@ -417,14 +421,15 @@ export default {
             this.$refs.table.afterDelete(index);
           }
         })
-        .catch(() => {
-          this.deleteModal.awaitingResponse = false;
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
         });
     },
-    requestRestore(e) {
-      const [{ __id: instanceId }, confirm] = e;
+    requestRestore(event) {
+      const [{ __id: instanceId }, confirm] = event;
 
-      if (this.restoreModal.state) this.restoreModal.awaitingResponse = true;
+      this.awaitingResponses.add(instanceId);
 
       this.request({
         method: 'POST',
@@ -448,8 +453,9 @@ export default {
             this.$refs.table.afterDelete(index);
           }
         })
-        .catch(() => {
-          this.restoreModal.awaitingResponse = false;
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
         });
     }
   }

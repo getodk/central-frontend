@@ -16,7 +16,8 @@ const mountComponent = (options = undefined) => {
     props: {
       projectId: '1',
       xmlFormId: 'f',
-      draft: false
+      draft: false,
+      awaitingDeletedResponses: new Set()
     },
     container: {
       requestData: testRequestData([useFields, useSubmissions], {
