@@ -18,3 +18,5 @@ export interface XPathDOMAdapter<
 
 export type * from './XPathNode.ts';
 export { XPathNodeKindKey } from './XPathNode.ts';
+
+export type { XPathCustomUnwrappableNode } from './XPathCustomUnwrappableNode.ts';
