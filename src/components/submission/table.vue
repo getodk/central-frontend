@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <table-freeze v-if="project.dataExists" id="submission-table" ref="table"
     :data="chunkyOData" key-prop="__id" :frozen-only="fields == null" divider
-    @action="review">
+    @action="handleActions">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
     <template #data-frozen="{ data, index }">
       <submission-metadata-row :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :submission="data" :deleted="deleted"
-        :row-number="odata.originalCount - index" :can-update="canUpdate"/>
+        :row-number="odata.originalCount - index" :verbs="project.verbs"/>
     </template>
     <template #data-scrolling="{ data }">
       <submission-data-row :project-id="projectId" :xml-form-id="xmlFormId"
@@ -49,7 +49,7 @@ import SubmissionMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
 import useChunkyArray from '../../composables/chunky-array';
-import { markRowsChanged } from '../../util/dom';
+import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -71,22 +71,22 @@ defineProps({
   draft: Boolean,
   fields: Array
 });
-const emit = defineEmits(['review']);
+const emit = defineEmits(['review', 'delete']);
 
 // The component does not assume that this data will exist when the component is
 // created.
 const { project, odata } = useRequestData();
 
 const chunkyOData = useChunkyArray(computed(() => odata.value));
-const canUpdate = computed(() =>
-  project.dataExists && project.permits('submission.update'));
 
-const review = ({ target, data }) => {
+const handleActions = ({ target, data }) => {
   if (target.classList.contains('review-button')) emit('review', data);
+  if (target.classList.contains('delete-button')) emit('delete', data);
 };
 const table = ref(null);
 const afterReview = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-defineExpose({ afterReview });
+const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+defineExpose({ afterReview, afterDelete });
 </script>
 
 <style lang="scss">

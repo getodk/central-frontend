@@ -3,6 +3,7 @@ import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
+import SubmissionDelete from '../../../src/components/submission/delete.vue';
 
 import testData from '../../data';
 import { changeMultiselect } from '../../util/trigger';
@@ -666,6 +667,226 @@ describe('SubmissionList', () => {
           component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
           component.getComponent('#submission-filters').props().disabled.should.be.true;
         });
+    });
+  });
+
+  describe('delete', () => {
+    it('toggles the modal', () => {
+      testData.extendedSubmissions.createPast(1);
+      return load('/projects/1/forms/f/submissions', { root: false })
+        .complete()
+        .testModalToggles({
+          modal: SubmissionDelete,
+          show: '.submission-metadata-row .delete-button',
+          hide: '.btn-link'
+        });
+    });
+
+    it('implements some standard button things', () => {
+      testData.extendedSubmissions.createPast(1);
+      return load('/projects/1/forms/f/submissions', { root: false })
+        .afterResponses(component =>
+          component.get('.submission-metadata-row .delete-button').trigger('click'))
+        .testStandardButton({
+          button: '#submission-delete .btn-danger',
+          disabled: ['#submission-delete .btn-link'],
+          modal: SubmissionDelete
+        });
+    });
+
+    it('sends the correct request', () => {
+      const { instanceId } = testData.extendedSubmissions.createPast(1).last();
+      return load('/projects/1/forms/f/submissions', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('.submission-metadata-row .delete-button').trigger('click');
+          return component.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'DELETE',
+          url: `/v1/projects/1/forms/f/submissions/${instanceId}`
+        }]);
+    });
+
+    describe('after a successful response', () => {
+      const del = () => {
+        testData.extendedSubmissions.createPast(1);
+        return load('/projects/1/forms/f/submissions', { root: false })
+          .complete()
+          .request(async (component) => {
+            await component.get('.submission-metadata-row .delete-button').trigger('click');
+            return component.get('#submission-delete .btn-danger').trigger('click');
+          })
+          .respondWithSuccess();
+      };
+
+      it('hides the modal', async () => {
+        const component = await del();
+        component.getComponent(SubmissionDelete).props().state.should.be.false;
+      });
+
+      it('shows a success alert', async () => {
+        const component = await del();
+        component.should.alert('success', 'The Submission has been deleted.');
+      });
+
+      it('hides the row', async () => {
+        const component = await del();
+        const row = component.getComponent(SubmissionMetadataRow);
+        row.element.dataset.markRowsDeleted.should.equal('true');
+      });
+
+      it('updates the submission count', async () => {
+        const component = await del();
+        const text = component.get('#submission-download-button').text();
+        text.should.equal('Download 0 Submissions…');
+      });
+
+      it('shows deleted submission button', async () => {
+        const component = await del();
+        component.get('.toggle-deleted-submissions').should.be.visible();
+      });
+    });
+
+    describe('last submission was deleted', () => {
+      beforeEach(() => {
+        testData.extendedSubmissions.createPast(2);
+      });
+
+      const del = (index) => async (component) => {
+        const row = component.get(`.submission-metadata-row:nth-child(${index + 1})`);
+        await row.get('.delete-button').trigger('click');
+        return component.get('#submission-delete .btn-danger').trigger('click');
+      };
+
+      it('hides the table', () =>
+        load('/projects/1/forms/f/submissions', { root: false })
+          .complete()
+          .request(del(1))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('#submission-table').should.be.visible();
+          })
+          .request(del(0))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('#submission-table').should.be.hidden();
+          }));
+
+      it('shows a message', () =>
+        load('/projects/1/forms/f/submissions', { root: false })
+          .complete()
+          .request(del(1))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('.empty-table-message').should.be.hidden();
+          })
+          .request(del(0))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.get('.empty-table-message').should.be.visible();
+          }));
+    });
+
+    it('continues to show modal if checkbox was not checked', () => {
+      testData.extendedSubmissions.createPast(2);
+      return load('/projects/1/forms/f/submissions', { root: false })
+        .complete()
+        .request(async (component) => {
+          const row = component.get('.submission-metadata-row:last-child');
+          await row.get('.delete-button').trigger('click');
+          return component.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(async (component) => {
+          await component.get('.submission-metadata-row .delete-button').trigger('click');
+          component.getComponent(SubmissionDelete).props().state.should.be.true;
+        });
+    });
+
+    describe('deleting after checking the checkbox', () => {
+      const delAndCheck = () => {
+        testData.extendedSubmissions
+          .createPast(1, { instanceId: 'e1' })
+          .createPast(1, { instanceId: 'e2' });
+        return load('/projects/1/forms/f/submissions', { root: false })
+          .complete()
+          .request(async (component) => {
+            const row = component.get('.submission-metadata-row:last-child');
+            await row.get('.delete-button').trigger('click');
+            const modal = component.getComponent(SubmissionDelete);
+            await modal.get('input').setChecked();
+            return modal.get('.btn-danger').trigger('click');
+          })
+          .respondWithSuccess()
+          .complete();
+      };
+
+      it('immediately sends a request', () =>
+        delAndCheck()
+          .request(component =>
+            component.get('.submission-metadata-row .delete-button').trigger('click'))
+          .respondWithProblem()
+          .testRequests([{
+            method: 'DELETE',
+            url: '/v1/projects/1/forms/f/submissions/e2'
+          }]));
+
+      it('does not show the modal', () =>
+        delAndCheck()
+          .request(async (component) => {
+            await component.get('.submission-metadata-row .delete-button').trigger('click');
+            component.getComponent(SubmissionDelete).props().state.should.be.false;
+          })
+          .respondWithProblem());
+
+      it('shows the correct alert', () =>
+        delAndCheck()
+          .request(component =>
+            component.get('.submission-metadata-row .delete-button').trigger('click'))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.should.alert('success', 'The Submission has been deleted.');
+          }));
+
+      it('does not hide table after deleting last submission if submissions are concurrently replaced', () =>
+        delAndCheck()
+          .request(async (component) => {
+            await component.get('#submission-list-refresh-button').trigger('click');
+            return component.get('.submission-metadata-row .delete-button').trigger('click');
+          })
+          .respondWithData(() => {
+            testData.extendedSubmissions.splice(0);
+            testData.extendedSubmissions.createNew();
+            testData.extendedSubmissions.createNew();
+            return testData.submissionOData();
+          })
+          .respondWithData(testData.submissionDeletedOData)
+          .respondWithSuccess()
+          .afterResponses(component => {
+            // Even though there were 2 Submissions before, and there are 2
+            // Submissions now, and 2 Submissions have been deleted, the table should
+            // still be shown.
+            component.get('#submission-table').should.be.visible();
+            // No row should be hidden.
+            component.find('[data-mark-rows-deleted]').exists().should.be.false;
+          })
+          .request(component =>
+            component.get('.submission-metadata-row .delete-button').trigger('click'))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            /* The removedCount should have been reset to 0 when the refreshed
+            Submissions were received. (Otherwise, the previous assertion should
+            have failed.) However, imagine that after that, the removedCount was
+            incorrectly increased to 1 following the success response (if
+            requestDelete() in SubmissionList didn't check whether
+            odata.value still includes the deleted Submission). In that
+            case, this latest deletion would increase the removedCount to 2,
+            which would hide the table. Here, we check that that doesn't
+            happen. */
+            component.get('#submission-table').should.be.visible();
+          }));
     });
   });
 });

@@ -18,7 +18,7 @@ const mountComponent = (props = undefined) => {
     draft: false,
     submission: props?.deleted ? testData.submissionDeletedOData().value[0] : testData.submissionOData().value[0],
     rowNumber: 1,
-    canUpdate: true,
+    verbs: new Set(testData.extendedUsers.first().verbs),
     ...props
   };
   return mount(SubmissionMetadataRow, {
@@ -135,6 +135,18 @@ describe('SubmissionMetadataRow', () => {
     });
   });
 
+  it('shows the delete button', async () => {
+    testData.extendedSubmissions.createPast(1);
+    mountComponent().find('.delete-button').attributes('aria-label').should.be.equal('Delete');
+  });
+
+  it('does not show the delete button if user does not have submission delete permission', async () => {
+    mockLogin({ role: 'none' });
+    testData.extendedProjects.createPast(1, { role: 'viewer' });
+    testData.extendedSubmissions.createPast(1);
+    mountComponent().find('.delete-button').exists().should.be.false;
+  });
+
   describe('review button', () => {
     beforeEach(mockLogin);
 
@@ -198,20 +210,20 @@ describe('SubmissionMetadataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-      const { href } = mountComponent().findAll('.btn')[1].attributes();
+      const { href } = mountComponent().findAll('.btn')[2].attributes();
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
     it('sets the correct ARIA label', async () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      const btn = mountComponent().findAll('.btn')[1];
+      const btn = mountComponent().findAll('.btn')[2];
       btn.attributes('aria-label').should.equal('Edit (1,000)');
       await btn.should.have.tooltip('Edit (1,000)');
     });
 
     it('disables the button if the submission is encrypted', async () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-      const button = mountComponent().findAll('.btn')[1];
+      const button = mountComponent().findAll('.btn')[2];
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription('You cannot edit encrypted Submissions.');
       await button.should.have.tooltip('You cannot edit encrypted Submissions.');
@@ -225,7 +237,7 @@ describe('SubmissionMetadataRow', () => {
     to.should.equal('/projects/1/forms/a%20b/submissions/c%20d');
   });
 
-  it('renders only the More button if the canUpdate prop is false', () => {
+  it('renders only the More button if user does not have update and delete permission', () => {
     mockLogin({ role: 'none' });
     testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
     testData.extendedSubmissions.createPast(1);
@@ -245,6 +257,11 @@ describe('SubmissionMetadataRow', () => {
     it('shows the deleted date', () => {
       const { deletedAt } = testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
       mountComponent({ deleted: true }).get('.state-and-actions').getComponent(DateTime).props().iso.should.equal(deletedAt);
+    });
+
+    it('does not have delete button', () => {
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
+      mountComponent({ deleted: true }).find('.delete-button').exists().should.be.false;
     });
   });
 });

@@ -43,6 +43,7 @@ export default () => {
         'submission.list',
         'submission.read',
         'submission.update',
+        'submission.delete',
         'user.create',
         'user.list',
         'user.read',
@@ -90,7 +91,8 @@ export default () => {
         'submission.create',
         'submission.list',
         'submission.read',
-        'submission.update'
+        'submission.update',
+        'submission.delete'
       ]
     })
     .createPast(1, {

@@ -33,12 +33,13 @@ except according to the terms contained in the LICENSE file.
           :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
           :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
       </div>
-      <submission-table v-show="odata.dataExists && odata.value.length !== 0"
+      <submission-table v-show="odata.dataExists && odata.value.length !== 0 && odata.removedCount < odata.value.length"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields"
         :deleted="deleted"
-        @review="reviewModal.show({ submission: $event })"/>
-      <p v-show="odata.dataExists && odata.value.length === 0"
+        @review="reviewModal.show({ submission: $event })"
+        @delete="showDelete"/>
+      <p v-show="odata.dataExists && (odata.value.length === 0 || odata.removedCount === odata.value.length)"
         class="empty-table-message">
         <template v-if="deleted">
           {{ $t('deletedSubmission.emptyTable') }}
@@ -60,6 +61,8 @@ except according to the terms contained in the LICENSE file.
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
+    <submission-delete v-bind="deleteModal" checkbox @hide="deleteModal.hide()"
+      @delete="requestDelete"/>
   </div>
 </template>
 
@@ -76,10 +79,12 @@ import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
+import SubmissionDelete from './delete.vue';
 
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
 import { modalData } from '../../util/reactivity';
@@ -92,6 +97,7 @@ export default {
   components: {
     Loading,
     Spinner,
+    SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
     SubmissionFieldDropdown,
@@ -180,11 +186,12 @@ export default {
         reviewState: value.length === allReviewStates.length ? [] : value
       })
     });
+    const { request } = useRequest();
 
     return {
       form, keys, fields, formVersion, odata, submitters,
       submitterIds, submissionDateRange, reviewStates, allReviewStates,
-      deletedSubmissionCount
+      request, deletedSubmissionCount
     };
   },
   data() {
@@ -198,7 +205,10 @@ export default {
       refreshing: false,
       // Modals
       downloadModal: modalData(),
-      reviewModal: modalData()
+      reviewModal: modalData(),
+      deleteModal: modalData(),
+      // state that indicates whether we need to show delete confirmation dialog
+      confirmDelete: true
     };
   },
   computed: {
@@ -350,6 +360,50 @@ export default {
         this.odata.value[index].__system.reviewState = reviewState;
         this.$refs.table.afterReview(index);
       }
+    },
+    showDelete(submission) {
+      if (this.confirmDelete) {
+        this.deleteModal.show({ submission });
+      } else {
+        this.requestDelete([submission, this.confirmDelete]);
+      }
+    },
+    requestDelete(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      if (this.deleteModal.state) this.deleteModal.awaitingResponse = true;
+
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.deleteModal.hide();
+          if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
+
+          this.alert.success(this.$t('alert.submissionDeleted'));
+          if (confirm != null) this.confirmDelete = confirm;
+
+          /* Before doing a couple more things, we first determine whether
+          this.odata.value still includes the Submission and if so, what the
+          current index of the Submission is. If a request to refresh
+          this.odata was sent while the deletion request was in
+          progress, then there could be a race condition such that data doesn't
+          exist for this.odata, or this.odata.value no longer
+          includes the Submission. Another possible result of the race condition is
+          that this.odata.value still includes the Submission, but the
+          Submission's index has changed. */
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.odata.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(() => {
+          this.deleteModal.awaitingResponse = false;
+        });
     }
   }
 };
@@ -395,7 +449,10 @@ export default {
   "en": {
     "noMatching": "There are no matching Submissions.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
-    "filterDisabledMessage": "Filters are unavailable for deleted Submissions"
+    "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
+    "deletedSubmission": {
+      "emptyTable": "There are no deleted Submissions."
+    }
   }
 }
 </i18n>

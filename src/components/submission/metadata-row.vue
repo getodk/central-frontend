@@ -28,7 +28,12 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-angle-right"></span>
       </div>
       <div class="btn-group">
-        <template v-if="canUpdate">
+        <button v-if="verbs.has('submission.delete')" type="button"
+          class="delete-button btn btn-default"
+          :aria-label="$t('action.delete')" v-tooltip.aria-label>
+          <span class="icon-trash"></span>
+        </button>
+        <template v-if="verbs.has('submission.update')">
           <button type="button" class="review-button btn btn-default"
             :aria-label="$t('action.review')" v-tooltip.aria-label>
             <span class="icon-check"></span>
@@ -93,7 +98,10 @@ export default {
       type: Boolean,
       default: false
     },
-    canUpdate: Boolean
+    verbs: {
+      type: Set,
+      required: true
+    }
   },
   setup() {
     const { reviewStateIcon } = useReviewState();
@@ -173,5 +181,7 @@ export default {
     font-size: 20px;
     margin-top: -1px;
   }
+
+  .delete-button .icon-trash { color: $color-danger; }
 }
 </style>

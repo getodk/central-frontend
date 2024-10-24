@@ -320,7 +320,8 @@
     "passwordTooShort": "Please input a password at least 10 characters long.",
     "updateEntity": "The Entity has been updated!",
     "updateReviewState": "Review State saved!",
-    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
+    "submissionDeleted": "The Submission has been deleted."
   },
   "moreInfo": {
     "clickHere": {

@@ -8,7 +8,6 @@ import useSubmissions from '../../../src/request-data/submissions';
 import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
-import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
 
@@ -133,22 +132,5 @@ describe('SubmissionTable', () => {
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
     rows.map(row => row.props().rowNumber).should.eql([10, 9]);
-  });
-
-  describe('canUpdate prop of SubmissionMetadataRow', () => {
-    it('passes true if the user can submission.update', () => {
-      mockLogin();
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.true;
-    });
-
-    it('passes false if the user cannot submission.update', () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.false;
-    });
   });
 });

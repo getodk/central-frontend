@@ -714,6 +714,9 @@
     },
     "versionChange": {
       "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+    },
+    "submissionDeleted": {
+      "string": "The Submission has been deleted."
     }
   },
   "moreInfo": {
@@ -4414,6 +4417,20 @@
         }
       }
     },
+    "SubmissionDelete": {
+      "title": {
+        "string": "Delete Submission",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to delete this Submission?"
+        },
+        "1": {
+          "string": "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
+        }
+      }
+    },
     "SubmissionDiffItem": {
       "editCaption": {
         "added": {
@@ -4621,7 +4638,12 @@
         "string": "Download is unavailable for deleted Submissions"
       },
       "filterDisabledMessage": {
-        "string": "Filters are unavailable for deleted Submissions"
+        "string": "Filtering is unavailable for deleted Submissions"
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": "There are no deleted Submissions."
+        }
       },
       "loading": {
         "withoutCount": {
