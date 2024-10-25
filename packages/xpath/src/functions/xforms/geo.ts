@@ -84,10 +84,9 @@ const INVALID_LINE: Line = {
 
 const evaluateLines = <T extends XPathNode>(
 	context: EvaluationContext<T>,
-	expression: EvaluableArgument
+	expression: readonly EvaluableArgument[]
 ): Line[] => {
-	const points = evaluatePoints(context, expression);
-
+	const points = expression.flatMap((el) => evaluatePoints(context, el));
 	if (points.length < 2) {
 		return [INVALID_LINE];
 	}
@@ -172,7 +171,7 @@ export const area = new NumberFunction(
 	'area',
 	[{ arityType: 'required' }],
 	(context, [expression]) => {
-		const lines = evaluateLines(context, expression!);
+		const lines = evaluateLines(context, [expression!]);
 
 		if (lines.some(isInvalidLine)) {
 			return NaN;
@@ -209,9 +208,9 @@ const sum = (values: readonly number[]) => {
 
 export const distance = new NumberFunction(
 	'distance',
-	[{ arityType: 'required' }],
-	(context, [expression]) => {
-		const lines = evaluateLines(context, expression!);
+	[{ arityType: 'variadic' }],
+	(context, args) => {
+		const lines = evaluateLines(context, args);
 
 		if (lines.some(isInvalidLine)) {
 			return NaN;
