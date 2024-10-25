@@ -43,7 +43,7 @@ describe('distance() and area() functions', () => {
 		});
 	});
 
-	describe('area with nodes', () => {
+	describe('area and distance with nodes', () => {
 		beforeEach(() => {
 			testContext = createXFormsTestContext(`
         <root>
