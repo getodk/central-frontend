@@ -53,6 +53,44 @@ export type DefaultDOMAdapterParentNode = AdapterParentNode<DefaultDOMAdapterNod
  * to a DOM adapter design.
  */
 export const DEFAULT_DOM_PROVIDER = {
+	getContainingDocument: (node: XPathNode): AdapterDocument<XPathNode> => {
+		if (node.nodeType === DOCUMENT_NODE) {
+			return node as Document;
+		}
+
+		const { ownerDocument } = node;
+
+		if (!ownerDocument?.contains(node)) {
+			throw new Error('Cannot reach containing document');
+		}
+
+		return ownerDocument;
+	},
+
+	hasLocalNamedAttribute: (node: AdapterElement<XPathNode>, localName: string): boolean => {
+		return node.hasAttribute(localName);
+	},
+	getChildrenByLocalName: (
+		node: AdapterParentNode<XPathNode>,
+		localName: string
+	): Iterable<Element> => {
+		return Array.from(node.children).filter((child) => {
+			return child.localName === localName;
+		});
+	},
+	getLocalNamedAttributeValue: (
+		node: AdapterElement<XPathNode>,
+		localName: string
+	): string | null => {
+		return node.getAttribute(localName);
+	},
+	getNamespaceURI: (node: AdapterQualifiedNamedNode<XPathNode>): string | null => {
+		return node.namespaceURI;
+	},
+
+	getNodeValue: (node: XPathNode): string => {
+		return node.textContent ?? '';
+	},
 } as const;
 
 // @ts-expect-error - This is temporary, its use will be replaced in comming commits migrating to a DOM adapter design.

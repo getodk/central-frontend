@@ -1,3 +1,4 @@
+import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { EvaluatorOptions } from '../evaluator/Evaluator.ts';
 import { Evaluator } from '../evaluator/Evaluator.ts';
 import { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
@@ -5,8 +6,24 @@ import { enk } from '../functions/enketo/index.ts';
 import { fn } from '../functions/fn/index.ts';
 import { jr } from '../functions/javarosa/index.ts';
 import { xf } from '../functions/xforms/index.ts';
-import type { AnyParentNode } from '../lib/dom/types.ts';
+import {
+	type AdapterDocument,
+	type AdapterParentNode,
+	type UnwrapAdapterNode,
+	type XPathDOMProvider,
+	type XPathNode,
+	DEFAULT_DOM_PROVIDER,
+} from '../temp/dom-abstraction.ts';
+import type {
+	XFormsItextTranslationLanguage,
+	XFormsItextTranslationMap,
+	XFormsItextTranslationsState,
+} from './XFormsItextTranslations.ts';
 import { XFormsItextTranslations } from './XFormsItextTranslations.ts';
+import type {
+	XFormsSecondaryInstanceElement,
+	XFormsSecondaryInstanceMap,
+} from './XFormsSecondaryInstances.ts';
 
 // Note: order of `FunctionLibrary` items matters! `xf` overrides `fn`, and
 // `enk` overrides `xf`.
@@ -16,42 +33,120 @@ const functions = new FunctionLibraryCollection([enk, xf, fn, jr], {
 	defaultNamespaceURIs: [enk.namespaceURI, xf.namespaceURI, fn.namespaceURI],
 });
 
-export interface ModelElement extends Element {
-	readonly localName: 'model';
+/**
+ * @todo We accept an arbitrary parent node specifically for legacy WHATWG DOM
+ * integration, which we will no longer be using _except in test_. We should
+ * consider narrowing this type to {@link AdapterDocument} for any other usage.
+ */
+// prettier-ignore
+export type XFormsXPathRootNode<T extends XPathNode> =
+	| AdapterParentNode<T>
+	| UnwrapAdapterNode<AdapterParentNode<T>>;
+
+export interface XFormsXPathEvaluatorOptions<T extends XPathNode> extends EvaluatorOptions {
+	readonly rootNode: XFormsXPathRootNode<T>;
+	readonly itextTranslationsByLanguage: XFormsItextTranslationMap<T>;
+	readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
 }
 
-interface XFormsXPathEvaluatorOptions extends EvaluatorOptions {
-	readonly rootNode: AnyParentNode;
+/**
+ * **!!! WEIRD TYPESCRIPT SHENANIGAN !!!**
+ *
+ *  This is meant to be an interface. Use of
+ * `declare class` syntax is what allows us to provide internal access to:
+ *
+ * - {@link itextTranslations}, which is **package** private.
+ */
+declare class InternalXFormsXPathEvaluator<T extends XPathNode> extends XFormsXPathEvaluator<T> {
+	readonly itextTranslations: XFormsItextTranslations<T>;
 }
 
-export class XFormsXPathEvaluator extends Evaluator {
-	override readonly rootNode: AnyParentNode;
-	override readonly rootNodeDocument: XMLDocument;
+interface InternalXFormsXPathEvaluatorContext<T extends XPathNode> extends EvaluationContext {
+	readonly evaluator: InternalXFormsXPathEvaluator<T>;
+}
 
-	readonly modelElement: ModelElement | null;
+type AssertInternalXFormsXPathEvaluatorContext = <T extends XPathNode>(
+	context: EvaluationContext
+) => asserts context is InternalXFormsXPathEvaluatorContext<T>;
 
-	readonly translations: XFormsItextTranslations;
+const assertInternalXFormsXPathEvaluatorContext: AssertInternalXFormsXPathEvaluatorContext = (
+	context
+) => {
+	const { evaluator } = context;
 
-	constructor(options: XFormsXPathEvaluatorOptions) {
+	if (evaluator instanceof XFormsXPathEvaluator) {
+		return;
+	}
+
+	throw new Error('Expected evaluation context initiated by XFormsXPathEvaluator');
+};
+
+export class XFormsXPathEvaluator<T extends XPathNode>
+	extends Evaluator
+	implements XFormsItextTranslationsState
+{
+	static getSecondaryInstance<T extends XPathNode>(
+		context: EvaluationContext,
+		id: string
+	): XFormsSecondaryInstanceElement<T> | null {
+		assertInternalXFormsXPathEvaluatorContext(context);
+
+		return context.evaluator.secondaryInstancesById.get(id) ?? null;
+	}
+
+	static getDefaultTranslationText(context: EvaluationContext, itextID: string): string {
+		assertInternalXFormsXPathEvaluatorContext(context);
+
+		return context.evaluator.itextTranslations.getDefaultTranslationText(itextID);
+	}
+
+	readonly domProvider: XPathDOMProvider<T>;
+
+	override readonly rootNode: AdapterParentNode<T>;
+
+	/**
+	 * @package
+	 * @see {@link InternalXFormsXPathEvaluator}
+	 */
+	protected readonly itextTranslations: XFormsItextTranslationsState;
+
+	/**
+	 * @package
+	 * @see {@link InternalXFormsXPathEvaluator}
+	 */
+	protected readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
+
+	constructor(options: XFormsXPathEvaluatorOptions<T>) {
 		super({
 			functions,
 			...options,
 		});
 
-		const { rootNode } = options;
+		this.domProvider = DEFAULT_DOM_PROVIDER;
 
-		const rootNodeDocument: XMLDocument = rootNode.ownerDocument ?? rootNode;
+		this.secondaryInstancesById = options.secondaryInstancesById;
+		this.rootNode = options.rootNode as AdapterParentNode<T>;
+		this.itextTranslations = new XFormsItextTranslations(
+			this.domProvider,
+			options.itextTranslationsByLanguage
+		);
+	}
 
-		/**
-		 * TODO: as noted in {@link XFormsItextTranslations}, this breaks out of
-		 * the {@link rootNode} sandbox.
-		 */
-		this.modelElement = this.evaluateNode<ModelElement>('./h:html/h:head/xf:model', {
-			contextNode: rootNodeDocument,
-		});
+	getLanguages(): readonly XFormsItextTranslationLanguage[] {
+		return this.itextTranslations.getLanguages();
+	}
 
-		this.rootNode = options.rootNode;
-		this.rootNodeDocument = rootNodeDocument;
-		this.translations = new XFormsItextTranslations(this);
+	getActiveLanguage(): XFormsItextTranslationLanguage | null {
+		return this.itextTranslations.getActiveLanguage();
+	}
+
+	setActiveLanguage(
+		language: XFormsItextTranslationLanguage | null
+	): XFormsItextTranslationLanguage | null {
+		return this.itextTranslations.setActiveLanguage(language);
+	}
+
+	getSecondaryInstance(id: string) {
+		return this.secondaryInstancesById.get(id);
 	}
 }

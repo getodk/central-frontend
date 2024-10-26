@@ -1,15 +1,12 @@
-import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
-import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { XFormsXPathEvaluator } from '../../index.ts';
 import { seededRandomize } from '../../lib/collections/sort.ts';
 import type { ContextNode, MaybeElementNode } from '../../lib/dom/types.ts';
-import type { ModelElement } from '../../xforms/XFormsXPathEvaluator.ts';
+import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 
 export const countNonEmpty = new NumberFunction(
 	'count-non-empty',
@@ -254,57 +251,18 @@ export const indexedRepeat = new NodeSetFunction(
 	}
 );
 
-interface IdentifiedInstanceElement extends KnownAttributeLocalNamedElement<'instance', 'id'> {}
-
-const identifiedInstanceLookup = {
-	getElements: (contextNode: ParentNode): readonly IdentifiedInstanceElement[] => {
-		return Array.from(contextNode.children).filter((child): child is IdentifiedInstanceElement => {
-			return child.localName === 'instance' && child.hasAttribute('id');
-		});
-	},
-};
-
-type InstanceID = string;
-
-const instancesCache = new UpsertableWeakMap<
-	ModelElement,
-	ReadonlyMap<InstanceID | null, IdentifiedInstanceElement>
->();
-
-const getInstanceElementByID = (modelElement: ModelElement, id: string): Element | null => {
-	const instances = instancesCache.upsert(modelElement, () => {
-		const instanceElements = Array.from(identifiedInstanceLookup.getElements(modelElement));
-
-		return new Map(
-			instanceElements.map((element) => {
-				return [element.getAttribute('id'), element];
-			})
-		);
-	});
-
-	return instances.get(id) ?? null;
-};
-
 export const instance = new NodeSetFunction(
 	'instance',
 	[{ arityType: 'required' }],
 	(context, [idExpression]): readonly Element[] => {
 		const id = idExpression!.evaluate(context).toString();
-		const { evaluator } = context;
+		const instanceElement = XFormsXPathEvaluator.getSecondaryInstance(context, id);
 
-		if (!(evaluator instanceof XFormsXPathEvaluator)) {
-			throw new Error('itext not available');
-		}
-
-		const { modelElement } = evaluator;
-
-		if (modelElement == null) {
+		if (instanceElement == null) {
 			return [];
 		}
 
-		const instanceElement = getInstanceElementByID(modelElement, id);
-
-		return instanceElement == null ? [] : [instanceElement];
+		return [instanceElement];
 	}
 );
 
