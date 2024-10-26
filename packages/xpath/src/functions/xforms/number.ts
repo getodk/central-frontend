@@ -3,8 +3,8 @@ import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
-import { XFormsXPathEvaluator } from '../../index.ts';
 import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
+import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
 
 export const abs = mathAlias('abs');

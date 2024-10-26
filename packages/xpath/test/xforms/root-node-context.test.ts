@@ -2,7 +2,7 @@ import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { xml } from '@getodk/common/test/factories/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Evaluator } from '../../src/index.ts';
+import { Evaluator } from '../../src/evaluator/Evaluator.ts';
 
 describe("Specifying an Evaluator's root node", () => {
 	const DEPTH_3_TEXT = 'text node in element at depth 3, in the first nested root';
