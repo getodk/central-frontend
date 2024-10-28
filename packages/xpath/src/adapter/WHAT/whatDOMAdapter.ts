@@ -1,6 +1,11 @@
 import type { XPathDOMAdapter } from '../interface/XPathDOMAdapter.ts';
 import { getWHATNodeKind, isWHATNode } from './kind.ts';
 import { getWHATLocalName, getWHATNamespaceURI } from './names.ts';
+import {
+	getLocalNamedWHATAttributeValue,
+	getWHATChildrenByLocalName,
+	hasLocalNamedWHATAttribute,
+} from './optimizations.ts';
 import { getChildWHATElements, getContainingWHATDocument, getWHATAttributes } from './traversal.ts';
 import { getWHATNodeValue } from './values.ts';
 import type { WHATNode } from './WHATNode.ts';
@@ -23,4 +28,9 @@ export const whatDOMAdapter: WHATDOMAdapter = {
 	getAttributes: getWHATAttributes,
 	getChildElements: getChildWHATElements,
 	getContainingDocument: getContainingWHATDocument,
+
+	// XPathDOMOptimizableOperations
+	getChildrenByLocalName: getWHATChildrenByLocalName,
+	getLocalNamedAttributeValue: getLocalNamedWHATAttributeValue,
+	hasLocalNamedAttribute: hasLocalNamedWHATAttribute,
 };
