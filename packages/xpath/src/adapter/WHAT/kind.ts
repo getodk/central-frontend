@@ -1,7 +1,13 @@
 import { XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { UnspecifiedNonXPathNodeKind, XPathNodeKind } from '../interface/XPathNode.ts';
 import { getNodeConstructor } from './platform.ts';
-import type { WHATDocument, WHATNode } from './WHATNode.ts';
+import type {
+	WHATAttribute,
+	WHATDocument,
+	WHATElement,
+	WHATNode,
+	WHATParentNode,
+} from './WHATNode.ts';
 
 type DOCUMENT_NODE = Node['DOCUMENT_NODE'];
 const DOCUMENT_NODE: DOCUMENT_NODE = 9;
@@ -94,4 +100,16 @@ export const isWHATNode = (value: unknown): value is WHATNode => {
 
 export const isWHATDocument = (node: WHATNode): node is WHATDocument => {
 	return node.nodeType === DOCUMENT_NODE;
+};
+
+export const isWHATElement = (node: WHATNode): node is WHATElement => {
+	return node.nodeType === ELEMENT_NODE;
+};
+
+export const isWHATAttribute = (node: Attr | WHATNode): node is WHATAttribute => {
+	return node.nodeType === ATTRIBUTE_NODE && (node as Attr).namespaceURI !== XMLNS_NAMESPACE_URI;
+};
+
+export const isWHATParentNode = (node: WHATNode): node is WHATParentNode => {
+	return isWHATDocument(node) || isWHATElement(node);
 };

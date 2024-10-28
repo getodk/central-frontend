@@ -1,9 +1,12 @@
 import type { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { XPathDOMProvider as TempDOMProvider } from '../temp/dom-abstraction.ts';
-import { DEFAULT_DOM_PROVIDER as tempDOMProvider } from '../temp/dom-abstraction.ts';
 import type { XPathDOMAdapter } from './interface/XPathDOMAdapter.ts';
+import type { XPathDOMOptimizableOperations } from './interface/XPathDOMOptimizableOperations.ts';
 import type { XPathNode } from './interface/XPathNode.ts';
-import type { AdapterParentNode, XPathNodeKindAdapter } from './interface/XPathNodeKindAdapter.ts';
+import type {
+	AdapterElement,
+	AdapterParentNode,
+	XPathNodeKindAdapter,
+} from './interface/XPathNodeKindAdapter.ts';
 
 type AssertXPathNode<T extends XPathNode> = <U>(
 	value: U,
@@ -31,8 +34,8 @@ interface NodeKindGuards<T extends XPathNode> {
 }
 
 interface ExtendedNodeKindGuards<T extends XPathNode>
-	extends NodeKindGuards<T>,
-		XPathDOMAdapter<T> {}
+	extends XPathDOMAdapter<T>,
+		NodeKindGuards<T> {}
 
 /**
  * Derives frequently used {@link NodeKindGuards | node kind predicates}
@@ -65,6 +68,110 @@ const extendNodeKindGuards = <T extends XPathNode>(
 				throw new Error(message);
 			}
 		},
+	};
+
+	return Object.assign(base, extensions);
+};
+
+type LocalNamedAttributeValueLookup<T extends XPathNode> = (
+	node: AdapterElement<T>,
+	localName: string
+) => string | null;
+
+const getLocalNamedAttributeValueFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): LocalNamedAttributeValueLookup<T> => {
+	const adapterImplementation = adapter.getLocalNamedAttributeValue?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node, localName) => {
+		const attributes = adapter.getAttributes(node);
+
+		for (const attribute of attributes) {
+			if (adapter.getLocalName(attribute) === localName) {
+				return adapter.getNodeValue(attribute);
+			}
+		}
+
+		return null;
+	};
+};
+
+type LocalNamedAttributePredicate<T extends XPathNode> = (
+	node: AdapterElement<T>,
+	localName: string
+) => boolean;
+
+const hasLocalNamedAttributeFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>,
+	lookup: LocalNamedAttributeValueLookup<T>
+): LocalNamedAttributePredicate<T> => {
+	const adapterImplementation = adapter.hasLocalNamedAttribute?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node, localName) => {
+		return lookup(node, localName) != null;
+	};
+};
+
+type LocalNamedChildElementsLookup<T extends XPathNode> = (
+	node: AdapterParentNode<T>,
+	localName: string
+) => Iterable<AdapterElement<T>>;
+
+const getChildrenByLocalNameFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): LocalNamedChildElementsLookup<T> => {
+	const adapterImplementation = adapter.getChildrenByLocalName?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node, localName) => {
+		return Array.from(adapter.getChildElements(node)).filter((element) => {
+			return adapter.getLocalName(element) === localName;
+		});
+	};
+};
+
+/**
+ * Omitting XPathDOMOptimizableOperations keys here allows them to be made
+ * non-optional, without then repeating the exact same properties and their
+ * exact same signatures inline...
+ */
+type OmitOptionalOptimizableOperations<T> = Omit<T, keyof XPathDOMOptimizableOperations<XPathNode>>;
+
+interface ExtendedOptimizableOperations<T extends XPathNode>
+	extends OmitOptionalOptimizableOperations<ExtendedNodeKindGuards<T>>,
+		XPathDOMOptimizableOperations<T> {}
+
+/**
+ * Derives concrete implementations for all of an {@link XPathDOMAdapter}'s
+ * **optional** {@link XPathDOMOptimizableOperations | optimized operations}.
+ *
+ * For each operation:
+ *
+ * 1. If an implementation is provided by the adapter, that implementation will
+ *    be incorporated as defined by the {@link XPathDOMProvider}.
+ * 2. If the adpater does not provide an implementation of the operation, one
+ *    will be derived from other aspects of the adapter's required APIs.
+ */
+const extendOptimizableOperations = <T extends XPathNode>(
+	base: ExtendedNodeKindGuards<T>
+): ExtendedOptimizableOperations<T> => {
+	const getLocalNamedAttributeValue = getLocalNamedAttributeValueFactory(base);
+
+	const extensions: XPathDOMOptimizableOperations<T> = {
+		hasLocalNamedAttribute: hasLocalNamedAttributeFactory(base, getLocalNamedAttributeValue),
+		getChildrenByLocalName: getChildrenByLocalNameFactory(base),
+		getLocalNamedAttributeValue,
 	};
 
 	return Object.assign(base, extensions);
@@ -108,15 +215,10 @@ const derivedDOMProvider = <T>(base: T): DerivedDOMProvider & T => {
 	});
 };
 
-interface TempDOMAbstractionBridge<T extends XPathNode>
-	extends XPathDOMAdapter<T>,
-		NodeKindGuards<T>,
-		TempDOMProvider<T> {}
-
 export interface XPathDOMProvider<T extends XPathNode>
-	extends XPathDOMAdapter<T>,
+	extends OmitOptionalOptimizableOperations<XPathDOMAdapter<T>>,
 		NodeKindGuards<T>,
-		TempDOMAbstractionBridge<T>,
+		XPathDOMOptimizableOperations<T>,
 		DerivedDOMProvider {}
 
 /**
@@ -141,7 +243,7 @@ export const xpathDOMProvider = <T extends XPathNode>(
 	}
 
 	const extendedGuards = extendNodeKindGuards(adapter);
-	const tempDOMAbstractionBridge = Object.assign(extendedGuards, tempDOMProvider);
+	const exended = extendOptimizableOperations(extendedGuards);
 
-	return derivedDOMProvider(tempDOMAbstractionBridge);
+	return derivedDOMProvider(exended);
 };

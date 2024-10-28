@@ -1,5 +1,5 @@
 import type { XPathNode } from './XPathNode.ts';
-import type { AdapterDocument } from './XPathNodeKindAdapter.ts';
+import type { AdapterAttribute, AdapterDocument, AdapterElement } from './XPathNodeKindAdapter.ts';
 
 export interface XPathTraversalAdapter<T extends XPathNode> {
 	/**
@@ -12,4 +12,7 @@ export interface XPathTraversalAdapter<T extends XPathNode> {
 	 * mandatory optimization of that otherwise implicit expectation.
 	 */
 	readonly getContainingDocument: (node: T) => AdapterDocument<T>;
+
+	readonly getAttributes: (node: T) => Iterable<AdapterAttribute<T>>;
+	readonly getChildElements: (node: T) => Iterable<AdapterElement<T>>;
 }

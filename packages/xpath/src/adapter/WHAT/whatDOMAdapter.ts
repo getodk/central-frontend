@@ -1,7 +1,7 @@
 import type { XPathDOMAdapter } from '../interface/XPathDOMAdapter.ts';
 import { getWHATNodeKind, isWHATNode } from './kind.ts';
-import { getWHATNamespaceURI } from './names.ts';
-import { getContainingWHATDocument } from './traversal.ts';
+import { getWHATLocalName, getWHATNamespaceURI } from './names.ts';
+import { getChildWHATElements, getContainingWHATDocument, getWHATAttributes } from './traversal.ts';
 import { getWHATNodeValue } from './values.ts';
 import type { WHATNode } from './WHATNode.ts';
 
@@ -13,11 +13,14 @@ export const whatDOMAdapter: WHATDOMAdapter = {
 	isXPathNode: isWHATNode,
 
 	// XPathNameAdapter
+	getLocalName: getWHATLocalName,
 	getNamespaceURI: getWHATNamespaceURI,
 
 	// XPathValueAdapter
 	getNodeValue: getWHATNodeValue,
 
 	// XPathTraversalAdapter
+	getAttributes: getWHATAttributes,
+	getChildElements: getChildWHATElements,
 	getContainingDocument: getContainingWHATDocument,
 };
