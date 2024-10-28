@@ -1,4 +1,6 @@
 import type { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
+import type { XPathDOMProvider as TempDOMProvider } from '../temp/dom-abstraction.ts';
+import { DEFAULT_DOM_PROVIDER as tempDOMProvider } from '../temp/dom-abstraction.ts';
 import type { XPathDOMAdapter } from './interface/XPathDOMAdapter.ts';
 import type { XPathNode } from './interface/XPathNode.ts';
 import type { AdapterParentNode, XPathNodeKindAdapter } from './interface/XPathNodeKindAdapter.ts';
@@ -106,9 +108,15 @@ const derivedDOMProvider = <T>(base: T): DerivedDOMProvider & T => {
 	});
 };
 
+interface TempDOMAbstractionBridge<T extends XPathNode>
+	extends XPathDOMAdapter<T>,
+		NodeKindGuards<T>,
+		TempDOMProvider<T> {}
+
 export interface XPathDOMProvider<T extends XPathNode>
 	extends XPathDOMAdapter<T>,
 		NodeKindGuards<T>,
+		TempDOMAbstractionBridge<T>,
 		DerivedDOMProvider {}
 
 /**
@@ -133,6 +141,7 @@ export const xpathDOMProvider = <T extends XPathNode>(
 	}
 
 	const extendedGuards = extendNodeKindGuards(adapter);
+	const tempDOMAbstractionBridge = Object.assign(extendedGuards, tempDOMProvider);
 
-	return derivedDOMProvider(extendedGuards);
+	return derivedDOMProvider(tempDOMAbstractionBridge);
 };

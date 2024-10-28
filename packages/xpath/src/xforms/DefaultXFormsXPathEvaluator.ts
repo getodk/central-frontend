@@ -1,11 +1,11 @@
 import { XFORMS_NAMESPACE_URI, XHTML_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import type { EvaluatorOptions } from '../evaluator/Evaluator.ts';
 import type {
 	DefaultDOMAdapterElement,
 	DefaultDOMAdapterNode,
 	DefaultDOMAdapterParentNode,
-} from '../temp/dom-abstraction.ts';
-import { DEFAULT_DOM_PROVIDER } from '../temp/dom-abstraction.ts';
+} from '../adapter/defaults.ts';
+import { DEFAULT_DOM_ADAPTER, DEFAULT_DOM_PROVIDER } from '../adapter/defaults.ts';
+import type { DefaultEvaluatorOptions } from '../evaluator/DefaultEvaluator.ts';
 import type { XFormsElementRepresentation } from './XFormsElementRepresentation.ts';
 import type {
 	XFormsItextTranslationElement,
@@ -193,7 +193,7 @@ const getTranslationsByLanguage = (modelElement: ModelElement | null): Translati
 	return result;
 };
 
-interface DefaultXFormsXPathEvaluatorOptions extends EvaluatorOptions {
+interface DefaultXFormsXPathEvaluatorOptions extends DefaultEvaluatorOptions {
 	readonly rootNode: XFormsXPathRootNode<DefaultDOMAdapterNode>;
 }
 
@@ -254,6 +254,7 @@ export class DefaultXFormsXPathEvaluator extends XFormsXPathEvaluator<DefaultDOM
 
 		super({
 			...options,
+			domAdapter: DEFAULT_DOM_ADAPTER,
 			itextTranslationsByLanguage,
 			secondaryInstancesById,
 		});

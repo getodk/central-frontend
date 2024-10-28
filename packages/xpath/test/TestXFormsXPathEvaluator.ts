@@ -1,4 +1,4 @@
-import type { DefaultDOMAdapterNode } from '../src/temp/dom-abstraction.ts';
+import type { DefaultDOMAdapterNode } from '../src/adapter/defaults.ts';
 import { DefaultXFormsXPathEvaluator } from '../src/xforms/DefaultXFormsXPathEvaluator.ts';
 import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
 

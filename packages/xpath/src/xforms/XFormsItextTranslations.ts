@@ -1,6 +1,7 @@
 import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type { XPathDOMProvider } from '../adapter/xpathDOMProvider.ts';
 import type { itext } from '../functions/javarosa/string.ts';
-import type { XPathDOMProvider, XPathNode } from '../temp/dom-abstraction.ts';
 import type { XFormsElementRepresentation } from './XFormsElementRepresentation.ts';
 import type { XFormsXPathEvaluator } from './XFormsXPathEvaluator.ts';
 

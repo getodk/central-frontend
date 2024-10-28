@@ -1,3 +1,9 @@
+import type { UnwrapAdapterNode } from '../adapter/interface/XPathCustomUnwrappableNode.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type {
+	AdapterDocument,
+	AdapterParentNode,
+} from '../adapter/interface/XPathNodeKindAdapter.ts';
 import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { EvaluatorOptions } from '../evaluator/Evaluator.ts';
 import { Evaluator } from '../evaluator/Evaluator.ts';
@@ -6,14 +12,6 @@ import { enk } from '../functions/enketo/index.ts';
 import { fn } from '../functions/fn/index.ts';
 import { jr } from '../functions/javarosa/index.ts';
 import { xf } from '../functions/xforms/index.ts';
-import {
-	type AdapterDocument,
-	type AdapterParentNode,
-	type UnwrapAdapterNode,
-	type XPathDOMProvider,
-	type XPathNode,
-	DEFAULT_DOM_PROVIDER,
-} from '../temp/dom-abstraction.ts';
 import type {
 	XFormsItextTranslationLanguage,
 	XFormsItextTranslationMap,
@@ -43,7 +41,7 @@ export type XFormsXPathRootNode<T extends XPathNode> =
 	| AdapterParentNode<T>
 	| UnwrapAdapterNode<AdapterParentNode<T>>;
 
-export interface XFormsXPathEvaluatorOptions<T extends XPathNode> extends EvaluatorOptions {
+export interface XFormsXPathEvaluatorOptions<T extends XPathNode> extends EvaluatorOptions<T> {
 	readonly rootNode: XFormsXPathRootNode<T>;
 	readonly itextTranslationsByLanguage: XFormsItextTranslationMap<T>;
 	readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
@@ -82,7 +80,7 @@ const assertInternalXFormsXPathEvaluatorContext: AssertInternalXFormsXPathEvalua
 };
 
 export class XFormsXPathEvaluator<T extends XPathNode>
-	extends Evaluator
+	extends Evaluator<T>
 	implements XFormsItextTranslationsState
 {
 	static getSecondaryInstance<T extends XPathNode>(
@@ -99,8 +97,6 @@ export class XFormsXPathEvaluator<T extends XPathNode>
 
 		return context.evaluator.itextTranslations.getDefaultTranslationText(itextID);
 	}
-
-	readonly domProvider: XPathDOMProvider<T>;
 
 	override readonly rootNode: AdapterParentNode<T>;
 
@@ -121,8 +117,6 @@ export class XFormsXPathEvaluator<T extends XPathNode>
 			functions,
 			...options,
 		});
-
-		this.domProvider = DEFAULT_DOM_PROVIDER;
 
 		this.secondaryInstancesById = options.secondaryInstancesById;
 		this.rootNode = options.rootNode as AdapterParentNode<T>;

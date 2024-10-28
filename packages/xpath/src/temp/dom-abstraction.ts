@@ -5,48 +5,15 @@
  * approach to providing DOM functionality.
  */
 
-import { DOCUMENT_NODE, type AnyParentNode } from '../lib/dom/types.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type {
+	AdapterDocument,
+	AdapterElement,
+	AdapterParentNode,
+	AdapterQualifiedNamedNode,
+} from '../adapter/interface/XPathNodeKindAdapter.ts';
 
-export type XPathNode = Node;
-
-// prettier-ignore
-type SpecificAdapterNode<T extends XPathNode, U extends XPathNode = T> =
-	// 1. If `T` is already `U` (or a supertype thereof)...
-	T extends U
-
-		// 2. ... it may be a wider (super) type: narrow.
-		? Extract<T, U>
-
-	// 3. OR: if `U` is narrower than `T` (likely: `U` = `T`, `T` = `XPathNode`)...
-	: U extends T
-
-		// 4. ... refine to `U` (sub) type: widen.
-		? U
-
-	// 5. ELSE: some `T`/`XPathNode` subtype which is incompatible with `U`: fail.
-	: never;
-
-export type AdapterDocument<T extends XPathNode> = SpecificAdapterNode<T, Document>;
-
-export type AdapterElement<T extends XPathNode> = SpecificAdapterNode<T, Element>;
-
-export type AdapterAttribute<T extends XPathNode> = SpecificAdapterNode<T, Attr>;
-
-// prettier-ignore
-export type AdapterParentNode<T extends XPathNode> =
-	[T, XPathNode] extends [XPathNode, T]
-		? AnyParentNode
-		: never;
-
-// prettier-ignore
-export type AdapterQualifiedNamedNode<T extends XPathNode> =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| AdapterElement<T>
-	| AdapterAttribute<T>;
-
-export type DefaultDOMAdapterNode = XPathNode;
-export type DefaultDOMAdapterElement = AdapterElement<DefaultDOMAdapterNode>;
-export type DefaultDOMAdapterParentNode = AdapterParentNode<DefaultDOMAdapterNode>;
+const DOCUMENT_NODE: Node['DOCUMENT_NODE'] = 9;
 
 /**
  * @todo this is temporary, its use will be replaced in coming commits migrating
@@ -55,7 +22,7 @@ export type DefaultDOMAdapterParentNode = AdapterParentNode<DefaultDOMAdapterNod
 export const DEFAULT_DOM_PROVIDER = {
 	getContainingDocument: (node: XPathNode): AdapterDocument<XPathNode> => {
 		if (node.nodeType === DOCUMENT_NODE) {
-			return node as Document;
+			return node as AdapterDocument<XPathNode>;
 		}
 
 		const { ownerDocument } = node;
@@ -64,7 +31,7 @@ export const DEFAULT_DOM_PROVIDER = {
 			throw new Error('Cannot reach containing document');
 		}
 
-		return ownerDocument;
+		return ownerDocument as AdapterDocument<XPathNode>;
 	},
 
 	hasLocalNamedAttribute: (node: AdapterElement<XPathNode>, localName: string): boolean => {
@@ -73,8 +40,10 @@ export const DEFAULT_DOM_PROVIDER = {
 	getChildrenByLocalName: (
 		node: AdapterParentNode<XPathNode>,
 		localName: string
-	): Iterable<Element> => {
-		return Array.from(node.children).filter((child) => {
+	): Iterable<AdapterElement<XPathNode>> => {
+		return (
+			Array.from(node.children) satisfies Element[] as Array<AdapterElement<XPathNode>>
+		).filter((child) => {
 			return child.localName === localName;
 		});
 	},

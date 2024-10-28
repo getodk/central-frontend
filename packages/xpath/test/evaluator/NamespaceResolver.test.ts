@@ -1,6 +1,6 @@
 import { xml } from '@getodk/common/test/factories/xml.ts';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
-import { Evaluator } from '../../src/evaluator/Evaluator.ts';
+import { DefaultEvaluator } from '../../src/evaluator/DefaultEvaluator.ts';
 import { NamespaceResolver, staticNamespaces } from '../../src/evaluator/NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
@@ -34,7 +34,7 @@ describe('NamespaceResolver', () => {
 
 	beforeEach(() => {
 		const rootNode = TEST_DOCUMENT;
-		const evaluator = new Evaluator({ rootNode });
+		const evaluator = new DefaultEvaluator({ rootNode });
 		const context = evaluator.getEvaluationContext(rootNode, rootNode);
 
 		resolver = context.namespaceResolver;

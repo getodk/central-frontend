@@ -1,4 +1,5 @@
-import type { AdapterElement, XPathNode } from '../temp/dom-abstraction.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type { AdapterElement } from '../adapter/interface/XPathNodeKindAdapter.ts';
 
 export const XFORMS_LOCAL_NAME = Symbol('XFORMS_LOCAL_NAME');
 export type XFORMS_LOCAL_NAME = typeof XFORMS_LOCAL_NAME;

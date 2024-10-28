@@ -4,14 +4,18 @@
  * Currently the main entrypoint for:
  *
  * - {@link Evaluator}, associated types
- * - {@link DefaultXFormsXPathEvaluator}, associated types (temporarily exported
- *   as `XFormsXPathEvaluator`)
+ * - {@link XPathDOMAdapter}, associated values and types
+ * - {@link DefaultEvaluator}, associated types
+ * - {@link XFormsXPathEvaluator}, associated types
+ * - {@link DefaultXFormsXPathEvaluator}, associated types (tempoary)
  *
  * @todo Break out distinct entrypoints for each.
  * @todo Seriously consider moving all XForms-specific functionality down the
  * stack instead of breaking those parts out.
  */
 
+import type { XPathDOMAdapter } from './adapter/interface/XPathDOMAdapter.ts';
+import type { DefaultEvaluator } from './evaluator/DefaultEvaluator.ts';
 import type { Evaluator } from './evaluator/Evaluator.ts';
 import type { DefaultXFormsXPathEvaluator } from './xforms/DefaultXFormsXPathEvaluator.ts';
 import type { XFormsXPathEvaluator } from './xforms/XFormsXPathEvaluator.ts';
@@ -24,6 +28,24 @@ import type { XFormsXPathEvaluator } from './xforms/XFormsXPathEvaluator.ts';
 
 export type * from './evaluator/Evaluator.ts';
 export { Evaluator } from './evaluator/Evaluator.ts';
+
+/**
+ * - - -
+ * {@link XPathDOMAdapter}, associated values and types
+ * - - -
+ */
+
+export * from './adapter/defaults.ts';
+export * from './adapter/interface/XPathDOMAdapter.ts';
+
+/**
+ * - - -
+ * {@link DefaultEvaluator}, associated types
+ * - - -
+ */
+
+export type * from './evaluator/DefaultEvaluator.ts';
+export { DefaultEvaluator } from './evaluator/DefaultEvaluator.ts';
 
 /**
  * - - -

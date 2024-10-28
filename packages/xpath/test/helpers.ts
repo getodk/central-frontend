@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { Evaluator } from '../src/evaluator/Evaluator.ts';
+import { DefaultEvaluator } from '../src/evaluator/DefaultEvaluator.ts';
 import type { XPathEvaluationResultType } from '../src/evaluator/result/XPathEvaluationResult.ts';
 import { TestXFormsXPathEvaluator } from './TestXFormsXPathEvaluator.ts';
 
@@ -52,7 +52,7 @@ interface TestContextOptions<XForms extends boolean = false> {
 type TestContextEvaluator<XForms extends boolean> =
 	[true] extends [XForms]
 		? TestXFormsXPathEvaluator
-		: Evaluator;
+		: DefaultEvaluator;
 
 export class TestContext<XForms extends boolean = false> {
 	readonly document: XMLDocument;
@@ -85,7 +85,7 @@ export class TestContext<XForms extends boolean = false> {
 			this.defaultContextNode = rootNode;
 			this.namespaceResolver = options.namespaceResolver ?? rootNode;
 		} else {
-			this.evaluator = new Evaluator(
+			this.evaluator = new DefaultEvaluator(
 				evaluatorOptions
 			) satisfies TestContextEvaluator<false> as TestContextEvaluator<XForms>;
 			this.defaultContextNode = testDocument;

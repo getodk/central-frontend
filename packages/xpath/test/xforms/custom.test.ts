@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import type { DefaultDOMAdapterNode } from '../../src/adapter/defaults.ts';
 import type {
 	XPathEvaluationResult,
 	XPathEvaluationResultType,
@@ -10,7 +11,7 @@ describe.skip('custom XPath functions', () => {
 	interface CustomFunctionEvaluator {
 		evaluate(
 			expression: string,
-			contextNode: Node,
+			contextNode: DefaultDOMAdapterNode,
 			namespaceResolver: XPathNSResolver | null,
 			resultType: XPathEvaluationResultType | null
 		): XPathEvaluationResult;
