@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { shallowReactive, isReactive } from 'vue';
 import { apiPaths, withAuth } from '../../util/request';
 import { SitePreferenceNormalizer, ProjectPreferenceNormalizer } from './normalizers';
@@ -74,6 +73,7 @@ export default class UserPreferences {
     return new Proxy(
       shallowReactive(sitePreferenceData),
       {
+        /* eslint-disable no-param-reassign */
         deleteProperty(target, prop) {
           SitePreferenceNormalizer.normalizeFn(prop); // throws if prop is not registered
           const retval = (delete target[prop]);
@@ -87,6 +87,7 @@ export default class UserPreferences {
           userPreferences.#propagate(prop, normalizedValue, null); // PUT to backend
           return retval;
         },
+        /* eslint-enable no-param-reassign */
         get(target, prop) {
           return SitePreferenceNormalizer.getProp(target, prop);
         }
@@ -109,6 +110,7 @@ export default class UserPreferences {
           if (Number.isNaN(parseInt(projectId, 10))) throw new TypeError(`Not an integer project ID: "${projectId}"`);
           const projectProps = target[projectId];
           if (projectProps === undefined || (!isReactive(projectProps))) { // not reentrant (TOCTOU issue) but there's no real way to solve it — as this is supposed to be a synchronous method we can't simply wrap it in a Lock
+            /* eslint-disable no-param-reassign */
             target[projectId] = new Proxy(
               // make (potentially autovivicated) props reactive, and front them with a proxy to enable our setters/deleters
               shallowReactive(projectProps === undefined ? {} : projectProps),
@@ -131,6 +133,7 @@ export default class UserPreferences {
                 },
               }
             );
+            /* eslint-enable no-param-reassign */
           }
           return target[projectId];
         },
