@@ -1,7 +1,7 @@
 import { XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { UnspecifiedNonXPathNodeKind, XPathNodeKind } from '../interface/XPathNode.ts';
 import { getNodeConstructor } from './platform.ts';
-import type { WHATNode } from './WHATNode.ts';
+import type { WHATDocument, WHATNode } from './WHATNode.ts';
 
 type DOCUMENT_NODE = Node['DOCUMENT_NODE'];
 const DOCUMENT_NODE: DOCUMENT_NODE = 9;
@@ -90,4 +90,8 @@ export const isWHATNode = (value: unknown): value is WHATNode => {
 	const nodeKind = getOptionalNodeKind(value);
 
 	return nodeKind != null && nodeKind !== 'UNSPECIFIED_NON_XPATH_NODE';
+};
+
+export const isWHATDocument = (node: WHATNode): node is WHATDocument => {
+	return node.nodeType === DOCUMENT_NODE;
 };

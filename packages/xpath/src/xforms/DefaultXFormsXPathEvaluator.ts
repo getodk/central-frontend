@@ -35,7 +35,10 @@ const getQualifiedNamedChildElement = <LocalName extends string>(
 	parent: DefaultDOMAdapterParentNode,
 	{ namespaceURI, localName }: NameQuery<LocalName>
 ): LocalNamedElement<LocalName> | null => {
-	const [childElement] = DEFAULT_DOM_PROVIDER.getChildrenByLocalName(parent, localName);
+	const [childElement] = DEFAULT_DOM_PROVIDER.getChildrenByLocalName<DefaultDOMAdapterParentNode>(
+		parent,
+		localName
+	);
 
 	if (childElement == null || DEFAULT_DOM_PROVIDER.getNamespaceURI(childElement) !== namespaceURI) {
 		return null;
