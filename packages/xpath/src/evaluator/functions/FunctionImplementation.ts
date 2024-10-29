@@ -39,7 +39,7 @@ export class InvalidArgumentError extends Error {
 	}
 }
 
-export type ParameterArityType = 'optional' | 'required' | 'variadic' | 'variadic+';
+export type ParameterArityType = 'optional' | 'required' | 'variadic';
 
 export type ParameterTypeHint =
 	// | 'lazy' // TODO: it might be good to *explicitly* mark certain parameters
@@ -122,12 +122,6 @@ export class FunctionImplementation {
 					case 'variadic':
 						return {
 							min: acc.min,
-							max: Infinity,
-						};
-
-					case 'variadic+':
-						return {
-							min: acc.min + 1,
 							max: Infinity,
 						};
 
