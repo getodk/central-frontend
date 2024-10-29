@@ -9,7 +9,6 @@ import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation.ts
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
 import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
-import { getDocument, getRootNode } from '../lib/dom/traversal.ts';
 import type { Context } from './Context.ts';
 
 export interface EvaluationContextOptions<T extends XPathNode> {
@@ -52,8 +51,8 @@ export class EvaluationContext<T extends XPathNode> implements Context<T> {
 
 		const { namespaceResolver } = options;
 
-		const rootNode = options.rootNode ?? getRootNode(contextNode);
-		const contextDocument = getDocument(rootNode);
+		const rootNode = options.rootNode ?? domProvider.getContainingDocument(contextNode);
+		const contextDocument = domProvider.getContainingDocument(rootNode);
 
 		this.contextDocument = contextDocument;
 		this.evaluationContextNode = contextNode;
