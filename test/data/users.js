@@ -46,4 +46,7 @@ export const extendedUsers = dataStore({
     administrator1.email.localeCompare(administrator2.email)
 });
 
-export const standardUsers = view(extendedUsers, omit(['verbs']));
+export const standardUsers = view(
+  extendedUsers,
+  omit(['verbs', 'preferences'])
+);
