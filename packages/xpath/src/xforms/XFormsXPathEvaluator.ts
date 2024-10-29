@@ -59,12 +59,12 @@ declare class InternalXFormsXPathEvaluator<T extends XPathNode> extends XFormsXP
 	readonly itextTranslations: XFormsItextTranslations<T>;
 }
 
-interface InternalXFormsXPathEvaluatorContext<T extends XPathNode> extends EvaluationContext {
+interface InternalXFormsXPathEvaluatorContext<T extends XPathNode> extends EvaluationContext<T> {
 	readonly evaluator: InternalXFormsXPathEvaluator<T>;
 }
 
 type AssertInternalXFormsXPathEvaluatorContext = <T extends XPathNode>(
-	context: EvaluationContext
+	context: EvaluationContext<T>
 ) => asserts context is InternalXFormsXPathEvaluatorContext<T>;
 
 const assertInternalXFormsXPathEvaluatorContext: AssertInternalXFormsXPathEvaluatorContext = (
@@ -72,7 +72,18 @@ const assertInternalXFormsXPathEvaluatorContext: AssertInternalXFormsXPathEvalua
 ) => {
 	const { evaluator } = context;
 
-	if (evaluator instanceof XFormsXPathEvaluator) {
+	if (
+		evaluator instanceof XFormsXPathEvaluator &&
+		/**
+		 * This check ensures that we apply consistent DOM adapter access where an
+		 * (ODK XForms) XPath expression crosses tree boundaries (e.g. any two of
+		 * primary instance, secondary instance, itext translations).
+		 *
+		 * It's not totally clear whether this check is strictly necessary! Even if
+		 * not, it should be cheap enough not to bother finding out.
+		 */
+		evaluator.domProvider === context.domProvider
+	) {
 		return;
 	}
 
@@ -84,7 +95,7 @@ export class XFormsXPathEvaluator<T extends XPathNode>
 	implements XFormsItextTranslationsState
 {
 	static getSecondaryInstance<T extends XPathNode>(
-		context: EvaluationContext,
+		context: EvaluationContext<T>,
 		id: string
 	): XFormsSecondaryInstanceElement<T> | null {
 		assertInternalXFormsXPathEvaluatorContext(context);
@@ -92,7 +103,10 @@ export class XFormsXPathEvaluator<T extends XPathNode>
 		return context.evaluator.secondaryInstancesById.get(id) ?? null;
 	}
 
-	static getDefaultTranslationText(context: EvaluationContext, itextID: string): string {
+	static getDefaultTranslationText<T extends XPathNode>(
+		context: EvaluationContext<T>,
+		itextID: string
+	): string {
 		assertInternalXFormsXPathEvaluatorContext(context);
 
 		return context.evaluator.itextTranslations.getDefaultTranslationText(itextID);

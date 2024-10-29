@@ -9,6 +9,8 @@ export class BooleanFunction extends TypedFunctionImplementation<boolean> {
 		signature: FunctionSignature,
 		call: TypedFunctionCallable<boolean>
 	) {
-		super(localName, BooleanEvaluation, signature, call);
+		super(localName, signature, call, (context, value) => {
+			return new BooleanEvaluation(context, value);
+		});
 	}
 }

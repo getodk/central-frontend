@@ -8,9 +8,10 @@
 // - TS types for arity -> expression nullishness?
 
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { Context } from '../../context/Context.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
-import type { EvaluationType } from '../../evaluations/EvaluationType.ts';
+import type { EvaluationType, PrimitiveEvaluationType } from '../../evaluations/EvaluationType.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 
 export class UnknownFunctionError extends Error {
@@ -61,24 +62,35 @@ export interface Parameter {
 // [...RequiredParameter, ...OptionalParameter, ...([] | [VariadicParameter])]
 export type FunctionSignature = readonly Parameter[];
 
+// prettier-ignore
+export type ArgumentEvaluation<T extends XPathNode> =
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	| Evaluation<any, PrimitiveEvaluationType>
+	| Evaluation<T, EvaluationType>;
+
+// prettier-ignore
 export interface EvaluableArgument {
-	evaluate(context: Context): Evaluation<EvaluationType>;
+	evaluate<T extends XPathNode>(context: EvaluationContext<T>): ArgumentEvaluation<T>;
 }
 
-export type ValidArguments<
-	Arguments extends readonly EvaluableArgument[],
-	IsValid extends boolean,
-> = [true] extends [IsValid] ? Arguments : never;
+// prettier-ignore
+type ValidArguments<Arguments extends readonly EvaluableArgument[], IsValid> =
+	[true] extends [IsValid]
+		? Arguments
+		: never;
 
 interface FunctionArity {
 	readonly min: number;
 	readonly max: number;
 }
 
-export type FunctionCallable = <Arguments extends readonly EvaluableArgument[]>(
-	context: LocationPathEvaluation,
+export type FunctionCallable = <
+	T extends XPathNode,
+	Arguments extends readonly EvaluableArgument[],
+>(
+	context: LocationPathEvaluation<T>,
 	args: Arguments
-) => Evaluation;
+) => Evaluation<T>;
 
 export class FunctionImplementation {
 	readonly arity: FunctionArity;
@@ -130,8 +142,11 @@ export class FunctionImplementation {
 				: runtimeImplementation;
 	}
 
-	call(context: LocationPathEvaluation, args: readonly EvaluableArgument[]): Evaluation {
-		this.validateArguments(args);
+	call<T extends XPathNode, Args extends readonly EvaluableArgument[]>(
+		context: LocationPathEvaluation<T>,
+		args: Args
+	): Evaluation<T> {
+		this.validateArguments<Args>(args);
 
 		return this.callable(context, args);
 	}

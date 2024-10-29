@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument, FunctionImplementation } from './FunctionImplementation.ts';
@@ -48,11 +49,11 @@ export class FunctionLibrary {
 		return this.implementations.has(localName);
 	}
 
-	call(
+	call<T extends XPathNode>(
 		localName: LocalName,
-		context: LocationPathEvaluation,
+		context: LocationPathEvaluation<T>,
 		args: readonly EvaluableArgument[]
-	): Evaluation {
+	): Evaluation<T> {
 		const implementation = this.implementations.get(localName);
 
 		if (implementation == null) {

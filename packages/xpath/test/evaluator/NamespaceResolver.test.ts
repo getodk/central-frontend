@@ -1,10 +1,12 @@
 import { xml } from '@getodk/common/test/factories/xml.ts';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
+import type { DefaultDOMAdapterNode } from '../../src/adapter/defaults.ts';
+import { DEFAULT_DOM_PROVIDER } from '../../src/adapter/defaults.ts';
 import { DefaultEvaluator } from '../../src/evaluator/DefaultEvaluator.ts';
 import { NamespaceResolver, staticNamespaces } from '../../src/evaluator/NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
-	let resolver: NamespaceResolver;
+	let resolver: NamespaceResolver<DefaultDOMAdapterNode>;
 
 	const ROOT_NAMESPACE_DEFAULT = 'https://root.namespace/';
 	const ROOT_NAMESPACE_A = 'https://root.namespace/a';
@@ -74,7 +76,7 @@ describe('NamespaceResolver', () => {
 
 	describe('nested element context', () => {
 		beforeEach(() => {
-			resolver = NamespaceResolver.from(TEST_DOCUMENT, UNPREFIXED_ELEMENT);
+			resolver = NamespaceResolver.from(DEFAULT_DOM_PROVIDER, TEST_DOCUMENT, UNPREFIXED_ELEMENT);
 		});
 
 		const nestedCases = [

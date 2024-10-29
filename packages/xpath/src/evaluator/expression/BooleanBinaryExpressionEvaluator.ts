@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { BooleanEvaluation } from '../../evaluations/BooleanEvaluation.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
@@ -56,7 +57,7 @@ export class BooleanBinaryExpressionEvaluator<
 		this.operator = syntaxNode.type.replace('_expr', '') as BooleanOperator<Node>;
 	}
 
-	protected and(context: EvaluationContext): Evaluation {
+	protected and<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T> {
 		const { lhs, rhs } = this;
 		const lhsResult = lhs.evaluate(context);
 
@@ -67,7 +68,7 @@ export class BooleanBinaryExpressionEvaluator<
 		return lhsResult;
 	}
 
-	protected or(context: EvaluationContext): Evaluation {
+	protected or<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T> {
 		const { lhs, rhs } = this;
 
 		const lhsResult = lhs.evaluate(context);
@@ -79,7 +80,10 @@ export class BooleanBinaryExpressionEvaluator<
 		return rhs.evaluate(context);
 	}
 
-	protected compare(context: EvaluationContext, operator: CompareOperator): BooleanEvaluation {
+	protected compare<T extends XPathNode>(
+		context: EvaluationContext<T>,
+		operator: CompareOperator
+	): BooleanEvaluation<T> {
 		const { lhs, rhs } = this;
 
 		const lhsResult = lhs.evaluate(context);
@@ -88,7 +92,7 @@ export class BooleanBinaryExpressionEvaluator<
 		return new BooleanEvaluation(context.currentContext(), lhsResult[operator](rhsResult));
 	}
 
-	evaluate(context: EvaluationContext): Evaluation {
+	evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T> {
 		const { operator } = this;
 
 		switch (operator) {

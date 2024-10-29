@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
@@ -212,9 +213,9 @@ export const formatDateTime = new StringFunction(
 	}
 );
 
-const evaluateDateTime = (
-	context: EvaluationContext,
-	evaluation: Evaluation
+const evaluateDateTime = <T extends XPathNode>(
+	context: EvaluationContext<T>,
+	evaluation: Evaluation<T>
 ): Temporal.ZonedDateTime | null => {
 	const { timeZone } = context;
 

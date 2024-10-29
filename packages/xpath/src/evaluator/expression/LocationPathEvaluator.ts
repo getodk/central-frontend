@@ -1,13 +1,14 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import type { ContextNode } from '../../lib/dom/types.ts';
 import type {
 	AbsoluteLocationPathNode,
 	FilterPathExprNode,
 	RelativeLocationPathNode,
 } from '../../static/grammar/SyntaxNode.ts';
-import { pathExprSteps, type PathExprSteps } from '../step/Step.ts';
+import type { PathExprSteps } from '../step/Step.ts';
+import { pathExprSteps } from '../step/Step.ts';
 import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { LocationPathExpressionEvaluator } from './LocationPathExpressionEvaluator.ts';
 import { NumberExpressionEvaluator } from './NumberExpressionEvaluator.ts';
@@ -47,7 +48,7 @@ export class LocationPathEvaluator
 		this.steps = pathExprSteps(syntaxNode);
 	}
 
-	evaluateNodes(context: EvaluationContext): Iterable<Node> {
+	evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): Iterable<T> {
 		if (this.isRoot) {
 			return context.rootContext().nodes;
 		}
@@ -58,7 +59,7 @@ export class LocationPathEvaluator
 
 		const [contextStep, ...rest] = this.steps;
 
-		let currentContext: LocationPathEvaluation;
+		let currentContext: LocationPathEvaluation<T>;
 
 		switch (contextStep.axisType) {
 			case '__ROOT__':
@@ -87,7 +88,7 @@ export class LocationPathEvaluator
 					positionPredicate = predicateExpression.evaluate(currentContext).toNumber();
 				}
 
-				const filteredNodes: Node[] = [];
+				const filteredNodes: T[] = [];
 
 				for (const self of currentContext) {
 					if (positionPredicate != null) {
@@ -117,7 +118,7 @@ export class LocationPathEvaluator
 
 				currentContext = LocationPathEvaluation.fromArbitraryNodes(
 					currentContext,
-					(filteredNodes as ContextNode[]).values(),
+					filteredNodes.values(),
 					this
 				);
 			}

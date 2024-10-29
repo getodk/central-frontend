@@ -1,5 +1,9 @@
 import { XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import type { NamespaceAttribute } from './types';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import type {
+	AdapterAttribute,
+	AdapterNamespaceDeclaration,
+} from '../../adapter/interface/XPathNodeKindAdapter.ts';
 import {
 	ATTRIBUTE_NODE,
 	CDATA_SECTION_NODE,
@@ -10,13 +14,17 @@ import {
 	TEXT_NODE,
 } from './types.ts';
 
-export const isAttributeNode = (node: Node): node is Attr => node.nodeType === ATTRIBUTE_NODE;
+export const isAttributeNode = <T extends XPathNode>(
+	node: T
+): node is AdapterAttribute<T> | AdapterNamespaceDeclaration<T> => node.nodeType === ATTRIBUTE_NODE;
 
-export const isNamespaceAttribute = (attr: Attr): attr is NamespaceAttribute =>
-	attr.namespaceURI === XMLNS_NAMESPACE_URI;
+export const isNamespaceAttribute = <T extends XPathNode>(
+	attr: AdapterAttribute<T> | AdapterNamespaceDeclaration<T>
+): attr is AdapterNamespaceDeclaration<T> => attr.namespaceURI === XMLNS_NAMESPACE_URI;
 
-export const isNamespaceNode = (node: Node): node is NamespaceAttribute =>
-	isAttributeNode(node) && isNamespaceAttribute(node);
+export const isNamespaceNode = <T extends XPathNode>(
+	node: T
+): node is AdapterNamespaceDeclaration<T> => isAttributeNode(node) && isNamespaceAttribute(node);
 
 export const isCDataSection = (node: Node): node is CDATASection =>
 	node.nodeType === CDATA_SECTION_NODE;

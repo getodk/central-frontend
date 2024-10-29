@@ -17,6 +17,7 @@ import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection
 import { toXPathEvaluationResult } from './result/toXPathEvaluationResult.ts';
 import {
 	XPATH_EVALUATION_RESULT,
+	type XPathEvaluationResult,
 	type XPathEvaluationResultType,
 } from './result/XPathEvaluationResult.ts';
 
@@ -56,8 +57,7 @@ type EvaluatedNode<
 			? U
 			: U | null;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Evaluator<T extends XPathNode = any> {
+export class Evaluator<T extends XPathNode> {
 	readonly domProvider: XPathDOMProvider<T>;
 
 	// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
@@ -101,7 +101,7 @@ export class Evaluator<T extends XPathNode = any> {
 	getEvaluationContext(
 		contextNode: T | UnwrapAdapterNode<T>,
 		namespaceResolver: Extract<T, XPathNSResolver> | XPathNSResolver | null
-	): EvaluationContext {
+	): EvaluationContext<T> {
 		const contextOptions = {
 			rootNode: this.rootNode,
 			namespaceResolver,
@@ -117,13 +117,17 @@ export class Evaluator<T extends XPathNode = any> {
 		contextNode: T | UnwrapAdapterNode<T>,
 		namespaceResolver: XPathNSResolver | null,
 		resultType: XPathEvaluationResultType | null
-	) {
+	): XPathEvaluationResult<T> {
 		const tree = this.parser.parse(expression, this.parseOptions);
 		const expr = createExpression(tree.rootNode);
 		const evaluationContext = this.getEvaluationContext(contextNode, namespaceResolver);
 		const results = expr.evaluate(evaluationContext);
 
-		return toXPathEvaluationResult(resultType ?? XPATH_EVALUATION_RESULT.ANY_TYPE, results);
+		return toXPathEvaluationResult(
+			this.domProvider,
+			resultType ?? XPATH_EVALUATION_RESULT.ANY_TYPE,
+			results
+		);
 	}
 
 	protected getContextNode(options: EvaluatorConvenienceMethodOptions<T>): T {

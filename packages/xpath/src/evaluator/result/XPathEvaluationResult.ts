@@ -1,3 +1,6 @@
+import type { XPathDOMAdapter } from '../../adapter/interface/XPathDOMAdapter.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+
 const ANY_TYPE: XPathResult['ANY_TYPE'] = 0;
 export type ANY_TYPE = typeof ANY_TYPE;
 
@@ -55,14 +58,15 @@ export type XPathEvaluationResultType =
 
 /**
  * Establishes baseline API compatibility with the WHAT Working Group DOM
- * standard {@link XPathResult}.
+ * standard {@link XPathResult}, extended to support any
+ * {@link XPathDOMAdapter}'s arbitrary DOM implementation.
  */
-export interface XPathEvaluationResult {
+export interface XPathEvaluationResult<T extends XPathNode> {
 	readonly booleanValue: boolean;
 	readonly invalidIteratorState: boolean;
 	readonly numberValue: number;
 	readonly resultType: XPathEvaluationResultType;
-	readonly singleNodeValue: Node | null;
+	readonly singleNodeValue: T | null;
 	readonly snapshotLength: number;
 	readonly stringValue: string;
 
@@ -77,6 +81,6 @@ export interface XPathEvaluationResult {
 	readonly UNORDERED_NODE_ITERATOR_TYPE: UNORDERED_NODE_ITERATOR_TYPE;
 	readonly UNORDERED_NODE_SNAPSHOT_TYPE: UNORDERED_NODE_SNAPSHOT_TYPE;
 
-	iterateNext(): Node | null;
-	snapshotItem(index: number): Node | null;
+	iterateNext(): T | null;
+	snapshotItem(index: number): T | null;
 }

@@ -9,6 +9,8 @@ export class NumberFunction extends TypedFunctionImplementation<number> {
 		signature: FunctionSignature,
 		call: TypedFunctionCallable<number>
 	) {
-		super(localName, NumberEvaluation, signature, call);
+		super(localName, signature, call, (context, value) => {
+			return new NumberEvaluation(context, value);
+		});
 	}
 }

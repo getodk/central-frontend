@@ -1,14 +1,17 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type { Evaluation } from './Evaluation.ts';
 import type { EvaluationType, EvaluationTypes } from './EvaluationType.ts';
 import { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 
-export abstract class ValueEvaluation<Type extends EvaluationType> implements Evaluation<Type> {
-	abstract readonly context: LocationPathEvaluation;
+export abstract class ValueEvaluation<T extends XPathNode, Type extends EvaluationType>
+	implements Evaluation<T, Type>
+{
+	abstract readonly context: LocationPathEvaluation<T>;
 
 	abstract readonly type: Type;
-	abstract readonly value: EvaluationTypes[Type];
-	abstract readonly nodes: Type extends 'NODE' ? Iterable<Node> : null;
+	abstract readonly value: EvaluationTypes<T>[Type];
+	abstract readonly nodes: Type extends 'NODE' ? Iterable<T> : null;
 
 	protected abstract readonly booleanValue: boolean;
 	protected abstract readonly numberValue: number;
@@ -38,7 +41,7 @@ export abstract class ValueEvaluation<Type extends EvaluationType> implements Ev
 		return this.stringValue;
 	}
 
-	eq(operand: Evaluation): boolean {
+	eq(operand: Evaluation<T>): boolean {
 		if (this.type === 'BOOLEAN') {
 			return this.toBoolean() === operand.toBoolean();
 		}
@@ -79,7 +82,7 @@ export abstract class ValueEvaluation<Type extends EvaluationType> implements Ev
 		return this.toString() === operand.toString();
 	}
 
-	ne(operand: Evaluation): boolean {
+	ne(operand: Evaluation<T>): boolean {
 		if (this.type === 'BOOLEAN') {
 			return this.toBoolean() !== operand.toBoolean();
 		}
@@ -91,7 +94,7 @@ export abstract class ValueEvaluation<Type extends EvaluationType> implements Ev
 		return !this.eq(operand);
 	}
 
-	lt(operand: Evaluation): boolean {
+	lt(operand: Evaluation<T>): boolean {
 		if (operand instanceof LocationPathEvaluation) {
 			return operand.some((rhs) => this.lt(rhs));
 		}
@@ -99,7 +102,7 @@ export abstract class ValueEvaluation<Type extends EvaluationType> implements Ev
 		return this.toNumber() < operand.toNumber();
 	}
 
-	lte(operand: Evaluation): boolean {
+	lte(operand: Evaluation<T>): boolean {
 		if (operand instanceof LocationPathEvaluation) {
 			return operand.some((rhs) => this.lte(rhs));
 		}
@@ -107,7 +110,7 @@ export abstract class ValueEvaluation<Type extends EvaluationType> implements Ev
 		return this.toNumber() <= operand.toNumber();
 	}
 
-	gt(operand: Evaluation): boolean {
+	gt(operand: Evaluation<T>): boolean {
 		if (operand instanceof LocationPathEvaluation) {
 			return operand.some((rhs) => this.gt(rhs));
 		}
@@ -115,7 +118,7 @@ export abstract class ValueEvaluation<Type extends EvaluationType> implements Ev
 		return this.toNumber() > operand.toNumber();
 	}
 
-	gte(operand: Evaluation): boolean {
+	gte(operand: Evaluation<T>): boolean {
 		if (operand instanceof LocationPathEvaluation) {
 			return operand.some((rhs) => this.gte(rhs));
 		}

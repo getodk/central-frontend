@@ -1,9 +1,10 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { MaybeAttrNode } from './types';
 
 const DOCUMENT_POSITION_PRECEDING: Node['DOCUMENT_POSITION_PRECEDING'] = 0x02;
 const DOCUMENT_POSITION_FOLLOWING: Node['DOCUMENT_POSITION_FOLLOWING'] = 0x04;
 
-export const sortDocumentOrder = (nodes: Iterable<Node>) => {
+export const sortDocumentOrder = <T extends XPathNode>(nodes: Iterable<T>) => {
 	const array = Array.from(nodes);
 
 	if (array.length < 2) {

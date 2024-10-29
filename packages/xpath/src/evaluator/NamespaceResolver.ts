@@ -20,7 +20,10 @@ import {
 	XMLNS_PREFIX,
 } from '@getodk/common/constants/xmlns.ts';
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { ContextNode, ContextParentNode } from '../lib/dom/types.ts';
+import type { UnwrapAdapterNode } from '../adapter/interface/XPathCustomUnwrappableNode.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type { AdapterParentNode } from '../adapter/interface/XPathNodeKindAdapter.ts';
+import type { XPathDOMProvider } from '../adapter/xpathDOMProvider.ts';
 
 export {
 	ENKETO_NAMESPACE_URI,
@@ -110,30 +113,38 @@ interface XPathNSResolverObject {
 	readonly lookupNamespaceURI: XPathNSResolverFunction;
 }
 
-export class NamespaceResolver implements XPathNSResolverObject {
-	private static isInstance(
-		rootNode: ContextParentNode,
+export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverObject {
+	private static isInstance<T extends XPathNode>(
+		rootNode: AdapterParentNode<T> | UnwrapAdapterNode<AdapterParentNode<T>>,
 		value: unknown
-	): value is NamespaceResolver {
+	): value is NamespaceResolver<T> {
 		return value instanceof NamespaceResolver && value.rootNode === rootNode;
 	}
 
-	static from(
-		rootNode: ContextParentNode,
-		referenceNode?: ContextNode | null,
+	static from<T extends XPathNode>(
+		domProvider: XPathDOMProvider<T>,
+		rootNode: AdapterParentNode<T> | UnwrapAdapterNode<AdapterParentNode<T>>,
+		referenceNode?: T | UnwrapAdapterNode<T> | null,
 		contextResolver?: XPathNSResolver | null
-	): NamespaceResolver {
+	): NamespaceResolver<T> {
 		if (this.isInstance(rootNode, contextResolver)) {
 			return contextResolver;
 		}
 
-		return new this(rootNode, referenceNode ?? null, contextResolver);
+		return new this(
+			domProvider,
+			rootNode as AdapterParentNode<T>,
+			(referenceNode ?? null) as T | null,
+			contextResolver
+		);
 	}
+
 	protected readonly contextResolver: XPathNSResolverFunction;
 
 	private constructor(
-		protected readonly rootNode: ContextParentNode,
-		protected readonly referenceNode?: Node | null,
+		protected readonly domProvider: XPathDOMProvider<T>,
+		protected readonly rootNode: AdapterParentNode<T>,
+		protected readonly referenceNode?: T | null,
 		contextResolver?: XPathNSResolver | null
 	) {
 		const contextResolverNode = referenceNode ?? rootNode;
@@ -148,14 +159,6 @@ export class NamespaceResolver implements XPathNSResolverObject {
 			this.contextResolver = (prefix) => contextResolver.lookupNamespaceURI(prefix);
 		}
 	}
-
-	protected lookupNodeNamespaceURI = (node: Node, prefix: string | null) => {
-		return node.lookupNamespaceURI(prefix);
-	};
-
-	protected lookupStaticNamespaceURI = (prefix: string | null) => {
-		return staticNamespaces.get(prefix) ?? null;
-	};
 
 	/**
 	 * Note: while it is likely consistent with the **spec** to resolve a `null`

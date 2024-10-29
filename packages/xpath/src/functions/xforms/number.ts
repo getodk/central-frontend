@@ -1,5 +1,4 @@
 import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
-import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
@@ -50,7 +49,7 @@ export const min = mathNAlias('min');
 export const number = new FunctionImplementation(
 	'number',
 	[{ arityType: 'optional' }],
-	(context, [expression]): Evaluation<'NUMBER'> => {
+	(context, [expression]) => {
 		const results = expression?.evaluate(context) ?? context;
 		const numberValue = results.toNumber();
 		const { type } = results;
@@ -68,7 +67,7 @@ export const number = new FunctionImplementation(
 		}
 
 		if (type === 'NUMBER') {
-			return results as Evaluation<'NUMBER'>;
+			return results;
 		}
 
 		return new NumberEvaluation(context, numberValue);

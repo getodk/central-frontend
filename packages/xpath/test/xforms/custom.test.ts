@@ -14,7 +14,7 @@ describe.skip('custom XPath functions', () => {
 			contextNode: DefaultDOMAdapterNode,
 			namespaceResolver: XPathNSResolver | null,
 			resultType: XPathEvaluationResultType | null
-		): XPathEvaluationResult;
+		): XPathEvaluationResult<DefaultDOMAdapterNode>;
 
 		readonly customXPathFunction?: {
 			add(...args: unknown[]): unknown;

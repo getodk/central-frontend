@@ -1,14 +1,27 @@
+import type {
+	DefaultDOMAdapterDocument,
+	DefaultDOMAdapterElement,
+	DefaultDOMAdapterNode,
+	DefaultDOMAdapterParentNode,
+} from '../../adapter/defaults.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import type {
+	AdapterDocument,
+	AdapterElement,
+	AdapterParentNode,
+} from '../../adapter/interface/XPathNodeKindAdapter.ts';
 import { assertParentNode } from './assertions.ts';
 import { isAttributeNode, isDocumentNode, isElementNode } from './predicates.ts';
-import type { ContextNode, ContextParentNode } from './types.ts';
 import { DOCUMENT_NODE } from './types.ts';
 
-export const getDocument = (node: Node): Document =>
-	node.nodeType === DOCUMENT_NODE ? (node as Document) : node.ownerDocument!;
+export const getDocument = <T extends XPathNode>(node: T): AdapterDocument<T> =>
+	(node.nodeType === DOCUMENT_NODE
+		? (node as Document)
+		: node.ownerDocument!) as DefaultDOMAdapterDocument as AdapterDocument<T>;
 
-export const getRootNode = (node: ContextNode): ContextParentNode => {
+export const getRootNode = <T extends XPathNode>(node: T): AdapterParentNode<T> => {
 	if (isDocumentNode(node)) {
-		return node;
+		return node as DefaultDOMAdapterDocument as AdapterDocument<T>;
 	}
 
 	if (isElementNode(node)) {
@@ -16,7 +29,7 @@ export const getRootNode = (node: ContextNode): ContextParentNode => {
 
 		assertParentNode(rootNode);
 
-		return rootNode;
+		return rootNode as DefaultDOMAdapterParentNode as AdapterParentNode<T>;
 	}
 
 	if (isAttributeNode(node)) {
@@ -26,7 +39,7 @@ export const getRootNode = (node: ContextNode): ContextParentNode => {
 			throw 'todo';
 		}
 
-		return getRootNode(ownerElement);
+		return getRootNode(ownerElement as DefaultDOMAdapterElement as AdapterElement<T>);
 	}
 
 	// Comment, ProcessingInstruction, Text
@@ -36,5 +49,5 @@ export const getRootNode = (node: ContextNode): ContextParentNode => {
 		throw 'todo getRootNode COMMENT | PROCESSING_INSTRUCTION | TEXT';
 	}
 
-	return getRootNode(parentElement);
+	return getRootNode(parentElement as Node as DefaultDOMAdapterNode as T);
 };

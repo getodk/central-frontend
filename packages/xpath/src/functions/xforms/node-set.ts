@@ -1,11 +1,11 @@
-import type { Evaluation } from '../../evaluations/Evaluation.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { seededRandomize } from '../../lib/collections/sort.ts';
-import type { ContextNode, MaybeElementNode } from '../../lib/dom/types.ts';
+import type { MaybeElementNode } from '../../lib/dom/types.ts';
 import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 
 export const countNonEmpty = new NumberFunction(
@@ -38,50 +38,31 @@ const assertArgument: AssertArgument = (index, arg) => {
 	}
 };
 
-type AssertIsLocationPathEvaluation = (
-	evaluation?: Evaluation
-) => asserts evaluation is LocationPathEvaluation;
-
-/**
- * @todo This is a concern in several `FunctionImplementation`s. It would be
- * much nicer if it were handled as part of the signature, then inferred in the
- * types and validated automatically at runtime. It would also make sense, as a
- * minor stopgap improvement, to generalize checks like this in a single place
- * (e.g. as a static method on {@link LocationPathEvaluation} itself). Deferred
- * here because there is exploratory work on both, but both are out of scope for
- * work in progress to support {@link indexedRepeat}.
- */
-const assertIsLocationPathEvaluation: AssertIsLocationPathEvaluation = (evaluation) => {
-	if (!(evaluation instanceof LocationPathEvaluation)) {
-		throw new Error('Expected a node-set result');
-	}
-};
-
 /**
  * Note: this function is not intended to be general outside of usage by
  * {@link indexedRepeat}.
  *
  * Evaluation of the provided argument is eager—i.e. materializing the complete
- * array of results, rather than the typical `Iterable<ContextNode>` produced in
- * most cases—because it is expected that in most cases the eagerness will not
- * be terribly expensive, and all results will usually be consumed, either to be
+ * array of results, rather than the typical `Iterable<T>` produced in most
+ * cases—because it is expected that in most cases the eagerness will not be
+ * terribly expensive, and all results will usually be consumed, either to be
  * indexed or filtered in other ways applicable at call sites.
  *
  * Function is named to reflect that expectation.
  */
-const evaluateArgumentToFilterableNodes = (
-	context: LocationPathEvaluation,
+const evaluateArgumentToFilterableNodes = <T extends XPathNode>(
+	context: LocationPathEvaluation<T>,
 	arg: EvaluableArgument
-): readonly ContextNode[] => {
+): readonly T[] => {
 	const evaluation = arg.evaluate(context);
 
-	assertIsLocationPathEvaluation(evaluation);
+	LocationPathEvaluation.assertInstance(context, evaluation);
 
 	return Array.from(evaluation.contextNodes);
 };
 
-interface EvaluatedIndexedRepeatArgumentPair {
-	readonly repeats: readonly ContextNode[];
+interface EvaluatedIndexedRepeatArgumentPair<T extends XPathNode> {
+	readonly repeats: readonly T[];
 	readonly position: number;
 }
 
@@ -94,9 +75,9 @@ type DepthSortResult = -1 | 0 | 1;
  * generally ought to be with current designs), but it would be nice to consider
  * how we'd address caching with these kinds of dynamics at play.
  */
-const compareContainmentDepth = (
-	{ repeats: a }: EvaluatedIndexedRepeatArgumentPair,
-	{ repeats: b }: EvaluatedIndexedRepeatArgumentPair
+const compareContainmentDepth = <T extends XPathNode>(
+	{ repeats: a }: EvaluatedIndexedRepeatArgumentPair<T>,
+	{ repeats: b }: EvaluatedIndexedRepeatArgumentPair<T>
 ): DepthSortResult => {
 	for (const repeatA of a) {
 		for (const repeatB of b) {
@@ -145,7 +126,10 @@ export const indexedRepeat = new NodeSetFunction(
 		// First argument is `target` (per spec) of the deepest resolved repeat
 		const target = args[0]!;
 
-		let pairs: EvaluatedIndexedRepeatArgumentPair[] = [];
+		/** @todo remove */
+		type T = (typeof context)['evaluationContextNode'];
+
+		let pairs: Array<EvaluatedIndexedRepeatArgumentPair<T>> = [];
 
 		// Iterate through rest of arguments, collecting pairs of:
 		//
@@ -214,7 +198,7 @@ export const indexedRepeat = new NodeSetFunction(
 		//
 		// 2. Selecting the repeat at the specified/evaluated position (of those
 		//    filtered in 1).
-		let repeatContextNode: ContextNode;
+		let repeatContextNode: T;
 
 		for (const [index, pair] of pairs.entries()) {
 			const { position } = pair;
@@ -254,7 +238,7 @@ export const indexedRepeat = new NodeSetFunction(
 export const instance = new NodeSetFunction(
 	'instance',
 	[{ arityType: 'required' }],
-	(context, [idExpression]): readonly Element[] => {
+	(context, [idExpression]) => {
 		const id = idExpression!.evaluate(context).toString();
 		const instanceElement = XFormsXPathEvaluator.getSecondaryInstance(context, id);
 
@@ -278,7 +262,7 @@ export const once = new StringFunction(
 			throw 'todo once no context';
 		}
 
-		const string = contextNode.textContent ?? '';
+		const string = context.domProvider.getNodeValue(contextNode);
 
 		if (string === '') {
 			// TODO: probably memoize, it's at least sort of implied by the name
@@ -300,9 +284,7 @@ export const position = new NumberFunction(
 
 		const results = expression.evaluate(context);
 
-		if (!(results instanceof LocationPathEvaluation)) {
-			throw 'todo not a node-set';
-		}
+		LocationPathEvaluation.assertInstance(context, results);
 
 		const [first, next] = results.values();
 
@@ -340,9 +322,7 @@ export const randomize = new NodeSetFunction(
 	(context, [expression, seedExpression]) => {
 		const results = expression!.evaluate(context);
 
-		if (!(results instanceof LocationPathEvaluation)) {
-			throw 'todo (not a node-set)';
-		}
+		LocationPathEvaluation.assertInstance(context, results);
 
 		const nodeResults = Array.from(results.values());
 		const nodes = nodeResults.map(({ value }) => value);

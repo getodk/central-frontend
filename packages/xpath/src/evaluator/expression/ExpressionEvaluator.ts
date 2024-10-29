@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type {
@@ -16,5 +17,5 @@ export type ExpressionNode =
 export interface ExpressionEvaluator {
 	readonly syntaxNode: ExpressionNode;
 
-	evaluate(context: EvaluationContext): Evaluation;
+	evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T>;
 }

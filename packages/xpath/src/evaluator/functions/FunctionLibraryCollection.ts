@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { Context } from '../../context/Context.ts';
 import { FN_NAMESPACE_URI } from '../NamespaceResolver.ts';
 import type { FunctionImplementation } from './FunctionImplementation.ts';
@@ -103,7 +104,10 @@ export class FunctionLibraryCollection {
 		return null;
 	}
 
-	getImplementation(context: Context, name: FunctionNameLookup): FunctionImplementation | null {
+	getImplementation<T extends XPathNode>(
+		context: Context<T>,
+		name: FunctionNameLookup
+	): FunctionImplementation | null {
 		const { localName, namespaceURI, prefix } = name;
 
 		const resolvedNamespaceURI =

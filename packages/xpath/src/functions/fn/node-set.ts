@@ -1,5 +1,6 @@
 import { normalizeXMLXPathWhitespace } from '@getodk/common/lib/string/whitespace.ts';
 import { reduce } from 'itertools-ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
@@ -36,7 +37,7 @@ export const current = new NodeSetFunction('current', [], (context) => {
 export const id = new NodeSetFunction(
 	'id',
 	[{ arityType: 'required' }],
-	(context, [expression]): Iterable<Node> => {
+	(context, [expression]) => {
 		const idArgument = expression!.evaluate(context);
 		const idArguments = idArgument.type === 'NODE' ? Array.from(idArgument) : [idArgument.first()];
 		const elementIds = Array.from(
@@ -52,6 +53,10 @@ export const id = new NodeSetFunction(
 		}
 
 		const { contextDocument } = context;
+
+		/** @todo remove */
+		type T = (typeof context)['evaluationContextNode'];
+
 		const elements = elementIds.flatMap((elementId) => {
 			const element = contextDocument.getElementById(elementId);
 
@@ -59,7 +64,7 @@ export const id = new NodeSetFunction(
 				return [];
 			}
 
-			return element;
+			return element as Node as XPathNode as T;
 		});
 
 		return sortDocumentOrder(elements);

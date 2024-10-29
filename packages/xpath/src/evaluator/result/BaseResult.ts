@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type {
 	ANY_UNORDERED_NODE_TYPE,
 	BOOLEAN_TYPE,
@@ -41,7 +42,7 @@ const {
 	FIRST_ORDERED_NODE_TYPE,
 } = XPATH_EVALUATION_RESULT;
 
-export abstract class BaseResult implements XPathEvaluationResult {
+export abstract class BaseResult<T extends XPathNode> implements XPathEvaluationResult<T> {
 	static readonly ANY_TYPE = ANY_TYPE;
 	static readonly NUMBER_TYPE = NUMBER_TYPE;
 	static readonly STRING_TYPE = STRING_TYPE;
@@ -64,17 +65,17 @@ export abstract class BaseResult implements XPathEvaluationResult {
 	readonly ANY_UNORDERED_NODE_TYPE = ANY_UNORDERED_NODE_TYPE;
 	readonly FIRST_ORDERED_NODE_TYPE = FIRST_ORDERED_NODE_TYPE;
 
-	protected abstract readonly nodes: Iterable<Node> | null;
+	protected abstract readonly nodes: Iterable<T> | null;
 
 	abstract readonly resultType: XPathEvaluationResultType;
 	abstract readonly invalidIteratorState: boolean;
-	abstract readonly singleNodeValue: Node | null;
+	abstract readonly singleNodeValue: T | null;
 	abstract readonly snapshotLength: number;
 
 	abstract readonly booleanValue: boolean;
 	abstract readonly numberValue: number;
 	abstract readonly stringValue: string;
 
-	abstract iterateNext(): Node | null;
-	abstract snapshotItem(index: number): Node | null;
+	abstract iterateNext(): T | null;
+	abstract snapshotItem(index: number): T | null;
 }

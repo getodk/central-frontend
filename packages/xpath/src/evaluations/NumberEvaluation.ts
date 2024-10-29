@@ -1,7 +1,8 @@
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
-export class NumberEvaluation extends ValueEvaluation<'NUMBER'> {
+export class NumberEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NUMBER'> {
 	readonly type = 'NUMBER';
 	readonly nodes = null;
 
@@ -10,7 +11,7 @@ export class NumberEvaluation extends ValueEvaluation<'NUMBER'> {
 	protected readonly stringValue: string;
 
 	constructor(
-		readonly context: LocationPathEvaluation,
+		readonly context: LocationPathEvaluation<T>,
 		readonly value: number
 	) {
 		super();

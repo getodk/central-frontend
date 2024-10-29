@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { PrimitiveResultType } from './BaseResult.ts';
 import { BaseResult } from './BaseResult.ts';
 import type { XPathEvaluationResult } from './XPathEvaluationResult.ts';
@@ -8,10 +9,13 @@ class InvalidNodeSetResultError extends Error {
 	}
 }
 
-export abstract class PrimitiveResult extends BaseResult implements XPathEvaluationResult {
+export abstract class PrimitiveResult<T extends XPathNode>
+	extends BaseResult<T>
+	implements XPathEvaluationResult<T>
+{
 	abstract override readonly resultType: PrimitiveResultType;
 
-	get singleNodeValue(): Node | null {
+	get singleNodeValue(): T | null {
 		throw new InvalidNodeSetResultError();
 	}
 
@@ -21,11 +25,11 @@ export abstract class PrimitiveResult extends BaseResult implements XPathEvaluat
 
 	readonly invalidIteratorState = true;
 
-	iterateNext(): Node | null {
+	iterateNext(): T | null {
 		throw new InvalidNodeSetResultError();
 	}
 
-	snapshotItem(_index?: number): Node | null {
+	snapshotItem(_index?: number): T | null {
 		throw new InvalidNodeSetResultError();
 	}
 }

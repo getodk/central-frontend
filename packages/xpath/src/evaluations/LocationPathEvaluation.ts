@@ -1,6 +1,17 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { identity } from '@getodk/common/lib/identity.ts';
 import type { Temporal } from '@js-temporal/polyfill';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type {
+	AdapterAttribute,
+	AdapterDocument,
+	AdapterElement,
+	AdapterNamespaceDeclaration,
+	AdapterParentNode,
+	AdapterProcessingInstruction,
+	AdapterText,
+} from '../adapter/interface/XPathNodeKindAdapter.ts';
+import type { XPathDOMProvider } from '../adapter/xpathDOMProvider.ts';
 import type { Context } from '../context/Context.ts';
 import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
@@ -21,15 +32,6 @@ import {
 	isTextNode,
 } from '../lib/dom/predicates.ts';
 import { sortDocumentOrder } from '../lib/dom/sort.ts';
-import type {
-	ContextDocument,
-	ContextNode,
-	ContextParentNode,
-	MaybeAttrNode,
-	MaybeElementNode,
-	MaybeNamedNode,
-	MaybeProcessingInstructionNode,
-} from '../lib/dom/types.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
 import { distinct, filter, tee } from '../lib/iterators/common.ts';
 import type { Evaluation } from './Evaluation.ts';
@@ -41,52 +43,62 @@ function* concat<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
 	}
 }
 
-function* flatMapNodeSets(
-	contextNodes: Iterable<ContextNode>,
-	fn: (contextNode: ContextNode) => Iterable<ContextNode>
-): Iterable<ContextNode> {
+function* flatMapNodeSets<T extends XPathNode>(
+	contextNodes: Iterable<T>,
+	fn: (contextNode: T) => Iterable<T>
+): Iterable<T> {
 	for (const contextNode of contextNodes) {
 		yield* fn(contextNode);
 	}
 }
 
-type LocationPathParentContext = EvaluationContext | LocationPathEvaluation;
+// prettier-ignore
+type LocationPathParentContext<T extends XPathNode> =
+	| EvaluationContext<T>
+	| LocationPathEvaluation<T>;
 
-function* toNodeEvaluations(
-	context: LocationPathEvaluation,
-	nodes: Iterable<ContextNode>
-): Iterable<NodeEvaluation> {
+function* toNodeEvaluations<T extends XPathNode>(
+	context: LocationPathEvaluation<T>,
+	nodes: Iterable<T>
+): Iterable<NodeEvaluation<T>> {
 	for (const node of nodes) {
 		yield new NodeEvaluation(context, node);
 	}
 }
 
-type EvaluationComparator = (lhs: Evaluation, rhs: Evaluation) => boolean;
+type EvaluationComparator<T extends XPathNode> = (
+	lhs: Evaluation<T>,
+	rhs: Evaluation<T>
+) => boolean;
 
 const filterNamespace = filter(isNamespaceAttribute);
 
-const filterNonNamespace = filter((attr: Attr) => !isNamespaceAttribute(attr));
+const filterNonNamespace = filter(
+	<T extends XPathNode>(
+		attr: AdapterAttribute<T> | AdapterNamespaceDeclaration<T>
+	): attr is AdapterAttribute<T> => !isNamespaceAttribute(attr)
+);
 
 // TODO: we'll be able to optimize this so we don't always need it
-type NodeTypeFilter = (nodes: Iterable<ContextNode>) => Iterable<ContextNode>;
+type NodeTypeFilter = <T extends XPathNode, U extends T>(nodes: Iterable<T>) => Iterable<U>;
 
-const isNamedNode = (node: ContextNode): node is Attr | Element => {
+const isNamedNode = <T extends XPathNode>(node: T) => {
 	return isElementNode(node) || isAttributeNode(node);
 };
 
-const filterNamedNodes: NodeTypeFilter = filter(isNamedNode);
+const filterNamedNodes = filter(isNamedNode) as NodeTypeFilter;
 
-const filterProcessingInstructionNodes: NodeTypeFilter = filter(isProcessingInstructionNode);
+const filterProcessingInstructionNodes = filter(isProcessingInstructionNode) as NodeTypeFilter;
 
-const filterCommentNodes: NodeTypeFilter = filter(isCommentNode);
+const filterCommentNodes = filter(isCommentNode) as NodeTypeFilter;
 
-const filterNode: NodeTypeFilter = identity;
+const filterNode = identity as NodeTypeFilter;
 
-const isXPathTextNode = (node: ContextNode): node is CDATASection | Text => {
+const isXPathTextNode = <T extends XPathNode>(node: T): node is AdapterText<T> => {
 	return isTextNode(node) || isCDataSection(node);
 };
 
-const filterTextNode: NodeTypeFilter = filter(isXPathTextNode);
+const filterTextNode = filter(isXPathTextNode) as NodeTypeFilter;
 
 const getNodeTypeFilter = (step: AnyStep): NodeTypeFilter => {
 	switch (step.nodeType) {
@@ -110,31 +122,33 @@ const getNodeTypeFilter = (step: AnyStep): NodeTypeFilter => {
 	}
 };
 
-const isContextNode = (node: Node | null | undefined): node is ContextNode => {
+const isContextNode = <T extends XPathNode>(node: T | null | undefined): node is T => {
 	return node != null;
 };
 
-type ContextNodeFilter = (node: Iterable<Node | null>) => Iterable<ContextNode>;
+type ContextNodeFilter = <T>(node: Iterable<T | null>) => Iterable<NonNullable<T>>;
 
-const filterContextNode: ContextNodeFilter = filter(isContextNode);
+const filterContextNode = filter(isContextNode) as ContextNodeFilter;
 
-interface AxisEvaluationCurrentContext {
-	readonly contextDocument: ContextDocument;
-	readonly rootNode: ContextParentNode;
-	readonly visited: WeakSet<ContextNode>;
+interface AxisEvaluationCurrentContext<T extends XPathNode> {
+	readonly domProvider: XPathDOMProvider<T>;
+	readonly contextDocument: AdapterDocument<T>;
+	readonly rootNode: AdapterParentNode<T>;
+	readonly visited: WeakSet<T>;
 }
 
-interface AxisEvaluationContext extends AxisEvaluationCurrentContext {
-	readonly contextNode: ContextNode;
+interface AxisEvaluationContext<T extends XPathNode> extends AxisEvaluationCurrentContext<T> {
+	readonly contextNode: T;
 }
 
-const axisEvaluationContext = (
-	currentContext: AxisEvaluationCurrentContext,
-	contextNode: ContextNode
-): AxisEvaluationContext => {
-	const { contextDocument, rootNode, visited } = currentContext;
+const axisEvaluationContext = <T extends XPathNode>(
+	currentContext: AxisEvaluationCurrentContext<T>,
+	contextNode: T
+): AxisEvaluationContext<T> => {
+	const { domProvider, contextDocument, rootNode, visited } = currentContext;
 
 	return {
+		domProvider,
 		contextDocument,
 		rootNode,
 		contextNode,
@@ -148,11 +162,13 @@ type SiblingKey =
 	| 'previousElementSibling'
 	| 'previousSibling';
 
-function* siblings(contextNode: ContextNode, siblingType: SiblingKey): Iterable<ContextNode> {
-	let currentNode: Node | null | undefined = contextNode;
+function* siblings<T extends XPathNode>(contextNode: T, siblingType: SiblingKey): Iterable<T> {
+	let currentNode: T | null | undefined = contextNode;
 
 	while (currentNode != null) {
-		currentNode = (currentNode as MaybeElementNode)[siblingType];
+		currentNode = (currentNode as AdapterElement<T>)[
+			siblingType
+		] satisfies ChildNode | null as T | null;
 
 		if (isContextNode(currentNode)) {
 			yield currentNode;
@@ -160,7 +176,10 @@ function* siblings(contextNode: ContextNode, siblingType: SiblingKey): Iterable<
 	}
 }
 
-type EvaluateAxisNodes = (context: AxisEvaluationContext, step: AnyStep) => Iterable<ContextNode>;
+type EvaluateAxisNodes = <T extends XPathNode>(
+	context: AxisEvaluationContext<T>,
+	step: AnyStep
+) => Iterable<T>;
 
 type AxisEvaluators = Readonly<Record<AxisType, EvaluateAxisNodes>>;
 
@@ -192,22 +211,28 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	attribute: function* attribute(context) {
-		const attributeNodes = (context.contextNode as MaybeElementNode).attributes ?? [];
+	attribute: function* attribute<T extends XPathNode>(
+		context: AxisEvaluationContext<T>
+	): Iterable<T> {
+		const attributeNodes = (context.contextNode as AdapterElement<T>).attributes ?? [];
 
+		// @ts-expect-error - this is temporary. The runtime logic hasn't changed yet, but since it will it's not worth the effort to satisfy the type checker here.
 		yield* filterNonNamespace(attributeNodes);
 	},
 
-	child: function* child(context, step) {
+	child: function* child<T extends XPathNode>(
+		context: AxisEvaluationContext<T>,
+		step: AnyStep
+	): Iterable<T> {
 		const { contextNode } = context;
 
 		switch (step.nodeType) {
 			case '__NAMED__':
-				yield* (contextNode as MaybeElementNode).children ?? [];
+				yield* ((contextNode as AdapterElement<T>).children ?? []) as Iterable<AdapterElement<T>>;
 				break;
 
 			default:
-				yield* contextNode.childNodes satisfies Iterable<ChildNode> as Iterable<ContextNode>;
+				yield* contextNode.childNodes satisfies Iterable<ChildNode> as Iterable<T>;
 		}
 	},
 
@@ -231,9 +256,13 @@ const axisEvaluators: AxisEvaluators = {
 		yield* axisEvaluators.descendant(selfContext, step);
 	},
 
-	following: function* following(context, step) {
+	following: function* following<T extends XPathNode>(
+		context: AxisEvaluationContext<T>,
+		step: AnyStep
+	): Iterable<T> {
 		const { contextDocument, contextNode, rootNode, visited } = context;
-		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
+		const effectiveContextNode = ((contextNode as AdapterAttribute<T>).ownerElement ??
+			contextNode) as T;
 
 		if (visited.has(effectiveContextNode)) {
 			return;
@@ -241,7 +270,7 @@ const axisEvaluators: AxisEvaluators = {
 
 		if (
 			effectiveContextNode === rootNode ||
-			effectiveContextNode === contextDocument.documentElement
+			effectiveContextNode === (contextDocument.documentElement as Node as T)
 		) {
 			return;
 		}
@@ -250,10 +279,13 @@ const axisEvaluators: AxisEvaluators = {
 
 		const { firstChild, nextSibling, parentNode } = effectiveContextNode;
 
-		let currentNodes = filterContextNode([firstChild, nextSibling]);
+		let currentNodes = filterContextNode([firstChild, nextSibling]) as Iterable<T>;
 
-		if (isContextNode(parentNode) && parentNode !== rootNode) {
-			const followingParentSiblingsContext = axisEvaluationContext(context, parentNode);
+		if (isContextNode(parentNode as AdapterParentNode<T> | null) && parentNode !== rootNode) {
+			const followingParentSiblingsContext = axisEvaluationContext(
+				context,
+				parentNode as AdapterParentNode<T>
+			);
 			const followingParentSiblings = axisEvaluators['following-sibling'](
 				followingParentSiblingsContext,
 				step
@@ -283,34 +315,38 @@ const axisEvaluators: AxisEvaluators = {
 		yield* siblings(context.contextNode, siblingKey);
 	},
 
-	namespace: function* namespace(context) {
-		const attributeNodes = (context.contextNode as MaybeElementNode).attributes ?? [];
+	namespace: function* namespace<T extends XPathNode>(context: AxisEvaluationContext<T>) {
+		const attributeNodes = (context.contextNode as AdapterElement<T>).attributes ?? [];
 
+		// @ts-expect-error - this is temporary. The runtime logic hasn't changed yet, but since it will it's not worth the effort to satisfy the type checker here.
 		yield* filterNamespace(attributeNodes);
 	},
 
-	parent: function* parent(context, step) {
+	parent: function* parent<T extends XPathNode>(
+		context: AxisEvaluationContext<T>,
+		step: AnyStep
+	): Iterable<T> {
 		const { rootNode, contextNode } = context;
 
 		if (contextNode === rootNode) {
 			return;
 		}
 
-		const { ownerElement } = contextNode as MaybeAttrNode;
+		const { ownerElement } = contextNode as AdapterAttribute<T>;
 
 		// Attribute/namespace parent is its owner element
 		if (ownerElement != null) {
-			yield ownerElement;
+			yield ownerElement as AdapterElement<T>;
 
 			return;
 		}
 
-		let parentNode: Node | null;
+		let parentNode: T | null;
 
 		if (step.nodeType === '__NAMED__') {
-			parentNode = contextNode.parentElement;
+			parentNode = contextNode.parentElement satisfies Node | null as T | null;
 		} else {
-			parentNode = contextNode.parentNode;
+			parentNode = contextNode.parentNode satisfies Node | null as T | null;
 		}
 
 		if (isContextNode(parentNode)) {
@@ -318,9 +354,13 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	preceding: function* preceding(context, step): Iterable<ContextNode> {
+	preceding: function* preceding<T extends XPathNode>(
+		context: AxisEvaluationContext<T>,
+		step: AnyStep
+	): Iterable<T> {
 		const { contextDocument, rootNode, contextNode, visited } = context;
-		const effectiveContextNode = (contextNode as MaybeAttrNode).ownerElement ?? contextNode;
+		const effectiveContextNode = ((contextNode as AdapterAttribute<T>).ownerElement ??
+			contextNode) as T;
 
 		if (visited.has(effectiveContextNode)) {
 			return;
@@ -332,7 +372,7 @@ const axisEvaluators: AxisEvaluators = {
 			return;
 		}
 
-		if (effectiveContextNode === contextDocument.documentElement) {
+		if (effectiveContextNode === (contextDocument.documentElement as Node as T)) {
 			yield* axisEvaluators['preceding-sibling'](context, step);
 
 			return;
@@ -340,10 +380,17 @@ const axisEvaluators: AxisEvaluators = {
 
 		const { lastChild, previousSibling, parentNode } = effectiveContextNode;
 
-		let currentNodes = filterContextNode([lastChild, previousSibling]);
+		let currentNodes = filterContextNode([lastChild, previousSibling]) as Iterable<T>;
 
-		if (effectiveContextNode !== rootNode && isContextNode(parentNode) && parentNode !== rootNode) {
-			const precedingParentSiblingsContext = axisEvaluationContext(context, parentNode);
+		if (
+			effectiveContextNode !== rootNode &&
+			isContextNode(parentNode as AdapterParentNode<T> | null) &&
+			parentNode !== rootNode
+		) {
+			const precedingParentSiblingsContext = axisEvaluationContext(
+				context,
+				parentNode as AdapterParentNode<T>
+			);
 			const precedingParentSiblings = axisEvaluators['preceding-sibling'](
 				precedingParentSiblingsContext,
 				step
@@ -389,6 +436,12 @@ type ArbitraryNodesTemporaryCallee =
 	| LocationPathEvaluator
 	| NodeSetFunction;
 
+type AssertLocationPathEvaluationInstance = <T extends XPathNode>(
+	context: EvaluationContext<T>,
+	value: unknown,
+	message?: string
+) => asserts value is LocationPathEvaluation<T>;
+
 // TODO: naming, general design/approach. This class has multiple, overlapping
 // purposes:
 //
@@ -423,33 +476,57 @@ type ArbitraryNodesTemporaryCallee =
 // satisfying, but it would come with a bunch of coupling between those
 // sub-structures to satisfy the various interfaces expecting some or all of
 // this behavior/structure.
-export class LocationPathEvaluation
-	implements Evaluation<'NODE'>, Context, EvaluationContext, Iterable<LocationPathEvaluation>
+export class LocationPathEvaluation<T extends XPathNode>
+	implements
+		Evaluation<T, 'NODE'>,
+		Context<T>,
+		EvaluationContext<T>,
+		Iterable<LocationPathEvaluation<T>>
 {
+	protected static isInstance<T extends XPathNode>(
+		context: Context<T>,
+		value: unknown
+	): value is LocationPathEvaluation<T> {
+		return value instanceof LocationPathEvaluation && value.domProvider === context.domProvider;
+	}
+
+	static readonly assertInstance: AssertLocationPathEvaluationInstance = (
+		context,
+		value,
+		message
+	) => {
+		if (!this.isInstance(context, value)) {
+			throw new Error(message ?? 'Expected a node-set result');
+		}
+	};
+
+	// --- DOM adapter/provider ---
+	readonly domProvider: XPathDOMProvider<T>;
+
 	// --- Evaluation ---
 	readonly type = 'NODE';
 
-	protected readonly nodeEvaluations: Reiterable<NodeEvaluation>;
+	protected readonly nodeEvaluations: Reiterable<NodeEvaluation<T>>;
 
 	// --- Context ---
-	readonly evaluator: Evaluator;
-	readonly context: LocationPathEvaluation = this;
+	readonly evaluator: Evaluator<T>;
+	readonly context: LocationPathEvaluation<T> = this;
 
 	/**
 	 * @see {@link Context.evaluationContextNode}
 	 */
-	readonly evaluationContextNode: ContextNode;
+	readonly evaluationContextNode: T;
 
-	readonly contextDocument: ContextDocument;
-	readonly rootNode: ContextParentNode;
+	readonly contextDocument: AdapterDocument<T>;
+	readonly rootNode: AdapterParentNode<T>;
 
-	private _nodes: Iterable<ContextNode>;
+	private _nodes: Iterable<T>;
 
-	get nodes(): Iterable<ContextNode> {
+	get nodes(): Iterable<T> {
 		return this._nodes;
 	}
 
-	get contextNodes(): IterableIterator<ContextNode> {
+	get contextNodes(): IterableIterator<T> {
 		const [nodes, contextNodes] = tee(this._nodes);
 
 		this._nodes = nodes;
@@ -463,7 +540,7 @@ export class LocationPathEvaluation
 	protected readonly initializedContextPosition: number;
 
 	readonly functions: FunctionLibraryCollection;
-	readonly namespaceResolver: NamespaceResolver;
+	readonly namespaceResolver: NamespaceResolver<T>;
 
 	readonly timeZone: Temporal.TimeZone;
 
@@ -477,15 +554,17 @@ export class LocationPathEvaluation
 	 * - Nodes filtered by predicate in {@link LocationPathExpression}. Such
 	 *   filtering almost certainly should be performed here, in {@link step}.
 	 */
-	static fromArbitraryNodes(
-		currentContext: LocationPathParentContext,
-		nodes: Iterable<ContextNode>,
+	static fromArbitraryNodes<T extends XPathNode>(
+		currentContext: LocationPathParentContext<T>,
+		nodes: Iterable<T>,
 		_temporaryCallee: ArbitraryNodesTemporaryCallee
-	): LocationPathEvaluation {
+	): LocationPathEvaluation<T> {
 		return new this(currentContext, nodes);
 	}
 
-	static fromCurrentContext(evaluationContext: EvaluationContext): LocationPathEvaluation {
+	static fromCurrentContext<T extends XPathNode>(
+		evaluationContext: EvaluationContext<T>
+	): LocationPathEvaluation<T> {
 		let options: LocationPathEvaluationOptions | undefined;
 
 		if (evaluationContext instanceof LocationPathEvaluation) {
@@ -502,15 +581,19 @@ export class LocationPathEvaluation
 		return new this(evaluationContext, evaluationContext.contextNodes, options);
 	}
 
-	static fromRoot(parentContext: LocationPathParentContext): LocationPathEvaluation {
+	static fromRoot<T extends XPathNode>(
+		parentContext: LocationPathParentContext<T>
+	): LocationPathEvaluation<T> {
 		return new this(parentContext, [parentContext.rootNode]);
 	}
 
 	protected constructor(
-		readonly parentContext: LocationPathParentContext,
-		contextNodes: Iterable<ContextNode>,
+		readonly parentContext: LocationPathParentContext<T>,
+		contextNodes: Iterable<T>,
 		options: LocationPathEvaluationOptions = {}
 	) {
+		this.domProvider = parentContext.domProvider;
+
 		const {
 			evaluator,
 			contextDocument,
@@ -550,7 +633,7 @@ export class LocationPathEvaluation
 		let contextPosition = this.contextPosition();
 
 		return {
-			next: (): IteratorResult<LocationPathEvaluation> => {
+			next: (): IteratorResult<LocationPathEvaluation<T>> => {
 				const next = nodes.next();
 
 				if (next.done) {
@@ -574,7 +657,7 @@ export class LocationPathEvaluation
 		};
 	}
 
-	values(): Iterable<NodeEvaluation> {
+	values(): Iterable<NodeEvaluation<T>> {
 		return this.nodeEvaluations;
 	}
 
@@ -601,17 +684,17 @@ export class LocationPathEvaluation
 		return computedContextSize;
 	}
 
-	currentContext(): LocationPathEvaluation {
-		return LocationPathEvaluation.fromCurrentContext(this);
+	currentContext<U extends XPathNode>(this: LocationPathEvaluation<U>): LocationPathEvaluation<U> {
+		return LocationPathEvaluation.fromCurrentContext<U>(this);
 	}
 
-	rootContext(): LocationPathEvaluation {
-		return LocationPathEvaluation.fromRoot(this);
+	rootContext<U extends XPathNode>(this: LocationPathEvaluation<U>): LocationPathEvaluation<U> {
+		return LocationPathEvaluation.fromRoot<U>(this);
 	}
 
-	protected _first?: NodeEvaluation | null;
+	protected _first?: NodeEvaluation<T> | null;
 
-	first(): NodeEvaluation | null {
+	first(): NodeEvaluation<T> | null {
 		let result = this._first;
 
 		if (typeof result !== 'undefined') {
@@ -639,7 +722,7 @@ export class LocationPathEvaluation
 		return result;
 	}
 
-	some(predicate: (evaluation: NodeEvaluation) => boolean): boolean {
+	some(predicate: (evaluation: NodeEvaluation<T>) => boolean): boolean {
 		return this.nodeEvaluations.some(predicate);
 	}
 
@@ -655,7 +738,7 @@ export class LocationPathEvaluation
 		return this.first()?.toString() ?? '';
 	}
 
-	protected compare(comparator: EvaluationComparator, operand: Evaluation) {
+	protected compare(comparator: EvaluationComparator<T>, operand: Evaluation<T>) {
 		if (operand instanceof LocationPathEvaluation) {
 			return this.some((lhs) => operand.some((rhs) => comparator(lhs, rhs)));
 		}
@@ -663,7 +746,7 @@ export class LocationPathEvaluation
 		return this.some((lhs) => comparator(lhs, operand));
 	}
 
-	eq(operand: Evaluation): boolean {
+	eq(operand: Evaluation<T>): boolean {
 		if (operand.type === 'BOOLEAN') {
 			return this.toBoolean() === operand.toBoolean();
 		}
@@ -671,7 +754,7 @@ export class LocationPathEvaluation
 		return this.compare((lhs, rhs) => lhs.eq(rhs), operand);
 	}
 
-	ne(operand: Evaluation): boolean {
+	ne(operand: Evaluation<T>): boolean {
 		if (operand.type === 'BOOLEAN') {
 			return this.toBoolean() !== operand.toBoolean();
 		}
@@ -679,24 +762,27 @@ export class LocationPathEvaluation
 		return this.compare((lhs, rhs) => lhs.ne(rhs), operand);
 	}
 
-	lt(operand: Evaluation): boolean {
+	lt(operand: Evaluation<T>): boolean {
 		return this.compare((lhs, rhs) => lhs.lt(rhs), operand);
 	}
 
-	lte(operand: Evaluation): boolean {
+	lte(operand: Evaluation<T>): boolean {
 		return this.compare((lhs, rhs) => lhs.lte(rhs), operand);
 	}
 
-	gt(operand: Evaluation): boolean {
+	gt(operand: Evaluation<T>): boolean {
 		return this.compare((lhs, rhs) => lhs.gt(rhs), operand);
 	}
 
-	gte(operand: Evaluation): boolean {
+	gte(operand: Evaluation<T>): boolean {
 		return this.compare((lhs, rhs) => lhs.gte(rhs), operand);
 	}
 
-	step(step: AnyStep): LocationPathEvaluation {
-		let nodesFilter: (nodes: Iterable<ContextNode>) => Iterable<ContextNode> = identity;
+	step(step: AnyStep): LocationPathEvaluation<T> {
+		/** @todo remove */
+		type MaybeNamedNode = AdapterAttribute<T> | AdapterElement<T>;
+
+		let nodesFilter: (nodes: Iterable<T>) => Iterable<T> = identity;
 
 		const { namespaceResolver } = this;
 
@@ -708,7 +794,7 @@ export class LocationPathEvaluation
 				const { nodeName } = step;
 				const nullNamespaceURI = namespaceResolver.lookupNamespaceURI(null);
 
-				nodesFilter = filter((node: ContextNode) => {
+				nodesFilter = filter((node: T) => {
 					const { namespaceURI } = node as MaybeNamedNode;
 
 					return (
@@ -723,8 +809,8 @@ export class LocationPathEvaluation
 			case 'ProcessingInstructionNameTest': {
 				const { processingInstructionName } = step;
 
-				nodesFilter = filter((node: ContextNode) => {
-					return (node as MaybeProcessingInstructionNode).nodeName === processingInstructionName;
+				nodesFilter = filter((node: T) => {
+					return (node as AdapterProcessingInstruction<T>).nodeName === processingInstructionName;
 				});
 
 				break;
@@ -735,7 +821,7 @@ export class LocationPathEvaluation
 				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
 				nodesFilter = filter(
-					(node: ContextNode) =>
+					(node: T) =>
 						(node as MaybeNamedNode).localName === localName &&
 						(node as MaybeNamedNode).namespaceURI === namespaceURI
 				);
@@ -747,9 +833,7 @@ export class LocationPathEvaluation
 				const { prefix } = step;
 				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-				nodesFilter = filter(
-					(node: ContextNode) => (node as MaybeNamedNode).namespaceURI === namespaceURI
-				);
+				nodesFilter = filter((node: T) => (node as MaybeNamedNode).namespaceURI === namespaceURI);
 
 				break;
 			}
@@ -763,7 +847,8 @@ export class LocationPathEvaluation
 
 		const { axisType } = step;
 		const axisEvaluator = axisEvaluators[axisType];
-		const context: AxisEvaluationCurrentContext = {
+		const context: AxisEvaluationCurrentContext<T> = {
+			domProvider: this.domProvider,
 			rootNode: this.rootNode,
 			contextDocument: this.contextDocument,
 			visited: new WeakSet(),
@@ -782,7 +867,7 @@ export class LocationPathEvaluation
 		// the tests, but making the minimal change necessary for refactor to
 		// eliminate use of TreeWalker
 		if (axisType === 'preceding' || axisType === 'preceding-sibling') {
-			nodes = sortDocumentOrder(nodes) satisfies Iterable<Node> as Iterable<ContextNode>;
+			nodes = sortDocumentOrder(nodes) satisfies Iterable<Node> as Iterable<T>;
 		}
 
 		return new LocationPathEvaluation(this, nodes);
@@ -790,9 +875,9 @@ export class LocationPathEvaluation
 
 	evaluateLocationPathExpression(
 		expression: LocationPathExpressionEvaluator
-	): LocationPathEvaluation {
+	): LocationPathEvaluation<T> {
 		const nodes = expression.evaluateNodes(this);
 
-		return new LocationPathEvaluation(this, nodes as Iterable<ContextNode>);
+		return new LocationPathEvaluation(this, nodes);
 	}
 }

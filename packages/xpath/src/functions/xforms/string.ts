@@ -2,8 +2,12 @@
 import { MD5, SHA1, SHA256, SHA384, SHA512 } from 'crypto-js';
 import * as base64 from 'crypto-js/enc-base64';
 import * as hex from 'crypto-js/enc-hex';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { IncompatibleRuntimeEnvironmentError } from '../../error/IncompatibleRuntimeEnvironmentError.ts';
+import type { Evaluation } from '../../evaluations/Evaluation.ts';
+import type { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
+import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { evaluateInt } from '../_shared/number.ts';
 import { toStrings } from '../_shared/string.ts';
@@ -28,14 +32,17 @@ export const coalesce = new StringFunction(
 export const concat = new StringFunction(
 	'concat',
 	[{ arityType: 'variadic', typeHint: 'string' }],
-	(context, expressions): string => {
-		if (expressions.length === 0) {
+	<T extends XPathNode>(
+		context: LocationPathEvaluation<T>,
+		args: readonly EvaluableArgument[]
+	): string => {
+		if (args.length === 0) {
 			return '';
 		}
 
-		return expressions
+		return args
 			.flatMap((expression) => {
-				const results = expression.evaluate(context);
+				const results: Evaluation<T> = expression.evaluate(context);
 
 				return Array.from(results).map((result) => result.toString());
 			})

@@ -9,6 +9,8 @@ export class StringFunction extends TypedFunctionImplementation<string> {
 		signature: FunctionSignature,
 		call: TypedFunctionCallable<string>
 	) {
-		super(localName, StringEvaluation, signature, call);
+		super(localName, signature, call, (context, value) => {
+			return new StringEvaluation(context, value);
+		});
 	}
 }
