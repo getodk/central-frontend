@@ -59,7 +59,13 @@ export abstract class NodeSetResult<T extends XPathNode>
 			computedNumberValue == null ||
 			computedStringValue == null
 		) {
-			computedStringValue = this.singleNodeValue?.textContent ?? '';
+			const { singleNodeValue } = this;
+
+			if (singleNodeValue == null) {
+				computedStringValue = '';
+			} else {
+				computedStringValue = this.domProvider.getNodeValue(singleNodeValue);
+			}
 
 			const isBlank = computedStringValue === '';
 

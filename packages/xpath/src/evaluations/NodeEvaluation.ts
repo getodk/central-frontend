@@ -46,7 +46,7 @@ export class NodeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NOD
 
 		if (computedValues == null) {
 			const { context, value: node } = this;
-			const stringValue = node.textContent ?? '';
+			const stringValue = context.domProvider.getNodeValue(node);
 			const isEmpty = trimXMLXPathWhitespace(stringValue) === '';
 			const booleanValue = !isEmpty;
 			const numberFunction = context.functions.getDefaultImplementation('number');
