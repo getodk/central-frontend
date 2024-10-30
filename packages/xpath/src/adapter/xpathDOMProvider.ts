@@ -4,6 +4,7 @@ import type { XPathDOMOptimizableOperations } from './interface/XPathDOMOptimiza
 import type { XPathNode } from './interface/XPathNode.ts';
 import type {
 	AdapterAttribute,
+	AdapterChildNode,
 	AdapterComment,
 	AdapterDocument,
 	AdapterElement,
@@ -116,6 +117,77 @@ const extendNodeKindGuards = <T extends XPathNode>(
 	return Object.assign(base, extensions);
 };
 
+type UniqueIDElementLookup<T extends XPathNode> = (
+	node: AdapterDocument<T>,
+	id: string
+) => AdapterElement<T> | null;
+
+const getElementByUniqueIdFactory = <T extends XPathNode>(
+	adapter: ExtendedNodeKindGuards<T>,
+	getNamedAttributeValue: LocalNamedAttributeValueLookup<T>
+): UniqueIDElementLookup<T> => {
+	const adapterImplementation = adapter.getElementByUniqueId?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	function* getElementDescendants(node: AdapterParentNode<T>): Iterable<AdapterElement<T>> {
+		if (adapter.isElement(node)) {
+			yield node;
+		}
+
+		for (const element of adapter.getChildElements(node)) {
+			yield element;
+
+			yield* getElementDescendants(element);
+		}
+	}
+
+	return (node, id) => {
+		const containingDocument = adapter.getContainingDocument(node);
+
+		for (const element of getElementDescendants(containingDocument)) {
+			if (getNamedAttributeValue(element, 'id') === id) {
+				return element;
+			}
+		}
+
+		return null;
+	};
+};
+
+type QualifiedNamedAttributeValueLookup<T extends XPathNode> = (
+	node: AdapterElement<T>,
+	namespaceURI: string | null,
+	localName: string
+) => string | null;
+
+const getQualifiedNamedAttributeValueFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): QualifiedNamedAttributeValueLookup<T> => {
+	const adapterImplementation = adapter.getQualifiedNamedAttributeValue?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node, namespaceURI, localName) => {
+		const attributes = adapter.getAttributes(node);
+
+		for (const attribute of attributes) {
+			if (
+				adapter.getNamespaceURI(attribute) === namespaceURI &&
+				adapter.getLocalName(attribute) === localName
+			) {
+				return adapter.getNodeValue(attribute);
+			}
+		}
+
+		return null;
+	};
+};
+
 type LocalNamedAttributeValueLookup<T extends XPathNode> = (
 	node: AdapterElement<T>,
 	localName: string
@@ -184,6 +256,70 @@ const getChildrenByLocalNameFactory = <T extends XPathNode>(
 	};
 };
 
+type ChildNodeLookup<T extends XPathNode> = (node: T) => AdapterChildNode<T> | null;
+
+const getFirstChildNodeFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): ChildNodeLookup<T> => {
+	const adapterImplementation = adapter.getFirstChildNode?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node) => {
+		const [childNode] = adapter.getChildNodes(node);
+
+		return childNode ?? null;
+	};
+};
+
+const getLastChildNodeFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): ChildNodeLookup<T> => {
+	const adapterImplementation = adapter.getLastChildNode?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node) => {
+		return Array.from(adapter.getChildNodes(node)).at(-1) ?? null;
+	};
+};
+
+type ChildElementLookup<T extends XPathNode> = (node: T) => AdapterElement<T> | null;
+
+const getFirstChildElementFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): ChildElementLookup<T> => {
+	const adapterImplementation = adapter.getFirstChildElement?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node) => {
+		const [childElement] = adapter.getChildElements(node);
+
+		return childElement ?? null;
+	};
+};
+
+const getLastChildElementFactory = <T extends XPathNode>(
+	adapter: XPathDOMAdapter<T>
+): ChildElementLookup<T> => {
+	const adapterImplementation = adapter.getLastChildElement?.bind(adapter);
+
+	if (adapterImplementation != null) {
+		return adapterImplementation;
+	}
+
+	return (node) => {
+		return Array.from(adapter.getChildElements(node)).at(-1) ?? null;
+	};
+};
+
 /**
  * Omitting XPathDOMOptimizableOperations keys here allows them to be made
  * non-optional, without then repeating the exact same properties and their
@@ -212,9 +348,15 @@ const extendOptimizableOperations = <T extends XPathNode>(
 	const getLocalNamedAttributeValue = getLocalNamedAttributeValueFactory(base);
 
 	const extensions: XPathDOMOptimizableOperations<T> = {
+		getElementByUniqueId: getElementByUniqueIdFactory(base, getLocalNamedAttributeValue),
+		getQualifiedNamedAttributeValue: getQualifiedNamedAttributeValueFactory(base),
+		getLocalNamedAttributeValue,
 		hasLocalNamedAttribute: hasLocalNamedAttributeFactory(base, getLocalNamedAttributeValue),
 		getChildrenByLocalName: getChildrenByLocalNameFactory(base),
-		getLocalNamedAttributeValue,
+		getFirstChildNode: getFirstChildNodeFactory(base),
+		getFirstChildElement: getFirstChildElementFactory(base),
+		getLastChildNode: getLastChildNodeFactory(base),
+		getLastChildElement: getLastChildElementFactory(base),
 	};
 
 	return Object.assign(base, extensions);

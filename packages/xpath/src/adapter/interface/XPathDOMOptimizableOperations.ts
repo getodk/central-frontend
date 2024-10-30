@@ -1,7 +1,20 @@
 import type { XPathNode } from './XPathNode.ts';
-import type { AdapterElement, AdapterParentNode } from './XPathNodeKindAdapter.ts';
+import type {
+	AdapterChildNode,
+	AdapterDocument,
+	AdapterElement,
+	AdapterParentNode,
+} from './XPathNodeKindAdapter.ts';
 
 export interface XPathDOMOptimizableOperations<T extends XPathNode> {
+	readonly getElementByUniqueId: (node: AdapterDocument<T>, id: string) => AdapterElement<T> | null;
+
+	readonly getQualifiedNamedAttributeValue: (
+		node: AdapterElement<T>,
+		namespaceURI: string | null,
+		localName: string
+	) => string | null;
+
 	readonly getLocalNamedAttributeValue: (
 		node: AdapterElement<T>,
 		localName: string
@@ -13,4 +26,9 @@ export interface XPathDOMOptimizableOperations<T extends XPathNode> {
 		node: AdapterParentNode<T>,
 		localName: string
 	) => Iterable<AdapterElement<T>>;
+
+	readonly getFirstChildNode: (node: T) => AdapterChildNode<T> | null;
+	readonly getFirstChildElement: (node: T) => AdapterElement<T> | null;
+	readonly getLastChildNode: (node: T) => AdapterChildNode<T> | null;
+	readonly getLastChildElement: (node: T) => AdapterElement<T> | null;
 }
