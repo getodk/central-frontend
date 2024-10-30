@@ -1,4 +1,5 @@
 import type { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
+import { filter } from '../lib/iterators/common.ts';
 import type { XPathDOMAdapter } from './interface/XPathDOMAdapter.ts';
 import type { XPathDOMOptimizableOperations } from './interface/XPathDOMOptimizableOperations.ts';
 import type { XPathNode } from './interface/XPathNode.ts';
@@ -111,6 +112,53 @@ const extendNodeKindGuards = <T extends XPathNode>(
 			const kind = base.getNodeKind(node);
 
 			return kind === 'element' || kind === 'attribute';
+		},
+	};
+
+	return Object.assign(base, extensions);
+};
+
+type IterableNodeFilter<T extends XPathNode, U extends T> = (nodes: Iterable<T>) => Iterable<U>;
+
+/**
+ * Provides frequently used operations, such as filtering and sorting, on
+ * {@link Iterable} sequences of an {@link XPathDOMAdapter}'s node
+ * representation.
+ */
+interface IterableOperations<T extends XPathNode> {
+	readonly filterAttributes: IterableNodeFilter<T, AdapterAttribute<T>>;
+	readonly filterQualifiedNamedNodes: IterableNodeFilter<T, AdapterQualifiedNamedNode<T>>;
+	readonly filterComments: IterableNodeFilter<T, AdapterComment<T>>;
+	readonly filterNamespaceDeclarations: IterableNodeFilter<T, AdapterNamespaceDeclaration<T>>;
+	readonly filterProcessingInstructions: IterableNodeFilter<T, AdapterProcessingInstruction<T>>;
+	readonly filterTextNodes: IterableNodeFilter<T, AdapterText<T>>;
+
+	// Note: iterable -> array is intentional. Can't sort a lazy, arbitrary-order
+	// sequence without iterating every item!
+	readonly sortInDocumentOrder: (nodes: Iterable<T>) => readonly T[];
+}
+
+interface ExtendedIterableOperations<T extends XPathNode>
+	extends ExtendedNodeKindGuards<T>,
+		IterableOperations<T> {}
+
+/**
+ * Derives frequently used {@link IterableOperations | iterable operations} from an
+ * {@link XPathDOMAdapter} and its derived
+ * {@link NodeKindGuards | node kind predicates}.
+ */
+const extendIterableOperations = <T extends XPathNode>(
+	base: ExtendedNodeKindGuards<T>
+): ExtendedIterableOperations<T> => {
+	const extensions: IterableOperations<T> = {
+		filterAttributes: filter(base.isAttribute),
+		filterQualifiedNamedNodes: filter(base.isQualifiedNamedNode),
+		filterComments: filter(base.isComment),
+		filterNamespaceDeclarations: filter(base.isNamespaceDeclaration),
+		filterProcessingInstructions: filter(base.isProcessingInstruction),
+		filterTextNodes: filter(base.isText),
+		sortInDocumentOrder: (nodes: Iterable<T>): readonly T[] => {
+			return Array.from(nodes).sort((a, b) => base.compareDocumentOrder(a, b));
 		},
 	};
 
@@ -328,7 +376,7 @@ const getLastChildElementFactory = <T extends XPathNode>(
 type OmitOptionalOptimizableOperations<T> = Omit<T, keyof XPathDOMOptimizableOperations<XPathNode>>;
 
 interface ExtendedOptimizableOperations<T extends XPathNode>
-	extends OmitOptionalOptimizableOperations<ExtendedNodeKindGuards<T>>,
+	extends OmitOptionalOptimizableOperations<ExtendedIterableOperations<T>>,
 		XPathDOMOptimizableOperations<T> {}
 
 /**
@@ -343,7 +391,7 @@ interface ExtendedOptimizableOperations<T extends XPathNode>
  *    will be derived from other aspects of the adapter's required APIs.
  */
 const extendOptimizableOperations = <T extends XPathNode>(
-	base: ExtendedNodeKindGuards<T>
+	base: ExtendedIterableOperations<T>
 ): ExtendedOptimizableOperations<T> => {
 	const getLocalNamedAttributeValue = getLocalNamedAttributeValueFactory(base);
 
@@ -403,6 +451,7 @@ const derivedDOMProvider = <T>(base: T): DerivedDOMProvider & T => {
 export interface XPathDOMProvider<T extends XPathNode>
 	extends OmitOptionalOptimizableOperations<XPathDOMAdapter<T>>,
 		NodeKindGuards<T>,
+		IterableOperations<T>,
 		XPathDOMOptimizableOperations<T>,
 		DerivedDOMProvider {}
 
@@ -428,7 +477,8 @@ export const xpathDOMProvider = <T extends XPathNode>(
 	}
 
 	const extendedGuards = extendNodeKindGuards(adapter);
-	const exended = extendOptimizableOperations(extendedGuards);
+	const extendedIterableOperations = extendIterableOperations(extendedGuards);
+	const exended = extendOptimizableOperations(extendedIterableOperations);
 
 	return derivedDOMProvider(exended);
 };
