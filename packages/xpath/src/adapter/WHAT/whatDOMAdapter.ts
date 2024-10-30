@@ -13,10 +13,18 @@ import {
 	hasLocalNamedWHATAttribute,
 } from './optimizations.ts';
 import {
+	compareWHATDocumentOrder,
 	getChildWHATElements,
 	getContainingWHATDocument,
+	getNextSiblingWHATElement,
+	getNextSiblingWHATNode,
+	getPreviousSiblingWHATElement,
+	getPreviousSiblingWHATNode,
 	getWHATAttributes,
+	getWHATChildNodes,
 	getWHATNamespaceDeclarations,
+	getWHATParentNode,
+	isDescendantWHATNode,
 } from './traversal.ts';
 import { getWHATNodeValue } from './values.ts';
 import type { WHATNode } from './WHATNode.ts';
@@ -39,10 +47,18 @@ export const whatDOMAdapter: WHATDOMAdapter = {
 	getNodeValue: getWHATNodeValue,
 
 	// XPathTraversalAdapter
+	compareDocumentOrder: compareWHATDocumentOrder,
 	getAttributes: getWHATAttributes,
 	getChildElements: getChildWHATElements,
+	getChildNodes: getWHATChildNodes,
 	getContainingDocument: getContainingWHATDocument,
 	getNamespaceDeclarations: getWHATNamespaceDeclarations,
+	getNextSiblingElement: getNextSiblingWHATElement,
+	getNextSiblingNode: getNextSiblingWHATNode,
+	getParentNode: getWHATParentNode,
+	getPreviousSiblingElement: getPreviousSiblingWHATElement,
+	getPreviousSiblingNode: getPreviousSiblingWHATNode,
+	isDescendantNode: isDescendantWHATNode,
 
 	// XPathDOMOptimizableOperations
 	getChildrenByLocalName: getWHATChildrenByLocalName,
