@@ -75,26 +75,3 @@ export type WHATNamedNode = UnwrappableWHATNodeUnion<
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	Element | Attr
 >;
-
-/**
- * @todo This is temporary! It can be removed once existing WHAT Working Group
- * DOM access is fully isolated to the WHAT adapter. In so doing, it also makes
- * sense to invert the interface extension relationship and remove direct
- * {@link XPathNodeKindKey} definitions on each of the `WHAT*` interfaces. (We
- * cannot do that now, because it would create an inheritance cycle.)
- */
-declare module '../interface/XPathNode.ts' {
-	export interface XPathDocument extends WHATDocument {}
-
-	export interface XPathElement extends WHATElement {}
-
-	export interface XPathNamespaceDeclaration extends WHATNamespaceDeclaration {}
-
-	export interface XPathAttribute extends WHATAttribute {}
-
-	export interface XPathText extends WHATText {}
-
-	export interface XPathComment extends WHATComment {}
-
-	export interface XPathProcessingInstruction extends WHATProcessingInstruction {}
-}
