@@ -146,21 +146,24 @@ const axisEvaluationContext = <T extends XPathNode>(
 	};
 };
 
-type SiblingKey =
-	| 'nextElementSibling'
-	| 'nextSibling'
-	| 'previousElementSibling'
-	| 'previousSibling';
+type SiblingMethodName =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| 'getPreviousSiblingNode'
+	| 'getPreviousSiblingElement'
+	| 'getNextSiblingNode'
+	| 'getNextSiblingElement';
 
-function* siblings<T extends XPathNode>(contextNode: T, siblingType: SiblingKey): Iterable<T> {
-	let currentNode: T | null | undefined = contextNode;
+function* siblings<T extends XPathNode>(
+	context: AxisEvaluationContext<T>,
+	methodName: SiblingMethodName
+): Iterable<T> {
+	const method = context.domProvider[methodName];
+	let currentNode: T | null = context.contextNode;
 
 	while (currentNode != null) {
-		currentNode = (currentNode as AdapterElement<T>)[
-			siblingType
-		] satisfies ChildNode | null as T | null;
+		currentNode = method(currentNode);
 
-		if (isContextNode(currentNode)) {
+		if (currentNode != null) {
 			yield currentNode;
 		}
 	}
@@ -282,16 +285,12 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	'following-sibling': function* followingSibling(context, step) {
-		let siblingKey: SiblingKey;
-
+	'following-sibling': (context, step) => {
 		if (step.nodeType === '__NAMED__') {
-			siblingKey = 'nextElementSibling';
-		} else {
-			siblingKey = 'nextSibling';
+			return siblings(context, 'getNextSiblingElement');
 		}
 
-		yield* siblings(context.contextNode, siblingKey);
+		return siblings(context, 'getNextSiblingNode');
 	},
 
 	namespace: (context) => {
@@ -384,16 +383,12 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	'preceding-sibling': function* precedingSibling(context, step) {
-		let siblingKey: SiblingKey;
-
+	'preceding-sibling': (context, step) => {
 		if (step.nodeType === '__NAMED__') {
-			siblingKey = 'previousElementSibling';
-		} else {
-			siblingKey = 'previousSibling';
+			return siblings(context, 'getPreviousSiblingElement');
 		}
 
-		yield* siblings(context.contextNode, siblingKey);
+		return siblings(context, 'getPreviousSiblingNode');
 	},
 
 	self: function* self(context) {
