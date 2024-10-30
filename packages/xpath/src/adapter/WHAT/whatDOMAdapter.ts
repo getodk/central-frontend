@@ -8,8 +8,14 @@ import {
 	resolveWHATNamespaceURI,
 } from './names.ts';
 import {
+	getFirstChildWHATElement,
+	getFirstWHATChildNode,
+	getLastChildWHATElement,
+	getLastWHATChildNode,
 	getLocalNamedWHATAttributeValue,
+	getQualifiedNamedWHATAttributeValue,
 	getWHATChildrenByLocalName,
+	getWHATElementByUniqueId,
 	hasLocalNamedWHATAttribute,
 } from './optimizations.ts';
 import {
@@ -61,7 +67,13 @@ export const whatDOMAdapter: WHATDOMAdapter = {
 	isDescendantNode: isDescendantWHATNode,
 
 	// XPathDOMOptimizableOperations
+	getElementByUniqueId: getWHATElementByUniqueId,
 	getChildrenByLocalName: getWHATChildrenByLocalName,
+	getQualifiedNamedAttributeValue: getQualifiedNamedWHATAttributeValue,
 	getLocalNamedAttributeValue: getLocalNamedWHATAttributeValue,
 	hasLocalNamedAttribute: hasLocalNamedWHATAttribute,
+	getFirstChildElement: getFirstChildWHATElement,
+	getFirstChildNode: getFirstWHATChildNode,
+	getLastChildElement: getLastChildWHATElement,
+	getLastChildNode: getLastWHATChildNode,
 };
