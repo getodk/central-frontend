@@ -297,8 +297,16 @@ export const position = new NumberFunction(
 			throw 'todo enforce single node(?)';
 		}
 
+		const { domProvider } = context;
 		const { value } = first;
-		const { nodeName } = value as MaybeElementNode;
+
+		if (!domProvider.isQualifiedNamedNode(value)) {
+			throw new Error(
+				'Cannot get position among contiguous nodes with same name: not a named node.'
+			);
+		}
+
+		const nodeName = domProvider.getQualifiedName(value);
 
 		let currentNode: MaybeElementNode | null = value as MaybeElementNode;
 		let result = 1;

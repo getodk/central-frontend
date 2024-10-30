@@ -89,7 +89,7 @@ export const localName = new StringFunction(
 		}
 
 		if (domProvider.isProcessingInstruction(node)) {
-			return node.nodeName;
+			return domProvider.getProcessingInstructionName(node);
 		}
 
 		return '';
@@ -115,11 +115,11 @@ export const name = new StringFunction(
 		const { domProvider } = context;
 
 		if (domProvider.isQualifiedNamedNode(node)) {
-			return node.nodeName ?? '';
+			return domProvider.getQualifiedName(node);
 		}
 
 		if (domProvider.isProcessingInstruction(node)) {
-			return node.nodeName ?? '';
+			return domProvider.getProcessingInstructionName(node);
 		}
 
 		return '';
