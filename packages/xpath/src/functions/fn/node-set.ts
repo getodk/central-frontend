@@ -86,6 +86,7 @@ export const localName = new StringFunction(
 			return domProvider.getProcessingInstructionName(node);
 		}
 
+		// TODO: double check expected behavior with namespace nodes
 		return '';
 	}
 );

@@ -659,7 +659,7 @@ export class LocationPathEvaluation<T extends XPathNode>
 		this.rootNode = rootNode;
 		this.timeZone = timeZone;
 
-		const [nodes] = tee(distinct(contextNodes));
+		const nodes = distinct(contextNodes);
 
 		this._nodes = nodes;
 
