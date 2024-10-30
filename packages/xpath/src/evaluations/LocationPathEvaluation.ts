@@ -4,16 +4,14 @@ import type { Temporal } from '@js-temporal/polyfill';
 import type { XPathDOMAdapter } from '../adapter/interface/XPathDOMAdapter.ts';
 import type {
 	UnspecifiedNonXPathNodeKind,
+	XPathAttribute,
+	XPathNamespaceDeclaration,
 	XPathNode,
 	XPathNodeKind,
 } from '../adapter/interface/XPathNode.ts';
 import type {
-	AdapterAttribute,
 	AdapterDocument,
-	AdapterElement,
 	AdapterParentNode,
-	AdapterProcessingInstruction,
-	AdapterText,
 } from '../adapter/interface/XPathNodeKindAdapter.ts';
 import type { XPathDOMProvider } from '../adapter/xpathDOMProvider.ts';
 import type { Context } from '../context/Context.ts';
@@ -26,14 +24,6 @@ import type { LocationPathExpressionEvaluator } from '../evaluator/expression/Lo
 import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
 import type { NodeSetFunction } from '../evaluator/functions/NodeSetFunction.ts';
 import type { AnyStep, AxisType } from '../evaluator/step/Step.ts';
-import {
-	isAttributeNode,
-	isCDataSection,
-	isCommentNode,
-	isElementNode,
-	isProcessingInstructionNode,
-	isTextNode,
-} from '../lib/dom/predicates.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
 import { distinct, filter, tee } from '../lib/iterators/common.ts';
 import type { Evaluation } from './Evaluation.ts';
@@ -73,43 +63,38 @@ type EvaluationComparator<T extends XPathNode> = (
 	rhs: Evaluation<T>
 ) => boolean;
 
-// TODO: we'll be able to optimize this so we don't always need it
-type NodeTypeFilter = <T extends XPathNode, U extends T>(nodes: Iterable<T>) => Iterable<U>;
+type NodeTypeFilter<T extends XPathNode> = (nodes: Iterable<T>) => Iterable<T>;
 
-const isNamedNode = <T extends XPathNode>(node: T) => {
-	return isElementNode(node) || isAttributeNode(node);
-};
+const getNodeTypeFilter = <T extends XPathNode>(
+	domProvider: XPathDOMProvider<T>,
+	step: AnyStep
+): NodeTypeFilter<T> => {
+	switch (step.axisType) {
+		case 'attribute':
+			return domProvider.filterAttributes;
 
-const filterNamedNodes = filter(isNamedNode) as NodeTypeFilter;
+		case 'namespace':
+			return domProvider.filterNamespaceDeclarations;
 
-const filterProcessingInstructionNodes = filter(isProcessingInstructionNode) as NodeTypeFilter;
+		default:
+			break;
+	}
 
-const filterCommentNodes = filter(isCommentNode) as NodeTypeFilter;
-
-const filterNode = identity as NodeTypeFilter;
-
-const isXPathTextNode = <T extends XPathNode>(node: T): node is AdapterText<T> => {
-	return isTextNode(node) || isCDataSection(node);
-};
-
-const filterTextNode = filter(isXPathTextNode) as NodeTypeFilter;
-
-const getNodeTypeFilter = (step: AnyStep): NodeTypeFilter => {
 	switch (step.nodeType) {
 		case '__NAMED__':
-			return filterNamedNodes;
+			return domProvider.filterQualifiedNamedNodes;
 
 		case 'processing-instruction':
-			return filterProcessingInstructionNodes;
+			return domProvider.filterProcessingInstructions;
 
 		case 'comment':
-			return filterCommentNodes;
+			return domProvider.filterComments;
 
 		case 'node':
-			return filterNode;
+			return identity;
 
 		case 'text':
-			return filterTextNode;
+			return domProvider.filterTextNodes;
 
 		default:
 			throw new UnreachableError(step);
@@ -841,15 +826,14 @@ export class LocationPathEvaluation<T extends XPathNode>
 	}
 
 	step(step: AnyStep): LocationPathEvaluation<T> {
-		/** @todo remove */
-		type MaybeNamedNode = AdapterAttribute<T> | AdapterElement<T>;
+		const { domProvider, namespaceResolver } = this;
 
-		let nodesFilter: (nodes: Iterable<T>) => Iterable<T> = identity;
-
-		const { namespaceResolver } = this;
+		let nodesFilter: (nodes: Iterable<T>) => Iterable<T>;
 
 		switch (step.stepType) {
 			case 'NodeTypeTest':
+			case 'UnqualifiedWildcardTest':
+				nodesFilter = getNodeTypeFilter(domProvider, step);
 				break;
 
 			case 'NodeNameTest': {
@@ -857,10 +841,14 @@ export class LocationPathEvaluation<T extends XPathNode>
 				const nullNamespaceURI = namespaceResolver.lookupNamespaceURI(null);
 
 				nodesFilter = filter((node: T) => {
-					const { namespaceURI } = node as MaybeNamedNode;
+					if (!domProvider.isQualifiedNamedNode(node)) {
+						return false;
+					}
+
+					const namespaceURI = domProvider.getNamespaceURI(node);
 
 					return (
-						(node as MaybeNamedNode).localName === nodeName &&
+						domProvider.getLocalName(node) === nodeName &&
 						(namespaceURI == null || namespaceURI === nullNamespaceURI)
 					);
 				});
@@ -872,7 +860,10 @@ export class LocationPathEvaluation<T extends XPathNode>
 				const { processingInstructionName } = step;
 
 				nodesFilter = filter((node: T) => {
-					return (node as AdapterProcessingInstruction<T>).nodeName === processingInstructionName;
+					return (
+						domProvider.isProcessingInstruction(node) &&
+						domProvider.getProcessingInstructionName(node) === processingInstructionName
+					);
 				});
 
 				break;
@@ -882,11 +873,13 @@ export class LocationPathEvaluation<T extends XPathNode>
 				const { prefix, localName } = step;
 				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-				nodesFilter = filter(
-					(node: T) =>
-						(node as MaybeNamedNode).localName === localName &&
-						(node as MaybeNamedNode).namespaceURI === namespaceURI
-				);
+				nodesFilter = filter((node: T) => {
+					return (
+						domProvider.isQualifiedNamedNode(node) &&
+						domProvider.getLocalName(node) === localName &&
+						domProvider.getNamespaceURI(node) === namespaceURI
+					);
+				});
 
 				break;
 			}
@@ -895,13 +888,15 @@ export class LocationPathEvaluation<T extends XPathNode>
 				const { prefix } = step;
 				const namespaceURI = namespaceResolver.lookupNamespaceURI(prefix);
 
-				nodesFilter = filter((node: T) => (node as MaybeNamedNode).namespaceURI === namespaceURI);
+				nodesFilter = filter((node: T) => {
+					return (
+						domProvider.isQualifiedNamedNode(node) &&
+						domProvider.getNamespaceURI(node) === namespaceURI
+					);
+				});
 
 				break;
 			}
-
-			case 'UnqualifiedWildcardTest':
-				break;
 
 			default:
 				throw new UnreachableError(step);
@@ -915,14 +910,12 @@ export class LocationPathEvaluation<T extends XPathNode>
 			contextDocument: this.contextDocument,
 			visited: new WeakSet(),
 		};
-		const nodeTypeFilter = getNodeTypeFilter(step);
 
 		let nodes = flatMapNodeSets(this.contextNodes, function* (contextNode) {
 			const currentContext = axisEvaluationContext(context, contextNode);
 			const axisNodes = axisEvaluator(currentContext, step);
-			const typedNodes = nodeTypeFilter(axisNodes);
 
-			yield* nodesFilter(typedNodes);
+			yield* nodesFilter(axisNodes);
 		});
 
 		// TODO: this is out of spec! Tests currently depend on it. We could update
