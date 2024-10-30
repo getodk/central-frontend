@@ -1,6 +1,6 @@
 import type { XPathDOMAdapter } from '../interface/XPathDOMAdapter.ts';
 import { getWHATNodeKind, isWHATNode } from './kind.ts';
-import { getWHATLocalName, getWHATNamespaceURI } from './names.ts';
+import { getWHATLocalName, getWHATNamespaceURI, resolveWHATNamespaceURI } from './names.ts';
 import {
 	getLocalNamedWHATAttributeValue,
 	getWHATChildrenByLocalName,
@@ -25,6 +25,7 @@ export const whatDOMAdapter: WHATDOMAdapter = {
 	// XPathNameAdapter
 	getLocalName: getWHATLocalName,
 	getNamespaceURI: getWHATNamespaceURI,
+	resolveNamespaceURI: resolveWHATNamespaceURI,
 
 	// XPathValueAdapter
 	getNodeValue: getWHATNodeValue,

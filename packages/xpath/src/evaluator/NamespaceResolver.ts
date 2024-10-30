@@ -151,7 +151,7 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
 
 		if (contextResolver == null) {
 			this.contextResolver = (prefix) => {
-				return contextResolverNode.lookupNamespaceURI(prefix);
+				return domProvider.resolveNamespaceURI(contextResolverNode, prefix);
 			};
 		} else if (typeof contextResolver === 'function') {
 			this.contextResolver = contextResolver;
