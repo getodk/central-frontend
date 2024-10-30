@@ -1,6 +1,5 @@
 import { normalizeXMLXPathWhitespace } from '@getodk/common/lib/string/whitespace.ts';
 import { reduce } from 'itertools-ts';
-import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
@@ -45,19 +44,15 @@ export const id = new NodeSetFunction(
 			return [];
 		}
 
-		const { contextDocument } = context;
-
-		/** @todo remove */
-		type T = (typeof context)['evaluationContextNode'];
-
+		const { contextDocument, domProvider } = context;
 		const elements = elementIds.flatMap((elementId) => {
-			const element = contextDocument.getElementById(elementId);
+			const element = domProvider.getElementByUniqueId(contextDocument, elementId);
 
 			if (element == null) {
 				return [];
 			}
 
-			return element as Node as XPathNode as T;
+			return element;
 		});
 
 		return sortDocumentOrder(elements);
