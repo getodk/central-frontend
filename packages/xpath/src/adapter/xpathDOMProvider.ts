@@ -3,8 +3,15 @@ import type { XPathDOMAdapter } from './interface/XPathDOMAdapter.ts';
 import type { XPathDOMOptimizableOperations } from './interface/XPathDOMOptimizableOperations.ts';
 import type { XPathNode } from './interface/XPathNode.ts';
 import type {
+	AdapterAttribute,
+	AdapterComment,
+	AdapterDocument,
 	AdapterElement,
+	AdapterNamespaceDeclaration,
 	AdapterParentNode,
+	AdapterProcessingInstruction,
+	AdapterQualifiedNamedNode,
+	AdapterText,
 	XPathNodeKindAdapter,
 } from './interface/XPathNodeKindAdapter.ts';
 
@@ -31,6 +38,15 @@ type NodeKindPredicate<T extends XPathNode, U extends T> = (node: T) => node is 
 interface NodeKindGuards<T extends XPathNode> {
 	readonly assertXPathNode: AssertXPathNode<T>;
 	readonly assertParentNode: AssertParentNode<T>;
+	readonly isDocument: NodeKindPredicate<T, AdapterDocument<T>>;
+	readonly isElement: NodeKindPredicate<T, AdapterElement<T>>;
+	readonly isNamespaceDeclaration: NodeKindPredicate<T, AdapterNamespaceDeclaration<T>>;
+	readonly isAttribute: NodeKindPredicate<T, AdapterAttribute<T>>;
+	readonly isText: NodeKindPredicate<T, AdapterText<T>>;
+	readonly isComment: NodeKindPredicate<T, AdapterComment<T>>;
+	readonly isProcessingInstruction: NodeKindPredicate<T, AdapterProcessingInstruction<T>>;
+	readonly isParentNode: NodeKindPredicate<T, AdapterParentNode<T>>;
+	readonly isQualifiedNamedNode: NodeKindPredicate<T, AdapterQualifiedNamedNode<T>>;
 }
 
 interface ExtendedNodeKindGuards<T extends XPathNode>
@@ -67,6 +83,33 @@ const extendNodeKindGuards = <T extends XPathNode>(
 			if (!isParentNode(value)) {
 				throw new Error(message);
 			}
+		},
+		isDocument: (node: T): node is AdapterDocument<T> => {
+			return base.getNodeKind(node) === 'document';
+		},
+		isElement: (node): node is AdapterElement<T> => {
+			return base.getNodeKind(node) === 'element';
+		},
+		isNamespaceDeclaration: (node): node is AdapterNamespaceDeclaration<T> => {
+			return base.getNodeKind(node) === 'namespace_declaration';
+		},
+		isAttribute: (node): node is AdapterAttribute<T> => {
+			return base.getNodeKind(node) === 'attribute';
+		},
+		isText: (node): node is AdapterText<T> => {
+			return base.getNodeKind(node) === 'text';
+		},
+		isComment: (node): node is AdapterComment<T> => {
+			return base.getNodeKind(node) === 'comment';
+		},
+		isProcessingInstruction: (node): node is AdapterProcessingInstruction<T> => {
+			return base.getNodeKind(node) === 'processing_instruction';
+		},
+		isParentNode,
+		isQualifiedNamedNode: (node): node is AdapterQualifiedNamedNode<T> => {
+			const kind = base.getNodeKind(node);
+
+			return kind === 'element' || kind === 'attribute';
 		},
 	};
 
