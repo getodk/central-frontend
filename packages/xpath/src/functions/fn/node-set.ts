@@ -5,14 +5,7 @@ import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { isNamespaceNode, isProcessingInstructionNode } from '../../lib/dom/predicates.ts';
 import { sortDocumentOrder } from '../../lib/dom/sort.ts';
-import {
-	ATTRIBUTE_NODE,
-	ELEMENT_NODE,
-	PROCESSING_INSTRUCTION_NODE,
-	type MaybeNamedNode,
-} from '../../lib/dom/types.ts';
 
 const { toCount } = reduce;
 
@@ -89,23 +82,17 @@ export const localName = new StringFunction(
 			return '';
 		}
 
-		if (
-			node.nodeType !== ELEMENT_NODE &&
-			node.nodeType !== ATTRIBUTE_NODE &&
-			node.nodeType !== PROCESSING_INSTRUCTION_NODE
-		) {
-			return '';
+		const { domProvider } = context;
+
+		if (domProvider.isQualifiedNamedNode(node)) {
+			return domProvider.getLocalName(node);
 		}
 
-		// prettier-ignore
-		const name =
-			isNamespaceNode(node)
-				? ''
-			: isProcessingInstructionNode(node)
-				? node.nodeName
-				: (node as MaybeNamedNode).localName ?? '';
+		if (domProvider.isProcessingInstruction(node)) {
+			return node.nodeName;
+		}
 
-		return name;
+		return '';
 	}
 );
 
@@ -125,19 +112,17 @@ export const name = new StringFunction(
 			return '';
 		}
 
-		if (
-			node.nodeType !== ELEMENT_NODE &&
-			node.nodeType !== ATTRIBUTE_NODE &&
-			node.nodeType !== PROCESSING_INSTRUCTION_NODE
-		) {
-			return '';
+		const { domProvider } = context;
+
+		if (domProvider.isQualifiedNamedNode(node)) {
+			return node.nodeName ?? '';
 		}
 
-		if (isNamespaceNode(node)) {
-			return '';
+		if (domProvider.isProcessingInstruction(node)) {
+			return node.nodeName ?? '';
 		}
 
-		return (node as MaybeNamedNode).nodeName ?? '';
+		return '';
 	}
 );
 
@@ -157,11 +142,13 @@ export const namespaceURI = new StringFunction(
 			return '';
 		}
 
-		if (isNamespaceNode(node)) {
-			return '';
+		const { domProvider } = context;
+
+		if (domProvider.isQualifiedNamedNode(node)) {
+			return domProvider.getNamespaceURI(node) ?? '';
 		}
 
-		return (node as MaybeNamedNode).namespaceURI ?? '';
+		return '';
 	}
 );
 

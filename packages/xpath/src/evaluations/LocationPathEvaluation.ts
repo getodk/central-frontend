@@ -196,7 +196,7 @@ const axisEvaluators: AxisEvaluators = {
 
 		yield* axisEvaluators.ancestor(currentContext, step);
 
-		if (!isNamedStep || isElementNode(contextNode)) {
+		if (!isNamedStep || context.domProvider.isElement(contextNode)) {
 			yield contextNode;
 		}
 	},

@@ -1,6 +1,5 @@
 import { XML_NAMESPACE_URI } from '../../evaluator/NamespaceResolver.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
-import { isElementNode } from '../../lib/dom/predicates.ts';
 
 const falseFn = new BooleanFunction('false', [], (): boolean => false);
 
@@ -35,7 +34,11 @@ export const lang = new BooleanFunction(
 			return false;
 		}
 
-		let contextElement = isElementNode(contextNode) ? contextNode : contextNode.parentElement;
+		const { domProvider } = context;
+
+		let contextElement = domProvider.isElement(contextNode)
+			? contextNode
+			: contextNode.parentElement;
 
 		if (contextElement == null) {
 			return false;
