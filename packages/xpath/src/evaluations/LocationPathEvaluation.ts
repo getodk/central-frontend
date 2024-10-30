@@ -1,7 +1,12 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { identity } from '@getodk/common/lib/identity.ts';
 import type { Temporal } from '@js-temporal/polyfill';
-import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type { XPathDOMAdapter } from '../adapter/interface/XPathDOMAdapter.ts';
+import type {
+	UnspecifiedNonXPathNodeKind,
+	XPathNode,
+	XPathNodeKind,
+} from '../adapter/interface/XPathNode.ts';
 import type {
 	AdapterAttribute,
 	AdapterDocument,
@@ -112,14 +117,6 @@ const getNodeTypeFilter = (step: AnyStep): NodeTypeFilter => {
 	}
 };
 
-const isContextNode = <T extends XPathNode>(node: T | null | undefined): node is T => {
-	return node != null;
-};
-
-type ContextNodeFilter = <T>(node: Iterable<T | null>) => Iterable<NonNullable<T>>;
-
-const filterContextNode = filter(isContextNode) as ContextNodeFilter;
-
 interface AxisEvaluationCurrentContext<T extends XPathNode> {
 	readonly domProvider: XPathDOMProvider<T>;
 	readonly contextDocument: AdapterDocument<T>;
@@ -165,6 +162,108 @@ function* siblings<T extends XPathNode>(
 
 		if (currentNode != null) {
 			yield currentNode;
+		}
+	}
+}
+
+/**
+ * Addresses a nuance of XPath DOM tree structural semantics, affecting the
+ * {@link axisEvaluators.following | following} and
+ * {@link axisEvaluators.preceding | preceding} axes. Since these axes exclude
+ * {@link XPathNamespaceDeclaration | namespace declarations} and
+ * {@link XPathAttribute | attributes}, traversal of those axes' nodes begins
+ * with their **parent element** (in XPath semantic terms; "owner" element in
+ * WHAT Working Group DOM terms).
+ *
+ * For all other XPath semantic node kinds, the provided {@link contextNode} is
+ * returned.
+ *
+ * This function is intrinsically coupled to both axis implementations. It is
+ * defined here to give an explicit name to the concept, and to host this
+ * documentation.
+ *
+ * It is also worth clarifying that neither axis _includes_ the node returned by
+ * this function. This is probably what one would expect for the `following`
+ * axis: no node is ever followed by its parent in document order. But if one's
+ * recall of XPath semantic nuances is rusty, it may be unintuitive (it was for
+ * me!) that the namespace/attribute's parent element does not precede it. This
+ * text from
+ * {@link https://www.w3.org/TR/1999/REC-xpath-19991116/#axes | XPath 1.0 > 2.2 Axes}
+ * is helpfully clarifying:
+ *
+ * > **NOTE:** The `ancestor`, `descendant`, `following`, `preceding` and `self`
+ * > axes partition a document (ignoring attribute and namespace nodes): they do
+ * > not overlap and together they contain all the nodes in the document.
+ */
+const getDocumentOrderTraversalContextNode = <T extends XPathNode>(
+	domProvider: XPathDOMProvider<T>,
+	contextNode: T
+): T => {
+	if (domProvider.isAttribute(contextNode) || domProvider.isNamespaceDeclaration(contextNode)) {
+		const parentElement = domProvider.getParentNode(contextNode);
+
+		domProvider.assertParentNode(parentElement);
+
+		return parentElement;
+	}
+
+	return contextNode;
+};
+
+function* filterValues<T>(iter: Iterable<T | null | undefined>): IterableIterator<T> {
+	for (const item of iter) {
+		if (item != null) {
+			yield item;
+		}
+	}
+}
+
+/**
+ * **!!! HERE BE DRAGONS !!!**
+ *
+ * This behavior may…
+ *
+ * - … exceed the XPath 1.0 specification; which in turn may…
+ * - … vary (even for the same document) between {@link domAdapter}
+ *   implementations, depending on whether they opt to implement
+ *   {@link UnspecifiedNonXPathNodeKind}.
+ *
+ * Specifically, if a {@link documentRoot | document root element} has preceding
+ * siblings, adapters **MAY** produce a
+ * {@link https://www.w3.org/TR/xml/#dtd | Document Type Declaration (DTD)}
+ * node. As described in more detail on {@link UnspecifiedNonXPathNodeKind}:
+ *
+ * - Per XPath 1.0, DTD nodes are **NOT** considered XPath nodes
+ * - Real world XPath implementations **DO** produce DTD nodes nonetheless
+ *
+ * This behavior is specifically implicated in accommodating that by traversing
+ * to applicable nodes as produced by {@link domAdapter}, and then checking that
+ * {@link domAdapter} does recognize the node's kind as **either**
+ * {@link XPathNodeKind} or {@link UnspecifiedNonXPathNodeKind}. More
+ * specifically, this is determined by calling the adapter's
+ * {@link XPathDOMAdapter.getNodeKind | getNodeKind} implementation, and
+ * checking that it produces a value. If the call returns null (or fails) for a
+ * given node, that node will not be produced.
+ *
+ * @see {@link UnspecifiedNonXPathNodeKind}
+ */
+function* documentRootPrecedingSiblings<T extends XPathNode>(
+	domAdapter: XPathDOMAdapter<T>,
+	precedingContext: AxisEvaluationContext<T>,
+	documentRoot: T,
+	step: AnyStep
+): Iterable<T> {
+	const documentRootContext = axisEvaluationContext(precedingContext, documentRoot);
+	const precedingSiblings = axisEvaluators['preceding-sibling'](documentRootContext, step);
+
+	for (const node of precedingSiblings) {
+		// Note: this is likely to be fallible in adapter implementations…
+		try {
+			if (domAdapter.getNodeKind(node) != null) {
+				yield node;
+			}
+		} catch {
+			// … and if it does fail, we should assume the node value is invalid!
 		}
 	}
 }
@@ -242,32 +341,36 @@ const axisEvaluators: AxisEvaluators = {
 		context: AxisEvaluationContext<T>,
 		step: AnyStep
 	): Iterable<T> {
-		const { contextDocument, contextNode, rootNode, visited } = context;
-		const effectiveContextNode = ((contextNode as AdapterAttribute<T>).ownerElement ??
-			contextNode) as T;
+		const { domProvider, contextDocument, rootNode } = context;
+		const contextNode = getDocumentOrderTraversalContextNode(domProvider, context.contextNode);
 
-		if (visited.has(effectiveContextNode)) {
+		if (context.visited.has(contextNode)) {
 			return;
 		}
 
-		if (
-			effectiveContextNode === rootNode ||
-			effectiveContextNode === (contextDocument.documentElement as Node as T)
-		) {
+		context.visited.add(contextNode);
+
+		const parentNode = domProvider.getParentNode(contextNode);
+
+		if (contextNode === rootNode || parentNode === contextDocument) {
 			return;
 		}
 
-		visited.add(effectiveContextNode);
+		let firstChild: T | null;
+		let nextSibling: T | null = null;
 
-		const { firstChild, nextSibling, parentNode } = effectiveContextNode;
+		if (step.nodeType === '__NAMED__') {
+			firstChild = domProvider.getFirstChildElement(contextNode);
+			nextSibling = domProvider.getNextSiblingElement(contextNode);
+		} else {
+			firstChild = domProvider.getFirstChildNode(contextNode);
+			nextSibling = domProvider.getNextSiblingNode(contextNode);
+		}
 
-		let currentNodes = filterContextNode([firstChild, nextSibling]) as Iterable<T>;
+		let currentNodes = filterValues([firstChild, nextSibling]);
 
-		if (isContextNode(parentNode as AdapterParentNode<T> | null) && parentNode !== rootNode) {
-			const followingParentSiblingsContext = axisEvaluationContext(
-				context,
-				parentNode as AdapterParentNode<T>
-			);
+		if (parentNode != null && parentNode !== rootNode) {
+			const followingParentSiblingsContext = axisEvaluationContext(context, parentNode);
 			const followingParentSiblings = axisEvaluators['following-sibling'](
 				followingParentSiblingsContext,
 				step
@@ -315,39 +418,46 @@ const axisEvaluators: AxisEvaluators = {
 		context: AxisEvaluationContext<T>,
 		step: AnyStep
 	): Iterable<T> {
-		const { contextDocument, rootNode, contextNode, visited } = context;
-		const effectiveContextNode = ((contextNode as AdapterAttribute<T>).ownerElement ??
-			contextNode) as T;
+		const { domProvider, rootNode, contextDocument, visited } = context;
+		const contextNode = getDocumentOrderTraversalContextNode(domProvider, context.contextNode);
 
-		if (visited.has(effectiveContextNode)) {
+		if (visited.has(contextNode)) {
 			return;
 		}
 
-		visited.add(effectiveContextNode);
+		visited.add(contextNode);
 
-		if (effectiveContextNode === rootNode) {
+		if (contextNode === rootNode) {
 			return;
 		}
 
-		if (effectiveContextNode === (contextDocument.documentElement as Node as T)) {
-			yield* axisEvaluators['preceding-sibling'](context, step);
+		const parentNode = domProvider.getParentNode(contextNode);
+
+		if (parentNode === contextDocument) {
+			yield* documentRootPrecedingSiblings(domProvider, context, contextNode, step);
 
 			return;
 		}
 
-		const { lastChild, previousSibling, parentNode } = effectiveContextNode;
+		let lastChild: T | null;
+		let previousSibling: T | null;
 
-		let currentNodes = filterContextNode([lastChild, previousSibling]) as Iterable<T>;
+		if (step.nodeType === '__NAMED__') {
+			previousSibling = domProvider.getPreviousSiblingElement(contextNode);
+			lastChild = domProvider.getLastChildElement(contextNode);
+		} else {
+			previousSibling = domProvider.getPreviousSiblingNode(contextNode);
+			lastChild = domProvider.getLastChildNode(contextNode);
+		}
 
-		if (
-			effectiveContextNode !== rootNode &&
-			isContextNode(parentNode as AdapterParentNode<T> | null) &&
-			parentNode !== rootNode
-		) {
-			const precedingParentSiblingsContext = axisEvaluationContext(
-				context,
-				parentNode as AdapterParentNode<T>
-			);
+		if (lastChild === contextNode) {
+			lastChild = null;
+		}
+
+		let currentNodes = filterValues([lastChild, previousSibling]);
+
+		if (contextNode !== rootNode && parentNode != null && parentNode !== rootNode) {
+			const precedingParentSiblingsContext = axisEvaluationContext(context, parentNode);
 			const precedingParentSiblings = axisEvaluators['preceding-sibling'](
 				precedingParentSiblingsContext,
 				step
