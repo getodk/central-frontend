@@ -95,7 +95,7 @@ export default {
       const projProps = this.currentUser.preferences.projects[this.project.id];
       if (evt.newState === 'closed') {
         projProps.formTrashCollapsed = true;
-      } else if (projProps.formTrashCollapsed) delete projProps.formTrashCollapsed;
+      } else if (projProps.formTrashCollapsed) projProps.formTrashCollapsed = false;
     },
   }
 };

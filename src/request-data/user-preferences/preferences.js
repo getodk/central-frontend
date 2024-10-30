@@ -109,24 +109,23 @@ export default class UserPreferences {
         get(target, projectId) {
           if (Number.isNaN(parseInt(projectId, 10))) throw new TypeError(`Not an integer project ID: "${projectId}"`);
           const projectProps = target[projectId];
-          if (projectProps === undefined || (!isReactive(projectProps))) { // not reentrant (TOCTOU issue) but there's no real way to solve it — as this is supposed to be a synchronous method we can't simply wrap it in a Lock
+          if (projectProps === undefined || (!isReactive(projectProps))) {
             /* eslint-disable no-param-reassign */
             target[projectId] = new Proxy(
               // make (potentially autovivicated) props reactive, and front them with a proxy to enable our setters/deleters
               shallowReactive(projectProps === undefined ? {} : projectProps),
               {
                 deleteProperty(from, prop) {
-                  ProjectPreferenceNormalizer.normalizeFn(prop); // throws if prop is not registered
+                  ProjectPreferenceNormalizer.normalizeFn(prop); // we're calling it just so that it throws if prop is not registered in the form of a normalization function
                   const retval = (delete from[prop]);
                   userPreferences.#propagate(prop, null, projectId); // DELETE to backend
                   return retval;
                 },
                 set(from, prop, propval) {
                   const normalizedValue = ProjectPreferenceNormalizer.normalize(prop, propval);
-                  // eslint-disable-next-line no-multi-assign
-                  const retval = (from[prop] = normalizedValue);
+                  from[prop] = normalizedValue;
                   userPreferences.#propagate(prop, normalizedValue, projectId); // PUT to backend
-                  return retval;
+                  return true;
                 },
                 get(projectTarget, prop) {
                   return ProjectPreferenceNormalizer.getProp(projectTarget, prop);

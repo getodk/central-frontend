@@ -25,6 +25,6 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
 
 export class ProjectPreferenceNormalizer extends PreferenceNormalizer {
   static formTrashCollapsed(val) {
-    return Boolean(val);
+    return val === true;
   }
 }
