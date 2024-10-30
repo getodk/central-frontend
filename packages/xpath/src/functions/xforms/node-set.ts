@@ -1,4 +1,5 @@
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import type { XPathDOMProvider } from '../../adapter/xpathDOMProvider.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
@@ -75,16 +76,17 @@ type DepthSortResult = -1 | 0 | 1;
  * how we'd address caching with these kinds of dynamics at play.
  */
 const compareContainmentDepth = <T extends XPathNode>(
+	domProvider: XPathDOMProvider<T>,
 	{ repeats: a }: EvaluatedIndexedRepeatArgumentPair<T>,
 	{ repeats: b }: EvaluatedIndexedRepeatArgumentPair<T>
 ): DepthSortResult => {
 	for (const repeatA of a) {
 		for (const repeatB of b) {
-			if (repeatA.contains(repeatB)) {
+			if (domProvider.isDescendantNode(repeatA, repeatB)) {
 				return -1;
 			}
 
-			if (repeatB.contains(repeatA)) {
+			if (domProvider.isDescendantNode(repeatB, repeatA)) {
 				return 1;
 			}
 		}
@@ -121,12 +123,12 @@ export const indexedRepeat = new NodeSetFunction(
 		// Go beyond spec? Why the heck not! It's clearly a variadic design.
 		{ arityType: 'variadic', typeHint: 'any' },
 	],
-	(context, args) => {
+	<T extends XPathNode>(
+		context: LocationPathEvaluation<T>,
+		args: readonly EvaluableArgument[]
+	): readonly T[] => {
 		// First argument is `target` (per spec) of the deepest resolved repeat
 		const target = args[0]!;
-
-		/** @todo remove */
-		type T = (typeof context)['evaluationContextNode'];
 
 		let pairs: Array<EvaluatedIndexedRepeatArgumentPair<T>> = [];
 
@@ -180,13 +182,15 @@ export const indexedRepeat = new NodeSetFunction(
 			});
 		}
 
+		const { domProvider } = context;
+
 		// Sort the results of each `repeatN`/`indexN` pair, by containment order.
 		//
 		// Note: the `repeatN`/`indexN` pairs can be supplied in any order (this is
 		// consistent with behavior in JavaRosa, likely as a side effect of the
 		// function being implemented there by transforming the expression to its
 		// LocationPath equivalent).
-		pairs = pairs.sort(compareContainmentDepth);
+		pairs = pairs.sort((pairA, pairB) => compareContainmentDepth(domProvider, pairA, pairB));
 
 		// Resolve repeats at the specified/evaluated position, in document depth
 		// order by:
@@ -206,7 +210,7 @@ export const indexedRepeat = new NodeSetFunction(
 
 			if (index > 0) {
 				repeats = pair.repeats.filter((repeat) => {
-					return repeatContextNode.contains(repeat);
+					return domProvider.isDescendantNode(repeatContextNode, repeat);
 				});
 			}
 
@@ -229,7 +233,7 @@ export const indexedRepeat = new NodeSetFunction(
 
 		// Filter only the target nodes contained by the deepest repeat context node.
 		return targetNodes.filter((targetNode) => {
-			return repeatContextNode.contains(targetNode);
+			return domProvider.isDescendantNode(repeatContextNode, targetNode);
 		});
 	}
 );
