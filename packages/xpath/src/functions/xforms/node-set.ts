@@ -273,7 +273,44 @@ export const once = new StringFunction(
 	}
 );
 
-// TODO: this probably belongs in `fn`?
+/**
+ * @todo this is a weird edge case, which we shouldn't handle here! It isn't
+ * even something `@getodk/xpath` should know about! It's unclear from a spec
+ * context what the appropriate behavior would/should be. What it's checking for
+ * is evaluation of an expression `position(current())` or equivalent, in the
+ * context of a `@getodk/xforms-engine`'s representation of a "repeat range".
+ * That representation is:
+ *
+ * 1. Currently associated with a WHAT Working Group DOM comment node.
+ * 2. Shortly going to be associated with the `@getodk/xforms-engine`
+ *    representation of the same semantic node kind.
+ *
+ * We treat this as a special case, returning the current context position, as
+ * it is the expected behavior. We call it out separately so that it won't
+ * prevent us from flagging other unusual usage of arity-1 `position` with
+ * non-named nodes (for which, if there is a use case, it is not presently
+ * addressed by the ODK XForms
+ * {@link https://getodk.github.io/xforms-spec/#fn:position | arity-1 spec extension}).
+ */
+const isLikelyRepeatRangeEvaluationContextCommentMarkerNode = <T extends XPathNode>(
+	context: LocationPathEvaluation<T>,
+	node: T
+): boolean => {
+	const { evaluationContextNode } = context;
+
+	return context.domProvider.isComment(node) && node === evaluationContextNode;
+};
+
+/**
+ * ~~@todo this probably belongs in `fn`?~~
+ *
+ * @todo the baseline behavior of this belongs in `fn`. The contiguous same-name
+ * node behavior belongs here, presumably as an override.
+ *
+ * @todo we have at least a couple other override cases. They all extend the
+ * baseline behavior. Consider ability to call into overridden baseline (similar
+ * to `super` in class inheritance?).
+ */
 export const position = new NumberFunction(
 	'position',
 	[{ arityType: 'optional' }],
@@ -301,6 +338,10 @@ export const position = new NumberFunction(
 		const { value } = first;
 
 		if (!domProvider.isQualifiedNamedNode(value)) {
+			if (isLikelyRepeatRangeEvaluationContextCommentMarkerNode(context, value)) {
+				return context.contextPosition();
+			}
+
 			throw new Error(
 				'Cannot get position among contiguous nodes with same name: not a named node.'
 			);
