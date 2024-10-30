@@ -5,7 +5,6 @@ import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { seededRandomize } from '../../lib/collections/sort.ts';
-import type { MaybeElementNode } from '../../lib/dom/types.ts';
 import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 
 export const countNonEmpty = new NumberFunction(
@@ -349,14 +348,20 @@ export const position = new NumberFunction(
 
 		const nodeName = domProvider.getQualifiedName(value);
 
-		let currentNode: MaybeElementNode | null = value as MaybeElementNode;
-		let result = 1;
+		let currentNode = value;
+		let result = 0;
 
-		while ((currentNode = currentNode!.previousSibling as MaybeElementNode | null) != null) {
-			if (currentNode.nodeName === nodeName) {
-				result += 1;
+		do {
+			result += 1;
+
+			const previousNode = domProvider.getPreviousSiblingElement(currentNode);
+
+			if (previousNode == null) {
+				break;
 			}
-		}
+
+			currentNode = previousNode;
+		} while (domProvider.getQualifiedName(currentNode) === nodeName);
 
 		return result;
 	}
