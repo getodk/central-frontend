@@ -297,34 +297,16 @@ const axisEvaluators: AxisEvaluators = {
 		return context.domProvider.getNamespaceDeclarations(context.contextNode);
 	},
 
-	parent: function* parent<T extends XPathNode>(
-		context: AxisEvaluationContext<T>,
-		step: AnyStep
-	): Iterable<T> {
+	parent: function* parent(context) {
 		const { rootNode, contextNode } = context;
 
 		if (contextNode === rootNode) {
 			return;
 		}
 
-		const { ownerElement } = contextNode as AdapterAttribute<T>;
+		const parentNode = context.domProvider.getParentNode(contextNode);
 
-		// Attribute/namespace parent is its owner element
-		if (ownerElement != null) {
-			yield ownerElement as AdapterElement<T>;
-
-			return;
-		}
-
-		let parentNode: T | null;
-
-		if (step.nodeType === '__NAMED__') {
-			parentNode = contextNode.parentElement satisfies Node | null as T | null;
-		} else {
-			parentNode = contextNode.parentNode satisfies Node | null as T | null;
-		}
-
-		if (isContextNode(parentNode)) {
+		if (parentNode != null) {
 			yield parentNode;
 		}
 	},
