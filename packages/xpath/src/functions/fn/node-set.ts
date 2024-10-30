@@ -4,7 +4,6 @@ import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { sortDocumentOrder } from '../../lib/dom/sort.ts';
 
 const { toCount } = reduce;
 
@@ -55,7 +54,7 @@ export const id = new NodeSetFunction(
 			return element;
 		});
 
-		return sortDocumentOrder(elements);
+		return context.domProvider.sortInDocumentOrder(elements);
 	}
 );
 

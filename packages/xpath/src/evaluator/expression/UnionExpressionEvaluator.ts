@@ -2,7 +2,6 @@ import { chain } from 'itertools-ts/lib/multi';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import { sortDocumentOrder } from '../../lib/dom/sort.ts';
 import { distinct } from '../../lib/iterators/common.ts';
 import type { UnionExprNode } from '../../static/grammar/SyntaxNode.ts';
 import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
@@ -37,6 +36,6 @@ export class UnionExpressionEvaluator extends LocationPathExpressionEvaluator {
 
 		// TODO: sort in result
 		// TODO: iter stuff cleanup (TODO doesn't belong here, just noting as I fix the import)
-		return sortDocumentOrder<T>(distinct(chain(lhs.nodes, rhs.nodes)));
+		return context.domProvider.sortInDocumentOrder(distinct(chain(lhs.nodes, rhs.nodes)));
 	}
 }

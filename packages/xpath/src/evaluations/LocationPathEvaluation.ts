@@ -34,7 +34,6 @@ import {
 	isProcessingInstructionNode,
 	isTextNode,
 } from '../lib/dom/predicates.ts';
-import { sortDocumentOrder } from '../lib/dom/sort.ts';
 import { Reiterable } from '../lib/iterators/Reiterable.ts';
 import { distinct, filter, tee } from '../lib/iterators/common.ts';
 import type { Evaluation } from './Evaluation.ts';
@@ -930,7 +929,7 @@ export class LocationPathEvaluation<T extends XPathNode>
 		// the tests, but making the minimal change necessary for refactor to
 		// eliminate use of TreeWalker
 		if (axisType === 'preceding' || axisType === 'preceding-sibling') {
-			nodes = sortDocumentOrder(nodes) satisfies Iterable<Node> as Iterable<T>;
+			nodes = this.domProvider.sortInDocumentOrder(nodes);
 		}
 
 		return new LocationPathEvaluation(this, nodes);
