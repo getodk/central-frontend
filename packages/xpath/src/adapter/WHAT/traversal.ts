@@ -1,5 +1,17 @@
-import { isWHATAttribute, isWHATDocument, isWHATElement, isWHATParentNode } from './kind.ts';
-import type { WHATAttribute, WHATDocument, WHATElement, WHATNode } from './WHATNode.ts';
+import {
+	isWHATAttribute,
+	isWHATDocument,
+	isWHATElement,
+	isWHATNamespaceDeclaration,
+	isWHATParentNode,
+} from './kind.ts';
+import type {
+	WHATAttribute,
+	WHATDocument,
+	WHATElement,
+	WHATNamespaceDeclaration,
+	WHATNode,
+} from './WHATNode.ts';
 
 export const getContainingWHATDocument = (node: WHATNode): WHATDocument => {
 	if (isWHATDocument(node)) {
@@ -15,6 +27,12 @@ const getAttrs = (node: WHATNode): readonly Attr[] => {
 	}
 
 	return [];
+};
+
+export const getWHATNamespaceDeclarations = (
+	node: WHATNode
+): readonly WHATNamespaceDeclaration[] => {
+	return getAttrs(node).filter(isWHATNamespaceDeclaration);
 };
 
 export const getWHATAttributes = (node: WHATNode): readonly WHATAttribute[] => {

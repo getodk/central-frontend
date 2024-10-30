@@ -1,5 +1,10 @@
 import type { XPathNode } from './XPathNode.ts';
-import type { AdapterAttribute, AdapterDocument, AdapterElement } from './XPathNodeKindAdapter.ts';
+import type {
+	AdapterAttribute,
+	AdapterDocument,
+	AdapterElement,
+	AdapterNamespaceDeclaration,
+} from './XPathNodeKindAdapter.ts';
 
 export interface XPathTraversalAdapter<T extends XPathNode> {
 	/**
@@ -13,6 +18,7 @@ export interface XPathTraversalAdapter<T extends XPathNode> {
 	 */
 	readonly getContainingDocument: (node: T) => AdapterDocument<T>;
 
+	readonly getNamespaceDeclarations: (node: T) => Iterable<AdapterNamespaceDeclaration<T>>;
 	readonly getAttributes: (node: T) => Iterable<AdapterAttribute<T>>;
 	readonly getChildElements: (node: T) => Iterable<AdapterElement<T>>;
 }

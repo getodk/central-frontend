@@ -6,7 +6,12 @@ import {
 	getWHATChildrenByLocalName,
 	hasLocalNamedWHATAttribute,
 } from './optimizations.ts';
-import { getChildWHATElements, getContainingWHATDocument, getWHATAttributes } from './traversal.ts';
+import {
+	getChildWHATElements,
+	getContainingWHATDocument,
+	getWHATAttributes,
+	getWHATNamespaceDeclarations,
+} from './traversal.ts';
 import { getWHATNodeValue } from './values.ts';
 import type { WHATNode } from './WHATNode.ts';
 
@@ -28,6 +33,7 @@ export const whatDOMAdapter: WHATDOMAdapter = {
 	getAttributes: getWHATAttributes,
 	getChildElements: getChildWHATElements,
 	getContainingDocument: getContainingWHATDocument,
+	getNamespaceDeclarations: getWHATNamespaceDeclarations,
 
 	// XPathDOMOptimizableOperations
 	getChildrenByLocalName: getWHATChildrenByLocalName,

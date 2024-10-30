@@ -5,6 +5,7 @@ import type {
 	WHATAttribute,
 	WHATDocument,
 	WHATElement,
+	WHATNamespaceDeclaration,
 	WHATNode,
 	WHATParentNode,
 } from './WHATNode.ts';
@@ -104,6 +105,12 @@ export const isWHATDocument = (node: WHATNode): node is WHATDocument => {
 
 export const isWHATElement = (node: WHATNode): node is WHATElement => {
 	return node.nodeType === ELEMENT_NODE;
+};
+
+export const isWHATNamespaceDeclaration = (
+	node: Attr | WHATNode
+): node is WHATNamespaceDeclaration => {
+	return node.nodeType === ATTRIBUTE_NODE && (node as Attr).namespaceURI === XMLNS_NAMESPACE_URI;
 };
 
 export const isWHATAttribute = (node: Attr | WHATNode): node is WHATAttribute => {

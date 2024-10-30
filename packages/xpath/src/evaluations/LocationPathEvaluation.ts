@@ -26,7 +26,6 @@ import {
 	isCDataSection,
 	isCommentNode,
 	isElementNode,
-	isNamespaceAttribute,
 	isProcessingInstructionNode,
 	isTextNode,
 } from '../lib/dom/predicates.ts';
@@ -69,8 +68,6 @@ type EvaluationComparator<T extends XPathNode> = (
 	lhs: Evaluation<T>,
 	rhs: Evaluation<T>
 ) => boolean;
-
-const filterNamespace = filter(isNamespaceAttribute);
 
 // TODO: we'll be able to optimize this so we don't always need it
 type NodeTypeFilter = <T extends XPathNode, U extends T>(nodes: Iterable<T>) => Iterable<U>;
@@ -303,11 +300,8 @@ const axisEvaluators: AxisEvaluators = {
 		yield* siblings(context.contextNode, siblingKey);
 	},
 
-	namespace: function* namespace<T extends XPathNode>(context: AxisEvaluationContext<T>) {
-		const attributeNodes = (context.contextNode as AdapterElement<T>).attributes ?? [];
-
-		// @ts-expect-error - this is temporary. The runtime logic hasn't changed yet, but since it will it's not worth the effort to satisfy the type checker here.
-		yield* filterNamespace(attributeNodes);
+	namespace: (context) => {
+		return context.domProvider.getNamespaceDeclarations(context.contextNode);
 	},
 
 	parent: function* parent<T extends XPathNode>(
