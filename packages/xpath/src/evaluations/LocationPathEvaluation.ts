@@ -6,7 +6,6 @@ import type {
 	AdapterAttribute,
 	AdapterDocument,
 	AdapterElement,
-	AdapterNamespaceDeclaration,
 	AdapterParentNode,
 	AdapterProcessingInstruction,
 	AdapterText,
@@ -72,12 +71,6 @@ type EvaluationComparator<T extends XPathNode> = (
 ) => boolean;
 
 const filterNamespace = filter(isNamespaceAttribute);
-
-const filterNonNamespace = filter(
-	<T extends XPathNode>(
-		attr: AdapterAttribute<T> | AdapterNamespaceDeclaration<T>
-	): attr is AdapterAttribute<T> => !isNamespaceAttribute(attr)
-);
 
 // TODO: we'll be able to optimize this so we don't always need it
 type NodeTypeFilter = <T extends XPathNode, U extends T>(nodes: Iterable<T>) => Iterable<U>;
@@ -211,13 +204,8 @@ const axisEvaluators: AxisEvaluators = {
 		}
 	},
 
-	attribute: function* attribute<T extends XPathNode>(
-		context: AxisEvaluationContext<T>
-	): Iterable<T> {
-		const attributeNodes = (context.contextNode as AdapterElement<T>).attributes ?? [];
-
-		// @ts-expect-error - this is temporary. The runtime logic hasn't changed yet, but since it will it's not worth the effort to satisfy the type checker here.
-		yield* filterNonNamespace(attributeNodes);
+	attribute: (context) => {
+		return context.domProvider.getAttributes(context.contextNode);
 	},
 
 	child: function* child<T extends XPathNode>(
