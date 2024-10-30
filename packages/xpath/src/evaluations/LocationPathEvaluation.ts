@@ -205,20 +205,14 @@ const axisEvaluators: AxisEvaluators = {
 		return context.domProvider.getAttributes(context.contextNode);
 	},
 
-	child: function* child<T extends XPathNode>(
-		context: AxisEvaluationContext<T>,
-		step: AnyStep
-	): Iterable<T> {
-		const { contextNode } = context;
+	child: (context, step) => {
+		const { contextNode, domProvider } = context;
 
-		switch (step.nodeType) {
-			case '__NAMED__':
-				yield* ((contextNode as AdapterElement<T>).children ?? []) as Iterable<AdapterElement<T>>;
-				break;
-
-			default:
-				yield* contextNode.childNodes satisfies Iterable<ChildNode> as Iterable<T>;
+		if (step.nodeType === '__NAMED__') {
+			return domProvider.getChildElements(contextNode);
 		}
+
+		return domProvider.getChildNodes(contextNode);
 	},
 
 	descendant: function* descendant(context, step) {
