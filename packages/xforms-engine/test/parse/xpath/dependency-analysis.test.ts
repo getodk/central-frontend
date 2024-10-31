@@ -1,5 +1,5 @@
 import { xml } from '@getodk/common/test/factories/xml.ts';
-import { XFormsXPathEvaluator } from '@getodk/xpath';
+import { DefaultEvaluator } from '@getodk/xpath';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import {
 	resolveDependencyNodesets,
@@ -462,7 +462,7 @@ describe('Dependency analysis', () => {
 
 			describe('evaluation examples', () => {
 				let fixture: XMLDocument;
-				let evaluator: XFormsXPathEvaluator;
+				let evaluator: DefaultEvaluator;
 				let dataBarTarget: Element;
 				let dataWhateverContext: Element;
 				let dataFooWhateverContext: Element;
@@ -478,7 +478,7 @@ describe('Dependency analysis', () => {
 						</data>
 					`;
 
-					evaluator = new XFormsXPathEvaluator({
+					evaluator = new DefaultEvaluator({
 						rootNode: fixture,
 					});
 
