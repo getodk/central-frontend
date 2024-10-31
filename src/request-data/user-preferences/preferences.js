@@ -116,7 +116,7 @@ export default class UserPreferences {
           throw new Error('Directly setting a project\'s whole property collection is not supported. Set each property individually, eg "preferences.projects[3].foo = \'bar\'"');
         },
         get(target, projectId) {
-          if (Number.isNaN(parseInt(projectId, 10))) throw new TypeError(`Not an integer project ID: "${projectId}"`);
+          if (!/^\d+$/.test(projectId)) throw new TypeError(`Not an integer project ID: "${projectId}"`);
           const projectProps = target[projectId];
           if (projectProps === undefined || (!isReactive(projectProps))) {
             /* eslint-disable no-param-reassign */
