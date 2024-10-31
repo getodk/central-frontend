@@ -68,7 +68,7 @@ export default class UserPreferences {
       withAuth(
         {
           method: (v === null) ? 'DELETE' : 'PUT',
-          url: (projectId === null) ? `${apiPaths.userSitePreferences(k)}` : `${apiPaths.userProjectPreferences(projectId, k)}`,
+          url: (projectId === null) ? apiPaths.userSitePreferences(k) : apiPaths.userProjectPreferences(projectId, k),
           headers: {
             'Content-Type': 'application/json',
           },
