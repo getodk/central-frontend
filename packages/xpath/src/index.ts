@@ -7,7 +7,6 @@
  * - {@link XPathDOMAdapter}, associated values and types
  * - {@link DefaultEvaluator}, associated types
  * - {@link XFormsXPathEvaluator}, associated types
- * - {@link DefaultXFormsXPathEvaluator}, associated types (tempoary)
  *
  * @todo Break out distinct entrypoints for each.
  * @todo Seriously consider moving all XForms-specific functionality down the
@@ -17,7 +16,6 @@
 import type { XPathDOMAdapter } from './adapter/interface/XPathDOMAdapter.ts';
 import type { DefaultEvaluator } from './evaluator/DefaultEvaluator.ts';
 import type { Evaluator } from './evaluator/Evaluator.ts';
-import type { DefaultXFormsXPathEvaluator } from './xforms/DefaultXFormsXPathEvaluator.ts';
 import type { XFormsXPathEvaluator } from './xforms/XFormsXPathEvaluator.ts';
 
 /**
@@ -64,16 +62,8 @@ export type {
 	XFormsSecondaryInstanceElement,
 	XFormsSecondaryInstanceMap,
 } from './xforms/XFormsSecondaryInstances.ts';
+export { XFormsXPathEvaluator } from './xforms/XFormsXPathEvaluator.ts';
 export type {
 	XFormsXPathEvaluatorOptions,
 	XFormsXPathRootNode,
 } from './xforms/XFormsXPathEvaluator.ts';
-
-/**
- * - - -
- * {@link DefaultXFormsXPathEvaluator}, associated types (temporary)
- * - - -
- */
-
-export type * from './xforms/DefaultXFormsXPathEvaluator.ts';
-export { DefaultXFormsXPathEvaluator as XFormsXPathEvaluator } from './xforms/DefaultXFormsXPathEvaluator.ts';
