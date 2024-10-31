@@ -69,9 +69,6 @@ export default class UserPreferences {
         {
           method: (v === null) ? 'DELETE' : 'PUT',
           url: (projectId === null) ? `${apiPaths.userSitePreferences(k)}` : `${apiPaths.userProjectPreferences(projectId, k)}`,
-          headers: {
-            'Content-Type': 'application/json',
-          },
           data: (v === null) ? undefined : { propertyValue: v },
           signal: aborter.signal,
         },
@@ -94,10 +91,9 @@ export default class UserPreferences {
         },
         set(target, prop, value) {
           const normalizedValue = SitePreferenceNormalizer.normalize(prop, value);
-          // eslint-disable-next-line no-multi-assign
-          const retval = (target[prop] = normalizedValue);
+          target[prop] = normalizedValue;
           userPreferences.#propagate(prop, normalizedValue, null); // PUT to backend
-          return retval;
+          return true;
         },
         /* eslint-enable no-param-reassign */
         get(target, prop) {
@@ -129,9 +125,9 @@ export default class UserPreferences {
               {
                 deleteProperty(from, prop) {
                   ProjectPreferenceNormalizer.normalizeFn(prop); // we're calling it just so that it throws if prop is not registered in the form of a normalization function
-                  const retval = (delete from[prop]);
+                  delete from[prop];
                   userPreferences.#propagate(prop, null, projectId); // DELETE to backend
-                  return retval;
+                  return true;
                 },
                 set(from, prop, propval) {
                   const normalizedValue = ProjectPreferenceNormalizer.normalize(prop, propval);
