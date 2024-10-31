@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 import { shallowReactive, isReactive } from 'vue';
 import { apiPaths, withAuth } from '../../util/request';
+import { noop } from '../../util/util';
 import { SitePreferenceNormalizer, ProjectPreferenceNormalizer } from './normalizers';
 
 
@@ -74,7 +75,7 @@ export default class UserPreferences {
         },
         this.#session.token
       )
-    );
+    ).catch(noop); // Preference didn't get persisted to the backend. Too bad! We're not doing any retrying.
   }
 
   #makeSiteProxy(sitePreferenceData) {
