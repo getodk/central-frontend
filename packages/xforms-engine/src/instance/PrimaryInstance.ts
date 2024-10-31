@@ -27,8 +27,8 @@ export class PrimaryInstance implements XPathDocument {
 
 		const evaluator = new EngineXPathEvaluator({
 			rootNode,
-			itextTranslationsByLanguage: new Map(),
-			secondaryInstancesById: new Map(),
+			itextTranslationsByLanguage: model.itextTranslations,
+			secondaryInstancesById: model.secondaryInstances,
 		});
 
 		this.definition = definition;

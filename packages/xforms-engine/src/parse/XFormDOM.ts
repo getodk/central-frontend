@@ -1,8 +1,37 @@
 import { XFORMS_NAMESPACE_URI, XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
+import type {
+	KnownAttributeLocalNamedElement,
+	LocalNamedElement,
+} from '@getodk/common/types/dom.ts';
 import { DefaultEvaluator } from '@getodk/xpath';
 
 interface DOMBindElement extends KnownAttributeLocalNamedElement<'bind', 'nodeset'> {}
+
+export interface DOMItextTranslationElement
+	extends KnownAttributeLocalNamedElement<'translation', 'lang'> {}
+
+interface DOMInstanceElement extends LocalNamedElement<'instance'> {}
+
+export interface DOMSecondaryInstanceElement
+	extends KnownAttributeLocalNamedElement<'instance', 'id'> {}
+
+type AssertDOMSecondaryInstanceElement = (
+	element: DOMInstanceElement
+) => asserts element is DOMSecondaryInstanceElement;
+
+const assertDOMSecondaryInstanceElement: AssertDOMSecondaryInstanceElement = (element) => {
+	if (!element.hasAttribute('id')) {
+		throw new Error('Invalid secondary instance element: missing `id` attribute');
+	}
+};
+
+type AssertDOMSecondaryInstanceElements = (
+	elements: readonly DOMInstanceElement[]
+) => asserts elements is readonly DOMSecondaryInstanceElement[];
+
+const assertDOMSecondaryInstanceElements: AssertDOMSecondaryInstanceElements = (elements) => {
+	elements.forEach(assertDOMSecondaryInstanceElement);
+};
 
 const domParser = new DOMParser();
 
@@ -170,6 +199,11 @@ interface XFormDOMOptions {
 	readonly isNormalized: boolean;
 }
 
+/**
+ * @todo **Everything** in this class should be cacheable. Maybe not worth it
+ * for small forms, but may make a pretty substantial difference for very large
+ * forms (in bytes) in sessions creating multiple instances of the same form.
+ */
 export class XFormDOM {
 	static from(sourceXML: string) {
 		return new this(sourceXML, { isNormalized: false });
@@ -189,6 +223,9 @@ export class XFormDOM {
 	readonly binds: readonly DOMBindElement[];
 	readonly primaryInstance: Element;
 	readonly primaryInstanceRoot: Element;
+
+	readonly itextTranslationElements: readonly DOMItextTranslationElement[];
+	readonly secondaryInstanceElements: readonly DOMSecondaryInstanceElement[];
 
 	readonly body: Element;
 
@@ -230,14 +267,30 @@ export class XFormDOM {
 		const binds = evaluator.evaluateNodes<DOMBindElement>('./xf:bind[@nodeset]', {
 			contextNode: model,
 		});
-		// TODO: Evidently primary instance root will not always have an id
-		const primaryInstanceRoot = evaluator.evaluateNonNullElement('./xf:instance/*[@id]', {
+
+		const instances = evaluator.evaluateNodes<DOMInstanceElement>('./xf:instance', {
 			contextNode: model,
 		});
-		// TODO: invert primary instance/root lookups
-		const primaryInstance = evaluator.evaluateNonNullElement('..', {
-			contextNode: primaryInstanceRoot,
+
+		const [primaryInstance, ...secondaryInstanceElements] = instances;
+
+		assertDOMSecondaryInstanceElements(secondaryInstanceElements);
+
+		if (primaryInstance == null) {
+			throw new Error('Form is missing primary instance');
+		}
+
+		// TODO: Evidently primary instance root will not always have an id
+		const primaryInstanceRoot = evaluator.evaluateNonNullElement('./*[@id]', {
+			contextNode: primaryInstance,
 		});
+
+		const itextTranslationElements = evaluator.evaluateNodes<DOMItextTranslationElement>(
+			'./xf:itext/xf:translation[@lang]',
+			{
+				contextNode: model,
+			}
+		);
 
 		this.normalizedXML = normalizedXML;
 		this.xformDocument = xformDocument;
@@ -248,6 +301,8 @@ export class XFormDOM {
 		this.binds = binds;
 		this.primaryInstance = primaryInstance;
 		this.primaryInstanceRoot = primaryInstanceRoot;
+		this.itextTranslationElements = itextTranslationElements;
+		this.secondaryInstanceElements = secondaryInstanceElements;
 		this.body = body;
 	}
 
