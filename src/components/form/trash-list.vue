@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="count > 0" id="form-trash-list">
-    <details :open="!isFormTrashCollapsed" @toggle="toggleTrashExpansion">
+    <details :open="!isFormTrashCollapsed" @toggle="onToggleTrashExpansion">
       <summary>
         <div id="form-trash-list-header">
           <span id="form-trash-list-title">
@@ -91,7 +91,7 @@ export default {
       // (by emitting event to that component's parent)
       this.$emit('restore');
     },
-    toggleTrashExpansion(evt) {
+    onToggleTrashExpansion(evt) {
       const projProps = this.currentUser.preferences.projects[this.project.id];
       if (evt.newState === 'closed') {
         projProps.formTrashCollapsed = true;
