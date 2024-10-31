@@ -93,9 +93,8 @@ export default {
     },
     onToggleTrashExpansion(evt) {
       const projProps = this.currentUser.preferences.projects[this.project.id];
-      if (evt.newState === 'closed') {
-        projProps.formTrashCollapsed = true;
-      } else if (projProps.formTrashCollapsed) projProps.formTrashCollapsed = false;
+      if (evt.newState === 'closed') projProps.formTrashCollapsed = true;
+      else if (projProps.formTrashCollapsed) projProps.formTrashCollapsed = false;
     },
   }
 };
