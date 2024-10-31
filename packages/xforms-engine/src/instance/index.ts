@@ -8,7 +8,7 @@ import type {
 import { retrieveSourceXMLResource } from '../instance/resource.ts';
 import { createUniqueId } from '../lib/unique-id.ts';
 import { XFormDefinition } from '../parse/XFormDefinition.ts';
-import { Root } from './Root.ts';
+import { PrimaryInstance } from './PrimaryInstance.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 
 interface InitializeFormOptions extends BaseInitializeFormOptions {
@@ -30,8 +30,9 @@ export const initializeForm = async (
 	const engineConfig = buildInstanceConfig(options.config);
 	const sourceXML = await retrieveSourceXMLResource(input, engineConfig);
 	const form = new XFormDefinition(sourceXML);
+	const primaryInstance = new PrimaryInstance(form.model, engineConfig);
 
-	return new Root(form.xformDOM, form.model.root, engineConfig);
+	return primaryInstance.root;
 };
 
 initializeForm satisfies InitializeForm;

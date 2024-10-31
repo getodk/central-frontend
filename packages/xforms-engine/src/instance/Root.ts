@@ -1,4 +1,3 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
@@ -12,6 +11,7 @@ import type {
 import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
 import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -25,15 +25,14 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
-import type { XFormDOM } from '../parse/XFormDOM.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
-import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
+import type { PrimaryInstance } from './PrimaryInstance.ts';
 
 interface RootStateSpec {
 	readonly reference: string;
@@ -135,13 +134,11 @@ export class Root
 		return this.definition.submission;
 	}
 
-	protected readonly instanceDOM: XFormDOM;
-
 	// BaseNode
 	readonly root = this;
 
 	// EvaluationContext
-	readonly evaluator: XFormsXPathEvaluator;
+	readonly evaluator: EngineXPathEvaluator;
 
 	readonly contextNode: Element;
 
@@ -155,7 +152,8 @@ export class Root
 		return this.engineState.activeLanguage;
 	}
 
-	constructor(xformDOM: XFormDOM, definition: RootDefinition, engineConfig: InstanceConfig) {
+	constructor(parent: PrimaryInstance) {
+		const { definition, engineConfig, evaluator } = parent;
 		const reference = definition.nodeset;
 
 		super(engineConfig, null, definition, {
@@ -168,9 +166,10 @@ export class Root
 
 		this.childrenState = childrenState;
 
-		const instanceDOM = xformDOM.createInstance();
-		const evaluator = instanceDOM.primaryInstanceEvaluator;
-		const { translations } = evaluator;
+		const translations: ItextTranslations = {
+			getActiveLanguage: () => evaluator.getActiveLanguage(),
+			getLanguages: () => evaluator.getLanguages(),
+		};
 		const { defaultLanguage, languages } = getInitialLanguageState(translations);
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -201,13 +200,8 @@ export class Root
 			childrenState
 		);
 
-		const contextNode = instanceDOM.xformDocument.createElement(definition.nodeName);
-
-		instanceDOM.primaryInstanceRoot.replaceWith(contextNode);
-
 		this.evaluator = evaluator;
-		this.contextNode = contextNode;
-		this.instanceDOM = instanceDOM;
+		this.contextNode = parent.contextNode.documentElement;
 		this.languages = languages;
 
 		childrenState.setChildren(buildChildren(this));
@@ -229,7 +223,7 @@ export class Root
 			throw new Error(`Language "${language.language}" not available`);
 		}
 
-		this.evaluator.translations.setActiveLanguage(activeLanguage.language);
+		this.evaluator.setActiveLanguage(activeLanguage.language);
 		this.state.setProperty('activeLanguage', activeLanguage);
 
 		return this;

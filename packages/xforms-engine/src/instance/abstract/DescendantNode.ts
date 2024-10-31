@@ -1,6 +1,6 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../parse/model/DescendentNodeDefinition.ts';
@@ -98,7 +98,7 @@ export abstract class DescendantNode<
 	readonly isRequired: Accessor<boolean>;
 
 	readonly root: Root;
-	readonly evaluator: XFormsXPathEvaluator;
+	readonly evaluator: EngineXPathEvaluator;
 	readonly contextNode: Element;
 
 	constructor(

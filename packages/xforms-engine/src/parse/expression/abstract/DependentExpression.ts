@@ -1,4 +1,4 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
+import type { EngineXPathEvaluator } from '../../../integration/xpath/EngineXPathEvaluator.ts';
 import { resolveDependencyNodesets } from '../../xpath/dependency-analysis.ts';
 import type {
 	ConstantExpression,
@@ -26,7 +26,7 @@ export type DependentExpressionEvaluatorMethod<Type extends DependentExpressionR
 	EvaluatorMethodsByResultType[Type];
 
 export type DependentExpressionResult<Type extends DependentExpressionResultType> = ReturnType<
-	XFormsXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
+	EngineXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
 >;
 
 interface SemanticDependencyOptions {

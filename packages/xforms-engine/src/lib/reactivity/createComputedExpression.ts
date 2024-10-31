@@ -1,9 +1,9 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
 	DependentExpression,
 	DependentExpressionResultType,
@@ -28,7 +28,7 @@ type ExpressionEvaluator<
 > = () => EvaluatedExpression<Type>
 
 const expressionEvaluator = <Type extends DependentExpressionResultType>(
-	evaluator: XFormsXPathEvaluator,
+	evaluator: EngineXPathEvaluator,
 	contextNode: Node,
 	type: Type,
 	expression: string

@@ -1,5 +1,5 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 import type { SubscribableDependency } from './SubscribableDependency.ts';
@@ -21,7 +21,7 @@ export interface EvaluationContextRoot extends SubscribableDependency, Translati
  */
 export interface EvaluationContext {
 	readonly scope: ReactiveScope;
-	readonly evaluator: XFormsXPathEvaluator;
+	readonly evaluator: EngineXPathEvaluator;
 	readonly root: EvaluationContextRoot;
 
 	/**

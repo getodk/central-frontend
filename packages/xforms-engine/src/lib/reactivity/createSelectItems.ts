@@ -1,5 +1,4 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
@@ -12,6 +11,7 @@ import type {
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/select/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
@@ -62,7 +62,7 @@ const createTranslatedStaticSelectItems = (
 
 class ItemsetItemEvaluationContext implements EvaluationContext {
 	readonly scope: ReactiveScope;
-	readonly evaluator: XFormsXPathEvaluator;
+	readonly evaluator: EngineXPathEvaluator;
 	readonly root: EvaluationContextRoot;
 	readonly contextReference: Accessor<string>;
 

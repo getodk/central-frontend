@@ -15,6 +15,7 @@ import type { FetchResource } from '../../src/client/EngineConfig.ts';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from '../../src/client/RootNode.ts';
+import { PrimaryInstance } from '../../src/instance/PrimaryInstance.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 import { createReactiveScope, type ReactiveScope } from '../../src/lib/reactivity/scope.ts';
@@ -22,7 +23,7 @@ import { createUniqueId } from '../../src/lib/unique-id.ts';
 import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
 import { reactiveTestScope } from '../helpers/reactive/internal.ts';
 
-describe('Instance root', () => {
+describe('PrimaryInstance engine representation of instance state', () => {
 	let scope: ReactiveScope;
 	let xformDefinition: XFormDefinition;
 
@@ -72,9 +73,9 @@ describe('Instance root', () => {
 	// boilerplate across tests. Most tests should use `createRootNode` below.
 	// Tests concerned with some aspects of internals may use this function
 	// directly, with caution.
-	const createRoot = (stateFactory: OpaqueReactiveObjectFactory): Root => {
+	const createPrimaryInstance = (stateFactory: OpaqueReactiveObjectFactory): PrimaryInstance => {
 		return scope.runTask(() => {
-			return new Root(xformDefinition.xformDOM, xformDefinition.model.root, {
+			return new PrimaryInstance(xformDefinition.model, {
 				createUniqueId,
 				fetchResource,
 				stateFactory,
@@ -82,29 +83,20 @@ describe('Instance root', () => {
 		});
 	};
 
+	it("produces instance root's the static nodeset reference", () => {
+		const rootReference = reactiveTestScope(({ mutable }) => {
+			const { root } = createPrimaryInstance(mutable);
+
+			return root.contextReference();
+		});
+
+		expect(rootReference).toBe('/data');
+	});
+
 	describe('internals', () => {
-		it('exposes a context node for XPath evaluation purposes', () => {
-			const { contextNode } = reactiveTestScope(({ mutable }) => {
-				return createRoot(mutable);
-			});
-
-			expect(contextNode).toBeInstanceOf(Element);
-			expect(contextNode.nodeName).toBe('data');
-		});
-
-		it("produces instance root's the static nodeset reference", () => {
-			const rootReference = reactiveTestScope(({ mutable }) => {
-				const root = createRoot(mutable);
-
-				return root.contextReference();
-			});
-
-			expect(rootReference).toBe('/data');
-		});
-
 		it('gets a node by reference', () => {
 			const [q1] = reactiveTestScope(({ mutable }) => {
-				const root = createRoot(mutable);
+				const { root } = createPrimaryInstance(mutable);
 
 				return root.getSubscribableDependenciesByReference('/data/q1');
 			});
@@ -120,7 +112,7 @@ describe('Instance root', () => {
 	// client-facing functionality. Those tests should use this convenience
 	// function if possible.
 	const createRootNode = (stateFactory: OpaqueReactiveObjectFactory): RootNode => {
-		return createRoot(stateFactory);
+		return createPrimaryInstance(stateFactory).root;
 	};
 
 	it('creates a Root instance', () => {

@@ -1,4 +1,3 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
@@ -7,6 +6,7 @@ import type { InstanceNodeType } from '../../client/node-types.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
 import type { TextRange } from '../../index.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -127,7 +127,7 @@ export abstract class InstanceNode<
 	abstract readonly root: Root;
 
 	// EvaluationContext: instance-global/shared
-	abstract readonly evaluator: XFormsXPathEvaluator;
+	abstract readonly evaluator: EngineXPathEvaluator;
 
 	// EvaluationContext *and* Subscribable: node-specific
 	readonly scope: ReactiveScope;
