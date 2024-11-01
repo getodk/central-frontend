@@ -486,7 +486,7 @@ const getChildRepeatPath = (scenario: Scenario, childIndex: number): string => {
 	while (currentHousehold == null) {
 		currentNode = currentNode.parent;
 
-		if (currentNode == null) {
+		if (currentNode == null || currentNode.nodeType === 'root') {
 			break;
 		}
 

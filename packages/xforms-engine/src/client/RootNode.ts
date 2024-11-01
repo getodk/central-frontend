@@ -9,10 +9,8 @@ import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
 	/**
-	 * This, along with {@link RootNode.languages} is the most significant break
-	   in consistency across node types' state and static properties. Exposing it
-	   across all node types seems like a point of potential confusion, so this
-	   particular divergence seems like the most reasonable compromise.
+	 * @todo If we ever expose an interface to the primary instance document, it
+	 * would make sense to move this state up.
 	 */
 	get activeLanguage(): ActiveLanguage;
 
@@ -48,13 +46,12 @@ export interface RootNode extends BaseNode {
 
 	readonly definition: RootDefinition;
 	readonly root: RootNode;
-	readonly parent: null;
+	readonly parent: unknown;
 	readonly currentState: RootNodeState;
 	readonly validationState: AncestorNodeValidationState;
 
 	/**
-	 * @todo as with {@link RootNodeState.activeLanguage}, this is the most
-	 * significant break in consistency across node types.
+	 * @todo as discussed on {@link RootNodeState.activeLanguage}
 	 */
 	readonly languages: FormLanguages;
 
