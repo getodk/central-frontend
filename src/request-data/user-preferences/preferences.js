@@ -86,9 +86,9 @@ export default class UserPreferences {
         /* eslint-disable no-param-reassign */
         deleteProperty(target, prop) {
           SitePreferenceNormalizer.normalizeFn(prop); // throws if prop is not registered
-          const retval = (delete target[prop]);
+          delete target[prop];
           userPreferences.#propagate(prop, null, null); // DELETE to backend
-          return retval;
+          return true;
         },
         set(target, prop, value) {
           const normalizedValue = SitePreferenceNormalizer.normalize(prop, value);
