@@ -16,6 +16,38 @@ import { noop } from '../../util/util';
 import { SitePreferenceNormalizer, ProjectPreferenceNormalizer } from './normalizers';
 
 
+/*
+UserPreferences - for storing user preferences such as the display sort order of listings, etc. The settings are propagated to the
+backend and will be loaded into newly created frontend sessions. As such, it doesn't function as a live-sync mechanism between sessions;
+preferences only get loaded from the backend once, at login time; thus concurrent sessions don't see eachother's changes. But a newly
+created third session will see the amalgamate of the preferences applied in the former two sessions, which may be lightly surprising to
+a user, but it keeps things simple.
+
+A preference has a key and a value. It's expressed via a JS object:
+- `currentUser.preferences.site.myPreference` for sitewide preferences, or
+- `currentUser.preferences.projects[someProjectID].someProjectPreference` for per-project preferences.
+The value may be anything json-serializable.
+
+Note that for project preferences, the per-project settings object is autovivicated when referenced. So you don't need to worry about
+whether there is already any settings object for a certain project. If there isn't one, it will be generated on the fly when you assign —
+for instance, `currentUser.preferences.projects[9000].blooblap = "green"`.
+
+You can also delete a preference; just do `delete currentUser.preferences.projects[9000].blooblap`.
+
+All values in the objects are reactive, so the *idea* is that you would be able to simply reference such a value in a Vue template, and be done!
+
+To set up a preference, there's one thing you need to do: register a "normalizer" for your preference inside `normalizers.js` (more documentation
+is to be found there).
+
+One thing to take into account is that every assignment will result in a PUT to the backend (and similarly, any `delete` will result in a
+HTTP DELETE request being sent). Thus if you have a preference situation in which the same value can be set repeatedly, you may want to
+intervene to compare the value, and only set it in the Preferences object when it has really changed.
+
+Another thing: the propagation to the backend is best-effort — there are no retries, nor is there dirtiness tracking. If the request fails,
+for instance due to some transient network error, then the preference is not propagated and a newly created session will not incorporate the
+mutation. At the backend, the preferences are stored in the `user_site_preferences` and `user_project_preferences` tables.
+*/
+
 export default class UserPreferences {
   #abortControllers;
   #instanceID;
