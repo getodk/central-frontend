@@ -462,4 +462,23 @@ describe('SubmissionFilters', () => {
       });
     });
   });
+
+  it('should not send Submission OData request on navigating to another route after filter', () => {
+    testData.extendedForms.createPast(1);
+
+    return loadComponent('reviewState=%27approved%27')
+      .beforeEachResponse((_, { url }) => {
+        if (url.includes('.svc')) {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.equal("(__system/reviewState eq 'approved')");
+        }
+      })
+      .afterResponses(component => {
+        const filters = component.getComponent(SubmissionFilters).props();
+        filters.reviewState.should.eql(["'approved'"]);
+      })
+      .complete()
+      .route('/projects/1/forms/f/draft/testing')
+      .testNoRequest();
+  });
 });
