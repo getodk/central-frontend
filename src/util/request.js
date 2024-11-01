@@ -72,6 +72,8 @@ export const apiPaths = {
   user: (id) => `/v1/users/${id}`,
   password: (id) => `/v1/users/${id}/password`,
   assignment: (role, actorId) => `/v1/assignments/${role}/${actorId}`,
+  userSitePreferences: (k) => `/v1/user-preferences/site/${k}`,
+  userProjectPreferences: (projectId, k) => `/v1/user-preferences/project/${projectId}/${k}`,
   project: projectPath(''),
   projectAssignments: projectPath('/assignments'),
   projectAssignment: (projectId, role, actorId) =>
@@ -173,7 +175,7 @@ export const apiPaths = {
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
-  audits: (query) => `/v1/audits${queryString(query)}`
+  audits: (query) => `/v1/audits${queryString(query)}`,
 };
 
 

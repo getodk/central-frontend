@@ -11,22 +11,27 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="count > 0" id="form-trash-list">
-    <div id="form-trash-list-header">
-      <span id="form-trash-list-title">
-        <span class="icon-trash"></span>
-        <span>{{ $t('title') }}</span>
-      </span>
-      <span id="form-trash-list-count">{{ $t('trashCount', { count: $n(count, 'default') }) }}</span>
-      <span id="form-trash-list-note">{{ $t('message') }}</span>
-    </div>
-    <table id="form-trash-list-table" class="table">
-      <tbody>
-        <form-trash-row v-for="form of sortedDeletedForms" :key="form.id" :form="form"
-          @start-restore="restoreForm.show({ form: $event })"/>
-      </tbody>
-    </table>
-    <form-restore v-bind="restoreForm" @hide="restoreForm.hide()"
-      @success="afterRestore"/>
+    <details :open="!isFormTrashCollapsed" @toggle="onToggleTrashExpansion">
+      <summary>
+        <div id="form-trash-list-header">
+          <span id="form-trash-list-title">
+            <span id="form-trash-expander" :class="{ 'icon-chevron-right': isFormTrashCollapsed, 'icon-chevron-down': !isFormTrashCollapsed }"></span>
+            <span class="icon-trash"></span>
+            <span>{{ $t('title') }}</span>
+          </span>
+          <span id="form-trash-list-count">{{ $t('trashCount', { count: $n(count, 'default') }) }}</span>
+          <span id="form-trash-list-note">{{ $t('message') }}</span>
+        </div>
+      </summary>
+      <table id="form-trash-list-table" class="table">
+        <tbody>
+          <form-trash-row v-for="form of sortedDeletedForms" :key="form.id" :form="form"
+            @start-restore="restoreForm.show({ form: $event })"/>
+        </tbody>
+      </table>
+      <form-restore v-bind="restoreForm" @hide="restoreForm.hide()"
+        @success="afterRestore"/>
+    </details>
   </div>
 </template>
 
@@ -49,8 +54,8 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, deletedForms } = useRequestData();
-    return { project, deletedForms, restoreForm: modalData() };
+    const { project, deletedForms, currentUser } = useRequestData();
+    return { project, deletedForms, currentUser, restoreForm: modalData() };
   },
   computed: {
     count() {
@@ -59,7 +64,10 @@ export default {
     sortedDeletedForms() {
       const sortByDeletedAt = sortWith([ascend(entry => entry.deletedAt)]);
       return sortByDeletedAt(this.deletedForms.data);
-    }
+    },
+    isFormTrashCollapsed() {
+      return this.currentUser.preferences.projects[this.project.id].formTrashCollapsed;
+    },
   },
   created() {
     this.fetchDeletedForms(false);
@@ -82,7 +90,12 @@ export default {
       // tell parent component (ProjectOverview) to refresh regular forms list
       // (by emitting event to that component's parent)
       this.$emit('restore');
-    }
+    },
+    onToggleTrashExpansion(evt) {
+      const projProps = this.currentUser.preferences.projects[this.project.id];
+      if (evt.newState === 'closed') projProps.formTrashCollapsed = true;
+      else if (projProps.formTrashCollapsed) projProps.formTrashCollapsed = false;
+    },
   }
 };
 </script>
@@ -93,6 +106,12 @@ export default {
 #form-trash-list-header {
   display: flex;
   align-items: baseline;
+
+  #form-trash-expander {
+    // Fixate the width as icon-chevron-down and icon-chevron-right have unequal width :-(
+    display: inline-block;
+    width: 1em;
+  }
 
   .icon-trash {
     padding-right: 8px;

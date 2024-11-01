@@ -15,18 +15,20 @@ import { mergeDeepLeft } from 'ramda';
 import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
+import UserPreferences from './user-preferences/preferences';
 
-export default ({ i18n }, createResource) => {
+export default ({ i18n, http }, createResource) => {
   // Resources related to the session
-  createResource('session');
+  const session = createResource('session');
   createResource('currentUser', () => ({
-    /* eslint-disable no-param-reassign */
     transformResponse: ({ data }) => {
+      /* eslint-disable no-param-reassign */
       data.verbs = new Set(data.verbs);
       data.can = hasVerbs;
+      data.preferences = new UserPreferences(data.preferences, session, http);
+      /* eslint-enable no-param-reassign */
       return shallowReactive(data);
     }
-    /* eslint-enable no-param-reassign */
   }));
 
   // Resources related to the system
