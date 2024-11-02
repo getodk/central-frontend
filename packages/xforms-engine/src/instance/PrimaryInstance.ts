@@ -2,6 +2,7 @@ import type { XPathDocument } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
+import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type {
 	SubmissionChunkedType,
@@ -13,13 +14,23 @@ import type { AncestorNodeValidationState } from '../client/validation.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
 import { createInstanceSubmissionState } from '../lib/client-reactivity/submission/createInstanceSubmissionState.ts';
 import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
+import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
+import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
+import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
+import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
+import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
+import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { ReactiveScope } from '../lib/reactivity/scope.ts';
 import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
+import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
+import { InstanceNode } from './abstract/InstanceNode.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
+import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocument.ts';
 import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
@@ -47,29 +58,53 @@ import { Root } from './Root.ts';
  */
 const PRIMARY_INSTANCE_REFERENCE = '/';
 
-interface PrimaryInstanceCurrentState {
+interface PrimaryInstanceStateSpec {
+	readonly reference: string;
+	readonly readonly: boolean;
 	readonly relevant: boolean;
-	readonly children: readonly Root[];
+	readonly required: boolean;
+	readonly label: null;
+	readonly hint: null;
+	readonly children: Accessor<readonly FormNodeID[]>;
+	readonly valueOptions: null;
+	readonly value: null;
+
+	// Root-specific
+	readonly activeLanguage: Accessor<ActiveLanguage>;
 }
 
 export class PrimaryInstance
+	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root, Document>
 	implements
+		PrimaryInstanceDocument,
 		XPathDocument,
 		TranslationContext,
 		EvaluationContext,
+		SubscribableDependency,
 		ClientReactiveSubmittableInstance
 {
+	// InstanceNode
+	protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
+	protected readonly engineState: EngineState<PrimaryInstanceStateSpec>;
+	readonly getChildren: Accessor<readonly Root[]>;
+
+	readonly hasReadonlyAncestor = () => false;
+	readonly isReadonly = () => false;
+	readonly hasNonRelevantAncestor = () => false;
+	readonly isRelevant = () => true;
+
 	// TranslationContext (support)
 	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
 
 	// XPathDocument
 	readonly [XPathNodeKindKey] = 'document';
 
-	// (Now: ClientReactiveSubmittableInstance, RootNode support; soon: ClientReactiveSubmittableInstance, PrimaryInstanceDocument)
-	readonly definition: RootDefinition;
+	// PrimaryInstanceDocument, ClientReactiveSubmittableInstance
+	readonly nodeType = 'primary-instance';
+	readonly appearances = null;
+	readonly classes: BodyClassList;
 	readonly root: Root;
-	readonly parent = null;
-	readonly currentState: PrimaryInstanceCurrentState;
+	readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;
 	readonly validationState: AncestorNodeValidationState;
 	readonly submissionState: SubmissionState;
 	readonly languages: FormLanguages;
@@ -78,16 +113,17 @@ export class PrimaryInstance
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	// EvaluationContext
-	readonly contextReference = () => PRIMARY_INSTANCE_REFERENCE;
 	readonly evaluator: EngineXPathEvaluator;
 	readonly contextNode: Document;
 
-	constructor(
-		readonly scope: ReactiveScope, // EvaluationContext
-		model: ModelDefinition,
-		readonly engineConfig: InstanceConfig // Consistency with InstanceNode
-	) {
+	constructor(scope: ReactiveScope, model: ModelDefinition, engineConfig: InstanceConfig) {
 		const { root: definition, form } = model;
+
+		super(engineConfig, null, definition, {
+			scope,
+			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
+		});
+
 		const { xformDOM } = form;
 		const { namespaceURI, nodeName } = xformDOM.primaryInstanceRoot;
 		const rootNode: Document = xformDOM.xformDocument.implementation.createDocument(
@@ -110,21 +146,37 @@ export class PrimaryInstance
 		this.getActiveLanguage = getActiveLanguage;
 		this.setActiveLanguage = setActiveLanguage;
 
-		this.definition = definition;
 		this.evaluator = evaluator;
-		this.engineConfig = engineConfig;
 		this.contextNode = rootNode;
+		this.classes = definition.classes;
 
-		const children: Root[] = [];
+		const childrenState = createChildrenState<this, Root>(this);
 
-		this.currentState = {
+		this.getChildren = childrenState.getChildren;
+
+		const stateSpec: PrimaryInstanceStateSpec = {
+			activeLanguage: getActiveLanguage,
+			reference: PRIMARY_INSTANCE_REFERENCE,
+			label: null,
+			hint: null,
+			readonly: false,
 			relevant: true,
-			children,
+			required: false,
+			valueOptions: null,
+			value: null,
+			children: childrenState.childIds,
 		};
+
+		const state = createSharedNodeState(scope, stateSpec, {
+			clientStateFactory: engineConfig.stateFactory,
+		});
+
+		this.state = state;
+		this.engineState = state.engineState;
+		this.currentState = materializeCurrentStateChildren(scope, state.currentState, childrenState);
 
 		const root = new Root(this);
 
-		children.push(root);
 		this.root = root;
 
 		this.validationState = {
@@ -133,15 +185,11 @@ export class PrimaryInstance
 			},
 		};
 		this.submissionState = createInstanceSubmissionState(this);
+
+		childrenState.setChildren([root]);
 	}
 
-	// EvaluationContext
-	/** @todo remove */
-	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
-		return this.root.getSubscribableDependenciesByReference(reference);
-	}
-
-	// (Now: RootNode support; soon: PrimaryInstanceDocument)
+	// PrimaryInstanceDocument
 	/**
 	 * @todo Note that this method's signature is intentionally derived from
 	 * {@link RootNode.setLanguage}, but its return type differs! The design
@@ -179,7 +227,7 @@ export class PrimaryInstance
 		return this.setActiveLanguage(availableFormLanguage);
 	}
 
-	// ClientReactiveSubmittableInstance
+	// PrimaryInstanceDocument, ClientReactiveSubmittableInstance
 	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
 		options?: SubmissionOptions<ChunkedType>
 	): Promise<SubmissionResult<ChunkedType>> {

@@ -1,6 +1,8 @@
+import type { XPathDOMAdapter } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
+import type { InstanceNodeType } from '../../client/node-types.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
@@ -11,7 +13,7 @@ import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
-import type { InstanceNodeStateSpec } from './InstanceNode.ts';
+import type { InstanceNodeContextNodeKind, InstanceNodeStateSpec } from './InstanceNode.ts';
 import { InstanceNode } from './InstanceNode.ts';
 
 export interface DescendantNodeSharedStateSpec {
@@ -43,6 +45,13 @@ export type AnyDescendantNode = DescendantNode<
 	any
 >;
 
+/**
+ * @see {@link InstanceNodeContextNodeKind}
+ *
+ * @todo We can't extend this to include {@link Attr} yet, nor can we make {@link DescendantNode} generic over it yet. But both will be easier to do, once we finish the migration to {@link XPathDOMAdapter}.
+ */
+type DescendantNodeContextNodeKind = Element;
+
 interface DescendantNodeOptions {
 	readonly computeReference?: Accessor<string>;
 }
@@ -54,7 +63,7 @@ export abstract class DescendantNode<
 		Parent extends AnyParentNode,
 		Child extends AnyChildNode | null = null,
 	>
-	extends InstanceNode<Definition, Spec, Parent, Child>
+	extends InstanceNode<Definition, Spec, Parent, Child, DescendantNodeContextNodeKind>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
 	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
@@ -91,6 +100,8 @@ export abstract class DescendantNode<
 
 	readonly isRequired: Accessor<boolean>;
 
+	// BaseNode
+	abstract override readonly nodeType: InstanceNodeType;
 	readonly root: Root;
 
 	// EvaluationContext
@@ -119,8 +130,10 @@ export abstract class DescendantNode<
 		this.isRequired = createComputedExpression(this, required);
 	}
 
-	protected createContextNode(parentContextNode: Element, nodeName: string): Element {
-		return parentContextNode.ownerDocument.createElement(nodeName);
+	protected createContextNode(parentContextNode: Document | Element, nodeName: string): Element {
+		const contextDocument = parentContextNode.ownerDocument ?? parentContextNode;
+
+		return contextDocument.createElement(nodeName);
 	}
 
 	/**
@@ -134,7 +147,10 @@ export abstract class DescendantNode<
 	 *   range, or even at an arbitrary index within the range, after instance
 	 *   creation is has completed).
 	 */
-	protected initializeContextNode(parentContextNode: Element, nodeName: string): Element {
+	protected initializeContextNode(
+		parentContextNode: Document | Element,
+		nodeName: string
+	): Element {
 		const element = this.createContextNode(parentContextNode, nodeName);
 
 		parentContextNode.append(element);

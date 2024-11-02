@@ -2,7 +2,7 @@ import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';
-import type { InstanceNodeType } from '../../client/node-types.ts';
+import type { InstanceNodeType as ClientInstanceNodeType } from '../../client/node-types.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
 import type { ActiveLanguage, TextRange } from '../../index.ts';
@@ -21,6 +21,12 @@ import { nodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
+
+export type EngineInstanceNodeType = ClientInstanceNodeType | 'primary-instance';
+
+export interface BaseEngineNode extends Omit<BaseNode, 'nodeType'> {
+	readonly nodeType: EngineInstanceNodeType;
+}
 
 export interface InstanceNodeStateSpec<Value = never> {
 	readonly reference: Accessor<string> | string;
@@ -70,8 +76,25 @@ type ComputeInstanceNodeReference = <This extends ComputableReferenceNode>(
 	definition: This['definition']
 ) => string;
 
+/**
+ * Corresponds to either:
+ *
+ * - The primary instance itself ({@link Document}, XPath reference `/`)
+ * - XPath semantic node kinds which can be associated with an XForms `<bind>`
+ *
+ * @todo We don't yet support attribute bindings, but we will. Acknowledging
+ * that now will help a bit when we do address that support.
+ */
+// prettier-ignore
+export type InstanceNodeContextNodeKind =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| Document
+	| Element
+	| Attr;
+
 export interface InstanceNodeOptions {
 	readonly computeReference?: () => string;
+	readonly scope?: ReactiveScope;
 }
 
 export abstract class InstanceNode<
@@ -80,8 +103,9 @@ export abstract class InstanceNode<
 		Spec extends InstanceNodeStateSpec<any>,
 		Parent extends AnyParentNode | null,
 		Child extends AnyChildNode | null = null,
+		ContextNode extends InstanceNodeContextNodeKind = Element,
 	>
-	implements BaseNode, EvaluationContext, SubscribableDependency
+	implements BaseEngineNode, EvaluationContext, SubscribableDependency
 {
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
@@ -114,7 +138,7 @@ export abstract class InstanceNode<
 	readonly nodeId: FormNodeID;
 
 	// BaseNode: node types and variants (e.g. for narrowing)
-	abstract readonly nodeType: InstanceNodeType;
+	abstract readonly nodeType: EngineInstanceNodeType;
 
 	abstract readonly appearances: NodeAppearances<Definition>;
 
@@ -154,7 +178,7 @@ export abstract class InstanceNode<
 		return this.computeReference(this.parent, this.definition);
 	};
 
-	abstract readonly contextNode: Element;
+	abstract readonly contextNode: ContextNode;
 
 	constructor(
 		readonly engineConfig: InstanceConfig,
@@ -164,7 +188,7 @@ export abstract class InstanceNode<
 	) {
 		this.computeReference = options?.computeReference ?? this.computeChildStepReference;
 
-		this.scope = createReactiveScope();
+		this.scope = options?.scope ?? createReactiveScope();
 		this.engineConfig = engineConfig;
 		this.nodeId = nodeID(engineConfig.createUniqueId());
 		this.definition = definition;

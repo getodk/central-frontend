@@ -1,6 +1,7 @@
 import type { Group } from './Group.ts';
 import type { ModelValue } from './ModelValue.ts';
 import type { Note } from './Note.ts';
+import type { PrimaryInstance } from './PrimaryInstance.ts';
 import type { RepeatInstance } from './repeat/RepeatInstance.ts';
 import type { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import type { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
@@ -16,7 +17,7 @@ import type { UploadControl } from './unsupported/UploadControl.ts';
 export type RepeatRange = RepeatRangeControlled | RepeatRangeUncontrolled;
 
 // prettier-ignore
-export type UnsupportedControl =
+export type AnyUnsupportedControl =
 	| RangeControl
 	| RankControl
 	| UploadControl;
@@ -24,6 +25,7 @@ export type UnsupportedControl =
 // prettier-ignore
 export type AnyNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| PrimaryInstance
 	| Root
 	| Group
 	| Subtree
@@ -34,11 +36,12 @@ export type AnyNode =
 	| StringField
 	| SelectField
 	| TriggerControl
-	| UnsupportedControl;
+	| AnyUnsupportedControl;
 
 // prettier-ignore
 export type AnyParentNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| PrimaryInstance
 	| Root
 	| Group
 	| Subtree
@@ -56,6 +59,7 @@ export type GeneralParentNode =
 // prettier-ignore
 export type AnyChildNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| Root
 	| Group
 	| Subtree
 	| RepeatRange
@@ -65,7 +69,7 @@ export type AnyChildNode =
 	| StringField
 	| SelectField
 	| TriggerControl
-	| UnsupportedControl;
+	| AnyUnsupportedControl;
 
 // prettier-ignore
 export type GeneralChildNode =
@@ -78,7 +82,7 @@ export type GeneralChildNode =
 	| StringField
 	| SelectField
 	| TriggerControl
-	| UnsupportedControl;
+	| AnyUnsupportedControl;
 
 // prettier-ignore
 export type AnyValueNode =
@@ -88,4 +92,4 @@ export type AnyValueNode =
 	| StringField
 	| SelectField
 	| TriggerControl
-	| UnsupportedControl;
+	| AnyUnsupportedControl;

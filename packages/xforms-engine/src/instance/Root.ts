@@ -48,7 +48,7 @@ interface RootStateSpec {
 }
 
 export class Root
-	extends InstanceNode<RootDefinition, RootStateSpec, null, GeneralChildNode>
+	extends InstanceNode<RootDefinition, RootStateSpec, PrimaryInstance, GeneralChildNode>
 	implements
 		RootNode,
 		EvaluationContext,
@@ -83,8 +83,6 @@ export class Root
 	}
 
 	// BaseNode
-	override readonly parent = null;
-
 	readonly root = this;
 
 	// EvaluationContext
@@ -102,13 +100,13 @@ export class Root
 		const { definition, engineConfig, evaluator } = parent;
 		const reference = definition.nodeset;
 
-		super(engineConfig, null, definition, {
+		super(engineConfig, parent, definition, {
 			computeReference: () => reference,
 		});
 
 		this.rootDocument = parent;
 
-		this.classes = definition.classes;
+		this.classes = parent.classes;
 
 		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 
