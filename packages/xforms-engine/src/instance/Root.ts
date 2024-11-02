@@ -1,5 +1,4 @@
-import type { Accessor, Signal } from 'solid-js';
-import { createSignal } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
@@ -16,12 +15,14 @@ import { createParentNodeSubmissionState } from '../lib/client-reactivity/submis
 import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
+import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
@@ -46,60 +47,8 @@ interface RootStateSpec {
 	readonly value: null;
 
 	// Root-specific
-	readonly activeLanguage: Signal<ActiveLanguage>;
+	readonly activeLanguage: Accessor<ActiveLanguage>;
 }
-
-// Subset of types expected from evaluator
-interface ItextTranslations {
-	getActiveLanguage(): string | null;
-	getLanguages(): readonly string[];
-}
-
-interface InitialLanguageState {
-	readonly defaultLanguage: ActiveLanguage;
-	readonly languages: FormLanguages;
-}
-
-// TODO: it's really very silly that the XPath evaluator is the current
-// definitional source of truth for translation stuff... even though it currently makes sense that that's where it's first derived.
-const getInitialLanguageState = (translations: ItextTranslations): InitialLanguageState => {
-	const activeLanguageName = translations.getActiveLanguage();
-
-	if (activeLanguageName == null) {
-		const defaultLanguage: ActiveLanguage = {
-			isSyntheticDefault: true,
-			language: '',
-		};
-		const languages = [defaultLanguage] satisfies FormLanguages;
-
-		return {
-			defaultLanguage,
-			languages,
-		};
-	}
-
-	const languageNames = translations.getLanguages();
-
-	const inactiveLanguages = languageNames
-		.filter((languageName) => {
-			return languageName !== activeLanguageName;
-		})
-		.map((language): FormLanguage => {
-			return { language };
-		});
-
-	const languages = [
-		{ language: activeLanguageName } satisfies FormLanguage,
-
-		...inactiveLanguages,
-	] satisfies FormLanguages;
-	const [defaultLanguage] = languages;
-
-	return {
-		defaultLanguage,
-		languages,
-	};
-};
 
 export class Root
 	extends InstanceNode<RootDefinition, RootStateSpec, GeneralChildNode>
@@ -147,10 +96,11 @@ export class Root
 
 	readonly languages: FormLanguages;
 
+	// TranslationContext (support)
+	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
+
 	// TranslationContext
-	get activeLanguage(): ActiveLanguage {
-		return this.engineState.activeLanguage;
-	}
+	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(parent: PrimaryInstance) {
 		const { definition, engineConfig, evaluator } = parent;
@@ -166,11 +116,14 @@ export class Root
 
 		this.childrenState = childrenState;
 
-		const translations: ItextTranslations = {
-			getActiveLanguage: () => evaluator.getActiveLanguage(),
-			getLanguages: () => evaluator.getLanguages(),
-		};
-		const { defaultLanguage, languages } = getInitialLanguageState(translations);
+		const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(
+			this.scope,
+			evaluator
+		);
+
+		this.getActiveLanguage = getActiveLanguage;
+		this.setActiveLanguage = setActiveLanguage;
+
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
 		};
@@ -178,7 +131,7 @@ export class Root
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				activeLanguage: createSignal<ActiveLanguage>(defaultLanguage),
+				activeLanguage: getActiveLanguage,
 				reference,
 				label: null,
 				hint: null,
@@ -215,16 +168,20 @@ export class Root
 
 	// RootNode
 	setLanguage(language: FormLanguage): Root {
-		const activeLanguage = this.languages.find((formLanguage) => {
-			return formLanguage.language === language.language;
-		});
+		const availableFormLanguage = this.languages.find(
+			(formLanguage): formLanguage is FormLanguage => {
+				return (
+					formLanguage.isSyntheticDefault == null && formLanguage.language === language.language
+				);
+			}
+		);
 
-		if (activeLanguage == null) {
+		if (availableFormLanguage == null) {
 			throw new Error(`Language "${language.language}" not available`);
 		}
 
-		this.evaluator.setActiveLanguage(activeLanguage.language);
-		this.state.setProperty('activeLanguage', activeLanguage);
+		this.evaluator.setActiveLanguage(availableFormLanguage.language);
+		this.setActiveLanguage(availableFormLanguage);
 
 		return this;
 	}
@@ -244,10 +201,6 @@ export class Root
 	override subscribe(): void {
 		super.subscribe();
 
-		// TODO: typescript-eslint is right to object to this! We should _at least_
-		// make internal reactive reads obvious, i.e. function calls.
-		//
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- read == subscribe
-		this.engineState.activeLanguage;
+		this.getActiveLanguage();
 	}
 }

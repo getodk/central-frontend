@@ -9,7 +9,7 @@ export class TextChunk implements ClientTextChunk {
 	}
 
 	get language(): ActiveLanguage {
-		return this.context.activeLanguage;
+		return this.context.getActiveLanguage();
 	}
 
 	constructor(
