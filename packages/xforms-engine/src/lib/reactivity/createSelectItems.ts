@@ -2,13 +2,11 @@ import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
-import type { SelectItem } from '../../index.ts';
+import type { ActiveLanguage, SelectItem } from '../../index.ts';
 import type { SelectField } from '../../instance/SelectField.ts';
-import type {
-	EvaluationContext,
-	EvaluationContextRoot,
-} from '../../instance/internal-api/EvaluationContext.ts';
+import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
+import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
@@ -20,8 +18,8 @@ import { createTextRange } from './text/createTextRange.ts';
 
 type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
 
-const derivedItemLabel = (context: EvaluationContext, value: string): DerivedItemLabel => {
-	const chunk = new TextChunk(context.root, 'literal', value);
+const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
+	const chunk = new TextChunk(context, 'literal', value);
 
 	return new TextRange('form-derived', 'item-label', [chunk]);
 };
@@ -63,8 +61,8 @@ const createTranslatedStaticSelectItems = (
 class ItemsetItemEvaluationContext implements EvaluationContext {
 	readonly scope: ReactiveScope;
 	readonly evaluator: EngineXPathEvaluator;
-	readonly root: EvaluationContextRoot;
 	readonly contextReference: Accessor<string>;
+	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
 		private readonly selectField: SelectField,
@@ -72,8 +70,8 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 	) {
 		this.scope = selectField.scope;
 		this.evaluator = selectField.evaluator;
-		this.root = selectField.root;
 		this.contextReference = selectField.contextReference;
+		this.getActiveLanguage = selectField.getActiveLanguage;
 	}
 
 	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {

@@ -5,8 +5,6 @@ import type { DependentExpression } from '../../parse/expression/abstract/Depend
 import type { SubscribableDependency } from './SubscribableDependency.ts';
 import type { TranslationContext } from './TranslationContext.ts';
 
-export interface EvaluationContextRoot extends SubscribableDependency, TranslationContext {}
-
 /**
  * Provides a common interface to establish context for XPath-based
  * computations, i.e. to evaluate {@link DependentExpression}s where:
@@ -19,10 +17,9 @@ export interface EvaluationContextRoot extends SubscribableDependency, Translati
  *   (e.g. `jr:itext`)
  * - any dynamic case is expected to be internally reactive
  */
-export interface EvaluationContext {
+export interface EvaluationContext extends TranslationContext {
 	readonly scope: ReactiveScope;
 	readonly evaluator: EngineXPathEvaluator;
-	readonly root: EvaluationContextRoot;
 
 	/**
 	 * Produces the current absolute reference to the {@link contextNode}, where

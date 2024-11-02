@@ -219,9 +219,9 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		this.selfEvaluationContext = {
 			scope: this.scope,
 			evaluator: this.evaluator,
-			root: this.root,
 			contextReference: this.contextReference,
 			contextNode: this.anchorNode,
+			getActiveLanguage: this.getActiveLanguage,
 
 			getSubscribableDependenciesByReference: (reference) => {
 				return repeatRange.getSubscribableDependenciesByReference(reference);

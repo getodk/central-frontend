@@ -29,7 +29,7 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { EvaluationContext, EvaluationContextRoot } from './internal-api/EvaluationContext.ts';
+import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
@@ -55,7 +55,6 @@ export class Root
 	implements
 		RootNode,
 		EvaluationContext,
-		EvaluationContextRoot,
 		SubscribableDependency,
 		TranslationContext,
 		ClientReactiveSubmittableInstance

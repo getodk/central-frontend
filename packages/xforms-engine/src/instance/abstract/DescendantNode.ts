@@ -1,5 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
+import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
@@ -98,8 +99,11 @@ export abstract class DescendantNode<
 	readonly isRequired: Accessor<boolean>;
 
 	readonly root: Root;
+
+	// EvaluationContext
 	readonly evaluator: EngineXPathEvaluator;
 	readonly contextNode: Element;
+	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
 		override readonly parent: DescendantNodeParent<Definition>,
@@ -112,6 +116,7 @@ export abstract class DescendantNode<
 
 		this.root = root;
 		this.evaluator = evaluator;
+		this.getActiveLanguage = parent.getActiveLanguage;
 		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
 
 		const { readonly, relevant, required } = definition.bind;

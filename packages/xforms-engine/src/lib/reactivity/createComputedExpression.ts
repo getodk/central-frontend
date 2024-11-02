@@ -75,7 +75,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 	dependentExpression: DependentExpression<Type>,
 	options: CreateComputedExpressionOptions = {}
 ): ComputedExpression<Type> => {
-	const { contextNode, evaluator, root, scope } = context;
+	const { contextNode, evaluator, scope } = context;
 	const { expression, isTranslated, resultType } = dependentExpression;
 	const dependencyReferences = Array.from(dependentExpression.dependencyReferences);
 	const evaluateExpression = expressionEvaluator(evaluator, contextNode, resultType, expression);
@@ -95,7 +95,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 
 		return createMemo(() => {
 			if (isTranslated) {
-				root.subscribe();
+				context.getActiveLanguage();
 			}
 
 			arbitraryDependencies.forEach((dependency) => {

@@ -5,7 +5,7 @@ import type { FormNodeID } from '../../client/identity.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
-import type { TextRange } from '../../index.ts';
+import type { ActiveLanguage, TextRange } from '../../index.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
@@ -128,6 +128,7 @@ export abstract class InstanceNode<
 
 	// EvaluationContext: instance-global/shared
 	abstract readonly evaluator: EngineXPathEvaluator;
+	abstract readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	// EvaluationContext *and* Subscribable: node-specific
 	readonly scope: ReactiveScope;
