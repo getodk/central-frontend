@@ -15,14 +15,12 @@ import { createParentNodeSubmissionState } from '../lib/client-reactivity/submis
 import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
-import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import { materializeCurrentStateChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
@@ -59,6 +57,9 @@ export class Root
 		TranslationContext,
 		ClientReactiveSubmittableInstance
 {
+	/** @todo this won't stay private long */
+	private readonly rootDocument: PrimaryInstance;
+
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
 	// InstanceNode
@@ -95,9 +96,6 @@ export class Root
 
 	readonly languages: FormLanguages;
 
-	// TranslationContext (support)
-	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
-
 	// TranslationContext
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
@@ -109,19 +107,16 @@ export class Root
 			computeReference: () => reference,
 		});
 
+		this.rootDocument = parent;
+
 		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 
 		this.childrenState = childrenState;
 
-		const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(
-			this.scope,
-			evaluator
-		);
-
-		this.getActiveLanguage = getActiveLanguage;
-		this.setActiveLanguage = setActiveLanguage;
+		this.languages = parent.languages;
+		this.getActiveLanguage = parent.getActiveLanguage;
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -130,7 +125,7 @@ export class Root
 		const state = createSharedNodeState(
 			this.scope,
 			{
-				activeLanguage: getActiveLanguage,
+				activeLanguage: parent.getActiveLanguage,
 				reference,
 				label: null,
 				hint: null,
@@ -154,7 +149,6 @@ export class Root
 
 		this.evaluator = evaluator;
 		this.contextNode = parent.contextNode.documentElement;
-		this.languages = languages;
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
@@ -167,20 +161,7 @@ export class Root
 
 	// RootNode
 	setLanguage(language: FormLanguage): Root {
-		const availableFormLanguage = this.languages.find(
-			(formLanguage): formLanguage is FormLanguage => {
-				return (
-					formLanguage.isSyntheticDefault == null && formLanguage.language === language.language
-				);
-			}
-		);
-
-		if (availableFormLanguage == null) {
-			throw new Error(`Language "${language.language}" not available`);
-		}
-
-		this.evaluator.setActiveLanguage(availableFormLanguage.language);
-		this.setActiveLanguage(availableFormLanguage);
+		this.rootDocument.setLanguage(language);
 
 		return this;
 	}

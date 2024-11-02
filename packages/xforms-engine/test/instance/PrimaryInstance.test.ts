@@ -75,7 +75,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 	// directly, with caution.
 	const createPrimaryInstance = (stateFactory: OpaqueReactiveObjectFactory): PrimaryInstance => {
 		return scope.runTask(() => {
-			return new PrimaryInstance(xformDefinition.model, {
+			return new PrimaryInstance(scope, xformDefinition.model, {
 				createUniqueId,
 				fetchResource,
 				stateFactory,
