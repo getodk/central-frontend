@@ -12,7 +12,6 @@ import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
 import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
-import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -28,7 +27,7 @@ import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
+import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
@@ -55,7 +54,7 @@ export class Root
 		EvaluationContext,
 		SubscribableDependency,
 		TranslationContext,
-		ClientReactiveSubmittableInstance
+		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	/** @todo this won't stay private long */
 	private readonly rootDocument: PrimaryInstance;
@@ -169,12 +168,7 @@ export class Root
 	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
 		options?: SubmissionOptions<ChunkedType>
 	): Promise<SubmissionResult<ChunkedType>> {
-		const result = prepareSubmission(this, {
-			chunked: (options?.chunked ?? 'monolithic') as ChunkedType,
-			maxSize: options?.maxSize ?? Infinity,
-		});
-
-		return Promise.resolve(result);
+		return this.rootDocument.prepareSubmission(options);
 	}
 
 	// SubscribableDependency

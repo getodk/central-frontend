@@ -3,7 +3,16 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type {
+	SubmissionChunkedType,
+	SubmissionOptions,
+} from '../client/submission/SubmissionOptions.ts';
+import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
+import type { SubmissionState } from '../client/submission/SubmissionState.ts';
+import type { AncestorNodeValidationState } from '../client/validation.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
+import { createInstanceSubmissionState } from '../lib/client-reactivity/submission/createInstanceSubmissionState.ts';
+import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { ReactiveScope } from '../lib/reactivity/scope.ts';
 import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
@@ -11,6 +20,7 @@ import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
+import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
 import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import { Root } from './Root.ts';
@@ -37,14 +47,31 @@ import { Root } from './Root.ts';
  */
 const PRIMARY_INSTANCE_REFERENCE = '/';
 
-export class PrimaryInstance implements XPathDocument, TranslationContext, EvaluationContext {
+interface PrimaryInstanceCurrentState {
+	readonly relevant: boolean;
+	readonly children: readonly Root[];
+}
+
+export class PrimaryInstance
+	implements
+		XPathDocument,
+		TranslationContext,
+		EvaluationContext,
+		ClientReactiveSubmittableInstance
+{
 	// TranslationContext (support)
 	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
 
 	// XPathDocument
 	readonly [XPathNodeKindKey] = 'document';
 
-	// (Now: RootNode support; soon: PrimaryInstanceDocument)
+	// (Now: ClientReactiveSubmittableInstance, RootNode support; soon: ClientReactiveSubmittableInstance, PrimaryInstanceDocument)
+	readonly definition: RootDefinition;
+	readonly root: Root;
+	readonly parent = null;
+	readonly currentState: PrimaryInstanceCurrentState;
+	readonly validationState: AncestorNodeValidationState;
+	readonly submissionState: SubmissionState;
 	readonly languages: FormLanguages;
 
 	// TranslationContext (+ EvaluationContext)
@@ -52,17 +79,13 @@ export class PrimaryInstance implements XPathDocument, TranslationContext, Evalu
 
 	// EvaluationContext
 	readonly contextReference = () => PRIMARY_INSTANCE_REFERENCE;
-
-	readonly engineConfig: InstanceConfig;
-	readonly definition: RootDefinition;
 	readonly evaluator: EngineXPathEvaluator;
-	readonly root: Root;
 	readonly contextNode: Document;
 
 	constructor(
 		readonly scope: ReactiveScope, // EvaluationContext
 		model: ModelDefinition,
-		engineConfig: InstanceConfig
+		readonly engineConfig: InstanceConfig // Consistency with InstanceNode
 	) {
 		const { root: definition, form } = model;
 		const { xformDOM } = form;
@@ -91,7 +114,25 @@ export class PrimaryInstance implements XPathDocument, TranslationContext, Evalu
 		this.evaluator = evaluator;
 		this.engineConfig = engineConfig;
 		this.contextNode = rootNode;
-		this.root = new Root(this);
+
+		const children: Root[] = [];
+
+		this.currentState = {
+			relevant: true,
+			children,
+		};
+
+		const root = new Root(this);
+
+		children.push(root);
+		this.root = root;
+
+		this.validationState = {
+			get violations() {
+				return root.validationState.violations;
+			},
+		};
+		this.submissionState = createInstanceSubmissionState(this);
 	}
 
 	// EvaluationContext
@@ -136,5 +177,17 @@ export class PrimaryInstance implements XPathDocument, TranslationContext, Evalu
 		this.evaluator.setActiveLanguage(availableFormLanguage.language);
 
 		return this.setActiveLanguage(availableFormLanguage);
+	}
+
+	// ClientReactiveSubmittableInstance
+	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
+		options?: SubmissionOptions<ChunkedType>
+	): Promise<SubmissionResult<ChunkedType>> {
+		const result = prepareSubmission(this, {
+			chunked: (options?.chunked ?? 'monolithic') as ChunkedType,
+			maxSize: options?.maxSize ?? Infinity,
+		});
+
+		return Promise.resolve(result);
 	}
 }
