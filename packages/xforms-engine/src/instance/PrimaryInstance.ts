@@ -1,6 +1,7 @@
 import type { XPathDocument } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
+import type { ReactiveScope } from '../lib/reactivity/scope.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
@@ -16,7 +17,11 @@ export class PrimaryInstance implements XPathDocument {
 	readonly root: Root;
 	readonly contextNode: Document;
 
-	constructor(model: ModelDefinition, engineConfig: InstanceConfig) {
+	constructor(
+		readonly scope: ReactiveScope,
+		model: ModelDefinition,
+		engineConfig: InstanceConfig
+	) {
 		const { root: definition, form } = model;
 		const { xformDOM } = form;
 		const { namespaceURI, nodeName } = xformDOM.primaryInstanceRoot;
