@@ -10,7 +10,6 @@ import type {
 import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
-import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
 import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -23,7 +22,7 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
-import { InstanceNode } from './abstract/InstanceNode.ts';
+import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
@@ -33,10 +32,10 @@ import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
 
 interface RootStateSpec {
-	readonly reference: string;
-	readonly readonly: boolean;
-	readonly relevant: boolean;
-	readonly required: boolean;
+	readonly reference: Accessor<string>;
+	readonly readonly: Accessor<boolean>;
+	readonly relevant: Accessor<boolean>;
+	readonly required: Accessor<boolean>;
 	readonly label: null;
 	readonly hint: null;
 	readonly children: Accessor<readonly FormNodeID[]>;
@@ -48,7 +47,7 @@ interface RootStateSpec {
 }
 
 export class Root
-	extends InstanceNode<RootDefinition, RootStateSpec, PrimaryInstance, GeneralChildNode>
+	extends DescendantNode<RootDefinition, RootStateSpec, PrimaryInstance, GeneralChildNode>
 	implements
 		RootNode,
 		EvaluationContext,
@@ -56,18 +55,19 @@ export class Root
 		TranslationContext,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
-	/** @todo this won't stay private long */
-	private readonly rootDocument: PrimaryInstance;
-
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
-	// InstanceNode
-	readonly hasReadonlyAncestor = () => false;
-	readonly isReadonly = () => false;
-	readonly hasNonRelevantAncestor = () => false;
-	readonly isRelevant = () => true;
+	// DescendantNode
 	protected readonly state: SharedNodeState<RootStateSpec>;
 	protected readonly engineState: EngineState<RootStateSpec>;
+
+	override readonly hasReadonlyAncestor = () => false;
+	override readonly isSelfReadonly = () => false;
+	override readonly isReadonly = () => false;
+	override readonly hasNonRelevantAncestor = () => false;
+	override readonly isSelfRelevant = () => true;
+	override readonly isRelevant = () => true;
+	override readonly isRequired = () => false;
 
 	// RootNode
 	readonly nodeType = 'root';
@@ -82,38 +82,24 @@ export class Root
 		return this.definition.submission;
 	}
 
-	// BaseNode
-	readonly root = this;
-
-	// EvaluationContext
-	readonly evaluator: EngineXPathEvaluator;
-
-	readonly contextNode: Element;
-
 	// RootNode
 	readonly languages: FormLanguages;
 
-	// TranslationContext
-	readonly getActiveLanguage: Accessor<ActiveLanguage>;
-
 	constructor(parent: PrimaryInstance) {
-		const { definition, engineConfig, evaluator } = parent;
-		const reference = definition.nodeset;
+		const { definition } = parent;
+		const { nodeset: reference } = definition;
+		const computeReference: Accessor<string> = () => reference;
 
-		super(engineConfig, parent, definition, {
-			computeReference: () => reference,
+		super(parent, definition, {
+			computeReference,
 		});
-
-		this.rootDocument = parent;
 
 		this.classes = parent.classes;
 
 		const childrenState = createChildrenState<Root, GeneralChildNode>(this);
 
 		this.childrenState = childrenState;
-
 		this.languages = parent.languages;
-		this.getActiveLanguage = parent.getActiveLanguage;
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -123,12 +109,12 @@ export class Root
 			this.scope,
 			{
 				activeLanguage: parent.getActiveLanguage,
-				reference,
+				reference: computeReference,
 				label: null,
 				hint: null,
-				readonly: false,
-				relevant: true,
-				required: false,
+				readonly: () => false,
+				relevant: () => true,
+				required: () => false,
 				valueOptions: null,
 				value: null,
 				children: childrenState.childIds,
@@ -144,12 +130,13 @@ export class Root
 			childrenState
 		);
 
-		this.evaluator = evaluator;
-		this.contextNode = parent.contextNode.documentElement;
-
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 		this.submissionState = createParentNodeSubmissionState(this);
+	}
+
+	protected override initializeContextNode(parentContextNode: Document): Element {
+		return parentContextNode.documentElement;
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

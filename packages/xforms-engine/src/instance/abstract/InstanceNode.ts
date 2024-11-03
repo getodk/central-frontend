@@ -15,6 +15,7 @@ import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { createReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
+import type { PrimaryInstance } from '../PrimaryInstance.ts';
 import type { Root } from '../Root.ts';
 import type { AnyChildNode, AnyNode, AnyParentNode } from '../hierarchy.ts';
 import { nodeID } from '../identity.ts';
@@ -110,6 +111,9 @@ export abstract class InstanceNode<
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
 
+	/** @todo this will be part of an XPath-specific interface soon */
+	readonly rootDocument: PrimaryInstance;
+
 	/**
 	 * @package Exposed on every node type to facilitate inheritance, as well as
 	 * conditional behavior for value nodes.
@@ -186,12 +190,36 @@ export abstract class InstanceNode<
 		readonly definition: Definition,
 		options?: InstanceNodeOptions
 	) {
+		const self = this as AnyInstanceNode as AnyNode;
+
+		if (parent == null) {
+			if (!self.isPrimaryInstance()) {
+				throw new Error(
+					'Failed to construct node: not a primary instance, no parent node specified'
+				);
+			}
+
+			this.rootDocument = self;
+		} else {
+			this.rootDocument = parent.rootDocument;
+		}
+
 		this.computeReference = options?.computeReference ?? this.computeChildStepReference;
 
 		this.scope = options?.scope ?? createReactiveScope();
 		this.engineConfig = engineConfig;
 		this.nodeId = nodeID(engineConfig.createUniqueId());
 		this.definition = definition;
+	}
+
+	/** @package */
+	isPrimaryInstance(): this is PrimaryInstance {
+		return this.parent == null;
+	}
+
+	/** @package */
+	isRoot(): this is Root {
+		return this.parent?.nodeType === 'primary-instance';
 	}
 
 	/**
@@ -240,18 +268,10 @@ export abstract class InstanceNode<
 	}
 
 	// EvaluationContext: node-relative
-	getSubscribableDependenciesByReference(
+	abstract getSubscribableDependenciesByReference(
 		this: AnyNode,
 		reference: string
-	): readonly SubscribableDependency[] {
-		if (this.nodeType === 'root') {
-			const visited = new WeakSet<AnyNode>();
-
-			return this.getNodesByReference(visited, reference);
-		}
-
-		return this.root.getSubscribableDependenciesByReference(reference);
-	}
+	): readonly SubscribableDependency[];
 
 	// SubscribableDependency
 	/**

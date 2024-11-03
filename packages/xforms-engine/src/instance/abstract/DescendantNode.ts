@@ -8,7 +8,7 @@ import { createComputedExpression } from '../../lib/reactivity/createComputedExp
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../parse/model/DescendentNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
-import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
+import type { AnyChildNode, AnyNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
@@ -116,9 +116,14 @@ export abstract class DescendantNode<
 	) {
 		super(parent.engineConfig, parent, definition, options);
 
-		const { evaluator, root } = parent;
+		if (this.isRoot()) {
+			this.root = this;
+		} else {
+			this.root = parent.root;
+		}
 
-		this.root = root;
+		const { evaluator } = parent;
+
 		this.evaluator = evaluator;
 		this.getActiveLanguage = parent.getActiveLanguage;
 		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
@@ -136,6 +141,15 @@ export abstract class DescendantNode<
 		return contextDocument.createElement(nodeName);
 	}
 
+	// EvaluationContext: node-relative
+	/** @todo remove */
+	getSubscribableDependenciesByReference(
+		this: AnyNode,
+		reference: string
+	): readonly SubscribableDependency[] {
+		return this.rootDocument.getSubscribableDependenciesByReference(reference);
+	}
+
 	/**
 	 * Currently expected to be overridden by...
 	 *
@@ -148,7 +162,7 @@ export abstract class DescendantNode<
 	 *   creation is has completed).
 	 */
 	protected initializeContextNode(
-		parentContextNode: Document | Element,
+		parentContextNode: Parent['contextNode'],
 		nodeName: string
 	): Element {
 		const element = this.createContextNode(parentContextNode, nodeName);

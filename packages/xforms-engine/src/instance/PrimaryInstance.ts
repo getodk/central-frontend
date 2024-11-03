@@ -28,6 +28,7 @@ import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
+import type { AnyNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocument.ts';
@@ -237,5 +238,13 @@ export class PrimaryInstance
 		});
 
 		return Promise.resolve(result);
+	}
+
+	// EvaluationContext, InstanceNode; called by all descendant nodes
+	/** @todo removed */
+	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
+		const visited = new WeakSet<AnyNode>();
+
+		return this.getNodesByReference(visited, reference);
 	}
 }

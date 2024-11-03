@@ -82,7 +82,8 @@ describe('Form instance state', () => {
 
 	const getPrimaryInstanceValue = (node: AnyNode | null): string => {
 		if (node instanceof InstanceNode) {
-			return node.contextNode.textContent!;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			return (node as InstanceNode<any, any, any>).contextNode.textContent!;
 		}
 
 		throw new Error('Cannot get internal primary instance state from node');
