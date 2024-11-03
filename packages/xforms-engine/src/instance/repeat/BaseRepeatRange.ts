@@ -23,11 +23,10 @@ import type {
 } from '../../parse/model/RepeatRangeDefinition.ts';
 import type {
 	AnyDescendantNode,
-	DescendantNodeParent,
 	DescendantNodeSharedStateSpec,
 } from '../abstract/DescendantNode.ts';
 import { DescendantNode } from '../abstract/DescendantNode.ts';
-import type { RepeatRange } from '../hierarchy.ts';
+import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -48,7 +47,7 @@ type BaseRepeatRangeNodeType<Definition extends AnyRepeatRangeDefinition> =
 		: 'repeat-range:uncontrolled';
 
 export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinition>
-	extends DescendantNode<Definition, RepeatRangeStateSpec, RepeatInstance>
+	extends DescendantNode<Definition, RepeatRangeStateSpec, GeneralParentNode, RepeatInstance>
 	implements
 		BaseRepeatRangeNode,
 		EvaluationContext,
@@ -202,7 +201,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	readonly submissionState: SubmissionState;
 
-	constructor(parent: DescendantNodeParent<Definition>, definition: Definition) {
+	constructor(parent: GeneralParentNode, definition: Definition) {
 		super(parent, definition);
 
 		const repeatRange = this as AnyDescendantNode as RepeatRange;

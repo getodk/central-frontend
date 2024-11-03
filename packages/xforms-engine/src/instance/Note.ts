@@ -39,7 +39,7 @@ interface NoteStateSpec extends DescendantNodeStateSpec<string> {
 }
 
 export class Note
-	extends DescendantNode<NoteNodeDefinition, NoteStateSpec, null>
+	extends DescendantNode<NoteNodeDefinition, NoteStateSpec, GeneralParentNode, null>
 	implements
 		NoteNode,
 		EvaluationContext,

@@ -40,7 +40,7 @@ interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
 }
 
 export class StringField
-	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, null>
+	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, GeneralParentNode, null>
 	implements
 		StringNode,
 		EvaluationContext,

@@ -44,7 +44,7 @@ interface RepeatInstanceOptions {
 }
 
 export class RepeatInstance
-	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec, GeneralChildNode>
+	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec, RepeatRange, GeneralChildNode>
 	implements
 		RepeatInstanceNode,
 		EvaluationContext,

@@ -30,7 +30,7 @@ interface SubtreeStateSpec extends DescendantNodeSharedStateSpec {
 }
 
 export class Subtree
-	extends DescendantNode<SubtreeDefinition, SubtreeStateSpec, GeneralChildNode>
+	extends DescendantNode<SubtreeDefinition, SubtreeStateSpec, GeneralParentNode, GeneralChildNode>
 	implements
 		SubtreeNode,
 		EvaluationContext,

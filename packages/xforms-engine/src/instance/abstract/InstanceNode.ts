@@ -78,6 +78,7 @@ export abstract class InstanceNode<
 		Definition extends AnyNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends InstanceNodeStateSpec<any>,
+		Parent extends AnyParentNode | null,
 		Child extends AnyChildNode | null = null,
 	>
 	implements BaseNode, EvaluationContext, SubscribableDependency
@@ -157,7 +158,7 @@ export abstract class InstanceNode<
 
 	constructor(
 		readonly engineConfig: InstanceConfig,
-		readonly parent: AnyParentNode | null,
+		readonly parent: Parent,
 		readonly definition: Definition,
 		options?: InstanceNodeOptions
 	) {

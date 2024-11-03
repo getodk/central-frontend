@@ -34,7 +34,7 @@ interface ModelValueStateSpec extends DescendantNodeStateSpec<string> {
 }
 
 export class ModelValue
-	extends DescendantNode<ModelValueDefinition, ModelValueStateSpec, null>
+	extends DescendantNode<ModelValueDefinition, ModelValueStateSpec, GeneralParentNode, null>
 	implements
 		ModelValueNode,
 		EvaluationContext,

@@ -64,7 +64,12 @@ class UnsupportedControlWriteError extends Error {
 }
 
 export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType>
-	extends DescendantNode<TypedUnsupportedControlDefinition<Type>, UnsupportedControlStateSpec, null>
+	extends DescendantNode<
+		TypedUnsupportedControlDefinition<Type>,
+		UnsupportedControlStateSpec,
+		GeneralParentNode,
+		null
+	>
 	implements
 		UnsupportedControlNode,
 		EvaluationContext,

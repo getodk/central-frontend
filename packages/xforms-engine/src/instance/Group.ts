@@ -33,7 +33,7 @@ interface GroupStateSpec extends DescendantNodeSharedStateSpec {
 }
 
 export class Group
-	extends DescendantNode<GroupDefinition, GroupStateSpec, GeneralChildNode>
+	extends DescendantNode<GroupDefinition, GroupStateSpec, GeneralParentNode, GeneralChildNode>
 	implements
 		GroupNode,
 		EvaluationContext,

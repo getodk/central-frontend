@@ -48,7 +48,7 @@ interface RootStateSpec {
 }
 
 export class Root
-	extends InstanceNode<RootDefinition, RootStateSpec, GeneralChildNode>
+	extends InstanceNode<RootDefinition, RootStateSpec, null, GeneralChildNode>
 	implements
 		RootNode,
 		EvaluationContext,
@@ -83,6 +83,8 @@ export class Root
 	}
 
 	// BaseNode
+	override readonly parent = null;
+
 	readonly root = this;
 
 	// EvaluationContext
@@ -91,8 +93,6 @@ export class Root
 	readonly contextNode: Element;
 
 	// RootNode
-	override readonly parent = null;
-
 	readonly languages: FormLanguages;
 
 	// TranslationContext

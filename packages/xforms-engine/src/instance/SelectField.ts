@@ -42,7 +42,7 @@ interface SelectFieldStateSpec extends DescendantNodeStateSpec<readonly SelectIt
 }
 
 export class SelectField
-	extends DescendantNode<SelectFieldDefinition, SelectFieldStateSpec, null>
+	extends DescendantNode<SelectFieldDefinition, SelectFieldStateSpec, GeneralParentNode, null>
 	implements
 		SelectNode,
 		EvaluationContext,

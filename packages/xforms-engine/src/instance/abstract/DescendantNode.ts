@@ -5,10 +5,8 @@ import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEv
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../parse/model/DescendentNodeDefinition.ts';
-import type { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
-import type { RepeatInstanceDefinition } from '../../parse/model/RepeatInstanceDefinition.ts';
-import type { AnyChildNode, GeneralParentNode, RepeatRange } from '../hierarchy.ts';
+import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
@@ -35,18 +33,12 @@ export type DescendantNodeDefinition = Extract<
 	AnyDescendantNodeDefinition
 >;
 
-// prettier-ignore
-export type DescendantNodeParent<Definition extends DescendantNodeDefinition> =
-	Definition extends LeafNodeDefinition
-		? GeneralParentNode
-	: Definition extends RepeatInstanceDefinition
-		? RepeatRange
-		: GeneralParentNode;
-
 export type AnyDescendantNode = DescendantNode<
 	DescendantNodeDefinition,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	DescendantNodeStateSpec<any>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	any,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	any
 >;
@@ -59,9 +51,10 @@ export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends DescendantNodeStateSpec<any>,
+		Parent extends AnyParentNode,
 		Child extends AnyChildNode | null = null,
 	>
-	extends InstanceNode<Definition, Spec, Child>
+	extends InstanceNode<Definition, Spec, Parent, Child>
 	implements BaseNode, EvaluationContext, SubscribableDependency
 {
 	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
@@ -106,7 +99,7 @@ export abstract class DescendantNode<
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
-		override readonly parent: DescendantNodeParent<Definition>,
+		override readonly parent: Parent,
 		override readonly definition: Definition,
 		options?: DescendantNodeOptions
 	) {

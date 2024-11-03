@@ -36,7 +36,7 @@ interface TriggerControlStateSpec extends DescendantNodeStateSpec<boolean> {
 const TRIGGER_ASSIGNED_VALUE = 'OK';
 
 export class TriggerControl
-	extends DescendantNode<TriggerNodeDefinition, TriggerControlStateSpec, null>
+	extends DescendantNode<TriggerNodeDefinition, TriggerControlStateSpec, GeneralParentNode, null>
 	implements
 		TriggerNode,
 		EvaluationContext,
