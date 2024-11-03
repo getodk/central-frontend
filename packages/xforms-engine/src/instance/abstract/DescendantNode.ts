@@ -1,8 +1,13 @@
-import type { XPathDOMAdapter } from '@getodk/xpath';
+import { XPathNodeKindKey, type XPathDOMAdapter } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
+import type {
+	XFormsXPathPrimaryInstanceDescendantNode,
+	XFormsXPathPrimaryInstanceDescendantNodeKind,
+} from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
@@ -64,7 +69,11 @@ export abstract class DescendantNode<
 		Child extends AnyChildNode | null = null,
 	>
 	extends InstanceNode<Definition, Spec, Parent, Child, DescendantNodeContextNodeKind>
-	implements BaseNode, EvaluationContext, SubscribableDependency
+	implements
+		BaseNode,
+		XFormsXPathPrimaryInstanceDescendantNode,
+		EvaluationContext,
+		SubscribableDependency
 {
 	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
 		const { parent } = this;
@@ -100,9 +109,24 @@ export abstract class DescendantNode<
 
 	readonly isRequired: Accessor<boolean>;
 
+	// XFormsXPathPrimaryInstanceDescendantNode
+
+	/**
+	 * WARNING! Ideally, this would be an abstract property, defined by each
+	 * concrete subclass (or other intermediate abstract classes, where
+	 * appropriate). Unfortunately it must be assigned here, so it will be present
+	 * for certain XPath DOM adapter functionality **during** each concrete node's
+	 * construction.
+	 *
+	 * Those subclasses nevertheless override this same property, assigning the
+	 * same value, for the purposes of narrowing the XPath node kind semantics
+	 * appropriate for each node type.
+	 */
+	override readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceDescendantNodeKind;
+	readonly root: Root;
+
 	// BaseNode
 	abstract override readonly nodeType: InstanceNodeType;
-	readonly root: Root;
 
 	// EvaluationContext
 	readonly evaluator: EngineXPathEvaluator;
@@ -123,6 +147,13 @@ export abstract class DescendantNode<
 		}
 
 		const { evaluator } = parent;
+
+		// See notes on property declaration
+		if (definition.type === 'repeat-range') {
+			this[XPathNodeKindKey] = XFORMS_XPATH_NODE_RANGE_KIND;
+		} else {
+			this[XPathNodeKindKey] = 'element';
+		}
 
 		this.evaluator = evaluator;
 		this.getActiveLanguage = parent.getActiveLanguage;

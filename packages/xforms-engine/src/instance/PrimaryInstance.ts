@@ -1,4 +1,3 @@
-import type { XPathDocument } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
@@ -11,6 +10,7 @@ import type {
 import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathDocument } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
 import { createInstanceSubmissionState } from '../lib/client-reactivity/submission/createInstanceSubmissionState.ts';
 import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
@@ -78,7 +78,7 @@ export class PrimaryInstance
 	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root, Document>
 	implements
 		PrimaryInstanceDocument,
-		XPathDocument,
+		XFormsXPathDocument,
 		TranslationContext,
 		EvaluationContext,
 		SubscribableDependency,
@@ -97,7 +97,7 @@ export class PrimaryInstance
 	// TranslationContext (support)
 	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
 
-	// XPathDocument
+	// XFormsXPathDocument
 	readonly [XPathNodeKindKey] = 'document';
 
 	// PrimaryInstanceDocument, ClientReactiveSubmittableInstance

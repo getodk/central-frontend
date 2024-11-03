@@ -1,3 +1,4 @@
+import type { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
@@ -7,6 +8,10 @@ import type { SubmissionState } from '../../client/submission/SubmissionState.ts
 import type { NodeValidationState } from '../../client/validation.ts';
 import type { ActiveLanguage, TextRange } from '../../index.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type {
+	XFormsXPathPrimaryInstanceNode,
+	XFormsXPathPrimaryInstanceNodeKind,
+} from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -106,13 +111,19 @@ export abstract class InstanceNode<
 		Child extends AnyChildNode | null = null,
 		ContextNode extends InstanceNodeContextNodeKind = Element,
 	>
-	implements BaseEngineNode, EvaluationContext, SubscribableDependency
+	implements
+		BaseEngineNode,
+		XFormsXPathPrimaryInstanceNode,
+		EvaluationContext,
+		SubscribableDependency
 {
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
 
-	/** @todo this will be part of an XPath-specific interface soon */
+	// XFormsXPathPrimaryInstanceNode
+	abstract readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceNodeKind;
 	readonly rootDocument: PrimaryInstance;
+	abstract readonly root: Root;
 
 	/**
 	 * @package Exposed on every node type to facilitate inheritance, as well as
@@ -151,9 +162,6 @@ export abstract class InstanceNode<
 	abstract readonly validationState: NodeValidationState;
 
 	abstract readonly submissionState: SubmissionState;
-
-	// BaseNode: structural
-	abstract readonly root: Root;
 
 	// EvaluationContext: instance-global/shared
 	abstract readonly evaluator: EngineXPathEvaluator;
@@ -223,16 +231,47 @@ export abstract class InstanceNode<
 	}
 
 	/**
-	 * @package This presently serves a few internal use cases, where certain
-	 * behaviors depend on arbitrary traversal from any point in the instance
-	 * tree, without particular regard for the visited node type. It isn't
-	 * intended for external traversal or any other means of consuming children by
-	 * a client. This return type intentionally deviates from one structural
-	 * expectation, requiring even leaf nodes to return an array (though for those
-	 * nodes it will always be empty). This affords consistency and efficiency of
-	 * interface for those internal uses.
+	 * @package This presently serves a growing variety of internal use cases,
+	 * where certain behaviors depend on arbitrary traversal from any point in the
+	 * instance tree, without particular regard for the visited node type. It
+	 * isn't intended for external traversal or any other means of consuming
+	 * children by a client. This return type intentionally deviates from one
+	 * structural expectation, requiring even leaf nodes to return an array
+	 * (though for those nodes it will always be empty). This affords consistency
+	 * and efficiency of interface for those internal uses.
 	 */
 	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
+
+	// XFormsXPathNode
+	/**
+	 * @todo Values as text nodes(?)
+	 */
+	getXPathChildNodes(): readonly AnyChildNode[] {
+		return (this as AnyInstanceNode).getChildren().flatMap((child) => {
+			switch (child.nodeType) {
+				case 'repeat-range:controlled':
+				case 'repeat-range:uncontrolled': {
+					const repeatInstances = child.getXPathChildNodes();
+
+					if (repeatInstances.length > 0) {
+						return repeatInstances;
+					}
+
+					return child;
+				}
+
+				default:
+					return child;
+			}
+		});
+	}
+
+	getXPathValue(): string {
+		return (this as AnyInstanceNode as AnyNode)
+			.getXPathChildNodes()
+			.map((child) => child.getXPathValue())
+			.join('');
+	}
 
 	getNodesByReference(
 		this: AnyNode,

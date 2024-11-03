@@ -1,10 +1,12 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { identity } from '@getodk/common/lib/identity.ts';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { NoteNode, NoteNodeAppearances } from '../client/NoteNode.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createNoteReadonlyThunk } from '../lib/reactivity/createNoteReadonlyThunk.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
@@ -42,6 +44,7 @@ export class Note
 	extends DescendantNode<NoteNodeDefinition, NoteStateSpec, GeneralParentNode, null>
 	implements
 		NoteNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
@@ -49,10 +52,13 @@ export class Note
 		ClientReactiveSubmittableLeafNode<string>
 {
 	private readonly validation: SharedValidationState;
-	protected readonly state: SharedNodeState<NoteStateSpec>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
-	protected engineState: EngineState<NoteStateSpec>;
+	protected readonly state: SharedNodeState<NoteStateSpec>;
+	protected readonly engineState: EngineState<NoteStateSpec>;
 
 	// NoteNode
 	readonly nodeType = 'note';
@@ -131,6 +137,11 @@ export class Note
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
 		this.submissionState = createLeafNodeSubmissionState(this);
+	}
+
+	// XFormsXPathElement
+	override getXPathValue(): string {
+		return this.engineState.value;
 	}
 
 	// ValidationContext

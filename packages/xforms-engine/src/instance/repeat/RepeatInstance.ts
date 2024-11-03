@@ -1,3 +1,4 @@
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createComputed, createSignal, on } from 'solid-js';
 import type { FormNodeID } from '../../client/identity.ts';
@@ -9,6 +10,7 @@ import type {
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createParentNodeSubmissionState } from '../../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
@@ -47,6 +49,7 @@ export class RepeatInstance
 	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec, RepeatRange, GeneralChildNode>
 	implements
 		RepeatInstanceNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
@@ -54,9 +57,11 @@ export class RepeatInstance
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 	private readonly currentIndex: Accessor<number>;
 
+	override readonly [XPathNodeKindKey] = 'element';
+
 	// InstanceNode
 	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
-	protected override engineState: EngineState<RepeatInstanceStateSpec>;
+	protected readonly engineState: EngineState<RepeatInstanceStateSpec>;
 
 	/**
 	 * @todo Should we special case repeat `readonly` inheritance the same way

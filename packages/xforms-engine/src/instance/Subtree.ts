@@ -1,8 +1,10 @@
-import { type Accessor } from 'solid-js';
+import { XPathNodeKindKey } from '@getodk/xpath';
+import type { Accessor } from 'solid-js';
 import type { FormNodeID } from '../client/identity.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -33,15 +35,18 @@ export class Subtree
 	extends DescendantNode<SubtreeDefinition, SubtreeStateSpec, GeneralParentNode, GeneralChildNode>
 	implements
 		SubtreeNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
+	override readonly [XPathNodeKindKey] = 'element';
+
 	// InstanceNode
 	protected readonly state: SharedNodeState<SubtreeStateSpec>;
-	protected engineState: EngineState<SubtreeStateSpec>;
+	protected readonly engineState: EngineState<SubtreeStateSpec>;
 
 	// SubtreeNode
 	readonly nodeType = 'subtree';

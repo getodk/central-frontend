@@ -2,6 +2,7 @@ import { createComputed } from 'solid-js';
 import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeControlledNode.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { XFormsXPathNodeRange } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { ControlledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
@@ -13,13 +14,15 @@ import type { RepeatDefinition } from './RepeatInstance.ts';
 
 export class RepeatRangeControlled
 	extends BaseRepeatRange<ControlledRepeatRangeDefinition>
-	implements RepeatRangeControlledNode, EvaluationContext, SubscribableDependency
+	implements
+		RepeatRangeControlledNode,
+		XFormsXPathNodeRange,
+		EvaluationContext,
+		SubscribableDependency
 {
 	// RepeatRangeControlledNode
 	readonly nodeType = 'repeat-range:controlled';
-
 	readonly appearances: RepeatRangeNodeAppearances;
-
 	readonly validationState: AncestorNodeValidationState;
 
 	constructor(parent: GeneralParentNode, definition: ControlledRepeatRangeDefinition) {

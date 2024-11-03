@@ -1,11 +1,18 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
-import { untrack, type Accessor } from 'solid-js';
+import { XPathNodeKindKey } from '@getodk/xpath';
+import type { Accessor } from 'solid-js';
+import { untrack } from 'solid-js';
 import type { FormNodeID } from '../../client/identity.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type {
+	XFormsXPathNodeRange,
+	XFormsXPathNodeRangeKind,
+} from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createNodeRangeSubmissionState } from '../../lib/client-reactivity/submission/createNodeRangeSubmissionState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
@@ -50,35 +57,47 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 	extends DescendantNode<Definition, RepeatRangeStateSpec, GeneralParentNode, RepeatInstance>
 	implements
 		BaseRepeatRangeNode,
+		XFormsXPathNodeRange,
 		EvaluationContext,
 		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<RepeatInstance>
 {
 	/**
-	 * A repeat range doesn't have a corresponding primary instance element of its
-	 * own, and its instances are appended to the range's parent element. During
-	 * creation of the initial primary instance state and DOM trees, we _could_
-	 * reliably append all of the range's instances in order as the definition
-	 * tree is recursed. But that would fail to handle some instance addition
-	 * cases afterwards.
-	 *
-	 * Most notably, we need to know where in the primary instance tree to append
-	 * instances created for a range which is currently empty. As a lucky
-	 * coincidence, this need coincides with the ability to add instances at any
-	 * arbitrary index within the range. In each case, we can reference a primary
-	 * instance DOM node which will become the new instance's preceding sibling.
-	 * Where the range is empty, we use this {@link Comment} node (itself created
-	 * and appended during range initialization) in lieu of a nonexistent
-	 * preceding instance's {@link contextNode}.
-	 *
-	 * @todo We likely want to remove these during submission serialization.
-	 * @todo Can we use a
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/Range | DOM Range}
-	 * instead?
+	 * @todo this will be removed soon!
 	 */
 	protected readonly anchorNode: Comment;
 
 	protected readonly childrenState: ChildrenState<RepeatInstance>;
+
+	/**
+	 * A repeat range doesn't have a corresponding primary instance element of its
+	 * own. It is represented in the following ways:
+	 *
+	 * - As a comment node (in terms of XPath semantics), immediately preceding
+	 *   the repeat range's {@link RepeatInstance | repeat instances} (if it
+	 *   presently has any; as a placeholder where they may be appended
+	 *   otherwise). This is necessary to support certain ODK XForms functionality
+	 *   where an expression is expected to be evaluated against "repeats" as a
+	 *   conceptual unit. Most typically, this includes:
+	 *
+	 *   - `jr:count` expressions associated with the repeat's body element
+	 *   - `relevant` bind computations associated with the repeat's nodeset
+	 *
+	 * - As a subtree with {@link RepeatInstance | repeat instance} **children**,
+	 *   in service of the client-facing {@link RepeatRangeNode} API (and with the
+	 *   same structural semantics internally)
+	 *
+	 * Ultimately, this means there is a fundamental impedance mismatch between
+	 * two representations which are either necessary (XPath) or high value
+	 * (providing a coherent mental model for clients and the engine
+	 * implementation servicing that client-facing model).
+	 *
+	 * In recognition that this is a truly odd mix of inherent and incidental
+	 * complexity, here we use the special {@link XFormsXPathNodeRangeKind}
+	 * branded type as a dedicated point of (internal) documentation where the two
+	 * models diverge.
+	 */
+	override readonly [XPathNodeKindKey]: XFormsXPathNodeRangeKind = XFORMS_XPATH_NODE_RANGE_KIND;
 
 	/**
 	 * Provides an {@link EvaluationContext} from which to evaluate expressions
@@ -103,7 +122,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	// InstanceNode
 	protected readonly state: SharedNodeState<RepeatRangeStateSpec>;
-	protected override engineState: EngineState<RepeatRangeStateSpec>;
+	protected readonly engineState: EngineState<RepeatRangeStateSpec>;
 
 	// DescendantNode
 	/**

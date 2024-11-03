@@ -1,7 +1,9 @@
 import { identity } from '@getodk/common/lib/identity.ts';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { ModelValueNode } from '../client/ModelValueNode.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -37,6 +39,7 @@ export class ModelValue
 	extends DescendantNode<ModelValueDefinition, ModelValueStateSpec, GeneralParentNode, null>
 	implements
 		ModelValueNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
@@ -44,10 +47,13 @@ export class ModelValue
 		ClientReactiveSubmittableLeafNode<string>
 {
 	private readonly validation: SharedValidationState;
-	protected readonly state: SharedNodeState<ModelValueStateSpec>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
-	protected engineState: EngineState<ModelValueStateSpec>;
+	protected readonly state: SharedNodeState<ModelValueStateSpec>;
+	protected readonly engineState: EngineState<ModelValueStateSpec>;
 
 	// ModelValueNode
 	readonly nodeType = 'model-value';
@@ -93,6 +99,11 @@ export class ModelValue
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
 		this.submissionState = createLeafNodeSubmissionState(this);
+	}
+
+	// XFormsXPathElement
+	override getXPathValue(): string {
+		return this.engineState.value;
 	}
 
 	// ValidationContext

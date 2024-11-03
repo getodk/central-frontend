@@ -1,4 +1,5 @@
 import { identity } from '@getodk/common/lib/identity.ts';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { UnsupportedControlNodeType } from '../../client/node-types.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
@@ -9,6 +10,7 @@ import type {
 	UnsupportedControlNode,
 } from '../../client/unsupported/UnsupportedControlNode.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
+import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createLeafNodeSubmissionState } from '../../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createValueState } from '../../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
@@ -72,6 +74,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 	>
 	implements
 		UnsupportedControlNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
@@ -80,6 +83,9 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 {
 	private readonly validation: SharedValidationState;
 	protected readonly state: SharedNodeState<UnsupportedControlStateSpec>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
 	protected readonly engineState: EngineState<UnsupportedControlStateSpec>;
@@ -140,6 +146,11 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
 		this.submissionState = createLeafNodeSubmissionState(this);
+	}
+
+	// XFormsXPathElement
+	override getXPathValue(): string {
+		return this.encodeValue(this.engineState.value);
 	}
 
 	// ValidationContext

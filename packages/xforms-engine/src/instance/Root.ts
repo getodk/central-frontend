@@ -1,3 +1,4 @@
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
@@ -10,6 +11,7 @@ import type {
 import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -50,12 +52,16 @@ export class Root
 	extends DescendantNode<RootDefinition, RootStateSpec, PrimaryInstance, GeneralChildNode>
 	implements
 		RootNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		TranslationContext,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// DescendantNode
 	protected readonly state: SharedNodeState<RootStateSpec>;

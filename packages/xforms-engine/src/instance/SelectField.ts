@@ -1,10 +1,12 @@
 import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace.ts';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
 import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
@@ -45,6 +47,7 @@ export class SelectField
 	extends DescendantNode<SelectFieldDefinition, SelectFieldStateSpec, GeneralParentNode, null>
 	implements
 		SelectNode,
+		XFormsXPathElement,
 		EvaluationContext,
 		SubscribableDependency,
 		ValidationContext,
@@ -53,6 +56,9 @@ export class SelectField
 {
 	private readonly selectExclusive: boolean;
 	private readonly validation: SharedValidationState;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
 	protected readonly state: SharedNodeState<SelectFieldStateSpec>;
@@ -168,6 +174,11 @@ export class SelectField
 		}
 
 		this.updateSelectedItemValues([value]);
+	}
+
+	// XFormsXPathElement
+	override getXPathValue(): string {
+		return this.encodeValue(this.engineState.value);
 	}
 
 	// SelectNode
