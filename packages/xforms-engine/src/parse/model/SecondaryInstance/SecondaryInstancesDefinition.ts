@@ -1,31 +1,21 @@
-import type {
-	DefaultDOMAdapterNode,
-	XFormsSecondaryInstanceElement,
-	XFormsSecondaryInstanceMap,
-} from '@getodk/xpath';
-import type { DOMSecondaryInstanceElement, XFormDOM } from '../../XFormDOM.ts';
-
-/** @todo remove */
-// prettier-ignore
-type SecondaryInstanceRootDefinition =
-	& DOMSecondaryInstanceElement
-	& XFormsSecondaryInstanceElement<DefaultDOMAdapterNode>;
-
-/** @todo remove */
-interface SecondaryInstanceDefinition {
-	readonly root: SecondaryInstanceRootDefinition;
-}
+import type { XFormsSecondaryInstanceMap } from '@getodk/xpath';
+import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
+import { parseStaticDocumentFromDOMSubtree } from '../../shared/parseStaticDocumentFromDOMSubtree.ts';
+import type { XFormDOM } from '../../XFormDOM.ts';
+import { SecondaryInstanceDefinition } from './SecondaryInstanceDefinition.ts';
+import { SecondaryInstanceRootDefinition } from './SecondaryInstanceRootDefinition.ts';
 
 export class SecondaryInstancesDefinition
 	extends Map<string, SecondaryInstanceRootDefinition>
-	implements XFormsSecondaryInstanceMap<DefaultDOMAdapterNode>
+	implements XFormsSecondaryInstanceMap<EngineXPathNode>
 {
 	static from(xformDOM: XFormDOM): SecondaryInstancesDefinition {
 		const definitions = xformDOM.secondaryInstanceElements.map((element) => {
-			element satisfies DOMSecondaryInstanceElement;
-			const root = element as SecondaryInstanceRootDefinition;
-
-			return { root };
+			return parseStaticDocumentFromDOMSubtree(
+				SecondaryInstanceDefinition,
+				SecondaryInstanceRootDefinition,
+				element
+			);
 		});
 
 		return new this(definitions);
@@ -34,7 +24,7 @@ export class SecondaryInstancesDefinition
 	private constructor(translations: readonly SecondaryInstanceDefinition[]) {
 		super(
 			translations.map(({ root }) => {
-				return [root.getAttribute('id'), root];
+				return [root.getAttributeValue('id'), root];
 			})
 		);
 	}

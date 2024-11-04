@@ -1,31 +1,21 @@
-import type {
-	DefaultDOMAdapterNode,
-	XFormsItextTranslationElement,
-	XFormsItextTranslationMap,
-} from '@getodk/xpath';
-import type { DOMItextTranslationElement, XFormDOM } from '../../XFormDOM.ts';
-
-/** @todo remove */
-// prettier-ignore
-export type ItextTranslationRootDefinition =
-	& DOMItextTranslationElement
-	& XFormsItextTranslationElement<DefaultDOMAdapterNode>;
-
-/** @todo remove */
-interface ItextTranslationDefinition {
-	readonly root: ItextTranslationRootDefinition;
-}
+import type { XFormsItextTranslationMap } from '@getodk/xpath';
+import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
+import { parseStaticDocumentFromDOMSubtree } from '../../shared/parseStaticDocumentFromDOMSubtree.ts';
+import type { XFormDOM } from '../../XFormDOM.ts';
+import { ItextTranslationDefinition } from './ItextTranslationDefinition.ts';
+import { ItextTranslationRootDefinition } from './ItextTranslationRootDefinition.ts';
 
 export class ItextTranslationsDefinition
 	extends Map<string, ItextTranslationRootDefinition>
-	implements XFormsItextTranslationMap<DefaultDOMAdapterNode>
+	implements XFormsItextTranslationMap<EngineXPathNode>
 {
 	static from(xformDOM: XFormDOM): ItextTranslationsDefinition {
 		const translationDefinitions = xformDOM.itextTranslationElements.map((element) => {
-			element satisfies DOMItextTranslationElement;
-			const root = element as ItextTranslationRootDefinition;
-
-			return { root };
+			return parseStaticDocumentFromDOMSubtree(
+				ItextTranslationDefinition,
+				ItextTranslationRootDefinition,
+				element
+			);
 		});
 
 		return new this(translationDefinitions);
@@ -34,7 +24,7 @@ export class ItextTranslationsDefinition
 	private constructor(translations: readonly ItextTranslationDefinition[]) {
 		super(
 			translations.map(({ root }) => {
-				return [root.getAttribute('lang'), root];
+				return [root.getAttributeValue('lang'), root];
 			})
 		);
 	}
