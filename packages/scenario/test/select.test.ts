@@ -920,50 +920,35 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 	});
 
 	describe('new choice filter evaluation', () => {
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * Failure appears to be a bug where selection state is (partially) lost
-		 * when changing an itemset filter updates the select's available items.
-		 * Similar behavior can be observed on simpler forms, including at least one
-		 * fixture previously derived from Enketo. This also appears to be at least
-		 * partly related to deferring a decision on the appropriate behavior for
-		 * the effect itemset filtering should have on selection state **when it is
-		 * changed and then reverted**
-		 * ({@link https://github.com/getodk/web-forms/issues/57}).
-		 */
 		// JR: removesIrrelevantAnswersAtAllLevels_withoutChangingOrder
-		it.fails(
-			'removes predicate-filtered answers at all levels, without changing order',
-			async () => {
-				const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+		it('removes predicate-filtered answers at all levels, without changing order', async () => {
+			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
 
-				expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
-				expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 
-				scenario.answer('/data/level1', 'a', 'b', 'c');
-				scenario.answer('/data/level2', 'aa', 'ba', 'ca');
-				scenario.answer('/data/level3', 'aab', 'baa', 'aaa');
+			scenario.answer('/data/level1', 'a', 'b', 'c');
+			scenario.answer('/data/level2', 'aa', 'ba', 'ca');
+			scenario.answer('/data/level3', 'aab', 'baa', 'aaa');
 
-				// Remove b from the level1 answer; this should filter out b-related answers and choices at levels 2 and 3
-				scenario.answer('/data/level1', 'a', 'c');
+			// Remove b from the level1 answer; this should filter out b-related answers and choices at levels 2 and 3
+			scenario.answer('/data/level1', 'a', 'c');
 
-				// Force populateDynamicChoices to run again which is what filters out irrelevant answers
-				scenario.choicesOf('/data/level2');
+			// Force populateDynamicChoices to run again which is what filters out irrelevant answers
+			scenario.choicesOf('/data/level2');
 
-				expect(scenario.answerOf('/data/level2')).toEqualAnswer(answerText('aa, ca'));
+			expect(scenario.answerOf('/data/level2')).toEqualAnswer(answerText('aa, ca'));
 
-				// This also runs populateDynamicChoices and filters out irrelevant answers
-				expect(scenario.choicesOf('/data/level3')).toContainChoices([
-					choice('aaa'),
-					choice('aab'),
-					choice('caa'),
-					choice('cab'),
-				]);
+			// This also runs populateDynamicChoices and filters out irrelevant answers
+			expect(scenario.choicesOf('/data/level3')).toContainChoices([
+				choice('aaa'),
+				choice('aab'),
+				choice('caa'),
+				choice('cab'),
+			]);
 
-				expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, aaa'));
-			}
-		);
+			expect(scenario.answerOf('/data/level3')).toEqualAnswer(answerText('aab, aaa'));
+		});
 
 		it('leaves answer unchanged if all selections still in choices', async () => {
 			const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
@@ -1093,14 +1078,24 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * Failure likely rooted in incomplete behavior, deferred to
-		 * {@link https://github.com/getodk/web-forms/issues/57}.
+		 * Test now passes, as a result of fixes identified during integration of
+		 * the `@getodk/xpath` DOM adapter interface.
 		 *
-		 * @todo If we ultimately decide to restore selections under (some)
-		 * circumstances like those described in the linked issue, this may be a
-		 * good place to add a supplemental test exercising that.
+		 * Several supplemental tests are added in the sub-suite below, each
+		 * tracking the open question of whether itemset filter changes should
+		 * reflect selected values' unavailability by:
+		 *
+		 * - removing them from the value state, regardless of any subsequent change
+		 *   to the itemset filter state
+		 *
+		 * - filtering them from the effective value state, restoring the previous
+		 *   value state if restored by a subsequent change to the itemset filter
+		 *   state
+		 *
+		 * @see
+		 * {@link https://github.com/getodk/web-forms/issues/57 | issue tracking this open question}
 		 */
-		it.fails('should clear choices at levels 2 and 3', async () => {
+		it('should clear choices at levels 2 and 3', async () => {
 			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
@@ -1124,6 +1119,136 @@ describe('SelectOneChoiceFilterTest.java', () => {
 			expect(scenario.answerOf('/data/level2').getValue()).toBe('');
 			expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
 		});
+
+		type ItemsetFilterValueEffectCaseExpectedBehavior = 'clear' | 'restore';
+
+		interface ItemsetFilterRestorationCase {
+			readonly expectedBehavior: ItemsetFilterValueEffectCaseExpectedBehavior;
+			readonly description: string;
+		}
+
+		describe.each<ItemsetFilterRestorationCase>([
+			{
+				expectedBehavior: 'clear',
+				description: 'clears selected items when removed by an itemset filter',
+			},
+			{
+				expectedBehavior: 'restore',
+				description:
+					'restores previously selected items when an itemset filter change restores their availability for selection',
+			},
+		])(
+			'effect of removing and restoring filtered itemset items',
+			({ expectedBehavior, description }) => {
+				let testFn: typeof it | typeof it.fails;
+
+				if (expectedBehavior === 'clear') {
+					testFn = it.fails;
+				} else {
+					testFn = it;
+				}
+
+				testFn(description, async () => {
+					const scenario = await Scenario.init('three-level-cascading-select.xml');
+
+					expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+					expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+
+					scenario.answer('/data/level1', 'a');
+					scenario.answer('/data/level2', 'aa');
+
+					expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+						choice('aaa'),
+						choice('aab'),
+					]);
+
+					scenario.answer('/data/level3', 'aab');
+
+					// Check assumption: itemset filter narrows choices, and clears items
+					// which are no longer available.
+					scenario.answer('/data/level1', '');
+
+					expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
+					expect(scenario.answerOf('/data/level2').getValue()).toBe('');
+					expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
+					expect(scenario.answerOf('/data/level3').getValue()).toBe('');
+
+					scenario.answer('/data/level1', 'a');
+
+					expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(false);
+					expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(false);
+
+					expect(scenario.choicesOf('/data/level3')).toContainChoicesInAnyOrder([
+						choice('aaa'),
+						choice('aab'),
+					]);
+
+					if (expectedBehavior === 'clear') {
+						expect(scenario.answerOf('/data/level2').getValue()).toBe('');
+						expect(scenario.answerOf('/data/level3').getValue()).toBe('');
+					} else {
+						expect(scenario.answerOf('/data/level2').getValue()).toBe('aa');
+						expect(scenario.answerOf('/data/level3').getValue()).toBe('aab');
+					}
+				});
+
+				/**
+				 * Demonstrates that changing a select's value state directly negates
+				 * any potential restoration of previous selection state (regardless of
+				 * whether removal or restoration is expected for the above case).
+				 */
+				it('does not revert values set explicitly between itemset filter state changes (depth: 2)', async () => {
+					const scenario = await Scenario.init('three-level-cascading-select.xml');
+
+					scenario.answer('/data/level1_contains', 'b');
+					scenario.answer('/data/level2_contains', 'ab');
+
+					expect(scenario.answerOf('/data/level1_contains')).toEqualAnswer(stringAnswer('b'));
+					expect(scenario.answerOf('/data/level2_contains')).toEqualAnswer(stringAnswer('ab'));
+
+					// Filter to remove availability of current level2_contains selection
+					scenario.answer('/data/level1_contains', 'c');
+
+					// Change level2_contains
+					scenario.answer('/data/level2_contains', 'ca');
+
+					// Restore availability of original level2_contains selection
+					scenario.answer('/data/level1_contains', 'a');
+
+					expect(scenario.answerOf('/data/level2_contains')).toEqualAnswer(stringAnswer('ca'));
+				});
+
+				/**
+				 * Help! I don't know how to write this test! At least with the fixture
+				 * as it exists. Here's what I want to validate...
+				 *
+				 * Given:
+				 *
+				 * 1. Value from depth 1 filters depth 2.
+				 * 2. Value from depth 2 filters depth 3.
+				 * 3. Set value at depth 3.
+				 * 4. Change depth 1 so that:
+				 *   - Value of depth 2 changes; WHICH IN TURN
+				 *   - Filters value selected at depth 3 is deselected, but some other
+				 *     options are still available at that depth.
+				 * 5. Set other value depth 3.
+				 * 6. Change depth 1 so that:
+				 *   - Value of depth 2 changes; WHICH IN TURN
+				 *   - Restores availability of value selected in step 3; AND
+				 *   - Value selected in step 5 is still available.
+				 *
+				 * Assert that: value set in step 5 is unchanged.
+				 *
+				 * - - -
+				 *
+				 * Commentary: I'm reasonably confident this test will pass! Trying to
+				 * write it just exhausted the state space I could keep in my head.
+				 */
+				it.todo(
+					'does not revert values set explicitly between itemset filter state changes (depth: 3)'
+				);
+			}
+		);
 
 		/**
 		 * **PORTING NOTES**
@@ -1178,47 +1303,31 @@ describe('SelectOneChoiceFilterTest.java', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * Meta-note: this test is **not** ported from JavaRosa, but supplemental to
-		 * the ported test above. While misleading, reusing the heading is expected
-		 * to be helpful in compiling notes for more comprehensive analysis,
-		 * discussion, planning and prioritization once porting is complete.
-		 *
-		 * Actual note: this failure is almost certainly rooted in incomplete
-		 * behavior, deferred to
-		 * {@link https://github.com/getodk/web-forms/issues/57}.
+		 * Supplemental to the ported test above.
 		 */
-		it.fails(
-			'clears values at levels 2 and 3 [currently supplemental, see porting notes on previous teest]',
-			async () => {
-				const scenario = await Scenario.init('three-level-cascading-select.xml');
+		it('clears values at levels 2 and 3 [currently supplemental, see porting notes on previous teest]', async () => {
+			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
-				expect(scenario.answerOf('/data/level2').getValue()).toBe('');
-				expect(scenario.answerOf('/data/level3').getValue()).toBe('');
+			expect(scenario.answerOf('/data/level2').getValue()).toBe('');
+			expect(scenario.answerOf('/data/level3').getValue()).toBe('');
 
-				scenario.answer('/data/level1', 'a');
-				scenario.answer('/data/level2', 'aa');
-				scenario.answer('/data/level3', 'aab');
+			scenario.answer('/data/level1', 'a');
+			scenario.answer('/data/level2', 'aa');
+			scenario.answer('/data/level3', 'aab');
 
-				scenario.answer('/data/level1', '');
+			scenario.answer('/data/level1', '');
 
-				expect(scenario.answerOf('/data/level2')).toEqualAnswer(stringAnswer(''));
+			expect(scenario.answerOf('/data/level2')).toEqualAnswer(stringAnswer(''));
 
-				scenario.answer('/data/level1', 'b');
-				scenario.answer('/data/level2', 'bb');
+			scenario.answer('/data/level1', 'b');
+			scenario.answer('/data/level2', 'bb');
 
-				expect(scenario.answerOf('/data/level3')).toEqualAnswer(stringAnswer(''));
-			}
-		);
+			expect(scenario.answerOf('/data/level3')).toEqualAnswer(stringAnswer(''));
+		});
 	});
 
 	describe('changing value at level 2', () => {
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * Failure likely rooted in incomplete behavior, deferred to
-		 * {@link https://github.com/getodk/web-forms/issues/57}.
-		 */
-		it.fails('should clear level 3 if choice no longer available', async () => {
+		it('should clear level 3 if choice no longer available', async () => {
 			const scenario = await Scenario.init('three-level-cascading-select.xml');
 
 			scenario.answer('/data/level1_contains', 'a');
@@ -1246,7 +1355,6 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
 		/**
 		 * **PORTING NOTES**
-		 *
 		 *
 		 * Assertions calling {@link SelectChoice.getDisplayText} have been replaced
 		 * with calls to {@link SelectChoice.getValue}. It's highly doubtful that
@@ -1368,7 +1476,7 @@ describe('FormEntryPromptTest.java', () => {
 					 *    we'll always want to test the actual text as produced
 					 *    (regardless of its form definition structure).
 					 */
-					it.fails('[gets?] returns label [~~]inner[~~] text', async () => {
+					it('[gets?] returns label [~~]inner[~~] text', async () => {
 						const scenario = await Scenario.init(
 							'Select',
 							html(
@@ -1462,110 +1570,70 @@ describe('FormEntryPromptTest.java', () => {
 				});
 
 				describe('with translations', () => {
-					/**
-					 * **PORTING NOTES**
-					 *
-					 * Fails due to regression, introduced in
-					 * {@link https://github.com/getodk/web-forms/commit/24277c2f48729c65716fe6b6ea965e8f403872ce | 24277c2}.
-					 * Briefly: the change causes selected items
-					 * (`SelectNode.currentState.value`) to reactively update
-					 * independently of available options
-					 * (`SelectNode.currentState.valueOptions`).
-					 *
-					 * A potential remedy might involve writing simpler values to the
-					 * client state `value` property, and decoding it back to the
-					 * `SelectItem`s corresponding to those values. This would have
-					 * potential overlap with:
-					 *
-					 * - Addressing current `InconsistentChildrenStateError` failures
-					 * - Further generalizing and hardening that concept (engine state ->
-					 *   reactively encode and write to simpler client state type ->
-					 *   decode to client-facing runtime value on read). It seems likely
-					 *   that would help us guard against other unexpected disconnects
-					 *   between internal and client-facing reactivity.
-					 *
-					 * We may also consider changing `SelectNode` value state to only deal
-					 * with the select items' **values**, distinct from their
-					 * corresponding `SelectItem` representations. This could either
-					 * become a client-facing API change, or tie in with the potential
-					 * remedy described above (i.e. store selected **values** in engine
-					 * _and client_ states, and compute their `SelectItem`s when reading
-					 * `SelectNode.currentState.value`).
-					 *
-					 * Rephrase?
-					 *
-					 * - Every test is presumably concerned with the correct behavior.
-					 *
-					 * - Unclear if the more verbose description is valuable, but IMO it
-					 *   better completes the BDD-ish format.
-					 */
-					it.fails(
-						'[gets?] returns [~~]correct[~~] [the translated label text] translation',
-						async () => {
-							const scenario = await Scenario.init(
-								'Multilingual dynamic select',
-								html(
-									head(
-										title('Multilingual dynamic select'),
-										model(
+					it('[gets?] returns [~~]correct[~~] [the translated label text] translation', async () => {
+						const scenario = await Scenario.init(
+							'Multilingual dynamic select',
+							html(
+								head(
+									title('Multilingual dynamic select'),
+									model(
+										t(
+											'itext',
 											t(
-												'itext',
-												t(
-													"translation lang='fr'",
-													t("text id='choices-0'", t('value', 'A (fr)')),
-													t("text id='choices-1'", t('value', 'B (fr)')),
-													t("text id='choices-2'", t('value', 'C (fr)'))
-												),
-												t(
-													"translation lang='en'",
-													t("text id='choices-0'", t('value', 'A (en)')),
-													t("text id='choices-1'", t('value', 'B (en)')),
-													t("text id='choices-2'", t('value', 'C (en)'))
-												)
+												"translation lang='fr'",
+												t("text id='choices-0'", t('value', 'A (fr)')),
+												t("text id='choices-1'", t('value', 'B (fr)')),
+												t("text id='choices-2'", t('value', 'C (fr)'))
 											),
-											mainInstance(t("data id='multilingual-select'", t('select', 'b'))),
-
-											instance(
-												'choices',
-												t('item', t('itextId', 'choices-0'), t('name', 'a')),
-												t('item', t('itextId', 'choices-1'), t('name', 'b')),
-												t('item', t('itextId', 'choices-2'), t('name', 'c'))
+											t(
+												"translation lang='en'",
+												t("text id='choices-0'", t('value', 'A (en)')),
+												t("text id='choices-1'", t('value', 'B (en)')),
+												t("text id='choices-2'", t('value', 'C (en)'))
 											)
-										)
-									),
-									body(
-										select1Dynamic(
-											'/data/select',
-											"instance('choices')/root/item",
-											'name',
-											'jr:itext(itextId)'
+										),
+										mainInstance(t("data id='multilingual-select'", t('select', 'b'))),
+
+										instance(
+											'choices',
+											t('item', t('itextId', 'choices-0'), t('name', 'a')),
+											t('item', t('itextId', 'choices-1'), t('name', 'b')),
+											t('item', t('itextId', 'choices-2'), t('name', 'c'))
 										)
 									)
+								),
+								body(
+									select1Dynamic(
+										'/data/select',
+										"instance('choices')/root/item",
+										'name',
+										'jr:itext(itextId)'
+									)
 								)
-							);
+							)
+						);
 
-							scenario.setLanguage('en');
+						scenario.setLanguage('en');
 
-							scenario.next('/data/select');
+						scenario.next('/data/select');
 
-							// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
-							// assertThat(questionPrompt.getAnswerText(), is("B (en)"));
-							expect(
-								scenario.proposed_getSelectedOptionLabelsAsText({
-									assertCurrentReference: '/data/select',
-								})
-							).toEqual(['B (en)']);
+						// FormEntryPrompt questionPrompt = scenario.getFormEntryPromptAtIndex();
+						// assertThat(questionPrompt.getAnswerText(), is("B (en)"));
+						expect(
+							scenario.proposed_getSelectedOptionLabelsAsText({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['B (en)']);
 
-							scenario.setLanguage('fr');
+						scenario.setLanguage('fr');
 
-							// assertThat(questionPrompt.getAnswerText(), is("B (fr)"));
-							expect(
-								scenario.proposed_getSelectedOptionLabelsAsText({
-									assertCurrentReference: '/data/select',
-								})
-							).toEqual(['B (fr)']);
-						}
-					);
+						// assertThat(questionPrompt.getAnswerText(), is("B (fr)"));
+						expect(
+							scenario.proposed_getSelectedOptionLabelsAsText({
+								assertCurrentReference: '/data/select',
+							})
+						).toEqual(['B (fr)']);
+					});
 
 					it("gets the available select items' labels (supplemental)", async () => {
 						const scenario = await Scenario.init(
@@ -1632,7 +1700,7 @@ describe('FormEntryPromptTest.java', () => {
 			});
 
 			describe('on selections[?] in repeat instances', () => {
-				it.fails('[gets?] returns [the label text] label inner text', async () => {
+				it('[gets?] returns [the label text] label inner text', async () => {
 					const scenario = await Scenario.init(
 						'Select',
 						html(

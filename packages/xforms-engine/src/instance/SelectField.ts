@@ -1,7 +1,7 @@
 import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import { untrack } from 'solid-js';
+import { createMemo, untrack } from 'solid-js';
 import type { SelectItem, SelectNode, SelectNodeAppearances } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
@@ -80,29 +80,28 @@ export class SelectField
 
 	readonly encodeValue = (runtimeValue: readonly SelectItem[]): string => {
 		const itemValues = new Set(runtimeValue.map(({ value }) => value));
+		const selectedItems = this.getValueOptions().filter(({ value }) => {
+			return itemValues.has(value);
+		});
 
-		return Array.from(itemValues).join(' ');
+		return selectedItems.map(({ value }) => value).join(' ');
 	};
 
 	readonly decodeValue = (instanceValue: string): readonly SelectItem[] => {
-		return this.scope.runTask(() => {
-			const values = xmlXPathWhitespaceSeparatedList(instanceValue, {
+		const itemValues = new Set(
+			xmlXPathWhitespaceSeparatedList(instanceValue, {
 				ignoreEmpty: true,
-			});
+			})
+		);
 
-			const items = this.getSelectItemsByValue();
-
-			return values
-				.map((value) => {
-					return items.get(value);
-				})
-				.filter((item): item is SelectItem => {
-					return item != null;
-				});
+		// TODO: also want set-like behavior, probably?
+		return this.getValueOptions().filter((option) => {
+			return itemValues.has(option.value);
 		});
 	};
 
 	protected readonly getValueOptions: Accessor<readonly SelectItem[]>;
+	protected readonly getValue: Accessor<readonly SelectItem[]>;
 
 	constructor(parent: GeneralParentNode, definition: SelectFieldDefinition) {
 		super(parent, definition);
@@ -113,6 +112,26 @@ export class SelectField
 		const valueOptions = createSelectItems(this);
 
 		this.getValueOptions = valueOptions;
+
+		const [baseGetValue, setValue] = createValueState(this);
+
+		const getValue = this.scope.runTask(() => {
+			const selectItemsByValue = createMemo((): ReadonlyMap<string, SelectItem> => {
+				return new Map(valueOptions().map((item) => [item.value, item]));
+			});
+
+			return createMemo(() => {
+				const items = selectItemsByValue();
+
+				return baseGetValue().filter((item) => {
+					return items.has(item.value);
+				});
+			});
+		});
+
+		this.getValue = getValue;
+
+		const valueState: SimpleAtomicState<readonly SelectItem[]> = [getValue, setValue];
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -129,7 +148,7 @@ export class SelectField
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				value: createValueState(this),
+				value: valueState,
 				valueOptions,
 			},
 			sharedStateOptions
