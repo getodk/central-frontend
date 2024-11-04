@@ -28,6 +28,9 @@ export default () => {
         // The count of submissions at the time of the initial fetch or last
         // refresh
         originalCount: data['@odata.count'],
+        // The count of submissions that are removed from the UI table but they
+        // are still there in `value`
+        removedCount: 0,
         filtered: searchParams.has('$filter'),
         nextLink: data['@odata.nextLink']
       });
@@ -40,11 +43,26 @@ export default () => {
       odata.count = chunk['@odata.count'];
       odata.skip += chunk.value.length;
       odata.nextLink = chunk['@odata.nextLink'];
+    },
+    countRemoved: () => {
+      // This change to odata.count will be overwritten if/when the next
+      // chunk is received with the latest count. However, the change to
+      // odata.removedCount will persist as long as odata is not
+      // cleared (e.g., when the refresh button is clicked or a filter is
+      // changed).
+      odata.count -= 1;
+      odata.removedCount += 1;
     }
   }));
   const submitters = createResource('submitters', () => ({
     ids: computeIfExists(() =>
       submitters.reduce((set, { id }) => set.add(id), new Set()))
   }));
-  return { odata, submitters };
+  const deletedSubmissionCount = createResource('deletedSubmissionCount', () => ({
+    transformResponse: ({ data }) => reactive({
+      value: data['@odata.count']
+    })
+  }));
+
+  return { odata, submitters, deletedSubmissionCount };
 };

@@ -16,10 +16,12 @@ except according to the terms contained in the LICENSE file.
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
     <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control" :class="{ required }"
+      :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
       :placeholder="requiredLabel(placeholder, required)" autocomplete="off"
+      @keydown="stopPropagationIfDisabled"
       @on-close="close"/>
     <template v-if="!required">
-      <button v-show="modelValue.length === 2" type="button" class="close"
+      <button v-show="modelValue.length === 2 && !disabled" type="button" class="close"
         :aria-label="$t('action.clear')" @click="clear">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -70,6 +72,14 @@ export default {
     placeholder: {
       type: String,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    disabledMessage: {
+      type: String,
+      required: false
     }
   },
   emits: ['update:modelValue'],
@@ -90,7 +100,8 @@ export default {
         mode: 'range',
         // See https://github.com/flatpickr/flatpickr/issues/1549
         dateFormat: 'Y/m/d',
-        locale: l10ns[this.$i18n.locale] ?? l10ns[this.$i18n.fallbackLocale]
+        locale: l10ns[this.$i18n.locale] ?? l10ns[this.$i18n.fallbackLocale],
+        clickOpens: !this.disabled
       };
     }
   },
@@ -149,6 +160,11 @@ export default {
       // https://github.com/ankurk91/vue-flatpickr-component/issues/33
       this.$refs.flatpickr.$el.focus();
       this.$refs.flatpickr.fp.close();
+    },
+    stopPropagationIfDisabled(e) {
+      if (this.disabled) {
+        e.stopPropagation();
+      }
     }
   }
 };
@@ -163,6 +179,10 @@ export default {
   color: $color-input;
 
   &::placeholder { color: $color-text; }
+}
+
+.form-group .flatpickr-input[aria-disabled="true"]::placeholder {
+  color: $color-input-inactive;
 }
 
 .form-inline .flatpickr-input {

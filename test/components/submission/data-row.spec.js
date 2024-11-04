@@ -40,6 +40,7 @@ const mountComponent = (props = undefined) => {
       xmlFormId: 'f',
       draft: false,
       fields: fields.data,
+      awaitingDeletedResponses: new Set(),
       ...props
     },
     container

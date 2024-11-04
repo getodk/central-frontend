@@ -27,13 +27,16 @@ except according to the terms contained in the LICENSE file.
         <div class="col-xs-8">
           <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
             :instance-id="instanceId" @review="reviewModal.show()"
-            @comment="fetchActivityData"/>
+            @comment="fetchActivityData" @delete="deleteModal.show()"/>
         </div>
       </div>
     </page-body>
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" :submission="submission"
       @hide="reviewModal.hide()" @success="afterReview"/>
+    <submission-delete v-bind="deleteModal" :submission="submission"
+      :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
+      @delete="requestDelete"/>
   </div>
 </template>
 
@@ -47,13 +50,16 @@ import PageHead from '../page/head.vue';
 import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
+import SubmissionDelete from './delete.vue';
 
 import useFields from '../../request-data/fields';
 import useRoutes from '../../composables/routes';
+import useRequest from '../../composables/request';
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
 import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
+import { noop } from '../../util/util';
 
 export default {
   name: 'SubmissionShow',
@@ -64,6 +70,7 @@ export default {
     PageHead,
     SubmissionActivity,
     SubmissionBasicDetails,
+    SubmissionDelete,
     SubmissionUpdateReviewState
   },
   inject: ['alert'],
@@ -83,6 +90,8 @@ export default {
   },
   setup() {
     const { project, resourceStates } = useRequestData();
+    const { request, awaitingResponse } = useRequest();
+
     const { submission, submissionVersion, audits, comments, diffs } = useSubmission();
     const fields = useFields();
 
@@ -94,8 +103,8 @@ export default {
     const { formPath } = useRoutes();
     return {
       project, submission, submissionVersion, audits, comments, diffs, fields,
-      ...resourceStates([project, submission]),
-      reviewModal: modalData(),
+      request, awaitingResponse, ...resourceStates([project, submission]),
+      reviewModal: modalData(), deleteModal: modalData(),
       formPath
     };
   },
@@ -166,6 +175,18 @@ export default {
       this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
       this.submission.__system.reviewState = reviewState;
+    },
+    requestDelete([{ __id: instanceId }]) {
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          const message = this.$t('alert.submissionDeleted');
+          this.$router.push(this.formPath('submissions'))
+            .then(() => { this.alert.success(message); });
+        })
+        .catch(noop);
     }
   }
 };

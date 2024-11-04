@@ -168,9 +168,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "restore": "Undelete"
-    },
     // This text shows when the Form was deleted. {dateTime} shows
     // the date and time, for example: "2020/01/01 01:23". It may show a
     // formatted date like "2020/01/01", or it may use a word like "today",

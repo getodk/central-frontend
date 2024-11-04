@@ -714,6 +714,12 @@
     },
     "versionChange": {
       "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+    },
+    "submissionDeleted": {
+      "string": "The Submission has been deleted."
+    },
+    "submissionRestored": {
+      "string": "The Submission has been undeleted."
     }
   },
   "moreInfo": {
@@ -3297,6 +3303,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "OData access is unavailable for deleted Submissions"
+      },
+      "purgeDescription": {
+        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -3337,12 +3355,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Undelete",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Deleted {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3350,6 +3362,12 @@
       "disabled": {
         "conflict": {
           "string": "This Form cannot be undeleted because an active Form with the same ID exists."
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "Undelete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4402,6 +4420,20 @@
         }
       }
     },
+    "SubmissionDelete": {
+      "title": {
+        "string": "Delete Submission",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to delete this Submission?"
+        },
+        "1": {
+          "string": "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
+        }
+      }
+    },
     "SubmissionDiffItem": {
       "editCaption": {
         "added": {
@@ -4605,6 +4637,17 @@
       "noMatching": {
         "string": "There are no matching Submissions."
       },
+      "downloadDisabled": {
+        "string": "Download is unavailable for deleted Submissions"
+      },
+      "filterDisabledMessage": {
+        "string": "Filtering is unavailable for deleted Submissions"
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": "There are no deleted Submissions."
+        }
+      },
       "loading": {
         "withoutCount": {
           "string": "Loading Submissions…",
@@ -4649,6 +4692,29 @@
         }
       }
     },
+    "SubmissionRestore": {
+      "title": {
+        "string": "Undelete Submission",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to undelete this Submission?"
+        },
+        "1": {
+          "string": "The Submission will be restored to its previous state, including associated data like comments."
+        },
+        "2": {
+          "string": "If the Submission is deleted again, it will be another 30 days before it is removed."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "Undelete immediately without confirmation until I leave the page",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
     "SubmissionShow": {
       "back": {
         "title": {
@@ -4666,6 +4732,10 @@
         "stateAndActions": {
           "string": "State and actions",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "Deleted at",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

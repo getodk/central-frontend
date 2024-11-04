@@ -12,12 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <table-freeze v-if="project.dataExists" id="submission-table" ref="table"
     :data="chunkyOData" key-prop="__id" :frozen-only="fields == null" divider
-    @action="review">
+    @action="handleActions">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
       <th>{{ $t('header.submissionDate') }}</th>
-      <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && !deleted">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && deleted" class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
       <template v-if="fields != null">
@@ -30,8 +31,8 @@ except according to the terms contained in the LICENSE file.
 
     <template #data-frozen="{ data, index }">
       <submission-metadata-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data"
-        :row-number="odata.originalCount - index" :can-update="canUpdate"/>
+        :draft="draft" :submission="data" :deleted="deleted" :awaiting-response="awaitingDeletedResponses.has(data.__id)"
+        :row-number="odata.originalCount - index" :verbs="project.verbs"/>
     </template>
     <template #data-scrolling="{ data }">
       <submission-data-row :project-id="projectId" :xml-form-id="xmlFormId"
@@ -48,7 +49,7 @@ import SubmissionMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table-freeze.vue';
 
 import useChunkyArray from '../../composables/chunky-array';
-import { markRowsChanged } from '../../util/dom';
+import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -63,36 +64,49 @@ defineProps({
     type: String,
     required: true
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   draft: Boolean,
-  fields: Array
+  fields: Array,
+  awaitingDeletedResponses: {
+    type: Set,
+    required: true
+  }
 });
-const emit = defineEmits(['review']);
+const emit = defineEmits(['review', 'delete', 'restore']);
 
 // The component does not assume that this data will exist when the component is
 // created.
 const { project, odata } = useRequestData();
 
 const chunkyOData = useChunkyArray(computed(() => odata.value));
-const canUpdate = computed(() =>
-  project.dataExists && project.permits('submission.update'));
 
-const review = ({ target, data }) => {
+const handleActions = ({ target, data }) => {
   if (target.classList.contains('review-button')) emit('review', data);
+  if (target.classList.contains('delete-button')) emit('delete', data);
+  if (target.classList.contains('restore-button')) emit('restore', data);
 };
 const table = ref(null);
 const afterReview = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-defineExpose({ afterReview });
+const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+defineExpose({ afterReview, afterDelete });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#submission-table .table-freeze-scrolling {
-  th, td {
-    @include text-overflow-ellipsis;
-    max-width: 250px;
-    &:last-child { max-width: 325px; }
+#submission-table {
+  .table-freeze-scrolling {
+    th, td {
+      @include text-overflow-ellipsis;
+      max-width: 250px;
+      &:last-child { max-width: 325px; }
+    }
   }
+
+  th.col-deleted-at { color: $color-danger; }
 }
 </style>
 
@@ -100,7 +114,9 @@ defineExpose({ afterReview });
 {
   "en": {
     "header": {
-      "stateAndActions": "State and actions"
+      "stateAndActions": "State and actions",
+      // Heading of the column that shows Submission deletion timestamp
+      "deletedAt": "Deleted at"
     }
   }
 }

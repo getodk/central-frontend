@@ -17,7 +17,8 @@ except according to the terms contained in the LICENSE file.
         <form class="form-inline" @submit.prevent>
           <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
-            v-model:reviewState="reviewStates"/>
+            v-model:reviewState="reviewStates"
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
@@ -29,15 +30,24 @@ except according to the terms contained in the LICENSE file.
           </button>
         </form>
         <submission-download-button :form-version="formVersion"
-          :filtered="odataFilter != null" @download="downloadModal.show()"/>
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+          :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
       </div>
-      <submission-table v-show="odata.dataExists && odata.value.length !== 0"
+      <submission-table v-show="odata.dataExists && odata.value.length !== 0 && odata.removedCount < odata.value.length"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields"
-        @review="reviewModal.show({ submission: $event })"/>
-      <p v-show="odata.dataExists && odata.value.length === 0"
+        :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+        @review="reviewModal.show({ submission: $event })"
+        @delete="showDelete"
+        @restore="showRestore"/>
+      <p v-show="odata.dataExists && (odata.value.length === 0 || odata.removedCount === odata.value.length)"
         class="empty-table-message">
-        {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        <template v-if="deleted">
+          {{ $t('deletedSubmission.emptyTable') }}
+        </template>
+        <template v-else>
+          {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        </template>
       </p>
       <odata-loading-message type="submission"
         :top="top(odata.dataExists ? odata.value.length : 0)"
@@ -52,12 +62,18 @@ except according to the terms contained in the LICENSE file.
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
+    <submission-delete v-bind="deleteModal" checkbox
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.submission.__id)"
+      @hide="deleteModal.hide()" @delete="requestDelete"/>
+    <submission-restore v-bind="restoreModal" checkbox
+      :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.submission.__id)"
+      @hide="restoreModal.hide()" @restore="requestRestore"/>
   </div>
 </template>
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watch, watchEffect } from 'vue';
+import { shallowRef, watch, watchEffect, reactive } from 'vue';
 
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
@@ -68,11 +84,13 @@ import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
+import SubmissionDelete from './delete.vue';
+import SubmissionRestore from './restore.vue';
 
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
-import useSubmissions from '../../request-data/submissions';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
 import { modalData } from '../../util/reactivity';
@@ -85,10 +103,12 @@ export default {
   components: {
     Loading,
     Spinner,
+    SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
     SubmissionFieldDropdown,
     SubmissionFilters,
+    SubmissionRestore,
     SubmissionTable,
     SubmissionUpdateReviewState,
     OdataLoadingMessage
@@ -104,20 +124,24 @@ export default {
       required: true
     },
     draft: Boolean,
+    deleted: {
+      type: Boolean,
+      required: false
+    },
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
-  emits: ['fetch-keys'],
+  emits: ['fetch-keys', 'fetch-deleted-count'],
   setup(props) {
-    const { form, keys, resourceView } = useRequestData();
+    const { form, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
     const formVersion = props.draft
       ? resourceView('formDraft', (data) => data.get())
       : form;
     const fields = useFields();
-    const { odata, submitters } = useSubmissions();
+
     // We do not reconcile `odata` with either form.lastSubmission or
     // project.lastSubmission.
     watchEffect(() => {
@@ -169,10 +193,12 @@ export default {
         reviewState: value.length === allReviewStates.length ? [] : value
       })
     });
+    const { request } = useRequest();
 
     return {
       form, keys, fields, formVersion, odata, submitters,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      request, deletedSubmissionCount
     };
   },
   data() {
@@ -186,7 +212,16 @@ export default {
       refreshing: false,
       // Modals
       downloadModal: modalData(),
-      reviewModal: modalData()
+      reviewModal: modalData(),
+      deleteModal: modalData(),
+      restoreModal: modalData(),
+
+      // state that indicates whether we need to show delete confirmation dialog
+      confirmDelete: true,
+      // state that indicates whether we need to show restore confirmation dialog
+      confirmRestore: true,
+
+      awaitingResponses: new Set()
     };
   },
   computed: {
@@ -199,6 +234,8 @@ export default {
     },
     odataFilter() {
       if (this.draft) return null;
+      if (this.deleted) return '__system/deletedAt ne null';
+
       const conditions = [];
       if (this.filtersOnSubmitterId) {
         const condition = this.submitterIds
@@ -270,8 +307,22 @@ export default {
           ? (response) => this.odata.addChunk(response.data)
           : null
       })
+        .then(() => {
+          if (this.deleted) {
+            this.deletedSubmissionCount.cancelRequest();
+            if (!this.deletedSubmissionCount.dataExists) {
+              this.deletedSubmissionCount.data = reactive({});
+            }
+            this.deletedSubmissionCount.value = this.odata.originalCount;
+          }
+        })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // emit event to parent component to re-fetch deleted Submissions count
+      if (refresh && !this.deleted && !this.draft) {
+        this.$emit('fetch-deleted-count');
+      }
 
       // emit event to parent component to re-fetch keys if needed
       if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
@@ -322,6 +373,90 @@ export default {
         this.odata.value[index].__system.reviewState = reviewState;
         this.$refs.table.afterReview(index);
       }
+    },
+    showDelete(submission) {
+      if (this.confirmDelete) {
+        this.deleteModal.show({ submission });
+      } else {
+        this.requestDelete([submission, this.confirmDelete]);
+      }
+    },
+    showRestore(submission) {
+      if (this.confirmRestore) {
+        this.restoreModal.show({ submission });
+      } else {
+        this.requestRestore([submission, this.confirmRestore]);
+      }
+    },
+    requestDelete(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      this.awaitingResponses.add(instanceId);
+
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.deleteModal.hide();
+          if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
+
+          this.alert.success(this.$t('alert.submissionDeleted'));
+          if (confirm != null) this.confirmDelete = confirm;
+
+          /* Before doing a couple more things, we first determine whether
+          this.odata.value still includes the Submission and if so, what the
+          current index of the Submission is. If a request to refresh
+          this.odata was sent while the deletion request was in
+          progress, then there could be a race condition such that data doesn't
+          exist for this.odata, or this.odata.value no longer
+          includes the Submission. Another possible result of the race condition is
+          that this.odata.value still includes the Submission, but the
+          Submission's index has changed. */
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.odata.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
+        });
+    },
+    requestRestore(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      this.awaitingResponses.add(instanceId);
+
+      this.request({
+        method: 'POST',
+        url: apiPaths.restoreSubmission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.restoreModal.hide();
+          if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0) {
+            this.deletedSubmissionCount.value -= 1;
+          }
+
+          this.alert.success(this.$t('alert.submissionRestored'));
+          if (confirm != null) this.confirmRestore = confirm;
+
+          // See the comments in requestDelete().
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.odata.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
+        });
     }
   }
 };
@@ -365,7 +500,12 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "noMatching": "There are no matching Submissions."
+    "noMatching": "There are no matching Submissions.",
+    "downloadDisabled": "Download is unavailable for deleted Submissions",
+    "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
+    "deletedSubmission": {
+      "emptyTable": "There are no deleted Submissions."
+    }
   }
 }
 </i18n>
