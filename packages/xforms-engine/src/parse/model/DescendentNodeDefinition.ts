@@ -29,7 +29,6 @@ export abstract class DescendentNodeDefinition<
 
 	readonly root: RootDefinition;
 	readonly nodeset: string;
-	readonly dependencyExpressions: ReadonlySet<string>;
 	readonly isTranslated: boolean = false;
 
 	constructor(
@@ -43,11 +42,6 @@ export abstract class DescendentNodeDefinition<
 		if (bind.isTranslated || bodyElement?.isTranslated) {
 			this.isTranslated = true;
 		}
-
-		this.dependencyExpressions = new Set([
-			...bind.dependencyExpressions,
-			...(bodyElement?.dependencyExpressions ?? []),
-		]);
 	}
 }
 

@@ -83,7 +83,7 @@ export class Note
 			clientStateFactory: this.engineConfig.stateFactory,
 		};
 
-		const isReadonly = createNoteReadonlyThunk(this, definition.bind.readonly);
+		const isReadonly = createNoteReadonlyThunk(this, definition);
 		const noteTextComputation = createNoteText(this, definition.noteTextDefinition);
 
 		let noteText: ComputedNoteText;

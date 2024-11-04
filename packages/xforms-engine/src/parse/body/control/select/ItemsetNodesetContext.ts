@@ -1,5 +1,4 @@
 import { DependencyContext } from '../../../expression/abstract/DependencyContext.ts';
-import type { AnyDependentExpression } from '../../../expression/abstract/DependentExpression.ts';
 import type { ItemsetDefinition } from './ItemsetDefinition.ts';
 
 export class ItemsetNodesetContext extends DependencyContext {
@@ -18,9 +17,5 @@ export class ItemsetNodesetContext extends DependencyContext {
 	override set isTranslated(value: true) {
 		super.isTranslated = value;
 		this.itemset.isTranslated = value;
-	}
-
-	override registerDependentExpression(expression: AnyDependentExpression): void {
-		this.itemset.registerDependentExpression(expression);
 	}
 }

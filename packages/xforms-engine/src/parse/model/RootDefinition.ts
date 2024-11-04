@@ -27,7 +27,6 @@ export class RootDefinition implements NodeDefinition<'root'> {
 	readonly defaultValue = null;
 
 	readonly isTranslated = false;
-	readonly dependencyExpressions: ReadonlySet<string> = new Set<string>();
 
 	constructor(
 		protected readonly form: XFormDefinition,
