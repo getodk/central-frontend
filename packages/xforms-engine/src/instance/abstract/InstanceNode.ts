@@ -12,6 +12,7 @@ import type {
 	XFormsXPathPrimaryInstanceNode,
 	XFormsXPathPrimaryInstanceNodeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { PrimaryInstanceXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -82,22 +83,6 @@ type ComputeInstanceNodeReference = <This extends ComputableReferenceNode>(
 	definition: This['definition']
 ) => string;
 
-/**
- * Corresponds to either:
- *
- * - The primary instance itself ({@link Document}, XPath reference `/`)
- * - XPath semantic node kinds which can be associated with an XForms `<bind>`
- *
- * @todo We don't yet support attribute bindings, but we will. Acknowledging
- * that now will help a bit when we do address that support.
- */
-// prettier-ignore
-export type InstanceNodeContextNodeKind =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| Document
-	| Element
-	| Attr;
-
 export interface InstanceNodeOptions {
 	readonly computeReference?: () => string;
 	readonly scope?: ReactiveScope;
@@ -109,7 +94,6 @@ export abstract class InstanceNode<
 		Spec extends InstanceNodeStateSpec<any>,
 		Parent extends AnyParentNode | null,
 		Child extends AnyChildNode | null = null,
-		ContextNode extends InstanceNodeContextNodeKind = Element,
 	>
 	implements
 		BaseEngineNode,
@@ -190,7 +174,13 @@ export abstract class InstanceNode<
 		return this.computeReference(this.parent, this.definition);
 	};
 
-	abstract readonly contextNode: ContextNode;
+	/**
+	 * Note: it is expected that at least some node subclasses will override this
+	 * to reflect (or in the case of intermediate abstract base classes, to
+	 * constrain) their more specific `this` type.
+	 */
+	readonly contextNode: PrimaryInstanceXPathNode =
+		this as AnyInstanceNode as PrimaryInstanceXPathNode;
 
 	constructor(
 		readonly engineConfig: InstanceConfig,

@@ -69,6 +69,7 @@ export class TriggerControl
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	override readonly contextNode = this;
 	readonly encodeValue: (runtimeValue: boolean) => string;
 	readonly decodeValue: (instanceValue: string) => boolean;
 

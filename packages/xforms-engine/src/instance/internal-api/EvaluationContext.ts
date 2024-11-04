@@ -41,7 +41,20 @@ export interface EvaluationContext extends TranslationContext {
 	 */
 	readonly contextReference: Accessor<string>;
 
-	readonly contextNode: Node;
+	/**
+	 * Note: in most cases, implementations of {@link EvaluationContext} will
+	 * **also** be an implementation of {@link EngineXPathNode} (as concrete
+	 * implementations of {@link InstanceNode}). This property is an intentional
+	 * indirection which:
+	 *
+	 * - Expresses only the much more limited set of properties which must be
+	 *   present to initialize computations during those nodes' construction.
+	 *
+	 * - Allows for a handful of cases where an {@link InstanceNode} provides the
+	 *   requisite facilities for evaluating expressions in a {@link StaticNode}'s
+	 *   context (itemsets being a prominent example).
+	 */
+	readonly contextNode: EngineXPathNode;
 
 	/**
 	 * Resolves nodes corresponding to the provided node-set reference, possibly

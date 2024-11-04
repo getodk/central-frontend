@@ -10,6 +10,7 @@ import type { TranslationContext } from '../../instance/internal-api/Translation
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { ItemDefinition } from '../../parse/body/control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/select/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
@@ -67,7 +68,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 
 	constructor(
 		private readonly selectField: SelectField,
-		readonly contextNode: Node
+		readonly contextNode: EngineXPathNode
 	) {
 		this.isAttached = selectField.isAttached;
 		this.scope = selectField.scope;
@@ -110,7 +111,7 @@ const createItemsetItems = (
 		const itemNodes = createComputedExpression(selectField, itemset.nodes, {
 			defaultValue: [],
 		});
-		const itemsCache = new UpsertableMap<Node, ItemsetItem>();
+		const itemsCache = new UpsertableMap<EngineXPathNode, ItemsetItem>();
 
 		return createMemo(() => {
 			return itemNodes().map((itemNode) => {

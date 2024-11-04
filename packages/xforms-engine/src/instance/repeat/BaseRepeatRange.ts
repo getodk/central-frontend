@@ -62,11 +62,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<RepeatInstance>
 {
-	/**
-	 * @todo this will be removed soon!
-	 */
-	protected readonly anchorNode: Comment;
-
 	protected readonly childrenState: ChildrenState<RepeatInstance>;
 
 	/**
@@ -112,7 +107,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 	 *   the repeat range itself (i.e. `jr:count`)
 	 */
 	protected readonly selfEvaluationContext: EvaluationContext & {
-		readonly contextNode: Comment;
+		readonly contextNode: XFormsXPathNodeRange;
 	};
 
 	/**
@@ -229,17 +224,12 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 		this.childrenState = childrenState;
 
-		this.anchorNode = this.contextNode.ownerDocument.createComment(
-			`Begin repeat range: ${definition.nodeset}`
-		);
-		this.contextNode.append(this.anchorNode);
-
 		this.selfEvaluationContext = {
 			isAttached: this.isAttached,
 			scope: this.scope,
 			evaluator: this.evaluator,
 			contextReference: this.contextReference,
-			contextNode: this.anchorNode,
+			contextNode: this as BaseRepeatRange<AnyRepeatRangeDefinition> as RepeatRange,
 			getActiveLanguage: this.getActiveLanguage,
 
 			getSubscribableDependenciesByReference: (reference) => {
@@ -287,10 +277,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		return this.engineState.children.length - 1;
 	}
 
-	protected override initializeContextNode(parentContextNode: Element): Element {
-		return parentContextNode;
-	}
-
 	getInstanceIndex(instance: RepeatInstance): number {
 		return this.engineState.children.indexOf(instance.nodeId);
 	}
@@ -318,9 +304,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 			return definitions.reduce<RepeatInstance[]>((acc, definition) => {
 				const precedingInstance = acc[acc.length - 1] ?? initialPrecedingInstance;
-				const precedingPrimaryInstanceNode = precedingInstance?.contextNode ?? this.anchorNode;
 				const newInstance = new RepeatInstance(repeatRange, definition, {
-					precedingPrimaryInstanceNode,
 					precedingInstance,
 				});
 

@@ -25,7 +25,7 @@ import { createAggregatedViolations } from '../../lib/reactivity/validation/crea
 import type { DescendantNodeSharedStateSpec } from '../abstract/DescendantNode.ts';
 import { DescendantNode } from '../abstract/DescendantNode.ts';
 import { buildChildren } from '../children.ts';
-import type { AnyChildNode, GeneralChildNode, RepeatRange } from '../hierarchy.ts';
+import type { GeneralChildNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -41,7 +41,6 @@ interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
 }
 
 interface RepeatInstanceOptions {
-	readonly precedingPrimaryInstanceNode: Comment | Element;
 	readonly precedingInstance: RepeatInstance | null;
 }
 
@@ -126,9 +125,6 @@ export class RepeatInstance
 		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
 
 		this.childrenState = childrenState;
-
-		options.precedingPrimaryInstanceNode.after(this.contextNode);
-
 		this.currentIndex = currentIndex;
 
 		const sharedStateOptions = {
@@ -187,10 +183,6 @@ export class RepeatInstance
 		this.submissionState = createParentNodeSubmissionState(this);
 	}
 
-	protected override initializeContextNode(parentContextNode: Element, nodeName: string): Element {
-		return this.createContextNode(parentContextNode, nodeName);
-	}
-
 	override subscribe(): void {
 		super.subscribe();
 		this.currentIndex();
@@ -198,30 +190,5 @@ export class RepeatInstance
 
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
-	}
-
-	/**
-	 * Performs repeat instance node-specific removal logic, then general node
-	 * removal logic, in that order:
-	 *
-	 * 1. At present, before any reactive state change is performed, the repeat
-	 *    instance's {@link contextNode} is removed from the primary instance's
-	 *    XML DOM backing store (which also removes any descendant nodes from that
-	 *    store, as a side effect). This behavior may become unnecessary if/when
-	 *    we phase out use of this XML DOM backing store. This should be peformed
-	 *    first, so that any following reactive logic which evaluates affected
-	 *    XPath expressions will be performed against a state consistent with the
-	 *    repeat instance's removal (and that of its XML DOM descendants).
-	 *
-	 * 2. Performs any remaining removal logic as defined in
-	 *    {@link DescendantNode.remove}.
-	 *
-	 * These removal steps **must also** occur before any update to the parent
-	 * {@link RepeatRange}'s reactive children state.
-	 */
-	override remove(this: AnyChildNode): void {
-		this.contextNode.remove();
-
-		super.remove();
 	}
 }

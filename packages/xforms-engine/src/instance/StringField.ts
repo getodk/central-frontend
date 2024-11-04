@@ -73,8 +73,8 @@ export class StringField
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	override readonly contextNode = this;
 	readonly encodeValue = identity<string>;
-
 	readonly decodeValue = identity<string>;
 
 	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {

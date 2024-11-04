@@ -1,9 +1,10 @@
-import { XPathNodeKindKey, type XPathDOMAdapter } from '@getodk/xpath';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
+import type { PrimaryInstanceXPathChildNode } from '../../integration/xpath/adapter/kind.ts';
 import type {
 	XFormsXPathPrimaryInstanceDescendantNode,
 	XFormsXPathPrimaryInstanceDescendantNodeKind,
@@ -19,7 +20,7 @@ import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
-import type { InstanceNodeContextNodeKind, InstanceNodeStateSpec } from './InstanceNode.ts';
+import type { InstanceNodeStateSpec } from './InstanceNode.ts';
 import { InstanceNode } from './InstanceNode.ts';
 
 export interface DescendantNodeSharedStateSpec {
@@ -51,13 +52,6 @@ export type AnyDescendantNode = DescendantNode<
 	any
 >;
 
-/**
- * @see {@link InstanceNodeContextNodeKind}
- *
- * @todo We can't extend this to include {@link Attr} yet, nor can we make {@link DescendantNode} generic over it yet. But both will be easier to do, once we finish the migration to {@link XPathDOMAdapter}.
- */
-type DescendantNodeContextNodeKind = Element;
-
 interface DescendantNodeOptions {
 	readonly computeReference?: Accessor<string>;
 }
@@ -69,7 +63,7 @@ export abstract class DescendantNode<
 		Parent extends AnyParentNode,
 		Child extends AnyChildNode | null = null,
 	>
-	extends InstanceNode<Definition, Spec, Parent, Child, DescendantNodeContextNodeKind>
+	extends InstanceNode<Definition, Spec, Parent, Child>
 	implements
 		BaseNode,
 		XFormsXPathPrimaryInstanceDescendantNode,
@@ -138,7 +132,8 @@ export abstract class DescendantNode<
 	// EvaluationContext
 	readonly isAttached: Accessor<boolean>;
 	readonly evaluator: EngineXPathEvaluator;
-	readonly contextNode: Element;
+	override readonly contextNode: PrimaryInstanceXPathChildNode =
+		this as AnyDescendantNode as PrimaryInstanceXPathChildNode;
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
@@ -185,7 +180,6 @@ export abstract class DescendantNode<
 
 		this.evaluator = evaluator;
 		this.getActiveLanguage = parent.getActiveLanguage;
-		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
 
 		const { readonly, relevant, required } = definition.bind;
 
@@ -200,12 +194,6 @@ export abstract class DescendantNode<
 		});
 	}
 
-	protected createContextNode(parentContextNode: Document | Element, nodeName: string): Element {
-		const contextDocument = parentContextNode.ownerDocument ?? parentContextNode;
-
-		return contextDocument.createElement(nodeName);
-	}
-
 	// EvaluationContext: node-relative
 	/** @todo remove */
 	getSubscribableDependenciesByReference(
@@ -213,28 +201,6 @@ export abstract class DescendantNode<
 		reference: string
 	): readonly SubscribableDependency[] {
 		return this.rootDocument.getSubscribableDependenciesByReference(reference);
-	}
-
-	/**
-	 * Currently expected to be overridden by...
-	 *
-	 * - Repeat range: returns its parent's context node, because it doesn't have
-	 *   a node in the primary instance tree.
-	 *
-	 * - Repeat instance: returns its created context node, but overrides handles
-	 *   appending behavior separately (for inserting at the end of its parent
-	 *   range, or even at an arbitrary index within the range, after instance
-	 *   creation is has completed).
-	 */
-	protected initializeContextNode(
-		parentContextNode: Parent['contextNode'],
-		nodeName: string
-	): Element {
-		const element = this.createContextNode(parentContextNode, nodeName);
-
-		parentContextNode.append(element);
-
-		return element;
 	}
 
 	/**

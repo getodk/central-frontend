@@ -3,6 +3,7 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
+import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
 	DependentExpression,
@@ -12,7 +13,7 @@ import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
 interface ComputedExpressionResults {
 	readonly boolean: boolean;
-	readonly nodes: Node[];
+	readonly nodes: EngineXPathNode[];
 	readonly number: number;
 	readonly string: string;
 }
@@ -28,7 +29,7 @@ type ExpressionEvaluator<
 > = () => EvaluatedExpression<Type>;
 
 interface ExpressionEvaluatorOptions {
-	get contextNode(): Node;
+	get contextNode(): EngineXPathNode;
 }
 
 const expressionEvaluator = <Type extends DependentExpressionResultType>(

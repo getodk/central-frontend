@@ -1,8 +1,7 @@
-import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
-import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
+import { createComputed, createMemo, createSignal, untrack, type Signal } from 'solid-js';
+import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { ValueContext } from '../../instance/internal-api/ValueContext.ts';
 import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
-import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 
@@ -19,8 +18,7 @@ export interface ValueStateOptions {
 	 *   other words, this value should not be used for edits.
 	 *
 	 * - 'PRIMARY_INSTANCE': Derives the initial state from the current text
-	 *   content of the {@link ValueNode.contextNode} (currently an XML DOM
-	 *   backing store/source of thruth for primary instance state). This option
+	 *   content of the {@link ValueNode.contextNode}. This option
 	 *   should be specified when initializing a form with existing primary
 	 *   instance data, such as when editing a previous submission.
 	 *
@@ -33,110 +31,54 @@ export interface ValueStateOptions {
 	readonly initialValueSource?: InitialValueSource;
 }
 
-interface PersistedValueState {
-	readonly isRelevant: boolean;
-	readonly value: string;
-}
-
-type PrimaryInstanceValueState = SimpleAtomicState<string>;
-
-type ValueState<RuntimeValue> = SimpleAtomicState<RuntimeValue>;
-
-/**
- * Creates a signal which:
- *
- * 1. Persists its state to the primary instance's
- *    {@link ValueContext.contextNode | contextNode} on state changes.
- * 2. Propagates downstream reactivity only after that write is persisted.
- *
- * This ensures that reactive subscriptions get a consistent view of a node's
- * current state, regardless of whether they derive state from values in the
- * primary instance (currently: computed {@link DependentExpression}
- * evaluations) or from other aspects of reactive runtime state (generally,
- * everything besides computed {@link DependentExpression}s).
- */
-const createPrimaryInstanceValueState = <RuntimeValue>(
+const getInitialValue = <RuntimeValue>(
 	context: ValueContext<RuntimeValue>,
 	options: ValueStateOptions
-): PrimaryInstanceValueState => {
-	const { contextNode, definition, scope } = context;
-	const { initialValueSource } = options;
-	const { defaultValue } = definition;
+): string => {
+	const { initialValueSource = 'FORM_DEFAULT' } = options;
 
-	return scope.runTask(() => {
-		// prettier-ignore
-		const initialValue =
-			initialValueSource === 'PRIMARY_INSTANCE'
-				? contextNode.textContent ?? defaultValue
-				: defaultValue;
+	if (initialValueSource === 'FORM_DEFAULT') {
+		return context.definition.defaultValue;
+	}
 
-		const persistedValueState = createSignal<PersistedValueState>(
-			{
-				isRelevant: context.isRelevant(),
-				value: initialValue,
-			},
-			{
-				// This could return a single boolean expression, but checking each
-				// equality condition separately feels like it more clearly expresses
-				// the intent.
-				equals: (previous, updated) => {
-					if (updated.isRelevant !== previous.isRelevant) {
-						return false;
-					}
+	throw new ErrorProductionDesignPendingError('Edit implementation pending');
+};
 
-					return updated.value === previous.value;
-				},
-			}
-		);
-		const [persistedValue, setValueForPersistence] = persistedValueState;
+type BaseValueState = Signal<string>;
 
-		createComputed(() => {
-			const isRelevant = context.isRelevant();
+type RelevantValueState = SimpleAtomicState<string>;
 
-			setValueForPersistence((persisted) => {
-				return {
-					isRelevant,
-					value: persisted.value,
-				};
-			});
-		});
+/**
+ * Wraps {@link baseValueState} in a signal-like interface which:
+ *
+ * - produces a blank value for nodes ({@link context}) in a non-relevant state
+ * - persists, and restores, the most recent non-blank value state when a
+ *   node/context's relevance is restored
+ */
+const createRelevantValueState = <RuntimeValue>(
+	context: ValueContext<RuntimeValue>,
+	baseValueState: BaseValueState
+): RelevantValueState => {
+	return context.scope.runTask(() => {
+		const [getRelevantValue, setValue] = baseValueState;
 
-		const toSignalValue = (current: PersistedValueState): string => {
-			if (current.isRelevant) {
-				return current.value;
+		const getValue = createMemo(() => {
+			if (context.isRelevant()) {
+				return getRelevantValue();
 			}
 
 			return '';
-		};
-
-		const [signalValue, setSignalValue] = createSignal(toSignalValue(persistedValue()));
-
-		createComputed(() => {
-			const { isRelevant, value } = persistedValue();
-			const preparedTextContent = isRelevant ? value : '';
-			const assignedTextContent = (contextNode.textContent = preparedTextContent);
-
-			setSignalValue(assignedTextContent);
 		});
 
-		const setPrimaryInstanceValue: SimpleAtomicStateSetter<string> = (value) => {
-			// TODO: Check (error?) for non-relevant value change?
-			const persisted = setValueForPersistence({
-				isRelevant: context.isRelevant(),
-				value,
-			});
-
-			return persisted.value;
-		};
-
-		return [signalValue, setPrimaryInstanceValue];
+		return [getValue, setValue];
 	});
 };
 
+type RuntimeValueState<RuntimeValue> = SimpleAtomicState<RuntimeValue>;
+
 /**
- * Wraps a node's {@link PrimaryInstanceValueState} in a signal-like interface
- * which automatically encodes and decodes a node's runtime value
- * representation:
+ * Wraps {@link relevantValueState} in a signal-like interface which
+ * automatically encodes and decodes a node's runtime value representation:
  *
  * - Values read by a node will be read from the current state as persisted in
  *   the primary instance, then {@link ValueContext.decodeValue | decoded} (as
@@ -144,21 +86,17 @@ const createPrimaryInstanceValueState = <RuntimeValue>(
  *   functionality provided by that node.
  *
  * - Values written by a node will be {@link ValueContext.encodeValue | encoded}
- *   (also as implemented by that node) into a string appropriate to persist to
- *   the primary instance, and written to it as such.
- *
- * - Downstream reactive computations should subscribe to updates to this
- *   runtime state (suggesting the value node itself should access this state in
- *   its {@link SubscribableDependency.subscribe} implementation).
+ *   (also as implemented by that node) into a string value appropriate for
+ *   serialization in an instance submission.
  */
 const createRuntimeValueState = <RuntimeValue>(
 	context: ValueContext<RuntimeValue>,
-	primaryInstanceState: PrimaryInstanceValueState
-): ValueState<RuntimeValue> => {
+	relevantValueState: RelevantValueState
+): RuntimeValueState<RuntimeValue> => {
 	const { decodeValue, encodeValue } = context;
 
 	return context.scope.runTask(() => {
-		const [primaryInstanceValue, setPrimaryInstanceValue] = primaryInstanceState;
+		const [primaryInstanceValue, setPrimaryInstanceValue] = relevantValueState;
 		const getRuntimeValue = createMemo(() => {
 			return decodeValue(primaryInstanceValue());
 		});
@@ -227,34 +165,36 @@ const createCalculation = <RuntimeValue>(
 	});
 };
 
+type ValueState<RuntimeValue> = SimpleAtomicState<RuntimeValue>;
+
 /**
  * Provides a consistent interface for value nodes of any type which:
  *
- * - derives initial state from either the existing primary instance state (e.g.
- *   for edits) or the node's definition (e.g. initializing a new submission)
- * - decodes primary instance state into the value node's runtime type
- * - encodes and persists updated values to the primary instance
+ * - derives initial state from either an existing instance (e.g. for edits) or
+ *   the node's definition (e.g. initializing a new submission)
+ * - decodes current primary instance state into the value node's runtime type
+ * - encodes updated runtime values to store updated instance state
  * - initializes reactive computation of `calculate` bind expressions for those
  *   nodes defined with one
- * - ensures any downstream reactive dependencies are updated only after writes
- *   (whether performed by a client, or by a reactive `calculate` computation)
- *   are persisted, ensuring a consistent view of state when downstream
- *   computations perform XPath evaluations against that primary instance state
+ * - prevents downstream writes to nodes in a readonly state
  */
 export const createValueState = <RuntimeValue>(
 	context: ValueContext<RuntimeValue>,
 	options: ValueStateOptions = {}
 ): ValueState<RuntimeValue> => {
-	const primaryInstanceState = createPrimaryInstanceValueState(context, options);
-	const runtimeState = createRuntimeValueState(context, primaryInstanceState);
+	return context.scope.runTask(() => {
+		const initialValue = getInitialValue(context, options);
+		const baseValueState = createSignal(initialValue);
+		const valueState = createRelevantValueState(context, baseValueState);
+		const runtimeState = createRuntimeValueState(context, valueState);
+		const { calculate } = context.definition.bind;
 
-	const { calculate } = context.definition.bind;
+		if (calculate != null) {
+			const [, setValue] = runtimeState;
 
-	if (calculate != null) {
-		const [, setValue] = runtimeState;
+			createCalculation(context, setValue, calculate);
+		}
 
-		createCalculation(context, setValue, calculate);
-	}
-
-	return guardDownstreamReadonlyWrites(context, runtimeState);
+		return guardDownstreamReadonlyWrites(context, runtimeState);
+	});
 };

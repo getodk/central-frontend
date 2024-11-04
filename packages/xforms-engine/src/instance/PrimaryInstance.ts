@@ -76,7 +76,7 @@ interface PrimaryInstanceStateSpec {
 }
 
 export class PrimaryInstance
-	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root, Document>
+	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root>
 	implements
 		PrimaryInstanceDocument,
 		XFormsXPathDocument,
@@ -117,10 +117,10 @@ export class PrimaryInstance
 	// EvaluationContext
 	readonly isAttached: Accessor<boolean>;
 	readonly evaluator: EngineXPathEvaluator;
-	readonly contextNode: Document;
+	override readonly contextNode = this;
 
 	constructor(scope: ReactiveScope, model: ModelDefinition, engineConfig: InstanceConfig) {
-		const { root: definition, form } = model;
+		const { root: definition } = model;
 
 		super(engineConfig, null, definition, {
 			scope,
@@ -131,15 +131,8 @@ export class PrimaryInstance
 
 		this.isAttached = isAttached;
 
-		const { xformDOM } = form;
-		const { namespaceURI, nodeName } = xformDOM.primaryInstanceRoot;
-		const rootNode: Document = xformDOM.xformDocument.implementation.createDocument(
-			namespaceURI,
-			nodeName
-		);
-
 		const evaluator = new EngineXPathEvaluator({
-			rootNode,
+			rootNode: this,
 			itextTranslationsByLanguage: model.itextTranslations,
 			secondaryInstancesById: model.secondaryInstances,
 		});
@@ -154,7 +147,6 @@ export class PrimaryInstance
 		this.setActiveLanguage = setActiveLanguage;
 
 		this.evaluator = evaluator;
-		this.contextNode = rootNode;
 		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<this, Root>(this);

@@ -27,7 +27,7 @@ import {
 	type SharedValidationState,
 } from '../../lib/reactivity/validation/createValidation.ts';
 import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/unknownAppearanceParser.ts';
-import type { GeneralParentNode } from '../hierarchy.ts';
+import type { AnyUnsupportedControl, GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from '../internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
 import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
@@ -103,6 +103,8 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	abstract override readonly contextNode: AnyUnsupportedControl & this;
+
 	readonly encodeValue = (instanceValue: unknown): string => {
 		const encoded = instanceValue;
 

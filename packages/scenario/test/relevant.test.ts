@@ -529,7 +529,7 @@ describe('Relevance - TriggerableDagTest.java', () => {
 		 * **PORTING NOTES** (supplemental: 3 of 3; see commit history for
 		 * additional context and commentary)
 		 */
-		it.fails('excludes default values on nodes which are non-relevant on init', async () => {
+		it('excludes default values on nodes which are non-relevant on init', async () => {
 			const scenario = await Scenario.init(
 				'Some form',
 				html(

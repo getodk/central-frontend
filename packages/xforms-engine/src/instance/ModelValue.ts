@@ -67,6 +67,7 @@ export class ModelValue
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	override readonly contextNode = this;
 	readonly encodeValue = identity<string>;
 	readonly decodeValue = identity<string>;
 

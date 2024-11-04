@@ -76,6 +76,8 @@ export class SelectField
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	override readonly contextNode = this;
+
 	readonly encodeValue = (runtimeValue: readonly SelectItem[]): string => {
 		const itemValues = new Set(runtimeValue.map(({ value }) => value));
 

@@ -141,10 +141,6 @@ export class Root
 		this.submissionState = createParentNodeSubmissionState(this);
 	}
 
-	protected override initializeContextNode(parentContextNode: Document): Element {
-		return parentContextNode.documentElement;
-	}
-
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
 	}
