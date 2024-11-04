@@ -8,17 +8,12 @@ import { createAggregatedViolations } from '../../lib/reactivity/validation/crea
 import type { ControlledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import { BaseRepeatRange } from './BaseRepeatRange.ts';
 import type { RepeatDefinition } from './RepeatInstance.ts';
 
 export class RepeatRangeControlled
 	extends BaseRepeatRange<ControlledRepeatRangeDefinition>
-	implements
-		RepeatRangeControlledNode,
-		XFormsXPathNodeRange,
-		EvaluationContext,
-		SubscribableDependency
+	implements RepeatRangeControlledNode, XFormsXPathNodeRange, EvaluationContext
 {
 	// RepeatRangeControlledNode
 	readonly nodeType = 'repeat-range:controlled';

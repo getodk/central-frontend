@@ -27,7 +27,6 @@ import type { AnyChildNode, AnyNode, AnyParentNode } from '../hierarchy.ts';
 import { nodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 
 export type EngineInstanceNodeType = ClientInstanceNodeType | 'primary-instance';
 
@@ -95,11 +94,7 @@ export abstract class InstanceNode<
 		Parent extends AnyParentNode | null,
 		Child extends AnyChildNode | null = null,
 	>
-	implements
-		BaseEngineNode,
-		XFormsXPathPrimaryInstanceNode,
-		EvaluationContext,
-		SubscribableDependency
+	implements BaseEngineNode, XFormsXPathPrimaryInstanceNode, EvaluationContext
 {
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
@@ -151,7 +146,7 @@ export abstract class InstanceNode<
 	abstract readonly evaluator: EngineXPathEvaluator;
 	abstract readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
-	// EvaluationContext *and* Subscribable: node-specific
+	// EvaluationContext: node-specific
 	abstract readonly isAttached: Accessor<boolean>;
 	readonly scope: ReactiveScope;
 	readonly computeReference: ComputeInstanceNodeReference;
@@ -261,80 +256,5 @@ export abstract class InstanceNode<
 			.getXPathChildNodes()
 			.map((child) => child.getXPathValue())
 			.join('');
-	}
-
-	getNodesByReference(
-		this: AnyNode,
-		visited: WeakSet<AnyNode>,
-		dependencyReference: string
-	): readonly SubscribableDependency[] {
-		if (visited.has(this)) {
-			return [];
-		}
-
-		visited.add(this);
-
-		const { nodeset } = this.definition;
-
-		if (dependencyReference === nodeset) {
-			if (this.nodeType === 'repeat-instance') {
-				return [this.parent];
-			}
-
-			return [this];
-		}
-
-		if (
-			dependencyReference.startsWith(`${nodeset}/`) ||
-			dependencyReference.startsWith(`${nodeset}[`)
-		) {
-			return this.getChildren().flatMap((child) => {
-				return child.getNodesByReference(visited, dependencyReference);
-			});
-		}
-
-		return this.parent?.getNodesByReference(visited, dependencyReference) ?? [];
-	}
-
-	// EvaluationContext: node-relative
-	abstract getSubscribableDependenciesByReference(
-		this: AnyNode,
-		reference: string
-	): readonly SubscribableDependency[];
-
-	// SubscribableDependency
-	/**
-	 * This is a default implementation suitable for most node types. The rest
-	 * (currently: `Root`, `RepeatRange`, `RepeatInstance`) should likely extend
-	 * this behavior, rather than simply overriding it.
-	 */
-	subscribe(): void {
-		const { engineState } = this;
-
-		// Note: a previous iteration of this default implementation guarded these
-		// reactive reads behind a relevance check. This caused timing issues for
-		// downstream computations referencing a node whose relevance changes.
-		//
-		// That original guard was intended to reduce excessive redundant
-		// computations, and so removing it is intended as a naive compromise of
-		// performance for obvious correctness improvements.
-		//
-		// This compromise, like many others, will be moot if/when we decide to
-		// decouple XPath evaluation from the browser/XML DOM: reactive
-		// subscriptions would be established by evaluation of the expressions
-		// themselves (as they traverse instance state and access values), rather
-		// than this safer/less focused approach.
-
-		// TODO: typescript-eslint is right to object to these! We should _at least_
-		// make internal reactive reads obvious, i.e. function calls.
-
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.reference;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.relevant;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.children;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.value;
 	}
 }

@@ -93,18 +93,6 @@ describe('PrimaryInstance engine representation of instance state', () => {
 		expect(rootReference).toBe('/data');
 	});
 
-	describe('internals', () => {
-		it('gets a node by reference', () => {
-			const [q1] = reactiveTestScope(({ mutable }) => {
-				const { root } = createPrimaryInstance(mutable);
-
-				return root.getSubscribableDependenciesByReference('/data/q1');
-			});
-
-			expect(q1).toBeInstanceOf(InstanceNode);
-		});
-	});
-
 	// Note: for test purposes, this is returning the client `RootNode` type
 	// rather than the more expansive `Root` type. Some tests will deal with
 	// internals (i.e. to check certain prerequisites for functionality dealing

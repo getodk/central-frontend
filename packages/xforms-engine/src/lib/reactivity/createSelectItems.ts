@@ -3,14 +3,13 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
 import type { ActiveLanguage, SelectItem } from '../../index.ts';
-import type { SelectField } from '../../instance/SelectField.ts';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
+import type { SelectField } from '../../instance/SelectField.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/select/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
@@ -67,7 +66,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
-		private readonly selectField: SelectField,
+		selectField: SelectField,
 		readonly contextNode: EngineXPathNode
 	) {
 		this.isAttached = selectField.isAttached;
@@ -75,10 +74,6 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 		this.evaluator = selectField.evaluator;
 		this.contextReference = selectField.contextReference;
 		this.getActiveLanguage = selectField.getActiveLanguage;
-	}
-
-	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
-		return this.selectField.getSubscribableDependenciesByReference(reference);
 	}
 }
 

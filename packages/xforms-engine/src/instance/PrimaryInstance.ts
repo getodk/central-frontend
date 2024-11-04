@@ -29,12 +29,10 @@ import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
-import type { AnyNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocument.ts';
 import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import { Root } from './Root.ts';
 
@@ -82,7 +80,6 @@ export class PrimaryInstance
 		XFormsXPathDocument,
 		TranslationContext,
 		EvaluationContext,
-		SubscribableDependency,
 		ClientReactiveSubmittableInstance
 {
 	// InstanceNode
@@ -237,13 +234,5 @@ export class PrimaryInstance
 		});
 
 		return Promise.resolve(result);
-	}
-
-	// EvaluationContext, InstanceNode; called by all descendant nodes
-	/** @todo removed */
-	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
-		const visited = new WeakSet<AnyNode>();
-
-		return this.getNodesByReference(visited, reference);
 	}
 }

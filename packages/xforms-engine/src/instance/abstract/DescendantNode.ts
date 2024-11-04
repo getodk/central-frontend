@@ -15,9 +15,8 @@ import { createComputedExpression } from '../../lib/reactivity/createComputedExp
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../parse/model/DescendentNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
-import type { AnyChildNode, AnyNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
+import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
 import type { InstanceNodeStateSpec } from './InstanceNode.ts';
@@ -64,11 +63,7 @@ export abstract class DescendantNode<
 		Child extends AnyChildNode | null = null,
 	>
 	extends InstanceNode<Definition, Spec, Parent, Child>
-	implements
-		BaseNode,
-		XFormsXPathPrimaryInstanceDescendantNode,
-		EvaluationContext,
-		SubscribableDependency
+	implements BaseNode, XFormsXPathPrimaryInstanceDescendantNode, EvaluationContext
 {
 	/**
 	 * Partial implementation of {@link isAttached}, used to check whether `this`
@@ -192,15 +187,6 @@ export abstract class DescendantNode<
 		this.isRequired = createComputedExpression(this, required, {
 			defaultValue: false,
 		});
-	}
-
-	// EvaluationContext: node-relative
-	/** @todo remove */
-	getSubscribableDependenciesByReference(
-		this: AnyNode,
-		reference: string
-	): readonly SubscribableDependency[] {
-		return this.rootDocument.getSubscribableDependenciesByReference(reference);
 	}
 
 	/**

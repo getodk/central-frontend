@@ -2,6 +2,7 @@ import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
+import type { RepeatRangeNode } from '../../client/hierarchy.ts';
 import type { FormNodeID } from '../../client/identity.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
@@ -35,7 +36,6 @@ import { DescendantNode } from '../abstract/DescendantNode.ts';
 import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
@@ -58,7 +58,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		BaseRepeatRangeNode,
 		XFormsXPathNodeRange,
 		EvaluationContext,
-		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<RepeatInstance>
 {
 	protected readonly childrenState: ChildrenState<RepeatInstance>;
@@ -258,16 +257,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 				return updatedInstances;
 			});
-		});
-	}
-
-	override subscribe(): void {
-		super.subscribe();
-
-		// Subscribing to children can support reactive expressions dependent on the
-		// repeat range itself (e.g. `count()`).
-		this.childrenState.getChildren().forEach((child) => {
-			child.subscribe();
 		});
 	}
 

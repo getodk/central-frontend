@@ -29,7 +29,6 @@ import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
 
@@ -54,7 +53,6 @@ export class Root
 		RootNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		TranslationContext,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
@@ -156,12 +154,5 @@ export class Root
 		options?: SubmissionOptions<ChunkedType>
 	): Promise<SubmissionResult<ChunkedType>> {
 		return this.rootDocument.prepareSubmission(options);
-	}
-
-	// SubscribableDependency
-	override subscribe(): void {
-		super.subscribe();
-
-		this.getActiveLanguage();
 	}
 }

@@ -26,7 +26,6 @@ import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
@@ -49,7 +48,6 @@ export class SelectField
 		SelectNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ValidationContext,
 		ValueContext<readonly SelectItem[]>,
 		ClientReactiveSubmittableLeafNode<readonly SelectItem[]>

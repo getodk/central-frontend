@@ -21,7 +21,6 @@ import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 
 interface SubtreeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: null;
@@ -37,7 +36,6 @@ export class Subtree
 		SubtreeNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;

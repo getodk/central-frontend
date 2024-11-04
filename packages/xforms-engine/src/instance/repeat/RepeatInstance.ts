@@ -28,7 +28,6 @@ import { buildChildren } from '../children.ts';
 import type { GeneralChildNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 
 export type { RepeatDefinition };
 
@@ -50,7 +49,6 @@ export class RepeatInstance
 		RepeatInstanceNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ClientReactiveSubmittableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
@@ -181,11 +179,6 @@ export class RepeatInstance
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
 		this.submissionState = createParentNodeSubmissionState(this);
-	}
-
-	override subscribe(): void {
-		super.subscribe();
-		this.currentIndex();
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

@@ -26,7 +26,6 @@ import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 
@@ -46,7 +45,6 @@ export class Note
 		NoteNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ValidationContext,
 		ValueContext<string>,
 		ClientReactiveSubmittableLeafNode<string>

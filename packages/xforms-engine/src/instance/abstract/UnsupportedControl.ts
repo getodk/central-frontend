@@ -30,7 +30,6 @@ import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/un
 import type { AnyUnsupportedControl, GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from '../internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { ValueContext } from '../internal-api/ValueContext.ts';
 import { DescendantNode, type DescendantNodeStateSpec } from './DescendantNode.ts';
@@ -76,7 +75,6 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		UnsupportedControlNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ValidationContext,
 		ValueContext<unknown>,
 		ClientReactiveSubmittableLeafNode<unknown>

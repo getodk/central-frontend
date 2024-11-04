@@ -2,7 +2,6 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
@@ -86,8 +85,6 @@ type ComputedExpression<Type extends DependentExpressionResultType> = Accessor<
 >;
 
 interface CreateComputedExpressionOptions<Type extends DependentExpressionResultType> {
-	readonly arbitraryDependencies?: readonly SubscribableDependency[];
-
 	/**
 	 * If a default value is provided, {@link createComputedExpression} will
 	 * produce this value for computations in a non-attached evaluation context,
@@ -115,7 +112,6 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 		const evaluatePreInitializationDefaultValue = () => {
 			return options?.defaultValue ?? defaultEvaluationsByType[resultType];
 		};
-		const dependencyReferences = Array.from(dependentExpression.dependencyReferences);
 		const evaluateExpression = expressionEvaluator(evaluator, resultType, expression, {
 			contextNode,
 		});
@@ -123,14 +119,6 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 		if (isConstantExpression(expression)) {
 			return createMemo(evaluateExpression);
 		}
-
-		const { arbitraryDependencies = [] } = options;
-
-		const getReferencedDependencies = createMemo(() => {
-			return dependencyReferences.flatMap((reference) => {
-				return context.getSubscribableDependenciesByReference(reference) ?? [];
-			});
-		});
 
 		return createMemo(() => {
 			if (!context.isAttached()) {
@@ -140,14 +128,6 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 			if (isTranslated) {
 				context.getActiveLanguage();
 			}
-
-			arbitraryDependencies.forEach((dependency) => {
-				dependency.subscribe();
-			});
-
-			getReferencedDependencies().forEach((dependency) => {
-				dependency.subscribe();
-			});
 
 			return evaluateExpression();
 		});
