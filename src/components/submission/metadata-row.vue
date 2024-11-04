@@ -59,7 +59,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td v-if="!draft && deleted" class="state-and-actions">
-      <div class="col-content">
+      <div class="col-content col-deleted-at">
         <date-time :iso="submission.__system.deletedAt"/>
       </div>
       <div v-if="verbs.has('submission.restore')" class="btn-group">
@@ -193,5 +193,7 @@ export default {
   }
 
   .delete-button .icon-trash { color: $color-danger; }
+
+  .col-deleted-at { color: $color-danger; }
 }
 </style>

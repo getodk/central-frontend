@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
       <th>{{ $t('header.submissionDate') }}</th>
       <th v-if="!draft && !deleted">{{ $t('header.stateAndActions') }}</th>
-      <th v-if="!draft && deleted">{{ $t('header.deletedAt') }}</th>
+      <th v-if="!draft && deleted" class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
       <template v-if="fields != null">
@@ -97,12 +97,16 @@ defineExpose({ afterReview, afterDelete });
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#submission-table .table-freeze-scrolling {
-  th, td {
-    @include text-overflow-ellipsis;
-    max-width: 250px;
-    &:last-child { max-width: 325px; }
+#submission-table {
+  .table-freeze-scrolling {
+    th, td {
+      @include text-overflow-ellipsis;
+      max-width: 250px;
+      &:last-child { max-width: 325px; }
+    }
   }
+
+  th.col-deleted-at { color: $color-danger; }
 }
 </style>
 
