@@ -16,7 +16,6 @@ import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XF
 import { createNodeRangeSubmissionState } from '../../lib/client-reactivity/submission/createNodeRangeSubmissionState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
-import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import { materializeCurrentStateChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
@@ -94,27 +93,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 	 */
 	override readonly [XPathNodeKindKey]: XFormsXPathNodeRangeKind = XFORMS_XPATH_NODE_RANGE_KIND;
 
-	/**
-	 * Provides an {@link EvaluationContext} from which to evaluate expressions
-	 * where some LocationPath sub-expressions may be **relative to the repeat
-	 * range itself**. This is useful for evaluation of expressions where:
-	 *
-	 * - the expression is typically contextualized to any of its
-	 *   {@link RepeatInstance} children, but it presently has none (i.e.
-	 *   `relevant`)
-	 *
-	 * - the expression is conceptually intended to be evaluated in the context of
-	 *   the repeat range itself (i.e. `jr:count`)
-	 */
-	protected readonly selfEvaluationContext: EvaluationContext & {
-		readonly contextNode: XFormsXPathNodeRange;
-	};
-
-	/**
-	 * @see {@link isSelfRelevant}
-	 */
-	protected readonly isEmptyRangeSelfRelevant: Accessor<boolean>;
-
 	// InstanceNode
 	protected readonly state: SharedNodeState<RepeatRangeStateSpec>;
 	protected readonly engineState: EngineState<RepeatRangeStateSpec>;
@@ -127,49 +105,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 	 * @see {@link isSelfRelevant}
 	 */
 	declare isSelfReadonly: Accessor<boolean>;
-
-	/**
-	 * A repeat range does not exist in the primary instance tree. A `relevant`
-	 * expression applies to each {@link RepeatInstance} child of the repeat
-	 * range. Determining whether a repeat range itself "is relevant" isn't a
-	 * concept the spec addresses, but it may be used by clients to determine
-	 * whether to allow interaction with the range (e.g. by adding a repeat
-	 * instance, or presenting the range's label when empty).
-	 *
-	 * As a naive first pass, it seems like the heuristic for this should be:
-	 *
-	 * 1. Does the repeat range have any repeat instance children?
-	 *
-	 *     - If yes, go to 2.
-	 *     - If no, go to 3.
-	 *
-	 * 2. Does one or more of those children return `true` for the node's
-	 *    `relevant` expression (i.e. is the repeat instance "self relevant")?
-	 *
-	 * 3. Does the relevant expression return `true` for the repeat range itself
-	 *    (where, at least for now, the context of that evaluation would be the
-	 *    repeat range's {@link anchorNode} to ensure correct relative expressions
-	 *    resolve correctly)?
-	 *
-	 * @todo While (3) is proactively implemented, there isn't presently a test
-	 * exercising it. It felt best for now to surface this for discussion in
-	 * review to validate that it's going in the right direction.
-	 *
-	 * @todo While (2) **is actually tested**, the tests currently in place behave
-	 * the same way with only the logic for (3), regardless of whether the repeat
-	 * range actually has any repeat instance children. It's unclear (a) if that's
-	 * a preferable simplification and (b) how that might affect performance (in
-	 * theory it could vary depending on form structure and runtime state).
-	 */
-	override readonly isSelfRelevant: Accessor<boolean> = () => {
-		const instances = this.childrenState.getChildren();
-
-		if (instances.length > 0) {
-			return instances.some((instance) => instance.isSelfRelevant());
-		}
-
-		return this.isEmptyRangeSelfRelevant();
-	};
 
 	// BaseRepeatRangeNode
 	abstract override readonly nodeType: BaseRepeatRangeNodeType<Definition>;
@@ -223,24 +158,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		const childrenState = createChildrenState<RepeatRange, RepeatInstance>(repeatRange);
 
 		this.childrenState = childrenState;
-
-		this.selfEvaluationContext = {
-			isAttached: this.isAttached,
-			scope: this.scope,
-			evaluator: this.evaluator,
-			contextReference: this.contextReference,
-			contextNode: this as BaseRepeatRange<AnyRepeatRangeDefinition> as RepeatRange,
-			getActiveLanguage: this.getActiveLanguage,
-
-			getSubscribableDependenciesByReference: (reference) => {
-				return repeatRange.getSubscribableDependenciesByReference(reference);
-			},
-		};
-
-		this.isEmptyRangeSelfRelevant = createComputedExpression(
-			this.selfEvaluationContext,
-			definition.bind.relevant
-		);
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
