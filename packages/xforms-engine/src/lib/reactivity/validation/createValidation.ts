@@ -76,6 +76,7 @@ const createConstraintValidation = (
 
 		const isValid = createComputedExpression(context, constraint, {
 			arbitraryDependencies: [context],
+			defaultValue: true,
 		});
 
 		const message = createViolationMessage(context, 'constraintMsg', constraintMsg);

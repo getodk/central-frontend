@@ -235,6 +235,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		this.contextNode.append(this.anchorNode);
 
 		this.selfEvaluationContext = {
+			isAttached: this.isAttached,
 			scope: this.scope,
 			evaluator: this.evaluator,
 			contextReference: this.contextReference,

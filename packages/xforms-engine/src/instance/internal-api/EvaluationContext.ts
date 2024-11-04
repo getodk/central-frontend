@@ -1,4 +1,5 @@
 import type { Accessor } from 'solid-js';
+import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
@@ -18,6 +19,19 @@ import type { TranslationContext } from './TranslationContext.ts';
  * - any dynamic case is expected to be internally reactive
  */
 export interface EvaluationContext extends TranslationContext {
+	/**
+	 * Used to determine whether {@link contextNode} is attached to its
+	 * {@link EngineXPathNode} document hierarchy.
+	 *
+	 * - If this function returns `true`: expressions are evaluated as defined.
+	 * - If this function returns `false`: expressions are evaluated to either an
+	 *   explicit default value (if provided) or an implicit default value
+	 *   appropriate for the requested result type.
+	 *
+	 * @see {@link createComputedExpression} for further detail on the latter.
+	 */
+	readonly isAttached: Accessor<boolean>;
+
 	readonly scope: ReactiveScope;
 	readonly evaluator: EngineXPathEvaluator;
 

@@ -29,7 +29,9 @@ const createComputedTextChunk = (
 	}
 
 	return context.scope.runTask(() => {
-		const getText = createComputedExpression(context, textSource);
+		const getText = createComputedExpression(context, textSource, {
+			defaultValue: '',
+		});
 
 		return {
 			source,

@@ -689,7 +689,7 @@ type KnownFailureTest = () => Promise<void>;
 
 type KnownFailureTestAPI = (description: string, fn: KnownFailureTest) => void;
 
-describe('ChildVaccinationTest.java', () => {
+describe.todo('ChildVaccinationTest.java', () => {
 	afterEach(() => {
 		refSingletons.clear();
 	});

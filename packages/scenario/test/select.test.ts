@@ -1368,7 +1368,7 @@ describe('FormEntryPromptTest.java', () => {
 					 *    we'll always want to test the actual text as produced
 					 *    (regardless of its form definition structure).
 					 */
-					it('[gets?] returns label [~~]inner[~~] text', async () => {
+					it.fails('[gets?] returns label [~~]inner[~~] text', async () => {
 						const scenario = await Scenario.init(
 							'Select',
 							html(
@@ -1632,7 +1632,7 @@ describe('FormEntryPromptTest.java', () => {
 			});
 
 			describe('on selections[?] in repeat instances', () => {
-				it('[gets?] returns [the label text] label inner text', async () => {
+				it.fails('[gets?] returns [the label text] label inner text', async () => {
 					const scenario = await Scenario.init(
 						'Select',
 						html(

@@ -212,10 +212,12 @@ const createCalculation = <RuntimeValue>(
 	calculateDefinition: BindComputationExpression<'calculate'>
 ): void => {
 	context.scope.runTask(() => {
-		const calculate = createComputedExpression(context, calculateDefinition);
+		const calculate = createComputedExpression(context, calculateDefinition, {
+			defaultValue: '',
+		});
 
 		createComputed(() => {
-			if (context.isRelevant()) {
+			if (context.isAttached() && context.isRelevant()) {
 				const calculated = calculate();
 				const value = context.decodeValue(calculated);
 

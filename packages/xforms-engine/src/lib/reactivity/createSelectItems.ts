@@ -59,6 +59,7 @@ const createTranslatedStaticSelectItems = (
 };
 
 class ItemsetItemEvaluationContext implements EvaluationContext {
+	readonly isAttached: Accessor<boolean>;
 	readonly scope: ReactiveScope;
 	readonly evaluator: EngineXPathEvaluator;
 	readonly contextReference: Accessor<string>;
@@ -68,6 +69,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 		private readonly selectField: SelectField,
 		readonly contextNode: Node
 	) {
+		this.isAttached = selectField.isAttached;
 		this.scope = selectField.scope;
 		this.evaluator = selectField.evaluator;
 		this.contextReference = selectField.contextReference;
@@ -105,14 +107,18 @@ const createItemsetItems = (
 	itemset: ItemsetDefinition
 ): Accessor<readonly ItemsetItem[]> => {
 	return selectField.scope.runTask(() => {
-		const itemNodes = createComputedExpression(selectField, itemset.nodes);
+		const itemNodes = createComputedExpression(selectField, itemset.nodes, {
+			defaultValue: [],
+		});
 		const itemsCache = new UpsertableMap<Node, ItemsetItem>();
 
 		return createMemo(() => {
 			return itemNodes().map((itemNode) => {
 				return itemsCache.upsert(itemNode, () => {
 					const context = new ItemsetItemEvaluationContext(selectField, itemNode);
-					const value = createComputedExpression(context, itemset.value);
+					const value = createComputedExpression(context, itemset.value, {
+						defaultValue: '',
+					});
 					const label = createSelectItemsetItemLabel(context, itemset, value);
 
 					return {

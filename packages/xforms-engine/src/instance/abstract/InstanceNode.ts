@@ -168,8 +168,8 @@ export abstract class InstanceNode<
 	abstract readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	// EvaluationContext *and* Subscribable: node-specific
+	abstract readonly isAttached: Accessor<boolean>;
 	readonly scope: ReactiveScope;
-
 	readonly computeReference: ComputeInstanceNodeReference;
 
 	protected readonly computeChildStepReference: ComputeInstanceNodeReference = (

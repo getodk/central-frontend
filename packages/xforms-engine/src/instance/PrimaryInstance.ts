@@ -1,5 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
@@ -114,6 +115,7 @@ export class PrimaryInstance
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	// EvaluationContext
+	readonly isAttached: Accessor<boolean>;
 	readonly evaluator: EngineXPathEvaluator;
 	readonly contextNode: Document;
 
@@ -124,6 +126,10 @@ export class PrimaryInstance
 			scope,
 			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
 		});
+
+		const [isAttached, setIsAttached] = createSignal(false);
+
+		this.isAttached = isAttached;
 
 		const { xformDOM } = form;
 		const { namespaceURI, nodeName } = xformDOM.primaryInstanceRoot;
@@ -188,6 +194,7 @@ export class PrimaryInstance
 		this.submissionState = createInstanceSubmissionState(this);
 
 		childrenState.setChildren([root]);
+		setIsAttached(true);
 	}
 
 	// PrimaryInstanceDocument

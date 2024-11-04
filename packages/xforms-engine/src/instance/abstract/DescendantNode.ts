@@ -1,5 +1,6 @@
 import { XPathNodeKindKey, type XPathDOMAdapter } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
@@ -75,6 +76,12 @@ export abstract class DescendantNode<
 		EvaluationContext,
 		SubscribableDependency
 {
+	/**
+	 * Partial implementation of {@link isAttached}, used to check whether `this`
+	 * is present in {@link parent}'s children state.
+	 */
+	protected readonly isAttachedDescendant: Accessor<boolean>;
+
 	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
 		const { parent } = this;
 
@@ -129,6 +136,7 @@ export abstract class DescendantNode<
 	abstract override readonly nodeType: InstanceNodeType;
 
 	// EvaluationContext
+	readonly isAttached: Accessor<boolean>;
 	readonly evaluator: EngineXPathEvaluator;
 	readonly contextNode: Element;
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
@@ -155,15 +163,41 @@ export abstract class DescendantNode<
 			this[XPathNodeKindKey] = 'element';
 		}
 
+		const self = this as AnyDescendantNode as AnyChildNode;
+
+		this.isAttachedDescendant = this.scope.runTask(() => {
+			return createMemo(() => {
+				for (const child of parent.getChildren()) {
+					if (child === self) {
+						return true;
+					}
+				}
+
+				return false;
+			});
+		});
+
+		this.isAttached = this.scope.runTask(() => {
+			return createMemo(() => {
+				return this.parent.isAttached() && this.isAttachedDescendant();
+			});
+		});
+
 		this.evaluator = evaluator;
 		this.getActiveLanguage = parent.getActiveLanguage;
 		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
 
 		const { readonly, relevant, required } = definition.bind;
 
-		this.isSelfReadonly = createComputedExpression(this, readonly);
-		this.isSelfRelevant = createComputedExpression(this, relevant);
-		this.isRequired = createComputedExpression(this, required);
+		this.isSelfReadonly = createComputedExpression(this, readonly, {
+			defaultValue: true,
+		});
+		this.isSelfRelevant = createComputedExpression(this, relevant, {
+			defaultValue: false,
+		});
+		this.isRequired = createComputedExpression(this, required, {
+			defaultValue: false,
+		});
 	}
 
 	protected createContextNode(parentContextNode: Document | Element, nodeName: string): Element {
