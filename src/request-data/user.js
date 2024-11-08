@@ -23,7 +23,7 @@ export default () => {
   watchSyncEffect(() => {
     // currentUser won't have data immediately after logout.
     if (user.dataExists && currentUser.dataExists && user.id === currentUser.id)
-      currentUser.patch(user.data);
+      Object.assign(currentUser.data, user.data);
   });
   return user;
 };

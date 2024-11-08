@@ -337,17 +337,17 @@ export default {
           if (this.$route !== initialRoute) return;
           if (updates.length === this.uploadStatus.total)
             this.alert.success(this.$tcn('alert.success', updates.length));
-          this.attachments.patch(() => {
-            for (const [name, updatedAt] of updates) {
-              const attachment = this.attachments.get(name);
-              attachment.blobExists = true;
-              attachment.datasetExists = false;
-              attachment.exists = true;
-              attachment.updatedAt = updatedAt;
 
-              this.updatedAttachments.add(name);
-            }
-          });
+          for (const [name, updatedAt] of updates) {
+            const attachment = this.attachments.get(name);
+            attachment.blobExists = true;
+            attachment.datasetExists = false;
+            attachment.exists = true;
+            attachment.updatedAt = updatedAt;
+
+            this.updatedAttachments.add(name);
+          }
+
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: 0 };
         });
       this.plannedUploads = [];
@@ -367,11 +367,9 @@ export default {
         attachmentName: attachment.name
       }));
 
-      this.attachments.patch(() => {
-        attachment.datasetExists = true;
-        attachment.blobExists = false;
-        attachment.exists = true;
-      });
+      attachment.datasetExists = true;
+      attachment.blobExists = false;
+      attachment.exists = true;
     }
   }
 };

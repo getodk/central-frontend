@@ -109,10 +109,10 @@ const markAsResolved = () => {
     .then(({ data }) => {
       hideConfirm();
       alert.success(t('conflictResolved'));
-      entity.patch(() => {
-        entity.conflict = data.conflict;
-        entity.updatedAt = data.updatedAt;
-      });
+
+      entity.conflict = data.conflict;
+      entity.updatedAt = data.updatedAt;
+
       emit('resolve');
     })
     .catch(noop);

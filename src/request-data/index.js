@@ -9,43 +9,21 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, inject, onUnmounted, provide, shallowReactive } from 'vue';
-import { defineStore } from 'pinia';
+import { computed, inject, onBeforeUnmount, onUnmounted, provide } from 'vue';
 
 import createResources from './resources';
 import { createResource, resourceView } from './resource';
-
-const createState = () =>
-  shallowReactive({ data: null, awaitingResponse: false });
-const patchMock = (f) => { f(); };
-const defineResourceStore = false // eslint-disable-line no-constant-condition
-  ? (name) => defineStore(`requestData.${name}`, { state: createState })
-  : () => {
-    const store = createState();
-    store.$patch = patchMock;
-    return () => store;
-  };
 
 const composableKey = Symbol('requestData composable');
 
 export const createRequestData = (container) => {
   // `resources` holds both app-wide resources and local resources.
   const resources = new Map();
-  /* `stores` holds all the Pinia stores that have ever been created for a
-  resource. Even after a local resource is removed from `resources` (when the
-  component is unmounted), the resource's underlying store is not removed from
-  `stores`. That's because we will reuse the store if another local resource is
-  created with the same name. Doing so minimizes the number of stores shown in
-  Vue Devtools. */
-  const stores = new Map();
 
   // Create app-wide resources.
   const requestData = { resources: new Set() };
-  const { pinia } = container;
   createResources(container, (name, setup) => {
-    const useStore = defineResourceStore(name);
-    stores.set(name, useStore);
-    const resource = createResource(container, name, useStore(pinia), setup);
+    const resource = createResource(container, name, setup);
     resources.set(name, resource);
     requestData[name] = resource;
     requestData.resources.add(resource);
@@ -66,35 +44,34 @@ export const createRequestData = (container) => {
 
   // Local resources
   const createLocalResource = (name, setup) => {
-    // Even local resources cannot share a name at the same time. That's because
-    // the name is used for the id of the store.
     if (resources.has(name)) throw new Error(`the name ${name} is in use`);
-    if (!stores.has(name)) {
-      const useStore = defineResourceStore(name);
-      stores.set(name, useStore);
-    }
-    const useStore = stores.get(name);
-    const resource = createResource(container, name, useStore(), setup);
+    const resource = createResource(container, name, setup);
     resources.set(name, resource);
     // We provide the local resource; only descendant components will be able to
     // inject it.
     provide(`requestData.localResources.${name}`, resource);
 
     onUnmounted(() => {
+      // The resource is no longer needed, so we cancel any request still in
+      // progress. We use onUnmounted() rather than onBeforeUnmount() in case
+      // the component is watching resource.awaitingResponse synchronously for
+      // some reason. We don't want to trigger a component watcher while the
+      // component is being unmounted.
+      resource.cancelRequest();
+    });
+    onBeforeUnmount(() => {
       /*
-      Resetting the resource will reset the state of the store, allowing the
-      store to be reused if a local resource is created later with the same
-      name.
+      This needs to be run in onBeforeUnmount(), not onUnmounted(). In
+      AsyncRoute, we see the following lifecycle stages:
 
-      It's because we reset the resource that we use an `unmounted` hook rather
-      than a beforeUnmount hook. If we used a beforeUnmount hook, then if the
-      component used watchSyncEffect() with the resource, the watchSyncEffect()
-      callback would be run after the resource was reset. That seems surprising,
-      and accounting for that possibility could add complexity to the
-      watchSyncEffect() callback and the component. (That said, using an
-      `unmounted` hook does end up adding complexity to AsyncRoute.)
+        - `beforeUnmount` for the old component
+        - `setup` for the new component
+        - `unmounted` for the old component
+
+      We need to delete `resource` from `resources` before the new component is
+      set up, in case the new component creates a local resource with the same
+      name.
       */
-      resource.reset();
       resources.delete(name);
     });
 
@@ -119,13 +96,10 @@ export const createRequestData = (container) => {
   // needed for computed refs that reference multiple resources.
   const getters = new Map();
   const createGetter = (name, ref) => {
-    // Unlike with resources, there's no real problem with different getters
-    // using the same name. Supporting that case would just make managing
-    // `getters` harder.
     if (getters.has(name)) throw new Error(`the name ${name} is in use`);
     getters.set(name, ref);
     provide(`requestData.getters.${name}`, ref);
-    onUnmounted(() => { getters.delete(name); });
+    onBeforeUnmount(() => { getters.delete(name); });
     return ref;
   };
 
@@ -138,8 +112,6 @@ export const createRequestData = (container) => {
     if (!requestData.resources.has(resource) &&
       inject(`requestData.localResources.${name}`) == null)
       return null;
-    const useStore = stores.get(name);
-    useStore();
     return resource;
   };
   const composable = new Proxy(
