@@ -231,9 +231,10 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
   const { response } = axiosError;
   if (response == null) return i18n.t('util.request.noResponse');
   if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data))) {
-    if (response.status === 413)
-      return i18n.t('util.request.error.413');
-    return i18n.t('util.request.errorNotProblem', response);
+    const key = `util.request.error.${response.status}`;
+    return i18n.te(key)
+      ? i18n.t(key)
+      : i18n.t('util.request.errorNotProblem', response);
   }
 
   const problem = response.data;

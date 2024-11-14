@@ -477,6 +477,7 @@
       "error": {
         // @transifexKey mixin.request.alert.entityTooLarge
         "413": "The data that you are trying to upload is too large.",
+        "504": "Your request took too long, and Central stopped waiting for it."
       },
       "problem": {
         // A "resource" is a generic term for something in Central, for example,

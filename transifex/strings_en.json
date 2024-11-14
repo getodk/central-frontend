@@ -982,6 +982,11 @@
         "string": "Something went wrong: error code {status}.",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
       },
+      "error": {
+        "504": {
+          "string": "Your request took too long, and Central stopped waiting for it."
+        }
+      },
       "problem": {
         "404_1": {
           "string": "The resource you are looking for cannot be found. The resource may have been deleted.",
