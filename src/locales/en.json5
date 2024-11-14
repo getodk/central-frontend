@@ -441,8 +441,7 @@
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit.",
-        "entityTooLarge":  "The data that you are trying to upload is too large.",
+        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit."
       }
     }
   },
@@ -475,6 +474,10 @@
       "noResponse": "Something went wrong: there was no response to your request.",
       // {status} is an HTTP status code, for example, 404.
       "errorNotProblem": "Something went wrong: error code {status}.",
+      "error": {
+        // @transifexKey mixin.request.alert.entityTooLarge
+        "413": "The data that you are trying to upload is too large.",
+      },
       "problem": {
         // A "resource" is a generic term for something in Central, for example,
         // a Project, a Web User, or a Form.

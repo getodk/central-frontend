@@ -232,7 +232,7 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
   if (response == null) return i18n.t('util.request.noResponse');
   if (!(axiosError.config.url.startsWith('/v1/') && isProblem(response.data))) {
     if (response.status === 413)
-      return i18n.t('mixin.request.alert.entityTooLarge');
+      return i18n.t('util.request.error.413');
     return i18n.t('util.request.errorNotProblem', response);
   }
 
