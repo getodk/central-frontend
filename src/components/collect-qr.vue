@@ -12,14 +12,20 @@ except according to the terms contained in the LICENSE file.
 
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <span class="collect-qr" v-html="imgHtml"></span>
+  <div>
+    <span class="collect-qr" v-html="imgHtml"></span>
+    <canvas ref="qrCanvas" style="display: none;"></canvas>
+  </div>
 </template>
 <!-- eslint-enable vue/no-v-html -->
 
 <script setup>
-import { computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 defineOptions({
   name: 'CollectQr'
@@ -37,15 +43,79 @@ const props = defineProps({
   cellSize: {
     type: Number,
     required: true
+  },
+  margin: {
+    type: Number,
+    default: 15
+  },
+  temporary: {
+    type: Boolean,
+    default: false
   }
 });
 
-const imgHtml = computed(() => {
+const qrCanvas = ref(null);
+const imgHtml = ref('');
+
+onMounted(() => {
   const code = qrcode(0, props.errorCorrectionLevel);
   const json = JSON.stringify(props.settings);
   code.addData(btoa(pako.deflate(json, { to: 'string' })));
   code.make();
-  return code.createImgTag(props.cellSize, 15);
+
+  // Compute image size
+  // blocks (based on length of encoded data) * cell size + (2 * margin)
+  const width = code.getModuleCount() * props.cellSize + props.margin * 2;
+  const height = props.temporary ? width + 20 : width;
+  qrCanvas.value.width = width;
+  qrCanvas.value.height = height;
+
+  // Create the canvas and get the context
+  //qrCanvas.value = new OffscreenCanvas(size, size);
+  const ctx = qrCanvas.value.getContext('2d');
+
+  // debugging background
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.translate(props.margin, props.margin);
+  code.renderTo2dContext(ctx, props.cellSize);
+  ctx.resetTransform();
+
+  if (props.temporary) {
+    // Draw outlined rounded white rect to put icon inside of
+    ctx.beginPath();
+    ctx.roundRect(width * 0.4, width * 0.4, width * 0.2, width * 0.2, [10, 10]);
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fill();
+
+    // Draw icon
+    ctx.font = `${width * 0.15}px icomoon`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'red';
+    //const icon = '\uf044'; // edit pencil
+    const icon = '\uf040'; // pencil
+    ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
+
+    // Write text at the bottom
+    ctx.font = '20px Monaco, Menlo, Consolas, "Courier New", monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'red';
+    ctx.fillText(t('temporary'), props.margin, width, width);
+  }
+
+  const img = document.createElement('img');
+  img.src = qrCanvas.value.toDataURL();
+  img.width = width;
+  img.height = height;
+  // todo: could add alt tag here
+
+  imgHtml.value = img.outerHTML;
 });
 
 </script>
@@ -57,3 +127,12 @@ const imgHtml = computed(() => {
 }
 
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      // This is shown in a temporary QR code.
+      "temporary": "Draft Form"
+    }
+  }
+</i18n>
