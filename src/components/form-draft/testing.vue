@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
       <div class="col-xs-4">
         <float-row>
           <collect-qr v-if="formDraft.dataExists" :settings="qrSettings"
-            error-correction-level="Q" :cell-size="3" :temporary="true"/>
+            error-correction-level="Q" :cell-size="3" draft/>
         </float-row>
       </div>
     </div>

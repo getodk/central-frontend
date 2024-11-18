@@ -1454,9 +1454,9 @@
       }
     },
     "CollectQr": {
-      "temporary": {
+      "draft": {
         "string": "Temporary draft",
-        "developer_comment": "This is shown below a temporary QR code for a draft form."
+        "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
     "ConfigError": {

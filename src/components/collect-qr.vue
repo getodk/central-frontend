@@ -12,10 +12,8 @@ except according to the terms contained in the LICENSE file.
 
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div>
-    <span class="collect-qr" v-html="imgHtml"></span>
-    <canvas ref="qrCanvas" style="display: none;"></canvas>
-  </div>
+  <span class="collect-qr" v-html="imgHtml"></span>
+  <canvas v-show="false" ref="qrCanvas"></canvas>
 </template>
 <!-- eslint-enable vue/no-v-html -->
 
@@ -44,11 +42,7 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  margin: {
-    type: Number,
-    default: 15
-  },
-  temporary: {
+  draft: {
     type: Boolean,
     default: false
   }
@@ -56,6 +50,8 @@ const props = defineProps({
 
 const qrCanvas = ref(null);
 const imgHtml = ref('');
+
+const margin = 15;
 
 onMounted(() => {
   const code = qrcode(0, props.errorCorrectionLevel);
@@ -65,8 +61,8 @@ onMounted(() => {
 
   // Compute image size
   // blocks (based on length of encoded data) * cell size + (2 * margin)
-  const width = code.getModuleCount() * props.cellSize + props.margin * 2;
-  const height = props.temporary ? width + 20 : width;
+  const width = code.getModuleCount() * props.cellSize + margin * 2;
+  const height = props.draft ? width + 20 : width;
   qrCanvas.value.width = width;
   qrCanvas.value.height = height;
 
@@ -78,11 +74,11 @@ onMounted(() => {
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, width, height);
 
-  ctx.translate(props.margin, props.margin);
+  ctx.translate(margin, margin);
   code.renderTo2dContext(ctx, props.cellSize);
   ctx.resetTransform();
 
-  if (props.temporary) {
+  if (props.draft) {
     // Draw outlined rounded white rect to put icon inside of
     ctx.beginPath();
     ctx.roundRect(width * 0.4, width * 0.4, width * 0.2, width * 0.2, [10, 10]);
@@ -106,14 +102,14 @@ onMounted(() => {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'red';
-    ctx.fillText(t('temporary'), props.margin, width, width);
+    ctx.fillText(t('draft'), margin, width, width);
   }
 
   const img = document.createElement('img');
   img.src = qrCanvas.value.toDataURL();
   img.width = width;
   img.height = height;
-  // todo: could add alt tag here
+  img.alt = 'QR code for ODK Collect';
 
   imgHtml.value = img.outerHTML;
 });
@@ -131,8 +127,8 @@ onMounted(() => {
 <i18n lang="json5">
   {
     "en": {
-      // This is shown below a temporary QR code for a draft form.
-      "temporary": "Temporary draft"
+      // This is shown below a QR code for a draft form.
+      "draft": "Temporary draft"
     }
   }
 </i18n>
