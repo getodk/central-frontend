@@ -96,9 +96,9 @@ onMounted(() => {
     ctx.font = `${width * 0.15}px icomoon`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'red';
-    //const icon = '\uf044'; // edit pencil
-    const icon = '\uf040'; // pencil
+    //const icon = '\uf044'; // icon: edit pencil
+    //const icon = '\uf040'; // icon: pencil
+    const icon = '\u{1F4DD}'; // memo emoji
     ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
 
     // Write text at the bottom
@@ -131,8 +131,8 @@ onMounted(() => {
 <i18n lang="json5">
   {
     "en": {
-      // This is shown in a temporary QR code.
-      "temporary": "Draft Form"
+      // This is shown below a temporary QR code for a draft form.
+      "temporary": "Temporary draft"
     }
   }
 </i18n>
