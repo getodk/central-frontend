@@ -1455,7 +1455,7 @@
     },
     "CollectQr": {
       "draft": {
-        "string": "Temporary draft",
+        "string": "Temporary Draft",
         "developer_comment": "This is shown below a QR code for a draft form."
       }
     },

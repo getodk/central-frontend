@@ -66,14 +66,17 @@ onMounted(() => {
   qrCanvas.value.width = width;
   qrCanvas.value.height = height;
 
-  // Create the canvas and get the context
-  //qrCanvas.value = new OffscreenCanvas(size, size);
+  // Get the canvas context to render into
   const ctx = qrCanvas.value.getContext('2d');
 
-  // debugging background
+  // Background
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, width, height);
 
+  // The QR code renders at position (0,0) so in order to draw it with a margin,
+  // we need to transform the coordinate system by 15px horizontally and vertically.
+  // After drawing the QR code, we reset the transformation so the rest of the
+  // rendering (icon and text) is positioned relative to the entire image.
   ctx.translate(margin, margin);
   code.renderTo2dContext(ctx, props.cellSize);
   ctx.resetTransform();
@@ -92,8 +95,6 @@ onMounted(() => {
     ctx.font = `${width * 0.15}px icomoon`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    //const icon = '\uf044'; // icon: edit pencil
-    //const icon = '\uf040'; // icon: pencil
     const icon = '\u{1F4DD}'; // memo emoji
     ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
 
@@ -109,7 +110,7 @@ onMounted(() => {
   img.src = qrCanvas.value.toDataURL();
   img.width = width;
   img.height = height;
-  img.alt = 'QR code for ODK Collect';
+  img.alt = t('altText');
 
   imgHtml.value = img.outerHTML;
 });
@@ -128,7 +129,9 @@ onMounted(() => {
   {
     "en": {
       // This is shown below a QR code for a draft form.
-      "draft": "Temporary draft"
+      "draft": "Temporary Draft",
+      // @transifexKey component.FieldKeyQrPanel.title.managed
+      "altText": "Client Configuration Code"
     }
   }
 </i18n>
