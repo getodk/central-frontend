@@ -177,19 +177,23 @@ export default {
 @import '../../assets/scss/variables';
 
 #odata-data-access { float: right; }
+
 #form-submissions {
   .toggle-deleted-submissions {
-    margin-left: 5px;
+    margin-left: 8px;
 
-    &.btn-link{
+    &.btn-link {
       color: $color-danger;
     }
+
+    .icon-close { margin-left: 3px; }
   }
+
   .purge-description {
     display: inline;
     position: relative;
     top: -5px;
-    left: 5px;
+    left: 12px;
     font-size: 14px;
   }
 }
