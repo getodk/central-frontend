@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
         </enketo-fill>
         <template v-if="deletedSubmissionCount.dataExists">
-          <button v-if="canUpdate && (deletedSubmissionCount.value > 0 || deleted)" type="button"
+          <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
             class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
             @click="toggleDeleted">
             <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
@@ -98,15 +98,15 @@ export default {
       })
     });
 
-    const canUpdate = computed(() => project.dataExists && project.permits('submission.update'));
+    const canDelete = computed(() => project.dataExists && project.permits('submission.delete'));
 
     watchEffect(() => {
-      if (deleted.value && project.dataExists && !canUpdate.value) router.push('/');
+      if (deleted.value && project.dataExists && !canDelete.value) router.push('/');
     });
 
     return {
       project, form, keys, analyzeModal: modalData(),
-      deletedSubmissionCount, canUpdate, deleted
+      deletedSubmissionCount, canDelete, deleted
     };
   },
   computed: {
