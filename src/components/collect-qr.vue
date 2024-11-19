@@ -53,6 +53,10 @@ const imgHtml = ref('');
 
 const margin = 15;
 
+// The QR code is rendered to a canvas (possibly with additional icons and text)
+// and then the canvas data is converted to an image via toDataURL and used as the source
+// of an image tag.
+// It is assumed that props will not change and the QR image will only be rendered once.
 onMounted(() => {
   const code = qrcode(0, props.errorCorrectionLevel);
   const json = JSON.stringify(props.settings);
