@@ -133,8 +133,8 @@ const afterUpdate = (updatedEntity) => {
   // need it to.
   entity.currentVersion = updatedEntity.currentVersion;
   entity.updatedAt = updatedEntity.updatedAt;
-  // Update entity.conflict in case a conflict has been resolved by another
-  // user or in another tab.
+  // Update entity.conflict in case a conflict has been resolved by another user
+  // or in another tab.
   entity.conflict = updatedEntity.conflict;
 };
 

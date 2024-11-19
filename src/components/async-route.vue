@@ -70,15 +70,10 @@ export default {
       // The main use of this.$attrs is to pass along event listeners to the
       // component.
       return { ...this.props, ...this.$attrs, key: this.k };
-    },
-    componentNameAndKey() {
-      return [this.componentName, this.k];
     }
   },
   watch: {
-    componentNameAndKey([newComponentName], [oldComponentName]) {
-      if (newComponentName !== oldComponentName) this.load();
-    }
+    componentName: 'load'
   },
   created() {
     this.load();

@@ -362,7 +362,6 @@ export default {
     afterLinkDataset() {
       const { attachment } = this.linkDatasetModal;
       this.linkDatasetModal.hide();
-
       this.alert.success(this.$t('alert.link', {
         attachmentName: attachment.name
       }));
