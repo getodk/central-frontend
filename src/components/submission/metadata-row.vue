@@ -159,7 +159,11 @@ export default {
     max-width: 250px;
   }
 
-  .state-and-actions { min-width: 205px; }
+  .state-and-actions {
+    // Ensure that the column is wide enough that the .btn-group does not wrap.
+    min-width: 205px;
+    &:lang(id) { min-width: 221px; }
+  }
   .col-content {
     align-items: flex-start;
     display: flex;
