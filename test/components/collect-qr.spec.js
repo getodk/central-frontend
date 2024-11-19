@@ -1,5 +1,6 @@
 import jsQR from 'jsqr';
 import pako from 'pako';
+import { nextTick } from 'vue';
 
 import CollectQr from '../../src/components/collect-qr.vue';
 
@@ -33,8 +34,9 @@ const qrData = (component) => {
 };
 
 describe('CollectQr', () => {
-  it('renders an image', () => {
-    const { childNodes } = mountComponent().element;
+  it('renders an image', async () => {
+    const { childNodes } = mountComponent().get('span').element;
+    await nextTick(); // wait for QR image to render in canvas
     childNodes.length.should.equal(1);
     childNodes[0].tagName.should.equal('IMG');
   });
@@ -56,9 +58,11 @@ describe('CollectQr', () => {
     });
   });
 
-  it('uses the errorCorrectionLevel prop', () => {
+  it('uses the errorCorrectionLevel prop', async () => {
     const componentL = mountComponent({ errorCorrectionLevel: 'L' });
     const componentM = mountComponent({ errorCorrectionLevel: 'M' });
+
+    await nextTick(); // wait for QR image to render in canvas
 
     const widthL = Number.parseInt(
       componentL.element.querySelector('img').getAttribute('width'),
@@ -72,9 +76,11 @@ describe('CollectQr', () => {
     widthM.should.be.above(widthL);
   });
 
-  it('uses the cellSize prop', () => {
+  it('uses the cellSize prop', async () => {
     const component1 = mountComponent({ cellSize: 1 });
     const component2 = mountComponent({ cellSize: 2 });
+
+    await nextTick(); // wait for QR image to render in canvas
 
     const width1 = Number.parseInt(
       component1.element.querySelector('img').getAttribute('width'),

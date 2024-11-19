@@ -13,13 +13,17 @@ except according to the terms contained in the LICENSE file.
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <span class="collect-qr" v-html="imgHtml"></span>
+  <canvas v-show="false" ref="qrCanvas"></canvas>
 </template>
 <!-- eslint-enable vue/no-v-html -->
 
 <script setup>
-import { computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 defineOptions({
   name: 'CollectQr'
@@ -37,15 +41,82 @@ const props = defineProps({
   cellSize: {
     type: Number,
     required: true
+  },
+  draft: {
+    type: Boolean,
+    default: false
   }
 });
 
-const imgHtml = computed(() => {
+const qrCanvas = ref(null);
+const imgHtml = ref('');
+
+const margin = 15;
+
+// The QR code is rendered to a canvas (possibly with additional icons and text)
+// and then the canvas data is converted to an image via toDataURL and used as the source
+// of an image tag.
+// It is assumed that props will not change and the QR image will only be rendered once.
+onMounted(() => {
   const code = qrcode(0, props.errorCorrectionLevel);
   const json = JSON.stringify(props.settings);
   code.addData(btoa(pako.deflate(json, { to: 'string' })));
   code.make();
-  return code.createImgTag(props.cellSize, 15);
+
+  // Compute image size
+  // blocks (based on length of encoded data) * cell size + (2 * margin)
+  const width = code.getModuleCount() * props.cellSize + margin * 2;
+  const height = props.draft ? width + 20 : width;
+  qrCanvas.value.width = width;
+  qrCanvas.value.height = height;
+
+  // Get the canvas context to render into
+  const ctx = qrCanvas.value.getContext('2d');
+
+  // Background
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, width, height);
+
+  // The QR code renders at position (0,0) so in order to draw it with a margin,
+  // we need to transform the coordinate system by 15px horizontally and vertically.
+  // After drawing the QR code, we reset the transformation so the rest of the
+  // rendering (icon and text) is positioned relative to the entire image.
+  ctx.translate(margin, margin);
+  code.renderTo2dContext(ctx, props.cellSize);
+  ctx.resetTransform();
+
+  if (props.draft) {
+    // Draw outlined rounded white rect to put icon inside of
+    ctx.beginPath();
+    ctx.roundRect(width * 0.4, width * 0.4, width * 0.2, width * 0.2, [10, 10]);
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fill();
+
+    // Draw icon
+    ctx.font = `${width * 0.15}px icomoon`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const icon = '\u{1F4DD}'; // memo emoji
+    ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
+
+    // Write text at the bottom
+    ctx.font = '20px Monaco, Menlo, Consolas, "Courier New", monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'red';
+    ctx.fillText(t('draft'), margin, width, width);
+  }
+
+  const img = document.createElement('img');
+  img.src = qrCanvas.value.toDataURL();
+  img.width = width;
+  img.height = height;
+  img.alt = t('altText');
+
+  imgHtml.value = img.outerHTML;
 });
 
 </script>
@@ -57,3 +128,14 @@ const imgHtml = computed(() => {
 }
 
 </style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      // This is shown below a QR code for a draft form.
+      "draft": "Temporary Draft",
+      // @transifexKey component.FieldKeyQrPanel.title.managed
+      "altText": "Client Configuration Code"
+    }
+  }
+</i18n>

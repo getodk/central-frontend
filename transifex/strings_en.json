@@ -1453,6 +1453,12 @@
         }
       }
     },
+    "CollectQr": {
+      "draft": {
+        "string": "Temporary Draft",
+        "developer_comment": "This is shown below a QR code for a draft form."
+      }
+    },
     "ConfigError": {
       "title": {
         "string": "Error Loading Central",
