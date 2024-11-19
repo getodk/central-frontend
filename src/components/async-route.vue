@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="loading === 'tab'">
     <loading :state="showsLoading"/>
-    <component :is="component" v-if="component != null" v-bind="propsAndAttrs"/>
+    <component :is="component" v-if="component != null" v-bind="bindings"/>
   </div>
   <page-body v-else-if="showsLoading">
     <loading :state="true"/>
   </page-body>
-  <component :is="component" v-else-if="component != null" v-bind="propsAndAttrs"/>
+  <component :is="component" v-else-if="component != null" v-bind="bindings"/>
 </template>
 
 <script>
@@ -66,7 +66,7 @@ export default {
     };
   },
   computed: {
-    propsAndAttrs() {
+    bindings() {
       // The main use of this.$attrs is to pass along event listeners to the
       // component.
       return { ...this.props, ...this.$attrs, key: this.k };
