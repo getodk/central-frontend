@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { FilterPathExprNode } from '../../static/grammar/SyntaxNode.ts';
@@ -30,14 +31,12 @@ export class FilterPathExpressionEvaluator
 		this.filterExpression = createExpression(exprNode) as LocationPathExpressionEvaluator;
 	}
 
-	override evaluateNodes(context: EvaluationContext): Iterable<Node> {
+	override evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): Iterable<T> {
 		// TODO: this check may not be necessary
 		if (this.hasSteps) {
 			const filterContextResults = this.filterExpression.evaluate(context);
 
-			if (!(filterContextResults instanceof LocationPathEvaluation)) {
-				throw 'todo not a node-set context';
-			}
+			LocationPathEvaluation.assertInstance(context, filterContextResults);
 
 			return super.evaluateNodes(filterContextResults);
 		}

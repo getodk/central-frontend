@@ -33,7 +33,7 @@ const engineViolationMessage = <Role extends ValidationTextRole>(
 	role: Role
 ): Accessor<EngineViolationMessage<Role>> => {
 	const messageText = VALIDATION_TEXT[role];
-	const chunk = new TextChunk(context.root, 'literal', messageText);
+	const chunk = new TextChunk(context, 'literal', messageText);
 	const message = new TextRange('engine', role, [chunk]);
 
 	return () => message;
@@ -75,9 +75,8 @@ const createConstraintValidation = (
 		}
 
 		const isValid = createComputedExpression(context, constraint, {
-			arbitraryDependencies: [context],
+			defaultValue: true,
 		});
-
 		const message = createViolationMessage(context, 'constraintMsg', constraintMsg);
 
 		return createMemo(() => {

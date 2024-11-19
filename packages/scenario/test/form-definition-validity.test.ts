@@ -546,7 +546,7 @@ describe('TriggerableDagTest.java', () => {
 				 * Same notes as previous (then surprising) failure of cycle detecction.
 				 * At least we have a pattern!
 				 */
-				it.fails('should fail', async () => {
+				it('should fail', async () => {
 					// exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 
@@ -645,7 +645,7 @@ describe('TriggerableDagTest.java', () => {
 				 * Same notes as previous (then surprising) failure of cycle detecction.
 				 * At least we have a pattern!
 				 */
-				it.fails('should fail', async () => {
+				it('should fail', async () => {
 					// 	exceptionRule.expect(XFormParseException.class);
 					// exceptionRule.expectMessage("Cycle detected in form's relevant and calculation logic!");
 

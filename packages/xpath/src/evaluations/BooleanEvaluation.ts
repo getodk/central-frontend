@@ -1,7 +1,8 @@
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
-export class BooleanEvaluation extends ValueEvaluation<'BOOLEAN'> {
+export class BooleanEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'BOOLEAN'> {
 	readonly type = 'BOOLEAN';
 	readonly nodes = null;
 
@@ -10,7 +11,7 @@ export class BooleanEvaluation extends ValueEvaluation<'BOOLEAN'> {
 	protected readonly stringValue: string;
 
 	constructor(
-		readonly context: LocationPathEvaluation,
+		readonly context: LocationPathEvaluation<T>,
 		readonly value: boolean
 	) {
 		super();

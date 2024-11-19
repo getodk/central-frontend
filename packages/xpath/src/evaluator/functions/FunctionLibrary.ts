@@ -1,10 +1,7 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import type {
-	AnyFunctionImplementation,
-	EvaluableArgument,
-	FunctionImplementation,
-} from './FunctionImplementation.ts';
+import type { EvaluableArgument, FunctionImplementation } from './FunctionImplementation.ts';
 import { UnknownFunctionError } from './FunctionImplementation.ts';
 
 // TODO: memoized boxed name types?
@@ -16,7 +13,7 @@ interface QualifiedName {
 	readonly localName: LocalName;
 }
 
-export interface LibraryFunction extends AnyFunctionImplementation {
+export interface LibraryFunction extends FunctionImplementation {
 	readonly qualifiedName: QualifiedName;
 }
 
@@ -25,7 +22,7 @@ export class FunctionLibrary {
 
 	constructor(
 		readonly namespaceURI: string,
-		entries: readonly AnyFunctionImplementation[]
+		entries: readonly FunctionImplementation[]
 	) {
 		const implementations = new Map<LocalName, LibraryFunction>();
 
@@ -52,11 +49,11 @@ export class FunctionLibrary {
 		return this.implementations.has(localName);
 	}
 
-	call(
+	call<T extends XPathNode>(
 		localName: LocalName,
-		context: LocationPathEvaluation,
+		context: LocationPathEvaluation<T>,
 		args: readonly EvaluableArgument[]
-	): Evaluation {
+	): Evaluation<T> {
 		const implementation = this.implementations.get(localName);
 
 		if (implementation == null) {
@@ -66,7 +63,7 @@ export class FunctionLibrary {
 		return implementation.call(context, args);
 	}
 
-	getImplementation(localName: LocalName): FunctionImplementation<number> | null {
+	getImplementation(localName: LocalName): FunctionImplementation | null {
 		const implementation = this.implementations.get(localName);
 
 		return implementation ?? null;

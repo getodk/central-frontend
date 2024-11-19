@@ -1,16 +1,12 @@
-import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
-import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
-import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import type { Evaluation } from '../../evaluations/Evaluation.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import type { XPathDOMProvider } from '../../adapter/xpathDOMProvider.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { XFormsXPathEvaluator } from '../../index.ts';
 import { seededRandomize } from '../../lib/collections/sort.ts';
-import type { ContextNode, MaybeElementNode } from '../../lib/dom/types.ts';
-import type { ModelElement } from '../../xforms/XFormsXPathEvaluator.ts';
+import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 
 export const countNonEmpty = new NumberFunction(
 	'count-non-empty',
@@ -42,50 +38,31 @@ const assertArgument: AssertArgument = (index, arg) => {
 	}
 };
 
-type AssertIsLocationPathEvaluation = (
-	evaluation?: Evaluation
-) => asserts evaluation is LocationPathEvaluation;
-
-/**
- * @todo This is a concern in several `FunctionImplementation`s. It would be
- * much nicer if it were handled as part of the signature, then inferred in the
- * types and validated automatically at runtime. It would also make sense, as a
- * minor stopgap improvement, to generalize checks like this in a single place
- * (e.g. as a static method on {@link LocationPathEvaluation} itself). Deferred
- * here because there is exploratory work on both, but both are out of scope for
- * work in progress to support {@link indexedRepeat}.
- */
-const assertIsLocationPathEvaluation: AssertIsLocationPathEvaluation = (evaluation) => {
-	if (!(evaluation instanceof LocationPathEvaluation)) {
-		throw new Error('Expected a node-set result');
-	}
-};
-
 /**
  * Note: this function is not intended to be general outside of usage by
  * {@link indexedRepeat}.
  *
  * Evaluation of the provided argument is eager—i.e. materializing the complete
- * array of results, rather than the typical `Iterable<ContextNode>` produced in
- * most cases—because it is expected that in most cases the eagerness will not
- * be terribly expensive, and all results will usually be consumed, either to be
+ * array of results, rather than the typical `Iterable<T>` produced in most
+ * cases—because it is expected that in most cases the eagerness will not be
+ * terribly expensive, and all results will usually be consumed, either to be
  * indexed or filtered in other ways applicable at call sites.
  *
  * Function is named to reflect that expectation.
  */
-const evaluateArgumentToFilterableNodes = (
-	context: LocationPathEvaluation,
+const evaluateArgumentToFilterableNodes = <T extends XPathNode>(
+	context: LocationPathEvaluation<T>,
 	arg: EvaluableArgument
-): readonly ContextNode[] => {
+): readonly T[] => {
 	const evaluation = arg.evaluate(context);
 
-	assertIsLocationPathEvaluation(evaluation);
+	LocationPathEvaluation.assertInstance(context, evaluation);
 
 	return Array.from(evaluation.contextNodes);
 };
 
-interface EvaluatedIndexedRepeatArgumentPair {
-	readonly repeats: readonly ContextNode[];
+interface EvaluatedIndexedRepeatArgumentPair<T extends XPathNode> {
+	readonly repeats: readonly T[];
 	readonly position: number;
 }
 
@@ -98,17 +75,18 @@ type DepthSortResult = -1 | 0 | 1;
  * generally ought to be with current designs), but it would be nice to consider
  * how we'd address caching with these kinds of dynamics at play.
  */
-const compareContainmentDepth = (
-	{ repeats: a }: EvaluatedIndexedRepeatArgumentPair,
-	{ repeats: b }: EvaluatedIndexedRepeatArgumentPair
+const compareContainmentDepth = <T extends XPathNode>(
+	domProvider: XPathDOMProvider<T>,
+	{ repeats: a }: EvaluatedIndexedRepeatArgumentPair<T>,
+	{ repeats: b }: EvaluatedIndexedRepeatArgumentPair<T>
 ): DepthSortResult => {
 	for (const repeatA of a) {
 		for (const repeatB of b) {
-			if (repeatA.contains(repeatB)) {
+			if (domProvider.isDescendantNode(repeatA, repeatB)) {
 				return -1;
 			}
 
-			if (repeatB.contains(repeatA)) {
+			if (domProvider.isDescendantNode(repeatB, repeatA)) {
 				return 1;
 			}
 		}
@@ -145,11 +123,14 @@ export const indexedRepeat = new NodeSetFunction(
 		// Go beyond spec? Why the heck not! It's clearly a variadic design.
 		{ arityType: 'variadic', typeHint: 'any' },
 	],
-	(context, args) => {
+	<T extends XPathNode>(
+		context: LocationPathEvaluation<T>,
+		args: readonly EvaluableArgument[]
+	): readonly T[] => {
 		// First argument is `target` (per spec) of the deepest resolved repeat
 		const target = args[0]!;
 
-		let pairs: EvaluatedIndexedRepeatArgumentPair[] = [];
+		let pairs: Array<EvaluatedIndexedRepeatArgumentPair<T>> = [];
 
 		// Iterate through rest of arguments, collecting pairs of:
 		//
@@ -201,13 +182,15 @@ export const indexedRepeat = new NodeSetFunction(
 			});
 		}
 
+		const { domProvider } = context;
+
 		// Sort the results of each `repeatN`/`indexN` pair, by containment order.
 		//
 		// Note: the `repeatN`/`indexN` pairs can be supplied in any order (this is
 		// consistent with behavior in JavaRosa, likely as a side effect of the
 		// function being implemented there by transforming the expression to its
 		// LocationPath equivalent).
-		pairs = pairs.sort(compareContainmentDepth);
+		pairs = pairs.sort((pairA, pairB) => compareContainmentDepth(domProvider, pairA, pairB));
 
 		// Resolve repeats at the specified/evaluated position, in document depth
 		// order by:
@@ -218,7 +201,7 @@ export const indexedRepeat = new NodeSetFunction(
 		//
 		// 2. Selecting the repeat at the specified/evaluated position (of those
 		//    filtered in 1).
-		let repeatContextNode: ContextNode;
+		let repeatContextNode: T;
 
 		for (const [index, pair] of pairs.entries()) {
 			const { position } = pair;
@@ -227,7 +210,7 @@ export const indexedRepeat = new NodeSetFunction(
 
 			if (index > 0) {
 				repeats = pair.repeats.filter((repeat) => {
-					return repeatContextNode.contains(repeat);
+					return domProvider.isDescendantNode(repeatContextNode, repeat);
 				});
 			}
 
@@ -250,58 +233,23 @@ export const indexedRepeat = new NodeSetFunction(
 
 		// Filter only the target nodes contained by the deepest repeat context node.
 		return targetNodes.filter((targetNode) => {
-			return repeatContextNode.contains(targetNode);
+			return domProvider.isDescendantNode(repeatContextNode, targetNode);
 		});
 	}
 );
 
-interface InstanceElement extends LocalNamedElement<'instance'> {}
-
-const identifiedInstanceLookup = new ScopedElementLookup(':scope > instance[id]', 'instance[id]');
-
-type InstanceID = string;
-
-const instancesCache = new UpsertableWeakMap<
-	ModelElement,
-	ReadonlyMap<InstanceID | null, InstanceElement>
->();
-
-const getInstanceElementByID = (modelElement: ModelElement, id: string): Element | null => {
-	const instances = instancesCache.upsert(modelElement, () => {
-		const instanceElements = Array.from(
-			identifiedInstanceLookup.getElements<InstanceElement>(modelElement)
-		);
-
-		return new Map(
-			instanceElements.map((element) => {
-				return [element.getAttribute('id'), element];
-			})
-		);
-	});
-
-	return instances.get(id) ?? null;
-};
-
 export const instance = new NodeSetFunction(
 	'instance',
 	[{ arityType: 'required' }],
-	(context, [idExpression]): readonly Element[] => {
+	(context, [idExpression]) => {
 		const id = idExpression!.evaluate(context).toString();
-		const { evaluator } = context;
+		const instanceElement = XFormsXPathEvaluator.getSecondaryInstance(context, id);
 
-		if (!(evaluator instanceof XFormsXPathEvaluator)) {
-			throw new Error('itext not available');
-		}
-
-		const { modelElement } = evaluator;
-
-		if (modelElement == null) {
+		if (instanceElement == null) {
 			return [];
 		}
 
-		const instanceElement = getInstanceElementByID(modelElement, id);
-
-		return instanceElement == null ? [] : [instanceElement];
+		return [instanceElement];
 	}
 );
 
@@ -317,7 +265,7 @@ export const once = new StringFunction(
 			throw 'todo once no context';
 		}
 
-		const string = contextNode.textContent ?? '';
+		const string = context.domProvider.getNodeValue(contextNode);
 
 		if (string === '') {
 			// TODO: probably memoize, it's at least sort of implied by the name
@@ -328,7 +276,44 @@ export const once = new StringFunction(
 	}
 );
 
-// TODO: this probably belongs in `fn`?
+/**
+ * @todo this is a weird edge case, which we shouldn't handle here! It isn't
+ * even something `@getodk/xpath` should know about! It's unclear from a spec
+ * context what the appropriate behavior would/should be. What it's checking for
+ * is evaluation of an expression `position(current())` or equivalent, in the
+ * context of a `@getodk/xforms-engine`'s representation of a "repeat range".
+ * That representation is:
+ *
+ * 1. Currently associated with a WHAT Working Group DOM comment node.
+ * 2. Shortly going to be associated with the `@getodk/xforms-engine`
+ *    representation of the same semantic node kind.
+ *
+ * We treat this as a special case, returning the current context position, as
+ * it is the expected behavior. We call it out separately so that it won't
+ * prevent us from flagging other unusual usage of arity-1 `position` with
+ * non-named nodes (for which, if there is a use case, it is not presently
+ * addressed by the ODK XForms
+ * {@link https://getodk.github.io/xforms-spec/#fn:position | arity-1 spec extension}).
+ */
+const isLikelyRepeatRangeEvaluationContextCommentMarkerNode = <T extends XPathNode>(
+	context: LocationPathEvaluation<T>,
+	node: T
+): boolean => {
+	const { evaluationContextNode } = context;
+
+	return context.domProvider.isComment(node) && node === evaluationContextNode;
+};
+
+/**
+ * ~~@todo this probably belongs in `fn`?~~
+ *
+ * @todo the baseline behavior of this belongs in `fn`. The contiguous same-name
+ * node behavior belongs here, presumably as an override.
+ *
+ * @todo we have at least a couple other override cases. They all extend the
+ * baseline behavior. Consider ability to call into overridden baseline (similar
+ * to `super` in class inheritance?).
+ */
 export const position = new NumberFunction(
 	'position',
 	[{ arityType: 'optional' }],
@@ -339,9 +324,7 @@ export const position = new NumberFunction(
 
 		const results = expression.evaluate(context);
 
-		if (!(results instanceof LocationPathEvaluation)) {
-			throw 'todo not a node-set';
-		}
+		LocationPathEvaluation.assertInstance(context, results);
 
 		const [first, next] = results.values();
 
@@ -354,17 +337,35 @@ export const position = new NumberFunction(
 			throw 'todo enforce single node(?)';
 		}
 
+		const { domProvider } = context;
 		const { value } = first;
-		const { nodeName } = value as MaybeElementNode;
 
-		let currentNode: MaybeElementNode | null = value as MaybeElementNode;
-		let result = 1;
-
-		while ((currentNode = currentNode!.previousSibling as MaybeElementNode | null) != null) {
-			if (currentNode.nodeName === nodeName) {
-				result += 1;
+		if (!domProvider.isQualifiedNamedNode(value)) {
+			if (isLikelyRepeatRangeEvaluationContextCommentMarkerNode(context, value)) {
+				return context.contextPosition();
 			}
+
+			throw new Error(
+				'Cannot get position among contiguous nodes with same name: not a named node.'
+			);
 		}
+
+		const nodeName = domProvider.getQualifiedName(value);
+
+		let currentNode = value;
+		let result = 0;
+
+		do {
+			result += 1;
+
+			const previousNode = domProvider.getPreviousSiblingElement(currentNode);
+
+			if (previousNode == null) {
+				break;
+			}
+
+			currentNode = previousNode;
+		} while (domProvider.getQualifiedName(currentNode) === nodeName);
 
 		return result;
 	}
@@ -379,9 +380,7 @@ export const randomize = new NodeSetFunction(
 	(context, [expression, seedExpression]) => {
 		const results = expression!.evaluate(context);
 
-		if (!(results instanceof LocationPathEvaluation)) {
-			throw 'todo (not a node-set)';
-		}
+		LocationPathEvaluation.assertInstance(context, results);
 
 		const nodeResults = Array.from(results.values());
 		const nodes = nodeResults.map(({ value }) => value);

@@ -4,9 +4,6 @@ import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { isNamespaceNode, isProcessingInstructionNode } from '../../lib/dom/predicates.ts';
-import { sortDocumentOrder } from '../../lib/dom/sort.ts';
-import type { MaybeNamedNode } from '../../lib/dom/types.ts';
 
 const { toCount } = reduce;
 
@@ -31,7 +28,7 @@ export const current = new NodeSetFunction('current', [], (context) => {
 export const id = new NodeSetFunction(
 	'id',
 	[{ arityType: 'required' }],
-	(context, [expression]): Iterable<Node> => {
+	(context, [expression]) => {
 		const idArgument = expression!.evaluate(context);
 		const idArguments = idArgument.type === 'NODE' ? Array.from(idArgument) : [idArgument.first()];
 		const elementIds = Array.from(
@@ -46,9 +43,9 @@ export const id = new NodeSetFunction(
 			return [];
 		}
 
-		const { contextDocument } = context;
+		const { contextDocument, domProvider } = context;
 		const elements = elementIds.flatMap((elementId) => {
-			const element = contextDocument.getElementById(elementId);
+			const element = domProvider.getElementByUniqueId(contextDocument, elementId);
 
 			if (element == null) {
 				return [];
@@ -57,7 +54,7 @@ export const id = new NodeSetFunction(
 			return element;
 		});
 
-		return sortDocumentOrder(elements);
+		return context.domProvider.sortInDocumentOrder(elements);
 	}
 );
 
@@ -79,23 +76,18 @@ export const localName = new StringFunction(
 			return '';
 		}
 
-		if (
-			node.nodeType !== Node.ELEMENT_NODE &&
-			node.nodeType !== Node.ATTRIBUTE_NODE &&
-			node.nodeType !== Node.PROCESSING_INSTRUCTION_NODE
-		) {
-			return '';
+		const { domProvider } = context;
+
+		if (domProvider.isQualifiedNamedNode(node)) {
+			return domProvider.getLocalName(node);
 		}
 
-		// prettier-ignore
-		const name =
-			isNamespaceNode(node)
-				? ''
-			: isProcessingInstructionNode(node)
-				? node.nodeName
-				: (node as MaybeNamedNode).localName ?? '';
+		if (domProvider.isProcessingInstruction(node)) {
+			return domProvider.getProcessingInstructionName(node);
+		}
 
-		return name;
+		// TODO: double check expected behavior with namespace nodes
+		return '';
 	}
 );
 
@@ -115,19 +107,17 @@ export const name = new StringFunction(
 			return '';
 		}
 
-		if (
-			node.nodeType !== Node.ELEMENT_NODE &&
-			node.nodeType !== Node.ATTRIBUTE_NODE &&
-			node.nodeType !== Node.PROCESSING_INSTRUCTION_NODE
-		) {
-			return '';
+		const { domProvider } = context;
+
+		if (domProvider.isQualifiedNamedNode(node)) {
+			return domProvider.getQualifiedName(node);
 		}
 
-		if (isNamespaceNode(node)) {
-			return '';
+		if (domProvider.isProcessingInstruction(node)) {
+			return domProvider.getProcessingInstructionName(node);
 		}
 
-		return (node as MaybeNamedNode).nodeName ?? '';
+		return '';
 	}
 );
 
@@ -147,11 +137,13 @@ export const namespaceURI = new StringFunction(
 			return '';
 		}
 
-		if (isNamespaceNode(node)) {
-			return '';
+		const { domProvider } = context;
+
+		if (domProvider.isQualifiedNamedNode(node)) {
+			return domProvider.getNamespaceURI(node) ?? '';
 		}
 
-		return (node as MaybeNamedNode).namespaceURI ?? '';
+		return '';
 	}
 );
 

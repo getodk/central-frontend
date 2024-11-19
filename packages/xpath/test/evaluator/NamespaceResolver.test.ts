@@ -1,9 +1,12 @@
 import { xml } from '@getodk/common/test/factories/xml.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
+import type { DefaultDOMAdapterNode } from '../../src/adapter/defaults.ts';
+import { DEFAULT_DOM_PROVIDER } from '../../src/adapter/defaults.ts';
+import { DefaultEvaluator } from '../../src/evaluator/DefaultEvaluator.ts';
 import { NamespaceResolver, staticNamespaces } from '../../src/evaluator/NamespaceResolver.ts';
 
 describe('NamespaceResolver', () => {
-	let resolver: NamespaceResolver;
+	let resolver: NamespaceResolver<DefaultDOMAdapterNode>;
 
 	const ROOT_NAMESPACE_DEFAULT = 'https://root.namespace/';
 	const ROOT_NAMESPACE_A = 'https://root.namespace/a';
@@ -25,10 +28,18 @@ describe('NamespaceResolver', () => {
 			/>
 		</root>
 	`;
-	const UNPREFIXED_ELEMENT = TEST_DOCUMENT.documentElement.firstElementChild;
+	const { firstElementChild } = TEST_DOCUMENT.documentElement;
+
+	assert(firstElementChild);
+
+	const UNPREFIXED_ELEMENT = firstElementChild;
 
 	beforeEach(() => {
-		resolver = new NamespaceResolver(TEST_DOCUMENT);
+		const rootNode = TEST_DOCUMENT;
+		const evaluator = new DefaultEvaluator({ rootNode });
+		const context = evaluator.getEvaluationContext(rootNode, rootNode);
+
+		resolver = context.namespaceResolver;
 	});
 
 	it('resolves the default namespace of the document', () => {
@@ -65,7 +76,7 @@ describe('NamespaceResolver', () => {
 
 	describe('nested element context', () => {
 		beforeEach(() => {
-			resolver = new NamespaceResolver(TEST_DOCUMENT, UNPREFIXED_ELEMENT);
+			resolver = NamespaceResolver.from(DEFAULT_DOM_PROVIDER, TEST_DOCUMENT, UNPREFIXED_ELEMENT);
 		});
 
 		const nestedCases = [

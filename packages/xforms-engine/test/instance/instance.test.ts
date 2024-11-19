@@ -17,6 +17,7 @@ import type { AnyNode, RootNode, StringNode } from '../../src/index.ts';
 import { initializeForm } from '../../src/index.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
+import type { AnyNode as AnyPrimaryInstanceNode } from '../../src/instance/hierarchy.ts';
 
 interface IntializedTestForm {
 	readonly dispose: VoidFunction;
@@ -60,10 +61,10 @@ const initializeTestForm = async (xformXML: string): Promise<IntializedTestForm>
 describe('Form instance state', () => {
 	let testForm: IntializedTestForm;
 
-	const getNodeByReference = <T extends AnyNode = AnyNode>(reference: string): T | null => {
-		const [node] = testForm.internalRoot.getNodesByReference(new WeakSet(), reference);
-
-		return (node ?? null) as T | null;
+	const getNodeByReference = (reference: string): AnyNode | null => {
+		return testForm.internalRoot.evaluator.evaluateNode<Extract<AnyPrimaryInstanceNode, AnyNode>>(
+			reference
+		);
 	};
 
 	const getStringNode = (reference: string): StringNode => {
@@ -82,7 +83,7 @@ describe('Form instance state', () => {
 
 	const getPrimaryInstanceValue = (node: AnyNode | null): string => {
 		if (node instanceof InstanceNode) {
-			return node.contextNode.textContent!;
+			return node.getXPathValue();
 		}
 
 		throw new Error('Cannot get internal primary instance state from node');

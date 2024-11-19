@@ -189,15 +189,13 @@ export interface BaseNode {
 	// 2. If `parent` does become nullable state, how best to convey the same
 	//    information for removed descendants. Some ideas:
 	//
-	//    - Apply null-as-removed recursively. This wouldn't technically be true
-	//      for the engine's current use of a DOM backing store (but that's an
-	//      implementation detail clients don't/shouldn't care about).
+	//    - Apply null-as-removed recursively.
 	//
 	//    - Borrow the browser DOM's notion of node "connected"-ness. When a node
 	//      is removed, its `isConnected` property is `false`. The same is true
 	//      for any of its descendants, even though they retain their own direct
 	//      parent reference.
-	readonly parent: BaseNode | null;
+	readonly parent: unknown;
 
 	/**
 	 * Each node provides a discrete object representing the stateful aspects\* of

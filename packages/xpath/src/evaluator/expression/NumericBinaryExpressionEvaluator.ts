@@ -1,4 +1,5 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import type {
@@ -42,7 +43,7 @@ export class NumericBinaryExpressionEvaluator<
 		this.operation = node.type.replace('_expr', '') as NumericOperation<Node>;
 	}
 
-	evaluate(context: EvaluationContext): NumberEvaluation {
+	evaluate<T extends XPathNode>(context: EvaluationContext<T>): NumberEvaluation<T> {
 		const lhsNumberValue = this.lhs.evaluate(context).toNumber();
 
 		if (Number.isNaN(lhsNumberValue)) {

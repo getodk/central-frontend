@@ -1,17 +1,15 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
-import type { SelectItem } from '../../index.ts';
+import type { ActiveLanguage, SelectItem } from '../../index.ts';
+import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
+import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
 import type { SelectField } from '../../instance/SelectField.ts';
-import type {
-	EvaluationContext,
-	EvaluationContextRoot,
-} from '../../instance/internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../../instance/internal-api/SubscribableDependency.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
+import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/select/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/select/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
@@ -20,8 +18,8 @@ import { createTextRange } from './text/createTextRange.ts';
 
 type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
 
-const derivedItemLabel = (context: EvaluationContext, value: string): DerivedItemLabel => {
-	const chunk = new TextChunk(context.root, 'literal', value);
+const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
+	const chunk = new TextChunk(context, 'literal', value);
 
 	return new TextRange('form-derived', 'item-label', [chunk]);
 };
@@ -61,23 +59,21 @@ const createTranslatedStaticSelectItems = (
 };
 
 class ItemsetItemEvaluationContext implements EvaluationContext {
+	readonly isAttached: Accessor<boolean>;
 	readonly scope: ReactiveScope;
-	readonly evaluator: XFormsXPathEvaluator;
-	readonly root: EvaluationContextRoot;
+	readonly evaluator: EngineXPathEvaluator;
 	readonly contextReference: Accessor<string>;
+	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
-		private readonly selectField: SelectField,
-		readonly contextNode: Node
+		selectField: SelectField,
+		readonly contextNode: EngineXPathNode
 	) {
+		this.isAttached = selectField.isAttached;
 		this.scope = selectField.scope;
 		this.evaluator = selectField.evaluator;
-		this.root = selectField.root;
 		this.contextReference = selectField.contextReference;
-	}
-
-	getSubscribableDependenciesByReference(reference: string): readonly SubscribableDependency[] {
-		return this.selectField.getSubscribableDependenciesByReference(reference);
+		this.getActiveLanguage = selectField.getActiveLanguage;
 	}
 }
 
@@ -107,14 +103,18 @@ const createItemsetItems = (
 	itemset: ItemsetDefinition
 ): Accessor<readonly ItemsetItem[]> => {
 	return selectField.scope.runTask(() => {
-		const itemNodes = createComputedExpression(selectField, itemset.nodes);
-		const itemsCache = new UpsertableMap<Node, ItemsetItem>();
+		const itemNodes = createComputedExpression(selectField, itemset.nodes, {
+			defaultValue: [],
+		});
+		const itemsCache = new UpsertableMap<EngineXPathNode, ItemsetItem>();
 
 		return createMemo(() => {
 			return itemNodes().map((itemNode) => {
 				return itemsCache.upsert(itemNode, () => {
 					const context = new ItemsetItemEvaluationContext(selectField, itemNode);
-					const value = createComputedExpression(context, itemset.value);
+					const value = createComputedExpression(context, itemset.value, {
+						defaultValue: '',
+					});
 					const label = createSelectItemsetItemLabel(context, itemset, value);
 
 					return {

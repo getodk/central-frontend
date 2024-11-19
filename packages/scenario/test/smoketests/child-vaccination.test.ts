@@ -2,6 +2,7 @@ import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { AnyNode, RepeatInstanceNode } from '@getodk/xforms-engine';
 import { afterEach, assert, describe, expect, it } from 'vitest';
+import type { ValueNodeAnswer } from '../../src/answer/ValueNodeAnswer.ts';
 import { LocalDate } from '../../src/java/time/LocalDate.ts';
 import { Consumer } from '../../src/java/util/function/Consumer.ts';
 import { Scenario as BaseScenario } from '../../src/jr/Scenario.ts';
@@ -24,40 +25,6 @@ const naiveStripPositionalPredicates = (expression: string): string => {
 	return expression.replaceAll(/\[\d+\]/g, '');
 };
 
-/**
- * **PORTING NOTES**
- *
- * This smoke test is intentionally ported in an incomplete state, pending
- * progress on whichever aspects of functionality are currently blocking it from
- * proceeding. Its incompleteness is an acknowledgement that the set of blocking
- * functionality is not presently known, and that the effort to complete it will
- * be better spent as each terminal blocker is cleared, revealing any remaining
- * blockers as they arise.
- *
- * To the extent possible, it's been ported in a way to make updating it
- * relatively straightforward as the features it depends on become available.
- *
- * The test itself is currently fibbing about its status: it passes, with a call
- * to a locally assigned {@link it.fails}. This allows us to identify the
- * **current expected failure mode**, prompting updates to the test when that
- * known failure mode changes.
- *
- * @todo We'd benefit here and in many other cases from being able to express
- * these semantics with the real {@link baseIt.fails | `it.fails`} API. We
- * should consider whether there is a way to achieve that without fibbing, and
- * possibly file an issue with Vitest if not.
- */
-class IncompleteTestPortError extends Error {
-	constructor(pendingFunctionality: string) {
-		const message = [
-			'Test port is incomplete. If this error condition has been reached, some aspect previously blocking the test from proceeding is no longer blocking it! Update the test to proceed through the remaining unblocked steps.',
-			`Pending functionality: ${pendingFunctionality}`,
-		].join('\n\n');
-
-		super(message);
-	}
-}
-
 const refSingletons = new UpsertableMap<string, JRTreeReference>();
 
 class JRTreeReference extends BaseJRTreeReference {
@@ -71,10 +38,8 @@ class JRTreeReference extends BaseJRTreeReference {
 		return this.xpathReference === other.xpathReference;
 	}
 
-	override toString(includePredicates: true, zeroIndexMult: true): string {
-		throw new IncompleteTestPortError(
-			`Pending - cast to string with includePredicates: ${includePredicates}, zeroIndexMult: ${zeroIndexMult}`
-		);
+	override toString(): string {
+		return this.xpathReference;
 	}
 }
 
@@ -211,6 +176,30 @@ class Scenario extends BaseScenario {
 
 		return super.next(expectReference);
 	}
+
+	private matchNextReference(possibleReferences: readonly string[]): string | null {
+		const nextReference = this.nextRef().xpathReference;
+
+		for (const possibleReference of possibleReferences) {
+			if (possibleReference === nextReference) {
+				return possibleReference;
+			}
+		}
+
+		return null;
+	}
+
+	answerIfNext(optionalReference: string, answer: unknown): ValueNodeAnswer | null {
+		const nextReference = this.matchNextReference([optionalReference]);
+
+		if (nextReference != null) {
+			this.next(nextReference);
+
+			return this.answer(answer);
+		}
+
+		return null;
+	}
 }
 
 const DOB_DAY_MONTH_TYPE_1_REF = getRef('/data/household/child_repeat/dob_day_1');
@@ -255,18 +244,18 @@ class HealthRecord {
 				break;
 
 			case HealthRecordValue.VACCINATION_CARD:
-				scenario.next();
+				scenario.next(`${childRepeatPath}/health_card`);
 				scenario.answer('no');
-				scenario.next();
+				scenario.next(`${childRepeatPath}/ever_had_card`);
 				scenario.answer('yes');
 				break;
 
 			case HealthRecordValue.HEALTH_CLINIC:
-				scenario.next();
+				scenario.next(`${childRepeatPath}/health_card`);
 				scenario.answer('no');
-				scenario.next();
+				scenario.next(`${childRepeatPath}/ever_had_card`);
 				scenario.answer('no');
-				scenario.next();
+				scenario.next(`${childRepeatPath}/ever_been_clinic`);
 				scenario.answer('yes');
 				break;
 
@@ -326,20 +315,12 @@ class Vaccine implements VaccineOptions {
 		this.measles = options.measles;
 	}
 
-	visit(scenario: Scenario): void {
+	visit(scenario: Scenario, childRepeatPath: string): void {
 		const { diphteriaFirst, diphteriaThird, measles } = this;
-		// Answer questions until there's no more vaccination related questions
-		while (!Vaccine.END_OF_VISIT_REFS.includes(scenario.nextRef().genericize())) {
-			scenario.next();
 
-			if (scenario.refAtIndex().genericize().equals(VACCINATION_PENTA1_REF)) {
-				scenario.answer(diphteriaFirst ? 'yes' : 'no');
-			} else if (scenario.refAtIndex().genericize().equals(VACCINATION_PENTA3_REF)) {
-				scenario.answer(diphteriaThird ? 'yes' : 'no');
-			} else if (scenario.refAtIndex().genericize().equals(VACCINATION_MEASLES_REF)) {
-				scenario.answer(measles ? 'yes' : 'no');
-			}
-		}
+		scenario.answerIfNext(`${childRepeatPath}/penta1`, diphteriaFirst ? 'yes' : 'no');
+		scenario.answerIfNext(`${childRepeatPath}/penta3`, diphteriaThird ? 'yes' : 'no');
+		scenario.answerIfNext(`${childRepeatPath}/mcv1`, measles ? 'yes' : 'no');
 	}
 }
 
@@ -416,13 +397,17 @@ const answerChild_ageInMonths = (
 		answerAgeInMonths(scenario, childRepeatPath, ageInMonths);
 
 		if (scenario.nextRef().genericize().equals(VACCINATION_PENTA1_REF)) {
-			vaccines.visit(scenario);
+			vaccines.visit(scenario, childRepeatPath);
 		}
 
-		if ([NEXT_CHILD_REF, NEXT_CHILD_NO_MOTHER_REF].includes(scenario.nextRef().genericize())) {
-			scenario.next();
-		} else if (!scenario.nextRef().genericize().equals(FINAL_FLAT_REF)) {
-			expect.fail('Unexpected next ref ' + scenario.nextRef().toString(true, true) + ' at index');
+		const nextRef = scenario.nextRef().genericize();
+
+		if (nextRef.equals(NEXT_CHILD_REF)) {
+			scenario.next(`${childRepeatPath}/nextChild`);
+		} else if (nextRef.equals(NEXT_CHILD_NO_MOTHER_REF)) {
+			scenario.next(`${childRepeatPath}/nextChild_no_mother`);
+		} else if (!nextRef.equals(FINAL_FLAT_REF)) {
+			expect.fail('Unexpected next ref ' + nextRef.toString() + ' at index');
 		}
 	});
 };
@@ -457,10 +442,11 @@ const answerDateOfBirth = (scenario: Scenario, childRepeatPath: string, dob: Loc
 		case 4:
 		case 6:
 		case 9:
+		case 11:
 			dobDayPath = `${childRepeatPath}/dob_day_2`;
 			break;
 
-		default: {
+		case 2: {
 			const dobYear = dob.year();
 			const leap = dobYear === 2016 || dobYear === 2020 || dobYear === 2024 || dobYear === 2028;
 
@@ -469,6 +455,15 @@ const answerDateOfBirth = (scenario: Scenario, childRepeatPath: string, dob: Loc
 			} else {
 				dobDayPath = `${childRepeatPath}/dob_day_4`;
 			}
+
+			break;
+		}
+
+		// This should not happen! But if it does, we've broken something in the
+		// ported test logic as we've updated it.
+		default: {
+			dobDayPath = '/UNREACHABLE';
+			expect(dob.monthValue()).toBeNaN();
 		}
 	}
 
@@ -486,7 +481,7 @@ const getChildRepeatPath = (scenario: Scenario, childIndex: number): string => {
 	while (currentHousehold == null) {
 		currentNode = currentNode.parent;
 
-		if (currentNode == null) {
+		if (currentNode == null || currentNode.nodeType === 'root') {
 			break;
 		}
 
@@ -509,20 +504,6 @@ const getChildRepeatPath = (scenario: Scenario, childIndex: number): string => {
 	return `${currentHouseholdPath}/child_repeat[${childRepeatPosition}]`;
 };
 
-const checkKnownFailure = (scenario: Scenario, childRepeatPath: string) => {
-	const repeatInstance = scenario.getInstanceNode(childRepeatPath);
-
-	assert(repeatInstance.nodeType === 'repeat-instance');
-
-	if (!repeatInstance.currentState.relevant) {
-		throw KnownFailureError.from(
-			new Error(
-				`Repeat ${childRepeatPath} should be relevant. Failure here occurs due to evaluation of relevant expression before repeat instance node is attached to the DOM backing store, and not rerun once attached. This is HIGHLY LIKELY to be solved when we decouple from the browser/XML/WHATWG DOM.`
-			)
-		);
-	}
-};
-
 const answerChild_dob = (
 	scenario: Scenario,
 	healthRecord: HealthRecord,
@@ -535,8 +516,6 @@ const answerChild_dob = (
 		const name = `CHILD ${i} - Age ${ageInMonths} months - ${sex.getName()}`;
 
 		const childRepeatPath = getChildRepeatPath(scenario, i);
-
-		checkKnownFailure(scenario, childRepeatPath);
 
 		scenario.trace(name);
 		scenario.next(childRepeatPath);
@@ -551,7 +530,7 @@ const answerChild_dob = (
 		if (scenario.nextRef().genericize().equals(NOT_ELIG_NOTE_REF)) {
 			scenario.next();
 		} else if (scenario.nextRef().genericize().equals(VACCINATION_PENTA1_REF)) {
-			vaccines.visit(scenario);
+			vaccines.visit(scenario, childRepeatPath);
 		}
 
 		const nextRef = scenario.nextRef().genericize();
@@ -560,8 +539,8 @@ const answerChild_dob = (
 			scenario.next(`${childRepeatPath}/nextChild`);
 		} else if (nextRef.equals(NEXT_CHILD_NO_MOTHER_REF)) {
 			scenario.next(`${childRepeatPath}/nextChild_no_mother`);
-		} else if (!scenario.nextRef().genericize().equals(FINAL_FLAT_REF)) {
-			expect.fail('Unexpected next ref ' + scenario.nextRef().toString(true, true) + ' at index');
+		} else if (!nextRef.equals(FINAL_FLAT_REF)) {
+			expect.fail('Unexpected next ref ' + nextRef.toString() + ' at index');
 		}
 	});
 };
@@ -702,25 +681,26 @@ describe('ChildVaccinationTest.java', () => {
 
 	interface FixtureCase {
 		readonly fixtureName: ChildVaccinationTestFixtureName;
-		readonly skipCondition: boolean;
-		readonly expectFailure: boolean;
+
+		/**
+		 * @see {@link https://github.com/getodk/web-forms/issues/205}
+		 */
+		readonly failureMode: 'INFINITE_LOOP' | null;
 	}
 
 	describe.each<FixtureCase>([
-		{ fixtureName: 'child_vaccination_VOL_tool_v12.xml', skipCondition: true, expectFailure: true },
+		{
+			fixtureName: 'child_vaccination_VOL_tool_v12.xml',
+			failureMode: 'INFINITE_LOOP',
+		},
 		{
 			fixtureName: 'child_vaccination_VOL_tool_v12-alt.xml',
-			skipCondition: false,
-			expectFailure: true,
+			failureMode: null,
 		},
-	])('fixture: $fixtureName', ({ fixtureName, skipCondition, expectFailure }) => {
+	])('fixture: $fixtureName', ({ fixtureName, failureMode }) => {
 		let testFn: KnownFailureTestAPI;
 
-		if (skipCondition) {
-			testFn = (description, fn) => {
-				return it.skipIf(skipCondition)(description, fn);
-			};
-		} else if (expectFailure) {
+		if (failureMode != null) {
 			testFn = (description, fn) => {
 				return it(description, async () => {
 					let unexpectedFailureMessage: string | null = null;
@@ -757,7 +737,27 @@ describe('ChildVaccinationTest.java', () => {
 			const scenario = await Scenario.init(fixtureName);
 
 			scenario.next('/data/building_type');
-			scenario.answer('multi');
+
+			const answerBuildTypeMulti = () => {
+				scenario.answer('multi');
+			};
+
+			if (failureMode === 'INFINITE_LOOP') {
+				try {
+					answerBuildTypeMulti();
+
+					throw new Error('Expected failure mode has changed');
+				} catch (error) {
+					if (error instanceof Error && error.message.toLowerCase().includes('infinite loop')) {
+						throw KnownFailureError.from(error);
+					}
+
+					throw error;
+				}
+			} else {
+				answerBuildTypeMulti();
+			}
+
 			scenario.next('/data/not_single');
 			scenario.next('/data/not_single/gps');
 			scenario.answer('1.234 5.678');
@@ -843,12 +843,12 @@ describe('ChildVaccinationTest.java', () => {
 
 			// region Go to the end of the form
 
-			scenario.next();
+			scenario.next(`/data/household[${households.length}]/finished2`);
 
 			// assertThat(scenario.refAtIndex().genericize(), is(FINISHED_FORM_REF));
 			expect(scenario.refAtIndex().genericize()).toEqual(FINISHED_FORM_REF);
 
-			scenario.next();
+			scenario.next('END_OF_FORM');
 
 			// endregion
 		});

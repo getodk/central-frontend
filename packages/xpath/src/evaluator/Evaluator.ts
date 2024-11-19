@@ -1,117 +1,136 @@
 import { Temporal } from '@js-temporal/polyfill';
-import type { EvaluationContextOptions } from '../context/EvaluationContext.ts';
+import type { UnwrapAdapterNode } from '../adapter/interface/XPathCustomUnwrappableNode.ts';
+import type { XPathDOMAdapter } from '../adapter/interface/XPathDOMAdapter.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
+import type {
+	AdapterElement,
+	AdapterParentNode,
+} from '../adapter/interface/XPathNodeKindAdapter.ts';
+import type { XPathDOMProvider } from '../adapter/xpathDOMProvider.ts';
+import { xpathDOMProvider } from '../adapter/xpathDOMProvider.ts';
 import { EvaluationContext } from '../context/EvaluationContext.ts';
 import { expressionParser } from '../expressionParser.ts';
 import { fn } from '../functions/fn/index.ts';
-import type { AnyParentNode, ContextNode } from '../lib/dom/types.ts';
-import type {
-	AnyXPathEvaluator,
-	XPathNSResolver,
-	XPathNamespaceResolverObject,
-	XPathResultType,
-} from '../shared/index.ts';
 import type { ExpressionParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection.ts';
-import { ResultTypes } from './result/ResultType.ts';
-import { toXPathResult } from './result/index.ts';
+import { toXPathEvaluationResult } from './result/toXPathEvaluationResult.ts';
+import {
+	XPATH_EVALUATION_RESULT,
+	type XPathEvaluationResult,
+	type XPathEvaluationResultType,
+} from './result/XPathEvaluationResult.ts';
 
 const functions = new FunctionLibraryCollection([fn]);
 
-export interface EvaluatorOptions {
+// prettier-ignore
+type EvaluatorRootNodeOption<T extends XPathNode> =
+	| AdapterParentNode<T>
+	| UnwrapAdapterNode<AdapterParentNode<T>>;
+
+export interface EvaluatorOptions<T extends XPathNode> {
+	readonly domAdapter: XPathDOMAdapter<T>;
 	readonly functions?: FunctionLibraryCollection;
 	readonly parseOptions?: ParseOptions;
-	readonly rootNode?: AnyParentNode | null | undefined;
+	readonly rootNode?: EvaluatorRootNodeOption<T> | null | undefined;
 	readonly timeZoneId?: string | undefined;
 }
 
-type MaybeNullishEntry<T> = readonly [key: string, value: T | null | undefined];
-type NonNullishEntry<T> = readonly [key: string, value: T];
-
-const isNonNullEntry = <T>(entry: MaybeNullishEntry<T>): entry is NonNullishEntry<T> =>
-	entry[1] != null;
-
-type PartialOmitNullish<T> = {
-	[K in keyof T]?: Exclude<T[K], null | undefined>;
-};
-
-const partialOmitNullish = <T extends Record<PropertyKey, unknown>>(
-	object: T
-): PartialOmitNullish<T> =>
-	Object.fromEntries(Object.entries(object).filter(isNonNullEntry)) as PartialOmitNullish<T>;
-
-export interface EvaluatorConvenienceMethodOptions {
-	readonly contextNode?: Node;
+export interface EvaluatorConvenienceMethodOptions<T extends XPathNode> {
+	readonly contextNode?: T | UnwrapAdapterNode<T>;
 }
 
-export interface EvaluatorNodeConvenienceMethodOptions<AssertExists extends boolean = false>
-	extends EvaluatorConvenienceMethodOptions {
+export interface EvaluatorNodeConvenienceMethodOptions<
+	T extends XPathNode,
+	AssertExists extends boolean = false,
+> extends EvaluatorConvenienceMethodOptions<T> {
 	readonly assertExists?: AssertExists;
 }
 
-type EvaluatedNode<AssertExists extends boolean, T extends Node> = AssertExists extends true
-	? T
-	: T | null;
+// prettier-ignore
+type EvaluatedNode<
+	T extends XPathNode,
+	U extends T | UnwrapAdapterNode<T>,
+	AssertExists extends boolean,
+> =
+		AssertExists extends true
+			? U
+			: U | null;
 
-export class Evaluator implements AnyXPathEvaluator {
+export class Evaluator<T extends XPathNode> {
+	readonly domProvider: XPathDOMProvider<T>;
+
 	// TODO: see notes on cache in `ExpressionParser.ts`, update or remove those
 	// if this usage changes in a way that addresses concerns expressed there.
 	protected readonly parser: ExpressionParser;
 
 	readonly functions: FunctionLibraryCollection;
 	readonly parseOptions: ParseOptions;
-	readonly resultTypes: ResultTypes = ResultTypes;
-	readonly rootNodeDocument: Document | XMLDocument | null = null;
-	readonly rootNode: AnyParentNode | null;
-	readonly sharedContextOptions: Partial<EvaluationContextOptions>;
+	readonly rootNode: AdapterParentNode<T> | null;
 	readonly timeZone: Temporal.TimeZone;
 
-	constructor(options: EvaluatorOptions = {}) {
-		const { parseOptions = {}, rootNode, timeZoneId } = options;
+	constructor(options: EvaluatorOptions<T>) {
+		// prettier-ignore
+		const rootNode = (
+			options.rootNode ??
+			null
+		) satisfies EvaluatorRootNodeOption<T> | null as AdapterParentNode<T> | null;
 
+		const { domAdapter, parseOptions = {}, timeZoneId } = options;
+
+		// If this explicit annotation looks weird, it's because TypeScript demands
+		// explicit type annotations anywhere type assertions occur... apparently
+		// even when the already-explicit method name... merely is a method...
+		const domProvider: XPathDOMProvider<T> = xpathDOMProvider(domAdapter);
+
+		if (rootNode != null) {
+			domProvider.assertParentNode(rootNode, 'Invalid root node');
+		}
+
+		this.domProvider = domProvider;
+		this.rootNode = rootNode;
 		this.functions = options.functions ?? functions;
 		this.parseOptions = parseOptions;
 		this.parser = expressionParser;
-		this.rootNode = rootNode ?? null;
-
-		if (rootNode != null) {
-			this.rootNodeDocument = rootNode.ownerDocument ?? rootNode;
-		}
-
-		this.sharedContextOptions = partialOmitNullish({
-			rootNode,
-		});
 		this.timeZone = new Temporal.TimeZone(timeZoneId ?? Temporal.Now.timeZoneId());
+	}
+
+	/**
+	 * @package - exposed for testing
+	 */
+	getEvaluationContext(
+		contextNode: T | UnwrapAdapterNode<T>,
+		namespaceResolver: Extract<T, XPathNSResolver> | XPathNSResolver | null
+	): EvaluationContext<T> {
+		const contextOptions = {
+			rootNode: this.rootNode,
+			namespaceResolver,
+		};
+
+		this.domProvider.assertXPathNode(contextNode);
+
+		return new EvaluationContext(this, contextNode, contextOptions);
 	}
 
 	evaluate(
 		expression: string,
-		contextNode: Node,
+		contextNode: T | UnwrapAdapterNode<T>,
 		namespaceResolver: XPathNSResolver | null,
-		resultType: XPathResultType | null
-	) {
+		resultType: XPathEvaluationResultType | null
+	): XPathEvaluationResult<T> {
 		const tree = this.parser.parse(expression, this.parseOptions);
-
-		const evaluationContextNamespaceResolver: XPathNamespaceResolverObject | null =
-			typeof namespaceResolver === 'function'
-				? {
-						lookupNamespaceURI: namespaceResolver,
-					}
-				: namespaceResolver;
-
-		const contextOptions = partialOmitNullish({
-			...this.sharedContextOptions,
-			namespaceResolver: evaluationContextNamespaceResolver,
-		});
-
 		const expr = createExpression(tree.rootNode);
-		const context = new EvaluationContext(this, contextNode as ContextNode, contextOptions);
-		const results = expr.evaluate(context);
+		const evaluationContext = this.getEvaluationContext(contextNode, namespaceResolver);
+		const results = expr.evaluate(evaluationContext);
 
-		return toXPathResult(resultType ?? XPathResult.ANY_TYPE, results);
+		return toXPathEvaluationResult(
+			this.domProvider,
+			resultType ?? XPATH_EVALUATION_RESULT.ANY_TYPE,
+			results
+		);
 	}
 
-	protected getContextNode(options: EvaluatorConvenienceMethodOptions): Node {
+	protected getContextNode(options: EvaluatorConvenienceMethodOptions<T>): T {
 		const contextNode = options.contextNode ?? this.rootNode;
 
 		if (contextNode == null) {
@@ -120,84 +139,93 @@ export class Evaluator implements AnyXPathEvaluator {
 			);
 		}
 
-		return contextNode;
+		return contextNode satisfies T | UnwrapAdapterNode<T> as T;
 	}
 
-	evaluateBoolean(expression: string, options: EvaluatorConvenienceMethodOptions = {}): boolean {
+	evaluateBoolean(expression: string, options: EvaluatorConvenienceMethodOptions<T> = {}): boolean {
 		const contextNode = this.getContextNode(options);
 
-		return this.evaluate(expression, contextNode, null, XPathResult.BOOLEAN_TYPE).booleanValue;
+		return this.evaluate(expression, contextNode, null, XPATH_EVALUATION_RESULT.BOOLEAN_TYPE)
+			.booleanValue;
 	}
 
-	evaluateNumber(expression: string, options: EvaluatorConvenienceMethodOptions = {}): number {
+	evaluateNumber(expression: string, options: EvaluatorConvenienceMethodOptions<T> = {}): number {
 		const contextNode = this.getContextNode(options);
 
-		return this.evaluate(expression, contextNode, null, XPathResult.NUMBER_TYPE).numberValue;
+		return this.evaluate(expression, contextNode, null, XPATH_EVALUATION_RESULT.NUMBER_TYPE)
+			.numberValue;
 	}
 
-	evaluateString(expression: string, options: EvaluatorConvenienceMethodOptions = {}): string {
+	evaluateString(expression: string, options: EvaluatorConvenienceMethodOptions<T> = {}): string {
 		const contextNode = this.getContextNode(options);
 
-		return this.evaluate(expression, contextNode, null, XPathResult.STRING_TYPE).stringValue;
+		return this.evaluate(expression, contextNode, null, XPATH_EVALUATION_RESULT.STRING_TYPE)
+			.stringValue;
 	}
 
-	evaluateNode<T extends Node, AssertExists extends boolean = false>(
+	evaluateNode<U extends T | UnwrapAdapterNode<T> = T, AssertExists extends boolean = false>(
 		expression: string,
-		options: EvaluatorNodeConvenienceMethodOptions<AssertExists> = {}
-	): EvaluatedNode<AssertExists, T> {
+		options: EvaluatorNodeConvenienceMethodOptions<T, AssertExists> = {}
+	): EvaluatedNode<T, U, AssertExists> {
 		const contextNode = this.getContextNode(options);
 
 		// TODO: unsafe cast
-		const node = this.evaluate(expression, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE)
-			.singleNodeValue as T | null;
+		const node = this.evaluate(
+			expression,
+			contextNode,
+			null,
+			XPATH_EVALUATION_RESULT.FIRST_ORDERED_NODE_TYPE
+		).singleNodeValue as U | null;
 
 		if (!options.assertExists) {
-			return node as EvaluatedNode<AssertExists, T>;
+			return node as EvaluatedNode<T, U, AssertExists>;
 		}
 
 		if (node == null) {
 			throw new Error(`Failed to evaluate node for expression ${expression}`);
 		}
 
-		return node as EvaluatedNode<AssertExists, T>;
+		return node as EvaluatedNode<T, U, AssertExists>;
 	}
 
-	evaluateElement<AssertExists extends boolean = false>(
-		expression: string,
-		options: EvaluatorNodeConvenienceMethodOptions<AssertExists> = {}
-	) {
-		return this.evaluateNode<Element, AssertExists>(expression, options);
+	evaluateElement<
+		U extends AdapterElement<T> | UnwrapAdapterNode<AdapterElement<T>> = AdapterElement<T>,
+		AssertExists extends boolean = false,
+	>(expression: string, options: EvaluatorNodeConvenienceMethodOptions<T, AssertExists> = {}) {
+		return this.evaluateNode<U, AssertExists>(expression, options);
 	}
 
-	evaluateNonNullElement(
+	evaluateNonNullElement<
+		U extends AdapterElement<T> | UnwrapAdapterNode<AdapterElement<T>> = AdapterElement<T>,
+	>(
 		expression: string,
-		options: Omit<EvaluatorNodeConvenienceMethodOptions<true>, 'assertExists'> = {}
-	): Element {
-		return this.evaluateElement<true>(expression, {
+		options: Omit<EvaluatorNodeConvenienceMethodOptions<T, true>, 'assertExists'> = {}
+	): U {
+		return this.evaluateElement<U, true>(expression, {
 			...options,
 			assertExists: true,
 		});
 	}
 
-	evaluateNodes<T extends Node>(
+	evaluateNodes<U extends T | UnwrapAdapterNode<T>>(
 		expression: string,
-		options: EvaluatorNodeConvenienceMethodOptions = {}
-	): T[] {
+		options: EvaluatorNodeConvenienceMethodOptions<T> = {}
+	): U[] {
 		const contextNode = this.getContextNode(options);
 
 		const snapshotResult = this.evaluate(
 			expression,
 			contextNode,
 			null,
-			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
+			XPATH_EVALUATION_RESULT.ORDERED_NODE_SNAPSHOT_TYPE
 		);
 		const { snapshotLength } = snapshotResult;
-		const nodes: T[] = [];
+		const nodes: U[] = [];
 
 		for (let i = 0; i < snapshotLength; i += 1) {
 			nodes.push(
 				// TODO: unsafe cast
-				snapshotResult.snapshotItem(i) as T
+				snapshotResult.snapshotItem(i) as U
 			);
 		}
 

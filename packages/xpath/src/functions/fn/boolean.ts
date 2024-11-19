@@ -1,6 +1,5 @@
 import { XML_NAMESPACE_URI } from '../../evaluator/NamespaceResolver.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
-import { isElementNode } from '../../lib/dom/predicates.ts';
 
 const falseFn = new BooleanFunction('false', [], (): boolean => false);
 
@@ -35,18 +34,30 @@ export const lang = new BooleanFunction(
 			return false;
 		}
 
-		let contextElement = isElementNode(contextNode) ? contextNode : contextNode.parentElement;
+		const { domProvider } = context;
 
-		if (contextElement == null) {
+		let currentContextNode = domProvider.isElement(contextNode)
+			? contextNode
+			: domProvider.getParentNode(contextNode);
+
+		if (currentContextNode == null) {
 			return false;
 		}
 
-		let langValue: string | null = contextElement.getAttributeNS(XML_NAMESPACE_URI, 'lang');
+		let langValue: string | null = null;
 
 		do {
-			langValue = contextElement?.getAttributeNS(XML_NAMESPACE_URI, 'lang')?.toLowerCase() ?? null;
-			contextElement = contextElement.parentElement;
-		} while (langValue == null && contextElement != null);
+			if (currentContextNode == null || !domProvider.isElement(currentContextNode)) {
+				break;
+			}
+
+			langValue =
+				domProvider
+					.getQualifiedNamedAttributeValue(currentContextNode, XML_NAMESPACE_URI, 'lang')
+					?.toLowerCase() ?? null;
+
+			currentContextNode = domProvider.getParentNode(currentContextNode);
+		} while (langValue == null && currentContextNode != null);
 
 		return langValue != null && (langValue === language || langValue.startsWith(`${language}-`));
 	}

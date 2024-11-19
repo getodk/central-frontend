@@ -1,8 +1,13 @@
 import { expect } from 'vitest';
-import { Evaluator } from '../src/index.ts';
-import type { AnyParentNode } from '../src/lib/dom/types.ts';
-import type { XPathResultType } from '../src/shared/interface.ts';
-import { XFormsXPathEvaluator } from '../src/xforms/XFormsXPathEvaluator.ts';
+import { DefaultEvaluator } from '../src/evaluator/DefaultEvaluator.ts';
+import type { XPathEvaluationResultType } from '../src/evaluator/result/XPathEvaluationResult.ts';
+import { TestXFormsXPathEvaluator } from './TestXFormsXPathEvaluator.ts';
+
+// prettier-ignore
+type AnyParentNode =
+	| Document
+	| Element
+	| XMLDocument;
 
 declare global {
 	// eslint-disable-next-line no-var
@@ -43,9 +48,11 @@ interface TestContextOptions<XForms extends boolean = false> {
 	readonly xforms?: XForms;
 }
 
-type TestContextEvaluator<XForms extends boolean> = XForms extends true
-	? XFormsXPathEvaluator
-	: Evaluator;
+// prettier-ignore
+type TestContextEvaluator<XForms extends boolean> =
+	[true] extends [XForms]
+		? TestXFormsXPathEvaluator
+		: DefaultEvaluator;
 
 export class TestContext<XForms extends boolean = false> {
 	readonly document: XMLDocument;
@@ -71,15 +78,16 @@ export class TestContext<XForms extends boolean = false> {
 
 		if (options.xforms) {
 			const rootNode = options.getRootNode?.(testDocument) ?? testDocument;
-
-			this.evaluator = new XFormsXPathEvaluator({
+			this.evaluator = new TestXFormsXPathEvaluator({
 				...evaluatorOptions,
 				rootNode,
-			}) as TestContextEvaluator<XForms>;
+			}) satisfies TestContextEvaluator<true>;
 			this.defaultContextNode = rootNode;
 			this.namespaceResolver = options.namespaceResolver ?? rootNode;
 		} else {
-			this.evaluator = new Evaluator(evaluatorOptions) as TestContextEvaluator<XForms>;
+			this.evaluator = new DefaultEvaluator(
+				evaluatorOptions
+			) satisfies TestContextEvaluator<false> as TestContextEvaluator<XForms>;
 			this.defaultContextNode = testDocument;
 			this.namespaceResolver = options.namespaceResolver ?? namespaceResolver;
 		}
@@ -88,7 +96,7 @@ export class TestContext<XForms extends boolean = false> {
 	evaluate(
 		expression: string,
 		contextNode?: Nullish<Node>,
-		resultType?: Nullish<XPathResultType>,
+		resultType?: Nullish<XPathEvaluationResultType>,
 		// eslint-disable-next-line @typescript-eslint/no-shadow
 		namespaceResolver?: Nullish<XPathNSResolver>
 	): XPathResult {
@@ -96,7 +104,7 @@ export class TestContext<XForms extends boolean = false> {
 
 		return this.evaluator.evaluate(
 			expression,
-			context,
+			context satisfies Node,
 			namespaceResolver ?? this.namespaceResolver ?? context,
 			resultType ?? XPathResult.ANY_TYPE
 		);
@@ -287,7 +295,7 @@ export class XFormsTestContext extends TestContext<true> {
 	}
 
 	setLanguage(language: string | null): string | null {
-		return this.evaluator.translations.setActiveLanguage(language);
+		return this.evaluator.setActiveLanguage(language);
 	}
 }
 
@@ -316,13 +324,13 @@ export const createXFormsTestContext = (
 export const createXFormsTextContentTestContext = (textContent: string) => {
 	//         ^ Say *that* ten times fast! ;)
 	return createXFormsTestContext(/* xml */ `<simple>
-    <xpath>
-      <to>
-        <node>${textContent}</node>
-      </to>
-    </xpath>
-    <empty />
-  </simple>`);
+		<xpath>
+			<to>
+				<node>${textContent}</node>
+			</to>
+		</xpath>
+		<empty />
+	</simple>`);
 };
 
 export const getNonNamespaceAttributes = (element: Element): readonly Attr[] => {

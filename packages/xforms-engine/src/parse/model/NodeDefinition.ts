@@ -121,10 +121,7 @@ export interface NodeDefinition<Type extends NodeDefinitionType> {
 	readonly nodeset: string;
 	readonly nodeName: string;
 	readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
-
 	readonly isTranslated: boolean;
-	readonly dependencyExpressions: ReadonlySet<string>;
-
 	readonly root: RootDefinition;
 	readonly parent: NodeParent<Type>;
 	readonly children: NodeChildren<Type>;

@@ -1,12 +1,18 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
+import type { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';
-import type { InstanceNodeType } from '../../client/node-types.ts';
+import type { InstanceNodeType as ClientInstanceNodeType } from '../../client/node-types.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
-import type { TextRange } from '../../index.ts';
+import type { ActiveLanguage, TextRange } from '../../index.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type {
+	XFormsXPathPrimaryInstanceNode,
+	XFormsXPathPrimaryInstanceNodeKind,
+} from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { PrimaryInstanceXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -15,12 +21,18 @@ import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { createReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
+import type { PrimaryInstance } from '../PrimaryInstance.ts';
 import type { Root } from '../Root.ts';
 import type { AnyChildNode, AnyNode, AnyParentNode } from '../hierarchy.ts';
 import { nodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
+
+export type EngineInstanceNodeType = ClientInstanceNodeType | 'primary-instance';
+
+export interface BaseEngineNode extends Omit<BaseNode, 'nodeType'> {
+	readonly nodeType: EngineInstanceNodeType;
+}
 
 export interface InstanceNodeStateSpec<Value = never> {
 	readonly reference: Accessor<string> | string;
@@ -72,18 +84,25 @@ type ComputeInstanceNodeReference = <This extends ComputableReferenceNode>(
 
 export interface InstanceNodeOptions {
 	readonly computeReference?: () => string;
+	readonly scope?: ReactiveScope;
 }
 
 export abstract class InstanceNode<
 		Definition extends AnyNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends InstanceNodeStateSpec<any>,
+		Parent extends AnyParentNode | null,
 		Child extends AnyChildNode | null = null,
 	>
-	implements BaseNode, EvaluationContext, SubscribableDependency
+	implements BaseEngineNode, XFormsXPathPrimaryInstanceNode, EvaluationContext
 {
 	protected abstract readonly state: SharedNodeState<Spec>;
 	protected abstract readonly engineState: EngineState<Spec>;
+
+	// XFormsXPathPrimaryInstanceNode
+	abstract readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceNodeKind;
+	readonly rootDocument: PrimaryInstance;
+	abstract readonly root: Root;
 
 	/**
 	 * @package Exposed on every node type to facilitate inheritance, as well as
@@ -113,7 +132,7 @@ export abstract class InstanceNode<
 	readonly nodeId: FormNodeID;
 
 	// BaseNode: node types and variants (e.g. for narrowing)
-	abstract readonly nodeType: InstanceNodeType;
+	abstract readonly nodeType: EngineInstanceNodeType;
 
 	abstract readonly appearances: NodeAppearances<Definition>;
 
@@ -123,15 +142,13 @@ export abstract class InstanceNode<
 
 	abstract readonly submissionState: SubmissionState;
 
-	// BaseNode: structural
-	abstract readonly root: Root;
-
 	// EvaluationContext: instance-global/shared
-	abstract readonly evaluator: XFormsXPathEvaluator;
+	abstract readonly evaluator: EngineXPathEvaluator;
+	abstract readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
-	// EvaluationContext *and* Subscribable: node-specific
+	// EvaluationContext: node-specific
+	abstract readonly isAttached: Accessor<boolean>;
 	readonly scope: ReactiveScope;
-
 	readonly computeReference: ComputeInstanceNodeReference;
 
 	protected readonly computeChildStepReference: ComputeInstanceNodeReference = (
@@ -152,114 +169,92 @@ export abstract class InstanceNode<
 		return this.computeReference(this.parent, this.definition);
 	};
 
-	abstract readonly contextNode: Element;
+	/**
+	 * Note: it is expected that at least some node subclasses will override this
+	 * to reflect (or in the case of intermediate abstract base classes, to
+	 * constrain) their more specific `this` type.
+	 */
+	readonly contextNode: PrimaryInstanceXPathNode =
+		this as AnyInstanceNode as PrimaryInstanceXPathNode;
 
 	constructor(
 		readonly engineConfig: InstanceConfig,
-		readonly parent: AnyParentNode | null,
+		readonly parent: Parent,
 		readonly definition: Definition,
 		options?: InstanceNodeOptions
 	) {
+		const self = this as AnyInstanceNode as AnyNode;
+
+		if (parent == null) {
+			if (!self.isPrimaryInstance()) {
+				throw new Error(
+					'Failed to construct node: not a primary instance, no parent node specified'
+				);
+			}
+
+			this.rootDocument = self;
+		} else {
+			this.rootDocument = parent.rootDocument;
+		}
+
 		this.computeReference = options?.computeReference ?? this.computeChildStepReference;
 
-		this.scope = createReactiveScope();
+		this.scope = options?.scope ?? createReactiveScope();
 		this.engineConfig = engineConfig;
 		this.nodeId = nodeID(engineConfig.createUniqueId());
 		this.definition = definition;
 	}
 
+	/** @package */
+	isPrimaryInstance(): this is PrimaryInstance {
+		return this.parent == null;
+	}
+
+	/** @package */
+	isRoot(): this is Root {
+		return this.parent?.nodeType === 'primary-instance';
+	}
+
 	/**
-	 * @package This presently serves a few internal use cases, where certain
-	 * behaviors depend on arbitrary traversal from any point in the instance
-	 * tree, without particular regard for the visited node type. It isn't
-	 * intended for external traversal or any other means of consuming children by
-	 * a client. This return type intentionally deviates from one structural
-	 * expectation, requiring even leaf nodes to return an array (though for those
-	 * nodes it will always be empty). This affords consistency and efficiency of
-	 * interface for those internal uses.
+	 * @package This presently serves a growing variety of internal use cases,
+	 * where certain behaviors depend on arbitrary traversal from any point in the
+	 * instance tree, without particular regard for the visited node type. It
+	 * isn't intended for external traversal or any other means of consuming
+	 * children by a client. This return type intentionally deviates from one
+	 * structural expectation, requiring even leaf nodes to return an array
+	 * (though for those nodes it will always be empty). This affords consistency
+	 * and efficiency of interface for those internal uses.
 	 */
 	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
 
-	getNodesByReference(
-		this: AnyNode,
-		visited: WeakSet<AnyNode>,
-		dependencyReference: string
-	): readonly SubscribableDependency[] {
-		if (visited.has(this)) {
-			return [];
-		}
-
-		visited.add(this);
-
-		const { nodeset } = this.definition;
-
-		if (dependencyReference === nodeset) {
-			if (this.nodeType === 'repeat-instance') {
-				return [this.parent];
-			}
-
-			return [this];
-		}
-
-		if (
-			dependencyReference.startsWith(`${nodeset}/`) ||
-			dependencyReference.startsWith(`${nodeset}[`)
-		) {
-			return this.getChildren().flatMap((child) => {
-				return child.getNodesByReference(visited, dependencyReference);
-			});
-		}
-
-		return this.parent?.getNodesByReference(visited, dependencyReference) ?? [];
-	}
-
-	// EvaluationContext: node-relative
-	getSubscribableDependenciesByReference(
-		this: AnyNode,
-		reference: string
-	): readonly SubscribableDependency[] {
-		if (this.nodeType === 'root') {
-			const visited = new WeakSet<AnyNode>();
-
-			return this.getNodesByReference(visited, reference);
-		}
-
-		return this.root.getSubscribableDependenciesByReference(reference);
-	}
-
-	// SubscribableDependency
+	// XFormsXPathNode
 	/**
-	 * This is a default implementation suitable for most node types. The rest
-	 * (currently: `Root`, `RepeatRange`, `RepeatInstance`) should likely extend
-	 * this behavior, rather than simply overriding it.
+	 * @todo Values as text nodes(?)
 	 */
-	subscribe(): void {
-		const { engineState } = this;
+	getXPathChildNodes(): readonly AnyChildNode[] {
+		return (this as AnyInstanceNode).getChildren().flatMap((child) => {
+			switch (child.nodeType) {
+				case 'repeat-range:controlled':
+				case 'repeat-range:uncontrolled': {
+					const repeatInstances = child.getXPathChildNodes();
 
-		// Note: a previous iteration of this default implementation guarded these
-		// reactive reads behind a relevance check. This caused timing issues for
-		// downstream computations referencing a node whose relevance changes.
-		//
-		// That original guard was intended to reduce excessive redundant
-		// computations, and so removing it is intended as a naive compromise of
-		// performance for obvious correctness improvements.
-		//
-		// This compromise, like many others, will be moot if/when we decide to
-		// decouple XPath evaluation from the browser/XML DOM: reactive
-		// subscriptions would be established by evaluation of the expressions
-		// themselves (as they traverse instance state and access values), rather
-		// than this safer/less focused approach.
+					if (repeatInstances.length > 0) {
+						return repeatInstances;
+					}
 
-		// TODO: typescript-eslint is right to object to these! We should _at least_
-		// make internal reactive reads obvious, i.e. function calls.
+					return child;
+				}
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.reference;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.relevant;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.children;
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		engineState.value;
+				default:
+					return child;
+			}
+		});
+	}
+
+	getXPathValue(): string {
+		return (this as AnyInstanceNode as AnyNode)
+			.getXPathChildNodes()
+			.map((child) => child.getXPathValue())
+			.join('');
 	}
 }

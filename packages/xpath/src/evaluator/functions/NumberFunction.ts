@@ -3,15 +3,14 @@ import type { FunctionSignature } from './FunctionImplementation.ts';
 import type { TypedFunctionCallable } from './TypedFunctionImplementation.ts';
 import { TypedFunctionImplementation } from './TypedFunctionImplementation.ts';
 
-export class NumberFunction<Length extends number> extends TypedFunctionImplementation<
-	number,
-	Length
-> {
+export class NumberFunction extends TypedFunctionImplementation<number> {
 	constructor(
 		localName: string,
-		signature: FunctionSignature<Length>,
+		signature: FunctionSignature,
 		call: TypedFunctionCallable<number>
 	) {
-		super(localName, NumberEvaluation, signature, call);
+		super(localName, signature, call, (context, value) => {
+			return new NumberEvaluation(context, value);
+		});
 	}
 }

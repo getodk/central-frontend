@@ -1,3 +1,4 @@
+import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
@@ -17,7 +18,7 @@ export interface ValueContextDefinition {
 export interface ValueContext<RuntimeValue> extends EvaluationContext {
 	readonly scope: ReactiveScope;
 	readonly definition: ValueContextDefinition;
-	readonly contextNode: Element;
+	readonly contextNode: EngineXPathNode & this;
 
 	isReadonly(): boolean;
 	isRelevant(): boolean;

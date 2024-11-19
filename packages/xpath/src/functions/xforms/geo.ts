@@ -1,4 +1,5 @@
 import { pairwise } from 'itertools-ts/lib/single';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
@@ -34,7 +35,10 @@ const INVALID_POINT: Point = {
 
 const isInvalidPoint = (point: Point) => point === INVALID_POINT;
 
-const evaluatePoints = (context: EvaluationContext, expression: EvaluableArgument): Point[] => {
+const evaluatePoints = <T extends XPathNode>(
+	context: EvaluationContext<T>,
+	expression: EvaluableArgument
+): Point[] => {
 	const results = expression.evaluate(context);
 
 	const stringResults = [...results].map((result) => result.toString());
@@ -78,7 +82,10 @@ const INVALID_LINE: Line = {
 	end: INVALID_POINT,
 };
 
-const evaluateLines = (context: EvaluationContext, expression: EvaluableArgument): Line[] => {
+const evaluateLines = <T extends XPathNode>(
+	context: EvaluationContext<T>,
+	expression: EvaluableArgument
+): Line[] => {
 	const points = evaluatePoints(context, expression);
 
 	if (points.length < 2) {

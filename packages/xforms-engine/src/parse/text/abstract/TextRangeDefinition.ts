@@ -2,7 +2,6 @@ import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { TextRole } from '../../../client/TextRange.ts';
 import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
 import { DependencyContext } from '../../expression/abstract/DependencyContext.ts';
-import type { AnyDependentExpression } from '../../expression/abstract/DependentExpression.ts';
 import type { AnyTextChunkExpression } from '../../expression/abstract/TextChunkExpression.ts';
 import type { AnyMessageDefinition } from '../MessageDefinition.ts';
 import type { AnyTextElementDefinition } from './TextElementDefinition.ts';
@@ -50,11 +49,6 @@ export abstract class TextRangeDefinition<Role extends TextRole> extends Depende
 
 		this.reference = ownerContext.reference;
 		this.parentReference = ownerContext.parentReference;
-	}
-
-	override registerDependentExpression(expression: AnyDependentExpression): void {
-		this.ownerContext.registerDependentExpression(expression);
-		super.registerDependentExpression(expression);
 	}
 
 	toJSON(): object {

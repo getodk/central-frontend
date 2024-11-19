@@ -1,5 +1,37 @@
 import { XFORMS_NAMESPACE_URI, XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import { XFormsXPathEvaluator } from '@getodk/xpath';
+import type {
+	KnownAttributeLocalNamedElement,
+	LocalNamedElement,
+} from '@getodk/common/types/dom.ts';
+import { DefaultEvaluator } from '@getodk/xpath';
+
+interface DOMBindElement extends KnownAttributeLocalNamedElement<'bind', 'nodeset'> {}
+
+export interface DOMItextTranslationElement
+	extends KnownAttributeLocalNamedElement<'translation', 'lang'> {}
+
+interface DOMInstanceElement extends LocalNamedElement<'instance'> {}
+
+export interface DOMSecondaryInstanceElement
+	extends KnownAttributeLocalNamedElement<'instance', 'id'> {}
+
+type AssertDOMSecondaryInstanceElement = (
+	element: DOMInstanceElement
+) => asserts element is DOMSecondaryInstanceElement;
+
+const assertDOMSecondaryInstanceElement: AssertDOMSecondaryInstanceElement = (element) => {
+	if (!element.hasAttribute('id')) {
+		throw new Error('Invalid secondary instance element: missing `id` attribute');
+	}
+};
+
+type AssertDOMSecondaryInstanceElements = (
+	elements: readonly DOMInstanceElement[]
+) => asserts elements is readonly DOMSecondaryInstanceElement[];
+
+const assertDOMSecondaryInstanceElements: AssertDOMSecondaryInstanceElements = (elements) => {
+	elements.forEach(assertDOMSecondaryInstanceElement);
+};
 
 const domParser = new DOMParser();
 
@@ -145,71 +177,39 @@ const normalizeRepeatGroups = (body: Element): void => {
 	}
 };
 
-interface NormalizedXForm {
-	readonly xformDocument: XMLDocument;
-	readonly rootEvaluator: XFormsXPathEvaluator;
-	readonly html: Element;
-	readonly body: Element;
-	readonly normalizedXML: string;
-}
+/**
+ * Performs preprocess operations to normalize certain aspects of the body of an
+ * XForm, for consistency when parsing its runtime representations.
+ *
+ * Currently this preprocessing:
+ *
+ * - Ensures consistent use of `ref` and `nodeset` where ambiguous in the ODK
+ *   XForms spec
+ * - Ensures `<repeat>` body elements are always enclosed by a `<group>` with
+ *   the same `ref`
+ */
+const normalizeXFormBody = <T extends Element>(body: T): T => {
+	normalizeBodyRefNodesetAttributes(body);
+	normalizeRepeatGroups(body);
 
-interface XFormDOMNormalizationOptions {
+	return body;
+};
+
+interface XFormDOMOptions {
 	readonly isNormalized: boolean;
 }
 
 /**
- * Performs preprocess operations to normalize certain aspects of an XForm
- * structure for consistency when building up its runtime representations.
- * Currently this preprocessing:
- *
- * - Ensures consistent use of `ref` and `nodeset` where ambiguous in the
- *   ODK XForms spec
- * - Ensures `<repeat>` body elements are always enclosed by a `<group>`
- *   with the same `ref`
+ * @todo **Everything** in this class should be cacheable. Maybe not worth it
+ * for small forms, but may make a pretty substantial difference for very large
+ * forms (in bytes) in sessions creating multiple instances of the same form.
  */
-const parseNormalizedXForm = (
-	sourceXML: string,
-	options: XFormDOMNormalizationOptions
-): NormalizedXForm => {
-	const xformDocument: XMLDocument = domParser.parseFromString(sourceXML, 'text/xml');
-	const rootEvaluator = new XFormsXPathEvaluator({
-		rootNode: xformDocument,
-	});
-	const html = rootEvaluator.evaluateNonNullElement('/h:html');
-	const body = rootEvaluator.evaluateNonNullElement('./h:body', {
-		contextNode: html,
-	});
-
-	let normalizedXML: string;
-
-	if (options.isNormalized) {
-		normalizedXML = sourceXML;
-	} else {
-		normalizeBodyRefNodesetAttributes(body);
-		normalizeRepeatGroups(body);
-
-		normalizedXML = html.outerHTML;
-	}
-
-	return {
-		xformDocument,
-		rootEvaluator,
-		html,
-		body,
-		normalizedXML,
-	};
-};
-
 export class XFormDOM {
 	static from(sourceXML: string) {
 		return new this(sourceXML, { isNormalized: false });
 	}
 
 	protected readonly normalizedXML: string;
-
-	// XPath
-	readonly rootEvaluator: XFormsXPathEvaluator;
-	readonly primaryInstanceEvaluator: XFormsXPathEvaluator;
 
 	// Commonly accessed landmark nodes
 	readonly xformDocument: XMLDocument;
@@ -220,59 +220,94 @@ export class XFormDOM {
 	readonly title: Element;
 
 	readonly model: Element;
+	readonly binds: readonly DOMBindElement[];
 	readonly primaryInstance: Element;
 	readonly primaryInstanceRoot: Element;
+
+	readonly itextTranslationElements: readonly DOMItextTranslationElement[];
+	readonly secondaryInstanceElements: readonly DOMSecondaryInstanceElement[];
 
 	readonly body: Element;
 
 	protected constructor(
 		protected readonly sourceXML: string,
-		options: XFormDOMNormalizationOptions
+		options: XFormDOMOptions
 	) {
-		const normalizedXForm: NormalizedXForm = parseNormalizedXForm(sourceXML, options);
-		const { xformDocument, html, body, rootEvaluator, normalizedXML } = normalizedXForm;
-		const head = rootEvaluator.evaluateNonNullElement('./h:head', {
-			contextNode: html,
-		});
-		const title = rootEvaluator.evaluateNonNullElement('./h:title', {
-			contextNode: head,
-		});
-		const model = rootEvaluator.evaluateNonNullElement('./xf:model', {
-			contextNode: head,
-		});
-		// TODO: Evidently primary instance root will not always have an id
-		const primaryInstanceRoot = rootEvaluator.evaluateNonNullElement('./xf:instance/*[@id]', {
-			contextNode: model,
-		});
-		// TODO: invert primary instance/root lookups
-		const primaryInstance = rootEvaluator.evaluateNonNullElement('..', {
-			contextNode: primaryInstanceRoot,
+		const evaluator = new DefaultEvaluator();
+		const xformDocument: XMLDocument = domParser.parseFromString(sourceXML, 'text/xml');
+		const html = evaluator.evaluateNonNullElement('/h:html', {
+			contextNode: xformDocument,
 		});
 
-		this.normalizedXML = normalizedXML;
-		this.rootEvaluator = rootEvaluator;
-		this.primaryInstanceEvaluator = new XFormsXPathEvaluator({
-			rootNode: primaryInstance,
+		let body = evaluator.evaluateNonNullElement('./h:body', {
+			contextNode: html,
 		});
+		let normalizedXML: string;
+
+		if (options.isNormalized) {
+			normalizedXML = sourceXML;
+		} else {
+			body = normalizeXFormBody(body);
+
+			// TODO: if we keep doing normalization this way long term (or using the DOM
+			// for parsing long term, for that matter!), we should measure this. And we
+			// should measure against XMLSerializer while we're at it!
+			normalizedXML = xformDocument.documentElement.outerHTML;
+		}
+
+		const head = evaluator.evaluateNonNullElement('./h:head', {
+			contextNode: html,
+		});
+		const title = evaluator.evaluateNonNullElement('./h:title', {
+			contextNode: head,
+		});
+		const model = evaluator.evaluateNonNullElement('./xf:model', {
+			contextNode: head,
+		});
+		const binds = evaluator.evaluateNodes<DOMBindElement>('./xf:bind[@nodeset]', {
+			contextNode: model,
+		});
+
+		const instances = evaluator.evaluateNodes<DOMInstanceElement>('./xf:instance', {
+			contextNode: model,
+		});
+
+		const [primaryInstance, ...secondaryInstanceElements] = instances;
+
+		assertDOMSecondaryInstanceElements(secondaryInstanceElements);
+
+		if (primaryInstance == null) {
+			throw new Error('Form is missing primary instance');
+		}
+
+		// TODO: Evidently primary instance root will not always have an id
+		const primaryInstanceRoot = evaluator.evaluateNonNullElement('./*[@id]', {
+			contextNode: primaryInstance,
+		});
+
+		const itextTranslationElements = evaluator.evaluateNodes<DOMItextTranslationElement>(
+			'./xf:itext/xf:translation[@lang]',
+			{
+				contextNode: model,
+			}
+		);
+
+		this.normalizedXML = normalizedXML;
 		this.xformDocument = xformDocument;
 		this.html = html;
 		this.head = head;
 		this.title = title;
 		this.model = model;
+		this.binds = binds;
 		this.primaryInstance = primaryInstance;
 		this.primaryInstanceRoot = primaryInstanceRoot;
+		this.itextTranslationElements = itextTranslationElements;
+		this.secondaryInstanceElements = secondaryInstanceElements;
 		this.body = body;
-	}
-
-	// TODO: anticipating this will be an entry point for edits as well
-	createInstance(): XFormDOM {
-		return new XFormDOM(this.normalizedXML, { isNormalized: true });
 	}
 
 	toJSON() {
 		const {
-			rootEvaluator,
-			primaryInstanceEvaluator,
 			html,
 			head,
 			title,

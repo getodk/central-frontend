@@ -110,8 +110,4 @@ export class ExpressionParser {
 			return new SyntaxTree(parsed as TreeSitterTree);
 		});
 	}
-
-	[Symbol.dispose]() {
-		this.cache.clear();
-	}
 }

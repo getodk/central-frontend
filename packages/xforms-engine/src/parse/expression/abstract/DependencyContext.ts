@@ -1,27 +1,6 @@
-import type { AnyDependentExpression } from './DependentExpression.ts';
-
 export abstract class DependencyContext {
 	abstract get parentReference(): string | null;
 	abstract get reference(): string | null;
-
-	protected readonly dependentExpressions = new Set<AnyDependentExpression>();
-
-	protected dependencyExpressionsCache: ReadonlySet<string> | null = null;
-
-	get dependencyExpressions(): ReadonlySet<string> {
-		let { dependencyExpressionsCache } = this;
-
-		if (dependencyExpressionsCache == null) {
-			dependencyExpressionsCache = new Set(
-				Array.from(this.dependentExpressions).flatMap((expression) => {
-					return Array.from(expression.dependencyReferences);
-				})
-			);
-			this.dependencyExpressionsCache = dependencyExpressionsCache;
-		}
-
-		return dependencyExpressionsCache;
-	}
 
 	get isTranslated(): boolean {
 		return this._isTranslated;
@@ -45,9 +24,4 @@ export abstract class DependencyContext {
 
 	// Update note on `set isTranslated` if this internal storage changes.
 	protected _isTranslated = false;
-
-	registerDependentExpression(expression: AnyDependentExpression): void {
-		this.dependencyExpressionsCache = null;
-		this.dependentExpressions.add(expression);
-	}
 }

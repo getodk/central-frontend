@@ -1,10 +1,12 @@
 import { xml } from '@getodk/common/test/factories/xml';
 import { beforeEach, describe, expect, it } from 'vitest';
+import type { DefaultDOMAdapterNode } from '../../src/adapter/defaults.ts';
+import { DEFAULT_DOM_ADAPTER } from '../../src/adapter/defaults.ts';
 import { Evaluator } from '../../src/evaluator/Evaluator.ts';
 
 describe('Evaluator convenience methods', () => {
 	let testDocument: XMLDocument;
-	let evaluator: Evaluator;
+	let evaluator: Evaluator<DefaultDOMAdapterNode>;
 
 	beforeEach(() => {
 		testDocument = xml`<root>
@@ -15,6 +17,7 @@ describe('Evaluator convenience methods', () => {
 			</c>
 		</root>`;
 		evaluator = new Evaluator({
+			domAdapter: DEFAULT_DOM_ADAPTER,
 			rootNode: testDocument,
 		});
 	});

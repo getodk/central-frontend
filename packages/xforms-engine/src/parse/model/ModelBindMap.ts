@@ -37,15 +37,8 @@ export class ModelBindMap extends Map<BindNodeset, BindDefinition> {
 		protected readonly form: XFormDefinition,
 		protected readonly model: ModelDefinition
 	) {
-		const bindElements = form.xformDOM.rootEvaluator.evaluateNodes<BindElement & Element>(
-			'./xf:bind[@nodeset]',
-			{
-				contextNode: form.xformDOM.model,
-			}
-		);
-
 		super(
-			bindElements.map((bindElement) => {
+			form.xformDOM.binds.map((bindElement) => {
 				const nodeset = bindElement.getAttribute('nodeset');
 				const bind = new BindDefinition(form, model, nodeset, bindElement);
 

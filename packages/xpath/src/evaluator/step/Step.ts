@@ -13,7 +13,7 @@ import type {
 	StepNode,
 } from '../../static/grammar/SyntaxNode.ts';
 
-type AxisType =
+export type AxisType =
 	| 'ancestor-or-self'
 	| 'ancestor'
 	| 'attribute'

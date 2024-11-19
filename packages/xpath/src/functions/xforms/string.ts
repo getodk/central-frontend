@@ -2,7 +2,12 @@
 import { MD5, SHA1, SHA256, SHA384, SHA512 } from 'crypto-js';
 import * as base64 from 'crypto-js/enc-base64';
 import * as hex from 'crypto-js/enc-hex';
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import { IncompatibleRuntimeEnvironmentError } from '../../error/IncompatibleRuntimeEnvironmentError.ts';
+import type { Evaluation } from '../../evaluations/Evaluation.ts';
+import type { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
+import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { evaluateInt } from '../_shared/number.ts';
 import { toStrings } from '../_shared/string.ts';
@@ -27,14 +32,17 @@ export const coalesce = new StringFunction(
 export const concat = new StringFunction(
 	'concat',
 	[{ arityType: 'variadic', typeHint: 'string' }],
-	(context, expressions): string => {
-		if (expressions.length === 0) {
+	<T extends XPathNode>(
+		context: LocationPathEvaluation<T>,
+		args: readonly EvaluableArgument[]
+	): string => {
+		if (args.length === 0) {
 			return '';
 		}
 
-		return expressions
+		return args
 			.flatMap((expression) => {
-				const results = expression.evaluate(context);
+				const results: Evaluation<T> = expression.evaluate(context);
 
 				return Array.from(results).map((result) => result.toString());
 			})
@@ -174,10 +182,63 @@ export const substr = new StringFunction(
 	}
 );
 
+type AssertCrypto = (value: Partial<Crypto> | undefined) => asserts value is Crypto;
+
+let didAssertCrypto = false;
+
+const assertCrypto: AssertCrypto = (crypto) => {
+	if (didAssertCrypto) {
+		return;
+	}
+
+	if (typeof crypto !== 'object' || crypto == null) {
+		throw new IncompatibleRuntimeEnvironmentError();
+	}
+
+	if (typeof crypto.randomUUID !== 'function' || crypto.randomUUID.length !== 0) {
+		throw new IncompatibleRuntimeEnvironmentError();
+	}
+
+	didAssertCrypto = true;
+};
+
+/**
+ * @todo This feature detection was introduced during the refactor to adopt a
+ * DOM adapter approach. In that effort, we stopped using TypeScript's DOM lib
+ * types throughout the `@getodk/xpath` src directory. It was discovered that
+ * the global {@link Crypto | `crypto`} object we were depending on is
+ * conditionally available:
+ *
+ * - Node: on all supported versions
+ * - Web:
+ *   {@link https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID | in secure contexts}
+ *   (i.e. HTTPS is required, except for localhost)
+ *
+ * We should consider:
+ *
+ * 0. Do/should we have a general policy around support (or lack thereof) for
+ *    non-secure contexts
+ * 1. Does it make sense to limit availability of this function based on such a
+ *    policy, and/or should we investigate a conditionally loaded dependency
+ *    equivalent?
+ * 2. Should we consider just adopting a dependency overall? That would be a
+ *    shame if we can reasonably assume the native functionality will be
+ *    available in the vast majority (or even all) of supported usage scenarios.
+ */
+const getGlobalCrypto = (): Crypto => {
+	const { crypto } = globalThis;
+
+	assertCrypto(crypto);
+
+	return crypto;
+};
+
 export const uuid = new StringFunction(
 	'uuid',
 	[{ arityType: 'optional', typeHint: 'number' }],
 	(context, [lengthExpression]) => {
+		const crypto = getGlobalCrypto();
+
 		let result: string = crypto.randomUUID();
 
 		if (lengthExpression == null) {

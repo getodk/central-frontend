@@ -1,9 +1,11 @@
 import { identity } from '@getodk/common/lib/identity.ts';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { StringNode, StringNodeAppearances } from '../client/StringNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createValueState } from '../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -22,7 +24,6 @@ import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from './internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
@@ -40,20 +41,23 @@ interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
 }
 
 export class StringField
-	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, null>
+	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, GeneralParentNode, null>
 	implements
 		StringNode,
+		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ValidationContext,
 		ValueContext<string>,
 		ClientReactiveSubmittableLeafNode<string>
 {
 	private readonly validation: SharedValidationState;
-	protected readonly state: SharedNodeState<StringFieldStateSpec>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
-	protected engineState: EngineState<StringFieldStateSpec>;
+	protected readonly state: SharedNodeState<StringFieldStateSpec>;
+	protected readonly engineState: EngineState<StringFieldStateSpec>;
 
 	// StringNode
 	readonly nodeType = 'string';
@@ -67,8 +71,8 @@ export class StringField
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	override readonly contextNode = this;
 	readonly encodeValue = identity<string>;
-
 	readonly decodeValue = identity<string>;
 
 	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {
@@ -102,6 +106,11 @@ export class StringField
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
 		this.submissionState = createLeafNodeSubmissionState(this);
+	}
+
+	// XFormsXPathElement
+	override getXPathValue(): string {
+		return this.engineState.value;
 	}
 
 	// ValidationContext

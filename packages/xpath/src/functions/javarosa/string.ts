@@ -1,41 +1,20 @@
+import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { XFormsXPathEvaluator } from '../../index.ts';
-import {
-	getDefaultTextValueElement,
-	getTranslationTextByLanguage,
-} from '../../xforms/XFormsItextTranslations.ts';
+import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 
+/**
+ * @todo This could be a {@link NodeSetFunction}. If it were, that might be a
+ * good starting point for thinking about how we'll support:
+ *
+ * - `<output>` in itext translations
+ * - `<value form="...">` (short, guidance, various media types)
+ */
 export const itext = new StringFunction(
 	'itext',
 	[{ arityType: 'required', typeHint: 'string' }],
 	(context, [itextIDExpression]) => {
-		const { evaluator } = context;
-
-		if (!(evaluator instanceof XFormsXPathEvaluator)) {
-			throw new Error('itext not available');
-		}
-
-		const { modelElement } = evaluator;
-
-		if (modelElement == null) {
-			return '';
-		}
-
-		const activeLanguage = evaluator.translations.getActiveLanguage();
-
-		if (activeLanguage == null) {
-			return '';
-		}
-
 		const itextID = itextIDExpression!.evaluate(context).toString();
-		const textElement = getTranslationTextByLanguage(modelElement, activeLanguage, itextID);
 
-		if (textElement == null) {
-			return '';
-		}
-
-		const defaultTextValue = getDefaultTextValueElement(textElement);
-
-		return defaultTextValue?.textContent ?? '';
+		return XFormsXPathEvaluator.getDefaultTranslationText(context, itextID);
 	}
 );

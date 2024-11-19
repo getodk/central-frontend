@@ -1,4 +1,5 @@
 import { trimXMLXPathWhitespace } from '@getodk/common/lib/string/whitespace.ts';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { StringEvaluation } from './StringEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
@@ -10,9 +11,9 @@ interface NodeEvaluationComputedValues {
 	readonly stringValue: string;
 }
 
-export class NodeEvaluation extends ValueEvaluation<'NODE'> {
+export class NodeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NODE'> {
 	readonly type = 'NODE';
-	readonly nodes: Iterable<Node>;
+	readonly nodes: Iterable<T>;
 
 	protected computedValues: NodeEvaluationComputedValues | null = null;
 
@@ -33,8 +34,8 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 	}
 
 	constructor(
-		readonly context: LocationPathEvaluation,
-		readonly value: Node
+		readonly context: LocationPathEvaluation<T>,
+		readonly value: T
 	) {
 		super();
 		this.nodes = [value];
@@ -45,7 +46,7 @@ export class NodeEvaluation extends ValueEvaluation<'NODE'> {
 
 		if (computedValues == null) {
 			const { context, value: node } = this;
-			const stringValue = node.textContent ?? '';
+			const stringValue = context.domProvider.getNodeValue(node);
 			const isEmpty = trimXMLXPathWhitespace(stringValue) === '';
 			const booleanValue = !isEmpty;
 			const numberFunction = context.functions.getDefaultImplementation('number');

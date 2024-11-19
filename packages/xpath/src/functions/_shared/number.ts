@@ -1,9 +1,12 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 
-export const evaluateInt = (context: EvaluationContext, expression: EvaluableArgument) =>
-	parseInt(expression.evaluate(context).toString(), 10);
+export const evaluateInt = <T extends XPathNode>(
+	context: EvaluationContext<T>,
+	expression: EvaluableArgument
+) => parseInt(expression.evaluate(context).toString(), 10);
 
 type MathAliasMethodName =
 	| 'abs'
@@ -61,8 +64,8 @@ interface ToNumberArgumentsOptions {
 	readonly shortCircuitOnNaN: boolean;
 }
 
-const toNumberArguments = (
-	context: EvaluationContext,
+const toNumberArguments = <T extends XPathNode>(
+	context: EvaluationContext<T>,
 	expressions: readonly EvaluableArgument[],
 	options: ToNumberArgumentsOptions
 ): number[] => {

@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { Context } from '../../context/Context.ts';
 import { FN_NAMESPACE_URI } from '../NamespaceResolver.ts';
 import type { FunctionImplementation } from './FunctionImplementation.ts';
@@ -91,7 +92,7 @@ export class FunctionLibraryCollection {
 		});
 	}
 
-	getDefaultImplementation(localName: string): FunctionImplementation<number> | null {
+	getDefaultImplementation(localName: string): FunctionImplementation | null {
 		for (const functionLibrary of this.defaultFunctionLibraries) {
 			const functionImplementation = functionLibrary.getImplementation(localName);
 
@@ -103,11 +104,10 @@ export class FunctionLibraryCollection {
 		return null;
 	}
 
-	getImplementation(
-		context: Context,
+	getImplementation<T extends XPathNode>(
+		context: Context<T>,
 		name: FunctionNameLookup
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	): FunctionImplementation<any> | null {
+	): FunctionImplementation | null {
 		const { localName, namespaceURI, prefix } = name;
 
 		const resolvedNamespaceURI =

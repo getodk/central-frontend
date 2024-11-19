@@ -1,3 +1,4 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { AnyBinaryExprNode } from '../../static/grammar/SyntaxNode.ts';
@@ -17,5 +18,5 @@ export abstract class BinaryExpressionEvaluator<Node extends AnyBinaryExprNode>
 		this.rhs = createExpression(rhsNode);
 	}
 
-	abstract evaluate(context: EvaluationContext): Evaluation;
+	abstract evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T>;
 }

@@ -1,6 +1,6 @@
 import type { SubmissionDefinition } from '../../../client/submission/SubmissionDefinition.ts';
 import type { AncestorNodeValidationState } from '../../../client/validation.ts';
-import type { GeneralChildNode } from '../../hierarchy.ts';
+import type { Root } from '../../Root.ts';
 import type {
 	ClientReactiveSubmittableParentNode,
 	ClientReactiveSubmittableParentNodeDefinition,
@@ -12,8 +12,9 @@ interface ClientReactiveSubmittableInstanceDefinition
 }
 
 export interface ClientReactiveSubmittableInstance
-	extends ClientReactiveSubmittableParentNode<GeneralChildNode> {
+	extends ClientReactiveSubmittableParentNode<Root> {
 	readonly definition: ClientReactiveSubmittableInstanceDefinition;
+	readonly root: Root;
 	readonly parent: null;
 	readonly validationState: AncestorNodeValidationState;
 }

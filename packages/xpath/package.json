@@ -49,7 +49,9 @@
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
     "test-watch:webkit": "BROWSER_NAME=webkit vitest",
-    "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
+    "test:types": "npm-run-all -nl test:types:*",
+    "test:types:main": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit",
+    "test:types:test": "tsc --project ./test/tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
     "@getodk/common": "0.4.0",

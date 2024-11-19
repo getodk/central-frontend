@@ -1,8 +1,9 @@
 import { Temporal } from '@js-temporal/polyfill';
+import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import { DAY_MILLISECONDS } from '../lib/datetime/constants.ts';
+import { localDateTimeOrDateString } from '../lib/datetime/functions.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
-import { localDateTimeOrDateString } from '../lib/datetime/functions.ts';
 
 interface PrecomputedXPathValues {
 	readonly booleanValue?: boolean;
@@ -12,7 +13,7 @@ interface PrecomputedXPathValues {
 
 const INVALID_DATE_TIME_STRING = 'Invalid Date';
 
-export class DateTimeLikeEvaluation extends ValueEvaluation<'NUMBER'> {
+export class DateTimeLikeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NUMBER'> {
 	readonly type = 'NUMBER';
 	readonly nodes = null;
 	readonly value: number;
@@ -26,7 +27,7 @@ export class DateTimeLikeEvaluation extends ValueEvaluation<'NUMBER'> {
 	protected readonly dateTimeString: string;
 
 	constructor(
-		readonly context: LocationPathEvaluation,
+		readonly context: LocationPathEvaluation<T>,
 		protected dateTime: Temporal.ZonedDateTime | null,
 		precomputedValues: PrecomputedXPathValues = {}
 	) {

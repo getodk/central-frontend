@@ -1,31 +1,33 @@
+import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { Evaluation } from '../../evaluations/Evaluation';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument, FunctionSignature } from './FunctionImplementation.ts';
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
-export type TypedFunctionCallable<Type> = <Arguments extends readonly EvaluableArgument[]>(
-	context: LocationPathEvaluation,
+export type TypedFunctionCallable<R> = <
+	T extends XPathNode,
+	Arguments extends readonly EvaluableArgument[],
+>(
+	context: LocationPathEvaluation<T>,
 	args: Arguments
-) => Type;
+) => R;
 
-export class TypedFunctionImplementation<
-	Type,
-	Length extends number,
-> extends FunctionImplementation<Length> {
+export type TypedFunctionResultFactory<R> = <T extends XPathNode>(
+	context: LocationPathEvaluation<T>,
+	value: R
+) => Evaluation<T>;
+
+export abstract class TypedFunctionImplementation<R> extends FunctionImplementation {
 	protected constructor(
 		localName: string,
-		TypedResult: new (context: LocationPathEvaluation, value: Type) => Evaluation,
-		signature: FunctionSignature<Length>,
-		call: TypedFunctionCallable<Type>
+		signature: FunctionSignature,
+		call: TypedFunctionCallable<R>,
+		resultFactory: TypedFunctionResultFactory<R>
 	) {
-		super(
-			localName,
-			signature,
-			(context: LocationPathEvaluation, args: readonly EvaluableArgument[]) => {
-				const runtimeResult = call(context, args);
+		super(localName, signature, (context, args) => {
+			const result = call(context, args);
 
-				return new TypedResult(context, runtimeResult);
-			}
-		);
+			return resultFactory(context, result);
+		});
 	}
 }

@@ -1,15 +1,22 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import { createMemo } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
+import type { ActiveLanguage } from '../../client/FormLanguage.ts';
+import type { InstanceNodeType } from '../../client/node-types.ts';
+import type { PrimaryInstanceXPathChildNode } from '../../integration/xpath/adapter/kind.ts';
+import type {
+	XFormsXPathPrimaryInstanceDescendantNode,
+	XFormsXPathPrimaryInstanceDescendantNodeKind,
+} from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyDescendantNodeDefinition } from '../../parse/model/DescendentNodeDefinition.ts';
-import type { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
-import type { RepeatInstanceDefinition } from '../../parse/model/RepeatInstanceDefinition.ts';
-import type { AnyChildNode, GeneralParentNode, RepeatRange } from '../hierarchy.ts';
+import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
 import type { InstanceNodeStateSpec } from './InstanceNode.ts';
@@ -34,18 +41,12 @@ export type DescendantNodeDefinition = Extract<
 	AnyDescendantNodeDefinition
 >;
 
-// prettier-ignore
-export type DescendantNodeParent<Definition extends DescendantNodeDefinition> =
-	Definition extends LeafNodeDefinition
-		? GeneralParentNode
-	: Definition extends RepeatInstanceDefinition
-		? RepeatRange
-		: GeneralParentNode;
-
 export type AnyDescendantNode = DescendantNode<
 	DescendantNodeDefinition,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	DescendantNodeStateSpec<any>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	any,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	any
 >;
@@ -58,11 +59,18 @@ export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends DescendantNodeStateSpec<any>,
+		Parent extends AnyParentNode,
 		Child extends AnyChildNode | null = null,
 	>
-	extends InstanceNode<Definition, Spec, Child>
-	implements BaseNode, EvaluationContext, SubscribableDependency
+	extends InstanceNode<Definition, Spec, Parent, Child>
+	implements BaseNode, XFormsXPathPrimaryInstanceDescendantNode, EvaluationContext
 {
+	/**
+	 * Partial implementation of {@link isAttached}, used to check whether `this`
+	 * is present in {@link parent}'s children state.
+	 */
+	protected readonly isAttachedDescendant: Accessor<boolean>;
+
 	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
 		const { parent } = this;
 
@@ -97,51 +105,88 @@ export abstract class DescendantNode<
 
 	readonly isRequired: Accessor<boolean>;
 
+	// XFormsXPathPrimaryInstanceDescendantNode
+
+	/**
+	 * WARNING! Ideally, this would be an abstract property, defined by each
+	 * concrete subclass (or other intermediate abstract classes, where
+	 * appropriate). Unfortunately it must be assigned here, so it will be present
+	 * for certain XPath DOM adapter functionality **during** each concrete node's
+	 * construction.
+	 *
+	 * Those subclasses nevertheless override this same property, assigning the
+	 * same value, for the purposes of narrowing the XPath node kind semantics
+	 * appropriate for each node type.
+	 */
+	override readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceDescendantNodeKind;
 	readonly root: Root;
-	readonly evaluator: XFormsXPathEvaluator;
-	readonly contextNode: Element;
+
+	// BaseNode
+	abstract override readonly nodeType: InstanceNodeType;
+
+	// EvaluationContext
+	readonly isAttached: Accessor<boolean>;
+	readonly evaluator: EngineXPathEvaluator;
+	override readonly contextNode: PrimaryInstanceXPathChildNode =
+		this as AnyDescendantNode as PrimaryInstanceXPathChildNode;
+	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
-		override readonly parent: DescendantNodeParent<Definition>,
+		override readonly parent: Parent,
 		override readonly definition: Definition,
 		options?: DescendantNodeOptions
 	) {
 		super(parent.engineConfig, parent, definition, options);
 
-		const { evaluator, root } = parent;
+		if (this.isRoot()) {
+			this.root = this;
+		} else {
+			this.root = parent.root;
+		}
 
-		this.root = root;
+		const { evaluator } = parent;
+
+		// See notes on property declaration
+		if (definition.type === 'repeat-range') {
+			this[XPathNodeKindKey] = XFORMS_XPATH_NODE_RANGE_KIND;
+		} else {
+			this[XPathNodeKindKey] = 'element';
+		}
+
+		const self = this as AnyDescendantNode as AnyChildNode;
+
+		this.isAttachedDescendant = this.scope.runTask(() => {
+			return createMemo(() => {
+				for (const child of parent.getChildren()) {
+					if (child === self) {
+						return true;
+					}
+				}
+
+				return false;
+			});
+		});
+
+		this.isAttached = this.scope.runTask(() => {
+			return createMemo(() => {
+				return this.parent.isAttached() && this.isAttachedDescendant();
+			});
+		});
+
 		this.evaluator = evaluator;
-		this.contextNode = this.initializeContextNode(parent.contextNode, definition.nodeName);
+		this.getActiveLanguage = parent.getActiveLanguage;
 
 		const { readonly, relevant, required } = definition.bind;
 
-		this.isSelfReadonly = createComputedExpression(this, readonly);
-		this.isSelfRelevant = createComputedExpression(this, relevant);
-		this.isRequired = createComputedExpression(this, required);
-	}
-
-	protected createContextNode(parentContextNode: Element, nodeName: string): Element {
-		return parentContextNode.ownerDocument.createElement(nodeName);
-	}
-
-	/**
-	 * Currently expected to be overridden by...
-	 *
-	 * - Repeat range: returns its parent's context node, because it doesn't have
-	 *   a node in the primary instance tree.
-	 *
-	 * - Repeat instance: returns its created context node, but overrides handles
-	 *   appending behavior separately (for inserting at the end of its parent
-	 *   range, or even at an arbitrary index within the range, after instance
-	 *   creation is has completed).
-	 */
-	protected initializeContextNode(parentContextNode: Element, nodeName: string): Element {
-		const element = this.createContextNode(parentContextNode, nodeName);
-
-		parentContextNode.append(element);
-
-		return element;
+		this.isSelfReadonly = createComputedExpression(this, readonly, {
+			defaultValue: true,
+		});
+		this.isSelfRelevant = createComputedExpression(this, relevant, {
+			defaultValue: false,
+		});
+		this.isRequired = createComputedExpression(this, required, {
+			defaultValue: false,
+		});
 	}
 
 	/**

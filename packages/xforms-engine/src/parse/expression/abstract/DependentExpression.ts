@@ -1,5 +1,4 @@
-import type { XFormsXPathEvaluator } from '@getodk/xpath';
-import { resolveDependencyNodesets } from '../../xpath/dependency-analysis.ts';
+import type { EngineXPathEvaluator } from '../../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
 	ConstantExpression,
 	ConstantTruthyExpression,
@@ -26,7 +25,7 @@ export type DependentExpressionEvaluatorMethod<Type extends DependentExpressionR
 	EvaluatorMethodsByResultType[Type];
 
 export type DependentExpressionResult<Type extends DependentExpressionResultType> = ReturnType<
-	XFormsXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
+	EngineXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
 >;
 
 interface SemanticDependencyOptions {
@@ -55,7 +54,6 @@ export interface ConstantTruthyDependentExpression extends ConstantDependentExpr
 }
 
 export abstract class DependentExpression<Type extends DependentExpressionResultType> {
-	readonly dependencyReferences: ReadonlySet<string> = new Set();
 	readonly isTranslated: boolean = false;
 	readonly evaluatorMethod: DependentExpressionEvaluatorMethod<Type>;
 	readonly constantExpression: ConstantExpression | null;
@@ -81,17 +79,10 @@ export abstract class DependentExpression<Type extends DependentExpressionResult
 		this.evaluatorMethod = evaluatorMethodsByResultType[resultType];
 
 		const {
-			ignoreContextReference = false,
 			semanticDependencies = {
 				translations: false,
 			},
 		} = options;
-
-		this.dependencyReferences = new Set(
-			resolveDependencyNodesets(context.reference, expression, {
-				ignoreReferenceToContextPath: ignoreContextReference,
-			})
-		);
 
 		const isTranslated = semanticDependencies.translations && isTranslationExpression(expression);
 
@@ -99,8 +90,6 @@ export abstract class DependentExpression<Type extends DependentExpressionResult
 			this.isTranslated = true;
 			context.isTranslated = true;
 		}
-
-		context.registerDependentExpression(this);
 	}
 
 	isConstantExpression(): this is ConstantDependentExpression<Type> {

@@ -29,7 +29,9 @@ const createComputedTextChunk = (
 	}
 
 	return context.scope.runTask(() => {
-		const getText = createComputedExpression(context, textSource);
+		const getText = createComputedExpression(context, textSource, {
+			defaultValue: '',
+		});
 
 		return {
 			source,
@@ -43,14 +45,13 @@ const createTextChunks = (
 	textSources: readonly AnyTextChunkExpression[]
 ): Accessor<readonly TextChunk[]> => {
 	return context.scope.runTask(() => {
-		const { root } = context;
 		const chunkComputations = textSources.map((textSource) => {
 			return createComputedTextChunk(context, textSource);
 		});
 
 		return createMemo(() => {
 			return chunkComputations.map(({ source, getText }) => {
-				return new TextChunk(root, source, getText());
+				return new TextChunk(context, source, getText());
 			});
 		});
 	});

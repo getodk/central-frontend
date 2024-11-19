@@ -1,4 +1,5 @@
 import { identity } from '@getodk/common/lib/identity.ts';
+import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { UnsupportedControlNodeType } from '../../client/node-types.ts';
 import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
@@ -9,6 +10,7 @@ import type {
 	UnsupportedControlNode,
 } from '../../client/unsupported/UnsupportedControlNode.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
+import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createLeafNodeSubmissionState } from '../../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
 import { createValueState } from '../../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
@@ -25,10 +27,9 @@ import {
 	type SharedValidationState,
 } from '../../lib/reactivity/validation/createValidation.ts';
 import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/unknownAppearanceParser.ts';
-import type { GeneralParentNode } from '../hierarchy.ts';
+import type { AnyUnsupportedControl, GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from '../internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
-import type { SubscribableDependency } from '../internal-api/SubscribableDependency.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { ValueContext } from '../internal-api/ValueContext.ts';
 import { DescendantNode, type DescendantNodeStateSpec } from './DescendantNode.ts';
@@ -64,17 +65,25 @@ class UnsupportedControlWriteError extends Error {
 }
 
 export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType>
-	extends DescendantNode<TypedUnsupportedControlDefinition<Type>, UnsupportedControlStateSpec, null>
+	extends DescendantNode<
+		TypedUnsupportedControlDefinition<Type>,
+		UnsupportedControlStateSpec,
+		GeneralParentNode,
+		null
+	>
 	implements
 		UnsupportedControlNode,
+		XFormsXPathElement,
 		EvaluationContext,
-		SubscribableDependency,
 		ValidationContext,
 		ValueContext<unknown>,
 		ClientReactiveSubmittableLeafNode<unknown>
 {
 	private readonly validation: SharedValidationState;
 	protected readonly state: SharedNodeState<UnsupportedControlStateSpec>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
 	protected readonly engineState: EngineState<UnsupportedControlStateSpec>;
@@ -92,6 +101,8 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 	readonly submissionState: SubmissionState;
 
 	// ValueContext
+	abstract override readonly contextNode: AnyUnsupportedControl & this;
+
 	readonly encodeValue = (instanceValue: unknown): string => {
 		const encoded = instanceValue;
 
@@ -135,6 +146,11 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
 		this.submissionState = createLeafNodeSubmissionState(this);
+	}
+
+	// XFormsXPathElement
+	override getXPathValue(): string {
+		return this.encodeValue(this.engineState.value);
 	}
 
 	// ValidationContext
