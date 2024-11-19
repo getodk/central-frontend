@@ -128,15 +128,14 @@ const afterUpdate = (updatedEntity) => {
   fetchActivityData();
   updateModal.hide();
   alert.success(i18n.t('alert.updateEntity'));
-  entity.patch(() => {
-    // entity.currentVersion will no longer have extended metadata, but we don't
-    // need it to.
-    entity.currentVersion = updatedEntity.currentVersion;
-    entity.updatedAt = updatedEntity.updatedAt;
-    // Update entity.conflict in case a conflict has been resolved by another
-    // user or in another tab.
-    entity.conflict = updatedEntity.conflict;
-  });
+
+  // entity.currentVersion will no longer have extended metadata, but we don't
+  // need it to.
+  entity.currentVersion = updatedEntity.currentVersion;
+  entity.updatedAt = updatedEntity.updatedAt;
+  // Update entity.conflict in case a conflict has been resolved by another user
+  // or in another tab.
+  entity.conflict = updatedEntity.conflict;
 };
 
 const deleteModal = modalData();

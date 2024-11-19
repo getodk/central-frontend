@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-if="loading === 'tab'">
     <loading :state="showsLoading"/>
-    <component :is="component" v-if="component != null" v-bind="propsAndAttrs"/>
+    <component :is="component" v-if="component != null" v-bind="bindings"/>
   </div>
   <page-body v-else-if="showsLoading">
     <loading :state="true"/>
   </page-body>
-  <component :is="component" v-else-if="component != null" v-bind="propsAndAttrs"/>
+  <component :is="component" v-else-if="component != null" v-bind="bindings"/>
 </template>
 
 <script>
@@ -66,44 +66,14 @@ export default {
     };
   },
   computed: {
-    propsAndAttrs() {
+    bindings() {
       // The main use of this.$attrs is to pass along event listeners to the
       // component.
-      return { ...this.props, ...this.$attrs };
-    },
-    componentNameAndKey() {
-      return [this.componentName, this.k];
+      return { ...this.props, ...this.$attrs, key: this.k };
     }
   },
   watch: {
-    componentNameAndKey([newComponentName], [oldComponentName]) {
-      if (newComponentName !== oldComponentName) {
-        this.load();
-      } else if (this.component != null) {
-        /*
-        If this.k has changed, then we need to re-render the component (unless
-        this.component == null, in which case there is no component to
-        re-render). We will cause a re-render by setting this.component to
-        `null` for a tick.
-
-        Previously, we used the `key` attribute to cause the component to
-        re-render. However, that results in the following lifecycle stages:
-
-          - `beforeUnmount` for the old component
-          - `setup` for the new component
-          - `unmounted` for the old component
-
-        Because we use `unmounted` hooks with requestData, we need `unmounted`
-        for the old component to happen before `setup` for the new component.
-        Otherwise, the new component might try to create a local resource with
-        the same name as one created by the old component, whose local resources
-        haven't been removed yet.
-        */
-        const { component } = this;
-        this.component = null;
-        this.$nextTick(() => { this.component = component; });
-      }
-    }
+    componentName: 'load'
   },
   created() {
     this.load();

@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, isRef, readonly, toRef } from 'vue';
+import { computed, isRef, readonly, shallowReactive, toRef } from 'vue';
 
 import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
 import { noop } from '../util/util';
@@ -40,21 +40,13 @@ class BaseResource {
       dataExists: computed(() => this.dataExists)
     };
   }
-
-  patch(data) {
-    this[_store].$patch(() => {
-      if (typeof data === 'function')
-        data(this.data);
-      else
-        Object.assign(this.data, data);
-    });
-  }
 }
 
 const _container = Symbol('container');
 const _abortController = Symbol('abortController');
 class Resource extends BaseResource {
-  constructor(container, name, store) {
+  constructor(container, name) {
+    const store = shallowReactive({ data: null, awaitingResponse: false });
     super(name, store);
     this[_container] = container;
     this[_abortController] = null;
@@ -67,12 +59,8 @@ class Resource extends BaseResource {
   cancelRequest() { if (this.awaitingResponse) this[_abortController].abort(); }
 
   reset() {
-    if (this.dataExists || this.awaitingResponse) {
-      this[_store].$patch(() => {
-        this.data = null;
-        this.cancelRequest();
-      });
-    }
+    this.data = null;
+    this.cancelRequest();
   }
 
   transformResponse(response) { return response.data; }
@@ -272,7 +260,7 @@ class Resource extends BaseResource {
           this.setFromResponse(response);
         } else {
           if (!this.dataExists) throw new Error('data does not exist');
-          this[_store].$patch(() => { patch(response, this); });
+          patch(response, this);
         }
       });
   }
@@ -309,8 +297,8 @@ const proxyHandler = {
   /* eslint-enable no-param-reassign */
 };
 
-export const createResource = (container, name, store, setup = undefined) => {
-  const resource = new Resource(container, name, store);
+export const createResource = (container, name, setup = undefined) => {
+  const resource = new Resource(container, name);
   const proxy = new Proxy(resource, proxyHandler);
 
   if (setup != null) {
