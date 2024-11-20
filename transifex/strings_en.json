@@ -3215,8 +3215,8 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {Dataset attached to this Form:} other {Datasets attached to this Form:}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
+        "string": "{count, plural, one {Entity List attached to this Form:} other {Entity Lists attached to this Form:}}",
+        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {

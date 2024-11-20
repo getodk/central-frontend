@@ -175,8 +175,8 @@ export default {
       "full": "{submissions} has been saved for this Form. | {submissions} have been saved for this Form.",
       "submissions": "Submission | Submissions"
     },
-    // The count of Dataset(s) is shown separately above this text.
-    "datasetsLinked": "Dataset attached to this Form: | Datasets attached to this Form:"
+    // The count of Entity List(s) is shown separately above this text.
+    "datasetsLinked": "Entity List attached to this Form: | Entity Lists attached to this Form:"
   }
 }
 </i18n>
