@@ -41,8 +41,13 @@ definition for an existing form -->
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.workflowWarnings">
-              {{ $t('warningsText[3].' + warning.type, { value: warning.details.xmlFormId }) }}
-              <doc-link :to="documentLinks[warning.type]">{{ $t('moreInfo.learnMore') }}</doc-link>
+              {{ $t('warningsText[3].' + warning.type, { value: getWarningValue(warning) }) }}
+              <template v-if="warning.type === 'oldEntityVersion'">
+                <a :href="externalLinks.oldEntityVersion" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
+              </template>
+              <template v-else>
+                <doc-link :to="documentLinks[warning.type]">{{ $t('moreInfo.learnMore') }}</doc-link>
+              </template>
               <span v-if="warning.type === 'structureChanged'">
                 <br>
                 <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
@@ -147,6 +152,9 @@ export default {
       documentLinks: {
         deletedFormExists: 'central-forms/#deleting-a-form',
         structureChanged: 'central-forms/#central-forms-updates'
+      },
+      externalLinks: {
+        oldEntityVersion: 'https://getodk.github.io/xforms-spec/entities'
       }
     };
   },
@@ -241,6 +249,10 @@ export default {
     },
     getLearnMoreLink(value) {
       return value.match(/Learn more: (https?:\/\/xlsform\.org[^.]*)\.?/)[1];
+    },
+    getWarningValue(warning) {
+      if (warning.type === 'oldEntityVersion') return warning.details.version;
+      return warning.details.xmlFormId;
     }
   }
 };
@@ -318,7 +330,8 @@ export default {
       "Workflow warnings:",
       {
         "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID.",
-        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default.",
+        "oldEntityVersion": "Entities specification version \"{value}\" is not compatible with Offline Entities. Please use version 2024.1.0 or later."
       },
       "Please correct the problems and try again.",
       {

@@ -3142,6 +3142,9 @@
           },
           "structureChanged": {
             "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+          },
+          "oldEntityVersion": {
+            "string": "Entities specification version \"{value}\" is not compatible with Offline Entities. Please use version 2024.1.0 or later."
           }
         },
         "4": {
