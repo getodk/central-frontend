@@ -52,6 +52,7 @@ const qrCanvas = ref(null);
 const imgHtml = ref('');
 
 const margin = 15;
+const textFontSize = 16;
 
 // The QR code is rendered to a canvas (possibly with additional icons and text)
 // and then the canvas data is converted to an image via toDataURL and used as the source
@@ -66,7 +67,7 @@ onMounted(() => {
   // Compute image size
   // blocks (based on length of encoded data) * cell size + (2 * margin)
   const width = code.getModuleCount() * props.cellSize + margin * 2;
-  const height = props.draft ? width + 20 : width;
+  const height = props.draft ? width + textFontSize : width;
   qrCanvas.value.width = width;
   qrCanvas.value.height = height;
 
@@ -103,7 +104,7 @@ onMounted(() => {
     ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
 
     // Write text at the bottom
-    ctx.font = '20px Monaco, Menlo, Consolas, "Courier New", monospace';
+    ctx.font = `${textFontSize}px Monaco, Menlo, Consolas, "Courier New", monospace`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'red';
@@ -133,7 +134,7 @@ onMounted(() => {
   {
     "en": {
       // This is shown below a QR code for a draft form.
-      "draft": "Temporary Draft",
+      "draft": "Temporary Testing Code",
       // @transifexKey component.FieldKeyQrPanel.title.managed
       "altText": "Client Configuration Code"
     }
