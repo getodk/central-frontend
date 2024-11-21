@@ -1,3 +1,5 @@
+import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import type { initializeForm } from '../instance/index.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 
 /**
@@ -29,7 +31,13 @@ export interface FetchResourceResponse {
  * actual resources (likely, but not necessarily, accessed at a corresponding
  * HTTP URL).
  */
-export type FetchResource = (resource: URL) => Promise<FetchResourceResponse>;
+export type FetchResource<Resource extends URL = URL> = (
+	resource: Resource
+) => Promise<FetchResourceResponse>;
+
+export type FormAttachmentURL = JRResourceURL;
+
+export type FetchFormAttachment = FetchResource<FormAttachmentURL>;
 
 /**
  * Options provided by a client to specify certain aspects of engine runtime
@@ -55,29 +63,59 @@ export interface EngineConfig {
 	readonly stateFactory?: OpaqueReactiveObjectFactory;
 
 	/**
-	 * A client may specify a generic function for retrieving resources referenced
-	 * by a form, such as:
 	 *
-	 * - Form definitions themselves (if not provided directly to the engine by
-	 *   the client)
-	 * - External secondary instances
-	 * - Media (images, audio, video, etc.)
+	 * A client may specify an arbitrary {@link fetch}-like function for retrieving an XML XForm form
+	 * definition.
 	 *
-	 * The function is expected to be a subset of the
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API | Fetch API},
-	 * performing `GET` requests for:
+	 * Notes:
 	 *
-	 * - Text resources (e.g. XML, CSV, JSON/GeoJSON)
-	 * - Binary resources (e.g. media)
-	 * - Optionally streamed binary data of either (e.g. for optimized
-	 *   presentation of audio/video)
+	 * - This configuration will only be consuled for calls to
+	 *   {@link initializeForm} with a URL referencing an XML XForm definition. It
+	 *   will be ignored for calls passing an XML XForm form definition directly.
 	 *
-	 * If provided by a client, this function will be used by the engine to
-	 * retrieve any such resource, as required for engine functionality. If
-	 * absent, the engine will use the native `fetch` function (if available, a
-	 * polyfill otherwise). Clients may use this function to provide resources
-	 * from sources other than the network, (or even in a test client to provide
-	 * e.g. resources from test fixtures).
+	 * - For calls to {@link initializeForm} with a URL, if this configuration is
+	 *   not specified it will default to the global {@link fetch} function (if
+	 *   one is defined).
+	 */
+	readonly fetchFormDefinition?: FetchResource;
+
+	/**
+	 * @deprecated
+	 * @alias fetchFormDefinition
 	 */
 	readonly fetchResource?: FetchResource;
+
+	/**
+	 * A client may specify an arbitrary {@link fetch}-like function to retrieve a
+	 * form's attachments, i.e. any `jr:` URL referenced by the form (as specified
+	 * by {@link https://getodk.github.io/xforms-spec/ | ODK XForms}).
+	 *
+	 * Notes:
+	 *
+	 * - This configuration will be consulted for all supported form attachments,
+	 *   as a part of {@link initializeForm | form initialization}.
+	 *
+	 * - If this configuration is not specified it will default to the global
+	 *   {@link fetch} function (if one is defined).
+	 *
+	 * This default behavior will typically result in failure to load form
+	 * attachments—and in most cases this will also cause
+	 * {@link initializeForm | form initialization} to fail overall—with the
+	 * following exceptions:
+	 *
+	 * - **CLIENT-SPECIFIC:** Usage in coordination with a client-implemented
+	 *   {@link https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API | Serivce Worker},
+	 *   which can intercept network requests **generally**. Clients already using
+	 *   a Service Worker may opt for the convenience of handling network requests
+	 *   for `jr:` URLs along with any other network interception logic. Client
+	 *   implementors should be warned, however, that such `jr:` URLs are not
+	 *   namespaced or otherwise scoped to a particular form; such a client would
+	 *   therefore inherently need to coordinate state between the Service Worker
+	 *   and the main thread (or whatever other realm calls
+	 *   {@link initializeForm}).
+	 *
+	 * - **PENDING:** Any usage where the engine does not require access to a
+	 *   form's attachments.
+	 */
+	readonly fetchFormAttachment?: FetchFormAttachment;
 }

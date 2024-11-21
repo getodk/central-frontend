@@ -77,7 +77,8 @@ describe('PrimaryInstance engine representation of instance state', () => {
 		return scope.runTask(() => {
 			return new PrimaryInstance(scope, xformDefinition.model, {
 				createUniqueId,
-				fetchResource,
+				fetchFormAttachment: fetchResource,
+				fetchFormDefinition: fetchResource,
 				stateFactory,
 			});
 		});
