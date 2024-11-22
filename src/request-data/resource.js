@@ -16,7 +16,18 @@ import { noop } from '../util/util';
 import { setCurrentResource } from './util';
 import { unlessFailure } from '../util/router';
 
+/*
+This file uses Symbols for internal properties. Private properties are usually
+nice, but they don't work well in this case:
+
+  - The _store property is used in subclasses.
+  - Our use of proxies in this file doesn't seem to play well with private
+    properties.
+
+Internal properties are not intended to be used outside this file.
+*/
 const _store = Symbol('store');
+
 // Subclasses must define a property named `data`.
 class BaseResource {
   /*
