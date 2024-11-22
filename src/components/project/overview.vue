@@ -18,37 +18,31 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-import ProjectOverviewDescription from './overview/description.vue';
+<script setup>
+import { computed } from 'vue';
+
 import FormList from '../form/list.vue';
 import FormTrashList from '../form/trash-list.vue';
+import ProjectOverviewDescription from './overview/description.vue';
 
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'ProjectOverview',
-  components: { ProjectOverviewDescription, FormList, FormTrashList },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['fetch-forms'],
-  setup() {
-    const { project } = useRequestData();
-    return { project };
-  },
-  computed: {
-    canUpdate() {
-      return this.project.dataExists && this.project.permits('project.update');
-    },
-    rendersTrashList() {
-      return this.project.dataExists && this.project.permits('form.restore');
-    }
-  },
-  created() {
-    this.$emit('fetch-forms', false);
+defineOptions({
+  name: 'ProjectOverview'
+});
+defineProps({
+  projectId: {
+    type: String,
+    required: true
   }
-};
+});
+const emit = defineEmits(['fetch-forms']);
+
+const { project } = useRequestData();
+emit('fetch-forms', false);
+
+const canUpdate = computed(() =>
+  project.dataExists && project.permits('project.update'));
+const rendersTrashList = computed(() =>
+  project.dataExists && project.permits('form.restore'));
 </script>
