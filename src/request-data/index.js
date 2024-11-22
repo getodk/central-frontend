@@ -67,8 +67,9 @@ export const createRequestData = (container) => {
     return resource;
   };
   // Normally, requestData only provides access to app-wide resources. However,
-  // we allow tests to access local resources in order to make assertions about
-  // them.
+  // in testing, we sometimes need access outside components to local resources.
+  // For example, tests sometimes need to access local resources in order to
+  // make assertions about them.
   if (process.env.NODE_ENV === 'test')
     requestData.localResources = localResources;
 
@@ -78,6 +79,7 @@ export const createRequestData = (container) => {
   const getters = Object.create(null);
   const createGetter = (name, ref) => {
     provide(`requestData.getters.${name}`, ref);
+    getters[name] = ref;
     onUnmounted(() => { if (getters[name] === ref) delete getters[name]; });
     return ref;
   };
