@@ -9,12 +9,12 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-
 import { shallowReactive, isReactive } from 'vue';
-import { apiPaths, withAuth } from '../../util/request';
-import { noop } from '../../util/util';
-import { SitePreferenceNormalizer, ProjectPreferenceNormalizer } from './normalizers';
 
+import { SitePreferenceNormalizer, ProjectPreferenceNormalizer } from './normalizers';
+import { apiPaths } from '../../util/request';
+import { createResource } from '../resource';
+import { noop } from '../../util/util';
 
 /*
 UserPreferences - for storing user preferences such as the display sort order of listings, etc. The settings are propagated to the
@@ -49,65 +49,42 @@ mutation. At the backend, the preferences are stored in the `user_site_preferenc
 */
 
 export default class UserPreferences {
-  #abortControllers;
-  #instanceID;
-  #session;
-  #http;
+  #container;
+  #resources;
 
-  constructor(preferenceData, session, http) {
-    this.#abortControllers = {};
-    this.#instanceID = crypto.randomUUID();
+  constructor(preferenceData, container) {
     this.site = this.#makeSiteProxy(preferenceData.site);
     this.projects = this.#makeProjectsProxy(preferenceData.projects);
-    this.#session = session;
-    this.#http = http;
+    this.#container = container;
+    this.#resources = {};
   }
 
+  // Creates or deletes a user preference on Backend.
   #propagate(k, v, projectId) {
-    // As we need to be able to have multiple requests in-flight (not canceling eachother), we can't use resource.request() here.
-    // However, we want to avoid stacking requests for the same key, so we abort preceding requests for the same key, if any.
-    // Note that because locks are origin-scoped, we use a store instantiation identifier to scope them to this app instance.
-    const keyLockName = `userPreferences-${this.#instanceID}-keystack-${projectId}-${k}`;
-    navigator.locks.request(
-      `userPreferences-${this.instanceID}-lockops`,
-      () => {
-        navigator.locks.request(
-          keyLockName,
-          { ifAvailable: true },
-          (lockForKey) => {
-            const aborter = new AbortController();
-            if (!lockForKey) {
-              // Cancel the preceding HTTP request, a new one supersedes it.
-              this.#abortControllers[k].abort();
-              return navigator.locks.request(
-                keyLockName,
-                () => {
-                  this.#abortControllers[k] = aborter;
-                  return this.#request(k, v, projectId, aborter);
-                }
-              );
-            }
-            this.#abortControllers[k] = aborter;
-            return this.#request(k, v, projectId, aborter);
-          },
-        );
-        return Promise.resolve(); // return asap with a resolved promise so the outer lockops lock gets released; we don't wan't to wait here for the inner keylock-enveloped requests.
-      }
-    );
-  }
+    // Get or create a resource to send the request. If there is a request in
+    // progress for the same user preference, then we will reuse that request's
+    // resource. Doing so will cancel the previous request; the new request
+    // supersedes it. We want to avoid stacking requests for the same key.
+    const resourceName = projectId == null
+      ? `userPreference.site.${k}`
+      : `userPreference.project.${projectId}.${k}`;
+    if (this.#resources[resourceName] == null)
+      this.#resources[resourceName] = createResource(this.#container, resourceName);
+    const resource = this.#resources[resourceName];
 
-  #request(k, v, projectId, aborter) {
-    return this.#http.request(
-      withAuth(
-        {
-          method: (v === null) ? 'DELETE' : 'PUT',
-          url: (projectId === null) ? apiPaths.userSitePreferences(k) : apiPaths.userProjectPreferences(projectId, k),
-          data: (v === null) ? undefined : { propertyValue: v },
-          signal: aborter.signal,
-        },
-        this.#session.token
-      )
-    ).catch(noop); // Preference didn't get persisted to the backend. Too bad! We're not doing any retrying.
+    resource.request({
+      method: (v === null) ? 'DELETE' : 'PUT',
+      url: (projectId === null)
+        ? apiPaths.userSitePreferences(k)
+        : apiPaths.userProjectPreferences(projectId, k),
+      data: (v === null) ? undefined : { propertyValue: v },
+    })
+      .catch(noop) // Preference didn't get persisted to the backend. Too bad! We're not doing any retrying.
+      .finally(() => {
+        // Remove the resource from this.#resources unless it is being used for
+        // a new request.
+        if (!resource.awaitingResponse) delete this.#resources[resourceName];
+      });
   }
 
   #makeSiteProxy(sitePreferenceData) {
