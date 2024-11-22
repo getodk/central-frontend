@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, inject, onBeforeUnmount, onUnmounted, provide } from 'vue';
+import { computed, inject, onUnmounted, provide } from 'vue';
 
 import createResources from './resources';
 import { createResource, resourceView } from './resource';
@@ -17,21 +17,18 @@ import { createResource, resourceView } from './resource';
 const composableKey = Symbol('requestData composable');
 
 export const createRequestData = (container) => {
-  // `resources` holds both app-wide resources and local resources.
-  const resources = new Map();
-
   // Create app-wide resources.
   const requestData = { resources: new Set() };
   createResources(container, (name, setup) => {
+    if (name in requestData) throw new Error(`the name ${name} is in use`);
     const resource = createResource(container, name, setup);
-    resources.set(name, resource);
     requestData[name] = resource;
     requestData.resources.add(resource);
     return resource;
   });
 
   // Checking the collective state of multiple resources
-  requestData.resourceStates = (resources) => ({ // eslint-disable-line no-shadow
+  requestData.resourceStates = (resources) => ({
     // Returns `true` if a group of resources is being initially loaded (not
     // refreshed). Returns `false` if there is a resource that is not loading
     // and also does not have data, because presumably its request resulted in
@@ -42,14 +39,17 @@ export const createRequestData = (container) => {
     dataExists: computed(() => resources.every(resource => resource.dataExists))
   });
 
-  // Local resources
+  // Add a mechanism to create local resources. Local resources do not have to
+  // have names that are globally unique: different local resources can have the
+  // same name at the same time. The localResources object keys by name, but it
+  // is only used in testing and only in situations where that should be OK.
+  const localResources = Object.create(null);
   const createLocalResource = (name, setup) => {
-    if (resources.has(name)) throw new Error(`the name ${name} is in use`);
     const resource = createResource(container, name, setup);
-    resources.set(name, resource);
     // We provide the local resource; only descendant components will be able to
     // inject it.
     provide(`requestData.localResources.${name}`, resource);
+    localResources[name] = resource;
 
     onUnmounted(() => {
       // The resource is no longer needed, so we cancel any request still in
@@ -58,61 +58,38 @@ export const createRequestData = (container) => {
       // some reason. We don't want to trigger a component watcher while the
       // component is being unmounted.
       resource.cancelRequest();
-    });
-    onBeforeUnmount(() => {
-      /*
-      This needs to be run in onBeforeUnmount(), not onUnmounted(). In
-      AsyncRoute, we see the following lifecycle stages:
 
-        - `beforeUnmount` for the old component
-        - `setup` for the new component
-        - `unmounted` for the old component
-
-      We need to delete `resource` from `resources` before the new component is
-      set up, in case the new component creates a local resource with the same
-      name.
-      */
-      resources.delete(name);
+      // Remove `resource` from localResources unless it has already been
+      // replaced.
+      if (localResources[name] === resource) delete localResources[name];
     });
 
     return resource;
   };
-  if (process.env.NODE_ENV === 'test') {
-    // Normally, requestData only provides access to app-wide resources.
-    // However, in testing, we sometimes need access outside components to local
-    // resources.
-    requestData.localResources = new Proxy({}, {
-      get: (_, prop) => {
-        const resource = resources.get(prop);
-        return resource != null && !requestData.resources.has(resource)
-          ? resource
-          : undefined;
-      }
-    });
-  }
+  // Normally, requestData only provides access to app-wide resources. However,
+  // in testing, we sometimes need access outside components to local resources.
+  // For example, tests sometimes need to access local resources in order to
+  // make assertions about them.
+  if (process.env.NODE_ENV === 'test')
+    requestData.localResources = localResources;
 
   // Getters allow you to create a computed ref in one component, then access it
   // from useRequestData() in a descendant component. Getters are only really
   // needed for computed refs that reference multiple resources.
-  const getters = new Map();
+  const getters = Object.create(null);
   const createGetter = (name, ref) => {
-    if (getters.has(name)) throw new Error(`the name ${name} is in use`);
-    getters.set(name, ref);
     provide(`requestData.getters.${name}`, ref);
-    onBeforeUnmount(() => { getters.delete(name); });
+    getters[name] = ref;
+    onUnmounted(() => { if (getters[name] === ref) delete getters[name]; });
     return ref;
   };
 
   // useRequestData()
   const getResource = (name) => {
-    const resource = resources.get(name);
-    if (resource == null) return null;
-    // If the resource is a local resource, check whether it was created by an
-    // ancestor component.
-    if (!requestData.resources.has(resource) &&
-      inject(`requestData.localResources.${name}`) == null)
-      return null;
-    return resource;
+    const localResource = inject(`requestData.localResources.${name}`, null);
+    if (localResource != null) return localResource;
+    const value = requestData[name];
+    return requestData.resources.has(value) ? value : null;
   };
   const composable = new Proxy(
     {
@@ -125,29 +102,21 @@ export const createRequestData = (container) => {
       createGetter
     },
     {
-      get: (target, prop) => {
-        const resource = getResource(prop);
-        if (resource != null) return resource;
-
-        if (getters.has(prop)) {
-          const getter = inject(`requestData.getters.${prop}`);
-          if (getter != null) return getter;
-        }
-
-        return requestData[prop] != null ? requestData[prop] : target[prop];
-      }
+      get: (target, prop) => getResource(prop) ??
+        inject(`requestData.getters.${prop}`, null) ??
+        requestData[prop] ??
+        target[prop]
     }
   );
 
   requestData.install = (app) => {
     app.provide(composableKey, composable);
 
-    // Provide local resources and getters for testing.
-    for (const [name, resource] of resources.entries()) {
-      if (!requestData.resources.has(resource))
-        app.provide(`requestData.localResources.${name}`, resource);
-    }
-    for (const [name, getter] of getters.entries())
+    // Provide local resources and getters to a component being mounted in
+    // testing.
+    for (const [name, resource] of Object.entries(localResources))
+      app.provide(`requestData.localResources.${name}`, resource);
+    for (const [name, getter] of Object.entries(getters))
       app.provide(`requestData.getters.${name}`, getter);
   };
 
