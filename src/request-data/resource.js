@@ -19,12 +19,17 @@ import { unlessFailure } from '../util/router';
 const _store = Symbol('store');
 // Subclasses must define a property named `data`.
 class BaseResource {
+  /*
+  - name. Every resource must be provided a name. This can be helpful for
+    logging/debugging. Resource names do not have to be unique.
+  - store. The reactive state of the resource.
+  */
   constructor(name, store) {
-    // We don't use a Symbol for this property so that it is easy to access it
-    // for display in testing. Not using a Symbol also means that calling
-    // Object.keys() on the resource will return a non-empty array. Vue I18n
-    // uses Object.keys() to determine whether an object is empty.
-    this._name = name;
+    // In addition to logging/debugging, another reason to add this property is
+    // so that calling Object.keys() on the resource will return a non-empty
+    // array. Vue I18n uses Object.keys() to determine whether an object is
+    // empty.
+    this.resourceName = name;
     this[_store] = store;
   }
 
@@ -329,7 +334,7 @@ const _view = Symbol('view');
 class ResourceView extends BaseResource {
   constructor(resource, lens) {
     const store = resource[_store];
-    super(`${resource._name} view`, store);
+    super(`${resource.resourceName} view`, store);
     this[_view] = computed(() =>
       (store.data != null ? lens(store.data) : null));
   }
