@@ -74,14 +74,19 @@ export const createRequestData = (container) => {
     requestData.localResources = localResources;
 
   // Getters allow you to create a computed ref in one component, then access it
-  // from useRequestData() in a descendant component. Getters are only really
-  // needed for computed refs that reference multiple resources.
+  // from useRequestData() in a descendant component. Getters are very similar
+  // to provide/inject, but they're a little easier to use in testing: getters
+  // are automatically `provide`-d to components that are mounted in testing.
+  // Getters are only really needed for computed refs that reference multiple
+  // resources.
   const getters = Object.create(null);
-  const createGetter = (name, ref) => {
-    provide(`requestData.getters.${name}`, ref);
-    getters[name] = ref;
-    onUnmounted(() => { if (getters[name] === ref) delete getters[name]; });
-    return ref;
+  const createGetter = (name, f) => {
+    const getter = computed(() => f(requestData));
+    provide(`requestData.getters.${name}`, getter);
+    getters[name] = getter;
+    // eslint-disable-next-line vue/no-ref-as-operand
+    onUnmounted(() => { if (getters[name] === getter) delete getters[name]; });
+    return getter;
   };
 
   // useRequestData()

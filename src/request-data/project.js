@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, watchSyncEffect } from 'vue';
+import { watchSyncEffect } from 'vue';
 
 import { computeIfExists, transformForms } from './util';
 import { useRequestData } from './index';
@@ -43,7 +43,7 @@ export default () => {
   // Returns a set containing just the form names that appear more than once
   // in a project. Used on forms page to show form ID next to form name
   // when form names are duplicated.
-  const duplicateFormNames = createGetter('duplicateFormNames', computed(() => {
+  const duplicateFormNames = createGetter('duplicateFormNames', () => {
     if (!(forms.dataExists && deletedForms.dataExists)) return null;
     const allForms = [...forms, ...deletedForms];
     const seenNames = new Set();
@@ -54,7 +54,7 @@ export default () => {
       seenNames.add(formName);
     }
     return dupeNames;
-  }));
+  });
 
   return {
     project, projectAssignments, forms, deletedForms, formSummaryAssignments,
