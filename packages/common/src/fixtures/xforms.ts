@@ -1,5 +1,5 @@
-import { IS_NODE_RUNTIME } from '../env/detection.ts';
 import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
+import { toGlobLoaderEntries } from './import-glob-helper.ts';
 
 type XFormResourceType = 'local' | 'remote';
 
@@ -73,14 +73,10 @@ const xformURLLoader = (url: URL): LoadXFormXML => {
 
 export class XFormResource<Type extends XFormResourceType> {
 	static forLocalFixture(
-		importerURL: string,
-		relativePath: string,
-		localURL: URL | string,
+		localPath: string,
+		resourceURL: URL,
 		loadXML?: LoadXFormXML
 	): XFormResource<'local'> {
-		const resourceURL = new URL(localURL, importerURL);
-		const localPath = new URL(relativePath, importerURL).pathname;
-
 		return new XFormResource('local', resourceURL, loadXML ?? xformURLLoader(resourceURL), {
 			category: localFixtureDirectoryCategory(localPath),
 			localPath,
@@ -118,34 +114,22 @@ export class XFormResource<Type extends XFormResourceType> {
 	}
 }
 
-export type XFormFixture = XFormResource<'local'>;
-
-const buildXFormFixtures = (): readonly XFormFixture[] => {
-	if (IS_NODE_RUNTIME) {
-		const fixtureXMLByRelativePath = import.meta.glob<false, 'raw', string>('./**/*.xml', {
-			query: '?raw',
-			import: 'default',
-			eager: false,
-		});
-
-		return Object.entries(fixtureXMLByRelativePath).map(([path, loadXML]) => {
-			const localURL = new URL(path, import.meta.url);
-			const fixture = XFormResource.forLocalFixture(import.meta.url, path, localURL, loadXML);
-
-			return fixture;
-		});
-	}
-
-	const fixtureURLByRelativePath = import.meta.glob<true, 'url', string>('./**/*.xml', {
+const xformFixtureLoaderEntries = toGlobLoaderEntries(
+	import.meta,
+	import.meta.glob<true, 'url', string>('./**/*.xml', {
 		query: '?url',
 		import: 'default',
 		eager: true,
-	});
+	})
+);
 
-	return Object.entries(fixtureURLByRelativePath).map(([path, url]) => {
-		const fixture = XFormResource.forLocalFixture(import.meta.url, path, url);
+export type XFormFixture = XFormResource<'local'>;
 
-		return fixture;
+const buildXFormFixtures = (): readonly XFormFixture[] => {
+	return xformFixtureLoaderEntries.map(([path, loadXML]) => {
+		const resourceURL = new URL(path, SELF_URL);
+
+		return XFormResource.forLocalFixture(path, resourceURL, loadXML);
 	});
 };
 
