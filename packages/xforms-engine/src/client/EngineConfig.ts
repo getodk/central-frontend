@@ -1,43 +1,6 @@
-import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { initializeForm } from '../instance/index.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
-
-/**
- * @todo this is currently a strict subset of the web standard `Response`. Is it
- * sufficient? Ways it might not be:
- *
- * - No way to convey metadata about the resource
- * - Ambiguous if a client supplies an alternative implementation which doesn't
- *   exhaust the body on access
- */
-export interface FetchResourceResponse {
-	readonly ok?: boolean;
-	readonly body?: ReadableStream<Uint8Array> | null;
-	readonly bodyUsed?: boolean;
-
-	readonly blob: () => Promise<Blob>;
-	readonly text: () => Promise<string>;
-}
-
-/**
- * @todo this is a strict subset of the web standard `fetch` interface. It
- * implicitly assumes that the engine itself will only ever issue `GET`-like
- * requests. It also provides no further request-like semantics to the engine.
- * This is presumed sufficient for now, but notably doesn't expose any notion of
- * content negotiation (e.g. the ability to supply `Accept` headers).
- *
- * This also completely ignores any notion of mapping
- * {@link https://getodk.github.io/xforms-spec/#uris | `jr:` URLs} to their
- * actual resources (likely, but not necessarily, accessed at a corresponding
- * HTTP URL).
- */
-export type FetchResource<Resource extends URL = URL> = (
-	resource: Resource
-) => Promise<FetchResourceResponse>;
-
-export type FormAttachmentURL = JRResourceURL;
-
-export type FetchFormAttachment = FetchResource<FormAttachmentURL>;
+import type { FetchFormAttachment, FetchResource } from './resources.ts';
 
 /**
  * Options provided by a client to specify certain aspects of engine runtime

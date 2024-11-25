@@ -11,10 +11,10 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { FetchResource } from '../../src/client/EngineConfig.ts';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from '../../src/client/RootNode.ts';
+import type { FetchResource } from '../../src/client/resources.ts';
 import { PrimaryInstance } from '../../src/instance/PrimaryInstance.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';

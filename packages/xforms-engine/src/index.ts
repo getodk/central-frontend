@@ -25,6 +25,7 @@ export type * from './client/OpaqueReactiveObjectFactory.ts';
 export type * from './client/repeat/RepeatInstanceNode.ts';
 export type * from './client/repeat/RepeatRangeControlledNode.ts';
 export type * from './client/repeat/RepeatRangeUncontrolledNode.ts';
+export type * from './client/resources.ts';
 export type * from './client/RootNode.ts';
 export type * from './client/SelectNode.ts';
 export type * from './client/StringNode.ts';
