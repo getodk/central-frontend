@@ -10,10 +10,27 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-draft-qr-panel">
-    <collect-qr v-if="formDraft.dataExists" :settings="settings"
-      error-correction-level="Q" :cell-size="3" draft/>
-  </div>
+  <qr-panel class="form-draft-qr-panel">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <collect-qr v-if="formDraft.dataExists" :settings="settings"
+        error-correction-level="Q" :cell-size="3" draft/>
+      <i18n-t keypath="intro.full" tag="p">
+        <template #temporaryCode>
+          <strong>{{ $t('intro.temporaryCode') }}</strong>
+        </template>
+      </i18n-t>
+      <p>{{ $t('stopsWorking') }}</p>
+      <p>{{ $t('instructions') }}</p>
+      <i18n-t keypath="codesForUsers.full" tag="p">
+        <template #appUsers>
+          <router-link :to="projectPath('app-users')">
+            {{ $t('codesForUsers.appUsers') }}
+          </router-link>
+        </template>
+      </i18n-t>
+    </template>
+  </qr-panel>
 </template>
 
 <script setup>
@@ -21,7 +38,9 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import CollectQr from '../collect-qr.vue';
+import QrPanel from '../qr-panel.vue';
 
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
@@ -52,15 +71,34 @@ const settings = computed(() => {
     admin: {}
   };
 });
+
+const { projectPath } = useRoutes();
 </script>
 
 <i18n lang="json5">
 {
   "en": {
+    // This is the title at the top of a pop-up. "Code" refers to a QR code.
+    "title": "Testing Code",
     // @transifexKey component.FormDraftTesting.collectProjectName
     // This text will be shown in ODK Collect when testing a Draft Form. {name}
     // is the title of the Draft Form.
     "collectProjectName": "[Draft] {name}",
+    "intro": {
+      // This is shown next to a QR code.
+      "full": "This is a {temporaryCode}.",
+      // "Code" refers to a QR code.
+      "temporaryCode": "Temporary Testing Code"
+    },
+    // "It" refers to a temporary testing code.
+    "stopsWorking": "It will stop working when you publish this Draft.",
+    // The table is a table of test Submissions.
+    "instructions": "Scan this QR code to configure Collect on a device for testing and submitting data to this test table.",
+    "codesForUsers": {
+      // "Codes" refers to "QR codes".
+      "full": "To create codes to distribute to users, please see the {appUsers} page.",
+      "appUsers": "App Users"
+    }
   }
 }
 </i18n>
