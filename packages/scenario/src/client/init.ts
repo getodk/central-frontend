@@ -1,3 +1,4 @@
+import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type {
 	EngineConfig,
@@ -53,6 +54,7 @@ const fetchResourceStub: typeof fetch = () => {
 };
 
 export interface InitializeTestFormOptions {
+	readonly resourceService: JRResourceService;
 	readonly stateFactory: OpaqueReactiveObjectFactory;
 }
 
@@ -82,6 +84,7 @@ export const initializeTestForm = async (
 			return initializeForm(formResource, {
 				config: {
 					...defaultConfig,
+					fetchFormAttachment: options.resourceService.handleRequest,
 					stateFactory: options.stateFactory,
 				},
 			});

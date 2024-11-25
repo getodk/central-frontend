@@ -24,6 +24,7 @@ import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.
 import { ImplementationPendingError } from '../error/ImplementationPendingError.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import type { ReactiveScenario } from '../reactive/ReactiveScenario.ts';
+import { SharedJRResourceService } from '../resources/SharedJRResourceService.ts';
 import type { JRFormEntryCaption } from './caption/JRFormEntryCaption.ts';
 import type { BeginningOfFormEvent } from './event/BeginningOfFormEvent.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
@@ -85,9 +86,8 @@ const isFormFileName = (value: FormDefinitionResource | string): value is FormFi
 
 // prettier-ignore
 type ScenarioStaticInitParameters =
-
 	| readonly [formFileName: FormFileName]
-	| readonly [formName: string, form: XFormsElement]
+	| readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<InitializeTestFormOptions>]
 	| readonly [resource: FormDefinitionResource];
 
 interface AssertCurrentReferenceOptions {
@@ -150,9 +150,14 @@ export class Scenario {
 	/**
 	 * To be overridden, e.g. by {@link ReactiveScenario}.
 	 */
-	// eslint-disable-next-line @typescript-eslint/class-literal-property-style
-	static get initializeTestFormOptions(): InitializeTestFormOptions | null {
-		return null;
+
+	static getInitializeTestFormOptions(
+		overrideOptions?: Partial<InitializeTestFormOptions>
+	): InitializeTestFormOptions {
+		return {
+			resourceService: overrideOptions?.resourceService ?? SharedJRResourceService.init(),
+			stateFactory: overrideOptions?.stateFactory ?? nonReactiveIdentityStateFactory,
+		};
 	}
 
 	static async init<This extends typeof Scenario>(
@@ -161,6 +166,7 @@ export class Scenario {
 	): Promise<This['prototype']> {
 		let resource: TestFormResource;
 		let formName: string;
+		let options: InitializeTestFormOptions;
 
 		if (isFormFileName(args[0])) {
 			return this.init(r(args[0]));
@@ -168,17 +174,14 @@ export class Scenario {
 			const [pathResource] = args;
 			resource = pathResource;
 			formName = pathResource.formName;
+			options = this.getInitializeTestFormOptions();
 		} else {
-			const [name, form] = args;
+			const [name, form, overrideOptions] = args;
 
 			formName = name;
 			resource = form;
+			options = this.getInitializeTestFormOptions(overrideOptions);
 		}
-
-		const options: InitializeTestFormOptions = {
-			stateFactory: nonReactiveIdentityStateFactory,
-			...this.initializeTestFormOptions,
-		};
 
 		const { dispose, owner, instanceRoot } = await initializeTestForm(resource, options);
 

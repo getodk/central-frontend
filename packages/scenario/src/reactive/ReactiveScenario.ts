@@ -6,10 +6,10 @@ import type { InitializeTestFormOptions } from '../client/init.ts';
 import { Scenario, type ScenarioConstructorOptions } from '../jr/Scenario.ts';
 
 export class ReactiveScenario extends Scenario {
-	static override get initializeTestFormOptions(): InitializeTestFormOptions {
-		return {
+	static override getInitializeTestFormOptions(): InitializeTestFormOptions {
+		return super.getInitializeTestFormOptions({
 			stateFactory: createMutable,
-		};
+		});
 	}
 
 	private readonly testScopedOwner: Owner;
