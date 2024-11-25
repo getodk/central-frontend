@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { initializeForm, type RootNode } from '@getodk/xforms-engine';
+import { initializeForm, type FetchFormAttachment, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
@@ -11,7 +11,10 @@ import QuestionList from './QuestionList.vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 
-const props = defineProps<{ formXml: string }>();
+const props = defineProps<{
+	formXml: string;
+	fetchFormAttachment: FetchFormAttachment;
+}>();
 const emit = defineEmits(['submit']);
 
 const odkForm = ref<RootNode>();
@@ -20,6 +23,7 @@ const initializeFormError = ref<FormInitializationError | null>();
 
 initializeForm(props.formXml, {
 	config: {
+		fetchFormAttachment: props.fetchFormAttachment,
 		stateFactory: reactive,
 	},
 })
