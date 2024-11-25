@@ -50,11 +50,11 @@ except according to the terms contained in the LICENSE file.
 
     <loading :state="keys.initiallyLoading"/>
     <submission-list v-show="keys.dataExists" :project-id="projectId"
-      :xml-form-id="xmlFormId" draft @fetch-keys="fetchData"/>
+      :xml-form-id="xmlFormId" draft @fetch-keys="fetchKeys"/>
   </div>
 </template>
 
-<script>
+<script setup>
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -67,49 +67,33 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'FormDraftTesting',
-  components: {
-    PageSection,
-    FloatRow,
-    CollectQr,
-    DocLink,
-    EnketoFill,
-    Loading,
-    SentenceSeparator,
-    SubmissionList
+defineOptions({
+  name: 'FormDraftTesting'
+});
+const props = defineProps({
+  projectId: {
+    type: String,
+    required: true
   },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    const { resourceView, createResource } = useRequestData();
-
-    // SubmissionList expects submission stores to be created!
-    useSubmissions();
-    const formDraft = resourceView('formDraft', (data) => data.get());
-    const keys = createResource('keys');
-    return { formDraft, keys };
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      // We do not reconcile this.keys and this.formDraft.keyId.
-      this.keys.request({
-        url: apiPaths.submissionKeys(this.projectId, this.xmlFormId, true)
-      }).catch(noop);
-    }
+  xmlFormId: {
+    type: String,
+    required: true
   }
+});
+
+const { resourceView, createResource } = useRequestData();
+const formDraft = resourceView('formDraft', (data) => data.get());
+// SubmissionList expects submission stores to be created!
+useSubmissions();
+
+const keys = createResource('keys');
+const fetchKeys = () => {
+  // We do not reconcile `keys` and formDraft.keyId.
+  keys.request({
+    url: apiPaths.submissionKeys(props.projectId, props.xmlFormId, true)
+  }).catch(noop);
 };
+fetchKeys();
 </script>
 
 <i18n lang="json5">
