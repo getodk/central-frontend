@@ -1,3 +1,4 @@
+import { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import {
 	bind,
 	body,
@@ -14,7 +15,8 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';
@@ -701,6 +703,88 @@ describe('Secondary instances', () => {
 
 				expect(scenario.choicesOf('/data/first').size()).toBe(0);
 			});
+		});
+	});
+
+	describe('basic external secondary instance support', () => {
+		const attachmentFileName = 'xml-attachment.xml';
+		const attachmentURL = `jr://file/${attachmentFileName}` as const;
+		const formTitle = 'External secondary instance (XML)';
+		const formDefinition = html(
+			head(
+				title(formTitle),
+				model(
+					mainInstance(t('data id="external-secondary-instance-xml"', t('first'))),
+
+					t(`instance id="external-xml" src="${attachmentURL}"`),
+
+					bind('/data/first').type('string')
+				)
+			),
+			body(
+				// Define a select using value and label references that don't exist in the secondary instance
+				select1Dynamic(
+					'/data/first',
+					"instance('external-xml')/instance-root/instance-item",
+					'item-value',
+					'item-label'
+				)
+			)
+		);
+
+		let resourceService: JRResourceService;
+
+		beforeEach(() => {
+			resourceService = new JRResourceService();
+		});
+
+		afterEach(() => {
+			resourceService.reset();
+		});
+
+		it('supports external secondary instances (XML, file system fixture)', async () => {
+			resourceService.activateFixtures(
+				r(attachmentFileName).toAbsolutePath().getParent().toString(),
+				['file']
+			);
+
+			const scenario = await Scenario.init(formTitle, formDefinition, {
+				resourceService,
+			});
+
+			scenario.answer('/data/first', 'a');
+
+			expect(scenario.answerOf('/data/first')).toEqualAnswer(stringAnswer('a'));
+		});
+
+		// This test is redundant to the one above, but demonstrates how we could
+		// define form attachments inline, like we do form definitions—a pattern
+		// worth considering if we want to expand external secondary instance
+		// support and/or test coverage.
+		it('supports external secondary instances (XML, file inline fixture)', async () => {
+			resourceService.activateResource(
+				{
+					url: attachmentURL,
+					fileName: attachmentFileName,
+					mimeType: 'text/xml',
+				},
+				// prettier-ignore
+				t('instance-root',
+					t('instance-item',
+							t('item-label', 'A'),
+							t('item-value', 'a')),
+					t('instance-item',
+							t('item-label', 'B'),
+							t('item-value', 'b'))).asXml()
+			);
+
+			const scenario = await Scenario.init(formTitle, formDefinition, {
+				resourceService,
+			});
+
+			scenario.answer('/data/first', 'a');
+
+			expect(scenario.answerOf('/data/first')).toEqualAnswer(stringAnswer('a'));
 		});
 	});
 });
