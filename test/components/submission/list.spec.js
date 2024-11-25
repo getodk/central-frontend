@@ -1,3 +1,4 @@
+import EnketoFill from '../../../src/components/enketo/fill.vue';
 import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
@@ -76,6 +77,13 @@ describe('SubmissionList', () => {
           count.should.equal(2);
         });
     });
+  });
+
+  it('shows the "Test in browser" button', async () => {
+    testData.extendedForms.createPast(1, { draft: true });
+    const component = await loadSubmissionList();
+    const actions = component.get('#submission-list-actions');
+    actions.findComponent(EnketoFill).exists().should.be.true;
   });
 
   it('shows a message if there are no submissions', () => {

@@ -19,6 +19,10 @@ except according to the terms contained in the LICENSE file.
             class="btn btn-default" @click="$emit('toggle-qr', $event.target)">
             <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
           </button>
+          <enketo-fill id="submission-list-test-in-browser"
+            :form-version="formVersion">
+            <span class="icon-plus-circle"></span>{{ $t('action.testInBrowser') }}
+          </enketo-fill>
         </template>
         <form class="form-inline" @submit.prevent>
           <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
@@ -81,6 +85,7 @@ except according to the terms contained in the LICENSE file.
 import { DateTime } from 'luxon';
 import { shallowRef, watch, watchEffect, reactive } from 'vue';
 
+import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
@@ -107,6 +112,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'SubmissionList',
   components: {
+    EnketoFill,
     Loading,
     Spinner,
     SubmissionDelete,
@@ -202,9 +208,9 @@ export default {
     const { request } = useRequest();
 
     return {
-      form, keys, fields, formVersion, odata, submitters,
+      form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
       submitterIds, submissionDateRange, reviewStates, allReviewStates,
-      request, deletedSubmissionCount
+      request
     };
   },
   data() {
@@ -496,6 +502,10 @@ export default {
   margin-bottom: 10px;
   margin-left: auto;
 }
+
+#submission-list-test-in-browser {
+  margin-left: 10px;
+}
 </style>
 
 <i18n lang="json5">
@@ -503,6 +513,7 @@ export default {
   "en": {
     "action": {
       "testOnDevice": "Test on device",
+      "testInBrowser": "Test in browser"
     },
     "noMatching": "There are no matching Submissions.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",

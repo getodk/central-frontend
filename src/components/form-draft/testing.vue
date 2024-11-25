@@ -14,9 +14,6 @@ except according to the terms contained in the LICENSE file.
     <page-section>
       <template #heading>
         <span>{{ $t('title') }}</span>
-        <enketo-fill v-if="formDraft.dataExists" :form-version="formDraft">
-          <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
-        </enketo-fill>
       </template>
       <template #body>
         <div v-if="formDraft.entityRelated" class="panel-dialog">
@@ -62,7 +59,6 @@ except according to the terms contained in the LICENSE file.
 import { provide, shallowReactive } from 'vue';
 
 import DocLink from '../doc-link.vue';
-import EnketoFill from '../enketo/fill.vue';
 import FormDraftQrPanel from './qr-panel.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';

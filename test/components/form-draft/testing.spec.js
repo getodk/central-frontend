@@ -1,5 +1,4 @@
 import ChecklistStep from '../../../src/components/checklist-step.vue';
-import EnketoFill from '../../../src/components/enketo/fill.vue';
 import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
@@ -8,14 +7,6 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('FormDraftTesting', () => {
-  it('shows the New button', async () => {
-    mockLogin();
-    testData.extendedForms.createPast(1, { draft: true });
-    const path = '/projects/1/forms/f/draft/testing';
-    const component = await load(path, { root: false });
-    component.getComponent(EnketoFill).should.be.visible();
-  });
-
   it('toggles the QR code for testing', async () => {
     mockLogin();
     testData.extendedForms.createPast(1, { draft: true });

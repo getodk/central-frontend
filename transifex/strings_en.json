@@ -4681,6 +4681,10 @@
         "testOnDevice": {
           "string": "Test on device",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "Test in browser",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "noMatching": {
