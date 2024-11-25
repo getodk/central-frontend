@@ -14,6 +14,12 @@ except according to the terms contained in the LICENSE file.
     <loading :state="fields.initiallyLoading"/>
     <div v-show="selectedFields != null">
       <div id="submission-list-actions">
+        <template v-if="draft">
+          <button id="submission-list-test-on-device" type="button"
+            class="btn btn-default" @click="$emit('toggle-qr', $event.target)">
+            <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
+          </button>
+        </template>
         <form class="form-inline" @submit.prevent>
           <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
@@ -134,7 +140,7 @@ export default {
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
-  emits: ['fetch-keys', 'fetch-deleted-count'],
+  emits: ['fetch-keys', 'fetch-deleted-count', 'toggle-qr'],
   setup(props) {
     const { form, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
     const formVersion = props.draft
@@ -475,11 +481,6 @@ export default {
   align-items: baseline;
   display: flex;
   flex-wrap: wrap-reverse;
-
-  // If there are filters, then there is already no left margin. But if there
-  // aren't filters (in the case of a form draft), then we need to remove the
-  // left margin.
-  form > :first-child { margin-left: 0; }
 }
 #submission-field-dropdown {
   margin-left: 15px;
@@ -500,6 +501,9 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "action": {
+      "testOnDevice": "Test on device",
+    },
     "noMatching": "There are no matching Submissions.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
     "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",

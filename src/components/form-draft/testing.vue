@@ -47,18 +47,26 @@ except according to the terms contained in the LICENSE file.
         </p>
       </template>
     </page-section>
-
     <loading :state="keys.initiallyLoading"/>
     <submission-list v-show="keys.dataExists" :project-id="projectId"
-      :xml-form-id="xmlFormId" draft @fetch-keys="fetchKeys"/>
+      :xml-form-id="xmlFormId" draft @fetch-keys="fetchKeys"
+      @toggle-qr="togglePopover"/>
+
+    <popover :target="popoverData.target" placement="right" @hide="hidePopover">
+      <form-draft-qr-panel/>
+    </popover>
   </div>
 </template>
 
 <script setup>
+import { provide, shallowReactive } from 'vue';
+
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
+import FormDraftQrPanel from './qr-panel.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import Popover from '../popover.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
 
@@ -80,6 +88,8 @@ const props = defineProps({
     required: true
   }
 });
+provide('projectId', props.projectId);
+provide('xmlFormId', props.xmlFormId);
 
 const { resourceView, createResource } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
@@ -94,6 +104,12 @@ const fetchKeys = () => {
   }).catch(noop);
 };
 fetchKeys();
+
+const popoverData = shallowReactive({ trigger: null });
+const togglePopover = (button) => {
+  popoverData.target = popoverData.target == null ? button : null;
+};
+const hidePopover = () => { popoverData.target = null; };
 </script>
 
 <i18n lang="json5">

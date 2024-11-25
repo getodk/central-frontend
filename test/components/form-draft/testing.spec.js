@@ -16,6 +16,20 @@ describe('FormDraftTesting', () => {
     component.getComponent(EnketoFill).should.be.visible();
   });
 
+  it('toggles the QR code for testing', async () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { draft: true });
+    const component = await load('/projects/1/forms/f/draft/testing', {
+      root: false,
+      attachTo: document.body
+    });
+    await component.get('#submission-list-test-on-device').trigger('click');
+    should.exist(document.querySelector('.popover .form-draft-qr-panel'));
+    // Click elsewhere to hide the popover.
+    await component.get('#submission-list .empty-table-message').trigger('click');
+    should.not.exist(document.querySelector('.popover .form-draft-qr-panel'));
+  });
+
   describe('submission count', () => {
     beforeEach(mockLogin);
 
