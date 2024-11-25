@@ -46,10 +46,10 @@ const surveyLink = computed(() => {
   position: fixed;
   z-index: 99999;
   right: 0;
-  bottom: 100px;
+  bottom: 250px;
   height: 4em;
   border: 2px solid;
-  border-color: #e3e4e4;
+  border-color: $color-accent-primary;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   text-align: center;
