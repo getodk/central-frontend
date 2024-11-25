@@ -54,7 +54,7 @@ definition for an existing form -->
                 </span>
               </template>
               <template v-else-if="warning.type === 'oldEntityVersion'">
-                {{ $t('warningsText[3].oldEntityVersion', { value: warning.details.version }) }}
+                {{ $t('warningsText[3].oldEntityVersion', { version: warning.details.version }) }}
                 <a href="https://getodk.github.io/xforms-spec/entities" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
               </template>
             </li>
@@ -325,7 +325,7 @@ export default {
       {
         "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID.",
         "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default.",
-        "oldEntityVersion": "Entities specification version “{value}” is not compatible with Offline Entities. Please use version 2024.1.0 or later."
+        "oldEntityVersion": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
       },
       "Please correct the problems and try again.",
       {
