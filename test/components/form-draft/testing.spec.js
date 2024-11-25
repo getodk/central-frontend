@@ -1,5 +1,4 @@
 import ChecklistStep from '../../../src/components/checklist-step.vue';
-import CollectQr from '../../../src/components/collect-qr.vue';
 import EnketoFill from '../../../src/components/enketo/fill.vue';
 import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
@@ -15,24 +14,6 @@ describe('FormDraftTesting', () => {
     const path = '/projects/1/forms/f/draft/testing';
     const component = await load(path, { root: false });
     component.getComponent(EnketoFill).should.be.visible();
-  });
-
-  it('shows a QR code that encodes the correct settings', async () => {
-    mockLogin();
-    testData.extendedForms.createPast(1, { name: 'My Form', draft: true });
-    const component = await load('/projects/1/forms/f/draft/testing', {
-      root: false
-    });
-    const { draftToken } = testData.extendedFormDrafts.last();
-    component.getComponent(CollectQr).props().settings.should.eql({
-      general: {
-        server_url: `http://localhost:9876/v1/test/${draftToken}/projects/1/forms/f/draft`,
-        form_update_mode: 'match_exactly',
-        autosend: 'wifi_and_cellular'
-      },
-      project: { name: '[Draft] My Form', icon: '📝' },
-      admin: {}
-    });
   });
 
   describe('submission count', () => {

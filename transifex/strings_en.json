@@ -2983,10 +2983,6 @@
           "string": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
         }
       },
-      "collectProjectName": {
-        "string": "[Draft] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
-      },
       "datasetsPreview": {
         "title": {
           "string": "This Form can update Entities"
@@ -2999,6 +2995,10 @@
             "string": "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
           }
         }
+      },
+      "collectProjectName": {
+        "string": "[Draft] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
