@@ -78,6 +78,7 @@ export default class UserPreferences {
         ? apiPaths.userSitePreferences(k)
         : apiPaths.userProjectPreferences(projectId, k),
       data: (v === null) ? undefined : { propertyValue: v },
+      alert: false
     })
       .catch(noop) // Preference didn't get persisted to the backend. Too bad! We're not doing any retrying.
       .finally(() => {
