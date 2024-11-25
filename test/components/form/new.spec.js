@@ -504,7 +504,8 @@ describe('FormNew', () => {
           xlsFormWarnings: ['warning 1', 'warning 2'],
           workflowWarnings: [
             { type: 'structureChanged', details: ['Name', 'Age'] },
-            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } }
+            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } },
+            { type: 'oldEntityVersion', details: { version: '2022.1.0' } }
           ]
         }
       }
@@ -545,6 +546,9 @@ describe('FormNew', () => {
 
           items[1].text().should.startWith('There is a form with ID "simple" in the Trash');
           items[1].find('span').exists().should.be.false;
+
+          items[2].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[2].find('span').exists().should.be.false;
         });
     });
 
@@ -567,6 +571,9 @@ describe('FormNew', () => {
 
           items[3].text().should.startWith('There is a form with ID "simple" in the Trash');
           items[3].find('span').exists().should.be.false;
+
+          items[4].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[4].find('span').exists().should.be.false;
         });
     });
 

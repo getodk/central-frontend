@@ -41,12 +41,22 @@ definition for an existing form -->
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.workflowWarnings">
-              {{ $t('warningsText[3].' + warning.type, { value: warning.details.xmlFormId }) }}
-              <doc-link :to="documentLinks[warning.type]">{{ $t('moreInfo.learnMore') }}</doc-link>
-              <span v-if="warning.type === 'structureChanged'">
-                <br>
-                <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
-              </span>
+              <template v-if="warning.type === 'deletedFormExists'">
+                {{ $t('warningsText[3].deletedFormExists', { value: warning.details.xmlFormId }) }}
+                <doc-link to="central-forms/#deleting-a-form">{{ $t('moreInfo.learnMore') }}</doc-link>
+              </template>
+              <template v-else-if="warning.type === 'structureChanged'">
+                {{ $t('warningsText[3].structureChanged') }}
+                <doc-link to="central-forms/#central-forms-updates">{{ $t('moreInfo.learnMore') }}</doc-link>
+                <span>
+                  <br>
+                  <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
+                </span>
+              </template>
+              <template v-else-if="warning.type === 'oldEntityVersion'">
+                {{ $t('warningsText[3].oldEntityVersion', { version: warning.details.version }) }}
+                <a href="https://getodk.github.io/xforms-spec/entities" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
+              </template>
             </li>
           </ul>
         </p>
@@ -143,11 +153,7 @@ export default {
   data() {
     return {
       file: null,
-      warnings: null,
-      documentLinks: {
-        deletedFormExists: 'central-forms/#deleting-a-form',
-        structureChanged: 'central-forms/#central-forms-updates'
-      }
+      warnings: null
     };
   },
   computed: {
@@ -318,7 +324,8 @@ export default {
       "Workflow warnings:",
       {
         "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID.",
-        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default.",
+        "oldEntityVersion": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
       },
       "Please correct the problems and try again.",
       {
