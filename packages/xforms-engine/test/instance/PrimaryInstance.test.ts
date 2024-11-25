@@ -20,12 +20,15 @@ import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 import { createReactiveScope, type ReactiveScope } from '../../src/lib/reactivity/scope.ts';
 import { createUniqueId } from '../../src/lib/unique-id.ts';
+import { XFormDOM } from '../../src/parse/XFormDOM.ts';
 import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
+import { SecondaryInstancesDefinition } from '../../src/parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { reactiveTestScope } from '../helpers/reactive/internal.ts';
 
 describe('PrimaryInstance engine representation of instance state', () => {
 	let scope: ReactiveScope;
 	let xformDefinition: XFormDefinition;
+	let secondaryInstances: SecondaryInstancesDefinition;
 
 	beforeEach(() => {
 		scope = createReactiveScope();
@@ -58,7 +61,10 @@ describe('PrimaryInstance engine representation of instance state', () => {
 			)
 		);
 
-		xformDefinition = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+
+		xformDefinition = new XFormDefinition(xformDOM);
+		secondaryInstances = SecondaryInstancesDefinition.loadSync(xformDOM);
 	});
 
 	afterEach(() => {
@@ -75,7 +81,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 	// directly, with caution.
 	const createPrimaryInstance = (stateFactory: OpaqueReactiveObjectFactory): PrimaryInstance => {
 		return scope.runTask(() => {
-			return new PrimaryInstance(scope, xformDefinition.model, {
+			return new PrimaryInstance(scope, xformDefinition.model, secondaryInstances, {
 				createUniqueId,
 				fetchFormAttachment: fetchResource,
 				fetchFormDefinition: fetchResource,

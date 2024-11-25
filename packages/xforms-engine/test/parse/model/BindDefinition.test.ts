@@ -10,6 +10,7 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
+import { XFormDOM } from '../../../src/parse/XFormDOM.ts';
 
 describe('BindDefinition', () => {
 	it.each([
@@ -45,7 +46,8 @@ describe('BindDefinition', () => {
 			body()
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+		const xformDefinition = new XFormDefinition(xformDOM);
 		const bindDefinition = xformDefinition.model.binds.get('/root/first-question');
 
 		expect(bindDefinition!.dataType).toEqual(expected);
@@ -90,7 +92,8 @@ describe('BindDefinition', () => {
 			body()
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+		const xformDefinition = new XFormDefinition(xformDOM);
 		const bindDefinition = xformDefinition.model.binds.get('/root/first-question');
 
 		expect(bindDefinition![computation]?.toString() ?? null).toEqual(expression);

@@ -3,7 +3,6 @@ import { ModelDefinition } from './model/ModelDefinition.ts';
 import { XFormDOM } from './XFormDOM.ts';
 
 export class XFormDefinition {
-	readonly xformDOM: XFormDOM;
 	readonly xformDocument: XMLDocument;
 
 	readonly id: string;
@@ -14,11 +13,7 @@ export class XFormDefinition {
 	readonly body: BodyDefinition;
 	readonly model: ModelDefinition;
 
-	constructor(readonly sourceXML: string) {
-		const xformDOM = XFormDOM.from(sourceXML);
-
-		this.xformDOM = xformDOM;
-
+	constructor(readonly xformDOM: XFormDOM) {
 		const { primaryInstanceRoot, title, xformDocument } = xformDOM;
 		const id = primaryInstanceRoot.getAttribute('id');
 

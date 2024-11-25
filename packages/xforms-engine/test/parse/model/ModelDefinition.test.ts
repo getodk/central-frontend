@@ -20,6 +20,7 @@ import type { LeafNodeDefinition } from '../../../src/parse/model/LeafNodeDefini
 import { ModelDefinition } from '../../../src/parse/model/ModelDefinition.ts';
 import type { RepeatRangeDefinition } from '../../../src/parse/model/RepeatRangeDefinition.ts';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
+import { XFormDOM } from '../../../src/parse/XFormDOM.ts';
 
 describe('ModelDefinition', () => {
 	let modelDefinition: ModelDefinition;
@@ -49,7 +50,8 @@ describe('ModelDefinition', () => {
 			)
 		);
 
-		const xformDefinition = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+		const xformDefinition = new XFormDefinition(xformDOM);
 
 		modelDefinition = xformDefinition.model;
 	});
@@ -164,7 +166,8 @@ describe('ModelDefinition', () => {
 				)
 			);
 
-			const xformDefinition = new XFormDefinition(xform.asXml());
+			const xformDOM = XFormDOM.from(xform.asXml());
+			const xformDefinition = new XFormDefinition(xformDOM);
 
 			modelDefinition = xformDefinition.model;
 		});
@@ -313,7 +316,8 @@ describe('ModelDefinition', () => {
 				)
 			);
 
-			const xformDefinition = new XFormDefinition(xform.asXml());
+			const xformDOM = XFormDOM.from(xform.asXml());
+			const xformDefinition = new XFormDefinition(xformDOM);
 
 			modelDefinition = xformDefinition.model;
 		});
@@ -474,7 +478,9 @@ describe('ModelDefinition', () => {
 					)
 				);
 
-				expect(() => new XFormDefinition(xform.asXml())).toThrow(
+				const xformDOM = XFormDOM.from(xform.asXml());
+
+				expect(() => new XFormDefinition(xformDOM)).toThrow(
 					'Multiple explicit templates defined for /root/rep/rep2'
 				);
 			});

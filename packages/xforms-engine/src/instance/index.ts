@@ -10,7 +10,9 @@ import type {
 import { retrieveSourceXMLResource } from '../instance/resource.ts';
 import { createReactiveScope } from '../lib/reactivity/scope.ts';
 import { createUniqueId } from '../lib/unique-id.ts';
+import { XFormDOM } from '../parse/XFormDOM.ts';
 import { XFormDefinition } from '../parse/XFormDefinition.ts';
+import { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { PrimaryInstance } from './PrimaryInstance.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 
@@ -37,8 +39,12 @@ export const initializeForm = async (
 	const sourceXML = await retrieveSourceXMLResource(input, {
 		fetchResource: engineConfig.fetchFormDefinition,
 	});
-	const form = new XFormDefinition(sourceXML);
-	const primaryInstance = new PrimaryInstance(scope, form.model, engineConfig);
+	const xformDOM = XFormDOM.from(sourceXML);
+	const secondaryInstances = await SecondaryInstancesDefinition.load(xformDOM, {
+		fetchResource: engineConfig.fetchFormAttachment,
+	});
+	const form = new XFormDefinition(xformDOM);
+	const primaryInstance = new PrimaryInstance(scope, form.model, secondaryInstances, engineConfig);
 
 	return primaryInstance.root;
 };
