@@ -11,10 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="entity.dataExists" :to="datasetPath('entities')">
-      <template #title>{{ $t('back.title') }}</template>
-      <template #back>{{ $t('back.back', { datasetName }) }}</template>
-    </page-back>
+    <breadcrumbs :links="breadcrumbLinks"/>
     <page-head v-show="entity.dataExists">
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
     </page-head>
@@ -45,10 +42,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, provide } from 'vue';
+import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import Breadcrumbs from '../page/breadcrumbs.vue';
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityBranchData from './branch-data.vue';
@@ -56,7 +54,6 @@ import EntityData from './data.vue';
 import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -141,7 +138,7 @@ const afterUpdate = (updatedEntity) => {
 const deleteModal = modalData();
 const { request, awaitingResponse } = useRequest();
 const router = useRouter();
-const { datasetPath } = useRoutes();
+const { datasetPath, projectPath } = useRoutes();
 const { t } = useI18n();
 const requestDelete = () => {
   request({
@@ -157,6 +154,16 @@ const requestDelete = () => {
 };
 
 const branchData = modalData();
+
+const breadcrumbLinks = computed(() => {
+  if (!entity.dataExists) return [];
+  return [
+    { text: project.dataExists ? project.nameWithArchived : t('resource.project'), path: projectPath() },
+    { text: t('resource.entities'), path: projectPath('entity-lists'), icon: 'icon-database' },
+    { text: props.datasetName, path: datasetPath('entities') },
+  ];
+});
+
 </script>
 
 <i18n lang="json5">

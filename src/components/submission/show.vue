@@ -11,10 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="submission.dataExists" :to="formPath('submissions')">
-      <template #title>{{ $t('back.title') }}</template>
-      <template #back>{{ $t('back.back') }}</template>
-    </page-back>
+    <breadcrumbs :links="breadcrumbLinks"/>
     <page-head v-show="submission.dataExists">
       <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
     </page-head>
@@ -43,8 +40,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { useI18n } from 'vue-i18n';
 
+import Breadcrumbs from '../page/breadcrumbs.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import SubmissionActivity from './activity.vue';
@@ -53,6 +50,7 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 import SubmissionDelete from './delete.vue';
 
 import useFields from '../../request-data/fields';
+import useForm from '../../request-data/form';
 import useRoutes from '../../composables/routes';
 import useRequest from '../../composables/request';
 import useSubmission from '../../request-data/submission';
@@ -64,8 +62,8 @@ import { noop } from '../../util/util';
 export default {
   name: 'SubmissionShow',
   components: {
+    Breadcrumbs,
     Loading,
-    PageBack,
     PageBody,
     PageHead,
     SubmissionActivity,
@@ -91,6 +89,7 @@ export default {
   setup() {
     const { project, resourceStates } = useRequestData();
     const { request, awaitingResponse } = useRequest();
+    const { form } = useForm();
 
     const { submission, submissionVersion, audits, comments, diffs } = useSubmission();
     const fields = useFields();
@@ -100,13 +99,22 @@ export default {
       ? [`${t('title.details')}: ${submission.instanceNameOrId}`]
       : [t('title.details')]));
 
-    const { formPath } = useRoutes();
+    const { formPath, projectPath } = useRoutes();
     return {
-      project, submission, submissionVersion, audits, comments, diffs, fields,
+      project, form, submission, submissionVersion, audits, comments, diffs, fields,
       request, awaitingResponse, ...resourceStates([project, submission]),
       reviewModal: modalData(), deleteModal: modalData(),
-      formPath
+      formPath, projectPath
     };
+  },
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
+        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' },
+        { text: this.form.dataExists ? this.form.name : this.$t('resource.form'), path: this.formPath('submissions') }
+      ];
+    }
   },
   created() {
     this.fetchData();
@@ -146,6 +154,11 @@ export default {
         this.project.request({
           url: apiPaths.project(this.projectId),
           extended: true,
+          resend: false
+        }),
+        this.form.request({
+          url: apiPaths.form(this.projectId, this.xmlFormId),
+          extended: false,
           resend: false
         }),
         this.submission.request({

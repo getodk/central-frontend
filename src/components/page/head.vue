@@ -35,7 +35,12 @@ defineOptions({
   border-bottom: 1px solid $color-subpanel-border-strong;
 }
 
-#page-head-title { overflow-wrap: break-word; }
+#page-head-title {
+  overflow-wrap: break-word;
+  &.h1 {
+    margin-top: 0px;
+  }
+}
 
 #page-head-body {
   color: #555;

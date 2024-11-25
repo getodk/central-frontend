@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <breadcrumbs/>
     <page-head v-show="project.dataExists">
       <template v-if="project.dataExists" #title>
         {{ project.nameWithArchived }}
@@ -72,6 +73,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Breadcrumbs from '../page/breadcrumbs.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
@@ -85,7 +87,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectShow',
-  components: { Loading, PageBody, PageHead },
+  components: { Breadcrumbs, Loading, PageBody, PageHead },
   props: {
     projectId: {
       type: String,
