@@ -616,16 +616,6 @@ describe('Secondary instances', () => {
 		});
 
 		describe('CSV secondary instance with header only', () => {
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * Should probably fail pending feature support. Currently passes because
-			 * this is the expected behavior:
-			 *
-			 * - Without support for external secondary instances (and CSV)
-			 *
-			 * - Without producing an error in their absence
-			 */
 			it('parses without error', async () => {
 				configureReferenceManagerCorrectly();
 
