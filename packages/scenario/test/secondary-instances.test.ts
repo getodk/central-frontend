@@ -1,3 +1,4 @@
+import { xformAttachmentFixturesByDirectory } from '@getodk/common/fixtures/xform-attachments.ts';
 import { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import {
 	bind,
@@ -552,11 +553,6 @@ describe('Secondary instances', () => {
 				 * Potentially test elsewhere and/or as integration test.
 				 */
 				it.todo('itemsFromExternalSecondaryCSVInstance_ShouldBeAvailableToXPathParser');
-
-				/**
-				 * **PORTING NOTES** (speculative addition)
-				 */
-				it.todo('can select itemset values');
 			});
 		});
 
@@ -687,34 +683,60 @@ describe('Secondary instances', () => {
 	});
 
 	describe('basic external secondary instance support', () => {
-		const attachmentFileName = 'xml-attachment.xml';
-		const attachmentURL = `jr://file/${attachmentFileName}` as const;
-		const formTitle = 'External secondary instance (XML)';
+		const xmlAttachmentFileName = 'xml-attachment.xml';
+		const xmlAttachmentURL = `jr://file/${xmlAttachmentFileName}` as const;
+		const csvAttachmentFileName = 'csv-attachment.csv';
+		const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
+		const formTitle = 'External secondary instance (XML and CSV)';
 		const formDefinition = html(
 			head(
 				title(formTitle),
 				model(
-					mainInstance(t('data id="external-secondary-instance-xml"', t('first'))),
+					// prettier-ignore
+					mainInstance(
+						t('data id="external-secondary-instance-xml-csv"',
+							t('first'),
+							t('second'))),
 
-					t(`instance id="external-xml" src="${attachmentURL}"`),
+					t(`instance id="external-xml" src="${xmlAttachmentURL}"`),
+					t(`instance id="external-csv" src="${csvAttachmentURL}"`),
 
-					bind('/data/first').type('string')
+					bind('/data/first').type('string'),
+					bind('/data/second').type('string')
 				)
 			),
 			body(
-				// Define a select using value and label references that don't exist in the secondary instance
 				select1Dynamic(
 					'/data/first',
 					"instance('external-xml')/instance-root/instance-item",
+					'item-value',
+					'item-label'
+				),
+				select1Dynamic(
+					'/data/second',
+					"instance('external-csv')/root/item",
 					'item-value',
 					'item-label'
 				)
 			)
 		);
 
+		let fixturesDirectory: string;
 		let resourceService: JRResourceService;
 
 		beforeEach(() => {
+			const scenarioFixturesDirectory = Array.from(xformAttachmentFixturesByDirectory.keys()).find(
+				(key) => {
+					return key.endsWith('/test-scenario');
+				}
+			);
+
+			if (scenarioFixturesDirectory == null) {
+				throw new Error(`Failed to get file system path for fixtures directory: "test-scenario"`);
+			}
+
+			fixturesDirectory = scenarioFixturesDirectory;
+
 			resourceService = new JRResourceService();
 		});
 
@@ -723,10 +745,7 @@ describe('Secondary instances', () => {
 		});
 
 		it('supports external secondary instances (XML, file system fixture)', async () => {
-			resourceService.activateFixtures(
-				r(attachmentFileName).toAbsolutePath().getParent().toString(),
-				['file']
-			);
+			resourceService.activateFixtures(fixturesDirectory, ['file']);
 
 			const scenario = await Scenario.init(formTitle, formDefinition, {
 				resourceService,
@@ -741,11 +760,11 @@ describe('Secondary instances', () => {
 		// define form attachments inline, like we do form definitions—a pattern
 		// worth considering if we want to expand external secondary instance
 		// support and/or test coverage.
-		it('supports external secondary instances (XML, file inline fixture)', async () => {
+		it('supports external secondary instances (XML, inline fixture)', async () => {
 			resourceService.activateResource(
 				{
-					url: attachmentURL,
-					fileName: attachmentFileName,
+					url: xmlAttachmentURL,
+					fileName: xmlAttachmentFileName,
 					mimeType: 'text/xml',
 				},
 				// prettier-ignore
@@ -765,6 +784,43 @@ describe('Secondary instances', () => {
 			scenario.answer('/data/first', 'a');
 
 			expect(scenario.answerOf('/data/first')).toEqualAnswer(stringAnswer('a'));
+		});
+
+		it('supports external secondary instances (CSV, file system fixture)', async () => {
+			resourceService.activateFixtures(fixturesDirectory, ['file']);
+
+			const scenario = await Scenario.init(formTitle, formDefinition, {
+				resourceService,
+			});
+
+			scenario.answer('/data/second', 'y');
+
+			expect(scenario.answerOf('/data/second')).toEqualAnswer(stringAnswer('y'));
+		});
+
+		it('supports external secondary instances (CSV, inline fixture)', async () => {
+			resourceService.activateResource(
+				{
+					url: csvAttachmentURL,
+					fileName: csvAttachmentFileName,
+					mimeType: 'text/csv',
+				},
+				// prettier-ignore
+				[
+					'item-label,item-value',
+					'Y,y',
+					'Z,z',
+					'\n\r\n'
+				].join('\n')
+			);
+
+			const scenario = await Scenario.init(formTitle, formDefinition, {
+				resourceService,
+			});
+
+			scenario.answer('/data/second', 'z');
+
+			expect(scenario.answerOf('/data/second')).toEqualAnswer(stringAnswer('z'));
 		});
 	});
 });
