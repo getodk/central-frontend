@@ -686,16 +686,6 @@ describe('Secondary instances', () => {
 		it.todo('dummyNodesInExternalInstanceDeclaration_ShouldBeIgnored');
 
 		describe('//region Missing external file', () => {
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * Should probably fail pending feature support. Currently passes because
-			 * this is the expected behavior:
-			 *
-			 * - Without support for external secondary instances (and CSV)
-			 *
-			 * - Without producing an error in their absence
-			 */
 			it('[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found', async () => {
 				configureReferenceManagerIncorrectly();
 
