@@ -132,8 +132,12 @@ export class ExternalSecondaryInstanceResource<
 		instanceId: string,
 		resourceURL: JRResourceURL,
 		options: ExternalSecondaryInstanceResourceOptions
-	): Promise<LoadedExternalSecondaryInstanceResource> {
+	): Promise<LoadedExternalSecondaryInstanceResource | null> {
 		const response = await options.fetchResource(resourceURL);
+
+		if (response.status === 404) {
+			return null;
+		}
 
 		assertResponseSuccess(resourceURL, response);
 

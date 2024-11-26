@@ -10,8 +10,10 @@ export type ExternalSecondaryInstanceSourceFormat =
 
 // prettier-ignore
 export type SecondaryInstanceSourceFormat =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| ExternalSecondaryInstanceSourceFormat
-	| 'internal';
+	| 'internal'
+	| 'blank';
 
 export abstract class SecondaryInstanceSource<
 	Format extends SecondaryInstanceSourceFormat = SecondaryInstanceSourceFormat,

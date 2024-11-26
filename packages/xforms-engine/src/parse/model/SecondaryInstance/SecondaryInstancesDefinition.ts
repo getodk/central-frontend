@@ -5,6 +5,7 @@ import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductio
 import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
 import type { XFormDOM } from '../../XFormDOM.ts';
 import { SecondaryInstanceRootDefinition } from './SecondaryInstanceRootDefinition.ts';
+import { BlankSecondaryInstanceSource } from './sources/BlankSecondaryInstanceSource.ts';
 import { CSVExternalSecondaryInstanceSource } from './sources/CSVExternalSecondaryInstance.ts';
 import type { ExternalSecondaryInstanceResourceOptions } from './sources/ExternalSecondaryInstanceResource.ts';
 import { ExternalSecondaryInstanceResource } from './sources/ExternalSecondaryInstanceResource.ts';
@@ -65,6 +66,10 @@ export class SecondaryInstancesDefinition
 					resourceURL,
 					options
 				);
+
+				if (resource == null) {
+					return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+				}
 
 				switch (resource.format) {
 					case 'csv':
