@@ -275,7 +275,7 @@ export class CSVExternalSecondaryInstanceSource extends ExternalSecondaryInstanc
 	}
 
 	parseDefinition(): SecondaryInstanceDefinition {
-		const csvData = this.resource.data;
+		const csvData = this.resource.data.replace(/[\n\r]+$/, '');
 		const { columns, meta } = this.parseCSVHeader(csvData);
 		const { rows } = this.parseCSVRows(csvData, {
 			columns,
