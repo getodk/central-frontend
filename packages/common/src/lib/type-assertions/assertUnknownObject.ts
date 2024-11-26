@@ -1,4 +1,4 @@
-type UnknownObject = Record<PropertyKey, unknown>;
+export type UnknownObject = Record<PropertyKey, unknown>;
 
 type AssertUnknownObject = (value: unknown) => asserts value is UnknownObject;
 
