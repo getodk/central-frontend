@@ -12,16 +12,21 @@ except according to the terms contained in the LICENSE file.
 
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <span class="collect-qr" v-html="imgHtml"></span>
+  <span class="collect-qr" :class="idClass" v-html="imgHtml"></span>
   <canvas v-show="false" ref="qrCanvas"></canvas>
 </template>
 <!-- eslint-enable vue/no-v-html -->
 
+<script>
+let id = 0;
+</script>
 <script setup>
 import { onMounted, ref } from 'vue';
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
 import { useI18n } from 'vue-i18n';
+
+import useEventListener from '../composables/event-listener';
 
 const { t } = useI18n();
 
@@ -120,6 +125,15 @@ onMounted(() => {
   imgHtml.value = img.outerHTML;
 });
 
+id += 1;
+// We have to use a class, not an id, because a QR code shown in a popover will
+// be rendered in two places in the DOM. Also due to the popover, we can't use
+// Vue event handlers. See the Popover component for details.
+const idClass = `collect-qr${id}`;
+useEventListener(document.body, 'click', (event) => {
+  if (event.target.parentNode.classList.contains(idClass))
+    console.log(props.settings); // eslint-disable-line no-console
+});
 </script>
 
 <style lang="scss">

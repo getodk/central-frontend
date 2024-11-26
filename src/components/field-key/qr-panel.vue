@@ -10,15 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="field-key-qr-panel panel panel-default"
-    :class="{ legacy: !managed }">
-    <div class="panel-heading">
-      <h1 class="panel-title">
-        {{ managed ? $t('title.managed') : $t('title.legacy') }}
-      </h1>
-      <span class="icon-mobile"></span>
-    </div>
-    <div v-if="fieldKey != null" class="panel-body">
+  <qr-panel class="field-key-qr-panel" :class="{ legacy: !managed }">
+    <template #title>
+      {{ managed ? $t('title.managed') : $t('title.legacy') }}
+    </template>
+    <template v-if="fieldKey != null" #body>
       <collect-qr :settings="settings" error-correction-level="L"
         :cell-size="3"/>
       <p>
@@ -62,13 +58,14 @@ except according to the terms contained in the LICENSE file.
         <sentence-separator/>
         <doc-link to="collect-import-export/">{{ $t('moreInfo.learnMore') }}</doc-link>
       </p>
-    </div>
-  </div>
+    </template>
+  </qr-panel>
 </template>
 
 <script>
 import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
+import QrPanel from '../qr-panel.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import { apiPaths } from '../../util/request';
@@ -76,7 +73,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FieldKeyQrPanel',
-  components: { CollectQr, DocLink, SentenceSeparator },
+  components: { CollectQr, DocLink, QrPanel, SentenceSeparator },
   props: {
     fieldKey: Object,
     managed: Boolean
@@ -108,49 +105,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 .field-key-qr-panel {
-  margin-bottom: 0;
-  width: 500px;
-
-  .panel-heading {
-    background-color: $color-action-background;
-    position: relative;
-  }
-
-  // The icon is not animated, because in the popover, switching between a
-  // managed and a legacy QR code would reset the animation.
-  .icon-mobile {
-    color: $color-action-overlay;
-    font-size: 98px;
-    position: absolute;
-    right: 18px;
-    top: -32px;
-    transform: rotate(15deg);
-
-    &::after {
-      background-color: #fff;
-      content: '';
-      height: 65px;
-      left: 5px;
-      position: absolute;
-      top: 18px;
-      width: 32px;
-      z-index: -1;
-    }
-  }
-
-  .collect-qr {
-    float: left;
-    margin-right: 15px;
-  }
-
-  p {
-    &:first-child { margin-top: 5px; }
-    &:last-child { margin-bottom: 5px; }
-  }
-
   &.legacy {
     .panel-heading { background-color: #777; }
     .icon-mobile { color: #555; }
