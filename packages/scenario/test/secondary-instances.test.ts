@@ -528,7 +528,7 @@ describe('Secondary instances', () => {
 					 *
 					 * - Typical `getDisplayText` -> `getValue`
 					 */
-					it.fails('can be selected', async () => {
+					it('can be selected', async () => {
 						configureReferenceManagerCorrectly();
 
 						const scenario = await Scenario.init(r('external-select-geojson.xml'));
