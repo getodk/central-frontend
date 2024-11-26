@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-section>
+    <page-section id="form-draft-testing-info">
       <template #heading>
         <span>{{ $t('title') }}</span>
       </template>
@@ -32,9 +32,8 @@ except according to the terms contained in the LICENSE file.
             </p>
           </div>
         </div>
-        <p>{{ $t('body[0]') }}</p>
         <p>
-          <span>{{ $t('body[1]') }}</span>
+          <span>{{ $t('introduction') }}</span>
           <sentence-separator/>
           <i18n-t keypath="moreInfo.helpArticle.full">
             <template #helpArticle>
@@ -101,22 +100,24 @@ const fetchKeys = () => {
 };
 fetchKeys();
 
-const popoverData = shallowReactive({ trigger: null });
+const popoverData = shallowReactive({ target: null });
 const togglePopover = (button) => {
   popoverData.target = popoverData.target == null ? button : null;
 };
 const hidePopover = () => { popoverData.target = null; };
 </script>
 
+<style lang="scss">
+#form-draft-testing-info { margin-bottom: 25px; }
+</style>
+
 <i18n lang="json5">
 {
   "en": {
     // This is a title shown above a section of the page.
     "title": "Draft Testing",
-    "body": [
-      "You can use the configuration code to the right to set up a mobile device to download this Draft. You can also click the New button above to create a new Submission from your web browser.",
-      "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
-    ],
+    // @transifexKey component.FormDraftTesting.body.1
+    "introduction": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed.",
     // @transifexKey component.FormDraftTesting.datasetsPreview
     "entitiesTesting": {
       "title": "This Form can update Entities",

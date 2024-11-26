@@ -135,6 +135,10 @@ export default {
       this.$emit('fetch-field-keys', resend);
       this.highlighted = null;
     },
+    hidePopover() {
+      this.popover.target = null;
+      this.popover.fieldKey = null;
+    },
     togglePopover(fieldKey, link) {
       if (this.popover.target == null) {
         this.popover.target = link;
@@ -142,10 +146,6 @@ export default {
       } else {
         this.hidePopover();
       }
-    },
-    hidePopover() {
-      this.popover.target = null;
-      this.popover.fieldKey = null;
     },
     switchCode(event) {
       if (event.target.closest('.field-key-qr-panel .switch-code') == null)

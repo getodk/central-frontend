@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <collect-qr v-if="formDraft.dataExists" :settings="settings"
         error-correction-level="Q" :cell-size="3" draft/>
-      <i18n-t keypath="intro.full" tag="p">
+      <i18n-t keypath="introduction.full" tag="p">
         <template #temporaryCode>
-          <strong>{{ $t('intro.temporaryCode') }}</strong>
+          <strong>{{ $t('introduction.temporaryCode') }}</strong>
         </template>
       </i18n-t>
       <p>{{ $t('stopsWorking') }}</p>
@@ -84,7 +84,7 @@ const { projectPath } = useRoutes();
     // This text will be shown in ODK Collect when testing a Draft Form. {name}
     // is the title of the Draft Form.
     "collectProjectName": "[Draft] {name}",
-    "intro": {
+    "introduction": {
       // This is shown next to a QR code.
       "full": "This is a {temporaryCode}.",
       // "Code" refers to a QR code.

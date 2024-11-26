@@ -79,7 +79,7 @@ describe('SubmissionList', () => {
     });
   });
 
-  it('shows the "Test in browser" button', async () => {
+  it('shows the "Test in browser" button for a form draft', async () => {
     testData.extendedForms.createPast(1, { draft: true });
     const component = await loadSubmissionList();
     const actions = component.get('#submission-list-actions');

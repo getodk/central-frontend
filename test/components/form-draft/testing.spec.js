@@ -16,9 +16,8 @@ describe('FormDraftTesting', () => {
     });
     await component.get('#submission-list-test-on-device').trigger('click');
     should.exist(document.querySelector('.popover .form-draft-qr-panel'));
-    // Click elsewhere to hide the popover.
-    await component.get('#submission-list .empty-table-message').trigger('click');
-    should.not.exist(document.querySelector('.popover .form-draft-qr-panel'));
+    await component.get('#submission-list-test-on-device').trigger('click');
+    should.not.exist(document.querySelector('.popover'));
   });
 
   describe('submission count', () => {

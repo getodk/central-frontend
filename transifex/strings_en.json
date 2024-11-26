@@ -2919,7 +2919,7 @@
         "string": "Testing Code",
         "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
       },
-      "intro": {
+      "introduction": {
         "full": {
           "string": "This is a {temporaryCode}.",
           "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
@@ -3010,9 +3010,6 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
-        "0": {
-          "string": "You can use the configuration code to the right to set up a mobile device to download this Draft. You can also click the New button above to create a new Submission from your web browser."
-        },
         "1": {
           "string": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
         }

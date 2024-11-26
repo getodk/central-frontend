@@ -19,7 +19,7 @@ const mountComponent = () => {
 };
 
 describe('FormDraftQrPanel', () => {
-  it('shows a QR code that encodes the correct settings', async () => {
+  it('shows a QR code that encodes the correct settings', () => {
     testData.extendedForms.createPast(1, { name: 'My Form', draft: true });
     const component = mountComponent();
     const { draftToken } = testData.extendedFormDrafts.last();

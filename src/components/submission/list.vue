@@ -19,8 +19,9 @@ except according to the terms contained in the LICENSE file.
             class="btn btn-default" @click="$emit('toggle-qr', $event.target)">
             <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
           </button>
-          <enketo-fill id="submission-list-test-in-browser"
-            :form-version="formVersion">
+          <enketo-fill v-if="formVersion.dataExists"
+            id="submission-list-test-in-browser" :form-version="formVersion"
+            btn="default">
             <span class="icon-plus-circle"></span>{{ $t('action.testInBrowser') }}
           </enketo-fill>
         </template>
