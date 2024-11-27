@@ -1,5 +1,6 @@
 import { xformAttachmentFixturesByDirectory } from '@getodk/common/fixtures/xform-attachments.ts';
 import { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
+import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import {
 	bind,
 	body,
@@ -16,6 +17,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -822,5 +824,235 @@ describe('Secondary instances', () => {
 
 			expect(scenario.answerOf('/data/second')).toEqualAnswer(stringAnswer('z'));
 		});
+	});
+
+	describe('CSV parsing', () => {
+		const BOM = '\ufeff';
+		type BOM = typeof BOM;
+
+		// prettier-ignore
+		type ColumnDelimiter =
+			| ','
+			| ';'
+			| '\t'
+			| '|';
+
+		// prettier-ignore
+		type RowDelimiter =
+			| '\n'
+			| '\r'
+			| '\r\n';
+
+		type ExpectedFailure = 'parse' | 'select-value';
+
+		interface CSVCase {
+			readonly description: string;
+
+			/** @default ',' */
+			readonly columnDelimiter?: PartiallyKnownString<ColumnDelimiter>;
+
+			/** @default '\n' */
+			readonly rowDelimiter?: PartiallyKnownString<RowDelimiter>;
+
+			/** @default '' */
+			readonly bom?: BOM | '';
+
+			/** @default 0 */
+			readonly columnPadding?: number;
+
+			/** @default null */
+			readonly expectedFailure?: ExpectedFailure | null;
+
+			/** @default null */
+			readonly surprisingSuccessWarning?: string | null;
+		}
+
+		const csvCases: readonly CSVCase[] = [
+			{
+				description: 'BOM is not treated as part of first column header',
+				bom: BOM,
+			},
+			{
+				description: 'column delimiter: semicolon',
+				columnDelimiter: ';',
+			},
+			{
+				description: 'column delimiter: tab',
+				columnDelimiter: '\t',
+			},
+			{
+				description: 'column delimiter: pipe',
+				columnDelimiter: '|',
+			},
+			{
+				description: 'unsupported column delimiter: $',
+				columnDelimiter: '$',
+				expectedFailure: 'parse',
+			},
+			{
+				description: 'row delimiter: LF',
+				rowDelimiter: '\n',
+			},
+			{
+				description: 'row delimiter: CR',
+				rowDelimiter: '\r',
+			},
+			{
+				description: 'row delimiter: CRLF',
+				rowDelimiter: '\r\n',
+			},
+			{
+				description: 'unsupported row delimiter: LFLF',
+				rowDelimiter: `\n\n`,
+				expectedFailure: 'parse',
+			},
+
+			{
+				description: 'somewhat surprisingly supported row delimiter: LFCR',
+				rowDelimiter: `\n\r`,
+				surprisingSuccessWarning:
+					"LFCR is not an expected line separator in any known-common usage. It's surprising that Papaparse does not fail parsing this case, at least parsing rows!",
+			},
+
+			{
+				description: 'whitespace padding around column delimiter is not ignored (by default)',
+				columnDelimiter: ',',
+				columnPadding: 1,
+				expectedFailure: 'select-value',
+			},
+		];
+
+		// Note: this isn't set up with `describe.each` because it would create a superfluous outer description where the inner description must be applied with `it` (to perform async setup)
+		csvCases.forEach(
+			({
+				description,
+				columnDelimiter = ',',
+				rowDelimiter = '\n',
+				bom = '',
+				columnPadding = 0,
+				expectedFailure = null,
+				surprisingSuccessWarning = null,
+			}) => {
+				const LOWER_ALPHA_ASCII_LETTER_COUNT = 26;
+				const lowerAlphaASCIILetters = Array.from(
+					{
+						length: LOWER_ALPHA_ASCII_LETTER_COUNT,
+					},
+					(_, i) => {
+						return String.fromCharCode(i + 97);
+					}
+				);
+
+				type CSVRow = readonly [itemLabel: string, itemValue: string];
+
+				const rows: readonly CSVRow[] = [
+					['item-label', 'item-value'],
+
+					...lowerAlphaASCIILetters.map((letter): CSVRow => {
+						return [letter.toUpperCase(), letter];
+					}),
+				];
+				const baseCSVFixture = rows
+					.map((row) => {
+						const padding = ' '.repeat(columnPadding);
+						const delimiter = `${padding}${columnDelimiter}${padding}`;
+
+						return row.join(delimiter);
+					})
+					.join(rowDelimiter);
+
+				const csvAttachmentFileName = 'csv-attachment.csv';
+				const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
+				const formTitle = 'External secondary instance (CSV)';
+				const formDefinition = html(
+					head(
+						title(formTitle),
+						model(
+							// prettier-ignore
+							mainInstance(
+						t('data id="external-secondary-instance-csv"',
+							t('letter'))),
+
+							t(`instance id="external-csv" src="${csvAttachmentURL}"`),
+
+							bind('/data/letter').type('string')
+						)
+					),
+					body(
+						select1Dynamic(
+							'/data/letter',
+							"instance('external-csv')/root/item",
+							'item-value',
+							'item-label'
+						)
+					)
+				);
+
+				let resourceService: JRResourceService;
+
+				beforeEach(() => {
+					resourceService = new JRResourceService();
+				});
+
+				afterEach(() => {
+					resourceService.reset();
+				});
+
+				it(description, async () => {
+					let csvFixture: string;
+
+					if (bom === '') {
+						csvFixture = baseCSVFixture;
+					} else {
+						const blob = new Blob([bom, baseCSVFixture]);
+
+						csvFixture = await getBlobText(blob);
+					}
+
+					resourceService.activateResource(
+						{
+							url: csvAttachmentURL,
+							fileName: csvAttachmentFileName,
+							mimeType: 'text/csv',
+						},
+						csvFixture
+					);
+
+					const letterIndex = Math.floor(Math.random() * LOWER_ALPHA_ASCII_LETTER_COUNT);
+					const letter = lowerAlphaASCIILetters[letterIndex]!;
+
+					const initScenario = async (): Promise<Scenario> => {
+						return await Scenario.init(formTitle, formDefinition, {
+							resourceService,
+						});
+					};
+
+					if (expectedFailure === 'parse') {
+						const initParseFailure = async () => {
+							await initScenario();
+						};
+
+						await expect(initParseFailure).rejects.toThrowError();
+
+						return;
+					}
+
+					if (surprisingSuccessWarning != null) {
+						// eslint-disable-next-line no-console
+						console.warn(surprisingSuccessWarning);
+					}
+
+					const scenario = await initScenario();
+
+					scenario.answer('/data/letter', letter);
+
+					if (expectedFailure === 'select-value') {
+						expect(scenario.answerOf('/data/letter')).toEqualAnswer(stringAnswer(''));
+					} else {
+						expect(scenario.answerOf('/data/letter')).toEqualAnswer(stringAnswer(letter));
+					}
+				});
+			}
+		);
 	});
 });
