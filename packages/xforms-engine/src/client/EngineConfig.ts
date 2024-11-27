@@ -1,4 +1,5 @@
 import type { initializeForm } from '../instance/index.ts';
+import type { MissingResourceBehavior, MissingResourceBehaviorDefault } from './constants.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { FetchFormAttachment, FetchResource } from './resources.ts';
 
@@ -76,9 +77,14 @@ export interface EngineConfig {
 	 *   therefore inherently need to coordinate state between the Service Worker
 	 *   and the main thread (or whatever other realm calls
 	 *   {@link initializeForm}).
-	 *
-	 * - **PENDING:** Any usage where the engine does not require access to a
-	 *   form's attachments.
 	 */
 	readonly fetchFormAttachment?: FetchFormAttachment;
+
+	/**
+	 * @see {@link MissingResourceBehavior}
+	 * @see {@link MissingResourceBehaviorDefault}
+	 *
+	 * @default MissingResourceBehaviorDefault
+	 */
+	readonly missingResourceBehavior?: MissingResourceBehavior;
 }

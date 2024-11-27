@@ -2,6 +2,7 @@ import { identity } from '@getodk/common/lib/identity.ts';
 import { getOwner } from 'solid-js';
 import type { EngineConfig } from '../client/EngineConfig.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import { MISSING_RESOURCE_BEHAVIOR } from '../client/constants.ts';
 import type {
 	InitializeFormOptions as BaseInitializeFormOptions,
 	FormResource,
@@ -25,6 +26,7 @@ const buildInstanceConfig = (options: EngineConfig = {}): InstanceConfig => {
 		createUniqueId,
 		fetchFormDefinition: options.fetchFormDefinition ?? options.fetchResource ?? fetch,
 		fetchFormAttachment: options.fetchFormAttachment ?? fetch,
+		missingResourceBehavior: options.missingResourceBehavior ?? MISSING_RESOURCE_BEHAVIOR.DEFAULT,
 		stateFactory: options.stateFactory ?? identity,
 	};
 };
@@ -42,6 +44,7 @@ export const initializeForm = async (
 	const xformDOM = XFormDOM.from(sourceXML);
 	const secondaryInstances = await SecondaryInstancesDefinition.load(xformDOM, {
 		fetchResource: engineConfig.fetchFormAttachment,
+		missingResourceBehavior: engineConfig.missingResourceBehavior,
 	});
 	const form = new XFormDefinition(xformDOM);
 	const primaryInstance = new PrimaryInstance(scope, form.model, secondaryInstances, engineConfig);

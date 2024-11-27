@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from '../../src/client/RootNode.ts';
+import { MISSING_RESOURCE_BEHAVIOR } from '../../src/client/constants.ts';
 import type { FetchResource } from '../../src/client/resources.ts';
 import { PrimaryInstance } from '../../src/instance/PrimaryInstance.ts';
 import { Root } from '../../src/instance/Root.ts';
@@ -85,6 +86,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 				createUniqueId,
 				fetchFormAttachment: fetchResource,
 				fetchFormDefinition: fetchResource,
+				missingResourceBehavior: MISSING_RESOURCE_BEHAVIOR.DEFAULT,
 				stateFactory,
 			});
 		});

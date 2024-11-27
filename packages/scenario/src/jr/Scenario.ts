@@ -11,6 +11,7 @@ import type {
 	SubmissionOptions,
 	SubmissionResult,
 } from '@getodk/xforms-engine';
+import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, expect } from 'vitest';
@@ -156,6 +157,9 @@ export class Scenario {
 	): InitializeTestFormOptions {
 		return {
 			resourceService: overrideOptions?.resourceService ?? SharedJRResourceService.init(),
+			missingResourceBehavior:
+				overrideOptions?.missingResourceBehavior ??
+				ENGINE_CONSTANTS.MISSING_RESOURCE_BEHAVIOR.DEFAULT,
 			stateFactory: overrideOptions?.stateFactory ?? nonReactiveIdentityStateFactory,
 		};
 	}

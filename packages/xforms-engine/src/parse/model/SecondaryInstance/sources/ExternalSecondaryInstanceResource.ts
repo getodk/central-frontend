@@ -1,4 +1,5 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import type { MissingResourceBehavior } from '../../../../client/constants.ts';
 import type { FetchResource, FetchResourceResponse } from '../../../../client/resources.ts';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
 import { FormAttachmentResource } from '../../../attachments/FormAttachmentResource.ts';
@@ -117,26 +118,66 @@ const detectSecondaryInstanceResourceMetadata = (
 	};
 };
 
-export interface ExternalSecondaryInstanceResourceOptions {
+interface MissingResourceResponse extends FetchResourceResponse {
+	readonly status: 404;
+}
+
+export interface ExternalSecondaryInstanceResourceLoadOptions {
 	readonly fetchResource: FetchResource<JRResourceURL>;
+	readonly missingResourceBehavior: MissingResourceBehavior;
 }
 
 type LoadedExternalSecondaryInstanceResource = {
 	[Format in ExternalSecondaryInstanceSourceFormat]: ExternalSecondaryInstanceResource<Format>;
 }[ExternalSecondaryInstanceSourceFormat];
 
+interface ExternalSecondaryInstanceResourceOptions {
+	readonly isExplicitlyBlank?: boolean;
+}
+
 export class ExternalSecondaryInstanceResource<
 	Format extends ExternalSecondaryInstanceSourceFormat = ExternalSecondaryInstanceSourceFormat,
 > extends FormAttachmentResource<'secondary-instance'> {
+	private static isMissingResource(
+		response: FetchResourceResponse
+	): response is MissingResourceResponse {
+		return response.status === 404;
+	}
+
+	private static createBlankResource(
+		instanceId: string,
+		resourceURL: JRResourceURL,
+		response: MissingResourceResponse,
+		options: ExternalSecondaryInstanceResourceLoadOptions
+	) {
+		if (options.missingResourceBehavior === 'BLANK') {
+			return new this(
+				response.status,
+				instanceId,
+				resourceURL,
+				{
+					format: 'xml',
+					contentType: 'text/xml',
+				},
+				'',
+				{ isExplicitlyBlank: true }
+			);
+		}
+
+		throw new ErrorProductionDesignPendingError(
+			`Failed to load resource: ${resourceURL.href}: resource is missing (status: ${response.status})`
+		);
+	}
+
 	static async load(
 		instanceId: string,
 		resourceURL: JRResourceURL,
-		options: ExternalSecondaryInstanceResourceOptions
-	): Promise<LoadedExternalSecondaryInstanceResource | null> {
+		options: ExternalSecondaryInstanceResourceLoadOptions
+	): Promise<LoadedExternalSecondaryInstanceResource> {
 		const response = await options.fetchResource(resourceURL);
 
-		if (response.status === 404) {
-			return null;
+		if (this.isMissingResource(response)) {
+			return this.createBlankResource(instanceId, resourceURL, response, options);
 		}
 
 		assertResponseSuccess(resourceURL, response);
@@ -144,28 +185,38 @@ export class ExternalSecondaryInstanceResource<
 		const data = await response.text();
 		const metadata = detectSecondaryInstanceResourceMetadata(resourceURL, response, data);
 
-		return new this(
-			response.status ?? null,
-			instanceId,
-			resourceURL,
-			metadata,
-			data
-		) satisfies ExternalSecondaryInstanceResource as LoadedExternalSecondaryInstanceResource;
+		return new this(response.status ?? null, instanceId, resourceURL, metadata, data, {
+			isExplicitlyBlank: false,
+		}) satisfies ExternalSecondaryInstanceResource as LoadedExternalSecondaryInstanceResource;
 	}
 
 	readonly format: Format;
+	readonly isBlank: boolean;
 
-	protected constructor(
+	private constructor(
 		readonly responseStatus: number | null,
 		readonly instanceId: string,
 		resourceURL: JRResourceURL,
 		metadata: ExternalSecondaryInstanceResourceMetadata<Format>,
-		data: string
+		data: string,
+		options: ExternalSecondaryInstanceResourceOptions
 	) {
 		const { contentType, format } = metadata;
 
 		super('secondary-instance', resourceURL, contentType, data);
 
 		this.format = format;
+
+		if (data === '') {
+			if (options.isExplicitlyBlank) {
+				this.isBlank = true;
+			} else {
+				throw new ErrorProductionDesignPendingError(
+					`Failed to load blank external secndary instance ${resourceURL.href}`
+				);
+			}
+		} else {
+			this.isBlank = false;
+		}
 	}
 }

@@ -9,6 +9,7 @@ import type {
 import { initializeForm } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
 import { createRoot, getOwner, runWithOwner } from 'solid-js';
+import type { MissingResourceBehavior } from '../../../xforms-engine/dist/client/constants';
 import { FormDefinitionResource } from '../jr/resource/FormDefinitionResource.ts';
 
 /**
@@ -55,6 +56,7 @@ const fetchResourceStub: typeof fetch = () => {
 
 export interface InitializeTestFormOptions {
 	readonly resourceService: JRResourceService;
+	readonly missingResourceBehavior: MissingResourceBehavior;
 	readonly stateFactory: OpaqueReactiveObjectFactory;
 }
 
@@ -85,6 +87,7 @@ export const initializeTestForm = async (
 				config: {
 					...defaultConfig,
 					fetchFormAttachment: options.resourceService.handleRequest,
+					missingResourceBehavior: options.missingResourceBehavior,
 					stateFactory: options.stateFactory,
 				},
 			});

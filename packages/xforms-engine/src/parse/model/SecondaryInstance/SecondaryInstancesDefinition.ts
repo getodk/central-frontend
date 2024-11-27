@@ -7,7 +7,7 @@ import type { XFormDOM } from '../../XFormDOM.ts';
 import { SecondaryInstanceRootDefinition } from './SecondaryInstanceRootDefinition.ts';
 import { BlankSecondaryInstanceSource } from './sources/BlankSecondaryInstanceSource.ts';
 import { CSVExternalSecondaryInstanceSource } from './sources/CSVExternalSecondaryInstance.ts';
-import type { ExternalSecondaryInstanceResourceOptions } from './sources/ExternalSecondaryInstanceResource.ts';
+import type { ExternalSecondaryInstanceResourceLoadOptions } from './sources/ExternalSecondaryInstanceResource.ts';
 import { ExternalSecondaryInstanceResource } from './sources/ExternalSecondaryInstanceResource.ts';
 import { GeoJSONExternalSecondaryInstanceSource } from './sources/GeoJSONExternalSecondaryInstance.ts';
 import { InternalSecondaryInstanceSource } from './sources/InternalSecondaryInstanceSource.ts';
@@ -41,7 +41,7 @@ export class SecondaryInstancesDefinition
 
 	static async load(
 		xformDOM: XFormDOM,
-		options: ExternalSecondaryInstanceResourceOptions
+		options: ExternalSecondaryInstanceResourceLoadOptions
 	): Promise<SecondaryInstancesDefinition> {
 		const { secondaryInstanceElements } = xformDOM;
 
@@ -67,7 +67,7 @@ export class SecondaryInstancesDefinition
 					options
 				);
 
-				if (resource == null) {
+				if (resource.isBlank) {
 					return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
 				}
 

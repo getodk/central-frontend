@@ -18,6 +18,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
+import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -673,11 +674,64 @@ describe('Secondary instances', () => {
 		 */
 		it.todo('dummyNodesInExternalInstanceDeclaration_ShouldBeIgnored');
 
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * This sub-suite has been updated to reflect different semantics and expectations for missing external secondary instances between JavaRosa and Web Forms:
+		 *
+		 * - By default, Web Forms will fail to initialize a form when any of the external secondary instances are missing (i.e. with HTTP 404 semantics).
+		 *
+		 * - By optional configuration, Web Forms may ignore missing external secondary instances, treating them as blank.
+		 */
 		describe('//region Missing external file', () => {
-			it('[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found', async () => {
+			// JR: emptyPlaceholderInstanceIsUsed_whenExternalInstanceNotFound
+			it.fails(
+				'[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found',
+				async () => {
+					configureReferenceManagerIncorrectly();
+
+					const scenario = await Scenario.init('external-select-csv.xml');
+
+					expect(scenario.choicesOf('/data/first').size()).toBe(0);
+				}
+			);
+
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Supplemental, exercises configured override of default missing resource
+			 * behavior.
+			 */
+			it('uses an empty/blank placeholder when not found, and when overriding configuration is specified', async () => {
 				configureReferenceManagerIncorrectly();
 
-				const scenario = await Scenario.init('external-select-csv.xml');
+				const scenario = await Scenario.init(
+					'Missing resource treated as blank',
+					// prettier-ignore
+					html(
+						head(
+							title('Missing resource treated as blank'),
+							model(
+								mainInstance(
+									t('data id="missing-resource-treated-as-blank"',
+										t('first'))),
+
+								t('instance id="external-csv" src="jr://file-csv/missing.csv"'),
+
+								bind('/data/first').type('string')
+							)
+						),
+						body(
+							select1Dynamic(
+								'/data/first',
+								"instance('external-csv')/root/item"
+							)
+						)
+					),
+					{
+						missingResourceBehavior: ENGINE_CONSTANTS.MISSING_RESOURCE_BEHAVIOR.BLANK,
+					}
+				);
 
 				expect(scenario.choicesOf('/data/first').size()).toBe(0);
 			});
@@ -723,6 +777,42 @@ describe('Secondary instances', () => {
 			)
 		);
 
+		const activateFixtures = () => {
+			resourceService.activateFixtures(fixturesDirectory, ['file', 'file-csv']);
+		};
+
+		const activateInlineResources = () => {
+			resourceService.activateResource(
+				{
+					url: xmlAttachmentURL,
+					fileName: xmlAttachmentFileName,
+					mimeType: 'text/xml',
+				},
+				// prettier-ignore
+				t('instance-root',
+					t('instance-item',
+							t('item-label', 'A'),
+							t('item-value', 'a')),
+					t('instance-item',
+							t('item-label', 'B'),
+							t('item-value', 'b'))).asXml()
+			);
+			resourceService.activateResource(
+				{
+					url: csvAttachmentURL,
+					fileName: csvAttachmentFileName,
+					mimeType: 'text/csv',
+				},
+				// prettier-ignore
+				[
+					'item-label,item-value',
+					'Y,y',
+					'Z,z',
+					'\n\r\n'
+				].join('\n')
+			);
+		};
+
 		let fixturesDirectory: string;
 		let resourceService: JRResourceService;
 
@@ -747,7 +837,7 @@ describe('Secondary instances', () => {
 		});
 
 		it('supports external secondary instances (XML, file system fixture)', async () => {
-			resourceService.activateFixtures(fixturesDirectory, ['file']);
+			activateFixtures();
 
 			const scenario = await Scenario.init(formTitle, formDefinition, {
 				resourceService,
@@ -763,21 +853,7 @@ describe('Secondary instances', () => {
 		// worth considering if we want to expand external secondary instance
 		// support and/or test coverage.
 		it('supports external secondary instances (XML, inline fixture)', async () => {
-			resourceService.activateResource(
-				{
-					url: xmlAttachmentURL,
-					fileName: xmlAttachmentFileName,
-					mimeType: 'text/xml',
-				},
-				// prettier-ignore
-				t('instance-root',
-					t('instance-item',
-							t('item-label', 'A'),
-							t('item-value', 'a')),
-					t('instance-item',
-							t('item-label', 'B'),
-							t('item-value', 'b'))).asXml()
-			);
+			activateInlineResources();
 
 			const scenario = await Scenario.init(formTitle, formDefinition, {
 				resourceService,
@@ -789,7 +865,7 @@ describe('Secondary instances', () => {
 		});
 
 		it('supports external secondary instances (CSV, file system fixture)', async () => {
-			resourceService.activateFixtures(fixturesDirectory, ['file']);
+			activateFixtures();
 
 			const scenario = await Scenario.init(formTitle, formDefinition, {
 				resourceService,
@@ -801,20 +877,7 @@ describe('Secondary instances', () => {
 		});
 
 		it('supports external secondary instances (CSV, inline fixture)', async () => {
-			resourceService.activateResource(
-				{
-					url: csvAttachmentURL,
-					fileName: csvAttachmentFileName,
-					mimeType: 'text/csv',
-				},
-				// prettier-ignore
-				[
-					'item-label,item-value',
-					'Y,y',
-					'Z,z',
-					'\n\r\n'
-				].join('\n')
-			);
+			activateInlineResources();
 
 			const scenario = await Scenario.init(formTitle, formDefinition, {
 				resourceService,
