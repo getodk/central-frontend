@@ -3,6 +3,7 @@ import { initializeForm as engine__initializeForm } from './instance/index.ts';
 
 export const initializeForm: InitializeForm = engine__initializeForm;
 
+export type * from './client/constants.ts';
 export * as constants from './client/constants.ts';
 export type * from './client/EngineConfig.ts';
 export type * from './client/FormLanguage.ts';
