@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { MissingResourceBehavior } from '@getodk/xforms-engine';
 import { initializeForm, type FetchFormAttachment, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -14,6 +15,7 @@ const webFormsVersion = __WEB_FORMS_VERSION__;
 const props = defineProps<{
 	formXml: string;
 	fetchFormAttachment: FetchFormAttachment;
+	missingResourceBehavior?: MissingResourceBehavior;
 }>();
 const emit = defineEmits(['submit']);
 
@@ -24,6 +26,7 @@ const initializeFormError = ref<FormInitializationError | null>();
 initializeForm(props.formXml, {
 	config: {
 		fetchFormAttachment: props.fetchFormAttachment,
+		missingResourceBehavior: props.missingResourceBehavior,
 		stateFactory: reactive,
 	},
 })
