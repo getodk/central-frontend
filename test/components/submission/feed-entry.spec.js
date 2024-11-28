@@ -71,6 +71,20 @@ describe('SubmissionFeedEntry', () => {
       title.text().should.equal('Submitted by Alice');
     });
 
+    it('renders correctly for a submission.delete audit', () => {
+      testData.extendedAudits.createPast(1, { action: 'submission.delete' });
+      const title = mountComponent().get('.feed-entry-title');
+      title.find('.icon-trash').exists().should.be.true;
+      title.text().should.equal('Deleted by Alice');
+    });
+
+    it('renders correctly for a submission.restore audit', () => {
+      testData.extendedAudits.createPast(1, { action: 'submission.restore' });
+      const title = mountComponent().get('.feed-entry-title');
+      title.find('.icon-recycle').exists().should.be.true;
+      title.text().should.equal('Undeleted by Alice');
+    });
+
     describe('submission.update audit', () => {
       it('renders correctly for null', () => {
         testData.extendedAudits.createPast(1, {
