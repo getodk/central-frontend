@@ -20,6 +20,18 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
+      <template v-else-if="entry.action === 'submission.delete'">
+        <span class="icon-trash"></span>
+        <i18n-t keypath="title.delete">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'submission.restore'">
+        <span class="icon-recycle"></span>
+        <i18n-t keypath="title.undelete">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
       <template v-else-if="updateOrEdit">
         <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
           <template #reviewState>
@@ -189,7 +201,7 @@ export default {
     font-weight: normal;
   }
 
-  .icon-cloud-upload, .icon-comment { color: #bbb; }
+  .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle { color: #bbb; }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
   .review-state {
@@ -326,7 +338,35 @@ export default {
 
       Comment • {name}
       */
-      "comment": "Comment by {name}"
+      "comment": "Comment by {name}",
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      There is an icon before the text that corresponds to the word "Deleted",
+      so it is essential for "Deleted" to also come first in the translation. If
+      that is unnatural in your language, you can also split the text into two
+      parts. For example, instead of:
+
+      Deleted by {name}
+
+      you could split it into:
+
+      Deleted • {name}
+      */
+      "delete": "Deleted by {name}",
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      There is an icon before the text that corresponds to the word "Undeleted",
+      so it is essential for "Undeleted" to also come first in the translation. If
+      that is unnatural in your language, you can also split the text into two
+      parts. For example, instead of:
+
+      Undeleted by {name}
+
+      you could split it into:
+
+      Undeleted • {name}
+      */
+      "undelete": "Undeleted by {name}"
     }
   }
 }
