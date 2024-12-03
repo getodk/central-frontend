@@ -12,7 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="dataset-row">
     <td class="name">
-      <router-link :to="datasetOverviewPage" v-tooltip.text>{{ dataset.name }}</router-link>
+      <dataset-link :project-id="dataset.projectId" :name="dataset.name"
+        v-tooltip.text/>
     </td>
     <td class="entities">
       <span>{{ $n(dataset.entities, 'default') }}</span>
@@ -39,6 +40,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DatasetLink from './link.vue';
 import DateTime from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
@@ -46,7 +48,7 @@ import { apiPaths } from '../../util/request';
 
 export default {
   name: 'DatasetRow',
-  components: { DateTime },
+  components: { DatasetLink, DateTime },
   props: {
     dataset: {
       type: Object,
@@ -60,9 +62,6 @@ export default {
   computed: {
     href() {
       return apiPaths.entities(this.dataset.projectId, this.dataset.name, '.csv');
-    },
-    datasetOverviewPage() {
-      return this.datasetPath(this.dataset.projectId, this.dataset.name);
     }
   }
 };

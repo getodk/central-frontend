@@ -13,10 +13,9 @@ except according to the terms contained in the LICENSE file.
   <div class="dataset-summary-row">
     <div class="row">
       <div class="col-xs-6 dataset-name-wrap">
-        <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>
-          <router-link v-if="!dataset.isNew" :to="datasetPath(projectId, dataset.name)" v-tooltip.text>
-            {{ dataset.name }}
-          </router-link>
+        <div class="dataset-name text-overflow-ellipsis">
+          <dataset-link v-if="!dataset.isNew" :project-id="projectId"
+            :name="dataset.name" v-tooltip.text/>
           <template v-else>
             {{ dataset.name }}
           </template>
@@ -50,13 +49,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DatasetLink from '../link.vue';
 import I18nList from '../../i18n/list.vue';
-
-import useRoutes from '../../../composables/routes';
 
 export default {
   name: 'DatasetSummaryRow',
-  components: { I18nList },
+  components: { DatasetLink, I18nList },
   props: {
     dataset: {
       type: Object,
@@ -66,10 +64,6 @@ export default {
       type: Number,
       required: true
     }
-  },
-  setup() {
-    const { datasetPath } = useRoutes();
-    return { datasetPath };
   },
   data() {
     return {

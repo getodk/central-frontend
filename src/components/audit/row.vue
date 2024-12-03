@@ -49,7 +49,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { pick } from 'ramda';
+
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
@@ -93,7 +96,9 @@ const acteeSpeciesByCategory = {
     path: (actee, { primaryFormPath }) => primaryFormPath(actee)
   },
   dataset: {
-    title: (actee) => actee.name
+    title: (actee) => actee.name,
+    component: DatasetLink,
+    props: pick(['projectId', 'name'])
   },
   public_link: {
     title: getDisplayName
@@ -109,7 +114,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { ActorLink, DateTime, Selectable },
+  components: { ActorLink, DatasetLink, DateTime, Selectable },
   props: {
     audit: {
       type: Object,

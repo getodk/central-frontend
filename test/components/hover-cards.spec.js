@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import { markRaw } from 'vue';
 
+import DatasetLink from '../../src/components/dataset/link.vue';
 import EntityLink from '../../src/components/entity/link.vue';
 import Popover from '../../src/components/popover.vue';
 
@@ -23,6 +24,26 @@ const hover = (clock) => async (component) => {
 };
 
 describe('HoverCards', () => {
+  it('shows a hover card of type dataset', () => {
+    const clock = sinon.useFakeTimers();
+    const dataset = testData.extendedDatasets
+      .createPast(1, { name: 'a b' })
+      .last();
+    return mockHttp()
+      .mount(TestUtilHoverCards, mountOptions(
+        DatasetLink,
+        { projectId: 1, name: 'a b' }
+      ))
+      .request(hover(clock))
+      .respondWithData(() => dataset)
+      .testRequests([{ url: '/v1/projects/1/datasets/a%20b', extended: true }])
+      .afterResponses(async (component) => {
+        should.exist(document.querySelector('.popover .hover-card-dataset'));
+        const { target } = component.getComponent(Popover).props();
+        target.should.equal(getAnchor(component).element);
+      });
+  });
+
   it('shows a hover card of type entity', () => {
     const clock = sinon.useFakeTimers();
     const dataset = testData.extendedDatasets
