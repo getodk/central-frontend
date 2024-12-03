@@ -18,9 +18,8 @@ except according to the terms contained in the LICENSE file.
         <i18n-t v-if="submission.currentVersion != null"
           keypath="title.submission.create.notDeleted">
           <template #instanceName>
-            <router-link :to="sourceSubmissionPath">
-              {{ submission.currentVersion.instanceName ?? submission.instanceId }}
-            </router-link>
+            <submission-link :project-id="projectId"
+              :xml-form-id="submission.xmlFormId" :submission="submission"/>
           </template>
           <template #submitter><actor-link :actor="submission.submitter"/></template>
         </i18n-t>
@@ -99,9 +98,8 @@ except according to the terms contained in the LICENSE file.
           <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>
-              <router-link :to="sourceSubmissionPath">
-                {{ submission.currentVersion.instanceName ?? submission.instanceId }}
-              </router-link>
+              <submission-link :project-id="projectId"
+                :xml-form-id="submission.xmlFormId" :submission="submission"/>
             </template>
           </i18n-t>
           <i18n-t v-else keypath="title.entity.update_version.submission.deleted.full">
@@ -147,9 +145,9 @@ import ActorLink from '../actor-link.vue';
 import DatasetLink from '../dataset/link.vue';
 import EntityDiff from './diff.vue';
 import FeedEntry from '../feed-entry.vue';
+import SubmissionLink from '../submission/link.vue';
 
 import useReviewState from '../../composables/review-state';
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -181,12 +179,6 @@ const wrapTitle = computed(() => {
 });
 
 // submission.create, entity.update.version
-const { submissionPath } = useRoutes();
-const sourceSubmissionPath = computed(() => submissionPath(
-  projectId,
-  props.submission.xmlFormId,
-  props.submission.instanceId
-));
 const { t } = useI18n();
 const deletedSubmission = (key) => t(key, { id: props.submission.instanceId });
 

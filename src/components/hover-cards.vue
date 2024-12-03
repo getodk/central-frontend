@@ -27,6 +27,7 @@ import { inject, nextTick, ref, shallowRef, watch } from 'vue';
 import HoverCardDataset from './hover-card/dataset.vue';
 import HoverCardEntity from './hover-card/entity.vue';
 import HoverCardForm from './hover-card/form.vue';
+import HoverCardSubmission from './hover-card/submission.vue';
 import Popover from './popover.vue';
 
 import useHoverCardResources from '../request-data/hover-card';
@@ -45,6 +46,17 @@ const types = {
     component: HoverCardForm,
     requests: ({ projectId, xmlFormId }) => ({
       form: { url: apiPaths.form(projectId, xmlFormId), extended: true }
+    })
+  },
+  submission: {
+    component: HoverCardSubmission,
+    requests: ({ projectId, xmlFormId, instanceId }) => ({
+      form: { url: apiPaths.form(projectId, xmlFormId) },
+      submission: {
+        url: apiPaths.odataSubmission(projectId, xmlFormId, instanceId, {
+          $select: '__id,__system,meta'
+        })
+      }
     })
   },
   dataset: {
