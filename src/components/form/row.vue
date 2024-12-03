@@ -12,9 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="form-row">
     <td class="name">
-      <link-if-can :to="primaryFormPath(form)">
-        {{ form.nameOrId }}
-      </link-if-can>
+      <form-link :form="form"/>
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
 
@@ -89,6 +87,7 @@ import { DateTime } from 'luxon';
 import DateTimeComponent from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
+import FormLink from './link.vue';
 import LinkIfCan from '../link-if-can.vue';
 
 import useReviewState from '../../composables/review-state';
@@ -98,7 +97,13 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormRow',
-  components: { DateTime: DateTimeComponent, EnketoFill, EnketoPreview, LinkIfCan },
+  components: {
+    DateTime: DateTimeComponent,
+    EnketoFill,
+    EnketoPreview,
+    FormLink,
+    LinkIfCan
+  },
   props: {
     form: {
       type: Object,
@@ -111,11 +116,11 @@ export default {
   },
   setup() {
     const { project, duplicateFormNames } = useRequestData();
-    const { formPath, primaryFormPath } = useRoutes();
+    const { formPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       project, duplicateFormNames,
-      formPath, primaryFormPath,
+      formPath,
       reviewStateIcon
     };
   },

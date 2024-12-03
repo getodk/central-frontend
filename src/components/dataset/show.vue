@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <div id="dataset-show">
     <page-back v-show="dataExists" :to="[projectPath(), projectPath('entity-lists')]">
@@ -87,7 +86,7 @@ export default {
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, datasetPath, tabPath, tabClass, canRoute
+      projectPath, tabPath, tabClass, canRoute
     };
   },
   created() {

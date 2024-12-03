@@ -52,9 +52,8 @@ module.exports = {
     'spaced-comment': 'off',
     'vue/attributes-order': ['error', {
       order: [
-        'DEFINITION',
         'LIST_RENDERING',
-        'CONDITIONALS',
+        ['CONDITIONALS', 'DEFINITION'],
         'RENDER_MODIFIERS',
         'GLOBAL',
         ['UNIQUE', 'SLOT'],

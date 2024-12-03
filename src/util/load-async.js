@@ -147,6 +147,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-home-config-section" */
     '../components/home/config-section.vue'
   )))
+  .set('HoverCards', loader(() => import(
+    /* webpackChunkName: "component-hover-cards" */
+    '../components/hover-cards.vue'
+  )))
   .set('NotFound', loader(() => import(
     /* webpackChunkName: "component-not-found" */
     '../components/not-found.vue'

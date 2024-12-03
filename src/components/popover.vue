@@ -89,7 +89,8 @@ export default {
           html: true,
           placement: this.placement,
           trigger: 'manual',
-          animation: false
+          animation: false,
+          sanitize: false
         })
         .popover('show'));
     },
@@ -122,6 +123,7 @@ export default {
 @import '../assets/scss/variables';
 
 .popover {
+  background-color: transparent;
   border: none;
   box-shadow: $box-shadow-popover;
   font-family: inherit;

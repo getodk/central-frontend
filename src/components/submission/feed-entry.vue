@@ -47,17 +47,13 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
-            </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <entity-link v-if="entityDetails.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -65,17 +61,13 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
-            </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -106,17 +98,25 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
+import EntityLink from '../entity/link.vue';
 import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
 
 import useReviewState from '../../composables/review-state';
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, FeedEntry, MarkdownView, SubmissionDiffItem },
+  components: {
+    ActorLink,
+    DatasetLink,
+    EntityLink,
+    FeedEntry,
+    MarkdownView,
+    SubmissionDiffItem
+  },
   props: {
     projectId: {
       type: String,
@@ -138,8 +138,7 @@ export default {
   setup() {
     const { diffs } = useRequestData();
     const { reviewStateIcon } = useReviewState();
-    const { datasetPath, entityPath } = useRoutes();
-    return { diffs, reviewStateIcon, datasetPath, entityPath };
+    return { diffs, reviewStateIcon };
   },
   computed: {
     updateOrEdit() {
@@ -150,6 +149,9 @@ export default {
       return this.entry.action === 'submission.update'
         ? this.entry.details.reviewState
         : 'edited';
+    },
+    entityDetails() {
+      return this.entry?.details?.entity;
     },
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
