@@ -1,5 +1,5 @@
 import NotFound from '../../../src/components/not-found.vue';
-import PageBack from '../../../src/components/page/back.vue';
+import Breadcrumbs from '../../../src/components/page/breadcrumbs.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 
 import testData from '../../data';
@@ -17,13 +17,17 @@ describe('SubmissionShow', () => {
   });
 
   it('renders a back link', async () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
+    testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 's' });
     const component = await load('/projects/1/forms/a%20b/submissions/s', {
       root: false
     });
-    const { to } = component.getComponent(PageBack).props();
-    to.should.equal('/projects/1/forms/a%20b/submissions');
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links[0].path.should.equal('/projects/1');
+    links[1].text.should.equal('Forms');
+    links[1].path.should.equal('/projects/1');
+    links[2].text.should.equal('My Form');
+    links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
   });
 
   it('shows the instance name if the submission has one', async () => {
