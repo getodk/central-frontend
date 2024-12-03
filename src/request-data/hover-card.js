@@ -15,11 +15,15 @@ except according to the terms contained in the LICENSE file.
 // e.g., `form`. For simplicity, we want the hover card resources to be
 // independent of resources used in other components.
 
+import { transformForm } from './util';
 import { useRequestData } from './index';
 
 export default () => {
   const { createResource } = useRequestData();
   return {
+    form: createResource('form', () => ({
+      transformResponse: ({ data }) => transformForm(data)
+    })),
     dataset: createResource('dataset'),
     entity: createResource('entity')
   };

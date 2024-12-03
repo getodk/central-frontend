@@ -15,20 +15,16 @@ except according to the terms contained in the LICENSE file.
       <span v-if="showIcon" class="icon-file"></span>
     </td>
     <td class="form-name">
-      <template v-if="canLinkToFormOverview">
-        <router-link :to="primaryFormPath(form)">{{ form.nameOrId }}</router-link>
+      <template v-if="project.permits('form.update') || canLinkToSubmissions">
+        <form-link :form="form"/>
       </template>
-      <template v-else-if="canLinkToSubmissions">
-        <router-link :to="submissionsPath.all">{{ form.nameOrId }}</router-link>
+      <template v-else-if="canLinkToEnketo">
+        <a :href="enketoPath" target="_blank">{{ form.nameOrId }}</a>
       </template>
       <template v-else>
-        <template v-if="canLinkToEnketo">
-          <a :href="enketoPath" target="_blank">{{ form.nameOrId }}</a>
-        </template>
-        <template v-else>
-          {{ form.nameOrId }}
-        </template>
+        {{ form.nameOrId }}
       </template>
+
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <template v-if="form.publishedAt != null">
@@ -93,6 +89,7 @@ except according to the terms contained in the LICENSE file.
 import { DateTime } from 'luxon';
 
 import DateTimeComponent from '../date-time.vue';
+import FormLink from '../form/link.vue';
 
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
@@ -102,7 +99,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectFormRow',
-  components: { DateTime: DateTimeComponent },
+  components: { DateTime: DateTimeComponent, FormLink },
   props: {
     form: {
       type: Object,
@@ -122,11 +119,11 @@ export default {
   setup() {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
-    const { formPath, primaryFormPath } = useRoutes();
+    const { formPath, canRoute } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       duplicateFormNamesPerProject,
-      formPath, primaryFormPath,
+      formPath, canRoute,
       reviewStateIcon
     };
   },
