@@ -47,16 +47,14 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
+            <router-link v-if="entityDetails?.currentVersion?.label != null" :to="entityPath(projectId, entityDetails.dataset, entityDetails.uuid)">
+              {{ entityDetails.currentVersion.label }}
             </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
+            <router-link :to="datasetPath(projectId, entityDetails.dataset)">
+              {{ entityDetails.dataset }}
             </router-link>
           </template>
         </i18n-t>
@@ -65,16 +63,14 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
+            <router-link v-if="entityDetails?.currentVersion?.label != null" :to="entityPath(projectId, entityDetails.dataset, entityDetails.uuid)">
+              {{ entityDetails.currentVersion.label }}
             </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
+            <router-link :to="datasetPath(projectId, entityDetails.dataset)">
+              {{ entityDetails.dataset }}
             </router-link>
           </template>
         </i18n-t>
@@ -150,6 +146,9 @@ export default {
       return this.entry.action === 'submission.update'
         ? this.entry.details.reviewState
         : 'edited';
+    },
+    entityDetails() {
+      return this.entry?.details?.entity;
     },
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
