@@ -35,12 +35,11 @@ defineOptions({
   border-bottom: 1px solid $color-subpanel-border-strong;
 }
 
-#page-head-title {
-  overflow-wrap: break-word;
-  &.h1 {
-    margin-top: 0px;
-  }
+.breadcrumbs + #page-head .h1 {
+  margin-top: 0;
 }
+
+#page-head-title { overflow-wrap: break-word; }
 
 #page-head-body {
   color: #555;

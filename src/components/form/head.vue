@@ -176,6 +176,10 @@ export default {
 $draft-nav-padding: 23px;
 $tab-li-margin-top: 5px;
 
+.breadcrumbs + #form-head-form-nav .h1 {
+  margin-top: 0;
+}
+
 #form-head-form-nav {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
@@ -183,7 +187,6 @@ $tab-li-margin-top: 5px;
   .h1 {
     @include text-overflow-ellipsis;
     margin-bottom: -10px;
-    margin-top: 0px;
   }
 
   .nav-tabs > li {
