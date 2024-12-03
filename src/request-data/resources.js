@@ -12,20 +12,22 @@ except according to the terms contained in the LICENSE file.
 import { computed, reactive, shallowReactive, watchSyncEffect } from 'vue';
 import { mergeDeepLeft } from 'ramda';
 
+import UserPreferences from './user-preferences/preferences';
 import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
-import UserPreferences from './user-preferences/preferences';
 
-export default ({ i18n, http }, createResource) => {
+export default (container, createResource) => {
+  const { i18n } = container;
+
   // Resources related to the session
-  const session = createResource('session');
+  createResource('session');
   createResource('currentUser', () => ({
     transformResponse: ({ data }) => {
       /* eslint-disable no-param-reassign */
       data.verbs = new Set(data.verbs);
       data.can = hasVerbs;
-      data.preferences = new UserPreferences(data.preferences, session, http);
+      data.preferences = new UserPreferences(data.preferences, container);
       /* eslint-enable no-param-reassign */
       return shallowReactive(data);
     }
