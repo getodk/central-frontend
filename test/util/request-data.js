@@ -21,9 +21,7 @@ the response or response data. For example:
 */
 export const setRequestData = (requestData, responsesOrData) => {
   for (const [name, responseOrData] of Object.entries(responsesOrData)) {
-    const resource = requestData[name] != null
-      ? requestData[name]
-      : requestData.localResources[name];
+    const resource = requestData.localResources[name] ?? requestData[name];
     if (resource == null) throw new Error(`unknown resource ${name}`);
     const response = mockResponse.of(responseOrData);
     if (typeof response.data === 'object' && response.data != null)
