@@ -113,6 +113,7 @@ const responsesByComponent = {
   }),
   SubmissionShow: componentResponses({
     project: true,
+    form: () => testData.extendedForms.last(),
     submission: () => {
       const odata = testData.submissionOData();
       const selected = odata.value.map(pick(['__id', '__system', 'meta']));
