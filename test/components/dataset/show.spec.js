@@ -1,5 +1,5 @@
 import DatasetOverview from '../../../src/components/dataset/overview.vue';
-import Breadcrumbs from '../../../src/components/page/breadcrumbs.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
 import { findTab } from '../../util/dom';
@@ -45,7 +45,7 @@ describe('DatasetShow', () => {
       });
   });
 
-  it('renders a back link', async () => {
+  it('renders breadcrumbs', async () => {
     testData.extendedDatasets.createPast(1);
     const component = await load('/projects/1/entity-lists/trees');
     const { links } = component.getComponent(Breadcrumbs).props();

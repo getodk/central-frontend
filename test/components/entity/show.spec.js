@@ -2,7 +2,7 @@ import EntityConflictSummary from '../../../src/components/entity/conflict-summa
 import EntityDelete from '../../../src/components/entity/delete.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
-import Breadcrumbs from '../../../src/components/page/breadcrumbs.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';

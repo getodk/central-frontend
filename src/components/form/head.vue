@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <breadcrumbs :links="breadcrumbLinks"/>
+    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <div id="form-head-form-nav" class="row">
       <div class="col-xs-12">
         <div class="row">
@@ -116,7 +116,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Breadcrumbs from '../page/breadcrumbs.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
 
 import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';

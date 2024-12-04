@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :links="breadcrumbLinks"/>
-    <page-head v-show="submission.dataExists">
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+    <page-head v-show="dataExists">
       <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
     </page-head>
     <page-body>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { useI18n } from 'vue-i18n';
 
-import Breadcrumbs from '../page/breadcrumbs.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
@@ -50,7 +50,6 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 import SubmissionDelete from './delete.vue';
 
 import useFields from '../../request-data/fields';
-import useForm from '../../request-data/form';
 import useRoutes from '../../composables/routes';
 import useRequest from '../../composables/request';
 import useSubmission from '../../request-data/submission';
@@ -87,9 +86,8 @@ export default {
     }
   },
   setup() {
-    const { project, resourceStates } = useRequestData();
+    const { project, form, resourceStates } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    const { form } = useForm();
 
     const { submission, submissionVersion, audits, comments, diffs } = useSubmission();
     const fields = useFields();
@@ -102,7 +100,7 @@ export default {
     const { formPath, projectPath } = useRoutes();
     return {
       project, form, submission, submissionVersion, audits, comments, diffs, fields,
-      request, awaitingResponse, ...resourceStates([project, submission]),
+      request, awaitingResponse, ...resourceStates([project, form, submission]),
       reviewModal: modalData(), deleteModal: modalData(),
       formPath, projectPath
     };
@@ -158,8 +156,7 @@ export default {
         }),
         this.form.request({
           url: apiPaths.form(this.projectId, this.xmlFormId),
-          extended: false,
-          resend: false
+          extended: false
         }),
         this.submission.request({
           url: apiPaths.odataSubmission(

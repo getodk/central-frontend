@@ -1,5 +1,5 @@
 import { RouterLinkStub } from '@vue/test-utils';
-import Breadcrumbs from '../../../src/components/page/breadcrumbs.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options) => mount(Breadcrumbs, mergeMountOptions(options, {

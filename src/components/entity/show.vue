@@ -11,13 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs :links="breadcrumbLinks"/>
-    <page-head v-show="entity.dataExists">
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+    <page-head v-show="dataExists">
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
     </page-head>
     <page-body>
-      <loading :state="entity.initiallyLoading"/>
-      <div v-show="entity.dataExists" class="row">
+      <loading :state="initiallyLoading"/>
+      <div v-show="dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
           <entity-data @update="updateModal.show()"/>
@@ -46,7 +46,7 @@ import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-import Breadcrumbs from '../page/breadcrumbs.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityBranchData from './branch-data.vue';
@@ -87,9 +87,10 @@ provide('projectId', props.projectId);
 provide('datasetName', props.datasetName);
 provide('uuid', props.uuid);
 
-const { project, dataset } = useRequestData();
+const { project, dataset, resourceStates } = useRequestData();
 const { entity, audits } = useEntity();
 const entityVersions = useEntityVersions();
+const { initiallyLoading, dataExists } = resourceStates([project, entity]);
 
 Promise.allSettled([
   entity.request({
@@ -155,14 +156,11 @@ const requestDelete = () => {
 
 const branchData = modalData();
 
-const breadcrumbLinks = computed(() => {
-  if (!entity.dataExists) return [];
-  return [
-    { text: project.dataExists ? project.nameWithArchived : t('resource.project'), path: projectPath() },
-    { text: t('resource.entities'), path: projectPath('entity-lists'), icon: 'icon-database' },
-    { text: props.datasetName, path: datasetPath('entities') },
-  ];
-});
+const breadcrumbLinks = computed(() => [
+  { text: project.nameWithArchived, path: projectPath() },
+  { text: t('resource.entities'), path: projectPath('entity-lists'), icon: 'icon-database' },
+  { text: props.datasetName, path: datasetPath('entities') },
+]);
 
 </script>
 

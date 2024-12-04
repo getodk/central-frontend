@@ -2,7 +2,7 @@ import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import FormHead from '../../../src/components/form/head.vue';
 import FormOverview from '../../../src/components/form/overview.vue';
 import Loading from '../../../src/components/loading.vue';
-import Breadcrumbs from '../../../src/components/page/breadcrumbs.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
 import { findTab } from '../../util/dom';

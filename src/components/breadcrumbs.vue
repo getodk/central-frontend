@@ -10,12 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="breadcrumbs row">
+  <div class="breadcrumbs">
     <div v-for="(link, index) in links" :key="index" class="breadcrumb-item">
-        <router-link :to="link.path">
-        {{ link.text }}
-          <span v-if="link.icon" :class="link.icon"></span>
-        </router-link>
+      <router-link :to="link.path">
+      {{ link.text }}
+        <span v-if="link.icon" :class="link.icon"></span>
+      </router-link>
       <span class="separator">/</span>
     </div>
   </div>
@@ -25,8 +25,7 @@ except according to the terms contained in the LICENSE file.
 defineProps({
   links: {
     type: Array,
-    required: false,
-    default: () => [],
+    required: true,
     validator(value) {
       return value.every(link => 'text' in link && 'path' in link);
     }
@@ -35,17 +34,16 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
+@import '../assets/scss/mixins';
 .breadcrumbs {
   display: flex;
   background-color: $color-subpanel-background;
   padding-top: 20px;
   padding-left: 15px;
+  margin-inline: -15px;
 }
 
 .breadcrumb-item {
-  display: flex;
-  align-items: center;
   font-size: 14px;
   color: #bbb;
 
@@ -59,6 +57,7 @@ defineProps({
 }
 
 .separator {
-  margin: 0 0.5rem;
+  margin-left: 3px;
+  margin-right: 5px;
 }
 </style>

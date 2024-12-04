@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div id="dataset-show">
-    <breadcrumbs :links="breadcrumbLinks"/>
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import Breadcrumbs from '../page/breadcrumbs.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
@@ -90,7 +90,7 @@ export default {
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
+        { text: this.project.nameWithArchived, path: this.projectPath() },
         { text: this.$t('resource.entities'), path: this.projectPath('entity-lists'), icon: 'icon-database' }
       ];
     }

@@ -1,5 +1,5 @@
 import NotFound from '../../../src/components/not-found.vue';
-import Breadcrumbs from '../../../src/components/page/breadcrumbs.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 
 import testData from '../../data';
