@@ -31,9 +31,8 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div>
           <dt>{{ $t('reviewState') }}</dt>
-          <dd id="submission-basic-details-review-state">
-            <span :class="reviewStateIcon(submission.__system.reviewState)"></span>
-            <span>{{ $t(`reviewState.${submission.__system.reviewState}`) }}</span>
+          <dd>
+            <submission-review-state :value="submission.__system.reviewState"/>
           </dd>
         </div>
         <div>
@@ -74,20 +73,24 @@ import DateTime from '../date-time.vue';
 import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import SubmissionReviewState from './review-state.vue';
 
-import useReviewState from '../../composables/review-state';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionBasicDetails',
-  components: { DateTime, FormVersionString, Loading, PageSection },
+  components: {
+    DateTime,
+    FormVersionString,
+    Loading,
+    PageSection,
+    SubmissionReviewState
+  },
   setup() {
     const { submission, submissionVersion, resourceStates } = useRequestData();
-    const { reviewStateIcon } = useReviewState();
     return {
       submission, submissionVersion,
-      ...resourceStates([submission, submissionVersion]),
-      reviewStateIcon
+      ...resourceStates([submission, submissionVersion])
     };
   },
   computed: {
@@ -120,16 +123,6 @@ export default {
     margin-left: 12px;
     margin-right: $margin-right-icon;
   }
-}
-
-#submission-basic-details-review-state {
-  [class^="icon-"] { margin-right: $margin-right-icon; }
-
-  .icon-dot-circle-o { color: #999; }
-  .icon-comments { color: $color-warning; }
-  .icon-pencil { color: #666; }
-  .icon-check-circle { color: $color-success; }
-  .icon-times-circle { color: $color-danger; }
 }
 </style>
 
