@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <breadcrumbs v-show="project.dataExists" :links="breadcrumbLinks"/>
+    <breadcrumbs :links="breadcrumbLinks"/>
     <div id="form-head-form-nav" class="row">
       <div class="col-xs-12">
         <div class="row">
@@ -154,7 +154,7 @@ export default {
     },
     breadcrumbLinks() {
       return [
-        { text: this.project.nameWithArchived, path: this.projectPath() },
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
       ];
     }

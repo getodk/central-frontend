@@ -112,7 +112,7 @@ export default {
       return [
         { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' },
-        { text: this.form.dataExists ? this.form.name : this.$t('resource.form'), path: this.formPath('submissions') }
+        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath('submissions') }
       ];
     }
   },

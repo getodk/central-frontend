@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div id="dataset-show">
-    <breadcrumbs v-show="dataExists" :links="breadcrumbLinks"/>
+    <breadcrumbs :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
@@ -90,7 +90,7 @@ export default {
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.nameWithArchived, path: this.projectPath() },
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.entities'), path: this.projectPath('entity-lists'), icon: 'icon-database' }
       ];
     }

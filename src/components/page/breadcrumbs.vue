@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="breadcrumbs row">
     <div v-for="(link, index) in links" :key="index" class="breadcrumb-item">
-      <router-link :to="link.path">
-      {{ link.text }}
-        <span v-if="link.icon" :class="link.icon"></span>
-      </router-link>
+        <router-link :to="link.path">
+        {{ link.text }}
+          <span v-if="link.icon" :class="link.icon"></span>
+        </router-link>
       <span class="separator">/</span>
     </div>
   </div>
@@ -46,8 +46,12 @@ defineProps({
 .breadcrumb-item {
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
   color: #bbb;
+
+  [class*='icon'] {
+    margin-left: 5px;
+  }
 }
 
 .breadcrumb-item a{
