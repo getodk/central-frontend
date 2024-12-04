@@ -43,6 +43,7 @@ export type * from './client/unsupported/RangeNode.ts';
 export type * from './client/unsupported/RankNode.ts';
 export type * from './client/unsupported/UploadNode.ts';
 export type * from './client/validation.ts';
+export type * from './client/ValueType.ts';
 
 // TODO: notwithstanding potential conflicts with parallel work on `web-forms`
 // (former `ui-vue`), these are the last remaining references **outside of
