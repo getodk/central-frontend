@@ -40,21 +40,24 @@ h1, .h1 {
 
 p { @include text-block; }
 
-dl > div {
+dl > * {
   border-bottom: 1px solid #ddd;
-  display: flex;
   padding-bottom: 10px;
   padding-top: 10px;
 
-  &:first-child { padding-top: 0; }
+  &:first-of-type { padding-top: 0; }
 
-  &:last-child {
+  &:last-of-type {
     border-bottom: none;
     padding-bottom: 0;
   }
 }
+
 dl:not(.dl-horizontal) {
-  > div { flex-direction: column-reverse; }
+  > div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
 
   dt {
     color: #666;
@@ -63,15 +66,18 @@ dl:not(.dl-horizontal) {
 
   dd { font-size: 16px; }
 }
-.dl-horizontal {
-  dt {
-    @include text-overflow-ellipsis;
-    flex-shrink: 0;
-    width: 160px;
-  }
 
-  dd { margin-left: 20px; }
+.dl-horizontal {
+  display: grid;
+  grid-template-columns: fit-content(50%) 1fr;
+
+  dt { padding-right: 12px; }
+  dd { padding-left: 12px; }
 }
+
+// Prevents <dt> elements from truncating. Useful for <dt> elements that have a
+// known fixed width.
+.dl-horizontal-fixed { grid-template-columns: max-content 1fr; }
 
 .dfn { border-bottom: 2px dotted #999; }
 
