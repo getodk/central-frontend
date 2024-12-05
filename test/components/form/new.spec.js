@@ -489,6 +489,24 @@ describe('FormNew', () => {
           );
         });
     });
+
+    it('shows a message for duplicate entity property', () => {
+      testData.extendedForms.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 409.17,
+          message: 'This form attempts to create new Entity properties that match with existing ones except for capitalization.',
+          details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+        })
+        .afterResponse(modal => {
+          modal.should.alert(
+            'danger',
+            /This form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+          );
+        });
+    });
   });
 
   describe('XLSForm warnings', () => {
