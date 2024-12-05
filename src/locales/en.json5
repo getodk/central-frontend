@@ -361,7 +361,8 @@
     // This text is shown under the "Latest Submission" column of the tables
     // for Projects and Forms. It is shown for a Project or Form with no Submissions.
     "noSubmission": "(none)",
-    "emptyTable": "There are no Submissions yet."
+    "emptyTable": "There are no Submissions yet.",
+    "fileDownloadUnavailable": "File download is not available for deleted Submissions."
   },
   "entity": {
     // This is the label of an Entity.
