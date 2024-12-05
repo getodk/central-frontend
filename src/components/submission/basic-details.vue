@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
           <dd><date-time :iso="submission.__system.submissionDate"/></dd>
         </div>
         <div>
-          <dt>{{ $t('reviewState') }}</dt>
+          <dt>{{ $t('common.reviewState') }}</dt>
           <dd id="submission-basic-details-review-state">
             <span :class="reviewStateIcon(submission.__system.reviewState)"></span>
             <span>{{ $t(`reviewState.${submission.__system.reviewState}`) }}</span>
@@ -136,7 +136,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "reviewState": "Review State",
     "formVersion": "Form version",
     "deviceId": "Device ID",
     "userAgent": "User agent",

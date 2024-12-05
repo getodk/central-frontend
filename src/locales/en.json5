@@ -234,7 +234,6 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
-    "reviewState": "Review State",
     "type": "Type"
   },
   "header": {
@@ -406,6 +405,8 @@
     // This is shown if a search returned no results.
     "noResults": "No results",
     "noUndo": "This action cannot be undone.",
+    // @transifexKey field.reviewState
+    "reviewState": "Review State",
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
     // This is shown for the row number.
