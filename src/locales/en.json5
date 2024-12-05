@@ -438,7 +438,9 @@
     // {version} is a version number.
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
-    "warning": "Warning"
+    "warning": "Warning",
+    // Part of the error message format that lists the duplicate property name like "<PropertyName> (existing: <ExistingPropertyName>)"
+    "existing": "existing"
   },
   "mixin": {
     "request": {
@@ -480,7 +482,8 @@
       "problem": {
         // A "resource" is a generic term for something in Central, for example,
         // a Project, a Web User, or a Form.
-        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted.",
+        "409_17": "This form attempts to create a new Entity property that matches with an existing one except for capitalization: | This form attempts to create new Entity properties that match with existing ones except for capitalization:"
       }
     },
     "session": {

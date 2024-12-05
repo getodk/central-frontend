@@ -224,6 +224,9 @@ export default {
               actual: details.value
             });
           }
+          if (code === 409.17) {
+            return `${this.$tcn('util.request.problem.409_17', details.duplicateProperties.length)}\n\n${details.duplicateProperties.map(p => `• ${p.provided} (${this.$t('common.existing')}: ${p.current})`).join('\n')}`;
+          }
           return null;
         }
       })
