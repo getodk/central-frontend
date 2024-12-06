@@ -790,6 +790,9 @@
     },
     "emptyTable": {
       "string": "There are no Submissions yet."
+    },
+    "fileDownloadUnavailable": {
+      "string": "File download is not available for deleted Submissions."
     }
   },
   "entity": {
