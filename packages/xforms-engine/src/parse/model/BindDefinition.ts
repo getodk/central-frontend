@@ -2,15 +2,14 @@ import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import type { DependentExpression } from '../expression/abstract/DependentExpression.ts';
 import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
 import { MessageDefinition } from '../text/MessageDefinition.ts';
-import type { XFormDataType } from '../XFormDataType.ts';
-import { bindDataType } from '../XFormDataType.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BindElement } from './BindElement.ts';
+import type { BindType } from './BindTypeDefinition.ts';
+import { BindTypeDefinition } from './BindTypeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
-export class BindDefinition extends DependencyContext {
-	readonly bindType: string | null;
-	readonly dataType: XFormDataType;
+export class BindDefinition<T extends BindType = BindType> extends DependencyContext {
+	readonly type: BindTypeDefinition<T>;
 	readonly parentNodeset: string | null;
 
 	readonly calculate: BindComputationExpression<'calculate'> | null;
@@ -78,9 +77,7 @@ export class BindDefinition extends DependencyContext {
 	) {
 		super();
 
-		const bindType = (this.bindType = bindElement.getAttribute('type'));
-
-		this.dataType = bindDataType(bindType);
+		this.type = BindTypeDefinition.from(bindElement);
 
 		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 

@@ -11,6 +11,9 @@ export type XML_NAMESPACE_URI = typeof XML_NAMESPACE_URI;
 export const XMLNS_NAMESPACE_URI = 'http://www.w3.org/2000/xmlns/';
 export type XMLNS_NAMESPACE_URI = typeof XMLNS_NAMESPACE_URI;
 
+export const XSD_NAMESPACE_URI = 'http://www.w3.org/2001/XMLSchema';
+export type XSD_NAMESPACE_URI = typeof XSD_NAMESPACE_URI;
+
 export const FN_NAMESPACE_URI = 'http://www.w3.org/2005/xpath-functions';
 export type FN_NAMESPACE_URI = typeof FN_NAMESPACE_URI;
 
@@ -40,6 +43,9 @@ export type XML_PREFIX = typeof XML_PREFIX;
 
 export const XMLNS_PREFIX = 'xmlns';
 export type XMLNS_PREFIX = typeof XMLNS_PREFIX;
+
+export const XSD_PREFIX = 'xsd';
+export type XSD_PREFIX = typeof XSD_PREFIX;
 
 export const FN_PREFIX = 'fn';
 export type FN_PREFIX = typeof FN_PREFIX;
