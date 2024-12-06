@@ -171,6 +171,13 @@ describe('SubmissionFeedEntry', () => {
       title.text().should.equal('Comment by Alice');
     });
 
+    it('renders an unknown action by displaying it', () => {
+      testData.extendedAudits.createPast(1, { action: 'unknown.action' });
+      const title = mountComponent().get('.feed-entry-title');
+      title.find('.icon-clock-o').exists().should.be.true;
+      title.text().should.equal('unknown.action');
+    });
+
     describe('entity.create audit', () => {
       it('renders correctly for newly created entity with ideally formatted details', () => {
         testData.extendedAudits.createPast(1, {

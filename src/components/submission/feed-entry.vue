@@ -84,11 +84,15 @@ except according to the terms contained in the LICENSE file.
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
         <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
-      <template v-else>
+      <template v-else-if="comment">
         <span class="icon-comment"></span>
         <i18n-t keypath="title.comment">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
+      </template>
+      <template v-else>
+        <span class="icon-clock-o"></span>
+        {{ entry.action }}
       </template>
     </template>
     <template #body>
