@@ -148,7 +148,7 @@ export default {
         : 'edited';
     },
     entityDetails() {
-      return this.entry?.details?.entity;
+      return this.entry.details.entity;
     },
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
