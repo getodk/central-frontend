@@ -27,7 +27,8 @@ defineOptions({
   name: 'DlData'
 });
 defineProps({
-  // "key" would have been nice, but sadly that's a reserved name.
+  // "key" would have been a nice name for this prop, but sadly that's a
+  // reserved name.
   name: {
     type: String,
     required: true
