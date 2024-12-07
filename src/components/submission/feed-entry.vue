@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <feed-entry :iso="entry.loggedAt ?? entry.createdAt"
-    :wrap-title="entry.action === 'entity.create' || entry.action === 'entity.update.version'"
+    :wrap-title="entry.action === 'entity.create' || entry.action === 'entity.update.version' || entry.action?.startsWith('submission.backlog')"
     class="submission-feed-entry">
     <template #title>
       <template v-if="entry.action === 'submission.create'">
@@ -84,11 +84,19 @@ except according to the terms contained in the LICENSE file.
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
         <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
-      <template v-else>
+      <template v-else-if="entry.action?.startsWith('submission.backlog')">
+        <span class="icon-clock-o"></span>
+        <span>{{ $t(`title.submissionBacklog.${entry.action.replace('submission.backlog.', '')}`) }}</span>
+      </template>
+      <template v-else-if="comment">
         <span class="icon-comment"></span>
         <i18n-t keypath="title.comment">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
+      </template>
+      <template v-else>
+        <span class="icon-question-circle-o"></span>
+        {{ entry.action }}
       </template>
     </template>
     <template #body>
@@ -201,7 +209,9 @@ export default {
     font-weight: normal;
   }
 
-  .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle { color: #bbb; }
+  .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
+    color: #bbb;
+  }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
   .review-state {
@@ -366,7 +376,15 @@ export default {
 
       Undeleted • {name}
       */
-      "undelete": "Undeleted by {name}"
+      "undelete": "Undeleted by {name}",
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      */
+      "submissionBacklog": {
+        "hold": "Waiting for previous Submission in offline update chain before updating Entity",
+        "force": "Processed Submission from backlog without previous Submission in offline update chain",
+        "reprocess": "Previous Submission in offline update chain was received"
+      }
     }
   }
 }
