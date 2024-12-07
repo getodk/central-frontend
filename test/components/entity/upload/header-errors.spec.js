@@ -36,7 +36,7 @@ describe('EntityUploadHeaderErrors', () => {
 
   describe('suggestions', () => {
     const getSuggestion = (component) => {
-      const p = component.findAll('#entity-upload-header-errors-suggestions p');
+      const p = component.findAll('.entity-upload-header-errors-suggestions p');
       p.length.should.equal(1);
       return p[0];
     };
@@ -48,7 +48,7 @@ describe('EntityUploadHeaderErrors', () => {
       const component = mountComponent({
         props: { header: 'label', missingProperty: true }
       });
-      component.find('#entity-upload-header-errors-suggestions').exists().should.be.false;
+      component.find('.entity-upload-header-errors-suggestions').exists().should.be.false;
     });
 
     describe('delimiter is not a comma', () => {
