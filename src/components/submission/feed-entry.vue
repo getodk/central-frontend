@@ -209,7 +209,9 @@ export default {
     font-weight: normal;
   }
 
-  .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle { color: #bbb; }
+  .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
+    color: #bbb;
+  }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
   .review-state {
