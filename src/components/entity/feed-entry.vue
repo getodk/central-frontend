@@ -196,7 +196,6 @@ const showBranchData = () => {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
 @import '../../assets/scss/mixins';
 
 .entity-feed-entry {

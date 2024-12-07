@@ -29,7 +29,7 @@ const props = defineProps({
   colorText: Boolean,
   // Useful when there is a list or column of review states, with a review state
   // on each row. In that case, specifying `true` for `align` will align the
-  // review state icons with each other. This is needed because different icons
+  // review state icons with one another. This is needed because different icons
   // have different widths.
   align: Boolean
 });
@@ -49,14 +49,14 @@ const { reviewStateIcon } = useReviewState();
 @import '../../assets/scss/variables';
 
 .submission-review-state {
-  @mixin reviewStateColor($color) {
+  @mixin review-state-color($color) {
     & span:first-child, &.color-text span:last-child { color: $color; }
   }
-  @include reviewStateColor(#999);
-  &.hasIssues { @include reviewStateColor($color-warning); }
-  &.edited { @include reviewStateColor(#666); }
-  &.approved { @include reviewStateColor($color-success); }
-  &.rejected { @include reviewStateColor($color-danger); }
+  @include review-state-color(#999);
+  &.hasIssues { @include review-state-color($color-warning); }
+  &.edited { @include review-state-color(#666); }
+  &.approved { @include review-state-color($color-success); }
+  &.rejected { @include review-state-color($color-danger); }
 
   span:first-child { margin-right: $margin-right-icon; }
 

@@ -168,7 +168,7 @@ export default {
     margin-right: 15px;
 
     .icon-circle-o {
-      color: #999;
+      color: $color-warning;
       margin-left: 1px;
       margin-right: #{$margin-right-icon + 1px};
     }

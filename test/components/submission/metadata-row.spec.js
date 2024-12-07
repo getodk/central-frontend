@@ -3,6 +3,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 import DateTime from '../../../src/components/date-time.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
@@ -65,39 +66,11 @@ describe('SubmissionMetadataRow', () => {
   });
 
   describe('state', () => {
-    it('renders correctly for a review state that is null', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: null });
-      const state = mountComponent().get('.state');
-      state.find('.icon-dot-circle-o').exists().should.be.true;
-      state.text().should.equal('Received');
-    });
-
-    it('renders correctly for a review state of hasIssues', () => {
+    it('shows the review state', () => {
       testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
       const state = mountComponent().get('.state');
-      state.find('.icon-comments').exists().should.be.true;
-      state.text().should.equal('Has issues');
-    });
-
-    it('renders correctly for a review state of edited', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
-      const state = mountComponent().get('.state');
-      state.find('.icon-pencil').exists().should.be.true;
-      state.text().should.equal('Edited');
-    });
-
-    it('renders correctly for a review state of approved', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
-      const state = mountComponent().get('.state');
-      state.find('.icon-check-circle').exists().should.be.true;
-      state.text().should.equal('Approved');
-    });
-
-    it('renders correctly for a review state of rejected', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'rejected' });
-      const state = mountComponent().get('.state');
-      state.find('.icon-times-circle').exists().should.be.true;
-      state.text().should.equal('Rejected');
+      const { value } = state.getComponent(SubmissionReviewState).props();
+      value.should.equal('hasIssues');
     });
 
     it('reports a missing attachment if the review state is null', () => {
@@ -109,6 +82,7 @@ describe('SubmissionMetadataRow', () => {
       const state = mountComponent().get('.state');
       state.find('.icon-circle-o').exists().should.be.true;
       state.text().should.equal('Missing Attachment');
+      state.findComponent(SubmissionReviewState).exists().should.be.false;
     });
 
     it('does not report a missing attachment if review state is not null', () => {
@@ -118,8 +92,8 @@ describe('SubmissionMetadataRow', () => {
         reviewState: 'approved'
       });
       const state = mountComponent().get('.state');
-      state.find('.icon-check-circle').exists().should.be.true;
-      state.text().should.equal('Approved');
+      const { value } = state.getComponent(SubmissionReviewState).props();
+      value.should.equal('approved');
     });
   });
 
