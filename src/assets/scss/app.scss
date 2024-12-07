@@ -53,6 +53,8 @@ dl > * {
   }
 }
 
+// Normal <dl> elements that are not .dl-horizontal are expected to have
+// children that are <div> elements. Each <div> must contain a <dt> and a <dd>.
 dl:not(.dl-horizontal) {
   > div {
     display: flex;
@@ -67,17 +69,28 @@ dl:not(.dl-horizontal) {
   dd { font-size: 16px; }
 }
 
+// <dl> elements that are .dl-horizontal are expected to have children that are
+// <dt> and <dd> elements. That's different from how other <dl> elements work,
+// as their children are expected to be <div> elements. The difference comes
+// down to the fact that .dl-horizontal uses a CSS grid, while other <dl>
+// elements use flexbox.
 .dl-horizontal {
+  $padding-between: 10px;
+  $dt-width: 160px + $padding-panel-body + $padding-between;
+
   display: grid;
-  grid-template-columns: fit-content(50%) 1fr;
+  // Components may override grid-template-columns in order to adjust the width
+  // of the <dt>.
+  grid-template-columns: $dt-width 1fr;
 
-  dt { padding-right: 12px; }
-  dd { padding-left: 12px; }
+  dt { padding-left: $padding-panel-body; }
+  dd { padding-right: $padding-panel-body; }
+
+  // Equally distribute the padding between the <dt> and the <dd> so that it is
+  // easy for components to give the two elements the same width.
+  dt { padding-right: $padding-between; }
+  dd { padding-left: $padding-between; }
 }
-
-// Prevents <dt> elements from truncating. Useful for <dt> elements that have a
-// known fixed width.
-.dl-horizontal-fixed { grid-template-columns: max-content 1fr; }
 
 .dfn { border-bottom: 2px dotted #999; }
 

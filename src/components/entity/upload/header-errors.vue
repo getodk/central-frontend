@@ -12,13 +12,19 @@ except according to the terms contained in the LICENSE file.
 <template>
   <dl id="entity-upload-header-errors" class="dl-horizontal">
     <dt>{{ $t('expectedHeader') }}</dt>
-    <dd :ref="setHeaderElement(0)" class="csv-header" @scroll="scrollHeader">
-      {{ expectedHeader }}
+    <dd>
+      <div :ref="setHeaderElement(0)" class="csv-header" @scroll="scrollHeader">
+        {{ expectedHeader }}
+      </div>
     </dd>
 
-    <dt id="entity-upload-header-filename" v-tooltip.text>{{ filename }}</dt>
-    <dd :ref="setHeaderElement(1)" class="csv-header" @scroll="scrollHeader">
-      {{ header }}
+    <dt id="entity-upload-header-errors-filename" v-tooltip.text>
+      {{ filename }}
+    </dt>
+    <dd>
+      <div :ref="setHeaderElement(1)" class="csv-header" @scroll="scrollHeader">
+        {{ header }}
+      </div>
     </dd>
 
     <dt v-if="hasSuggestion" class="entity-upload-header-errors-suggestions">
@@ -105,8 +111,6 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 
 #entity-upload-header-errors {
   margin-bottom: 0;
-  padding-left: $padding-panel-body;
-  padding-right: $padding-panel-body;
 
   .csv-header {
     @include line-clamp(3);
@@ -114,9 +118,10 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     overflow-x: auto;
     white-space: break-spaces;
   }
+  dd:has(.csv-header) { overflow-x: hidden; }
 }
 
-#entity-upload-header-filename { @include text-overflow-ellipsis; }
+#entity-upload-header-errors-filename { @include text-overflow-ellipsis; }
 
 .entity-upload-header-errors-suggestions {
   color: $color-danger;
