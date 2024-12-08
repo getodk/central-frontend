@@ -234,7 +234,6 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
-    "reviewState": "Review State",
     "type": "Type"
   },
   "header": {
@@ -361,7 +360,8 @@
     // This text is shown under the "Latest Submission" column of the tables
     // for Projects and Forms. It is shown for a Project or Form with no Submissions.
     "noSubmission": "(none)",
-    "emptyTable": "There are no Submissions yet."
+    "emptyTable": "There are no Submissions yet.",
+    "fileDownloadUnavailable": "File download is not available for deleted Submissions."
   },
   "entity": {
     // This is the label of an Entity.
@@ -406,6 +406,8 @@
     // This is shown if a search returned no results.
     "noResults": "No results",
     "noUndo": "This action cannot be undone.",
+    // @transifexKey field.reviewState
+    "reviewState": "Review State",
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
     // This is shown for the row number.

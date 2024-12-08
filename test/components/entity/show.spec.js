@@ -2,7 +2,7 @@ import EntityConflictSummary from '../../../src/components/entity/conflict-summa
 import EntityDelete from '../../../src/components/entity/delete.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import NotFound from '../../../src/components/not-found.vue';
-import PageBack from '../../../src/components/page/back.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -44,9 +44,12 @@ describe('EntityShow', () => {
     const component = await load('/projects/1/entity-lists/%C3%A1/entities/e', {
       root: false
     });
-    const back = component.getComponent(PageBack);
-    back.props().to.should.equal('/projects/1/entity-lists/%C3%A1/entities');
-    back.get('#page-back-back').text().should.equal('Back to á Table');
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links[0].path.should.equal('/projects/1');
+    links[1].text.should.equal('Entities');
+    links[1].path.should.equal('/projects/1/entity-lists');
+    links[2].text.should.equal('á');
+    links[2].path.should.equal('/projects/1/entity-lists/%C3%A1/entities');
   });
 
   it('shows the entity label', async () => {

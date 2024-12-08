@@ -11,11 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="submission.dataExists" :to="formPath('submissions')">
-      <template #title>{{ $t('back.title') }}</template>
-      <template #back>{{ $t('back.back') }}</template>
-    </page-back>
-    <page-head v-show="submission.dataExists">
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+    <page-head v-show="dataExists">
       <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
     </page-head>
     <page-body>
@@ -43,8 +40,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { useI18n } from 'vue-i18n';
 
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import SubmissionActivity from './activity.vue';
@@ -64,8 +61,8 @@ import { noop } from '../../util/util';
 export default {
   name: 'SubmissionShow',
   components: {
+    Breadcrumbs,
     Loading,
-    PageBack,
     PageBody,
     PageHead,
     SubmissionActivity,
@@ -89,7 +86,7 @@ export default {
     }
   },
   setup() {
-    const { project, resourceStates } = useRequestData();
+    const { project, form, resourceStates } = useRequestData();
     const { request, awaitingResponse } = useRequest();
 
     const { submission, submissionVersion, audits, comments, diffs } = useSubmission();
@@ -100,13 +97,22 @@ export default {
       ? [`${t('title.details')}: ${submission.instanceNameOrId}`]
       : [t('title.details')]));
 
-    const { formPath } = useRoutes();
+    const { formPath, projectPath } = useRoutes();
     return {
-      project, submission, submissionVersion, audits, comments, diffs, fields,
-      request, awaitingResponse, ...resourceStates([project, submission]),
+      project, form, submission, submissionVersion, audits, comments, diffs, fields,
+      request, awaitingResponse, ...resourceStates([project, form, submission]),
       reviewModal: modalData(), deleteModal: modalData(),
-      formPath
+      formPath, projectPath
     };
+  },
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
+        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' },
+        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath('submissions') }
+      ];
+    }
   },
   created() {
     this.fetchData();
@@ -147,6 +153,10 @@ export default {
           url: apiPaths.project(this.projectId),
           extended: true,
           resend: false
+        }),
+        this.form.request({
+          url: apiPaths.form(this.projectId, this.xmlFormId),
+          extended: false
         }),
         this.submission.request({
           url: apiPaths.odataSubmission(

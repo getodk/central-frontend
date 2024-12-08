@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #data-scrolling="{ data }">
       <submission-data-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data" :fields="fields"/>
+        :draft="draft" :submission="data" :fields="fields" :deleted="deleted"/>
     </template>
   </table-freeze>
 </template>

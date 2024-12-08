@@ -495,13 +495,12 @@
       "string": "New password (confirm)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "Review State",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "Type",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "Review State"
     }
   },
   "header": {
@@ -790,6 +789,9 @@
     },
     "emptyTable": {
       "string": "There are no Submissions yet."
+    },
+    "fileDownloadUnavailable": {
+      "string": "File download is not available for deleted Submissions."
     }
   },
   "entity": {
@@ -4351,9 +4353,6 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "Review State"
-      },
       "formVersion": {
         "string": "Form version"
       },
@@ -4590,6 +4589,20 @@
         "undelete": {
           "string": "Undeleted by {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "Waiting for previous Submission in offline update chain before updating Entity",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "Processed Submission from backlog without previous Submission in offline update chain",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "Previous Submission in offline update chain was received",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },

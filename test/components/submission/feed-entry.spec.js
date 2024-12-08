@@ -159,6 +159,36 @@ describe('SubmissionFeedEntry', () => {
       title.text().should.equal('Comment by Alice');
     });
 
+    describe('submission.backlog.* audits', () => {
+      it('renders correctly for hold', () => {
+        testData.extendedAudits.createPast(1, { action: 'submission.backlog.hold' });
+        const title = mountComponent().get('.feed-entry-title');
+        title.find('.icon-clock-o').exists().should.be.true;
+        title.text().should.equal('Waiting for previous Submission in offline update chain before updating Entity');
+      });
+
+      it('renders correctly for reprocess', () => {
+        testData.extendedAudits.createPast(1, { action: 'submission.backlog.reprocess' });
+        const title = mountComponent().get('.feed-entry-title');
+        title.find('.icon-clock-o').exists().should.be.true;
+        title.text().should.equal('Previous Submission in offline update chain was received');
+      });
+
+      it('renders correctly for force', () => {
+        testData.extendedAudits.createPast(1, { action: 'submission.backlog.force' });
+        const title = mountComponent().get('.feed-entry-title');
+        title.find('.icon-clock-o').exists().should.be.true;
+        title.text().should.equal('Processed Submission from backlog without previous Submission in offline update chain');
+      });
+    });
+
+    it('renders an unknown action by displaying it', () => {
+      testData.extendedAudits.createPast(1, { action: 'unknown.action' });
+      const title = mountComponent().get('.feed-entry-title');
+      title.find('.icon-question-circle-o').exists().should.be.true;
+      title.text().should.equal('unknown.action');
+    });
+
     describe('entity.create audit', () => {
       it('renders correctly for newly created entity with ideally formatted details', () => {
         testData.extendedAudits.createPast(1, {

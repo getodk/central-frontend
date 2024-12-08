@@ -11,10 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <page-back :to="[projectPath(), projectPath()]">
-      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.forms') }}</template>
-    </page-back>
+    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <div id="form-head-form-nav" class="row">
       <div class="col-xs-12">
         <div class="row">
@@ -119,7 +116,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import PageBack from '../page/back.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
 
 import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';
@@ -127,7 +124,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
-  components: { PageBack },
+  components: { Breadcrumbs },
   emits: ['create-draft'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -154,6 +151,12 @@ export default {
     rendersDraftNav() {
       return this.dataExists &&
         (this.formDraft.isDefined() || this.project.permits('form.update'));
+    },
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
+        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
+      ];
     }
   },
   methods: {
@@ -172,6 +175,10 @@ export default {
 
 $draft-nav-padding: 23px;
 $tab-li-margin-top: 5px;
+
+.breadcrumbs + #form-head-form-nav .h1 {
+  margin-top: 0;
+}
 
 #form-head-form-nav {
   background-color: $color-subpanel-background;
