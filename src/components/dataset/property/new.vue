@@ -93,6 +93,7 @@ const submit = () => {
 
 <i18n lang="json5">
 {
+  // @transifexKey component.DatasetOverviewNewProperty
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Add Entity Property",
