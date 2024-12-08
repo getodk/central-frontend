@@ -1,10 +1,10 @@
-
 import { RouterLinkStub } from '@vue/test-utils';
 
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import useFields from '../../../src/request-data/fields';
 import useSubmission from '../../../src/request-data/submission';
@@ -93,10 +93,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Received per Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.attributes().class.should.equal('review-state');
-        reviewState.find('.icon-dot-circle-o').exists().should.be.true;
-        reviewState.text().should.equal('Received');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        expect(value).to.be.null;
       });
 
       it('renders correctly for hasIssues', () => {
@@ -106,10 +104,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Has Issues per Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('hasIssues').should.be.true;
-        reviewState.find('.icon-comments').exists().should.be.true;
-        reviewState.text().should.equal('Has Issues');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('hasIssues');
       });
 
       it('renders correctly for edited', () => {
@@ -119,10 +115,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Edited by Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('edited').should.be.true;
-        reviewState.find('.icon-pencil').exists().should.be.true;
-        reviewState.text().should.equal('Edited');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('edited');
       });
 
       it('renders correctly for approved', () => {
@@ -132,10 +126,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Approved by Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('approved').should.be.true;
-        reviewState.find('.icon-check-circle').exists().should.be.true;
-        reviewState.text().should.equal('Approved');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('approved');
       });
 
       it('renders correctly for rejected', () => {
@@ -145,10 +137,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Rejected by Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('rejected').should.be.true;
-        reviewState.find('.icon-times-circle').exists().should.be.true;
-        reviewState.text().should.equal('Rejected');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('rejected');
       });
     });
 
@@ -158,10 +148,8 @@ describe('SubmissionFeedEntry', () => {
       });
       const title = mountComponent().get('.feed-entry-title');
       title.text().should.equal('Edited by Alice');
-      const reviewState = title.get('.review-state');
-      reviewState.classes('edited').should.be.true;
-      reviewState.find('.icon-pencil').exists().should.be.true;
-      reviewState.text().should.equal('Edited');
+      const { value } = title.getComponent(SubmissionReviewState).props();
+      value.should.equal('edited');
     });
 
     it('renders correctly for a comment', () => {

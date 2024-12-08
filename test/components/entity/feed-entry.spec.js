@@ -5,6 +5,7 @@ import ActorLink from '../../../src/components/actor-link.vue';
 import EntityDiff from '../../../src/components/entity/diff.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import FeedEntry from '../../../src/components/feed-entry.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import useEntity from '../../../src/request-data/entity';
 import useEntityVersions from '../../../src/request-data/entity-versions';
@@ -147,9 +148,9 @@ describe('EntityFeedEntry', () => {
     });
 
     it('shows the correct icon', () => {
-      const component = mountComponent();
-      const icon = component.find('.feed-entry-title .icon-check-circle');
-      icon.exists().should.be.true;
+      const title = mountComponent().get('.feed-entry-title');
+      const { value } = title.getComponent(SubmissionReviewState).props();
+      value.should.equal('approved');
     });
 
     it('shows the correct text', () => {

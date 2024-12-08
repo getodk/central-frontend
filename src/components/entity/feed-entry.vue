@@ -36,10 +36,9 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'submission.update'">
         <i18n-t keypath="title.submission.approval.full">
           <template #reviewState>
-            <span class="approval">
-              <span :class="reviewStateIcon('approved')"></span>
-              <span>{{ $t('title.submission.approval.reviewState') }}</span>
-            </span>
+            <submission-review-state value="approved" color-text>
+              {{ $t('title.submission.approval.reviewState') }}
+            </submission-review-state>
           </template>
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
@@ -146,8 +145,8 @@ import { useI18n } from 'vue-i18n';
 import ActorLink from '../actor-link.vue';
 import EntityDiff from './diff.vue';
 import FeedEntry from '../feed-entry.vue';
+import SubmissionReviewState from '../submission/review-state.vue';
 
-import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
@@ -189,9 +188,6 @@ const sourceSubmissionPath = computed(() => submissionPath(
 const { t } = useI18n();
 const deletedSubmission = (key) => t(key, { id: props.submission.instanceId });
 
-// submission.update
-const { reviewStateIcon } = useReviewState();
-
 // entity.create, entity.update.version
 const versionAnchor = (v) => `#v${v}`;
 const showBranchData = () => {
@@ -200,7 +196,6 @@ const showBranchData = () => {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
 @import '../../assets/scss/mixins';
 
 .entity-feed-entry {
@@ -214,7 +209,6 @@ const showBranchData = () => {
 
   .deleted-submission, .entity-label, .source-name { font-weight: normal; }
   .deleted-submission { color: $color-danger; }
-  .approval { color: $color-success; }
 
   .entity-version-tag, .feed-entry-title .offline-update {
     font-size: 12px;

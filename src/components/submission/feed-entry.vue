@@ -35,10 +35,9 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="updateOrEdit">
         <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
           <template #reviewState>
-            <span class="review-state" :class="reviewState">
-              <span :class="reviewStateIcon(reviewState)"></span>
-              <span>{{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}</span>
-            </span>
+            <submission-review-state :value="reviewState" color-text>
+              {{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}
+            </submission-review-state>
           </template>
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
@@ -113,14 +112,20 @@ import ActorLink from '../actor-link.vue';
 import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
+import SubmissionReviewState from './review-state.vue';
 
-import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, FeedEntry, MarkdownView, SubmissionDiffItem },
+  components: {
+    ActorLink,
+    FeedEntry,
+    MarkdownView,
+    SubmissionDiffItem,
+    SubmissionReviewState
+  },
   props: {
     projectId: {
       type: String,
@@ -141,9 +146,8 @@ export default {
   },
   setup() {
     const { diffs } = useRequestData();
-    const { reviewStateIcon } = useReviewState();
     const { datasetPath, entityPath } = useRoutes();
-    return { diffs, reviewStateIcon, datasetPath, entityPath };
+    return { diffs, datasetPath, entityPath };
   },
   computed: {
     updateOrEdit() {
@@ -213,13 +217,6 @@ export default {
   }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
-  .review-state {
-    color: #999;
-    &.hasIssues { color: $color-warning; }
-    &.edited { color: #666; }
-    &.approved { color: $color-success; }
-    &.rejected { color: $color-danger; }
-  }
   .entity-label { font-weight: normal; }
 }
 </style>
