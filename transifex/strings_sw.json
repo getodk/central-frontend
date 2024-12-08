@@ -241,6 +241,10 @@
           "string": "Unda rasimu",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
+        "update_draft_replace": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
         "update_publish": {
           "string": "Chapisha rasimu",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
@@ -289,6 +293,10 @@
         },
         "process_form_draft": {
           "string": "Rasimu ya fomu ya mchakato",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_entities_version": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -487,13 +495,12 @@
       "string": "Password mpya (thibitisha)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "Kagua hali",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "Aina",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "Kagua hali"
     }
   },
   "header": {
@@ -706,6 +713,12 @@
     },
     "versionChange": {
       "string": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka tabia isiyotabirika."
+    },
+    "submissionDeleted": {
+      "string": ""
+    },
+    "submissionRestored": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -776,6 +789,9 @@
     },
     "emptyTable": {
       "string": "Bado hakuna Mawasilisho."
+    },
+    "fileDownloadUnavailable": {
+      "string": ""
     }
   },
   "entity": {
@@ -1437,6 +1453,12 @@
           "string": "Maelezo",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "CollectQr": {
+      "draft": {
+        "string": "",
+        "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
     "ConfigError": {
@@ -2894,6 +2916,40 @@
         }
       }
     },
+    "FormDraftQrPanel": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
+      },
+      "introduction": {
+        "full": {
+          "string": "",
+          "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
+        },
+        "temporaryCode": {
+          "string": "",
+          "developer_comment": "\"Code\" refers to a QR code.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {temporaryCode} is in the following text:\n\nThis is a {temporaryCode}."
+        }
+      },
+      "stopsWorking": {
+        "string": "",
+        "developer_comment": "\"It\" refers to a temporary testing code."
+      },
+      "instructions": {
+        "string": "",
+        "developer_comment": "The table is a table of test Submissions."
+      },
+      "codesForUsers": {
+        "full": {
+          "string": "",
+          "developer_comment": "\"Codes\" refers to \"QR codes\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nTo create codes to distribute to users, please see the {appUsers} page."
+        }
+      }
+    },
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
@@ -2956,16 +3012,9 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
-        "0": {
-          "string": "Unaweza kutumia msimbo wa usanidi ulio kulia ili kusanidi kifaa cha mkononi ili kupakua Rasimu hii. Unaweza pia kubofya kitufe kipya hapo juu ili kuunda Wasilisho jipya kutoka kwa kivinjari chako cha wavuti."
-        },
         "1": {
           "string": "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."
         }
-      },
-      "collectProjectName": {
-        "string": "[Rasimu] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
         "title": {
@@ -2979,6 +3028,10 @@
             "string": "Kwa sasa, tunapendekeza ujaribu ufafanuzi wa Fomu yako katika hali ya Rasimu ili kuthibitisha mantiki yake. Kabla ya kuchapisha, unaweza kuthibitisha kuwa inasasisha vipengele vyote unavyotaka."
           }
         }
+      },
+      "collectProjectName": {
+        "string": "[Rasimu] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -3122,6 +3175,9 @@
           },
           "structureChanged": {
             "string": "Sehemu zifuatazo zimefutwa, zimepewa jina jipya au sasa ziko katika vikundi tofauti au marudio. Sehemu hizi hazitaonekana katika jedwali la Wasilisho au kujumuishwa katika uhamishaji kwa chaguo msingi"
+          },
+          "oldEntityVersion": {
+            "string": ""
           }
         },
         "4": {
@@ -3195,8 +3251,8 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {Seti ya data iliyoambatishwa kwenye Fomu hii:} other {Seti za data zilizoambatishwa kwenye Fomu hii:}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {
@@ -3289,6 +3345,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": ""
+      },
+      "purgeDescription": {
+        "string": ""
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -3329,12 +3397,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Ondoa kufuta",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Imefutwa {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3342,6 +3404,12 @@
       "disabled": {
         "conflict": {
           "string": "Fomu hii haiwezi kufutwa kwa sababu kuna Fomu inayotumika yenye kitambulisho sawa."
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "Ondoa kufuta",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4285,9 +4353,6 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "Kagua hali"
-      },
       "formVersion": {
         "string": "Toleo la fomu"
       },
@@ -4391,6 +4456,20 @@
         },
         "parseError": {
           "string": "Hitilafu fulani imetokea wakati wa kuomba data yako."
+        }
+      }
+    },
+    "SubmissionDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
         }
       }
     },
@@ -4502,6 +4581,28 @@
         "comment": {
           "string": "Maoni kutoka kwa {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        },
+        "delete": {
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
+        },
+        "undelete": {
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },
@@ -4594,8 +4695,29 @@
       }
     },
     "SubmissionList": {
+      "action": {
+        "testOnDevice": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "noMatching": {
         "string": "Hakuna Mawasilisho yanayolingana."
+      },
+      "downloadDisabled": {
+        "string": ""
+      },
+      "filterDisabledMessage": {
+        "string": ""
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": ""
+        }
       },
       "loading": {
         "withoutCount": {
@@ -4641,6 +4763,29 @@
         }
       }
     },
+    "SubmissionRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
     "SubmissionShow": {
       "back": {
         "title": {
@@ -4658,6 +4803,10 @@
         "stateAndActions": {
           "string": "Hali na vitendo",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

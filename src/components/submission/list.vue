@@ -533,19 +533,55 @@ export default {
     "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
-    "noMatching": "Es gibt keine passenden Übermittlungen."
+    "action": {
+      "testOnDevice": "Test am Gerät",
+      "testInBrowser": "Test im Browser"
+    },
+    "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
+    "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
+    "deletedSubmission": {
+      "emptyTable": "Es gibt keine gelöschten Übermittlungen."
+    }
   },
   "es": {
-    "noMatching": "No hay envíos coincidentes."
+    "action": {
+      "testOnDevice": "Prueba en el dispositivo",
+      "testInBrowser": "Prueba en el navegador"
+    },
+    "noMatching": "No hay envíos coincidentes.",
+    "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
+    "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
+    "deletedSubmission": {
+      "emptyTable": "No hay envíos eliminados."
+    }
   },
   "fr": {
-    "noMatching": "Il n'y a pas de soumission correspondante."
+    "action": {
+      "testOnDevice": "Tester sur un appareil",
+      "testInBrowser": "Tester dans le naviguateur"
+    },
+    "noMatching": "Il n'y a pas de soumission correspondante.",
+    "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
+    "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
+    "deletedSubmission": {
+      "emptyTable": "Il n'y a pas de Soumissions supprimées"
+    }
   },
   "id": {
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
   "it": {
-    "noMatching": "Non sono presenti invii corrispondenti."
+    "action": {
+      "testOnDevice": "Testa sul dispositivo",
+      "testInBrowser": "Testa nel browser"
+    },
+    "noMatching": "Non sono presenti invii corrispondenti.",
+    "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
+    "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
+    "deletedSubmission": {
+      "emptyTable": "Non ci sono invii cancellati."
+    }
   },
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"

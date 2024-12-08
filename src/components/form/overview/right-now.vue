@@ -213,7 +213,7 @@ export default {
       "full": "{submissions} wurde für dieses Formular gespeichert. | {submissions} wurden für dieses Formular gespeichert.",
       "submissions": "Übermittlung | Übermittlungen"
     },
-    "datasetsLinked": "An dieses Formular angehängter Datensatz: | Diesem Formular beigefügte Datensätze:"
+    "datasetsLinked": "Diesem Formular beigefügte Entitätsliste: | Diesem Formular beigefügte Entitätslisten:"
   },
   "es": {
     "version": {
@@ -229,7 +229,7 @@ export default {
       "full": "{submissions} ha sido guardada para este formulario | {submissions} han sido guardadas para este formulario. | {submissions} han sido guardadas para este formulario.",
       "submissions": "Envío | Envíos | Envíos"
     },
-    "datasetsLinked": "Conjunto de datos adjunto a este formulario: | Conjuntos de datos adjuntos a este formulario: | Conjuntos de datos adjuntos a este formulario:"
+    "datasetsLinked": "Lista de entidades adjunta a este formulario: | Listas de entidades adjuntas a este formulario: | Listas de entidades adjuntas a este formulario:"
   },
   "fr": {
     "version": {
@@ -245,7 +245,7 @@ export default {
       "full": "{submissions} a été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire. | {submissions} ont été enregistrées pour ce formulaire.",
       "submissions": "Soumission | Soumissions | Soumissions"
     },
-    "datasetsLinked": "Liste d'entités attachée à ce formulaire | Listes d'entités attachées à ce formulaire | Listes d'entités attachées à ce formulaire"
+    "datasetsLinked": "Liste d'Entités attachée à ce Formulaire : | Listes d'Entités attachées à ce Formulaire : | Listes d'Entités attachées à ce Formulaire :"
   },
   "id": {
     "version": {
@@ -276,7 +276,7 @@ export default {
       "full": "{submissions} è stato salvato per questo formulario | {submissions} sono state salvate per questo formulario | {submissions} sono state salvate per questo formulario",
       "submissions": "Invio | Invii | Invii"
     },
-    "datasetsLinked": "Il Set di dati è collegato questo formulario: | Set di dati sono collegati questo formulario: | Set di dati sono collegati questo formulario:"
+    "datasetsLinked": "Elenchi della entità allegata al presente formulario: | Elenchi delle entità allegati al presente formulario: | Elenchi delle entità allegati al presente formulario:"
   },
   "ja": {
     "version": {
@@ -306,8 +306,7 @@ export default {
     "submissions": {
       "full": "{submissions} zimehifadhiwa kwa Fomu hii. | {submissions} zimehifadhiwa kwa Fomu hii.",
       "submissions": "Wasilisho | Mawasilisho"
-    },
-    "datasetsLinked": "Seti ya data iliyoambatishwa kwenye Fomu hii: | Seti za data zilizoambatishwa kwenye Fomu hii:"
+    }
   },
   "zh-Hant": {
     "version": {
@@ -322,8 +321,7 @@ export default {
     "submissions": {
       "full": "{submissions} 已為此表格儲存。",
       "submissions": "提交"
-    },
-    "datasetsLinked": "本表格附有資料集："
+    }
   }
 }
 </i18n>

@@ -156,7 +156,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "reviewState": "Stav kontroly",
     "formVersion": "Verze formuláře",
     "deviceId": "ID zařízení",
     "userAgent": "Uživatelský agent",
@@ -166,7 +165,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "de": {
-    "reviewState": "Überprüfungsstatus",
     "formVersion": "Formular Version",
     "deviceId": "Geräte-ID",
     "userAgent": "User-Agent",
@@ -176,7 +174,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "es": {
-    "reviewState": "Estado de revisión",
     "formVersion": "Versión formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente de usuario",
@@ -186,7 +183,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "fr": {
-    "reviewState": "État",
     "formVersion": "Version de formulaire",
     "deviceId": "ID d'appareil",
     "userAgent": "\"User agent\"",
@@ -196,7 +192,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "id": {
-    "reviewState": "Status ulasan",
     "formVersion": "Versi formulir",
     "deviceId": "ID Perangkat",
     "attachments": "Lampiran",
@@ -205,7 +200,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "it": {
-    "reviewState": "Rivedi lo stato",
     "formVersion": "Versione formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente utente",
@@ -215,7 +209,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "ja": {
-    "reviewState": "レビュー・ステータス",
     "formVersion": "フォームのバージョン",
     "deviceId": "デバイスID",
     "userAgent": "ユーザーエージェント",
@@ -224,7 +217,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "sw": {
-    "reviewState": "Kagua hali",
     "formVersion": "Toleo la fomu",
     "deviceId": "Kitambulisho cha Kifaa",
     "userAgent": "Wakala wa mtumiaji",
@@ -234,7 +226,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "zh-Hant": {
-    "reviewState": "預覽情況",
     "formVersion": "表單版本",
     "deviceId": "裝置ID",
     "userAgent": "使用者代理",
