@@ -168,7 +168,6 @@
     "passphrase": "Frasa sandi",
     "password": "Kata sandi",
     "passwordConfirm": "Kata sandi baru (konfirmasi)",
-    "reviewState": "Status ulasan",
     "type": "Tipe"
   },
   "header": {
@@ -290,6 +289,7 @@
     "total": "Total",
     "totalSubmissions": "Total Kiriman",
     "propertiesCount": "{inform} dari {count} properti",
+    "reviewState": "Status ulasan",
     "status": "Status",
     "version": "Versi"
   },

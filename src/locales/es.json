@@ -61,7 +61,8 @@
       "public_link": "Acciones de enlace de acceso público",
       "dataset": "Acciones de la lista de entidades",
       "config": "Acciones de configuración del servidor",
-      "upgrade": "Actualización de servidor"
+      "upgrade": "Actualización de servidor",
+      "task": "Operación del sistema"
     },
     "action": {
       "default": {
@@ -71,6 +72,10 @@
         "delete": "Borrar"
       },
       "analytics": "Informe de uso",
+      "blobs": {
+        "s3_upload": "Subir archivos al almacén",
+        "s3_failed_to_pending": "Marcar archivos para volver a cargarlos en el almacén"
+      },
       "config": {
         "set": "Establecer"
       },
@@ -88,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Crear o actualizar borrador",
+        "update_draft_replace": "Sustituir borrador",
         "update_publish": "Publicar borrador",
         "update_draft_delete": "Descartar borrador",
         "attachment_update": "Actualizar adjuntos",
@@ -105,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Eliminar envíos"
+      },
       "upgrade": {
         "process_form": "Procesar formulario",
-        "process_form_draft": "Procesar borrador de formulario"
+        "process_form_draft": "Procesar borrador de formulario",
+        "process_form_entities_version": "Marcar formulario para actualización"
       },
       "user": {
         "assignment_create": "Asignar rol",
@@ -160,7 +170,8 @@
     "expand": "Expandir",
     "collapse": "Contraer",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
-    "upload": "Subir"
+    "upload": "Subir",
+    "restore": "Restaurar"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -173,7 +184,6 @@
     "passphrase": "Frase de contraseña",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
-    "reviewState": "Estado de revisión",
     "type": "Tipo"
   },
   "header": {
@@ -238,7 +248,9 @@
     "passwordTooShort": "Introduzca una contraseña de al menos 10 caracteres.",
     "updateEntity": "¡La Entidad ha sido actualizada!",
     "updateReviewState": "Estado de revisión guardado!",
-    "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles."
+    "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles.",
+    "submissionDeleted": "El envío ha sido eliminado.",
+    "submissionRestored": "El envío ha sido recuperado."
   },
   "moreInfo": {
     "clickHere": {
@@ -312,6 +324,7 @@
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
     "warning": "Advertencia",
+    "reviewState": "Estado de revisión",
     "status": "Estado",
     "version": "Versión"
   },

@@ -173,7 +173,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "task": {
-        "string": "",
+        "string": "作業系統",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -202,11 +202,11 @@
       },
       "blobs": {
         "s3_upload": {
-          "string": "",
+          "string": "上傳檔案至儲存空間",
           "developer_comment": "This is shown in the log of actions performed on the server."
         },
         "s3_failed_to_pending": {
-          "string": "",
+          "string": "標記檔案以重傳到存儲空間",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -239,6 +239,10 @@
       "form": {
         "update_draft_set": {
           "string": "建立或更新草稿",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_replace": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -278,7 +282,7 @@
       },
       "submission": {
         "purge": {
-          "string": "",
+          "string": "清除提交內容",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -289,6 +293,10 @@
         },
         "process_form_draft": {
           "string": "處理草稿",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_entities_version": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -487,13 +495,12 @@
       "string": "新密碼(確認)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "審核狀態",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "類型",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "審核狀態"
     }
   },
   "header": {
@@ -706,6 +713,12 @@
     },
     "versionChange": {
       "string": "服器已更新。請更新頁面以避免出現不可預測的問題。"
+    },
+    "submissionDeleted": {
+      "string": ""
+    },
+    "submissionRestored": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -776,6 +789,9 @@
     },
     "emptyTable": {
       "string": "還沒有提交內容。"
+    },
+    "fileDownloadUnavailable": {
+      "string": ""
     }
   },
   "entity": {
@@ -1337,19 +1353,19 @@
           "string": "處理已延遲的審核日誌事件數"
         },
         "num_offline_entity_branches": {
-          "string": ""
+          "string": "離線實體分支數量"
         },
         "num_offline_entity_interrupted_branches": {
-          "string": ""
+          "string": "中斷的離線實體分支數量"
         },
         "num_offline_entity_submissions_reprocessed": {
-          "string": ""
+          "string": "重新排序的離線實體提交數量"
         },
         "max_entity_submission_delay": {
-          "string": ""
+          "string": "最大實體提交處理延遲"
         },
         "avg_entity_submission_delay": {
-          "string": ""
+          "string": "平均實體提交處理延遲"
         }
       }
     },
@@ -1437,6 +1453,12 @@
           "string": "細節",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "CollectQr": {
+      "draft": {
+        "string": "",
+        "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
     "ConfigError": {
@@ -2894,6 +2916,40 @@
         }
       }
     },
+    "FormDraftQrPanel": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
+      },
+      "introduction": {
+        "full": {
+          "string": "",
+          "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
+        },
+        "temporaryCode": {
+          "string": "",
+          "developer_comment": "\"Code\" refers to a QR code.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {temporaryCode} is in the following text:\n\nThis is a {temporaryCode}."
+        }
+      },
+      "stopsWorking": {
+        "string": "",
+        "developer_comment": "\"It\" refers to a temporary testing code."
+      },
+      "instructions": {
+        "string": "",
+        "developer_comment": "The table is a table of test Submissions."
+      },
+      "codesForUsers": {
+        "full": {
+          "string": "",
+          "developer_comment": "\"Codes\" refers to \"QR codes\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nTo create codes to distribute to users, please see the {appUsers} page."
+        }
+      }
+    },
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
@@ -2956,16 +3012,9 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
-        "0": {
-          "string": "您可以使用右側的設定代碼設定行動裝置來下載此草稿。您也可以點擊上面的「新增」按鈕，從網頁瀏覽器建立新的提交內容。"
-        },
         "1": {
           "string": "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發布此表單草稿時，其測試提交內容將會永久刪除。"
         }
-      },
-      "collectProjectName": {
-        "string": "[草稿] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
         "title": {
@@ -2979,6 +3028,10 @@
             "string": "目前，我們建議在草稿狀態下嘗試表單定義以驗證其邏輯。在發布之前，您可以驗證它是否更新了所有所需的屬性。"
           }
         }
+      },
+      "collectProjectName": {
+        "string": "[草稿] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -3122,6 +3175,9 @@
           },
           "structureChanged": {
             "string": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。"
+          },
+          "oldEntityVersion": {
+            "string": ""
           }
         },
         "4": {
@@ -3195,8 +3251,8 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, other {本表格附有資料集：}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
+        "string": "{count, plural, other {}}",
+        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {
@@ -3289,6 +3345,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "由於表單加密，OData 存取不可用"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": ""
+      },
+      "purgeDescription": {
+        "string": ""
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -3329,12 +3397,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "復原刪除",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "已刪除{dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3342,6 +3404,12 @@
       "disabled": {
         "conflict": {
           "string": "該表單無法取消刪除，因為存在具有相同 ID 的活動表單。"
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "復原刪除",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4285,9 +4353,6 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "預覽情況"
-      },
       "formVersion": {
         "string": "表單版本"
       },
@@ -4391,6 +4456,20 @@
         },
         "parseError": {
           "string": "請求您的資料時出現問題。"
+        }
+      }
+    },
+    "SubmissionDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
         }
       }
     },
@@ -4502,6 +4581,28 @@
         "comment": {
           "string": "由{name}評論",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        },
+        "delete": {
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
+        },
+        "undelete": {
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },
@@ -4594,8 +4695,29 @@
       }
     },
     "SubmissionList": {
+      "action": {
+        "testOnDevice": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "noMatching": {
         "string": "沒有符合的提交內容。"
+      },
+      "downloadDisabled": {
+        "string": ""
+      },
+      "filterDisabledMessage": {
+        "string": ""
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": ""
+        }
       },
       "loading": {
         "withoutCount": {
@@ -4641,6 +4763,29 @@
         }
       }
     },
+    "SubmissionRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
     "SubmissionShow": {
       "back": {
         "title": {
@@ -4658,6 +4803,10 @@
         "stateAndActions": {
           "string": "狀態和動作",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

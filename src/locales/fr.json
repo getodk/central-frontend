@@ -61,7 +61,8 @@
       "public_link": "Actions de liens d'accès public",
       "dataset": "Actions de listes d'entités",
       "config": "Actions de configuration du serveur",
-      "upgrade": "Mise à jour du serveur"
+      "upgrade": "Mise à jour du serveur",
+      "task": "Opération système"
     },
     "action": {
       "default": {
@@ -71,6 +72,10 @@
         "delete": "Supprimer"
       },
       "analytics": "Rapport d'utilisation",
+      "blobs": {
+        "s3_upload": "Téléverser les Fichiers sur le Stockage",
+        "s3_failed_to_pending": "Marquer les fichiers pour réessayer envoi au stockage"
+      },
       "config": {
         "set": "Spécifier"
       },
@@ -88,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Créer ou mettre à jour l'ébauche",
+        "update_draft_replace": "Remplacer ébauche",
         "update_publish": "Publier l'ébauche",
         "update_draft_delete": "Abandonner l'ébauche",
         "attachment_update": "Mettre à jour les fichiers joints",
@@ -105,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Purger les Soumissions"
+      },
       "upgrade": {
         "process_form": "Traiter le formulaire",
-        "process_form_draft": "Traiter l'ébauche du formulaire"
+        "process_form_draft": "Traiter l'ébauche du formulaire",
+        "process_form_entities_version": "Marquer le formulaire pour mise à jour"
       },
       "user": {
         "assignment_create": "Attribuer un rôle",
@@ -160,7 +170,8 @@
     "expand": "Déplier",
     "collapse": "Replier",
     "reviewParallelUpdates": "Examiner les mises à jour parallèles",
-    "upload": "Téléverser"
+    "upload": "Téléverser",
+    "restore": "Restaurer"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -173,7 +184,6 @@
     "passphrase": "Phrase de passe",
     "password": "Mot de passe",
     "passwordConfirm": "Nouveau mot de passe (confirmez)",
-    "reviewState": "État",
     "type": "Type"
   },
   "header": {
@@ -238,7 +248,9 @@
     "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",
     "updateEntity": "L'entité a été mise à jour !",
     "updateReviewState": "État sauvegardé !",
-    "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
+    "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu.",
+    "submissionDeleted": "La soumission a été supprimée",
+    "submissionRestored": "La soumission a été restaurée."
   },
   "moreInfo": {
     "clickHere": {
@@ -267,7 +279,8 @@
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement.",
     "noSubmission": "(aucune)",
-    "emptyTable": "Il n'y a pas encore de Soumission"
+    "emptyTable": "Il n'y a pas encore de Soumission",
+    "fileDownloadUnavailable": "Le téléchargement de fichiers n'est pas disponible pour les Soumissions supprimées."
   },
   "entity": {
     "label": "Étiquette",
@@ -312,6 +325,7 @@
     "totalEntities": "Nombre d'entités",
     "versionShort": "v {version}",
     "warning": "Avertissement",
+    "reviewState": "État",
     "status": "Statut",
     "version": "Version"
   },
