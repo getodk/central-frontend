@@ -49,9 +49,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import MarkdownTextarea from '../markdown/textarea.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import MarkdownTextarea from '../markdown/textarea.vue';
 import SubmissionReviewState from './review-state.vue';
 
 import useRequest from '../../composables/request';
@@ -62,7 +62,7 @@ const selectableStates = ['approved', 'hasIssues', 'rejected'];
 
 export default {
   name: 'SubmissionUpdateReviewState',
-  components: { Modal, Spinner, MarkdownTextarea, SubmissionReviewState },
+  components: { MarkdownTextarea, Modal, Spinner, SubmissionReviewState },
   props: {
     state: Boolean,
     projectId: {

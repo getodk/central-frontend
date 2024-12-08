@@ -50,7 +50,7 @@ const { reviewStateIcon } = useReviewState();
 
 .submission-review-state {
   @mixin review-state-color($color) {
-    & span:first-child, &.color-text span:last-child { color: $color; }
+    & [class^="icon-"], &.color-text span:last-child { color: $color; }
   }
   @include review-state-color(#999);
   &.hasIssues { @include review-state-color($color-warning); }
@@ -58,7 +58,9 @@ const { reviewStateIcon } = useReviewState();
   &.approved { @include review-state-color($color-success); }
   &.rejected { @include review-state-color($color-danger); }
 
-  span:first-child { margin-right: $margin-right-icon; }
+  // Minimize the CSS specificity to make it easy to override this style (e.g.,
+  // in FeedEntry).
+  :where(&) [class^="icon-"] { margin-right: $margin-right-icon; }
 
   &.align {
     .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
