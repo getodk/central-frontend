@@ -991,7 +991,7 @@
         },
         "409_17": {
           "message": {
-            "string": "{count, plural, one {This form attempts to create a new Entity property that matches with an existing one except for capitalization:} other {This form attempts to create new Entity properties that match with existing ones except for capitalization:}}"
+            "string": "{count, plural, one {This Form attempts to create a new Entity property that matches with an existing one except for capitalization:} other {This Form attempts to create new Entity properties that match with existing ones except for capitalization:}}"
           },
           "duplicateProperty": {
             "string": "{provided} (existing: {current})",
