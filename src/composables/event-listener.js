@@ -16,13 +16,32 @@ except according to the terms contained in the LICENSE file.
 // over useEventListener() whenever possible. However, useEventListener() can be
 // useful for event targets like document.body or window.
 
-import { onBeforeUnmount, onMounted } from 'vue';
+import { isRef, onBeforeUnmount, shallowRef } from 'vue';
 
-export default (target, type, callback, capture = false) => {
-  onMounted(() => {
+import { watchSync } from '../util/reactivity';
+
+const useEventListener = (targetOrRef, type, callback, capture = false) => {
+  if (!isRef(targetOrRef)) {
+    useEventListener(shallowRef(targetOrRef), type, callback, capture);
+    return;
+  }
+
+  const addEventListener = (target) => {
+    if (target == null) return;
+    if (!(target === window || target === document || target instanceof HTMLElement))
+      throw new Error("Could not identify the EventTarget to add the event listener to. Note that you cannot pass a template ref of a child component: you must pass the component's root element.");
     target.addEventListener(type, callback, capture);
+  };
+  const removeEventListener = (target) => {
+    if (target != null)
+      target.removeEventListener(type, callback, capture);
+  };
+  if (targetOrRef.value != null) addEventListener(targetOrRef.value);
+  watchSync(targetOrRef, (newTarget, oldTarget) => {
+    removeEventListener(oldTarget);
+    addEventListener(newTarget);
   });
-  onBeforeUnmount(() => {
-    target.removeEventListener(type, callback, capture);
-  });
+  onBeforeUnmount(() => { removeEventListener(targetOrRef.value); });
 };
+
+export default useEventListener;

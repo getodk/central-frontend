@@ -29,7 +29,9 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="target">
       <template v-if="target != null">
-        <router-link v-if="target.path != null" :to="target.path"
+        <component v-if="target.component != null" :is="target.component"
+          v-bind="target.props" v-tooltip.text/>
+        <router-link v-else-if="target.path != null" :to="target.path"
           v-tooltip.text>
           {{ target.title }}
         </router-link>
@@ -144,18 +146,23 @@ export default {
       if (this.category == null) return null;
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
+
       const { actee } = this.audit;
-
-      // purged actee (used purgedName as title)
-      if (actee.purgedAt != null)
-        return { title: actee.purgedName, purged: true };
-
-      const title = species.title(actee);
-      // soft-deleted actee (use species title but don't make a link)
-      if (actee.deletedAt != null) return { title, deleted: true };
-
-      const result = { title };
-      if (species.path != null) result.path = species.path(actee, this);
+      const deleted = actee.deletedAt != null;
+      const purged = actee.purgedAt != null;
+      const result = {
+        title: purged ? actee.purgedName : species.title(actee),
+        deleted,
+        purged
+      };
+      if (!(deleted || purged)) {
+        if (species.path != null) {
+          result.path = species.path(actee, this);
+        } else if (species.component != null) {
+          result.component = species.component;
+          result.props = species.props(actee);
+        }
+      }
       return result;
     },
     details() {

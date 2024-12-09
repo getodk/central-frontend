@@ -15,12 +15,14 @@ import { Translation } from 'vue-i18n';
 import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
+import createHoverCard from './container/hover-card';
 import createUnsavedChanges from './unsaved-changes';
 import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
 
 const provide = [
   'alert',
+  'hoverCard',
   'unsavedChanges',
   'config',
   'http',
@@ -37,6 +39,7 @@ export default ({
   // passed a partial container.
   requestData = createRequestData,
   alert = createAlert(),
+  hoverCard = createHoverCard(),
   unsavedChanges = createUnsavedChanges(i18n.global),
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
@@ -45,6 +48,7 @@ export default ({
   const container = {
     i18n: i18n.global,
     alert,
+    hoverCard,
     unsavedChanges,
     http,
     logger
