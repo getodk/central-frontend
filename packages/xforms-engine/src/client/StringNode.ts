@@ -1,4 +1,4 @@
-import type { InputDefinition } from '../parse/body/control/InputDefinition.ts';
+import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
@@ -20,7 +20,7 @@ export interface StringNodeState extends BaseNodeState {
 }
 
 export interface StringDefinition extends LeafNodeDefinition {
-	readonly bodyElement: InputDefinition;
+	readonly bodyElement: InputControlDefinition;
 }
 
 export type StringNodeAppearances = NodeAppearances<StringDefinition>;

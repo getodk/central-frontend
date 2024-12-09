@@ -1,6 +1,6 @@
 import type { NoteNode } from '../../client/NoteNode.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
-import type { InputDefinition } from '../body/control/InputDefinition.ts';
+import type { InputControlDefinition } from '../body/control/InputControlDefinition.ts';
 import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
 import type { ConstantTruthyDependentExpression } from '../expression/abstract/DependentExpression.ts';
 import type { HintDefinition } from '../text/HintDefinition.ts';
@@ -61,7 +61,7 @@ export class NoteNodeDefinition extends LeafNodeDefinition {
 	constructor(
 		parent: ParentNodeDefinition,
 		override readonly bind: NoteBindDefinition,
-		override readonly bodyElement: InputDefinition,
+		override readonly bodyElement: InputControlDefinition,
 		readonly noteTextDefinition: NoteTextDefinition,
 		node: Element
 	) {

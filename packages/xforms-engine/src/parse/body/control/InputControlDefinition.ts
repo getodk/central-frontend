@@ -1,12 +1,10 @@
 import type { XFormDefinition } from '../../XFormDefinition.ts';
-import {
-	inputAppearanceParser,
-	type InputAppearanceDefinition,
-} from '../appearance/inputAppearanceParser.ts';
+import type { InputAppearanceDefinition } from '../appearance/inputAppearanceParser.ts';
+import { inputAppearanceParser } from '../appearance/inputAppearanceParser.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { ControlDefinition } from './ControlDefinition.ts';
 
-export class InputDefinition extends ControlDefinition<'input'> {
+export class InputControlDefinition extends ControlDefinition<'input'> {
 	static override isCompatible(localName: string): boolean {
 		return localName === 'input';
 	}

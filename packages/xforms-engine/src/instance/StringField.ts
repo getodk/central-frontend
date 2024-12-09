@@ -17,7 +17,7 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { InputDefinition } from '../parse/body/control/InputDefinition.ts';
+import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
@@ -29,7 +29,7 @@ import type { ValueContext } from './internal-api/ValueContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
 
 export interface StringFieldDefinition extends LeafNodeDefinition {
-	readonly bodyElement: InputDefinition;
+	readonly bodyElement: InputControlDefinition;
 }
 
 interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
