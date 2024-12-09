@@ -3,6 +3,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 import ActorLink from '../../../src/components/actor-link.vue';
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import FormLink from '../../../src/components/form/link.vue';
 import DatasetLink from '../../../src/components/dataset/link.vue';
 import Selectable from '../../../src/components/selectable.vue';
 
@@ -186,12 +187,14 @@ describe('AuditTable', () => {
           actor: testData.extendedUsers.first(),
           action,
           actee: testData.standardForms
-            .createPast(1, { xmlFormId: 'a b', name: 'My Form' })
+            .createPast(1, { name: 'My Form' })
             .last()
         });
         const row = mountComponent();
         testType(row, type);
-        await testTarget(row, 'My Form', '/projects/1/forms/a%20b');
+        await testTarget(row, 'My Form', FormLink, (link) => {
+          link.props().form.xmlFormId.should.equal('f');
+        });
       });
     }
 

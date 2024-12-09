@@ -53,6 +53,7 @@ import { pick } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
 import DatasetLink from '../dataset/link.vue';
+import FormLink from '../form/link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
@@ -93,7 +94,8 @@ const acteeSpeciesByCategory = {
   },
   form: {
     title: (actee) => (actee.name != null ? actee.name : actee.xmlFormId),
-    path: (actee, { primaryFormPath }) => primaryFormPath(actee)
+    component: FormLink,
+    props: (actee) => ({ form: actee })
   },
   dataset: {
     title: (actee) => actee.name,
@@ -114,7 +116,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { ActorLink, DatasetLink, DateTime, Selectable },
+  components: { ActorLink, DatasetLink, DateTime, FormLink, Selectable },
   props: {
     audit: {
       type: Object,
@@ -123,8 +125,8 @@ export default {
   },
   setup() {
     const { actionMessage } = useAudit();
-    const { projectPath, primaryFormPath, userPath } = useRoutes();
-    return { actionMessage, projectPath, primaryFormPath, userPath };
+    const { projectPath, userPath } = useRoutes();
+    return { actionMessage, projectPath, userPath };
   },
   computed: {
     // When an audit log action has multiple parts/segments, we treat it as

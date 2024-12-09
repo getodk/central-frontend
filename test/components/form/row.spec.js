@@ -1,8 +1,8 @@
 import DateTime from '../../../src/components/date-time.vue';
 import EnketoFill from '../../../src/components/enketo/fill.vue';
 import EnketoPreview from '../../../src/components/enketo/preview.vue';
+import FormLink from '../../../src/components/form/link.vue';
 import FormRow from '../../../src/components/form/row.vue';
-import LinkIfCan from '../../../src/components/link-if-can.vue';
 
 import useProject from '../../../src/request-data/project';
 
@@ -32,70 +32,11 @@ const mountComponent = () => {
 };
 
 describe('FormRow', () => {
-  describe('form name', () => {
-    beforeEach(mockLogin);
-
-    it("shows the form's name if it has one", () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: 'My Form' });
-      mountComponent().get('.name a').text().should.equal('My Form');
-    });
-
-    it('shows the xmlFormId if the form does not have a name', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: null });
-      mountComponent().get('.name a').text().should.equal('f');
-    });
-  });
-
-  describe('form link', () => {
-    describe('administrator', () => {
-      beforeEach(mockLogin);
-
-      it('links to form overview for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const { to } = mountComponent().getComponent(LinkIfCan).props();
-        to.should.equal('/projects/1/forms/a%20b');
-      });
-
-      it('links to .../draft for a form without a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const { to } = mountComponent().getComponent(LinkIfCan).props();
-        to.should.equal('/projects/1/forms/a%20b/draft');
-      });
-    });
-
-    describe('project viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      });
-
-      it('links to .../submissions for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const { to } = mountComponent().getComponent(LinkIfCan).props();
-        to.should.equal('/projects/1/forms/a%20b/submissions');
-      });
-
-      it('links to .../draft/testing for form without published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const { to } = mountComponent().getComponent(LinkIfCan).props();
-        to.should.equal('/projects/1/forms/a%20b/draft/testing');
-      });
-    });
-
-    describe('Data Collector', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'formfill', forms: 1 });
-        testData.extendedForms.createPast(1, { name: 'My Form' });
-      });
-
-      it('does not render a link', () => {
-        const row = mountComponent();
-        const name = row.get('.name');
-        name.find('a').exists().should.be.false;
-        name.text().should.equal('My Form');
-      });
-    });
+  it("shows the form's name", () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { name: 'My Form' });
+    const link = mountComponent().get('.name').getComponent(FormLink);
+    link.props().form.name.should.equal('My Form');
   });
 
   describe('review state counts', () => {

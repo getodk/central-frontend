@@ -26,6 +26,7 @@ import { inject, nextTick, ref, shallowRef, watch } from 'vue';
 
 import HoverCardDataset from './hover-card/dataset.vue';
 import HoverCardEntity from './hover-card/entity.vue';
+import HoverCardForm from './hover-card/form.vue';
 import Popover from './popover.vue';
 
 import useHoverCardResources from '../request-data/hover-card';
@@ -40,6 +41,12 @@ To add a new type of hover card:
   - Check whether the hover card should be used in AuditRow.
 */
 const types = {
+  form: {
+    component: HoverCardForm,
+    requests: ({ projectId, xmlFormId }) => ({
+      form: { url: apiPaths.form(projectId, xmlFormId), extended: true }
+    })
+  },
   dataset: {
     component: HoverCardDataset,
     requests: ({ projectId, name }) => ({
