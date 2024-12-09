@@ -3,6 +3,7 @@ import { markRaw } from 'vue';
 
 import DatasetLink from '../../src/components/dataset/link.vue';
 import EntityLink from '../../src/components/entity/link.vue';
+import SubmissionLink from '../../src/components/submission/link.vue';
 import Popover from '../../src/components/popover.vue';
 
 import TestUtilHoverCards from '../util/components/hover-cards.vue';
@@ -31,6 +32,38 @@ const hover = (clock) => async (component) => {
 // These tests test both the HoverCards component and the useHoverCard()
 // composable.
 describe('HoverCards', () => {
+  it('shows a hover card of type submission', () => {
+    const clock = sinon.useFakeTimers();
+    const form = testData.standardForms
+      .createPast(1, { xmlFormId: 'a b' })
+      .last();
+    const submission = testData.standardSubmissions
+      .createPast(1, { instanceId: 'c d' })
+      .last();
+    return mockHttp()
+      .mount(TestUtilHoverCards, mountOptions(
+        SubmissionLink,
+        { projectId: 1, xmlFormId: 'a b', submission }
+      ))
+      .request(hover(clock))
+      .respondWithData(() => form)
+      .respondWithData(testData.submissionOData)
+      .testRequests([
+        { url: '/v1/projects/1/forms/a%20b' },
+        {
+          url: ({ pathname, searchParams }) => {
+            pathname.should.equal("/v1/projects/1/forms/a%20b.svc/Submissions('c%20d')");
+            searchParams.get('$select').should.equal('__id,__system,meta');
+          }
+        }
+      ])
+      .afterResponses(async (component) => {
+        getSubtitle().should.equal('Submission');
+        const { target } = component.getComponent(Popover).props();
+        target.should.equal(getAnchor(component).element);
+      });
+  });
+
   it('shows a hover card of type dataset', () => {
     const clock = sinon.useFakeTimers();
     const dataset = testData.extendedDatasets
