@@ -1,8 +1,8 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
+	AnyInputNode,
 	AnyUnsupportedControlNode,
 	GroupNode,
-	InputNode,
 	NoteNode,
 	RepeatInstanceNode,
 	RepeatRangeUncontrolledNode,
@@ -17,7 +17,7 @@ export type QuestionPositionalEventNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| NoteNode
 	| SelectNode
-	| InputNode
+	| AnyInputNode
 	| TriggerNode
 	| AnyUnsupportedControlNode;
 
