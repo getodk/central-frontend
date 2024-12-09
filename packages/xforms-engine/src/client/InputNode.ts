@@ -26,11 +26,9 @@ export interface InputDefinition extends LeafNodeDefinition {
 export type InputNodeAppearances = NodeAppearances<InputDefinition>;
 
 /**
- * A node which can be assigned a string/text value. A string node **MAY**
- * correspond to form field defined as an XForms `<input>`, which a user-facing
- * client would likely present for a user to fill. It may not correspond to an
- * `<input>`, or necessarily have any presentational implications for a client
- * (for instance if the node is bound to an XForms `calculate` expression).
+ * A node corresponding to form field defined as an
+ * {@link https://getodk.github.io/xforms-spec/#body-elements | XForms `<input>`},
+ * which a user-facing client would likely present for a user to fill..
  */
 export interface InputNode extends BaseNode {
 	readonly nodeType: 'input';
@@ -42,11 +40,7 @@ export interface InputNode extends BaseNode {
 	readonly validationState: LeafNodeValidationState;
 
 	/**
-	 * For use by a client to update the value of a string node.
-	 *
-	 * @todo [how] should we express write restrictions to a client? E.g. what
-	 * happens when a string node is readonly, and a client attempts to call this
-	 * method?
+	 * For use by a client to update the value of an {@link InputNode}.
 	 */
 	setValue(value: string): RootNode;
 }
