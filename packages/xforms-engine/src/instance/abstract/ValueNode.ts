@@ -1,0 +1,109 @@
+import { XPathNodeKindKey } from '@getodk/xpath';
+import type { Accessor } from 'solid-js';
+import type { BaseValueNode } from '../../client/BaseValueNode.ts';
+import type { LeafNodeType as ValueNodeType } from '../../client/node-types.ts';
+import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
+import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
+import type { ValueType } from '../../client/ValueType.ts';
+import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import { createValueNodeSubmissionState } from '../../lib/client-reactivity/submission/createValueNodeSubmissionState.ts';
+import type { RuntimeValueState, ValueCodec } from '../../lib/codecs/ValueCodec.ts';
+import { createInstanceValueState } from '../../lib/reactivity/createInstanceValueState.ts';
+import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
+import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
+import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
+import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
+import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
+import { createValidationState } from '../../lib/reactivity/validation/createValidation.ts';
+import { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
+import type { GeneralParentNode } from '../hierarchy.ts';
+import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type { ClientReactiveSubmittableValueNode } from '../internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ValidationContext } from '../internal-api/ValidationContext.ts';
+import type { DescendantNodeStateSpec } from './DescendantNode.ts';
+import { DescendantNode } from './DescendantNode.ts';
+
+export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
+
+export interface ValueNodeStateSpec<RuntimeValue> extends DescendantNodeStateSpec<RuntimeValue> {
+	readonly children: null;
+	readonly valueOptions: null;
+	readonly value: SimpleAtomicState<RuntimeValue>;
+	readonly instanceValue: Accessor<string>;
+}
+
+export abstract class ValueNode<
+		V extends ValueType,
+		Definition extends ValueNodeDefinition<V>,
+		RuntimeValue extends RuntimeInputValue,
+		RuntimeInputValue = RuntimeValue,
+	>
+	extends DescendantNode<Definition, ValueNodeStateSpec<RuntimeValue>, GeneralParentNode, null>
+	implements
+		BaseValueNode<V, RuntimeValue>,
+		XFormsXPathElement,
+		EvaluationContext,
+		ValidationContext,
+		ClientReactiveSubmittableValueNode
+{
+	protected readonly validation: SharedValidationState;
+	protected readonly getInstanceValue: Accessor<string>;
+	protected readonly valueState: RuntimeValueState<RuntimeValue>;
+
+	// XFormsXPathElement
+	override readonly [XPathNodeKindKey] = 'element';
+	override readonly getXPathValue: () => string;
+
+	// InstanceNode
+	protected abstract override readonly state: SharedNodeState<ValueNodeStateSpec<RuntimeValue>>;
+	protected abstract override readonly engineState: EngineState<ValueNodeStateSpec<RuntimeValue>>;
+
+	// BaseValueNode
+	abstract override readonly nodeType: ValueNodeType;
+	readonly valueType: V;
+
+	abstract override readonly currentState: CurrentState<ValueNodeStateSpec<RuntimeValue>>;
+
+	get validationState(): LeafNodeValidationState {
+		return this.validation.currentState;
+	}
+
+	readonly submissionState: SubmissionState;
+
+	constructor(
+		parent: GeneralParentNode,
+		definition: Definition,
+		codec: ValueCodec<V, RuntimeValue, RuntimeInputValue>
+	) {
+		super(parent, definition);
+
+		this.valueType = definition.valueType;
+
+		const instanceValueState = createInstanceValueState(this);
+		const valueState = codec.createRuntimeValueState(instanceValueState);
+
+		const [getInstanceValue] = instanceValueState;
+
+		this.getInstanceValue = getInstanceValue;
+		this.getXPathValue = getInstanceValue;
+		this.valueState = valueState;
+		this.validation = createValidationState(this, {
+			clientStateFactory: this.engineConfig.stateFactory,
+		});
+		this.submissionState = createValueNodeSubmissionState(this);
+	}
+
+	// ValidationContext
+	getViolation(): AnyViolation | null {
+		return this.validation.engineState.violation;
+	}
+
+	isBlank(): boolean {
+		return this.getInstanceValue() === '';
+	}
+
+	// InstanceNode
+	getChildren(): readonly [] {
+		return [];
+	}
+}

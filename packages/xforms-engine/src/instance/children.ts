@@ -1,5 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
+import type { ModelValueDefinition } from '../client/ModelValueNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../client/TriggerNode.ts';
 import type { RangeNodeDefinition } from '../client/unsupported/RangeNode.ts';
@@ -11,7 +12,7 @@ import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
-import { ModelValue, type ModelValueDefinition } from './ModelValue.ts';
+import { ModelValue } from './ModelValue.ts';
 import { Note } from './Note.ts';
 import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';

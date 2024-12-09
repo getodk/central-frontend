@@ -1,13 +1,15 @@
+import type { ValueType } from '../../client/ValueType.ts';
 import type { AnyBodyElementDefinition, ControlElementDefinition } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 
-export class LeafNodeDefinition
+export class LeafNodeDefinition<V extends ValueType = ValueType>
 	extends DescendentNodeDefinition<'leaf-node', ControlElementDefinition | null>
 	implements NodeDefinition<'leaf-node'>
 {
 	readonly type = 'leaf-node';
+	readonly valueType: V;
 
 	readonly nodeName: string;
 	readonly children = null;
@@ -26,6 +28,7 @@ export class LeafNodeDefinition
 
 		super(parent, bind, bodyElement);
 
+		this.valueType = bind.type.resolved satisfies ValueType as V;
 		this.nodeName = node.localName;
 		this.defaultValue = node.textContent ?? '';
 	}
