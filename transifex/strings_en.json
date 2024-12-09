@@ -778,7 +778,7 @@
       "developer_comment": "This is shown when the Edit button is disabled."
     },
     "binaryLinkTitle": {
-      "string": "File was submitted. Click to download."
+      "string": "Click to download."
     },
     "encryptionMessage": {
       "string": "Data preview is not available due to encryption."
