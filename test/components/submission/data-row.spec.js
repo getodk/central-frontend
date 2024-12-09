@@ -292,7 +292,7 @@ describe('SubmissionDataRow', () => {
       const a = td.get('a');
       const { href } = a.attributes();
       href.should.equal('/v1/projects/1/forms/f/submissions/a%20b/attachments/c%20d.jpg');
-      await a.should.have.tooltip('File was submitted. Click to download.');
+      await a.should.have.tooltip('Click to download.');
       a.find('.icon-check').exists().should.be.true;
       a.find('.icon-download').exists().should.be.true;
     });
