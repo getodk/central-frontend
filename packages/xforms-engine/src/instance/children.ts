@@ -13,13 +13,13 @@ import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
+import { InputControl } from './InputControl.ts';
 import { ModelValue } from './ModelValue.ts';
 import { Note } from './Note.ts';
 import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { SelectFieldDefinition } from './SelectField.ts';
 import { SelectField } from './SelectField.ts';
-import { StringField } from './StringField.ts';
 import { Subtree } from './Subtree.ts';
 import { TriggerControl } from './TriggerControl.ts';
 import { RangeControl } from './unsupported/RangeControl.ts';
@@ -124,7 +124,7 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				}
 
 				if (isInputDefinition(leafChild)) {
-					return new StringField(parent, leafChild);
+					return InputControl.from(parent, leafChild);
 				}
 
 				if (isSelectFieldDefinition(leafChild)) {

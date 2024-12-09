@@ -7,7 +7,11 @@ import type { AnyViolation, LeafNodeValidationState } from '../../client/validat
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createValueNodeSubmissionState } from '../../lib/client-reactivity/submission/createValueNodeSubmissionState.ts';
-import type { RuntimeValueState, ValueCodec } from '../../lib/codecs/ValueCodec.ts';
+import type {
+	RuntimeValueSetter,
+	RuntimeValueState,
+	ValueCodec,
+} from '../../lib/codecs/ValueCodec.ts';
 import { createInstanceValueState } from '../../lib/reactivity/createInstanceValueState.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -49,6 +53,7 @@ export abstract class ValueNode<
 	protected readonly validation: SharedValidationState;
 	protected readonly getInstanceValue: Accessor<string>;
 	protected readonly valueState: RuntimeValueState<RuntimeValue>;
+	protected readonly setValueState: RuntimeValueSetter<RuntimeInputValue>;
 
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';
@@ -83,8 +88,10 @@ export abstract class ValueNode<
 		const valueState = codec.createRuntimeValueState(instanceValueState);
 
 		const [getInstanceValue] = instanceValueState;
+		const [, setValueState] = valueState;
 
 		this.getInstanceValue = getInstanceValue;
+		this.setValueState = setValueState;
 		this.getXPathValue = getInstanceValue;
 		this.valueState = valueState;
 		this.validation = createValidationState(this, {

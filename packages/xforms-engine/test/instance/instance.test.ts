@@ -13,7 +13,7 @@ import {
 import { createRoot } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { AnyNode, InputNode, RootNode } from '../../src/index.ts';
+import type { AnyInputNode, AnyNode, RootNode } from '../../src/index.ts';
 import { initializeForm } from '../../src/index.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
@@ -67,7 +67,7 @@ describe('Form instance state', () => {
 		);
 	};
 
-	const getInputNode = (reference: string): InputNode => {
+	const getInputNode = (reference: string): AnyInputNode => {
 		const node = getNodeByReference(reference);
 
 		if (node == null) {

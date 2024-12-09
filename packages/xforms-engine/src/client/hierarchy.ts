@@ -1,6 +1,6 @@
 import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
-import type { InputNode } from './InputNode.ts';
+import type { AnyInputNode } from './InputNode.ts';
 import type { AnyModelValueNode } from './ModelValueNode.ts';
 import type { NoteNode } from './NoteNode.ts';
 import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
@@ -22,7 +22,7 @@ export type AnyUnsupportedControlNode =
 
 // prettier-ignore
 export type AnyControlNode =
-	| InputNode
+	| AnyInputNode
 	| NoteNode
 	| SelectNode
 	| TriggerNode;
