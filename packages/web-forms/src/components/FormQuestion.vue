@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type {
 	AnyControlNode,
+	AnyInputNode,
 	AnyUnsupportedControlNode,
-	InputNode,
 	NoteNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
@@ -17,7 +17,7 @@ type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
 
 defineProps<{ question: ControlNode }>();
 
-const isInputNode = (n: ControlNode): n is InputNode => n.nodeType === 'input';
+const isInputNode = (n: ControlNode): n is AnyInputNode => n.nodeType === 'input';
 const isSelectNode = (n: ControlNode): n is SelectNode => n.nodeType === 'select';
 const isNoteNode = (n: ControlNode): n is NoteNode => n.nodeType === 'note';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';

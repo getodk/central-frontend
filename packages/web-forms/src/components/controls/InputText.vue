@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { InputNode } from '@getodk/xforms-engine';
+import type { AnyInputNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
 import { computed, inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 
-const props = defineProps<{ question: InputNode }>();
+const props = defineProps<{ question: AnyInputNode }>();
 
 const setValue = (value = '') => {
 	props.question.setValue(value);
@@ -26,7 +26,7 @@ const invalid = computed(() => props.question.validationState.violation?.valid =
 			:disabled="question.currentState.readonly"
 			:class="{'inside-highlighted': invalid && submitPressed}"
 			variant="filled"
-			:model-value="question.currentState.value"
+			:model-value="question.currentState.instanceValue"
 			@update:model-value="setValue"
 			@input="doneAnswering = false"
 			@blur="doneAnswering = true"
