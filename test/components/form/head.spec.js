@@ -18,7 +18,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f').then(app => {
         const breadcrumb = app.findAll('.breadcrumb-item')[0];
-        breadcrumb.text().should.equal('My Project /');
+        breadcrumb.text().should.equal('My Project');
       });
     });
 
@@ -31,7 +31,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f').then(app => {
         const breadcrumb = app.findAll('.breadcrumb-item')[0];
-        breadcrumb.text().should.equal('My Project (archived) /');
+        breadcrumb.text().should.equal('My Project (archived)');
       });
     });
 
