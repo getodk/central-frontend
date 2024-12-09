@@ -1,11 +1,11 @@
-import { StringNodeAnswer } from '../../answer/StringNodeAnswer.ts';
+import { InputNodeAnswer } from '../../answer/InputNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
 import type { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
 
-export class StringInputQuestionEvent extends QuestionEvent<'string'> {
-	getAnswer(): StringNodeAnswer {
-		return new StringNodeAnswer(this.node);
+export class InputQuestionEvent extends QuestionEvent<'input'> {
+	getAnswer(): InputNodeAnswer {
+		return new InputNodeAnswer(this.node);
 	}
 
 	answerQuestion(answerValue: unknown): ValueNodeAnswer {
@@ -13,6 +13,6 @@ export class StringInputQuestionEvent extends QuestionEvent<'string'> {
 
 		this.node.setValue(stringValue);
 
-		return new StringNodeAnswer(this.node);
+		return new InputNodeAnswer(this.node);
 	}
 }

@@ -2,12 +2,12 @@ import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-pr
 import type {
 	AnyUnsupportedControlNode,
 	GroupNode,
+	InputNode,
 	NoteNode,
 	RepeatInstanceNode,
 	RepeatRangeUncontrolledNode,
 	RootNode,
 	SelectNode,
-	StringNode,
 	TriggerNode,
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
@@ -17,7 +17,7 @@ export type QuestionPositionalEventNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| NoteNode
 	| SelectNode
-	| StringNode
+	| InputNode
 	| TriggerNode
 	| AnyUnsupportedControlNode;
 

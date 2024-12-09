@@ -27,7 +27,7 @@ export const collectFlatNodeList = (currentNode: AnyNode): readonly AnyNode[] =>
 		case 'model-value':
 		case 'note':
 		case 'select':
-		case 'string':
+		case 'input':
 		case 'range':
 		case 'rank':
 		case 'trigger':
@@ -62,7 +62,7 @@ export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | n
 		case 'subtree':
 		case 'model-value':
 		case 'note':
-		case 'string':
+		case 'input':
 		case 'select':
 		case 'range':
 		case 'rank':
