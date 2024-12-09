@@ -186,13 +186,7 @@ export default {
             ? { version: this.versionString }
             : null
         ),
-        fulfillProblem: (problem) => problem.code === 409.6,
-        problemToAlert: (({ code, details }) => {
-          if (code === 409.17) {
-            return `${this.$tcn('util.request.problem.409_17', details.duplicateProperties.length)}\n\n${details.duplicateProperties.map(p => `• ${p.provided} (${this.$t('common.existing')}: ${p.current})`).join('\n')}`;
-          }
-          return null;
-        })
+        fulfillProblem: (problem) => problem.code === 409.6
       })
         .then(({ data }) => {
           if (!isProblem(data)) {

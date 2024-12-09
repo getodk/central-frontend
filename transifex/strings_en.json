@@ -934,10 +934,6 @@
     "warning": {
       "string": "Warning",
       "developer_comment": "This text is shown on its own before details about a warning."
-    },
-    "existing": {
-      "string": "existing",
-      "developer_comment": "Part of the error message format that lists the duplicate property name like \"<PropertyName> (existing: <ExistingPropertyName>)\""
     }
   },
   "mixin": {
@@ -994,7 +990,13 @@
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
         },
         "409_17": {
-          "string": "{count, plural, one {This form attempts to create a new Entity property that matches with an existing one except for capitalization:} other {This form attempts to create new Entity properties that match with existing ones except for capitalization:}}"
+          "message": {
+            "string": "{count, plural, one {This form attempts to create a new Entity property that matches with an existing one except for capitalization:} other {This form attempts to create new Entity properties that match with existing ones except for capitalization:}}"
+          },
+          "duplicateProperty": {
+            "string": "{provided} (existing: {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
