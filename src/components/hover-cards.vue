@@ -24,6 +24,7 @@ except according to the terms contained in the LICENSE file.
 
 import { inject, nextTick, ref, shallowRef, watch } from 'vue';
 
+import HoverCardEntity from './hover-card/entity.vue';
 import Popover from './popover.vue';
 
 import useHoverCardResources from '../request-data/hover-card';
@@ -38,6 +39,13 @@ To add a new type of hover card:
   - Check whether the hover card should be used in AuditRow.
 */
 const types = {
+  entity: {
+    component: HoverCardEntity,
+    requests: ({ projectId, dataset, uuid }) => ({
+      dataset: { url: apiPaths.dataset(projectId, dataset) },
+      entity: { url: apiPaths.entity(projectId, dataset, uuid) }
+    })
+  }
 };
 
 const resources = useHoverCardResources();

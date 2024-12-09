@@ -46,9 +46,9 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entityDetails?.currentVersion?.label != null" :to="entityPath(projectId, entityDetails.dataset, entityDetails.uuid)">
-              {{ entityDetails.currentVersion.label }}
-            </router-link>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
@@ -62,9 +62,9 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <router-link v-if="entityDetails?.currentVersion?.label != null" :to="entityPath(projectId, entityDetails.dataset, entityDetails.uuid)">
-              {{ entityDetails.currentVersion.label }}
-            </router-link>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
@@ -109,6 +109,7 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
+import EntityLink from '../entity/link.vue';
 import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
@@ -121,6 +122,7 @@ export default {
   name: 'SubmissionFeedEntry',
   components: {
     ActorLink,
+    EntityLink,
     FeedEntry,
     MarkdownView,
     SubmissionDiffItem,
@@ -146,7 +148,7 @@ export default {
   },
   setup() {
     const { diffs } = useRequestData();
-    const { datasetPath, entityPath } = useRoutes();
+    const { datasetPath } = useRoutes();
     return { diffs, datasetPath, entityPath };
   },
   computed: {

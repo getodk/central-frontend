@@ -295,9 +295,10 @@
     "appUser": "App User",
     "appUsers": "App Users",
     "config": "Server Configuration",
+    "entity": "Entity",
+    "entities": "Entities",
     "entityList": "Entity List",
     "entityLists": "Entity Lists",
-    "entities": "Entities",
     "form": "Form",
     "forms": "Forms",
     // @transifexKey component.FormHead.draftNav.title
@@ -401,6 +402,7 @@
     "filter": "Filter",
     // This is the text of a link that links to the ODK forum.
     "forum": "Forum",
+    "lastUpdate": "Last update",
     "loading": "Loading…",
     "no": "No",
     // This is shown if a search returned no results.

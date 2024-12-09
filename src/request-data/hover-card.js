@@ -20,5 +20,6 @@ import { useRequestData } from './index';
 export default () => {
   const { createResource } = useRequestData();
   return {
+    entity: createResource('entity')
   };
 };
