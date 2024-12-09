@@ -46,3 +46,18 @@ export interface ModelValueNode<V extends ValueType = ValueType>
 	readonly currentState: ModelValueNodeState<V>;
 	readonly validationState: LeafNodeValidationState;
 }
+
+export type AnyModelValueNode =
+	| ModelValueNode<'barcode'>
+	| ModelValueNode<'binary'>
+	| ModelValueNode<'boolean'>
+	| ModelValueNode<'date'>
+	| ModelValueNode<'dateTime'>
+	| ModelValueNode<'decimal'>
+	| ModelValueNode<'geopoint'>
+	| ModelValueNode<'geoshape'>
+	| ModelValueNode<'geotrace'>
+	| ModelValueNode<'int'>
+	| ModelValueNode<'intent'>
+	| ModelValueNode<'string'>
+	| ModelValueNode<'time'>;

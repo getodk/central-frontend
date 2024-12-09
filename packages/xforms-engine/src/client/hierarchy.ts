@@ -1,6 +1,6 @@
 import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
-import type { ModelValueNode } from './ModelValueNode.ts';
+import type { AnyModelValueNode } from './ModelValueNode.ts';
 import type { NoteNode } from './NoteNode.ts';
 import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
 import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNode.ts';
@@ -30,8 +30,8 @@ export type AnyControlNode =
 // prettier-ignore
 export type AnyLeafNode =
 	| AnyControlNode
-	| AnyUnsupportedControlNode
-	| ModelValueNode;
+	| AnyModelValueNode
+	| AnyUnsupportedControlNode;
 
 // prettier-ignore
 export type RepeatRangeNode =

@@ -14,6 +14,10 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
 
+export type AnyModelValueDefinition = {
+	[V in ValueType]: ModelValueDefinition<V>;
+}[ValueType];
+
 interface ModelValueStateSpec<V extends ValueType> extends ValueNodeStateSpec<RuntimeValue<V>> {
 	readonly label: null;
 	readonly hint: null;
@@ -28,6 +32,14 @@ export class ModelValue<V extends ValueType = ValueType>
 		ValidationContext,
 		ClientReactiveSubmittableValueNode
 {
+	static from(parent: GeneralParentNode, definition: ModelValueDefinition): AnyModelValue;
+	static from<V extends ValueType>(
+		parent: GeneralParentNode,
+		definition: ModelValueDefinition<V>
+	): ModelValue<V> {
+		return new this(parent, definition);
+	}
+
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';
 
@@ -72,3 +84,18 @@ export class ModelValue<V extends ValueType = ValueType>
 		this.currentState = state.currentState;
 	}
 }
+
+export type AnyModelValue =
+	| ModelValue<'barcode'>
+	| ModelValue<'binary'>
+	| ModelValue<'boolean'>
+	| ModelValue<'date'>
+	| ModelValue<'dateTime'>
+	| ModelValue<'decimal'>
+	| ModelValue<'geopoint'>
+	| ModelValue<'geoshape'>
+	| ModelValue<'geotrace'>
+	| ModelValue<'int'>
+	| ModelValue<'intent'>
+	| ModelValue<'string'>
+	| ModelValue<'time'>;

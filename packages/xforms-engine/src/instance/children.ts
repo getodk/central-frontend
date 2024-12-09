@@ -122,7 +122,7 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				const leafChild: AnyLeafNodeDefinition = child;
 
 				if (isModelValueDefinition(leafChild)) {
-					return new ModelValue(parent, leafChild);
+					return ModelValue.from(parent, leafChild);
 				}
 
 				if (isStringFieldDefinition(leafChild)) {
