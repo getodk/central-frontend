@@ -1,4 +1,9 @@
 import type { ValueType } from '../../client/ValueType.ts';
+import {
+	DecimalValueCodec,
+	type DecimalInputValue,
+	type DecimalRuntimeValue,
+} from './DecimalValueCodec.ts';
 import { IntValueCodec, type IntInputValue, type IntRuntimeValue } from './IntValueCodec.ts';
 import { StringValueCodec } from './StringValueCodec.ts';
 import type { ValueCodec } from './ValueCodec.ts';
@@ -7,7 +12,7 @@ import { ValueTypePlaceholderCodec } from './ValueTypePlaceholderCodec.ts';
 interface RuntimeValuesByType {
 	readonly string: string;
 	readonly int: IntRuntimeValue;
-	readonly decimal: string;
+	readonly decimal: DecimalRuntimeValue;
 	readonly boolean: string;
 	readonly date: string;
 	readonly time: string;
@@ -25,7 +30,7 @@ export type RuntimeValue<V extends ValueType> = RuntimeValuesByType[V];
 interface RuntimeInputValuesByType {
 	readonly string: string;
 	readonly int: IntInputValue;
-	readonly decimal: string;
+	readonly decimal: DecimalInputValue;
 	readonly boolean: string;
 	readonly date: string;
 	readonly time: string;
@@ -54,7 +59,7 @@ export const sharedValueCodecs: SharedValueCodecs = {
 	string: new StringValueCodec(),
 
 	int: new IntValueCodec(),
-	decimal: new ValueTypePlaceholderCodec('decimal'),
+	decimal: new DecimalValueCodec(),
 	boolean: new ValueTypePlaceholderCodec('boolean'),
 	date: new ValueTypePlaceholderCodec('date'),
 	time: new ValueTypePlaceholderCodec('time'),

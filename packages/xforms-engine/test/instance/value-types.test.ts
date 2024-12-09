@@ -142,40 +142,19 @@ describe('Value types', () => {
 		});
 
 		describe('type="decimal"', () => {
-			// Will be removed in next commit.
-			describe('defaults before implementation', () => {
-				it('has a string runtime value', () => {
-					expect(decimalValueNode.currentState.value).toBeTypeOf('string');
-				});
-
-				it('has a string static type', () => {
-					expectTypeOf(decimalValueNode.currentState.value).toEqualTypeOf<string>();
-				});
-
-				it('has a string populated value', () => {
-					expect(decimalValueNode.currentState.value).toBe('45.67');
-				});
-
-				it('has an empty string blank value', () => {
-					setModelNodesNonRelevant();
-					expect(decimalValueNode.currentState.value).toBe('');
-				});
-			});
-
-			it.fails('has a number runtime value', () => {
+			it('has a number runtime value', () => {
 				expect(decimalValueNode.currentState.value).toBeTypeOf('number');
 			});
 
 			it('has a number | null static type', () => {
-				// @ts-expect-error - To be fixed with implementation in next commit
 				expectTypeOf(decimalValueNode.currentState.value).toEqualTypeOf<number | null>();
 			});
 
-			it.fails('has a number populated value', () => {
+			it('has a number populated value', () => {
 				expect(decimalValueNode.currentState.value).toBe(45.67);
 			});
 
-			it.fails('has a null blank value', () => {
+			it('has a null blank value', () => {
 				setModelNodesNonRelevant();
 				expect(decimalValueNode.currentState.value).toBe(null);
 			});
