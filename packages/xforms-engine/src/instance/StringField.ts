@@ -1,7 +1,7 @@
 import { identity } from '@getodk/common/lib/identity.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import type { StringNode, StringNodeAppearances } from '../client/StringNode.ts';
+import type { InputDefinition, InputNode, InputNodeAppearances } from '../client/InputNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
@@ -17,8 +17,6 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
-import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
@@ -27,10 +25,6 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ValueContext } from './internal-api/ValueContext.ts';
 import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
-
-export interface StringFieldDefinition extends LeafNodeDefinition {
-	readonly bodyElement: InputControlDefinition;
-}
 
 interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
 	readonly label: Accessor<TextRange<'label'> | null>;
@@ -41,9 +35,9 @@ interface StringFieldStateSpec extends DescendantNodeStateSpec<string> {
 }
 
 export class StringField
-	extends DescendantNode<StringFieldDefinition, StringFieldStateSpec, GeneralParentNode, null>
+	extends DescendantNode<InputDefinition, StringFieldStateSpec, GeneralParentNode, null>
 	implements
-		StringNode,
+		InputNode,
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
@@ -59,9 +53,9 @@ export class StringField
 	protected readonly state: SharedNodeState<StringFieldStateSpec>;
 	protected readonly engineState: EngineState<StringFieldStateSpec>;
 
-	// StringNode
-	readonly nodeType = 'string';
-	readonly appearances: StringNodeAppearances;
+	// InputNode
+	readonly nodeType = 'input';
+	readonly appearances: InputNodeAppearances;
 	readonly currentState: CurrentState<StringFieldStateSpec>;
 
 	get validationState(): LeafNodeValidationState {
@@ -75,7 +69,7 @@ export class StringField
 	readonly encodeValue = identity<string>;
 	readonly decodeValue = identity<string>;
 
-	constructor(parent: GeneralParentNode, definition: StringFieldDefinition) {
+	constructor(parent: GeneralParentNode, definition: InputDefinition) {
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;
@@ -127,7 +121,7 @@ export class StringField
 		return [];
 	}
 
-	// StringNode
+	// InputNode
 	setValue(value: string): Root {
 		this.state.setProperty('value', value);
 

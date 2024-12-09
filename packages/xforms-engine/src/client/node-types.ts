@@ -15,7 +15,7 @@ export type LeafNodeType =
 	| 'model-value'
 	| 'note'
 	| 'select'
-	| 'string'
+	| 'input'
 	| 'trigger'
 	| UnsupportedControlNodeType;
 

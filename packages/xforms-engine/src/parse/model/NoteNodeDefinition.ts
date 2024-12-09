@@ -31,7 +31,7 @@ export type NoteTextDefinition =
 /**
  * @package This class is used internally, both in static types and at runtime,
  * to guard and guide the distinction between instance state nodes for 'note'
- * and 'string' node types. It is intentionally package-private! The less
+ * and 'input' node types. It is intentionally package-private! The less
  * specific {@link NoteNode.definition} type, if it has any client value at all,
  * should be more than sufficient. Clients are otherwise expected to use other
  * aspects of the node's interface (such as its {@link NoteNode.nodeType} and

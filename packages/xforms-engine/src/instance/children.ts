@@ -1,5 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
+import type { InputDefinition } from '../client/InputNode.ts';
 import type { ModelValueDefinition } from '../client/ModelValueNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../client/TriggerNode.ts';
@@ -18,7 +19,6 @@ import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { SelectFieldDefinition } from './SelectField.ts';
 import { SelectField } from './SelectField.ts';
-import type { StringFieldDefinition } from './StringField.ts';
 import { StringField } from './StringField.ts';
 import { Subtree } from './Subtree.ts';
 import { TriggerControl } from './TriggerControl.ts';
@@ -40,8 +40,8 @@ type AnyUnsupportedControlDefinition =
 // prettier-ignore
 type ControlNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| InputDefinition
 	| SelectFieldDefinition
-	| StringFieldDefinition
 	| TriggerNodeDefinition
 	| AnyUnsupportedControlDefinition;
 
@@ -53,9 +53,7 @@ const isModelValueDefinition = (
 	return definition.bodyElement == null;
 };
 
-const isStringFieldDefinition = (
-	definition: ControlNodeDefinition
-): definition is StringFieldDefinition => {
+const isInputDefinition = (definition: ControlNodeDefinition): definition is InputDefinition => {
 	return definition.bodyElement.type === 'input';
 };
 
@@ -125,7 +123,7 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 					return ModelValue.from(parent, leafChild);
 				}
 
-				if (isStringFieldDefinition(leafChild)) {
+				if (isInputDefinition(leafChild)) {
 					return new StringField(parent, leafChild);
 				}
 

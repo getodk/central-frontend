@@ -20,6 +20,7 @@ export type {
 	RepeatRangeNode,
 } from './client/hierarchy.ts';
 export type * from './client/index.ts';
+export type * from './client/InputNode.ts';
 export type * from './client/ModelValueNode.ts';
 export type * from './client/NoteNode.ts';
 export type * from './client/OpaqueReactiveObjectFactory.ts';
@@ -29,7 +30,6 @@ export type * from './client/repeat/RepeatRangeUncontrolledNode.ts';
 export type * from './client/resources.ts';
 export type * from './client/RootNode.ts';
 export type * from './client/SelectNode.ts';
-export type * from './client/StringNode.ts';
 export type * from './client/submission/SubmissionData.ts';
 export type * from './client/submission/SubmissionDefinition.ts';
 export type * from './client/submission/SubmissionInstanceFile.ts';

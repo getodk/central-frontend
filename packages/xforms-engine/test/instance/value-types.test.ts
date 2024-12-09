@@ -67,7 +67,7 @@ describe('Value types', () => {
 			const [modelNodeRelevance, explicitStringNode, implicitStringNode, intNode, decimalNode] =
 				root.currentState.children;
 
-			assert(modelNodeRelevance?.nodeType === 'string');
+			assert(modelNodeRelevance?.nodeType === 'input');
 
 			setModelNodesNonRelevant = () => {
 				modelNodeRelevance.setValue('no');

@@ -271,9 +271,9 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 
 				if (
 					home?.currentState.reference !== '/data/contactdetails/phone/home' ||
-					home.nodeType !== 'string'
+					home.nodeType !== 'input'
 				) {
-					throw new Error('Expected string node /data/contactdetails/phone/home');
+					throw new Error('Expected input node /data/contactdetails/phone/home');
 				}
 
 				// Satisfy `required` condition
@@ -435,9 +435,9 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 
 				if (
 					home?.currentState.reference !== '/data/contactdetails/phone/home' ||
-					home.nodeType !== 'string'
+					home.nodeType !== 'input'
 				) {
-					throw new Error('Expected string node /data/contactdetails/phone/home');
+					throw new Error('Expected input node /data/contactdetails/phone/home');
 				}
 
 				// Satisfy `required` condition

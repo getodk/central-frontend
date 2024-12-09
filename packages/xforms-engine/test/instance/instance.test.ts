@@ -13,7 +13,7 @@ import {
 import { createRoot } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { AnyNode, RootNode, StringNode } from '../../src/index.ts';
+import type { AnyNode, InputNode, RootNode } from '../../src/index.ts';
 import { initializeForm } from '../../src/index.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
@@ -67,18 +67,18 @@ describe('Form instance state', () => {
 		);
 	};
 
-	const getStringNode = (reference: string): StringNode => {
+	const getInputNode = (reference: string): InputNode => {
 		const node = getNodeByReference(reference);
 
 		if (node == null) {
 			throw new Error(`No node for reference: ${reference}`);
 		}
 
-		if (node.nodeType === 'string') {
+		if (node.nodeType === 'input') {
 			return node;
 		}
 
-		throw new Error(`Node with reference ${reference} not a StringNode`);
+		throw new Error(`Node with reference ${reference} not an InputNode`);
 	};
 
 	const getPrimaryInstanceValue = (node: AnyNode | null): string => {
@@ -137,7 +137,7 @@ describe('Form instance state', () => {
 		])(
 			'updates the calculation to $expected when its dependency value is updated to $firstValue',
 			({ firstValue, expected }) => {
-				const first = getStringNode('/root/first-question');
+				const first = getInputNode('/root/first-question');
 				const second = getNodeByReference('/root/second-question')!;
 
 				first.setValue(firstValue);
@@ -148,8 +148,8 @@ describe('Form instance state', () => {
 		);
 
 		it('sets an arbitrary value overriding the calculated value', () => {
-			const first = getStringNode('/root/first-question');
-			const second = getStringNode('/root/second-question');
+			const first = getInputNode('/root/first-question');
+			const second = getInputNode('/root/second-question');
 
 			first.setValue('1');
 			second.setValue('234');
@@ -159,8 +159,8 @@ describe('Form instance state', () => {
 		});
 
 		it("overrides the arbitrary value with a new calculation when the calculation's dependency is updated", () => {
-			const first = getStringNode('/root/first-question');
-			const second = getStringNode('/root/second-question');
+			const first = getInputNode('/root/first-question');
+			const second = getInputNode('/root/second-question');
 
 			first.setValue('1');
 			second.setValue('234');
@@ -208,27 +208,27 @@ describe('Form instance state', () => {
 		});
 
 		it('clears the value when non-relevant', () => {
-			const second = getStringNode('/root/second-question');
+			const second = getInputNode('/root/second-question');
 
 			expect(getPrimaryInstanceValue(second)).toBe('');
 		});
 
 		it('stores the DOM value when relevant', () => {
-			const first = getStringNode('/root/first-question');
+			const first = getInputNode('/root/first-question');
 
 			first.setValue('3');
 
-			const second = getStringNode('/root/second-question');
+			const second = getInputNode('/root/second-question');
 
 			expect(getPrimaryInstanceValue(second)).toBe('default if relevant');
 		});
 
 		it('restores the DOM value when it becomes relevant again', () => {
-			const first = getStringNode('/root/first-question');
+			const first = getInputNode('/root/first-question');
 
 			first.setValue('3');
 
-			const second = getStringNode('/root/second-question');
+			const second = getInputNode('/root/second-question');
 
 			second.setValue('updated value');
 
@@ -246,9 +246,9 @@ describe('Form instance state', () => {
 
 		describe('relevance inheritance', () => {
 			it('clears the child of a non-relevant parent', () => {
-				const first = getStringNode('/root/first-question');
+				const first = getInputNode('/root/first-question');
 				const parent = getNodeByReference('/root/parent-group')!;
-				const child = getStringNode('/root/parent-group/child-question');
+				const child = getInputNode('/root/parent-group/child-question');
 
 				child.setValue('anything');
 				first.setValue('3');
@@ -261,9 +261,9 @@ describe('Form instance state', () => {
 			});
 
 			it('restores the child value of a parent which becomes relevant', () => {
-				const first = getStringNode('/root/first-question');
+				const first = getInputNode('/root/first-question');
 				const parent = getNodeByReference('/root/parent-group')!;
-				const child = getStringNode('/root/parent-group/child-question');
+				const child = getInputNode('/root/parent-group/child-question');
 
 				child.setValue('anything');
 				first.setValue('3');
@@ -313,14 +313,14 @@ describe('Form instance state', () => {
 		});
 
 		it('clears the value when non-relevant', () => {
-			const third = getStringNode('/root/third-question');
+			const third = getInputNode('/root/third-question');
 
 			expect(getPrimaryInstanceValue(third)).toBe('');
 		});
 
 		it('calculates the value when it becomes relevant', () => {
-			const second = getStringNode('/root/second-question');
-			const third = getStringNode('/root/third-question');
+			const second = getInputNode('/root/second-question');
+			const third = getInputNode('/root/third-question');
 
 			second.setValue('yes');
 
@@ -335,9 +335,9 @@ describe('Form instance state', () => {
 		])(
 			'updates the calculated value $expected while it is relevant',
 			({ firstValue, expected }) => {
-				const first = getStringNode('/root/first-question');
-				const second = getStringNode('/root/second-question');
-				const third = getStringNode('/root/third-question');
+				const first = getInputNode('/root/first-question');
+				const second = getInputNode('/root/second-question');
+				const third = getInputNode('/root/third-question');
 
 				second.setValue('yes');
 				first.setValue(firstValue);
@@ -354,9 +354,9 @@ describe('Form instance state', () => {
 		])(
 			'updates the calculated value $expected when it becomes relevant after the calculated dependency has been updated',
 			({ firstValue, expected }) => {
-				const first = getStringNode('/root/first-question');
-				const second = getStringNode('/root/second-question');
-				const third = getStringNode('/root/third-question');
+				const first = getInputNode('/root/first-question');
+				const second = getInputNode('/root/second-question');
+				const third = getInputNode('/root/third-question');
 
 				first.setValue('20');
 				second.setValue('no');
@@ -374,9 +374,9 @@ describe('Form instance state', () => {
 		it.fails(
 			'restores an arbitrary value without recalculating when becoming relevant again',
 			() => {
-				const first = getStringNode('/root/first-question');
-				const second = getStringNode('/root/second-question');
-				const third = getStringNode('/root/third-question');
+				const first = getInputNode('/root/first-question');
+				const second = getInputNode('/root/second-question');
+				const third = getInputNode('/root/third-question');
 
 				first.setValue('20');
 				third.setValue('999');
@@ -421,8 +421,8 @@ describe('Form instance state', () => {
 		});
 
 		it("recomputes the state's required condition when a dependency changes", () => {
-			const first = getStringNode('/root/first-question');
-			const second = getStringNode('/root/second-question');
+			const first = getInputNode('/root/first-question');
+			const second = getInputNode('/root/second-question');
 
 			first.setValue('1');
 
@@ -466,8 +466,8 @@ describe('Form instance state', () => {
 		});
 
 		it("recomputes the state's readonly condition when a dependency changes", () => {
-			const first = getStringNode('/root/first-question');
-			const second = getStringNode('/root/second-question');
+			const first = getInputNode('/root/first-question');
+			const second = getInputNode('/root/second-question');
 
 			first.setValue('1');
 
@@ -511,8 +511,8 @@ describe('Form instance state', () => {
 			});
 
 			it('is readonly if a parent is readonly', () => {
-				const a = getStringNode('/root/a');
-				const b = getStringNode('/root/grp/b');
+				const a = getInputNode('/root/a');
+				const b = getInputNode('/root/grp/b');
 
 				// Check assumptions
 				expect(b.currentState.readonly).toBe(false);
@@ -523,8 +523,8 @@ describe('Form instance state', () => {
 			});
 
 			it('is not readonly if the parent is no longer readonly', () => {
-				const a = getStringNode('/root/a');
-				const b = getStringNode('/root/grp/b');
+				const a = getInputNode('/root/a');
+				const b = getInputNode('/root/grp/b');
 
 				a.setValue('set b readonly');
 
@@ -537,9 +537,9 @@ describe('Form instance state', () => {
 			});
 
 			it('remains readonly for its own condition if the parent is not readonly', () => {
-				const a = getStringNode('/root/a');
-				const b = getStringNode('/root/grp/b');
-				const c = getStringNode('/root/grp/c');
+				const a = getInputNode('/root/a');
+				const b = getInputNode('/root/grp/b');
+				const c = getInputNode('/root/grp/c');
 
 				b.setValue('yep');
 
@@ -557,9 +557,9 @@ describe('Form instance state', () => {
 			});
 
 			it("is no longer readonly if both its own condition and parent's are not satisfied", () => {
-				const a = getStringNode('/root/a');
-				const b = getStringNode('/root/grp/b');
-				const c = getStringNode('/root/grp/c');
+				const a = getInputNode('/root/a');
+				const b = getInputNode('/root/grp/b');
+				const c = getInputNode('/root/grp/c');
 
 				b.setValue('yep');
 

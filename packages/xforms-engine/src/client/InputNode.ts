@@ -6,24 +6,24 @@ import type { RootNode } from './RootNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { LeafNodeValidationState } from './validation.ts';
 
-export interface StringNodeState extends BaseNodeState {
+export interface InputNodeState extends BaseNodeState {
 	get children(): null;
 	get valueOptions(): null;
 
 	/**
-	 * Reflects the current value of a {@link StringNode}. This value may be
+	 * Reflects the current value of a {@link InputNode}. This value may be
 	 * populated when a form is loaded, and it may be updated by certain
 	 * computations defined by the form. It may also be updated by a client, using
-	 * the {@link StringNode.setValue} method.
+	 * the {@link InputNode.setValue} method.
 	 */
 	get value(): string;
 }
 
-export interface StringDefinition extends LeafNodeDefinition {
+export interface InputDefinition extends LeafNodeDefinition {
 	readonly bodyElement: InputControlDefinition;
 }
 
-export type StringNodeAppearances = NodeAppearances<StringDefinition>;
+export type InputNodeAppearances = NodeAppearances<InputDefinition>;
 
 /**
  * A node which can be assigned a string/text value. A string node **MAY**
@@ -32,13 +32,13 @@ export type StringNodeAppearances = NodeAppearances<StringDefinition>;
  * `<input>`, or necessarily have any presentational implications for a client
  * (for instance if the node is bound to an XForms `calculate` expression).
  */
-export interface StringNode extends BaseNode {
-	readonly nodeType: 'string';
-	readonly appearances: StringNodeAppearances;
-	readonly definition: StringDefinition;
+export interface InputNode extends BaseNode {
+	readonly nodeType: 'input';
+	readonly appearances: InputNodeAppearances;
+	readonly definition: InputDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
-	readonly currentState: StringNodeState;
+	readonly currentState: InputNodeState;
 	readonly validationState: LeafNodeValidationState;
 
 	/**
