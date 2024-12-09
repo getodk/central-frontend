@@ -1,8 +1,8 @@
-import type { ModelValueNode } from '@getodk/xforms-engine';
+import type { AnyModelValueNode } from '@getodk/xforms-engine';
 import { ValueNodeAnswer } from './ValueNodeAnswer.ts';
 
-export class ModelValueNodeAnswer extends ValueNodeAnswer<ModelValueNode> {
+export class ModelValueNodeAnswer extends ValueNodeAnswer<AnyModelValueNode> {
 	get stringValue(): string {
-		return this.node.currentState.value;
+		return this.node.currentState.instanceValue;
 	}
 }
