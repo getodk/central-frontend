@@ -1,15 +1,17 @@
 import InputText from '@/components/controls/InputText.vue';
-import type { StringNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../../helpers';
 
 const mountComponent = async (questionNumber: number, submitPressed = false) => {
 	const xform = await getReactiveForm('1-validation.xml');
+	const question = xform.currentState.children[questionNumber];
+
+	assert(question.nodeType === 'input');
 
 	return mount(InputText, {
 		props: {
-			question: xform.currentState.children[questionNumber] as StringNode,
+			question,
 		},
 		global: { ...globalMountOptions, provide: { submitPressed } },
 		attachTo: document.body,

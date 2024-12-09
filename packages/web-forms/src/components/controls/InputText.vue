@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { StringNode } from '@getodk/xforms-engine';
+import type { InputNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
 import { computed, inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
 
-const props = defineProps<{ question: StringNode }>();
+const props = defineProps<{ question: InputNode }>();
 
 const setValue = (value = '') => {
 	props.question.setValue(value);

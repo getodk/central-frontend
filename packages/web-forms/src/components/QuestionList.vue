@@ -33,7 +33,7 @@ const isControlNode = (node: NonStructuralNode): node is ControlNode => {
 	const { nodeType } = node;
 
 	return (
-		nodeType === 'string' ||
+		nodeType === 'input' ||
 		nodeType === 'note' ||
 		nodeType === 'select' ||
 		nodeType === 'trigger' ||
