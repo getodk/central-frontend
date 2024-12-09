@@ -988,6 +988,15 @@
         "404_1": {
           "string": "The resource you are looking for cannot be found. The resource may have been deleted.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {This Form attempts to create a new Entity property that matches with an existing one except for capitalization:} other {This Form attempts to create new Entity properties that match with existing ones except for capitalization:}}"
+          },
+          "duplicateProperty": {
+            "string": "{provided} (existing: {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },

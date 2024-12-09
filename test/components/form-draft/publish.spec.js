@@ -282,6 +282,28 @@ describe('FormDraftPublish', () => {
       });
   });
 
+  it('shows a custom alert message for a duplicate property name', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+    return mockHttp()
+      .mount(FormDraftPublish, mountOptions())
+      .request(async (modal) => {
+        await modal.setProps({ state: true });
+        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+      })
+      .respondWithProblem({
+        code: 409.17,
+        message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+        details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+      })
+      .afterResponse(modal => {
+        modal.should.alert(
+          'danger',
+          /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+        );
+      });
+  });
+
   it('shows the version input field after request returns duplicate version problem', () => {
     // The scenario here is a user trying to publish a form that conflicts with
     // a form/version combo probably found in the trash. This component doesn't

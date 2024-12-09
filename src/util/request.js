@@ -242,5 +242,14 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
     if (message != null) return message;
   }
   if (problem.code === 404.1) return i18n.t('util.request.problem.404_1');
+  if (problem.code === 409.17) {
+    const { duplicateProperties } = problem.details;
+    // eslint-disable-next-line prefer-template
+    return i18n.tc('util.request.problem.409_17.message', duplicateProperties.length) +
+      '\n\n' +
+      duplicateProperties
+        .map(p => `• ${i18n.t('util.request.problem.409_17.duplicateProperty', p)}`)
+        .join('\n');
+  }
   return problem.message;
 };
