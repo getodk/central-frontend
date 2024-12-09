@@ -52,9 +52,7 @@ except according to the terms contained in the LICENSE file.
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entityDetails.dataset)">
-              {{ entityDetails.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -68,9 +66,7 @@ except according to the terms contained in the LICENSE file.
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entityDetails.dataset)">
-              {{ entityDetails.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -109,19 +105,20 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
 import EntityLink from '../entity/link.vue';
 import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
 import SubmissionReviewState from './review-state.vue';
 
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
   components: {
     ActorLink,
+    DatasetLink,
     EntityLink,
     FeedEntry,
     MarkdownView,
@@ -148,8 +145,7 @@ export default {
   },
   setup() {
     const { diffs } = useRequestData();
-    const { datasetPath } = useRoutes();
-    return { diffs, datasetPath, entityPath };
+    return { diffs };
   },
   computed: {
     updateOrEdit() {

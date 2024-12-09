@@ -1,5 +1,4 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
+import DatasetLink from '../../../../src/components/dataset/link.vue';
 import FormOverviewRightNow from '../../../../src/components/form/overview/right-now.vue';
 import FormVersionString from '../../../../src/components/form-version/string.vue';
 import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
@@ -106,15 +105,14 @@ describe('FormOverviewRightNow', () => {
       should.not.exist(item);
     });
 
-    it('lists name of datasets', () => {
+    it('lists the datasets', () => {
       testData.standardFormAttachments.createPast(1, { name: 'trees.csv', datasetExists: true });
       testData.standardFormAttachments.createPast(1, { name: 'people.csv', datasetExists: true });
       const item = findItem(mountComponent(), 'linked-datasets');
-      const rows = item.findAll('tr');
-      rows[0].text().should.be.equal('people');
-      rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/entity-lists/people');
-      rows[1].text().should.be.equal('trees');
-      rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/entity-lists/trees');
+      const links = item.findAllComponents(DatasetLink);
+      links.length.should.equal(2);
+      links[0].props().should.eql({ projectId: 1, name: 'people' });
+      links[1].props().should.eql({ projectId: 1, name: 'trees' });
     });
   });
 });

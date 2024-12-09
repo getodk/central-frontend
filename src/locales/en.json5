@@ -308,6 +308,8 @@
     "projects": "Projects",
     // This is a data property of an Entity.
     "property": "Property",
+    // This refers to the data properties of an Entity.
+    "properties": "Properties",
     "publicLink": "Public Access Link",
     "user": "User",
     "users": "Users",

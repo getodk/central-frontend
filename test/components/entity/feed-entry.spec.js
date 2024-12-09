@@ -2,6 +2,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 import { last } from 'ramda';
 
 import ActorLink from '../../../src/components/actor-link.vue';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import EntityDiff from '../../../src/components/entity/diff.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import FeedEntry from '../../../src/components/feed-entry.vue';
@@ -217,8 +218,10 @@ describe('EntityFeedEntry', () => {
 
       it('links to the dataset', () => {
         const title = mountComponent().get('.feed-entry-title');
-        const { to } = title.getComponent(RouterLinkStub).props();
-        to.should.equal('/projects/1/entity-lists/trees');
+        title.getComponent(DatasetLink).props().should.eql({
+          projectId: '1',
+          name: 'trees'
+        });
       });
     });
 
@@ -261,8 +264,10 @@ describe('EntityFeedEntry', () => {
 
     it('links to the dataset in the top of the event block', () => {
       const title = mountComponent().get('.feed-entry-title .bulk-event');
-      const { to } = title.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/entity-lists/trees');
+      title.getComponent(DatasetLink).props().should.eql({
+        projectId: '1',
+        name: 'trees'
+      });
     });
 
     it('shows the correct text in bottom of event block', () => {

@@ -20,6 +20,7 @@ import { useRequestData } from './index';
 export default () => {
   const { createResource } = useRequestData();
   return {
+    dataset: createResource('dataset'),
     entity: createResource('entity')
   };
 };

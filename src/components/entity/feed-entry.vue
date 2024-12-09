@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
             <span class="entity-label">{{ entity.currentVersion.label }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath()">{{ datasetName }}</router-link>
+            <dataset-link :project-id="projectId" :name="datasetName"/>
           </template>
         </i18n-t>
         <i18n-t v-else keypath="title.entity.create.api">
@@ -79,7 +79,7 @@ except according to the terms contained in the LICENSE file.
               <span class="entity-label">{{ entity.currentVersion.label }}</span>
             </template>
             <template #dataset>
-              <router-link :to="datasetPath()">{{ datasetName }}</router-link>
+              <dataset-link :project-id="projectId" :name="datasetName"/>
             </template>
           </i18n-t>
         </div>
@@ -143,6 +143,7 @@ import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
 import EntityDiff from './diff.vue';
 import FeedEntry from '../feed-entry.vue';
 import SubmissionReviewState from '../submission/review-state.vue';
@@ -179,7 +180,7 @@ const wrapTitle = computed(() => {
 });
 
 // submission.create, entity.update.version
-const { submissionPath, datasetPath } = useRoutes();
+const { submissionPath } = useRoutes();
 const sourceSubmissionPath = computed(() => submissionPath(
   projectId,
   props.submission.xmlFormId,
