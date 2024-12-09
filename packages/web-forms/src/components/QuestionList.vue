@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type {
+	AnyControlNode,
+	AnyUnsupportedControlNode,
 	GeneralChildNode,
 	GroupNode,
-	ModelValueNode,
 	RepeatRangeNode,
-	SubtreeNode,
 } from '@getodk/xforms-engine';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';
 import RepeatRange from './RepeatRange.vue';
+import ExpectModelNode from './dev-only/ExpectModelNode.vue';
 
 defineProps<{ nodes: readonly GeneralChildNode[] }>();
 
@@ -16,14 +17,30 @@ const isGroupNode = (node: GeneralChildNode): node is GroupNode => {
 	return node.nodeType === 'group';
 };
 
-const isRepeatRangeNode = (node: GeneralChildNode): node is RepeatRangeNode => {
+type NonGroupNode = Exclude<GeneralChildNode, GroupNode>;
+
+const isRepeatRangeNode = (node: NonGroupNode): node is RepeatRangeNode => {
 	return (
 		node.nodeType === 'repeat-range:controlled' || node.nodeType === 'repeat-range:uncontrolled'
 	);
 };
 
-const isModelOnlyNode = (node: GeneralChildNode): node is ModelValueNode | SubtreeNode => {
-	return node.nodeType === 'model-value' || node.nodeType === 'subtree';
+type NonStructuralNode = Exclude<NonGroupNode, RepeatRangeNode>;
+
+type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
+
+const isControlNode = (node: NonStructuralNode): node is ControlNode => {
+	const { nodeType } = node;
+
+	return (
+		nodeType === 'string' ||
+		nodeType === 'note' ||
+		nodeType === 'select' ||
+		nodeType === 'trigger' ||
+		nodeType === 'range' ||
+		nodeType === 'rank' ||
+		nodeType === 'upload'
+	);
 };
 </script>
 
@@ -38,7 +55,9 @@ const isModelOnlyNode = (node: GeneralChildNode): node is ModelValueNode | Subtr
 
 
 			<!-- Render leaf nodes like string, select, etc -->
-			<FormQuestion v-else-if="!isModelOnlyNode(node)" :question="node" />
+			<FormQuestion v-else-if="isControlNode(node)" :question="node" />
+
+			<ExpectModelNode v-else :node="node" />
 		</template>
 	</template>
 </template>
