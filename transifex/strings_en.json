@@ -3620,6 +3620,24 @@
         }
       }
     },
+    "OutdatedVersionBanner": {
+      "title": {
+        "string": "Outdate Version",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": "Instructions to upgrade"
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": "Click here to see the instructions to upgrade the Central"
+      },
+      "dismiss": {
+        "string": "Dismiss for 30 days"
+      },
+      "dismissTooltip": {
+        "string": "Click here to dismiss this warning for 30 days."
+      }
+    },
     "Pagination": {
       "action": {
         "first": {

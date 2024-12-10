@@ -15,17 +15,29 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('title') }}</span>
     </template>
     <template #body>
-      <iframe src="https://getodk.github.io/central/news.html" :title="$t('title')"></iframe>
+      <iframe :src="iframeSrc" :title="$t('title')"></iframe>
     </template>
   </page-section>
 </template>
 
 <script setup>
+import { computed, inject } from 'vue';
+import { useRequestData } from '../../request-data';
 import PageSection from '../page/section.vue';
 
 defineOptions({
   name: 'HomeNews'
 });
+
+const { centralVersion } = useRequestData();
+
+
+const container = inject('container');
+const { i18n: globalI18n } = container;
+const languageSubtag = computed(() => new Intl.Locale(globalI18n.locale).language);
+
+const iframeSrc = computed(() => `https://getodk.github.io/central/news.html?version=${centralVersion.data?.currentVersion}&lang=${languageSubtag.value}`);
+
 </script>
 
 <style lang="scss">

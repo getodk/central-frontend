@@ -151,6 +151,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-not-found" */
     '../components/not-found.vue'
   )))
+  .set('OutdatedVersion', loader(() => import(
+    /* webpackChunkName: "component-not-found" */
+    '../components/outdated-version-banner.vue'
+  )))
   .set('ProjectFormAccess', loader(() => import(
     /* webpackChunkName: "component-project-form-access" */
     '../components/project/form-access.vue'
