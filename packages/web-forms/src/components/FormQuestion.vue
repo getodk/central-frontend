@@ -7,7 +7,7 @@ import type {
 	SelectNode,
 } from '@getodk/xforms-engine';
 import { inject } from 'vue';
-import InputText from './controls/InputText.vue';
+import InputControl from './controls/Input/InputControl.vue';
 import NoteControl from './controls/NoteControl.vue';
 import SelectControl from './controls/SelectControl.vue';
 import TriggerControl from './controls/TriggerControl.vue';
@@ -33,7 +33,7 @@ const submitPressed = inject('submitPressed');
 			'highlight': submitPressed && question.validationState.violation?.valid === false,
 		}"
 	>
-		<InputText v-if="isInputNode(question)" :question="question" />
+		<InputControl v-if="isInputNode(question)" :node="question" />
 
 		<SelectControl v-else-if="isSelectNode(question)" :question="question" />
 
