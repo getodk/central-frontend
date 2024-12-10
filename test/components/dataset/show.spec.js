@@ -60,7 +60,7 @@ describe('DatasetShow', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees', properties: [], linkedForms: [] });
     return load('/projects/1/entity-lists/trees').then(app => {
       const breadcrumb = app.findAll('.breadcrumb-item')[0];
-      breadcrumb.text().should.equal('My Project /');
+      breadcrumb.text().should.equal('My Project');
     });
   });
 
@@ -69,7 +69,7 @@ describe('DatasetShow', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees', properties: [], linkedForms: [] });
     return load('/projects/1/entity-lists/trees').then(app => {
       const breadcrumb = app.findAll('.breadcrumb-item')[0];
-      breadcrumb.text().should.equal('My Project (archived) /');
+      breadcrumb.text().should.equal('My Project (archived)');
     });
   });
 
