@@ -202,8 +202,8 @@ export default {
       "num_admins": "Anzahl Administratoren",
       "num_projects_encryption": "Anzahl der Projekte mit aktivierter Verschlüsselung",
       "num_questions_biggest_form": "Anzahl Fragen im grössten Formular",
-      "num_audit_log_entries": "Anzahl der Audit-Log-Einträge",
-      "num_archived_projects": "Anzahl der archivierten Projekte",
+      "num_audit_log_entries": "Anzahl Audit-Log-Einträge",
+      "num_archived_projects": "Anzahl archivierter Projekte",
       "num_unique_managers": "Anzahl eindeutiger Projekt-Manager",
       "num_unique_viewers": "Anzahl eindeutiger Projekt-Betrachter",
       "num_unique_collectors": "Anzahl eindeutiger Datensammler",
@@ -214,15 +214,15 @@ export default {
       "num_data_collectors": "Anzahl Datensammler",
       "num_app_users": "Anzahl App-Benutzer",
       "num_device_ids": "Anzahl Geräte-IDs",
-      "num_public_access_links": "Anzahl der öffentlicher Zugangslinks",
+      "num_public_access_links": "Anzahl öffentlicher Zugangslinks",
       "num_forms": "Anzahl Formulare",
       "num_forms_with_repeats": "Anzahl Formulare mit Wiederholungen/repeats",
       "num_forms_with_geospatial": "Anzahl Formulare mit Geodata",
       "num_forms_with_encryption": "Anzahl Formulare mit Verschlüsselung",
       "num_forms_with_audits": "Anzahl Formulare mit Audits",
-      "num_reused_form_ids": "Anzahl der wiederverwendeten Formular-IDs",
+      "num_reused_form_ids": "Anzahl wiederverwendeter Formular-IDs",
       "num_open_forms": "Anzahl offener Formulare",
-      "num_closing_forms": "Anzahl der schliessenden Formulare",
+      "num_closing_forms": "Anzahl schliessender Formulare",
       "num_closed_forms": "Anzahl geschlossener Formulare",
       "num_submissions_received": "Anzahl ausgefüllte Formulare - erhalten",
       "num_submissions_approved": "Anzahl ausgefüllte Formulare - genehmigt",
@@ -250,12 +250,17 @@ export default {
       "num_bulk_create_events": "Anzahl von Bulk-Uploads",
       "biggest_bulk_upload": "Anzahl der Zeilen im grössten Bulk-Upload",
       "sso_enabled": "SSO auf dem Server aktiviert",
-      "num_client_audit_attachments": "Anzahl an Client-Audit-Anhängen",
+      "num_client_audit_attachments": "Anzahl Client-Audit-Anhänge",
       "num_client_audit_attachments_failures": "Anzahl an Client-Audit-Verarbeitungsfehler",
       "num_client_audit_rows": "Anzahl von Client-Audit-Zeilen",
-      "num_audits_failed": "Anzahl der Audit-Log-Events, die mindestens einmal fehlgeschlagen sind",
-      "num_audits_failed5": "Anzahl der Audit-Log-Events, die komplett fehlgeschlagen sind",
-      "num_audits_unprocessed": "Anzahl der Audit-Log-Events, deren Verarbeitung verzögert wurde"
+      "num_audits_failed": "Anzahl mindestens einmal fehlgeschlagener Audit-Log-Events",
+      "num_audits_failed5": "Anzahl komplett fehlgeschlagener Audit-Log-Events",
+      "num_audits_unprocessed": "Anzahl der Audit-Log-Events, deren Verarbeitung verzögert wurde",
+      "num_offline_entity_branches": "Anzahl Offline-Objekte-Zweige",
+      "num_offline_entity_interrupted_branches": "Anzahl unterbrochene Offline-Objekt-Zweige",
+      "num_offline_entity_submissions_reprocessed": "Anzahl umsortierter Offline-Objekt-Übermittlungen",
+      "max_entity_submission_delay": "Maximum Objektübermittlung-Verarbeitungsverzögerung",
+      "avg_entity_submission_delay": "Durchschnitt Objektübermittlung-Verarbeitungsverzögerung"
     }
   },
   "es": {
@@ -317,7 +322,12 @@ export default {
       "num_client_audit_rows": "Número de filas de auditoría de cliente",
       "num_audits_failed": "Número de eventos del registro de auditoría que fallaron al menos una vez",
       "num_audits_failed5": "Número de eventos del registro de auditoría que fallaron por completo",
-      "num_audits_unprocessed": "Número de eventos del registro de auditoría cuyo procesamiento se ha retrasado"
+      "num_audits_unprocessed": "Número de eventos del registro de auditoría cuyo procesamiento se ha retrasado",
+      "num_offline_entity_branches": "Número de ramas de entidades fuera de línea",
+      "num_offline_entity_interrupted_branches": "Número de ramas de entidades fuera de línea interrumpidas",
+      "num_offline_entity_submissions_reprocessed": "Número de envíos de entidades fuera de línea reordenados",
+      "max_entity_submission_delay": "Plazo máximo de tramitación de envió de entidades",
+      "avg_entity_submission_delay": "Plazo medio de tramitación del envío de entidades"
     }
   },
   "fr": {
@@ -379,7 +389,12 @@ export default {
       "num_client_audit_rows": "Nombre de rangées d'audit de client",
       "num_audits_failed": "Nombre d'événements du journal d'audit qui ont échoué au moins une fois",
       "num_audits_failed5": "Nombre d'événements du journal d'audit qui ont entièrement échoué",
-      "num_audits_unprocessed": "Nombre d'événements du journal d'audit qui ont été traités à retardement"
+      "num_audits_unprocessed": "Nombre d'événements du journal d'audit qui ont été traités à retardement",
+      "num_offline_entity_branches": "Nombre de branches d'Entités Hors ligne",
+      "num_offline_entity_interrupted_branches": "Nombre de branches d'Entités hors lignes interrompues",
+      "num_offline_entity_submissions_reprocessed": "Nombre de soumissions reliées à des Entités hors ligne qui sont arrivées dans le mauvais ordre",
+      "max_entity_submission_delay": "Délai maximum de traitement de soumissions reliées à une Entité",
+      "avg_entity_submission_delay": "Délai moyen de traitement de soumissions reliées à une Entité"
     }
   },
   "id": {
@@ -465,7 +480,12 @@ export default {
       "num_client_audit_rows": "Numero di righe di audit client",
       "num_audits_failed": "Numero di eventi del registro di controllo che non sono riusciti almeno una volta",
       "num_audits_failed5": "Numero di eventi del registro di controllo completamente non riusciti",
-      "num_audits_unprocessed": "Numero di eventi del registro di controllo la cui elaborazione è stata ritardata"
+      "num_audits_unprocessed": "Numero di eventi del registro di controllo la cui elaborazione è stata ritardata",
+      "num_offline_entity_branches": "Numero di rami di entità offline",
+      "num_offline_entity_interrupted_branches": "Numero di rami di entità offline interrotti",
+      "num_offline_entity_submissions_reprocessed": "Numero di invii di entità offline riordinate",
+      "max_entity_submission_delay": "Ritardo massimo di elaborazione della trasmissione dell'entità",
+      "avg_entity_submission_delay": "Ritardo medio di elaborazione della trasmissione di un'entità"
     }
   },
   "ja": {
@@ -618,7 +638,12 @@ export default {
       "num_client_audit_rows": "客戶端審核行數",
       "num_audits_failed": "至少失敗一次的審核日誌事件數",
       "num_audits_failed5": "完全失敗的審核日誌事件數",
-      "num_audits_unprocessed": "處理已延遲的審核日誌事件數"
+      "num_audits_unprocessed": "處理已延遲的審核日誌事件數",
+      "num_offline_entity_branches": "離線實體分支數量",
+      "num_offline_entity_interrupted_branches": "中斷的離線實體分支數量",
+      "num_offline_entity_submissions_reprocessed": "重新排序的離線實體提交數量",
+      "max_entity_submission_delay": "最大實體提交處理延遲",
+      "avg_entity_submission_delay": "平均實體提交處理延遲"
     }
   }
 }
