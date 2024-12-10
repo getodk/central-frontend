@@ -21,10 +21,9 @@ except according to the terms contained in the LICENSE file.
         <div v-if="submission != null">
           <dt>{{ $t('creatingSubmission') }}</dt>
           <dd id="entity-basic-details-creating-submission">
-            <router-link v-if="submission.currentVersion != null"
-              :to="submissionPath(projectId, submission.xmlFormId, submission.instanceId)">
-              {{ submission.currentVersion.instanceName ?? submission.instanceId }}
-            </router-link>
+            <submission-link v-if="submission.currentVersion != null"
+              :project-id="projectId" :xml-form-id="submission.xmlFormId"
+              :submission="submission"/>
             <template v-else>
               <span class="icon-trash" v-tooltip.sr-only></span>
               <span>{{ submission.instanceId }}</span>
@@ -55,8 +54,8 @@ import { inject, ref, watchEffect } from 'vue';
 import ActorLink from '../actor-link.vue';
 import DateTime from '../date-time.vue';
 import PageSection from '../page/section.vue';
+import SubmissionLink from '../submission/link.vue';
 
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -83,8 +82,6 @@ watchEffect(() => {
   submission.value = audit.details.source?.submission;
   source.value = audit.details.source;
 });
-
-const { submissionPath } = useRoutes();
 </script>
 
 <style lang="scss">

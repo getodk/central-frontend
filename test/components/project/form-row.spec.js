@@ -1,7 +1,6 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ProjectFormRow from '../../../src/components/project/form-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import FormLink from '../../../src/components/form/link.vue';
 
 import useProjects from '../../../src/request-data/projects';
 
@@ -28,71 +27,29 @@ const mountComponent = (showIcon = false) => {
 };
 
 describe('ProjectFormRow', () => {
-  describe('form name', () => {
-    beforeEach(mockLogin);
-
-    it('renders the form name correctly', () => {
-      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
-      const link = mountComponent().find('.form-name a');
-      link.text().should.equal('My Form');
-    });
-
-    it('shows the xmlFormId if the form does not have a name', () => {
-      testData.extendedForms.createPast(1, { name: null, xmlFormId: 'f' });
-      const link = mountComponent().getComponent(RouterLinkStub);
-      link.text().should.equal('f');
-    });
-  });
-
   describe('form link', () => {
-    describe('Administrator', () => {
-      beforeEach(mockLogin);
-
-      it('links to form overview for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b');
-      });
-
-      it('links to .../draft for a form without a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b/draft');
-      });
+    it('renders a FormLink for a sitewide administrator', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1);
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      link.props().form.xmlFormId.should.equal('f');
     });
 
-    describe('Project Manager', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
-      });
-
-      it('links to form overview for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b');
-      });
-
-      it('links to .../draft for a form without a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b/draft');
-      });
+    it('renders a FormLink for a project manager', () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
+      testData.extendedForms.createPast(1);
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      link.props().form.xmlFormId.should.equal('f');
     });
 
-    describe('Project Viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      });
-
-      it('links to .../submissions for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
-      });
-
-      // draft forms not shown in project-form-row to project viewers
+    // Note that draft forms are not shown in ProjectFormRow to project viewers.
+    it('renders a FormLink for a project viewer', () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
+      testData.extendedForms.createPast(1);
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      link.props().form.xmlFormId.should.equal('f');
     });
 
     describe('Data Collector', () => {

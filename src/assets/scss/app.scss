@@ -42,8 +42,7 @@ p { @include text-block; }
 
 dl > * {
   border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding-block: $padding-block-dl;
 
   &:first-of-type { padding-top: 0; }
 
@@ -75,7 +74,7 @@ dl:not(.dl-horizontal) {
 // down to the fact that .dl-horizontal uses a CSS grid, while other <dl>
 // elements use flexbox.
 .dl-horizontal {
-  $padding-between: 10px;
+  $padding-between: 12px;
   $dt-width: 160px + $padding-panel-body + $padding-between;
 
   display: grid;

@@ -1,12 +1,12 @@
-import { RouterLinkStub } from '@vue/test-utils';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import Row from '../../../src/components/dataset/summary/row.vue';
+
 import Property from '../../util/ds-property-enum';
-
 import testData from '../../data';
-import { mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
+import { mount } from '../../util/lifecycle';
 
-describe('Dataset summary row', () => {
+describe('DatasetSummaryRow', () => {
   const theories = [
     { case: 'Case 1', isNew: true, properties: [Property.NewProperty] },
     { case: 'Case 2', isNew: false, properties: [Property.DefaultProperty] },
@@ -24,11 +24,16 @@ describe('Dataset summary row', () => {
           router: mockRouter('/')
         }
       });
-      component.get('.dataset-name').text().should.be.equal(dataset.name);
-      if (data.isNew)
-        component.find('.dataset-name a').exists().should.be.false;
-      else
-        component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
+
+      const name = component.get('.dataset-name');
+      if (data.isNew) {
+        name.findComponent(DatasetLink).exists().should.be.false;
+        name.text().should.equal(dataset.name);
+      } else {
+        const link = name.getComponent(DatasetLink);
+        link.props().should.eql({ projectId: 1, name: dataset.name });
+      }
+
       component.find('.dataset-new').exists().should.be.equal(data.isNew);
       component.get('.properties-count').text().should.be.equal(`${inFormProperties.length} of ${dataset.properties.length} ${dataset.properties.length === 1 ? 'property' : 'properties'}`);
 
@@ -58,7 +63,10 @@ describe('Dataset summary row', () => {
         router: mockRouter('/')
       }
     });
-    component.getComponent(RouterLinkStub).props().to.should.be.equal(`/projects/1/entity-lists/${dataset.name}`);
+    component.getComponent(DatasetLink).props().should.eql({
+      projectId: 1,
+      name: dataset.name
+    });
     component.get('.properties-count').text().should.be.equal('0 of 0 properties');
 
     // check help text is hidden (.property-list is the parent)

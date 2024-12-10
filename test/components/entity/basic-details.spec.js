@@ -1,8 +1,7 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityBasicDetails from '../../../src/components/entity/basic-details.vue';
+import SubmissionLink from '../../../src/components/submission/link.vue';
 
 import useEntity from '../../../src/request-data/entity';
 
@@ -41,11 +40,10 @@ describe('EntityBasicDetails', () => {
 
   describe('creating submission', () => {
     const createEntityFromSubmission = ({
-      deleted: submissionDeleted = false,
-      ...submissionOptions
+      deleted: submissionDeleted = false
     } = {}) => {
       const submission = testData.extendedSubmissions
-        .createPast(1, { instanceId: 's', ...submissionOptions })
+        .createPast(1, { instanceId: 's' })
         .last();
       testData.extendedEntities.createPast(1, { uuid: 'e' });
       const details = {
@@ -68,32 +66,10 @@ describe('EntityBasicDetails', () => {
     it('shows creating submission if there is a submission in audit log', () => {
       createEntityFromSubmission();
       const component = mountComponent();
-      const dd = component.find('#entity-basic-details-creating-submission');
-      dd.exists().should.be.true;
-    });
-
-    it('shows the instance name if the submission has one', () => {
-      createEntityFromSubmission({
-        meta: { instanceName: 'My Submission' }
-      });
-      const component = mountComponent();
       const dd = component.get('#entity-basic-details-creating-submission');
-      dd.text().should.equal('My Submission');
-    });
-
-    it('falls back to showing the instance ID', () => {
-      createEntityFromSubmission();
-      const component = mountComponent();
-      const dd = component.get('#entity-basic-details-creating-submission');
-      dd.text().should.equal('s');
-    });
-
-    it('links to the submission', () => {
-      createEntityFromSubmission();
-      const component = mountComponent();
-      const dd = component.get('#entity-basic-details-creating-submission');
-      const { to } = dd.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/submissions/s');
+      const link = dd.getComponent(SubmissionLink);
+      link.props().should.include({ projectId: '1', xmlFormId: 'f' });
+      link.props().submission.instanceId.should.equal('s');
     });
 
     describe('submission was deleted', () => {
@@ -101,7 +77,7 @@ describe('EntityBasicDetails', () => {
         createEntityFromSubmission({ deleted: true });
         const component = mountComponent();
         const dd = component.get('#entity-basic-details-creating-submission');
-        dd.findComponent(RouterLinkStub).exists().should.be.false;
+        dd.findComponent(SubmissionLink).exists().should.be.false;
       });
 
       it('shows a trash icon with a tooltip', async () => {

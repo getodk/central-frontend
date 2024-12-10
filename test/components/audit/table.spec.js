@@ -3,6 +3,8 @@ import { RouterLinkStub } from '@vue/test-utils';
 import ActorLink from '../../../src/components/actor-link.vue';
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import FormLink from '../../../src/components/form/link.vue';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import Selectable from '../../../src/components/selectable.vue';
 
 import { ago } from '../../../src/util/date-time';
@@ -28,19 +30,23 @@ const testType = (row, type) => {
   else
     throw new Error('invalid type');
 };
-const testTarget = async (row, text, to = undefined) => {
+const testTarget = async (row, text, ...linkOptions) => {
   if (text === '') {
     row.get('.target').text().should.equal('');
-  } else if (to == null) {
+  } else if (linkOptions.length === 0) {
     const span = row.get('.target span');
     span.text().should.equal(text);
     await span.should.have.textTooltip();
+  } else if (typeof linkOptions[0] === 'string') {
+    testTarget(row, text, RouterLinkStub, (link) => {
+      link.props().to.should.equal(linkOptions[0]);
+    });
   } else {
-    const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
-      wrapper.element.closest('.target') != null);
+    const [component, f] = linkOptions;
+    const link = row.get('.target').getComponent(component);
     link.text().should.equal(text);
     await link.should.have.textTooltip();
-    link.props().to.should.equal(to);
+    if (f != null) f(link);
   }
 };
 
@@ -181,12 +187,14 @@ describe('AuditTable', () => {
           actor: testData.extendedUsers.first(),
           action,
           actee: testData.standardForms
-            .createPast(1, { xmlFormId: 'a b', name: 'My Form' })
+            .createPast(1, { name: 'My Form' })
             .last()
         });
         const row = mountComponent();
         testType(row, type);
-        await testTarget(row, 'My Form', '/projects/1/forms/a%20b');
+        await testTarget(row, 'My Form', FormLink, (link) => {
+          link.props().form.xmlFormId.should.equal('f');
+        });
       });
     }
 
@@ -292,7 +300,9 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        await testTarget(row, 'people');
+        await testTarget(row, 'people', DatasetLink, (link) => {
+          link.props().should.eql({ projectId: 1, name: 'people' });
+        });
       });
     }
   });

@@ -10,15 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <router-link v-if="canRoute(to)" :to="to" class="link-if-can">
+  <router-link v-if="canRoute(to)" ref="link" :to="to" class="link-if-can">
     <slot></slot>
   </router-link>
-  <span v-else class="link-if-can">
+  <span v-else ref="span" class="link-if-can">
     <slot></slot>
   </span>
 </template>
 
 <script setup>
+import { computed, ref } from 'vue';
+
 import useRoutes from '../composables/routes';
 
 defineProps({
@@ -29,6 +31,12 @@ defineProps({
 });
 
 const { canRoute } = useRoutes();
+
+const link = ref(null);
+const span = ref(null);
+const $el = computed(() => (link.value != null ? link.value.$el : span.value));
+
+defineExpose({ $el });
 </script>
 
 <style lang="scss">

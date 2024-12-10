@@ -55,7 +55,7 @@ const forms = dataStore({
         })
         .last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
-    name = faker.random.boolean() ? faker.name.findName() : null,
+    name = null,
     enketoId = 'xyz',
     draft = !inPast,
     publishedAt = undefined,

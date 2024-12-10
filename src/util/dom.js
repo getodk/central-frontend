@@ -44,6 +44,14 @@ for (const [propName, styleName = propName] of [
 
 export const styleBox = (style) => new StyleBox(style);
 
+// Returns `true` if the text of the element is truncated and `false` if not.
+// Works with both the text-overflow and the line-clamp mixins. `element` must
+// be a block element.
+export const truncatesText = (element) =>
+  (element.scrollWidth > element.clientWidth ||
+  (element.scrollHeight > element.clientHeight &&
+  getComputedStyle(element)['-webkit-line-clamp'] !== 'none'));
+
 export const requiredLabel = (text, required) => {
   const star = required ? ' *' : '';
   return `${text}${star}`;

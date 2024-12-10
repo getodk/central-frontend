@@ -33,7 +33,7 @@ implementation of the Bootstrap plugins. We could also consider implementing our
 own popover functionality, perhaps using Popper.
 -->
 <template>
-  <div class="popover-content-source">
+  <div class="popover-content-source" aria-hidden="true">
     <slot></slot>
   </div>
 </template>
@@ -89,7 +89,8 @@ export default {
           html: true,
           placement: this.placement,
           trigger: 'manual',
-          animation: false
+          animation: false,
+          sanitize: false
         })
         .popover('show'));
     },
@@ -122,6 +123,7 @@ export default {
 @import '../assets/scss/variables';
 
 .popover {
+  background-color: transparent;
   border: none;
   box-shadow: $box-shadow-popover;
   font-family: inherit;
@@ -132,5 +134,13 @@ export default {
 }
 
 .popover-content { padding: 0; }
-.popover-content-source { display: none; }
+
+// We don't want this element to be visible, but we also can't specify
+// `display: none`. In some cases, we need to measure the width of the content
+// that will be shown in the popover.
+.popover-content-source {
+  position: fixed;
+  left: -1000px;
+  top: 0;
+}
 </style>

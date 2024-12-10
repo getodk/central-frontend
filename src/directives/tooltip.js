@@ -80,6 +80,7 @@ is asynchronous, so you must use `await`. For example:
 import { computePosition, detectOverflow, flip, inline, offset } from '@floating-ui/dom';
 
 import { noop } from '../util/util';
+import { truncatesText } from '../util/dom';
 
 const types = ['text', 'aria-describedby', 'aria-label', 'sr-only', 'no-aria'];
 const placements = ['top', 'right', 'bottom', 'left'];
@@ -180,12 +181,7 @@ class Tooltip {
         // safeguard.
         if (closestBlock == null || closestBlock === document.body) return null;
       }
-      // Check whether the text is truncated.
-      if (closestBlock.scrollWidth > closestBlock.clientWidth ||
-        (closestBlock.scrollHeight > closestBlock.clientHeight &&
-        getComputedStyle(closestBlock)['-webkit-line-clamp'] !== 'none'))
-        return this.anchor.innerText;
-      return null;
+      return truncatesText(closestBlock) ? this.anchor.innerText : null;
     }
     if (this.type === 'aria-label')
       return this.anchor.getAttribute('aria-label');

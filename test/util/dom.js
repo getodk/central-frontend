@@ -6,6 +6,14 @@ export const textWithout = (wrapper, selector) => {
   return without.textContent.trim();
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FINDING ELEMENTS
+
+// Returns a Vue Test Utils wrapper that does not exist.
+const nonexistentWrapper = (component) => component.find('div:not(div)');
+
 // Searches a component for a nav tab whose text matches the specified text. The
 // component must contain a PageBody component.
 export const findTab = (component, text) => {
@@ -24,6 +32,15 @@ export const findTab = (component, text) => {
     if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === text)
       return tab;
   }
-  // Return a wrapper that does not exist.
-  return component.find('div:not(div)');
+  return nonexistentWrapper(component);
+};
+
+export const findDd = (component, dtText) => {
+  const dtdd = component.findAll('dt, dd');
+  const index = dtdd.findIndex(wrapper => wrapper.element.tagName === 'DT' &&
+    wrapper.text() === dtText);
+  if (index === -1 || index === dtdd.length)
+    return nonexistentWrapper(component);
+  const dd = dtdd[index + 1];
+  return dd.element.tagName === 'DD' ? dd : nonexistentWrapper(component);
 };

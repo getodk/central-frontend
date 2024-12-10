@@ -15,7 +15,8 @@ except according to the terms contained in the LICENSE file.
       <span v-if="showIcon" class="icon-database"></span>
     </td>
     <td colspan="2" class="dataset-name">
-      <router-link :to="datasetPath(project.id, dataset.name)" v-tooltip.text>{{ dataset.name }}</router-link>
+      <dataset-link :project-id="project.id" :name="dataset.name"
+        v-tooltip.text/>
     </td>
     <td colspan="2" class="conflicts-count">
       <span v-tooltip.no-aria="dataset.conflicts > 0 ? null : $t('common.conflicts')">
@@ -47,10 +48,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { DateTime } from 'luxon';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import DatasetLink from '../dataset/link.vue';
 import DateTimeComponent from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
@@ -82,10 +84,7 @@ const lastEntityTooltip = computed(() => {
   const formatted = formatDateTime(DateTime.fromISO(lastEntity));
   return `${header}\n${formatted}`;
 });
-
 </script>
-
-
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
