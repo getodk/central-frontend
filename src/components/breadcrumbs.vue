@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <template v-for="(link, index) in links" :key="index">
       <div class="breadcrumb-item" v-tooltip.text>
         <router-link :to="link.path">
-        {{ link.text }}
+          {{ link.text }}
           <span v-if="link.icon" :class="link.icon"></span>
         </router-link>
       </div>
@@ -50,9 +50,9 @@ defineProps({
   font-size: 14px;
   max-width: 275px;
 
-  [class*='icon'] {
+  a [class^="icon-"] {
     margin-left: 5px;
-    margin-right: 0px !important
+    margin-right: 0;
   }
 }
 
