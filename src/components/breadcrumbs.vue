@@ -11,13 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="breadcrumbs">
-    <div v-for="(link, index) in links" :key="index" class="breadcrumb-item">
-      <router-link :to="link.path">
-      {{ link.text }}
-        <span v-if="link.icon" :class="link.icon"></span>
-      </router-link>
+    <template v-for="(link, index) in links" :key="index">
+      <div class="breadcrumb-item" v-tooltip.text>
+        <router-link :to="link.path">
+          {{ link.text }}
+          <span v-if="link.icon" :class="link.icon"></span>
+        </router-link>
+      </div>
       <span class="separator">/</span>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -44,11 +46,13 @@ defineProps({
 }
 
 .breadcrumb-item {
+  @include text-overflow-ellipsis;
   font-size: 14px;
-  color: #bbb;
+  max-width: 275px;
 
-  [class*='icon'] {
+  a [class^="icon-"] {
     margin-left: 5px;
+    margin-right: 0;
   }
 }
 
@@ -57,7 +61,7 @@ defineProps({
 }
 
 .separator {
-  margin-left: 3px;
-  margin-right: 5px;
+  padding: 0px 9px;
+  color: #bbb;
 }
 </style>

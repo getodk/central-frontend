@@ -148,7 +148,8 @@
     "yesProceed": "はい、続けます。",
     "showPreview": "プレビュー",
     "hidePreview": "プレビューを隠す",
-    "upload": "アップロード"
+    "upload": "アップロード",
+    "restore": "復元"
   },
   "field": {
     "comment": "コメントを残す...",
@@ -161,7 +162,6 @@
     "passphrase": "パスフレーズ",
     "password": "パスワード",
     "passwordConfirm": "新しいパスワード（確認用）",
-    "reviewState": "レビュー・ステータス",
     "type": "タイプ"
   },
   "header": {
@@ -257,6 +257,7 @@
       "overview": "概要"
     },
     "total": "全期間",
+    "reviewState": "レビュー・ステータス",
     "status": "ステータス",
     "version": "バージョン"
   },

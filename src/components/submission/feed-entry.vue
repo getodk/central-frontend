@@ -511,7 +511,9 @@ export default {
           "reviewState": "Rejetée"
         }
       },
-      "comment": "Commentaire de {name}"
+      "comment": "Commentaire de {name}",
+      "delete": "Supprimée par {name}",
+      "undelete": "Restaurée par {name}"
     }
   },
   "id": {
