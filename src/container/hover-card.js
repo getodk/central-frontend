@@ -16,7 +16,7 @@ that manages reactive state for the hover card. There is only ever a single
 hover card shown at a time.
 
 This hover card object is how the useHoverCard() composable communicates with
-the HoverCards component. The object is included in the container object, but
+the HoverCards component. The object is included in the `container` object, but
 most components will not use it directly. Most components should use the
 useHoverCard() composable instead.
 */
@@ -51,7 +51,7 @@ class HoverCardData {
   }
 
   show(anchor, type, data = null) { this.#set(anchor, type, data); }
-  hide() { if (this.state) this.#set(null, null, null); }
+  hide() { this.#set(null, null, null); }
 }
 
 export default () => new HoverCardData();
