@@ -781,38 +781,6 @@ describe('Secondary instances', () => {
 			resourceService.activateFixtures(fixturesDirectory, ['file', 'file-csv']);
 		};
 
-		const activateInlineResources = () => {
-			resourceService.activateResource(
-				{
-					url: xmlAttachmentURL,
-					fileName: xmlAttachmentFileName,
-					mimeType: 'text/xml',
-				},
-				// prettier-ignore
-				t('instance-root',
-					t('instance-item',
-							t('item-label', 'A'),
-							t('item-value', 'a')),
-					t('instance-item',
-							t('item-label', 'B'),
-							t('item-value', 'b'))).asXml()
-			);
-			resourceService.activateResource(
-				{
-					url: csvAttachmentURL,
-					fileName: csvAttachmentFileName,
-					mimeType: 'text/csv',
-				},
-				// prettier-ignore
-				[
-					'item-label,item-value',
-					'Y,y',
-					'Z,z',
-					'\n\r\n'
-				].join('\n')
-			);
-		};
-
 		let fixturesDirectory: string;
 		let resourceService: JRResourceService;
 
@@ -848,22 +816,6 @@ describe('Secondary instances', () => {
 			expect(scenario.answerOf('/data/first')).toEqualAnswer(stringAnswer('a'));
 		});
 
-		// This test is redundant to the one above, but demonstrates how we could
-		// define form attachments inline, like we do form definitions—a pattern
-		// worth considering if we want to expand external secondary instance
-		// support and/or test coverage.
-		it('supports external secondary instances (XML, inline fixture)', async () => {
-			activateInlineResources();
-
-			const scenario = await Scenario.init(formTitle, formDefinition, {
-				resourceService,
-			});
-
-			scenario.answer('/data/first', 'a');
-
-			expect(scenario.answerOf('/data/first')).toEqualAnswer(stringAnswer('a'));
-		});
-
 		it('supports external secondary instances (CSV, file system fixture)', async () => {
 			activateFixtures();
 
@@ -874,18 +826,6 @@ describe('Secondary instances', () => {
 			scenario.answer('/data/second', 'y');
 
 			expect(scenario.answerOf('/data/second')).toEqualAnswer(stringAnswer('y'));
-		});
-
-		it('supports external secondary instances (CSV, inline fixture)', async () => {
-			activateInlineResources();
-
-			const scenario = await Scenario.init(formTitle, formDefinition, {
-				resourceService,
-			});
-
-			scenario.answer('/data/second', 'z');
-
-			expect(scenario.answerOf('/data/second')).toEqualAnswer(stringAnswer('z'));
 		});
 	});
 
