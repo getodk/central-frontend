@@ -28,6 +28,7 @@ import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
+import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
@@ -116,7 +117,12 @@ export class PrimaryInstance
 	readonly evaluator: EngineXPathEvaluator;
 	override readonly contextNode = this;
 
-	constructor(scope: ReactiveScope, model: ModelDefinition, engineConfig: InstanceConfig) {
+	constructor(
+		scope: ReactiveScope,
+		model: ModelDefinition,
+		secondaryInstances: SecondaryInstancesDefinition,
+		engineConfig: InstanceConfig
+	) {
 		const { root: definition } = model;
 
 		super(engineConfig, null, definition, {
@@ -131,7 +137,7 @@ export class PrimaryInstance
 		const evaluator = new EngineXPathEvaluator({
 			rootNode: this,
 			itextTranslationsByLanguage: model.itextTranslations,
-			secondaryInstancesById: model.secondaryInstances,
+			secondaryInstancesById: secondaryInstances,
 		});
 
 		const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(

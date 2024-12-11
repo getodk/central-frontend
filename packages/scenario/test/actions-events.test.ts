@@ -1117,8 +1117,8 @@ describe('Actions/Events', () => {
 	 * what we might want to change, such as providing a more direct mechanism to
 	 * influence the resolution of geolocation data for testing purposes (hint:
 	 * it'll probably be configurable in a very similar same way to the
-	 * `fetchResource` engine config option), I also thought it worth mentioning
-	 * these thoughts in anticipation of working on the feature:
+	 * `fetchFormDefinition` engine config option), I also thought it worth
+	 * mentioning these thoughts in anticipation of working on the feature:
 	 *
 	 * - Any web-native solution will almost certainly be async.
 	 *

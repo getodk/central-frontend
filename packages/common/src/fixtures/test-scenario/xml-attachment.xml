@@ -1,0 +1,10 @@
+<instance-root>
+  <instance-item>
+    <item-label>A</item-label>
+    <item-value>a</item-value>
+  </instance-item>
+  <instance-item>
+    <item-label>B</item-label>
+    <item-value>b</item-value>
+  </instance-item>
+</instance-root>

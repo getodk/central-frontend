@@ -14,6 +14,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { BodyDefinition } from '../../src/parse/body/BodyDefinition.ts';
 import { ModelDefinition } from '../../src/parse/model/ModelDefinition.ts';
 import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
+import { XFormDOM } from '../../src/parse/XFormDOM.ts';
 
 describe('XFormDefinition', () => {
 	const FORM_TITLE = 'Minimal XForm';
@@ -48,7 +49,9 @@ describe('XFormDefinition', () => {
 			)
 		);
 
-		xformDefinition = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+
+		xformDefinition = new XFormDefinition(xformDOM);
 	});
 
 	it('defines the form title', () => {

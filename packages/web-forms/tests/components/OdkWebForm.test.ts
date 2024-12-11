@@ -13,6 +13,9 @@ const mountComponent = (formXML: string) => {
 	const component = mount(OdkWebForm, {
 		props: {
 			formXml: formXML,
+			fetchFormAttachment: () => {
+				throw new Error('Not exercised here');
+			},
 		},
 		global: globalMountOptions,
 		attachTo: document.body,

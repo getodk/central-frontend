@@ -54,6 +54,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
+    "papaparse": "^5.4.1",
     "solid-js": "^1.9.1"
   },
   "devDependencies": {
@@ -61,6 +62,7 @@
     "@getodk/tree-sitter-xpath": "0.1.2",
     "@getodk/xpath": "0.2.1",
     "@playwright/test": "^1.47.2",
+    "@types/papaparse": "^5.3.15",
     "@vitest/browser": "^2.1.1",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.0",
     "http-server": "^14.1.1",

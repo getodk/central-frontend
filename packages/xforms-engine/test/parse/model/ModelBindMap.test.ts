@@ -12,6 +12,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { BindDefinition } from '../../../src/parse/model/BindDefinition.ts';
 import type { ModelBindMap } from '../../../src/parse/model/ModelBindMap.ts';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
+import { XFormDOM } from '../../../src/parse/XFormDOM.ts';
 
 describe('ModelBindMap', () => {
 	let binds: ModelBindMap;
@@ -50,7 +51,8 @@ describe('ModelBindMap', () => {
 			),
 			body()
 		);
-		const form = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+		const form = new XFormDefinition(xformDOM);
 
 		binds = form.model.binds;
 	});

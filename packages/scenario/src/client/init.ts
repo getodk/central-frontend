@@ -1,3 +1,4 @@
+import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type {
 	EngineConfig,
@@ -8,6 +9,7 @@ import type {
 import { initializeForm } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
 import { createRoot, getOwner, runWithOwner } from 'solid-js';
+import type { MissingResourceBehavior } from '../../../xforms-engine/dist/client/constants';
 import { FormDefinitionResource } from '../jr/resource/FormDefinitionResource.ts';
 
 /**
@@ -48,16 +50,18 @@ export const getFormResource = async (
  * @todo Currently we stub resource fetching. We can address this as needed
  * while we port existing tests and/or add new ones which require it.
  */
-const fetchResourceStub: typeof fetch = () => {
-	throw new Error('TODO: resource fetching not implemented');
+const fetchFormDefinitionStub: typeof fetch = () => {
+	throw new Error('TODO: fetching form definition not implemented');
 };
 
 export interface InitializeTestFormOptions {
+	readonly resourceService: JRResourceService;
+	readonly missingResourceBehavior: MissingResourceBehavior;
 	readonly stateFactory: OpaqueReactiveObjectFactory;
 }
 
 const defaultConfig = {
-	fetchResource: fetchResourceStub,
+	fetchFormDefinition: fetchFormDefinitionStub,
 } as const satisfies Omit<EngineConfig, 'stateFactory'>;
 
 interface InitializedTestForm {
@@ -82,6 +86,8 @@ export const initializeTestForm = async (
 			return initializeForm(formResource, {
 				config: {
 					...defaultConfig,
+					fetchFormAttachment: options.resourceService.handleRequest,
+					missingResourceBehavior: options.missingResourceBehavior,
 					stateFactory: options.stateFactory,
 				},
 			});

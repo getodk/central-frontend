@@ -175,10 +175,11 @@ describe('ExternalSecondaryInstanceParseTest.java', () => {
 		 * - Insofar as we may find ourselves implementing similar logic (albeit
 		 *   serving other purposes), how can we establish a clear interface
 		 *   contract around behaviors like this? Should it be more consistent? Does
-		 *   our current {@link EngineConfig.fetchResource} option—configurable in
-		 *   {@link InitializeFormOptions}—provide enough informational surface area
-		 *   to communicate such intent (and allow both clients and engine alike to
-		 *   have clarity of that intent at call/handling sites)?
+		 *   our current {@link EngineConfig.fetchFormDefinition}
+		 *   option—configurable in {@link InitializeFormOptions}—provide enough
+		 *   informational surface area to communicate such intent (and allow both
+		 *   clients and engine alike to have clarity of that intent at
+		 *   call/handling sites)?
 		 *
 		 * - - -
 		 *

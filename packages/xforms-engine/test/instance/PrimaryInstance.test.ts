@@ -11,21 +11,25 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { FetchResource } from '../../src/client/EngineConfig.ts';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from '../../src/client/RootNode.ts';
+import { MISSING_RESOURCE_BEHAVIOR } from '../../src/client/constants.ts';
+import type { FetchResource } from '../../src/client/resources.ts';
 import { PrimaryInstance } from '../../src/instance/PrimaryInstance.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 import { createReactiveScope, type ReactiveScope } from '../../src/lib/reactivity/scope.ts';
 import { createUniqueId } from '../../src/lib/unique-id.ts';
+import { XFormDOM } from '../../src/parse/XFormDOM.ts';
 import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
+import { SecondaryInstancesDefinition } from '../../src/parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { reactiveTestScope } from '../helpers/reactive/internal.ts';
 
 describe('PrimaryInstance engine representation of instance state', () => {
 	let scope: ReactiveScope;
 	let xformDefinition: XFormDefinition;
+	let secondaryInstances: SecondaryInstancesDefinition;
 
 	beforeEach(() => {
 		scope = createReactiveScope();
@@ -58,7 +62,10 @@ describe('PrimaryInstance engine representation of instance state', () => {
 			)
 		);
 
-		xformDefinition = new XFormDefinition(xform.asXml());
+		const xformDOM = XFormDOM.from(xform.asXml());
+
+		xformDefinition = new XFormDefinition(xformDOM);
+		secondaryInstances = SecondaryInstancesDefinition.loadSync(xformDOM);
 	});
 
 	afterEach(() => {
@@ -75,9 +82,11 @@ describe('PrimaryInstance engine representation of instance state', () => {
 	// directly, with caution.
 	const createPrimaryInstance = (stateFactory: OpaqueReactiveObjectFactory): PrimaryInstance => {
 		return scope.runTask(() => {
-			return new PrimaryInstance(scope, xformDefinition.model, {
+			return new PrimaryInstance(scope, xformDefinition.model, secondaryInstances, {
 				createUniqueId,
-				fetchResource,
+				fetchFormAttachment: fetchResource,
+				fetchFormDefinition: fetchResource,
+				missingResourceBehavior: MISSING_RESOURCE_BEHAVIOR.DEFAULT,
 				stateFactory,
 			});
 		});

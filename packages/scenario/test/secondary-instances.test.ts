@@ -1,3 +1,6 @@
+import { xformAttachmentFixturesByDirectory } from '@getodk/common/fixtures/xform-attachments.ts';
+import { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
+import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import {
 	bind,
 	body,
@@ -14,7 +17,10 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
+import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';
@@ -84,33 +90,25 @@ describe('Secondary instances', () => {
 			 *    (`answerOf` return value) to be `equalTo(null)`. It seems likely
 			 *    given the form's shape that the intent is to check that the field is
 			 *    present and its value is blank, at that point in time.
-			 *
-			 * 3. (HUNCH ONLY!) I'm betting this failure is related to the form's
-			 *    `current()` sub-expression (which I doubt is being accounted for in
-			 *    dependency analysis, and is therefore failing to establish a
-			 *    reactive subscription within the engine).
 			 */
 			// JR: `doNotGetConfused`
-			it.fails(
-				"[re]computes separately within each respective repeat instance, when the predicate's dependencies affecting that node change",
-				async () => {
-					const scenario = await Scenario.init('repeat-secondary-instance.xml');
+			it("[re]computes separately within each respective repeat instance, when the predicate's dependencies affecting that node change", async () => {
+				const scenario = await Scenario.init('repeat-secondary-instance.xml');
 
-					scenario.createNewRepeat('/data/repeat');
-					scenario.createNewRepeat('/data/repeat');
+				scenario.createNewRepeat('/data/repeat');
+				scenario.createNewRepeat('/data/repeat');
 
-					scenario.answer('/data/repeat[1]/choice', 'a');
+				scenario.answer('/data/repeat[1]/choice', 'a');
 
-					expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
-					// assertThat(scenario.answerOf('/data/repeat[2]/calculate'), equalTo(null));
-					expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('');
+				expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
+				// assertThat(scenario.answerOf('/data/repeat[2]/calculate'), equalTo(null));
+				expect(scenario.answerOf('/data/repeat[2]/calculate').getValue()).toBe('');
 
-					scenario.answer('/data/repeat[2]/choice', 'b');
+				scenario.answer('/data/repeat[2]/choice', 'b');
 
-					expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
-					expect(scenario.answerOf('/data/repeat[2]/calculate').getValue()).toBe('B');
-				}
-			);
+				expect(scenario.answerOf('/data/repeat[1]/calculate').getValue()).toBe('A');
+				expect(scenario.answerOf('/data/repeat[2]/calculate').getValue()).toBe('B');
+			});
 		});
 
 		describe('predicates on different child names', () => {
@@ -534,7 +532,7 @@ describe('Secondary instances', () => {
 					 *
 					 * - Typical `getDisplayText` -> `getValue`
 					 */
-					it.fails('can be selected', async () => {
+					it('can be selected', async () => {
 						configureReferenceManagerCorrectly();
 
 						const scenario = await Scenario.init(r('external-select-geojson.xml'));
@@ -558,11 +556,6 @@ describe('Secondary instances', () => {
 				 * Potentially test elsewhere and/or as integration test.
 				 */
 				it.todo('itemsFromExternalSecondaryCSVInstance_ShouldBeAvailableToXPathParser');
-
-				/**
-				 * **PORTING NOTES** (speculative addition)
-				 */
-				it.todo('can select itemset values');
 			});
 		});
 
@@ -622,16 +615,6 @@ describe('Secondary instances', () => {
 		});
 
 		describe('CSV secondary instance with header only', () => {
-			/**
-			 * **PORTING NOTES**
-			 *
-			 * Should probably fail pending feature support. Currently passes because
-			 * this is the expected behavior:
-			 *
-			 * - Without support for external secondary instances (and CSV)
-			 *
-			 * - Without producing an error in their absence
-			 */
 			it('parses without error', async () => {
 				configureReferenceManagerCorrectly();
 
@@ -691,24 +674,388 @@ describe('Secondary instances', () => {
 		 */
 		it.todo('dummyNodesInExternalInstanceDeclaration_ShouldBeIgnored');
 
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * This sub-suite has been updated to reflect different semantics and expectations for missing external secondary instances between JavaRosa and Web Forms:
+		 *
+		 * - By default, Web Forms will fail to initialize a form when any of the external secondary instances are missing (i.e. with HTTP 404 semantics).
+		 *
+		 * - By optional configuration, Web Forms may ignore missing external secondary instances, treating them as blank.
+		 */
 		describe('//region Missing external file', () => {
+			// JR: emptyPlaceholderInstanceIsUsed_whenExternalInstanceNotFound
+			it.fails(
+				'[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found',
+				async () => {
+					configureReferenceManagerIncorrectly();
+
+					const scenario = await Scenario.init('external-select-csv.xml');
+
+					expect(scenario.choicesOf('/data/first').size()).toBe(0);
+				}
+			);
+
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * Should probably fail pending feature support. Currently passes because
-			 * this is the expected behavior:
-			 *
-			 * - Without support for external secondary instances (and CSV)
-			 *
-			 * - Without producing an error in their absence
+			 * Supplemental, exercises configured override of default missing resource
+			 * behavior.
 			 */
-			it('[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found', async () => {
+			it('uses an empty/blank placeholder when not found, and when overriding configuration is specified', async () => {
 				configureReferenceManagerIncorrectly();
 
-				const scenario = await Scenario.init('external-select-csv.xml');
+				const scenario = await Scenario.init(
+					'Missing resource treated as blank',
+					// prettier-ignore
+					html(
+						head(
+							title('Missing resource treated as blank'),
+							model(
+								mainInstance(
+									t('data id="missing-resource-treated-as-blank"',
+										t('first'))),
+
+								t('instance id="external-csv" src="jr://file-csv/missing.csv"'),
+
+								bind('/data/first').type('string')
+							)
+						),
+						body(
+							select1Dynamic(
+								'/data/first',
+								"instance('external-csv')/root/item"
+							)
+						)
+					),
+					{
+						missingResourceBehavior: ENGINE_CONSTANTS.MISSING_RESOURCE_BEHAVIOR.BLANK,
+					}
+				);
 
 				expect(scenario.choicesOf('/data/first').size()).toBe(0);
 			});
 		});
+	});
+
+	describe('basic external secondary instance support', () => {
+		const xmlAttachmentFileName = 'xml-attachment.xml';
+		const xmlAttachmentURL = `jr://file/${xmlAttachmentFileName}` as const;
+		const csvAttachmentFileName = 'csv-attachment.csv';
+		const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
+		const formTitle = 'External secondary instance (XML and CSV)';
+		const formDefinition = html(
+			head(
+				title(formTitle),
+				model(
+					// prettier-ignore
+					mainInstance(
+						t('data id="external-secondary-instance-xml-csv"',
+							t('first'),
+							t('second'))),
+
+					t(`instance id="external-xml" src="${xmlAttachmentURL}"`),
+					t(`instance id="external-csv" src="${csvAttachmentURL}"`),
+
+					bind('/data/first').type('string'),
+					bind('/data/second').type('string')
+				)
+			),
+			body(
+				select1Dynamic(
+					'/data/first',
+					"instance('external-xml')/instance-root/instance-item",
+					'item-value',
+					'item-label'
+				),
+				select1Dynamic(
+					'/data/second',
+					"instance('external-csv')/root/item",
+					'item-value',
+					'item-label'
+				)
+			)
+		);
+
+		const activateFixtures = () => {
+			resourceService.activateFixtures(fixturesDirectory, ['file', 'file-csv']);
+		};
+
+		let fixturesDirectory: string;
+		let resourceService: JRResourceService;
+
+		beforeEach(() => {
+			const scenarioFixturesDirectory = Array.from(xformAttachmentFixturesByDirectory.keys()).find(
+				(key) => {
+					return key.endsWith('/test-scenario');
+				}
+			);
+
+			if (scenarioFixturesDirectory == null) {
+				throw new Error(`Failed to get file system path for fixtures directory: "test-scenario"`);
+			}
+
+			fixturesDirectory = scenarioFixturesDirectory;
+
+			resourceService = new JRResourceService();
+		});
+
+		afterEach(() => {
+			resourceService.reset();
+		});
+
+		it('supports external secondary instances (XML, file system fixture)', async () => {
+			activateFixtures();
+
+			const scenario = await Scenario.init(formTitle, formDefinition, {
+				resourceService,
+			});
+
+			scenario.answer('/data/first', 'a');
+
+			expect(scenario.answerOf('/data/first')).toEqualAnswer(stringAnswer('a'));
+		});
+
+		it('supports external secondary instances (CSV, file system fixture)', async () => {
+			activateFixtures();
+
+			const scenario = await Scenario.init(formTitle, formDefinition, {
+				resourceService,
+			});
+
+			scenario.answer('/data/second', 'y');
+
+			expect(scenario.answerOf('/data/second')).toEqualAnswer(stringAnswer('y'));
+		});
+	});
+
+	describe('CSV parsing', () => {
+		const BOM = '\ufeff';
+		type BOM = typeof BOM;
+
+		// prettier-ignore
+		type ColumnDelimiter =
+			| ','
+			| ';'
+			| '\t'
+			| '|';
+
+		// prettier-ignore
+		type RowDelimiter =
+			| '\n'
+			| '\r'
+			| '\r\n';
+
+		type ExpectedFailure = 'parse' | 'select-value';
+
+		interface CSVCase {
+			readonly description: string;
+
+			/** @default ',' */
+			readonly columnDelimiter?: PartiallyKnownString<ColumnDelimiter>;
+
+			/** @default '\n' */
+			readonly rowDelimiter?: PartiallyKnownString<RowDelimiter>;
+
+			/** @default '' */
+			readonly bom?: BOM | '';
+
+			/** @default 0 */
+			readonly columnPadding?: number;
+
+			/** @default null */
+			readonly expectedFailure?: ExpectedFailure | null;
+
+			/** @default null */
+			readonly surprisingSuccessWarning?: string | null;
+		}
+
+		const csvCases: readonly CSVCase[] = [
+			{
+				description: 'BOM is not treated as part of first column header',
+				bom: BOM,
+			},
+			{
+				description: 'column delimiter: semicolon',
+				columnDelimiter: ';',
+			},
+			{
+				description: 'column delimiter: tab',
+				columnDelimiter: '\t',
+			},
+			{
+				description: 'column delimiter: pipe',
+				columnDelimiter: '|',
+			},
+			{
+				description: 'unsupported column delimiter: $',
+				columnDelimiter: '$',
+				expectedFailure: 'parse',
+			},
+			{
+				description: 'row delimiter: LF',
+				rowDelimiter: '\n',
+			},
+			{
+				description: 'row delimiter: CR',
+				rowDelimiter: '\r',
+			},
+			{
+				description: 'row delimiter: CRLF',
+				rowDelimiter: '\r\n',
+			},
+			{
+				description: 'unsupported row delimiter: LFLF',
+				rowDelimiter: `\n\n`,
+				expectedFailure: 'parse',
+			},
+
+			{
+				description: 'somewhat surprisingly supported row delimiter: LFCR',
+				rowDelimiter: `\n\r`,
+				surprisingSuccessWarning:
+					"LFCR is not an expected line separator in any known-common usage. It's surprising that Papaparse does not fail parsing this case, at least parsing rows!",
+			},
+
+			{
+				description: 'whitespace padding around column delimiter is not ignored (by default)',
+				columnDelimiter: ',',
+				columnPadding: 1,
+				expectedFailure: 'select-value',
+			},
+		];
+
+		// Note: this isn't set up with `describe.each` because it would create a superfluous outer description where the inner description must be applied with `it` (to perform async setup)
+		csvCases.forEach(
+			({
+				description,
+				columnDelimiter = ',',
+				rowDelimiter = '\n',
+				bom = '',
+				columnPadding = 0,
+				expectedFailure = null,
+				surprisingSuccessWarning = null,
+			}) => {
+				const LOWER_ALPHA_ASCII_LETTER_COUNT = 26;
+				const lowerAlphaASCIILetters = Array.from(
+					{
+						length: LOWER_ALPHA_ASCII_LETTER_COUNT,
+					},
+					(_, i) => {
+						return String.fromCharCode(i + 97);
+					}
+				);
+
+				type CSVRow = readonly [itemLabel: string, itemValue: string];
+
+				const rows: readonly CSVRow[] = [
+					['item-label', 'item-value'],
+
+					...lowerAlphaASCIILetters.map((letter): CSVRow => {
+						return [letter.toUpperCase(), letter];
+					}),
+				];
+				const baseCSVFixture = rows
+					.map((row) => {
+						const padding = ' '.repeat(columnPadding);
+						const delimiter = `${padding}${columnDelimiter}${padding}`;
+
+						return row.join(delimiter);
+					})
+					.join(rowDelimiter);
+
+				const csvAttachmentFileName = 'csv-attachment.csv';
+				const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
+				const formTitle = 'External secondary instance (CSV)';
+				const formDefinition = html(
+					head(
+						title(formTitle),
+						model(
+							// prettier-ignore
+							mainInstance(
+						t('data id="external-secondary-instance-csv"',
+							t('letter'))),
+
+							t(`instance id="external-csv" src="${csvAttachmentURL}"`),
+
+							bind('/data/letter').type('string')
+						)
+					),
+					body(
+						select1Dynamic(
+							'/data/letter',
+							"instance('external-csv')/root/item",
+							'item-value',
+							'item-label'
+						)
+					)
+				);
+
+				let resourceService: JRResourceService;
+
+				beforeEach(() => {
+					resourceService = new JRResourceService();
+				});
+
+				afterEach(() => {
+					resourceService.reset();
+				});
+
+				it(description, async () => {
+					let csvFixture: string;
+
+					if (bom === '') {
+						csvFixture = baseCSVFixture;
+					} else {
+						const blob = new Blob([bom, baseCSVFixture]);
+
+						csvFixture = await getBlobText(blob);
+					}
+
+					resourceService.activateResource(
+						{
+							url: csvAttachmentURL,
+							fileName: csvAttachmentFileName,
+							mimeType: 'text/csv',
+						},
+						csvFixture
+					);
+
+					const letterIndex = Math.floor(Math.random() * LOWER_ALPHA_ASCII_LETTER_COUNT);
+					const letter = lowerAlphaASCIILetters[letterIndex]!;
+
+					const initScenario = async (): Promise<Scenario> => {
+						return await Scenario.init(formTitle, formDefinition, {
+							resourceService,
+						});
+					};
+
+					if (expectedFailure === 'parse') {
+						const initParseFailure = async () => {
+							await initScenario();
+						};
+
+						await expect(initParseFailure).rejects.toThrowError();
+
+						return;
+					}
+
+					if (surprisingSuccessWarning != null) {
+						// eslint-disable-next-line no-console
+						console.warn(surprisingSuccessWarning);
+					}
+
+					const scenario = await initScenario();
+
+					scenario.answer('/data/letter', letter);
+
+					if (expectedFailure === 'select-value') {
+						expect(scenario.answerOf('/data/letter')).toEqualAnswer(stringAnswer(''));
+					} else {
+						expect(scenario.answerOf('/data/letter')).toEqualAnswer(stringAnswer(letter));
+					}
+				});
+			}
+		);
 	});
 });

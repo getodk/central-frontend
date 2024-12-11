@@ -15,6 +15,7 @@ import {
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { BodyDefinition } from '../../../src/parse/body/BodyDefinition.ts';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
+import { XFormDOM } from '../../../src/parse/XFormDOM.ts';
 
 describe('BodyDefinition', () => {
 	let bodyDefinition: BodyDefinition;
@@ -175,7 +176,9 @@ describe('BodyDefinition', () => {
 				)
 			)
 		);
-		const xformDefinition = new XFormDefinition(xform.asXml());
+
+		const xformDOM = XFormDOM.from(xform.asXml());
+		const xformDefinition = new XFormDefinition(xformDOM);
 
 		bodyDefinition = xformDefinition.body;
 	});
