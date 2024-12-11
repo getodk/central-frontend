@@ -1,5 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { ValueType } from '../../client/ValueType.ts';
+import type { DecodeInstanceValue } from '../../instance/internal-api/InstanceValueContext.ts';
 import type { SimpleAtomicState } from '../reactivity/types.ts';
 
 type CodecEncoder<RuntimeInputValue> = (input: RuntimeInputValue) => string;
@@ -36,6 +37,19 @@ type RuntimeValueStateFactory<
 	decodeValue: CodecDecoder<RuntimeValue>
 ) => CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
 
+type DecodeInstanceValueFactory<
+	RuntimeValue extends RuntimeInputValue,
+	RuntimeInputValue = RuntimeValue,
+> = (
+	encodeValue: CodecEncoder<RuntimeInputValue>,
+	decodeValue: CodecDecoder<RuntimeValue>
+) => DecodeInstanceValue;
+
+interface ValueCodecOptions<RuntimeValue extends RuntimeInputValue, RuntimeInputValue> {
+	readonly decodeInstanceValueFactory?: DecodeInstanceValueFactory<RuntimeValue, RuntimeInputValue>;
+	readonly runtimeValueStateFactory?: RuntimeValueStateFactory<RuntimeValue, RuntimeInputValue>;
+}
+
 export abstract class ValueCodec<
 	V extends ValueType,
 	RuntimeValue extends RuntimeInputValue,
@@ -63,16 +77,30 @@ export abstract class ValueCodec<
 		};
 	};
 
+	protected readonly defaultDecodeInstanceValueFactory: DecodeInstanceValueFactory<
+		RuntimeValue,
+		RuntimeInputValue
+	> = (encodeValue, decodeValue) => {
+		return (instanceValue) => {
+			return encodeValue(decodeValue(instanceValue));
+		};
+	};
+
+	readonly decodeInstanceValue: DecodeInstanceValue;
 	readonly createRuntimeValueState: CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
 
 	constructor(
 		readonly valueType: V,
 		readonly encodeValue: CodecEncoder<RuntimeInputValue>,
 		readonly decodeValue: CodecDecoder<RuntimeValue>,
-		runtimeValueStateFactory: NoInfer<
-			RuntimeValueStateFactory<RuntimeValue, RuntimeInputValue>
-		> = this.defaultRuntimeValueStateFactory
+		options: ValueCodecOptions<RuntimeValue, RuntimeInputValue> = {}
 	) {
+		const {
+			decodeInstanceValueFactory = this.defaultDecodeInstanceValueFactory,
+			runtimeValueStateFactory = this.defaultRuntimeValueStateFactory,
+		} = options;
+
+		this.decodeInstanceValue = decodeInstanceValueFactory(encodeValue, decodeValue);
 		this.createRuntimeValueState = runtimeValueStateFactory(encodeValue, decodeValue);
 	}
 }

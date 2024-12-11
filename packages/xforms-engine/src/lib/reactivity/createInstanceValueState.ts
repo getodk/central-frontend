@@ -39,7 +39,9 @@ const getInitialValue = (
 	const { initialValueSource = 'FORM_DEFAULT' } = options;
 
 	if (initialValueSource === 'FORM_DEFAULT') {
-		return context.definition.defaultValue;
+		const { defaultValue } = context.definition;
+
+		return context.decodeInstanceValue(defaultValue);
 	}
 
 	throw new ErrorProductionDesignPendingError('Edit implementation pending');
@@ -122,8 +124,9 @@ const createCalculation = (
 		createComputed(() => {
 			if (context.isAttached() && context.isRelevant()) {
 				const calculated = calculate();
+				const value = context.decodeInstanceValue(calculated);
 
-				setRelevantValue(calculated);
+				setRelevantValue(value);
 			}
 		});
 	});

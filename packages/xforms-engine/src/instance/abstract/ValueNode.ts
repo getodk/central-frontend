@@ -22,6 +22,10 @@ import { createValidationState } from '../../lib/reactivity/validation/createVal
 import { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import type {
+	DecodeInstanceValue,
+	InstanceValueContext,
+} from '../internal-api/InstanceValueContext.ts';
 import type { ClientReactiveSubmittableValueNode } from '../internal-api/submission/ClientReactiveSubmittableValueNode.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
@@ -47,6 +51,7 @@ export abstract class ValueNode<
 		BaseValueNode<V, RuntimeValue>,
 		XFormsXPathElement,
 		EvaluationContext,
+		InstanceValueContext,
 		ValidationContext,
 		ClientReactiveSubmittableValueNode
 {
@@ -62,6 +67,9 @@ export abstract class ValueNode<
 	// InstanceNode
 	protected abstract override readonly state: SharedNodeState<ValueNodeStateSpec<RuntimeValue>>;
 	protected abstract override readonly engineState: EngineState<ValueNodeStateSpec<RuntimeValue>>;
+
+	// InstanceValueContext
+	readonly decodeInstanceValue: DecodeInstanceValue;
 
 	// BaseValueNode
 	abstract override readonly nodeType: ValueNodeType;
@@ -83,8 +91,11 @@ export abstract class ValueNode<
 		super(parent, definition);
 
 		this.valueType = definition.valueType;
+		this.decodeInstanceValue = codec.decodeInstanceValue;
 
-		const instanceValueState = createInstanceValueState(this);
+		const instanceValueState = createInstanceValueState(this, {
+			initialValueSource: 'FORM_DEFAULT',
+		});
 		const valueState = codec.createRuntimeValueState(instanceValueState);
 
 		const [getInstanceValue] = instanceValueState;

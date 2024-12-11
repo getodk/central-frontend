@@ -11,6 +11,9 @@ import { ValueCodec } from './ValueCodec.ts';
  */
 export class ValueTypePlaceholderCodec<V extends ValueType> extends ValueCodec<V, string, string> {
 	constructor(valueType: V) {
-		super(valueType, identity, identity, () => identity);
+		super(valueType, identity, identity, {
+			decodeInstanceValueFactory: () => identity,
+			runtimeValueStateFactory: () => identity,
+		});
 	}
 }
