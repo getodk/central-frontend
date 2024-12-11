@@ -44,12 +44,6 @@ export interface EngineConfig {
 	readonly fetchFormDefinition?: FetchResource;
 
 	/**
-	 * @deprecated
-	 * @alias fetchFormDefinition
-	 */
-	readonly fetchResource?: FetchResource;
-
-	/**
 	 * A client may specify an arbitrary {@link fetch}-like function to retrieve a
 	 * form's attachments, i.e. any `jr:` URL referenced by the form (as specified
 	 * by {@link https://getodk.github.io/xforms-spec/ | ODK XForms}).

@@ -24,7 +24,7 @@ interface InitializeFormOptions extends BaseInitializeFormOptions {
 const buildInstanceConfig = (options: EngineConfig = {}): InstanceConfig => {
 	return {
 		createUniqueId,
-		fetchFormDefinition: options.fetchFormDefinition ?? options.fetchResource ?? fetch,
+		fetchFormDefinition: options.fetchFormDefinition ?? fetch,
 		fetchFormAttachment: options.fetchFormAttachment ?? fetch,
 		missingResourceBehavior: options.missingResourceBehavior ?? MISSING_RESOURCE_BEHAVIOR.DEFAULT,
 		stateFactory: options.stateFactory ?? identity,

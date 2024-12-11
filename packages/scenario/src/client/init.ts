@@ -50,8 +50,8 @@ export const getFormResource = async (
  * @todo Currently we stub resource fetching. We can address this as needed
  * while we port existing tests and/or add new ones which require it.
  */
-const fetchResourceStub: typeof fetch = () => {
-	throw new Error('TODO: resource fetching not implemented');
+const fetchFormDefinitionStub: typeof fetch = () => {
+	throw new Error('TODO: fetching form definition not implemented');
 };
 
 export interface InitializeTestFormOptions {
@@ -61,7 +61,7 @@ export interface InitializeTestFormOptions {
 }
 
 const defaultConfig = {
-	fetchResource: fetchResourceStub,
+	fetchFormDefinition: fetchFormDefinitionStub,
 } as const satisfies Omit<EngineConfig, 'stateFactory'>;
 
 interface InitializedTestForm {
