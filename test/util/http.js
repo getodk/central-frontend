@@ -415,7 +415,7 @@ class MockHttp {
   }
 
   respondWithData(callback) {
-    return this.respond(() => ({ status: 200, data: callback() }));
+    return this.respond(() => ({ status: 200, data: callback(), headers: new Map([['date', new Date()]]) }));
   }
 
   respondWithSuccess() {
