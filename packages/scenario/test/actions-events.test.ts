@@ -714,20 +714,19 @@ describe('Actions/Events', () => {
 			/**
 			 * **PORTING NOTES** (alternate)
 			 *
-			 * As expected, this fails. It could be made to pass by updating the
-			 * pertinent {@link Scenario.answer} casting logic, but that just feels
-			 * like cheating.
+			 * With support for `int` bind types, this test is now passing, and is
+			 * updated to reflect that fact. However, since the test itself isn't
+			 * especially clear about the intended functionality being exercised, this
+			 * commit also introduces new tests in `bind-data-types.test.ts`
+			 * exercising that (and related) functionality more clearly.
 			 */
-			it.fails(
-				"(alternate) casts a decimal/fractional value to an integer [which controls a repeat's `jr:count`]",
-				async () => {
-					const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+			it("(alternate) casts a decimal/fractional value to an integer [which controls a repeat's `jr:count`]", async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
 
-					scenario.answer('/data/repeat-count', 2.5);
+				scenario.answer('/data/repeat-count', 2.5);
 
-					expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
-				}
-			);
+				expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
+			});
 
 			it("(alternate) assigns a non-fractional integer-as-float-number [which controls a repeat's `jr:count`]", async () => {
 				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
