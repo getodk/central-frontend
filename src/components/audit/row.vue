@@ -29,7 +29,9 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="target">
       <template v-if="target != null">
-        <router-link v-if="target.path != null" :to="target.path"
+        <component v-if="target.component != null" :is="target.component"
+          v-bind="target.props" v-tooltip.text/>
+        <router-link v-else-if="target.path != null" :to="target.path"
           v-tooltip.text>
           {{ target.title }}
         </router-link>
@@ -47,7 +49,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { pick } from 'ramda';
+
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
+import FormLink from '../form/link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
@@ -88,10 +94,13 @@ const acteeSpeciesByCategory = {
   },
   form: {
     title: (actee) => (actee.name != null ? actee.name : actee.xmlFormId),
-    path: (actee, { primaryFormPath }) => primaryFormPath(actee)
+    component: FormLink,
+    props: (actee) => ({ form: actee })
   },
   dataset: {
-    title: (actee) => actee.name
+    title: (actee) => actee.name,
+    component: DatasetLink,
+    props: pick(['projectId', 'name'])
   },
   public_link: {
     title: getDisplayName
@@ -107,7 +116,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { ActorLink, DateTime, Selectable },
+  components: { ActorLink, DatasetLink, DateTime, FormLink, Selectable },
   props: {
     audit: {
       type: Object,
@@ -116,8 +125,8 @@ export default {
   },
   setup() {
     const { actionMessage } = useAudit();
-    const { projectPath, primaryFormPath, userPath } = useRoutes();
-    return { actionMessage, projectPath, primaryFormPath, userPath };
+    const { projectPath, userPath } = useRoutes();
+    return { actionMessage, projectPath, userPath };
   },
   computed: {
     // When an audit log action has multiple parts/segments, we treat it as
@@ -144,18 +153,23 @@ export default {
       if (this.category == null) return null;
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
+
       const { actee } = this.audit;
-
-      // purged actee (used purgedName as title)
-      if (actee.purgedAt != null)
-        return { title: actee.purgedName, purged: true };
-
-      const title = species.title(actee);
-      // soft-deleted actee (use species title but don't make a link)
-      if (actee.deletedAt != null) return { title, deleted: true };
-
-      const result = { title };
-      if (species.path != null) result.path = species.path(actee, this);
+      const deleted = actee.deletedAt != null;
+      const purged = actee.purgedAt != null;
+      const result = {
+        title: purged ? actee.purgedName : species.title(actee),
+        deleted,
+        purged
+      };
+      if (!(deleted || purged)) {
+        if (species.path != null) {
+          result.path = species.path(actee, this);
+        } else if (species.component != null) {
+          result.component = species.component;
+          result.props = species.props(actee);
+        }
+      }
       return result;
     },
     details() {

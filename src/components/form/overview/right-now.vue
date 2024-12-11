@@ -52,9 +52,8 @@ except according to the terms contained in the LICENSE file.
             <tbody>
               <tr v-for="(dataset) in linkedDatasets" :key="dataset">
                 <td>
-                  <router-link :to="datasetPath(form.projectId, dataset)" v-tooltip.text>
-                    {{ dataset }}
-                  </router-link>
+                  <dataset-link :project-id="form.projectId" :name="dataset"
+                    v-tooltip.text/>
                 </td>
               </tr>
             </tbody>
@@ -80,11 +79,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DatasetLink from '../../dataset/link.vue';
+import DatasetSummary from '../../dataset/summary.vue';
 import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';
 import FormVersionString from '../../form-version/string.vue';
 import PageSection from '../../page/section.vue';
 import SummaryItem from '../../summary-item.vue';
-import DatasetSummary from '../../dataset/summary.vue';
 
 import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
@@ -92,22 +92,20 @@ import { useRequestData } from '../../../request-data';
 export default {
   name: 'FormOverviewRightNow',
   components: {
+    DatasetLink,
+    DatasetSummary,
     FormVersionStandardButtons,
     FormVersionString,
     PageSection,
-    SummaryItem,
-    DatasetSummary
+    SummaryItem
   },
   emits: ['view-xml'],
   setup() {
     // The component assumes that this data will exist when the component is
     // created.
     const { form, publishedAttachments, formDatasetDiff } = useRequestData();
-    const { formPath, datasetPath } = useRoutes();
-    return {
-      form, publishedAttachments, formDatasetDiff,
-      formPath, datasetPath
-    };
+    const { formPath } = useRoutes();
+    return { form, publishedAttachments, formDatasetDiff, formPath };
   },
   computed: {
     stateIcon() {
