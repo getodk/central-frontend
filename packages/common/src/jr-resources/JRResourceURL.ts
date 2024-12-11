@@ -30,7 +30,7 @@ export class JRResourceURL extends URL {
 	}
 
 	static isJRResourceReference(reference: string | null): reference is JRResourceURLString {
-		return reference?.startsWith('jr:') ?? false;
+		return reference?.startsWith(JR_RESOURCE_URL_PROTOCOL) ?? false;
 	}
 
 	declare readonly protocol: JRResourceURLProtocol;
