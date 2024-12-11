@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
 
     <a class="btn btn-primary"
       href="https://docs.getodk.org/central-upgrade/"
-      target="_blank" rel="noopener"
+      target="_blank"
       v-tooltip.aria-describedby="$t('instructionsToUpgradeTooltip')">
         {{ $t('instructionsToUpgrade') }}
     </a>
@@ -45,9 +45,9 @@ defineOptions({
 
 const container = inject('container');
 const { i18n: globalI18n } = container;
-const languageSubtag = computed(() => new Intl.Locale(globalI18n.locale).language);
+const locale = computed(() => globalI18n.locale);
 
-const iframeSrc = computed(() => `https://sadiqkhoja.com/central/outdated-version.html?version=${centralVersion.data?.currentVersion}&lang=${languageSubtag.value}`);
+const iframeSrc = computed(() => `https://sadiqkhoja.com/central/outdated-version.html?version=${centralVersion.data?.currentVersion}&lang=${locale.value}`);
 
 const showBanner = computed(() => {
   // user is not logged in or doesn't have ability to set config (implying not an admin)
@@ -57,7 +57,7 @@ const showBanner = computed(() => {
   // User has seen the warning in the last 30 days, so don't show it again
   // 864E5 is the number of milliseconds in a day
   const dismissDate = currentUser.preferences?.site?.outdatedVersionWarningDismissDate;
-  if (dismissDate && centralVersion.currentDate.getTime() < (dismissDate.getTime() + (864E5 * 30))) return false;
+  if (dismissDate && centralVersion.currentDate.getTime() < (new Date(dismissDate).getTime() + (864E5 * 30))) return false;
 
   // Difference between current year and Central version year is less than 2
   const centralVersionYear = Number(centralVersion.currentVersion.match(/^(\d{4})/)[1]);
@@ -83,7 +83,7 @@ const dismiss = () => {
   text-align: center;
   width: 700px;
   margin: 20px auto;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: $box-shadow-popover;
 
   iframe {
     border-width: 0;
@@ -104,9 +104,9 @@ const dismiss = () => {
   {
     "en": {
       // This is a title for the outdated version banner shown for the screenreaders only
-      "title": "Outdate Version",
+      "title": "Outdated Version",
       "instructionsToUpgrade": "Instructions to upgrade",
-      "instructionsToUpgradeTooltip": "Click here to see the instructions to upgrade the Central",
+      "instructionsToUpgradeTooltip": "Click here to see instructions to upgrade Central",
       "dismiss": "Dismiss for 30 days",
       "dismissTooltip": "Click here to dismiss this warning for 30 days."
     }

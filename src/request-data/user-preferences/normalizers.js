@@ -43,7 +43,7 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
     // Backend to Frontend
     const isoDateRegex = /^\d{4}-\d{2}-\d{2}([T](\d{2}:\d{2}:\d{2}(\.\d+)?Z)?)?$/;
     if (typeof (val) === 'string' && isoDateRegex.test(val)) {
-      return new Date(val);
+      return val;
     }
 
     return null;

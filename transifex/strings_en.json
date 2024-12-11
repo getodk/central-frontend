@@ -2256,6 +2256,19 @@
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": "You’re using a significantly outdated version of ODK Central"
+        },
+        "sentence1": {
+          "string": "Upgrade now to protect your data and take advantage of the latest features."
+        },
+        "sentence2": {
+          "string": "If you don’t want to maintain Central, try {OdkCloudLink}."
+        }
+      }
+    },
     "FeedbackButton": {
       "feedback": {
         "string": "Feedback",
@@ -3622,14 +3635,14 @@
     },
     "OutdatedVersionBanner": {
       "title": {
-        "string": "Outdate Version",
+        "string": "Outdated Version",
         "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
       },
       "instructionsToUpgrade": {
         "string": "Instructions to upgrade"
       },
       "instructionsToUpgradeTooltip": {
-        "string": "Click here to see the instructions to upgrade the Central"
+        "string": "Click here to see instructions to upgrade Central"
       },
       "dismiss": {
         "string": "Dismiss for 30 days"
