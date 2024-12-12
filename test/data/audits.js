@@ -14,6 +14,8 @@ const actionsWithDefaultActor = new Set([
   'entity.update.version',
   'entity.update.resolve',
   'submission.create',
+  'submission.delete',
+  'submission.restore',
   'submission.update',
   'submission.update.version',
   'user.session.create'
@@ -26,6 +28,7 @@ const defaultActee = (action) => {
     action === 'entity.update.resolve')
     return extendedDatasets.last();
   if (action === 'submission.create' || action === 'submission.update' ||
+    action === 'submission.delete' || action === 'submission.restore' ||
     action === 'submission.update.version')
     return extendedForms.last();
   if (action === 'user.session.create')

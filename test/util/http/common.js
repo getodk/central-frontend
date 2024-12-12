@@ -21,7 +21,7 @@ export function testRequests(expectedConfigs) {
         (config.method ?? 'GET').should.equal(expectedConfig.method ?? 'GET');
 
         if (typeof expectedConfig.url === 'function') {
-          expectedConfig.url.call(null, config.url, relativeUrl(config.url));
+          expectedConfig.url.call(null, relativeUrl(config.url));
           // Replace expectedConfig.url now that config.url has passed
           // validation. This is needed because withAuth() expects the URL.
           expectedConfig.url = config.url;

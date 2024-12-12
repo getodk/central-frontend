@@ -28,7 +28,9 @@ except according to the terms contained in the LICENSE file.
     <template v-else-if="$route.meta.standalone">
       <router-view/>
     </template>
+
     <div id="tooltips"></div>
+    <hover-cards/>
   </div>
 </template>
 
@@ -51,6 +53,7 @@ export default {
   name: 'App',
   components: {
     Alert,
+    HoverCards: defineAsyncComponent(loadAsync('HoverCards')),
     Navbar,
     FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
     OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))

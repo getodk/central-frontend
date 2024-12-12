@@ -1,4 +1,5 @@
 import ProjectDatasetRow from '../../../src/components/project/dataset-row.vue';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 
 import useProjects from '../../../src/request-data/projects';
@@ -41,8 +42,9 @@ describe('ProjectDatasetRow', () => {
 
   it('links to dataset page', () => {
     testData.extendedDatasets.createPast(1, { name: 'people' });
-    const link = mountComponent().getComponent('.dataset-name a');
-    link.props().to.should.equal('/projects/1/entity-lists/people');
+    const component = mountComponent();
+    const link = component.get('.dataset-name').getComponent(DatasetLink);
+    link.props().should.eql({ projectId: 1, name: 'people' });
   });
 
   it('shows the correct time since the last entity', async () => {

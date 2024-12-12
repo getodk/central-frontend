@@ -11,16 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="entity.dataExists" :to="datasetPath('entities')">
-      <template #title>{{ $t('back.title') }}</template>
-      <template #back>{{ $t('back.back', { datasetName }) }}</template>
-    </page-back>
-    <page-head v-show="entity.dataExists">
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+    <page-head v-show="dataExists">
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
     </page-head>
     <page-body>
-      <loading :state="entity.initiallyLoading"/>
-      <div v-show="entity.dataExists" class="row">
+      <loading :state="initiallyLoading"/>
+      <div v-show="dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
           <entity-data @update="updateModal.show()"/>
@@ -45,10 +42,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, provide } from 'vue';
+import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import Breadcrumbs from '../breadcrumbs.vue';
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
 import EntityBranchData from './branch-data.vue';
@@ -56,7 +54,6 @@ import EntityData from './data.vue';
 import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -90,9 +87,10 @@ provide('projectId', props.projectId);
 provide('datasetName', props.datasetName);
 provide('uuid', props.uuid);
 
-const { project, dataset } = useRequestData();
+const { project, dataset, resourceStates } = useRequestData();
 const { entity, audits } = useEntity();
 const entityVersions = useEntityVersions();
+const { initiallyLoading, dataExists } = resourceStates([project, entity]);
 
 Promise.allSettled([
   entity.request({
@@ -141,7 +139,7 @@ const afterUpdate = (updatedEntity) => {
 const deleteModal = modalData();
 const { request, awaitingResponse } = useRequest();
 const router = useRouter();
-const { datasetPath } = useRoutes();
+const { datasetPath, projectPath } = useRoutes();
 const { t } = useI18n();
 const requestDelete = () => {
   request({
@@ -157,6 +155,13 @@ const requestDelete = () => {
 };
 
 const branchData = modalData();
+
+const breadcrumbLinks = computed(() => [
+  { text: project.nameWithArchived, path: projectPath() },
+  { text: t('resource.entities'), path: projectPath('entity-lists'), icon: 'icon-database' },
+  { text: props.datasetName, path: datasetPath('entities') },
+]);
+
 </script>
 
 <i18n lang="json5">

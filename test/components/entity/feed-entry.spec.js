@@ -2,9 +2,12 @@ import { RouterLinkStub } from '@vue/test-utils';
 import { last } from 'ramda';
 
 import ActorLink from '../../../src/components/actor-link.vue';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import EntityDiff from '../../../src/components/entity/diff.vue';
 import EntityFeedEntry from '../../../src/components/entity/feed-entry.vue';
 import FeedEntry from '../../../src/components/feed-entry.vue';
+import SubmissionLink from '../../../src/components/submission/link.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import useEntity from '../../../src/request-data/entity';
 import useEntityVersions from '../../../src/request-data/entity-versions';
@@ -98,10 +101,17 @@ describe('EntityFeedEntry', () => {
       });
 
       it('links to the submission', () => {
-        const component = mountComponent({ props: createSubmission() });
+        const component = mountComponent({
+          props: createSubmission({
+            meta: { instanceName: 'Some Name' }
+          })
+        });
         const title = component.get('.feed-entry-title');
-        const { to } = title.getComponent(RouterLinkStub).props();
-        to.should.equal('/projects/1/forms/f/submissions/s');
+        const link = title.getComponent(SubmissionLink);
+        link.props().should.include({ projectId: '1', xmlFormId: 'f' });
+        const { submission } = link.props();
+        submission.instanceId.should.equal('s');
+        submission.currentVersion.instanceName.should.equal('Some Name');
       });
 
       it('links to the submitter', () => {
@@ -134,9 +144,7 @@ describe('EntityFeedEntry', () => {
         const component = mountComponent({
           props: createSubmission({ deleted: true })
         });
-        const links = component.findAllComponents(RouterLinkStub);
-        links.length.should.equal(1);
-        links[0].props().to.should.startWith('/users/');
+        component.findComponent(SubmissionLink).exists().should.be.false;
       });
     });
   });
@@ -147,9 +155,9 @@ describe('EntityFeedEntry', () => {
     });
 
     it('shows the correct icon', () => {
-      const component = mountComponent();
-      const icon = component.find('.feed-entry-title .icon-check-circle');
-      icon.exists().should.be.true;
+      const title = mountComponent().get('.feed-entry-title');
+      const { value } = title.getComponent(SubmissionReviewState).props();
+      value.should.equal('approved');
     });
 
     it('shows the correct text', () => {
@@ -216,8 +224,10 @@ describe('EntityFeedEntry', () => {
 
       it('links to the dataset', () => {
         const title = mountComponent().get('.feed-entry-title');
-        const { to } = title.getComponent(RouterLinkStub).props();
-        to.should.equal('/projects/1/entity-lists/trees');
+        title.getComponent(DatasetLink).props().should.eql({
+          projectId: '1',
+          name: 'trees'
+        });
       });
     });
 
@@ -260,8 +270,10 @@ describe('EntityFeedEntry', () => {
 
     it('links to the dataset in the top of the event block', () => {
       const title = mountComponent().get('.feed-entry-title .bulk-event');
-      const { to } = title.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/entity-lists/trees');
+      title.getComponent(DatasetLink).props().should.eql({
+        projectId: '1',
+        name: 'trees'
+      });
     });
 
     it('shows the correct text in bottom of event block', () => {
@@ -379,10 +391,17 @@ describe('EntityFeedEntry', () => {
       });
 
       it('links to the submission', () => {
-        const component = mountComponent({ props: updateEntityFromSubmission() });
+        const component = mountComponent({
+          props: updateEntityFromSubmission({
+            meta: { instanceName: 'Some Name' }
+          })
+        });
         const title = component.get('.feed-entry-title');
-        const { to } = title.getComponent(RouterLinkStub).props();
-        to.should.equal('/projects/1/forms/f/submissions/s');
+        const link = title.getComponent(SubmissionLink);
+        link.props().should.include({ projectId: '1', xmlFormId: 'f' });
+        const { submission } = link.props();
+        submission.instanceId.should.equal('s');
+        submission.currentVersion.instanceName.should.equal('Some Name');
       });
 
       it('shows the correct text with deleted submission instance id', () => {
@@ -396,8 +415,7 @@ describe('EntityFeedEntry', () => {
         const component = mountComponent({
           props: updateEntityFromSubmission({ deleted: true })
         });
-        const links = component.findAllComponents(RouterLinkStub);
-        links.length.should.equal(1); // only link is anchor link on version tag
+        component.findComponent(SubmissionLink).exists().should.be.false;
       });
     });
   });

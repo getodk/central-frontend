@@ -18,7 +18,14 @@ except according to the terms contained in the LICENSE file.
     <td><date-time :iso="submission.__system.submissionDate"/></td>
     <td v-if="!draft && !deleted" class="state-and-actions">
       <div class="col-content">
-        <span class="state"><span :class="stateIcon"></span>{{ stateText }}</span>
+        <span class="state">
+          <template v-if="missingAttachment">
+            <span class="icon-circle-o"></span>
+            <span>{{ $t('submission.missingAttachment') }}</span>
+          </template>
+          <submission-review-state v-else
+            :value="submission.__system.reviewState" align/>
+        </span>
         <span class="edits">
           <template v-if="submission.__system.edits !== 0">
             <span class="icon-pencil"></span>
@@ -76,15 +83,15 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
+import Spinner from '../spinner.vue';
+import SubmissionReviewState from './review-state.vue';
 
-import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
-import Spinner from '../spinner.vue';
 
 export default {
   name: 'SubmissionMetadataRow',
-  components: { DateTime, Spinner },
+  components: { DateTime, Spinner, SubmissionReviewState },
   props: {
     projectId: {
       type: String,
@@ -114,25 +121,14 @@ export default {
     awaitingResponse: Boolean
   },
   setup() {
-    const { reviewStateIcon } = useReviewState();
     const { submissionPath } = useRoutes();
-    return { reviewStateIcon, submissionPath };
+    return { submissionPath };
   },
   computed: {
     missingAttachment() {
       const { __system } = this.submission;
       return __system.reviewState == null &&
         __system.attachmentsPresent !== __system.attachmentsExpected;
-    },
-    stateIcon() {
-      return this.missingAttachment
-        ? 'icon-circle-o'
-        : this.reviewStateIcon(this.submission.__system.reviewState);
-    },
-    stateText() {
-      return this.missingAttachment
-        ? this.$t('submission.missingAttachment')
-        : this.$t(`reviewState.${this.submission.__system.reviewState}`);
     },
     editPath() {
       return apiPaths.editSubmission(
@@ -171,17 +167,13 @@ export default {
   .state {
     margin-right: 15px;
 
-    .icon-comments { margin-right: $margin-right-icon; }
-    .icon-circle-o, .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {
+    .icon-circle-o {
+      color: $color-warning;
       margin-left: 1px;
       margin-right: #{$margin-right-icon + 1px};
     }
 
-    .icon-circle-o, .icon-comments { color: $color-warning; }
-    .icon-dot-circle-o { color: #999; }
     .icon-pencil { color: #777; }
-    .icon-check-circle { color: $color-success; }
-    .icon-times-circle { color: $color-danger; }
   }
   .edits {
     color: #777;

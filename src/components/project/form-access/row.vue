@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <template v-if="frozen">
       <td class="project-form-access-row-form-name">
         <span v-if="form.publishedAt == null" class="icon-edit" v-tooltip.sr-only></span>
-        <router-link :to="primaryFormPath(form)" v-tooltip.text>{{ form.nameOrId }}</router-link>
+        <form-link :form="form" v-tooltip.text/>
         <span v-if="form.publishedAt == null" class="sr-only">&nbsp;{{ $t('draftTitle') }}</span>
       </td>
       <td>
@@ -50,11 +50,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import FormLink from '../../form/link.vue';
+
 import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectFormAccessRow',
+  components: { FormLink },
   props: {
     form: {
       type: Object,

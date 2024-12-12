@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #data-scrolling="{ data }">
       <submission-data-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data" :fields="fields"/>
+        :draft="draft" :submission="data" :fields="fields" :deleted="deleted"/>
     </template>
   </table-freeze>
 </template>
@@ -132,17 +132,20 @@ defineExpose({ afterReview, afterDelete });
   },
   "de": {
     "header": {
-      "stateAndActions": "Status und Aktionen"
+      "stateAndActions": "Status und Aktionen",
+      "deletedAt": "Gelöscht am"
     }
   },
   "es": {
     "header": {
-      "stateAndActions": "Estado y acciones"
+      "stateAndActions": "Estado y acciones",
+      "deletedAt": "Suprimido el"
     }
   },
   "fr": {
     "header": {
-      "stateAndActions": "État et actions"
+      "stateAndActions": "État et actions",
+      "deletedAt": "Supprimé à"
     }
   },
   "id": {
@@ -152,7 +155,8 @@ defineExpose({ afterReview, afterDelete });
   },
   "it": {
     "header": {
-      "stateAndActions": "Stato e azioni"
+      "stateAndActions": "Stato e azioni",
+      "deletedAt": "Eliminato il"
     }
   },
   "ja": {

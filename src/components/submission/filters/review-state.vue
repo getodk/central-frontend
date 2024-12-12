@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <multiselect id="submission-filters-review-state" :model-value="modelValue"
-    :options="options" default-to-all :label="$t('field.reviewState')"
+    :options="options" default-to-all :label="$t('common.reviewState')"
     :placeholder="placeholder" :all="$t('action.select.all')"
     :none="$t('action.select.none')"
     @update:model-value="$emit('update:modelValue', $event)"/>

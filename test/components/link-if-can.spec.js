@@ -19,6 +19,7 @@ describe('LinkIfCan', () => {
     const link = component.getComponent(RouterLinkStub);
     link.props().to.should.equal('/users');
     link.get('span').text().should.equal('Some span text');
+    component.vm.$el.should.equal(link.element);
   });
 
   it('renders a span if the user cannot navigate to the location', () => {
@@ -31,6 +32,7 @@ describe('LinkIfCan', () => {
     component.findComponent(RouterLinkStub).exists().should.be.false;
     component.element.tagName.should.equal('SPAN');
     component.get('span').text().should.equal('Some span text');
+    component.vm.$el.should.equal(component.element);
   });
 
   it('hides an .icon-angle-right if user cannot navigate to location', () => {
