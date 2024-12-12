@@ -78,7 +78,18 @@ export default (container, createResource) => {
   }));
 
   createResource('dataset', () => ({
-    transformResponse: ({ data }) => shallowReactive(data)
+    transformResponse: ({ data }) => {
+      // Add projectId to forms. FormLink expects this property to exist on form
+      // objects.
+      const { projectId } = data;
+      for (const form of data.sourceForms) form.projectId = projectId;
+      for (const form of data.linkedForms) form.projectId = projectId;
+      for (const property of data.properties) {
+        for (const form of property.forms) form.projectId = projectId;
+      }
+
+      return shallowReactive(data);
+    }
   }));
 
   const formDraft = createResource('formDraft', () =>

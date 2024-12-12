@@ -1,25 +1,21 @@
-import { RouterLinkStub } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
-import ConnectionToForm from '../../../../src/components/dataset/overview/connection-to-forms.vue';
+import ConnectionToForms from '../../../../src/components/dataset/overview/connection-to-forms.vue';
 import ExpandableRow from '../../../../src/components/expandable-row.vue';
+import FormLink from '../../../../src/components/form/link.vue';
 
 import testData from '../../../data';
 import { mockRouter } from '../../../util/router';
 import { mount } from '../../../util/lifecycle';
 
-const mountComponent = () => mount(ConnectionToForm, {
-  props: {
-    properties: testData.extendedDatasets.last().properties,
-    sourceForms: testData.extendedDatasets.last().sourceForms,
-    projectId: testData.extendedProjects.first().id.toString()
-  },
+const mountComponent = () => mount(ConnectionToForms, {
   container: {
-    router: mockRouter('/')
+    router: mockRouter('/'),
+    requestData: { dataset: testData.extendedDatasets.last() }
   }
 });
 
-describe('Connection to Forms', () => {
+describe('ConnectionToForms', () => {
   it('shows the creation forms with associated properties', async () => {
     testData.extendedDatasets.createPast(1, {
       name: 'trees',
@@ -62,17 +58,17 @@ describe('Connection to Forms', () => {
     rows[0].get('.title-cell').text().should.be.eql('Tree Registration');
     rows[0].get('.caption-cell').text().should.be.eql('2 of 3 properties');
     rows[0].get('.expanded-row').text().should.be.eql('height, type');
-    rows[0].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration');
+    rows[0].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration');
 
     rows[1].get('.title-cell').text().should.be.eql('Tree Registration Adv');
     rows[1].get('.caption-cell').text().should.be.eql('3 of 3 properties');
     rows[1].get('.expanded-row').text().should.be.eql('height, circumference, type');
-    rows[1].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/tree_registration_adv');
+    rows[1].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration_adv');
 
     rows[2].get('.title-cell').text().should.be.eql('Form with no properties');
     rows[2].get('.caption-cell').text().should.be.eql('0 of 3 properties');
     rows[2].get('.expanded-row').text().should.be.eql('This Form only sets the “label”.');
-    rows[2].getComponent(RouterLinkStub).props().to.should.be.equal('/projects/1/forms/form_with_no_prop');
+    rows[2].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/form_with_no_prop');
   });
 
   it('does not break if there is no forms', () => {
