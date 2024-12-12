@@ -2291,7 +2291,8 @@
           "string": "Upgrade now to protect your data and take advantage of the latest features."
         },
         "sentence2": {
-          "string": "If you don’t want to maintain Central, try {OdkCloudLink}."
+          "string": "If you don’t want to maintain Central, try {OdkCloudLink}.",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
         }
       }
     },
@@ -3659,7 +3660,7 @@
         }
       }
     },
-    "OutdatedVersionBanner": {
+    "OutdatedVersion": {
       "title": {
         "string": "Outdated Version",
         "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"

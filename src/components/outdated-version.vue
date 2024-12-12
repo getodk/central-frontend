@@ -33,21 +33,20 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, inject } from 'vue';
 import { useRequestData } from '../request-data';
-import { useSessions } from '../util/session';
-
-const { visiblyLoggedIn } = useSessions();
 
 const { centralVersion, currentUser } = useRequestData();
 
 defineOptions({
-  name: 'OutdatedVersionBanner'
+  name: 'OutdatedVersion'
 });
+
+const visiblyLoggedIn = inject('visiblyLoggedIn');
 
 const container = inject('container');
 const { i18n: globalI18n } = container;
 const locale = computed(() => globalI18n.locale);
 
-const iframeSrc = computed(() => `https://getodk.github.io/central/outdated-version.html?version=${centralVersion.data?.currentVersion}&lang=${locale.value}`);
+const iframeSrc = computed(() => `https://getodk.github.io/central/outdated-version.html?version=${centralVersion.currentVersion}&lang=${locale.value}`);
 
 const showBanner = computed(() => {
   // user is not logged in or doesn't have ability to set config (implying not an admin)

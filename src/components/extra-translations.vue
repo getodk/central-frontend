@@ -1,5 +1,5 @@
 <!--
-Copyright 2021 ODK Central Developers
+Copyright 2024 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
 
@@ -21,6 +21,8 @@ using existing transifex process.
       "outdatedVersionHtml": {
         "heading": "You’re using a significantly outdated version of ODK Central",
         "sentence1": "Upgrade now to protect your data and take advantage of the latest features.",
+        // {OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is "ODK Cloud",
+        // which doesn't need to be translated.
         "sentence2": "If you don’t want to maintain Central, try {OdkCloudLink}."
       }
     }

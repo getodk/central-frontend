@@ -30,9 +30,9 @@ defineOptions({
 
 const container = inject('container');
 const { i18n: globalI18n } = container;
-const languageSubtag = computed(() => new Intl.Locale(globalI18n.locale).language);
+const locale = computed(() => globalI18n.locale);
 
-const iframeSrc = computed(() => `https://getodk.github.io/central/news.html?outdatedVersionWarning=false&lang=${languageSubtag.value}`);
+const iframeSrc = computed(() => `https://getodk.github.io/central/news.html?outdatedVersionWarning=false&lang=${locale.value}`);
 
 </script>
 

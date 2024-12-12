@@ -415,7 +415,7 @@ class MockHttp {
   }
 
   respondWithData(callback) {
-    return this.respond(() => ({ status: 200, data: callback(), headers: new Map([['date', new Date()]]) }));
+    return this.respond(() => ({ status: 200, data: callback() }));
   }
 
   respondWithSuccess() {
@@ -703,6 +703,7 @@ class MockHttp {
           this._requestResponseLog.push(responseWithoutConfig);
 
           const response = { ...responseWithoutConfig, config };
+          response.headers = new Map([['date', new Date()], ...(response.headers ?? [])]);
           if (response.status >= 200 && response.status < 300)
             resolve(response);
           else
