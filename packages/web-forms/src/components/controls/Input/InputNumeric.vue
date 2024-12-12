@@ -2,7 +2,7 @@
 import type { InputNumberInputEvent } from 'primevue/inputnumber';
 import PrimeInputNumber from 'primevue/inputnumber';
 import type { Ref } from 'vue';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, customRef, inject, ref } from 'vue';
 
 interface NumericNodeState {
 	get required(): boolean;
@@ -21,6 +21,8 @@ interface InputNumericProps {
 	readonly node: NumericNode;
 	readonly numericValue: number | null;
 	readonly setNumericValue: (value: number | null) => void;
+	readonly min?: number;
+	readonly max?: number;
 }
 
 const props = defineProps<InputNumericProps>();
@@ -39,10 +41,65 @@ if (props.node.valueType === 'decimal') {
 	};
 }
 
-const numericValue = ref(props.numericValue);
+/**
+ * Manages component-local state in tandem with the node's state, where:
+ *
+ * - If `min`/`max` are specified, the value is clamped to those prop values
+ * - If assigning node state fails, local state is rolled back to the previous
+ *   state
+ *
+ * In either case, if the value assigned from the input's event handlers (or
+ * `v-model`) differs from the value which will become effective (whether
+ * clamped or rolled back), **local state** assignment is performed in two
+ * stages:
+ *
+ * 1. The value is first assigned the _invalid value_ (reflecting the input's
+ *    current DOM state).
+ * 2. On the next event loop tick, the value is then assigned the effective
+ *    value.
+ *
+ * This must be performed in two ticks to ensure PrimeVue's management of the
+ * DOM state reflects the effective state (otherwise the second assignment is
+ * lost!).
+ */
+const modelValue = customRef<number | null>(() => {
+	const internalValue = ref(props.numericValue);
 
-watchEffect(() => {
-	props.setNumericValue(numericValue.value);
+	const setValidValue = (initialValue: number | null, validValue: number | null) => {
+		internalValue.value = initialValue;
+
+		if (validValue !== initialValue) {
+			queueMicrotask(() => {
+				internalValue.value = validValue;
+			});
+		}
+	};
+
+	return {
+		get: () => {
+			return internalValue.value;
+		},
+		set: (assignedValue) => {
+			let newValue = assignedValue;
+
+			if (newValue != null) {
+				const { min = newValue, max = newValue } = props;
+
+				if (min !== newValue || max !== newValue) {
+					newValue = Math.max(min, Math.min(newValue, max));
+				}
+			}
+
+			try {
+				props.setNumericValue(newValue);
+				setValidValue(assignedValue, newValue);
+			} catch {
+				const previousValue = internalValue.value;
+
+				setValidValue(newValue, previousValue);
+			}
+		},
+	};
 });
 
 const injectRef = <T,>(name: string, defaultValue?: T): Ref<T> => {
@@ -58,30 +115,22 @@ const injectRef = <T,>(name: string, defaultValue?: T): Ref<T> => {
 };
 
 const doneAnswering = injectRef<boolean>('doneAnswering');
-const submitPressed = injectRef<boolean>('submitPressed');
-const isInvalid = injectRef<boolean>('isInvalid');
+const submitPressed = inject<boolean>('submitPressed');
+const isInvalid = inject<boolean>('isInvalid');
 
-/**
- * By default, PrimeVue's `InputText` component applies state changes on every
- * value change, i.e. the `input` event. For `InputNumber`, it only applies
- * state changes on increment/decrement (button press, up/down key), but not
- * from typing arbitrary values. Those changes are only applied by a `change`
- * (or perhaps `blur`) event. We do our best here to apply state changes
- * consistently by handling the `input` event directly.
- */
 const onInput = (event: InputNumberInputEvent) => {
 	doneAnswering.value = false;
 
-	const { value } = event;
+	const { value = null } = event;
 
 	if (value == null || value === '') {
-		props.setNumericValue(null);
+		// props.setNumericValue(null);
+		modelValue.value = null;
+	} else if (typeof value === 'number') {
+		modelValue.value = value;
 	} else {
-		const numberValue = Number(value);
-
-		if (!Number.isNaN(numberValue)) {
-			props.setNumericValue(numberValue);
-		}
+		// TODO: the types suggest this may be a string, but it's not clear how or
+		// why that would ever happen!
 	}
 };
 </script>
@@ -89,7 +138,7 @@ const onInput = (event: InputNumberInputEvent) => {
 <template>
 	<PrimeInputNumber
 		:id="node.nodeId"
-		v-model="numericValue"
+		v-model="modelValue"
 		:required="node.currentState.required"
 		:disabled="node.currentState.readonly"
 		:class="{'inside-highlighted': isInvalid && submitPressed}"

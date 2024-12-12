@@ -3,6 +3,9 @@ import type { IntInputNode } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 import InputNumeric from './InputNumeric.vue';
 
+const MIN_INT_NUMERIC_VALUE = -999_999_999;
+const MAX_INT_NUMERIC_VALUE = 999_999_999;
+
 interface InputIntProps {
 	readonly node: IntInputNode;
 }
@@ -29,5 +32,7 @@ const setNumberValue = (value: number | null): void => {
 		:node="node"
 		:numeric-value="numericValue"
 		:set-numeric-value="setNumberValue"
+		:min="MIN_INT_NUMERIC_VALUE"
+		:max="MAX_INT_NUMERIC_VALUE"
 	/>
 </template>
