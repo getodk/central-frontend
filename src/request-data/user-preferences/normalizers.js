@@ -33,6 +33,21 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
   static projectSortMode(val) {
     return ['alphabetical', 'latest', 'newest'].includes(val) ? val : 'latest';
   }
+
+  static outdatedVersionWarningDismissDate(val) {
+    // Frontend to Backend
+    if (val instanceof Date) {
+      return val.toISOString();
+    }
+
+    // Backend to Frontend
+    const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z?$/;
+    if (typeof (val) === 'string' && isoDateRegex.test(val)) {
+      return val;
+    }
+
+    return null;
+  }
 }
 
 export class ProjectPreferenceNormalizer extends PreferenceNormalizer {

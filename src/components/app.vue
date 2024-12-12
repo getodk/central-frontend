@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
     <navbar v-if="!$route.meta.standalone" v-show="routerReady"/>
+    <outdated-version/>
     <alert id="app-alert"/>
     <feedback-button v-if="showsFeedbackButton"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
@@ -54,7 +55,8 @@ export default {
     Alert,
     HoverCards: defineAsyncComponent(loadAsync('HoverCards')),
     Navbar,
-    FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton'))
+    FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
+    OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))
   },
   inject: ['alert', 'config'],
   setup() {
@@ -94,14 +96,14 @@ export default {
   },
   methods: {
     checkVersion() {
-      const previousVersion = this.centralVersion.data;
+      const previousVersion = this.centralVersion.versionText;
       return this.centralVersion.request({
         url: '/version.txt',
         clear: false,
         alert: false
       })
         .then(() => {
-          if (previousVersion == null || this.centralVersion.data === previousVersion)
+          if (previousVersion == null || this.centralVersion.versionText === previousVersion)
             return false;
 
           // Alert the user about the version change, then keep alerting them.
