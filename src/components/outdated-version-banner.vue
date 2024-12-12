@@ -47,7 +47,7 @@ const container = inject('container');
 const { i18n: globalI18n } = container;
 const locale = computed(() => globalI18n.locale);
 
-const iframeSrc = computed(() => `https://sadiqkhoja.com/central/outdated-version.html?version=${centralVersion.data?.currentVersion}&lang=${locale.value}`);
+const iframeSrc = computed(() => `https://getodk.github.io/central/outdated-version.html?version=${centralVersion.data?.currentVersion}&lang=${locale.value}`);
 
 const showBanner = computed(() => {
   // user is not logged in or doesn't have ability to set config (implying not an admin)
