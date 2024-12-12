@@ -21,7 +21,7 @@ const assertIntBounds = <T extends bigint | null>(value: T): T => {
 	if (value < INT_BOUNDS.MIN || value > INT_BOUNDS.MAX) {
 		throw new ValueTypeInvariantError(
 			'int',
-			`Unable to decode int value from ${JSON.stringify(value)}: expected value to be between ${INT_BOUNDS.MIN} and ${INT_BOUNDS.MAX} (inclusive)`
+			`Unable to decode int value from ${String(value)}: expected value to be between ${INT_BOUNDS.MIN} and ${INT_BOUNDS.MAX} (inclusive)`
 		);
 	}
 
