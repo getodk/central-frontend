@@ -52,7 +52,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormLink from '../../form/link.vue';
 
-import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
 
 export default {
@@ -75,8 +74,7 @@ export default {
   emits: ['update:state', 'update:fieldKeyAccess'],
   setup() {
     const { fieldKeys } = useRequestData();
-    const { primaryFormPath } = useRoutes();
-    return { fieldKeys, primaryFormPath };
+    return { fieldKeys };
   },
   computed: {
     htmlClass() {
