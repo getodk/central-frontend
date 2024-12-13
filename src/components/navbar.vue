@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('analyticsNotice') }}
             </a>
             <ul class="nav navbar-nav">
-              <navbar-help-dropdown/>
+              <navbar-help-dropdown @show-version="versionModal.show()"/>
               <navbar-locale-dropdown/>
               <navbar-actions/>
             </ul>
@@ -40,6 +40,8 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </nav>
+
+    <central-version v-bind="versionModal" @hide="versionModal.hide()"/>
     <analytics-introduction v-if="config.loaded && config.showsAnalytics"
       v-bind="analyticsIntroduction" @hide="analyticsIntroduction.hide()"/>
   </div>
@@ -48,6 +50,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { defineAsyncComponent } from 'vue';
 
+import CentralVersion from './central-version.vue';
 import NavbarActions from './navbar/actions.vue';
 import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
@@ -62,6 +65,7 @@ export default {
   name: 'Navbar',
   components: {
     AnalyticsIntroduction: defineAsyncComponent(loadAsync('AnalyticsIntroduction')),
+    CentralVersion,
     NavbarActions,
     NavbarHelpDropdown,
     NavbarLinks,
@@ -77,6 +81,7 @@ export default {
   },
   data() {
     return {
+      versionModal: modalData(),
       analyticsIntroduction: modalData('AnalyticsIntroduction')
     };
   },

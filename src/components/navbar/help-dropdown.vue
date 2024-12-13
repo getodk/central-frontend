@@ -23,7 +23,9 @@ except according to the terms contained in the LICENSE file.
         <a href="https://forum.getodk.org/" target="_blank">{{ $t('common.forum') }}</a>
       </li>
       <li>
-        <a href="/version.txt" target="_blank">{{ $t('common.version') }}</a>
+        <a href="#" @click.prevent="$emit('show-version')">
+          {{ $t('common.version') }}
+        </a>
       </li>
     </ul>
   </li>
@@ -35,6 +37,7 @@ import DocLink from '../doc-link.vue';
 defineOptions({
   name: 'NavbarHelpDropdown'
 });
+defineEmits(['show-version']);
 </script>
 
 <i18n lang="json5">

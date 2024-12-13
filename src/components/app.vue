@@ -45,9 +45,10 @@ import Navbar from './navbar.vue';
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
 import useFeatureFlags from '../composables/feature-flags';
+import { loadAsync } from '../util/load-async';
+import { noop } from '../util/util';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
-import { loadAsync } from '../util/load-async';
 
 export default {
   name: 'App',
@@ -73,9 +74,12 @@ export default {
 
     const { features } = useFeatureFlags();
 
-    const { centralVersion } = useRequestData();
+    const { centralVersion, createResource } = useRequestData();
+    // Used to re-fetch version.txt in order to check for a version change.
+    const latestVersion = createResource('latestVersion');
+
     const { callWait } = useCallWait();
-    return { visiblyLoggedIn, centralVersion, callWait, features };
+    return { visiblyLoggedIn, centralVersion, latestVersion, callWait, features };
   },
   computed: {
     routerReady() {
@@ -87,23 +91,28 @@ export default {
     },
   },
   created() {
+    setTimeout(this.requestVersion, 15000);
     this.callWait('checkVersion', this.checkVersion, (tries) =>
-      (tries === 0 ? 15000 : 60000));
+      (tries === 0 ? 75000 : 60000));
   },
   // Reset backgroundColor after each test.
   beforeUnmount() {
     document.documentElement.style.backgroundColor = '';
   },
   methods: {
-    checkVersion() {
-      const previousVersion = this.centralVersion.versionText;
-      return this.centralVersion.request({
+    requestVersion() {
+      this.centralVersion.request({
         url: '/version.txt',
-        clear: false,
+        resend: false,
         alert: false
-      })
+      }).catch(noop);
+    },
+    checkVersion() {
+      if (!this.centralVersion.dataExists)
+        return !this.centralVersion.awaitingResponse;
+      return this.latestVersion.request({ url: '/version.txt', alert: false })
         .then(() => {
-          if (previousVersion == null || this.centralVersion.versionText === previousVersion)
+          if (this.latestVersion.data === this.centralVersion.versionText)
             return false;
 
           // Alert the user about the version change, then keep alerting them.
@@ -116,10 +125,7 @@ export default {
           );
           return true;
         })
-        // This error could be the result of logout, which will cancel all
-        // requests.
-        .catch(error =>
-          (error.response != null && error.response.status === 404));
+        .catch(noop);
     },
     hideAlertAfterClick(event) {
       if (this.alert.state && event.target.closest('a[target="_blank"]') != null &&
