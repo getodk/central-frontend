@@ -488,10 +488,12 @@ export default {
   align-items: center;
   display: flex;
   flex-wrap: wrap-reverse;
-  // This is 10px of space between actions on the row and also 10px between
-  // rows if the actions start wrapping.
+  // This results in 10px of space between elements on the row, as well as 10px
+  // between rows if elements start wrapping. The main example of that is that
+  // the download button can wrap above the other actions if the viewport is not
+  // wide enough.
   gap: 10px;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 
   .form-inline {
     margin-bottom: 0;
@@ -500,18 +502,20 @@ export default {
 }
 #submission-field-dropdown {
   // This is the entire spacing between the dropdown and the filters to its
-  // left. Since they're both children of the form, the flexbox gap doesn't
-  // apply to them.
+  // left. Since they're both child elements of the form, the flexbox gap does
+  // not apply to them.
   margin-left: 15px;
   // Additional space between the dropdown and the refresh button
   margin-right: 5px;
 }
-#submission-download-button {
-  margin-left: auto;
-}
+#submission-download-button { margin-left: auto; }
 
+// Adjust the spacing between actions on the draft testing page.
 #submission-list-test-in-browser {
   ~ .form-inline {
+    // It is possible for .form-inline to be :empty, but we still render it so
+    // that the buttons that follow it are shown on the righthand side of the
+    // page.
     margin-left: auto;
 
     #submission-field-dropdown {
