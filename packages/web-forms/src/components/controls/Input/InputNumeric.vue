@@ -35,13 +35,24 @@ interface FractionalDigitOptions {
 	readonly max?: number;
 }
 
-let fractionalDigits: FractionalDigitOptions = {};
+let fractionalDigits: FractionalDigitOptions;
+
+/**
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode}
+ */
+type NumericInputMode = 'decimal' | 'numeric';
+
+let inputMode: NumericInputMode;
 
 if (props.isDecimal) {
 	fractionalDigits = {
 		min: 0,
 		max: 18,
 	};
+	inputMode = 'decimal';
+} else {
+	fractionalDigits = {};
+	inputMode = 'numeric';
 }
 
 /**
@@ -149,6 +160,11 @@ const onInput = (event: InputNumberInputEvent) => {
 		:min-fraction-digits="fractionalDigits.min"
 		:max-fraction-digits="fractionalDigits.max"
 		:use-grouping="node.appearances['thousands-sep']"
+		:pt="{
+			input: {
+				root: { inputMode }
+			}
+		}"
 		@input="onInput"
 		@blur="doneAnswering = true"
 	/>
