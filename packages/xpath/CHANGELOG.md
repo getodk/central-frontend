@@ -1,5 +1,18 @@
 # @getodk/xpath
 
+## 0.3.0
+
+### Minor Changes
+
+- e636a9c: XPath support for evaluation of arbitrary DOM implementations (XPathDOMAdapter)
+
+### Patch Changes
+
+- Updated dependencies [2fddcec]
+- Updated dependencies [e636a9c]
+- Updated dependencies [8edf375]
+  - @getodk/common@0.5.0
+
 ## 0.2.1
 
 ### Patch Changes

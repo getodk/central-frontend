@@ -1,5 +1,16 @@
 # @getodk/common
 
+## 0.5.0
+
+### Minor Changes
+
+- 2fddcec: Support for external secondary instances (XML, CSV, GeoJSON)
+
+### Patch Changes
+
+- e636a9c: XPath support for evaluation of arbitrary DOM implementations (XPathDOMAdapter)
+- 8edf375: Initial engine support for preparing submissions
+
 ## 0.4.0
 
 ### Minor Changes

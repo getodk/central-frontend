@@ -1,5 +1,16 @@
 # @getodk/scenario
 
+## 0.5.0
+
+### Minor Changes
+
+- 2fddcec: Support for external secondary instances (XML, CSV, GeoJSON)
+- 8edf375: Initial engine support for preparing submissions
+
+### Patch Changes
+
+- e636a9c: XPath support for evaluation of arbitrary DOM implementations (XPathDOMAdapter)
+
 ## 0.4.0
 
 ### Minor Changes

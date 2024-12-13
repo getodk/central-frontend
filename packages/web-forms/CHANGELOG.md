@@ -1,5 +1,17 @@
 # @getodk/web-forms
 
+## 0.6.0
+
+### Minor Changes
+
+- fcda4d8: Support for numeric controls:
+
+  - inputs with `int` and `decimal` types
+  - inputs with `appearance="numbers"`
+  - (all types) support for `appearance="thousands-sep"`
+
+- 2fddcec: Support for external secondary instances (XML, CSV, GeoJSON)
+
 ## 0.5.0
 
 ### Minor Changes
