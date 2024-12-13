@@ -1310,9 +1310,6 @@
         "num_submissions_from_web_users": {
           "string": "Number of Submissions from Web Users"
         },
-        "has_description": {
-          "string": "Project has a description"
-        },
         "description_length": {
           "string": "Length of the Project description"
         },
