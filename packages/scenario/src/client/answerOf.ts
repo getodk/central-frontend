@@ -1,8 +1,8 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { AnyNode, RootNode } from '@getodk/xforms-engine';
+import { InputNodeAnswer } from '../answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../answer/ModelValueNodeAnswer.ts.ts';
 import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
-import { StringNodeAnswer } from '../answer/StringNodeAnswer.ts';
 import { TriggerNodeAnswer } from '../answer/TriggerNodeAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { getNodeForReference } from './traversal.ts';
@@ -11,7 +11,7 @@ const isValueNode = (node: AnyNode) => {
 	return (
 		node.nodeType === 'model-value' ||
 		node.nodeType === 'select' ||
-		node.nodeType === 'string' ||
+		node.nodeType === 'input' ||
 		node.nodeType === 'trigger'
 	);
 };
@@ -30,8 +30,8 @@ export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAn
 		case 'select':
 			return new SelectNodeAnswer(node);
 
-		case 'string':
-			return new StringNodeAnswer(node);
+		case 'input':
+			return new InputNodeAnswer(node);
 
 		case 'trigger':
 			return new TriggerNodeAnswer(node);

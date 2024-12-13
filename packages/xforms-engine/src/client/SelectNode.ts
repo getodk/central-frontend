@@ -1,9 +1,9 @@
 import type { AnySelectDefinition } from '../parse/body/control/select/SelectDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { InputNode } from './InputNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
-import type { StringNode } from './StringNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { LeafNodeValidationState } from './validation.ts';
@@ -60,7 +60,7 @@ export interface SelectNode extends BaseNode {
 	 * - For fields defined with an XForms `<select1>`, calling this method will
 	 *   replace the selection (if any).
 	 *
-	 * @todo @see {@link StringNode.setValue} re: write restrictions
+	 * @todo @see {@link InputNode.setValue} re: write restrictions
 	 * @todo @see {@link SelectNodeState.value} re: breaking up the types
 	 */
 	select(item: SelectItem): RootNode;
@@ -69,7 +69,7 @@ export interface SelectNode extends BaseNode {
 	 * For use by a client to remove an item from the node's
 	 * {@link SelectNodeState.value}.
 	 *
-	 * @todo @see {@link StringNode.setValue} re: write restrictions
+	 * @todo @see {@link InputNode.setValue} re: write restrictions
 	 */
 	deselect(item: SelectItem): RootNode;
 }

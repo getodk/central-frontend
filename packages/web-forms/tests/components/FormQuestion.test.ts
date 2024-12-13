@@ -1,4 +1,4 @@
-import InputText from '@/components/controls/InputText.vue';
+import InputControl from '@/components/controls/Input/InputControl.vue';
 import SelectControl from '@/components/controls/SelectControl.vue';
 import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
@@ -19,12 +19,12 @@ const mountComponent = async (formPath: string, questionNumber: number) => {
 };
 
 describe('FormQuestion', () => {
-	it('shows InputText control for string nodes', async () => {
+	it('shows InputControl control for string nodes', async () => {
 		const component = await mountComponent('minimal.xform.xml', 0);
 
-		const inputText = component.findComponent(InputText);
+		const inputControl = component.findComponent(InputControl);
 
-		expect(inputText.exists()).toBe(true);
+		expect(inputControl.exists()).toBe(true);
 
 		expect(component.text()).toBe('First question');
 	});

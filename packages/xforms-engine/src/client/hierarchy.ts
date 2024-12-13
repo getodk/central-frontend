@@ -1,13 +1,13 @@
 import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { GroupNode } from './GroupNode.ts';
-import type { ModelValueNode } from './ModelValueNode.ts';
+import type { AnyInputNode } from './InputNode.ts';
+import type { AnyModelValueNode } from './ModelValueNode.ts';
 import type { NoteNode } from './NoteNode.ts';
 import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
 import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNode.ts';
 import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
-import type { StringNode } from './StringNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 import type { TriggerNode } from './TriggerNode.ts';
 import type { RangeNode } from './unsupported/RangeNode.ts';
@@ -22,16 +22,16 @@ export type AnyUnsupportedControlNode =
 
 // prettier-ignore
 export type AnyControlNode =
+	| AnyInputNode
 	| NoteNode
 	| SelectNode
-	| StringNode
 	| TriggerNode;
 
 // prettier-ignore
 export type AnyLeafNode =
 	| AnyControlNode
-	| AnyUnsupportedControlNode
-	| ModelValueNode;
+	| AnyModelValueNode
+	| AnyUnsupportedControlNode;
 
 // prettier-ignore
 export type RepeatRangeNode =

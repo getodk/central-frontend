@@ -608,6 +608,16 @@ describe('Actions/Events', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
+		 * This test previously had a confusing assertion: setting a value
+		 * referenced by a `jr:count` expression to "1" (as a string value) would
+		 * produce a value of 0 (as a number value) for that expression. This
+		 * reflected the behavior in JavaRosa at the time, rather than the intent of
+		 * the test. The behavior and test were corrected after this test was
+		 * ported, in {@link https://github.com/getodk/javarosa/pull/789}. Our port
+		 * has been updated accordingly.
+		 *
+		 * - - -
+		 *
 		 * 1. None of this test feels like it has anything to do with
 		 *    actions/events, `odk-new-repeat` specifically, or really anything in
 		 *    this module/suite/bag/vat other than loading the same fixture.
@@ -660,7 +670,7 @@ describe('Actions/Events', () => {
 		 * form-definition-validity.test.ts.
 		 */
 		describe('set [value other than integer] other than integer value, on repeat with count', () => {
-			it.fails('converts [the count-setting]', async () => {
+			it('converts [the count-setting]', async () => {
 				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
 
 				// String
@@ -670,7 +680,7 @@ describe('Actions/Events', () => {
 				//     scenario.next();
 				// }
 
-				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(0);
+				expect(scenario.countRepeatInstancesOf('/data/my-jr-count-repeat')).toBe(1);
 
 				// Decimal
 				scenario.jumpToBeginningOfForm();
@@ -704,20 +714,19 @@ describe('Actions/Events', () => {
 			/**
 			 * **PORTING NOTES** (alternate)
 			 *
-			 * As expected, this fails. It could be made to pass by updating the
-			 * pertinent {@link Scenario.answer} casting logic, but that just feels
-			 * like cheating.
+			 * With support for `int` bind types, this test is now passing, and is
+			 * updated to reflect that fact. However, since the test itself isn't
+			 * especially clear about the intended functionality being exercised, this
+			 * commit also introduces new tests in `bind-data-types.test.ts`
+			 * exercising that (and related) functionality more clearly.
 			 */
-			it.fails(
-				"(alternate) casts a decimal/fractional value to an integer [which controls a repeat's `jr:count`]",
-				async () => {
-					const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+			it("(alternate) casts a decimal/fractional value to an integer [which controls a repeat's `jr:count`]", async () => {
+				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
 
-					scenario.answer('/data/repeat-count', 2.5);
+				scenario.answer('/data/repeat-count', 2.5);
 
-					expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
-				}
-			);
+				expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
+			});
 
 			it("(alternate) assigns a non-fractional integer-as-float-number [which controls a repeat's `jr:count`]", async () => {
 				const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));

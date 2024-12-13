@@ -27,7 +27,7 @@ type AnyNodeType = AnyNode['nodeType'];
 type NonRootNodeType = Exclude<AnyNodeType, 'root'>;
 
 const nonRootNodeTypes = new Set<NonRootNodeType>([
-	'string',
+	'input',
 	'select',
 	'subtree',
 	'group',

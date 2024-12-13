@@ -1,76 +1,57 @@
-import { identity } from '@getodk/common/lib/identity.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
-import type { ModelValueNode } from '../client/ModelValueNode.ts';
-import type { SubmissionState } from '../client/submission/SubmissionState.ts';
-import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import type { ModelValueDefinition, ModelValueNode } from '../client/ModelValueNode.ts';
+import type { ValueType } from '../client/ValueType.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
-import { createValueState } from '../lib/reactivity/createValueState.ts';
+import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
+import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
-import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
-import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
-import { DescendantNode } from './abstract/DescendantNode.ts';
+import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type { ValueContext } from './internal-api/ValueContext.ts';
-import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
+import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
 
-export interface ModelValueDefinition extends LeafNodeDefinition {
-	readonly bodyElement: null;
-}
-
-interface ModelValueStateSpec extends DescendantNodeStateSpec<string> {
+interface ModelValueStateSpec<V extends ValueType> extends ValueNodeStateSpec<RuntimeValue<V>> {
 	readonly label: null;
 	readonly hint: null;
-	readonly children: null;
-	readonly value: SimpleAtomicState<string>;
-	readonly valueOptions: null;
 }
 
-export class ModelValue
-	extends DescendantNode<ModelValueDefinition, ModelValueStateSpec, GeneralParentNode, null>
+export class ModelValue<V extends ValueType = ValueType>
+	extends ValueNode<V, ModelValueDefinition<V>, RuntimeValue<V>, RuntimeInputValue<V>>
 	implements
-		ModelValueNode,
+		ModelValueNode<V>,
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ValueContext<string>,
-		ClientReactiveSubmittableLeafNode<string>
+		ClientReactiveSubmittableValueNode
 {
-	private readonly validation: SharedValidationState;
+	static from(parent: GeneralParentNode, definition: ModelValueDefinition): AnyModelValue;
+	static from<V extends ValueType>(
+		parent: GeneralParentNode,
+		definition: ModelValueDefinition<V>
+	): ModelValue<V> {
+		return new this(parent, definition);
+	}
 
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
-	protected readonly state: SharedNodeState<ModelValueStateSpec>;
-	protected readonly engineState: EngineState<ModelValueStateSpec>;
+	protected readonly state: SharedNodeState<ModelValueStateSpec<V>>;
+	protected readonly engineState: EngineState<ModelValueStateSpec<V>>;
 
 	// ModelValueNode
 	readonly nodeType = 'model-value';
 	readonly appearances = null;
-	readonly currentState: CurrentState<ModelValueStateSpec>;
+	readonly currentState: CurrentState<ModelValueStateSpec<V>>;
 
-	get validationState(): LeafNodeValidationState {
-		return this.validation.currentState;
-	}
+	constructor(parent: GeneralParentNode, definition: ModelValueDefinition<V>) {
+		const codec = getSharedValueCodec(definition.valueType);
 
-	readonly submissionState: SubmissionState;
-
-	// ValueContext
-	override readonly contextNode = this;
-	readonly encodeValue = identity<string>;
-	readonly decodeValue = identity<string>;
-
-	constructor(parent: GeneralParentNode, definition: ModelValueDefinition) {
-		super(parent, definition);
+		super(parent, definition, codec);
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -88,7 +69,8 @@ export class ModelValue
 				hint: null,
 				children: null,
 				valueOptions: null,
-				value: createValueState(this),
+				value: this.valueState,
+				instanceValue: this.getInstanceValue,
 			},
 			sharedStateOptions
 		);
@@ -96,26 +78,20 @@ export class ModelValue
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
-		this.validation = createValidationState(this, sharedStateOptions);
-		this.submissionState = createLeafNodeSubmissionState(this);
-	}
-
-	// XFormsXPathElement
-	override getXPathValue(): string {
-		return this.engineState.value;
-	}
-
-	// ValidationContext
-	getViolation(): AnyViolation | null {
-		return this.validation.engineState.violation;
-	}
-
-	isBlank(): boolean {
-		return this.engineState.value === '';
-	}
-
-	// InstanceNode
-	getChildren(): readonly [] {
-		return [];
 	}
 }
+
+export type AnyModelValue =
+	| ModelValue<'barcode'>
+	| ModelValue<'binary'>
+	| ModelValue<'boolean'>
+	| ModelValue<'date'>
+	| ModelValue<'dateTime'>
+	| ModelValue<'decimal'>
+	| ModelValue<'geopoint'>
+	| ModelValue<'geoshape'>
+	| ModelValue<'geotrace'>
+	| ModelValue<'int'>
+	| ModelValue<'intent'>
+	| ModelValue<'string'>
+	| ModelValue<'time'>;

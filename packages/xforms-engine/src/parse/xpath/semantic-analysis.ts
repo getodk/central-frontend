@@ -9,7 +9,9 @@ import type {
 	FilterPathExprNode,
 	FunctionCallNode,
 	FunctionNameNode,
+	LocalPartNode,
 	NumberNode,
+	PrefixNode,
 	RelativeLocationPathNode,
 	StringLiteralNode,
 } from '@getodk/xpath/static/grammar/SyntaxNode.js';
@@ -463,4 +465,31 @@ export const isConstantTruthyExpression = (
 		default:
 			throw new UnreachableError(syntaxNode);
 	}
+};
+
+interface QualifiedNameExpression {
+	readonly prefix: string;
+	readonly localPart: string;
+}
+
+export const parseQualifiedNameExpression = (
+	expression: string
+): QualifiedNameExpression | null => {
+	const { rootNode } = expressionParser.parse(expression);
+	const syntaxNode = findTypedPrincipalExpressionNode(['prefixed_name'], rootNode);
+
+	if (syntaxNode == null) {
+		return null;
+	}
+
+	const [prefixNode, localPartNode, ...rest] = syntaxNode.children;
+
+	prefixNode satisfies PrefixNode;
+	localPartNode satisfies LocalPartNode;
+	rest satisfies readonly [];
+
+	return {
+		prefix: prefixNode.text,
+		localPart: localPartNode.text,
+	};
 };

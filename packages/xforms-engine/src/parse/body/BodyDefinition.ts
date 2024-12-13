@@ -3,7 +3,7 @@ import { TokenListParser } from '../../lib/TokenListParser.ts';
 import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
 import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import { ControlDefinition } from './control/ControlDefinition.ts';
-import { InputDefinition } from './control/InputDefinition.ts';
+import { InputControlDefinition } from './control/InputControlDefinition.ts';
 import { RangeControlDefinition } from './control/RangeControlDefinition.ts';
 import { RankControlDefinition } from './control/RankControlDefinition.ts';
 import type { AnySelectDefinition } from './control/select/SelectDefinition.ts';
@@ -25,7 +25,7 @@ export interface BodyElementParentContext {
 // prettier-ignore
 export type ControlElementDefinition =
 	| AnySelectDefinition
-	| InputDefinition
+	| InputControlDefinition
 	| RangeControlDefinition
 	| RankControlDefinition
 	| TriggerControlDefinition
@@ -47,7 +47,7 @@ const BodyElementDefinitionConstructors = [
 	LogicalGroupDefinition,
 	PresentationGroupDefinition,
 	StructuralGroupDefinition,
-	InputDefinition,
+	InputControlDefinition,
 	SelectDefinition,
 	RangeControlDefinition,
 	RankControlDefinition,

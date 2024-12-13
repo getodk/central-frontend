@@ -4,7 +4,7 @@ export const inputAppearanceParser = new TokenListParser([
 	'multiline',
 	'numbers',
 	'url',
-	'thousand-sep',
+	'thousands-sep',
 
 	// date (TODO: data types)
 	'no-calendar',

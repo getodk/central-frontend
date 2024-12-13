@@ -1,6 +1,6 @@
 import type { NoteNode } from '../../client/NoteNode.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
-import type { InputDefinition } from '../body/control/InputDefinition.ts';
+import type { InputControlDefinition } from '../body/control/InputControlDefinition.ts';
 import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
 import type { ConstantTruthyDependentExpression } from '../expression/abstract/DependentExpression.ts';
 import type { HintDefinition } from '../text/HintDefinition.ts';
@@ -31,7 +31,7 @@ export type NoteTextDefinition =
 /**
  * @package This class is used internally, both in static types and at runtime,
  * to guard and guide the distinction between instance state nodes for 'note'
- * and 'string' node types. It is intentionally package-private! The less
+ * and 'input' node types. It is intentionally package-private! The less
  * specific {@link NoteNode.definition} type, if it has any client value at all,
  * should be more than sufficient. Clients are otherwise expected to use other
  * aspects of the node's interface (such as its {@link NoteNode.nodeType} and
@@ -61,7 +61,7 @@ export class NoteNodeDefinition extends LeafNodeDefinition {
 	constructor(
 		parent: ParentNodeDefinition,
 		override readonly bind: NoteBindDefinition,
-		override readonly bodyElement: InputDefinition,
+		override readonly bodyElement: InputControlDefinition,
 		readonly noteTextDefinition: NoteTextDefinition,
 		node: Element
 	) {

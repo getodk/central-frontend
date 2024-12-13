@@ -32,8 +32,8 @@ const collectViolationReferences = (
 	return context.getChildren().flatMap((child) => {
 		switch (child.nodeType) {
 			case 'model-value':
+			case 'input':
 			case 'note':
-			case 'string':
 			case 'select':
 			case 'range':
 			case 'rank':

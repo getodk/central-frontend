@@ -1,18 +1,18 @@
-import type { StringNode } from '@getodk/xforms-engine';
+import type { AnyInputNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';
 import { describe, expect, it } from 'vitest';
 import ControlLabel from '../../src/components/ControlLabel.vue';
 
 const baseQuestion = {
-	nodeType: 'string',
+	nodeType: 'input',
 	currentState: {
 		required: true,
 		label: {
 			asString: 'First Name',
 		},
 	},
-} as StringNode;
+} as AnyInputNode;
 
 describe('ControlLabel', () => {
 	it('shows asterisk with field is required', () => {

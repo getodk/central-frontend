@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Value types (numeric)</h:title>
+    <model>
+      <instance>
+        <root id="value-types-numeric">
+          <int-q>1</int-q>
+          <int-val />
+          <decimal-q>1.5</decimal-q>
+          <decimal-val />
+          <numbers-q>95</numbers-q>
+          <numbers-val />
+          <thousands-int></thousands-int>
+          <thousands-decimal></thousands-decimal>
+          <thousands-numbers></thousands-numbers>
+          <thousands-q>9999</thousands-q>
+          <meta>
+            <instanceID />
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/int-q" type="int" constraint=". &gt; 1" />
+      <bind nodeset="/root/int-val" calculate="/root/int-q" readonly="true()" />
+      <bind nodeset="/root/decimal-q" type="decimal" constraint=". &lt; 2.5" />
+      <bind nodeset="/root/decimal-val" calculate="/root/decimal-q" readonly="true()" />
+      <bind nodeset="/root/numbers-q" type="string" constraint=". &gt; 94.99" />
+      <bind nodeset="/root/numbers-val" calculate="/root/numbers-q" readonly="true()" />
+      <bind nodeset="/root/thousands-int" type="int" />
+      <bind nodeset="/root/thousands-decimal" type="decimal" />
+      <bind nodeset="/root/thousands-numbers" type="string" />
+      <bind nodeset="/root/meta/instanceID" type="string" />
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/int-q">
+      <label>1. Int[eger] question</label>
+    </input>
+    <input ref="/root/int-val">
+      <label>1.1 Int value</label>
+    </input>
+    <input ref="/root/decimal-q">
+      <label>2. Decimal question</label>
+    </input>
+    <input ref="/root/decimal-val">
+      <label>2.1 Decimal value</label>
+    </input>
+    <input ref="/root/numbers-q" appearance="numbers">
+      <label>3. Numbers question (string + appearance="numbers")</label>
+    </input>
+    <input ref="/root/numbers-val">
+      <label>3.1 Numbers value</label>
+    </input>
+    <input ref="/root/thousands-int" appearance="thousands-sep">
+      <label>4. Thousands separator (type="int")</label>
+    </input>
+    <input ref="/root/thousands-decimal" appearance="thousands-sep">
+      <label>4. Thousands separator (type="decimal")</label>
+    </input>
+    <input ref="/root/thousands-numbers" appearance="numbers thousands-sep">
+      <label>4. Thousands separator (string + appearance="numbers thousands-sep")</label>
+    </input>
+  </h:body>
+</h:html>

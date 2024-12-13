@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type {
 	AnyControlNode,
+	AnyInputNode,
 	AnyUnsupportedControlNode,
 	NoteNode,
 	SelectNode,
-	StringNode,
 } from '@getodk/xforms-engine';
 import { inject } from 'vue';
-import InputText from './controls/InputText.vue';
+import InputControl from './controls/Input/InputControl.vue';
 import NoteControl from './controls/NoteControl.vue';
 import SelectControl from './controls/SelectControl.vue';
 import TriggerControl from './controls/TriggerControl.vue';
@@ -17,7 +17,7 @@ type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
 
 defineProps<{ question: ControlNode }>();
 
-const isStringNode = (n: ControlNode): n is StringNode => n.nodeType === 'string';
+const isInputNode = (n: ControlNode): n is AnyInputNode => n.nodeType === 'input';
 const isSelectNode = (n: ControlNode): n is SelectNode => n.nodeType === 'select';
 const isNoteNode = (n: ControlNode): n is NoteNode => n.nodeType === 'note';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
@@ -33,7 +33,7 @@ const submitPressed = inject('submitPressed');
 			'highlight': submitPressed && question.validationState.violation?.valid === false,
 		}"
 	>
-		<InputText v-if="isStringNode(question)" :question="question" />
+		<InputControl v-if="isInputNode(question)" :node="question" />
 
 		<SelectControl v-else-if="isSelectNode(question)" :question="question" />
 

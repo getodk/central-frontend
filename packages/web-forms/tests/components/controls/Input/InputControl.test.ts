@@ -1,22 +1,24 @@
-import InputText from '@/components/controls/InputText.vue';
-import type { StringNode } from '@getodk/xforms-engine';
+import InputControl from '@/components/controls/Input/InputControl.vue';
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
-import { getReactiveForm, globalMountOptions } from '../../helpers';
+import { assert, describe, expect, it } from 'vitest';
+import { getReactiveForm, globalMountOptions } from '../../../helpers';
 
 const mountComponent = async (questionNumber: number, submitPressed = false) => {
 	const xform = await getReactiveForm('1-validation.xml');
+	const node = xform.currentState.children[questionNumber];
 
-	return mount(InputText, {
+	assert(node.nodeType === 'input');
+
+	return mount(InputControl, {
 		props: {
-			question: xform.currentState.children[questionNumber] as StringNode,
+			node,
 		},
 		global: { ...globalMountOptions, provide: { submitPressed } },
 		attachTo: document.body,
 	});
 };
 
-describe('InputText', () => {
+describe('InputControl', () => {
 	describe('validation', () => {
 		it('does not show validation message on init', async () => {
 			const component = await mountComponent(0);
