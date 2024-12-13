@@ -92,9 +92,10 @@ const computePlacement = () => {
   const anchorRect = hoverCard.anchor.getBoundingClientRect();
   const popoverRect = popoverRef.value.$el.getBoundingClientRect();
 
-  // Try 'right' and 'left' first unless the anchor is so close to the bottom
-  // that the popover won't fit.
-  if (window.scrollY + anchorRect.bottom + (popoverRect.height / 2) <
+  // Try 'right' and 'left' first unless the anchor is so close to the bottom of
+  // the page that the popover won't fit. Dividing by 2 because the popover
+  // would be vertically centered relative to the anchor element.
+  if (window.scrollY + anchorRect.top + (anchorRect.height / 2) + (popoverRect.height / 2) <
     document.body.scrollHeight) {
     if (anchorRect.right + popoverRect.width <=
       document.documentElement.clientWidth - buffer)
@@ -119,10 +120,15 @@ const show = () => {
     .then(() => {
       component.value = typeConfig.component;
       // Wait a tick in order to render the component. We need to measure the
-      // component's width before deciding where to place it.
+      // size of the component before deciding where to place it.
       return nextTick()
         .then(computePlacement)
-        .then(result => { placement.value = result; });
+        .then(result => { placement.value = result; })
+        .catch(error => {
+          // Log if computePlacement() throws an error, as that's unexpected.
+          console.error(error); // eslint-disable-line no-console
+          throw error;
+        });
     })
     // If some but not all requests succeeded, we want to avoid holding onto the
     // resources that were successful.
