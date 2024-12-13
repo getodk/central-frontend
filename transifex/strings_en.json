@@ -1390,6 +1390,36 @@
         },
         "avg_entity_submission_delay": {
           "string": "Average Entity Submission processing delay"
+        },
+        "uses_external_blob_store": {
+          "string": "Server uses external blob store"
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": "Number of force-processed Offline Entity submissions"
+        },
+        "max_entity_branch_delay": {
+          "string": "Maximum Offline Entity branch processing time"
+        },
+        "num_xml_only_form_defs": {
+          "string": "Number of XML-only Form Defs with no associated XLSForm"
+        },
+        "num_blob_files": {
+          "string": "Number of binary files"
+        },
+        "num_blob_files_on_s3": {
+          "string": "Number of binary files currently stored in external Blob store"
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": "Number of times user has reset failed External Blob upload state"
+        },
+        "num_entity_creates_sub": {
+          "string": "Number of creates through Submissions"
+        },
+        "num_entity_creates_api": {
+          "string": "Number of creates through API"
+        },
+        "num_entity_creates_bulk": {
+          "string": "Number of creates through Bulk Upload"
         }
       }
     },
