@@ -20,6 +20,19 @@ describe('FormDraftTesting', () => {
     should.not.exist(document.querySelector('.popover'));
   });
 
+  it('hides QR code on close button', async () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { draft: true });
+    const component = await load('/projects/1/forms/f/draft/testing', {
+      root: false,
+      attachTo: document.body
+    });
+    await component.get('#submission-list-test-on-device').trigger('click');
+    should.exist(document.querySelector('.popover .form-draft-qr-panel'));
+    await document.querySelector('.popover button').click();
+    should.not.exist(document.querySelector('.popover'));
+  });
+
   describe('submission count', () => {
     beforeEach(mockLogin);
 
