@@ -9,9 +9,14 @@ interface NumericNodeState {
 	get readonly(): boolean;
 }
 
+interface NumericNodeAppearances {
+	readonly 'thousands-sep'?: boolean;
+}
+
 interface NumericNode {
 	readonly nodeId: string;
 	readonly currentState: NumericNodeState;
+	readonly appearances: NumericNodeAppearances;
 }
 
 interface InputNumericProps {
@@ -143,6 +148,7 @@ const onInput = (event: InputNumberInputEvent) => {
 		:show-buttons="true"
 		:min-fraction-digits="fractionalDigits.min"
 		:max-fraction-digits="fractionalDigits.max"
+		:use-grouping="node.appearances['thousands-sep']"
 		@input="onInput"
 		@blur="doneAnswering = true"
 	/>

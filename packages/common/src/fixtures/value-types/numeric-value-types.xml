@@ -16,6 +16,10 @@
           <decimal-val />
           <numbers-q>95</numbers-q>
           <numbers-val />
+          <thousands-int></thousands-int>
+          <thousands-decimal></thousands-decimal>
+          <thousands-numbers></thousands-numbers>
+          <thousands-q>9999</thousands-q>
           <meta>
             <instanceID />
           </meta>
@@ -27,6 +31,9 @@
       <bind nodeset="/root/decimal-val" calculate="/root/decimal-q" readonly="true()" />
       <bind nodeset="/root/numbers-q" type="string" constraint=". &gt; 94.99" />
       <bind nodeset="/root/numbers-val" calculate="/root/numbers-q" readonly="true()" />
+      <bind nodeset="/root/thousands-int" type="int" />
+      <bind nodeset="/root/thousands-decimal" type="decimal" />
+      <bind nodeset="/root/thousands-numbers" type="string" />
       <bind nodeset="/root/meta/instanceID" type="string" />
     </model>
   </h:head>
@@ -48,6 +55,15 @@
     </input>
     <input ref="/root/numbers-val">
       <label>3.1 Numbers value</label>
+    </input>
+    <input ref="/root/thousands-int" appearance="thousands-sep">
+      <label>4. Thousands separator (type="int")</label>
+    </input>
+    <input ref="/root/thousands-decimal" appearance="thousands-sep">
+      <label>4. Thousands separator (type="decimal")</label>
+    </input>
+    <input ref="/root/thousands-numbers" appearance="numbers thousands-sep">
+      <label>4. Thousands separator (string + appearance="numbers thousands-sep")</label>
     </input>
   </h:body>
 </h:html>
