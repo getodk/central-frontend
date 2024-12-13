@@ -1,5 +1,17 @@
 # @getodk/ui-solid
 
+## 0.2.3
+
+### Patch Changes
+
+- 8edf375: Initial engine support for preparing submissions
+- Updated dependencies [fcda4d8]
+- Updated dependencies [2fddcec]
+- Updated dependencies [e636a9c]
+- Updated dependencies [8edf375]
+  - @getodk/xforms-engine@0.5.0
+  - @getodk/common@0.5.0
+
 ## 0.2.2
 
 ### Patch Changes
