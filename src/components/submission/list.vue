@@ -33,13 +33,13 @@ except according to the terms contained in the LICENSE file.
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
-          <button id="submission-list-refresh-button" type="button"
-            class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(false, true)">
-            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-            <spinner :state="refreshing"/>
-          </button>
         </form>
+        <button id="submission-list-refresh-button" type="button"
+          class="btn btn-default" :aria-disabled="refreshing"
+          @click="fetchChunk(false, true)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
         <submission-download-button :form-version="formVersion"
           :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
           :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
@@ -485,27 +485,44 @@ export default {
 }
 
 #submission-list-actions {
-  align-items: baseline;
+  align-items: center;
   display: flex;
   flex-wrap: wrap-reverse;
+  // This is 10px of space between actions on the row and also 10px between
+  // rows if the actions start wrapping.
+  gap: 10px;
+  margin-bottom: 25px;
+
+  .form-inline {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 }
 #submission-field-dropdown {
+  // This is the entire spacing between the dropdown and the filters to its
+  // left. Since they're both children of the form, the flexbox gap doesn't
+  // apply to them.
   margin-left: 15px;
-  margin-right: 5px;
-}
-#submission-list-refresh-button {
-  margin-left: 10px;
+  // Additional space between the dropdown and the refresh button
   margin-right: 5px;
 }
 #submission-download-button {
-  // The bottom margin is for if the download button wraps above the other
-  // actions.
-  margin-bottom: 10px;
   margin-left: auto;
 }
 
 #submission-list-test-in-browser {
-  margin-left: 10px;
+  ~ .form-inline {
+    margin-left: auto;
+
+    #submission-field-dropdown {
+      // There are no filters, so no need for margin-left.
+      margin-left: 0;
+      // Further increase the space between the dropdown and the refresh button.
+      margin-right: 10px;
+    }
+  }
+
+  ~ #submission-download-button { margin-left: 0; }
 }
 </style>
 
