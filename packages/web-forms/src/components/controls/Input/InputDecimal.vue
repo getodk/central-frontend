@@ -18,5 +18,6 @@ const setNumberValue = (value: number | null): void => {
 		:node="node"
 		:numeric-value="props.node.currentState.value"
 		:set-numeric-value="setNumberValue"
+		:is-decimal="true"
 	/>
 </template>

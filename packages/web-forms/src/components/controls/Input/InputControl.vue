@@ -5,6 +5,7 @@ import ControlText from '../../ControlText.vue';
 import ValidationMessage from '../../ValidationMessage.vue';
 import InputDecimal from './InputDecimal.vue';
 import InputInt from './InputInt.vue';
+import InputNumbersAppearance from './InputNumbersAppearance.vue';
 import InputText from './InputText.vue';
 
 interface InputControlProps {
@@ -30,6 +31,9 @@ provide('isInvalid', isInvalid);
 		</template>
 		<template v-else-if="node.valueType === 'int'">
 			<InputInt :node="node" />
+		</template>
+		<template v-else-if="node.valueType === 'string' && node.appearances.numbers">
+			<InputNumbersAppearance :node="node" />
 		</template>
 		<template v-else>
 			<InputText :node="node" />

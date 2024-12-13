@@ -10,10 +10,12 @@
     <model>
       <instance>
         <root id="value-types-numeric">
-          <int-q />
+          <int-q>1</int-q>
           <int-val />
           <decimal-q>1.5</decimal-q>
           <decimal-val />
+          <numbers-q>95</numbers-q>
+          <numbers-val />
           <meta>
             <instanceID />
           </meta>
@@ -23,6 +25,8 @@
       <bind nodeset="/root/int-val" calculate="/root/int-q" readonly="true()" />
       <bind nodeset="/root/decimal-q" type="decimal" constraint=". &lt; 2.5" />
       <bind nodeset="/root/decimal-val" calculate="/root/decimal-q" readonly="true()" />
+      <bind nodeset="/root/numbers-q" type="string" constraint=". &gt; 94.99" />
+      <bind nodeset="/root/numbers-val" calculate="/root/numbers-q" readonly="true()" />
       <bind nodeset="/root/meta/instanceID" type="string" />
     </model>
   </h:head>
@@ -38,6 +42,12 @@
     </input>
     <input ref="/root/decimal-val">
       <label>2.1 Decimal value</label>
+    </input>
+    <input ref="/root/numbers-q" appearance="numbers">
+      <label>3. Numbers question (string + appearance="numbers")</label>
+    </input>
+    <input ref="/root/numbers-val">
+      <label>3.1 Numbers value</label>
     </input>
   </h:body>
 </h:html>

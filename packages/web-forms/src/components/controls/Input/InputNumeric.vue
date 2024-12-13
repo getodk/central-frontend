@@ -9,11 +9,8 @@ interface NumericNodeState {
 	get readonly(): boolean;
 }
 
-type NumericValueType = 'decimal' | 'int';
-
 interface NumericNode {
 	readonly nodeId: string;
-	readonly valueType: NumericValueType;
 	readonly currentState: NumericNodeState;
 }
 
@@ -21,6 +18,7 @@ interface InputNumericProps {
 	readonly node: NumericNode;
 	readonly numericValue: number | null;
 	readonly setNumericValue: (value: number | null) => void;
+	readonly isDecimal?: boolean;
 	readonly min?: number;
 	readonly max?: number;
 }
@@ -34,7 +32,7 @@ interface FractionalDigitOptions {
 
 let fractionalDigits: FractionalDigitOptions = {};
 
-if (props.node.valueType === 'decimal') {
+if (props.isDecimal) {
 	fractionalDigits = {
 		min: 0,
 		max: 18,
