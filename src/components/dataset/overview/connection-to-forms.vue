@@ -21,7 +21,9 @@ except according to the terms contained in the LICENSE file.
         <expandable-row v-for="(form) in propertiesByForm" :key="form.xmlFormId">
           <template #title>
             <div class="form-name">
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
+              <form-link :form="form"
+                :to="publishedFormPath(form.projectId, form.xmlFormId)"
+                v-tooltip.text/>
             </div>
           </template>
           <template #caption>
@@ -39,44 +41,35 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import ExpandableRow from '../../expandable-row.vue';
+import FormLink from '../../form/link.vue';
 import I18nList from '../../i18n/list.vue';
 import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
+import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ConnectionToForms',
   components: {
     ExpandableRow,
+    FormLink,
     I18nList,
     SummaryItem
   },
-  props: {
-    properties: {
-      type: Array,
-      required: true
-    },
-    sourceForms: {
-      type: Array,
-      required: true
-    },
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
   setup() {
+    const { dataset } = useRequestData();
     const { publishedFormPath } = useRoutes();
-    return { publishedFormPath };
+    return { dataset, publishedFormPath };
   },
   computed: {
     totalProperties() {
-      return this.properties.length;
+      return this.dataset.properties.length;
     },
     propertiesByForm() {
-      const formMap = new Map(this.sourceForms.map(f => ([f.xmlFormId, { ...f, projectId: this.projectId, properties: [] }])));
+      const formMap = new Map(this.dataset.sourceForms.map(f =>
+        [f.xmlFormId, { ...f, properties: [] }]));
 
-      for (const p of this.properties) {
+      for (const p of this.dataset.properties) {
         for (const f of p.forms) {
           const form = formMap.get(f.xmlFormId);
           form.properties.push(p.name);
