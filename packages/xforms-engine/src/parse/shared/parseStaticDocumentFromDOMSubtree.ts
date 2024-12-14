@@ -1,16 +1,15 @@
-import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { AnyConstructor } from '@getodk/common/types/helpers.js';
+import type { StaticAttributeOptions } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type {
 	StaticDocument,
 	StaticDocumentRootFactory,
 } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type {
-	StaticElementChildNodesFactory,
+	StaticElementChildOption,
 	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { StaticParentNode } from '../../integration/xpath/static-dom/StaticNode.ts';
-import { StaticText } from '../../integration/xpath/static-dom/StaticText.ts';
 
 type ConcreteConstructor<T extends AnyConstructor> = Pick<T, keyof T>;
 
@@ -21,74 +20,6 @@ export type ConcreteStaticDocumentConstructor<
 > =
 	& ConcreteConstructor<typeof StaticDocument<Root>>
 	& (new (rootFactory: StaticDocumentRootFactory<T, Root>) => T);
-
-const { ELEMENT_NODE, CDATA_SECTION_NODE, TEXT_NODE } = Node;
-
-interface StaticChildElementSource {
-	readonly domType: typeof ELEMENT_NODE;
-	readonly domNode: Element;
-}
-
-interface StaticChildTextSource {
-	readonly domType: typeof CDATA_SECTION_NODE | typeof TEXT_NODE;
-	readonly domNode: CharacterData;
-}
-
-// prettier-ignore
-type StaticChildNodeSource =
-	| StaticChildElementSource
-	| StaticChildTextSource;
-
-export const toStaticChildNodeSource = (childNode: ChildNode): StaticChildNodeSource | null => {
-	const domType = childNode.nodeType;
-
-	switch (domType) {
-		case ELEMENT_NODE:
-			return {
-				domType,
-				domNode: childNode as Element,
-			};
-
-		case TEXT_NODE:
-			return {
-				domType,
-				domNode: childNode as Text,
-			};
-
-		case CDATA_SECTION_NODE:
-			return {
-				domType,
-				domNode: childNode as CDATASection,
-			};
-
-		default:
-			return null;
-	}
-};
-
-const toStaticChildNodeSources = (childNode: ChildNode): StaticChildNodeSource | readonly [] => {
-	return toStaticChildNodeSource(childNode) ?? [];
-};
-
-const domElementChildNodesFactory = (domElement: Element): StaticElementChildNodesFactory => {
-	const childNodeSources = Array.from(domElement.childNodes).flatMap(toStaticChildNodeSources);
-
-	return (parent) => {
-		return childNodeSources.map((domSource) => {
-			switch (domSource.domType) {
-				case ELEMENT_NODE:
-					return parseStaticElementFromDOMElement(parent, StaticElement, domSource.domNode);
-
-				case TEXT_NODE:
-				case CDATA_SECTION_NODE:
-					return new StaticText(parent, domSource.domNode.data);
-
-				default:
-					throw new UnreachableError(domSource);
-			}
-		});
-	};
-};
 
 // prettier-ignore
 export type StaticElementConstructor<
@@ -101,10 +32,46 @@ export type StaticElementConstructor<
 
 			new (
 				parent: Parent,
-				childNodesFactory: StaticElementChildNodesFactory,
 				options: StaticElementOptions
 			): T;
 	};
+
+const parseStaticElementAttributes = (domElement: Element): readonly StaticAttributeOptions[] => {
+	return Array.from(domElement.attributes).map((attr) => ({
+		namespaceURI: attr.namespaceURI,
+		localName: attr.localName,
+		value: attr.value,
+	}));
+};
+
+const { ELEMENT_NODE, CDATA_SECTION_NODE, TEXT_NODE } = Node;
+
+const parseStaticElementChildren = (domElement: Element): readonly StaticElementChildOption[] => {
+	return Array.from(domElement.childNodes).flatMap((child) => {
+		switch (child.nodeType) {
+			case ELEMENT_NODE:
+				return parseStaticElementOptions(child as Element);
+
+			case TEXT_NODE:
+			case CDATA_SECTION_NODE:
+				return (child as CharacterData).data;
+
+			default:
+				return [];
+		}
+	});
+};
+
+const parseStaticElementOptions = (domElement: Element): StaticElementOptions => {
+	const { namespaceURI, localName } = domElement;
+
+	return {
+		namespaceURI,
+		localName,
+		attributes: parseStaticElementAttributes(domElement),
+		children: parseStaticElementChildren(domElement),
+	};
+};
 
 const parseStaticElementFromDOMElement = <
 	T extends StaticElement<Parent>,
@@ -114,18 +81,9 @@ const parseStaticElementFromDOMElement = <
 	ElementConstructor: StaticElementConstructor<T, Parent>,
 	domElement: Element
 ): T => {
-	const { namespaceURI, localName, attributes } = domElement;
-	const childNodesFactory = domElementChildNodesFactory(domElement);
+	const options = parseStaticElementOptions(domElement);
 
-	return new ElementConstructor(parent, childNodesFactory, {
-		namespaceURI,
-		localName,
-		attributes: Array.from(attributes).map((attr) => ({
-			namespaceURI: attr.namespaceURI,
-			localName: attr.localName,
-			value: attr.value,
-		})),
-	});
+	return new ElementConstructor(parent, options);
 };
 
 export const parseStaticDocumentFromDOMSubtree = <

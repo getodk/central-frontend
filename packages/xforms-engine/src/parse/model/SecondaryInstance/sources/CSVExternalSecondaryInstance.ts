@@ -2,8 +2,7 @@ import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticElement } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { StaticText } from '../../../../integration/xpath/static-dom/StaticText.ts';
+import type { StaticElementChildOption } from '../../../../integration/xpath/static-dom/StaticElement.ts';
 import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
 import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
@@ -87,50 +86,35 @@ interface CSVExternalSecondaryInstanceItemColumn {
 
 type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceItemColumn[];
 
-class CSVExternalSecondaryInstanceColumnElement extends StaticElement {
-	constructor(parent: StaticElement, column: CSVExternalSecondaryInstanceItemColumn) {
-		const { columnName, cellValue } = column;
+const columnChildOption = (
+	column: CSVExternalSecondaryInstanceItemColumn
+): StaticElementChildOption => {
+	const { columnName, cellValue } = column;
 
-		super(parent, (self) => [new StaticText(self, cellValue)], {
-			namespaceURI: XFORMS_NAMESPACE_URI,
-			localName: columnName,
-		});
-	}
-}
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: columnName,
+		children: [cellValue],
+	};
+};
 
-class CSVExternalSecondaryInstanceItemElement extends StaticElement {
-	constructor(parent: StaticElement, item: CSVExternalSecondaryInstanceItem) {
-		super(
-			parent,
-			(self) => {
-				return item.map((column) => {
-					return new CSVExternalSecondaryInstanceColumnElement(self, column);
-				});
-			},
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'item',
-			}
-		);
-	}
-}
+const itemChildOption = (item: CSVExternalSecondaryInstanceItem): StaticElementChildOption => {
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: 'item',
+		children: item.map(columnChildOption),
+	};
+};
 
-class CSVExternalSecondaryInstanceRootElement extends StaticElement {
-	constructor(parent: StaticElement, items: readonly CSVExternalSecondaryInstanceItem[]) {
-		super(
-			parent,
-			(self) => {
-				return items.map((item) => {
-					return new CSVExternalSecondaryInstanceItemElement(self, item);
-				});
-			},
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'root',
-			}
-		);
-	}
-}
+const rootChildOption = (
+	items: readonly CSVExternalSecondaryInstanceItem[]
+): StaticElementChildOption => {
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: 'root',
+		children: items.map(itemChildOption),
+	};
+};
 
 class CSVExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootDefinition {
 	constructor(
@@ -138,7 +122,7 @@ class CSVExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootD
 		parent: CSVExternalSecondaryInstanceDefinition,
 		items: readonly CSVExternalSecondaryInstanceItem[]
 	) {
-		super(parent, (self) => [new CSVExternalSecondaryInstanceRootElement(self, items)], {
+		super(parent, {
 			namespaceURI: XFORMS_NAMESPACE_URI,
 			localName: 'instance',
 			attributes: [
@@ -148,6 +132,7 @@ class CSVExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootD
 					value: instanceId,
 				},
 			],
+			children: [rootChildOption(items)],
 		});
 	}
 }

@@ -7,14 +7,19 @@ import { StaticAttribute } from './StaticAttribute.ts';
 import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticChildNode, StaticParentNode } from './StaticNode.ts';
 import { StaticNode } from './StaticNode.ts';
+import { StaticText } from './StaticText.ts';
 
-export type StaticElementChildNodesFactory = (element: StaticElement) => readonly StaticChildNode[];
+// prettier-ignore
+export type StaticElementChildOption =
+	| StaticElementOptions
+	| string;
 
 export interface StaticElementOptions {
 	readonly namespaceURI: string | null;
 	readonly prefix?: string | null;
 	readonly localName: string;
 	readonly attributes?: readonly StaticAttributeOptions[];
+	readonly children?: readonly StaticElementChildOption[];
 }
 
 type StaticElementKnownAttributeValue<
@@ -56,7 +61,6 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 
 	constructor(
 		readonly parent: Parent,
-		childNodesFactory: StaticElementChildNodesFactory,
 		options: StaticElementOptions
 	) {
 		super();
@@ -74,12 +78,18 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 
 		this.qualifiedName = new QualifiedName(options);
 
-		const { attributes = [] } = options;
+		const { attributes = [], children = [] } = options;
 
 		this.attributes = attributes.map((attrOptions) => {
 			return new StaticAttribute(this, attrOptions);
 		});
-		this.children = childNodesFactory(this);
+		this.children = children.map((child) => {
+			if (typeof child === 'string') {
+				return new StaticText(this, child);
+			}
+
+			return new StaticElement(this, child);
+		});
 	}
 
 	/**

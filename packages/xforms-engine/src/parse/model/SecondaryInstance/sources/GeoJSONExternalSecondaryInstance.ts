@@ -12,8 +12,7 @@ import type {
 	FeatureCollection as GeoJSONFeatureCollection,
 } from 'geojson';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticElement } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { StaticText } from '../../../../integration/xpath/static-dom/StaticText.ts';
+import type { StaticElementChildOption } from '../../../../integration/xpath/static-dom/StaticElement.ts';
 import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
 import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
@@ -251,108 +250,86 @@ const serializeCoordinates = (coordinates: LongLatCoordinates): SerializedCoordi
 	return `${latitude} ${longitude} 0 0`;
 };
 
-class GeoJSONSecondaryInstanceFeatureGeometryElement extends StaticElement {
-	static from(
-		parent: StaticElement,
-		feature: Feature
-	): GeoJSONSecondaryInstanceFeatureGeometryElement {
-		const { geometry } = feature;
+const geometryValues = (geometry: SupportedGeometry): readonly string[] => {
+	switch (geometry.type) {
+		case 'LineString':
+			return geometry.coordinates.map(serializeCoordinates);
 
-		switch (geometry.type) {
-			case 'LineString':
-				return new this(parent, geometry.coordinates);
+		case 'Point':
+			return [serializeCoordinates(geometry.coordinates)];
 
-			case 'Point':
-				return new this(parent, [geometry.coordinates]);
+		case 'Polygon': {
+			const [coordinates = []] = geometry.coordinates;
 
-			case 'Polygon':
-				return new this(parent, geometry.coordinates[0] ?? []);
-
-			default:
-				throw new UnreachableError(geometry);
+			return coordinates.map(serializeCoordinates);
 		}
+
+		default:
+			throw new UnreachableError(geometry);
+	}
+};
+
+const geometryChildElementOption = (feature: Feature): StaticElementChildOption => {
+	const { geometry } = feature;
+	const values = geometryValues(geometry);
+	const value = values.join('; ');
+
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: 'geometry',
+		children: [value],
+	};
+};
+
+const propertyChildOption = (
+	propertyName: string,
+	propertyValue: string
+): StaticElementChildOption => {
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: propertyName,
+		children: [propertyValue],
+	};
+};
+
+function* propertyChildOptions(feature: Feature): Iterable<StaticElementChildOption> {
+	const { properties } = feature;
+
+	if (properties == null) {
+		return [];
 	}
 
-	constructor(parent: StaticElement, points: readonly LongLatCoordinates[]) {
-		const values = points.map(serializeCoordinates);
-		const value = values.join('; ');
+	const { id: propertiesId, ...nonIdProperties } = properties;
+	const { id = propertiesId } = feature;
 
-		super(parent, (self) => [new StaticText(self, value)], {
-			namespaceURI: XFORMS_NAMESPACE_URI,
-			localName: 'geometry',
-		});
+	if (id !== undefined) {
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- Intentional fallback, we don't know what this is and it could be any permutation of JSON
+		yield propertyChildOption('id', String(id));
+	}
+
+	for (const [propertyName, propertyValue] of Object.entries(nonIdProperties)) {
+		yield propertyChildOption(propertyName, String(propertyValue));
 	}
 }
 
-class GeoJSONSecondaryInstanceFeaturePropertyElement extends StaticElement {
-	static *buildPropertyElements(
-		parent: StaticElement,
-		feature: Feature
-	): Iterable<GeoJSONSecondaryInstanceFeaturePropertyElement> {
-		const { properties } = feature;
+const itemChildOption = (feature: Feature): StaticElementChildOption => {
+	const geometry = geometryChildElementOption(feature);
+	const properties = propertyChildOptions(feature);
 
-		if (properties == null) {
-			return [];
-		}
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: 'item',
+		children: [geometry, ...properties],
+	};
+};
 
-		const { id: propertiesId, ...nonIdProperties } = properties;
-		const { id = propertiesId } = feature;
-
-		if (id !== undefined) {
-			// eslint-disable-next-line @typescript-eslint/no-base-to-string -- Intentional fallback, we don't know what this is and it could be any permutation of JSON
-			yield new this(parent, 'id', String(id));
-		}
-
-		for (const [propertyName, propertyValue] of Object.entries(nonIdProperties)) {
-			yield new this(parent, propertyName, String(propertyValue));
-		}
-	}
-
-	constructor(parent: StaticElement, propertyName: string, propertyValue: string) {
-		super(parent, (self) => [new StaticText(self, propertyValue)], {
-			namespaceURI: XFORMS_NAMESPACE_URI,
-			localName: propertyName,
-		});
-	}
-}
-
-class GeoJSONSecondaryInstanceFeatureItemElement extends StaticElement {
-	constructor(parent: StaticElement, feature: Feature) {
-		super(
-			parent,
-			(self) => {
-				const geometry = GeoJSONSecondaryInstanceFeatureGeometryElement.from(self, feature);
-				const properties = GeoJSONSecondaryInstanceFeaturePropertyElement.buildPropertyElements(
-					self,
-					feature
-				);
-
-				return [geometry, ...properties];
-			},
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'item',
-			}
-		);
-	}
-}
-
-class GeoJSONSecondaryInstanceRootElement extends StaticElement {
-	constructor(parent: StaticElement, featureCollection: FeatureCollection) {
-		super(
-			parent,
-			(self) => {
-				return featureCollection.features.map((feature) => {
-					return new GeoJSONSecondaryInstanceFeatureItemElement(self, feature);
-				});
-			},
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'root',
-			}
-		);
-	}
-}
+const rootChildOption = (featureCollection: FeatureCollection): StaticElementChildOption => {
+	return {
+		namespaceURI: XFORMS_NAMESPACE_URI,
+		localName: 'root',
+		children: featureCollection.features.map(itemChildOption),
+	};
+};
 
 class GeoJSONExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootDefinition {
 	constructor(
@@ -360,7 +337,7 @@ class GeoJSONExternalSecondaryInstanceDocumentElement extends SecondaryInstanceR
 		parent: GeoJSONExternalSecondaryInstanceDefinition,
 		featureCollection: FeatureCollection
 	) {
-		super(parent, (self) => [new GeoJSONSecondaryInstanceRootElement(self, featureCollection)], {
+		super(parent, {
 			namespaceURI: XFORMS_NAMESPACE_URI,
 			localName: 'instance',
 			attributes: [
@@ -370,6 +347,7 @@ class GeoJSONExternalSecondaryInstanceDocumentElement extends SecondaryInstanceR
 					value: instanceId,
 				},
 			],
+			children: [rootChildOption(featureCollection)],
 		});
 	}
 }
