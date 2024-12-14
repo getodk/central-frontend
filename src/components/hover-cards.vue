@@ -139,14 +139,12 @@ const hide = () => {
   component.value = null;
   placement.value = undefined;
 };
-watch(() => hoverCard.anchor, (anchor) => {
-  /* If hoverCard.state is `true`, then there are two possibilities. It could be
-  that hoverCard.state has changed from `false` to `true`. Or it could be that
-  it was `true` already, but hoverCard.anchor has changed. (That would be pretty
-  unusual, but it could happen if preventHide is set to `true` in
-  useHoverCard().) But most importantly, if hoverCard.state is `true`, then we
-  need to hide the current hover card before we show a new one. */
-  if (hoverCard.state) hide();
-  if (anchor != null) show();
+watch(() => hoverCard.anchor, (newAnchor, oldAnchor) => {
+  // Note the possibility that oldAnchor != null && newAnchor != null. That
+  // would be pretty unusual, but it could happen if preventHide is set to
+  // `true` in useHoverCard(). In that case, we need to hide the current hover
+  // card before we show the new one.
+  if (oldAnchor != null) hide();
+  if (newAnchor != null) show();
 });
 </script>
