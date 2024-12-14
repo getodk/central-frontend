@@ -2,12 +2,11 @@ import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME, XPathNodeKindKey } from '@ge
 import { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EngineDOMAdapter } from '../adapter/engineDOMAdapter.ts';
 import type { XFormsXPathElement } from '../adapter/XFormsXPathNode.ts';
+import type { StaticAttributeOptions } from './StaticAttribute.ts';
 import { StaticAttribute } from './StaticAttribute.ts';
 import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticChildNode, StaticParentNode } from './StaticNode.ts';
 import { StaticNode } from './StaticNode.ts';
-
-export type StaticElementAttributesFactory = (element: StaticElement) => readonly StaticAttribute[];
 
 export type StaticElementChildNodesFactory = (element: StaticElement) => readonly StaticChildNode[];
 
@@ -15,6 +14,7 @@ export interface StaticElementOptions {
 	readonly namespaceURI: string | null;
 	readonly prefix?: string | null;
 	readonly localName: string;
+	readonly attributes?: readonly StaticAttributeOptions[];
 }
 
 type StaticElementKnownAttributeValue<
@@ -56,7 +56,6 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 
 	constructor(
 		readonly parent: Parent,
-		attributesFactory: StaticElementAttributesFactory,
 		childNodesFactory: StaticElementChildNodesFactory,
 		options: StaticElementOptions
 	) {
@@ -74,7 +73,12 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 		}
 
 		this.qualifiedName = new QualifiedName(options);
-		this.attributes = attributesFactory(this);
+
+		const { attributes = [] } = options;
+
+		this.attributes = attributes.map((attrOptions) => {
+			return new StaticAttribute(this, attrOptions);
+		});
 		this.children = childNodesFactory(this);
 	}
 

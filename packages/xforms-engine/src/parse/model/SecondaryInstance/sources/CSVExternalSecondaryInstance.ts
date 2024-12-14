@@ -2,7 +2,6 @@ import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticAttribute } from '../../../../integration/xpath/static-dom/StaticAttribute.ts';
 import { StaticElement } from '../../../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticText } from '../../../../integration/xpath/static-dom/StaticText.ts';
 import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
@@ -92,15 +91,10 @@ class CSVExternalSecondaryInstanceColumnElement extends StaticElement {
 	constructor(parent: StaticElement, column: CSVExternalSecondaryInstanceItemColumn) {
 		const { columnName, cellValue } = column;
 
-		super(
-			parent,
-			() => [],
-			(self) => [new StaticText(self, cellValue)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: columnName,
-			}
-		);
+		super(parent, (self) => [new StaticText(self, cellValue)], {
+			namespaceURI: XFORMS_NAMESPACE_URI,
+			localName: columnName,
+		});
 	}
 }
 
@@ -108,7 +102,6 @@ class CSVExternalSecondaryInstanceItemElement extends StaticElement {
 	constructor(parent: StaticElement, item: CSVExternalSecondaryInstanceItem) {
 		super(
 			parent,
-			() => [],
 			(self) => {
 				return item.map((column) => {
 					return new CSVExternalSecondaryInstanceColumnElement(self, column);
@@ -126,7 +119,6 @@ class CSVExternalSecondaryInstanceRootElement extends StaticElement {
 	constructor(parent: StaticElement, items: readonly CSVExternalSecondaryInstanceItem[]) {
 		super(
 			parent,
-			() => [],
 			(self) => {
 				return items.map((item) => {
 					return new CSVExternalSecondaryInstanceItemElement(self, item);
@@ -146,21 +138,17 @@ class CSVExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootD
 		parent: CSVExternalSecondaryInstanceDefinition,
 		items: readonly CSVExternalSecondaryInstanceItem[]
 	) {
-		super(
-			parent,
-			(self) => [
-				new StaticAttribute(self, {
+		super(parent, (self) => [new CSVExternalSecondaryInstanceRootElement(self, items)], {
+			namespaceURI: XFORMS_NAMESPACE_URI,
+			localName: 'instance',
+			attributes: [
+				{
 					namespaceURI: XFORMS_NAMESPACE_URI,
 					localName: 'id',
 					value: instanceId,
-				}),
+				},
 			],
-			(self) => [new CSVExternalSecondaryInstanceRootElement(self, items)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'instance',
-			}
-		);
+		});
 	}
 }
 

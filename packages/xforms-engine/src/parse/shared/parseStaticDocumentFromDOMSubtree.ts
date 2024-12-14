@@ -1,12 +1,10 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { AnyConstructor } from '@getodk/common/types/helpers.js';
-import { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type {
 	StaticDocument,
 	StaticDocumentRootFactory,
 } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type {
-	StaticElementAttributesFactory,
 	StaticElementChildNodesFactory,
 	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -23,16 +21,6 @@ export type ConcreteStaticDocumentConstructor<
 > =
 	& ConcreteConstructor<typeof StaticDocument<Root>>
 	& (new (rootFactory: StaticDocumentRootFactory<T, Root>) => T);
-
-const domElementAttributesFactory = (domElement: Element): StaticElementAttributesFactory => {
-	const attributes = Array.from(domElement.attributes);
-
-	return (element) => {
-		return attributes.map((attr) => {
-			return new StaticAttribute(element, attr);
-		});
-	};
-};
 
 const { ELEMENT_NODE, CDATA_SECTION_NODE, TEXT_NODE } = Node;
 
@@ -113,7 +101,6 @@ export type StaticElementConstructor<
 
 			new (
 				parent: Parent,
-				attributesFactory: StaticElementAttributesFactory,
 				childNodesFactory: StaticElementChildNodesFactory,
 				options: StaticElementOptions
 			): T;
@@ -127,10 +114,18 @@ const parseStaticElementFromDOMElement = <
 	ElementConstructor: StaticElementConstructor<T, Parent>,
 	domElement: Element
 ): T => {
-	const attributesFactory = domElementAttributesFactory(domElement);
+	const { namespaceURI, localName, attributes } = domElement;
 	const childNodesFactory = domElementChildNodesFactory(domElement);
 
-	return new ElementConstructor(parent, attributesFactory, childNodesFactory, domElement);
+	return new ElementConstructor(parent, childNodesFactory, {
+		namespaceURI,
+		localName,
+		attributes: Array.from(attributes).map((attr) => ({
+			namespaceURI: attr.namespaceURI,
+			localName: attr.localName,
+			value: attr.value,
+		})),
+	});
 };
 
 export const parseStaticDocumentFromDOMSubtree = <

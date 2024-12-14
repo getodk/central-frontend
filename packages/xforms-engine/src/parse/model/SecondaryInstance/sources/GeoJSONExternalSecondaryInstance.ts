@@ -12,7 +12,6 @@ import type {
 	FeatureCollection as GeoJSONFeatureCollection,
 } from 'geojson';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticAttribute } from '../../../../integration/xpath/static-dom/StaticAttribute.ts';
 import { StaticElement } from '../../../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticText } from '../../../../integration/xpath/static-dom/StaticText.ts';
 import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
@@ -278,15 +277,10 @@ class GeoJSONSecondaryInstanceFeatureGeometryElement extends StaticElement {
 		const values = points.map(serializeCoordinates);
 		const value = values.join('; ');
 
-		super(
-			parent,
-			() => [],
-			(self) => [new StaticText(self, value)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'geometry',
-			}
-		);
+		super(parent, (self) => [new StaticText(self, value)], {
+			namespaceURI: XFORMS_NAMESPACE_URI,
+			localName: 'geometry',
+		});
 	}
 }
 
@@ -315,15 +309,10 @@ class GeoJSONSecondaryInstanceFeaturePropertyElement extends StaticElement {
 	}
 
 	constructor(parent: StaticElement, propertyName: string, propertyValue: string) {
-		super(
-			parent,
-			() => [],
-			(self) => [new StaticText(self, propertyValue)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: propertyName,
-			}
-		);
+		super(parent, (self) => [new StaticText(self, propertyValue)], {
+			namespaceURI: XFORMS_NAMESPACE_URI,
+			localName: propertyName,
+		});
 	}
 }
 
@@ -331,7 +320,6 @@ class GeoJSONSecondaryInstanceFeatureItemElement extends StaticElement {
 	constructor(parent: StaticElement, feature: Feature) {
 		super(
 			parent,
-			() => [],
 			(self) => {
 				const geometry = GeoJSONSecondaryInstanceFeatureGeometryElement.from(self, feature);
 				const properties = GeoJSONSecondaryInstanceFeaturePropertyElement.buildPropertyElements(
@@ -353,7 +341,6 @@ class GeoJSONSecondaryInstanceRootElement extends StaticElement {
 	constructor(parent: StaticElement, featureCollection: FeatureCollection) {
 		super(
 			parent,
-			() => [],
 			(self) => {
 				return featureCollection.features.map((feature) => {
 					return new GeoJSONSecondaryInstanceFeatureItemElement(self, feature);
@@ -373,21 +360,17 @@ class GeoJSONExternalSecondaryInstanceDocumentElement extends SecondaryInstanceR
 		parent: GeoJSONExternalSecondaryInstanceDefinition,
 		featureCollection: FeatureCollection
 	) {
-		super(
-			parent,
-			(self) => [
-				new StaticAttribute(self, {
+		super(parent, (self) => [new GeoJSONSecondaryInstanceRootElement(self, featureCollection)], {
+			namespaceURI: XFORMS_NAMESPACE_URI,
+			localName: 'instance',
+			attributes: [
+				{
 					namespaceURI: XFORMS_NAMESPACE_URI,
 					localName: 'id',
 					value: instanceId,
-				}),
+				},
 			],
-			(self) => [new GeoJSONSecondaryInstanceRootElement(self, featureCollection)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'instance',
-			}
-		);
+		});
 	}
 }
 

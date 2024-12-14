@@ -5,7 +5,7 @@ import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticElement } from './StaticElement.ts';
 import { StaticNode } from './StaticNode.ts';
 
-interface StaticAttributeOptions {
+export interface StaticAttributeOptions {
 	readonly namespaceURI: string | null;
 	readonly prefix?: string | null;
 	readonly localName: string;
