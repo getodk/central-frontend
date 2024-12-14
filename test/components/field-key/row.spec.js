@@ -57,6 +57,14 @@ describe('FieldKeyRow', () => {
       should.not.exist(document.querySelector('.popover'));
     });
 
+    it('hides the popover on close button', async () => {
+      const app = await load('/projects/1/app-users', { attachTo: document.body });
+      await app.get('.field-key-row-popover-link').trigger('click');
+      should.exist(document.querySelector('.popover .field-key-qr-panel'));
+      await document.querySelector('.popover button').click();
+      should.not.exist(document.querySelector('.popover'));
+    });
+
     it("shows the app user's display name", async () => {
       const app = await load('/projects/1/app-users', { attachTo: document.body });
       await app.get('.field-key-row-popover-link').trigger('click');

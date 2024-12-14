@@ -74,11 +74,13 @@ export default {
     // not show, then hide), we use event capturing here.
     document.addEventListener('click', this.hideAfterClick, true);
     window.addEventListener('resize', this.hideAfterResize);
+    document.addEventListener('keydown', this.hideAfterEsc);
   },
   beforeUnmount() {
     if (this.target != null) this.hide();
     document.removeEventListener('click', this.hideAfterClick, true);
     window.removeEventListener('resize', this.hideAfterResize);
+    document.removeEventListener('keydown', this.hideAfterEsc);
   },
   methods: {
     show() {
@@ -108,12 +110,16 @@ export default {
       this.show();
     },
     hideAfterClick(event) {
-      if (this.target != null && event.target.closest('.popover') == null &&
-        !this.target.contains(event.target))
+      if (this.target != null &&
+          ((event.target.closest('.popover') == null && !this.target.contains(event.target)) ||
+            (event.target.hasAttribute('data-closes-popover'))))
         this.$emit('hide');
     },
     hideAfterResize() {
       if (this.target != null) this.$emit('hide');
+    },
+    hideAfterEsc({ key }) {
+      if (this.target != null && key === 'Escape') this.$emit('hide');
     }
   }
 };

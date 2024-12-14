@@ -15,13 +15,24 @@ except according to the terms contained in the LICENSE file.
       <h1 class="panel-title"><slot name="title"></slot></h1>
       <span class="icon-mobile"></span>
     </div>
-    <div class="panel-body"><slot name="body"></slot></div>
+    <div class="panel-body">
+      <slot name="body"></slot>
+      <div v-if="showClose" class="panel-footer">
+        <button type="button" class="btn btn-primary" data-closes-popover>{{ $t('action.close') }}</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 defineOptions({
   name: 'QrPanel'
+});
+defineProps({
+  showClose: {
+    type: Boolean,
+    default: true
+  }
 });
 </script>
 
@@ -35,6 +46,11 @@ defineOptions({
   .panel-heading {
     background-color: $color-action-background;
     position: relative;
+  }
+
+  .panel-footer {
+    margin-bottom: -15px;
+    border-radius: 0;
   }
 
   // The icon is not animated, because in FieldKeyQrPanel, switching between a
