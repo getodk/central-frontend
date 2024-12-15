@@ -1,13 +1,18 @@
-import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME, XPathNodeKindKey } from '@getodk/xpath';
+import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME } from '@getodk/xpath';
 import { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EngineDOMAdapter } from '../adapter/engineDOMAdapter.ts';
 import type { XFormsXPathElement } from '../adapter/XFormsXPathNode.ts';
 import type { StaticAttributeOptions } from './StaticAttribute.ts';
 import { StaticAttribute } from './StaticAttribute.ts';
 import type { StaticDocument } from './StaticDocument.ts';
-import type { StaticChildNode, StaticParentNode } from './StaticNode.ts';
-import { StaticNode } from './StaticNode.ts';
+import type { StaticChildNode } from './StaticNode.ts';
+import { StaticParentNode } from './StaticParentNode.ts';
 import { StaticText } from './StaticText.ts';
+
+// prettier-ignore
+type StaticElementParent =
+	| StaticDocument
+	| StaticElement;
 
 // prettier-ignore
 export type StaticElementChildOption =
@@ -43,15 +48,13 @@ const assertStaticElementKnownAttributeValue: AssertStaticElementKnownAttributeV
 	}
 };
 
-export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
-	extends StaticNode<'element'>
+export class StaticElement<Parent extends StaticElementParent = StaticElementParent>
+	extends StaticParentNode<'element'>
 	implements XFormsXPathElement
 {
 	readonly [XFORMS_LOCAL_NAME]?: string;
 	readonly [XFORMS_KNOWN_ATTRIBUTE]?: string;
 
-	readonly [XPathNodeKindKey] = 'element';
-	readonly nodeType = 'static-element';
 	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
 	readonly qualifiedName: QualifiedName;
@@ -63,7 +66,7 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 		readonly parent: Parent,
 		options: StaticElementOptions
 	) {
-		super();
+		super('element');
 
 		const { rootDocument } = parent;
 

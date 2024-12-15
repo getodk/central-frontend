@@ -9,7 +9,6 @@ import type {
 	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
-import type { StaticParentNode } from '../../integration/xpath/static-dom/StaticNode.ts';
 
 type ConcreteConstructor<T extends AnyConstructor> = Pick<T, keyof T>;
 
@@ -24,7 +23,7 @@ export type ConcreteStaticDocumentConstructor<
 // prettier-ignore
 export type StaticElementConstructor<
 	T extends StaticElement<Parent>,
-	Parent extends StaticParentNode = StaticParentNode
+	Parent extends StaticDocument<T> | StaticElement,
 > =
 	& ConcreteConstructor<typeof StaticElement>
 	& {
@@ -75,7 +74,7 @@ const parseStaticElementOptions = (domElement: Element): StaticElementOptions =>
 
 const parseStaticElementFromDOMElement = <
 	T extends StaticElement<Parent>,
-	Parent extends StaticParentNode = StaticParentNode,
+	Parent extends StaticDocument<T> | StaticElement,
 >(
 	parent: Parent,
 	ElementConstructor: StaticElementConstructor<T, Parent>,

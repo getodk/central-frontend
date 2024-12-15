@@ -2,7 +2,7 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import { XPathFunctionalityPendingError } from '../../../error/XPathFunctionalityPendingError.ts';
 import type { AnyNode } from '../../../instance/hierarchy.ts';
-import type { AnyStaticNode, StaticParentNode } from '../static-dom/StaticNode.ts';
+import type { AnyStaticNode, StaticNodeParent } from '../static-dom/StaticNode.ts';
 import type {
 	EngineXPathAttribute,
 	EngineXPathDocument,
@@ -168,7 +168,7 @@ const primaryInstanceElementContains = (ancestor: AnyNode, other: AnyNode): bool
 	return primaryInstanceElementContains(ancestor, parent);
 };
 
-const staticParentNodeContains = (ancestor: StaticParentNode, other: AnyStaticNode): boolean => {
+const staticParentNodeContains = (ancestor: StaticNodeParent, other: AnyStaticNode): boolean => {
 	if (ancestor === other) {
 		return false;
 	}

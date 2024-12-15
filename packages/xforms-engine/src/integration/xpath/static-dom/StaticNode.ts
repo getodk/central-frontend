@@ -58,7 +58,7 @@ export type AnyStaticNode =
 	| StaticText;
 
 // prettier-ignore
-export type StaticParentNode =
+export type StaticNodeParent =
 	| StaticDocument
 	| StaticElement;
 
