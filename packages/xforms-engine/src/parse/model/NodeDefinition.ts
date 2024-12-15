@@ -83,52 +83,25 @@ export type ChildNodeInstanceDefinition =
 	| SubtreeDefinition
 	| LeafNodeDefinition;
 
-// prettier-ignore
-export type NodeChildren<Type extends NodeDefinitionType> =
-	Type extends ParentNodeDefinition['type']
-		? readonly ChildNodeDefinition[]
-		: null;
+export abstract class NodeDefinition<Type extends NodeDefinitionType> {
+	abstract readonly type: Type;
+	abstract readonly nodeName: string;
+	abstract readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
+	abstract readonly isTranslated: boolean;
+	abstract readonly root: RootDefinition;
+	abstract readonly parent: ParentNodeDefinition | null;
+	abstract readonly children: readonly ChildNodeDefinition[] | null;
+	abstract readonly instances: readonly RepeatInstanceDefinition[] | null;
+	abstract readonly defaultValue: string | null;
 
-// prettier-ignore
-export type NodeInstances<Type extends NodeDefinitionType> =
-	Type extends 'repeat-range'
-		? readonly RepeatInstanceDefinition[]
-		: null;
+	/** @todo leaf-node may be Attr */
+	abstract readonly node: Element | null;
 
-// prettier-ignore
-export type NodeParent<Type extends NodeDefinitionType> =
-	Type extends ChildNodeDefinition['type'] | ChildNodeInstanceDefinition['type']
-		? ParentNodeDefinition
-		: null;
-
-// TODO: leaf-node may be Attr
-// prettier-ignore
-export type ModelNode<Type extends NodeDefinitionType> =
-	Type extends 'repeat-range'
-		? null
-		: Element;
-
-// prettier-ignore
-export type NodeDefaultValue<Type extends NodeDefinitionType> =
-	Type extends 'leaf-node'
-		? string
-		: null;
-
-export interface NodeDefinition<Type extends NodeDefinitionType> {
-	readonly type: Type;
-
-	readonly bind: BindDefinition;
 	readonly nodeset: string;
-	readonly nodeName: string;
-	readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
-	readonly isTranslated: boolean;
-	readonly root: RootDefinition;
-	readonly parent: NodeParent<Type>;
-	readonly children: NodeChildren<Type>;
-	readonly instances: NodeInstances<Type>;
 
-	readonly node: ModelNode<Type>;
-	readonly defaultValue: NodeDefaultValue<Type>;
+	constructor(readonly bind: BindDefinition) {
+		this.nodeset = bind.nodeset;
+	}
 }
 
 export type AnyNodeDefinition =
@@ -139,5 +112,3 @@ export type AnyNodeDefinition =
 	| RepeatInstanceDefinition
 	| SubtreeDefinition
 	| LeafNodeDefinition;
-
-export type TypedNodeDefinition<Type> = Extract<AnyNodeDefinition, { readonly type: Type }>;

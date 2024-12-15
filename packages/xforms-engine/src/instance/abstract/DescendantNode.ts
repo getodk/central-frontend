@@ -13,7 +13,6 @@ import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XF
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
-import type { AnyDescendantNodeDefinition } from '../../parse/model/DescendentNodeDefinition.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
@@ -35,11 +34,7 @@ export type DescendantNodeStateSpec<Value = never> =
 	& InstanceNodeStateSpec<Value>
 	& DescendantNodeSharedStateSpec;
 
-// prettier-ignore
-export type DescendantNodeDefinition = Extract<
-	AnyNodeDefinition,
-	AnyDescendantNodeDefinition
->;
+export type DescendantNodeDefinition = AnyNodeDefinition;
 
 export type AnyDescendantNode = DescendantNode<
 	DescendantNodeDefinition,

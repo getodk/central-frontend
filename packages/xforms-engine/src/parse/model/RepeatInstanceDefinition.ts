@@ -1,12 +1,12 @@
 import { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
-import type { ChildNodeDefinition, NodeDefinition } from './NodeDefinition.ts';
+import type { ChildNodeDefinition } from './NodeDefinition.ts';
 import type { AnyRepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 
-export class RepeatInstanceDefinition
-	extends DescendentNodeDefinition<'repeat-instance', RepeatElementDefinition>
-	implements NodeDefinition<'repeat-instance'>
-{
+export class RepeatInstanceDefinition extends DescendentNodeDefinition<
+	'repeat-instance',
+	RepeatElementDefinition
+> {
 	readonly type = 'repeat-instance';
 
 	readonly nodeName: string;

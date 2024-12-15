@@ -1,22 +1,16 @@
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { BindDefinition } from './BindDefinition.ts';
 import type { FormSubmissionDefinition } from './FormSubmissionDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
-import type {
-	ChildNodeDefinition,
-	NodeDefinition,
-	ParentNodeDefinition,
-} from './NodeDefinition.ts';
+import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
+import { NodeDefinition } from './NodeDefinition.ts';
 import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
-export class RootDefinition implements NodeDefinition<'root'> {
+export class RootDefinition extends NodeDefinition<'root'> {
 	readonly type = 'root';
-	readonly bind: BindDefinition;
-	readonly nodeset: string;
 	readonly nodeName: string;
 	readonly bodyElement = null;
 	readonly root = this;
@@ -45,7 +39,7 @@ export class RootDefinition implements NodeDefinition<'root'> {
 		const { primaryInstanceRoot } = form.xformDOM;
 		const { localName: rootNodeName } = primaryInstanceRoot;
 
-		this.nodeName = rootNodeName;
+		const nodeName = rootNodeName;
 
 		const nodeset = `/${rootNodeName}`;
 		const bind = model.binds.get(nodeset);
@@ -54,8 +48,9 @@ export class RootDefinition implements NodeDefinition<'root'> {
 			throw new Error('Missing root node bind definition');
 		}
 
-		this.bind = bind;
-		this.nodeset = nodeset;
+		super(bind);
+
+		this.nodeName = nodeName;
 		this.node = primaryInstanceRoot;
 		this.children = this.buildSubtree(this);
 	}

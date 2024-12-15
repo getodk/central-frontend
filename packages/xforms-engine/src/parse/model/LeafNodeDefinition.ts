@@ -2,12 +2,12 @@ import type { ValueType } from '../../client/ValueType.ts';
 import type { AnyBodyElementDefinition, ControlElementDefinition } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
-import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
+import type { ParentNodeDefinition } from './NodeDefinition.ts';
 
-export class LeafNodeDefinition<V extends ValueType = ValueType>
-	extends DescendentNodeDefinition<'leaf-node', ControlElementDefinition | null>
-	implements NodeDefinition<'leaf-node'>
-{
+export class LeafNodeDefinition<V extends ValueType = ValueType> extends DescendentNodeDefinition<
+	'leaf-node',
+	ControlElementDefinition | null
+> {
 	readonly type = 'leaf-node';
 	readonly valueType: V;
 

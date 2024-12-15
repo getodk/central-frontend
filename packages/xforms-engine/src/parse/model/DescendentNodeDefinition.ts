@@ -1,14 +1,7 @@
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
-import type {
-	ModelNode,
-	NodeChildren,
-	NodeDefaultValue,
-	NodeDefinition,
-	NodeDefinitionType,
-	NodeInstances,
-	NodeParent,
-} from './NodeDefinition.ts';
+import type { NodeDefinitionType, ParentNodeDefinition } from './NodeDefinition.ts';
+import { NodeDefinition } from './NodeDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
 export type DescendentNodeType = Exclude<NodeDefinitionType, 'root'>;
@@ -18,32 +11,21 @@ type DescendentNodeBodyElement = AnyBodyElementDefinition;
 export abstract class DescendentNodeDefinition<
 	Type extends DescendentNodeType,
 	BodyElement extends DescendentNodeBodyElement | null = DescendentNodeBodyElement | null,
-> implements NodeDefinition<Type>
-{
-	abstract readonly type: Type;
-	abstract readonly children: NodeChildren<Type>;
-	abstract readonly instances: NodeInstances<Type>;
-	abstract readonly defaultValue: NodeDefaultValue<Type>;
-	abstract readonly node: ModelNode<Type>;
-	abstract readonly nodeName: string;
-
+> extends NodeDefinition<Type> {
 	readonly root: RootDefinition;
-	readonly nodeset: string;
 	readonly isTranslated: boolean = false;
 
 	constructor(
-		readonly parent: NodeParent<Type>,
-		readonly bind: BindDefinition,
+		readonly parent: ParentNodeDefinition,
+		bind: BindDefinition,
 		readonly bodyElement: BodyElement
 	) {
+		super(bind);
+
 		this.root = parent.root;
-		this.nodeset = bind.nodeset;
 
 		if (bind.isTranslated || bodyElement?.isTranslated) {
 			this.isTranslated = true;
 		}
 	}
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyDescendantNodeDefinition = DescendentNodeDefinition<any, any>;
