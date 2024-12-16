@@ -20,8 +20,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
           </button>
           <enketo-fill v-if="formVersion.dataExists"
-            id="submission-list-test-in-browser" :form-version="formVersion"
-            btn="default">
+            id="submission-list-test-in-browser" :form-version="formVersion">
             <span class="icon-desktop"></span>{{ $t('action.testInBrowser') }}
           </enketo-fill>
         </template>
