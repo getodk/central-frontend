@@ -159,12 +159,30 @@ describe('HoverCards', () => {
       ))
       .request(hover(clock))
       .respondWithData(() => testData.extendedDatasets.last())
-      .respondWithProblem(() => entity)
+      .respondWithProblem()
       .afterResponses(async (component) => {
         should.not.exist(document.querySelector('.popover'));
         component.should.not.alert();
         // Make sure that this does not result in a Vue warning.
         await getAnchor(component).trigger('mouseleave');
+      });
+  });
+
+  it('does not log an error if mouseleave is triggered during request', () => {
+    const clock = sinon.useFakeTimers();
+    const entity = testData.standardEntities.createPast(1).last();
+    return mockHttp()
+      .mount(TestUtilHoverCards, mountOptions(
+        EntityLink,
+        { projectId: 1, dataset: 'trees', entity }
+      ))
+      .request(hover(clock))
+      .beforeAnyResponse(component =>
+        getAnchor(component).trigger('mouseleave'))
+      .respondWithData(() => testData.extendedDatasets.last())
+      .respondWithData(() => entity)
+      .afterResponses(async () => {
+        should.not.exist(document.querySelector('.popover'));
       });
   });
 });
