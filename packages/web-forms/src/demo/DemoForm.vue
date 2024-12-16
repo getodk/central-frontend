@@ -44,7 +44,7 @@ const formXls = computed(() => {
 				<slot name="description" />
 			</p>
 			<div class="actions">
-				<RouterLink :to="`/form?url=${formXml}`" target="_blank">
+				<RouterLink :to="`/form?url=${formXml}`" target="_blank" class="form-preview-link">
 					<PrimeButton class="preview-button" label="View Form" icon="icon-remove_red_eye" />
 				</RouterLink>
 				<a :href="formXls">

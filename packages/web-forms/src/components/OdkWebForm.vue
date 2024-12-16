@@ -75,6 +75,15 @@ watchEffect(() => {
 	applicable for usage of a given tag.
 -->
 <template>
+	<div
+		:class="{
+			'form-initialization-status': true,
+			loading: odkForm == null && initializeFormError == null,
+			error: initializeFormError != null,
+			ready: odkForm != null,
+		}"
+	/>
+
 	<template v-if="initializeFormError != null">
 		<FormLoadFailureDialog
 			severity="error"
@@ -132,6 +141,10 @@ watchEffect(() => {
 
 <style scoped lang="scss">
 @import 'primeflex/core/_variables.scss';
+
+.form-initialization-status {
+	display: none;
+}
 
 .odk-form {
 	width: 100%;
