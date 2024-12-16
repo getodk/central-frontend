@@ -3,7 +3,7 @@
 Implementation of the [ODK XForms specification](https://getodk.github.io/xforms-spec/)'s data model and computation logic. This package does not handle presentation or user interaction. Those aspects of forms are meant to be handled by a client. Presently, those clients are:
 
 - [`@getodk/web-forms`](../web-forms)
-- [`@getodk/ui-solid`](../ui-solid)
+- [`@getodk/scenario`](../scenario)
 
 ## Install
 
