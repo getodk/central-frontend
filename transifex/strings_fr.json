@@ -628,16 +628,20 @@
       "string": "Configuration du serveur",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entity": {
+      "string": "Entité",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Entités",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entityList": {
       "string": "Liste d'entités",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
       "string": "Listes d'Entités",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "entities": {
-      "string": "Entités",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -664,6 +668,10 @@
       "string": "Propriété",
       "developer_comment": "This is a data property of an Entity."
     },
+    "properties": {
+      "string": "Propriétés",
+      "developer_comment": "This refers to the data properties of an Entity."
+    },
     "publicLink": {
       "string": "Lien d'accès public",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -686,6 +694,10 @@
     },
     "session": {
       "string": "Session",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submission": {
+      "string": "Soumission",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
@@ -870,6 +882,9 @@
       "string": "Forum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
     },
+    "lastUpdate": {
+      "string": "Dernière mise à jour"
+    },
     "loading": {
       "string": "Chargement..."
     },
@@ -988,6 +1003,15 @@
         "404_1": {
           "string": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {Ce formulaire tente de créer une nouvelle propriété d'Entité qui correspond à une propriété existante, à l'exception des majuscules :} many {Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules :} other {Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules :}}"
+          },
+          "duplicateProperty": {
+            "string": "{provided}(existante : {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
@@ -1286,9 +1310,6 @@
         "num_submissions_from_web_users": {
           "string": "Nombre de soumissions par des utilisateurs web"
         },
-        "has_description": {
-          "string": "Le projet a une description"
-        },
         "description_length": {
           "string": "Longueur de la description du Projet"
         },
@@ -1366,6 +1387,36 @@
         },
         "avg_entity_submission_delay": {
           "string": "Délai moyen de traitement de soumissions reliées à une Entité"
+        },
+        "uses_external_blob_store": {
+          "string": "Le serveur utilise un service de stockage externe compatible avec S3"
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": "Nombre de soumissions reliées à des Entités hors ligne qui ont été traitées par force"
+        },
+        "max_entity_branch_delay": {
+          "string": "Temps maximum pour traiter une série d'Entités modifiées hors ligne"
+        },
+        "num_xml_only_form_defs": {
+          "string": "Nombre de définitions de formulaires sans XLSForm associées"
+        },
+        "num_blob_files": {
+          "string": "Nombre de fichiers binaires"
+        },
+        "num_blob_files_on_s3": {
+          "string": "Nombre de fichiers binaires stockés dans un service de stockage externe compatible avec S3 "
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": "Nombre de fois qu'un utilisateur a réinitialisé un envoi échoué au stockage externe compatible avec S3"
+        },
+        "num_entity_creates_sub": {
+          "string": "Nombre d'Entités créées par soumissions"
+        },
+        "num_entity_creates_api": {
+          "string": "Nombre d'Entités créées par API"
+        },
+        "num_entity_creates_bulk": {
+          "string": "Nombre d'Entités créées par envoi en masse"
         }
       }
     },
@@ -2256,6 +2307,20 @@
       "bulk": {
         "string": "Envoi du fichier {filename} par {name}",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
+      }
+    },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": "Vous utilisez une version ancienne d'ODK Central"
+        },
+        "sentence1": {
+          "string": "Effectuez une mise à jour pour protéger vos données et profiter des fonctionnalités les plus récentes."
+        },
+        "sentence2": {
+          "string": "Si vous préférez ne pas être responsable des mises à jours, essayez {OdkCloudLink}.",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
       }
     },
     "FeedbackButton": {
@@ -3622,6 +3687,24 @@
         }
       }
     },
+    "OutdatedVersion": {
+      "title": {
+        "string": "Version ancienne",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": "Instructions de mise à jour"
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": "Cliquez ici pour voir les instructions pour mettre Central à jour"
+      },
+      "dismiss": {
+        "string": "Cacher pour 30 jours"
+      },
+      "dismissTooltip": {
+        "string": "Cliquez ici pour cacher cette alerte pour 30 jours."
+      }
+    },
     "Pagination": {
       "action": {
         "first": {
@@ -4592,15 +4675,15 @@
         },
         "submissionBacklog": {
           "hold": {
-            "string": "",
+            "string": "En attente d'une soumission précédente dans une série de mises à jour effectuées hors ligne avant de mettre l'Entité à jour ",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           },
           "force": {
-            "string": "",
+            "string": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne ",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           },
           "reprocess": {
-            "string": "",
+            "string": "Soumission précédente dans une série de mises à jours hors ligne à été reçue",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
@@ -4776,12 +4859,12 @@
           "string": "La Soumission sera restaurée dans son état précédent, y compris les données associées comme les commentaires."
         },
         "2": {
-          "string": ""
+          "string": "Si la soumission est à nouveau supprimée, il faudra attendre à nouveau 30 jours avant qu'elle ne soit retirée."
         }
       },
       "field": {
         "noConfirm": {
-          "string": "",
+          "string": "Restaurer immédiatement sans confirmation jusqu'à ce que je quitte la page",
           "developer_comment": "This is the text of a form field."
         }
       }

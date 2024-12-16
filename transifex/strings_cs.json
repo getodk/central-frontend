@@ -628,16 +628,20 @@
       "string": "Konfigurace serveru",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entity": {
+      "string": "",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Subjekty",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entityList": {
       "string": "Seznam entit",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
       "string": "Seznamy entit",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "entities": {
-      "string": "Subjekty",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -664,6 +668,10 @@
       "string": "Vlastnost",
       "developer_comment": "This is a data property of an Entity."
     },
+    "properties": {
+      "string": "",
+      "developer_comment": "This refers to the data properties of an Entity."
+    },
     "publicLink": {
       "string": "Veřejný odkaz",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -686,6 +694,10 @@
     },
     "session": {
       "string": "Relace",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submission": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
@@ -870,6 +882,9 @@
       "string": "Fórum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
     },
+    "lastUpdate": {
+      "string": ""
+    },
     "loading": {
       "string": "Načítání..."
     },
@@ -988,6 +1003,15 @@
         "404_1": {
           "string": "Hledaný zdroj nelze nalézt. Zdroj mohl být smazán.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {} few {} many {} other {}}"
+          },
+          "duplicateProperty": {
+            "string": "",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
@@ -1286,9 +1310,6 @@
         "num_submissions_from_web_users": {
           "string": "Počet podání od uživatelů webu"
         },
-        "has_description": {
-          "string": "Projekt má popis"
-        },
         "description_length": {
           "string": "Délka popisu projektu"
         },
@@ -1365,6 +1386,36 @@
           "string": ""
         },
         "avg_entity_submission_delay": {
+          "string": ""
+        },
+        "uses_external_blob_store": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": ""
+        },
+        "max_entity_branch_delay": {
+          "string": ""
+        },
+        "num_xml_only_form_defs": {
+          "string": ""
+        },
+        "num_blob_files": {
+          "string": ""
+        },
+        "num_blob_files_on_s3": {
+          "string": ""
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": ""
+        },
+        "num_entity_creates_sub": {
+          "string": ""
+        },
+        "num_entity_creates_api": {
+          "string": ""
+        },
+        "num_entity_creates_bulk": {
           "string": ""
         }
       }
@@ -2256,6 +2307,20 @@
       "bulk": {
         "string": "",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
+      }
+    },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": ""
+        },
+        "sentence1": {
+          "string": ""
+        },
+        "sentence2": {
+          "string": "",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
       }
     },
     "FeedbackButton": {
@@ -3620,6 +3685,24 @@
             }
           }
         }
+      }
+    },
+    "OutdatedVersion": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": ""
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": ""
+      },
+      "dismiss": {
+        "string": ""
+      },
+      "dismissTooltip": {
+        "string": ""
       }
     },
     "Pagination": {

@@ -224,21 +224,24 @@
     "appUser": "Usuario móvil",
     "appUsers": "Usuarios móviles",
     "config": "Configuración del servidor",
+    "entity": "Entidad",
+    "entities": "Entidades",
     "entityList": "Lista de entidades",
     "entityLists": "Listas de entidades",
-    "entities": "Entidades",
     "form": "Formulario",
     "forms": "Formularios",
     "formAttachments": "Adjuntos de formulario",
     "project": "Proyecto",
     "projects": "Proyectos",
     "property": "Propiedad",
+    "properties": "Propiedades",
     "publicLink": "Enlace de acceso público",
     "user": "Usuario",
     "users": "Usuarios",
     "webUser": "Usuario web",
     "webUsers": "Usuarios web",
     "session": "Sesión",
+    "submission": "Envío",
     "submissions": "Envíos",
     "projectRoles": "Roles del proyecto",
     "formPreview": "Vista previa del formulario",
@@ -279,7 +282,8 @@
     "binaryLinkTitle": "Se envió el archivo. Haga clic para descargar.",
     "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado.",
     "noSubmission": "(ninguno)",
-    "emptyTable": "No hay envíos todavía."
+    "emptyTable": "No hay envíos todavía.",
+    "fileDownloadUnavailable": "La descarga de archivos no está disponible para los envíos eliminados."
   },
   "entity": {
     "label": "Etiqueta",
@@ -304,6 +308,7 @@
     "error": "Error",
     "filter": "Filtrar",
     "forum": "Foro",
+    "lastUpdate": "Última actualización",
     "loading": "Cargando...",
     "no": "No",
     "noResults": "Sin resultados",
@@ -350,7 +355,11 @@
       "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
       "errorNotProblem": "Algo salió mal: error de código {status}",
       "problem": {
-        "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado."
+        "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado.",
+        "409_17": {
+          "message": "Este formulario intenta crear una nueva propiedad de entidad que coincida con una existente excepto por las mayúsculas: | Este formulario intenta crear nuevas propiedades de entidad que coincidan con las existentes, excepto por las mayúsculas: | Este formulario intenta crear nuevas propiedades de entidad que coincidan con las existentes, excepto por las mayúsculas:",
+          "duplicateProperty": "{provided} (existente: {current})"
+        }
       }
     },
     "session": {

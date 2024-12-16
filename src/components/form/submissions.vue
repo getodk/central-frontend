@@ -223,7 +223,7 @@ export default {
     "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Übermittlungen nicht verfügbar",
     "purgeDescription": "Übermittlungen und übermittlungsbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht.",
     "action": {
-      "toggleDeletedSubmissions": "{count}gelöscht Übermittlung | {count} gelöschte Übermittlungen"
+      "toggleDeletedSubmissions": "{count} gelöscht Übermittlung | {count} gelöschte Übermittlungen"
     }
   },
   "es": {

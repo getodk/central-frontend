@@ -118,8 +118,12 @@ const restore = () => {
     "title": "Restaurer la Soumission",
     "introduction": [
       "Etes vous sûr de vouloir restaurer cette Soumission ?",
-      "La Soumission sera restaurée dans son état précédent, y compris les données associées comme les commentaires."
-    ]
+      "La Soumission sera restaurée dans son état précédent, y compris les données associées comme les commentaires.",
+      "Si la soumission est à nouveau supprimée, il faudra attendre à nouveau 30 jours avant qu'elle ne soit retirée."
+    ],
+    "field": {
+      "noConfirm": "Restaurer immédiatement sans confirmation jusqu'à ce que je quitte la page"
+    }
   },
   "it": {
     "title": "Ripristino dell'invio",

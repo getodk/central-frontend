@@ -188,7 +188,6 @@ export default {
       "num_submissions_from_app_users": "Počet podání od uživatelů aplikace",
       "num_submissions_from_public_links": "Počet podání z veřejných odkazů",
       "num_submissions_from_web_users": "Počet podání od uživatelů webu",
-      "has_description": "Projekt má popis",
       "description_length": "Délka popisu projektu",
       "num_properties": "Počet vlastností",
       "num_creation_forms": "Počet formulářů, které aktualizují seznam subjektů",
@@ -243,7 +242,6 @@ export default {
       "num_submissions_from_app_users": "Anzahl ausgefüllter Formulare von App-Benutzern",
       "num_submissions_from_public_links": "Anzahl Einreichungen von Zugangslink",
       "num_submissions_from_web_users": "Anzahl Einreichungen von Web Benutzern",
-      "has_description": "Das Projekt hat eine Beschreibung",
       "description_length": "Länge der Projektbeschreibung",
       "num_properties": "Anzahl der Eigenschaften",
       "num_creation_forms": "Anzahl der Formulare, die die Entitätsliste aktualisieren",
@@ -310,7 +308,6 @@ export default {
       "num_submissions_from_app_users": "Número de envíos de Usuarios móviles",
       "num_submissions_from_public_links": "Número de envíos de enlaces públicos",
       "num_submissions_from_web_users": "Número de envíos de usuarios web",
-      "has_description": "El proyecto tiene una descripción",
       "description_length": "Longitud de la descripción del proyecto",
       "num_properties": "Número de Propiedades",
       "num_creation_forms": "Número de formularios que actualizan la lista de entidades",
@@ -336,7 +333,17 @@ export default {
       "num_offline_entity_interrupted_branches": "Número de ramas de entidades fuera de línea interrumpidas",
       "num_offline_entity_submissions_reprocessed": "Número de envíos de entidades fuera de línea reordenados",
       "max_entity_submission_delay": "Plazo máximo de tramitación de envió de entidades",
-      "avg_entity_submission_delay": "Plazo medio de tramitación del envío de entidades"
+      "avg_entity_submission_delay": "Plazo medio de tramitación del envío de entidades",
+      "uses_external_blob_store": "El servidor utiliza almacenamiento externo compatible con S3",
+      "num_offline_entity_submissions_force_processed": "Número de presentaciones de entidades fuera de línea procesadas por la fuerza",
+      "max_entity_branch_delay": "Tiempo máximo para procesar fuera de línea la cadena de actualización de entidades",
+      "num_xml_only_form_defs": "Número de definiciones de formulario sin XLSForm asociado",
+      "num_blob_files": "Número de archivos binarios",
+      "num_blob_files_on_s3": "Número de archivos binarios almacenados actualmente en un almacenamiento compatible con S3",
+      "num_reset_failed_to_pending_count": "Número de veces que el usuario ha restablecido una carga fallida en un almacenamiento compatible con S3",
+      "num_entity_creates_sub": "Número de entidades creadas a través de envíos",
+      "num_entity_creates_api": "Número de entidades creadas a través de la API",
+      "num_entity_creates_bulk": "Número de entidades creadas mediante carga masiva"
     }
   },
   "fr": {
@@ -377,7 +384,6 @@ export default {
       "num_submissions_from_app_users": "Nombre de soumissions depuis les utilisateurs d'application",
       "num_submissions_from_public_links": "Nombre de soumissions depuis les liens d'accès public",
       "num_submissions_from_web_users": "Nombre de soumissions par des utilisateurs web",
-      "has_description": "Le projet a une description",
       "description_length": "Longueur de la description du Projet",
       "num_properties": "Nombre de propriétés",
       "num_creation_forms": "Nombre de formulaires qui mettent à jour la liste d'entités",
@@ -403,7 +409,17 @@ export default {
       "num_offline_entity_interrupted_branches": "Nombre de branches d'Entités hors lignes interrompues",
       "num_offline_entity_submissions_reprocessed": "Nombre de soumissions reliées à des Entités hors ligne qui sont arrivées dans le mauvais ordre",
       "max_entity_submission_delay": "Délai maximum de traitement de soumissions reliées à une Entité",
-      "avg_entity_submission_delay": "Délai moyen de traitement de soumissions reliées à une Entité"
+      "avg_entity_submission_delay": "Délai moyen de traitement de soumissions reliées à une Entité",
+      "uses_external_blob_store": "Le serveur utilise un service de stockage externe compatible avec S3",
+      "num_offline_entity_submissions_force_processed": "Nombre de soumissions reliées à des Entités hors ligne qui ont été traitées par force",
+      "max_entity_branch_delay": "Temps maximum pour traiter une série d'Entités modifiées hors ligne",
+      "num_xml_only_form_defs": "Nombre de définitions de formulaires sans XLSForm associées",
+      "num_blob_files": "Nombre de fichiers binaires",
+      "num_blob_files_on_s3": "Nombre de fichiers binaires stockés dans un service de stockage externe compatible avec S3",
+      "num_reset_failed_to_pending_count": "Nombre de fois qu'un utilisateur a réinitialisé un envoi échoué au stockage externe compatible avec S3",
+      "num_entity_creates_sub": "Nombre d'Entités créées par soumissions",
+      "num_entity_creates_api": "Nombre d'Entités créées par API",
+      "num_entity_creates_bulk": "Nombre d'Entités créées par envoi en masse"
     }
   },
   "id": {
@@ -468,7 +484,6 @@ export default {
       "num_submissions_from_app_users": "Numero di invii ricevuti da utenti applicazione",
       "num_submissions_from_public_links": "Numero di invii ricevuti da link pubblici",
       "num_submissions_from_web_users": "Numero di invii ricevuti da utenti web",
-      "has_description": "Il Progetto ha una descrizione",
       "description_length": "Lunghezza della descrizione del progetto",
       "num_properties": "Numero di proprietà",
       "num_creation_forms": "Numero di formulari che aggiornano la Lista di Entità",
@@ -494,7 +509,17 @@ export default {
       "num_offline_entity_interrupted_branches": "Numero di rami di entità offline interrotti",
       "num_offline_entity_submissions_reprocessed": "Numero di invii di entità offline riordinate",
       "max_entity_submission_delay": "Ritardo massimo di elaborazione della trasmissione dell'entità",
-      "avg_entity_submission_delay": "Ritardo medio di elaborazione della trasmissione di un'entità"
+      "avg_entity_submission_delay": "Ritardo medio di elaborazione della trasmissione di un'entità",
+      "uses_external_blob_store": "Il server utilizza uno storage esterno compatibile con S3",
+      "num_offline_entity_submissions_force_processed": "Numero di invii di Entità offline elaborati forzatamente",
+      "max_entity_branch_delay": "Tempo massimo di elaborazione della catena di aggiornamento delle Entità offline",
+      "num_xml_only_form_defs": "Numero di Definizioni di formulario senza un XLSForm associato",
+      "num_blob_files": "Numero di file binari",
+      "num_blob_files_on_s3": "Numero di file binari attualmente memorizzati in uno spazio di archiviazione compatibile con S3",
+      "num_reset_failed_to_pending_count": "Numero di volte in cui l'utente ha ripristinato il caricamento fallito su uno storage compatibile con S3",
+      "num_entity_creates_sub": "Numero di Entità create attraverso invii",
+      "num_entity_creates_api": "Numero di Entità create tramite API",
+      "num_entity_creates_bulk": "Numero di Entità create tramite caricamento massivo"
     }
   },
   "ja": {
@@ -571,7 +596,6 @@ export default {
       "num_submissions_from_app_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Programu",
       "num_submissions_from_public_links": "Idadi ya Mawasilisho kutoka kwa Viungo vya Umma",
       "num_submissions_from_web_users": "Idadi ya Mawasilisho kutoka kwa Watumiaji wa Wavuti",
-      "has_description": "Mradi una maelezo",
       "description_length": "Urefu wa maelezo ya Mradi",
       "num_properties": "Idadi ya Mali",
       "num_creation_forms": "Idadi ya Fomu zinazosasisha Orodha ya Huluki",
@@ -626,7 +650,6 @@ export default {
       "num_submissions_from_app_users": "APP用戶提交的數量",
       "num_submissions_from_public_links": "來自公共連結的提交數量",
       "num_submissions_from_web_users": "網路使用者提交的數量",
-      "has_description": "專案已有描述",
       "description_length": "專案描述的長度",
       "num_properties": "特性數量",
       "num_creation_forms": "更新實體列表的表格數量",
