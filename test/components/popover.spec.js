@@ -27,6 +27,28 @@ describe('Popover', () => {
     document.querySelectorAll('.popover').length.should.equal(0);
   });
 
+  it('hides the popover after close button of popover is clicked', async () => {
+    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
+    document.querySelector('#show-foo').click();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(1);
+    document.querySelector('.popover button').click();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(0);
+  });
+
+  it('hides on escape', async () => {
+    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
+    document.querySelector('#show-foo').click();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(1);
+    await component.trigger('keydown', { key: 'Escape' });
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(0);
+  });
+
   it('does not hide the popover after a click on the popover', async () => {
     const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
     document.querySelector('#show-foo').click();

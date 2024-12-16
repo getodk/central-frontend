@@ -106,7 +106,6 @@ export default {
       "num_submissions_from_app_users": "Number of Submissions from App Users",
       "num_submissions_from_public_links": "Number of Submissions from Public Links",
       "num_submissions_from_web_users": "Number of Submissions from Web Users",
-      "has_description": "Project has a description",
       "description_length": "Length of the Project description",
       "num_properties": "Number of Properties",
       "num_creation_forms": "Number of Forms that update the Entity List",
@@ -133,6 +132,16 @@ export default {
       "num_offline_entity_submissions_reprocessed": "Number of reordered Offline Entity submissions",
       "max_entity_submission_delay": "Maximum Entity Submission processing delay",
       "avg_entity_submission_delay": "Average Entity Submission processing delay",
+      "uses_external_blob_store": "Server uses external S3-compatible storage",
+      "num_offline_entity_submissions_force_processed": "Number of force-processed Offline Entity Submissions",
+      "max_entity_branch_delay": "Maximum time to process offline Entity update chain",
+      "num_xml_only_form_defs": "Number of Form Definitions with no associated XLSForm",
+      "num_blob_files": "Number of binary files",
+      "num_blob_files_on_s3": "Number of binary files currently stored in S3-compatible storage",
+      "num_reset_failed_to_pending_count": "Number of times user has reset failed upload to S3-compatible storage",
+      "num_entity_creates_sub": "Number of Entities created via Submissions",
+      "num_entity_creates_api": "Number of Entities created via API",
+      "num_entity_creates_bulk": "Number of Entities created via bulk upload",
     }
   }
 }
