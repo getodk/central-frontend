@@ -21,9 +21,9 @@ except according to the terms contained in the LICENSE file.
 let id = 0;
 </script>
 <script setup>
-import { onMounted, ref } from 'vue';
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
+import { inject, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import useEventListener from '../composables/event-listener';
@@ -130,8 +130,9 @@ id += 1;
 // be rendered in two places in the DOM. Also due to the popover, we can't use
 // Vue event handlers. See the Popover component for details.
 const idClass = `collect-qr${id}`;
+const config = inject('config');
 useEventListener(document.body, 'click', (event) => {
-  if (event.target.parentNode.classList.contains(idClass))
+  if (config.devTools && event.target.parentNode.classList.contains(idClass))
     console.log(props.settings); // eslint-disable-line no-console
 });
 </script>
