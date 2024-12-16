@@ -183,8 +183,9 @@ const deletedSubmission = (key) => t(key, { id: props.submission.instanceId });
 
 // entity.create, entity.update.version
 const versionAnchor = (v) => `#v${v}`;
+const config = inject('config');
 const showBranchData = () => {
-  emit('branch-data', props.entityVersion.version);
+  if (config.devTools) emit('branch-data', props.entityVersion.version);
 };
 </script>
 

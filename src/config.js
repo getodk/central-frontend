@@ -22,5 +22,7 @@ export default {
   // VUE_APP_OIDC_ENABLED is not set in production. It can be set during local
   // development to facilitate work on SSO.
   oidcEnabled: process.env.VUE_APP_OIDC_ENABLED === 'true',
-  showsFeedbackButton: false
+  showsFeedbackButton: false,
+  // `true` to show additional buttons to facilitate development and testing.
+  devTools: false
 };

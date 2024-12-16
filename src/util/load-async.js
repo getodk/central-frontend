@@ -83,6 +83,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-download" */
     '../components/download.vue'
   )))
+  .set('EntityBranchData', loader(() => import(
+    /* webpackChunkName: "component-entity-branch-data" */
+    '../components/entity/branch-data.vue'
+  )))
   .set('EntityShow', loader(() => import(
     /* webpackChunkName: "component-entity-show" */
     '../components/entity/show.vue'

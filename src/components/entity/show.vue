@@ -37,19 +37,19 @@ except according to the terms contained in the LICENSE file.
       :label="entity.dataExists ? entity.currentVersion.label : ''"
       :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
       @delete="requestDelete"/>
-    <entity-branch-data v-bind="branchData" @hide="branchData.hide()"/>
+    <entity-branch-data v-if="config.devTools" v-bind="branchData"
+      @hide="branchData.hide()"/>
   </div>
 </template>
 
 <script setup>
-import { computed, inject, provide } from 'vue';
+import { computed, defineAsyncComponent, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import Breadcrumbs from '../breadcrumbs.vue';
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
-import EntityBranchData from './branch-data.vue';
 import EntityData from './data.vue';
 import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
@@ -62,6 +62,7 @@ import useEntityVersions from '../../request-data/entity-versions';
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
 import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -121,7 +122,7 @@ fetchActivityData();
 setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null]);
 
 const updateModal = modalData();
-const { i18n, alert } = inject('container');
+const { i18n, alert, config } = inject('container');
 const afterUpdate = (updatedEntity) => {
   fetchActivityData();
   updateModal.hide();
@@ -154,7 +155,8 @@ const requestDelete = () => {
     .catch(noop);
 };
 
-const branchData = modalData();
+const EntityBranchData = defineAsyncComponent(loadAsync('EntityBranchData'));
+const branchData = modalData('EntityBranchData');
 
 const breadcrumbLinks = computed(() => [
   { text: project.nameWithArchived, path: projectPath() },
