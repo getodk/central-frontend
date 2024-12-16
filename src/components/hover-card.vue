@@ -109,6 +109,8 @@ $border-radius: 12px;
 .hover-card { width: 290px; }
 
 .hover-card-heading {
+  $icon-margin-top: 2px;
+
   background-color: #666;
   border-inline: $border;
   border-top: $border;
@@ -116,15 +118,14 @@ $border-radius: 12px;
   border-top-right-radius: $border-radius;
   color: #fff;
   display: flex;
-  // Align the top of the text with the top of the icon.
-  line-height: 1;
-  padding: $padding-panel-body;
-  padding-bottom: 12px;
+  line-height: 1.2;
+  padding: #{$padding-panel-body - $icon-margin-top} $padding-panel-body 12px;
 
   > [class^="icon-"] {
     flex-shrink: 0;
     font-size: 26px;
     margin-right: 10px;
+    margin-top: $icon-margin-top;
   }
 
   // Needed for .hover-card-title to truncate.
@@ -135,15 +136,12 @@ $border-radius: 12px;
   @include text-overflow-ellipsis;
   font-size: 16px;
   font-weight: 500;
-  // This padding has two purposes. We need space between the title and the
-  // subtitle. Since the line-height is 1, we also need space for descenders in
-  // the text. It's for the latter reason that we use padding instead of margin.
-  padding-bottom: 3px;
+  margin-bottom: 1px;
 }
 
 .hover-card-subtitle {
   font-size: 12px;
-  padding-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .hover-card-body {
