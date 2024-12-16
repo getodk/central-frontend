@@ -41,7 +41,7 @@ describe('DlData', () => {
         props: { name: 'notes', value: 'The\ntree\nis\ntall.' },
         attachTo: document.body
       });
-      await component.get('dd').should.have.tooltip('The\ntree\nis\ntall.');
+      await component.get('dd div').should.have.tooltip('The\ntree\nis\ntall.');
     });
 
     it('does not show a tooltip if the value fits within 3 lines', async () => {
@@ -49,7 +49,7 @@ describe('DlData', () => {
         props: { name: 'notes', value: 'Tall' },
         attachTo: document.body
       });
-      await component.get('dd').should.not.have.tooltip();
+      await component.get('dd div').should.not.have.tooltip();
     });
   });
 

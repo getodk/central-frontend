@@ -19,7 +19,7 @@ are too long. -->
   <dd v-if="value == null || value === ''" class="dl-data-dd empty">
     {{ $t('common.emptyValue') }}
   </dd>
-  <dd v-else class="dl-data-dd" v-tooltip.text>{{ value }}</dd>
+  <dd v-else class="dl-data-dd"><div v-tooltip.text>{{ value }}</div></dd>
 </template>
 
 <script setup>
@@ -43,9 +43,11 @@ defineProps({
 .dl-data-dt { @include text-overflow-ellipsis; }
 
 .dl-data-dd {
-  @include line-clamp(3);
-  overflow-wrap: break-word;
-  white-space: break-spaces;
+  div {
+    @include line-clamp(3);
+    overflow-wrap: break-word;
+    white-space: break-spaces;
+  }
 
   &.empty {
     @include italic;
