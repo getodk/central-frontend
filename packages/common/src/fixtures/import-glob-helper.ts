@@ -34,11 +34,16 @@ if (IS_NODE_RUNTIME) {
 
 type ImportMetaGlobURLRecord = Readonly<Record<string, string>>;
 
-export type ImportMetaGlobLoader = (this: void) => Promise<string>;
+export type GlobFixtureLoader = (this: void) => Promise<string>;
 
-export type GlobLoaderEntry = readonly [absolutePath: string, loader: ImportMetaGlobLoader];
+export interface GlobFixture {
+	readonly url: URL;
+	readonly load: GlobFixtureLoader;
+}
 
-const globLoader = (globURL: string): ImportMetaGlobLoader => {
+export type GlobFixtureEntry = readonly [absolutePath: string, loader: GlobFixture];
+
+const globFixtureLoader = (globURL: string): GlobFixtureLoader => {
 	return async () => {
 		const response = await fetchGlobURL(globURL);
 
@@ -49,12 +54,17 @@ const globLoader = (globURL: string): ImportMetaGlobLoader => {
 export const toGlobLoaderEntries = (
 	importMeta: ImportMeta,
 	globObject: ImportMetaGlobURLRecord
-): readonly GlobLoaderEntry[] => {
+): readonly GlobFixtureEntry[] => {
 	const parentPathURL = new URL('./', importMeta.url);
 
 	return Object.entries(globObject).map(([relativePath, value]) => {
 		const { pathname: absolutePath } = new URL(relativePath, parentPathURL);
+		const fixtureAssetURL = new URL(value, import.meta.url);
+		const fixture: GlobFixture = {
+			url: fixtureAssetURL,
+			load: globFixtureLoader(value),
+		};
 
-		return [absolutePath, globLoader(value)];
+		return [absolutePath, fixture];
 	});
 };

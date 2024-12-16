@@ -1,6 +1,7 @@
 import { JRResourceService } from '../jr-resources/JRResourceService.ts';
 import type { JRResourceURL } from '../jr-resources/JRResourceURL.ts';
 import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
+import type { GlobFixture } from './import-glob-helper.ts';
 import { toGlobLoaderEntries } from './import-glob-helper.ts';
 
 type XFormResourceType = 'local' | 'remote';
@@ -92,12 +93,8 @@ const getNoopResourceService: ResourceServiceFactory = () => {
 };
 
 export class XFormResource<Type extends XFormResourceType> {
-	static forLocalFixture(
-		localPath: string,
-		resourceURL: URL,
-		loadXML?: LoadXFormXML
-	): XFormResource<'local'> {
-		return new XFormResource('local', resourceURL, loadXML ?? xformURLLoader(resourceURL), {
+	static forLocalFixture(localPath: string, fixture: GlobFixture): XFormResource<'local'> {
+		return new XFormResource('local', fixture.url, fixture.load, {
 			category: localFixtureDirectoryCategory(localPath),
 			localPath,
 			identifier: pathToFileName(localPath),
@@ -168,10 +165,8 @@ const xformFixtureLoaderEntries = toGlobLoaderEntries(
 export type XFormFixture = XFormResource<'local'>;
 
 const buildXFormFixtures = (): readonly XFormFixture[] => {
-	return xformFixtureLoaderEntries.map(([path, loadXML]) => {
-		const resourceURL = new URL(path, SELF_URL);
-
-		return XFormResource.forLocalFixture(path, resourceURL, loadXML);
+	return xformFixtureLoaderEntries.map(([path, fixture]) => {
+		return XFormResource.forLocalFixture(path, fixture);
 	});
 };
 
