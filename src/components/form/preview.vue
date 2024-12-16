@@ -87,16 +87,52 @@ const handleSubmit = () => {
   previewModal.show();
 };
 
-// Web Form expects host application to provide a function that it can use to fetch attachments.
-// Signature of the function is (url) => Response; where Response is subset of `fetch` response,
-// It mainly uses `text()` to read the data. We can also pass response `headers`, which can help
-// it to determine the content type but currently that functionality seems to be broken:
-// https://github.com/getodk/web-forms/pull/259#discussion_r1887227207
+
+
+/**
+ * Web Form expects host application to provide a function that it can use to
+ * fetch attachments. Signature of the function is (url) => Response; where
+ * Response is subset of web standard  {@link Response}.
+ */
 const getAttachment = (url) => request({
-  url: apiPaths.formDraftAttachment(props.projectId, props.xmlFormId, false, url.pathname.substring(1))
-}).then(r => ({
-  text: () => (typeof (r.data) === 'string' ? r.data : JSON.stringify(r.data))
-}));
+  url: apiPaths.formAttachment(
+    props.projectId,
+    props.xmlFormId,
+    props.draft,
+    url.pathname.substring(1)
+  ),
+  alert: false
+}).then(axiosResponse => {
+  const { data, status, statusText, headers } = axiosResponse;
+
+  const fetchHeaders = new Headers();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key === 'content-type') {
+      // because web-forms doens't want space between media type and charset
+      // https://github.com/getodk/web-forms/pull/259#discussion_r1887227207
+      fetchHeaders.append(key, value.replace('; charset', ';charset'));
+    } else {
+      fetchHeaders.append(key, value);
+    }
+  }
+
+  let body;
+  if (typeof (data) === 'string') {
+    body = data;
+  } else if (headers['content-type'].includes('application/json') ||
+             headers['content-type'].includes('application/geo+json')) {
+    body = JSON.stringify(data);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error('response data is not a known text format');
+  }
+
+  return new Response(body, {
+    status,
+    statusText,
+    headers: fetchHeaders,
+  });
+});
 </script>
 
 <style lang="scss">

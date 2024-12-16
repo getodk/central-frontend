@@ -130,7 +130,7 @@ export default {
       return this.$te(path, this.$i18n.fallbackLocale) ? this.$t(path) : type;
     },
     href() {
-      return apiPaths.formDraftAttachment(
+      return apiPaths.formAttachment(
         this.form.projectId,
         this.form.xmlFormId,
         true,

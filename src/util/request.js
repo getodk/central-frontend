@@ -113,7 +113,7 @@ export const apiPaths = {
   publishFormDraft: formPath('/draft/publish'),
   publishedAttachments: formPath('/attachments'),
   formDraftAttachments: formPath('/draft/attachments'),
-  formDraftAttachment: (projectId, xmlFormId, draft, attachmentName) => {
+  formAttachment: (projectId, xmlFormId, draft, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedName = encodeURIComponent(attachmentName);
     const draftPath = draft ? '/draft' : '';

@@ -83,13 +83,16 @@ const _request = (container, awaitingResponse) => (config) => {
   const {
     fulfillProblem = undefined,
     problemToAlert = undefined,
+    alert: alertOption = true,
     ...axiosConfig
   } = config;
 
   const { data } = axiosConfig;
   // This limit is set in the nginx config. The alert also mentions this number.
   if (data != null && data instanceof File && data.size > 100000000) {
-    alert.danger(i18n.t('mixin.request.alert.fileSize', { name: data.name }));
+    if (alertOption) {
+      alert.danger(i18n.t('mixin.request.alert.fileSize', { name: data.name }));
+    }
     return Promise.reject(new Error('file size exceeds limit'));
   }
 
@@ -111,7 +114,9 @@ const _request = (container, awaitingResponse) => (config) => {
       awaitingResponse.value = false;
 
       logAxiosError(logger, error);
-      alert.danger(requestAlertMessage(i18n, error, problemToAlert));
+      if (alertOption) {
+        alert.danger(requestAlertMessage(i18n, error, problemToAlert));
+      }
       throw error;
     })
     .then(response => {
