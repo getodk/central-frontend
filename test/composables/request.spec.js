@@ -87,6 +87,17 @@ describe('useRequest()', () => {
         .afterResponse(component => {
           component.should.alert('danger', 'Message from problemToAlert');
         }));
+
+    it('does not show alert when it is set to false', () =>
+      mockHttp()
+        .mount(TestUtilRequest)
+        .request(component =>
+          component.vm.request({ method: 'DELETE', url: '/v1/projects/1', alert: false })
+            .catch(noop))
+        .respondWithProblem({ code: 403.1, message: 'Insufficient rights' })
+        .afterResponse(component => {
+          component.should.not.alert();
+        }));
   });
 
   describe('fulfillProblem', () => {

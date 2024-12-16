@@ -282,9 +282,10 @@ export default {
 
       return this.request({
         method: 'POST',
-        url: apiPaths.formDraftAttachment(
+        url: apiPaths.formAttachment(
           this.form.projectId,
           this.form.xmlFormId,
+          true,
           attachment.name
         ),
         headers: {

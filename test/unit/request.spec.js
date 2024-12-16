@@ -164,9 +164,14 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments');
     });
 
-    it('formDraftAttachment', () => {
-      const path = apiPaths.formDraftAttachment(1, 'a b', 'c d');
+    it('formAttachment - draft', () => {
+      const path = apiPaths.formAttachment(1, 'a b', true, 'c d');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
+    });
+
+    it('formAttachment - published', () => {
+      const path = apiPaths.formAttachment(1, 'a b', false, 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/attachments/c%20d');
     });
 
     it('publishedAttachments', () => {

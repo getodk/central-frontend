@@ -67,7 +67,7 @@ export default {
     link() {
       this.request({
         method: 'PATCH',
-        url: apiPaths.formDraftAttachment(this.form.projectId, this.form.xmlFormId, this.attachment.name),
+        url: apiPaths.formAttachment(this.form.projectId, this.form.xmlFormId, true, this.attachment.name),
         data: { dataset: true }
       })
         .then(() => {
