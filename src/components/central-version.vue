@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="central-version" :state="state" hideable backdrop
+  <modal id="central-version" :state="state" hideable size="large" backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -68,7 +68,7 @@ watch(() => props.state, (state) => {
     // This is the title at the top of a pop-up. It refers to the version of ODK
     // Central that the user is using.
     "title": "Central Version",
-    "shortVersion": "You are using version {version} of ODK Central.",
+    "shortVersion": "You are using ODK Central {version}.",
     "longVersion": "You can find more detailed version information below:"
   }
 }
