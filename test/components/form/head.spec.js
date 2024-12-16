@@ -1,6 +1,7 @@
 import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import FormHead from '../../../src/components/form/head.vue';
 import FormOverview from '../../../src/components/form/overview.vue';
+import FormShow from '../../../src/components/form/show.vue';
 import Loading from '../../../src/components/loading.vue';
 import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
@@ -262,7 +263,7 @@ describe('FormHead', () => {
           .complete()
           .request(app => app.get('#form-head-create-draft-button').trigger('click'))
           .beforeAnyResponse(app => {
-            app.getComponent(Loading).should.be.visible();
+            app.getComponent(FormShow).getComponent(Loading).should.be.visible();
             app.getComponent(FormHead).should.be.hidden();
             app.getComponent(FormOverview).element.parentNode.should.be.hidden();
           })

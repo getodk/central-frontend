@@ -14,8 +14,7 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <loading :state="centralVersion.initiallyLoading"/>
-      <div v-if="centralVersion.dataExists" class="modal-introduction">
+      <div class="modal-introduction">
         <p>{{ $t('shortVersion', { version: centralVersion.currentVersion }) }}</p>
         <p>{{ $t('longVersion') }}</p>
         <pre><code><selectable wrap>{{ centralVersion.versionText }}</selectable></code></pre>
@@ -30,30 +29,20 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { watch } from 'vue';
-
-import Loading from './loading.vue';
 import Modal from './modal.vue';
 import Selectable from './selectable.vue';
 
-import { noop } from '../util/util';
 import { useRequestData } from '../request-data';
 
 defineOptions({
   name: 'CentralVersion'
 });
-const props = defineProps({
+defineProps({
   state: Boolean
 });
 defineEmits(['hide']);
 
 const { centralVersion } = useRequestData();
-
-watch(() => props.state, (state) => {
-  if (state)
-    centralVersion.request({ url: '/version.txt', resend: false })
-      .catch(noop);
-});
 </script>
 
 <style lang="scss">

@@ -45,6 +45,11 @@ export const mockAxios = () => {
   return http;
 };
 
+
+export const mockResponseHeaders = () => new Map([
+  ['date', new Date()]
+]);
+
 export const mockResponse = {
   // Given a Problem object or a Problem code, returns a Problem response. (Note
   // that the response will not have a `config` property.)
@@ -52,7 +57,7 @@ export const mockResponse = {
     const data = typeof problemOrCode === 'object'
       ? problemOrCode
       : { code: problemOrCode, message: 'There was a problem.' };
-    return { status: Math.floor(data.code), data };
+    return { status: Math.floor(data.code), data, headers: mockResponseHeaders() };
   },
   // Converts an object that may be a response to a response. If the object
   // looks like a response, it is returned as-is. Otherwise a 200 response is
@@ -60,8 +65,13 @@ export const mockResponse = {
   // will not have a `config` property.)
   of: (responseOrData) => {
     if (typeof responseOrData === 'object' &&
-      typeof responseOrData.status === 'number' && responseOrData.data != null)
-      return responseOrData;
-    return { status: 200, data: responseOrData };
+      typeof responseOrData.status === 'number' && responseOrData.data != null) {
+      const { headers } = responseOrData;
+      return headers != null
+        ? responseOrData
+        : { ...responseOrData, headers: mockResponseHeaders() };
+    }
+
+    return { status: 200, data: responseOrData, headers: mockResponseHeaders() };
   }
 };

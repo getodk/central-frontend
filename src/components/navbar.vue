@@ -41,7 +41,8 @@ except according to the terms contained in the LICENSE file.
       </div>
     </nav>
 
-    <central-version v-bind="versionModal" @hide="versionModal.hide()"/>
+    <central-version-component v-if="centralVersion.dataExists"
+      v-bind="versionModal" @hide="versionModal.hide()"/>
     <analytics-introduction v-if="config.loaded && config.showsAnalytics"
       v-bind="analyticsIntroduction" @hide="analyticsIntroduction.hide()"/>
   </div>
@@ -65,7 +66,7 @@ export default {
   name: 'Navbar',
   components: {
     AnalyticsIntroduction: defineAsyncComponent(loadAsync('AnalyticsIntroduction')),
-    CentralVersion,
+    CentralVersionComponent: CentralVersion,
     NavbarActions,
     NavbarHelpDropdown,
     NavbarLinks,
@@ -75,9 +76,9 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { currentUser, analyticsConfig } = useRequestData();
+    const { currentUser, analyticsConfig, centralVersion } = useRequestData();
     const { canRoute } = useRoutes();
-    return { currentUser, analyticsConfig, canRoute };
+    return { currentUser, analyticsConfig, centralVersion, canRoute };
   },
   data() {
     return {

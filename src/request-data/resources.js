@@ -37,18 +37,14 @@ export default (container, createResource) => {
   createResource('config', (config) => ({
     // If client-config.json is completely invalid JSON, `data` seems to be a
     // string (e.g., '{]').
-    transformResponse: ({ data }) => (typeof data === 'object' && data != null
-      ? mergeDeepLeft(data, configDefaults)
-      : configDefaults),
+    transformResponse: ({ data, headers }) => {
+      const result = typeof data === 'object' && data != null
+        ? mergeDeepLeft(data, configDefaults)
+        : configDefaults;
+      result.currentDate = new Date(headers.get('date'));
+      return result;
+    },
     loaded: computed(() => config.dataExists && config.loadError == null)
-  }));
-  createResource('centralVersion', () => ({
-    transformResponse: ({ data, headers }) =>
-      shallowReactive({
-        versionText: data,
-        currentVersion: data.match(/\(v(\d{4}[^-]*)/)[1],
-        currentDate: new Date(headers.get('date'))
-      })
   }));
   createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({

@@ -1,6 +1,6 @@
 import createContainer from '../../src/container';
 
-import { mockAxios } from './axios';
+import { mockAxios, mockResponse } from './axios';
 import { mockLogger } from './util';
 import { testRequestData } from './request-data';
 
@@ -28,7 +28,7 @@ export default ({ requestData, config = {}, ...options } = {}) => {
     ...options
   });
   if (config !== false)
-    container.requestData.config.setFromResponse({ status: 200, data: config });
+    container.requestData.config.setFromResponse(mockResponse.of(config));
   if (container.requestData.seed != null) container.requestData.seed();
   return container;
 };

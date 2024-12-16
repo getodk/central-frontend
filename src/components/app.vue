@@ -42,12 +42,10 @@ import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
-import useCallWait from '../composables/call-wait';
+import useCentralVersion from '../composables/central-version';
 import useDisabled from '../composables/disabled';
 import useFeatureFlags from '../composables/feature-flags';
 import { loadAsync } from '../util/load-async';
-import { noop } from '../util/util';
-import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 
 export default {
@@ -62,7 +60,9 @@ export default {
   inject: ['alert', 'config'],
   setup() {
     const { visiblyLoggedIn } = useSessions();
+    useCentralVersion();
     useDisabled();
+    const { features } = useFeatureFlags();
 
     const router = useRouter();
     const route = useRoute();
@@ -72,14 +72,7 @@ export default {
           document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
       });
 
-    const { features } = useFeatureFlags();
-
-    const { centralVersion, createResource } = useRequestData();
-    // Used to re-fetch version.txt in order to check for a version change.
-    const latestVersion = createResource('latestVersion');
-
-    const { callWait } = useCallWait();
-    return { visiblyLoggedIn, centralVersion, latestVersion, callWait, features };
+    return { features, visiblyLoggedIn };
   },
   computed: {
     routerReady() {
@@ -90,43 +83,11 @@ export default {
         this.visiblyLoggedIn;
     },
   },
-  created() {
-    setTimeout(this.requestVersion, 15000);
-    this.callWait('checkVersion', this.checkVersion, (tries) =>
-      (tries === 0 ? 75000 : 60000));
-  },
   // Reset backgroundColor after each test.
   beforeUnmount() {
     document.documentElement.style.backgroundColor = '';
   },
   methods: {
-    requestVersion() {
-      this.centralVersion.request({
-        url: '/version.txt',
-        resend: false,
-        alert: false
-      }).catch(noop);
-    },
-    checkVersion() {
-      if (!this.centralVersion.dataExists)
-        return !this.centralVersion.awaitingResponse;
-      return this.latestVersion.request({ url: '/version.txt', alert: false })
-        .then(() => {
-          if (this.latestVersion.data === this.centralVersion.versionText)
-            return false;
-
-          // Alert the user about the version change, then keep alerting them.
-          // One benefit of this approach is that the user should see the alert
-          // even if there is another alert (say, about session expiration).
-          this.callWait(
-            'alertVersionChange',
-            () => { this.alert.info(this.$t('alert.versionChange')); },
-            (count) => (count === 0 ? 0 : 60000)
-          );
-          return true;
-        })
-        .catch(noop);
-    },
     hideAlertAfterClick(event) {
       if (this.alert.state && event.target.closest('a[target="_blank"]') != null &&
         !event.defaultPrevented) {

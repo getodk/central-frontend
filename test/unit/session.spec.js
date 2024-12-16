@@ -593,12 +593,7 @@ describe('util/session', () => {
         .respondFor('/', { users: false })
         .complete()
         .request(() => {
-          clock.tick(15000);
-        })
-        .respond(() => ({ status: 404, data: '' })) // /version.txt
-        .complete()
-        .request(() => {
-          clock.tick(225000);
+          clock.tick(240000);
         })
         .respondWithSuccess()
         .afterResponse(app => {

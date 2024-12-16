@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         <a href="https://forum.getodk.org/" target="_blank">{{ $t('common.forum') }}</a>
       </li>
       <li>
-        <a href="#" @click.prevent="$emit('show-version')">
+        <a href="/version.txt" target="_blank" @click="showVersion">
           {{ $t('common.version') }}
         </a>
       </li>
@@ -34,10 +34,20 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import DocLink from '../doc-link.vue';
 
+import { useRequestData } from '../../request-data';
+
 defineOptions({
   name: 'NavbarHelpDropdown'
 });
-defineEmits(['show-version']);
+const emit = defineEmits(['show-version']);
+
+const { centralVersion } = useRequestData();
+const showVersion = (event) => {
+  if (centralVersion.dataExists) {
+    event.preventDefault();
+    emit('show-version');
+  }
+};
 </script>
 
 <i18n lang="json5">
