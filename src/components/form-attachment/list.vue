@@ -285,6 +285,7 @@ export default {
         url: apiPaths.formDraftAttachment(
           this.form.projectId,
           this.form.xmlFormId,
+          true,
           attachment.name
         ),
         headers: {

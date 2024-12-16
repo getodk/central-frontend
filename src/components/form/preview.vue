@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
       <loading :state="formVersionXml.initiallyLoading"/>
 
       <template v-if="formVersionXml.dataExists">
-        <OdkWebForm :form-xml="formVersionXml.data" @submit="handleSubmit"/>
+        <OdkWebForm :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
       </template>
 
       <modal v-bind="previewModal" hideable backdrop @hide="previewModal.hide()">
@@ -39,6 +39,7 @@ import { apiPaths } from '../../util/request';
 import Modal from '../modal.vue';
 import Loading from '../loading.vue';
 import { modalData } from '../../util/reactivity';
+import useRequest from '../../composables/request';
 
 // Install WebFormsPlugin in the component instead of installing it at the
 // application level so that @getodk/web-forms package is not loaded for every
@@ -69,6 +70,7 @@ const props = defineProps({
 });
 
 const { form, formVersionXml } = useForm();
+const { request } = useRequest();
 
 const previewModal = modalData();
 
@@ -84,6 +86,17 @@ fetchForm();
 const handleSubmit = () => {
   previewModal.show();
 };
+
+// Web Form expects host application to provide a function that it can use to fetch attachments.
+// Signature of the function is (url) => Response; where Response is subset of `fetch` response,
+// It mainly uses `text()` to read the data. We can also pass response `headers`, which can help
+// it to determine the content type but currently that functionality seems to be broken:
+// https://github.com/getodk/web-forms/pull/259#discussion_r1887227207
+const getAttachment = (url) => request({
+  url: apiPaths.formDraftAttachment(props.projectId, props.xmlFormId, false, url.pathname.substring(1))
+}).then(r => ({
+  text: () => (typeof (r.data) === 'string' ? r.data : JSON.stringify(r.data))
+}));
 </script>
 
 <style lang="scss">

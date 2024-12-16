@@ -133,6 +133,7 @@ export default {
       return apiPaths.formDraftAttachment(
         this.form.projectId,
         this.form.xmlFormId,
+        true,
         this.attachment.name
       );
     },
