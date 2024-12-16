@@ -1,6 +1,6 @@
 import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
 import { UnreachableError } from '../lib/error/UnreachableError.ts';
-import type { ImportMetaGlobLoader } from './import-glob-helper.ts';
+import type { GlobFixtureLoader } from './import-glob-helper.ts';
 import { toGlobLoaderEntries } from './import-glob-helper.ts';
 
 /**
@@ -60,7 +60,7 @@ export class XFormAttachmentFixture {
 
 	constructor(
 		readonly absolutePath: string,
-		readonly load: ImportMetaGlobLoader
+		readonly load: GlobFixtureLoader
 	) {
 		const fileName = getFileName(absolutePath);
 		const fileExtension = getFileExtension(fileName);
@@ -97,7 +97,7 @@ type XFormAttachmentFixtureEntry = readonly [absolutePath: string, fixture: XFor
 type XFormAttachmentFixtureEntries = readonly XFormAttachmentFixtureEntry[];
 
 const xformAttachmentFixtureEntries: XFormAttachmentFixtureEntries =
-	xformAttachmentFixtureLoaderEntries.map(([absolutePath, load]) => {
+	xformAttachmentFixtureLoaderEntries.map(([absolutePath, { load }]) => {
 		const fixture = new XFormAttachmentFixture(absolutePath, load);
 
 		return [absolutePath, fixture];
