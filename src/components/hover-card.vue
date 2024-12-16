@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { onMounted, ref } from 'vue';
 
-import { px } from '../util/dom';
+import { px, styleBox } from '../util/dom';
 
 defineOptions({
   name: 'HoverCard'
@@ -57,42 +57,44 @@ const width = ref('');
 const el = ref(null);
 // Returns the desired width of .hover-card-body based on the width of the <dl>.
 // Returning 0 means that the default width should be used.
-const computeBodyWidth = () => {
-  if (props.truncateDt) return 0;
-  const dd = [...el.value.querySelectorAll('dd')];
-  if (dd.length === 0) return 0;
+const computeWidth = (body) => {
+  const dt = body.querySelector('dt');
+  if (dt == null) return 0;
 
-  const dtWidth = el.value.querySelector('dt').getBoundingClientRect().width;
-  const ddWidth = dd[0].getBoundingClientRect().width;
+  const dtWidth = dt.getBoundingClientRect().width;
+  const ddWidth = body.querySelector('dd').getBoundingClientRect().width;
   // Don't give the <dd> elements the same width as the <dt> elements unless
-  // they need it (unless at least one is truncated). The <dt> elements are
-  // already making the hover card wider than the default. The width of the <dd>
-  // elements is allowed to grow up to the width of the <dt> elements, but it
-  // shouldn't grow beyond what it needs.
+  // they need it. The <dt> elements are already making the hover card wider
+  // than the default. The width of the <dd> elements is allowed to grow up to
+  // the width of the <dt> elements, but it shouldn't grow beyond what it needs.
   return dtWidth + Math.min(dtWidth, ddWidth);
 };
 const resize = () => {
-  // Get the width excluding borders.
-  const currentBodyWidth = el.value.querySelector('.hover-card-body').clientWidth;
+  if (props.truncateDt) return;
 
-  // Hide children other than .hover-card-body before setting `width: auto` so
-  // that we can compute the width of the hover card based on the width of
-  // .hover-card-body alone. For example, we don't want .hover-card-title to
-  // influence the width of the hover card.
-  const otherChildren = [...el.value.querySelectorAll(':scope > *:not(.hover-card-body)')];
-  for (const child of otherChildren) child.style.display = 'none';
+  const body = el.value.querySelector('.hover-card-body');
+  const box = styleBox(getComputedStyle(body));
+  const currentWidth = body.getBoundingClientRect().width -
+    box.borderLeft - box.borderRight;
+
+  // Hide siblings of .hover-card-body (i.e., .hover-card-heading and
+  // .hover-card-footer) before setting `width: auto`. That way, we can compute
+  // the width of the hover card based on the width of .hover-card-body alone.
+  // For example, we don't want .hover-card-title to influence the width of the
+  // hover card.
+  const siblings = [...el.value.querySelectorAll(':scope > :not(.hover-card-body)')];
+  for (const sibling of siblings) sibling.style.display = 'none';
   el.value.style.width = 'auto';
 
-  const newBodyWidth = computeBodyWidth();
+  const newWidth = computeWidth(body);
 
   el.value.style.width = '';
-  for (const child of otherChildren) child.style.display = '';
+  for (const sibling of siblings) sibling.style.display = '';
 
-  // Persist the new width in width.value so that it appears in the style
-  // attribute. That's needed for the style to be copied to the popover.
-  if (newBodyWidth > currentBodyWidth)
-    width.value = px(el.value.getBoundingClientRect().width +
-      newBodyWidth - currentBodyWidth);
+  if (newWidth > currentWidth)
+    // Persist the new width in width.value so that it is added to the `style`
+    // attribute. That's needed for the style to be copied to the popover.
+    width.value = px(el.value.getBoundingClientRect().width + newWidth - currentWidth);
 };
 onMounted(resize);
 </script>
