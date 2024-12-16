@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <enketo-fill v-if="formVersion.dataExists"
             id="submission-list-test-in-browser" :form-version="formVersion"
             btn="default">
-            <span class="icon-plus-circle"></span>{{ $t('action.testInBrowser') }}
+            <span class="icon-desktop"></span>{{ $t('action.testInBrowser') }}
           </enketo-fill>
         </template>
         <form class="form-inline" @submit.prevent>
