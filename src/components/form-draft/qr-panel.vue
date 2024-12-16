@@ -13,22 +13,24 @@ except according to the terms contained in the LICENSE file.
   <qr-panel class="form-draft-qr-panel">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <collect-qr v-if="formDraft.dataExists" :settings="settings"
+      <div class="clearfix">
+        <collect-qr v-if="formDraft.dataExists" :settings="settings"
         error-correction-level="Q" :cell-size="3" draft/>
-      <i18n-t keypath="introduction.full" tag="p">
-        <template #temporaryCode>
-          <strong>{{ $t('introduction.temporaryCode') }}</strong>
-        </template>
-      </i18n-t>
-      <p>{{ $t('stopsWorking') }}</p>
-      <p>{{ $t('instructions') }}</p>
-      <i18n-t keypath="codesForUsers.full" tag="p">
-        <template #appUsers>
-          <router-link :to="projectPath('app-users')">
-            {{ $t('codesForUsers.appUsers') }}
-          </router-link>
-        </template>
-      </i18n-t>
+        <i18n-t keypath="introduction.full" tag="p">
+          <template #temporaryCode>
+            <strong>{{ $t('introduction.temporaryCode') }}</strong>
+          </template>
+        </i18n-t>
+        <p>{{ $t('stopsWorking') }}</p>
+        <p>{{ $t('instructions') }}</p>
+        <i18n-t keypath="codesForUsers.full" tag="p">
+          <template #appUsers>
+            <router-link :to="projectPath('app-users')">
+              {{ $t('codesForUsers.appUsers') }}
+            </router-link>
+          </template>
+        </i18n-t>
+      </div>
     </template>
   </qr-panel>
 </template>
