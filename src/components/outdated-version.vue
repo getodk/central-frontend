@@ -43,7 +43,7 @@ defineOptions({
 const visiblyLoggedIn = inject('visiblyLoggedIn');
 
 const container = inject('container');
-const { i18n: globalI18n } = container;
+const { i18n: globalI18n, currentDate } = container;
 const locale = computed(() => globalI18n.locale);
 
 const iframeSrc = computed(() => `https://getodk.github.io/central/outdated-version.html?version=${centralVersion.currentVersion}&lang=${locale.value}`);
@@ -56,18 +56,18 @@ const showBanner = computed(() => {
   // User has seen the warning in the last 30 days, so don't show it again
   // 864E5 is the number of milliseconds in a day
   const dismissDate = currentUser.preferences?.site?.outdatedVersionWarningDismissDate;
-  if (dismissDate && centralVersion.currentDate.getTime() < (new Date(dismissDate).getTime() + (864E5 * 30))) return false;
+  if (dismissDate && currentDate.value.getTime() < (new Date(dismissDate).getTime() + (864E5 * 30))) return false;
 
   // Difference between current year and Central version year is less than 2
   const centralVersionYear = Number(centralVersion.currentVersion.match(/^(\d{4})/)[1]);
-  const currentYear = centralVersion.currentDate.getFullYear();
+  const currentYear = currentDate.value.getFullYear();
   if (currentYear - centralVersionYear < 2) return false;
 
   return true;
 });
 
 const dismiss = () => {
-  currentUser.preferences.site.outdatedVersionWarningDismissDate = centralVersion.currentDate;
+  currentUser.preferences.site.outdatedVersionWarningDismissDate = currentDate.value;
 };
 </script>
 

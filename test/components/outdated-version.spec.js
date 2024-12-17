@@ -14,12 +14,9 @@ const mountOptions = (options) => ({
     provide: { visiblyLoggedIn: options.userLoggedIn ?? true }
   },
   container: {
-    config: {
-      status: 200,
-      data: { centralVersion: options.centralVersion },
-      headers: new Map([['date', options.currentDate ? new Date(options.currentDate) : new Date()]])
-    },
-    requestData: testRequestData([useCentralVersion])
+    requestData: testRequestData([useCentralVersion]),
+    config: { centralVersion: options.centralVersion },
+    currentDate: options.currentDate ? new Date(options.currentDate) : new Date()
   }
 });
 

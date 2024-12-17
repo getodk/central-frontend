@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import axios from 'axios';
 import { Translation } from 'vue-i18n';
+import { shallowRef } from 'vue';
 
 import createAlert from './alert';
 import createCentralI18n from './i18n';
@@ -25,6 +26,7 @@ const provide = [
   'hoverCard',
   'unsavedChanges',
   'config',
+  'currentDate',
   'http',
   'logger'
 ];
@@ -41,6 +43,7 @@ export default ({
   alert = createAlert(),
   hoverCard = createHoverCard(),
   unsavedChanges = createUnsavedChanges(i18n.global),
+  currentDate = null,
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
@@ -50,6 +53,8 @@ export default ({
     alert,
     hoverCard,
     unsavedChanges,
+    // The current date according to the latest Date header received
+    currentDate: shallowRef(currentDate),
     http,
     logger
   };

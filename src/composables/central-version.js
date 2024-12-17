@@ -25,8 +25,7 @@ export default memoizeForContainer(({ i18n, alert, config }) => {
     if (versionText == null) return;
     centralVersion.data = {
       versionText,
-      currentVersion: versionText.match(/\(v(\d{4}[^-]*)/)[1],
-      currentDate: config.currentDate
+      currentVersion: versionText.match(/\(v(\d{4}[^-]*)/)[1]
     };
   });
 

@@ -37,13 +37,9 @@ export default (container, createResource) => {
   createResource('config', (config) => ({
     // If client-config.json is completely invalid JSON, `data` seems to be a
     // string (e.g., '{]').
-    transformResponse: ({ data, headers }) => {
-      const result = typeof data === 'object' && data != null
-        ? mergeDeepLeft(data, configDefaults)
-        : configDefaults;
-      result.currentDate = new Date(headers.get('date'));
-      return result;
-    },
+    transformResponse: ({ data }) => (typeof data === 'object' && data != null
+      ? mergeDeepLeft(data, configDefaults)
+      : configDefaults),
     loaded: computed(() => config.dataExists && config.loadError == null)
   }));
   createResource('analyticsConfig', noargs(setupOption));

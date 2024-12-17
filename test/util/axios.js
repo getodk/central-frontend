@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 const _mockError = (message, config) => {
   const error = new Error(message);
   error.config = config;
@@ -45,10 +47,15 @@ export const mockAxios = () => {
   return http;
 };
 
+export const mockResponseHeaders = (headers = {}) => {
+  const map = new Map();
+  for (const [name, value] of Object.entries(headers))
+    map.set(name.toLowerCase(), value);
 
-export const mockResponseHeaders = () => new Map([
-  ['date', new Date()]
-]);
+  if (!map.has('date')) map.set('date', DateTime.local().toHTTP());
+
+  return map;
+};
 
 export const mockResponse = {
   // Given a Problem object or a Problem code, returns a Problem response. (Note

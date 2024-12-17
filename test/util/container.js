@@ -23,6 +23,7 @@ export default ({ requestData, config = {}, ...options } = {}) => {
     requestData: typeof requestData === 'function'
       ? requestData
       : testRequestData([], requestData),
+    currentDate: new Date(),
     http: mockAxios(),
     logger: mockLogger(),
     ...options
