@@ -44,6 +44,22 @@ describe('useQueryRef()', () => {
     result.value.should.equal('c,d');
   });
 
+  // https://github.com/getodk/central/issues/756
+  it('does not change value of ref after route path changes', async () => {
+    let result;
+    return load('/?x=a&y=b')
+      .afterResponses(app => {
+        result = withSetup(() => useQueryRef(options.comma), {
+          container: app.vm.$container
+        });
+        result.value.should.equal('a,b');
+      })
+      .load('/users?x=c&y=d')
+      .afterResponses(() => {
+        result.value.should.equal('a,b');
+      });
+  });
+
   describe('change to an irrelevant query parameter', () => {
     it('does not change the value of the ref', async () => {
       // `z` is the irrelevant query parameter that the ref doesn't use.
