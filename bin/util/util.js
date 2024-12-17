@@ -1,6 +1,13 @@
 const fs = require('fs');
 const { comparator, last } = require('ramda');
 
+const containsSubarray = (array, subarray) => {
+  for (let i = 0; i < array.length - subarray.length + 1; i += 1) {
+    if (subarray.every((element, j) => array[i + j] === element)) return true;
+  }
+  return false;
+};
+
 const logThenThrow = (toLog, errorMessage) => {
   console.error(toLog); // eslint-disable-line no-console
   throw new Error(errorMessage);
@@ -81,7 +88,6 @@ const sortProps = (obj) => {
 // EXPORT
 
 module.exports = {
-  logThenThrow,
-  mapComponentsToFiles,
+  containsSubarray, logThenThrow, mapComponentsToFiles,
   setPath, deletePath, sortProps
 };
