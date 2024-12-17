@@ -57,6 +57,7 @@ const { dataset } = useRequestData();
 
   div {
     font-weight: bold;
+    white-space: nowrap;
 
     padding: 4px 6px;
     &:first-child { padding-left: $padding-panel-body; }
