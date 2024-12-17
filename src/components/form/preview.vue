@@ -99,7 +99,7 @@ const getAttachment = (url) => request({
     props.projectId,
     props.xmlFormId,
     props.draft,
-    url.pathname.substring(1)
+    url.pathname.split('/').pop()
   ),
   alert: false
 }).then(axiosResponse => {
