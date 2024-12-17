@@ -65,16 +65,21 @@ export default ({ fromQuery, toQuery }) => {
   the same -- something we want to avoid.
   */
   let ignoreNextRouteChange = false;
-  watch(router.currentRoute, ({ query: newQuery, name: oldRouteName }, { query: oldQuery, name: newRouteName }) => {
-    // If route is different then we don't need to set value from the query, it
-    // will be set during setup phase
-    if (oldRouteName !== newRouteName) return;
+  watch(router.currentRoute, (newRoute, oldRoute) => {
+    // If the route has changed, then the component that called this composable
+    // is probably about to be unmounted, so there's no need to set the value of
+    // the ref. If a new component is mounted that also uses useQueryRef(), that
+    // will set up a different watcher. See:
+    // https://github.com/getodk/central/issues/756
+    if (newRoute.path !== oldRoute.path) return;
 
     if (ignoreNextRouteChange) {
       ignoreNextRouteChange = false;
       return;
     }
 
+    const newQuery = newRoute.query;
+    const oldQuery = oldRoute.query;
     for (const name of params) {
       // Using equals() rather than === to account for array values.
       if (!equals(newQuery[name], oldQuery[name])) {

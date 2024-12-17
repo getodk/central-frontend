@@ -44,7 +44,8 @@ describe('useQueryRef()', () => {
     result.value.should.equal('c,d');
   });
 
-  it('should not changes value of ref after a change of route name', async () => {
+  // https://github.com/getodk/central/issues/756
+  it('does not change value of ref after route path changes', async () => {
     let result;
     return load('/?x=a&y=b')
       .afterResponses(app => {
