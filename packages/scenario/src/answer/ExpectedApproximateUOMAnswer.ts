@@ -22,6 +22,7 @@ export abstract class UOMValue implements CustomInspectable {
 
 	constructor(readonly unitValue: number) {}
 
+	[Symbol.toPrimitive](hint: 'string'): string;
 	[Symbol.toPrimitive](hint: ToPrimitiveHint = 'default'): number | string {
 		const { unitValue } = this;
 
@@ -47,6 +48,10 @@ export abstract class UOMValue implements CustomInspectable {
 		}
 
 		return `${baseResult} (± ${String(errorTolerance)} ${uom})`;
+	}
+
+	toString(): string {
+		return this[Symbol.toPrimitive]('string');
 	}
 }
 

@@ -36,7 +36,7 @@ test('Build includes component-defined styles', async ({ page }) => {
 	// variable, in OdkWebForm.vue.
 	const colors = ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'];
 
-	for await (const color of colors) {
+	for (const color of colors) {
 		await expect(page.locator('body')).not.toHaveCSS('background-color', color);
 
 		await page.locator('html').evaluate((pageRoot, gray200) => {

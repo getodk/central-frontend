@@ -97,6 +97,7 @@ export const expectEqualNode = (actual: Node, expected: Node) => {
 	} else if (isCommentNode(expected)) {
 		expectEqualComment(actual, expected);
 	} else {
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- Intentional fallback
 		throw new Error(`Unhandled expected node: ${String(expected)}`);
 	}
 };

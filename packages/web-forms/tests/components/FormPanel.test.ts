@@ -5,7 +5,7 @@ import { globalMountOptions } from '../helpers';
 
 const mountComponent = (props: PanelProps) => {
 	return mount(FormPanel, {
-		props, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+		props,
 		global: globalMountOptions,
 	});
 };

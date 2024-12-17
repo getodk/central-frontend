@@ -396,9 +396,10 @@ const findConstantExpressionNode = (expression: string): ConstantExpressionSynta
 	}
 };
 
-type BrandedExpression<Expression extends string, Brand extends symbol> = Expression & {
-	readonly [K in Brand]: true;
-};
+// prettier-ignore
+type BrandedExpression<Expression extends string, Brand extends symbol> =
+	& Expression
+	& Readonly<Record<Brand, true>>;
 
 const CONSTANT_EXPRESSION = Symbol('CONSTANT_EXPRESSION');
 type CONSTANT_EXPRESSION = typeof CONSTANT_EXPRESSION;

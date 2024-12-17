@@ -305,6 +305,7 @@ class GeoJSONSecondaryInstanceFeaturePropertyElement extends StaticElement {
 		const { id = propertiesId } = feature;
 
 		if (id !== undefined) {
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string -- Intentional fallback, we don't know what this is and it could be any permutation of JSON
 			yield new this(parent, 'id', String(id));
 		}
 

@@ -72,9 +72,9 @@ export type ExpectExtension =
 	| TypedExpectExtension
 	| UntypedExpectExtension;
 
-export type ExpectExtensionRecord<MethodName extends string> = {
-	[K in MethodName]: ExpectExtension;
-};
+export type ExpectExtensionRecord<MethodName extends string> = Readonly<
+	Record<MethodName, ExpectExtension>
+>;
 
 // prettier-ignore
 export type DeriveStaticVitestExpectExtension<
