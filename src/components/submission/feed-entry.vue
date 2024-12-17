@@ -445,7 +445,9 @@ export default {
           "reviewState": "Abgelehnt"
         }
       },
-      "comment": "Kommentiert von {name}"
+      "comment": "Kommentiert von {name}",
+      "delete": "Gelöscht von {name}",
+      "undelete": "Wiederhergestellt von {name}"
     }
   },
   "es": {
@@ -478,7 +480,14 @@ export default {
           "reviewState": "Rechazado"
         }
       },
-      "comment": "Comentario por {name}"
+      "comment": "Comentario por {name}",
+      "delete": "Eliminado por {name}",
+      "undelete": "Restablecido por {name}",
+      "submissionBacklog": {
+        "hold": "Esperar al envío anterior en la cadena de actualización offline antes de actualizar la entidad",
+        "force": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
+        "reprocess": "Se ha recibido el envío anterior en la cadena de actualización offline"
+      }
     }
   },
   "fr": {
@@ -513,7 +522,12 @@ export default {
       },
       "comment": "Commentaire de {name}",
       "delete": "Supprimée par {name}",
-      "undelete": "Restaurée par {name}"
+      "undelete": "Restaurée par {name}",
+      "submissionBacklog": {
+        "hold": "En attente d'une soumission précédente dans une série de mises à jour effectuées hors ligne avant de mettre l'Entité à jour",
+        "force": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne",
+        "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
+      }
     }
   },
   "id": {
@@ -574,7 +588,14 @@ export default {
           "reviewState": "Respinto"
         }
       },
-      "comment": "Commenti di {name}"
+      "comment": "Commenti di {name}",
+      "delete": "Eliminato da {name}",
+      "undelete": "Ripristinato da {name}",
+      "submissionBacklog": {
+        "hold": "Attesa di un invio precedente nella catena di aggiornamento offline prima di aggiornare l'entità",
+        "force": "Invio elaborato dall'arretrato senza un invio precedente nella catena di aggiornamento offline",
+        "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
+      }
     }
   },
   "ja": {

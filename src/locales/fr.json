@@ -224,21 +224,24 @@
     "appUser": "Utilisateur mobile",
     "appUsers": "Utilisateurs mobiles",
     "config": "Configuration du serveur",
+    "entity": "Entité",
+    "entities": "Entités",
     "entityList": "Liste d'entités",
     "entityLists": "Listes d'Entités",
-    "entities": "Entités",
     "form": "Formulaire",
     "forms": "Formulaires",
     "formAttachments": "Fichiers joints du formulaire",
     "project": "Projet",
     "projects": "Projets",
     "property": "Propriété",
+    "properties": "Propriétés",
     "publicLink": "Lien d'accès public",
     "user": "Utilisateur",
     "users": "Utilisateurs",
     "webUser": "Utilisateur web",
     "webUsers": "Utilisateurs web",
     "session": "Session",
+    "submission": "Soumission",
     "submissions": "Soumissions",
     "projectRoles": "Rôles du projet",
     "formPreview": "Aperçu du Formulaire",
@@ -305,6 +308,7 @@
     "error": "Erreur",
     "filter": "Filtrer",
     "forum": "Forum",
+    "lastUpdate": "Dernière mise à jour",
     "loading": "Chargement...",
     "no": "Non",
     "noResults": "Aucun résultat",
@@ -351,7 +355,11 @@
       "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
       "errorNotProblem": "Quelque-chose s'est mal passé : code d'erreur {status}.",
       "problem": {
-        "404_1": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée."
+        "404_1": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée.",
+        "409_17": {
+          "message": "Ce formulaire tente de créer une nouvelle propriété d'Entité qui correspond à une propriété existante, à l'exception des majuscules : | Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules : | Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules :",
+          "duplicateProperty": "{provided}(existante : {current})"
+        }
       }
     },
     "session": {

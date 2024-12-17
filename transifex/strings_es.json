@@ -628,16 +628,20 @@
       "string": "Configuración del servidor",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entity": {
+      "string": "Entidad",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Entidades",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entityList": {
       "string": "Lista de entidades",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
       "string": "Listas de entidades",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "entities": {
-      "string": "Entidades",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -664,6 +668,10 @@
       "string": "Propiedad",
       "developer_comment": "This is a data property of an Entity."
     },
+    "properties": {
+      "string": "Propiedades",
+      "developer_comment": "This refers to the data properties of an Entity."
+    },
     "publicLink": {
       "string": "Enlace de acceso público",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -686,6 +694,10 @@
     },
     "session": {
       "string": "Sesión",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submission": {
+      "string": "Envío",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
@@ -791,7 +803,7 @@
       "string": "No hay envíos todavía."
     },
     "fileDownloadUnavailable": {
-      "string": ""
+      "string": "La descarga de archivos no está disponible para los envíos eliminados."
     }
   },
   "entity": {
@@ -869,6 +881,9 @@
     "forum": {
       "string": "Foro",
       "developer_comment": "This is the text of a link that links to the ODK forum."
+    },
+    "lastUpdate": {
+      "string": "Última actualización"
     },
     "loading": {
       "string": "Cargando..."
@@ -988,6 +1003,15 @@
         "404_1": {
           "string": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {Este formulario intenta crear una nueva propiedad de entidad que coincida con una existente excepto por las mayúsculas:} many {Este formulario intenta crear nuevas propiedades de entidad que coincidan con las existentes, excepto por las mayúsculas:} other {Este formulario intenta crear nuevas propiedades de entidad que coincidan con las existentes, excepto por las mayúsculas:}}"
+          },
+          "duplicateProperty": {
+            "string": "{provided} (existente: {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
@@ -1286,9 +1310,6 @@
         "num_submissions_from_web_users": {
           "string": "Número de envíos de usuarios web"
         },
-        "has_description": {
-          "string": "El proyecto tiene una descripción"
-        },
         "description_length": {
           "string": "Longitud de la descripción del proyecto"
         },
@@ -1366,6 +1387,36 @@
         },
         "avg_entity_submission_delay": {
           "string": "Plazo medio de tramitación del envío de entidades"
+        },
+        "uses_external_blob_store": {
+          "string": "El servidor utiliza almacenamiento externo compatible con S3"
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": "Número de presentaciones de entidades fuera de línea procesadas por la fuerza"
+        },
+        "max_entity_branch_delay": {
+          "string": "Tiempo máximo para procesar fuera de línea la cadena de actualización de entidades"
+        },
+        "num_xml_only_form_defs": {
+          "string": "Número de definiciones de formulario sin XLSForm asociado"
+        },
+        "num_blob_files": {
+          "string": "Número de archivos binarios"
+        },
+        "num_blob_files_on_s3": {
+          "string": "Número de archivos binarios almacenados actualmente en un almacenamiento compatible con S3"
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": "Número de veces que el usuario ha restablecido una carga fallida en un almacenamiento compatible con S3"
+        },
+        "num_entity_creates_sub": {
+          "string": "Número de entidades creadas a través de envíos"
+        },
+        "num_entity_creates_api": {
+          "string": "Número de entidades creadas a través de la API"
+        },
+        "num_entity_creates_bulk": {
+          "string": "Número de entidades creadas mediante carga masiva"
         }
       }
     },
@@ -2256,6 +2307,20 @@
       "bulk": {
         "string": "Archivo {filename} subido por {name}",
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
+      }
+    },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": "Está utilizando una versión significativamente obsoleta de ODK Central"
+        },
+        "sentence1": {
+          "string": "Actualízate ahora para proteger tus datos y aprovechar las últimas funciones."
+        },
+        "sentence2": {
+          "string": "Si no quiere mantener Central, pruebe con {OdkCloudLink}.",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
       }
     },
     "FeedbackButton": {
@@ -3622,6 +3687,24 @@
         }
       }
     },
+    "OutdatedVersion": {
+      "title": {
+        "string": "Versión obsoleta",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": "Instrucciones para actualizar"
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": "Haga clic aquí para ver las instrucciones de actualización de Central"
+      },
+      "dismiss": {
+        "string": "Despido durante 30 días"
+      },
+      "dismissTooltip": {
+        "string": "Haga clic aquí para desactivar esta advertencia durante 30 días."
+      }
+    },
     "Pagination": {
       "action": {
         "first": {
@@ -4583,24 +4666,24 @@
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
         },
         "delete": {
-          "string": "",
+          "string": "Eliminado por {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
         },
         "undelete": {
-          "string": "",
+          "string": "Restablecido por {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
         },
         "submissionBacklog": {
           "hold": {
-            "string": "",
+            "string": "Esperar al envío anterior en la cadena de actualización offline antes de actualizar la entidad",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           },
           "force": {
-            "string": "",
+            "string": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           },
           "reprocess": {
-            "string": "",
+            "string": "Se ha recibido el envío anterior en la cadena de actualización offline",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }

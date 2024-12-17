@@ -224,21 +224,24 @@
     "appUser": "Utente dell'applicazione",
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
+    "entity": "Entità",
+    "entities": "Entità",
     "entityList": "Lista Entità",
     "entityLists": "Liste Entità",
-    "entities": "Entità",
     "form": "Formulario",
     "forms": "Formulari",
     "formAttachments": "Allegati del formulario",
     "project": "Progetto",
     "projects": "Progetti",
     "property": "Proprietà",
+    "properties": "Proprietà",
     "publicLink": "Link con accesso pubblico",
     "user": "Utente",
     "users": "Utenti",
     "webUser": "Utente Web",
     "webUsers": "Utenti web",
     "session": "Sessioni",
+    "submission": "Invio",
     "submissions": "Invii",
     "projectRoles": "Ruoli del progetto",
     "formPreview": "Anteprima formulario",
@@ -279,7 +282,8 @@
     "binaryLinkTitle": "Il file è stato inviato. Clicca per scaricare.",
     "encryptionMessage": "L'anteprima dei dati non è disponibile a causa della crittografia.",
     "noSubmission": "(nessuno)",
-    "emptyTable": "Non ci sono ancora invii."
+    "emptyTable": "Non ci sono ancora invii.",
+    "fileDownloadUnavailable": "Il download dei documenti non è disponibile per gli invii cancellati"
   },
   "entity": {
     "label": "Label",
@@ -304,6 +308,7 @@
     "error": "Errore",
     "filter": "Filtro",
     "forum": "Forum",
+    "lastUpdate": "Ultima aggiornamento",
     "loading": "Caricando...",
     "no": "No",
     "noResults": "Nessun risultato",
@@ -350,7 +355,11 @@
       "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",
       "errorNotProblem": "Qualcosa è andato storto: codice error {status}.",
       "problem": {
-        "404_1": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata."
+        "404_1": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata.",
+        "409_17": {
+          "message": "Questo formulario tenta di creare nuove proprietà dell'entità che corrisponde a una esistente, tranne che per la capitalizzazione: | Questo formulario tenta di creare nuove proprietà dell'entità che corrispondano a quelle esistenti, tranne che per la capitalizzazione: | Questo formulario tenta di creare nuove proprietà dell'entità che corrispondano a quelle esistenti, tranne che per la capitalizzazione:",
+          "duplicateProperty": "{provided} (esistente: {current})"
+        }
       }
     },
     "session": {
