@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <feed-entry :iso="entry.loggedAt ?? entry.createdAt"
-    :wrap-title="entry.action === 'entity.create' || entry.action === 'entity.update.version'"
+    :wrap-title="entry.action === 'entity.create' || entry.action === 'entity.update.version' || entry.action?.startsWith('submission.backlog')"
     class="submission-feed-entry">
     <template #title>
       <template v-if="entry.action === 'submission.create'">
@@ -20,13 +20,24 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
+      <template v-else-if="entry.action === 'submission.delete'">
+        <span class="icon-trash"></span>
+        <i18n-t keypath="title.delete">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'submission.restore'">
+        <span class="icon-recycle"></span>
+        <i18n-t keypath="title.undelete">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
       <template v-else-if="updateOrEdit">
         <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
           <template #reviewState>
-            <span class="review-state" :class="reviewState">
-              <span :class="reviewStateIcon(reviewState)"></span>
-              <span>{{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}</span>
-            </span>
+            <submission-review-state :value="reviewState" color-text>
+              {{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}
+            </submission-review-state>
           </template>
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
@@ -35,17 +46,13 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
-            </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -53,17 +60,13 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
-            </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -72,11 +75,19 @@ except according to the terms contained in the LICENSE file.
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
         <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
-      <template v-else>
+      <template v-else-if="entry.action?.startsWith('submission.backlog')">
+        <span class="icon-clock-o"></span>
+        <span>{{ $t(`title.submissionBacklog.${entry.action.replace('submission.backlog.', '')}`) }}</span>
+      </template>
+      <template v-else-if="comment">
         <span class="icon-comment"></span>
         <i18n-t keypath="title.comment">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
+      </template>
+      <template v-else>
+        <span class="icon-question-circle-o"></span>
+        {{ entry.action }}
       </template>
     </template>
     <template #body>
@@ -94,17 +105,26 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
+import EntityLink from '../entity/link.vue';
 import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
+import SubmissionReviewState from './review-state.vue';
 
-import useReviewState from '../../composables/review-state';
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, FeedEntry, MarkdownView, SubmissionDiffItem },
+  components: {
+    ActorLink,
+    DatasetLink,
+    EntityLink,
+    FeedEntry,
+    MarkdownView,
+    SubmissionDiffItem,
+    SubmissionReviewState
+  },
   props: {
     projectId: {
       type: String,
@@ -125,9 +145,7 @@ export default {
   },
   setup() {
     const { diffs } = useRequestData();
-    const { reviewStateIcon } = useReviewState();
-    const { datasetPath, entityPath } = useRoutes();
-    return { diffs, reviewStateIcon, datasetPath, entityPath };
+    return { diffs };
   },
   computed: {
     updateOrEdit() {
@@ -138,6 +156,9 @@ export default {
       return this.entry.action === 'submission.update'
         ? this.entry.details.reviewState
         : 'edited';
+    },
+    entityDetails() {
+      return this.entry.details.entity;
     },
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
@@ -189,16 +210,11 @@ export default {
     font-weight: normal;
   }
 
-  .icon-cloud-upload, .icon-comment { color: #bbb; }
+  .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
+    color: #bbb;
+  }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
-  .review-state {
-    color: #999;
-    &.hasIssues { color: $color-warning; }
-    &.edited { color: #666; }
-    &.approved { color: $color-success; }
-    &.rejected { color: $color-danger; }
-  }
   .entity-label { font-weight: normal; }
 }
 </style>
@@ -326,7 +342,43 @@ export default {
 
       Comment • {name}
       */
-      "comment": "Comment by {name}"
+      "comment": "Comment by {name}",
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      There is an icon before the text that corresponds to the word "Deleted",
+      so it is essential for "Deleted" to also come first in the translation. If
+      that is unnatural in your language, you can also split the text into two
+      parts. For example, instead of:
+
+      Deleted by {name}
+
+      you could split it into:
+
+      Deleted • {name}
+      */
+      "delete": "Deleted by {name}",
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      There is an icon before the text that corresponds to the word "Undeleted",
+      so it is essential for "Undeleted" to also come first in the translation. If
+      that is unnatural in your language, you can also split the text into two
+      parts. For example, instead of:
+
+      Undeleted by {name}
+
+      you could split it into:
+
+      Undeleted • {name}
+      */
+      "undelete": "Undeleted by {name}",
+      /*
+      This text is shown in the list of actions performed on a Submission.
+      */
+      "submissionBacklog": {
+        "hold": "Waiting for previous Submission in offline update chain before updating Entity",
+        "force": "Processed Submission from backlog without previous Submission in offline update chain",
+        "reprocess": "Previous Submission in offline update chain was received"
+      }
     }
   }
 }
@@ -393,7 +445,9 @@ export default {
           "reviewState": "Abgelehnt"
         }
       },
-      "comment": "Kommentiert von {name}"
+      "comment": "Kommentiert von {name}",
+      "delete": "Gelöscht von {name}",
+      "undelete": "Wiederhergestellt von {name}"
     }
   },
   "es": {
@@ -426,7 +480,14 @@ export default {
           "reviewState": "Rechazado"
         }
       },
-      "comment": "Comentario por {name}"
+      "comment": "Comentario por {name}",
+      "delete": "Eliminado por {name}",
+      "undelete": "Restablecido por {name}",
+      "submissionBacklog": {
+        "hold": "Esperar al envío anterior en la cadena de actualización offline antes de actualizar la entidad",
+        "force": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
+        "reprocess": "Se ha recibido el envío anterior en la cadena de actualización offline"
+      }
     }
   },
   "fr": {
@@ -459,7 +520,14 @@ export default {
           "reviewState": "Rejetée"
         }
       },
-      "comment": "Commentaire de {name}"
+      "comment": "Commentaire de {name}",
+      "delete": "Supprimée par {name}",
+      "undelete": "Restaurée par {name}",
+      "submissionBacklog": {
+        "hold": "En attente d'une soumission précédente dans une série de mises à jour effectuées hors ligne avant de mettre l'Entité à jour",
+        "force": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne",
+        "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
+      }
     }
   },
   "id": {
@@ -520,7 +588,14 @@ export default {
           "reviewState": "Respinto"
         }
       },
-      "comment": "Commenti di {name}"
+      "comment": "Commenti di {name}",
+      "delete": "Eliminato da {name}",
+      "undelete": "Ripristinato da {name}",
+      "submissionBacklog": {
+        "hold": "Attesa di un invio precedente nella catena di aggiornamento offline prima di aggiornare l'entità",
+        "force": "Invio elaborato dall'arretrato senza un invio precedente nella catena di aggiornamento offline",
+        "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
+      }
     }
   },
   "ja": {

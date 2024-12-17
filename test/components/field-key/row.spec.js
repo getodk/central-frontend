@@ -49,11 +49,20 @@ describe('FieldKeyRow', () => {
         .createPast(1, { displayName: 'App User 2' });
     });
 
-    it('shows the popover', async () => {
+    it('toggles the popover', async () => {
       const app = await load('/projects/1/app-users', { attachTo: document.body });
-      document.querySelectorAll('.popover').length.should.equal(0);
       await app.get('.field-key-row-popover-link').trigger('click');
-      document.querySelectorAll('.popover').length.should.equal(1);
+      should.exist(document.querySelector('.popover .field-key-qr-panel'));
+      await app.get('.field-key-row-popover-link').trigger('click');
+      should.not.exist(document.querySelector('.popover'));
+    });
+
+    it('hides the popover on close button', async () => {
+      const app = await load('/projects/1/app-users', { attachTo: document.body });
+      await app.get('.field-key-row-popover-link').trigger('click');
+      should.exist(document.querySelector('.popover .field-key-qr-panel'));
+      await document.querySelector('.popover button').click();
+      should.not.exist(document.querySelector('.popover'));
     });
 
     it("shows the app user's display name", async () => {

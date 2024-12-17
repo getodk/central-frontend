@@ -22,6 +22,11 @@ const assertChecked = (component, checked) => {
   const inputs = component.findAll('input[type="checkbox"]');
   inputs.map(input => input.element.checked).should.eql(checked);
 };
+const assertDisabled = (component) => {
+  component.get('select').attributes('aria-disabled').should.equal('true');
+  component.get('select').attributes('aria-expanded').should.equal('false');
+  component.classes().should.not.contain('open');
+};
 
 describe('Multiselect', () => {
   it('renders a checkbox for each option', () => {
@@ -629,11 +634,13 @@ describe('Multiselect', () => {
       component.get('option').text().should.equal('Loading…');
     });
 
-    it('is disabled', () => {
+    it('is disabled', async () => {
       const component = mountComponent({
-        props: { options: null, loading: true }
+        props: { options: null, loading: true },
+        attachTo: document.body
       });
-      component.get('select').attributes('aria-disabled').should.equal('true');
+      await toggle(component);
+      assertDisabled(component);
     });
   });
 
@@ -645,11 +652,13 @@ describe('Multiselect', () => {
       component.get('option').text().should.equal('Error');
     });
 
-    it('is disabled', () => {
+    it('is disabled', async () => {
       const component = mountComponent({
-        props: { options: null, loading: false }
+        props: { options: null, loading: false },
+        attachTo: document.body
       });
-      component.get('select').attributes('aria-disabled').should.equal('true');
+      await toggle(component);
+      assertDisabled(component);
     });
   });
 
@@ -710,5 +719,19 @@ describe('Multiselect', () => {
       }
     });
     component.find('.after-list #foo').exists().should.be.true;
+  });
+
+  it('is disabled', async () => {
+    const component = mountComponent({
+      props: {
+        options: [{ value: 'foo' }],
+        disabled: true,
+        disabledMessage: 'disabled due to some reason.'
+      },
+      attachTo: document.body
+    });
+    await toggle(component);
+    assertDisabled(component);
+    component.get('select').should.have.ariaDescription('disabled due to some reason.');
   });
 });

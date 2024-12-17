@@ -1,3 +1,4 @@
+import DlData from '../../../src/components/dl-data.vue';
 import EntityData from '../../../src/components/entity/data.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
 
@@ -53,60 +54,10 @@ describe('EntityData', () => {
     testData.extendedEntities.createPast(1, {
       data: { height: '1', circumference: '2' }
     });
-    mountComponent().findAll('dl > div').length.should.equal(2);
-  });
-
-  it('shows the property name', async () => {
-    testData.extendedEntities.createPast(1, {
-      data: { height: '1' }
-    });
-    const span = mountComponent().get('dt span');
-    span.text().should.equal('height');
-    await span.should.have.textTooltip();
-  });
-
-  it('shows the property value', () => {
-    testData.extendedEntities.createPast(1, {
-      data: { height: '1' }
-    });
-    mountComponent().get('dd').text().should.equal('1');
-  });
-
-  describe('tooltip for the property value', () => {
-    it('shows a tooltip if the value does not fit within 3 lines', async () => {
-      testData.extendedEntities.createPast(1, {
-        data: { notes: 'The\ntree\nis\ntall.' }
-      });
-      const dd = mountComponent({ attachTo: document.body }).get('dd');
-      await dd.should.have.tooltip('The\ntree\nis\ntall.');
-    });
-
-    it('does not show a tooltip if the value fits within 3 lines', async () => {
-      testData.extendedEntities.createPast(1, {
-        data: { notes: 'Tall' }
-      });
-      const dd = mountComponent({ attachTo: document.body }).get('dd');
-      await dd.should.not.have.tooltip();
-    });
-  });
-
-  it('renders correctly if the value of a property is an empty string', () => {
-    testData.extendedEntities.createPast(1, {
-      data: { height: '' }
-    });
-    const dd = mountComponent().get('dd');
-    dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true;
-  });
-
-  it('renders correctly if the value of a property does not exist', () => {
-    testData.extendedDatasets.createPast(1, {
-      properties: [{ name: 'height' }],
-      entities: 1
-    });
-    testData.extendedEntities.createPast(1, { data: {} });
-    const dd = mountComponent().get('dd');
-    dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true;
+    const data = mountComponent().findAllComponents(DlData);
+    data.map(wrapper => wrapper.props()).should.eql([
+      { name: 'height', value: '1' },
+      { name: 'circumference', value: '2' }
+    ]);
   });
 });

@@ -173,7 +173,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "task": {
-        "string": "",
+        "string": "Opération système",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -202,11 +202,11 @@
       },
       "blobs": {
         "s3_upload": {
-          "string": "",
+          "string": "Téléverser les Fichiers sur le Stockage",
           "developer_comment": "This is shown in the log of actions performed on the server."
         },
         "s3_failed_to_pending": {
-          "string": "",
+          "string": "Marquer les fichiers pour réessayer envoi au stockage",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -239,6 +239,10 @@
       "form": {
         "update_draft_set": {
           "string": "Créer ou mettre à jour l'ébauche",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_replace": {
+          "string": "Remplacer ébauche",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -278,7 +282,7 @@
       },
       "submission": {
         "purge": {
-          "string": "",
+          "string": "Purger les Soumissions",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -289,6 +293,10 @@
         },
         "process_form_draft": {
           "string": "Traiter l'ébauche du formulaire",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_entities_version": {
+          "string": "Marquer le formulaire pour mise à jour",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -487,13 +495,12 @@
       "string": "Nouveau mot de passe (confirmez)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "État",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "Type",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "État"
     }
   },
   "header": {
@@ -621,16 +628,20 @@
       "string": "Configuration du serveur",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entity": {
+      "string": "Entité",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Entités",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entityList": {
       "string": "Liste d'entités",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
       "string": "Listes d'Entités",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "entities": {
-      "string": "Entités",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -657,6 +668,10 @@
       "string": "Propriété",
       "developer_comment": "This is a data property of an Entity."
     },
+    "properties": {
+      "string": "Propriétés",
+      "developer_comment": "This refers to the data properties of an Entity."
+    },
     "publicLink": {
       "string": "Lien d'accès public",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -679,6 +694,10 @@
     },
     "session": {
       "string": "Session",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submission": {
+      "string": "Soumission",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
@@ -706,6 +725,12 @@
     },
     "versionChange": {
       "string": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
+    },
+    "submissionDeleted": {
+      "string": "La soumission a été supprimée"
+    },
+    "submissionRestored": {
+      "string": "La soumission a été restaurée."
     }
   },
   "moreInfo": {
@@ -776,6 +801,9 @@
     },
     "emptyTable": {
       "string": "Il n'y a pas encore de Soumission"
+    },
+    "fileDownloadUnavailable": {
+      "string": "Le téléchargement de fichiers n'est pas disponible pour les Soumissions supprimées."
     }
   },
   "entity": {
@@ -853,6 +881,9 @@
     "forum": {
       "string": "Forum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
+    },
+    "lastUpdate": {
+      "string": "Dernière mise à jour"
     },
     "loading": {
       "string": "Chargement..."
@@ -972,6 +1003,15 @@
         "404_1": {
           "string": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {Ce formulaire tente de créer une nouvelle propriété d'Entité qui correspond à une propriété existante, à l'exception des majuscules :} many {Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules :} other {Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules :}}"
+          },
+          "duplicateProperty": {
+            "string": "{provided}(existante : {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
@@ -1270,9 +1310,6 @@
         "num_submissions_from_web_users": {
           "string": "Nombre de soumissions par des utilisateurs web"
         },
-        "has_description": {
-          "string": "Le projet a une description"
-        },
         "description_length": {
           "string": "Longueur de la description du Projet"
         },
@@ -1337,19 +1374,49 @@
           "string": "Nombre d'événements du journal d'audit qui ont été traités à retardement"
         },
         "num_offline_entity_branches": {
-          "string": ""
+          "string": "Nombre de branches d'Entités Hors ligne"
         },
         "num_offline_entity_interrupted_branches": {
-          "string": ""
+          "string": "Nombre de branches d'Entités hors lignes interrompues "
         },
         "num_offline_entity_submissions_reprocessed": {
-          "string": ""
+          "string": "Nombre de soumissions reliées à des Entités hors ligne qui sont arrivées dans le mauvais ordre"
         },
         "max_entity_submission_delay": {
-          "string": ""
+          "string": "Délai maximum de traitement de soumissions reliées à une Entité"
         },
         "avg_entity_submission_delay": {
-          "string": ""
+          "string": "Délai moyen de traitement de soumissions reliées à une Entité"
+        },
+        "uses_external_blob_store": {
+          "string": "Le serveur utilise un service de stockage externe compatible avec S3"
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": "Nombre de soumissions reliées à des Entités hors ligne qui ont été traitées par force"
+        },
+        "max_entity_branch_delay": {
+          "string": "Temps maximum pour traiter une série d'Entités modifiées hors ligne"
+        },
+        "num_xml_only_form_defs": {
+          "string": "Nombre de définitions de formulaires sans XLSForm associées"
+        },
+        "num_blob_files": {
+          "string": "Nombre de fichiers binaires"
+        },
+        "num_blob_files_on_s3": {
+          "string": "Nombre de fichiers binaires stockés dans un service de stockage externe compatible avec S3 "
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": "Nombre de fois qu'un utilisateur a réinitialisé un envoi échoué au stockage externe compatible avec S3"
+        },
+        "num_entity_creates_sub": {
+          "string": "Nombre d'Entités créées par soumissions"
+        },
+        "num_entity_creates_api": {
+          "string": "Nombre d'Entités créées par API"
+        },
+        "num_entity_creates_bulk": {
+          "string": "Nombre d'Entités créées par envoi en masse"
         }
       }
     },
@@ -1437,6 +1504,12 @@
           "string": "Détails",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "CollectQr": {
+      "draft": {
+        "string": "Code de Test Temporaire",
+        "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
     "ConfigError": {
@@ -2236,6 +2309,20 @@
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": "Vous utilisez une version ancienne d'ODK Central"
+        },
+        "sentence1": {
+          "string": "Effectuez une mise à jour pour protéger vos données et profiter des fonctionnalités les plus récentes."
+        },
+        "sentence2": {
+          "string": "Si vous préférez ne pas être responsable des mises à jours, essayez {OdkCloudLink}.",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
+      }
+    },
     "FeedbackButton": {
       "feedback": {
         "string": "Retour d'information",
@@ -2894,6 +2981,40 @@
         }
       }
     },
+    "FormDraftQrPanel": {
+      "title": {
+        "string": "Code de Test",
+        "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
+      },
+      "introduction": {
+        "full": {
+          "string": "Ceci est un {temporaryCode}",
+          "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
+        },
+        "temporaryCode": {
+          "string": "Code de Test Temporaire",
+          "developer_comment": "\"Code\" refers to a QR code.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {temporaryCode} is in the following text:\n\nThis is a {temporaryCode}."
+        }
+      },
+      "stopsWorking": {
+        "string": "Il cessera de fonctionner quand vous publierez cette ébauche.",
+        "developer_comment": "\"It\" refers to a temporary testing code."
+      },
+      "instructions": {
+        "string": "Scannez ce QR code pour configurer Collect sur un appareil pour tester et soumettre des données à cette table de test.",
+        "developer_comment": "The table is a table of test Submissions."
+      },
+      "codesForUsers": {
+        "full": {
+          "string": "Pour créer des codes à distribuer aux utilisateurs, merci de visiter la page {appUsers}.",
+          "developer_comment": "\"Codes\" refers to \"QR codes\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "Utilisateurs mobiles",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nTo create codes to distribute to users, please see the {appUsers} page."
+        }
+      }
+    },
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
@@ -2956,16 +3077,9 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
-        "0": {
-          "string": "Vous pouvez utiliser le code de configuration à droite pour configurer un appareil mobile afin de télécharger cette ébauche. Vous pouvez aussi cliquer le bouton Nouveau ci-dessus pour créer une nouvelle soumission depuis votre navigateur."
-        },
         "1": {
           "string": "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
         }
-      },
-      "collectProjectName": {
-        "string": "[Brouillon] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
         "title": {
@@ -2979,6 +3093,10 @@
             "string": "Pour le moment, nous vous conseillons de tester la définition de votre formulaire à l'état d'ébauche pour vérifier sa logique. Avant de le publier, vous pouvez vérifier qu'il met à jour les propriétés désirées."
           }
         }
+      },
+      "collectProjectName": {
+        "string": "[Brouillon] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -3122,6 +3240,9 @@
           },
           "structureChanged": {
             "string": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut."
+          },
+          "oldEntityVersion": {
+            "string": "La version \"{version}\" de la spécification des entités n'est pas compatible avec les entités hors-ligne. Nous recommandons d'utiliser la version 2024.1.0 ou supérieure."
           }
         },
         "4": {
@@ -3195,8 +3316,8 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {Liste d'entités attachée à ce formulaire} many {Listes d'entités attachées à ce formulaire} other {Listes d'entités attachées à ce formulaire}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
+        "string": "{count, plural, one {Liste d'Entités attachée à ce Formulaire :} many {Listes d'Entités attachées à ce Formulaire :} other {Listes d'Entités attachées à ce Formulaire :}}",
+        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {
@@ -3289,6 +3410,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "L'accès OData n'est pas possible pour les soumissions supprimées."
+      },
+      "purgeDescription": {
+        "string": "Les soumissions et les données associées sont supprimées aprés 30 jours passés dans la corbeille."
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {{count} Soumission supprimée} many {{count} Soumissions supprimées} other {{count} Soumission supprimée}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -3329,12 +3462,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Restaurer",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Supprimé le {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3342,6 +3469,12 @@
       "disabled": {
         "conflict": {
           "string": "Le formulaire ne peut être supprimé car il existe un formulaire actif avec le même ID."
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "Restaurer",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3552,6 +3685,24 @@
             }
           }
         }
+      }
+    },
+    "OutdatedVersion": {
+      "title": {
+        "string": "Version ancienne",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": "Instructions de mise à jour"
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": "Cliquez ici pour voir les instructions pour mettre Central à jour"
+      },
+      "dismiss": {
+        "string": "Cacher pour 30 jours"
+      },
+      "dismissTooltip": {
+        "string": "Cliquez ici pour cacher cette alerte pour 30 jours."
       }
     },
     "Pagination": {
@@ -3841,7 +3992,7 @@
         "string": "Ce projet utilise un chiffrement des données."
       },
       "showMore": {
-        "string": "{count, plural, one {Afficher tous les {count} Formulaires} many {Afficher tous les {count} Formulaires} other {Afficher tous les {count} Formulaires}}",
+        "string": "{count, plural, one {Afficher tous les {count} Formulaires} many {Afficher tous les {count} Formulaires} other {Afficher les {count} Formulaires}}",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showMoreDatasets": {
@@ -4285,9 +4436,6 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "État"
-      },
       "formVersion": {
         "string": "Version de formulaire"
       },
@@ -4391,6 +4539,20 @@
         },
         "parseError": {
           "string": "Quelque chose s'est mal passé pendant la requête de vos données"
+        }
+      }
+    },
+    "SubmissionDelete": {
+      "title": {
+        "string": "Supprimer la Soumission",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Etes vous sûr de vouloir supprimer cette Soumission ?"
+        },
+        "1": {
+          "string": "Cette action va mettre la Soumission à la corbeille. Aprés 30 jours elle sera définitivement supprimée, mais elle peut être restaurée avant ce délai."
         }
       }
     },
@@ -4502,6 +4664,28 @@
         "comment": {
           "string": "Commentaire de {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        },
+        "delete": {
+          "string": "Supprimée par {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
+        },
+        "undelete": {
+          "string": "Restaurée par {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "En attente d'une soumission précédente dans une série de mises à jour effectuées hors ligne avant de mettre l'Entité à jour ",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne ",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "Soumission précédente dans une série de mises à jours hors ligne à été reçue",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },
@@ -4594,8 +4778,29 @@
       }
     },
     "SubmissionList": {
+      "action": {
+        "testOnDevice": {
+          "string": "Tester sur un appareil",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "Tester dans le naviguateur",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "noMatching": {
         "string": "Il n'y a pas de soumission correspondante."
+      },
+      "downloadDisabled": {
+        "string": "Le téléchargement n'est pas possible pour les Soumissions supprimées."
+      },
+      "filterDisabledMessage": {
+        "string": "Le filtrage n'est pas possible pour les Soumissions supprimées."
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": "Il n'y a pas de Soumissions supprimées"
+        }
       },
       "loading": {
         "withoutCount": {
@@ -4641,6 +4846,29 @@
         }
       }
     },
+    "SubmissionRestore": {
+      "title": {
+        "string": "Restaurer la Soumission",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Etes vous sûr de vouloir restaurer cette Soumission ?"
+        },
+        "1": {
+          "string": "La Soumission sera restaurée dans son état précédent, y compris les données associées comme les commentaires."
+        },
+        "2": {
+          "string": "Si la soumission est à nouveau supprimée, il faudra attendre à nouveau 30 jours avant qu'elle ne soit retirée."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "Restaurer immédiatement sans confirmation jusqu'à ce que je quitte la page",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
     "SubmissionShow": {
       "back": {
         "title": {
@@ -4658,6 +4886,10 @@
         "stateAndActions": {
           "string": "État et actions ",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "Supprimé à",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

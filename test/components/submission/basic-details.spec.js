@@ -1,6 +1,7 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 import SubmissionBasicDetails from '../../../src/components/submission/basic-details.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import useSubmission from '../../../src/request-data/submission';
 
@@ -45,46 +46,11 @@ describe('SubmissionBasicDetails', () => {
     mountComponent().getComponent(DateTime).props().iso.should.equal(createdAt);
   });
 
-  describe('review state', () => {
-    it('renders correctly for null', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: null });
-      const component = mountComponent();
-      const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-dot-circle-o').exists().should.be.true;
-      dd.text().should.equal('Received');
-    });
-
-    it('renders correctly for hasIssues', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'hasIssues' });
-      const component = mountComponent();
-      const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-comments').exists().should.be.true;
-      dd.text().should.equal('Has issues');
-    });
-
-    it('renders correctly for edited', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'edited' });
-      const component = mountComponent();
-      const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-pencil').exists().should.be.true;
-      dd.text().should.equal('Edited');
-    });
-
-    it('renders correctly for approved', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
-      const component = mountComponent();
-      const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-check-circle').exists().should.be.true;
-      dd.text().should.equal('Approved');
-    });
-
-    it('renders correctly for rejected', () => {
-      testData.extendedSubmissions.createPast(1, { reviewState: 'rejected' });
-      const component = mountComponent();
-      const dd = component.get('#submission-basic-details-review-state');
-      dd.find('.icon-times-circle').exists().should.be.true;
-      dd.text().should.equal('Rejected');
-    });
+  it('shows the review state', () => {
+    testData.extendedSubmissions.createPast(1, { reviewState: 'approved' });
+    const component = mountComponent();
+    const { value } = component.getComponent(SubmissionReviewState).props();
+    value.should.equal('approved');
   });
 
   it('shows the form version', () => {

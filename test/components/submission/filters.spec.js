@@ -463,6 +463,19 @@ describe('SubmissionFilters', () => {
     });
   });
 
+  it('disables all filters', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+    return loadComponent({ props: { deleted: true } })
+      .afterResponses(component => {
+        component.getComponent(DateRangePicker).props().disabled.should.be.true;
+        const multiselects = component.findAll('.multiselect select');
+        multiselects[0].attributes('aria-disabled').should.equal('true');
+        multiselects[1].attributes('aria-disabled').should.equal('true');
+      });
+  });
+
   it('should not send Submission OData request on navigating to another route after filter', () => {
     testData.extendedForms.createPast(1);
 

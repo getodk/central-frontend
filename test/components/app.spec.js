@@ -21,7 +21,7 @@ describe('App', () => {
         })
         // This isn't actually what a version looks like. However, the value
         // itself doesn't really matter, but rather only whether it changes.
-        .respondWithData(() => 'v1.2')
+        .respondWithData(() => '(v2024.1.2-sha)')
         .testRequests([{ url: '/version.txt' }]);
     });
 
@@ -32,12 +32,12 @@ describe('App', () => {
         .request(() => {
           clock.tick(15000);
         })
-        .respondWithData(() => 'v1.2')
+        .respondWithData(() => '(v2024.1.2-sha)')
         .complete()
         .request(() => {
           clock.tick(60000);
         })
-        .respondWithData(() => 'v1.2')
+        .respondWithData(() => '(v2024.1.2-sha)')
         .testRequests([{ url: '/version.txt' }]);
     });
 
@@ -49,21 +49,21 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .afterResponse(app => {
             app.should.not.alert();
           })
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .afterResponse(app => {
             app.should.not.alert();
           })
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(app => {
             clock.tick(0);
             app.should.alert('info', (message) => {
@@ -79,12 +79,12 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .complete()
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .complete()
           .testNoRequest(() => {
             clock.tick(60000);
@@ -98,12 +98,12 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .complete()
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(async (app) => {
             clock.tick(0);
             app.vm.$container.alert.blank();
@@ -142,7 +142,7 @@ describe('App', () => {
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .testRequests([{ url: '/version.txt' }]);
       });
 
@@ -156,13 +156,13 @@ describe('App', () => {
           .beforeEachResponse((app, { url }) => {
             if (url === '/version.txt') logOut(app.vm.$container, false);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .respondWithSuccess()
           .complete()
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .testRequests([{ url: '/version.txt' }]);
       });
 
@@ -173,7 +173,7 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .complete()
           .request(() => {
             clock.tick(60000);
@@ -183,7 +183,7 @@ describe('App', () => {
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(app => {
             clock.tick(0);
             app.should.alert('info', (message) => {

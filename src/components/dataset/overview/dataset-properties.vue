@@ -26,16 +26,19 @@ except according to the terms contained in the LICENSE file.
             {{ property.name }}
           </td>
           <td>
-            <router-link v-if="property.forms.length > 0" :to="publishedFormPath(projectId, property.forms[0].xmlFormId)" v-tooltip.text>
-              {{ property.forms[0].name }}
-            </router-link>
+            <form-link v-if="property.forms.length > 0"
+              :form="property.forms[0]"
+              :to="publishedFormPath(property.forms[0].projectId, property.forms[0].xmlFormId)"
+              v-tooltip.text/>
             <div v-else class="empty-update-form">{{ $t('none') }}</div>
           </td>
         </tr>
         <template v-for="(form, index) in property.forms" :key="form.xmlFormId">
           <tr v-if="index > 0">
             <td>
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
+              <form-link :form="form"
+                :to="publishedFormPath(form.projectId, form.xmlFormId)"
+                v-tooltip.text/>
             </td>
           </tr>
         </template>
@@ -49,21 +52,19 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
+import FormLink from '../../form/link.vue';
+
 import useRoutes from '../../../composables/routes';
+import { useRequestData } from '../../../request-data';
 
 defineOptions({
   name: 'DatasetProperties'
 });
-defineProps({
-  properties: {
-    type: Array,
-    required: true
-  },
-  projectId: {
-    type: String,
-    required: true
-  }
-});
+
+const { dataset } = useRequestData();
+const properties = computed(() => dataset.properties);
 
 const { publishedFormPath } = useRoutes();
 </script>

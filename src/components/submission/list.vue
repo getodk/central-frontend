@@ -14,30 +14,50 @@ except according to the terms contained in the LICENSE file.
     <loading :state="fields.initiallyLoading"/>
     <div v-show="selectedFields != null">
       <div id="submission-list-actions">
+        <template v-if="draft">
+          <button id="submission-list-test-on-device" type="button"
+            class="btn btn-default" @click="$emit('toggle-qr', $event.target)">
+            <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
+          </button>
+          <enketo-fill v-if="formVersion.dataExists"
+            id="submission-list-test-in-browser" :form-version="formVersion">
+            <span class="icon-desktop"></span>{{ $t('action.testInBrowser') }}
+          </enketo-fill>
+        </template>
         <form class="form-inline" @submit.prevent>
           <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
-            v-model:reviewState="reviewStates"/>
+            v-model:reviewState="reviewStates"
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
-          <button id="submission-list-refresh-button" type="button"
-            class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(false, true)">
-            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-            <spinner :state="refreshing"/>
-          </button>
         </form>
+        <button id="submission-list-refresh-button" type="button"
+          class="btn btn-default" :aria-disabled="refreshing"
+          @click="fetchChunk(false, true)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
         <submission-download-button :form-version="formVersion"
-          :filtered="odataFilter != null" @download="downloadModal.show()"/>
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+          :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
       </div>
-      <submission-table v-show="odata.dataExists && odata.value.length !== 0"
+      <submission-table v-show="odata.dataExists && odata.value.length !== 0 && odata.removedCount < odata.value.length"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :fields="selectedFields"
-        @review="reviewModal.show({ submission: $event })"/>
-      <p v-show="odata.dataExists && odata.value.length === 0"
+        :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+        @review="reviewModal.show({ submission: $event })"
+        @delete="showDelete"
+        @restore="showRestore"/>
+      <p v-show="odata.dataExists && (odata.value.length === 0 || odata.removedCount === odata.value.length)"
         class="empty-table-message">
-        {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        <template v-if="deleted">
+          {{ $t('deletedSubmission.emptyTable') }}
+        </template>
+        <template v-else>
+          {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        </template>
       </p>
       <odata-loading-message type="submission"
         :top="top(odata.dataExists ? odata.value.length : 0)"
@@ -52,13 +72,20 @@ except according to the terms contained in the LICENSE file.
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
+    <submission-delete v-bind="deleteModal" checkbox
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.submission.__id)"
+      @hide="deleteModal.hide()" @delete="requestDelete"/>
+    <submission-restore v-bind="restoreModal" checkbox
+      :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.submission.__id)"
+      @hide="restoreModal.hide()" @restore="requestRestore"/>
   </div>
 </template>
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watch, watchEffect } from 'vue';
+import { shallowRef, watch, watchEffect, reactive } from 'vue';
 
+import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
@@ -68,11 +95,13 @@ import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
+import SubmissionDelete from './delete.vue';
+import SubmissionRestore from './restore.vue';
 
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
-import useSubmissions from '../../request-data/submissions';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
 import { modalData } from '../../util/reactivity';
@@ -83,12 +112,15 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'SubmissionList',
   components: {
+    EnketoFill,
     Loading,
     Spinner,
+    SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
     SubmissionFieldDropdown,
     SubmissionFilters,
+    SubmissionRestore,
     SubmissionTable,
     SubmissionUpdateReviewState,
     OdataLoadingMessage
@@ -104,20 +136,24 @@ export default {
       required: true
     },
     draft: Boolean,
+    deleted: {
+      type: Boolean,
+      required: false
+    },
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
-  emits: ['fetch-keys'],
+  emits: ['fetch-keys', 'fetch-deleted-count', 'toggle-qr'],
   setup(props) {
-    const { form, keys, resourceView } = useRequestData();
+    const { form, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
     const formVersion = props.draft
       ? resourceView('formDraft', (data) => data.get())
       : form;
     const fields = useFields();
-    const { odata, submitters } = useSubmissions();
+
     // We do not reconcile `odata` with either form.lastSubmission or
     // project.lastSubmission.
     watchEffect(() => {
@@ -169,10 +205,12 @@ export default {
         reviewState: value.length === allReviewStates.length ? [] : value
       })
     });
+    const { request } = useRequest();
 
     return {
-      form, keys, fields, formVersion, odata, submitters,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates
+      form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      request
     };
   },
   data() {
@@ -186,7 +224,16 @@ export default {
       refreshing: false,
       // Modals
       downloadModal: modalData(),
-      reviewModal: modalData()
+      reviewModal: modalData(),
+      deleteModal: modalData(),
+      restoreModal: modalData(),
+
+      // state that indicates whether we need to show delete confirmation dialog
+      confirmDelete: true,
+      // state that indicates whether we need to show restore confirmation dialog
+      confirmRestore: true,
+
+      awaitingResponses: new Set()
     };
   },
   computed: {
@@ -199,6 +246,8 @@ export default {
     },
     odataFilter() {
       if (this.draft) return null;
+      if (this.deleted) return '__system/deletedAt ne null';
+
       const conditions = [];
       if (this.filtersOnSubmitterId) {
         const condition = this.submitterIds
@@ -270,8 +319,22 @@ export default {
           ? (response) => this.odata.addChunk(response.data)
           : null
       })
+        .then(() => {
+          if (this.deleted) {
+            this.deletedSubmissionCount.cancelRequest();
+            if (!this.deletedSubmissionCount.dataExists) {
+              this.deletedSubmissionCount.data = reactive({});
+            }
+            this.deletedSubmissionCount.value = this.odata.originalCount;
+          }
+        })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // emit event to parent component to re-fetch deleted Submissions count
+      if (refresh && !this.deleted && !this.draft) {
+        this.$emit('fetch-deleted-count');
+      }
 
       // emit event to parent component to re-fetch keys if needed
       if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
@@ -322,6 +385,90 @@ export default {
         this.odata.value[index].__system.reviewState = reviewState;
         this.$refs.table.afterReview(index);
       }
+    },
+    showDelete(submission) {
+      if (this.confirmDelete) {
+        this.deleteModal.show({ submission });
+      } else {
+        this.requestDelete([submission, this.confirmDelete]);
+      }
+    },
+    showRestore(submission) {
+      if (this.confirmRestore) {
+        this.restoreModal.show({ submission });
+      } else {
+        this.requestRestore([submission, this.confirmRestore]);
+      }
+    },
+    requestDelete(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      this.awaitingResponses.add(instanceId);
+
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.deleteModal.hide();
+          if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
+
+          this.alert.success(this.$t('alert.submissionDeleted'));
+          if (confirm != null) this.confirmDelete = confirm;
+
+          /* Before doing a couple more things, we first determine whether
+          this.odata.value still includes the Submission and if so, what the
+          current index of the Submission is. If a request to refresh
+          this.odata was sent while the deletion request was in
+          progress, then there could be a race condition such that data doesn't
+          exist for this.odata, or this.odata.value no longer
+          includes the Submission. Another possible result of the race condition is
+          that this.odata.value still includes the Submission, but the
+          Submission's index has changed. */
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.odata.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
+        });
+    },
+    requestRestore(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      this.awaitingResponses.add(instanceId);
+
+      this.request({
+        method: 'POST',
+        url: apiPaths.restoreSubmission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.restoreModal.hide();
+          if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0) {
+            this.deletedSubmissionCount.value -= 1;
+          }
+
+          this.alert.success(this.$t('alert.submissionRestored'));
+          if (confirm != null) this.confirmRestore = confirm;
+
+          // See the comments in requestDelete().
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.odata.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
+        });
     }
   }
 };
@@ -337,35 +484,64 @@ export default {
 }
 
 #submission-list-actions {
-  align-items: baseline;
+  align-items: center;
   display: flex;
   flex-wrap: wrap-reverse;
+  // This results in 10px of space between elements on the row, as well as 10px
+  // between rows if elements start wrapping. The main example of that is that
+  // the download button can wrap above the other actions if the viewport is not
+  // wide enough.
+  gap: 10px;
+  margin-bottom: 30px;
 
-  // If there are filters, then there is already no left margin. But if there
-  // aren't filters (in the case of a form draft), then we need to remove the
-  // left margin.
-  form > :first-child { margin-left: 0; }
+  .form-inline {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 }
 #submission-field-dropdown {
+  // This is the entire spacing between the dropdown and the filters to its
+  // left. Since they're both child elements of the form, the flexbox gap does
+  // not apply to them.
   margin-left: 15px;
+  // Additional space between the dropdown and the refresh button
   margin-right: 5px;
 }
-#submission-list-refresh-button {
-  margin-left: 10px;
-  margin-right: 5px;
-}
-#submission-download-button {
-  // The bottom margin is for if the download button wraps above the other
-  // actions.
-  margin-bottom: 10px;
-  margin-left: auto;
+#submission-download-button { margin-left: auto; }
+
+// Adjust the spacing between actions on the draft testing page.
+#submission-list-test-in-browser {
+  ~ .form-inline {
+    // It is possible for .form-inline to be :empty, but we still render it so
+    // that the buttons that follow it are shown on the righthand side of the
+    // page.
+    margin-left: auto;
+
+    #submission-field-dropdown {
+      // There are no filters, so no need for margin-left.
+      margin-left: 0;
+      // Further increase the space between the dropdown and the refresh button.
+      margin-right: 10px;
+    }
+  }
+
+  ~ #submission-download-button { margin-left: 0; }
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "noMatching": "There are no matching Submissions."
+    "action": {
+      "testOnDevice": "Test on device",
+      "testInBrowser": "Test in browser"
+    },
+    "noMatching": "There are no matching Submissions.",
+    "downloadDisabled": "Download is unavailable for deleted Submissions",
+    "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
+    "deletedSubmission": {
+      "emptyTable": "There are no deleted Submissions."
+    }
   }
 }
 </i18n>
@@ -377,19 +553,55 @@ export default {
     "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
-    "noMatching": "Es gibt keine passenden Übermittlungen."
+    "action": {
+      "testOnDevice": "Test am Gerät",
+      "testInBrowser": "Test im Browser"
+    },
+    "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
+    "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
+    "deletedSubmission": {
+      "emptyTable": "Es gibt keine gelöschten Übermittlungen."
+    }
   },
   "es": {
-    "noMatching": "No hay envíos coincidentes."
+    "action": {
+      "testOnDevice": "Prueba en el dispositivo",
+      "testInBrowser": "Prueba en el navegador"
+    },
+    "noMatching": "No hay envíos coincidentes.",
+    "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
+    "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
+    "deletedSubmission": {
+      "emptyTable": "No hay envíos eliminados."
+    }
   },
   "fr": {
-    "noMatching": "Il n'y a pas de soumission correspondante."
+    "action": {
+      "testOnDevice": "Tester sur un appareil",
+      "testInBrowser": "Tester dans le naviguateur"
+    },
+    "noMatching": "Il n'y a pas de soumission correspondante.",
+    "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
+    "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
+    "deletedSubmission": {
+      "emptyTable": "Il n'y a pas de Soumissions supprimées"
+    }
   },
   "id": {
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
   "it": {
-    "noMatching": "Non sono presenti invii corrispondenti."
+    "action": {
+      "testOnDevice": "Testa sul dispositivo",
+      "testInBrowser": "Testa nel browser"
+    },
+    "noMatching": "Non sono presenti invii corrispondenti.",
+    "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
+    "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
+    "deletedSubmission": {
+      "emptyTable": "Non ci sono invii cancellati."
+    }
   },
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"

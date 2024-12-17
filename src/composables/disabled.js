@@ -76,7 +76,7 @@ const preventDisabledSelect = (event) => {
   if (event.target.tagName === 'SELECT' &&
     event.target.getAttribute('aria-disabled') === 'true' &&
     (event.type === 'mousedown' ||
-    event.key === ' ' || event.key === 'ArrowDown' || event.key === 'ArrowUp'))
+    event.key === ' ' || event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Enter'))
     preventAndStop(event);
 };
 

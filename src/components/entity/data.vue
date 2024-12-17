@@ -22,11 +22,7 @@ except according to the terms contained in the LICENSE file.
       <loading :state="dataset.initiallyLoading"/>
       <dl v-if="dataExists">
         <div v-for="{ name } of dataset.properties" :key="name">
-          <dt><span v-tooltip.text>{{ name }}</span></dt>
-          <dd v-if="data[name] == null || data[name] === ''" class="empty">
-            {{ $t('common.emptyValue') }}
-          </dd>
-          <dd v-else v-tooltip.text>{{ data[name] }}</dd>
+          <dl-data :name="name" :value="data[name]"/>
         </div>
       </dl>
     </template>
@@ -36,6 +32,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed } from 'vue';
 
+import DlData from '../dl-data.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 
@@ -57,23 +54,8 @@ const data = computed(() => entity.currentVersion.data);
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
-
 #entity-data {
   margin-bottom: 35px;
-
-  dt { @include text-overflow-ellipsis; }
-
-  dd {
-    @include line-clamp(3);
-    overflow-wrap: break-word;
-    white-space: break-spaces;
-  }
-
-  .empty {
-    @include italic;
-    color: #888;
-  }
 }
 </style>
 

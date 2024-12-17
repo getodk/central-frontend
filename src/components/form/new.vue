@@ -41,12 +41,22 @@ definition for an existing form -->
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.workflowWarnings">
-              {{ $t('warningsText[3].' + warning.type, { value: warning.details.xmlFormId }) }}
-              <doc-link :to="documentLinks[warning.type]">{{ $t('moreInfo.learnMore') }}</doc-link>
-              <span v-if="warning.type === 'structureChanged'">
-                <br>
-                <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
-              </span>
+              <template v-if="warning.type === 'deletedFormExists'">
+                {{ $t('warningsText[3].deletedFormExists', { value: warning.details.xmlFormId }) }}
+                <doc-link to="central-forms/#deleting-a-form">{{ $t('moreInfo.learnMore') }}</doc-link>
+              </template>
+              <template v-else-if="warning.type === 'structureChanged'">
+                {{ $t('warningsText[3].structureChanged') }}
+                <doc-link to="central-forms/#central-forms-updates">{{ $t('moreInfo.learnMore') }}</doc-link>
+                <span>
+                  <br>
+                  <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
+                </span>
+              </template>
+              <template v-else-if="warning.type === 'oldEntityVersion'">
+                {{ $t('warningsText[3].oldEntityVersion', { version: warning.details.version }) }}
+                <a href="https://getodk.github.io/xforms-spec/entities" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
+              </template>
             </li>
           </ul>
         </p>
@@ -143,11 +153,7 @@ export default {
   data() {
     return {
       file: null,
-      warnings: null,
-      documentLinks: {
-        deletedFormExists: 'central-forms/#deleting-a-form',
-        structureChanged: 'central-forms/#central-forms-updates'
-      }
+      warnings: null
     };
   },
   computed: {
@@ -318,7 +324,8 @@ export default {
       "Workflow warnings:",
       {
         "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID.",
-        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default.",
+        "oldEntityVersion": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
       },
       "Please correct the problems and try again.",
       {
@@ -465,7 +472,8 @@ export default {
       "Advertencias sobre el flujo de trabajo:",
       {
         "deletedFormExists": "Hay un formulario con ID \"{value}\" en la Papelera. Si carga este formulario, no podrá recuperar el otro con la identificación coincidente.",
-        "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada."
+        "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada.",
+        "oldEntityVersion": "La versión \"{version}\" de la especificación de entidades no es compatible con las entidades sin conexión. Se recomienda utilizar la versión 2024.1.0 o posterior."
       },
       "Por favor, corrija los problemas e intente nuevamente.",
       {
@@ -512,7 +520,8 @@ export default {
       "Avertissements sur le déroulement des opérations :",
       {
         "deletedFormExists": "Il y a un formualire avec l'identifiant \"{value}\" dans la corbeille. Si vous envoyez ce Formulaire, vous ne serez pas en mesure restaurer l'autre ayant le même ID.",
-        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut."
+        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut.",
+        "oldEntityVersion": "La version \"{version}\" de la spécification des entités n'est pas compatible avec les entités hors-ligne. Nous recommandons d'utiliser la version 2024.1.0 ou supérieure."
       },
       "Merci de corriger le problème et d'essayer à nouveau.",
       {
@@ -590,7 +599,8 @@ export default {
       "Avvertenze sul flusso di lavoro:",
       {
         "deletedFormExists": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di annullare l'eliminazione dell'altro con l'ID corrispondente.",
-        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
+        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti.",
+        "oldEntityVersion": "Versione delle specifiche delle entità “{version}” non è compatibile con le Entità offline. Si consiglia di utilizzare la versione 2024.1.0 o successiva."
       },
       "Correggi i problemi e riprova.",
       {

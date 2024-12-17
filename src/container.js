@@ -11,25 +11,23 @@ except according to the terms contained in the LICENSE file.
 */
 import axios from 'axios';
 import { Translation } from 'vue-i18n';
-import { createPinia } from 'pinia';
 
 import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
+import createHoverCard from './container/hover-card';
 import createUnsavedChanges from './unsaved-changes';
 import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
-import { noop } from './util/util';
 
 const provide = [
   'alert',
+  'hoverCard',
   'unsavedChanges',
   'config',
   'http',
   'logger'
 ];
-
-const piniaMock = { install: noop };
 
 export default ({
   // `router` must be a function that returns an object. The function will be
@@ -41,15 +39,16 @@ export default ({
   // passed a partial container.
   requestData = createRequestData,
   alert = createAlert(),
+  hoverCard = createHoverCard(),
   unsavedChanges = createUnsavedChanges(i18n.global),
   http = axios,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
 } = {}) => {
   const container = {
-    pinia: process.env.NODE_ENV === 'development' ? createPinia() : piniaMock,
     i18n: i18n.global,
     alert,
+    hoverCard,
     unsavedChanges,
     http,
     logger
@@ -64,7 +63,6 @@ export default ({
     // eslint-disable-next-line no-param-reassign
     app.config.globalProperties.$tcn = $tcn;
 
-    app.use(container.pinia);
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
 

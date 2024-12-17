@@ -72,6 +72,8 @@ export const apiPaths = {
   user: (id) => `/v1/users/${id}`,
   password: (id) => `/v1/users/${id}/password`,
   assignment: (role, actorId) => `/v1/assignments/${role}/${actorId}`,
+  userSitePreferences: (k) => `/v1/user-preferences/site/${k}`,
+  userProjectPreferences: (projectId, k) => `/v1/user-preferences/project/${projectId}/${k}`,
   project: projectPath(''),
   projectAssignments: projectPath('/assignments'),
   projectAssignment: (projectId, role, actorId) =>
@@ -111,10 +113,11 @@ export const apiPaths = {
   publishFormDraft: formPath('/draft/publish'),
   publishedAttachments: formPath('/attachments'),
   formDraftAttachments: formPath('/draft/attachments'),
-  formDraftAttachment: (projectId, xmlFormId, attachmentName) => {
+  formAttachment: (projectId, xmlFormId, draft, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedName = encodeURIComponent(attachmentName);
-    return `/v1/projects/${projectId}/forms/${encodedFormId}/draft/attachments/${encodedName}`;
+    const draftPath = draft ? '/draft' : '';
+    return `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}/attachments/${encodedName}`;
   },
   submissions: (projectId, xmlFormId, draft, extension, query = undefined) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
@@ -126,6 +129,7 @@ export const apiPaths = {
   submissionKeys: formOrDraftPath('/submissions/keys'),
   submitters: formOrDraftPath('/submissions/submitters'),
   submission: submissionPath(''),
+  restoreSubmission: submissionPath('/restore'),
   odataSubmission: (projectId, xmlFormId, instanceId, query = undefined) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(odataLiteral(instanceId));
@@ -173,7 +177,7 @@ export const apiPaths = {
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
-  audits: (query) => `/v1/audits${queryString(query)}`
+  audits: (query) => `/v1/audits${queryString(query)}`,
 };
 
 
@@ -239,5 +243,14 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
     if (message != null) return message;
   }
   if (problem.code === 404.1) return i18n.t('util.request.problem.404_1');
+  if (problem.code === 409.17) {
+    const { duplicateProperties } = problem.details;
+    // eslint-disable-next-line prefer-template
+    return i18n.tc('util.request.problem.409_17.message', duplicateProperties.length) +
+      '\n\n' +
+      duplicateProperties
+        .map(p => `• ${i18n.t('util.request.problem.409_17.duplicateProperty', p)}`)
+        .join('\n');
+  }
   return problem.message;
 };

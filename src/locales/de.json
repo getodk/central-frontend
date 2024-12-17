@@ -61,7 +61,8 @@
       "public_link": "Öffentlicher Zugangslink-Aktionen",
       "dataset": "Entitätslistenaktionen",
       "config": "Server-Konfigurationsaktionen",
-      "upgrade": "Server-Aktualisierung"
+      "upgrade": "Server-Aktualisierung",
+      "task": "Systembetrieb"
     },
     "action": {
       "default": {
@@ -71,6 +72,10 @@
         "delete": "Löschen"
       },
       "analytics": "Berichtsnutzung",
+      "blobs": {
+        "s3_upload": "Dateien in den Speicher hochladen",
+        "s3_failed_to_pending": "Dateien für erneuten Upload zum Speicher markieren"
+      },
       "config": {
         "set": "Setzen"
       },
@@ -88,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Entwurf verfassen oder aktualisieren",
+        "update_draft_replace": "Ersetzen des Entwurfs",
         "update_publish": "Entwurf veröffentlichen",
         "update_draft_delete": "Entwurf löschen",
         "attachment_update": "Anhänge aktualisieren",
@@ -105,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Übermittlungen bereinigen"
+      },
       "upgrade": {
         "process_form": "Formular verarbeiten",
-        "process_form_draft": "Formularentwurf verarbeiten"
+        "process_form_draft": "Formularentwurf verarbeiten",
+        "process_form_entities_version": "Formular für Upgrade markieren"
       },
       "user": {
         "assignment_create": "Rolle zuweisen",
@@ -160,7 +170,8 @@
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
     "reviewParallelUpdates": "Parallele Updates überprüfen",
-    "upload": "Hochladen"
+    "upload": "Hochladen",
+    "restore": "Wiederherstellen"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -173,7 +184,6 @@
     "passphrase": "Passphrase",
     "password": "Passwort",
     "passwordConfirm": "Neues Passwort (bestätigen)",
-    "reviewState": "Überprüfungsstatus",
     "type": "Typ"
   },
   "header": {
@@ -214,21 +224,24 @@
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
+    "entity": "Entität",
+    "entities": "Entitäten",
     "entityList": "Entitätsliste",
     "entityLists": "Entitätslisten",
-    "entities": "Entitäten",
     "form": "Formular",
     "forms": "Formulare",
     "formAttachments": "Formularanhänge",
     "project": "Projekt",
     "projects": "Projekte",
     "property": "Eigenschaft",
+    "properties": "Eigenschaften",
     "publicLink": "Öffentlicher Zugangslink",
     "user": "Benutzer",
     "users": "Benutzer",
     "webUser": "Web-Benutzer",
     "webUsers": "Web-Benutzer",
     "session": "Sitzung",
+    "submission": "Übermittlung",
     "submissions": "Übermittlungen",
     "projectRoles": "Projektrollen",
     "formPreview": "Formular Vorschau",
@@ -238,7 +251,9 @@
     "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
     "updateEntity": "Das Objekt wurde aktualisiert!",
     "updateReviewState": "Überprüfungsstatus gespeichert!",
-    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden."
+    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden.",
+    "submissionDeleted": "Die Übermittlung wurde gelöscht.",
+    "submissionRestored": "Die Übermittlung wurde wiederhergestellt."
   },
   "moreInfo": {
     "clickHere": {
@@ -267,7 +282,8 @@
     "binaryLinkTitle": "Datei wurde übermittelt. Zum Downloaden klicken.",
     "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar",
     "noSubmission": "(keine)",
-    "emptyTable": "Es gibt noch keine Übermittlungen."
+    "emptyTable": "Es gibt noch keine Übermittlungen.",
+    "fileDownloadUnavailable": "Datei-Download ist für gelöschte Einsendungen nicht verfügbar."
   },
   "entity": {
     "label": "Etikett",
@@ -292,6 +308,7 @@
     "error": "Fehler",
     "filter": "Filter",
     "forum": "Forum",
+    "lastUpdate": "Letzte Aktualisierung",
     "loading": "Wird geladen...",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
@@ -312,6 +329,7 @@
     "totalEntities": "Entitäten insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
+    "reviewState": "Überprüfungsstatus",
     "status": "Status",
     "version": "Version"
   },

@@ -83,6 +83,7 @@ const _request = (container, awaitingResponse) => (config) => {
   const {
     fulfillProblem = undefined,
     problemToAlert = undefined,
+    alert: alertOption = true,
     ...axiosConfig
   } = config;
 
@@ -110,8 +111,10 @@ const _request = (container, awaitingResponse) => (config) => {
       // eslint-disable-next-line no-param-reassign
       awaitingResponse.value = false;
 
-      logAxiosError(logger, error);
-      alert.danger(requestAlertMessage(i18n, error, problemToAlert));
+      if (alertOption) {
+        logAxiosError(logger, error);
+        alert.danger(requestAlertMessage(i18n, error, problemToAlert));
+      }
       throw error;
     })
     .then(response => {

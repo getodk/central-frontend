@@ -173,7 +173,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "task": {
-        "string": "",
+        "string": "Systembetrieb",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -202,11 +202,11 @@
       },
       "blobs": {
         "s3_upload": {
-          "string": "",
+          "string": "Dateien in den Speicher hochladen",
           "developer_comment": "This is shown in the log of actions performed on the server."
         },
         "s3_failed_to_pending": {
-          "string": "",
+          "string": "Dateien für erneuten Upload zum Speicher markieren",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -239,6 +239,10 @@
       "form": {
         "update_draft_set": {
           "string": "Entwurf verfassen oder aktualisieren",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_replace": {
+          "string": "Ersetzen des Entwurfs",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -278,7 +282,7 @@
       },
       "submission": {
         "purge": {
-          "string": "",
+          "string": "Übermittlungen bereinigen",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -289,6 +293,10 @@
         },
         "process_form_draft": {
           "string": "Formularentwurf verarbeiten",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_entities_version": {
+          "string": "Formular für Upgrade markieren",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -487,13 +495,12 @@
       "string": "Neues Passwort (bestätigen)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "Überprüfungsstatus",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "Typ",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "Überprüfungsstatus"
     }
   },
   "header": {
@@ -621,16 +628,20 @@
       "string": "Server-Konfiguration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entity": {
+      "string": "Entität",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Entitäten",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entityList": {
       "string": "Entitätsliste",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
       "string": "Entitätslisten",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "entities": {
-      "string": "Entitäten",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -657,6 +668,10 @@
       "string": "Eigenschaft",
       "developer_comment": "This is a data property of an Entity."
     },
+    "properties": {
+      "string": "Eigenschaften",
+      "developer_comment": "This refers to the data properties of an Entity."
+    },
     "publicLink": {
       "string": "Öffentlicher Zugangslink",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -679,6 +694,10 @@
     },
     "session": {
       "string": "Sitzung",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submission": {
+      "string": "Übermittlung",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
@@ -706,6 +725,12 @@
     },
     "versionChange": {
       "string": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden. "
+    },
+    "submissionDeleted": {
+      "string": "Die Übermittlung wurde gelöscht."
+    },
+    "submissionRestored": {
+      "string": "Die Übermittlung wurde wiederhergestellt."
     }
   },
   "moreInfo": {
@@ -776,6 +801,9 @@
     },
     "emptyTable": {
       "string": "Es gibt noch keine Übermittlungen."
+    },
+    "fileDownloadUnavailable": {
+      "string": "Datei-Download ist für gelöschte Einsendungen nicht verfügbar."
     }
   },
   "entity": {
@@ -853,6 +881,9 @@
     "forum": {
       "string": "Forum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
+    },
+    "lastUpdate": {
+      "string": "Letzte Aktualisierung"
     },
     "loading": {
       "string": "Wird geladen..."
@@ -972,6 +1003,15 @@
         "404_1": {
           "string": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {} other {}}"
+          },
+          "duplicateProperty": {
+            "string": "",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
@@ -1175,10 +1215,10 @@
           "string": "Anzahl Fragen im grössten Formular"
         },
         "num_audit_log_entries": {
-          "string": "Anzahl der Audit-Log-Einträge"
+          "string": "Anzahl Audit-Log-Einträge"
         },
         "num_archived_projects": {
-          "string": "Anzahl der archivierten Projekte"
+          "string": "Anzahl archivierter Projekte"
         },
         "num_unique_managers": {
           "string": "Anzahl eindeutiger Projekt-Manager"
@@ -1211,7 +1251,7 @@
           "string": "Anzahl Geräte-IDs"
         },
         "num_public_access_links": {
-          "string": "Anzahl der öffentlicher Zugangslinks"
+          "string": "Anzahl öffentlicher Zugangslinks"
         },
         "num_forms": {
           "string": "Anzahl Formulare"
@@ -1229,13 +1269,13 @@
           "string": "Anzahl Formulare mit Audits"
         },
         "num_reused_form_ids": {
-          "string": "Anzahl der wiederverwendeten Formular-IDs"
+          "string": "Anzahl wiederverwendeter Formular-IDs"
         },
         "num_open_forms": {
           "string": "Anzahl offener Formulare"
         },
         "num_closing_forms": {
-          "string": "Anzahl der schliessenden Formulare"
+          "string": "Anzahl schliessender Formulare"
         },
         "num_closed_forms": {
           "string": "Anzahl geschlossener Formulare"
@@ -1269,9 +1309,6 @@
         },
         "num_submissions_from_web_users": {
           "string": "Anzahl Einreichungen von Web Benutzern"
-        },
-        "has_description": {
-          "string": "Das Projekt hat eine Beschreibung"
         },
         "description_length": {
           "string": "Länge der Projektbeschreibung"
@@ -1319,7 +1356,7 @@
           "string": "SSO auf dem Server aktiviert"
         },
         "num_client_audit_attachments": {
-          "string": "Anzahl an Client-Audit-Anhängen"
+          "string": "Anzahl Client-Audit-Anhänge"
         },
         "num_client_audit_attachments_failures": {
           "string": "Anzahl an Client-Audit-Verarbeitungsfehler"
@@ -1328,27 +1365,57 @@
           "string": "Anzahl von Client-Audit-Zeilen"
         },
         "num_audits_failed": {
-          "string": "Anzahl der Audit-Log-Events, die mindestens einmal fehlgeschlagen sind"
+          "string": "Anzahl mindestens einmal fehlgeschlagener Audit-Log-Events"
         },
         "num_audits_failed5": {
-          "string": "Anzahl der Audit-Log-Events, die komplett fehlgeschlagen sind"
+          "string": "Anzahl komplett fehlgeschlagener Audit-Log-Events"
         },
         "num_audits_unprocessed": {
           "string": "Anzahl der Audit-Log-Events, deren Verarbeitung verzögert wurde"
         },
         "num_offline_entity_branches": {
-          "string": ""
+          "string": "Anzahl Offline-Objekte-Zweige"
         },
         "num_offline_entity_interrupted_branches": {
-          "string": ""
+          "string": "Anzahl unterbrochene Offline-Objekt-Zweige"
         },
         "num_offline_entity_submissions_reprocessed": {
-          "string": ""
+          "string": "Anzahl umsortierter Offline-Objekt-Übermittlungen"
         },
         "max_entity_submission_delay": {
-          "string": ""
+          "string": "Maximum Objektübermittlung-Verarbeitungsverzögerung"
         },
         "avg_entity_submission_delay": {
+          "string": "Durchschnitt Objektübermittlung-Verarbeitungsverzögerung"
+        },
+        "uses_external_blob_store": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": ""
+        },
+        "max_entity_branch_delay": {
+          "string": ""
+        },
+        "num_xml_only_form_defs": {
+          "string": ""
+        },
+        "num_blob_files": {
+          "string": ""
+        },
+        "num_blob_files_on_s3": {
+          "string": ""
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": ""
+        },
+        "num_entity_creates_sub": {
+          "string": ""
+        },
+        "num_entity_creates_api": {
+          "string": ""
+        },
+        "num_entity_creates_bulk": {
           "string": ""
         }
       }
@@ -1437,6 +1504,12 @@
           "string": "Details",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "CollectQr": {
+      "draft": {
+        "string": "",
+        "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
     "ConfigError": {
@@ -2236,6 +2309,20 @@
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": ""
+        },
+        "sentence1": {
+          "string": ""
+        },
+        "sentence2": {
+          "string": "",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
+      }
+    },
     "FeedbackButton": {
       "feedback": {
         "string": "Rückmeldung",
@@ -2894,6 +2981,40 @@
         }
       }
     },
+    "FormDraftQrPanel": {
+      "title": {
+        "string": "Test-Code",
+        "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
+      },
+      "introduction": {
+        "full": {
+          "string": "Das ist ein {temporaryCode}.",
+          "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
+        },
+        "temporaryCode": {
+          "string": "Vorläufiger Testcode",
+          "developer_comment": "\"Code\" refers to a QR code.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {temporaryCode} is in the following text:\n\nThis is a {temporaryCode}."
+        }
+      },
+      "stopsWorking": {
+        "string": "Wenn Sie diesen Entwurf veröffentlichen, funktioniert er nicht mehr.",
+        "developer_comment": "\"It\" refers to a temporary testing code."
+      },
+      "instructions": {
+        "string": "",
+        "developer_comment": "The table is a table of test Submissions."
+      },
+      "codesForUsers": {
+        "full": {
+          "string": "",
+          "developer_comment": "\"Codes\" refers to \"QR codes\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "App-Benutzer",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nTo create codes to distribute to users, please see the {appUsers} page."
+        }
+      }
+    },
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
@@ -2956,16 +3077,9 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
-        "0": {
-          "string": "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen."
-        },
         "1": {
           "string": "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
         }
-      },
-      "collectProjectName": {
-        "string": "[Entwurf] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
         "title": {
@@ -2979,6 +3093,10 @@
             "string": "Derzeit empfehlen wir, Ihre Formdefinition im Entwurfszustand zu überprüfen, um deren Logik zu überprüfen. Bevor Sie sie veröffentlichen, können Sie sicherstellen, dass sie alle gewünschten Eigenschaften aktualisiert."
           }
         }
+      },
+      "collectProjectName": {
+        "string": "[Entwurf] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -3122,6 +3240,9 @@
           },
           "structureChanged": {
             "string": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
+          },
+          "oldEntityVersion": {
+            "string": ""
           }
         },
         "4": {
@@ -3195,8 +3316,8 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {An dieses Formular angehängter Datensatz:} other {Diesem Formular beigefügte Datensätze:}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
+        "string": "{count, plural, one {Diesem Formular beigefügte Entitätsliste:} other {Diesem Formular beigefügte Entitätslisten:}}",
+        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {
@@ -3289,6 +3410,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "OData-Zugriff ist wegen Formularverschlüsselung nicht verfügbar."
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "Der OData-Zugriff ist für gelöschte Übermittlungen nicht verfügbar"
+      },
+      "purgeDescription": {
+        "string": "Übermittlungen und übermittlungsbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht."
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {{count} gelöscht Übermittlung} other {{count} gelöschte Übermittlungen}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -3329,12 +3462,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Wiederherstellen",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Gelöscht {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3342,6 +3469,12 @@
       "disabled": {
         "conflict": {
           "string": "Dieses Formular kann nicht wiederhergestellt werden, weil ein aktives Formular mit derselben ID existiert."
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "Wiederherstellen",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3552,6 +3685,24 @@
             }
           }
         }
+      }
+    },
+    "OutdatedVersion": {
+      "title": {
+        "string": "Veraltete Version",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": "Anweisungen zum Upgrade"
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": "Klicken Sie hier für eine Anleitung zum Upgrade von Central"
+      },
+      "dismiss": {
+        "string": ""
+      },
+      "dismissTooltip": {
+        "string": ""
       }
     },
     "Pagination": {
@@ -4285,9 +4436,6 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "Überprüfungsstatus"
-      },
       "formVersion": {
         "string": "Formular Version"
       },
@@ -4391,6 +4539,20 @@
         },
         "parseError": {
           "string": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
+        }
+      }
+    },
+    "SubmissionDelete": {
+      "title": {
+        "string": "Übermittlung löschen",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?"
+        },
+        "1": {
+          "string": "Diese Aktion verschiebt die Übermittlung in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
         }
       }
     },
@@ -4502,6 +4664,28 @@
         "comment": {
           "string": "Kommentiert von {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        },
+        "delete": {
+          "string": "Gelöscht von {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
+        },
+        "undelete": {
+          "string": "Wiederhergestellt von {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },
@@ -4594,8 +4778,29 @@
       }
     },
     "SubmissionList": {
+      "action": {
+        "testOnDevice": {
+          "string": "Test am Gerät",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "Test im Browser",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "noMatching": {
         "string": "Es gibt keine passenden Übermittlungen."
+      },
+      "downloadDisabled": {
+        "string": "Der Download ist für gelöschte Übermittlungen nicht verfügbar"
+      },
+      "filterDisabledMessage": {
+        "string": "Filterung ist für gelöschte Übermittlungen nicht verfügbar"
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": "Es gibt keine gelöschten Übermittlungen."
+        }
       },
       "loading": {
         "withoutCount": {
@@ -4641,6 +4846,29 @@
         }
       }
     },
+    "SubmissionRestore": {
+      "title": {
+        "string": "Übermittlung zurücknehmen",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Sind Sie sicher, dass Sie diese Übermittlung wiederherstellen wollen?"
+        },
+        "1": {
+          "string": "Die Übermittlung wird in seinem vorherigen Zustand wiederhergestellt, einschliesslich zugehöriger Daten wie Kommentare."
+        },
+        "2": {
+          "string": "Wenn die Übermittlung erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "Sofortige Wiederherstellen ohne Bestätigung, bis ich die Seite verlasse",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
     "SubmissionShow": {
       "back": {
         "title": {
@@ -4658,6 +4886,10 @@
         "stateAndActions": {
           "string": "Status und Aktionen",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "Gelöscht am",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

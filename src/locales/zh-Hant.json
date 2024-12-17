@@ -61,7 +61,8 @@
       "public_link": "公共連結活動",
       "dataset": "實體清單活動",
       "config": "伺服器設定活動",
-      "upgrade": "伺服器更新"
+      "upgrade": "伺服器更新",
+      "task": "作業系統"
     },
     "action": {
       "default": {
@@ -71,6 +72,10 @@
         "delete": "刪除"
       },
       "analytics": "報告使用情況",
+      "blobs": {
+        "s3_upload": "上傳檔案至儲存空間",
+        "s3_failed_to_pending": "標記檔案以重傳到存儲空間"
+      },
       "config": {
         "set": "設定"
       },
@@ -104,6 +109,9 @@
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
+      },
+      "submission": {
+        "purge": "清除提交內容"
       },
       "upgrade": {
         "process_form": "處理表單",
@@ -160,7 +168,8 @@
     "expand": "開啟",
     "collapse": "閉合",
     "reviewParallelUpdates": "查看並行更新",
-    "upload": "上傳"
+    "upload": "上傳",
+    "restore": "復原刪除"
   },
   "field": {
     "comment": "發表評論...",
@@ -173,7 +182,6 @@
     "passphrase": "密碼片語",
     "password": "密碼",
     "passwordConfirm": "新密碼(確認)",
-    "reviewState": "審核狀態",
     "type": "類型"
   },
   "header": {
@@ -214,9 +222,9 @@
     "appUser": "App 使用者",
     "appUsers": "App 使用者",
     "config": "伺服器設置",
+    "entities": "實體",
     "entityList": "實體清單",
     "entityLists": "實體清單",
-    "entities": "實體",
     "form": "表單",
     "forms": "表單",
     "formAttachments": "表單附件",
@@ -312,6 +320,7 @@
     "totalEntities": "實體總數",
     "versionShort": "v{version}",
     "warning": "警告",
+    "reviewState": "審核狀態",
     "status": "狀態",
     "version": "版本"
   },

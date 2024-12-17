@@ -41,7 +41,8 @@ const href = computed(() => {
   const headers = dataset.properties.map(({ name }) => name);
   headers.unshift('label');
   const csv = headers.join(',');
-  return `data:text/csv;charset=UTF-8,${encodeURIComponent(csv)}`;
+  // \uFEFF is byte-order-mark - fixes getodk/central#721
+  return `data:text/csv;charset=UTF-8,\uFEFF${encodeURIComponent(csv)}`;
 });
 const setFilename = (event) => {
   const now = DateTime.local().toFormat('yyyyMMddHHmmss');

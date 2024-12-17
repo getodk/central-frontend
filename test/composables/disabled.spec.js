@@ -144,7 +144,7 @@ describe('useDisabled()', () => {
     handler.callCount.should.equal(2);
   });
 
-  for (const key of [' ', 'ArrowDown', 'ArrowUp']) {
+  for (const key of [' ', 'ArrowDown', 'ArrowUp', 'Enter']) {
     // eslint-disable-next-line no-loop-func
     it(`disables keydown of '${key}' for <select> with aria-disabled="true"`, () => {
       const [component, handler] = mountComponent(`<div>

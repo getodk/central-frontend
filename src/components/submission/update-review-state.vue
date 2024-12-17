@@ -22,8 +22,7 @@ except according to the terms contained in the LICENSE file.
               <label>
                 <input v-model="selectedState" type="radio"
                   :value="reviewState">
-                <span :class="reviewStateIcon(reviewState)"></span>
-                <span>{{ $t(`reviewState.${reviewState}`) }}</span>
+                <submission-review-state :value="reviewState" align/>
               </label>
             </div>
           </div>
@@ -50,12 +49,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import MarkdownTextarea from '../markdown/textarea.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import MarkdownTextarea from '../markdown/textarea.vue';
+import SubmissionReviewState from './review-state.vue';
 
 import useRequest from '../../composables/request';
-import useReviewState from '../../composables/review-state';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
@@ -63,7 +62,7 @@ const selectableStates = ['approved', 'hasIssues', 'rejected'];
 
 export default {
   name: 'SubmissionUpdateReviewState',
-  components: { Modal, Spinner, MarkdownTextarea },
+  components: { MarkdownTextarea, Modal, Spinner, SubmissionReviewState },
   props: {
     state: Boolean,
     projectId: {
@@ -79,8 +78,7 @@ export default {
   emits: ['hide', 'success'],
   setup() {
     const { request, awaitingResponse } = useRequest();
-    const { reviewStateIcon } = useReviewState();
-    return { request, awaitingResponse, reviewStateIcon };
+    return { request, awaitingResponse };
   },
   data() {
     return {
@@ -135,24 +133,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 #submission-update-review-state {
   .form-group { margin-bottom: 0; }
-
-  $margin-left-icon: 2px;
-  .icon-comments {
-    margin-left: $margin-left-icon;
-    margin-right: $margin-right-icon;
-  }
-  .icon-check-circle, .icon-times-circle {
-    margin-left: #{$margin-left-icon + 1px};
-    margin-right: #{$margin-right-icon + 1px};
-  }
-
-  .icon-check-circle { color: $color-success; }
-  .icon-comments { color: $color-warning; }
-  .icon-times-circle { color: $color-danger; }
+  .submission-review-state { margin-left: 2px; }
 }
 </style>
 

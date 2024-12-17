@@ -33,7 +33,7 @@ implementation of the Bootstrap plugins. We could also consider implementing our
 own popover functionality, perhaps using Popper.
 -->
 <template>
-  <div class="popover-content-source">
+  <div class="popover-content-source" aria-hidden="true">
     <slot></slot>
   </div>
 </template>
@@ -74,11 +74,13 @@ export default {
     // not show, then hide), we use event capturing here.
     document.addEventListener('click', this.hideAfterClick, true);
     window.addEventListener('resize', this.hideAfterResize);
+    document.addEventListener('keydown', this.hideAfterEsc);
   },
   beforeUnmount() {
     if (this.target != null) this.hide();
     document.removeEventListener('click', this.hideAfterClick, true);
     window.removeEventListener('resize', this.hideAfterResize);
+    document.removeEventListener('keydown', this.hideAfterEsc);
   },
   methods: {
     show() {
@@ -89,7 +91,8 @@ export default {
           html: true,
           placement: this.placement,
           trigger: 'manual',
-          animation: false
+          animation: false,
+          sanitize: false
         })
         .popover('show'));
     },
@@ -107,12 +110,16 @@ export default {
       this.show();
     },
     hideAfterClick(event) {
-      if (this.target != null && event.target.closest('.popover') == null &&
-        !this.target.contains(event.target))
+      if (this.target != null &&
+          ((event.target.closest('.popover') == null && !this.target.contains(event.target)) ||
+            (event.target.hasAttribute('data-closes-popover'))))
         this.$emit('hide');
     },
     hideAfterResize() {
       if (this.target != null) this.$emit('hide');
+    },
+    hideAfterEsc({ key }) {
+      if (this.target != null && key === 'Escape') this.$emit('hide');
     }
   }
 };
@@ -122,6 +129,7 @@ export default {
 @import '../assets/scss/variables';
 
 .popover {
+  background-color: transparent;
   border: none;
   box-shadow: $box-shadow-popover;
   font-family: inherit;
@@ -132,5 +140,13 @@ export default {
 }
 
 .popover-content { padding: 0; }
-.popover-content-source { display: none; }
+
+// We don't want this element to be visible, but we also can't specify
+// `display: none`. In some cases, we need to measure the width of the content
+// that will be shown in the popover.
+.popover-content-source {
+  position: fixed;
+  left: -1000px;
+  top: 0;
+}
 </style>

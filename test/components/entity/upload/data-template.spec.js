@@ -17,7 +17,7 @@ describe('EntityUploadDataTemplate', () => {
       properties: [{ name: 'hauteur' }, { name: 'circonférence' }]
     });
     const { href } = mountComponent().get('a').attributes();
-    const expectedStart = 'data:text/csv;charset=UTF-8,';
+    const expectedStart = 'data:text/csv;charset=UTF-8,\ufeff';
     href.should.startWith(expectedStart);
     const content = decodeURIComponent(href.replace(expectedStart, ''));
     content.should.equal('label,hauteur,circonférence');

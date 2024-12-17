@@ -71,6 +71,10 @@
         "delete": "Smazat"
       },
       "analytics": "Zpráva o použití",
+      "blobs": {
+        "s3_upload": "Nahrávání souborů do úložiště",
+        "s3_failed_to_pending": "Označení souborů k opětovnému nahrání do úložiště"
+      },
       "config": {
         "set": "Nastavit"
       },
@@ -88,6 +92,7 @@
       },
       "form": {
         "update_draft_set": "Vytvořit nebo aktualizovat koncept",
+        "update_draft_replace": "Nahrazení návrhu",
         "update_publish": "Zveřejnit koncept",
         "update_draft_delete": "Opustit koncept",
         "attachment_update": "Aktualizovat přílohy",
@@ -132,6 +137,7 @@
     "continue": "Pokračovat",
     "create": "Vytvořit",
     "createSubmission": "Nový",
+    "delete": "Smazat",
     "done": "Hotovo",
     "download": "Stáhnout",
     "edit": "Upravit",
@@ -155,9 +161,11 @@
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
     "hidePreview": "Skrýt náhled",
+    "newPreview": "Nový náhled",
     "expand": "Rozbalit",
     "collapse": "Sbalit",
-    "upload": "Nahrát"
+    "upload": "Nahrát",
+    "restore": "Zrušit smazání"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -170,7 +178,6 @@
     "passphrase": "Přístupová fráze",
     "password": "Heslo",
     "passwordConfirm": "Nové heslo (potvrzení)",
-    "reviewState": "Přezkoumání stavu",
     "type": "Typ"
   },
   "header": {
@@ -210,8 +217,9 @@
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
-    "entityList": "Seznam entit",
     "entities": "Subjekty",
+    "entityList": "Seznam entit",
+    "entityLists": "Seznamy entit",
     "form": "Formulář",
     "forms": "Formuláře",
     "formAttachments": "Přílohy formuláře",
@@ -226,6 +234,7 @@
     "session": "Relace",
     "submissions": "Příspěvky",
     "projectRoles": "Role projektu",
+    "formPreview": "Náhled formuláře",
     "draft": "Koncept"
   },
   "alert": {
@@ -302,21 +311,29 @@
     "new": "Novinka!",
     "totalEntities": "Celkem entit",
     "versionShort": "v{version}",
+    "reviewState": "Přezkoumání stavu",
     "status": "Stav",
     "version": "Verze"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Soubor \"{name}\" který se pokoušíte nahrát, je větší než limit 100 MB."
+        "fileSize": "Soubor \"{name}\" který se pokoušíte nahrát, je větší než limit 100 MB.",
+        "entityTooLarge": "Data, která se snažíte nahrát, jsou příliš velká."
       }
     }
   },
   "util": {
+    "csv": {
+      "emptyRow": "Řádek je prázdný."
+    },
     "request": {
       "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
       "noResponse": "Něco se pokazilo: nebyla žádná odezva na váš požadavek.",
-      "errorNotProblem": "Něco se pokazilo: chybový kód {status}."
+      "errorNotProblem": "Něco se pokazilo: chybový kód {status}.",
+      "problem": {
+        "404_1": "Hledaný zdroj nelze nalézt. Zdroj mohl být smazán."
+      }
     },
     "session": {
       "alert": {

@@ -91,6 +91,7 @@ const responsesByComponent = {
   FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
     keys: true,
+    deletedSubmissionCount: () => testData.submissionDeletedOData(0),
     fields: true,
     odata: true,
     submitters: () => testData.extendedFieldKeys
@@ -112,6 +113,7 @@ const responsesByComponent = {
   }),
   SubmissionShow: componentResponses({
     project: true,
+    form: () => testData.extendedForms.last(),
     submission: () => {
       const odata = testData.submissionOData();
       const selected = odata.value.map(pick(['__id', '__system', 'meta']));

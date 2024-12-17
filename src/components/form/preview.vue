@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
       <loading :state="formVersionXml.initiallyLoading"/>
 
       <template v-if="formVersionXml.dataExists">
-        <OdkWebForm :form-xml="formVersionXml.data" @submit="handleSubmit"/>
+        <OdkWebForm :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
       </template>
 
       <modal v-bind="previewModal" hideable backdrop @hide="previewModal.hide()">
@@ -39,6 +39,7 @@ import { apiPaths } from '../../util/request';
 import Modal from '../modal.vue';
 import Loading from '../loading.vue';
 import { modalData } from '../../util/reactivity';
+import useRequest from '../../composables/request';
 
 // Install WebFormsPlugin in the component instead of installing it at the
 // application level so that @getodk/web-forms package is not loaded for every
@@ -69,6 +70,7 @@ const props = defineProps({
 });
 
 const { form, formVersionXml } = useForm();
+const { request } = useRequest();
 
 const previewModal = modalData();
 
@@ -84,6 +86,53 @@ fetchForm();
 const handleSubmit = () => {
   previewModal.show();
 };
+
+
+
+/**
+ * Web Form expects host application to provide a function that it can use to
+ * fetch attachments. Signature of the function is (url) => Response; where
+ * Response is subset of web standard  {@link Response}.
+ */
+const getAttachment = (url) => request({
+  url: apiPaths.formAttachment(
+    props.projectId,
+    props.xmlFormId,
+    props.draft,
+    url.pathname.split('/').pop()
+  ),
+  alert: false
+}).then(axiosResponse => {
+  const { data, status, statusText, headers } = axiosResponse;
+
+  const fetchHeaders = new Headers();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key === 'content-type') {
+      // because web-forms doens't want space between media type and charset
+      // https://github.com/getodk/web-forms/pull/259#discussion_r1887227207
+      fetchHeaders.append(key, value.replace('; charset', ';charset'));
+    } else {
+      fetchHeaders.append(key, value);
+    }
+  }
+
+  let body;
+  if (typeof (data) === 'string') {
+    body = data;
+  } else if (headers['content-type'].includes('application/json') ||
+             headers['content-type'].includes('application/geo+json')) {
+    body = JSON.stringify(data);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error('response data is not a known text format');
+  }
+
+  return new Response(body, {
+    status,
+    statusText,
+    headers: fetchHeaders,
+  });
+});
 </script>
 
 <style lang="scss">

@@ -11,16 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="entity.dataExists" :to="datasetPath('entities')">
-      <template #title>{{ $t('back.title') }}</template>
-      <template #back>{{ $t('back.back', { datasetName }) }}</template>
-    </page-back>
-    <page-head v-show="entity.dataExists">
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+    <page-head v-show="dataExists">
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
     </page-head>
     <page-body>
-      <loading :state="entity.initiallyLoading"/>
-      <div v-show="entity.dataExists" class="row">
+      <loading :state="initiallyLoading"/>
+      <div v-show="dataExists" class="row">
         <div class="col-xs-4">
           <entity-basic-details/>
           <entity-data @update="updateModal.show()"/>
@@ -40,23 +37,23 @@ except according to the terms contained in the LICENSE file.
       :label="entity.dataExists ? entity.currentVersion.label : ''"
       :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
       @delete="requestDelete"/>
-    <entity-branch-data v-bind="branchData" @hide="branchData.hide()"/>
+    <entity-branch-data v-if="config.devTools" v-bind="branchData"
+      @hide="branchData.hide()"/>
   </div>
 </template>
 
 <script setup>
-import { inject, provide } from 'vue';
+import { computed, defineAsyncComponent, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import Breadcrumbs from '../breadcrumbs.vue';
 import EntityActivity from './activity.vue';
 import EntityBasicDetails from './basic-details.vue';
-import EntityBranchData from './branch-data.vue';
 import EntityData from './data.vue';
 import EntityDelete from './delete.vue';
 import EntityUpdate from './update.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -65,6 +62,7 @@ import useEntityVersions from '../../request-data/entity-versions';
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
 import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -90,9 +88,10 @@ provide('projectId', props.projectId);
 provide('datasetName', props.datasetName);
 provide('uuid', props.uuid);
 
-const { project, dataset } = useRequestData();
+const { project, dataset, resourceStates } = useRequestData();
 const { entity, audits } = useEntity();
 const entityVersions = useEntityVersions();
+const { initiallyLoading, dataExists } = resourceStates([project, entity]);
 
 Promise.allSettled([
   entity.request({
@@ -123,26 +122,25 @@ fetchActivityData();
 setDocumentTitle(() => [entity.dataExists ? entity.currentVersion.label : null]);
 
 const updateModal = modalData();
-const { i18n, alert } = inject('container');
+const { i18n, alert, config } = inject('container');
 const afterUpdate = (updatedEntity) => {
   fetchActivityData();
   updateModal.hide();
   alert.success(i18n.t('alert.updateEntity'));
-  entity.patch(() => {
-    // entity.currentVersion will no longer have extended metadata, but we don't
-    // need it to.
-    entity.currentVersion = updatedEntity.currentVersion;
-    entity.updatedAt = updatedEntity.updatedAt;
-    // Update entity.conflict in case a conflict has been resolved by another
-    // user or in another tab.
-    entity.conflict = updatedEntity.conflict;
-  });
+
+  // entity.currentVersion will no longer have extended metadata, but we don't
+  // need it to.
+  entity.currentVersion = updatedEntity.currentVersion;
+  entity.updatedAt = updatedEntity.updatedAt;
+  // Update entity.conflict in case a conflict has been resolved by another user
+  // or in another tab.
+  entity.conflict = updatedEntity.conflict;
 };
 
 const deleteModal = modalData();
 const { request, awaitingResponse } = useRequest();
 const router = useRouter();
-const { datasetPath } = useRoutes();
+const { datasetPath, projectPath } = useRoutes();
 const { t } = useI18n();
 const requestDelete = () => {
   request({
@@ -157,7 +155,15 @@ const requestDelete = () => {
     .catch(noop);
 };
 
-const branchData = modalData();
+const EntityBranchData = defineAsyncComponent(loadAsync('EntityBranchData'));
+const branchData = modalData('EntityBranchData');
+
+const breadcrumbLinks = computed(() => [
+  { text: project.nameWithArchived, path: projectPath() },
+  { text: t('resource.entities'), path: projectPath('entity-lists'), icon: 'icon-database' },
+  { text: props.datasetName, path: datasetPath('entities') },
+]);
+
 </script>
 
 <i18n lang="json5">

@@ -489,6 +489,24 @@ describe('FormNew', () => {
           );
         });
     });
+
+    it('shows a message for duplicate entity property', () => {
+      testData.extendedForms.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 409.17,
+          message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+          details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+        })
+        .afterResponse(modal => {
+          modal.should.alert(
+            'danger',
+            /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+          );
+        });
+    });
   });
 
   describe('XLSForm warnings', () => {
@@ -504,7 +522,8 @@ describe('FormNew', () => {
           xlsFormWarnings: ['warning 1', 'warning 2'],
           workflowWarnings: [
             { type: 'structureChanged', details: ['Name', 'Age'] },
-            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } }
+            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } },
+            { type: 'oldEntityVersion', details: { version: '2022.1.0' } }
           ]
         }
       }
@@ -545,6 +564,9 @@ describe('FormNew', () => {
 
           items[1].text().should.startWith('There is a form with ID "simple" in the Trash');
           items[1].find('span').exists().should.be.false;
+
+          items[2].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[2].find('span').exists().should.be.false;
         });
     });
 
@@ -567,6 +589,9 @@ describe('FormNew', () => {
 
           items[3].text().should.startWith('There is a form with ID "simple" in the Trash');
           items[3].find('span').exists().should.be.false;
+
+          items[4].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[4].find('span').exists().should.be.false;
         });
     });
 

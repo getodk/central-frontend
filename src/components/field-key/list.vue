@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
       <tbody v-if="fieldKeys.dataExists">
         <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
           :field-key="fieldKey" :highlighted="highlighted"
-          @show-code="showPopover"
+          @toggle-qr="togglePopover"
           @revoke="revokeModal.show({ fieldKey: $event })"/>
       </tbody>
     </table>
@@ -135,13 +135,17 @@ export default {
       this.$emit('fetch-field-keys', resend);
       this.highlighted = null;
     },
-    showPopover(fieldKey, link) {
-      this.popover.target = link;
-      this.popover.fieldKey = fieldKey;
-    },
     hidePopover() {
       this.popover.target = null;
       this.popover.fieldKey = null;
+    },
+    togglePopover(fieldKey, link) {
+      if (this.popover.target == null) {
+        this.popover.target = link;
+        this.popover.fieldKey = fieldKey;
+      } else {
+        this.hidePopover();
+      }
     },
     switchCode(event) {
       if (event.target.closest('.field-key-qr-panel .switch-code') == null)

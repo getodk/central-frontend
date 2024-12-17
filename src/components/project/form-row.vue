@@ -16,10 +16,10 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="form-name">
       <template v-if="canLinkToFormOverview">
-        <router-link :to="primaryFormPath(form)">{{ form.nameOrId }}</router-link>
+        <form-link :form="form"/>
       </template>
       <template v-else-if="canLinkToSubmissions">
-        <router-link :to="submissionsPath.all">{{ form.nameOrId }}</router-link>
+        <form-link :form="form" :to="submissionsPath.all"/>
       </template>
       <template v-else>
         <template v-if="canLinkToEnketo">
@@ -29,6 +29,7 @@ except according to the terms contained in the LICENSE file.
           {{ form.nameOrId }}
         </template>
       </template>
+
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <template v-if="form.publishedAt != null">
@@ -93,6 +94,7 @@ except according to the terms contained in the LICENSE file.
 import { DateTime } from 'luxon';
 
 import DateTimeComponent from '../date-time.vue';
+import FormLink from '../form/link.vue';
 
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
@@ -102,7 +104,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectFormRow',
-  components: { DateTime: DateTimeComponent },
+  components: { DateTime: DateTimeComponent, FormLink },
   props: {
     form: {
       type: Object,
@@ -122,11 +124,11 @@ export default {
   setup() {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
-    const { formPath, primaryFormPath } = useRoutes();
+    const { formPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       duplicateFormNamesPerProject,
-      formPath, primaryFormPath,
+      formPath,
       reviewStateIcon
     };
   },

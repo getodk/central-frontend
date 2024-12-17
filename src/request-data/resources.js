@@ -12,21 +12,25 @@ except according to the terms contained in the LICENSE file.
 import { computed, reactive, shallowReactive, watchSyncEffect } from 'vue';
 import { mergeDeepLeft } from 'ramda';
 
+import UserPreferences from './user-preferences/preferences';
 import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
 
-export default ({ i18n }, createResource) => {
+export default (container, createResource) => {
+  const { i18n } = container;
+
   // Resources related to the session
   createResource('session');
   createResource('currentUser', () => ({
-    /* eslint-disable no-param-reassign */
     transformResponse: ({ data }) => {
+      /* eslint-disable no-param-reassign */
       data.verbs = new Set(data.verbs);
       data.can = hasVerbs;
+      data.preferences = new UserPreferences(data.preferences, container);
+      /* eslint-enable no-param-reassign */
       return shallowReactive(data);
     }
-    /* eslint-enable no-param-reassign */
   }));
 
   // Resources related to the system
@@ -38,7 +42,14 @@ export default ({ i18n }, createResource) => {
       : configDefaults),
     loaded: computed(() => config.dataExists && config.loadError == null)
   }));
-  createResource('centralVersion');
+  createResource('centralVersion', () => ({
+    transformResponse: ({ data, headers }) =>
+      shallowReactive({
+        versionText: data,
+        currentVersion: data.match(/\(v(\d{4}[^-]*)/)[1],
+        currentDate: new Date(headers.get('date'))
+      })
+  }));
   createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({
     bySystem: computeIfExists(() => {
@@ -74,7 +85,18 @@ export default ({ i18n }, createResource) => {
   }));
 
   createResource('dataset', () => ({
-    transformResponse: ({ data }) => shallowReactive(data)
+    transformResponse: ({ data }) => {
+      // Add projectId to forms. FormLink expects this property to exist on form
+      // objects.
+      const { projectId } = data;
+      for (const form of data.sourceForms) form.projectId = projectId;
+      for (const form of data.linkedForms) form.projectId = projectId;
+      for (const property of data.properties) {
+        for (const form of property.forms) form.projectId = projectId;
+      }
+
+      return shallowReactive(data);
+    }
   }));
 
   const formDraft = createResource('formDraft', () =>

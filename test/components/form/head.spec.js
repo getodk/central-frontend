@@ -2,7 +2,7 @@ import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import FormHead from '../../../src/components/form/head.vue';
 import FormOverview from '../../../src/components/form/overview.vue';
 import Loading from '../../../src/components/loading.vue';
-import PageBack from '../../../src/components/page/back.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
 import { findTab } from '../../util/dom';
@@ -13,15 +13,16 @@ describe('FormHead', () => {
   describe('names and links', () => {
     beforeEach(mockLogin);
 
-    it("shows the project's name", () => {
+    it("shows the project's name in the breadcrumb", () => {
       testData.extendedProjects.createPast(1, { name: 'My Project', forms: 1 });
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f').then(app => {
-        app.get('#page-back-title').text().should.equal('My Project');
+        const breadcrumb = app.findAll('.breadcrumb-item')[0];
+        breadcrumb.text().should.equal('My Project');
       });
     });
 
-    it("appends (archived) to an archived project's name", () => {
+    it("appends (archived) to an archived project's name in the breadcrumb", () => {
       testData.extendedProjects.createPast(1, {
         name: 'My Project',
         archived: true,
@@ -29,16 +30,19 @@ describe('FormHead', () => {
       });
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f').then(app => {
-        const text = app.get('#page-back-title').text();
-        text.should.equal('My Project (archived)');
+        const breadcrumb = app.findAll('.breadcrumb-item')[0];
+        breadcrumb.text().should.equal('My Project (archived)');
       });
     });
 
-    it("renders the project's name as a link", async () => {
+    it("renders the project's name as a link in the breadcrumb", async () => {
       testData.extendedForms.createPast(1);
       const component = await load('/projects/1/forms/f');
-      const { to } = component.getComponent(PageBack).props();
-      to.should.eql(['/projects/1', '/projects/1']);
+      const { links } = component.getComponent(Breadcrumbs).props();
+      links.length.should.equal(2);
+      links[0].path.should.equal('/projects/1');
+      links[1].text.should.equal('Forms');
+      links[1].path.should.equal('/projects/1');
     });
 
     it("shows the form's name", async () => {

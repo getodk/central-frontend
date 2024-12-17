@@ -9,13 +9,9 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <div id="dataset-show">
-    <page-back v-show="dataExists" :to="[projectPath(), projectPath('entity-lists')]">
-      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.entities') }}</template>
-    </page-back>
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
@@ -49,8 +45,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -63,8 +59,8 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetShow',
   components: {
+    Breadcrumbs,
     Loading,
-    PageBack,
     PageBody,
     PageHead
   },
@@ -87,8 +83,16 @@ export default {
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, datasetPath, tabPath, tabClass, canRoute
+      projectPath, tabPath, tabClass, canRoute
     };
+  },
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.nameWithArchived, path: this.projectPath() },
+        { text: this.$t('resource.entities'), path: this.projectPath('entity-lists'), icon: 'icon-database' }
+      ];
+    }
   },
   created() {
     this.fetchData();

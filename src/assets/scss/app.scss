@@ -40,21 +40,25 @@ h1, .h1 {
 
 p { @include text-block; }
 
-dl > div {
+dl > * {
   border-bottom: 1px solid #ddd;
-  display: flex;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding-block: $padding-block-dl;
 
-  &:first-child { padding-top: 0; }
+  &:first-of-type { padding-top: 0; }
 
-  &:last-child {
+  &:last-of-type {
     border-bottom: none;
     padding-bottom: 0;
   }
 }
+
+// Normal <dl> elements that are not .dl-horizontal are expected to have
+// children that are <div> elements. Each <div> must contain a <dt> and a <dd>.
 dl:not(.dl-horizontal) {
-  > div { flex-direction: column-reverse; }
+  > div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
 
   dt {
     color: #666;
@@ -63,14 +67,28 @@ dl:not(.dl-horizontal) {
 
   dd { font-size: 16px; }
 }
-.dl-horizontal {
-  dt {
-    @include text-overflow-ellipsis;
-    flex-shrink: 0;
-    width: 160px;
-  }
 
-  dd { margin-left: 20px; }
+// <dl> elements that are .dl-horizontal are expected to have children that are
+// <dt> and <dd> elements. That's different from how other <dl> elements work,
+// as their children are expected to be <div> elements. The difference comes
+// down to the fact that .dl-horizontal uses a CSS grid, while other <dl>
+// elements use flexbox.
+.dl-horizontal {
+  $padding-between: 12px;
+  $dt-width: 160px + $padding-panel-body + $padding-between;
+
+  display: grid;
+  // Components may override grid-template-columns in order to adjust the width
+  // of the <dt>.
+  grid-template-columns: $dt-width 1fr;
+
+  dt { padding-left: $padding-panel-body; }
+  dd { padding-right: $padding-panel-body; }
+
+  // Equally distribute the padding between the <dt> and the <dd> so that it is
+  // easy for components to give the two elements the same width.
+  dt { padding-right: $padding-between; }
+  dd { padding-left: $padding-between; }
 }
 
 .dfn { border-bottom: 2px dotted #999; }

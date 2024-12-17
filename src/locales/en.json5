@@ -219,7 +219,9 @@
     // This text is show on a button that the user clicks to see the Form preview in the new Web Forms component
     "newPreview": "New Preview",
     "expand": "Expand",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    // @transifexKey component.FormTrashRow.action.restore
+    "restore": "Undelete"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -232,7 +234,6 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
-    "reviewState": "Review State",
     "type": "Type"
   },
   "header": {
@@ -294,9 +295,10 @@
     "appUser": "App User",
     "appUsers": "App Users",
     "config": "Server Configuration",
+    "entity": "Entity",
+    "entities": "Entities",
     "entityList": "Entity List",
     "entityLists": "Entity Lists",
-    "entities": "Entities",
     "form": "Form",
     "forms": "Forms",
     // @transifexKey component.FormHead.draftNav.title
@@ -306,12 +308,15 @@
     "projects": "Projects",
     // This is a data property of an Entity.
     "property": "Property",
+    // This refers to the data properties of an Entity.
+    "properties": "Properties",
     "publicLink": "Public Access Link",
     "user": "User",
     "users": "Users",
     "webUser": "Web User",
     "webUsers": "Web Users",
     "session": "Session",
+    "submission": "Submission",
     "submissions": "Submissions",
     "projectRoles": "Project Roles",
     "formPreview": "Form Preview"
@@ -320,7 +325,9 @@
     "passwordTooShort": "Please input a password at least 10 characters long.",
     "updateEntity": "The Entity has been updated!",
     "updateReviewState": "Review State saved!",
-    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
+    "submissionDeleted": "The Submission has been deleted.",
+    "submissionRestored": "The Submission has been undeleted."
   },
   "moreInfo": {
     "clickHere": {
@@ -357,7 +364,8 @@
     // This text is shown under the "Latest Submission" column of the tables
     // for Projects and Forms. It is shown for a Project or Form with no Submissions.
     "noSubmission": "(none)",
-    "emptyTable": "There are no Submissions yet."
+    "emptyTable": "There are no Submissions yet.",
+    "fileDownloadUnavailable": "File download is not available for deleted Submissions."
   },
   "entity": {
     // This is the label of an Entity.
@@ -397,11 +405,14 @@
     "filter": "Filter",
     // This is the text of a link that links to the ODK forum.
     "forum": "Forum",
+    "lastUpdate": "Last update",
     "loading": "Loading…",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
     "noUndo": "This action cannot be undone.",
+    // @transifexKey field.reviewState
+    "reviewState": "Review State",
     // This is the title of a section that shows status information for the entire server such as project count.
     "rightNow": "Right Now",
     // This is shown for the row number.
@@ -474,7 +485,14 @@
       "problem": {
         // A "resource" is a generic term for something in Central, for example,
         // a Project, a Web User, or a Form.
-        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted.",
+        "409_17": {
+          "message": "This Form attempts to create a new Entity property that matches with an existing one except for capitalization: | This Form attempts to create new Entity properties that match with existing ones except for capitalization:",
+          // Error message format for the duplicate properties (different capitalization) in an Entity-list.
+          // {provided} is the property name in the uploaded Form.
+          // {current} is the existing property name in the Entity-list.
+          "duplicateProperty": "{provided} (existing: {current})"
+        }
       }
     },
     "session": {

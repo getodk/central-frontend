@@ -15,11 +15,14 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
     <submission-filters-submitter :model-value="submitterId"
+      :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:submitterId', $event)"/>
     <date-range-picker :model-value="submissionDate"
       :placeholder="$t('field.submissionDate')"
+      :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:submissionDate', $event)"/>
     <submission-filters-review-state :model-value="reviewState"
+      :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:reviewState', $event)"/>
   </span>
 </template>
@@ -48,6 +51,14 @@ export default {
     reviewState: {
       type: Array,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: true
+    },
+    disabledMessage: {
+      type: String,
+      required: false
     }
   },
   emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState']

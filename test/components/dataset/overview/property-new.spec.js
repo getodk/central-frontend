@@ -1,6 +1,6 @@
 import DatasetPropertyNew from '../../../../src/components/dataset/overview/new-property.vue';
 import DatasetProperties from '../../../../src/components/dataset/overview/dataset-properties.vue';
-import ConnectionToForm from '../../../../src/components/dataset/overview/connection-to-forms.vue';
+import ConnectionToForms from '../../../../src/components/dataset/overview/connection-to-forms.vue';
 
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
@@ -101,7 +101,7 @@ describe('DatasetPropertyNew', () => {
 
     it('updates property count in form summary', async () => {
       const app = await submit('width_cm');
-      const connections = app.findComponent(ConnectionToForm);
+      const connections = app.findComponent(ConnectionToForms);
       connections.find('.caption-cell').text().should.equal('1 of 2 properties');
     });
   });

@@ -168,9 +168,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "restore": "Undelete"
-    },
     // This text shows when the Form was deleted. {dateTime} shows
     // the date and time, for example: "2020/01/01 01:23". It may show a
     // formatted date like "2020/01/01", or it may use a word like "today",
@@ -187,36 +184,24 @@ export default {
 <i18n>
 {
   "cs": {
-    "action": {
-      "restore": "Zrušit smazání"
-    },
     "deletedDate": "Smazáno {dateTime}",
     "disabled": {
       "conflict": "Tento formulář nelze smazat, protože existuje aktivní formulář se stejným ID."
     }
   },
   "de": {
-    "action": {
-      "restore": "Wiederherstellen"
-    },
     "deletedDate": "Gelöscht {dateTime}",
     "disabled": {
       "conflict": "Dieses Formular kann nicht wiederhergestellt werden, weil ein aktives Formular mit derselben ID existiert."
     }
   },
   "es": {
-    "action": {
-      "restore": "Restaurar"
-    },
     "deletedDate": "Borrado {dateTime}",
     "disabled": {
       "conflict": "Este formulario no se puede recuperar porque existe un formulario activo con el mismo ID."
     }
   },
   "fr": {
-    "action": {
-      "restore": "Restaurer"
-    },
     "deletedDate": "Supprimé le {dateTime}",
     "disabled": {
       "conflict": "Le formulaire ne peut être supprimé car il existe un formulaire actif avec le même ID."
@@ -226,36 +211,24 @@ export default {
     "deletedDate": "Terhapus {dateTime}"
   },
   "it": {
-    "action": {
-      "restore": "Ripristina"
-    },
     "deletedDate": "Eliminato {dateTime}",
     "disabled": {
       "conflict": "Questo formulario non può essere ripristinato perché esiste un formulario attivo con lo stesso ID."
     }
   },
   "ja": {
-    "action": {
-      "restore": "復元"
-    },
     "deletedDate": "削除 {dateTime}",
     "disabled": {
       "conflict": "このフォームは、同一IDのフォームが有効化されているため、復元できません。"
     }
   },
   "sw": {
-    "action": {
-      "restore": "Ondoa kufuta"
-    },
     "deletedDate": "Imefutwa {dateTime}",
     "disabled": {
       "conflict": "Fomu hii haiwezi kufutwa kwa sababu kuna Fomu inayotumika yenye kitambulisho sawa."
     }
   },
   "zh-Hant": {
-    "action": {
-      "restore": "復原刪除"
-    },
     "deletedDate": "已刪除{dateTime}",
     "disabled": {
       "conflict": "該表單無法取消刪除，因為存在具有相同 ID 的活動表單。"

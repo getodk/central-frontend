@@ -16,7 +16,9 @@ except according to the terms contained in the LICENSE file.
         <template v-if="field.binary === true">
           <a v-if="rawValue(submission, field) != null" class="binary-link"
             :href="formattedValue(submission, field)" target="_blank"
-            :aria-label="$t('submission.binaryLinkTitle')" v-tooltip.aria-label>
+            :aria-disabled="deleted"
+            :aria-label="deleted ? $t('submission.fileDownloadUnavailable') : $t('submission.binaryLinkTitle')"
+            v-tooltip.aria-label>
             <span class="icon-check"></span> <span class="icon-download"></span>
           </a>
         </template>
@@ -76,7 +78,11 @@ export default {
     fields: {
       type: Array,
       required: true
-    }
+    },
+    deleted: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     htmlClass() {

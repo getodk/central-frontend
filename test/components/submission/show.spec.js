@@ -1,5 +1,6 @@
 import NotFound from '../../../src/components/not-found.vue';
-import PageBack from '../../../src/components/page/back.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
+import SubmissionDelete from '../../../src/components/submission/delete.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -15,14 +16,32 @@ describe('SubmissionShow', () => {
     component.findComponent(NotFound).exists().should.be.true;
   });
 
-  it('renders a back link', async () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
+  it('renders breadcrumbs with links', async () => {
+    testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 's' });
     const component = await load('/projects/1/forms/a%20b/submissions/s', {
       root: false
     });
-    const { to } = component.getComponent(PageBack).props();
-    to.should.equal('/projects/1/forms/a%20b/submissions');
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links[0].path.should.equal('/projects/1');
+    links[1].text.should.equal('Forms');
+    links[1].path.should.equal('/projects/1');
+    links[2].text.should.equal('My Form');
+    links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
+  });
+
+  it('renders the xmlformid of the form in the breadcrumb if it has no name', async () => {
+    testData.extendedForms.createPast(1, { name: null, xmlFormId: 'a b', submissions: 1 });
+    testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+    const component = await load('/projects/1/forms/a%20b/submissions/s', {
+      root: false
+    });
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links[0].path.should.equal('/projects/1');
+    links[1].text.should.equal('Forms');
+    links[1].path.should.equal('/projects/1');
+    links[2].text.should.equal('a b');
+    links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
   });
 
   it('shows the instance name if the submission has one', async () => {
@@ -42,5 +61,83 @@ describe('SubmissionShow', () => {
       root: false
     });
     component.get('#page-head-title').text().should.equal('s');
+  });
+
+  describe('delete', () => {
+    it('toggles the modal', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 'e' });
+      return load('/projects/1/forms/f/submissions/e', { root: false })
+        .testModalToggles({
+          modal: SubmissionDelete,
+          show: '#submission-activity-delete-button',
+          hide: '.btn-link'
+        });
+    });
+
+    it('sends the correct request', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 'e' });
+      return load('/projects/1/forms/f/submissions/e', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('#submission-activity-delete-button').trigger('click');
+          return component.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'DELETE',
+          url: '/v1/projects/1/forms/f/submissions/e'
+        }]);
+    });
+
+    it('implements some standard button things', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 'e' });
+      return load('/projects/1/forms/f/submissions/e', { root: false })
+        .afterResponses(component =>
+          component.get('#submission-activity-delete-button').trigger('click'))
+        .testStandardButton({
+          button: '#submission-delete .btn-danger',
+          disabled: ['#submission-delete .btn-link'],
+          modal: SubmissionDelete
+        });
+    });
+
+    it('does not show the delete button if user does not have submission delete permission', async () => {
+      testData.extendedUsers.reset();
+      testData.sessions.reset();
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer' });
+      testData.extendedSubmissions.createPast(1, { instanceId: 'e' });
+      return load('/projects/1/forms/f/submissions/e', { root: false })
+        .afterResponses(component => {
+          component.find('#submission-activity-delete-button').exists().should.be.false;
+        });
+    });
+
+    describe('after a successful response', () => {
+      const del = () => {
+        testData.extendedSubmissions.createPast(1, { instanceId: 'e' });
+        return load('/projects/1/forms/f/submissions/e')
+          .complete()
+          .request(async (app) => {
+            await app.get('#submission-activity-delete-button').trigger('click');
+            return app.get('#submission-delete .btn-danger').trigger('click');
+          })
+          .respondWithSuccess()
+          .respondFor('/projects/1/forms/f/submissions', {
+            project: false
+          });
+      };
+
+      it('redirects to the Data page', async () => {
+        const app = await del();
+        const { path } = app.vm.$route;
+        path.should.equal('/projects/1/forms/f/submissions');
+      });
+
+      it('shows a success alert', async () => {
+        const app = await del();
+        app.should.alert('success', 'The Submission has been deleted.');
+      });
+    });
   });
 });

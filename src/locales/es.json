@@ -61,7 +61,8 @@
       "public_link": "Acciones de enlace de acceso público",
       "dataset": "Acciones de la lista de entidades",
       "config": "Acciones de configuración del servidor",
-      "upgrade": "Actualización de servidor"
+      "upgrade": "Actualización de servidor",
+      "task": "Operación del sistema"
     },
     "action": {
       "default": {
@@ -71,6 +72,10 @@
         "delete": "Borrar"
       },
       "analytics": "Informe de uso",
+      "blobs": {
+        "s3_upload": "Subir archivos al almacén",
+        "s3_failed_to_pending": "Marcar archivos para volver a cargarlos en el almacén"
+      },
       "config": {
         "set": "Establecer"
       },
@@ -88,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Crear o actualizar borrador",
+        "update_draft_replace": "Sustituir borrador",
         "update_publish": "Publicar borrador",
         "update_draft_delete": "Descartar borrador",
         "attachment_update": "Actualizar adjuntos",
@@ -105,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Eliminar envíos"
+      },
       "upgrade": {
         "process_form": "Procesar formulario",
-        "process_form_draft": "Procesar borrador de formulario"
+        "process_form_draft": "Procesar borrador de formulario",
+        "process_form_entities_version": "Marcar formulario para actualización"
       },
       "user": {
         "assignment_create": "Asignar rol",
@@ -160,7 +170,8 @@
     "expand": "Expandir",
     "collapse": "Contraer",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
-    "upload": "Subir"
+    "upload": "Subir",
+    "restore": "Restaurar"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -173,7 +184,6 @@
     "passphrase": "Frase de contraseña",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
-    "reviewState": "Estado de revisión",
     "type": "Tipo"
   },
   "header": {
@@ -214,21 +224,24 @@
     "appUser": "Usuario móvil",
     "appUsers": "Usuarios móviles",
     "config": "Configuración del servidor",
+    "entity": "Entidad",
+    "entities": "Entidades",
     "entityList": "Lista de entidades",
     "entityLists": "Listas de entidades",
-    "entities": "Entidades",
     "form": "Formulario",
     "forms": "Formularios",
     "formAttachments": "Adjuntos de formulario",
     "project": "Proyecto",
     "projects": "Proyectos",
     "property": "Propiedad",
+    "properties": "Propiedades",
     "publicLink": "Enlace de acceso público",
     "user": "Usuario",
     "users": "Usuarios",
     "webUser": "Usuario web",
     "webUsers": "Usuarios web",
     "session": "Sesión",
+    "submission": "Envío",
     "submissions": "Envíos",
     "projectRoles": "Roles del proyecto",
     "formPreview": "Vista previa del formulario",
@@ -238,7 +251,9 @@
     "passwordTooShort": "Introduzca una contraseña de al menos 10 caracteres.",
     "updateEntity": "¡La Entidad ha sido actualizada!",
     "updateReviewState": "Estado de revisión guardado!",
-    "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles."
+    "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles.",
+    "submissionDeleted": "El envío ha sido eliminado.",
+    "submissionRestored": "El envío ha sido recuperado."
   },
   "moreInfo": {
     "clickHere": {
@@ -267,7 +282,8 @@
     "binaryLinkTitle": "Se envió el archivo. Haga clic para descargar.",
     "encryptionMessage": "La vista previa de datos no está disponible debido al cifrado.",
     "noSubmission": "(ninguno)",
-    "emptyTable": "No hay envíos todavía."
+    "emptyTable": "No hay envíos todavía.",
+    "fileDownloadUnavailable": "La descarga de archivos no está disponible para los envíos eliminados."
   },
   "entity": {
     "label": "Etiqueta",
@@ -292,6 +308,7 @@
     "error": "Error",
     "filter": "Filtrar",
     "forum": "Foro",
+    "lastUpdate": "Última actualización",
     "loading": "Cargando...",
     "no": "No",
     "noResults": "Sin resultados",
@@ -312,6 +329,7 @@
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
     "warning": "Advertencia",
+    "reviewState": "Estado de revisión",
     "status": "Estado",
     "version": "Versión"
   },
@@ -337,7 +355,11 @@
       "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
       "errorNotProblem": "Algo salió mal: error de código {status}",
       "problem": {
-        "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado."
+        "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado.",
+        "409_17": {
+          "message": "Este formulario intenta crear una nueva propiedad de entidad que coincida con una existente excepto por las mayúsculas: | Este formulario intenta crear nuevas propiedades de entidad que coincidan con las existentes, excepto por las mayúsculas: | Este formulario intenta crear nuevas propiedades de entidad que coincidan con las existentes, excepto por las mayúsculas:",
+          "duplicateProperty": "{provided} (existente: {current})"
+        }
       }
     },
     "session": {

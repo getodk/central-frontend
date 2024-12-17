@@ -495,13 +495,12 @@
       "string": "New password (confirm)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "Review State",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "Type",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "Review State"
     }
   },
   "header": {
@@ -629,16 +628,20 @@
       "string": "Server Configuration",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "entity": {
+      "string": "Entity",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entities": {
+      "string": "Entities",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "entityList": {
       "string": "Entity List",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
       "string": "Entity Lists",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "entities": {
-      "string": "Entities",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -665,6 +668,10 @@
       "string": "Property",
       "developer_comment": "This is a data property of an Entity."
     },
+    "properties": {
+      "string": "Properties",
+      "developer_comment": "This refers to the data properties of an Entity."
+    },
     "publicLink": {
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -687,6 +694,10 @@
     },
     "session": {
       "string": "Session",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "submission": {
+      "string": "Submission",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "submissions": {
@@ -714,6 +725,12 @@
     },
     "versionChange": {
       "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+    },
+    "submissionDeleted": {
+      "string": "The Submission has been deleted."
+    },
+    "submissionRestored": {
+      "string": "The Submission has been undeleted."
     }
   },
   "moreInfo": {
@@ -784,6 +801,9 @@
     },
     "emptyTable": {
       "string": "There are no Submissions yet."
+    },
+    "fileDownloadUnavailable": {
+      "string": "File download is not available for deleted Submissions."
     }
   },
   "entity": {
@@ -861,6 +881,9 @@
     "forum": {
       "string": "Forum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
+    },
+    "lastUpdate": {
+      "string": "Last update"
     },
     "loading": {
       "string": "Loading…"
@@ -980,6 +1003,15 @@
         "404_1": {
           "string": "The resource you are looking for cannot be found. The resource may have been deleted.",
           "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {This Form attempts to create a new Entity property that matches with an existing one except for capitalization:} other {This Form attempts to create new Entity properties that match with existing ones except for capitalization:}}"
+          },
+          "duplicateProperty": {
+            "string": "{provided} (existing: {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
         }
       }
     },
@@ -1278,9 +1310,6 @@
         "num_submissions_from_web_users": {
           "string": "Number of Submissions from Web Users"
         },
-        "has_description": {
-          "string": "Project has a description"
-        },
         "description_length": {
           "string": "Length of the Project description"
         },
@@ -1358,6 +1387,36 @@
         },
         "avg_entity_submission_delay": {
           "string": "Average Entity Submission processing delay"
+        },
+        "uses_external_blob_store": {
+          "string": "Server uses external S3-compatible storage"
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": "Number of force-processed Offline Entity Submissions"
+        },
+        "max_entity_branch_delay": {
+          "string": "Maximum time to process offline Entity update chain"
+        },
+        "num_xml_only_form_defs": {
+          "string": "Number of Form Definitions with no associated XLSForm"
+        },
+        "num_blob_files": {
+          "string": "Number of binary files"
+        },
+        "num_blob_files_on_s3": {
+          "string": "Number of binary files currently stored in S3-compatible storage"
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": "Number of times user has reset failed upload to S3-compatible storage"
+        },
+        "num_entity_creates_sub": {
+          "string": "Number of Entities created via Submissions"
+        },
+        "num_entity_creates_api": {
+          "string": "Number of Entities created via API"
+        },
+        "num_entity_creates_bulk": {
+          "string": "Number of Entities created via bulk upload"
         }
       }
     },
@@ -1445,6 +1504,12 @@
           "string": "Details",
           "developer_comment": "This is the text of a table column header."
         }
+      }
+    },
+    "CollectQr": {
+      "draft": {
+        "string": "Temporary Testing Code",
+        "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
     "ConfigError": {
@@ -2244,6 +2309,20 @@
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": "You’re using a significantly outdated version of ODK Central"
+        },
+        "sentence1": {
+          "string": "Upgrade now to protect your data and take advantage of the latest features."
+        },
+        "sentence2": {
+          "string": "If you don’t want to maintain Central, try {OdkCloudLink}.",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
+      }
+    },
     "FeedbackButton": {
       "feedback": {
         "string": "Feedback",
@@ -2902,6 +2981,40 @@
         }
       }
     },
+    "FormDraftQrPanel": {
+      "title": {
+        "string": "Testing Code",
+        "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
+      },
+      "introduction": {
+        "full": {
+          "string": "This is a {temporaryCode}.",
+          "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
+        },
+        "temporaryCode": {
+          "string": "Temporary Testing Code",
+          "developer_comment": "\"Code\" refers to a QR code.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {temporaryCode} is in the following text:\n\nThis is a {temporaryCode}."
+        }
+      },
+      "stopsWorking": {
+        "string": "It will stop working when you publish this Draft.",
+        "developer_comment": "\"It\" refers to a temporary testing code."
+      },
+      "instructions": {
+        "string": "Scan this QR code to configure Collect on a device for testing and submitting data to this test table.",
+        "developer_comment": "The table is a table of test Submissions."
+      },
+      "codesForUsers": {
+        "full": {
+          "string": "To create codes to distribute to users, please see the {appUsers} page.",
+          "developer_comment": "\"Codes\" refers to \"QR codes\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
+        },
+        "appUsers": {
+          "string": "App Users",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nTo create codes to distribute to users, please see the {appUsers} page."
+        }
+      }
+    },
     "FormDraftStatus": {
       "draftChecklist": {
         "title": {
@@ -2964,16 +3077,9 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "body": {
-        "0": {
-          "string": "You can use the configuration code to the right to set up a mobile device to download this Draft. You can also click the New button above to create a new Submission from your web browser."
-        },
         "1": {
           "string": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
         }
-      },
-      "collectProjectName": {
-        "string": "[Draft] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       },
       "datasetsPreview": {
         "title": {
@@ -2987,6 +3093,10 @@
             "string": "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
           }
         }
+      },
+      "collectProjectName": {
+        "string": "[Draft] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
     "FormHead": {
@@ -3130,6 +3240,9 @@
           },
           "structureChanged": {
             "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+          },
+          "oldEntityVersion": {
+            "string": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
           }
         },
         "4": {
@@ -3203,8 +3316,8 @@
         }
       },
       "datasetsLinked": {
-        "string": "{count, plural, one {Dataset attached to this Form:} other {Datasets attached to this Form:}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
+        "string": "{count, plural, one {Entity List attached to this Form:} other {Entity Lists attached to this Form:}}",
+        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {
@@ -3297,6 +3410,18 @@
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "OData access is unavailable for deleted Submissions"
+      },
+      "purgeDescription": {
+        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -3337,12 +3462,6 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Undelete",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Deleted {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3350,6 +3469,12 @@
       "disabled": {
         "conflict": {
           "string": "This Form cannot be undeleted because an active Form with the same ID exists."
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "Undelete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3560,6 +3685,24 @@
             }
           }
         }
+      }
+    },
+    "OutdatedVersion": {
+      "title": {
+        "string": "Outdated Version",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": "Instructions to upgrade"
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": "Click here to see instructions to upgrade Central"
+      },
+      "dismiss": {
+        "string": "Dismiss for 30 days"
+      },
+      "dismissTooltip": {
+        "string": "Click here to dismiss this warning for 30 days."
       }
     },
     "Pagination": {
@@ -4293,9 +4436,6 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "Review State"
-      },
       "formVersion": {
         "string": "Form version"
       },
@@ -4399,6 +4539,20 @@
         },
         "parseError": {
           "string": "Something went wrong while requesting your data."
+        }
+      }
+    },
+    "SubmissionDelete": {
+      "title": {
+        "string": "Delete Submission",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to delete this Submission?"
+        },
+        "1": {
+          "string": "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
         }
       }
     },
@@ -4510,6 +4664,28 @@
         "comment": {
           "string": "Comment by {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        },
+        "delete": {
+          "string": "Deleted by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
+        },
+        "undelete": {
+          "string": "Undeleted by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "Waiting for previous Submission in offline update chain before updating Entity",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "Processed Submission from backlog without previous Submission in offline update chain",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "Previous Submission in offline update chain was received",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },
@@ -4602,8 +4778,29 @@
       }
     },
     "SubmissionList": {
+      "action": {
+        "testOnDevice": {
+          "string": "Test on device",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "Test in browser",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "noMatching": {
         "string": "There are no matching Submissions."
+      },
+      "downloadDisabled": {
+        "string": "Download is unavailable for deleted Submissions"
+      },
+      "filterDisabledMessage": {
+        "string": "Filtering is unavailable for deleted Submissions"
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": "There are no deleted Submissions."
+        }
       },
       "loading": {
         "withoutCount": {
@@ -4649,6 +4846,29 @@
         }
       }
     },
+    "SubmissionRestore": {
+      "title": {
+        "string": "Undelete Submission",
+        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to undelete this Submission?"
+        },
+        "1": {
+          "string": "The Submission will be restored to its previous state, including associated data like comments."
+        },
+        "2": {
+          "string": "If the Submission is deleted again, it will be another 30 days before it is removed."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "Undelete immediately without confirmation until I leave the page",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
     "SubmissionShow": {
       "back": {
         "title": {
@@ -4666,6 +4886,10 @@
         "stateAndActions": {
           "string": "State and actions",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "Deleted at",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },

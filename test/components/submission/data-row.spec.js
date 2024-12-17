@@ -40,6 +40,7 @@ const mountComponent = (props = undefined) => {
       xmlFormId: 'f',
       draft: false,
       fields: fields.data,
+      awaitingDeletedResponses: new Set(),
       ...props
     },
     container
@@ -322,6 +323,24 @@ describe('SubmissionDataRow', () => {
       const td = mountComponent().get('td');
       td.find('a').exists().should.be.false;
       td.text().should.equal('');
+    });
+
+    it('disables the link if the Submission is deleted', async () => {
+      testData.extendedForms.createPast(1, {
+        fields: [testData.fields.binary('/b')],
+        submissions: 1
+      });
+      testData.extendedSubmissions.createPast(1, {
+        instanceId: 'a b',
+        b: 'c d.jpg'
+      });
+      const td = mountComponent({ deleted: true }).get('td');
+      td.classes('binary-field').should.be.true;
+      const a = td.get('a');
+      a.attributes()['aria-disabled'].should.equal('true');
+      await a.should.have.tooltip('File download is not available for deleted Submissions.');
+      a.find('.icon-check').exists().should.be.true;
+      a.find('.icon-download').exists().should.be.true;
     });
   });
 

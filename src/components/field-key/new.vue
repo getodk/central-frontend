@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
               <span>{{ $t('success[0]', created) }}</span>
             </p>
           </div>
-          <field-key-qr-panel :field-key="created" :managed="managed"/>
+          <field-key-qr-panel :field-key="created" :managed="managed" :show-close="false"/>
           <p>{{ $t('success[1]', created) }}</p>
           <i18n-t tag="p" keypath="success[2].full">
             <template #formAccessSettings>
