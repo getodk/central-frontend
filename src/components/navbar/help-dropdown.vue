@@ -34,16 +34,16 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import DocLink from '../doc-link.vue';
 
-import { useRequestData } from '../../request-data';
+import useCentralVersion from '../../composables/central-version';
 
 defineOptions({
   name: 'NavbarHelpDropdown'
 });
 const emit = defineEmits(['show-version']);
 
-const { centralVersion } = useRequestData();
+const centralVersion = useCentralVersion();
 const showVersion = (event) => {
-  if (centralVersion.dataExists) {
+  if (centralVersion.value != null) {
     event.preventDefault();
     emit('show-version');
   }

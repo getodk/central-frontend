@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </nav>
 
-    <central-version-component v-if="centralVersion.dataExists"
+    <central-version-component v-if="centralVersion != null"
       v-bind="versionModal" @hide="versionModal.hide()"/>
     <analytics-introduction v-if="config.loaded && config.showsAnalytics"
       v-bind="analyticsIntroduction" @hide="analyticsIntroduction.hide()"/>
@@ -57,6 +57,7 @@ import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
+import useCentralVersion from '../composables/central-version';
 import useRoutes from '../composables/routes';
 import { loadAsync } from '../util/load-async';
 import { modalData } from '../util/reactivity';
@@ -76,7 +77,8 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { currentUser, analyticsConfig, centralVersion } = useRequestData();
+    const { currentUser, analyticsConfig } = useRequestData();
+    const centralVersion = useCentralVersion();
     const { canRoute } = useRoutes();
     return { currentUser, analyticsConfig, centralVersion, canRoute };
   },

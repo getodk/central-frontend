@@ -10,26 +10,25 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { F } from 'ramda';
-import { watchEffect, watchSyncEffect } from 'vue';
+import { computed, watchEffect } from 'vue';
 
 import useCallWait from './call-wait';
 import { memoizeForContainer } from '../util/composable';
 import { useRequestData } from '../request-data';
 
 export default memoizeForContainer(({ i18n, alert, config }) => {
-  const { createResource } = useRequestData();
-  const centralVersion = createResource('centralVersion');
-  watchSyncEffect(() => {
-    if (!config.dataExists) return;
+  const centralVersion = computed(() => {
+    if (!config.dataExists) return null;
     const versionText = config.centralVersion;
-    if (versionText == null) return;
-    centralVersion.data = {
+    if (versionText == null) return null;
+    return {
       versionText,
       currentVersion: versionText.match(/\(v(\d{4}[^-]*)/)[1]
     };
   });
 
   // Check for a change to /version.txt.
+  const { createResource } = useRequestData();
   const latestVersion = createResource('latestVersion');
   const { callWait } = useCallWait();
   // Alerts the user about a version change, then keep alerting them. One
@@ -43,12 +42,13 @@ export default memoizeForContainer(({ i18n, alert, config }) => {
     );
   };
   watchEffect(() => {
-    if (!centralVersion.dataExists) return;
+    if (centralVersion.value == null) return;
     callWait(
       'centralVersion.check',
       () => latestVersion.request({ url: '/version.txt', alert: false })
         .then(() => {
-          if (latestVersion.data === centralVersion.versionText) return false;
+          if (latestVersion.data === centralVersion.value.versionText)
+            return false;
           alertAboutChange();
           return true;
         })

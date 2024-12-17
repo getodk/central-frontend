@@ -32,13 +32,15 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject } from 'vue';
-import { useRequestData } from '../request-data';
 
-const { centralVersion, currentUser } = useRequestData();
+import useCentralVersion from '../composables/central-version';
+import { useRequestData } from '../request-data';
 
 defineOptions({
   name: 'OutdatedVersion'
 });
+
+const { currentUser } = useRequestData();
 
 const visiblyLoggedIn = inject('visiblyLoggedIn');
 
@@ -46,12 +48,13 @@ const container = inject('container');
 const { i18n: globalI18n, currentDate } = container;
 const locale = computed(() => globalI18n.locale);
 
-const iframeSrc = computed(() => `https://getodk.github.io/central/outdated-version.html?version=${centralVersion.currentVersion}&lang=${locale.value}`);
+const centralVersion = useCentralVersion();
+const iframeSrc = computed(() => `https://getodk.github.io/central/outdated-version.html?version=${centralVersion.value.currentVersion}&lang=${locale.value}`);
 
 const showBanner = computed(() => {
   // user is not logged in or doesn't have ability to set config (implying not an admin)
   if (!currentUser.dataExists || !visiblyLoggedIn || !currentUser.can('config.set')) return false;
-  if (!centralVersion.dataExists) return false;
+  if (centralVersion.value == null) return false;
 
   // User has seen the warning in the last 30 days, so don't show it again
   // 864E5 is the number of milliseconds in a day
@@ -59,7 +62,7 @@ const showBanner = computed(() => {
   if (dismissDate && currentDate.value.getTime() < (new Date(dismissDate).getTime() + (864E5 * 30))) return false;
 
   // Difference between current year and Central version year is less than 2
-  const centralVersionYear = Number(centralVersion.currentVersion.match(/^(\d{4})/)[1]);
+  const centralVersionYear = Number(centralVersion.value.currentVersion.match(/^(\d{4})/)[1]);
   const currentYear = currentDate.value.getFullYear();
   if (currentYear - centralVersionYear < 2) return false;
 

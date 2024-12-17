@@ -1,20 +1,17 @@
 import OutdatedVersion from '../../src/components/outdated-version.vue';
 
-import useCentralVersion from '../../src/composables/central-version';
 import { loadLocale } from '../../src/util/i18n';
 
 import testData from '../data';
 import { mockHttp } from '../util/http';
 import { mockLogin } from '../util/session';
 import { mount } from '../util/lifecycle';
-import { testRequestData } from '../util/request-data';
 
 const mountOptions = (options) => ({
   global: {
     provide: { visiblyLoggedIn: options.userLoggedIn ?? true }
   },
   container: {
-    requestData: testRequestData([useCentralVersion]),
     config: { centralVersion: options.centralVersion },
     currentDate: options.currentDate ? new Date(options.currentDate) : new Date()
   }
