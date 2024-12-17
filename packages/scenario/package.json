@@ -49,10 +49,10 @@
   "devDependencies": {
     "@getodk/xforms-engine": "0.5.0",
     "@js-joda/core": "^5.6.3",
-    "@vitest/browser": "^2.1.1",
+    "@vitest/browser": "^2.1.8",
     "jsdom": "^25.0.1",
-    "solid-js": "^1.9.1",
-    "vite": "^5.4.8",
-    "vitest": "^2.1.1"
+    "solid-js": "^1.9.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
   }
 }
