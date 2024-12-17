@@ -1,11 +1,12 @@
 {
   "Question types (basic functionality)": {
     "text": "✅",
-    "integer": "",
-    "decimal": "",
+    "integer": "✅",
+    "decimal": "✅",
     "note": "✅",
     "select_one": "✅",
     "select_multiple": "✅",
+    "select_*_from_file": "✅",
     "repeat": "✅",
     "group": "✅",
     "geopoint": "",
@@ -23,7 +24,7 @@
     "time": "",
     "datetime": "",
     "rank": "",
-    "csv-external": "",
+    "csv-external": "✅",
     "acknowledge": "🚧",
     "start": "",
     "end": "",
@@ -35,11 +36,11 @@
     "audit": ""
   },
   "Appearances": {
-    "numbers": "",
+    "numbers": "✅",
     "multiline": "",
     "url": "",
     "ex:": "",
-    "thousands-sep": "",
+    "thousands-sep": "✅",
     "bearing": "",
     "vertical": "",
     "no-ticks": "",
@@ -75,7 +76,8 @@
     "field-list": "✅",
     "label": "✅",
     "list-nolabel": "✅",
-    "list": "✅"
+    "list": "✅",
+    "counter": ""
   },
   "Parameters": {
     "randomize": "✅",
@@ -115,7 +117,6 @@
     "big-image": "",
     "audio": "",
     "video": "",
-    "secondary instance (external choice file)": "",
     "secondary instance (last saved)": "",
     "autoplay": ""
   },
