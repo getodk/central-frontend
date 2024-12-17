@@ -109,6 +109,7 @@ $border-radius: 12px;
 .hover-card { width: 290px; }
 
 .hover-card-heading {
+  // Used to align the top of the icon with the top of the text.
   $icon-margin-top: 2px;
 
   background-color: #666;
@@ -119,7 +120,7 @@ $border-radius: 12px;
   color: #fff;
   display: flex;
   line-height: 1.2;
-  padding: #{$padding-panel-body - $icon-margin-top} $padding-panel-body 12px;
+  padding: #{$padding-panel-body - $icon-margin-top} $padding-panel-body 13px;
 
   > [class^="icon-"] {
     flex-shrink: 0;
@@ -139,10 +140,7 @@ $border-radius: 12px;
   margin-bottom: 1px;
 }
 
-.hover-card-subtitle {
-  font-size: 12px;
-  margin-bottom: 1px;
-}
+.hover-card-subtitle { font-size: 12px; }
 
 .hover-card-body {
   background-color: #fff;
