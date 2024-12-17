@@ -476,22 +476,15 @@ describe('SubmissionFilters', () => {
       });
   });
 
-  it('should not send Submission OData request on navigating to another route after filter', () => {
+  // https://github.com/getodk/central/issues/756
+  it('does not send an extra OData request after filtering, then navigating away', () => {
     testData.extendedForms.createPast(1);
-
-    return loadComponent('reviewState=%27approved%27')
-      .beforeEachResponse((_, { url }) => {
-        if (url.includes('.svc')) {
-          const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.equal("(__system/reviewState eq 'approved')");
-        }
-      })
-      .afterResponses(component => {
-        const filters = component.getComponent(SubmissionFilters).props();
-        filters.reviewState.should.eql(["'approved'"]);
-      })
+    testData.extendedFormVersions.createPast(1, { draft: true });
+    return load('/projects/1/forms/f/submissions?reviewState=%27approved%27')
       .complete()
-      .route('/projects/1/forms/f/draft/testing')
-      .testNoRequest();
+      // If an extra request is sent, then .load() will fail.
+      .load('/projects/1/forms/f/draft/testing', {
+        project: false, form: false, formDraft: false, attachments: false
+      });
   });
 });
