@@ -10,13 +10,12 @@ describe('App', () => {
   describe('change in Central version', () => {
     beforeEach(mockLogin);
 
-    const container = {
-      config: { centralVersion: '(v2024.1.2-sha)' }
-    };
-
     describe('after a version change', () => {
       it('shows an alert', () => {
         const clock = sinon.useFakeTimers(Date.now());
+        const container = {
+          config: { centralVersion: '(v2024.1.2-sha)' }
+        };
         return load('/', { container })
           .complete()
           .request(() => {
@@ -40,6 +39,9 @@ describe('App', () => {
 
       it('stops sending the request', () => {
         const clock = sinon.useFakeTimers(Date.now());
+        const container = {
+          config: { centralVersion: '(v2024.1.2-sha)' }
+        };
         return load('/', { container })
           .complete()
           .request(() => {
@@ -54,6 +56,9 @@ describe('App', () => {
 
       it('keeps alerting the user', () => {
         const clock = sinon.useFakeTimers(Date.now());
+        const container = {
+          config: { centralVersion: '(v2024.1.2-sha)' }
+        };
         return load('/', { container })
           .complete()
           .request(() => {
@@ -73,6 +78,9 @@ describe('App', () => {
 
     it('does not stop sending request after a response error', () => {
       const clock = sinon.useFakeTimers(Date.now());
+      const container = {
+        config: { centralVersion: '(v2024.1.2-sha)' }
+      };
       return load('/', { container })
         .complete()
         .request(() => {
