@@ -221,14 +221,14 @@ class Resource extends BaseResource {
     const abortController = new AbortController();
     this[_abortController] = abortController;
     axiosConfig.signal = abortController.signal;
-    const { router, i18n, requestData, alert, http, logger } = this[_container];
+    const { router, i18n, requestData, alert, currentDate, http, logger } = this[_container];
     // `router` may be `null` in testing.
     const removeHook = router == null || method === 'GET'
       ? noop
       : router.afterEach(unlessFailure(() => { abortController.abort(); }));
 
     this[_store].awaitingResponse = true;
-    const cleanup = () => {
+    const cleanup = (response) => {
       // Each request is associated with its own AbortController. If another
       // request is sent for this same resource, then that will cancel this
       // request and immediately set this[_abortController] to the
@@ -245,20 +245,25 @@ class Resource extends BaseResource {
       // then that will cause cleanup() to be called very soon, yet
       // asynchronously (in a different tick from the navigation hook).
       removeHook();
+
+      if (response != null)
+        currentDate.value = new Date(response.headers.get('date'));
     };
 
     return http.request(withAuth(axiosConfig, requestData.session.token))
       .catch(error => {
+        const { response } = error;
+
         if (abortController.signal.aborted) {
-          cleanup();
+          cleanup(response);
           throw new Error('request was canceled');
         }
 
-        if (fulfillProblem != null && error.response != null &&
-          isProblem(error.response.data) && fulfillProblem(error.response.data))
-          return error.response;
+        if (fulfillProblem != null && response != null &&
+          isProblem(response.data) && fulfillProblem(response.data))
+          return response;
 
-        cleanup();
+        cleanup(response);
 
         if (alertOption) {
           logAxiosError(logger, error);
@@ -268,7 +273,7 @@ class Resource extends BaseResource {
         throw error;
       })
       .then(response => {
-        cleanup();
+        cleanup(response);
         if (abortController.signal.aborted)
           throw new Error('request was canceled');
 

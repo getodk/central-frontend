@@ -1,5 +1,4 @@
 import FormOverview from '../../../src/components/form/overview.vue';
-import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 
 import testData from '../../data';
@@ -63,25 +62,6 @@ describe('FormShow', () => {
       })
       .afterResponses(app => {
         expect(app.getComponent(FormOverview).vm).to.not.equal(vm);
-      });
-  });
-
-  it('shows a loading message until all responses are received', () => {
-    testData.extendedProjects.createPast(1);
-    testData.extendedForms.createPast(1, { xmlFormId: 'f', draft: false });
-    testData.standardFormAttachments.createPast(1);
-    return load('/projects/1/forms/f')
-      .beforeEachResponse((app, req) => {
-        const loading = app.findAllComponents('.loading:not(#form-overview .loading)'); // select all loading components except FormOverview's
-        loading.length.should.equal(2);
-        if (req.url !== '/v1/projects/1/forms/f/attachments') { // skip form/f/attachments because it is requested from FormOverview
-          loading[0].props().state.should.eql(true);
-        }
-      })
-      .afterResponses(app => {
-        const loading = app.findAllComponents(Loading);
-        loading.length.should.equal(3);
-        loading[0].props().state.should.eql(false);
       });
   });
 });

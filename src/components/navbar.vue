@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('analyticsNotice') }}
             </a>
             <ul class="nav navbar-nav">
-              <navbar-help-dropdown/>
+              <navbar-help-dropdown @show-version="versionModal.show()"/>
               <navbar-locale-dropdown/>
               <navbar-actions/>
             </ul>
@@ -40,6 +40,9 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </nav>
+
+    <central-version-component v-if="centralVersion != null"
+      v-bind="versionModal" @hide="versionModal.hide()"/>
     <analytics-introduction v-if="config.loaded && config.showsAnalytics"
       v-bind="analyticsIntroduction" @hide="analyticsIntroduction.hide()"/>
   </div>
@@ -48,11 +51,13 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { defineAsyncComponent } from 'vue';
 
+import CentralVersion from './central-version.vue';
 import NavbarActions from './navbar/actions.vue';
 import NavbarHelpDropdown from './navbar/help-dropdown.vue';
 import NavbarLinks from './navbar/links.vue';
 import NavbarLocaleDropdown from './navbar/locale-dropdown.vue';
 
+import useCentralVersion from '../composables/central-version';
 import useRoutes from '../composables/routes';
 import { loadAsync } from '../util/load-async';
 import { modalData } from '../util/reactivity';
@@ -62,6 +67,7 @@ export default {
   name: 'Navbar',
   components: {
     AnalyticsIntroduction: defineAsyncComponent(loadAsync('AnalyticsIntroduction')),
+    CentralVersionComponent: CentralVersion,
     NavbarActions,
     NavbarHelpDropdown,
     NavbarLinks,
@@ -72,11 +78,13 @@ export default {
     // The component does not assume that this data will exist when the
     // component is created.
     const { currentUser, analyticsConfig } = useRequestData();
+    const centralVersion = useCentralVersion();
     const { canRoute } = useRoutes();
-    return { currentUser, analyticsConfig, canRoute };
+    return { currentUser, analyticsConfig, centralVersion, canRoute };
   },
   data() {
     return {
+      versionModal: modalData(),
       analyticsIntroduction: modalData('AnalyticsIntroduction')
     };
   },

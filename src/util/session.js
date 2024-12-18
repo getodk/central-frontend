@@ -113,7 +113,7 @@ const requestLogout = ({ i18n, requestData, alert, http }) => {
 // Resets requestData, clearing data and canceling requests. Some general/system
 // resources are not reset.
 const resetRequestData = (requestData) => {
-  const preserve = new Set([requestData.config, requestData.centralVersion]);
+  const preserve = new Set([requestData.config]);
   for (const resource of requestData.resources) {
     if (!preserve.has(resource)) resource.reset();
   }

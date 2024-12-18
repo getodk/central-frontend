@@ -286,7 +286,7 @@ import requestDataByComponent from './http/data';
 import testData from '../data';
 import * as commonTests from './http/common';
 import { loadAsyncCache } from './load-async';
-import { mockAxiosError, mockResponse } from './axios';
+import { mockAxiosError, mockResponse, mockResponseHeaders } from './axios';
 import { mockRouter, setInstallLocation, testRouter } from './router';
 import { mount as lifecycleMount, withSetup } from './lifecycle';
 import { setRequestData } from './request-data';
@@ -686,24 +686,25 @@ class MockHttp {
         .then(() => new Promise((resolve, reject) => {
           this._responseCount += 1;
 
-          let responseWithoutConfig;
+          let response;
           try {
             const callback = this._responses[index];
-            responseWithoutConfig = callback();
+            response = callback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
 
-          const { data } = responseWithoutConfig;
+          const { data } = response;
           if (typeof data === 'object' && data != null)
-            responseWithoutConfig.data = clone(data);
+            response.data = clone(data);
+          if (response.headers == null)
+            response.headers = mockResponseHeaders();
+          // Add `response` to the log before adding `config` to it.
+          this._requestResponseLog.push({ ...response });
+          response.config = config;
 
-          this._requestResponseLog.push(responseWithoutConfig);
-
-          const response = { ...responseWithoutConfig, config };
-          response.headers = new Map([['date', new Date()], ...(response.headers ?? [])]);
           if (response.status >= 200 && response.status < 300)
             resolve(response);
           else

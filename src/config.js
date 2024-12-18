@@ -13,6 +13,9 @@ except according to the terms contained in the LICENSE file.
 // These are the default config values. They will be merged with the response
 // for /client-config.json.
 export default {
+  centralVersion: process.env.NODE_ENV === 'development'
+    ? `(v${new Date().getFullYear()}.1.0-sha)\nNote: fake version for development.`
+    : null,
   // `true` to allow navigation to /system/analytics and `false` not to.
   showsAnalytics: true,
   home: {
