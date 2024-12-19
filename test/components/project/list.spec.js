@@ -13,8 +13,9 @@ import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
+import { mockHttp } from '../../util/http';
 
-const mountComponent = () => mount(ProjectList, {
+const mountOptions = () => ({
   container: {
     requestData: testRequestData([useProjects], {
       projects: testData.extendedProjects.sorted()
@@ -22,6 +23,7 @@ const mountComponent = () => mount(ProjectList, {
     router: mockRouter('/')
   }
 });
+const mountComponent = () => mount(ProjectList, mountOptions());
 
 const createProjects = (projects, forms = [], datasets = []) => {
   // Input: Two arrays of same length with options for creating
@@ -123,8 +125,11 @@ describe('ProjectList', () => {
     });
 
     it('changes sort to alphabetical', async () => {
-      const component = mountComponent();
-      await component.find('#project-sort select').setValue('alphabetical');
+      const component = await mockHttp()
+        .mount(ProjectList, mountOptions())
+        .request(c => c.find('#project-sort select').setValue('alphabetical'))
+        .respondWithSuccess()
+        .complete();
       const blocks = component.findAllComponents(ProjectHomeBlock);
       blocks.length.should.equal(3);
       blocks.map((block) => block.props().project.name).should.eql(['A', 'B', 'C']);
@@ -134,8 +139,11 @@ describe('ProjectList', () => {
 
     it('changes sort to newest', async () => {
       // createdAt fields will be in order of test data creation
-      const component = mountComponent();
-      await component.find('#project-sort select').setValue('newest');
+      const component = await mockHttp()
+        .mount(ProjectList, mountOptions())
+        .request(c => c.find('#project-sort select').setValue('newest'))
+        .respondWithSuccess()
+        .complete();
       const blocks = component.findAllComponents(ProjectHomeBlock);
       blocks.length.should.equal(3);
       blocks.map((block) => block.props().project.name).should.eql(['C', 'B', 'A']);
@@ -143,16 +151,24 @@ describe('ProjectList', () => {
       formRows.map((row) => row.props().form.name).should.eql(['Z', 'Y', 'X']);
     });
 
-    it('does not render the list in chunks again after sorting', async () => {
+    it('does not render the list in chunks again after sorting', () => {
       const clock = sinon.useFakeTimers(Date.now());
       createProjects(new Array(25).fill({}), new Array(25).fill([]));
-      const component = mountComponent();
-      component.findAllComponents(ProjectHomeBlock).length.should.equal(25);
-      clock.tick(25);
-      await component.vm.$nextTick();
-      component.findAllComponents(ProjectHomeBlock).length.should.equal(28);
-      await component.find('#project-sort select').setValue('alphabetical');
-      component.findAllComponents(ProjectHomeBlock).length.should.equal(28);
+      return mockHttp()
+        .mount(ProjectList, mountOptions())
+        .afterResponses((component) => {
+          component.findAllComponents(ProjectHomeBlock).length.should.equal(25);
+          // Project List is rendered using chunky array, which loads chunks of
+          // 25 items in 25ms intervals
+          clock.tick(25);
+        })
+        .request(component => component
+          .find('#project-sort select')
+          .setValue('alphabetical'))
+        .respondWithSuccess()
+        .afterResponses(component => {
+          component.findAllComponents(ProjectHomeBlock).length.should.equal(28);
+        });
     });
 
     it('sorts archived projects by latest submission by default', () => {
@@ -161,8 +177,11 @@ describe('ProjectList', () => {
     });
 
     it('changes sort of archived projects', async () => {
-      const component = mountComponent();
-      await component.find('#project-sort select').setValue('alphabetical');
+      const component = await mockHttp()
+        .mount(ProjectList, mountOptions())
+        .request(c => c.find('#project-sort select').setValue('alphabetical'))
+        .respondWithSuccess()
+        .complete();
       const archived = component.findAll('#project-list-archived .project-title');
       archived.map((projDiv) => projDiv.text()).should.eql(['D', 'E']);
     });
@@ -193,9 +212,12 @@ describe('ProjectList', () => {
         ]
       );
 
-      const component = mountComponent();
+      const component = await mockHttp()
+        .mount(ProjectList, mountOptions())
+        .request(c => c.find('#project-sort select').setValue('latest'))
+        .respondWithSuccess()
+        .complete();
       const blocks = component.findAllComponents(ProjectHomeBlock);
-      await component.find('#project-sort select').setValue('latest');
       blocks.length.should.equal(4);
       blocks.map((block) => block.props().project.name).should.eql(['X_subs', 'A_no_subs', 'B_no_subs', 'C_no_subs']);
       const formRows = blocks[0].findAllComponents(FormRow);
