@@ -43,6 +43,10 @@ defineProps({
 .dl-data-dt { @include text-overflow-ellipsis; }
 
 .dl-data-dd {
+  // This is needed for the line-clamp mixin to work if the component is used in
+  // .dl-horizontal. See: https://github.com/getodk/central/issues/854
+  overflow: hidden;
+
   div {
     @include line-clamp(3);
     overflow-wrap: break-word;
