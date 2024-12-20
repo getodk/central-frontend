@@ -9,6 +9,8 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import Alert40917 from '../components/alert/40917.vue';
+
 import { odataLiteral } from './odata';
 
 // Returns `true` if `data` looks like a Backend Problem and `false` if not.
@@ -245,12 +247,7 @@ export const requestAlertMessage = (i18n, axiosError, problemToAlert = undefined
   if (problem.code === 404.1) return i18n.t('util.request.problem.404_1');
   if (problem.code === 409.17) {
     const { duplicateProperties } = problem.details;
-    // eslint-disable-next-line prefer-template
-    return i18n.tc('util.request.problem.409_17.message', duplicateProperties.length) +
-      '\n\n' +
-      duplicateProperties
-        .map(p => `• ${i18n.t('util.request.problem.409_17.duplicateProperty', p)}`)
-        .join('\n');
+    return [Alert40917, { duplicateProperties }];
   }
   return problem.message;
 };

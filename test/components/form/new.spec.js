@@ -1,5 +1,6 @@
 import { clone } from 'ramda';
 
+import Alert40917 from '../../../src/components/alert/40917.vue';
 import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
@@ -501,10 +502,10 @@ describe('FormNew', () => {
           details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
         })
         .afterResponse(modal => {
-          modal.should.alert(
-            'danger',
-            /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
-          );
+          modal.should.alert('danger', [
+            Alert40917,
+            { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+          ]);
         });
     });
   });
