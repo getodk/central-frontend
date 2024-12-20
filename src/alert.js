@@ -12,40 +12,51 @@ except according to the terms contained in the LICENSE file.
 import { shallowReactive } from 'vue';
 
 class AlertData {
+  #data;
+
   constructor() {
-    this._data = shallowReactive({
+    this.#data = shallowReactive({
       // The alert's "contextual" type: 'success', 'info', 'warning', or
       // 'danger'.
       type: 'danger',
-      message: null,
-      // `true` if the alert should be visible and `false` if not.
-      state: false,
-      // The time at which the alert was last set
+      // Either a string or an array with a component and props for the
+      // component
+      content: null,
+      // The time at which the alert was last shown
       at: new Date()
     });
   }
 
-  get type() { return this._data.type; }
-  get message() { return this._data.message; }
-  get state() { return this._data.state; }
-  get at() { return this._data.at; }
+  // Returns `true` if the alert should be visible and `false` if not.
+  get state() { return this.content != null; }
 
-  _set(type, message) {
-    this._data.type = type;
-    this._data.message = message;
-    this._data.state = true;
-    this._data.at = new Date();
+  get type() { return this.#data.type; }
+
+  get content() { return this.#data.content; }
+
+  get message() {
+    const { content } = this.#data;
+    return typeof content === 'string' ? content : null;
   }
 
-  success(message) { this._set('success', message); }
-  info(message) { this._set('info', message); }
-  warning(message) { this._set('warning', message); }
-  danger(message) { this._set('danger', message); }
+  get at() { return this.#data.at; }
 
-  blank() {
-    this._data.state = false;
-    this._data.message = null;
+  // `content` can be a string, an array with a component and props for the
+  // component, or just a component.
+  #show(type, content) {
+    this.#data.type = type;
+    this.#data.content = typeof content === 'string' || Array.isArray(content)
+      ? content
+      : [content, {}];
+    this.#data.at = new Date();
   }
+
+  success(content) { this.#show('success', content); }
+  info(content) { this.#show('info', content); }
+  warning(content) { this.#show('warning', content); }
+  danger(content) { this.#show('danger', content); }
+
+  blank() { this.#data.content = null; }
 }
 
 // Only a single alert is shown at a time. This function returns an object that

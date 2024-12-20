@@ -316,7 +316,7 @@ addAsyncMethod('textTooltip', async function textTooltip() {
 ////////////////////////////////////////////////////////////////////////////////
 // OTHER
 
-Assertion.addMethod('alert', function assertAlert(type = undefined, message = undefined) {
+Assertion.addMethod('alert', function assertAlert(type = undefined, content = undefined) {
   expect(this._obj).to.be.instanceof(VueWrapper);
   const { alert } = this._obj.vm.$container;
   this.assert(
@@ -324,7 +324,18 @@ Assertion.addMethod('alert', function assertAlert(type = undefined, message = un
     'expected the component to show an alert',
     'expected the component not to show an alert'
   );
-  if (checkNegate(this, [type, message])) return;
+  if (checkNegate(this, [type, content])) return;
   if (type != null) alert.type.should.equal(type);
-  if (message != null) alert.message.should.stringMatch(message);
+  if (content != null) {
+    if (typeof content === 'string' || content instanceof RegExp ||
+      typeof content === 'function') {
+      alert.message.should.stringMatch(content);
+    } else if (Array.isArray(content)) {
+      const [component, props = {}] = content;
+      alert.content[0].should.equal(component);
+      alert.content[1].should.eql(props);
+    } else {
+      alert.content.should.eql([content, {}]);
+    }
+  }
 });
