@@ -132,7 +132,7 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				}
 
 				if (isTriggerNodeDefinition(leafChild)) {
-					return new TriggerControl(parent, leafChild);
+					return TriggerControl.from(parent, leafChild);
 				}
 
 				if (isRangeNodeDefinition(leafChild)) {
