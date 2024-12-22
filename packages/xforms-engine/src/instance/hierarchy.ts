@@ -1,7 +1,7 @@
 import type { Group } from './Group.ts';
 import type { AnyInputControl } from './InputControl.ts';
 import type { AnyModelValue } from './ModelValue.ts';
-import type { Note } from './Note.ts';
+import type { AnyNote } from './Note.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
 import type { RepeatInstance } from './repeat/RepeatInstance.ts';
 import type { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
@@ -31,7 +31,7 @@ export type AnyNode =
 	| Subtree
 	| RepeatRange
 	| RepeatInstance
-	| Note
+	| AnyNote
 	| AnyModelValue
 	| AnyInputControl
 	| SelectField
@@ -65,7 +65,7 @@ export type AnyChildNode =
 	| RepeatRange
 	| RepeatInstance
 	| AnyModelValue
-	| Note
+	| AnyNote
 	| AnyInputControl
 	| SelectField
 	| TriggerControl
@@ -78,7 +78,7 @@ export type GeneralChildNode =
 	| Subtree
 	| RepeatRange
 	| AnyModelValue
-	| Note
+	| AnyNote
 	| AnyInputControl
 	| SelectField
 	| TriggerControl
@@ -88,7 +88,7 @@ export type GeneralChildNode =
 export type AnyValueNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| AnyModelValue
-	| Note
+	| AnyNote
 	| AnyInputControl
 	| SelectField
 	| TriggerControl

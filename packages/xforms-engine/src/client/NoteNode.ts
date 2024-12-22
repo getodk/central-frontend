@@ -1,13 +1,17 @@
+import type { NoteRuntimeValue } from '../lib/codecs/NoteCodec.ts';
 import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
-import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { LeafNodeValidationState } from './validation.ts';
+import type { ValueType } from './ValueType.ts';
 
-export interface NoteNodeState extends BaseNodeState {
+export type NoteValue<V extends ValueType> = NoteRuntimeValue<V>;
+
+export interface NoteNodeState<V extends ValueType> extends BaseValueNodeState<NoteValue<V>> {
 	/**
 	 * Note-specific specialization: a note will always have a non-null value in
 	 * at least one of:
@@ -48,10 +52,10 @@ export interface NoteNodeState extends BaseNodeState {
 	// node types, specifically to make a clear distinction between blank and
 	// non-blank values (as that has been a primary driver for prioritizing note
 	// functionality).
-	get value(): string | null;
+	get value(): NoteValue<V>;
 }
 
-export interface NoteDefinition extends LeafNodeDefinition {
+export interface NoteDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
 	readonly bodyElement: InputControlDefinition;
 }
 
@@ -63,12 +67,35 @@ export type NoteNodeAppearances = NodeAppearances<NoteDefinition>;
  * - associated with an input, with at least one text element (label or hint)
  * - guaranteed to be {@link NoteNodeState.readonly | readonly}
  */
-export interface NoteNode extends BaseNode {
+export interface NoteNode<V extends ValueType = ValueType> extends BaseValueNode<V, NoteValue<V>> {
 	readonly nodeType: 'note';
 	readonly appearances: NoteNodeAppearances;
-	readonly definition: NoteDefinition;
+	readonly definition: NoteDefinition<V>;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
-	readonly currentState: NoteNodeState;
+	readonly currentState: NoteNodeState<V>;
 	readonly validationState: LeafNodeValidationState;
 }
+
+export type StringNoteNode = NoteNode<'string'>;
+export type IntNoteNode = NoteNode<'int'>;
+export type DecimalNoteNode = NoteNode<'decimal'>;
+
+// prettier-ignore
+type SupportedNoteValueType =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| 'string'
+	| 'int'
+	| 'decimal';
+
+type TemporaryStringValueType = Exclude<ValueType, SupportedNoteValueType>;
+
+export type TemporaryStringValueNoteNode = NoteNode<TemporaryStringValueType>;
+
+// prettier-ignore
+export type AnyNoteNode =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| StringNoteNode
+	| IntNoteNode
+	| DecimalNoteNode
+	| TemporaryStringValueNoteNode;
