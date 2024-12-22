@@ -1,9 +1,9 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
 	AnyInputNode,
+	AnyNoteNode,
 	AnyUnsupportedControlNode,
 	GroupNode,
-	NoteNode,
 	RepeatInstanceNode,
 	RepeatRangeUncontrolledNode,
 	RootNode,
@@ -15,7 +15,7 @@ import type { Scenario } from '../Scenario.ts';
 // prettier-ignore
 export type QuestionPositionalEventNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| NoteNode
+	| AnyNoteNode
 	| SelectNode
 	| AnyInputNode
 	| TriggerNode
