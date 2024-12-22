@@ -2,8 +2,8 @@
 import type {
 	AnyControlNode,
 	AnyInputNode,
+	AnyNoteNode,
 	AnyUnsupportedControlNode,
-	NoteNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
 import { inject } from 'vue';
@@ -19,7 +19,7 @@ defineProps<{ question: ControlNode }>();
 
 const isInputNode = (n: ControlNode): n is AnyInputNode => n.nodeType === 'input';
 const isSelectNode = (n: ControlNode): n is SelectNode => n.nodeType === 'select';
-const isNoteNode = (n: ControlNode): n is NoteNode => n.nodeType === 'note';
+const isNoteNode = (n: ControlNode): n is AnyNoteNode => n.nodeType === 'note';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
 
 const submitPressed = inject('submitPressed');
