@@ -1,0 +1,44 @@
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:h="http://www.w3.org/1999/xhtml">
+
+  <h:head>
+    <h:title>Range controls</h:title>
+    <model>
+      <instance>
+        <root id="range-controls">
+          <range-decimal>1.0</range-decimal>
+          <range-int>2</range-int>
+
+          <vertical>
+            <v-decimal>1.25</v-decimal>
+            <v-int>1</v-int>
+          </vertical>
+        </root>
+      </instance>
+      <bind nodeset="/root/range-decimal" type="xsd:decimal" />
+      <bind nodeset="/root/range-int" type="int" />
+      <bind nodeset="/root/vertical/v-decimal" type="decimal" />
+      <bind nodeset="/root/vertical/v-int" type="xsd:int" />
+    </model>
+  </h:head>
+
+  <h:body>
+    <range ref="/root/range-decimal" start="-2.0" end="2.0" step="0.5">
+      <label>Range control (decimal)</label>
+    </range>
+    <range ref="/root/range-int" start="-6" end="4" step="2">
+      <label>Range control (int)</label>
+    </range>
+
+    <group ref="/root/vertical">
+      <range ref="/root/vertical/v-decimal" start="-5.0" end="7.0" step="0.5"
+        appearance="vertical">
+        <label>Range control (decimal)</label>
+      </range>
+      <range ref="/root/vertical/v-int" start="-3" end="4" step="3" appearance="vertical no-ticks">
+        <label>Range control (int)</label>
+      </range>
+    </group>
+  </h:body>
+
+</h:html>

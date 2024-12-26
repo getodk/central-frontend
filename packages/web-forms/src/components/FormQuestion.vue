@@ -9,6 +9,7 @@ import type {
 import { inject } from 'vue';
 import InputControl from './controls/Input/InputControl.vue';
 import NoteControl from './controls/NoteControl.vue';
+import RangeControl from './controls/Range/RangeControl.vue';
 import SelectControl from './controls/SelectControl.vue';
 import TriggerControl from './controls/TriggerControl.vue';
 import UnsupportedControl from './controls/UnsupportedControl.vue';
@@ -17,9 +18,10 @@ type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
 
 defineProps<{ question: ControlNode }>();
 
-const isInputNode = (n: ControlNode): n is AnyInputNode => n.nodeType === 'input';
-const isSelectNode = (n: ControlNode): n is SelectNode => n.nodeType === 'select';
-const isNoteNode = (n: ControlNode): n is AnyNoteNode => n.nodeType === 'note';
+const isInputNode = (node: ControlNode): node is AnyInputNode => node.nodeType === 'input';
+const isSelectNode = (node: ControlNode): node is SelectNode => node.nodeType === 'select';
+const isNoteNode = (node: ControlNode): node is AnyNoteNode => node.nodeType === 'note';
+const isRangeNode = (node: ControlNode) => node.nodeType === 'range';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
 
 const submitPressed = inject('submitPressed');
@@ -38,6 +40,8 @@ const submitPressed = inject('submitPressed');
 		<SelectControl v-else-if="isSelectNode(question)" :question="question" />
 
 		<NoteControl v-else-if="isNoteNode(question)" :question="question" />
+
+		<RangeControl v-else-if="isRangeNode(question)" :node="question" />
 
 		<TriggerControl v-else-if="isTriggerNode(question)" :question="question" />
 
