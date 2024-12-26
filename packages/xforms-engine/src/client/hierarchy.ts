@@ -3,6 +3,7 @@ import type { GroupNode } from './GroupNode.ts';
 import type { AnyInputNode } from './InputNode.ts';
 import type { AnyModelValueNode } from './ModelValueNode.ts';
 import type { AnyNoteNode } from './NoteNode.ts';
+import type { AnyRangeNode } from './RangeNode.ts';
 import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
 import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNode.ts';
 import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
@@ -10,13 +11,11 @@ import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 import type { TriggerNode } from './TriggerNode.ts';
-import type { RangeNode } from './unsupported/RangeNode.ts';
 import type { RankNode } from './unsupported/RankNode.ts';
 import type { UploadNode } from './unsupported/UploadNode.ts';
 
 // prettier-ignore
 export type AnyUnsupportedControlNode =
-	| RangeNode
 	| RankNode
 	| UploadNode;
 
@@ -24,6 +23,7 @@ export type AnyUnsupportedControlNode =
 export type AnyControlNode =
 	| AnyInputNode
 	| AnyNoteNode
+	| AnyRangeNode
 	| SelectNode
 	| TriggerNode;
 

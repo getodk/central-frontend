@@ -4,25 +4,31 @@ import type { InputDefinition } from '../client/InputNode.ts';
 import type { ModelValueDefinition } from '../client/ModelValueNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../client/TriggerNode.ts';
-import type { RangeNodeDefinition } from '../client/unsupported/RangeNode.ts';
 import type { RankNodeDefinition } from '../client/unsupported/RankNode.ts';
 import type { UnsupportedControlDefinition } from '../client/unsupported/UnsupportedControlNode.ts';
 import type { UploadNodeDefinition } from '../client/unsupported/UploadNode.ts';
+import type { ValueType } from '../client/ValueType.ts';
+import { ErrorProductionDesignPendingError } from '../error/ErrorProductionDesignPendingError.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
+import type {
+	AnyRangeNodeDefinition,
+	RangeLeafNodeDefinition,
+} from '../parse/model/RangeNodeDefinition.ts';
+import { RangeNodeDefinition } from '../parse/model/RangeNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import { InputControl } from './InputControl.ts';
 import { ModelValue } from './ModelValue.ts';
 import { Note } from './Note.ts';
+import { RangeControl } from './RangeControl.ts';
 import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { SelectFieldDefinition } from './SelectField.ts';
 import { SelectField } from './SelectField.ts';
 import { Subtree } from './Subtree.ts';
 import { TriggerControl } from './TriggerControl.ts';
-import { RangeControl } from './unsupported/RangeControl.ts';
 import { RankControl } from './unsupported/RankControl.ts';
 import { UploadControl } from './unsupported/UploadControl.ts';
 
@@ -32,8 +38,8 @@ const isSubtreeDefinition = (
 	return definition.bodyElement == null;
 };
 
+// prettier-ignore
 type AnyUnsupportedControlDefinition =
-	| RangeNodeDefinition
 	| RankNodeDefinition
 	| UploadNodeDefinition;
 
@@ -41,6 +47,7 @@ type AnyUnsupportedControlDefinition =
 type ControlNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| InputDefinition
+	| RangeLeafNodeDefinition
 	| SelectFieldDefinition
 	| TriggerNodeDefinition
 	| AnyUnsupportedControlDefinition;
@@ -63,10 +70,49 @@ const isSelectFieldDefinition = (
 	return definition.bodyElement.type === 'select' || definition.bodyElement.type === 'select1';
 };
 
-const isRangeNodeDefinition = (
-	definition: UnsupportedControlDefinition
-): definition is RangeNodeDefinition => {
+const isRangeLeafNodeDefinition = (
+	definition: ControlNodeDefinition
+): definition is RangeLeafNodeDefinition => {
 	return definition.bodyElement.type === 'range';
+};
+
+type AssertRangeNodeDefinition = (
+	definition: RangeLeafNodeDefinition
+) => asserts definition is AnyRangeNodeDefinition;
+
+/**
+ * We need some way to narrow the base {@link RangeLeafNodeDefinition} type to
+ * {@link RankNodeDefinition} type.
+ *
+ * At time of writing, we know there is no code path to produce the broader
+ * type, but appeasing the type checker for it will help guard against
+ * introducing one. (And it would have caught exactly such a mistake in this
+ * phase of development, where a more optimistic type cast did not.)
+ *
+ * An `instanceof` check is appropriate because the narrower type refines all of
+ * the following:
+ *
+ * - `valueType` is a subset of the full range of
+ *   {@link ValueType | specified value types} (only `int` or `decimal` are
+ *   supported for range controls)
+ *
+ * - addition of range-specific properties: `min`, `max`, `step`
+ */
+const assertRangeNodeDefinition: AssertRangeNodeDefinition = (definition) => {
+	if (definition instanceof RangeNodeDefinition) {
+		return;
+	}
+
+	/**
+	 * At time of writing we know there is no code path producing this
+	 * case, but appeasing the type checker for it now will guard against
+	 * it happening mistakenly in any future refactoring. (Hint: it
+	 * occurred during some refactoring that arrived here, which is why
+	 * this isn't a type cast!)
+	 */
+	throw new ErrorProductionDesignPendingError(
+		`Invalid <range> definition with value type: ${definition.valueType}`
+	);
 };
 
 const isRankNodeDefinition = (
@@ -135,8 +181,10 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 					return TriggerControl.from(parent, leafChild);
 				}
 
-				if (isRangeNodeDefinition(leafChild)) {
-					return new RangeControl(parent, leafChild);
+				if (isRangeLeafNodeDefinition(leafChild)) {
+					assertRangeNodeDefinition(leafChild);
+
+					return RangeControl.from(parent, leafChild);
 				}
 
 				if (isRankNodeDefinition(leafChild)) {

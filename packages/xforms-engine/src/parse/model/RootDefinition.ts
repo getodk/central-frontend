@@ -6,6 +6,7 @@ import type { ModelDefinition } from './ModelDefinition.ts';
 import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 import { NodeDefinition } from './NodeDefinition.ts';
 import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
+import { RangeNodeDefinition } from './RangeNodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
@@ -97,6 +98,10 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			const isLeafNode = element.childElementCount === 0;
 
 			if (isLeafNode) {
+				if (bodyElement?.type === 'range') {
+					return RangeNodeDefinition.from(parent, bind, bodyElement, element);
+				}
+
 				return (
 					NoteNodeDefinition.from(parent, bind, bodyElement, element) ??
 					new LeafNodeDefinition(parent, bind, bodyElement, element)
