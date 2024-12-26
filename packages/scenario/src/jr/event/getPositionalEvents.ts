@@ -7,6 +7,7 @@ import { GroupEvent } from './GroupEvent.ts';
 import { InputQuestionEvent } from './InputQuestionEvent.ts';
 import { NoteQuestionEvent } from './NoteQuestionEvent.ts';
 import { PromptNewRepeatEvent } from './PromptNewRepeatEvent.ts';
+import { RangeQuestionEvent } from './RangeQuestionEvent.ts';
 import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
 import { TriggerQuestionEvent } from './TriggerQuestionEvent.ts';
@@ -16,6 +17,7 @@ import { UnsupportedControlQuestionEvent } from './UnsupportedControlQuestionEve
 export type AnyQuestionEvent =
 	| InputQuestionEvent
 	| NoteQuestionEvent
+	| RangeQuestionEvent
 	| SelectQuestionEvent
 	| TriggerQuestionEvent
 	| UnsupportedControlQuestionEvent;
@@ -87,6 +89,8 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 					return TriggerQuestionEvent.from(node);
 
 				case 'range':
+					return RangeQuestionEvent.from(node);
+
 				case 'rank':
 				case 'upload':
 					return UnsupportedControlQuestionEvent.from(node);

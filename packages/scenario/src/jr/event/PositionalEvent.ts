@@ -2,6 +2,7 @@ import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-pr
 import type {
 	AnyInputNode,
 	AnyNoteNode,
+	AnyRangeNode,
 	AnyUnsupportedControlNode,
 	GroupNode,
 	RepeatInstanceNode,
@@ -18,6 +19,7 @@ export type QuestionPositionalEventNode =
 	| AnyNoteNode
 	| SelectNode
 	| AnyInputNode
+	| AnyRangeNode
 	| TriggerNode
 	| AnyUnsupportedControlNode;
 
