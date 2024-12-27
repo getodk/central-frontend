@@ -2,10 +2,12 @@ import type { AnyConstructor } from '@getodk/common/types/helpers.js';
 import type { StaticAttributeOptions } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type {
 	StaticDocument,
+	StaticDocumentConstructor,
 	StaticDocumentRootFactory,
 } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type {
 	StaticElementChildOption,
+	StaticElementConstructor,
 	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -19,21 +21,6 @@ export type ConcreteStaticDocumentConstructor<
 > =
 	& ConcreteConstructor<typeof StaticDocument<Root>>
 	& (new (rootFactory: StaticDocumentRootFactory<T, Root>) => T);
-
-// prettier-ignore
-export type StaticElementConstructor<
-	T extends StaticElement<Parent>,
-	Parent extends StaticDocument<T> | StaticElement,
-> =
-	& ConcreteConstructor<typeof StaticElement>
-	& {
-			readonly prototype: T;
-
-			new (
-				parent: Parent,
-				options: StaticElementOptions
-			): T;
-	};
 
 const parseStaticElementAttributes = (domElement: Element): readonly StaticAttributeOptions[] => {
 	return Array.from(domElement.attributes).map((attr) => ({
@@ -72,30 +59,18 @@ const parseStaticElementOptions = (domElement: Element): StaticElementOptions =>
 	};
 };
 
-const parseStaticElementFromDOMElement = <
-	T extends StaticElement<Parent>,
-	Parent extends StaticDocument<T> | StaticElement,
->(
-	parent: Parent,
-	ElementConstructor: StaticElementConstructor<T, Parent>,
-	domElement: Element
-): T => {
-	const options = parseStaticElementOptions(domElement);
-
-	return new ElementConstructor(parent, options);
-};
-
 export const parseStaticDocumentFromDOMSubtree = <
 	T extends StaticDocument<Root>,
 	Root extends StaticElement<T>,
 >(
-	DocumentConstructor: ConcreteStaticDocumentConstructor<T, Root>,
+	DocumentConstructor: StaticDocumentConstructor<T, Root>,
 	DocumentRootConstructor: StaticElementConstructor<Root, T>,
 	subtreeRootElement: Element
 ): T => {
-	const rootFactory: StaticDocumentRootFactory<T, Root> = (parent) => {
-		return parseStaticElementFromDOMElement(parent, DocumentRootConstructor, subtreeRootElement);
-	};
+	const documentRoot = parseStaticElementOptions(subtreeRootElement);
 
-	return new DocumentConstructor(rootFactory);
+	return new DocumentConstructor({
+		DocumentRootConstructor,
+		documentRoot,
+	});
 };

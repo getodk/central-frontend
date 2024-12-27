@@ -116,31 +116,22 @@ const rootChildOption = (
 	};
 };
 
-class CSVExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootDefinition {
-	constructor(
-		instanceId: string,
-		parent: CSVExternalSecondaryInstanceDefinition,
-		items: readonly CSVExternalSecondaryInstanceItem[]
-	) {
-		super(parent, {
-			namespaceURI: XFORMS_NAMESPACE_URI,
-			localName: 'instance',
-			attributes: [
-				{
-					namespaceURI: XFORMS_NAMESPACE_URI,
-					localName: 'id',
-					value: instanceId,
-				},
-			],
-			children: [rootChildOption(items)],
-		});
-	}
-}
-
 class CSVExternalSecondaryInstanceDefinition extends SecondaryInstanceDefinition {
 	constructor(instanceId: string, items: readonly CSVExternalSecondaryInstanceItem[]) {
-		super((self) => {
-			return new CSVExternalSecondaryInstanceDocumentElement(instanceId, self, items);
+		super({
+			DocumentRootConstructor: SecondaryInstanceRootDefinition,
+			documentRoot: {
+				namespaceURI: XFORMS_NAMESPACE_URI,
+				localName: 'instance',
+				attributes: [
+					{
+						namespaceURI: XFORMS_NAMESPACE_URI,
+						localName: 'id',
+						value: instanceId,
+					},
+				],
+				children: [rootChildOption(items)],
+			},
 		});
 	}
 }

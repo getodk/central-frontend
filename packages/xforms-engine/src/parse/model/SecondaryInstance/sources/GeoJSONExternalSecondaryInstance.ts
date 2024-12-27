@@ -331,35 +331,22 @@ const rootChildOption = (featureCollection: FeatureCollection): StaticElementChi
 	};
 };
 
-class GeoJSONExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootDefinition {
-	constructor(
-		instanceId: string,
-		parent: GeoJSONExternalSecondaryInstanceDefinition,
-		featureCollection: FeatureCollection
-	) {
-		super(parent, {
-			namespaceURI: XFORMS_NAMESPACE_URI,
-			localName: 'instance',
-			attributes: [
-				{
-					namespaceURI: XFORMS_NAMESPACE_URI,
-					localName: 'id',
-					value: instanceId,
-				},
-			],
-			children: [rootChildOption(featureCollection)],
-		});
-	}
-}
-
 class GeoJSONExternalSecondaryInstanceDefinition extends SecondaryInstanceDefinition {
 	constructor(instanceId: string, featureCollection: FeatureCollection) {
-		super((self) => {
-			return new GeoJSONExternalSecondaryInstanceDocumentElement(
-				instanceId,
-				self,
-				featureCollection
-			);
+		super({
+			DocumentRootConstructor: SecondaryInstanceRootDefinition,
+			documentRoot: {
+				namespaceURI: XFORMS_NAMESPACE_URI,
+				localName: 'instance',
+				attributes: [
+					{
+						namespaceURI: XFORMS_NAMESPACE_URI,
+						localName: 'id',
+						value: instanceId,
+					},
+				],
+				children: [rootChildOption(featureCollection)],
+			},
 		});
 	}
 }

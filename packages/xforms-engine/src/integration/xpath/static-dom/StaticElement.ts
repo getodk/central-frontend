@@ -134,3 +134,18 @@ export class StaticElement<Parent extends StaticElementParent = StaticElementPar
 		return this.children.map((child) => child.getXPathValue()).join('');
 	}
 }
+
+// prettier-ignore
+export type StaticElementConstructor<
+	T extends StaticElement<Parent>,
+	Parent extends StaticDocument<T> | StaticElement,
+> =
+	& Pick<typeof StaticElement, keyof typeof StaticElement>
+	& {
+			readonly prototype: T;
+
+			new (
+				parent: Parent,
+				options: StaticElementOptions
+			): T;
+	};
