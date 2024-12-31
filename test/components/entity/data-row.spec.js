@@ -17,7 +17,8 @@ const mountComponent = () => {
       provide: { projectId: '1', datasetName: 'trees' }
     },
     props: {
-      properties: testData.extendedDatasets.last().properties
+      properties: testData.extendedDatasets.last().properties,
+      awaitingDeletedResponses: new Set()
     },
     container: {
       router: mockRouter('/projects/1/entity-lists/trees/entities/e'),

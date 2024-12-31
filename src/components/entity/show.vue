@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
       :entity="entity.dataExists ? entity.data : null" @hide="updateModal.hide()"
       @success="afterUpdate"/>
     <entity-delete v-bind="deleteModal"
-      :label="entity.dataExists ? entity.currentVersion.label : ''"
+      :entity="entity.currentVersion"
       :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
       @delete="requestDelete"/>
     <entity-branch-data v-if="config.devTools" v-bind="branchData"
@@ -150,7 +150,7 @@ const requestDelete = () => {
     .then(() => {
       const { label } = entity.currentVersion;
       return router.push(datasetPath('entities'))
-        .then(() => { alert.success(t('alert.delete', { label })); });
+        .then(() => { alert.success(t('alert.entityDeleted', { label })); });
     })
     .catch(noop);
 };
@@ -174,10 +174,6 @@ const breadcrumbLinks = computed(() => [
       "title": "Entity Detail",
       // This is shown at the top of the page. The user can click it to go back.
       "back": "Back to {datasetName} Table"
-    },
-    "alert": {
-      // @transifexKey component.EntityList.alert.delete
-      "delete": "Entity “{label}” has been deleted."
     }
   }
 }

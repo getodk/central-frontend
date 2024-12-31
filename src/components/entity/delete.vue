@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-delete" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')" @shown="focusCheckbox">
-    <template #title>{{ $t('title', { label }) }}</template>
+    <template #title>{{ $t('title', { label: entity?.label }) }}</template>
     <template #body>
       <p class="modal-introduction">
-        <span>{{ $t('introduction[0]', { label }) }}</span>
+        <span>{{ $t('introduction[0]', { label: entity?.label }) }}</span>
         <sentence-separator/>
         <span>{{ $t('common.noUndo') }}</span>
       </p>
@@ -54,10 +54,7 @@ defineOptions({
 const props = defineProps({
   state: Boolean,
   checkbox: Boolean,
-  label: {
-    type: String,
-    default: ''
-  },
+  entity: Object,
   awaitingResponse: Boolean
 });
 const emit = defineEmits(['hide', 'delete']);
@@ -70,9 +67,9 @@ const focusCheckbox = () => { if (props.checkbox) input.value.focus(); };
 
 const del = () => {
   if (props.checkbox)
-    emit('delete', !noConfirm.value);
+    emit('delete', [props.entity, !noConfirm.value]);
   else
-    emit('delete');
+    emit('delete', [props.entity]);
 };
 </script>
 

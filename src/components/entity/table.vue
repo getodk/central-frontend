@@ -17,7 +17,8 @@ except according to the terms contained in the LICENSE file.
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
-      <th>{{ $t('header.updatedAtAndActions') }}</th>
+      <th v-if="!deleted">{{ $t('header.updatedAtAndActions') }}</th>
+      <th v-else class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
       <template v-if="properties != null">
@@ -32,7 +33,8 @@ except according to the terms contained in the LICENSE file.
     <template #data-frozen="{ data, index }">
       <entity-metadata-row :entity="data"
         :row-number="odataEntities.originalCount - index"
-        :verbs="project.verbs"/>
+        :verbs="project.verbs" :deleted="deleted"
+        :awaiting-response="awaitingDeletedResponses.has(data.__id)"/>
     </template>
     <template #data-scrolling="{ data }">
       <entity-data-row :entity="data" :properties="properties"/>
@@ -54,22 +56,32 @@ defineOptions({
   name: 'EntityTable'
 });
 defineProps({
-  properties: Array
+  properties: Array,
+  deleted: {
+    type: Boolean,
+    default: false
+  },
+  awaitingDeletedResponses: {
+    type: Set,
+    required: true
+  }
 });
-const emit = defineEmits(['update', 'resolve', 'delete']);
+const emit = defineEmits(['update', 'resolve', 'delete', 'restore']);
 
 // The component does not assume that this data will exist when the component is
 // created.
 const { project, odataEntities } = useRequestData();
 
-const afterAction = ({ target, index }) => {
+const afterAction = ({ target, data, index }) => {
   const { classList } = target;
   if (classList.contains('delete-button'))
-    emit('delete', index);
+    emit('delete', data);
   else if (classList.contains('update-button'))
     emit('update', index);
   else if (classList.contains('resolve-button'))
     emit('resolve', index);
+  else if (target.classList.contains('restore-button'))
+    emit('restore', data);
 };
 const table = ref(null);
 const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
@@ -96,7 +108,9 @@ defineExpose({ afterUpdate, afterDelete });
       // This is the text of a column header of a table of Entities. The column
       // shows when each Entity was last updated, as well as actions that can be
       // taken on the Entity.
-      "updatedAtAndActions": "Last Updated / Actions"
+      "updatedAtAndActions": "Last Updated / Actions",
+      // Heading of the column that shows Entity deletion timestamp
+      "deletedAt": "Deleted at"
     }
   }
 }

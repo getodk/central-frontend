@@ -16,6 +16,7 @@ const mountComponent = (props = undefined) => mount(EntityTable, {
   },
   props: {
     properties: testData.extendedDatasets.last().properties,
+    awaitingDeletedResponses: new Set(),
     ...props
   },
   container: {

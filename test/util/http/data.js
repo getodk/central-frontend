@@ -131,6 +131,7 @@ const responsesByComponent = {
   }),
   DatasetOverview: [],
   DatasetEntities: componentResponses({
+    deletedEntityCount: () => testData.entityDeletedOData(0),
     odataEntities: true
   }),
   DatasetSettings: [],

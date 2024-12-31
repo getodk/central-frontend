@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <div class="form-group">
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
-    <entity-filters-conflict :model-value="conflict"
-      @update:model-value="$emit('update:conflict', $event)"/>
+    <entity-filters-conflict :model-value="conflict" :disabled="disabled"
+      :disabled-message="disabledMessage" @update:model-value="$emit('update:conflict', $event)"/>
   </span>
 </template>
 
@@ -29,6 +29,14 @@ defineProps({
   conflict: {
     type: Array,
     required: true
+  },
+  disabled: {
+    type: Boolean,
+    required: true
+  },
+  disabledMessage: {
+    type: String,
+    required: false
   }
 });
 defineEmits(['update:conflict']);
