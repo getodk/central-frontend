@@ -129,6 +129,21 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
+      <template v-else-if="entry.action === 'entity.delete'">
+        <span class="icon-trash"></span>
+        <i18n-t keypath="title.entity.delete">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'entity.restore'">
+        <span class="icon-recycle"></span>
+        <i18n-t keypath="title.entity.restore">
+          <template #label>
+            <span class="entity-label">{{ entity.currentVersion.label }}</span>
+          </template>
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
     </template>
     <template #body>
       <entity-diff v-if="entityVersion != null && entityVersion.version !== 1"/>
@@ -200,6 +215,8 @@ const showBranchData = () => {
     color: #bbb;
     vertical-align: -2px;
   }
+  .icon-trash { color: #bbb; }
+  .icon-recycle {color: #bbb; }
 
   .deleted-submission, .entity-label, .source-name { font-weight: normal; }
   .deleted-submission { color: $color-danger; }
@@ -282,7 +299,13 @@ const showBranchData = () => {
         },
         // This text is shown in a list of events. {name} is the name of a Web
         // User.
-        "update_resolve": "Conflict warning resolved by {name}"
+        "update_resolve": "Conflict warning resolved by {name}",
+        // This text is shown in a list of events. {name} is the name of a Web
+        // User.
+        "delete": "Entity {label} deleted by {name}",
+        // This text is shown in a list of events. {name} is the name of a Web
+        // User.
+        "restore": "Entity {label} undeleted by {name}"
       }
     },
     // This is shown for an update to an Entity when the update was made offline
