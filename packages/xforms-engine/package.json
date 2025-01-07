@@ -29,7 +29,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.20.4 || ^20.17.0 || ^22.9.0",
+    "node": "^18.20.5 || ^20.18.1 || ^22.12.0",
     "yarn": "1.22.22"
   },
   "scripts": {
@@ -55,26 +55,26 @@
   },
   "dependencies": {
     "papaparse": "^5.4.1",
-    "solid-js": "^1.9.1"
+    "solid-js": "^1.9.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
+    "@babel/core": "^7.26.0",
     "@getodk/tree-sitter-xpath": "0.1.2",
     "@getodk/xpath": "0.3.0",
-    "@playwright/test": "^1.47.2",
+    "@playwright/test": "^1.49.1",
     "@types/papaparse": "^5.3.15",
-    "@vitest/browser": "^2.1.1",
+    "@vitest/browser": "^2.1.8",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.0",
     "http-server": "^14.1.1",
     "jsdom": "^25.0.1",
-    "typedoc": "^0.26.7",
-    "vite": "^5.4.8",
-    "vite-plugin-dts": "^4.2.2",
+    "typedoc": "^0.27.5",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.8"
   },
   "peerDependencies": {
-    "solid-js": "^1.8.18"
+    "solid-js": "^1.9.3"
   },
   "peerDependenciesMeta": {
     "solid-js": {

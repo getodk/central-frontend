@@ -1,0 +1,34 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "@getodk/xpath",
+      "camelcase": "GetODKXPath",
+      "scope": "source.xpath",
+      "path": "./dist",
+      "file-types": null,
+      "injection-regex": "^xpath$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.2",
+    "license": "Apache-2.0",
+    "description": "XPath grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "getodk"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/getodk/web-forms"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": true,
+    "python": false,
+    "rust": true,
+    "swift": false
+  }
+}

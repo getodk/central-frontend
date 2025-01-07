@@ -7,7 +7,7 @@ test('Web Forms Preview: demo forms load', async ({ context, page }) => {
 
 	expect(formPreviewLinks.length).toBeGreaterThan(0);
 
-	for await (const link of formPreviewLinks) {
+	for (const link of formPreviewLinks) {
 		const [previewPage] = await Promise.all([context.waitForEvent('page'), link.click()]);
 
 		await previewPage.waitForSelector(

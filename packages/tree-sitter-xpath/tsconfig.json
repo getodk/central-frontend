@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["grammar.ts", "scripts/**/*.mjs", "test/**/*.test.ts"],
+  "include": ["src/grammar.ts", "scripts/**/*.mjs", "test/**/*.test.ts"],
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",

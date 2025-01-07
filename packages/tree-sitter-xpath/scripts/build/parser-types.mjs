@@ -1,16 +1,19 @@
 // @ts-check
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { resolve as resolvePath } from 'node:path';
 
 const CWD = process.cwd();
+const distPath = resolvePath(CWD, 'dist');
 const baseTypeGeneratorPath = resolvePath(
 	CWD,
 	'../../node_modules/@asgerf/dts-tree-sitter/build/src/index.js'
 );
 
-const baseGeneratedTypes = spawnSync('node', [baseTypeGeneratorPath, CWD]).stdout.toString('utf-8');
+const baseGeneratedTypes = spawnSync('node', [baseTypeGeneratorPath, distPath]).stdout.toString(
+	'utf-8'
+);
 
 const correctedTypes = baseGeneratedTypes
 	// Replace broken interface constructor signatures with constructor declarations
@@ -30,7 +33,6 @@ const wrappedTypes = [
 	'',
 ].join('\n');
 
-mkdirSync('./types', {
-	recursive: true,
-});
-writeFileSync('./types/tree-sitter-xpath-parser.d.ts', wrappedTypes);
+const outPath = resolvePath(distPath, 'tree-sitter-xpath-parser.d.ts');
+
+writeFileSync(outPath, wrappedTypes);
