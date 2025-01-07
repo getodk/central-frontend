@@ -23,38 +23,36 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 
-<script>
+<script setup>
+import { computed } from 'vue';
+
 import MarkdownView from '../../markdown/view.vue';
 
 import useRoutes from '../../../composables/routes';
 
-export default {
-  name: 'ProjectOverviewDescription',
-  components: { MarkdownView },
-  props: {
-    description: {
-      type: String
-    },
-    // This canUpdate boolean is set by the parent project/overview.vue
-    // component based on user's permissions on the project.
-    // If the description is blank, they will see an explanation and
-    // edit link if they are a manager and can update the project.
-    // If the description is blank and they don't have permission,
-    // nothing will be shown in this description component.
-    canUpdate: {
-      type: Boolean
-    }
+defineOptions({
+  name: 'ProjectOverviewDescription'
+});
+
+const props = defineProps({
+  description: {
+    type: String
   },
-  setup() {
-    const { projectPath } = useRoutes();
-    return { projectPath };
-  },
-  computed: {
-    emptyDescription() {
-      return this.description === '' || this.description == null;
-    }
+  // This canUpdate boolean is set by the parent project/overview.vue
+  // component based on user's permissions on the project.
+  // If the description is blank, they will see an explanation and
+  // edit link if they are a manager and can update the project.
+  // If the description is blank and they don't have permission,
+  // nothing will be shown in this description component.
+  canUpdate: {
+    type: Boolean
   }
-};
+});
+
+const { projectPath } = useRoutes();
+
+const emptyDescription = computed(() => !props.description);
+
 </script>
 
 
