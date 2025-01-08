@@ -15,7 +15,11 @@ except according to the terms contained in the LICENSE file.
       <template v-if="project.dataExists" #title>
         {{ project.nameWithArchived }}
       </template>
-      <template #tabs>
+      <template #description>
+        <project-overview-description v-if="project.dataExists"
+        :description="project.description" :can-update="canUpdate"/>
+      </template>
+        <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
         the forms page. -->
         <li :class="tabClass('')" role="presentation">
@@ -75,6 +79,7 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import ProjectOverviewDescription from './overview/description.vue';
 
 import useDatasets from '../../request-data/datasets';
 import useProject from '../../request-data/project';
@@ -85,7 +90,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectShow',
-  components: { Loading, PageBody, PageHead },
+  components: { Loading, PageBody, PageHead, ProjectOverviewDescription },
   props: {
     projectId: {
       type: String,
@@ -101,6 +106,11 @@ export default {
       project, forms, datasets, fieldKeys,
       tabPath, tabClass, projectPath, canRoute
     };
+  },
+  computed: {
+    canUpdate() {
+      return this.project.dataExists && this.project.permits('project.update');
+    }
   },
   created() {
     this.fetchProject(false);
