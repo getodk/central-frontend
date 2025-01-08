@@ -13,7 +13,9 @@ export type RangeValue<V extends RangeValueType> = RuntimeValue<V>;
 export type RangeInputValue<V extends RangeValueType> = RuntimeInputValue<V>;
 
 export interface RangeNodeState<V extends RangeValueType>
-	extends BaseValueNodeState<RangeValue<V>> {}
+	extends BaseValueNodeState<RangeValue<V>> {
+	get valueOptions(): null;
+}
 
 export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;
 
