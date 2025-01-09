@@ -11,7 +11,10 @@
     "editProfile": "Edit Profile",
     "download": "Download",
     "pageNotFound": "Page Not Found",
-    "details": "Details"
+    "details": "Details",
+    "formSubmission": "Form submission", 
+    "formPublicSubmission": "Form submission (public link)",
+    "formPreview": "Form preview",
   },
   "projectShow": {
     "tab": {

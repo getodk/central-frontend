@@ -23,6 +23,18 @@
     "details": {
       "string": "Details",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "formSubmission": {
+      "string": "Form submission",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "formPublicSubmission": {
+      "string": "Form submission (public link)",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "formPreview": {
+      "string": "Form preview",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
   "projectShow": {
