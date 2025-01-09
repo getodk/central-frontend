@@ -13,6 +13,7 @@ import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
+import FormSubmission from './components/form/formsubmission.vue';
 
 import { routeProps } from './util/router';
 
@@ -212,6 +213,43 @@ const asyncRoute = (options) => {
 const { i18n, requestData, config } = container;
 const { currentUser, project, form, dataset } = requestData;
 const routes = [
+  {
+    path: '/formsubmission/:enketoId',
+    component: FormSubmission,
+    standalone: false,
+    props: (route) => ({
+      ...route.params,
+      actionType: 'fill',
+    }),
+    meta: {
+      title: () => [i18n.t('title.formSubmission')]
+    }
+  },
+  {
+    path: '/formsubmission/:enketoId/publiclink/:enketoPath/:sessionToken',
+    component: FormSubmission,
+    standalone: true,
+    props: (route) => ({
+      ...route.params,
+      actionType: 'publicfill',
+    }),
+    meta: {
+      requireLogin: false,
+      title: () => [i18n.t('title.formPublicSubmission')]
+    }
+  },
+  {
+    path: '/formsubmission/:enketoId/preview',
+    component: FormSubmission,
+    standalone: false,
+    props: (route) => ({
+      ...route.params,
+      actionType: 'preview',
+    }),
+    meta: {
+      title: () => [i18n.t('title.formPreview')]
+    }
+  },
   asyncRoute({
     path: '/load-error',
     component: 'ConfigError',
