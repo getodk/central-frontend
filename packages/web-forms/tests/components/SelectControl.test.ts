@@ -1,81 +1,364 @@
 import SelectControl from '@/components/controls/SelectControl.vue';
-import type { SelectNode } from '@getodk/xforms-engine';
+import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
-import { getReactiveForm, globalMountOptions } from '../helpers';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
+import { getReactiveForm, globalMountOptions } from '../helpers.ts';
 
-const mountComponent = async (
-	questionNumber: number,
-	formPath = '1-static-selects.xml',
-	submitPressed = false
-) => {
-	const xform = await getReactiveForm(formPath);
+const findSelectNodeByReference = (node: AnyNode, reference: string): SelectNode | null => {
+	const nodeReference = node.currentState.reference;
 
-	const component = mount(SelectControl, {
+	if (nodeReference === reference) {
+		assert(node.nodeType === 'select');
+
+		return node;
+	}
+
+	const children = node.currentState.children ?? [];
+
+	for (const child of children) {
+		const result = findSelectNodeByReference(child, reference);
+
+		if (result != null) {
+			return result;
+		}
+	}
+
+	return null;
+};
+
+const getSelectNodeByReference = (root: RootNode, reference: string): SelectNode => {
+	const result = findSelectNodeByReference(root, reference);
+
+	assert(result != null);
+
+	return result;
+};
+
+interface MountComponentOptions {
+	readonly submitPressed?: boolean;
+}
+
+type MountedComponent = ReturnType<typeof mountComponent>;
+
+const mountComponent = (selectNode: SelectNode, options?: MountComponentOptions) => {
+	const { submitPressed = false } = options ?? {};
+
+	return mount(SelectControl, {
 		props: {
-			question: xform.currentState.children[questionNumber] as SelectNode,
+			question: selectNode,
 		},
-		global: { ...globalMountOptions, provide: { submitPressed } },
+		global: {
+			...globalMountOptions,
+			provide: { submitPressed },
+		},
 		attachTo: document.body,
 	});
+};
 
-	return { xform, component };
+const expectSelectedValuesState = (selectNode: SelectNode, expectedValues: readonly string[]) => {
+	const actualValues = selectNode.currentState.value.map((item) => item.value);
+
+	expect(actualValues.length).toBe(expectedValues.length);
+
+	for (const expectedValue of expectedValues) {
+		expect(actualValues).toContain(expectedValue);
+	}
+};
+
+const expectSelectedValueState = (selectNode: SelectNode, value: string | null) => {
+	if (value == null) {
+		return expectSelectedValuesState(selectNode, []);
+	}
+
+	return expectSelectedValuesState(selectNode, [value]);
+};
+
+const findMenu = (component: MountedComponent): DOMWrapper<HTMLElement> | null => {
+	const [menu = null] = component.findAll<HTMLElement>('.p-dropdown-items, .p-multiselect-items');
+
+	return menu;
+};
+
+const openMenu = async (
+	component: MountedComponent,
+	controlElement: DOMWrapper<HTMLElement>
+): Promise<DOMWrapper<HTMLElement>> => {
+	let menu = findMenu(component);
+
+	if (menu == null) {
+		await controlElement.trigger('click');
+
+		menu = findMenu(component);
+	}
+
+	assert(menu != null);
+
+	return menu;
+};
+
+const getMenuItems = async (
+	component: MountedComponent,
+	controlElement: DOMWrapper<HTMLElement>
+): Promise<ReadonlyArray<DOMWrapper<HTMLElement>>> => {
+	const menu = await openMenu(component, controlElement);
+
+	return menu.findAll('.p-dropdown-item, .p-multiselect-item');
+};
+
+const getMenuItem = async (
+	component: MountedComponent,
+	controlElement: DOMWrapper<HTMLElement>,
+	label: string
+): Promise<DOMWrapper<HTMLElement> | null> => {
+	const menuItems = await getMenuItems(component, controlElement);
+
+	return menuItems.find((menuItem) => menuItem.text() === label) ?? null;
 };
 
 describe('SelectControl', () => {
-	it('shows radio buttons for select1', async () => {
-		const { xform, component } = await mountComponent(0);
-		const nodeId = xform.currentState.children[0].nodeId;
+	describe('select1', () => {
+		describe('no appearance (radio controls)', () => {
+			let root: RootNode;
+			let selectNode: SelectNode;
+			let component: MountedComponent;
+			let cherry: DOMWrapper<HTMLInputElement>;
+			let mango: DOMWrapper<HTMLInputElement>;
 
-		const cherry: DOMWrapper<HTMLInputElement> = component.find(`input[id="${nodeId}_cherry"]`);
-		const mango: DOMWrapper<HTMLInputElement> = component.find(`input[id="${nodeId}_mango"]`);
+			beforeEach(async () => {
+				root = await getReactiveForm('select-control.xml');
+				selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel1');
+				component = mountComponent(selectNode);
 
-		expect(cherry.element.type).toEqual('radio');
-		expect(cherry.element.checked).toBe(true);
+				const nodeId = selectNode.nodeId;
 
-		await mango.trigger('click');
+				cherry = component.find(`input[id="${nodeId}_cherry"]`);
+				mango = component.find(`input[id="${nodeId}_mango"]`);
 
-		expect(cherry.element.checked).toBe(false);
-		expect(mango.element.checked).toBe(true);
+				expectSelectedValueState(selectNode, 'cherry');
+			});
+
+			it('renders radio buttons for items of <select1> with no appearance', () => {
+				expect(cherry.element.type).toEqual('radio');
+				expect(mango.element.type).toEqual('radio');
+			});
+
+			it('renders the selected value as checked', () => {
+				expect(cherry.element.checked).toBe(true);
+				expect(mango.element.checked).toBe(false);
+			});
+
+			it('updates the selection when selecting a rendered radio', async () => {
+				await mango.trigger('click');
+
+				expectSelectedValueState(selectNode, 'mango');
+				expect(cherry.element.checked).toBe(false);
+				expect(mango.element.checked).toBe(true);
+			});
+		});
+
+		interface Select1MenuAppearanceCase {
+			readonly appearance: string;
+			readonly reference: string;
+		}
+
+		describe.each<Select1MenuAppearanceCase>([
+			{ appearance: 'minimal', reference: '/data/minimal' },
+			{ appearance: 'search', reference: '/data/search' },
+			{ appearance: 'minimal search', reference: '/data/minimal_search' },
+		])('dropdown with appearance: $appearance', ({ reference }) => {
+			let root: RootNode;
+			let selectNode: SelectNode;
+			let component: MountedComponent;
+			let controlElement: DOMWrapper<HTMLDivElement>;
+
+			beforeEach(async () => {
+				root = await getReactiveForm('select-control.xml');
+				selectNode = getSelectNodeByReference(root, reference);
+				component = mountComponent(selectNode);
+				controlElement = component.find(`[id="${selectNode.nodeId}"]`);
+			});
+
+			it('renders as a dropdown', () => {
+				// TODO: this is tied to PrimeVue's classes, we should control this!
+				expect(controlElement.classes()).toContain('p-dropdown');
+			});
+
+			const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
+
+			it('shows option items in a menu', async () => {
+				const menuItems = await getMenuItems(component, controlElement);
+
+				expect(menuItems.length).toBe(expectedOptionLabels.length);
+
+				for (const [index, expectedLabel] of expectedOptionLabels.entries()) {
+					const menuItem = menuItems[index];
+
+					assert(menuItem != null);
+
+					expect(menuItem.text()).toBe(expectedLabel);
+				}
+			});
+
+			it.each(expectedOptionLabels)('selects option: %s', async (expectedOptionLabel) => {
+				let menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+
+				assert(menuItem != null);
+				expectSelectedValueState(selectNode, null);
+				expect(menuItem.classes()).not.toContain('p-highlight');
+
+				await menuItem.trigger('click');
+
+				menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+				assert(menuItem != null);
+
+				expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
+				expect(menuItem.classes()).toContain('p-highlight');
+			});
+		});
 	});
 
-	it('shows checkboxes for select many', async () => {
-		const { xform, component } = await mountComponent(1);
-		const nodeId = xform.currentState.children[1].nodeId;
+	describe('select', () => {
+		describe('no appearance (checkbox controls)', () => {
+			let root: RootNode;
+			let selectNode: SelectNode;
+			let component: MountedComponent;
+			let watermelon: DOMWrapper<HTMLInputElement>;
+			let peach: DOMWrapper<HTMLInputElement>;
 
-		const watermelon: DOMWrapper<HTMLInputElement> = component.find(
-			`input[id="${nodeId}_watermelon"]`
-		);
-		const peach: DOMWrapper<HTMLInputElement> = component.find(`input[id="${nodeId}_peach"]`);
+			beforeEach(async () => {
+				root = await getReactiveForm('select-control.xml');
+				selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel');
+				component = mountComponent(selectNode);
 
-		expect(watermelon.element.type).toEqual('checkbox');
-		expect(watermelon.element.checked).toBe(false);
-		expect(peach.element.checked).toBe(true);
+				const nodeId = selectNode.nodeId;
 
-		await watermelon.trigger('click');
-		await peach.trigger('click');
+				watermelon = component.find(`input[id="${nodeId}_watermelon"]`);
+				peach = component.find(`input[id="${nodeId}_peach"]`);
 
-		expect(watermelon.element.checked).toBe(true);
-		expect(peach.element.checked).toBe(false);
+				expectSelectedValuesState(selectNode, ['peach']);
+			});
+
+			it('renders checkboxes for items of <select> with no appearance', () => {
+				expect(watermelon.element.type).toEqual('checkbox');
+				expect(peach.element.type).toEqual('checkbox');
+			});
+
+			it('renders the selected value as checked', () => {
+				expect(watermelon.element.checked).toBe(false);
+				expect(peach.element.checked).toBe(true);
+			});
+
+			it('updates the selection when selecting a rendered checkbox', async () => {
+				await watermelon.trigger('click');
+
+				expectSelectedValuesState(selectNode, ['peach', 'watermelon']);
+				expect(watermelon.element.checked).toBe(true);
+				expect(peach.element.checked).toBe(true);
+
+				await peach.trigger('click');
+
+				expectSelectedValuesState(selectNode, ['watermelon']);
+				expect(watermelon.element.checked).toBe(true);
+				expect(peach.element.checked).toBe(false);
+			});
+		});
+
+		interface SelectMultiMenuAppearanceCase {
+			readonly appearance: string;
+			readonly reference: string;
+		}
+
+		describe.each<SelectMultiMenuAppearanceCase>([
+			{ appearance: 'minimal', reference: '/data/minimal_m' },
+			{ appearance: 'search', reference: '/data/search_m' },
+			{ appearance: 'minimal search', reference: '/data/minimal_search_m' },
+		])('dropdown with appearance: $appearance', ({ reference }) => {
+			let root: RootNode;
+			let selectNode: SelectNode;
+			let component: MountedComponent;
+			let controlElement: DOMWrapper<HTMLDivElement>;
+
+			beforeEach(async () => {
+				root = await getReactiveForm('select-control.xml');
+				selectNode = getSelectNodeByReference(root, reference);
+				component = mountComponent(selectNode);
+				controlElement = component.find(`[id="${selectNode.nodeId}-control"]`);
+			});
+
+			it('renders as a dropdown', () => {
+				// TODO: this is tied to PrimeVue's classes, we should control this!
+				expect(controlElement.classes()).toContain('p-multiselect');
+			});
+
+			const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
+
+			it('shows option items in a menu', async () => {
+				const menuItems = await getMenuItems(component, controlElement);
+
+				expect(menuItems.length).toBe(expectedOptionLabels.length);
+
+				for (const [index, expectedLabel] of expectedOptionLabels.entries()) {
+					const menuItem = menuItems[index];
+
+					assert(menuItem != null);
+
+					expect(menuItem.text()).toBe(expectedLabel);
+				}
+			});
+
+			it.each(expectedOptionLabels)('selects option: %s', async (expectedOptionLabel) => {
+				let menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+
+				assert(menuItem != null);
+
+				let menuItemSelection = menuItem.find('.p-checkbox');
+
+				expectSelectedValueState(selectNode, null);
+
+				expect(menuItemSelection.classes()).not.toContain('p-highlight');
+
+				await menuItem.trigger('click');
+
+				expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
+
+				menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+
+				assert(menuItem != null);
+
+				menuItemSelection = menuItem.find('.p-checkbox');
+
+				expect(menuItemSelection.classes()).toContain('p-highlight');
+			});
+		});
 	});
 
 	describe('validation', () => {
 		it('does not show validation message on init', async () => {
-			const { component } = await mountComponent(0);
+			const root = await getReactiveForm('select-control.xml');
+			const selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel1');
+			const component = mountComponent(selectNode);
+
 			expect(component.get('.validation-message').isVisible()).toBe(false);
 		});
 
 		it('shows validation message for invalid state', async () => {
-			const { component } = await mountComponent(4, '1-validation.xml');
+			const root = await getReactiveForm('1-validation.xml');
+			const selectNode = getSelectNodeByReference(root, '/data/citizen');
+			const component = mountComponent(selectNode);
 			const pakistan = component.find('input[id*=_pk]');
+
 			await pakistan.setValue();
+
 			expect(component.get('.validation-message').isVisible()).toBe(true);
 			expect(component.get('.validation-message').text()).toBe('It has to be two');
 		});
 
 		it('hides validation message when user enters a valid value', async () => {
-			const { component } = await mountComponent(4, '1-validation.xml');
+			const root = await getReactiveForm('1-validation.xml');
+			const selectNode = getSelectNodeByReference(root, '/data/citizen');
+			const component = mountComponent(selectNode);
 			const pakistan = component.find('input[id*=_pk]');
+
 			await pakistan.setValue();
 			const canada = component.find('input[id*=_ca]');
 			await canada.setValue();
@@ -83,7 +366,10 @@ describe('SelectControl', () => {
 		});
 
 		it('shows validation message on submit pressed even when no interaction is made with the component', async () => {
-			const { component } = await mountComponent(4, '1-validation.xml', true);
+			const root = await getReactiveForm('1-validation.xml');
+			const selectNode = getSelectNodeByReference(root, '/data/citizen');
+			const component = mountComponent(selectNode, { submitPressed: true });
+
 			expect(component.get('.validation-message').isVisible()).toBe(true);
 			expect(component.get('.validation-message').text()).toBe('Condition not satisfied: required');
 		});

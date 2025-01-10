@@ -7,7 +7,7 @@ defineProps<{ question: SelectNode }>();
 </script>
 
 <template>
-	<Select1Control v-if="question.definition.bodyElement.type === 'select1'" :question="question" />
+	<Select1Control v-if="question.selectType === 'select1'" :question="question" />
 
-	<SelectNControl v-else-if="question.definition.bodyElement.type === 'select'" :question="question" />
+	<SelectNControl v-else-if="question.selectType === 'select'" :question="question" />
 </template>

@@ -2,20 +2,23 @@
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeMultiSelect from 'primevue/multiselect';
 
-const props = defineProps<{ question: SelectNode; style?: string }>();
+interface MultiselectDropdownProps {
+	readonly question: SelectNode;
+	readonly style?: string;
+}
+
+const props = defineProps<MultiselectDropdownProps>();
+
 defineEmits(['update:modelValue', 'change']);
 
-const setSelectNValue = (values: SelectItem[]) => {
-	for (const v of props.question.currentState.value) {
-		props.question.deselect(v);
-	}
-	for (const v of values) {
-		props.question.select(v);
-	}
+const selectItems = (items: SelectItem[]) => {
+	const value = items.map((item) => item.value);
+
+	props.question.selectValues(value);
 };
 
-const getOptionLabel = (o: SelectItem) => {
-	return o.label?.asString;
+const getOptionLabel = (item: SelectItem) => {
+	return item.label.asString;
 };
 
 let panelClass = 'multi-select-dropdown-panel';
@@ -26,6 +29,7 @@ if (props.question.appearances['no-buttons']) {
 
 <template>
 	<PrimeMultiSelect
+		:id="`${question.nodeId}-control`"
 		class="multi-select-dropdown"
 		:input-id="question.nodeId"
 		:filter="question.appearances.autocomplete"
@@ -35,12 +39,10 @@ if (props.question.appearances['no-buttons']) {
 		:option-label="getOptionLabel"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		@update:model-value="setSelectNValue"
+		@update:model-value="selectItems"
 		@change="$emit('change')"
 	/>
 </template>
-
-
 
 <style scoped lang="scss">
 @import 'primeflex/core/_variables.scss';

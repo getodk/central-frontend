@@ -2,14 +2,21 @@
 import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
 import PrimeDropdown from 'primevue/dropdown';
 
-const props = defineProps<{ question: SelectNode; style?: string }>();
+interface SearchableDropdownProps {
+	readonly question: SelectNode;
+	readonly style?: string;
+}
+
+const props = defineProps<SearchableDropdownProps>();
+
 defineEmits(['update:modelValue', 'change']);
 
-const setSelect1Value = (item: SelectItem) => {
-	props.question.select(item);
+const selectItem = (item: SelectItem) => {
+	props.question.selectValue(item.value);
 };
-const getOptionLabel = (o: SelectItem) => {
-	return o.label?.asString;
+
+const getOptionLabel = (item: SelectItem) => {
+	return item.label.asString;
 };
 </script>
 
@@ -22,7 +29,7 @@ const getOptionLabel = (o: SelectItem) => {
 		:model-value="question.currentState.value[0]"
 		:options="question.currentState.valueOptions"
 		:option-label="getOptionLabel"
-		@update:model-value="setSelect1Value"
+		@update:model-value="selectItem"
 		@change="$emit('change')"
 	/>
 </template>
