@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <markdown-view v-if="!emptyDescription" id="project-overview-description"
-    ref="markdownRef" :class="{ clickable: targetHeight, expanded }" :raw-markdown="description" @click="toggle"/>
+    ref="markdownRef" :class="{ clickable: targetHeight }" :raw-markdown="description" @click="toggle"/>
   <div v-else-if="canUpdate" id="project-overview-description-update">
     <i18n-t tag="div" class="instructions" keypath="instructions.full">
       <template #projectSettings>
@@ -24,10 +24,11 @@ except according to the terms contained in the LICENSE file.
 
 
 <script setup>
-import { computed, onMounted, onUpdated, ref, nextTick } from 'vue';
+import { computed, onMounted, ref, nextTick, watch } from 'vue';
 import MarkdownView from '../../markdown/view.vue';
 
 import useRoutes from '../../../composables/routes';
+import { styleBox } from '../../../util/dom';
 
 defineOptions({
   name: 'ProjectOverviewDescription'
@@ -55,85 +56,80 @@ const emptyDescription = computed(() => !props.description);
 const markdownRef = ref(null);
 
 const targetHeight = ref(null);
-const expanded = ref(false);
 
-const getExtraProperties = (element) => {
-  const style = window.getComputedStyle(element);
-  const marginTop = parseFloat(style.marginTop);
-  const marginBottom = parseFloat(style.marginBottom);
-  const paddingTop = parseFloat(style.paddingTop);
-  const paddingBottom = parseFloat(style.paddingBottom);
-  const elementHeight = element.offsetHeight;
-  const contentHeight = elementHeight - paddingTop - paddingBottom;
+const getNumberOfLines = (box, offsetHeight, lineHeight) => {
+  const contentHeight = offsetHeight - box.paddingTop - box.paddingBottom;
 
-  let lineHeight = parseFloat(style.lineHeight);
-  if (Number.isNaN(lineHeight)) {
-    const fontSize = parseFloat(style.fontSize);
-    lineHeight = fontSize * 1.2;
-  }
-
-  if (element.tagName === 'IMG') {
-    lineHeight = 20;
-  }
-  return {
-    marginTop,
-    paddingTop,
-    elementHeight,
-    paddingBottom,
-    marginBottom,
-    totalHeight: marginTop + elementHeight + marginBottom,
-    lineHeight,
-    numberOfLines: Math.round(contentHeight / lineHeight)
-  };
+  return Math.round(contentHeight / lineHeight);
 };
 
+/**
+ * Returns the desired height for the element based on the number of text lines in the element and
+ * number of lines to show on the UI. If number of lines in the element is less than or equal to
+ * allowedLines then `null` is returned.
+ */
 const getTargetHeight = (element, allowedLines) => {
   let linesCount = 0;
   let runningHeight = 0;
-  let previousLineHeight = 0;
-  let previousMarginBottom = 0;
-  let previousPaddingBottom = 0;
 
-  for (const node of element.children) {
-    // Previous node reached the allowed lines and we have more node(s)
-    if (linesCount === allowedLines) {
-      return runningHeight - previousPaddingBottom - previousMarginBottom - (0.5 * previousLineHeight);
+  for (let i = 0; i < element.children.length; i += 1) {
+    const child = element.children[i];
+
+    // Get/compute required inputs to determine the target height
+    const style = window.getComputedStyle(child);
+    const box = styleBox(style);
+    let { lineHeight } = box;
+    if (child.tagName === 'IMG') {
+      lineHeight = 20;
     }
+    const numberOfLines = getNumberOfLines(box, child.offsetHeight, lineHeight);
 
-    const { numberOfLines, totalHeight, marginTop, marginBottom, lineHeight, paddingTop, paddingBottom } = getExtraProperties(node);
+    // Adjustment for margin collapsing
+    const previousMarginBottom = element.children[i - 1]
+      ? styleBox(window.getComputedStyle(element.children[i - 1])).marginBottom
+      : 0;
+    const adjustedMarginTop = Math.max(box.marginTop - previousMarginBottom, 0);
+    const totalHeight = adjustedMarginTop + child.offsetHeight + box.marginBottom;
 
-    // Only if we exceed the allowed number of lines
-    if (linesCount + numberOfLines > allowedLines) {
+    // we have exceeded the allowed number of lines
+    // OR We have reached exact allowed number lines and there are more
+    // elements after this one
+    if (linesCount + numberOfLines > allowedLines ||
+          (linesCount + numberOfLines === allowedLines && (i + 1) < element.children.length)) {
       const linesToShowOfThisNode = allowedLines - linesCount - 0.5;
-      return runningHeight + marginTop + paddingTop + (linesToShowOfThisNode * lineHeight);
+      return runningHeight +
+        adjustedMarginTop +
+        box.paddingTop +
+        (linesToShowOfThisNode * lineHeight);
     }
 
+    // Update running totals
     linesCount += numberOfLines;
-    // Adjustment for margin collapse
-    runningHeight += totalHeight - Math.min(previousMarginBottom, marginTop);
-    previousLineHeight = lineHeight;
-    previousMarginBottom = marginBottom;
-    previousPaddingBottom = paddingBottom;
+    runningHeight += totalHeight;
   }
   return null;
 };
 
-const setMarkdownHeight = async () => {
-  // nextTick is good enough for the calculation being done here. I don't see
-  // any screen flicker.
-  // https://github.com/vuejs/vue/issues/9200
-  await nextTick();
+const setMarkdownHeight = () => {
+  if (!markdownRef.value) return;
+
+  const expanded = targetHeight.value && markdownRef.value.$el.style.height === 'auto';
+
   targetHeight.value = getTargetHeight(markdownRef.value.$el, 4);
-  if (targetHeight.value) {
+
+  if (!expanded && targetHeight.value) {
     markdownRef.value.$el.style.height = `${targetHeight.value}px`;
-  } else {
-    markdownRef.value.$el.style.height = 'auto';
   }
 };
 
-onMounted(async () => {
-  await setMarkdownHeight();
+onMounted(() => {
+  // nextTick is good enough for the calculation being done here. I don't see
+  // any screen flicker. Maybe related: https://github.com/vuejs/vue/issues/9200.
+  // Additionally Without nextTick offsetHeight is always 0.
+  nextTick(setMarkdownHeight);
 });
+
+watch(() => props.description, () => nextTick(setMarkdownHeight));
 
 const toggle = () => {
   if (targetHeight.value && markdownRef.value.$el.style.height === 'auto') {
@@ -142,10 +138,6 @@ const toggle = () => {
     markdownRef.value.$el.style.height = 'auto';
   }
 };
-
-onUpdated(async () => {
-  await setMarkdownHeight();
-});
 </script>
 
 
