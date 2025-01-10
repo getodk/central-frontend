@@ -26,15 +26,16 @@ describe('EntityUploadDataTemplate', () => {
   it('has the correct filename', async () => {
     const clock = sinon.useFakeTimers(Date.parse('2024-12-31T01:23:45'));
     testData.extendedDatasets.createPast(1);
-    const a = mountComponent().get('a');
-    // We don't want to actually download the file. See CF#1047.
+    const component = mountComponent();
+    const a = component.get('a');
+    // Call setFilename method directly instead of trigger click event which
+    // creates the actual file in the file system; see CF#1047.
     // Additionally, since Chrome Headless 131.0.0.0, this test has started
-    // failing.
-    a.element.addEventListener('click', (e) => { e.preventDefault(); });
-    await a.trigger('click');
+    // failing
+    component.vm.setFilename({ target: a.element });
     a.attributes().download.should.equal('trees 20241231012345.csv');
     clock.tick(1000);
-    await a.trigger('click');
+    component.vm.setFilename({ target: a.element });
     a.attributes().download.should.equal('trees 20241231012346.csv');
   });
 });
