@@ -43,8 +43,8 @@ export interface ComparableChoiceEqualityExpectationResult {
 	 *
 	 * - `false` if both:
 	 *    - {@link ExpectedChoice.label} is a string
-	 *    - The compared ("actual") {@link ComparableChoice.label} is null or has
-	 *      a different string value
+	 *    - The compared ("actual") {@link ComparableChoice.label} has a different
+	 *      string value
 	 *
 	 * - {@link LabelEqualityNotApplicable} if no label is expressed in the
 	 *   calling assertion (i.e. {@link ExpectedChoice.label} is `null`)

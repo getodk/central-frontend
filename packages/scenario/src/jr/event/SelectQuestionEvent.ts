@@ -48,19 +48,8 @@ export class SelectQuestionEvent extends QuestionEvent<'select'> {
 		const selectedValues = xmlXPathWhitespaceSeparatedList(stringValue, {
 			ignoreEmpty: true,
 		});
-		const selectedItems = node.currentState.valueOptions.filter((item) => {
-			return selectedValues.includes(item.value);
-		});
 
-		node.currentState.value.forEach((currentItem) => {
-			if (!selectedValues.includes(currentItem.value)) {
-				node.deselect(currentItem);
-			}
-		});
-
-		selectedItems.forEach((selectedItem) => {
-			node.select(selectedItem);
-		});
+		this.node.selectValues(selectedValues);
 
 		return new SelectNodeAnswer(node);
 	}

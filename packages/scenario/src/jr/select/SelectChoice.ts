@@ -8,8 +8,8 @@ export class SelectChoice extends ComparableChoice {
 		return this.selectItem.value;
 	}
 
-	get label(): string | null {
-		return this.selectItem.label?.asString ?? null;
+	get label(): string {
+		return this.selectItem.label.asString;
 	}
 
 	constructor(protected readonly selectItem: SelectItem) {

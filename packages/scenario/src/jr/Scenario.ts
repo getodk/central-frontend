@@ -927,7 +927,7 @@ export class Scenario {
 		const node = this.getCurrentSelectNode(options);
 
 		return node.currentState.value.map((item) => {
-			return item.label?.asString ?? item.value;
+			return item.label.asString;
 		});
 	}
 
@@ -942,7 +942,7 @@ export class Scenario {
 		const node = this.getCurrentSelectNode(options);
 
 		return node.currentState.valueOptions.map((item) => {
-			return item.label?.asString ?? item.value;
+			return item.label.asString;
 		});
 	}
 
