@@ -19,7 +19,10 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { AnySelectDefinition } from '../parse/body/control/select/SelectDefinition.ts';
+import type {
+	AnySelectDefinition,
+	SelectType,
+} from '../parse/body/control/select/SelectDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
@@ -52,7 +55,6 @@ export class SelectField
 		ValueContext<readonly SelectItem[]>,
 		ClientReactiveSubmittableLeafNode<readonly SelectItem[]>
 {
-	private readonly selectExclusive: boolean;
 	private readonly validation: SharedValidationState;
 
 	// XFormsXPathElement
@@ -64,6 +66,7 @@ export class SelectField
 
 	// SelectNode
 	readonly nodeType = 'select';
+	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
 	readonly currentState: CurrentState<SelectFieldStateSpec>;
 
@@ -105,7 +108,7 @@ export class SelectField
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;
-		this.selectExclusive = definition.bodyElement.type === 'select1';
+		this.selectType = definition.bodyElement.type;
 
 		const valueOptions = createSelectItems(this);
 
@@ -201,50 +204,24 @@ export class SelectField
 	}
 
 	// SelectNode
-	select(selectedItem: SelectItem): Root {
-		const { engineState, root } = this;
+	selectValue(value: string | null): Root {
+		let values: readonly [] | readonly [value: string];
 
-		if (this.selectExclusive) {
-			this.setSelectedItemValue(selectedItem.value);
-
-			return root;
+		if (value == null) {
+			values = [];
+		} else {
+			values = [value];
 		}
 
-		const currentValues = engineState.value.map(({ value }) => {
-			return value;
-		});
+		this.updateSelectedItemValues(values);
 
-		const selectedValue = selectedItem.value;
-
-		if (currentValues.includes(selectedValue)) {
-			return root;
-		}
-
-		this.updateSelectedItemValues(currentValues.concat(selectedValue));
-
-		return root;
+		return this.root;
 	}
 
-	deselect(deselectedItem: SelectItem): Root {
-		const { engineState, root } = this;
+	selectValues(values: Iterable<string>): Root {
+		this.updateSelectedItemValues(Array.from(values));
 
-		const currentValues = engineState.value.map(({ value }) => {
-			return value;
-		});
-
-		const selectedValue = deselectedItem.value;
-
-		if (!currentValues.includes(selectedValue)) {
-			return root;
-		}
-
-		const updatedValues = currentValues.filter((value) => {
-			return value !== selectedValue;
-		});
-
-		this.updateSelectedItemValues(updatedValues);
-
-		return root;
+		return this.root;
 	}
 
 	// InstanceNode

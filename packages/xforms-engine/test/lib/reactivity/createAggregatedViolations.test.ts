@@ -361,7 +361,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 				}
 
 				// Satisfy `required` condition
-				color.select(option);
+				color.selectValue(option.value);
 
 				return observedViolations;
 			});
@@ -542,7 +542,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 				}
 
 				// Satisfy `required` condition
-				color.select(option);
+				color.selectValue(option.value);
 
 				return observedViolations;
 			});

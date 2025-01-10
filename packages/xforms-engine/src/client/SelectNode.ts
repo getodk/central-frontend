@@ -1,7 +1,9 @@
-import type { AnySelectDefinition } from '../parse/body/control/select/SelectDefinition.ts';
+import type {
+	AnySelectDefinition,
+	SelectType,
+} from '../parse/body/control/select/SelectDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
-import type { InputNode } from './InputNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
@@ -10,7 +12,7 @@ import type { LeafNodeValidationState } from './validation.ts';
 
 export interface SelectItem {
 	get value(): string;
-	get label(): TextRange<'item-label'> | null;
+	get label(): TextRange<'item-label'>;
 }
 
 export interface SelectNodeState extends BaseNodeState {
@@ -44,6 +46,7 @@ export type SelectNodeAppearances = NodeAppearances<SelectDefinition>;
 
 export interface SelectNode extends BaseNode {
 	readonly nodeType: 'select';
+	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
 	readonly definition: SelectDefinition;
 	readonly root: RootNode;
@@ -52,24 +55,33 @@ export interface SelectNode extends BaseNode {
 	readonly validationState: LeafNodeValidationState;
 
 	/**
-	 * For use by a client to update the selection of a select node where:
+	 * Selects a single {@link value}, as provided by a {@link SelectItem.value}.
+	 * Calling this setter replaces the currently selected value(s, if any),
+	 * where:
 	 *
-	 * - For fields defined with an XForms `<select>`, calling this method is
-	 *   additive, i.e. it will include the item in its
-	 *   {@link SelectNodeState.value}.
-	 * - For fields defined with an XForms `<select1>`, calling this method will
-	 *   replace the selection (if any).
+	 * - if the provided value is `null`, the current selection is cleared; ELSE
+	 * - the provided value is selected in place of any currently selected values.
 	 *
-	 * @todo @see {@link InputNode.setValue} re: write restrictions
-	 * @todo @see {@link SelectNodeState.value} re: breaking up the types
+	 * This setter is most useful for {@link SelectNode}s associated with an
+	 * XForms
+	 * {@link https://getodk.github.io/xforms-spec/#body-elements | `<select1>`}
+	 * control.
 	 */
-	select(item: SelectItem): RootNode;
+	selectValue(value: string | null): RootNode;
 
 	/**
-	 * For use by a client to remove an item from the node's
-	 * {@link SelectNodeState.value}.
+	 * Selects any number of {@link values}, as provided by any number of
+	 * {@link SelectItem.value}s. Calling this setter replaces the currently
+	 * selected value(s, if any). If called with an empty array, the current
+	 * selection is cleared.
 	 *
-	 * @todo @see {@link InputNode.setValue} re: write restrictions
+	 * This setter is most useful for {@link SelectNode}s associated with an
+	 * XForms
+	 * {@link https://getodk.github.io/xforms-spec/#body-elements | `<select>`}
+	 * control.
+	 *
+	 * This setter _may_ be used with a `<select1>` control, in which case the
+	 * provided {@link values} should produce at most one value.
 	 */
-	deselect(item: SelectItem): RootNode;
+	selectValues(values: Iterable<string>): RootNode;
 }
