@@ -14,7 +14,7 @@ import type {
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
-import { afterEach, expect } from 'vitest';
+import { afterEach, assert, expect } from 'vitest';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
@@ -927,7 +927,11 @@ export class Scenario {
 		const node = this.getCurrentSelectNode(options);
 
 		return node.currentState.value.map((item) => {
-			return item.label.asString;
+			const option = node.getValueOption(item);
+
+			assert(option != null);
+
+			return option.label.asString;
 		});
 	}
 

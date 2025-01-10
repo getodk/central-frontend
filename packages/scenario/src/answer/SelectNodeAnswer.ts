@@ -13,7 +13,7 @@ export class SelectNodeAnswer extends ValueNodeAnswer<SelectNode> {
 	}
 
 	private itemValues(): readonly string[] {
-		return this.node.currentState.value.map((item) => item.value);
+		return this.node.currentState.value;
 	}
 
 	override inspectValue(): JSONValue {
