@@ -37,11 +37,11 @@ export interface SelectFieldDefinition extends LeafNodeDefinition {
 	readonly bodyElement: AnySelectDefinition;
 }
 
-interface SelectFieldStateSpec extends DescendantNodeStateSpec<readonly SelectItem[]> {
+interface SelectFieldStateSpec extends DescendantNodeStateSpec<readonly string[]> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
 	readonly children: null;
-	readonly value: SimpleAtomicState<readonly SelectItem[]>;
+	readonly value: SimpleAtomicState<readonly string[]>;
 	readonly valueOptions: Accessor<readonly SelectItem[]>;
 }
 
@@ -52,8 +52,8 @@ export class SelectField
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ValueContext<readonly SelectItem[]>,
-		ClientReactiveSubmittableLeafNode<readonly SelectItem[]>
+		ValueContext<readonly string[]>,
+		ClientReactiveSubmittableLeafNode<readonly string[]>
 {
 	private readonly validation: SharedValidationState;
 
@@ -79,8 +79,8 @@ export class SelectField
 	// ValueContext
 	override readonly contextNode = this;
 
-	readonly encodeValue = (runtimeValue: readonly SelectItem[]): string => {
-		const itemValues = new Set(runtimeValue.map(({ value }) => value));
+	readonly encodeValue = (runtimeValue: readonly string[]): string => {
+		const itemValues = new Set(runtimeValue);
 		const selectedItems = this.getValueOptions().filter(({ value }) => {
 			return itemValues.has(value);
 		});
@@ -88,7 +88,7 @@ export class SelectField
 		return selectedItems.map(({ value }) => value).join(' ');
 	};
 
-	readonly decodeValue = (instanceValue: string): readonly SelectItem[] => {
+	readonly decodeValue = (instanceValue: string): readonly string[] => {
 		const itemValues = new Set(
 			xmlXPathWhitespaceSeparatedList(instanceValue, {
 				ignoreEmpty: true,
@@ -96,13 +96,15 @@ export class SelectField
 		);
 
 		// TODO: also want set-like behavior, probably?
-		return this.getValueOptions().filter((option) => {
-			return itemValues.has(option.value);
-		});
+		return this.getValueOptions()
+			.filter((option) => {
+				return itemValues.has(option.value);
+			})
+			.map((option) => option.value);
 	};
 
 	protected readonly getValueOptions: Accessor<readonly SelectItem[]>;
-	protected readonly getValue: Accessor<readonly SelectItem[]>;
+	protected readonly getValue: Accessor<readonly string[]>;
 
 	constructor(parent: GeneralParentNode, definition: SelectFieldDefinition) {
 		super(parent, definition);
@@ -125,14 +127,14 @@ export class SelectField
 				const items = selectItemsByValue();
 
 				return baseGetValue().filter((item) => {
-					return items.has(item.value);
+					return items.has(item);
 				});
 			});
 		});
 
 		this.getValue = getValue;
 
-		const valueState: SimpleAtomicState<readonly SelectItem[]> = [getValue, setValue];
+		const valueState: SimpleAtomicState<readonly string[]> = [getValue, setValue];
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -182,7 +184,7 @@ export class SelectField
 				return [];
 			}
 
-			return item ?? [];
+			return item.value ?? [];
 		});
 
 		this.state.setProperty('value', items);
@@ -204,6 +206,14 @@ export class SelectField
 	}
 
 	// SelectNode
+	getValueOption(value: string): SelectItem | null {
+		return (
+			this.getValueOptions().find((option) => {
+				return option.value === value;
+			}) ?? null
+		);
+	}
+
 	selectValue(value: string | null): Root {
 		let values: readonly [] | readonly [value: string];
 

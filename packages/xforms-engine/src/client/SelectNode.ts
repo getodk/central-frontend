@@ -18,9 +18,6 @@ export interface SelectItem {
 export interface SelectNodeState extends BaseNodeState {
 	get children(): null;
 
-	/**
-	 * @todo should {@link BaseNodeState} include this??
-	 */
 	get valueOptions(): readonly SelectItem[];
 
 	/**
@@ -35,7 +32,7 @@ export interface SelectNodeState extends BaseNodeState {
 	 * Should a `SelectNodeState` have this `value` type, whereas a hypothetical
 	 * `Select1NodeState` would have `get value(): SelectItem | null`?
 	 */
-	get value(): readonly SelectItem[];
+	get value(): readonly string[];
 }
 
 export interface SelectDefinition extends LeafNodeDefinition {
@@ -53,6 +50,8 @@ export interface SelectNode extends BaseNode {
 	readonly parent: GeneralParentNode;
 	readonly currentState: SelectNodeState;
 	readonly validationState: LeafNodeValidationState;
+
+	getValueOption(value: string): SelectItem | null;
 
 	/**
 	 * Selects a single {@link value}, as provided by a {@link SelectItem.value}.
