@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeMultiSelect from 'primevue/multiselect';
+import { computed } from 'vue';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
@@ -11,14 +12,22 @@ const props = defineProps<MultiselectDropdownProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectItems = (items: SelectItem[]) => {
-	const value = items.map((item) => item.value);
+const options = computed(() => {
+	return props.question.currentState.valueOptions.map((option) => option.value);
+});
 
-	props.question.selectValues(value);
+const selectValues = (values: readonly string[]) => {
+	props.question.selectValues(values);
 };
 
-const getOptionLabel = (item: SelectItem) => {
-	return item.label.asString;
+const getOptionLabel = (value: string) => {
+	const option = props.question.getValueOption(value);
+
+	if (option == null) {
+		throw new Error(`Failed to find option for value: ${value}`);
+	}
+
+	return option.label.asString;
 };
 
 let panelClass = 'multi-select-dropdown-panel';
@@ -35,11 +44,11 @@ if (props.question.appearances['no-buttons']) {
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
 		:show-toggle-all="false"
-		:options="question.currentState.valueOptions"
+		:options="options"
 		:option-label="getOptionLabel"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		@update:model-value="selectItems"
+		@update:model-value="selectValues"
 		@change="$emit('change')"
 	/>
 </template>

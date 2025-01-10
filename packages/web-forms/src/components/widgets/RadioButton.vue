@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeRadioButton from 'primevue/radiobutton';
 
 interface RadioButtonProps {
@@ -10,8 +10,8 @@ const props = defineProps<RadioButtonProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectItem = (item: SelectItem) => {
-	props.question.selectValue(item.value);
+const selectValue = (value: string) => {
+	props.question.selectValue(value);
 };
 </script>
 
@@ -22,18 +22,18 @@ const selectItem = (item: SelectItem) => {
 		:for="question.nodeId + '_' + option.value"
 		:class="{
 			'value-option': true,
-			active: question.currentState.value[0] === option,
+			active: question.currentState.value[0] === option.value,
 			disabled: question.currentState.readonly,
 			'no-buttons': question.appearances['no-buttons']
 		}"
 	>
 		<PrimeRadioButton
 			:input-id="question.nodeId + '_' + option.value"
-			:value="option"
+			:value="option.value"
 			:name="question.nodeId"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value[0]"
-			@update:model-value="selectItem"
+			@update:model-value="selectValue"
 			@change="$emit('change')"
 		/>
 		<span class="label-text">

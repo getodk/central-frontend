@@ -56,7 +56,7 @@ const mountComponent = (selectNode: SelectNode, options?: MountComponentOptions)
 };
 
 const expectSelectedValuesState = (selectNode: SelectNode, expectedValues: readonly string[]) => {
-	const actualValues = selectNode.currentState.value.map((item) => item.value);
+	const actualValues = selectNode.currentState.value;
 
 	expect(actualValues.length).toBe(expectedValues.length);
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeDropdown from 'primevue/dropdown';
+import { computed } from 'vue';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -11,12 +12,22 @@ const props = defineProps<SearchableDropdownProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectItem = (item: SelectItem) => {
-	props.question.selectValue(item.value);
+const options = computed(() => {
+	return props.question.currentState.valueOptions.map((option) => option.value);
+});
+
+const selectValue = (value: string) => {
+	props.question.selectValue(value);
 };
 
-const getOptionLabel = (item: SelectItem) => {
-	return item.label.asString;
+const getOptionLabel = (value: string) => {
+	const option = props.question.getValueOption(value);
+
+	if (option == null) {
+		throw new Error(`Failed to find option for value: ${value}`);
+	}
+
+	return option.label.asString;
 };
 </script>
 
@@ -27,9 +38,9 @@ const getOptionLabel = (item: SelectItem) => {
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
 		:model-value="question.currentState.value[0]"
-		:options="question.currentState.valueOptions"
+		:options="options"
 		:option-label="getOptionLabel"
-		@update:model-value="selectItem"
+		@update:model-value="selectValue"
 		@change="$emit('change')"
 	/>
 </template>

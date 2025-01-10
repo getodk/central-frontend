@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeCheckbox from 'primevue/checkbox';
 
 interface CheckboxWidgetProps {
@@ -11,10 +11,8 @@ const props = defineProps<CheckboxWidgetProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectItems = (items: SelectItem[]) => {
-	const value = items.map((item) => item.value);
-
-	props.question.selectValues(value);
+const selectValues = (values: readonly string[]) => {
+	props.question.selectValues(values);
 };
 </script>
 
@@ -24,7 +22,7 @@ const selectItems = (items: SelectItem[]) => {
 		:key="option.value"
 		:class="[{
 			'value-option': true,
-			active: question.currentState.value.find(v => v.value === option.value),
+			active: question.currentState.value.find((value) => value === option.value),
 			disabled: question.currentState.readonly,
 			'no-buttons': question.appearances['no-buttons'] }]"
 		:for="question.nodeId + '_' + option.value"
@@ -32,10 +30,10 @@ const selectItems = (items: SelectItem[]) => {
 		<PrimeCheckbox
 			:input-id="question.nodeId + '_' + option.value"
 			:name="question.nodeId"
-			:value="option"
+			:value="option.value"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value"
-			@update:model-value="selectItems"
+			@update:model-value="selectValues"
 			@change="$emit('change')"
 		/>
 		<span class="label-text">
