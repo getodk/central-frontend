@@ -24,6 +24,7 @@ import type { ClientReactiveSubmittableValueNode } from './internal-api/submissi
 interface TriggerControlStateSpec extends ValueNodeStateSpec<TriggerRuntimeValue> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
+	readonly valueOptions: null;
 }
 
 type AnyTriggerNodeDefinition = {

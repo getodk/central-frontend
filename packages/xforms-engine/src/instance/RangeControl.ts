@@ -32,6 +32,7 @@ interface RangeControlStateSpec<V extends RangeValueType>
 	extends ValueNodeStateSpec<RangeValue<V>> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
+	readonly valueOptions: null;
 }
 
 export class RangeControl<V extends RangeValueType = RangeValueType>

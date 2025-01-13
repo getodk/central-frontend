@@ -13,8 +13,8 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
-import { initializeForm } from '../../../src/index.ts';
-import type { SelectField } from '../../../src/instance/SelectField.ts';
+import { initializeForm } from '../../../src/instance/index.ts';
+import type { SelectControl } from '../../../src/instance/SelectControl.ts';
 import type { createSelectItems } from '../../../src/lib/reactivity/createSelectItems.ts';
 import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
 
@@ -25,7 +25,7 @@ import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
  *   conventional unit tests: If there's a reasonable way to do that, it would
  *   probably begin (especially in this case) with relaxing the
  *   {@link createSelectItems} signature to accept something more minimal than a
- *   {@link SelectField}. However, after some reflection on the efforts to port
+ *   {@link SelectControl}. However, after some reflection on the efforts to port
  *   JavaRosa tests, there's quite a lot of value in form-level integration
  *   tests. We might benefit instead from...
  *
@@ -248,11 +248,12 @@ describe('createSelectItems - reactive `<select>`/`<select1>` items and itemsets
 				// immediately upon its definition.
 				effect(() => {
 					select.currentState.valueOptions.forEach((option) => {
-						const { label, value } = option;
-						const labelStates = observedLabelStatesByValue.upsert(value, () => []);
+						const label = option.label;
+						const stringValue = option.asString;
+						const labelStates = observedLabelStatesByValue.upsert(stringValue, () => []);
 
 						if (label == null) {
-							expect.fail(`Select item with value ${value} has no label`);
+							expect.fail(`Select item with value ${stringValue} has no label`);
 						}
 
 						labelStates.push(label.asString);

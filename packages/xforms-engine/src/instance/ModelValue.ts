@@ -17,6 +17,7 @@ import type { ClientReactiveSubmittableValueNode } from './internal-api/submissi
 interface ModelValueStateSpec<V extends ValueType> extends ValueNodeStateSpec<RuntimeValue<V>> {
 	readonly label: null;
 	readonly hint: null;
+	readonly valueOptions: null;
 }
 
 export class ModelValue<V extends ValueType = ValueType>

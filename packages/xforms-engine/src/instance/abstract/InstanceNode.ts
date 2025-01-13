@@ -34,6 +34,12 @@ export interface BaseEngineNode extends Omit<BaseNode, 'nodeType'> {
 	readonly nodeType: EngineInstanceNodeType;
 }
 
+// prettier-ignore
+export type InstanceNodeValueOptionsStateSpec =
+	| Accessor<null>
+	| Accessor<readonly unknown[]>
+	| null
+
 export interface InstanceNodeStateSpec<Value = never> {
 	readonly reference: Accessor<string> | string;
 	readonly readonly: Accessor<boolean> | boolean;
@@ -42,7 +48,7 @@ export interface InstanceNodeStateSpec<Value = never> {
 	readonly label: Accessor<TextRange<'label'> | null> | null;
 	readonly hint: Accessor<TextRange<'hint'> | null> | null;
 	readonly children: Accessor<readonly FormNodeID[]> | null;
-	readonly valueOptions: Accessor<null> | Accessor<readonly unknown[]> | null;
+	readonly valueOptions: InstanceNodeValueOptionsStateSpec;
 	readonly value: Signal<Value> | SimpleAtomicState<Value> | null;
 }
 

@@ -2,6 +2,7 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { InputDefinition } from '../client/InputNode.ts';
 import type { ModelValueDefinition } from '../client/ModelValueNode.ts';
+import type { SelectDefinition } from '../client/SelectNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../client/TriggerNode.ts';
 import type { RankNodeDefinition } from '../client/unsupported/RankNode.ts';
@@ -25,8 +26,7 @@ import { Note } from './Note.ts';
 import { RangeControl } from './RangeControl.ts';
 import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
-import type { SelectFieldDefinition } from './SelectField.ts';
-import { SelectField } from './SelectField.ts';
+import { SelectControl } from './SelectControl.ts';
 import { Subtree } from './Subtree.ts';
 import { TriggerControl } from './TriggerControl.ts';
 import { RankControl } from './unsupported/RankControl.ts';
@@ -48,7 +48,7 @@ type ControlNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| InputDefinition
 	| RangeLeafNodeDefinition
-	| SelectFieldDefinition
+	| SelectDefinition
 	| TriggerNodeDefinition
 	| AnyUnsupportedControlDefinition;
 
@@ -64,9 +64,7 @@ const isInputDefinition = (definition: ControlNodeDefinition): definition is Inp
 	return definition.bodyElement.type === 'input';
 };
 
-const isSelectFieldDefinition = (
-	definition: ControlNodeDefinition
-): definition is SelectFieldDefinition => {
+const isSelectDefinition = (definition: ControlNodeDefinition): definition is SelectDefinition => {
 	return definition.bodyElement.type === 'select' || definition.bodyElement.type === 'select1';
 };
 
@@ -173,8 +171,8 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 					return InputControl.from(parent, leafChild);
 				}
 
-				if (isSelectFieldDefinition(leafChild)) {
-					return new SelectField(parent, leafChild);
+				if (isSelectDefinition(leafChild)) {
+					return SelectControl.from(parent, leafChild);
 				}
 
 				if (isTriggerNodeDefinition(leafChild)) {

@@ -8,7 +8,7 @@ import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
 import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNode.ts';
 import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from './RootNode.ts';
-import type { SelectNode } from './SelectNode.ts';
+import type { AnySelectNode } from './SelectNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 import type { TriggerNode } from './TriggerNode.ts';
 import type { RankNode } from './unsupported/RankNode.ts';
@@ -24,7 +24,7 @@ export type AnyControlNode =
 	| AnyInputNode
 	| AnyNoteNode
 	| AnyRangeNode
-	| SelectNode
+	| AnySelectNode
 	| TriggerNode;
 
 // prettier-ignore

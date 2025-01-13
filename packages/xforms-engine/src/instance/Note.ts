@@ -27,6 +27,7 @@ interface NoteStateSpec<V extends ValueType> extends ValueNodeStateSpec<NoteValu
 	readonly noteText: ComputedNoteText;
 	readonly label: Accessor<TextRange<'label', 'form'> | null>;
 	readonly hint: Accessor<TextRange<'hint', 'form'> | null>;
+	readonly valueOptions: null;
 }
 
 export class Note<V extends ValueType = ValueType>

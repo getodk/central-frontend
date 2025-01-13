@@ -3,9 +3,9 @@ import type { ValueType } from '../../client/ValueType.ts';
 import type { DecodeInstanceValue } from '../../instance/internal-api/InstanceValueContext.ts';
 import type { SimpleAtomicState } from '../reactivity/types.ts';
 
-type CodecEncoder<RuntimeInputValue> = (input: RuntimeInputValue) => string;
+export type CodecEncoder<RuntimeInputValue> = (input: RuntimeInputValue) => string;
 
-type CodecDecoder<RuntimeValue> = (value: string) => RuntimeValue;
+export type CodecDecoder<RuntimeValue> = (value: string) => RuntimeValue;
 
 type RuntimeValueAccessor<RuntimeValue> = Accessor<RuntimeValue>;
 
