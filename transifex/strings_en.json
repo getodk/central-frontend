@@ -1035,6 +1035,20 @@
       "string": "Are you sure you want to leave this page? Your changes might not be saved."
     }
   },
+  "formSetting": {
+    "formTech": {
+      "string": "Web based form technology"
+    },
+    "enableWebForms": {
+      "string": "Use WebForms instead of Enketo"
+    },
+    "enableWebFormsExplanation": {
+      "string": "When users fill out forms via the web (not via ODK Collect), we use Enketo by default. Its successor is \"WebForms\", which is a work in progress that you can already test."
+    },
+    "enableWebFormsExplanationLinktext": {
+      "string": "Before enabling this, read up on WebForms and which form features it currently supports!"
+    }
+  },
   "component": {
     "AccountClaim": {
       "action": {

@@ -27,6 +27,31 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
       <div class="col-xs-6">
+        <div class="panel panel-simple">
+          <div class="panel-heading">
+            <h1 class="panel-title">{{ $t('formSetting.formTech') }}</h1>
+          </div>
+          <div class="panel-body">
+            <div class="checkbox">
+              <label>
+                <input
+                  v-model="form.webformsEnabled"
+                  type="checkbox"
+                  :aria-disabled="form.awaitingResponse"
+                  :disabled="form.awaitingResponse"
+                  @change="setWebformsEnabled">
+                  <spinner :state="form.awaitingResponse"/>
+                  {{ $t('formSetting.enableWebForms') }}
+                </label>
+            </div>
+              <p>
+                {{ $t('formSetting.enableWebFormsExplanation') }}
+              </p>
+              <p>
+                <a href="https://getodk.org/webforms#TODO-REPLACE-THIS_URL">{{ $t('formSetting.enableWebFormsExplanationLinktext') }}</a>
+              </p>
+          </div>
+        </div>
         <div class="panel panel-simple-danger">
           <div class="panel-heading">
             <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
@@ -49,14 +74,16 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormDelete from './delete.vue';
+import Spinner from '../spinner.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
+import { apiPaths } from '../../util/request';
 
 export default {
   name: 'FormSettings',
-  components: { FormDelete },
+  components: { FormDelete, Spinner },
   inject: ['alert'],
   setup() {
     const { form } = useRequestData();
@@ -68,6 +95,20 @@ export default {
       const message = this.$t('alert.delete', { name: this.form.nameOrId });
       this.$router.push(this.projectPath())
         .then(() => { this.alert.success(message); });
+    },
+    setWebformsEnabled() {
+      this.form.request({
+        method: 'PATCH',
+        url: apiPaths.form(this.form.projectId, this.form.xmlFormId),
+        data: { webformsEnabled: this.form.webformsEnabled },
+        patch: ({ data }) => {
+          this.form.updatedAt = data.updatedAt;
+        }
+      })
+        .catch(err => {
+          this.form.webformsEnabled = !this.form.webformsEnabled;
+          throw err;
+        });
     }
   }
 };
