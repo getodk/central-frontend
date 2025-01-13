@@ -1,16 +1,15 @@
-<script lang="ts" setup>
-import type { SelectNode } from '@getodk/xforms-engine';
+<script lang="ts" setup generic="V extends ValueType">
+import { selectOptionId } from '@/lib/format/selectOptionId.ts';
+import type { SelectItemValue, SelectNode, ValueType } from '@getodk/xforms-engine';
 import PrimeRadioButton from 'primevue/radiobutton';
 
-interface RadioButtonProps {
-	readonly question: SelectNode;
-}
-
-const props = defineProps<RadioButtonProps>();
+const props = defineProps<{
+	readonly question: SelectNode<V>;
+}>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectValue = (value: string) => {
+const selectValue = (value: SelectItemValue<V>) => {
 	props.question.selectValue(value);
 };
 </script>
@@ -18,8 +17,8 @@ const selectValue = (value: string) => {
 <template>
 	<label
 		v-for="option in question.currentState.valueOptions"
-		:key="option.value"
-		:for="question.nodeId + '_' + option.value"
+		:key="option.asString"
+		:for="selectOptionId(question, option)"
 		:class="{
 			'value-option': true,
 			active: question.currentState.value[0] === option.value,
@@ -28,7 +27,7 @@ const selectValue = (value: string) => {
 		}"
 	>
 		<PrimeRadioButton
-			:input-id="question.nodeId + '_' + option.value"
+			:input-id="selectOptionId(question, option)"
 			:value="option.value"
 			:name="question.nodeId"
 			:disabled="question.currentState.readonly"

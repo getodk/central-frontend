@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SelectNode } from '@getodk/xforms-engine';
+import type { AnySelectNode } from '@getodk/xforms-engine';
 import { inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
@@ -10,7 +10,11 @@ import RadioButton from '../widgets/RadioButton.vue';
 import SearchableDropdown from '../widgets/SearchableDropdown.vue';
 import UnsupportedAppearance from './UnsupportedAppearance.vue';
 
-const props = defineProps<{ question: SelectNode }>();
+interface Select1ControlProps {
+	readonly question: AnySelectNode;
+}
+
+const props = defineProps<Select1ControlProps>();
 
 const hasColumnsAppearance =
 	[...props.question.appearances].filter((a) => a.startsWith('columns')).length > 0;

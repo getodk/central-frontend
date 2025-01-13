@@ -1,10 +1,10 @@
 import SelectControl from '@/components/controls/SelectControl.vue';
-import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
+import type { AnyNode, AnySelectNode, RootNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../helpers.ts';
 
-const findSelectNodeByReference = (node: AnyNode, reference: string): SelectNode | null => {
+const findSelectNodeByReference = (node: AnyNode, reference: string): AnySelectNode | null => {
 	const nodeReference = node.currentState.reference;
 
 	if (nodeReference === reference) {
@@ -26,7 +26,7 @@ const findSelectNodeByReference = (node: AnyNode, reference: string): SelectNode
 	return null;
 };
 
-const getSelectNodeByReference = (root: RootNode, reference: string): SelectNode => {
+const getSelectNodeByReference = (root: RootNode, reference: string): AnySelectNode => {
 	const result = findSelectNodeByReference(root, reference);
 
 	assert(result != null);
@@ -40,7 +40,7 @@ interface MountComponentOptions {
 
 type MountedComponent = ReturnType<typeof mountComponent>;
 
-const mountComponent = (selectNode: SelectNode, options?: MountComponentOptions) => {
+const mountComponent = (selectNode: AnySelectNode, options?: MountComponentOptions) => {
 	const { submitPressed = false } = options ?? {};
 
 	return mount(SelectControl, {
@@ -55,7 +55,10 @@ const mountComponent = (selectNode: SelectNode, options?: MountComponentOptions)
 	});
 };
 
-const expectSelectedValuesState = (selectNode: SelectNode, expectedValues: readonly string[]) => {
+const expectSelectedValuesState = (
+	selectNode: AnySelectNode,
+	expectedValues: readonly string[]
+) => {
 	const actualValues = selectNode.currentState.value;
 
 	expect(actualValues.length).toBe(expectedValues.length);
@@ -65,7 +68,7 @@ const expectSelectedValuesState = (selectNode: SelectNode, expectedValues: reado
 	}
 };
 
-const expectSelectedValueState = (selectNode: SelectNode, value: string | null) => {
+const expectSelectedValueState = (selectNode: AnySelectNode, value: string | null) => {
 	if (value == null) {
 		return expectSelectedValuesState(selectNode, []);
 	}
@@ -119,7 +122,7 @@ describe('SelectControl', () => {
 	describe('select1', () => {
 		describe('no appearance (radio controls)', () => {
 			let root: RootNode;
-			let selectNode: SelectNode;
+			let selectNode: AnySelectNode;
 			let component: MountedComponent;
 			let cherry: DOMWrapper<HTMLInputElement>;
 			let mango: DOMWrapper<HTMLInputElement>;
@@ -167,7 +170,7 @@ describe('SelectControl', () => {
 			{ appearance: 'minimal search', reference: '/data/minimal_search' },
 		])('dropdown with appearance: $appearance', ({ reference }) => {
 			let root: RootNode;
-			let selectNode: SelectNode;
+			let selectNode: AnySelectNode;
 			let component: MountedComponent;
 			let controlElement: DOMWrapper<HTMLDivElement>;
 
@@ -220,7 +223,7 @@ describe('SelectControl', () => {
 	describe('select', () => {
 		describe('no appearance (checkbox controls)', () => {
 			let root: RootNode;
-			let selectNode: SelectNode;
+			let selectNode: AnySelectNode;
 			let component: MountedComponent;
 			let watermelon: DOMWrapper<HTMLInputElement>;
 			let peach: DOMWrapper<HTMLInputElement>;
@@ -274,7 +277,7 @@ describe('SelectControl', () => {
 			{ appearance: 'minimal search', reference: '/data/minimal_search_m' },
 		])('dropdown with appearance: $appearance', ({ reference }) => {
 			let root: RootNode;
-			let selectNode: SelectNode;
+			let selectNode: AnySelectNode;
 			let component: MountedComponent;
 			let controlElement: DOMWrapper<HTMLDivElement>;
 

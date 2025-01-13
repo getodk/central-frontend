@@ -1,14 +1,12 @@
-<script setup lang="ts">
-import type { SelectNode } from '@getodk/xforms-engine';
+<script setup lang="ts" generic="V extends ValueType">
+import type { SelectItemValue, SelectNode, ValueType } from '@getodk/xforms-engine';
 import PrimeDropdown from 'primevue/dropdown';
 import { computed } from 'vue';
 
-interface SearchableDropdownProps {
-	readonly question: SelectNode;
+const props = defineProps<{
+	readonly question: SelectNode<V>;
 	readonly style?: string;
-}
-
-const props = defineProps<SearchableDropdownProps>();
+}>();
 
 defineEmits(['update:modelValue', 'change']);
 
@@ -16,11 +14,11 @@ const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => option.value);
 });
 
-const selectValue = (value: string) => {
+const selectValue = (value: SelectItemValue<V>) => {
 	props.question.selectValue(value);
 };
 
-const getOptionLabel = (value: string) => {
+const getOptionLabel = (value: SelectItemValue<V>) => {
 	const option = props.question.getValueOption(value);
 
 	if (option == null) {

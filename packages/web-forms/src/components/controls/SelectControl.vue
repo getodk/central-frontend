@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import type { SelectNode } from '@getodk/xforms-engine';
+import type { AnySelectNode } from '@getodk/xforms-engine';
 import Select1Control from './Select1Control.vue';
 import SelectNControl from './SelectNControl.vue';
 
-defineProps<{ question: SelectNode }>();
+interface SelectControlProps {
+	readonly question: AnySelectNode;
+}
+
+defineProps<SelectControlProps>();
 </script>
 
 <template>
