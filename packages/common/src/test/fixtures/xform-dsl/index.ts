@@ -172,6 +172,52 @@ export const select1Dynamic: select1Dynamic = (
 	);
 };
 
+/**
+ * @see {@link proposed_selectDynamic}
+ */
+type Proposed_SelectDynamicParameters =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| readonly [ref: string, nodesetRef: string]
+	| readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
+
+/**
+ * @see {@link proposed_selectDynamic}
+ */
+type Proposed_selectDynamic = (...args: Proposed_SelectDynamicParameters) => XFormsElement;
+
+/**
+ * **PORTING NOTES**
+ *
+ * As the name implies, this is not ported from JavaRosa. It is a proposed
+ * addition, for parity with {@link select1Dynamic}.
+ */
+export const proposed_selectDynamic: Proposed_selectDynamic = (
+	...[ref, nodesetRef, valueRef, labelRef]: Proposed_SelectDynamicParameters
+): XFormsElement => {
+	if (valueRef == null && labelRef == null) {
+		const value = t('value ref="value"');
+		const label = t('label ref="label"');
+
+		const itemsetAttributes = new Map<string, string>();
+
+		itemsetAttributes.set('nodeset', nodesetRef);
+
+		const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
+		const selectAttributes = new Map<string, string>();
+
+		selectAttributes.set('ref', ref);
+
+		return new TagXFormsElement('select', selectAttributes, [itemset]);
+	}
+
+	return t(
+		`select ref="${ref}"`,
+		t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
+	);
+};
+
+export { proposed_selectDynamic as selectDynamic };
+
 export const group = (ref: string, ...children: XFormsElement[]): XFormsElement => {
 	return t(`group ref="${ref}"`, ...children);
 };

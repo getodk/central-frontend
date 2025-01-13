@@ -1,19 +1,19 @@
-import type { SelectItem } from '@getodk/xforms-engine';
+import type { SelectItem, ValueType } from '@getodk/xforms-engine';
 import { ComparableChoice } from '../../choice/ComparableChoice.ts';
 import { UnclearApplicabilityError } from '../../error/UnclearApplicabilityError.ts';
 import type { SelectChoiceArbitraryChildList } from './SelectChoiceArbitraryChildList.ts';
 
-export class SelectChoice extends ComparableChoice {
-	get value(): string {
-		return this.selectItem.value;
-	}
+export class SelectChoice<V extends ValueType> extends ComparableChoice {
+	readonly value: string;
 
 	get label(): string {
 		return this.selectItem.label.asString;
 	}
 
-	constructor(protected readonly selectItem: SelectItem) {
+	constructor(protected readonly selectItem: SelectItem<V>) {
 		super();
+
+		this.value = selectItem.asString;
 	}
 
 	/**

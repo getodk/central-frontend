@@ -3,12 +3,12 @@ import type {
 	AnyInputNode,
 	AnyNoteNode,
 	AnyRangeNode,
+	AnySelectNode,
 	AnyUnsupportedControlNode,
 	GroupNode,
 	RepeatInstanceNode,
 	RepeatRangeUncontrolledNode,
 	RootNode,
-	SelectNode,
 	TriggerNode,
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
@@ -17,7 +17,7 @@ import type { Scenario } from '../Scenario.ts';
 export type QuestionPositionalEventNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| AnyNoteNode
-	| SelectNode
+	| AnySelectNode
 	| AnyInputNode
 	| AnyRangeNode
 	| TriggerNode
