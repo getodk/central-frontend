@@ -89,14 +89,6 @@ describe('FieldKeyRow', () => {
         panel.classList.contains('legacy').should.be.true;
       });
 
-      it('focuses the link to switch back to a managed QR code', async () => {
-        const app = await load('/projects/1/app-users', { attachTo: document.body });
-        await app.get('.field-key-row-popover-link').trigger('click');
-        document.querySelector('.popover .switch-code').click();
-        await app.vm.$nextTick();
-        document.querySelector('.popover .switch-code').should.be.focused();
-      });
-
       it('shows a legacy QR code in the next popover', async () => {
         const app = await load('/projects/1/app-users', { attachTo: document.body });
         const links = app.findAll('.field-key-row-popover-link');

@@ -10,38 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!--
-The Popover component renders the content of a popover, then passes the
-resulting HTML to the Bootstrap popover plugin. That means that this component
-does not contain the popover content shown to the user; the actual popover
-content is a copy based on this component. This component is rendered, but
-hidden.
-
-This setup results in a few limitations:
-
-  - The HTML passed to the Bootstrap plugin is not reactive, so the popover must
-    be destroyed and reinitialized whenever its content changes. To do so, call
-    the update() method.
-  - We can't pass event handlers to the Bootstrap plugin, so don't use Vue event
-    handling to listen for events. Instead, manually attach event listeners to
-    the document and use event delegation.
-  - Since the popover content is rendered here and also shown in the .popover
-    element, avoid using an id attribute.
-
-If any of these limitations becomes an issue, we could consider moving to a Vue
-implementation of the Bootstrap plugins. We could also consider implementing our
-own popover functionality, perhaps using Popper.
--->
 <template>
-  <div class="popover-content-source" aria-hidden="true">
-    <slot></slot>
+  <div v-if="target != null" class="popover">
+    <div class="popover-content">
+      <slot></slot>
+    </div>
+    <div class="arrow"></div>
   </div>
 </template>
 
 <script>
-import { markRaw } from 'vue';
-import 'bootstrap/js/tooltip';
-import 'bootstrap/js/popover';
+import { arrow, computePosition, flip, offset, shift } from '@floating-ui/dom';
 
 export default {
   name: 'Popover',
@@ -54,15 +33,8 @@ export default {
     }
   },
   emits: ['hide'],
-  data() {
-    return {
-      // jQuery wrapper of this.target
-      wrapper: null
-    };
-  },
   watch: {
-    target(newTarget, oldTarget) {
-      if (oldTarget != null) this.hide();
+    target(newTarget) {
       if (newTarget != null) this.$nextTick(this.show);
     }
   },
@@ -77,37 +49,49 @@ export default {
     document.addEventListener('keydown', this.hideAfterEsc);
   },
   beforeUnmount() {
-    if (this.target != null) this.hide();
     document.removeEventListener('click', this.hideAfterClick, true);
     window.removeEventListener('resize', this.hideAfterResize);
     document.removeEventListener('keydown', this.hideAfterEsc);
   },
   methods: {
     show() {
-      this.wrapper = markRaw($(this.target)
-        .popover({
-          container: 'body',
-          content: this.$el.innerHTML,
-          html: true,
-          placement: this.placement,
-          trigger: 'manual',
-          animation: false,
-          sanitize: false
-        })
-        .popover('show'));
-    },
-    hide() {
-      this.wrapper.popover('destroy');
-      this.wrapper = null;
-    },
-    // Popper is a popular popover package that also requires a method call
-    // after the height of a popover changes. However, Popper only repositions
-    // the popover. This method destroys the popover and reinitializes it; the
-    // Bootstrap plugin does not provide another way to reposition the popover
-    // and its arrow.
-    update() {
-      this.hide();
-      this.show();
+      const arrowEl = document.querySelector('.popover .arrow');
+
+      computePosition(this.target, this.$el, {
+        placement: this.placement,
+        middleware: [
+          offset(0),
+          shift(),
+          flip({ fallbackPlacements: ['bottom', 'left', 'right'] }),
+          arrow({ element: arrowEl }),
+        ]
+      })
+        .then(({ x, y, placement, strategy, middlewareData }) => {
+          const { style } = this.$el;
+          style.top = `${y}px`;
+          style.left = `${x}px`;
+          this.$el.classList.remove(...['top', 'right', 'bottom', 'left']);
+          this.$el.classList.add(placement);
+          style.position = strategy;
+
+          const side = placement.split('-')[0];
+          const staticSide = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right'
+          }[side];
+
+          if (middlewareData.arrow) {
+            // eslint-disable-next-line no-shadow
+            const { x, y } = middlewareData.arrow;
+            Object.assign(arrowEl.style, {
+              left: x != null ? `${x + 10}px` : '',
+              top: y != null ? `${y + 10}px` : '',
+              [staticSide]: `${-arrowEl.offsetWidth}px`
+            });
+          }
+        });
     },
     hideAfterClick(event) {
       if (this.target != null &&
@@ -129,24 +113,13 @@ export default {
 @import '../assets/scss/variables';
 
 .popover {
-  background-color: transparent;
+  display: block;
   border: none;
   box-shadow: $box-shadow-popover;
-  font-family: inherit;
   max-width: none;
   padding: 0;
-
-  &.left > .arrow { border-left-color: rgba(0, 0, 0, 0.125); }
 }
 
 .popover-content { padding: 0; }
 
-// We don't want this element to be visible, but we also can't specify
-// `display: none`. In some cases, we need to measure the width of the content
-// that will be shown in the popover.
-.popover-content-source {
-  position: fixed;
-  left: -1000px;
-  top: 0;
-}
 </style>

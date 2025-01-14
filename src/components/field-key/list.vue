@@ -153,18 +153,6 @@ export default {
 
       event.preventDefault();
       this.managed = !this.managed;
-
-      if (this.popover.target != null) {
-        this.$nextTick(() => {
-          // Changing this.managed may change the height of the popover: the
-          // height of the QR code may change, and there may be a locale for
-          // which the height of the text will change.
-          this.$refs.popover.update();
-
-          document.querySelector('.popover .field-key-qr-panel .switch-code')
-            .focus();
-        });
-      }
     },
     afterCreate(fieldKey) {
       this.fetchData(true);
