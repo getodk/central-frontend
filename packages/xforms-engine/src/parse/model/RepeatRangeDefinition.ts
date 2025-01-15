@@ -2,7 +2,7 @@ import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts
 import { RepeatCountControlExpression } from '../expression/RepeatCountControlExpression.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
-import type { NodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
+import type { ParentNodeDefinition } from './NodeDefinition.ts';
 import { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
 import { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
 
@@ -29,10 +29,10 @@ const assertRepeatRangeDefinitionUnion: AssertRepeatRangeDefinitionUnion = (_def
 	// tautologically true!
 };
 
-export class RepeatRangeDefinition
-	extends DescendentNodeDefinition<'repeat-range', RepeatElementDefinition>
-	implements NodeDefinition<'repeat-range'>
-{
+export class RepeatRangeDefinition extends DescendentNodeDefinition<
+	'repeat-range',
+	RepeatElementDefinition
+> {
 	static from(
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,

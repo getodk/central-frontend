@@ -2,51 +2,61 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { TextRange } from '../client/TextRange.ts';
 import type { TriggerNode, TriggerNodeDefinition } from '../client/TriggerNode.ts';
-import type { SubmissionState } from '../client/submission/SubmissionState.ts';
-import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
+import type { ValueType } from '../client/ValueType.ts';
+import { ErrorProductionDesignPendingError } from '../error/ErrorProductionDesignPendingError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createLeafNodeSubmissionState } from '../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
-import { createValueState } from '../lib/reactivity/createValueState.ts';
+import type { TriggerInputValue, TriggerRuntimeValue } from '../lib/codecs/TriggerCodec.ts';
+import { TriggerCodec } from '../lib/codecs/TriggerCodec.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
-import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
-import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
 import type { Root } from './Root.ts';
-import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
-import { DescendantNode } from './abstract/DescendantNode.ts';
+import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type { ValueContext } from './internal-api/ValueContext.ts';
-import type { ClientReactiveSubmittableLeafNode } from './internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
+import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
 
-interface TriggerControlStateSpec extends DescendantNodeStateSpec<boolean> {
+interface TriggerControlStateSpec extends ValueNodeStateSpec<TriggerRuntimeValue> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
-	readonly children: null;
-	readonly value: SimpleAtomicState<boolean>;
 	readonly valueOptions: null;
 }
 
-const TRIGGER_ASSIGNED_VALUE = 'OK';
+type AnyTriggerNodeDefinition = {
+	[V in ValueType]: TriggerNodeDefinition<V>;
+}[ValueType];
+
+const codec = new TriggerCodec();
 
 export class TriggerControl
-	extends DescendantNode<TriggerNodeDefinition, TriggerControlStateSpec, GeneralParentNode, null>
+	extends ValueNode<
+		'string',
+		TriggerNodeDefinition<'string'>,
+		TriggerRuntimeValue,
+		TriggerInputValue
+	>
 	implements
 		TriggerNode,
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ValueContext<boolean>,
-		ClientReactiveSubmittableLeafNode<boolean>
+		ClientReactiveSubmittableValueNode
 {
-	private readonly validation: SharedValidationState;
+	static from(parent: GeneralParentNode, definition: TriggerNodeDefinition): TriggerControl;
+	static from(parent: GeneralParentNode, definition: AnyTriggerNodeDefinition): TriggerControl {
+		if (definition.valueType !== 'string') {
+			throw new ErrorProductionDesignPendingError(
+				`Unsupported trigger value type: ${definition.valueType}`
+			);
+		}
+
+		return new this(parent, definition);
+	}
 
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';
@@ -60,40 +70,10 @@ export class TriggerControl
 	readonly appearances: UnknownAppearanceDefinition;
 	readonly currentState: CurrentState<TriggerControlStateSpec>;
 
-	get validationState(): LeafNodeValidationState {
-		return this.validation.currentState;
-	}
-
-	readonly submissionState: SubmissionState;
-
-	// ValueContext
-	override readonly contextNode = this;
-	readonly encodeValue: (runtimeValue: boolean) => string;
-	readonly decodeValue: (instanceValue: string) => boolean;
-
-	constructor(parent: GeneralParentNode, definition: TriggerNodeDefinition) {
-		super(parent, definition);
+	private constructor(parent: GeneralParentNode, definition: TriggerNodeDefinition<'string'>) {
+		super(parent, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
-		this.encodeValue = (runtimeValue) => {
-			return runtimeValue ? TRIGGER_ASSIGNED_VALUE : '';
-		};
-		this.decodeValue = (instanceValue) => {
-			const value = instanceValue.trim();
-
-			switch (value) {
-				case TRIGGER_ASSIGNED_VALUE:
-					return true;
-
-				case '':
-					return false;
-
-				// TODO (robustness principle): Case insensitivity? Handle
-				// XPath-semantic booleans?? Other known/common equivalents?
-				default:
-					throw new Error(`Unexpected trigger value: ${value}`);
-			}
-		};
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,
@@ -111,7 +91,8 @@ export class TriggerControl
 				hint: createFieldHint(this, definition),
 				children: null,
 				valueOptions: null,
-				value: createValueState(this),
+				value: this.valueState,
+				instanceValue: this.getInstanceValue,
 			},
 			sharedStateOptions
 		);
@@ -119,32 +100,11 @@ export class TriggerControl
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
-		this.validation = createValidationState(this, sharedStateOptions);
-		this.submissionState = createLeafNodeSubmissionState(this);
-	}
-
-	// XFormsXPathElement
-	override getXPathValue(): string {
-		return this.encodeValue(this.engineState.value);
-	}
-
-	// ValidationContext
-	getViolation(): AnyViolation | null {
-		return this.validation.engineState.violation;
-	}
-
-	isBlank(): boolean {
-		return this.engineState.value == null;
-	}
-
-	// InstanceNode
-	getChildren(): readonly [] {
-		return [];
 	}
 
 	// TriggerNode
-	setValue(value: boolean): Root {
-		this.state.setProperty('value', value);
+	setValue(value: TriggerInputValue): Root {
+		this.setValueState(value);
 
 		return this.root;
 	}

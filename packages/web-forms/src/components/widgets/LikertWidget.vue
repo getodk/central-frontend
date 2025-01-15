@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import type { SelectNode } from '@getodk/xforms-engine';
+import type { AnySelectNode } from '@getodk/xforms-engine';
 import RadioButton from '../widgets/RadioButton.vue';
 
-defineProps<{ question: SelectNode }>();
+interface LikertWidgetProps {
+	readonly question: AnySelectNode;
+}
+
+defineProps<LikertWidgetProps>();
 defineEmits(['change']);
 </script>
 

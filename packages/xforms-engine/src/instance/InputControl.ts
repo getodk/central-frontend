@@ -31,6 +31,7 @@ export type AnyInputDefinition = {
 interface InputControlStateSpec<V extends ValueType> extends ValueNodeStateSpec<RuntimeValue<V>> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
+	readonly valueOptions: null;
 }
 
 export class InputControl<V extends ValueType = ValueType>

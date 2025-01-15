@@ -1,18 +1,32 @@
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { xmlXPathWhitespaceSeparatedList } from '@getodk/common/lib/string/whitespace.ts';
-import type { SelectNode } from '@getodk/xforms-engine';
+import type {
+	AnySelectNode,
+	RootNode,
+	SelectNode,
+	SelectValues,
+	ValueType,
+} from '@getodk/xforms-engine';
+import { assert } from 'vitest';
 import { SelectNodeAnswer } from '../../answer/SelectNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
 import type { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
-import type { Scenario } from '../Scenario.ts';
 import { SelectChoice } from '../select/SelectChoice.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
+
+interface StringValueSelectWriteMethods {
+	selectValue(value: string): RootNode;
+	selectValues(values: readonly string[]): RootNode;
+}
+
+type StringValueSelectNode = Extract<AnySelectNode, StringValueSelectWriteMethods>;
 
 export class SelectQuestionEvent extends QuestionEvent<'select'> {
 	getAnswer(): SelectNodeAnswer {
 		return new SelectNodeAnswer(this.node);
 	}
 
-	getChoice(choiceIndex: number): SelectChoice {
+	getChoice(choiceIndex: number): SelectChoice<this['node']['valueType']> {
 		const items = this.node.currentState.valueOptions;
 		const item = items[choiceIndex];
 
@@ -23,45 +37,98 @@ export class SelectQuestionEvent extends QuestionEvent<'select'> {
 		return new SelectChoice(item);
 	}
 
-	/**
-	 * @todo Per @sadiqkhoja, this is another good example of where at least one
-	 * kind of "select multiple" API would be much more sensible.
-	 *
-	 * @todo It's also pretty likely we might want an escape hatch for setting
-	 * encoded values directly from the client. But proceed with caution: if we
-	 * did this, we'd need to apply all of the same parsing, sanitization,
-	 * validation, etc logic (likely per node and data type) at that client API
-	 * boundary as we do internally.
-	 *
-	 * @todo This is also yet another case where it would make more sense to split
-	 * up the {@link SelectNode} type.
-	 *
-	 * @todo pending split up of {@link SelectNode} type: regardless of other
-	 * improvements to setter APIs, only `<select>` should have this whitespace
-	 * behavior! For now it's consistent with the internals (which we shouldn't
-	 * need to know about here because {@link Scenario} is a client)
-	 */
-	answerQuestion(answerValue: unknown): ValueNodeAnswer {
-		const { node } = this;
-		const { stringValue } = new UntypedAnswer(answerValue);
+	private getOptionValues<V extends ValueType>(
+		node: SelectNode<V>,
+		stringValues: readonly string[]
+	): SelectValues<V> {
+		const optionsByStringValue = new Map(
+			node.currentState.valueOptions.map((item) => {
+				return [item.asString, item];
+			})
+		);
 
-		const selectedValues = xmlXPathWhitespaceSeparatedList(stringValue, {
-			ignoreEmpty: true,
-		});
-		const selectedItems = node.currentState.valueOptions.filter((item) => {
-			return selectedValues.includes(item.value);
-		});
+		return stringValues.map((stringValue) => {
+			const option = optionsByStringValue.get(stringValue);
 
-		node.currentState.value.forEach((currentItem) => {
-			if (!selectedValues.includes(currentItem.value)) {
-				node.deselect(currentItem);
-			}
-		});
+			assert(option);
 
-		selectedItems.forEach((selectedItem) => {
-			node.select(selectedItem);
+			return option.value;
 		});
+	}
+
+	private answerTypedQuestion<V extends ValueType>(
+		node: SelectNode<V>,
+		stringValues: readonly string[]
+	): SelectNodeAnswer<V> {
+		const values = this.getOptionValues(node, stringValues);
+
+		node.selectValues(values);
 
 		return new SelectNodeAnswer(node);
+	}
+
+	/**
+	 * @todo This is yet another case where it would make more sense to split up
+	 * the {@link SelectNode} by control type.
+	 */
+	answerQuestion(answerValue: unknown): ValueNodeAnswer {
+		const node: AnySelectNode = this.node;
+
+		if (answerValue == null) {
+			node.selectValue(null);
+
+			return new SelectNodeAnswer(node);
+		}
+
+		const { stringValue } = new UntypedAnswer(answerValue);
+		const { selectType } = this.node;
+
+		let stringValues: readonly string[];
+
+		switch (selectType) {
+			case 'select':
+				stringValues = xmlXPathWhitespaceSeparatedList(stringValue, {
+					ignoreEmpty: true,
+				});
+
+				break;
+
+			case 'select1':
+				if (stringValue === '') {
+					stringValues = [];
+				} else {
+					stringValues = [stringValue];
+				}
+
+				break;
+
+			default:
+				throw new UnreachableError(selectType);
+		}
+
+		switch (node.valueType) {
+			case 'string':
+			case 'boolean':
+			case 'date':
+			case 'time':
+			case 'dateTime':
+			case 'geopoint':
+			case 'geotrace':
+			case 'geoshape':
+			case 'binary':
+			case 'barcode':
+			case 'intent':
+				// This will continue to pass for each of the above value types while
+				// the engine's implementation falls back to `string` for each
+				// respective type. It will produce a type error if/when each value type
+				// is implemented with a different runtime representation.
+				node satisfies StringValueSelectNode;
+
+				this.node.selectValues(stringValues);
+
+				return new SelectNodeAnswer(node);
+		}
+
+		return this.answerTypedQuestion(node, stringValues);
 	}
 }

@@ -1,21 +1,31 @@
-<script lang="ts" setup>
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+<script lang="ts" setup generic="V extends ValueType">
+import type { SelectItemValue, SelectNode, SelectValues, ValueType } from '@getodk/xforms-engine';
 import PrimeMultiSelect from 'primevue/multiselect';
+import { computed } from 'vue';
 
-const props = defineProps<{ question: SelectNode; style?: string }>();
+const props = defineProps<{
+	readonly question: SelectNode<V>;
+	readonly style?: string;
+}>();
+
 defineEmits(['update:modelValue', 'change']);
 
-const setSelectNValue = (values: SelectItem[]) => {
-	for (const v of props.question.currentState.value) {
-		props.question.deselect(v);
-	}
-	for (const v of values) {
-		props.question.select(v);
-	}
+const options = computed(() => {
+	return props.question.currentState.valueOptions.map((option) => option.value);
+});
+
+const selectValues = (values: SelectValues<V>) => {
+	props.question.selectValues(values);
 };
 
-const getOptionLabel = (o: SelectItem) => {
-	return o.label?.asString;
+const getOptionLabel = (value: SelectItemValue<V>) => {
+	const option = props.question.getValueOption(value);
+
+	if (option == null) {
+		throw new Error(`Failed to find option for value: ${value}`);
+	}
+
+	return option.label.asString;
 };
 
 let panelClass = 'multi-select-dropdown-panel';
@@ -26,21 +36,20 @@ if (props.question.appearances['no-buttons']) {
 
 <template>
 	<PrimeMultiSelect
+		:id="`${question.nodeId}-control`"
 		class="multi-select-dropdown"
 		:input-id="question.nodeId"
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
 		:show-toggle-all="false"
-		:options="question.currentState.valueOptions"
+		:options="options"
 		:option-label="getOptionLabel"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		@update:model-value="setSelectNValue"
+		@update:model-value="selectValues"
 		@change="$emit('change')"
 	/>
 </template>
-
-
 
 <style scoped lang="scss">
 @import 'primeflex/core/_variables.scss';

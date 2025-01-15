@@ -1,25 +1,44 @@
-import type { AnySelectDefinition } from '../parse/body/control/select/SelectDefinition.ts';
+import type { RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
+import type {
+	AnySelectDefinition,
+	SelectType,
+} from '../parse/body/control/select/SelectDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
-import type { BaseNode, BaseNodeState } from './BaseNode.ts';
-import type { InputNode } from './InputNode.ts';
+import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
+import type { ValueType } from './ValueType.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { LeafNodeValidationState } from './validation.ts';
 
-export interface SelectItem {
-	get value(): string;
-	get label(): TextRange<'item-label'> | null;
-}
+export type SelectItemValue<V extends ValueType> = NonNullable<RuntimeValue<V>>;
 
-export interface SelectNodeState extends BaseNodeState {
-	get children(): null;
+export type SelectValues<V extends ValueType> = ReadonlyArray<SelectItemValue<V>>;
+
+export interface SelectItem<V extends ValueType> {
+	get label(): TextRange<'item-label'>;
+	get value(): SelectItemValue<V>;
 
 	/**
-	 * @todo should {@link BaseNodeState} include this??
+	 * Produces a string serialization of {@link value}, consistent with that
+	 * value's serialization for submission purposes.
+	 *
+	 * Clients should use caution when using this serialized representation! It is
+	 * generally applicable for cases where a string value **MUST** be used (e.g.
+	 * for integration with platform and/or third party interfaces). Use of this
+	 * value for reproducing aspects of submission or instance state piecemeal is
+	 * **highly discouraged**.
 	 */
-	get valueOptions(): readonly SelectItem[];
+	get asString(): string;
+}
+
+export type SelectValueOptions<V extends ValueType> = ReadonlyArray<SelectItem<V>>;
+
+export interface SelectNodeState<V extends ValueType> extends BaseValueNodeState<SelectValues<V>> {
+	get children(): null;
+
+	get valueOptions(): SelectValueOptions<V>;
 
 	/**
 	 * This value is treated as set-like by the engine, where each
@@ -33,43 +52,100 @@ export interface SelectNodeState extends BaseNodeState {
 	 * Should a `SelectNodeState` have this `value` type, whereas a hypothetical
 	 * `Select1NodeState` would have `get value(): SelectItem | null`?
 	 */
-	get value(): readonly SelectItem[];
+	get value(): SelectValues<V>;
 }
 
-export interface SelectDefinition extends LeafNodeDefinition {
+export interface SelectDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
 	readonly bodyElement: AnySelectDefinition;
 }
 
 export type SelectNodeAppearances = NodeAppearances<SelectDefinition>;
 
-export interface SelectNode extends BaseNode {
+export interface SelectNode<V extends ValueType = ValueType>
+	extends BaseValueNode<V, SelectValues<V>> {
 	readonly nodeType: 'select';
+	readonly valueType: V;
+	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
 	readonly definition: SelectDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
-	readonly currentState: SelectNodeState;
+	readonly currentState: SelectNodeState<V>;
 	readonly validationState: LeafNodeValidationState;
 
 	/**
-	 * For use by a client to update the selection of a select node where:
-	 *
-	 * - For fields defined with an XForms `<select>`, calling this method is
-	 *   additive, i.e. it will include the item in its
-	 *   {@link SelectNodeState.value}.
-	 * - For fields defined with an XForms `<select1>`, calling this method will
-	 *   replace the selection (if any).
-	 *
-	 * @todo @see {@link InputNode.setValue} re: write restrictions
-	 * @todo @see {@link SelectNodeState.value} re: breaking up the types
+	 * Convenience API to get the {@link SelectItem} which is associated with
+	 * {@link value}, if one is currently available—i.e. if it is present in
+	 * {@link SelectNodeState.valueOptions}.
 	 */
-	select(item: SelectItem): RootNode;
+	getValueOption<T extends ValueType>(
+		this: SelectNode<T>,
+		value: SelectItemValue<T>
+	): SelectItem<T> | null;
+	getValueOption(value: SelectItemValue<V>): SelectItem<V> | null;
 
 	/**
-	 * For use by a client to remove an item from the node's
-	 * {@link SelectNodeState.value}.
-	 *
-	 * @todo @see {@link InputNode.setValue} re: write restrictions
+	 * Convenience API to determine if {@link value} is currently selected—i.e. if
+	 * it is one of the selected values in {@link SelectNodeState.value}.
 	 */
-	deselect(item: SelectItem): RootNode;
+	isSelected<T extends ValueType>(this: SelectNode<T>, value: SelectItemValue<T>): boolean;
+	isSelected(value: SelectItemValue<V>): boolean;
+
+	/**
+	 * Selects a single {@link value}, as provided by a {@link SelectItem.value}.
+	 * Calling this setter replaces the currently selected value(s, if any),
+	 * where:
+	 *
+	 * - if the provided value is `null`, the current selection is cleared; ELSE
+	 * - the provided value is selected in place of any currently selected values.
+	 *
+	 * This setter is most useful for {@link SelectNode}s associated with an
+	 * XForms
+	 * {@link https://getodk.github.io/xforms-spec/#body-elements | `<select1>`}
+	 * control.
+	 */
+	selectValue<T extends ValueType>(this: SelectNode<T>, value: SelectItemValue<T> | null): RootNode;
+	selectValue(this: SelectNode<V>, value: SelectItemValue<V> | null): RootNode;
+
+	/**
+	 * Selects any number of {@link values}, as provided by any number of
+	 * {@link SelectItem.value}s. Calling this setter replaces the currently
+	 * selected value(s, if any). If called with an empty array, the current
+	 * selection is cleared.
+	 *
+	 * This setter is most useful for {@link SelectNode}s associated with an
+	 * XForms
+	 * {@link https://getodk.github.io/xforms-spec/#body-elements | `<select>`}
+	 * control.
+	 *
+	 * This setter _may_ be used with a `<select1>` control, in which case the
+	 * provided {@link values} should produce at most one value.
+	 */
+	selectValues<T extends ValueType>(this: SelectNode<T>, values: SelectValues<T>): RootNode;
+	selectValues(this: SelectNode<V>, values: SelectValues<V>): RootNode;
 }
+
+export type StringSelectNode = SelectNode<'string'>;
+export type IntSelectNode = SelectNode<'int'>;
+export type DecimalSelectNode = SelectNode<'decimal'>;
+
+// prettier-ignore
+type SupportedSelectValueType =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| 'string'
+	| 'int'
+	| 'decimal';
+
+type TemporaryStringValueType = Exclude<ValueType, SupportedSelectValueType>;
+
+export type TemporaryStringValueSelectNode = {
+	[V in TemporaryStringValueType]: SelectNode<V>;
+}[TemporaryStringValueType];
+
+// prettier-ignore
+export type AnySelectNode =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| StringSelectNode
+	| IntSelectNode
+	| DecimalSelectNode
+	| TemporaryStringValueSelectNode;

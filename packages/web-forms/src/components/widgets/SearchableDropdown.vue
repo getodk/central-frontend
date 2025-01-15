@@ -1,15 +1,31 @@
-<script setup lang="ts">
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+<script setup lang="ts" generic="V extends ValueType">
+import type { SelectItemValue, SelectNode, ValueType } from '@getodk/xforms-engine';
 import PrimeDropdown from 'primevue/dropdown';
+import { computed } from 'vue';
 
-const props = defineProps<{ question: SelectNode; style?: string }>();
+const props = defineProps<{
+	readonly question: SelectNode<V>;
+	readonly style?: string;
+}>();
+
 defineEmits(['update:modelValue', 'change']);
 
-const setSelect1Value = (item: SelectItem) => {
-	props.question.select(item);
+const options = computed(() => {
+	return props.question.currentState.valueOptions.map((option) => option.value);
+});
+
+const selectValue = (value: SelectItemValue<V>) => {
+	props.question.selectValue(value);
 };
-const getOptionLabel = (o: SelectItem) => {
-	return o.label?.asString;
+
+const getOptionLabel = (value: SelectItemValue<V>) => {
+	const option = props.question.getValueOption(value);
+
+	if (option == null) {
+		throw new Error(`Failed to find option for value: ${value}`);
+	}
+
+	return option.label.asString;
 };
 </script>
 
@@ -20,9 +36,9 @@ const getOptionLabel = (o: SelectItem) => {
 		:filter="question.appearances.autocomplete"
 		:auto-filter-focus="true"
 		:model-value="question.currentState.value[0]"
-		:options="question.currentState.valueOptions"
+		:options="options"
 		:option-label="getOptionLabel"
-		@update:model-value="setSelect1Value"
+		@update:model-value="selectValue"
 		@change="$emit('change')"
 	/>
 </template>

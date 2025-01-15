@@ -2,7 +2,7 @@ import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
-import type { ChildNodeDefinition, NodeDefinition } from './NodeDefinition.ts';
+import type { ChildNodeDefinition } from './NodeDefinition.ts';
 import type { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 
 const repeatTemplates = new WeakMap<BindDefinition, RepeatTemplateDefinition>();
@@ -72,10 +72,10 @@ interface ParsedRepeatNodes {
 	readonly instanceNodes: readonly Element[];
 }
 
-export class RepeatTemplateDefinition
-	extends DescendentNodeDefinition<'repeat-template', RepeatElementDefinition>
-	implements NodeDefinition<'repeat-template'>
-{
+export class RepeatTemplateDefinition extends DescendentNodeDefinition<
+	'repeat-template',
+	RepeatElementDefinition
+> {
 	static parseModelNodes(
 		range: RepeatRangeDefinition,
 		modelNodes: readonly [Element, ...Element[]]

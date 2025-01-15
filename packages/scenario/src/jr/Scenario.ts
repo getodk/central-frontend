@@ -1,20 +1,24 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type {
 	AnyNode,
+	AnySelectNode,
 	OpaqueReactiveObjectFactory,
 	RepeatRangeControlledNode,
 	RepeatRangeNode,
 	RepeatRangeUncontrolledNode,
 	RootNode,
 	SelectNode,
+	SelectValues,
 	SubmissionChunkedType,
 	SubmissionOptions,
 	SubmissionResult,
+	ValueType,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
-import { afterEach, expect } from 'vitest';
+import { afterEach, assert, expect } from 'vitest';
+import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
@@ -389,6 +393,23 @@ export class Scenario {
 		}
 
 		return event.answerQuestion(new SelectValuesAnswer(selectionValues));
+	}
+
+	proposed_answerTypedSelect<V extends ValueType>(
+		reference: string,
+		valueType: V,
+		values: SelectValues<V>
+	): SelectNodeAnswer<V> {
+		const node = this.getInstanceNode(reference);
+
+		assert(node.nodeType === 'select');
+		assert(node.valueType === valueType);
+
+		const selectNode = node as SelectNode<V>;
+
+		selectNode.selectValues(values);
+
+		return new SelectNodeAnswer(selectNode);
 	}
 
 	answer(...args: AnswerParameters): ValueNodeAnswer {
@@ -879,7 +900,7 @@ export class Scenario {
 		return label;
 	}
 
-	private getCurrentSelectNode(options: AssertCurrentReferenceOptions): SelectNode {
+	private getCurrentSelectNode(options: AssertCurrentReferenceOptions): AnySelectNode {
 		const { assertCurrentReference } = options;
 		const event = this.getSelectedPositionalEvent();
 
@@ -927,7 +948,11 @@ export class Scenario {
 		const node = this.getCurrentSelectNode(options);
 
 		return node.currentState.value.map((item) => {
-			return item.label?.asString ?? item.value;
+			const option = node.getValueOption(item);
+
+			assert(option != null);
+
+			return option.label.asString;
 		});
 	}
 
@@ -942,7 +967,7 @@ export class Scenario {
 		const node = this.getCurrentSelectNode(options);
 
 		return node.currentState.valueOptions.map((item) => {
-			return item.label?.asString ?? item.value;
+			return item.label.asString;
 		});
 	}
 

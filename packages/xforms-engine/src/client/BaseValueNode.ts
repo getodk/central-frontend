@@ -7,7 +7,7 @@ import type { ValueType } from './ValueType.ts';
 
 export interface BaseValueNodeState<Value> extends BaseNodeState {
 	get children(): null;
-	get valueOptions(): null;
+	get valueOptions(): unknown;
 	get value(): Value;
 
 	/**

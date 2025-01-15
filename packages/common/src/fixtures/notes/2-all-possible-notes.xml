@@ -18,6 +18,7 @@
             <note_w_ex_appearance />
             <read_only_int />
             <read_only_int_value>3</read_only_int_value>
+            <note_calc_decimal_from_int />
           </group>
           <meta>
             <instanceID />
@@ -34,6 +35,8 @@
       <bind nodeset="/data/group/note_w_ex_appearance" readonly="true()" type="string" />
       <bind nodeset="/data/group/read_only_int" type="int" readonly="true()" />
       <bind nodeset="/data/group/read_only_int_value" type="int" readonly="true()" />
+      <bind nodeset="/data/group/note_calc_decimal_from_int" type="decimal"
+        calculate="/data/group/read_only_int_value + 1.5" readonly="true()" />
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
     </model>
   </h:head>
@@ -69,6 +72,9 @@
       </input>
       <input ref="/data/group/read_only_int_value">
         <label>A readonly integer with value</label>
+      </input>
+      <input ref="/data/group/note_calc_decimal_from_int">
+        <label>A note with decimal type calculated from int</label>
       </input>
     </group>
   </h:body>

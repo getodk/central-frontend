@@ -1,4 +1,5 @@
 import type { NoteNode } from '../../client/NoteNode.ts';
+import type { ValueType } from '../../client/ValueType.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { InputControlDefinition } from '../body/control/InputControlDefinition.ts';
 import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
@@ -14,11 +15,11 @@ export type NoteReadonlyDefinition =
 	&	BindComputationExpression<'readonly'>
 	& ConstantTruthyDependentExpression;
 
-export interface NoteBindDefinition extends BindDefinition {
+export interface NoteBindDefinition<V extends ValueType> extends BindDefinition<V> {
 	readonly readonly: NoteReadonlyDefinition;
 }
 
-const isNoteBindDefinition = (bind: BindDefinition): bind is NoteBindDefinition => {
+const isNoteBindDefinition = (bind: BindDefinition): bind is NoteBindDefinition<ValueType> => {
 	return bind.readonly.isConstantTruthyExpression();
 };
 
@@ -37,13 +38,13 @@ export type NoteTextDefinition =
  * aspects of the node's interface (such as its {@link NoteNode.nodeType} and
  * distinct {@link NoteNode.currentState} types) to handle note-specific logic.
  */
-export class NoteNodeDefinition extends LeafNodeDefinition {
-	static from(
+export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
+	static from<V extends ValueType>(
 		parent: ParentNodeDefinition,
-		bind: BindDefinition,
+		bind: BindDefinition<V>,
 		bodyElement: AnyBodyElementDefinition | null,
 		node: Element
-	): NoteNodeDefinition | null {
+	): NoteNodeDefinition<V> | null {
 		if (!isNoteBindDefinition(bind) || bodyElement?.type !== 'input') {
 			return null;
 		}
@@ -60,7 +61,7 @@ export class NoteNodeDefinition extends LeafNodeDefinition {
 
 	constructor(
 		parent: ParentNodeDefinition,
-		override readonly bind: NoteBindDefinition,
+		override readonly bind: NoteBindDefinition<V>,
 		override readonly bodyElement: InputControlDefinition,
 		readonly noteTextDefinition: NoteTextDefinition,
 		node: Element

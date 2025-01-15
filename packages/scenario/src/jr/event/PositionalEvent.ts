@@ -1,13 +1,14 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
 	AnyInputNode,
+	AnyNoteNode,
+	AnyRangeNode,
+	AnySelectNode,
 	AnyUnsupportedControlNode,
 	GroupNode,
-	NoteNode,
 	RepeatInstanceNode,
 	RepeatRangeUncontrolledNode,
 	RootNode,
-	SelectNode,
 	TriggerNode,
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
@@ -15,9 +16,10 @@ import type { Scenario } from '../Scenario.ts';
 // prettier-ignore
 export type QuestionPositionalEventNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| NoteNode
-	| SelectNode
+	| AnyNoteNode
+	| AnySelectNode
 	| AnyInputNode
+	| AnyRangeNode
 	| TriggerNode
 	| AnyUnsupportedControlNode;
 
@@ -69,7 +71,7 @@ const singletons = new Map<AnyEventNode, UnknownPositionalEvent>();
 export abstract class PositionalEvent<Type extends PositionalEventType> {
 	static from<Type extends PositionalEventType, Inst extends PositionalEvent<Type>>(
 		this: PositionalEventConstructor<Type, Inst>,
-		node: PositionalEventNode<Type>
+		node: PositionalEventConstructorNode<Type, Inst>
 	): Inst {
 		let singleton = singletons.get(node);
 
@@ -96,3 +98,13 @@ type PositionalEventConstructor<
 	Type extends PositionalEventType,
 	Inst extends PositionalEvent<Type>,
 > = new (node: Inst['node']) => Inst;
+
+// prettier-ignore
+type PositionalEventConstructorNode<
+	Type extends PositionalEventType,
+	Inst extends PositionalEvent<Type>
+> =
+	PositionalEventConstructor<Type, Inst> extends
+	(new (node: infer T) => Inst)
+		? T
+		: never;

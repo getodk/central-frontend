@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms"
+  xmlns:orx="http://openrosa.org/xforms">
+  <h:head>
+    <h:title>Select types</h:title>
+    <model>
+      <instance>
+        <root id="select-types">
+          <select-relevance>yes</select-relevance>
+
+          <sel-1>
+            <string-value>explicit string</string-value>
+            <implicit-string-value>implicit string</implicit-string-value>
+            <int-value>123</int-value>
+            <decimal-value>45.67</decimal-value>
+          </sel-1>
+
+          <sel-n>
+            <string-value>explicit string</string-value>
+            <implicit-string-value>implicit string</implicit-string-value>
+            <int-value>123</int-value>
+            <decimal-value>45.67</decimal-value>
+          </sel-n>
+        </root>
+      </instance>
+      <instance id="strings">
+        <root>
+          <!-- for select1 -->
+          <item>
+            <value>implicit string</value>
+            <label>Implicit String</label>
+          </item>
+          <item>
+            <value>explicit string</value>
+            <label>Explicit String</label>
+          </item>
+          <item>
+            <value>updated string</value>
+            <label>Updated String</label>
+          </item>
+
+          <!-- for select (multiple) -->
+          <item>
+            <value>implicit</value>
+            <label>Implicit</label>
+          </item>
+          <item>
+            <value>explicit</value>
+            <label>Explicit</label>
+          </item>
+          <item>
+            <value>updated</value>
+            <label>Updated</label>
+          </item>
+          <item>
+            <value>string</value>
+            <label>string</label>
+          </item>
+        </root>
+      </instance>
+      <instance id="ints">
+        <root>
+          <item>
+            <value>123</value>
+            <label>123</label>
+          </item>
+          <item>
+            <value>10</value>
+            <label>10</label>
+          </item>
+          <item>
+            <value>23</value>
+            <label>23</label>
+          </item>
+          <item>
+            <value>89</value>
+            <label>89</label>
+          </item>
+        </root>
+      </instance>
+      <instance id="decimals">
+        <root>
+          <item>
+            <value>45.67</value>
+            <label>45.67</label>
+          </item>
+          <item>
+            <value>89</value>
+            <label>89</label>
+          </item>
+          <item>
+            <value>10</value>
+            <label>10</label>
+          </item>
+          <item>
+            <value>23.4</value>
+            <label>23.4</label>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/root/sel-1/string-value" type="string"
+        relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-1/implicit-string-value" relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-1/int-value" type="int" relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-1/decimal-value" type="decimal"
+        relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-n/string-value" type="string"
+        relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-n/implicit-string-value" relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-n/int-value" type="int" relevant="/root/select-relevance = 'yes'" />
+      <bind nodeset="/root/sel-n/decimal-value" type="decimal"
+        relevant="/root/select-relevance = 'yes'" />
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/root/select-relevance">
+      <label>All selects relevant?</label>
+      <item>
+        <label>Yes</label>
+        <value>yes</value>
+      </item>
+      <item>
+        <label>No</label>
+        <value>no</value>
+      </item>
+    </select1>
+
+    <group ref="/root/sel-1">
+      <label>Select (1) with types</label>
+
+      <select1 ref="/root/sel-1/string-value">
+        <itemset nodeset="instance('strings')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 ref="/root/sel-1/implicit-string-value">
+        <itemset nodeset="instance('strings')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 ref="/root/sel-1/int-value">
+        <itemset nodeset="instance('ints')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 ref="/root/sel-1/decimal-value">
+        <itemset nodeset="instance('decimals')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+    </group>
+
+    <group ref="/root/sel-n">
+      <label>Select (N) with types</label>
+
+      <select ref="/root/sel-n/string-value">
+        <itemset nodeset="instance('strings')/root/item[not(contains(value, ' '))]">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select>
+      <select ref="/root/sel-n/implicit-string-value">
+        <itemset nodeset="instance('strings')/root/item[not(contains(value, ' '))]">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select>
+      <select ref="/root/sel-n/int-value">
+        <itemset nodeset="instance('ints')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select>
+      <select ref="/root/sel-n/decimal-value">
+        <itemset nodeset="instance('decimals')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select>
+    </group>
+  </h:body>
+</h:html>

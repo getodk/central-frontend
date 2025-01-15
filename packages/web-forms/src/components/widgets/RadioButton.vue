@@ -1,38 +1,42 @@
-<script lang="ts" setup>
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+<script lang="ts" setup generic="V extends ValueType">
+import { selectOptionId } from '@/lib/format/selectOptionId.ts';
+import type { SelectItemValue, SelectNode, ValueType } from '@getodk/xforms-engine';
 import PrimeRadioButton from 'primevue/radiobutton';
 
-const props = defineProps<{ question: SelectNode }>();
+const props = defineProps<{
+	readonly question: SelectNode<V>;
+}>();
+
 defineEmits(['update:modelValue', 'change']);
 
-const setSelect1Value = (item: SelectItem) => {
-	props.question.select(item);
+const selectValue = (value: SelectItemValue<V>) => {
+	props.question.selectValue(value);
 };
 </script>
 
 <template>
 	<label
 		v-for="option in question.currentState.valueOptions"
-		:key="option.value"
-		:for="question.nodeId + '_' + option.value"
+		:key="option.asString"
+		:for="selectOptionId(question, option)"
 		:class="{
 			'value-option': true,
-			active: question.currentState.value[0] === option,
+			active: question.currentState.value[0] === option.value,
 			disabled: question.currentState.readonly,
 			'no-buttons': question.appearances['no-buttons']
 		}"
 	>
 		<PrimeRadioButton
-			:input-id="question.nodeId + '_' + option.value"
-			:value="option"
+			:input-id="selectOptionId(question, option)"
+			:value="option.value"
 			:name="question.nodeId"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value[0]"
-			@update:model-value="setSelect1Value"
+			@update:model-value="selectValue"
 			@change="$emit('change')"
 		/>
 		<span class="label-text">
-			{{ option.label?.asString }}
+			{{ option.label.asString }}
 		</span>
 	</label>
 </template>

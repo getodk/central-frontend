@@ -1,22 +1,23 @@
 import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
-import type { SelectNode } from '@getodk/xforms-engine';
+import type { SelectNode, SelectValues, ValueType } from '@getodk/xforms-engine';
 import { ValueNodeAnswer } from './ValueNodeAnswer.ts';
 
-export class SelectNodeAnswer extends ValueNodeAnswer<SelectNode> {
-	/**
-	 * @todo There probably should be some means to get this from the engine, but
-	 * we should be careful not to incentivize clients attempting to reproduce
-	 * engine behavior with it.
-	 */
-	get stringValue(): string {
-		return this.itemValues().join(' ');
-	}
+export class SelectNodeAnswer<V extends ValueType = ValueType> extends ValueNodeAnswer<
+	SelectNode<V>
+> {
+	readonly valueType: V;
+	readonly stringValue: string;
+	readonly value: SelectValues<V>;
 
-	private itemValues(): readonly string[] {
-		return this.node.currentState.value.map((item) => item.value);
+	constructor(node: SelectNode<V>) {
+		super(node);
+
+		this.valueType = node.valueType;
+		this.stringValue = node.currentState.instanceValue;
+		this.value = node.currentState.value.slice();
 	}
 
 	override inspectValue(): JSONValue {
-		return this.itemValues();
+		return this.stringValue;
 	}
 }

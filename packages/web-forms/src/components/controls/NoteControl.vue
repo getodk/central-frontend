@@ -1,16 +1,74 @@
 <script setup lang="ts">
-import type { NoteNode } from '@getodk/xforms-engine';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import type { AnyNoteNode } from '@getodk/xforms-engine';
+import { computed } from 'vue';
 import ControlText from '../ControlText.vue';
 
-defineProps<{ question: NoteNode }>();
+const props = defineProps<{ question: AnyNoteNode }>();
+
+// prettier-ignore
+type TextRenderableValue =
+	| bigint
+	| boolean
+	| number
+	| string
+	| null
+	| undefined;
+
+type AssertTextRenderableValue = (value: unknown) => asserts value is TextRenderableValue;
+
+const assertTextRenderableValue: AssertTextRenderableValue = (value) => {
+	if (value == null) {
+		return;
+	}
+
+	switch (typeof value) {
+		case 'string':
+		case 'number':
+		case 'bigint':
+		case 'boolean':
+			return;
+
+		default:
+			throw new Error(`Expected text-renderable value type. Got: ${typeof value}`);
+	}
+};
+
+const value = computed((): TextRenderableValue => {
+	const { question } = props;
+
+	switch (question.valueType) {
+		case 'string':
+		case 'int':
+		case 'decimal':
+			return question.currentState.value;
+
+		case 'boolean':
+		case 'date':
+		case 'time':
+		case 'dateTime':
+		case 'geopoint':
+		case 'geotrace':
+		case 'geoshape':
+		case 'binary':
+		case 'barcode':
+		case 'intent':
+			assertTextRenderableValue(question.currentState.value);
+
+			return question.currentState.value;
+
+		default:
+			throw new UnreachableError(question);
+	}
+});
 </script>
 
 <template>
 	<div class="note-control">
 		<ControlText :question="question" />
 
-		<div v-if="question.currentState.value" class="note-value">
-			{{ question.currentState.value }}
+		<div v-if="value != null" class="note-value">
+			{{ value }}
 		</div>
 	</div>
 </template>

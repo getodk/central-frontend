@@ -35,7 +35,6 @@ export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
 export interface ValueNodeStateSpec<RuntimeValue> extends DescendantNodeStateSpec<RuntimeValue> {
 	readonly children: null;
-	readonly valueOptions: null;
 	readonly value: SimpleAtomicState<RuntimeValue>;
 	readonly instanceValue: Accessor<string>;
 }
@@ -103,7 +102,9 @@ export abstract class ValueNode<
 
 		this.getInstanceValue = getInstanceValue;
 		this.setValueState = setValueState;
-		this.getXPathValue = getInstanceValue;
+		this.getXPathValue = () => {
+			return this.getInstanceValue();
+		};
 		this.valueState = valueState;
 		this.validation = createValidationState(this, {
 			clientStateFactory: this.engineConfig.stateFactory,

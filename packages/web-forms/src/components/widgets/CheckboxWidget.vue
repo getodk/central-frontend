@@ -1,42 +1,42 @@
-<script lang="ts" setup>
-import type { SelectItem, SelectNode } from '@getodk/xforms-engine';
+<script lang="ts" setup generic="V extends ValueType">
+import { selectOptionId } from '@/lib/format/selectOptionId.ts';
+import type { SelectNode, SelectValues, ValueType } from '@getodk/xforms-engine';
 import PrimeCheckbox from 'primevue/checkbox';
 
-const props = defineProps<{ question: SelectNode; style?: string }>();
+const props = defineProps<{
+	readonly question: SelectNode<V>;
+	readonly style?: string;
+}>();
+
 defineEmits(['update:modelValue', 'change']);
 
-const setSelectNValue = (values: SelectItem[]) => {
-	for (const v of props.question.currentState.value) {
-		props.question.deselect(v);
-	}
-	for (const v of values) {
-		props.question.select(v);
-	}
+const selectValues = (values: SelectValues<V>) => {
+	props.question.selectValues(values);
 };
 </script>
 
 <template>
 	<label
 		v-for="option of question.currentState.valueOptions"
-		:key="option.value"
+		:key="option.asString"
 		:class="[{
 			'value-option': true,
-			active: question.currentState.value.find(v => v.value === option.value),
+			active: question.isSelected(option.value),
 			disabled: question.currentState.readonly,
 			'no-buttons': question.appearances['no-buttons'] }]"
-		:for="question.nodeId + '_' + option.value"
+		:for="selectOptionId(question, option)"
 	>
 		<PrimeCheckbox
-			:input-id="question.nodeId + '_' + option.value"
+			:input-id="selectOptionId(question, option)"
 			:name="question.nodeId"
-			:value="option"
+			:value="option.value"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value"
-			@update:model-value="setSelectNValue"
+			@update:model-value="selectValues"
 			@change="$emit('change')"
 		/>
 		<span class="label-text">
-			{{ option.label?.asString }}
+			{{ option.label.asString }}
 		</span>
 	</label>
 </template>

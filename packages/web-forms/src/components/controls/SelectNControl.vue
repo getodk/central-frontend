@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SelectNode } from '@getodk/xforms-engine';
+import type { AnySelectNode } from '@getodk/xforms-engine';
 import { inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
@@ -9,7 +9,11 @@ import CheckboxWidget from '../widgets/CheckboxWidget.vue';
 import MultiselectDropdown from '../widgets/MultiselectDropdown.vue';
 import UnsupportedAppearance from './UnsupportedAppearance.vue';
 
-const props = defineProps<{ question: SelectNode }>();
+interface SelectNControlProps {
+	readonly question: AnySelectNode;
+}
+
+const props = defineProps<SelectNControlProps>();
 
 const hasColumnsAppearance =
 	[...props.question.appearances].filter((a) => a.startsWith('columns')).length > 0;

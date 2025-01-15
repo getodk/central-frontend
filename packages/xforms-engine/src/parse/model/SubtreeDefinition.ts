@@ -4,16 +4,12 @@ import type {
 } from '../body/BodyDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
-import type {
-	ChildNodeDefinition,
-	NodeDefinition,
-	ParentNodeDefinition,
-} from './NodeDefinition.ts';
+import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 
-export class SubtreeDefinition
-	extends DescendentNodeDefinition<'subtree', AnyGroupElementDefinition | null>
-	implements NodeDefinition<'subtree'>
-{
+export class SubtreeDefinition extends DescendentNodeDefinition<
+	'subtree',
+	AnyGroupElementDefinition | null
+> {
 	readonly type = 'subtree';
 
 	readonly nodeName: string;
