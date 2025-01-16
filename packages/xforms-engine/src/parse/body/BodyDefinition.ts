@@ -6,8 +6,8 @@ import { ControlDefinition } from './control/ControlDefinition.ts';
 import { InputControlDefinition } from './control/InputControlDefinition.ts';
 import { RangeControlDefinition } from './control/RangeControlDefinition.ts';
 import { RankControlDefinition } from './control/RankControlDefinition.ts';
-import type { AnySelectDefinition } from './control/select/SelectDefinition.ts';
-import { SelectDefinition } from './control/select/SelectDefinition.ts';
+import type { AnySelectControlDefinition } from './control/SelectControlDefinition.ts';
+import { SelectControlDefinition } from './control/SelectControlDefinition.ts';
 import { TriggerControlDefinition } from './control/TriggerControlDefinition.ts';
 import { UploadControlDefinition } from './control/UploadControlDefinition.ts';
 import { LogicalGroupDefinition } from './group/LogicalGroupDefinition.ts';
@@ -24,7 +24,7 @@ export interface BodyElementParentContext {
 
 // prettier-ignore
 export type ControlElementDefinition =
-	| AnySelectDefinition
+	| AnySelectControlDefinition
 	| InputControlDefinition
 	| RangeControlDefinition
 	| RankControlDefinition
@@ -48,7 +48,7 @@ const BodyElementDefinitionConstructors = [
 	PresentationGroupDefinition,
 	StructuralGroupDefinition,
 	InputControlDefinition,
-	SelectDefinition,
+	SelectControlDefinition,
 	RangeControlDefinition,
 	RankControlDefinition,
 	TriggerControlDefinition,

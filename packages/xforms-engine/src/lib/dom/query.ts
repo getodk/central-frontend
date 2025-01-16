@@ -3,7 +3,7 @@ import type {
 	KnownAttributeLocalNamedElement,
 	LocalNamedElement,
 } from '@getodk/common/types/dom.ts';
-import type { SelectElement } from '../../parse/body/control/select/SelectDefinition';
+import type { SelectElement } from '../../parse/body/control/SelectControlDefinition.ts';
 
 const hintLookup = new ScopedElementLookup(':scope > hint', 'hint');
 const itemLookup = new ScopedElementLookup(':scope > item', 'item');

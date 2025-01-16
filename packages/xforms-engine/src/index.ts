@@ -44,13 +44,3 @@ export type * from './client/unsupported/RankNode.ts';
 export type * from './client/unsupported/UploadNode.ts';
 export type * from './client/validation.ts';
 export type * from './client/ValueType.ts';
-
-// TODO: notwithstanding potential conflicts with parallel work on `web-forms`
-// (former `ui-vue`), these are the last remaining references **outside of
-// `xforms-engine`** to anything besides /client/* and the `initializeForm`
-// entrypoint implementation. We'll refine the various `definition` types in due
-// time.
-export type {
-	AnySelectDefinition,
-	SelectDefinition,
-} from './parse/body/control/select/SelectDefinition.ts';

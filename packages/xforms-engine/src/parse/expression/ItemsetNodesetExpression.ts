@@ -1,4 +1,4 @@
-import type { ItemsetDefinition } from '../body/control/select/ItemsetDefinition.ts';
+import type { ItemsetDefinition } from '../body/control/ItemsetDefinition.ts';
 import { DependentExpression } from './abstract/DependentExpression.ts';
 
 export class ItemsetNodesetExpression extends DependentExpression<'nodes'> {

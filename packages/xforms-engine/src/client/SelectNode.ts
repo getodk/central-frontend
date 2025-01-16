@@ -1,8 +1,8 @@
 import type { RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import type {
-	AnySelectDefinition,
+	AnySelectControlDefinition,
 	SelectType,
-} from '../parse/body/control/select/SelectDefinition.ts';
+} from '../parse/body/control/SelectControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
@@ -56,7 +56,7 @@ export interface SelectNodeState<V extends ValueType> extends BaseValueNodeState
 }
 
 export interface SelectDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
-	readonly bodyElement: AnySelectDefinition;
+	readonly bodyElement: AnySelectControlDefinition;
 }
 
 export type SelectNodeAppearances = NodeAppearances<SelectDefinition>;

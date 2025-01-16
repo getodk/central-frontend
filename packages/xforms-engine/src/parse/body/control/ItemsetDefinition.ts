@@ -1,11 +1,12 @@
-import { getValueElement, type ItemsetElement } from '../../../../lib/dom/query.ts';
-import { ItemsetNodesetExpression } from '../../../expression/ItemsetNodesetExpression.ts';
-import { ItemsetValueExpression } from '../../../expression/ItemsetValueExpression.ts';
-import { ItemsetLabelDefinition } from '../../../text/ItemsetLabelDefinition.ts';
-import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import { parseNodesetReference } from '../../../xpath/reference-parsing.ts';
-import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
-import type { AnySelectDefinition } from './SelectDefinition.ts';
+import type { ItemsetElement } from '../../../lib/dom/query.ts';
+import { getValueElement } from '../../../lib/dom/query.ts';
+import { ItemsetNodesetExpression } from '../../expression/ItemsetNodesetExpression.ts';
+import { ItemsetValueExpression } from '../../expression/ItemsetValueExpression.ts';
+import { ItemsetLabelDefinition } from '../../text/ItemsetLabelDefinition.ts';
+import type { XFormDefinition } from '../../XFormDefinition.ts';
+import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
+import { BodyElementDefinition } from '../BodyElementDefinition.ts';
+import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
 
 export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 	override readonly category = 'support';
@@ -19,7 +20,7 @@ export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 
 	constructor(
 		form: XFormDefinition,
-		override readonly parent: AnySelectDefinition,
+		override readonly parent: AnySelectControlDefinition,
 		element: ItemsetElement
 	) {
 		super(form, parent, element);

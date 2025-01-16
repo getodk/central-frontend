@@ -1,7 +1,7 @@
 import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { ElementTextRole } from '../../../client/TextRange.ts';
 import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
-import type { ItemDefinition } from '../../body/control/select/ItemDefinition.ts';
+import type { ItemDefinition } from '../../body/control/ItemDefinition.ts';
 import { TextLiteralExpression } from '../../expression/TextLiteralExpression.ts';
 import { TextOutputExpression } from '../../expression/TextOutputExpression.ts';
 import { TextReferenceExpression } from '../../expression/TextReferenceExpression.ts';
