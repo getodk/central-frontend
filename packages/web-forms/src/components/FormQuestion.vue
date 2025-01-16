@@ -3,8 +3,8 @@ import type {
 	AnyControlNode,
 	AnyInputNode,
 	AnyNoteNode,
-	AnySelectNode,
 	AnyUnsupportedControlNode,
+	SelectNode,
 } from '@getodk/xforms-engine';
 import { inject } from 'vue';
 import InputControl from './controls/Input/InputControl.vue';
@@ -19,7 +19,7 @@ type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
 defineProps<{ question: ControlNode }>();
 
 const isInputNode = (node: ControlNode): node is AnyInputNode => node.nodeType === 'input';
-const isSelectNode = (node: ControlNode): node is AnySelectNode => node.nodeType === 'select';
+const isSelectNode = (node: ControlNode): node is SelectNode => node.nodeType === 'select';
 const isNoteNode = (node: ControlNode): node is AnyNoteNode => node.nodeType === 'note';
 const isRangeNode = (node: ControlNode) => node.nodeType === 'range';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';

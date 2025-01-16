@@ -1,16 +1,18 @@
-<script lang="ts" setup generic="V extends ValueType">
+<script lang="ts" setup>
 import { selectOptionId } from '@/lib/format/selectOptionId.ts';
-import type { SelectNode, SelectValues, ValueType } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeCheckbox from 'primevue/checkbox';
 
-const props = defineProps<{
-	readonly question: SelectNode<V>;
+interface CheckboxWidgetProps {
+	readonly question: SelectNode;
 	readonly style?: string;
-}>();
+}
+
+const props = defineProps<CheckboxWidgetProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectValues = (values: SelectValues<V>) => {
+const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
 </script>
@@ -18,7 +20,7 @@ const selectValues = (values: SelectValues<V>) => {
 <template>
 	<label
 		v-for="option of question.currentState.valueOptions"
-		:key="option.asString"
+		:key="option.value"
 		:class="[{
 			'value-option': true,
 			active: question.isSelected(option.value),

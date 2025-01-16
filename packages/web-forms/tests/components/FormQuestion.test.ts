@@ -1,7 +1,7 @@
 import InputControl from '@/components/controls/Input/InputControl.vue';
 import SelectControl from '@/components/controls/SelectControl.vue';
 import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
-import type { AnySelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import FormQuestion from '../../src/components/FormQuestion.vue';
@@ -12,7 +12,7 @@ const mountComponent = async (formPath: string, questionNumber: number) => {
 
 	return mount(FormQuestion, {
 		props: {
-			question: xform.currentState.children[questionNumber] as AnySelectNode,
+			question: xform.currentState.children[questionNumber] as SelectNode,
 		},
 		global: globalMountOptions,
 	});

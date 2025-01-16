@@ -1,15 +1,16 @@
-<script lang="ts" setup generic="V extends ValueType">
+<script lang="ts" setup>
 import { selectOptionId } from '@/lib/format/selectOptionId.ts';
-import type { SelectItemValue, SelectNode, ValueType } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeRadioButton from 'primevue/radiobutton';
+interface RadioButtonProps {
+	readonly question: SelectNode;
+}
 
-const props = defineProps<{
-	readonly question: SelectNode<V>;
-}>();
+const props = defineProps<RadioButtonProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
-const selectValue = (value: SelectItemValue<V>) => {
+const selectValue = (value: string) => {
 	props.question.selectValue(value);
 };
 </script>
@@ -17,7 +18,7 @@ const selectValue = (value: SelectItemValue<V>) => {
 <template>
 	<label
 		v-for="option in question.currentState.valueOptions"
-		:key="option.asString"
+		:key="option.value"
 		:for="selectOptionId(question, option)"
 		:class="{
 			'value-option': true,

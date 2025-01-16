@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { AnySelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
@@ -11,7 +11,7 @@ import SearchableDropdown from '../widgets/SearchableDropdown.vue';
 import UnsupportedAppearance from './UnsupportedAppearance.vue';
 
 interface Select1ControlProps {
-	readonly question: AnySelectNode;
+	readonly question: SelectNode;
 }
 
 const props = defineProps<Select1ControlProps>();
