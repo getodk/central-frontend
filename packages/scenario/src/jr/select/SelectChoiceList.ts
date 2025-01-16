@@ -1,11 +1,9 @@
-import type { SelectNode, ValueType } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import type { JavaUtilList } from '../../java/util/List.ts';
 import { SelectChoice } from './SelectChoice.ts';
 
-export class SelectChoiceList<V extends ValueType = ValueType>
-	implements Iterable<SelectChoice<V>>, JavaUtilList<SelectChoice<V>>
-{
-	*[Symbol.iterator](): Iterator<SelectChoice<V>> {
+export class SelectChoiceList implements Iterable<SelectChoice>, JavaUtilList<SelectChoice> {
+	*[Symbol.iterator](): Iterator<SelectChoice> {
 		const { valueOptions } = this.node.currentState;
 
 		for (const index of valueOptions.keys()) {
@@ -19,9 +17,9 @@ export class SelectChoiceList<V extends ValueType = ValueType>
 		}
 	}
 
-	constructor(readonly node: SelectNode<V>) {}
+	constructor(readonly node: SelectNode) {}
 
-	get(index: number): SelectChoice<V> | null {
+	get(index: number): SelectChoice | null {
 		const selectItem = this.node.currentState.valueOptions[index];
 
 		if (selectItem == null) {
