@@ -2,9 +2,8 @@ import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
-import type { SelectItem, SelectValueOptions } from '../../client/SelectNode.ts';
+import type { SelectItem } from '../../client/SelectNode.ts';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
-import type { ValueType } from '../../client/ValueType.ts';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
 import type { SelectControl } from '../../instance/SelectControl.ts';
@@ -12,9 +11,8 @@ import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
-import type { ItemDefinition } from '../../parse/body/control/select/ItemDefinition.ts';
-import type { ItemsetDefinition } from '../../parse/body/control/select/ItemsetDefinition.ts';
-import type { SelectCodec } from '../codecs/select/getSelectCodec.ts';
+import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
+import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
@@ -45,8 +43,8 @@ interface SourceValueSelectItem {
 	readonly label: ClientTextRange<'item-label'>;
 }
 
-const createTranslatedStaticSelectItems = <V extends ValueType>(
-	select: SelectControl<V>,
+const createTranslatedStaticSelectItems = (
+	select: SelectControl,
 	items: readonly ItemDefinition[]
 ): Accessor<readonly SourceValueSelectItem[]> => {
 	return select.scope.runTask(() => {
@@ -66,7 +64,7 @@ const createTranslatedStaticSelectItems = <V extends ValueType>(
 	});
 };
 
-class ItemsetItemEvaluationContext<V extends ValueType> implements EvaluationContext {
+class ItemsetItemEvaluationContext implements EvaluationContext {
 	readonly isAttached: Accessor<boolean>;
 	readonly scope: ReactiveScope;
 	readonly evaluator: EngineXPathEvaluator;
@@ -74,7 +72,7 @@ class ItemsetItemEvaluationContext<V extends ValueType> implements EvaluationCon
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
-		select: SelectControl<V>,
+		select: SelectControl,
 		readonly contextNode: EngineXPathNode
 	) {
 		this.isAttached = select.isAttached;
@@ -106,8 +104,8 @@ interface ItemsetItem {
 	value(): string;
 }
 
-const createItemsetItems = <V extends ValueType>(
-	select: SelectControl<V>,
+const createItemsetItems = (
+	select: SelectControl,
 	itemset: ItemsetDefinition
 ): Accessor<readonly ItemsetItem[]> => {
 	return select.scope.runTask(() => {
@@ -135,8 +133,8 @@ const createItemsetItems = <V extends ValueType>(
 	});
 };
 
-const createItemset = <V extends ValueType>(
-	select: SelectControl<V>,
+const createItemset = (
+	select: SelectControl,
 	itemset: ItemsetDefinition
 ): Accessor<readonly SourceValueSelectItem[]> => {
 	return select.scope.runTask(() => {
@@ -165,31 +163,12 @@ const createItemset = <V extends ValueType>(
  *   their appropriate dependencies (whether relative to the itemset item node,
  *   referencing a form's `itext` translations, etc).
  */
-export const createSelectItems = <V extends ValueType>(
-	select: SelectControl<V>,
-	codec: SelectCodec<V>
-): Accessor<SelectValueOptions<V>> => {
+export const createSelectItems = (select: SelectControl): Accessor<readonly SelectItem[]> => {
 	const { items, itemset } = select.definition.bodyElement;
 
-	let getSourceValueItems: Accessor<readonly SourceValueSelectItem[]>;
-
 	if (itemset != null) {
-		getSourceValueItems = createItemset(select, itemset);
-	} else {
-		getSourceValueItems = createTranslatedStaticSelectItems(select, items);
+		return createItemset(select, itemset);
 	}
 
-	return select.scope.runTask(() => {
-		return createMemo(() => {
-			return getSourceValueItems().map((item): SelectItem<V> => {
-				const asString = item.value;
-
-				return {
-					value: codec.decodeItemValue(asString),
-					label: item.label,
-					asString,
-				};
-			});
-		});
-	});
+	return createTranslatedStaticSelectItems(select, items);
 };

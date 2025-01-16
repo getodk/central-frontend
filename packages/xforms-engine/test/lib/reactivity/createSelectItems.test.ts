@@ -249,11 +249,10 @@ describe('createSelectItems - reactive `<select>`/`<select1>` items and itemsets
 				effect(() => {
 					select.currentState.valueOptions.forEach((option) => {
 						const label = option.label;
-						const stringValue = option.asString;
-						const labelStates = observedLabelStatesByValue.upsert(stringValue, () => []);
+						const labelStates = observedLabelStatesByValue.upsert(option.value, () => []);
 
 						if (label == null) {
-							expect.fail(`Select item with value ${stringValue} has no label`);
+							expect.fail(`Select item with value ${option.value} has no label`);
 						}
 
 						labelStates.push(label.asString);

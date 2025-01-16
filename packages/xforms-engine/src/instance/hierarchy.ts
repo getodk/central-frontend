@@ -8,7 +8,7 @@ import type { RepeatInstance } from './repeat/RepeatInstance.ts';
 import type { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import type { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { Root } from './Root.ts';
-import type { AnySelectControl } from './SelectControl.ts';
+import type { SelectControl } from './SelectControl.ts';
 import type { Subtree } from './Subtree.ts';
 import type { TriggerControl } from './TriggerControl.ts';
 import type { RankControl } from './unsupported/RankControl.ts';
@@ -34,7 +34,7 @@ export type AnyNode =
 	| AnyModelValue
 	| AnyInputControl
 	| AnyRangeControl
-	| AnySelectControl
+	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
 
@@ -68,7 +68,7 @@ export type AnyChildNode =
 	| AnyNote
 	| AnyInputControl
 	| AnyRangeControl
-	| AnySelectControl
+	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
 
@@ -82,7 +82,7 @@ export type GeneralChildNode =
 	| AnyNote
 	| AnyInputControl
 	| AnyRangeControl
-	| AnySelectControl
+	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
 
@@ -93,6 +93,6 @@ export type AnyValueNode =
 	| AnyNote
 	| AnyInputControl
 	| AnyRangeControl
-	| AnySelectControl
+	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
