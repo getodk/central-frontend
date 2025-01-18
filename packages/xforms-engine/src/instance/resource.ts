@@ -10,7 +10,10 @@ export interface ResourceOptions {
 }
 
 const fetchTextFromURL = async (resource: URL, options: ResourceOptions): Promise<string> => {
-	const response = await options.fetchResource(resource);
+	// destructuring prevents "Failed to execute 'fetch' on 'Window': Illegal invocation"
+	const { fetchResource } = options;
+
+	const response = await fetchResource(resource);
 
 	return response.text();
 };
