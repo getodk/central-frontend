@@ -1,6 +1,5 @@
 // prettier-ignore
 export type UnsupportedControlNodeType =
-	| 'range'
 	| 'rank'
 	| 'upload';
 
@@ -17,6 +16,7 @@ export type LeafNodeType =
 	| 'select'
 	| 'input'
 	| 'trigger'
+	| 'range'
 	| UnsupportedControlNodeType;
 
 // prettier-ignore

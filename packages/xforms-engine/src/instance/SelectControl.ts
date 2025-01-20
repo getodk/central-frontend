@@ -4,14 +4,13 @@ import { createMemo } from 'solid-js';
 import type {
 	SelectDefinition,
 	SelectItem,
-	SelectItemValue,
 	SelectNode,
 	SelectNodeAppearances,
 	SelectValueOptions,
-	SelectValues,
 } from '../client/SelectNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { ValueType } from '../client/ValueType.ts';
+import { SelectValueTypeError } from '../error/SelectValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { getSelectCodec } from '../lib/codecs/select/getSelectCodec.ts';
 import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
@@ -22,7 +21,7 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
-import type { SelectType } from '../parse/body/control/select/SelectDefinition.ts';
+import type { SelectType } from '../parse/body/control/SelectControlDefinition.ts';
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
@@ -35,30 +34,41 @@ export type AnySelectDefinition = {
 	[V in ValueType]: SelectDefinition<V>;
 }[ValueType];
 
-interface SelectControlStateSpec<V extends ValueType> extends ValueNodeStateSpec<SelectValues<V>> {
+type AssertSupportedSelectValueType = (
+	definition: AnySelectDefinition
+) => asserts definition is SelectDefinition<'string'>;
+
+const assertSupportedSelectValueType: AssertSupportedSelectValueType = (definition) => {
+	if (definition.valueType !== 'string') {
+		throw new SelectValueTypeError(definition);
+	}
+};
+
+type SelectItemMap = ReadonlyMap<string, SelectItem>;
+
+interface SelectControlStateSpec extends ValueNodeStateSpec<readonly string[]> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
-	readonly valueOptions: Accessor<SelectValueOptions<V>>;
+	readonly valueOptions: Accessor<SelectValueOptions>;
 }
 
-export class SelectControl<V extends ValueType = ValueType>
-	extends ValueNode<V, SelectDefinition<V>, SelectValues<V>, SelectValues<V>>
+export class SelectControl
+	extends ValueNode<'string', SelectDefinition<'string'>, readonly string[], readonly string[]>
 	implements
-		SelectNode<V>,
+		SelectNode,
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
 		ClientReactiveSubmittableValueNode
 {
-	static from(parent: GeneralParentNode, definition: SelectDefinition): AnySelectControl;
-	static from<V extends ValueType>(
-		parent: GeneralParentNode,
-		definition: SelectDefinition<V>
-	): SelectControl<V> {
+	static from(parent: GeneralParentNode, definition: SelectDefinition): SelectControl;
+	static from(parent: GeneralParentNode, definition: AnySelectDefinition): SelectControl {
+		assertSupportedSelectValueType(definition);
+
 		return new this(parent, definition);
 	}
 
-	private readonly mapOptionsByValue: Accessor<ReadonlyMap<SelectItemValue<V>, SelectItem<V>>>;
+	private readonly mapOptionsByValue: Accessor<SelectItemMap>;
 
 	protected override readonly getInstanceValue: Accessor<string>;
 
@@ -66,16 +76,16 @@ export class SelectControl<V extends ValueType = ValueType>
 	override readonly [XPathNodeKindKey] = 'element';
 
 	// InstanceNode
-	protected readonly state: SharedNodeState<SelectControlStateSpec<V>>;
-	protected readonly engineState: EngineState<SelectControlStateSpec<V>>;
+	protected readonly state: SharedNodeState<SelectControlStateSpec>;
+	protected readonly engineState: EngineState<SelectControlStateSpec>;
 
 	// SelectNode
 	readonly nodeType = 'select';
 	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
-	readonly currentState: CurrentState<SelectControlStateSpec<V>>;
+	readonly currentState: CurrentState<SelectControlStateSpec>;
 
-	constructor(parent: GeneralParentNode, definition: SelectDefinition<V>) {
+	private constructor(parent: GeneralParentNode, definition: SelectDefinition<'string'>) {
 		const codec = getSelectCodec(definition);
 
 		super(parent, definition, codec);
@@ -83,14 +93,13 @@ export class SelectControl<V extends ValueType = ValueType>
 		this.appearances = definition.bodyElement.appearances;
 		this.selectType = definition.bodyElement.type;
 
-		const valueOptions = createSelectItems(this, codec);
+		const valueOptions = createSelectItems(this);
 
-		const mapOptionsByValue: Accessor<ReadonlyMap<SelectItemValue<V>, SelectItem<V>>> =
-			this.scope.runTask(() => {
-				return createMemo(() => {
-					return new Map(valueOptions().map((item) => [item.value, item]));
-				});
+		const mapOptionsByValue: Accessor<SelectItemMap> = this.scope.runTask(() => {
+			return createMemo(() => {
+				return new Map(valueOptions().map((item) => [item.value, item]));
 			});
+		});
 
 		this.mapOptionsByValue = mapOptionsByValue;
 
@@ -105,7 +114,7 @@ export class SelectControl<V extends ValueType = ValueType>
 				});
 			});
 		});
-		const valueState: SimpleAtomicState<SelectValues<V>> = [getValue, setValue];
+		const valueState: SimpleAtomicState<readonly string[]> = [getValue, setValue];
 
 		this.getInstanceValue = this.scope.runTask(() => {
 			return createMemo(() => {
@@ -163,9 +172,9 @@ export class SelectControl<V extends ValueType = ValueType>
 	 * reversed.
 	 */
 	private filterValues(
-		sourceValues: Iterable<SelectItemValue<V>>,
-		values: Iterable<SelectItemValue<V>>
-	): SelectValues<V> {
+		sourceValues: Iterable<string>,
+		values: Iterable<string>
+	): readonly string[] {
 		const selectedValues = new Set(values);
 
 		return Array.from(sourceValues).filter((sourceValue) => {
@@ -174,10 +183,7 @@ export class SelectControl<V extends ValueType = ValueType>
 	}
 
 	// SelectNode
-	getValueOption<T extends ValueType>(
-		this: SelectControl<T>,
-		value: SelectItemValue<T>
-	): SelectItem<T> | null {
+	getValueOption(value: string): SelectItem | null {
 		// Note: this method is a client-facing convenience API for reading state,
 		// so it **MUST** read from client-reactive state!
 		const valueOption = this.currentState.valueOptions.find((item) => {
@@ -187,13 +193,13 @@ export class SelectControl<V extends ValueType = ValueType>
 		return valueOption ?? null;
 	}
 
-	isSelected<T extends ValueType>(this: SelectControl<T>, value: SelectItemValue<T>): boolean {
+	isSelected(value: string): boolean {
 		// Note: this method is a client-facing convenience API for reading state,
 		// so it **MUST** read from client-reactive state!
 		return this.currentState.value.includes(value);
 	}
 
-	selectValue<T extends ValueType>(this: SelectControl<T>, value: SelectItemValue<T> | null): Root {
+	selectValue(value: string | null): Root {
 		if (value == null) {
 			return this.selectValues([]);
 		}
@@ -201,7 +207,7 @@ export class SelectControl<V extends ValueType = ValueType>
 		return this.selectValues([value]);
 	}
 
-	selectValues<T extends ValueType>(this: SelectControl<T>, values: SelectValues<T>): Root {
+	selectValues(values: readonly string[]): Root {
 		const sourceValues = this.mapOptionsByValue().keys();
 		const effectiveValues = this.filterValues(sourceValues, values);
 
@@ -210,18 +216,3 @@ export class SelectControl<V extends ValueType = ValueType>
 		return this.root;
 	}
 }
-
-export type AnySelectControl =
-	| SelectControl<'barcode'>
-	| SelectControl<'binary'>
-	| SelectControl<'boolean'>
-	| SelectControl<'date'>
-	| SelectControl<'dateTime'>
-	| SelectControl<'decimal'>
-	| SelectControl<'geopoint'>
-	| SelectControl<'geoshape'>
-	| SelectControl<'geotrace'>
-	| SelectControl<'int'>
-	| SelectControl<'intent'>
-	| SelectControl<'string'>
-	| SelectControl<'time'>;

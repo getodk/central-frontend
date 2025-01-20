@@ -3,7 +3,7 @@
   xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms"
   xmlns:orx="http://openrosa.org/xforms">
   <h:head>
-    <h:title>Select types</h:title>
+    <h:title>Select types (now expected to error on load)</h:title>
     <model>
       <instance>
         <root id="select-types">

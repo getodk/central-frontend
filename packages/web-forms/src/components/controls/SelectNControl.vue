@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { AnySelectNode } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { inject, ref } from 'vue';
 import ControlText from '../ControlText.vue';
 import ValidationMessage from '../ValidationMessage.vue';
@@ -10,7 +10,7 @@ import MultiselectDropdown from '../widgets/MultiselectDropdown.vue';
 import UnsupportedAppearance from './UnsupportedAppearance.vue';
 
 interface SelectNControlProps {
-	readonly question: AnySelectNode;
+	readonly question: SelectNode;
 }
 
 const props = defineProps<SelectNControlProps>();

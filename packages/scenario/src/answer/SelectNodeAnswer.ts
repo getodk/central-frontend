@@ -1,18 +1,14 @@
 import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
-import type { SelectNode, SelectValues, ValueType } from '@getodk/xforms-engine';
+import type { SelectNode } from '@getodk/xforms-engine';
 import { ValueNodeAnswer } from './ValueNodeAnswer.ts';
 
-export class SelectNodeAnswer<V extends ValueType = ValueType> extends ValueNodeAnswer<
-	SelectNode<V>
-> {
-	readonly valueType: V;
+export class SelectNodeAnswer extends ValueNodeAnswer<SelectNode> {
 	readonly stringValue: string;
-	readonly value: SelectValues<V>;
+	readonly value: readonly string[];
 
-	constructor(node: SelectNode<V>) {
+	constructor(node: SelectNode) {
 		super(node);
 
-		this.valueType = node.valueType;
 		this.stringValue = node.currentState.instanceValue;
 		this.value = node.currentState.value.slice();
 	}

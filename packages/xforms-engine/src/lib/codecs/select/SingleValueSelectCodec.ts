@@ -1,21 +1,20 @@
-import type { ValueType } from '../../../client/ValueType.ts';
 import type { SharedValueCodec } from '../getSharedValueCodec.ts';
-import { ValueArrayCodec, type RuntimeItemValue, type RuntimeValues } from '../ValueArrayCodec.ts';
 import { type CodecDecoder, type CodecEncoder } from '../ValueCodec.ts';
+import { BaseSelectCodec } from './BaseSelectCodec.ts';
 import type { MultipleValueSelectCodec } from './MultipleValueSelectCodec.ts';
 
 // prettier-ignore
-export type SingleValueSelectRuntimeValues<V extends ValueType> =
+export type SingleValueSelectRuntimeValues =
 	| readonly []
-	| readonly [RuntimeItemValue<V>];
+	| readonly [string];
 
 /**
  * @see {@link encodeValueFactory}
  */
 // prettier-ignore
-type SingleValueSelectCodecValues<V extends ValueType> =
-	| RuntimeValues<V>
-	| SingleValueSelectRuntimeValues<V>;
+type SingleValueSelectCodecValues =
+	| SingleValueSelectRuntimeValues
+	| readonly string[];
 
 /**
  * @todo This is more permissive than it should be, allowing an array of any
@@ -24,9 +23,9 @@ type SingleValueSelectCodecValues<V extends ValueType> =
  * than one value to be set, this is where we'd start looking. The check is
  * skipped for now, to reduce performance overhead.
  */
-const encodeValueFactory = <V extends ValueType>(
-	baseCodec: SharedValueCodec<V>
-): CodecEncoder<SingleValueSelectCodecValues<V>> => {
+const encodeValueFactory = (
+	baseCodec: SharedValueCodec<'string'>
+): CodecEncoder<SingleValueSelectCodecValues> => {
 	return (values) => {
 		const [value] = values;
 
@@ -51,21 +50,16 @@ const encodeValueFactory = <V extends ValueType>(
  * 2. as an optimization, as the more general implementation performs poorly on
  *    forms which we monitor for performance.
  */
-export class SingleValueSelectCodec<V extends ValueType> extends ValueArrayCodec<
-	V,
-	SingleValueSelectCodecValues<V>
-> {
-	constructor(baseCodec: SharedValueCodec<V>) {
+export class SingleValueSelectCodec extends BaseSelectCodec<SingleValueSelectCodecValues> {
+	constructor(baseCodec: SharedValueCodec<'string'>) {
 		const encodeValue = encodeValueFactory(baseCodec);
 
-		const decodeValue: CodecDecoder<SingleValueSelectRuntimeValues<V>> = (value) => {
-			const decoded = baseCodec.decodeValue(value);
-
-			if (decoded == null) {
+		const decodeValue: CodecDecoder<SingleValueSelectRuntimeValues> = (value) => {
+			if (value == null) {
 				return [];
 			}
 
-			return [decoded];
+			return [value];
 		};
 
 		super(baseCodec, encodeValue, decodeValue);

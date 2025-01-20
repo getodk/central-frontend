@@ -1,11 +1,11 @@
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import { getItemElements, getItemsetElement } from '../../../../lib/dom/query.ts';
-import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import type { SelectAppearanceDefinition } from '../../appearance/selectAppearanceParser.ts';
-import { selectAppearanceParser } from '../../appearance/selectAppearanceParser.ts';
-import type { AnyBodyElementDefinition, BodyElementParentContext } from '../../BodyDefinition.ts';
-import { ControlDefinition } from '../ControlDefinition.ts';
+import { getItemElements, getItemsetElement } from '../../../lib/dom/query.ts';
+import type { XFormDefinition } from '../../XFormDefinition.ts';
+import type { SelectAppearanceDefinition } from '../appearance/selectAppearanceParser.ts';
+import { selectAppearanceParser } from '../appearance/selectAppearanceParser.ts';
+import type { AnyBodyElementDefinition, BodyElementParentContext } from '../BodyDefinition.ts';
+import { ControlDefinition } from './ControlDefinition.ts';
 import { ItemDefinition } from './ItemDefinition.ts';
 import { ItemsetDefinition } from './ItemsetDefinition.ts';
 
@@ -22,12 +22,12 @@ const isSelectElement = (
 	return selectLocalNames.has(localName as SelectType);
 };
 
-export class SelectDefinition<Type extends SelectType> extends ControlDefinition<Type> {
+export class SelectControlDefinition<Type extends SelectType> extends ControlDefinition<Type> {
 	static override isCompatible(localName: string, element: Element): boolean {
 		return isSelectElement(element, localName);
 	}
 
-	static isSelect(element: AnyBodyElementDefinition): element is AnySelectDefinition {
+	static isSelect(element: AnyBodyElementDefinition): element is AnySelectControlDefinition {
 		return selectLocalNames.has(element.type as SelectType);
 	}
 
@@ -72,4 +72,4 @@ export class SelectDefinition<Type extends SelectType> extends ControlDefinition
 	}
 }
 
-export type AnySelectDefinition = SelectDefinition<SelectType>;
+export type AnySelectControlDefinition = SelectControlDefinition<SelectType>;

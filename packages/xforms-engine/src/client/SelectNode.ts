@@ -1,8 +1,7 @@
-import type { RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import type {
-	AnySelectDefinition,
+	AnySelectControlDefinition,
 	SelectType,
-} from '../parse/body/control/select/SelectDefinition.ts';
+} from '../parse/body/control/SelectControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
@@ -12,33 +11,17 @@ import type { ValueType } from './ValueType.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { LeafNodeValidationState } from './validation.ts';
 
-export type SelectItemValue<V extends ValueType> = NonNullable<RuntimeValue<V>>;
-
-export type SelectValues<V extends ValueType> = ReadonlyArray<SelectItemValue<V>>;
-
-export interface SelectItem<V extends ValueType> {
+export interface SelectItem {
 	get label(): TextRange<'item-label'>;
-	get value(): SelectItemValue<V>;
-
-	/**
-	 * Produces a string serialization of {@link value}, consistent with that
-	 * value's serialization for submission purposes.
-	 *
-	 * Clients should use caution when using this serialized representation! It is
-	 * generally applicable for cases where a string value **MUST** be used (e.g.
-	 * for integration with platform and/or third party interfaces). Use of this
-	 * value for reproducing aspects of submission or instance state piecemeal is
-	 * **highly discouraged**.
-	 */
-	get asString(): string;
+	get value(): string;
 }
 
-export type SelectValueOptions<V extends ValueType> = ReadonlyArray<SelectItem<V>>;
+export type SelectValueOptions = readonly SelectItem[];
 
-export interface SelectNodeState<V extends ValueType> extends BaseValueNodeState<SelectValues<V>> {
+export interface SelectNodeState extends BaseValueNodeState<readonly string[]> {
 	get children(): null;
 
-	get valueOptions(): SelectValueOptions<V>;
+	get valueOptions(): readonly SelectItem[];
 
 	/**
 	 * This value is treated as set-like by the engine, where each
@@ -52,25 +35,24 @@ export interface SelectNodeState<V extends ValueType> extends BaseValueNodeState
 	 * Should a `SelectNodeState` have this `value` type, whereas a hypothetical
 	 * `Select1NodeState` would have `get value(): SelectItem | null`?
 	 */
-	get value(): SelectValues<V>;
+	get value(): readonly string[];
 }
 
 export interface SelectDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
-	readonly bodyElement: AnySelectDefinition;
+	readonly bodyElement: AnySelectControlDefinition;
 }
 
 export type SelectNodeAppearances = NodeAppearances<SelectDefinition>;
 
-export interface SelectNode<V extends ValueType = ValueType>
-	extends BaseValueNode<V, SelectValues<V>> {
+export interface SelectNode extends BaseValueNode<'string', readonly string[]> {
 	readonly nodeType: 'select';
-	readonly valueType: V;
+	readonly valueType: 'string';
 	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
-	readonly definition: SelectDefinition;
+	readonly definition: SelectDefinition<'string'>;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
-	readonly currentState: SelectNodeState<V>;
+	readonly currentState: SelectNodeState;
 	readonly validationState: LeafNodeValidationState;
 
 	/**
@@ -78,18 +60,13 @@ export interface SelectNode<V extends ValueType = ValueType>
 	 * {@link value}, if one is currently available—i.e. if it is present in
 	 * {@link SelectNodeState.valueOptions}.
 	 */
-	getValueOption<T extends ValueType>(
-		this: SelectNode<T>,
-		value: SelectItemValue<T>
-	): SelectItem<T> | null;
-	getValueOption(value: SelectItemValue<V>): SelectItem<V> | null;
+	getValueOption(value: string): SelectItem | null;
 
 	/**
 	 * Convenience API to determine if {@link value} is currently selected—i.e. if
 	 * it is one of the selected values in {@link SelectNodeState.value}.
 	 */
-	isSelected<T extends ValueType>(this: SelectNode<T>, value: SelectItemValue<T>): boolean;
-	isSelected(value: SelectItemValue<V>): boolean;
+	isSelected(value: string): boolean;
 
 	/**
 	 * Selects a single {@link value}, as provided by a {@link SelectItem.value}.
@@ -104,8 +81,7 @@ export interface SelectNode<V extends ValueType = ValueType>
 	 * {@link https://getodk.github.io/xforms-spec/#body-elements | `<select1>`}
 	 * control.
 	 */
-	selectValue<T extends ValueType>(this: SelectNode<T>, value: SelectItemValue<T> | null): RootNode;
-	selectValue(this: SelectNode<V>, value: SelectItemValue<V> | null): RootNode;
+	selectValue(value: string | null): RootNode;
 
 	/**
 	 * Selects any number of {@link values}, as provided by any number of
@@ -121,31 +97,5 @@ export interface SelectNode<V extends ValueType = ValueType>
 	 * This setter _may_ be used with a `<select1>` control, in which case the
 	 * provided {@link values} should produce at most one value.
 	 */
-	selectValues<T extends ValueType>(this: SelectNode<T>, values: SelectValues<T>): RootNode;
-	selectValues(this: SelectNode<V>, values: SelectValues<V>): RootNode;
+	selectValues(values: readonly string[]): RootNode;
 }
-
-export type StringSelectNode = SelectNode<'string'>;
-export type IntSelectNode = SelectNode<'int'>;
-export type DecimalSelectNode = SelectNode<'decimal'>;
-
-// prettier-ignore
-type SupportedSelectValueType =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| 'string'
-	| 'int'
-	| 'decimal';
-
-type TemporaryStringValueType = Exclude<ValueType, SupportedSelectValueType>;
-
-export type TemporaryStringValueSelectNode = {
-	[V in TemporaryStringValueType]: SelectNode<V>;
-}[TemporaryStringValueType];
-
-// prettier-ignore
-export type AnySelectNode =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| StringSelectNode
-	| IntSelectNode
-	| DecimalSelectNode
-	| TemporaryStringValueSelectNode;

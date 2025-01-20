@@ -1,12 +1,14 @@
-<script lang="ts" setup generic="V extends ValueType">
-import type { SelectItemValue, SelectNode, SelectValues, ValueType } from '@getodk/xforms-engine';
+<script lang="ts" setup>
+import type { SelectNode } from '@getodk/xforms-engine';
 import PrimeMultiSelect from 'primevue/multiselect';
 import { computed } from 'vue';
 
-const props = defineProps<{
-	readonly question: SelectNode<V>;
+interface MultiselectDropdownProps {
+	readonly question: SelectNode;
 	readonly style?: string;
-}>();
+}
+
+const props = defineProps<MultiselectDropdownProps>();
 
 defineEmits(['update:modelValue', 'change']);
 
@@ -14,11 +16,11 @@ const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => option.value);
 });
 
-const selectValues = (values: SelectValues<V>) => {
+const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
 
-const getOptionLabel = (value: SelectItemValue<V>) => {
+const getOptionLabel = (value: string) => {
 	const option = props.question.getValueOption(value);
 
 	if (option == null) {

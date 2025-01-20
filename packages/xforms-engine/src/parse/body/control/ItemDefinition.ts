@@ -1,8 +1,9 @@
-import { getValueElement, type ItemElement } from '../../../../lib/dom/query.ts';
-import { ItemLabelDefinition } from '../../../text/ItemLabelDefinition.ts';
-import type { XFormDefinition } from '../../../XFormDefinition.ts';
-import { BodyElementDefinition } from '../../BodyElementDefinition.ts';
-import type { AnySelectDefinition } from './SelectDefinition.ts';
+import type { ItemElement } from '../../../lib/dom/query.ts';
+import { getValueElement } from '../../../lib/dom/query.ts';
+import { ItemLabelDefinition } from '../../text/ItemLabelDefinition.ts';
+import type { XFormDefinition } from '../../XFormDefinition.ts';
+import { BodyElementDefinition } from '../BodyElementDefinition.ts';
+import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
 
 export class ItemDefinition extends BodyElementDefinition<'item'> {
 	override readonly category = 'support';
@@ -13,7 +14,7 @@ export class ItemDefinition extends BodyElementDefinition<'item'> {
 
 	constructor(
 		form: XFormDefinition,
-		override readonly parent: AnySelectDefinition,
+		override readonly parent: AnySelectControlDefinition,
 		element: ItemElement
 	) {
 		const valueElement = getValueElement(element);
