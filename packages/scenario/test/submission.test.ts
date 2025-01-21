@@ -141,7 +141,7 @@ describe('Form submission', () => {
 
 			expect(scenario).toHaveSerializedSubmissionXML(
 				// prettier-ignore
-				t('data',
+				t('data id="xml-serialization-basic-default-values"',
 					t('grp',
 						t('inp', defaults.inp ?? ''),
 						t('sel1', defaults.sel1 ?? ''),
@@ -154,6 +154,116 @@ describe('Form submission', () => {
 					t('meta',
 						t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
 			);
+		});
+
+		describe('instance root attributes', () => {
+			it('serializes attributes from the instance root, as they appear in the form definition', async () => {
+				const formId = 'inst-root-attrs';
+				const version = '2018061801';
+
+				const scenario = await Scenario.init(
+					'XML serialization - instance root attrs',
+					// prettier-ignore
+					html(
+						head(
+							title('XML serialization - instance root attrs'),
+							model(
+								mainInstance(
+									t(`data id="${formId}" version="${version}"`,
+										t('inp', 'val'),
+										t('meta',
+											t('instanceID')))
+								),
+								bind('/data/inp').type('string'),
+								bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
+							)
+						),
+						body(
+							input('/data/inp', label('Input (with default value)'))
+						)
+					)
+				);
+
+				expect(scenario).toHaveSerializedSubmissionXML(
+					// prettier-ignore
+					t(`data id="${formId}" version="${version}"`,
+						t('inp', 'val'),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+			});
+
+			it('preserves instance root attribute namespace prefixes, as they appear in the form definition', async () => {
+				const formId = 'inst-root-attrs';
+				const version = '2018061801';
+
+				const scenario = await Scenario.init(
+					'XML serialization - instance root attrs',
+					// prettier-ignore
+					html(
+						head(
+							title('XML serialization - instance root attrs'),
+							model(
+								mainInstance(
+									t(`data id="${formId}" orx:version="${version}"`,
+										t('inp', 'val'),
+										t('meta',
+											t('instanceID')))
+								),
+								bind('/data/inp').type('string'),
+								bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
+							)
+						),
+						body(
+							input('/data/inp', label('Input (with default value)'))
+						)
+					)
+				);
+
+				expect(scenario).toHaveSerializedSubmissionXML(
+					// prettier-ignore
+					t(`data id="${formId}" orx:version="${version}"`,
+						t('inp', 'val'),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+			});
+
+			it('preserves escaped values of instance root attributes', async () => {
+				const formId = 'inst-root-attrs';
+				const version = '2018061801&gt;&quot;XML&quot;&amp;special&lt;chars';
+
+				const scenario = await Scenario.init(
+					'XML serialization - instance root attrs',
+					// prettier-ignore
+					html(
+						head(
+							title('XML serialization - instance root attrs'),
+							model(
+								mainInstance(
+									t(`data id="${formId}" orx:version="${version}"`,
+										t('inp', 'val'),
+										t('meta',
+											t('instanceID')))
+								),
+								bind('/data/inp').type('string'),
+								bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
+							)
+						),
+						body(
+							input('/data/inp', label('Input (with default value)'))
+						)
+					)
+				);
+
+				expect(scenario).toHaveSerializedSubmissionXML(
+					// prettier-ignore
+					t(`data id="${formId}" orx:version="${version}"`,
+						t('inp', 'val'),
+						t('meta',
+							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
+				);
+			});
 		});
 
 		// The original ported JavaRosa test exercising Unicode support was a good
@@ -202,7 +312,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="unicode-normalization"',
 						t('rep',
 							t('inp', composed)),
 						t('meta',
@@ -217,7 +327,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="unicode-normalization"',
 						t('rep',
 							t('inp', composed)),
 						t('meta',
@@ -255,7 +365,7 @@ describe('Form submission', () => {
 			it('does not serialize an element for a repeat range', () => {
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="xml-serialization-repeats"',
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
 				);
@@ -269,7 +379,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="xml-serialization-repeats"',
 						t('rep',
 							t('inp', 'a')),
 						t('rep',
@@ -282,7 +392,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="xml-serialization-repeats"',
 						t('rep',
 							t('inp', 'b')),
 						t('meta',
@@ -333,7 +443,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="xml-serialization-relevance"',
 						t('grp-rel', '1'),
 						t('inp-rel', '0'),
 						t('grp'),
@@ -347,7 +457,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t('data',
+					t('data id="xml-serialization-relevance"',
 						t('grp-rel', '0'),
 						t('inp-rel', '1'),
 						t('meta',
@@ -365,10 +475,10 @@ describe('Form submission', () => {
 					// prettier-ignore
 					html(
 						head(
-							title('Relevance XML serialization'),
+							title('Reactive XML serialization'),
 							model(
 								mainInstance(
-									t('data id="relevance-xml-serialization"',
+									t('data id="reactive-xml-serialization"',
 										t('rep-inp-rel'),
 										t('rep',
 											t('inp')),
@@ -400,7 +510,7 @@ describe('Form submission', () => {
 				// Default serialization before any state change
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -415,7 +525,7 @@ describe('Form submission', () => {
 					// After first value change
 					expect(serialized).toBe(
 						// prettier-ignore
-						t('data',
+						t('data id="reactive-xml-serialization"',
 							t('rep-inp-rel'),
 							t('rep',
 								t('inp', `${i}`)),
@@ -435,7 +545,7 @@ describe('Form submission', () => {
 				// Default serialization before any state change
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -448,7 +558,7 @@ describe('Form submission', () => {
 				// First repeat instance added
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -463,7 +573,7 @@ describe('Form submission', () => {
 				// Second repeat instance added
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -482,7 +592,7 @@ describe('Form submission', () => {
 				// Each of the above values set
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -499,7 +609,7 @@ describe('Form submission', () => {
 				// Last repeat instance removed
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -514,7 +624,7 @@ describe('Form submission', () => {
 				// First repeat instance removed
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 2 inp')),
@@ -527,7 +637,7 @@ describe('Form submission', () => {
 				// All repeat instances removed
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
@@ -550,7 +660,7 @@ describe('Form submission', () => {
 				// Current serialization before any relevance change
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -567,7 +677,7 @@ describe('Form submission', () => {
 				// Non-relevant /data/rep[position() != '1']/inp omitted
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel', '1'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -582,7 +692,7 @@ describe('Form submission', () => {
 				// Non-relevant /data/rep[position() != '3']/inp omitted
 				expect(serialized).toBe(
 					// prettier-ignore
-					t('data',
+					t('data id="reactive-xml-serialization"',
 						t('rep-inp-rel', '3'),
 						t('rep'),
 						t('rep'),
@@ -732,7 +842,7 @@ describe('Form submission', () => {
 					expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
 
 					// prettier-ignore
-					validSubmissionXML = t('data',
+					validSubmissionXML = t('data id="prepare-for-submission"',
 						t('rep',
 							t('inp', 'rep 1 inp')),
 						t('rep',
@@ -769,7 +879,7 @@ describe('Form submission', () => {
 					expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
 
 					// prettier-ignore
-					invalidSubmissionXML = t('data',
+					invalidSubmissionXML = t('data id="prepare-for-submission"',
 						t('rep',
 							t('inp', 'rep 1 inp')),
 						t('rep',
