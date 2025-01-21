@@ -1,6 +1,11 @@
+import { XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import { escapeXMLText } from '../../lib/xml-serialization.ts';
+
 interface RootAttributeSource {
-	/** @see {@link RootAttributeDefinition.nodeName} */
+	readonly namespaceURI: string | null;
 	readonly nodeName: string;
+	readonly prefix: string | null;
+	readonly localName: string;
 	readonly value: string;
 }
 
@@ -8,21 +13,40 @@ interface RootAttributeSource {
  * @todo This class is named and typed to emphasize its intentionally narrow
  * usage and purpose. It **intentionally** avoids addressing the much broader
  * set of concerns around modeling attributes in primary instance/submissions.
+ *
+ * @todo This class technically does double duty, as it will also capture an
+ * explicit namespace declaration (if {@link RootAttributeSource} is one).
+ * This matches the DOM semantics from which we currently parse, but differs
+ * from XML/XPath semantics (where a "namespace declaration" node is distinct
+ * from an attribute node, despite having similar serialized syntax).
  */
 export class RootAttributeDefinition {
-	/**
-	 * Note: this parameter/property is named and typed to emphasize the fact
-	 * that its source is the **prefixed name** of the attribute (e.g. as a
-	 * reference to {@link Attr.nodeName}, with the same semantics), as parsed
-	 * from a form definition. At time of writing, we have decided that the
-	 * safest way to handle such attributes is to preserve their namespace
-	 * details **as authored**.
-	 */
+	private readonly serializedXML: string;
+
+	readonly namespaceURI: string | null;
 	readonly nodeName: string;
+	readonly prefix: string | null;
+	readonly localName: string;
 	readonly value: string;
 
 	constructor(source: RootAttributeSource) {
-		this.nodeName = source.nodeName;
-		this.value = source.value;
+		const { namespaceURI, nodeName, value } = source;
+
+		this.namespaceURI = source.namespaceURI;
+		this.nodeName = nodeName;
+		this.prefix = source.prefix;
+		this.localName = source.localName;
+		this.value = value;
+
+		// We serialize namespace declarations separately
+		if (namespaceURI === XMLNS_NAMESPACE_URI) {
+			this.serializedXML = '';
+		} else {
+			this.serializedXML = ` ${nodeName}="${escapeXMLText(value, true)}"`;
+		}
+	}
+
+	serializeAttributeXML(): string {
+		return this.serializedXML;
 	}
 }

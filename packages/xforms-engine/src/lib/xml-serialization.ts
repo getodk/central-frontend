@@ -75,44 +75,51 @@ export const escapeXMLText = <Text extends string>(
 		: (out as EscapedXMLText);
 };
 
-interface SerializableElementAttribute {
-	readonly nodeName: string;
-	readonly value: string;
+interface SerializableNamespaceDeclaration {
+	serializeNamespaceDeclarationXML(): string;
 }
 
-const serializeAttributeXML = (attribute: SerializableElementAttribute) => {
-	return ` ${attribute.nodeName}="${escapeXMLText(attribute.value, true)}"`;
-};
+interface SerializableElementAttribute {
+	serializeAttributeXML(): string;
+}
 
-interface SerializeElementXMLOptions {
-	readonly attributes: readonly SerializableElementAttribute[];
+interface ElementXMLSerializationOptions {
+	readonly namespaceDeclarations?: readonly SerializableNamespaceDeclaration[];
+	readonly attributes?: readonly SerializableElementAttribute[];
 }
 
 const serializeElementXML = (
 	nodeName: string,
 	children: string,
-	options: SerializeElementXMLOptions
+	options: ElementXMLSerializationOptions = {}
 ): string => {
-	const attributes = options.attributes.map(serializeAttributeXML).join('');
+	const namespaceDeclarations =
+		options.namespaceDeclarations
+			?.map((namespaceDeclaration) => {
+				return namespaceDeclaration.serializeNamespaceDeclarationXML();
+			})
+			.join('') ?? '';
+	const attributes =
+		options.attributes
+			?.map((attribute) => {
+				return attribute.serializeAttributeXML();
+			})
+			.join('') ?? '';
+	const prefix = `<${nodeName}${namespaceDeclarations}${attributes}`;
 
 	if (children === '') {
-		return `<${nodeName}${attributes}/>`;
+		return `${prefix}/>`;
 	}
 
-	// TODO: attributes
-	return `<${nodeName}${attributes}>${children}</${nodeName}>`;
+	return `${prefix}>${children}</${nodeName}>`;
 };
-
-export type ElementXMLSerializationOptions = Partial<SerializeElementXMLOptions>;
 
 export const serializeParentElementXML = (
 	nodeName: string,
 	serializedChildren: readonly string[],
 	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(nodeName, serializedChildren.join(''), {
-		attributes: options?.attributes ?? [],
-	});
+	return serializeElementXML(nodeName, serializedChildren.join(''), options);
 };
 
 export const serializeLeafElementXML = (
@@ -120,7 +127,5 @@ export const serializeLeafElementXML = (
 	xmlValue: EscapedXMLText,
 	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(nodeName, xmlValue.normalize(), {
-		attributes: options?.attributes ?? [],
-	});
+	return serializeElementXML(nodeName, xmlValue.normalize(), options);
 };

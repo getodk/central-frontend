@@ -5,12 +5,14 @@ import { serializeParentElementXML } from '../../xml-serialization.ts';
 export const createRootSubmissionState = (node: Root): SubmissionState => {
 	return {
 		get submissionXML() {
+			const { namespaceDeclarations, attributes } = node.definition;
 			const serializedChildren = node.currentState.children.map((child) => {
 				return child.submissionState.submissionXML;
 			});
 
 			return serializeParentElementXML(node.definition.nodeName, serializedChildren, {
-				attributes: node.definition.attributes,
+				namespaceDeclarations,
+				attributes,
 			});
 		},
 	};

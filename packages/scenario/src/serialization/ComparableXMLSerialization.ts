@@ -1,4 +1,8 @@
-import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import {
+	XFORMS_NAMESPACE_URI,
+	XMLNS_NAMESPACE_URI,
+	XMLNS_PREFIX,
+} from '@getodk/common/constants/xmlns.ts';
 import { InspectableComparisonError } from '@getodk/common/test/assertions/helpers.ts';
 import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import { ComparableAssertableValue } from '../comparable/ComparableAssertableValue.ts';
@@ -8,38 +12,53 @@ class ComparableXMLQualifiedName {
 
 	constructor(
 		readonly namespaceURI: string | null,
+		readonly nodeName: string,
 		readonly localName: string
 	) {
-		this.sortKey = JSON.stringify({ namespaceURI, localName });
+		let namespaceDeclarationType: string;
+
+		if (namespaceURI === XMLNS_NAMESPACE_URI) {
+			if (nodeName === XMLNS_PREFIX) {
+				namespaceDeclarationType = 'default';
+			} else {
+				namespaceDeclarationType = 'non-default';
+			}
+		} else {
+			namespaceDeclarationType = 'none';
+		}
+
+		this.sortKey = JSON.stringify({
+			namespaceDeclarationType,
+			namespaceURI,
+			localName,
+		});
 	}
 
-	/**
-	 * @todo prefix re-serialization
-	 */
 	toString(): string {
-		const { namespaceURI } = this;
+		const { namespaceURI, nodeName } = this;
 
 		if (namespaceURI == null || namespaceURI === XFORMS_NAMESPACE_URI) {
 			return this.localName;
 		}
 
-		return this.sortKey;
+		return nodeName;
 	}
 }
 
 class ComparableXMLAttribute {
 	static from(attr: Attr): ComparableXMLAttribute {
-		return new this(attr.namespaceURI, attr.localName, attr.value);
+		return new this(attr.namespaceURI, attr.nodeName, attr.localName, attr.value);
 	}
 
 	readonly qualifiedName: ComparableXMLQualifiedName;
 
 	private constructor(
 		namespaceURI: string | null,
+		nodeName: string,
 		localName: string,
 		readonly value: string
 	) {
-		this.qualifiedName = new ComparableXMLQualifiedName(namespaceURI, localName);
+		this.qualifiedName = new ComparableXMLQualifiedName(namespaceURI, nodeName, localName);
 	}
 
 	/**
@@ -59,17 +78,23 @@ const comparableXMLElementAttributes = (element: Element): readonly ComparableXM
 		return ComparableXMLAttribute.from(attr);
 	});
 
-	return attributes.sort(({ qualifiedName: a }, { qualifiedName: b }) => {
-		if (a > b) {
-			return 1;
-		}
+	return attributes.sort(
+		(
+			// prettier-ignore
+			{ qualifiedName: { sortKey: a } },
+			{ qualifiedName: { sortKey: b } }
+		) => {
+			if (a > b) {
+				return 1;
+			}
 
-		if (b > a) {
-			return -1;
-		}
+			if (b > a) {
+				return -1;
+			}
 
-		return 0;
-	});
+			return 0;
+		}
+	);
 };
 
 const isElement = (node: ChildNode): node is Element => {
@@ -118,18 +143,25 @@ class ComparableXMLElement {
 		const attributes = comparableXMLElementAttributes(element);
 		const children = comparableXMLElementChildren(element);
 
-		return new this(element.namespaceURI, element.localName, attributes, children);
+		return new this(
+			element.namespaceURI,
+			element.nodeName,
+			element.localName,
+			attributes,
+			children
+		);
 	}
 
 	readonly qualifiedName: ComparableXMLQualifiedName;
 
 	private constructor(
 		namespaceURI: string | null,
+		nodeName: string,
 		localName: string,
 		readonly attributes: readonly ComparableXMLAttribute[],
 		readonly children: readonly ComparableXMLElementChild[]
 	) {
-		this.qualifiedName = new ComparableXMLQualifiedName(namespaceURI, localName);
+		this.qualifiedName = new ComparableXMLQualifiedName(namespaceURI, nodeName, localName);
 	}
 
 	toString(): string {
