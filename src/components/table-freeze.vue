@@ -22,9 +22,11 @@ except according to the terms contained in the LICENSE file.
         :class="`actions-trigger-${actionsTrigger}`"
         @mousemove="setActionsTrigger('hover')"
         @focusin="setActionsTrigger('focus')" @click="actionClick">
-        <slot v-for="(element, index) in data" :key="element[keyProp]"
-          name="data-frozen" :data="element" :index="index">
-        </slot>
+        <transition-group name="table-freeze-row">
+          <slot v-for="(element, index) in data" :key="element[keyProp]"
+            name="data-frozen" :data="element" :index="index">
+          </slot>
+        </transition-group>
       </tbody>
     </table>
     <div v-if="!frozenOnly" class="table-freeze-scrolling-container">
@@ -38,9 +40,11 @@ except according to the terms contained in the LICENSE file.
         <tbody v-if="data != null" ref="scrollingBody"
           @mousemove="setActionsTrigger('hover')" @mouseover="toggleHoverClass"
           @mouseleave="removeHoverClass">
-          <slot v-for="(element, index) in data" :key="element[keyProp]"
-            name="data-scrolling" :data="element" :index="index">
-          </slot>
+          <transition-group name="table-freeze-row">
+            <slot v-for="(element, index) in data" :key="element[keyProp]"
+              name="data-scrolling" :data="element" :index="index">
+            </slot>
+          </transition-group>
         </tbody>
       </table>
     </div>
@@ -111,6 +115,8 @@ following cases in mind:
 */
 watch(() => props.data, removeHoverClass);
 
+
+
 const actionClick = (event) => {
   const action = event.target.closest('.btn-group .btn');
   if (action != null) {
@@ -123,6 +129,7 @@ const scrollingBody = ref(null);
 const getRowPair = (index) =>
   [frozenBody.value.rows[index], scrollingBody.value.rows[index]];
 defineExpose({ getRowPair });
+
 </script>
 
 <style lang="scss">
@@ -196,4 +203,5 @@ defineExpose({ getRowPair });
     }
   }
 }
+
 </style>

@@ -911,7 +911,7 @@ becomes more complicated.
 // markRowsChanged(), markRowsDeleted()
 
 [data-mark-rows-changed="true"] { background-color: $color-highlight; }
-[data-mark-rows-changed="false"] { transition: background-color 0.6s 6s; }
+[data-mark-rows-changed="false"] { transition: background-color 0.6s; }
 
 [data-mark-rows-deleted="true"] {
   opacity: 0;

@@ -30,9 +30,9 @@ except according to the terms contained in the LICENSE file.
       <th>{{ $t('entity.entityId') }}</th>
     </template>
 
-    <template #data-frozen="{ data, index }">
+    <template #data-frozen="{ data }">
       <entity-metadata-row :entity="data"
-        :row-number="odataEntities.originalCount - index"
+        :row-number="data.__system.rowNumber"
         :verbs="project.verbs" :deleted="deleted"
         :awaiting-response="awaitingDeletedResponses.has(data.__id)"/>
     </template>

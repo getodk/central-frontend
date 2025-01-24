@@ -54,8 +54,8 @@ except according to the terms contained in the LICENSE file.
         </select>
         <span>{{ $t('field.size') }}</span>
       </label>
+      <spinner :state="spinner" inline/>
     </form>
-    <spinner :state="spinner" inline/>
   </div>
 </template>
 
@@ -169,6 +169,7 @@ const sizeModel = computed({
 
   .form-inline {
     @include form-control-background;
+    width: 100%;
     align-items: center;
     display: flex;
     border-radius: 5px;

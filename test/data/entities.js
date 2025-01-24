@@ -275,7 +275,6 @@ const restToOData = (filterExpression) => (top = 250, skip = 0, asc = false) => 
   const { properties } = extendedDatasets.last();
   return {
     '@odata.count': sorted.length,
-    '@odata.nextLink': top > 0 && (top + skip < sorted.length) ? `https://test/Entities?$top=${top}&$skipToken=thetoken` : undefined,
     value: sorted.slice(skip, skip + top).map(entity => {
       const result = {
         label: entity.currentVersion.label,
