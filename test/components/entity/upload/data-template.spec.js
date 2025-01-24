@@ -23,14 +23,17 @@ describe('EntityUploadDataTemplate', () => {
     content.should.equal('label,hauteur,circonférence');
   });
 
-  it('has the correct filename', async () => {
+  it('has the correct filename', () => {
     const clock = sinon.useFakeTimers(Date.parse('2024-12-31T01:23:45'));
     testData.extendedDatasets.createPast(1);
     const a = mountComponent().get('a');
-    await a.trigger('click');
-    a.attributes().download.should.equal('trees 20241231012345.csv');
-    clock.tick(1000);
-    await a.trigger('click');
-    a.attributes().download.should.equal('trees 20241231012346.csv');
+    a.element.addEventListener('click', (e) => { e.preventDefault(); });
+    return a.trigger('click').then(() => {
+      a.attributes().download.should.equal('trees 20241231012345.csv');
+      clock.tick(1000);
+      return a.trigger('click').then(() => {
+        a.attributes().download.should.equal('trees 20241231012346.csv');
+      });
+    });
   });
 });
