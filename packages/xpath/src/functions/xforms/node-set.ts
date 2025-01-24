@@ -1,3 +1,5 @@
+import { SHA256 } from 'crypto-js';
+
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { XPathDOMProvider } from '../../adapter/xpathDOMProvider.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
@@ -384,8 +386,44 @@ export const randomize = new NodeSetFunction(
 
 		const nodeResults = Array.from(results.values());
 		const nodes = nodeResults.map(({ value }) => value);
-		const seed = seedExpression?.evaluate(context).toNumber();
 
-		return seededRandomize(nodes, seed);
+		if (seedExpression === undefined) return seededRandomize(nodes);
+
+		const seed = seedExpression.evaluate(context);
+		const asNumber = seed.toNumber(); // TODO: There are some peculiarities to address: https://github.com/getodk/web-forms/issues/240
+		let finalSeed: number | bigint | undefined;
+		if (Number.isNaN(asNumber)) {
+			// Specific behaviors for when a seed value is not interpretable as numeric.
+			// We still want to derive a seed in those cases, see https://github.com/getodk/javarosa/issues/800
+			const seedString = seed.toString();
+			if (seedString === '') {
+				finalSeed = 0; // special case: JR behaviour
+			} else {
+				// any other string, we'll convert to a number via a digest function
+				finalSeed = toBigIntHash(seedString);
+			}
+		} else {
+			finalSeed = asNumber;
+		}
+		return seededRandomize(nodes, finalSeed);
 	}
 );
+
+const toBigIntHash = (text: string): bigint => {
+	/**
+	Hash text with sha256, and interpret the first 64 bits of output
+	(the first and second int32s ("words") of CryptoJS digest output)
+	as an int64 (in JS represented in a BigInt).
+	Thus the entropy of the hash is reduced to 64 bits, which
+	for some applications is sufficient.
+	The underlying representations are big-endian regardless of the endianness
+	of the machine this runs on, as is the equivalent JavaRosa implementation.
+	({@link https://github.com/getodk/javarosa/blob/ab0e8f4da6ad8180ac7ede5bc939f3f261c16edf/src/main/java/org/javarosa/xpath/expr/XPathFuncExpr.java#L718-L726 | see here}).
+	*/
+	const buffer = new ArrayBuffer(8);
+	const dataview = new DataView(buffer);
+	SHA256(text)
+		.words.slice(0, 2)
+		.forEach((val, ix) => dataview.setInt32(ix * Int32Array.BYTES_PER_ELEMENT, val));
+	return dataview.getBigInt64(0);
+};
