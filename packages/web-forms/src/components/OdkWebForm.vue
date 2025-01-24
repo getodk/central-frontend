@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import type { MissingResourceBehavior } from '@getodk/xforms-engine';
+import type {
+	ChunkedSubmissionResult,
+	MissingResourceBehavior,
+	MonolithicSubmissionResult,
+} from '@getodk/xforms-engine';
 import { initializeForm, type FetchFormAttachment, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
-import { computed, provide, reactive, ref, watchEffect, type ComponentPublicInstance } from 'vue';
+import type { ComponentPublicInstance } from 'vue';
+import { computed, getCurrentInstance, provide, reactive, ref, watchEffect } from 'vue';
 import { FormInitializationError } from '../lib/error/FormInitializationError.ts';
 import FormLoadFailureDialog from './Form/FormLoadFailureDialog.vue';
 import FormHeader from './FormHeader.vue';
@@ -12,12 +17,91 @@ import QuestionList from './QuestionList.vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 
-const props = defineProps<{
+interface OdkWebFormsProps {
 	formXml: string;
 	fetchFormAttachment: FetchFormAttachment;
 	missingResourceBehavior?: MissingResourceBehavior;
-}>();
-const emit = defineEmits(['submit']);
+
+	/**
+	 * Note: this parameter must be set when subscribing to the
+	 * {@link OdkWebFormEmits.submitChunked | submitChunked} event.
+	 */
+	submissionMaxSize?: number;
+}
+
+const props = defineProps<OdkWebFormsProps>();
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
+type OdkWebFormEmits = {
+	submit: [submissionPayload: MonolithicSubmissionResult];
+	submitChunked: [submissionPayload: ChunkedSubmissionResult];
+};
+
+/**
+ * Supports {@link isEmitSubscribed}.
+ *
+ * @see
+ * {@link https://mokkapps.de/vue-tips/check-if-component-has-event-listener-attached}
+ *
+ * Usage here is intentionally different from the linked article: for reasons
+ * unknown, {@link getCurrentInstance} returns `null` called in a
+ * {@link computed} function body (or any function body), but produces the
+ * expected value assigned to a top level value as it is here.
+ */
+const instance = getCurrentInstance();
+
+type OdkWebFormEmitsEventType = keyof OdkWebFormEmits;
+
+/**
+ * A Vue _template_ event handler is subscribed with syntax like:
+ *
+ * ```vue
+ * <OdkWebForm @whatever-event-type="handler" />
+ * ```
+ *
+ * At runtime, its props key is a concatenation of the prefix "on" and the
+ * PascalCase variant of the same event type. Since we already
+ * {@link defineEmits} in camelCase, this type represents that key format.
+ */
+type EventKey = `on${Capitalize<OdkWebFormEmitsEventType>}`;
+
+/**
+ * @see {@link https://mokkapps.de/vue-tips/check-if-component-has-event-listener-attached}
+ * @see {@link instance}
+ * @see {@link EventKey}
+ */
+const isEmitSubscribed = (eventKey: EventKey): boolean => {
+	return eventKey in (instance?.vnode.props ?? {});
+};
+
+const emitSubmit = async (root: RootNode) => {
+	if (isEmitSubscribed('onSubmit')) {
+		const payload = await root.prepareSubmission({
+			chunked: 'monolithic',
+		});
+
+		emit('submit', payload);
+	}
+};
+
+const emitSubmitChunked = async (root: RootNode) => {
+	if (isEmitSubscribed('onSubmitChunked')) {
+		const maxSize = props.submissionMaxSize;
+
+		if (maxSize == null) {
+			throw new Error('The `submissionMaxSize` prop is required for chunked submissions');
+		}
+
+		const payload = await root.prepareSubmission({
+			chunked: 'chunked',
+			maxSize,
+		});
+
+		emit('submitChunked', payload);
+	}
+};
+
+const emit = defineEmits<OdkWebFormEmits>();
 
 const odkForm = ref<RootNode>();
 const submitPressed = ref(false);
@@ -38,8 +122,13 @@ initializeForm(props.formXml, {
 	});
 
 const handleSubmit = () => {
-	if (odkForm.value?.validationState.violations?.length === 0) {
-		emit('submit');
+	const root = odkForm.value;
+
+	if (root?.validationState.violations?.length === 0) {
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		emitSubmit(root);
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		emitSubmitChunked(root);
 	} else {
 		submitPressed.value = true;
 		document.scrollingElement?.scrollTo(0, 0);
