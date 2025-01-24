@@ -250,6 +250,18 @@ const routes = [
       title: () => [i18n.t('title.formPreview')]
     }
   },
+  {
+    path: '/formsubmission/:enketoId/edit/:instanceId',
+    component: FormSubmission,
+    standalone: false,
+    props: (route) => ({
+      ...route.params,
+      actionType: 'edit',
+    }),
+    meta: {
+      title: () => [i18n.t('title.formEdit')]
+    }
+  },
   asyncRoute({
     path: '/load-error',
     component: 'ConfigError',
