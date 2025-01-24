@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="formVersionXml.initiallyLoading"/>
-  <template v-if="!formMeta.webformsEnabled">
+  <template v-if="!formMeta.webformsEnabled || actionType === 'edit'">
     <iframe id="enketoiframe" title="Enketo" :src="enketoURLByRouteProps()"></iframe>
   </template>
   <template v-else>
@@ -119,6 +119,10 @@ const props = defineProps({
     type: String,
     required: false
   },
+  instanceId: {
+    type: String,
+    required: false
+  },
 });
 
 const { formVersionXml } = useForm();
@@ -143,6 +147,11 @@ const enketoURLByRouteProps = () => {
     case 'publicfill': {
       const queryArgs = (new URLSearchParams({ st: props.sessionToken })).toString();
       enketoPath = `/${props.enketoPath}/${props.enketoId}?${queryArgs}`;
+      break;
+    }
+    case 'edit': {
+      const queryArgs = (new URLSearchParams({ instance_id: props.instanceId })).toString();
+      enketoPath = `/edit/${props.enketoId}?${queryArgs}`;
       break;
     }
     default:
