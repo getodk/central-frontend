@@ -3,8 +3,12 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { SubmissionChunkedType, SubmissionOptions } from './submission/SubmissionOptions.ts';
-import type { SubmissionResult } from './submission/SubmissionResult.ts';
+import type { SubmissionOptions } from './submission/SubmissionOptions.ts';
+import type {
+	ChunkedSubmissionResult,
+	MonolithicSubmissionResult,
+	SubmissionResult,
+} from './submission/SubmissionResult.ts';
 import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
@@ -84,7 +88,7 @@ export interface RootNode extends BaseNode {
 	 * A client may specify {@link SubmissionOptions<'chunked'>}, in which case a
 	 * {@link SubmissionResult<'chunked'>} will be produced, with form attachments
 	 */
-	prepareSubmission<ChunkedType extends SubmissionChunkedType>(
-		options?: SubmissionOptions<ChunkedType>
-	): Promise<SubmissionResult<ChunkedType>>;
+	prepareSubmission(): Promise<MonolithicSubmissionResult>;
+	prepareSubmission(options: SubmissionOptions<'monolithic'>): Promise<MonolithicSubmissionResult>;
+	prepareSubmission(options: SubmissionOptions<'chunked'>): Promise<ChunkedSubmissionResult>;
 }

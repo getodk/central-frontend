@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { xformFixturesByCategory, XFormResource } from '@getodk/common/fixtures/xforms.ts';
-import type { FetchFormAttachment, MissingResourceBehavior } from '@getodk/xforms-engine';
+import type {
+	ChunkedSubmissionResult,
+	FetchFormAttachment,
+	MissingResourceBehavior,
+	MonolithicSubmissionResult,
+} from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -50,8 +55,16 @@ xformResource
 		alert('Failed to load the Form XML');
 	});
 
-const handleSubmit = () => {
+const handleSubmit = (payload: MonolithicSubmissionResult) => {
+	// eslint-disable-next-line no-console
+	console.log('submission payload:', payload);
+
 	alert(`Submit button was pressed`);
+};
+
+const handleSubmitChunked = (payload: ChunkedSubmissionResult) => {
+	// eslint-disable-next-line no-console
+	console.log('CHUNKED submission payload:', payload);
 };
 </script>
 <template>
@@ -60,7 +73,9 @@ const handleSubmit = () => {
 			:form-xml="formPreviewState.formXML"
 			:fetch-form-attachment="formPreviewState.fetchFormAttachment"
 			:missing-resource-behavior="formPreviewState.missingResourceBehavior"
+			:submission-max-size="Infinity"
 			@submit="handleSubmit"
+			@submit-chunked="handleSubmitChunked"
 		/>
 		<FeedbackButton />
 	</template>

@@ -7,9 +7,6 @@ import type {
 	RepeatRangeUncontrolledNode,
 	RootNode,
 	SelectNode,
-	SubmissionChunkedType,
-	SubmissionOptions,
-	SubmissionResult,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
@@ -965,10 +962,8 @@ export class Scenario {
 	 * more about Collect's responsibility for submission (beyond serialization,
 	 * already handled by {@link proposed_serializeInstance}).
 	 */
-	prepareWebFormsSubmission<ChunkedType extends SubmissionChunkedType>(
-		options?: SubmissionOptions<ChunkedType>
-	): Promise<SubmissionResult<ChunkedType>> {
-		return this.instanceRoot.prepareSubmission<ChunkedType>(options);
+	prepareWebFormsSubmission() {
+		return this.instanceRoot.prepareSubmission();
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
