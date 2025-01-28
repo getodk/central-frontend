@@ -308,6 +308,23 @@ export default {
       "retire": "ユーザー\"{displayName}\"を除外しました。"
     }
   },
+  "pt": {
+    "action": {
+      "create": "Criar usuário do site"
+    },
+    "heading": [
+      "Os usuários de site têm contas nesse servidor para supervisionar e administrar os projetos neste servidor. Os administradores podem gerenciar qualquer coisa no site. Os usuários sem permissões de administração do site podem receber uma função em qualquer projeto, a partir das configurações do projeto. Os administradores e algumas funções do projeto podem usar um navegador da web para preencher os formulários. Para enviar dados por meio de um aplicativo como o {collect}, crie usuários de aplicativo para cada projeto."
+    ],
+    "header": {
+      "sitewideRole": "Função do site"
+    },
+    "alert": {
+      "create": "Um usuário foi criado com sucesso para \"{displayName}\".",
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função do site de \"{roleName}\".",
+      "resetPassword": "A senha para \"{displayName}\" foi invalidada. Um email foi enviado para {email}com as instruções de como prosseguir.",
+      "retire": "O usuário \"{displayName}\" foi desativado."
+    }
+  },
   "sw": {
     "action": {
       "create": "Unda Mtumiaji wa Wavuti"

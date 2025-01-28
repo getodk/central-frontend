@@ -256,6 +256,16 @@ const currentVersion = computed(() =>
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
   },
+  "pt": {
+    "title": "Atualizar {label}",
+    "header": {
+      "currentValue": "Valor Atual",
+      "updatedValue": "Valor Atualizado"
+    },
+    "problem": {
+      "409_15": "Os dados foram modificados por outro usuário. Por favor, atualize a página para ver os dados atualizados."
+    }
+  },
   "sw": {
     "title": "Sasisha {label}",
     "header": {

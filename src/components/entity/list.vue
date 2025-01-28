@@ -411,6 +411,13 @@ export default {
       "delete": "La Entità “{label}” è stata cancellata."
     }
   },
+  "pt": {
+    "noEntities": "Não há Entidades para mostrar.",
+    "noMatching": "Não há Entidades correspondentes.",
+    "alert": {
+      "delete": "A Entidade \"{label}\" foi excluída."
+    }
+  },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
     "noMatching": "Hakuna Huluki zinazolingana."

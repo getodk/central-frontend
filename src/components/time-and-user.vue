@@ -86,6 +86,9 @@ const { userPath } = useRoutes();
   "ja": {
     "text": "{displayName}が{dateTime}の時点で実施"
   },
+  "pt": {
+    "text": "{dateTime} feito por {displayName}"
+  },
   "sw": {
     "text": "{dateTime} na {displayName}"
   },

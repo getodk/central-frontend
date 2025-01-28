@@ -250,6 +250,14 @@ export default {
       "toggleDeletedSubmissions": "{count} invio cancellato | {count} invii cancellati | {count} invii cancellati"
     }
   },
+  "pt": {
+    "analyzeDisabled": "O acesso ao OData não está disponível devido à encriptação do Formulário",
+    "analyzeDisabledDeletedData": "O acesso ao OData não está disponível devido às Respostas excluídas",
+    "purgeDescription": "Respostas e dados relacionados a Respostas são deletados depois de 30 dias na Lixeira",
+    "action": {
+      "toggleDeletedSubmissions": "{count} Resposta excluída | {count} Respostas excluídas | {count} Respostas excluídas"
+    }
+  },
   "sw": {
     "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
   },

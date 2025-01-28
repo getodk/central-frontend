@@ -195,6 +195,14 @@ html, body {
       }
     }
   },
+  "pt": {
+    "webFormPreview": {
+      "submissionModal": {
+        "title": "Pré-visualização do ODK Web Forms",
+        "body": "Você concluiu o formulário usando uma versão anterior do novo ODK Web Forms. A Resposta não foi enviada: atualmente, você só pode visualizar seus formulários no ODK Web Forms."
+      }
+    }
+  },
   "zh-Hant": {
     "webFormPreview": {
       "submissionModal": {

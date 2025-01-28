@@ -59,6 +59,13 @@ using existing transifex process.
       "sentence2": "Se non si vuole mantenere Central, provare con {OdkCloudLink}."
     }
   },
+  "pt": {
+    "outdatedVersionHtml": {
+      "heading": "Você está usando uma versão consideravelmente ultrapassada do ODK Central",
+      "sentence1": "Atualize agora para proteger seus dados e obter vantagem das últimas implementações.",
+      "sentence2": "Se você não quer manter o Central, tente {OdkCloudLink}"
+    }
+  },
   "zh-Hant": {
     "outdatedVersionHtml": {
       "heading": "您使用的 ODK Central 版本明顯過時",

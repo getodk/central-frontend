@@ -416,6 +416,38 @@ export default {
       "success": "設定が保存されました！"
     }
   },
+  "pt": {
+    "enabled": {
+      "null": [
+        "Lembrar-nos depois.",
+        "Os administradores continuarão a ver a mensagem no topo da tela."
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} e nós aceitamos os {termsOfService} e a {privacyPolicy}.",
+          "weWillShare": "Nós concordamos em compartilhar dados anônimos de uso mensalmente com a equipe do Central,",
+          "termsOfService": "Termos de serviço",
+          "privacyPolicy": "Política de privacidade"
+        },
+        "Quais métricas são enviadas?"
+      ],
+      "false": [
+        "Nós não desejamos em compartilhar nenhuma informação.",
+        "Você não verá nenhum aviso sobre isso novamente."
+      ]
+    },
+    "contact": [
+      "Desejo incluir minhas informações de contato com o relatório.",
+      "Nós poderemos entrar em contato com você para saber mais sobre o uso do Central."
+    ],
+    "field": {
+      "workEmail": "Endereço de email de trabalho",
+      "organization": "Nome da organização"
+    },
+    "alert": {
+      "success": "Configurações gravadas com sucesso!"
+    }
+  },
   "sw": {
     "enabled": {
       "null": [

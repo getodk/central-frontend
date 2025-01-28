@@ -606,6 +606,18 @@ export default {
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"
   },
+  "pt": {
+    "action": {
+      "testOnDevice": "Testar no dispositivo'",
+      "testInBrowser": "Testar no navegador"
+    },
+    "noMatching": "Não foram encontradas respostas com esses parâmetros.",
+    "downloadDisabled": "O download está indisponível para Respostas excluídas",
+    "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
+    "deletedSubmission": {
+      "emptyTable": "Não há Respostas excluídas"
+    }
+  },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
   },

@@ -393,6 +393,30 @@ export default {
       "revoke": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
     }
   },
+  "pt": {
+    "action": {
+      "create": "Criar usuário de aplicativo"
+    },
+    "heading": [
+      {
+        "full": "Usuários de aplicativo são usados para coletar dados usando uma aplicação como o {collect}. Eles tipicamente representam uma função como \"Vacinador\" mas também podem representar indivíduos. Usuários de aplicativo nesse projeto pode baixar e utilizar formulários apenas dentro desse projeto. Quando você cria um novo usuário de aplicativo, ele não terá acesso a nenhum formulário inicialmente. Para definir os formulários que cada usuário de aplicativo pode acessar, utilize a aba {formAccess}.",
+        "formAccess": "Acesso ao formulário"
+      },
+      {
+        "full": "Usuários de aplicativo são mais apropriados quando coletores de dados precisam acessar múltiplos formulários, não tem acesso constante à internet, ou quando você tem um formulário complexo. Se você precisa que os entrevistados preencham o formulário sozinhos ou ter o formulário disponível apenas na internet, {clickHere} para outras opções.",
+        "clickHere": "clique aqui"
+      }
+    ],
+    "header": {
+      "lastUsed": "Última utilização em",
+      "configureClient": "Configurar cliente"
+    },
+    "emptyTable": "Não existe nenhum usuário de aplicativo ainda. Você terá que criar um para baixar formulários e enviar dados a partir do seu dispositivo.",
+    "alert": {
+      "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso.",
+      "revoke": "O acesso foi revogado para o usuário de aplicativo \"{displayName}\"."
+    }
+  },
   "sw": {
     "action": {
       "create": "Unda Mtumiaji wa Programu"

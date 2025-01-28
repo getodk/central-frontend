@@ -340,6 +340,27 @@ watch(() => props.entity, (entity) => {
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
   },
+  "pt": {
+    "title": "Atualizações paralelas para \"{label}\"",
+    "instructions": [
+      "Atualizações foram feitas para \"{label}\" em paralelo. Isso significa que as alterações podem estar em conflito entre si, pois foram criadas com base em dados mais antigos do que os que foram eventualmente aplicados pelo Central.",
+      "Revise as atualizações, faça as alterações necessárias e, se tiver certeza de que os dados desta Entidade estão corretos, pressione \"Marcar como resolvido\" para limpar esta mensagem de aviso."
+    ],
+    "action": {
+      "table": {
+        "show": "Mostrar tabela de resumo",
+        "hide": "Ocultar tabela de resumo"
+      },
+      "seeMoreDetails": "Ver mais detalhes",
+      "editEntity": "Editar Entidade",
+      "markAsResolved": "Marcar como resolvido"
+    },
+    "successMessage": "O aviso de conflito foi limpo da Entidade.",
+    "problem": {
+      "400_32": "Outro usuário já marcou o conflito como resolvido. Por favor, atualize a página para ver os dados atualizados.",
+      "409_15": "Os dados foram modificados por outro usuário. Por favor, atualize a página para ver os dados atualizados."
+    }
+  },
   "sw": {
     "title": "Masasisho sambamba ya “{label}”",
     "instructions": [

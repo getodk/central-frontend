@@ -99,6 +99,9 @@ const { publishedFormPath } = useRoutes();
   "it": {
     "formsConsumeData": "Il formulario utilizza questo elenco di entità | I formulari utilizzano questo elenco di entità | I formulari utilizzano questo elenco di entità"
   },
+  "pt": {
+    "formsConsumeData": "Formulário usa esta Lista de Entidades | Formulários usam esta Lista de Entidades | Formulários usam esta Lista de Entidades"
+  },
   "sw": {
     "formsConsumeData": "Fomu hutumia Orodha hii ya Huluki | Fomu hutumia Orodha hii ya Huluki"
   },

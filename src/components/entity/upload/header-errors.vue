@@ -204,6 +204,18 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "delimiterNotComma": "Ciò potrebbe essere dovuto al fatto che abbiamo sbagliato il delimitatore di cella. Abbiamo usato {delimiter}."
     }
   },
+  "pt": {
+    "expectedHeader": "Cabeçalho esperado",
+    "suggestions": {
+      "title": "Sugestões",
+      "invalidQuotes": "Um campo entre aspas é inválido. Verifique a linha de cabeçalho do seu arquivo para ver se há valores incomuns.",
+      "missingLabel": "Uma propriedade de {label} é obrigatória. O rótulo indica o nome a ser usado para cada Entidade no Central e em outros lugares.",
+      "unknownProperty": "Se quiser adicionar propriedades a esta Lista de Entidades, você pode fazê-lo na seção Propriedades da Entidade na página Visão Geral desta Lista de Entidades, ou pode carregar e publicar um Formulário que faça referência à propriedade.",
+      "duplicateColumn": "Parece que duas ou mais colunas têm o mesmo cabeçalho. Certifique-se de que os cabeçalhos das colunas sejam exclusivos.",
+      "emptyColumn": "Parece que você tem uma célula vazia no cabeçalho. Remova todas as colunas vazias do seu arquivo.",
+      "delimiterNotComma": "Isso pode ter ocorrido porque definimos o delimitador de célula errado. Usamos {delimiter}."
+    }
+  },
   "zh-Hant": {
     "expectedHeader": "預期標題",
     "suggestions": {

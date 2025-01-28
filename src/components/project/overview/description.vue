@@ -151,6 +151,13 @@ export default {
     },
     "note": "Solo i Project Manager possono vedere questo suggerimento."
   },
+  "pt": {
+    "instructions": {
+      "full": "Adicione notas de Projeto, links, instruções e outros recursos neste espaço em {projectSettings}.",
+      "projectSettings": "Configurações do Projeto"
+    },
+    "note": "Somente Gerentes de Projeto podem ver esta sugestão."
+  },
   "sw": {
     "instructions": {
       "full": "Ongeza madokezo ya Mradi, viungo, maagizo na nyenzo zingine kwenye nafasi hii katika {projectSettings}.",

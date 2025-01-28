@@ -196,6 +196,19 @@ const hideAndReset = () => {
       "successMessage": "Le entità verranno create non appena gli Invii saranno contrassegnati come approvati."
     }
   },
+  "pt": {
+    "entityWorkflow": "Fluxo de Trabalho da Entidade",
+    "onReceipt": {
+      "label": "Criar Entidades assim que as Respostas forem recebidas pelo Central",
+      "description": "Você não terá oportunidade de examinar ou revisar dados antes de as Entidades serem criadas.",
+      "successMessage": "As Entidades serão criadas assim que as Respostas forem recebidas pelo Central."
+    },
+    "onApproval": {
+      "label": "Criar Entidades quando as Respostas forem marcadas como Aprovadas",
+      "description": "Os dados da Entidade não serão atualizados até que uma pessoa revise os dados. Correções podem ser feitas, se necessário.",
+      "successMessage": "Entidades serão criadas quando as Respostas forem marcadas como Aprovadas."
+    }
+  },
   "sw": {
     "entityWorkflow": "Mtiririko wa Kazi wa Huluki",
     "onReceipt": {

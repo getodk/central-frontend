@@ -256,6 +256,21 @@ const hideOrComplete = () => {
       "Le entità consentono di condividere le informazioni tra i formulari per raccogliere dati longitudinali, gestire i casi nel tempo e rappresentare altri flussi di lavoro con più passaggi."
     ]
   },
+  "pt": {
+    "title": "Criar lista de Entidades",
+    "encrypted": "Este Projeto está encriptado. Formulários e Respostas não poderão modificar nenhuma Entidade nesta Lista. As Entidades devem ser gerenciadas por meio do Central ou da API.",
+    "entityListName": "Nome da Lista de Entidades",
+    "success": [
+      "A Lista de Entidades “{name}” foi criada.",
+      "Você pode começar a usá-la adicionando suas propriedades de dados diretamente nesta página ou carregando Formulários que a usam. Nesse caso, quaisquer propriedades que o Formulário chamar serão criadas automaticamente quando você publicar o Formulário."
+    ],
+    "problem": {
+      "409_3": "Uma Lista de Entidades já existe neste Projeto com o nome de “{datasetName}”."
+    },
+    "introduction": [
+      "As Entidades permitem que você compartilhe informações entre Formulários para que você possa coletar dados longitudinais, gerenciar casos ao longo do tempo e representar outros fluxos de trabalho com várias etapas."
+    ]
+  },
   "sw": {
     "introduction": [
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi."

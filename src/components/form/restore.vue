@@ -137,6 +137,14 @@ export default {
       "フォームを再削除した場合、完全に削除されるまで、さらに30日を要します。"
     ]
   },
+  "pt": {
+    "title": "Desfazer exclusão do Formulário",
+    "introduction": [
+      "Tem certeza de que deseja desfazer a exclusão do formulário {name}?",
+      "O Formulário será restaurado ao seu status anterior, incluindo todos os dados, configurações e permissões.",
+      "Se o Formulário for excluído novamente, serão necessários mais 30 dias para que seja removido."
+    ]
+  },
   "sw": {
     "title": "Ondoa kufuta fomu",
     "introduction": [

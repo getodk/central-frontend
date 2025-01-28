@@ -83,6 +83,9 @@ $border-radius: 3px;
   "it": {
     "headersNote": "The first row in your data file must exactly match the table header you see above."
   },
+  "pt": {
+    "headersNote": "A primeira linha do seu arquivo de dados deve corresponder exatamente ao cabeçalho da tabela que você vê acima."
+  },
   "zh-Hant": {
     "headersNote": "資料檔案中的第一行必須與上面看到的表標題完全相符。"
   }

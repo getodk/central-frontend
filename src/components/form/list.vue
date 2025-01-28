@@ -185,6 +185,16 @@ export default {
       "create": "新規フォーム\"{name}\"が下書きとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用できます。"
     }
   },
+  "pt": {
+    "title": "Formulários",
+    "action": {
+      "create": "Novo"
+    },
+    "emptyTable": "Não há formulários para exibir.",
+    "alert": {
+      "create": "O seu novo formulário \"{name}\" foi criado como rascunho. Dê uma olhada na lista de verificação abaixo e, quando você sentir que está pronto, publique o formulário para utilização."
+    }
+  },
   "sw": {
     "title": "Fomu",
     "action": {

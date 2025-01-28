@@ -141,6 +141,13 @@ const dismiss = () => {
     "dismiss": "Sospendere per 30 giorni",
     "dismissTooltip": "Fate clic qui per disattivare questo avviso per 30 giorni."
   },
+  "pt": {
+    "title": "Versão ultrapassada",
+    "instructionsToUpgrade": "Instruções para atualizar",
+    "instructionsToUpgradeTooltip": "Clique aqui para ver as instruções para atualizar o Central",
+    "dismiss": "Ignorar por 30 dias",
+    "dismissTooltip": "Clique aqui para ignorar este aviso por 30 dias."
+  },
   "zh-Hant": {
     "title": "過時的版本",
     "instructionsToUpgrade": "升級說明",

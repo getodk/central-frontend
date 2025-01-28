@@ -135,6 +135,17 @@ export default {
       }
     }
   },
+  "pt": {
+    "action": {
+      "download": {
+        "unfiltered": "Baixar {count} Resposta | Baixar {count} Respostas | Baixar {count} Respostas",
+        "filtered": {
+          "withoutCount": "Baixar Respostas correspondentes",
+          "withCount": "Baixar {count} Resposta correspondente | Baixar {count} Respostas correspondentes | Baixar {count} Respostas correspondentes"
+        }
+      }
+    }
+  },
   "sw": {
     "action": {
       "download": {

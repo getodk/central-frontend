@@ -291,6 +291,22 @@ export default {
       "submissions": "提出"
     }
   },
+  "pt": {
+    "version": {
+      "full": "{publishedVersion}desse fomulário.",
+      "publishedVersion": "Versão publicada"
+    },
+    "stateCaption": {
+      "open": "Esse formulário pode ser baixado e está aceitando respostas.",
+      "closing": "Esse formulário não pode ser baixado, mas ainda aceita respostas.",
+      "closed": "Esse formulário não pode ser baixado, e não aceita mais respostas."
+    },
+    "submissions": {
+      "full": "{submissions} foi gravada para esse formulário. | {submissions} foram gravadas para esse formulário. | {submissions} foram gravadas para esse formulário.",
+      "submissions": "Resposta | Respostas | Respostas"
+    },
+    "datasetsLinked": "Lista de Entidades vinculada a este Formulário: | Listas de Entidades vinculadas a este Formulário: | Listas de Entidades vinculadas a este Formulário:"
+  },
   "sw": {
     "version": {
       "full": "{publishedVersion} ya Fomu hii.",

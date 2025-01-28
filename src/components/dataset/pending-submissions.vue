@@ -209,6 +209,27 @@ const convert = ref(null);
       "description": "Modifica l'impostazione e crea entità per il {count} invio non ancora approvato o rifiutato. Gli Stati di revisione non saranno interessati. | Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati. | Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati."
     }
   },
+  "pt": {
+    "title": "Respostas Pendentes",
+    "action": {
+      "changeSetting": "Alterar configuração"
+    },
+    "explanation": {
+      "userAction": "Você está definindo a criação da Entidade para ocorrer quando as Respostas forem recebidas pelo Central.",
+      "implication": {
+        "full": "Quando isso entrar em vigor, as Entidades não serão mais geradas quando as Respostas forem marcadas como Aprovadas, incluindo {records} que encontramos que não foi marcado como Aprovado nem Rejeitado. | Quando isso entrar em vigor, as Entidades não serão mais geradas quando as Respostas forem marcadas como Aprovadas, incluindo {records} que encontramos que não foram marcados como Aprovados nem Rejeitados. | Quando isso entrar em vigor, as Entidades não serão mais geradas quando as Respostas forem marcadas como Aprovadas, incluindo {records} que encontramos que não foram marcados como Aprovados nem Rejeitados.",
+        "records": "{count} registro | {count} registros | {count} registros"
+      }
+    },
+    "dontConvert": {
+      "label": "Eu entendo e isso não é um problema para mim.",
+      "description": "Alterar a configuração e não fazer nada com a Resposta pendente. | Alterar a configuração e não fazer nada com as Respostas pendentes. | Alterar a configuração e não fazer nada com as Respostas pendentes."
+    },
+    "convert": {
+      "label": "Converter todas as Respostas pendentes em Entidades agora.",
+      "description": "Alterar a configuração e criar Entidade da {count} Resposta ainda não Aprovada ou Rejeitada. Os Status de Revisão não serão afetados. | Alterar a configuração e criar Entidades de todas as {count} Respostas ainda não Aprovadas ou Rejeitadas. Os Status de Revisão não serão afetados. | Alterar a configuração e criar Entidades de todas as {count} Respostas ainda não Aprovadas ou Rejeitadas. Os Status de Revisão não serão afetados."
+    }
+  },
   "sw": {
     "title": "Mawasilisho Yanayosubiri",
     "action": {

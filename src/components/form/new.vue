@@ -640,6 +640,54 @@ export default {
       "409_3": "このプロジェクトには、フォームID\"{xmlFormId}\"のフォームがすでに存在しています。"
     }
   },
+  "pt": {
+    "title": {
+      "create": "Criar formulário",
+      "update": "Carregar nova definição de formulário"
+    },
+    "introduction": [
+      {
+        "create": "Para criar um formulário, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel.",
+        "update": "Para atualizar o rascunho, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel."
+      },
+      {
+        "full": "Se você não tem nenhum ainda, existem {tools} que podem ajudar você a construir seu formulário.",
+        "tools": "ferramentas disponíveis"
+      },
+      "Se você tiver Anexos do Formulário, poderá fornecê-los na próxima página, após o Formulário ter sido criado."
+    ],
+    "dropZone": {
+      "full": "Solte o arquivo aqui, ou {chooseOne}para carregar.",
+      "chooseOne": "escolha um"
+    },
+    "action": {
+      "uploadAnyway": "Carregar assim mesmo"
+    },
+    "alert": {
+      "fileRequired": "Por favor, selecione um arquivo."
+    },
+    "problem": {
+      "400_8": "A especificação de formulário que você carregou não parece ser para esse formulário. Ela contém uma identificação de formulário errada (era esperado \"{expected}\", mas encontramos \"{actual}\").",
+      "400_15": "O XLSForm não pode ser convertido: {error}",
+      "409_3": "Já existe um formulário nesse projeto com o ID de formulário \"{xmlFormId}\"."
+    },
+    "fields": "Campos:",
+    "warningsText": [
+      "Este arquivo pode ser usado, mas tem os seguintes problemas possíveis:",
+      "Avisos de design do formulário:",
+      "Avisos de fluxo de trabalho:",
+      {
+        "deletedFormExists": "Há um formulário com ID \"{value}\" na Lixeira. Se você fizer upload deste Formulário, não poderá desfazer a exclusão do outro com a ID correspondente.",
+        "structureChanged": "Os seguintes campos foram excluídos, renomeados ou agora estão em grupos diferentes ou repetições. Esses campos não estarão visíveis na tabela de Resposta ou incluídos nas exportações por padrão.",
+        "oldEntityVersion": "A versão “{version}” da especificação de Entidades não é compatível com Entidades Offline. Recomendamos utilizar a versão 2024.1.0 ou alguma mais recente."
+      },
+      "Por favor, corrija os problemas e tente novamente.",
+      {
+        "create": "Se tiver certeza de que esses problemas podem ser ignorados, clique no botão para criar o Formulário mesmo assim:",
+        "update": "Se tiver certeza de que esses problemas podem ser ignorados, clique no botão para atualizar o Rascunho mesmo assim:"
+      }
+    ]
+  },
   "sw": {
     "title": {
       "create": "unda fomu",

@@ -259,6 +259,20 @@ export default {
       }
     }
   },
+  "pt": {
+    "draft": {
+      "none": {
+        "title": "Sem rascunho atual",
+        "body": "Não há atualmente uma versão Rascunho deste formulário. Se quiser fazer alterações no formulário ou em seus anexos, comece criando um rascunho usando o botão acima."
+      },
+      "any": {
+        "versionCaption": {
+          "full": "{draftVersion} desse formulário.",
+          "draftVersion": "Versão de rascunho"
+        }
+      }
+    }
+  },
   "sw": {
     "draft": {
       "none": {

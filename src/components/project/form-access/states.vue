@@ -239,6 +239,27 @@ export default {
       }
     ]
   },
+  "pt": {
+    "title": "Status de formulário",
+    "introduction": [
+      "Os status do formulário controlam o ciclo de vida de cada formulário. Normalmente, mas nem sempre, um formulário começará como Aberto, em seguida Em fechamento, e mudará para Fechado quando não precisar mais ser usado.",
+      {
+        "full": "Formulários com status {open}ficam disponíveis para baixar e aceitarão novas respostas.",
+        "open": "Aberto"
+      },
+      {
+        "full": "Formulários com o status {closing} aceitarão novas respostas, mas {not}estarão disponíveis para baixar.",
+        "closing": "Em fechamento",
+        "not": "não"
+      },
+      {
+        "full": "Formulários com o status {closed}{not1}estão disponíveis para baixar e {not2}aceitam novas respostas.",
+        "closed": "Fechado",
+        "not1": "não",
+        "not2": "não"
+      }
+    ]
+  },
   "sw": {
     "title": "Hali ya fomu",
     "introduction": [

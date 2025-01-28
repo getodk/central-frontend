@@ -344,6 +344,30 @@ export default {
       }
     }
   },
+  "pt": {
+    "title": "Utilizando OData",
+    "introduction": [
+      "OData é um padrão para transferência de dados entre ferramentas e serviços. Ferramentas de análise poderosas como {powerBi}, {excel}, {python} e {r} podem buscar dados via OData para análise.",
+      "Para conectar-se a este feed OData, selecione sua ferramenta e copie o link para ela."
+    ],
+    "tab": {
+      "microsoft": "Power BI ou Excel",
+      "other": "Outra ferramenta"
+    },
+    "help": {
+      "microsoft": {
+        "full": "Para obter ajuda ao usar OData com Power BI, consulte {pageForPowerBi}. Para obter ajuda com Excel, consulte {pageForExcel}.",
+        "pageForExcel": "esta página",
+        "pageForPowerBi": "esta página"
+      },
+      "python": "Para conectar-se ao Central a partir do Python, recomendamos {pyODK}. O pyODK é o cliente Python oficial para o Central. Ele simplifica a análise de dados e a automação do fluxo de trabalho.",
+      "r": "Para conectar-se ao Central a partir do R, recomendamos {ruODK}. O ruODK é desenvolvido e suportado por membros da comunidade ODK.",
+      "other": {
+        "full": "Para uma descrição detalhada do nosso suporte a OData, por favor veja {article}.",
+        "article": "esse artigo"
+      }
+    }
+  },
   "sw": {
     "title": "Kwa kutumia OData",
     "introduction": [

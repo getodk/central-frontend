@@ -295,6 +295,12 @@ $border-height: 3px;
     },
     "analyticsNotice": "Centralの改善を支援！"
   },
+  "pt": {
+    "action": {
+      "toggle": "Ocultar ou exibir a barra de navegação"
+    },
+    "analyticsNotice": "Ajude a melhorar o Central!"
+  },
   "sw": {
     "action": {
       "toggle": "Geuza urambazaji"

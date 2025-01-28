@@ -132,6 +132,15 @@ const del = () => {
       "noConfirm": "Elimina immediatamente senza conferma finché non lascio la pagina"
     }
   },
+  "pt": {
+    "title": "Excluir {label}",
+    "introduction": [
+      "Tem certeza de que deseja excluir “{label}”?"
+    ],
+    "field": {
+      "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
+    }
+  },
   "zh-Hant": {
     "title": "刪除{label}",
     "introduction": [

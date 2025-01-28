@@ -163,6 +163,22 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     }
   },
+  "pt": {
+    "conflict": {
+      "true": "Possível conflito",
+      "false": "Nenhum conflito"
+    },
+    "field": {
+      "conflict": "Status do conflito"
+    },
+    "placeholder": "{selected} de {total}",
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Nenhum"
+      }
+    }
+  },
   "sw": {
     "conflict": {
       "true": "Mzozo unaowezekana",

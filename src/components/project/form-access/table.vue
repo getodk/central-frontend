@@ -256,6 +256,12 @@ export default {
       "state": "状態"
     }
   },
+  "pt": {
+    "header": {
+      "form": "Formulário",
+      "state": "Status"
+    }
+  },
   "sw": {
     "header": {
       "form": "fomu",

@@ -220,6 +220,14 @@ export default {
     },
     "message": "フォームとフォームに関連したデータは30日後に削除されます。"
   },
+  "pt": {
+    "title": "Lixeira",
+    "trashCount": "({count})",
+    "alert": {
+      "restore": "A exclusão do Formulário \"{name}\" foi desfeita."
+    },
+    "message": "Formulários e dados relacionados a Formulários são excluídos após 30 dias na Lixeira"
+  },
   "sw": {
     "title": "Takataka",
     "trashCount": "({count})",

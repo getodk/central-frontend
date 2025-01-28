@@ -209,6 +209,15 @@ export default {
     "expected": "{count}件の期待されるメディアファイル数",
     "attachmentSummary": "{present} / {expected}"
   },
+  "pt": {
+    "formVersion": "Versão do formulário",
+    "deviceId": "ID do dispositivo",
+    "userAgent": "Agente de usuário",
+    "attachments": "Anexos",
+    "present": "{count}arquivo | {count}arquivos | {count}arquivos",
+    "expected": "{count}esperado | {count} esperados | {count} esperados",
+    "attachmentSummary": "{present} / {expected}"
+  },
   "sw": {
     "formVersion": "Toleo la fomu",
     "deviceId": "Kitambulisho cha Kifaa",

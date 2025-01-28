@@ -155,6 +155,17 @@ const submit = () => {
       "409_3": "Esiste già una proprietà in questo elenco di entità con il nome \"{propertyName}”."
     }
   },
+  "pt": {
+    "title": "Adicionar Propriedade da Entidade",
+    "introduction": [
+      "Para adicionar uma propriedade de Entidade, escolha um nome de propriedade exclusivo abaixo.",
+      "Você também pode adicionar novas propriedades carregando um Formulário que as referencie; nesse caso, as propriedades são criadas quando o Formulário é publicado."
+    ],
+    "newPropertyName": "Novo nome da propriedade",
+    "problem": {
+      "409_3": "Uma propriedade já existe nesta Lista de Entidades com o nome de “{propertyName}”."
+    }
+  },
   "zh-Hant": {
     "title": "新增實體屬性",
     "introduction": [

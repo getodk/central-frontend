@@ -182,6 +182,11 @@ watchEffect(() => {
       "delete": "Elimina Entità"
     }
   },
+  "pt": {
+    "action": {
+      "delete": "Excluir Entidade"
+    }
+  },
   "zh-Hant": {
     "action": {
       "delete": "刪除實體"

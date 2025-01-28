@@ -164,6 +164,12 @@ defineExpose({ afterReview, afterDelete });
       "stateAndActions": "レビュー・ステータスと操作"
     }
   },
+  "pt": {
+    "header": {
+      "stateAndActions": "Status e ações",
+      "deletedAt": "Excluída em"
+    }
+  },
   "sw": {
     "header": {
       "stateAndActions": "Hali na vitendo"

@@ -360,6 +360,15 @@ export default {
     "showFewerDatasets": "Mostra meno del {count} totale Lista Entità | Mostra meno del {count} totale Lista Entità | Mostra meno del {count} totale Lista Entità",
     "hidden": "nascosto"
   },
+  "pt": {
+    "encrypted": "Encriptado",
+    "encryptionTip": "Este Projeto usa encriptação gerenciada.",
+    "showMore": "Mostrar {count} Formulário | Mostrar {count} total de Formulários | Mostrar {count} total de Formulários",
+    "showMoreDatasets": "Mostrar {count} Lista de Entidades | Mostrar {count} total de Listas de Entidades | Mostrar {count} total de Listas de Entidades",
+    "showFewer": "Mostrar menos de {count} Formulário | Mostrar menos de {count} total de Formulários | Mostrar menos de {count} total de Formulários",
+    "showFewerDatasets": "Mostrar menos de {count} Lista de Entidades | Mostrar menos de {count} total de Listas de Entidades | Mostrar menos de {count} total de Listas de Entidades",
+    "hidden": "oculto"
+  },
   "sw": {
     "encrypted": "Imesimbwa kwa njia fiche",
     "encryptionTip": "Mradi huu unatumia usimbaji fiche unaodhibitiwa.",

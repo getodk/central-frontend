@@ -239,6 +239,10 @@ export default {
     "deletedMessage": "これは削除されました。",
     "purgedMessage": "これは完全に削除されました。"
   },
+  "pt": {
+    "deletedMessage": "Esse recurso foi deletado.",
+    "purgedMessage": "Esse recurso foi limpo."
+  },
   "sw": {
     "deletedMessage": "Rasimali hii imefutwa",
     "purgedMessage": "Rasilimali hii imesafishwa."

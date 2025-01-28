@@ -140,6 +140,12 @@ export default {
     },
     "possibleConflictsCount": "{count} possibile conflitto | {count} possibili conflitti | {count} possibili conflitti"
   },
+  "pt": {
+    "action": {
+      "download": "Baixar dados (.csv)"
+    },
+    "possibleConflictsCount": "{count} possível conflito | {count} possíveis conflitos | {count} possíveis conflitos"
+  },
   "sw": {
     "action": {
       "download": "Pakua data (.csv)"

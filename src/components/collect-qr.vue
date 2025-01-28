@@ -184,6 +184,10 @@ useEventListener(document.body, 'click', (event) => {
   "ja": {
     "altText": "クライアントの設定コード"
   },
+  "pt": {
+    "draft": "Código para teste temporário",
+    "altText": "Código de configuração de cliente"
+  },
   "sw": {
     "altText": "Msimbo wa Usanidi wa Mteja"
   },

@@ -242,6 +242,17 @@ export default {
       "retire": "ユーザーの除外"
     }
   },
+  "pt": {
+    "cannotAssignRole": "Você não pode alterar a sua própria função do site.",
+    "field": {
+      "sitewideRole": "Função do site"
+    },
+    "cannotResetPassword": "Você não pode redefinir sua própria senha nesta página. Para alterar sua senha, edite seu perfil.",
+    "cannotRetire": "Você não pode desativar você mesmo.",
+    "action": {
+      "retire": "Desativar usuário"
+    }
+  },
   "sw": {
     "cannotAssignRole": "Huenda usihariri Jukumu lako la Tovuti nzima.",
     "field": {

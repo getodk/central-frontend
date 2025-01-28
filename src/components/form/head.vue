@@ -366,6 +366,21 @@ $tab-li-margin-top: 5px;
       }
     }
   },
+  "pt": {
+    "projectNav": {
+      "action": {
+        "back": "Voltar à visão geral do projeto"
+      }
+    },
+    "formNav": {
+      "tabTitle": "Essas funções estarão disponíveis quando você publicar o seu formulário de rascunho"
+    },
+    "draftNav": {
+      "action": {
+        "create": "Criar um novo rascunho"
+      }
+    }
+  },
   "sw": {
     "projectNav": {
       "action": {
