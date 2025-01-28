@@ -8,6 +8,9 @@ import { NodeDefinition } from './NodeDefinition.ts';
 import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RangeNodeDefinition } from './RangeNodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
+import { RootAttributeDefinition } from './RootAttributeDefinition.ts';
+import type { RootNamespaceDeclaration } from './RootNamespaceDeclaration.ts';
+import { RootNamespaceDeclarations } from './RootNamespaceDeclarations.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 export class RootDefinition extends NodeDefinition<'root'> {
@@ -16,6 +19,8 @@ export class RootDefinition extends NodeDefinition<'root'> {
 	readonly bodyElement = null;
 	readonly root = this;
 	readonly parent = null;
+	readonly namespaceDeclarations: readonly RootNamespaceDeclaration[];
+	readonly attributes: readonly RootAttributeDefinition[];
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly node: Element;
@@ -53,6 +58,15 @@ export class RootDefinition extends NodeDefinition<'root'> {
 
 		this.nodeName = nodeName;
 		this.node = primaryInstanceRoot;
+
+		const attributes = Array.from(primaryInstanceRoot.attributes).map((attr) => {
+			return new RootAttributeDefinition(attr);
+		});
+		const namespaceDeclarationMap = new RootNamespaceDeclarations(primaryInstanceRoot, attributes);
+
+		this.attributes = attributes;
+		this.namespaceDeclarations = Array.from(namespaceDeclarationMap.values());
+
 		this.children = this.buildSubtree(this);
 	}
 

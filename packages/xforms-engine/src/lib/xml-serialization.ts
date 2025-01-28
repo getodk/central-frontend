@@ -75,22 +75,57 @@ export const escapeXMLText = <Text extends string>(
 		: (out as EscapedXMLText);
 };
 
-const serializeElementXML = (nodeName: string, children: string): string => {
+interface SerializableNamespaceDeclaration {
+	serializeNamespaceDeclarationXML(): string;
+}
+
+interface SerializableElementAttribute {
+	serializeAttributeXML(): string;
+}
+
+interface ElementXMLSerializationOptions {
+	readonly namespaceDeclarations?: readonly SerializableNamespaceDeclaration[];
+	readonly attributes?: readonly SerializableElementAttribute[];
+}
+
+const serializeElementXML = (
+	nodeName: string,
+	children: string,
+	options: ElementXMLSerializationOptions = {}
+): string => {
+	const namespaceDeclarations =
+		options.namespaceDeclarations
+			?.map((namespaceDeclaration) => {
+				return namespaceDeclaration.serializeNamespaceDeclarationXML();
+			})
+			.join('') ?? '';
+	const attributes =
+		options.attributes
+			?.map((attribute) => {
+				return attribute.serializeAttributeXML();
+			})
+			.join('') ?? '';
+	const prefix = `<${nodeName}${namespaceDeclarations}${attributes}`;
+
 	if (children === '') {
-		return `<${nodeName}/>`;
+		return `${prefix}/>`;
 	}
 
-	// TODO: attributes
-	return `<${nodeName}>${children}</${nodeName}>`;
+	return `${prefix}>${children}</${nodeName}>`;
 };
 
 export const serializeParentElementXML = (
 	nodeName: string,
-	serializedChildren: readonly string[]
+	serializedChildren: readonly string[],
+	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(nodeName, serializedChildren.join(''));
+	return serializeElementXML(nodeName, serializedChildren.join(''), options);
 };
 
-export const serializeLeafElementXML = (nodeName: string, xmlValue: EscapedXMLText): string => {
-	return serializeElementXML(nodeName, xmlValue.normalize());
+export const serializeLeafElementXML = (
+	nodeName: string,
+	xmlValue: EscapedXMLText,
+	options?: ElementXMLSerializationOptions
+): string => {
+	return serializeElementXML(nodeName, xmlValue.normalize(), options);
 };

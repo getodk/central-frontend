@@ -12,7 +12,7 @@ import type { SubmissionResult } from '../client/submission/SubmissionResult.ts'
 import type { SubmissionState } from '../client/submission/SubmissionState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
+import { createRootSubmissionState } from '../lib/client-reactivity/submission/createRootSubmissionState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -136,7 +136,7 @@ export class Root
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
-		this.submissionState = createParentNodeSubmissionState(this);
+		this.submissionState = createRootSubmissionState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {
