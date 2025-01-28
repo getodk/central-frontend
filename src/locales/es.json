@@ -290,7 +290,7 @@
     "entityLabel": "Etiqueta de la entidad",
     "entityId": "ID de la entidad",
     "noProperties": "Este formulario sólo define la \"etiqueta\".",
-    "noEntity": "(ninguno)",
+    "noEntity": "(ninguna)",
     "conflictsCount": "{count} conflicto | {count} conflictos | {count} conflictos"
   },
   "common": {

@@ -171,7 +171,8 @@ defineExpose({ afterReview, afterDelete });
   },
   "zh-Hant": {
     "header": {
-      "stateAndActions": "狀態和動作"
+      "stateAndActions": "狀態和動作",
+      "deletedAt": "刪除於"
     }
   }
 }

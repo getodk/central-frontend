@@ -254,7 +254,12 @@ export default {
     "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
   },
   "zh-Hant": {
-    "analyzeDisabled": "由於表單加密，OData 存取不可用"
+    "analyzeDisabled": "由於表單加密，OData 存取不可用",
+    "analyzeDisabledDeletedData": "對於已刪除的提交內容，OData 存取不可用",
+    "purgeDescription": "提交內容和與提交內容相關的資料將在 30 天後從垃圾箱中刪除",
+    "action": {
+      "toggleDeletedSubmissions": "已刪除{count} 筆提交內容"
+    }
   }
 }
 </i18n>

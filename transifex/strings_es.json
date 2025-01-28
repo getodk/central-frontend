@@ -822,7 +822,7 @@
       "string": "Este formulario sólo define la \"etiqueta\"."
     },
     "noEntity": {
-      "string": "(ninguno)"
+      "string": "(ninguna)"
     },
     "conflictsCount": {
       "string": "{count, plural, one {{count} conflicto} many {{count} conflictos} other {{count} conflictos}}"
@@ -1329,7 +1329,7 @@
           "string": "Número de errores de creación de entidad"
         },
         "num_entity_updates": {
-          "string": "Número de actualizaciones de la entidad"
+          "string": "Número de actualizaciones de entidad"
         },
         "num_entity_updates_sub": {
           "string": "Número de actualizaciones de entidades a través de envíos"

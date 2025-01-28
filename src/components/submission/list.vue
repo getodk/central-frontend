@@ -610,7 +610,16 @@ export default {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
   },
   "zh-Hant": {
-    "noMatching": "沒有符合的提交內容。"
+    "action": {
+      "testOnDevice": "在設備上測試",
+      "testInBrowser": "在瀏覽器中測試"
+    },
+    "noMatching": "沒有符合的提交內容。",
+    "downloadDisabled": "已刪除的提交內容無法下載",
+    "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
+    "deletedSubmission": {
+      "emptyTable": "沒有已刪除的提交內容。"
+    }
   }
 }
 </i18n>

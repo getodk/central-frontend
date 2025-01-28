@@ -689,7 +689,14 @@ export default {
           "reviewState": "拒絕"
         }
       },
-      "comment": "由{name}評論"
+      "comment": "由{name}評論",
+      "delete": "已由 {name} 刪除",
+      "undelete": "已由 {name}復原",
+      "submissionBacklog": {
+        "hold": "在更新實體之前等待離線更新鏈中的先前提交",
+        "force": "已處理來自積壓的提交，而離線更新鏈中沒有先前的提交",
+        "reprocess": "前次離線更新鏈提交已收到"
+      }
     }
   }
 }

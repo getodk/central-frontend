@@ -267,7 +267,8 @@ export default {
       "num_offline_entity_interrupted_branches": "Anzahl unterbrochene Offline-Objekt-Zweige",
       "num_offline_entity_submissions_reprocessed": "Anzahl umsortierter Offline-Objekt-Übermittlungen",
       "max_entity_submission_delay": "Maximum Objektübermittlung-Verarbeitungsverzögerung",
-      "avg_entity_submission_delay": "Durchschnitt Objektübermittlung-Verarbeitungsverzögerung"
+      "avg_entity_submission_delay": "Durchschnitt Objektübermittlung-Verarbeitungsverzögerung",
+      "num_blob_files": "Anzahl der Binärdateien"
     }
   },
   "es": {
@@ -314,7 +315,7 @@ export default {
       "num_followup_forms": "Número de formularios que utilizan la lista de entidades",
       "num_entities": "Número de entidades en la lista de entidades",
       "num_failed_entities": "Número de errores de creación de entidad",
-      "num_entity_updates": "Número de actualizaciones de la entidad",
+      "num_entity_updates": "Número de actualizaciones de entidad",
       "num_entity_updates_sub": "Número de actualizaciones de entidades a través de envíos",
       "num_entity_updates_api": "Número de actualizaciones de entidades a través de la API",
       "num_entities_updated": "Número de Entidades modificadas",
@@ -675,7 +676,17 @@ export default {
       "num_offline_entity_interrupted_branches": "中斷的離線實體分支數量",
       "num_offline_entity_submissions_reprocessed": "重新排序的離線實體提交數量",
       "max_entity_submission_delay": "最大實體提交處理延遲",
-      "avg_entity_submission_delay": "平均實體提交處理延遲"
+      "avg_entity_submission_delay": "平均實體提交處理延遲",
+      "uses_external_blob_store": "伺服器使用外部S3相容存儲",
+      "num_offline_entity_submissions_force_processed": "強制處理的離線實體提交數量",
+      "max_entity_branch_delay": "處理離線實體更新鏈的最長時間",
+      "num_xml_only_form_defs": "沒有關聯 XLSForm 的表單定義數量",
+      "num_blob_files": "二進位檔案數量",
+      "num_blob_files_on_s3": "目前儲存在 S3 相容儲存中的二進位檔案數量",
+      "num_reset_failed_to_pending_count": "使用者重置上傳到 S3 相容儲存失敗的次數",
+      "num_entity_creates_sub": "透過提交創建的實體數量",
+      "num_entity_creates_api": "透過API建立的實體數量",
+      "num_entity_creates_bulk": "透過批次上傳建立的實體數量"
     }
   }
 }

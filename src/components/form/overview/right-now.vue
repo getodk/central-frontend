@@ -319,7 +319,8 @@ export default {
     "submissions": {
       "full": "{submissions} 已為此表格儲存。",
       "submissions": "提交"
-    }
+    },
+    "datasetsLinked": "本表所附實體名單："
   }
 }
 </i18n>

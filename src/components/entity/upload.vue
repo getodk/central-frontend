@@ -497,7 +497,7 @@ watch(() => props.state, (state) => {
       "file": "Données à importer"
     },
     "action": {
-      "append": "Ajouter des données"
+      "append": "Ajouter les données"
     },
     "alert": {
       "blankLabel": "Le label manque",

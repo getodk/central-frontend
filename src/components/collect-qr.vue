@@ -163,6 +163,7 @@ useEventListener(document.body, 'click', (event) => {
     "altText": "Konfigurační kód klienta"
   },
   "de": {
+    "draft": "Vorläufiger Testcode",
     "altText": "Client Configuration Code"
   },
   "es": {
@@ -187,6 +188,7 @@ useEventListener(document.body, 'click', (event) => {
     "altText": "Msimbo wa Usanidi wa Mteja"
   },
   "zh-Hant": {
+    "draft": "臨時測試程式碼",
     "altText": "客戶端配置QR code"
   }
 }
