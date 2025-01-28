@@ -1,7 +1,4 @@
-import {
-	OPENROSA_XFORMS_NAMESPACE_URI,
-	XFORMS_NAMESPACE_URI,
-} from '@getodk/common/constants/xmlns.ts';
+import { OPENROSA_XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import {
 	bind,
 	body,
@@ -145,7 +142,7 @@ describe('Form submission', () => {
 
 			expect(scenario).toHaveSerializedSubmissionXML(
 				// prettier-ignore
-				t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="xml-serialization-basic-default-values"`,
+				t(`data id="xml-serialization-basic-default-values"`,
 					t('grp',
 						t('inp', defaults.inp ?? ''),
 						t('sel1', defaults.sel1 ?? ''),
@@ -190,7 +187,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="${formId}" version="${version}"`,
+					t(`data id="${formId}" version="${version}"`,
 						t('inp', 'val'),
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
@@ -226,7 +223,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" xmlns:orx="${OPENROSA_XFORMS_NAMESPACE_URI}" id="${formId}" orx:version="${version}"`,
+					t(`data xmlns:orx="${OPENROSA_XFORMS_NAMESPACE_URI}" id="${formId}" orx:version="${version}"`,
 						t('inp', 'val'),
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
@@ -262,7 +259,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" xmlns:orx="${OPENROSA_XFORMS_NAMESPACE_URI}" id="${formId}" orx:version="${version}"`,
+					t(`data xmlns:orx="${OPENROSA_XFORMS_NAMESPACE_URI}" id="${formId}" orx:version="${version}"`,
 						t('inp', 'val'),
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
@@ -316,7 +313,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="unicode-normalization"`,
+					t(`data id="unicode-normalization"`,
 						t('rep',
 							t('inp', composed)),
 						t('meta',
@@ -331,7 +328,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="unicode-normalization"`,
+					t(`data id="unicode-normalization"`,
 						t('rep',
 							t('inp', composed)),
 						t('meta',
@@ -369,7 +366,7 @@ describe('Form submission', () => {
 			it('does not serialize an element for a repeat range', () => {
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="xml-serialization-repeats"`,
+					t(`data id="xml-serialization-repeats"`,
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
 				);
@@ -383,7 +380,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="xml-serialization-repeats"`,
+					t(`data id="xml-serialization-repeats"`,
 						t('rep',
 							t('inp', 'a')),
 						t('rep',
@@ -396,7 +393,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="xml-serialization-repeats"`,
+					t(`data id="xml-serialization-repeats"`,
 						t('rep',
 							t('inp', 'b')),
 						t('meta',
@@ -447,7 +444,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="xml-serialization-relevance"`,
+					t(`data id="xml-serialization-relevance"`,
 						t('grp-rel', '1'),
 						t('inp-rel', '0'),
 						t('grp'),
@@ -461,7 +458,7 @@ describe('Form submission', () => {
 
 				expect(scenario).toHaveSerializedSubmissionXML(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="xml-serialization-relevance"`,
+					t(`data id="xml-serialization-relevance"`,
 						t('grp-rel', '0'),
 						t('inp-rel', '1'),
 						t('meta',
@@ -514,7 +511,7 @@ describe('Form submission', () => {
 				// Default serialization before any state change
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -529,7 +526,7 @@ describe('Form submission', () => {
 					// After first value change
 					expect(serialized).toBe(
 						// prettier-ignore
-						t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+						t(`data id="reactive-xml-serialization"`,
 							t('rep-inp-rel'),
 							t('rep',
 								t('inp', `${i}`)),
@@ -549,7 +546,7 @@ describe('Form submission', () => {
 				// Default serialization before any state change
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -562,7 +559,7 @@ describe('Form submission', () => {
 				// First repeat instance added
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -577,7 +574,7 @@ describe('Form submission', () => {
 				// Second repeat instance added
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp')),
@@ -596,7 +593,7 @@ describe('Form submission', () => {
 				// Each of the above values set
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -613,7 +610,7 @@ describe('Form submission', () => {
 				// Last repeat instance removed
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -628,7 +625,7 @@ describe('Form submission', () => {
 				// First repeat instance removed
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 2 inp')),
@@ -641,7 +638,7 @@ describe('Form submission', () => {
 				// All repeat instances removed
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('meta',
 							t('instanceID', DEFAULT_INSTANCE_ID))).asXml()
@@ -664,7 +661,7 @@ describe('Form submission', () => {
 				// Current serialization before any relevance change
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -681,7 +678,7 @@ describe('Form submission', () => {
 				// Non-relevant /data/rep[position() != '1']/inp omitted
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel', '1'),
 						t('rep',
 							t('inp', 'rep 1 inp')),
@@ -696,7 +693,7 @@ describe('Form submission', () => {
 				// Non-relevant /data/rep[position() != '3']/inp omitted
 				expect(serialized).toBe(
 					// prettier-ignore
-					t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="reactive-xml-serialization"`,
+					t(`data id="reactive-xml-serialization"`,
 						t('rep-inp-rel', '3'),
 						t('rep'),
 						t('rep'),
@@ -846,7 +843,7 @@ describe('Form submission', () => {
 					expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
 
 					// prettier-ignore
-					validSubmissionXML = t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="prepare-for-submission"`,
+					validSubmissionXML = t(`data id="prepare-for-submission"`,
 						t('rep',
 							t('inp', 'rep 1 inp')),
 						t('rep',
@@ -883,7 +880,7 @@ describe('Form submission', () => {
 					expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
 
 					// prettier-ignore
-					invalidSubmissionXML = t(`data xmlns="${XFORMS_NAMESPACE_URI}" id="prepare-for-submission"`,
+					invalidSubmissionXML = t(`data id="prepare-for-submission"`,
 						t('rep',
 							t('inp', 'rep 1 inp')),
 						t('rep',

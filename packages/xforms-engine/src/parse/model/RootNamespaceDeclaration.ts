@@ -8,19 +8,18 @@ export class RootNamespaceDeclaration {
 		readonly prefix: string | null,
 		readonly namespaceURI: string | null
 	) {
-		let serializedName: string;
-
 		if (prefix == null) {
-			serializedName = XMLNS_PREFIX;
+			// We intentionally omit the default namespace declaration, which is
+			// consistent with both Collect and Enketo. Including it may technically
+			// be more "correct", but consistency ensures we don't introduce subtle
+			// problems in any namespace-aware usage downstream.
+			this.serializedXML = '';
 		} else {
-			serializedName = `${XMLNS_PREFIX}:${prefix}`;
+			const name = `${XMLNS_PREFIX}:${prefix}`;
+			const value = escapeXMLText(namespaceURI ?? '', true);
+
+			this.serializedXML = ` ${name}="${value}"`;
 		}
-
-		const serializedValue = escapeXMLText(namespaceURI ?? '', true);
-
-		this.serializedXML = ` ${serializedName}="${serializedValue}"`;
-
-		this.prefix = prefix;
 	}
 
 	serializeNamespaceDeclarationXML(): string {
