@@ -2189,7 +2189,7 @@
       },
       "action": {
         "append": {
-          "string": "Ajouter des données",
+          "string": "Ajouter les données",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },

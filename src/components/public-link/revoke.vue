@@ -116,6 +116,12 @@ const revoke = () => {
       "一般公開リンクを無効化しようとしています。これにより、この一般公開リンクを用いた全てのデータの提出が出来なくなります。これには現在すでに入力が開始されたフォームの提出も含まれます。"
     ]
   },
+  "pt": {
+    "title": "Revogar link de acesso público",
+    "introduction": [
+      "Você está prestes a revogar esse link de acesso público. Isso significa que todas as tentativas de enviar dados usando esse link serão negadas, incluindo preenchimentos que já tenham sido iniciados."
+    ]
+  },
   "sw": {
     "title": "Batilisha Kiungo cha Ufikiaji wa Umma",
     "introduction": [

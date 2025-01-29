@@ -146,6 +146,12 @@ export default {
       "プロジェクトでは、フォームやアプリユーザーをグループ化して、このWebサイトとデータ収集デバイスの両方で、整理と管理を簡易化します。"
     ]
   },
+  "pt": {
+    "title": "Criar projeto",
+    "introduction": [
+      "Os projetos agrupam formulários e usuários de aplicativos para torná-los mais fáceis de organizar e gerenciar, tanto neste site quanto em seu dispositivo de coleta de dados."
+    ]
+  },
   "sw": {
     "title": "Unda Mradi",
     "introduction": [

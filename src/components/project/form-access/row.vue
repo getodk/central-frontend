@@ -197,6 +197,13 @@ export default {
       "appUserAccess": "アプリユーザーのアクセス"
     }
   },
+  "pt": {
+    "draftTitle": "Este formulário ainda não possui uma versão publicada. Ele não aparecerá nos dispositivos até que um rascunho seja publicado. Depois de publicar o formulário, as configurações exibidas aqui serão usadas.",
+    "field": {
+      "state": "Status",
+      "appUserAccess": "Acesso de usuários de aplicativo"
+    }
+  },
   "sw": {
     "draftTitle": "Fomu hii bado haina toleo lililochapishwa. Haitaonekana kwenye vifaa hadi Rasimu itakapochapishwa. Ukishachapisha Fomu, mipangilio iliyoonyeshwa hapa itatumika",
     "field": {

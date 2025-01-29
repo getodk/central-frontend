@@ -138,6 +138,13 @@ export default {
       "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。"
     ]
   },
+  "pt": {
+    "title": "Remover acesso do usuário",
+    "introduction": [
+      "Você tem certeza que deseja remover o acesso do usuário de aplicativo {displayName}?",
+      "Respostas existentes para esse usuário serão mantidas, mas qualquer pessoa utilizando esse usuário precisará criar outro para continuar obtendo formulários e enviando respostas."
+    ]
+  },
   "sw": {
     "title": "Batilisha Ufikiaji wa Mtumiaji",
     "introduction": [

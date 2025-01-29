@@ -404,6 +404,41 @@ export default {
       "このQRコードをスキャンして、アカウント名\"{displayName}\"の端末を設定する。"
     ]
   },
+  "pt": {
+    "title": {
+      "managed": "Código de configuração de cliente",
+      "legacy": "Código legado de configuração do cliente"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Isso é um {managedCode}.",
+          "managedCode": "Código QR gerenciado"
+        },
+        "legacy": {
+          "full": "Isso é um {legacyCode}.",
+          "legacyCode": "Código QR legado"
+        }
+      },
+      {
+        "managed": "O Collect irá fazer a correspondência exata dos formulários disponíveis para \"{displayName}\" aplicando atualizações de forma automática. Os usuários não precisarão obter formulários em branco de forma manual. Além disso, respostas marcadas como finalizadas serão enviadas automaticamente assim que uma conexão de rede for encontrada.",
+        "legacy": "Os usuários terão que obter formulários em branco de forma manual no dispositivo e determinar quais formulários devem ser atualizados. Eles também precisarão enviar manualmente respostas finalizadas."
+      },
+      {
+        "managed": {
+          "full": "Para o comportamento anterior, {switchToLegacy}.",
+          "switchToLegacy": "altere para um {legacyCode}",
+          "legacyCode": "Código QR legado"
+        },
+        "legacy": {
+          "full": "Para um processo mais controlado e à prova de bobagens, {switchToManaged}.",
+          "switchToManaged": "mudar para um {managedCode}",
+          "managedCode": "Código QR gerenciado"
+        }
+      },
+      "Use um scanner de código QR para configurar um dispositivo com a conta \"{displayName}\"."
+    ]
+  },
   "sw": {
     "title": {
       "managed": "Msimbo wa Usanidi wa Mteja",

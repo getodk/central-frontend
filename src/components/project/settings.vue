@@ -394,6 +394,38 @@ export default {
       "archive": "プロジェクト\"{name}\"はアーカイブされました。"
     }
   },
+  "pt": {
+    "encryption": {
+      "title": "Encriptação",
+      "body": {
+        "unencrypted": [
+          "A encriptação de respostas não está habilitada para esse projeto."
+        ],
+        "encrypted": [
+          {
+            "full": "A encriptação de dados de respostas está {enabled}para esse projeto.",
+            "enabled": "habilitado"
+          },
+          "Nessa versão do ODK Central você não poderá desabilitar a encriptação uma vez que ela estive ligada."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Habilitar encriptação"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "Arquivar esse projeto"
+      },
+      "archived": [
+        "O projeto foi arquivado.",
+        "Nessa versão do ODK Central você não pode desarquivar um projeto. Entretanto, essa funcionalidade está planejada para uma versão futura."
+      ]
+    },
+    "alert": {
+      "archive": "O projeto \"{name}\" foi arquivado."
+    }
+  },
   "sw": {
     "encryption": {
       "title": "Usimbaji fiche",

@@ -193,6 +193,16 @@ export default {
     },
     "onceHelp": "各プラウザから一回しかフォームの提出を受け付けない。"
   },
+  "pt": {
+    "title": "Criar link de acesso público",
+    "introduction": [
+      "Qualquer pessoa com esse link poderá preencher esse formulário num navegador de internet. Use o nome de exibição do formulário para se lembrar de onde você o colocou, com quem você compartilhou, quando ele está previsto para estar ativo, e assim por diante."
+    ],
+    "field": {
+      "once": "Resposta única"
+    },
+    "onceHelp": "Permitir apenas uma resposta de cada navegador."
+  },
   "sw": {
     "title": "Unda Kiungo cha Ufikiaji wa Umma",
     "introduction": [

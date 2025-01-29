@@ -128,6 +128,10 @@ const { publishedFormPath } = useRoutes();
     "emptyTable": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente.",
     "none": "(Nessuna)"
   },
+  "pt": {
+    "emptyTable": "As Entidades nesta Lista de Entidades não têm nenhuma propriedade definida pelo usuário.",
+    "none": "(Nenhum)"
+  },
   "sw": {
     "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
   },

@@ -94,6 +94,12 @@ const { oidcEnabled } = inject('config');
       "analyze": "Analizzare attraverso OData"
     }
   },
+  "pt": {
+    "action": {
+      "apiAccess": "Acesso à API",
+      "analyze": "Analisar via OData"
+    }
+  },
   "sw": {
     "action": {
       "apiAccess": "Ufikiaji wa API",

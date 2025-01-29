@@ -606,11 +606,32 @@ export default {
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"
   },
+  "pt": {
+    "action": {
+      "testOnDevice": "Testar no dispositivo'",
+      "testInBrowser": "Testar no navegador"
+    },
+    "noMatching": "Não foram encontradas respostas com esses parâmetros.",
+    "downloadDisabled": "O download está indisponível para Respostas excluídas",
+    "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
+    "deletedSubmission": {
+      "emptyTable": "Não há Respostas excluídas"
+    }
+  },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
   },
   "zh-Hant": {
-    "noMatching": "沒有符合的提交內容。"
+    "action": {
+      "testOnDevice": "在設備上測試",
+      "testInBrowser": "在瀏覽器中測試"
+    },
+    "noMatching": "沒有符合的提交內容。",
+    "downloadDisabled": "已刪除的提交內容無法下載",
+    "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
+    "deletedSubmission": {
+      "emptyTable": "沒有已刪除的提交內容。"
+    }
   }
 }
 </i18n>

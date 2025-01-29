@@ -136,6 +136,13 @@ export default {
       "resetPassword": "パスワードのリセット"
     }
   },
+  "pt": {
+    "title": "Redefinir senha",
+    "introduction": {
+      "full": "Assim que você clicar em {resetPassword}abaixo, a senha para o usuário \"{displayName}\" \u003c{email}> será imediatamente invalidada. Um email será enviado para {email} com instruções de como prosseguir.",
+      "resetPassword": "Redefinir senha"
+    }
+  },
   "sw": {
     "title": "Weka upya Nenosiri",
     "introduction": {

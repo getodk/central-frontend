@@ -93,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "建立或更新草稿",
+        "update_draft_replace": "替換草稿",
         "update_publish": "發布草稿",
         "update_draft_delete": "放棄草稿",
         "attachment_update": "更新附件",
@@ -115,7 +116,8 @@
       },
       "upgrade": {
         "process_form": "處理表單",
-        "process_form_draft": "處理草稿"
+        "process_form_draft": "處理草稿",
+        "process_form_entities_version": "升級標記表格"
       },
       "user": {
         "assignment_create": "指派角色",
@@ -222,6 +224,7 @@
     "appUser": "App 使用者",
     "appUsers": "App 使用者",
     "config": "伺服器設置",
+    "entity": "實體資料",
     "entities": "實體",
     "entityList": "實體清單",
     "entityLists": "實體清單",
@@ -231,12 +234,14 @@
     "project": "專案",
     "projects": "專案",
     "property": "属性",
+    "properties": "資料屬性",
     "publicLink": "公共存取連結",
     "user": "使用者",
     "users": "使用者",
     "webUser": "網頁使用者",
     "webUsers": "網頁使用者",
     "session": "區域",
+    "submission": "提交資料",
     "submissions": "提交",
     "projectRoles": "專案角色",
     "formPreview": "預覽表單",
@@ -246,7 +251,9 @@
     "passwordTooShort": "請輸入長度至少為 10 個字元的密碼。",
     "updateEntity": "實體已更新！",
     "updateReviewState": "審核狀態已儲存！",
-    "versionChange": "服器已更新。請更新頁面以避免出現不可預測的問題。"
+    "versionChange": "服器已更新。請更新頁面以避免出現不可預測的問題。",
+    "submissionDeleted": "提交內容已刪除。",
+    "submissionRestored": "提交的內容已取消刪除。"
   },
   "moreInfo": {
     "clickHere": {
@@ -275,7 +282,8 @@
     "binaryLinkTitle": "文件已提交。點擊下載。",
     "encryptionMessage": "由於資料加密，無法預覽。",
     "noSubmission": "(無)",
-    "emptyTable": "還沒有提交內容。"
+    "emptyTable": "還沒有提交內容。",
+    "fileDownloadUnavailable": "文件下載不適用於已刪除的提交內容。"
   },
   "entity": {
     "label": "標籤",
@@ -300,6 +308,7 @@
     "error": "錯誤",
     "filter": "過濾",
     "forum": "論壇",
+    "lastUpdate": "最後更新日期",
     "loading": "載入...",
     "no": "無",
     "noResults": "沒有結果",
@@ -346,7 +355,11 @@
       "noResponse": "出了點問題：您的請求沒有得到回應。",
       "errorNotProblem": "出了點問題：錯誤代碼 {status}.",
       "problem": {
-        "404_1": "找不到您要找的資源。該資源可能已被刪除。"
+        "404_1": "找不到您要找的資源。該資源可能已被刪除。",
+        "409_17": {
+          "message": "此表單嘗試建立與現有屬性相符的新實體屬性（大小寫除外）：",
+          "duplicateProperty": "{provided} (已存在: {current})"
+        }
       }
     },
     "session": {

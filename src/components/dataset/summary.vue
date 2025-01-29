@@ -93,6 +93,9 @@ export default {
   "it": {
     "datasetUpdates": "L' elenco delle entità è aggiornato da questo formulario: | Gli elenchi delle entità sono aggiornati da questo formulario: | Gli elenchi delle entità sono aggiornati da questo formulario:"
   },
+  "pt": {
+    "datasetUpdates": "Lista de Entidade é atualizada por este Formulário: | Listas de Entidades são atualizadas por este Formulário: | Listas de Entidades são atualizadas por este Formulário:"
+  },
   "sw": {
     "datasetUpdates": "Orodha za Mashirika husasishwa na Fomu hii: | Orodha za Mashirika husasishwa na Fomu hii:"
   },

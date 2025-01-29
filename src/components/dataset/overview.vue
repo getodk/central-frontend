@@ -130,6 +130,11 @@ const afterCreateProperty = () => {
     "entityProperties": "Proprietà della Entità",
     "new": "Nuova"
   },
+  "pt": {
+    "connectionsToForms": "Conexões com Formulários",
+    "entityProperties": "Propriedades da Entidade",
+    "new": "Nova"
+  },
   "sw": {
     "connectionsToForms": "Viunganisho kwa Fomu",
     "entityProperties": "Sifa za Mashirika"

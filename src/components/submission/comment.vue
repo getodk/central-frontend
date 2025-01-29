@@ -162,6 +162,9 @@ export default {
   "ja": {
     "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。"
   },
+  "pt": {
+    "editWithoutComment": "Você fez alterações nesse registro. Por favor, descreva as mudanças efetuadas."
+  },
   "sw": {
     "editWithoutComment": "Umefanya mabadiliko kwenye data hii. Tafadhali eleza mabadiliko uliyofanya."
   },

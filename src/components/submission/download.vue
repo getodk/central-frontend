@@ -598,6 +598,36 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "submit": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
     }
   },
+  "pt": {
+    "title": "Baixar Respostas",
+    "exportOptions": "Opções de exportação",
+    "field": {
+      "splitSelectMultiples": "Dividir opções de “selecionar várias” em colunas",
+      "removeGroupNames": "Remover nomes de grupos",
+      "deletedFields": "Incluir campos que não estão no Formulário publicado"
+    },
+    "deletedFieldsHelp": "Use esta opção se precisar ver campos referenciados em versões anteriores do Formulário.",
+    "noSelectMultiple": "Este Formulário não tem campos de seleção múltiplos.",
+    "encryptedForm": "Formulários encriptados não podem ser processados dessa forma.",
+    "deletedFieldsDisabledForDraft": "Formulários de rascunho não podem ser processados dessa forma.",
+    "introduction": [
+      "Para baixar esses dados, você precisará fornecer sua senha. Sua senha será usada apenas para descriptografar seus dados para download, após o qual o servidor irá esquecê-la novamente."
+    ],
+    "hint": "Dica: {hint}",
+    "noRepeat": "Este Formulário não tem repetições.",
+    "action": {
+      "download": {
+        "mainTable": "Tabela de dados principal (sem repetições)",
+        "allTables": "Todas as tabelas de dados",
+        "withAttachments": "Todos os dados e Anexos"
+      }
+    },
+    "alert": {
+      "unavailable": "O download de dados ainda não está disponível. Tente novamente em instantes.",
+      "submit": "O processo de baixar seus dados começará em breve. Assim que ele começar você poderá fechar essa caixa. Se você já está esperando e ele ainda não começou, por favor tente novamente.",
+      "parseError": "Algo deu errado ao solicitar seus dados."
+    }
+  },
   "sw": {
     "title": "Pakua Mawasilisho",
     "exportOptions": "Chaguzi za export",

@@ -298,6 +298,13 @@ export default {
     },
     "empty": "空"
   },
+  "pt": {
+    "editCaption": {
+      "added": "(incluído)",
+      "deleted": "(apagado)"
+    },
+    "empty": "vazio"
+  },
   "sw": {
     "editCaption": {
       "added": "(imeongezwa)",

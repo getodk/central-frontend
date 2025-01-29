@@ -143,6 +143,12 @@ watchEffect(() => {
     "upload": "Carica",
     "submissionDeleted": "Questo invio è stato eliminato."
   },
+  "pt": {
+    "creatingSubmission": "Criando Resposta",
+    "creatingSource": "Criando fonte",
+    "upload": "Fazer upload",
+    "submissionDeleted": "Esta Resposta foi excluída."
+  },
   "sw": {
     "creatingSubmission": "Kuunda Uwasilishaji",
     "submissionDeleted": "Wasilisho hili limefutwa."

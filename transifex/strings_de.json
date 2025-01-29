@@ -1401,7 +1401,7 @@
           "string": ""
         },
         "num_blob_files": {
-          "string": ""
+          "string": "Anzahl der Binärdateien"
         },
         "num_blob_files_on_s3": {
           "string": ""
@@ -1508,7 +1508,7 @@
     },
     "CollectQr": {
       "draft": {
-        "string": "",
+        "string": "Vorläufiger Testcode",
         "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
@@ -2312,13 +2312,13 @@
     "ExtraTranslations": {
       "outdatedVersionHtml": {
         "heading": {
-          "string": ""
+          "string": "Sie verwenden eine deutlich veraltete Version von ODK Central"
         },
         "sentence1": {
           "string": ""
         },
         "sentence2": {
-          "string": "",
+          "string": "Wenn Sie Central nicht pflegen wollen, versuchen Sie  {OdkCloudLink}.",
           "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
         }
       }

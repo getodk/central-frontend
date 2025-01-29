@@ -131,7 +131,22 @@ const del = () => {
       "noConfirm": "Elimina immediatamente senza conferma finché non lascio la pagina"
     }
   },
+  "pt": {
+    "title": "Deletar Resposta",
+    "introduction": [
+      "Você tem certeza que quer deletar esta Resposta?",
+      "Esta ação vai mover a Resposta para a Lixeira. Depois de 30 dias na Lixeira, ela vai ser permanentemente eliminada, mas a exclusão pode ser desfeita antes deste prazo."
+    ],
+    "field": {
+      "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
+    }
+  },
   "zh-Hant": {
+    "title": "刪除提交內容",
+    "introduction": [
+      "您確定要刪除此提交嗎？",
+      "此操作會將提交內容移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+    ],
     "field": {
       "noConfirm": "立即刪除，無需確認，直到我離開頁面"
     }

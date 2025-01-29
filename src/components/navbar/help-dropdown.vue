@@ -68,6 +68,9 @@ defineOptions({
   "it": {
     "help": "Aiuto"
   },
+  "pt": {
+    "help": "Ajuda"
+  },
   "sw": {
     "help": "msaada"
   },

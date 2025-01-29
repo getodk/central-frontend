@@ -137,6 +137,13 @@ const afterCreateDataset = async (dataset) => {
     ],
     "new": "Nuova"
   },
+  "pt": {
+    "heading": [
+      "As Entidades permitem que você compartilhe informações entre Formulários para que você possa coletar dados longitudinais, gerenciar casos ao longo do tempo e representar outros fluxos de trabalho com várias etapas.",
+      "As Entidades são criadas por meio do design do formulário e podem ser anexadas a qualquer Formulário."
+    ],
+    "new": "Nova"
+  },
   "sw": {
     "heading": [
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi.",

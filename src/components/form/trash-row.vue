@@ -222,6 +222,12 @@ export default {
       "conflict": "このフォームは、同一IDのフォームが有効化されているため、復元できません。"
     }
   },
+  "pt": {
+    "deletedDate": "Excluído {dateTime}",
+    "disabled": {
+      "conflict": "A exclusão deste Formulário não pode ser desfeita porque existe um formulário ativo com a mesma ID."
+    }
+  },
   "sw": {
     "deletedDate": "Imefutwa {dateTime}",
     "disabled": {

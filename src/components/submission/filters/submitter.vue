@@ -221,6 +221,20 @@ const placeholder = (counts) => t('placeholder', counts);
       "submitter": "フォーム送信者"
     }
   },
+  "pt": {
+    "field": {
+      "submitter": "Enviado por",
+      "search": "Pesquisar remetentes…"
+    },
+    "placeholder": "{selected} de {total}",
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Nenhum"
+      }
+    },
+    "unknown": "Remetente desconhecido"
+  },
   "sw": {
     "field": {
       "submitter": "Iliyowasilishwa na",

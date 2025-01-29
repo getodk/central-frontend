@@ -626,6 +626,46 @@ export default {
       "comment": "{name}によるコメント"
     }
   },
+  "pt": {
+    "title": {
+      "create": "Enviado por {name}",
+      "entity": {
+        "create": "Entidade {label} criada na Lista de Entidades {dataset}",
+        "update": "Entidade {label} atualizada na Lista de Entidades {dataset}",
+        "error": "Problema ao processar a Entidade"
+      },
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState}por {name}",
+          "reviewState": "Recebido"
+        },
+        "hasIssues": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Contém erros"
+        },
+        "edited": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Editado"
+        },
+        "approved": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Aprovado"
+        },
+        "rejected": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Rejeitado"
+        }
+      },
+      "comment": "Comentado por {name}",
+      "delete": "Deletado por {name}",
+      "undelete": "Exclusão desfeita por {name}",
+      "submissionBacklog": {
+        "hold": "Aguardando Resposta anterior na cadeia de atualização offline antes de atualizar a Entidade",
+        "force": "Resposta processada do backlog sem Resposta anterior na cadeia de atualização offline",
+        "reprocess": "Resposta anterior na cadeia de atualização offline foi recebida"
+      }
+    }
+  },
   "sw": {
     "title": {
       "create": "Imewasilishwa na {name}",
@@ -689,7 +729,14 @@ export default {
           "reviewState": "拒絕"
         }
       },
-      "comment": "由{name}評論"
+      "comment": "由{name}評論",
+      "delete": "已由 {name} 刪除",
+      "undelete": "已由 {name}復原",
+      "submissionBacklog": {
+        "hold": "在更新實體之前等待離線更新鏈中的先前提交",
+        "force": "已處理來自積壓的提交，而離線更新鏈中沒有先前的提交",
+        "reprocess": "前次離線更新鏈提交已收到"
+      }
     }
   }
 }

@@ -181,6 +181,16 @@ export default {
       "title": "一般公開リンクはまだ利用できません。処理が終了していません。後ほどページを更新し、もう一度試して下さい。"
     }
   },
+  "pt": {
+    "action": {
+      "revoke": "Revogar"
+    },
+    "revoked": "Revogado",
+    "unavailable": {
+      "text": "Não disponível ainda",
+      "title": "O link de acesso público não está disponível ainda. Ele não terminou de ser processado. Por favor atualize a página mais tarde e tente novamente."
+    }
+  },
   "sw": {
     "action": {
       "revoke": "Batilisha"

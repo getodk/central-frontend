@@ -131,6 +131,11 @@ export default {
       "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
     }
   },
+  "pt": {
+    "alert": {
+      "upload": "Sucesso! Suas entidades foram carregadas."
+    }
+  },
   "zh-Hant": {
     "alert": {
       "upload": "成功！您的實體已上傳。"

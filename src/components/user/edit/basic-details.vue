@@ -184,6 +184,19 @@ const submit = () => {
       "success": "ユーザー詳細の保存完了！"
     }
   },
+  "pt": {
+    "title": "Detalhes básicos",
+    "emailDisabled": "Seu endereço de e-mail não pode ser alterado. Ele é usado entre o Central e seu servidor de login para garantir sua identidade.",
+    "action": {
+      "update": "Atualizar detalhes"
+    },
+    "problem": {
+      "409_3": "Você não pode alterar seu e-mail para {email} porque essa conta já existe. Tente outro endereço de e-mail."
+    },
+    "alert": {
+      "success": "Detalhes do usuário gravados!"
+    }
+  },
   "sw": {
     "title": "Maelezo ya Msingi",
     "emailDisabled": "Anwani yako ya barua pepe haiwezi kubadilishwa. Inatumika kati ya Central na seva yako ya kuingia ili kuhakikisha utambulisho wako.",

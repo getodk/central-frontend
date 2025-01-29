@@ -497,7 +497,7 @@ watch(() => props.state, (state) => {
       "file": "Données à importer"
     },
     "action": {
-      "append": "Ajouter des données"
+      "append": "Ajouter les données"
     },
     "alert": {
       "blankLabel": "Le label manque",
@@ -519,6 +519,21 @@ watch(() => props.state, (state) => {
       "noData": "Il tuo file non contiene alcun dato."
     },
     "noEntities": "Non ci sono entità da mostrare."
+  },
+  "pt": {
+    "title": "Importar dados de arquivo",
+    "table": {
+      "server": "Dados do servidor {name}",
+      "file": "Dados para importar"
+    },
+    "action": {
+      "append": "Anexar dados"
+    },
+    "alert": {
+      "blankLabel": "Está faltando o rótulo.",
+      "noData": "Seu arquivo não contém dados."
+    },
+    "noEntities": "Não há Entidades para mostrar."
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha."

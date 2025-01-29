@@ -1,0 +1,381 @@
+{
+  "title": {
+    "resetPassword": "Redefinir senha",
+    "setPassword": "Definir senha",
+    "editProfile": "Editar Perfil",
+    "download": "Baixar",
+    "pageNotFound": "Página não encontrada",
+    "details": "Detalhes"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Acesso a formulário"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "Versões",
+      "publicAccess": "Acesso Público"
+    },
+    "draftNav": {
+      "tab": {
+        "testing": "Em teste"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "Gerenciamento do sistema",
+    "tab": {
+      "audits": "Registros de auditoria do servidor",
+      "analytics": "Relatório de uso"
+    }
+  },
+  "role": {
+    "none": "Nenhum",
+    "admin": "Administrador",
+    "manager": "Gerente de projeto",
+    "viewer": "Observador de projeto",
+    "formfill": "Coletor de dados"
+  },
+  "formState": {
+    "open": "Aberto",
+    "closing": "Em fechamento",
+    "closed": "Fechado",
+    "unpublished": "Ainda não publicado"
+  },
+  "reviewState": {
+    "received": "Recebido",
+    "hasIssues": "Contém erros",
+    "edited": "Alterado",
+    "approved": "Aprovado",
+    "rejected": "Rejeitado",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "(Todas as ações)",
+      "user": "Ações de usuários do site",
+      "project": "Ações do projeto",
+      "form": "Ações de formulário",
+      "field_key": "Ações de usuário de aplicativo",
+      "public_link": "Ações de link público de acesso",
+      "dataset": "Ações da Lista de Entidades",
+      "config": "Ações de configuração de servidor",
+      "upgrade": "Atualização do servidor",
+      "task": "Operação do Sistema"
+    },
+    "action": {
+      "default": {
+        "create": "Criar",
+        "update": "Atualizar detalhes",
+        "session_end": "Revogar",
+        "delete": "Excluir"
+      },
+      "analytics": "Histórico de uso",
+      "blobs": {
+        "s3_upload": "Fazer upload de arquivos para o Armazenamento",
+        "s3_failed_to_pending": "Sinalizar Arquivos para Refazer upload para o Armazenamento"
+      },
+      "config": {
+        "set": "Atribuir"
+      },
+      "dataset": {
+        "update": "Atualizar",
+        "update_publish": "Publicar",
+        "create": "@:audit.action.default.create"
+      },
+      "field_key": {
+        "assignment_create": "Conceder acesso",
+        "assignment_delete": "Remover acesso",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "Criar ou atualizar formulário de teste",
+        "update_draft_replace": "Substituir Rascunho",
+        "update_publish": "Publicar rascunho",
+        "update_draft_delete": "Abandonar rascunho",
+        "attachment_update": "Atualizar anexos",
+        "submission_export": "Baixar respostas",
+        "restore": "Desfazer Exclusão",
+        "purge": "Limpar",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "Conceder acesso",
+        "assignment_delete": "Remover acesso",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "submission": {
+        "purge": "Limpar Respostas"
+      },
+      "upgrade": {
+        "process_form": "Processar formulário",
+        "process_form_draft": "Processar formulário de teste",
+        "process_form_entities_version": "Marcar Formulário para Atualização"
+      },
+      "user": {
+        "assignment_create": "Atribuir função",
+        "assignment_delete": "Remover função",
+        "delete": "Desativar",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Cancelar",
+    "clear": "Limpar",
+    "close": "Fechar",
+    "comment": "Comentário",
+    "continue": "Continuar",
+    "create": "Criar",
+    "createSubmission": "Novo",
+    "delete": "Excluir",
+    "done": "Concluído",
+    "download": "Baixar",
+    "edit": "Editar",
+    "editProfile": "Editar perfil",
+    "finish": "Concluir",
+    "logIn": "Entrar",
+    "looksGood": "Parece bom, prosseguir",
+    "more": "Mais informações",
+    "neverMind": "Esqueça, cancelar",
+    "next": "Próximo",
+    "noCancel": "Não, cancelar",
+    "ok": "Tudo certo",
+    "proceed": "Prosseguir",
+    "refresh": "Atualizar",
+    "resetPassword": "Redefinir senha",
+    "review": "Revisar",
+    "save": "Salvar",
+    "saveSettings": "Salvar configuração",
+    "sort": "Ordenar",
+    "update": "Atualizar",
+    "yesProceed": "Sim, prossiga",
+    "showPreview": "Visualizar",
+    "hidePreview": "Ocultar visualização",
+    "newPreview": "Nova Visualização Prévia",
+    "expand": "Expandir",
+    "collapse": "Condensar",
+    "reviewParallelUpdates": "Revisar atualizações paralelas",
+    "upload": "Carregar",
+    "restore": "Desfazer Exclusão"
+  },
+  "field": {
+    "comment": "Deixe um comentário",
+    "dateRange": "Intervalo de datas",
+    "displayName": "Nome para exibição",
+    "email": "Endereço de email",
+    "name": "Nome",
+    "newPassword": "Nova senha",
+    "oldPassword": "Senha antiga",
+    "passphrase": "Dica de senha",
+    "password": "Senha",
+    "passwordConfirm": "Nova senha (confirmar)",
+    "type": "Tipo"
+  },
+  "header": {
+    "actions": "Ações",
+    "created": "Criado",
+    "createdBy": "Criado por",
+    "createdAt": "Criado em",
+    "updatedBy": "Atualizado por",
+    "displayName": "Nome para exibição",
+    "email": "Endereço de email",
+    "instanceId": "Identificador do registro",
+    "lastSubmission": "Última resposta",
+    "recentActivity": "Atividade recente",
+    "name": "Nome",
+    "listName": "Nome da lista",
+    "submitterName": "Enviado por",
+    "submissionDate": "Enviado em",
+    "time": "Hora",
+    "type": "Tipo",
+    "entities": "Total de Entidades",
+    "lastEntity": "Entidade mais recente"
+  },
+  "plural": {
+    "appUser": "Usuário de aplicativo | Usuários de aplicativo | Usuários de aplicativo",
+    "form": "Formulário | Formulários | Formulários",
+    "project": "Projeto | Projetos | Projetos",
+    "submission": "Resposta | Respostas | Respostas",
+    "user": "Usuário | Usuários | Usuários",
+    "webUser": "Usuário da web | Usuários da web | Usuários da web"
+  },
+  "count": {
+    "appUser": "{count} usuário de aplicativo | {count} usuários de aplicativo | {count} usuários de aplicativo",
+    "form": "{count} formulário | {count} formulários | {count} formulários",
+    "submission": "{count}resposta | {count} respostas | {count} respostas",
+    "warning": "{count} aviso | {count} avisos | {count} avisos"
+  },
+  "resource": {
+    "appUser": "Usuário de aplicativo",
+    "appUsers": "Usuários de aplicativo",
+    "config": "Configuração do servidor",
+    "entity": "Entidade",
+    "entities": "Entidades",
+    "entityList": "Lista de Entidades",
+    "entityLists": "Listas de Entidades",
+    "form": "Formulário",
+    "forms": "Formulários",
+    "formAttachments": "Anexos do formulário",
+    "project": "Projeto",
+    "projects": "Projetos",
+    "property": "Propriedade",
+    "properties": "Propriedades",
+    "publicLink": "Link de acesso público",
+    "user": "Usuário",
+    "users": "Usuários",
+    "webUser": "Usuário do site",
+    "webUsers": "Usuários do site",
+    "session": "Sessão",
+    "submission": "Resposta",
+    "submissions": "Respostas",
+    "projectRoles": "Funções de projeto",
+    "formPreview": "Visualizar Formulário",
+    "draft": "Rascunho"
+  },
+  "alert": {
+    "passwordTooShort": "Por favor, insira uma senha com pelo menos 10 caracteres.",
+    "updateEntity": "A Entidade foi atualizada!",
+    "updateReviewState": "Status de revisão salvo!",
+    "versionChange": "O servidor foi atualizado. Por favor atualize a página para evitar comportamentos indesejáveis.",
+    "submissionDeleted": "A Resposta foi deletada.",
+    "submissionRestored": "A exclusão da Resposta foi desfeita."
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Para mais informações, {clickHere}.",
+      "clickHere": "clique aqui"
+    },
+    "helpArticle": {
+      "full": "Para mais informações, por favor acesse {helpArticle}",
+      "helpArticle": "este artigo da ajuda"
+    },
+    "learnMore": "Saiba mais."
+  },
+  "analytics": {
+    "alwaysImprove": "Nós estamos sempre tentando melhorar o ODK Central.",
+    "needFeedback": {
+      "full": "Para fazer isso nós precisamos do {your} comentário, assim poderemos entender o uso do Central e como torná-lo melhor para você.",
+      "your": "seu"
+    }
+  },
+  "submission": {
+    "missingAttachment": "Sem anexo",
+    "action": {
+      "edit": "Editar ({count})"
+    },
+    "editDisabled": "Você não pode editar respostas encriptadas.",
+    "binaryLinkTitle": "O arquivo foi enviado. Clique para baixar.",
+    "encryptionMessage": "A visualização dos dados não está disponível devido à encriptação.",
+    "noSubmission": "(nenhum)",
+    "emptyTable": "Não existem Respostas ainda.",
+    "fileDownloadUnavailable": "O download de arquivos não está disponível para Respostas excluídas."
+  },
+  "entity": {
+    "label": "Rótulo",
+    "entityLabel": "Rótulo da Entidade",
+    "entityId": "ID da Entidade",
+    "noProperties": "Este Formulário apenas define o “rótulo”",
+    "noEntity": "(nenhuma)",
+    "conflictsCount": "{count} conflito | {count} conflitos | {count} conflitos"
+  },
+  "common": {
+    "activity": "Atividade",
+    "anybody": "(Qualquer pessoa)",
+    "areYouSure": "Tem certeza que deseja continuar?",
+    "basicInfo": "Informações básicas",
+    "conflict": "Conflito",
+    "conflicts": "Conflitos",
+    "currentDraft": "Sua versão de rascunho atual",
+    "dangerZone": "Zona de perigo",
+    "data": "Dados",
+    "docs": "Documentação",
+    "emptyValue": "(vazio)",
+    "error": "Erro",
+    "filter": "Filtrar",
+    "forum": "Fórum",
+    "lastUpdate": "Última atualização",
+    "loading": "Carregando...",
+    "no": "Não",
+    "noResults": "Não há resultados",
+    "noUndo": "Esta ação não pode se desfeita.",
+    "rightNow": "Nesse instante",
+    "rowNumber": "Linha",
+    "success": "Sucesso!",
+    "system": "Sistema",
+    "yes": "Sim",
+    "tab": {
+      "settings": "Configurações",
+      "overview": "Visão geral"
+    },
+    "total": "Total",
+    "totalSubmissions": "Total de Respostas",
+    "propertiesCount": "{inform} de {count} propriedade | {inform} de {count} propriedades | {inform} de {count} propriedades",
+    "new": "Novo(a)!",
+    "totalEntities": "Total de Entidades",
+    "versionShort": "v{version}",
+    "warning": "Aviso",
+    "reviewState": "Status da revisão",
+    "status": "Situação",
+    "version": "Versão"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "O arquivo \"{name}\" que você está tentando enviar é maior do que o limite de 100 MB.",
+        "entityTooLarge": "Os dados que você está tentando carregar são muito grandes."
+      }
+    }
+  },
+  "util": {
+    "csv": {
+      "readError": "Ocorreu um problema ao ler seu arquivo: {message}",
+      "invalidCSV": "O arquivo “{name}” não é um arquivo .csv válido. Ele não pode ser lido.",
+      "rowError": "Há um problema na linha{row} do arquivo: {message}",
+      "invalidQuotes": "Um campo entre aspas é inválido. Verifique a linha para ver se há algum valor incomum.",
+      "emptyRow": "A linha está vazia.",
+      "dataWithoutHeader": "Era esperada {expected} coluna, mas foi encontrada {actual}. | Eram esperadas {expected} colunas, mas foram encontradas{actual}. | Eram esperadas {expected} colunas, mas foram encontradas {actual}."
+    },
+    "request": {
+      "noRequest": "Algo deu errado: não houve requisição.",
+      "noResponse": "Algo deu errado: não houve resposta à sua requisição.",
+      "errorNotProblem": "Algo deu errado: código de erro {status}.",
+      "problem": {
+        "404_1": "O recurso que você está procurando não foi encontrado. O recurso pode ter sido excluído.",
+        "409_17": {
+          "message": "Este Formulário tenta criar uma nova propriedade de Entidade que corresponde a uma já existente, exceto pelas letras maiúsculas: | Este Formulário tenta criar novas propriedades de Entidade que correspondem às existentes, exceto pelas letras maiúsculas: | Este Formulário tenta criar novas propriedades de Entidade que correspondem às existentes, exceto pelas letras maiúsculas:",
+          "duplicateProperty": "{provided}(existentes: {current})"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Sua sessão irá expirar em 2 minutos e será encerrada automaticamente.",
+        "expired": "Sua sessão expirou. Para continuar trabalhando efetue login novamente.",
+        "logoutError": "Houve um problema e sua última sessão não foi encerrada corretamente. Por favor, atualize a página ou tente efetuar login novamente. {message}"
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "Você tem certeza que deseja sair da dessa página? Suas alterações podem não ter sido salvas."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (arquivado)"
+    }
+  }
+}

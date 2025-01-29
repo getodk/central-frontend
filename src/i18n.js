@@ -47,6 +47,7 @@ addLocale('fr', { name: 'Français' });
 addLocale('id', { name: 'Bahasa Indonesia' });
 addLocale('it', { name: 'Italiano' });
 addLocale('ja', { name: '日本語', sentenceSeparator: '' });
+addLocale('pt', { name: 'Português' });
 addLocale('sw', { name: 'Kiswahili' });
 addLocale('zh-Hant', { name: '漢語', sentenceSeparator: '' });
 
@@ -92,6 +93,10 @@ const pluralizationRules = {
   es: (count) => (count === 1 ? 0 : 2),
   id: noPlural,
   ja: noPlural,
+  // As we do for other Romance languages like es, we never use the "many"
+  // plural form for pt. However, unlike those languages, we use the "one" form
+  // for 0.
+  pt: (count) => (count === 0 || count === 1 ? 0 : 2),
   'zh-Hant': noPlural
 };
 pluralizationRules.fr = pluralizationRules.es;

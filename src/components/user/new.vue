@@ -190,6 +190,18 @@ export default {
       "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送信されます。"
     ]
   },
+  "pt": {
+    "title": "Criar usuário do site",
+    "introduction": [
+      "Quando você criar essa conta, o endereço de email fornecido receberá instruções sobre como criar uma senha e os próximos passos."
+    ],
+    "oidcIntroduction": [
+      "Usuários em seu servidor de login devem ter uma conta no Central para fazer login no Central. Depois de criar essa conta, o usuário no seu servidor de login com o endereço de e-mail que você fornecer poderá fazer login no Central."
+    ],
+    "problem": {
+      "409_3": "Parece que {email} já tem uma conta. Tente outro endereço de e-mail."
+    }
+  },
   "sw": {
     "title": "Unda Mtumiaji wa Wavuti",
     "introduction": [

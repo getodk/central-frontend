@@ -130,6 +130,11 @@ defineExpose({ afterUpdate, afterDelete });
       "updatedAtAndActions": "Ultimo aggiornamento/ azioni"
     }
   },
+  "pt": {
+    "header": {
+      "updatedAtAndActions": "Última Atualização / Ações"
+    }
+  },
   "sw": {
     "header": {
       "updatedAtAndActions": "Ilisasishwa Mwisho / Vitendo"

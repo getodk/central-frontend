@@ -293,6 +293,13 @@ export default {
       "fill": "フォームに記入"
     }
   },
+  "pt": {
+    "action": {
+      "fill": "Preencher formulário",
+      "test": "Teste"
+    },
+    "formClosingTip": "Este Formulário está sendo fechado e aceitando suas respostas finais. Ele não pode ser baixado, mas ainda aceita Respostas."
+  },
   "sw": {
     "action": {
       "fill": "Jaza Fomu",

@@ -89,6 +89,9 @@ const data = computed(() => entity.currentVersion.data);
   "it": {
     "title": "Dati Entità"
   },
+  "pt": {
+    "title": "Dados da Entidade"
+  },
   "sw": {
     "title": "Data ya Huluki"
   },

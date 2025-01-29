@@ -211,6 +211,18 @@ export default {
       "success": "成功です！パスワードが更新されました。"
     }
   },
+  "pt": {
+    "title": "Mudar senha",
+    "oidcBody": "Este servidor Central não gerencia nenhuma senha de login.",
+    "action": {
+      "change": "Mudar senha"
+    },
+    "cannotChange": "Apenas o proprietário da conta pode definir sua própria senha.",
+    "alert": {
+      "mismatch": "Por favor, certifique-se de que a suas novas senhas sejam iguais.",
+      "success": "Sua senha foi atualizada com sucesso!"
+    }
+  },
   "sw": {
     "title": "Badilisha neno la siri",
     "oidcBody": "Seva hii ya Kati haidhibiti manenosiri yoyote ya kuingia.",

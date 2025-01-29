@@ -438,6 +438,36 @@ export default {
       "409_6": "バージョン名が以前の下書き、または削除されたフォームと競合しています。以下の入力項目から新しいものに変更するか、もしくは新しい定義フォームをアップロードしてください。"
     }
   },
+  "pt": {
+    "title": "Publicar rascunho",
+    "warnings": {
+      "attachments": {
+        "full": "Você não forneceu todos os {formAttachments} que seu Formulário requer. Você pode ignorar isso se desejar, mas precisará fazer uma nova versão Rascunho para fornecer esses Anexos mais tarde.",
+        "formAttachments": "Anexos do Formulário"
+      },
+      "testing": {
+        "full": "Você ainda não {tested} enviando uma resposta de teste. Você não é obrigado a fazê-lo, mas isso é altamente recomendado.",
+        "tested": "Testar esse formulário"
+      }
+    },
+    "introduction": [
+      "Você está prestes a tornar este Rascunho a versão publicada do seu Formulário. Isso finalizará todas as alterações feitas na definição do Formulário e nos Anexos do Formulário.",
+      "As respostas existentes do formulário principal não serão afetadas, mas todas as respostas de teste do rascunho serão removidas.",
+      "Cada versão de um formulário requer um nome de versão exclusivo. No momento, seu formulário de rascunho tem o mesmo nome de versão de outro publicado anteriormente. Você pode definir um novo carregando uma definição de formulário com o nome desejado ou pode digitar um novo abaixo e o servidor irá alterá-lo para você.",
+      "Você quer prosseguir?"
+    ],
+    "problem": {
+      "409_6": "O nome da versão deste Rascunho está em conflito com uma versão anterior deste Formulário ou de um Formulário excluído. Use o campo abaixo para alterá-lo para algo novo ou carregar uma nova definição do Formulário."
+    },
+    "dataset": {
+      "introduction": {
+        "full": "{inAddition} publicar esta definição do Formulário fará as seguintes alterações neste Projeto:",
+        "inAddition": "Além disso,"
+      },
+      "newDataset": "Uma nova Lista de Entidades {datasetName} será criada.",
+      "newProperty": "Na Lista de Entidades {datasetName}, uma nova propriedade {propertyName} será criada."
+    }
+  },
   "sw": {
     "title": "Chapisha Rasimu",
     "warnings": {

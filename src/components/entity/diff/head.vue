@@ -223,6 +223,20 @@ const change = (value) => {
       "updating": "(aggiornando {version})"
     }
   },
+  "pt": {
+    "introduction": "Esta atualização de Resposta foi aplicada à versão {version} desta Entidade, mas foi criada com base na versão {baseVersion}.",
+    "hardConflict": {
+      "description": "Outras atualizações já foram gravadas nas mesmas propriedades."
+    },
+    "softConflict": {
+      "title": "Atualização paralela"
+    },
+    "tab": {
+      "baseDiff": "Visualização do Autor",
+      "serverDiff": "Visualização do Central",
+      "updating": "(atualizando {version})"
+    }
+  },
   "zh-Hant": {
     "introduction": "此提交更新已套用至該實體的版本 {version}，但它是基於版本{baseVersion}建立的。",
     "hardConflict": {
