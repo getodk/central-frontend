@@ -78,6 +78,9 @@ const iframeSrc = computed(() => `https://getodk.github.io/central/news.html?out
   "it": {
     "title": "Novità"
   },
+  "pt": {
+    "title": "Notícias"
+  },
   "sw": {
     "title": "Habari"
   },

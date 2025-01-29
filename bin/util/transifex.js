@@ -19,6 +19,7 @@ const locales = {
   id: {},
   it: { pluralCategories: ['one', 'many', 'other'] },
   ja: { warnVariableSeparator: false },
+  pt: {},
   sw: {},
   'zh-Hant': { warnVariableSeparator: false }
 };

@@ -43,6 +43,7 @@ import 'flatpickr/dist/l10n/fr';
 import 'flatpickr/dist/l10n/id';
 import 'flatpickr/dist/l10n/it';
 import 'flatpickr/dist/l10n/ja';
+import 'flatpickr/dist/l10n/pt';
 import 'flatpickr/dist/l10n/zh-tw';
 
 import { locales } from '../i18n';

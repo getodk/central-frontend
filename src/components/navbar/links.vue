@@ -103,6 +103,9 @@ export default {
   "ja": {
     "current": "現在"
   },
+  "pt": {
+    "current": "atual"
+  },
   "sw": {
     "current": "sasa"
   },

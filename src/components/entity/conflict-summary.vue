@@ -331,6 +331,28 @@ const markAsResolved = () => {
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
   },
+  "pt": {
+    "title": "Atualizações de dados em paralelo",
+    "subtitle": [
+      "Uma ou mais atualizações foram feitas com base em dados que podem estar desatualizados.",
+      "Por favor, revise este resumo das atualizações paralelas."
+    ],
+    "footer": [
+      "Se algum valor precisar ser ajustado, você pode alterar os dados da Entidade diretamente.",
+      "Se tudo parecer correto, clique em “Marcar como resolvido” para descartar esse aviso."
+    ],
+    "confirmation": {
+      "title": "Esta Entidade está correta?",
+      "body": "Após revisar as atualizações possivelmente conflitantes e fazer as atualizações necessárias, você pode clicar em Confirmar abaixo para limpar o aviso de atualização paralela.",
+      "confirm": "Confirmar"
+    },
+    "conflictResolved": "O aviso de conflito foi resolvido.",
+    "markAsResolved": "Marcar como resolvido",
+    "problem": {
+      "400_32": "Outro usuário já marcou o conflito como resolvido. Por favor, atualize a página para ver os dados atualizados.",
+      "409_15": "Os dados foram modificados por outro usuário. Por favor, atualize a página para ver os dados atualizados."
+    }
+  },
   "sw": {
     "title": "Masasisho ya data inafanyika sambamba",
     "subtitle": [

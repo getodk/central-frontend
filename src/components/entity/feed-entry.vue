@@ -500,6 +500,42 @@ const showBranchData = () => {
       }
     }
   },
+  "pt": {
+    "title": {
+      "submission": {
+        "create": {
+          "notDeleted": "Resposta {instanceName} carregada por {submitter}",
+          "deleted": {
+            "full": "{deletedSubmission} carregada por {name}",
+            "deletedSubmission": "(Resposta {id} excluída)"
+          }
+        },
+        "approval": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Aprovado"
+        }
+      },
+      "entity": {
+        "create": {
+          "api": "{label} da Entidade criada por {name}",
+          "bulkSource": "Arquivo {name} carregado por {actor}",
+          "submission": "Entidade {label} criada na Lista de Entidades {dataset}"
+        },
+        "update_version": {
+          "submission": {
+            "notDeleted": "Dados atualizados pela Resposta {instanceName}",
+            "deleted": {
+              "full": "Dados atualizados por {deletedSubmission}",
+              "deletedSubmission": "(Resposta {id} excluída)"
+            }
+          },
+          "api": "Dados atualizados por {name}"
+        },
+        "update_resolve": "Aviso de conflito resolvido por {name}"
+      }
+    },
+    "offlineUpdate": "Atualização offline"
+  },
   "sw": {
     "title": {
       "submission": {

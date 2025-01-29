@@ -141,6 +141,12 @@ export default {
       "notOpen": "このバージョンのODK Centralでは、プレビューは、公開状態のフォームでのみ利用可能です。"
     }
   },
+  "pt": {
+    "disabled": {
+      "processing": "A visualização prévia não terminou de processar esse formulário. Por favor, atualize a página mais tarde e tente novamente.",
+      "notOpen": "Nessa versão do ODK Central, a pré-visualização está disponível apenas para formulários com status aberto."
+    }
+  },
   "sw": {
     "disabled": {
       "processing": "Onyesho la kuchungulia halijamaliza kuchakata Fomu hii. Tafadhali onyesha upya baadaye na ujaribu tena.",

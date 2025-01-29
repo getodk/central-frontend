@@ -407,6 +407,44 @@ const message = computed(() => {
       }
     }
   },
+  "pt": {
+    "entity": {
+      "withoutCount": "Carregando Entidades…",
+      "all": "Carregando {count} Entidades… | Carregando {count} Entidades… | Carregando {count} Entidades…",
+      "first": "Carregando o primeiro {top} de {count} Entidade… | Carregando o primeiro {top} de {count} Entidades… | Carregando o primeiro {top} de {count} Entidades…",
+      "middle": "Carregando {top} mais de {count} Entidade restante… | Carregando {top} mais de {count} Entidades restantes… | Carregando {top} mais de {count} Entidades restantes…",
+      "last": {
+        "multiple": "Carregando a última {count} Entidade… | Carregando as últimas {count} Entidades… | Carregando as últimas {count} Entidades…",
+        "one": "Carregando a última Entidade…"
+      },
+      "filtered": {
+        "withoutCount": "Carregando Entidades correspondentes…",
+        "middle": "Carregando {top} mais de {count} Entidade correspondente restante… | Carregando {top} mais de {count} Entidades correspondentes restantes… | Carregando {top} mais de {count} Entidades correspondentes restantes…",
+        "last": {
+          "multiple": "Carregando a última {count} Entidade correspondente… | Carregando as últimas {count} Entidades correspondentes… | Carregando as últimas {count} Entidades correspondentes…",
+          "one": "Carregando a última Entidade correspondente…"
+        }
+      }
+    },
+    "submission": {
+      "withoutCount": "Carregando respostas...",
+      "all": "Carregando {count} resposta... | Carregando {count}respostas... | Carregando {count}respostas...",
+      "first": "Carregando as primeira {top}de {count} respostas... | Carregando as primeiras {top}de {count}respostas... | Carregando as primeiras {top}de {count}respostas...",
+      "middle": "Carregando mais {top} de {count} resposta que ainda falta... | Carregando mais {top}de {count}respostas que ainda faltam... | Carregando mais {top}de {count}respostas que ainda faltam...",
+      "last": {
+        "multiple": "Carregando {count} resposta... | Carregando as últimas {count} respostas... | Carregando as últimas {count} respostas...",
+        "one": "Carregando a última resposta..."
+      },
+      "filtered": {
+        "withoutCount": "Carregando respostas encontradas...",
+        "middle": "Carregando mais {top}de{count}resposta correspondente que ainda falta... | Carregando mais {top}de {count} respostas correspondentes que ainda faltam... | Carregando mais {top}de {count} respostas correspondentes que ainda faltam...",
+        "last": {
+          "multiple": "Carregando a última {count} resposta correspondente... | Carregando as últimas {count}respostas correspondentes... | Carregando as últimas {count}respostas correspondentes...",
+          "one": "Carregando a última resposta encontrada..."
+        }
+      }
+    }
+  },
   "sw": {
     "entity": {
       "withoutCount": "Inapakia Huluki...",

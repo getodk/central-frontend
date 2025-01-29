@@ -442,6 +442,33 @@ export default {
       "delete": "フォーム\"{name}\"は削除されました。"
     }
   },
+  "pt": {
+    "draftChecklist": {
+      "title": "Lista de verificação do rascunho"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "{draftVersion}desse formulário.",
+        "draftVersion": "Versão de rascunho"
+      },
+      "action": {
+        "upload": "Carregar nova definição"
+      }
+    },
+    "actions": {
+      "title": "Ações",
+      "action": {
+        "publish": "Publicar rascunho",
+        "abandon": "Abandonar rascunho"
+      }
+    },
+    "alert": {
+      "upload": "Sucesso! A nova definição de formulário foi armazenada como o seu rascunho.",
+      "publish": "Seu Rascunho agora está publicado. Todos os dispositivos que obtêm Formulários deste Projeto agora receberão a nova definição de Formulário e Anexos do Formulário.",
+      "abandon": "A versão de rascunho desse formulário foi excluída com sucesso.",
+      "delete": "O formulário \"{name}\" foi excluído."
+    }
+  },
   "sw": {
     "draftChecklist": {
       "title": "Orodha ya rasimu"

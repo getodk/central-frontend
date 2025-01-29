@@ -136,6 +136,15 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     }
   },
+  "pt": {
+    "placeholder": "{selected} de {total}",
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Nenhum"
+      }
+    }
+  },
   "sw": {
     "placeholder": "{selected} kati ya {total}",
     "action": {

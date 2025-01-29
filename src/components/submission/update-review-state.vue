@@ -196,6 +196,12 @@ export default {
       "notes": "メモとコメント（任意）"
     }
   },
+  "pt": {
+    "title": "Atualizar status de revisão",
+    "field": {
+      "notes": "Observações e comentários (opcional)"
+    }
+  },
   "sw": {
     "title": "Sasisha Uhakiki wa hali",
     "field": {

@@ -348,6 +348,25 @@ export default {
       "title": "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
     }
   },
+  "pt": {
+    "type": {
+      "image": "Imagem",
+      "audio": "Áudio",
+      "video": "Vídeo",
+      "file": "Arquivo de dados"
+    },
+    "replace": "Substituir",
+    "notUploaded": {
+      "text": "Não carregado ainda",
+      "title": "Para carregar arquivos, arraste e solte um ou mais arquivos nessa página"
+    },
+    "linkedToDataset": "Vinculado à Lista de Entidades {datasetName}",
+    "uploadToOverride": "Carregue um arquivo para suprimir.",
+    "action": {
+      "linkDataset": "Vincule a Lista de Entidades {datasetName}"
+    },
+    "override": "Substituir"
+  },
   "sw": {
     "type": {
       "image": "Picha",

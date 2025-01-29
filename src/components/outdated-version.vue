@@ -140,6 +140,20 @@ const dismiss = () => {
     "instructionsToUpgradeTooltip": "Fare clic qui per visualizzare le istruzioni per l'aggiornamento di Central",
     "dismiss": "Sospendere per 30 giorni",
     "dismissTooltip": "Fate clic qui per disattivare questo avviso per 30 giorni."
+  },
+  "pt": {
+    "title": "Versão ultrapassada",
+    "instructionsToUpgrade": "Instruções para atualizar",
+    "instructionsToUpgradeTooltip": "Clique aqui para ver as instruções para atualizar o Central",
+    "dismiss": "Ignorar por 30 dias",
+    "dismissTooltip": "Clique aqui para ignorar este aviso por 30 dias."
+  },
+  "zh-Hant": {
+    "title": "過時的版本",
+    "instructionsToUpgrade": "升級說明",
+    "instructionsToUpgradeTooltip": "按此處查看升級 Central 的說明",
+    "dismiss": "忽略 30 天",
+    "dismissTooltip": "按此處忽略此警告 30 天。"
   }
 }
 </i18n>

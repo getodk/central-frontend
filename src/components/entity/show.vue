@@ -228,6 +228,15 @@ const breadcrumbLinks = computed(() => [
       "delete": "La Entità “{label}” è stata cancellata."
     }
   },
+  "pt": {
+    "back": {
+      "title": "Detalhes da Entidade",
+      "back": "Voltar para a Tabela {datasetName}"
+    },
+    "alert": {
+      "delete": "A Entidade \"{label}\" foi excluída."
+    }
+  },
   "sw": {
     "back": {
       "title": "Data ya Huluki",

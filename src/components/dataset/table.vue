@@ -85,6 +85,9 @@ const { datasets } = useRequestData();
   "it": {
     "emptyTable": "Non sono ancora stati create Entità per questo progetto."
   },
+  "pt": {
+    "emptyTable": "Nenhuma Entidade foi criada para este Projeto ainda."
+  },
   "sw": {
     "emptyTable": "Bado hakuna Huluki ambazo zimeundwa kwa ajili ya Mradi huu."
   },

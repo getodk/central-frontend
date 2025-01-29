@@ -186,6 +186,20 @@ if (currentUser.can('user.list'))
       "body": "Puoi sempre ottenere aiuto dagli altri sul forum, dove puoi anche cercare domande precedenti."
     }
   },
+  "pt": {
+    "projects": {
+      "body": "O Central é organizado em Projetos, cada um contendo seus próprios Formulários e dados relacionados."
+    },
+    "users": {
+      "body": "Usuários podem ser associados a Projetos para gerenciá-los ou para coletar ou revisar dados enviados."
+    },
+    "docs": {
+      "body": "Há um guia de iniciação e uma documentação de usuário disponíveis no website ODK Docs."
+    },
+    "forum": {
+      "body": "Você sempre pode obter ajuda de outras pessoas no fórum, onde também pode pesquisar perguntas anteriores."
+    }
+  },
   "sw": {
     "projects": {
       "body": "Central imepangwa katika Miradi, ambayo kila moja ina Fomu zake na data zinazohusiana."

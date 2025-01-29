@@ -93,6 +93,9 @@ const selectLocale = (locale) => {
   "ja": {
     "helpTranslate": "Centralの翻訳に貢献する"
   },
+  "pt": {
+    "helpTranslate": "Ajude a traduzir o Central"
+  },
   "sw": {
     "helpTranslate": "Saidia kutafsiri Central"
   },

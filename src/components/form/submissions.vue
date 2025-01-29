@@ -250,11 +250,24 @@ export default {
       "toggleDeletedSubmissions": "{count} invio cancellato | {count} invii cancellati | {count} invii cancellati"
     }
   },
+  "pt": {
+    "analyzeDisabled": "O acesso ao OData não está disponível devido à encriptação do Formulário",
+    "analyzeDisabledDeletedData": "O acesso ao OData não está disponível devido às Respostas excluídas",
+    "purgeDescription": "Respostas e dados relacionados a Respostas são deletados depois de 30 dias na Lixeira",
+    "action": {
+      "toggleDeletedSubmissions": "{count} Resposta excluída | {count} Respostas excluídas | {count} Respostas excluídas"
+    }
+  },
   "sw": {
     "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
   },
   "zh-Hant": {
-    "analyzeDisabled": "由於表單加密，OData 存取不可用"
+    "analyzeDisabled": "由於表單加密，OData 存取不可用",
+    "analyzeDisabledDeletedData": "對於已刪除的提交內容，OData 存取不可用",
+    "purgeDescription": "提交內容和與提交內容相關的資料將在 30 天後從垃圾箱中刪除",
+    "action": {
+      "toggleDeletedSubmissions": "已刪除{count} 筆提交內容"
+    }
   }
 }
 </i18n>

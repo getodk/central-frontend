@@ -196,6 +196,17 @@ const hidePopover = () => { popoverData.target = null; };
     "title": "下書きのテスト",
     "introduction": "下書きにテスト提出されたフォームは、以下の表に示されます。ここではデータのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト提出済フォームは永久に削除されます。"
   },
+  "pt": {
+    "title": "Teste do rascunho",
+    "introduction": "As respostas do rascunho vão para a tabela de teste abaixo, onde você pode visualizá-las e baixá-las. Quando você publicar este formulário de rascunho, seus envios de teste serão removidos permanentemente.",
+    "entitiesTesting": {
+      "title": "Este Formulário pode atualizar Entidades",
+      "body": [
+        "As Entidades são atualizadas apenas para Formulários publicados. Em uma versão futura do Central, você poderá testar a funcionalidade da Entidade em um status de Rascunho.",
+        "Por enquanto, recomendamos testar sua definição de Formulário em status de Rascunho para verificar sua lógica. Antes de publicar, você pode verificar se ele atualiza todas as propriedades desejadas."
+      ]
+    }
+  },
   "sw": {
     "title": "Mtihani wa Rasimu",
     "introduction": "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."

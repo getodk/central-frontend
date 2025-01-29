@@ -141,6 +141,9 @@ export default {
   "it": {
     "formsUpdateEntities": "Formulario aggiorna Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità"
   },
+  "pt": {
+    "formsUpdateEntities": "Formulário atualiza Entidades nesta Lista de Entidades | Formulários atualizam Entidades nesta Lista de Entidades | Formulários atualizam Entidades nesta Lista de Entidades"
+  },
   "zh-Hant": {
     "formsUpdateEntities": "表單更新此實體清單中的實體"
   }

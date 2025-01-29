@@ -180,6 +180,10 @@ export default {
     "new": "nuovo!",
     "addedByThisDraft": "Aggiunto da questa bozza"
   },
+  "pt": {
+    "new": "Nova!",
+    "addedByThisDraft": "Adicionada por este Rascunho"
+  },
   "sw": {
     "new": "mpya!",
     "addedByThisDraft": "Imeongezwa na Rasimu hii"

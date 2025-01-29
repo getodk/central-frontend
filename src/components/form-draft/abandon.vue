@@ -222,6 +222,24 @@ export default {
       "abandon": "削除"
     }
   },
+  "pt": {
+    "title": {
+      "abandon": "Abandonar rascunho",
+      "deleteForm": "Abandonar rascunho e apagar formulário"
+    },
+    "introduction": {
+      "abandon": [
+        "Você está prestes a excluir permanentemente a versão Rascunho deste Formulário. Isso significa que a definição de Formulário de rascunho, quaisquer Anexos do Formulário de rascunho que você carregou e todas as Respostas de teste serão removidos.",
+        "Sua definição de Formulário publicada, seus Anexos de Formulário e suas Respostas não serão afetados."
+      ],
+      "deleteForm": [
+        "Você está prestes a excluir esta definição de Formulário de rascunho, juntamente com todos os Anexos de Formulário de rascunho que você carregou e todos as Respostas de teste. Como você ainda não o publicou, este Formulário será totalmente excluído e movido para a Lixeira."
+      ]
+    },
+    "action": {
+      "abandon": "Abandonar"
+    }
+  },
   "sw": {
     "title": {
       "abandon": "acha rasimu",

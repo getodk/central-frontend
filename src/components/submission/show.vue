@@ -259,6 +259,12 @@ export default {
       "back": "提出フォームの一覧に戻る"
     }
   },
+  "pt": {
+    "back": {
+      "title": "Detalhes da resposta",
+      "back": "Voltar à tabela de respostas"
+    }
+  },
   "sw": {
     "back": {
       "title": "Maelezo ya Uwasilishaji",

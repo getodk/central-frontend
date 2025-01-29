@@ -168,10 +168,35 @@ const { projectPath } = useRoutes();
   "ja": {
     "collectProjectName": "[下書き] {name}"
   },
+  "pt": {
+    "title": "Código para teste",
+    "introduction": {
+      "full": "Este é um {temporaryCode}",
+      "temporaryCode": "Código para teste temporário"
+    },
+    "stopsWorking": "Vai parar de funcionar quando você publicar este Rascunho.",
+    "instructions": "Escaneie o QR code para configurar o Collect num aparelho para testar e enviar dados a esta tabela de teste.",
+    "codesForUsers": {
+      "full": "Para criar códigos para distribuir aos usuários, veja a página {appUsers}.",
+      "appUsers": "Usuários de App"
+    },
+    "collectProjectName": "[Rascunho] {name}"
+  },
   "sw": {
     "collectProjectName": "[Rasimu] {name}"
   },
   "zh-Hant": {
+    "title": "測試程式碼",
+    "introduction": {
+      "full": "這是一個 {temporaryCode}.",
+      "temporaryCode": "臨時測試程式碼"
+    },
+    "stopsWorking": "當您發布此草稿時，它將停止工作。",
+    "instructions": "掃描此二維碼可在裝置上設定 Collect 以進行測試並將資料提交至此測試表。",
+    "codesForUsers": {
+      "full": "若要建立程式碼以分發給用戶，請參閱 {appUsers} 頁面。",
+      "appUsers": "應用程式用戶"
+    },
     "collectProjectName": "[草稿] {name}"
   }
 }

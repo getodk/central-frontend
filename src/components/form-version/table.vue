@@ -110,6 +110,12 @@ const { formVersions } = useRequestData();
       "definition": "定義フォーム"
     }
   },
+  "pt": {
+    "header": {
+      "published": "Publicado",
+      "definition": "Definição"
+    }
+  },
   "sw": {
     "header": {
       "published": "Imechapishwa",

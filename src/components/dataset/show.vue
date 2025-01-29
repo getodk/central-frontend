@@ -147,6 +147,9 @@ export default {
   "it": {
     "back": "Torna alle Entità del progetto"
   },
+  "pt": {
+    "back": "Voltar para Entidades do Projeto"
+  },
   "sw": {
     "back": "Rudi kwenye vyombo vya Mradi"
   },

@@ -154,6 +154,14 @@ export default {
       "この操作はフォームをゴミ箱に移動します。ゴミ箱に入れた30日後、完全に削除されますが、それ以前であれば削除を取り消せます。"
     ]
   },
+  "pt": {
+    "title": "Excluir formulário",
+    "introduction": [
+      "Você tem certeza que deseja excluir o formulário {name} e todas as suas respostas?",
+      "Esta ação moverá o Formulário para a Lixeira. Após 30 dias na Lixeira, ele será permanentemente eliminado, mas pode ser recuperado antes desse prazo."
+    ],
+    "noDeleteEntities": "Nenhuma Entidade criada pelas Respostas deste Formulário será excluída. Em uma versão futura do Central, será possível excluir Entidades."
+  },
   "sw": {
     "title": "Futa Fomu",
     "introduction": [

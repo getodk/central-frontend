@@ -135,6 +135,28 @@ const restore = () => {
     "field": {
       "noConfirm": "Ripristino immediato senza conferma fino a quando non lascio la pagina"
     }
+  },
+  "pt": {
+    "title": "Desfazer a exclusão da Resposta",
+    "introduction": [
+      "Você tem certeza de que deseja desfazer a exclusão desta Resposta?",
+      "A Resposta vai ser restaurada ao seu estado anterior, incluindo dados associados, como comentários.",
+      "Se a Resposta foi excluída novamente, haverá um novo prazo de 30 dias até que seja removida."
+    ],
+    "field": {
+      "noConfirm": "Desfazer a exclusão imediatamente sem confirmação até que eu deixe esta página"
+    }
+  },
+  "zh-Hant": {
+    "title": "取消刪除提交",
+    "introduction": [
+      "您確定要取消刪除此提交內容嗎？",
+      "提交內容將恢復到先前的狀態，包括評論等相關資料。",
+      "如果提交內容再次被刪除，則需要 30 天後才會被刪除。"
+    ],
+    "field": {
+      "noConfirm": "立即取消刪除，無需確認，直到我離開頁面"
+    }
   }
 }
 </i18n>

@@ -294,6 +294,19 @@ export default {
       "create": "新規プロジェクトは正しく作成されました。"
     }
   },
+  "pt": {
+    "archived": "Projetos arquivados",
+    "action": {
+      "create": "Novo"
+    },
+    "emptyTable": {
+      "canCreate": "Para começar, crie um Projeto. Os Projetos ajudam você a organizar seus dados agrupando Formulários e Usuários relacionados.",
+      "cannotCreate": "Não há Projetos para mostrar. Se você espera ver Projetos aqui, fale com a pessoa que lhe deu esta conta. Ela pode precisar atribuir uma Função de Projeto nos Projetos que você deve ver."
+    },
+    "alert": {
+      "create": "O seu novo projeto foi criado com sucesso."
+    }
+  },
   "sw": {
     "archived": "Miradi Iliyohifadhiwa",
     "action": {

@@ -186,6 +186,17 @@ export default {
       "success": "パスワードが正常にリセットされました。"
     }
   },
+  "pt": {
+    "action": {
+      "set": "Definir senha"
+    },
+    "problem": {
+      "401_2": "{message} O link de seu email expirou e um novo link precisa ser enviado."
+    },
+    "alert": {
+      "success": "A senha foi redefinida com sucesso."
+    }
+  },
   "sw": {
     "action": {
       "set": "Weka nenosiri"
