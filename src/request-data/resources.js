@@ -42,14 +42,6 @@ export default (container, createResource) => {
       : configDefaults),
     loaded: computed(() => config.dataExists && config.loadError == null)
   }));
-  createResource('centralVersion', () => ({
-    transformResponse: ({ data, headers }) =>
-      shallowReactive({
-        versionText: data,
-        currentVersion: data.match(/\(v(\d{4}[^-]*)/)[1],
-        currentDate: new Date(headers.get('date'))
-      })
-  }));
   createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({
     bySystem: computeIfExists(() => {

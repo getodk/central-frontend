@@ -5,6 +5,7 @@ import { noop } from '../../src/util/util';
 import createTestContainer from '../util/container';
 import testData from '../data';
 import { mockHttp } from '../util/http';
+import { mockResponseHeaders } from '../util/axios';
 
 describe('createResource()', () => {
   describe('request()', () => {
@@ -92,6 +93,45 @@ describe('createResource()', () => {
           .respondWithData(() => projectData)
           .afterResponse(() => {
             requestData.project.awaitingResponse.should.be.false;
+          });
+      });
+    });
+
+    describe('currentDate', () => {
+      it('sets currentDate after a successful response', () => {
+        const container = createTestContainer();
+        const { requestData, currentDate } = container;
+        return mockHttp(container)
+          .request(() => requestData.project.request({ url: '/v1/projects/1' }))
+          .respond(() => ({
+            status: 200,
+            data: testData.extendedProjects.createNew(),
+            headers: mockResponseHeaders({
+              Date: 'Tue, 17 Dec 2024 01:23:45 GMT'
+            })
+          }))
+          .afterResponse(() => {
+            const iso = currentDate.value.toISOString();
+            iso.should.equal('2024-12-17T01:23:45.000Z');
+          });
+      });
+
+      it('sets currentDate after an error response', () => {
+        const container = createTestContainer();
+        const { requestData, currentDate } = container;
+        return mockHttp(container)
+          .request(() =>
+            requestData.project.request({ url: '/v1/projects/1' }).catch(noop))
+          .respond(() => ({
+            status: 404,
+            data: { code: 404.1, message: 'Not found' },
+            headers: mockResponseHeaders({
+              Date: 'Tue, 17 Dec 2024 01:23:45 GMT'
+            })
+          }))
+          .afterResponse(() => {
+            const iso = currentDate.value.toISOString();
+            iso.should.equal('2024-12-17T01:23:45.000Z');
           });
       });
     });

@@ -774,7 +774,6 @@ const routesByName = new Map();
     requestData.session,
     currentUser,
     config,
-    requestData.centralVersion,
     requestData.analyticsConfig,
     requestData.roles
   ]);

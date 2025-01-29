@@ -1506,6 +1506,18 @@
         }
       }
     },
+    "CentralVersion": {
+      "title": {
+        "string": "Central Version",
+        "developer_comment": "This is the title at the top of a pop-up. It refers to the version of ODK Central that the user is using."
+      },
+      "shortVersion": {
+        "string": "You are using ODK Central {version}."
+      },
+      "longVersion": {
+        "string": "You can find more detailed version information below:"
+      }
+    },
     "CollectQr": {
       "draft": {
         "string": "Temporary Testing Code",

@@ -1,28 +1,25 @@
-import { mount } from '../util/lifecycle';
 import OutdatedVersion from '../../src/components/outdated-version.vue';
-import { mockLogin } from '../util/session';
+
+import { loadLocale } from '../../src/util/i18n';
+
 import testData from '../data';
 import { mockHttp } from '../util/http';
-import { loadLocale } from '../../src/util/i18n';
+import { mockLogin } from '../util/session';
+import { mount } from '../util/lifecycle';
 
 const mountOptions = (options) => ({
   global: {
     provide: { visiblyLoggedIn: options.userLoggedIn ?? true }
   },
   container: {
-    requestData: {
-      centralVersion: {
-        status: 200,
-        data: options.centralVersion,
-        headers: new Map([['date', options.currentDate ? new Date(options.currentDate) : new Date()]])
-      }
-    }
+    config: { centralVersion: options.centralVersion },
+    currentDate: options.currentDate ? new Date(options.currentDate) : new Date()
   }
 });
 
 const mountComponent = (options) => mount(OutdatedVersion, mountOptions(options));
 
-describe('OutdatedVersionBanner', () => {
+describe('OutdatedVersion', () => {
   const cases = [
     {
       description: 'user is not logged in',

@@ -10,13 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="el" class="selectable" @click="select"><!-- eslint-disable-line vuejs-accessibility/click-events-have-key-events, vue/multiline-html-element-content-newline -->
+  <div ref="el" class="selectable" :class="{ scroll: !wrap }" @click="select"><!-- eslint-disable-line vuejs-accessibility/click-events-have-key-events, vue/multiline-html-element-content-newline -->
     <slot></slot>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+
+defineProps({
+  wrap: Boolean
+});
 
 const el = ref(null);
 const select = () => {
@@ -31,7 +35,10 @@ const select = () => {
 
 .selectable {
   font-family: $font-family-monospace;
-  overflow-x: auto;
-  white-space: nowrap;
+
+  &.scroll {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
 </style>
