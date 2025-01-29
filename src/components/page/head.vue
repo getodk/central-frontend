@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="page-head" class="row">
     <div class="col-xs-12">
       <div id="page-head-title" class="h1"><slot name="title"></slot></div>
-      <p id="page-head-body"><slot name="body"></slot></p>
+      <div id="page-description"><slot name="description"></slot></div>
       <ul id="page-head-tabs" class="nav nav-tabs">
         <slot name="tabs"></slot>
       </ul>

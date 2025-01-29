@@ -1,4 +1,3 @@
-import ProjectOverviewDescription from '../../../src/components/project/overview/description.vue';
 import FormList from '../../../src/components/form/list.vue';
 import FormRow from '../../../src/components/form/row.vue';
 import FormTrashList from '../../../src/components/form/trash-list.vue';
@@ -9,44 +8,6 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('ProjectOverview', () => {
-  describe('project description', () => {
-    it('allows admins to see instructions about editing', async () => {
-      mockLogin({ role: 'admin' });
-      testData.extendedProjects.createPast(1);
-      const app = await load('/projects/1');
-      const desc = app.getComponent(ProjectOverviewDescription);
-      desc.props().description.should.equal('');
-      desc.props().canUpdate.should.equal(true);
-    });
-
-    it('allows managers to see instructions about editing', async () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'manager' });
-      const app = await load('/projects/1');
-      const desc = app.getComponent(ProjectOverviewDescription);
-      desc.props().description.should.equal('');
-      desc.props().canUpdate.should.equal(true);
-    });
-
-    it('does not allow viewers to see instructions about editing', async () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer' });
-      const app = await load('/projects/1', {}, { deletedForms: false });
-      const desc = app.getComponent(ProjectOverviewDescription);
-      desc.props().description.should.equal('');
-      desc.props().canUpdate.should.equal(false);
-    });
-
-    it('passes project description through', async () => {
-      mockLogin({ role: 'admin' });
-      testData.extendedProjects.createPast(1, { description: 'Description' });
-      const app = await load('/projects/1');
-      const desc = app.getComponent(ProjectOverviewDescription);
-      desc.props().description.should.equal('Description');
-      desc.props().canUpdate.should.equal(true);
-    });
-  });
-
   // These tests are in ProjectOverview because this component
   // does/does not include the trashed forms component based on
   // permissions of the given user and project. (And those

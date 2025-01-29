@@ -29,7 +29,8 @@ for (const [propName, styleName = propName] of [
   ['marginTop'],
   ['marginRight'],
   ['marginBottom'],
-  ['marginLeft']
+  ['marginLeft'],
+  ['lineHeight']
 ]) {
   Object.defineProperty(StyleBox.prototype, propName, {
     get() {

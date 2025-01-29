@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <markdown-view v-if="!emptyDescription" id="project-overview-description"
-    :raw-markdown="description"/>
+    ref="markdownRef" :class="{ clickable: targetHeight }" :raw-markdown="description" @click="toggle"/>
   <div v-else-if="canUpdate" id="project-overview-description-update">
     <i18n-t tag="div" class="instructions" keypath="instructions.full">
       <template #projectSettings>
@@ -23,36 +23,119 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 
-<script>
+<script setup>
+import { computed, onMounted, ref, nextTick, watch } from 'vue';
 import MarkdownView from '../../markdown/view.vue';
 
 import useRoutes from '../../../composables/routes';
+import { styleBox } from '../../../util/dom';
 
-export default {
-  name: 'ProjectOverviewDescription',
-  components: { MarkdownView },
-  props: {
-    description: {
-      type: String
-    },
-    // This canUpdate boolean is set by the parent project/overview.vue
-    // component based on user's permissions on the project.
-    // If the description is blank, they will see an explanation and
-    // edit link if they are a manager and can update the project.
-    // If the description is blank and they don't have permission,
-    // nothing will be shown in this description component.
-    canUpdate: {
-      type: Boolean
-    }
+defineOptions({
+  name: 'ProjectOverviewDescription'
+});
+
+const props = defineProps({
+  description: {
+    type: String
   },
-  setup() {
-    const { projectPath } = useRoutes();
-    return { projectPath };
-  },
-  computed: {
-    emptyDescription() {
-      return this.description === '' || this.description == null;
+  // This canUpdate boolean is set by the parent project/overview.vue
+  // component based on user's permissions on the project.
+  // If the description is blank, they will see an explanation and
+  // edit link if they are a manager and can update the project.
+  // If the description is blank and they don't have permission,
+  // nothing will be shown in this description component.
+  canUpdate: {
+    type: Boolean
+  }
+});
+
+const { projectPath } = useRoutes();
+
+const emptyDescription = computed(() => !props.description);
+
+const markdownRef = ref(null);
+
+const targetHeight = ref(null);
+
+const getNumberOfLines = (box, offsetHeight, lineHeight) => {
+  const contentHeight = offsetHeight - box.paddingTop - box.paddingBottom;
+
+  return Math.round(contentHeight / lineHeight);
+};
+
+/**
+ * Returns the desired height for the element based on the number of text lines in the element and
+ * number of lines to show on the UI. If number of lines in the element is less than or equal to
+ * allowedLines then `null` is returned.
+ */
+const getTargetHeight = (element, allowedLines) => {
+  let linesCount = 0;
+  let runningHeight = 0;
+
+  for (let i = 0; i < element.children.length; i += 1) {
+    const child = element.children[i];
+
+    // Get/compute required inputs to determine the target height
+    const style = window.getComputedStyle(child);
+    const box = styleBox(style);
+    let { lineHeight } = box;
+    if (child.tagName === 'IMG') {
+      lineHeight = 20;
     }
+    const numberOfLines = getNumberOfLines(box, child.offsetHeight, lineHeight);
+
+    // Adjustment for margin collapsing
+    const previousMarginBottom = element.children[i - 1]
+      ? styleBox(window.getComputedStyle(element.children[i - 1])).marginBottom
+      : 0;
+    const adjustedMarginTop = Math.max(box.marginTop - previousMarginBottom, 0);
+    const totalHeight = adjustedMarginTop + child.offsetHeight + box.marginBottom;
+
+    // we have exceeded the allowed number of lines
+    // OR We have reached exact allowed number lines and there are more
+    // elements after this one
+    if (linesCount + numberOfLines > allowedLines ||
+          (linesCount + numberOfLines === allowedLines && (i + 1) < element.children.length)) {
+      const linesToShowOfThisNode = allowedLines - linesCount - 0.5;
+      return runningHeight +
+        adjustedMarginTop +
+        box.paddingTop +
+        (linesToShowOfThisNode * lineHeight);
+    }
+
+    // Update running totals
+    linesCount += numberOfLines;
+    runningHeight += totalHeight;
+  }
+  return null;
+};
+
+const setMarkdownHeight = () => {
+  if (!markdownRef.value) return;
+
+  const expanded = targetHeight.value && markdownRef.value.$el.style.height === 'auto';
+
+  targetHeight.value = getTargetHeight(markdownRef.value.$el, 4);
+
+  if (!expanded && targetHeight.value) {
+    markdownRef.value.$el.style.height = `${targetHeight.value}px`;
+  }
+};
+
+onMounted(() => {
+  // nextTick is good enough for the calculation being done here. I don't see
+  // any screen flicker. Maybe related: https://github.com/vuejs/vue/issues/9200.
+  // Additionally Without nextTick offsetHeight is always 0.
+  nextTick(setMarkdownHeight);
+});
+
+watch(() => props.description, () => nextTick(setMarkdownHeight));
+
+const toggle = () => {
+  if (targetHeight.value && markdownRef.value.$el.style.height === 'auto') {
+    markdownRef.value.$el.style.height = `${targetHeight.value}px`;
+  } else {
+    markdownRef.value.$el.style.height = 'auto';
   }
 };
 </script>
@@ -60,16 +143,35 @@ export default {
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
+@import '../../../assets/scss/variables';
 
 #project-overview-description, #project-overview-description-update {
-  border-left: 5px solid #ccc;
-  padding-left: 12px;
   margin-bottom: 20px;
+}
+
+#project-overview-description.clickable {
+  cursor: pointer;
+  border-bottom: 1px solid $color-subpanel-border;
+  overflow: hidden;
+
+  &:hover {
+    border-bottom: 1px solid $color-subpanel-border-strong;
+  }
+
+  &.expanded {
+    border-bottom: none;
+
+    &:hover {
+      border-bottom: none;
+    }
+  }
+
 }
 
 #project-overview-description {
   font-size: 16px;
   line-height: 1.2;
+  max-width: 700px;
 
   /*
     The markdown html can include tags like `<h1>`s with their

@@ -11,8 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-overview">
-    <project-overview-description v-if="project.dataExists"
-      :description="project.description" :can-update="canUpdate"/>
     <form-list/>
     <form-trash-list v-if="rendersTrashList" @restore="$emit('fetch-forms', true)"/>
   </div>
@@ -23,7 +21,6 @@ import { computed } from 'vue';
 
 import FormList from '../form/list.vue';
 import FormTrashList from '../form/trash-list.vue';
-import ProjectOverviewDescription from './overview/description.vue';
 
 import { useRequestData } from '../../request-data';
 
@@ -41,8 +38,6 @@ const emit = defineEmits(['fetch-forms']);
 const { project } = useRequestData();
 emit('fetch-forms', false);
 
-const canUpdate = computed(() =>
-  project.dataExists && project.permits('project.update'));
 const rendersTrashList = computed(() =>
   project.dataExists && project.permits('form.restore'));
 </script>
