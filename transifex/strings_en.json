@@ -23,6 +23,18 @@
     "details": {
       "string": "Details",
       "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "formSubmission": {
+      "string": "Form submission",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "formPublicSubmission": {
+      "string": "Form submission (public link)",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
+    },
+    "formPreview": {
+      "string": "Form preview",
+      "developer_comment": "This is the text shown as the title of a page including in the browser tab."
     }
   },
   "projectShow": {
@@ -3097,6 +3109,30 @@
       "collectProjectName": {
         "string": "[Draft] {name}",
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
+      }
+    },
+    "FormFormsubmission": {
+      "WebformFill": {
+        "previewModal": {
+          "title": {
+            "string": "ODK Web Forms Preview",
+            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of Web Forms."
+          },
+          "body": {
+            "string": "You have completed the form preview using ODK Web Forms. The Submission was not sent.",
+            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of Web Forms."
+          }
+        },
+        "submissionModal": {
+          "title": {
+            "string": "ODK Web Forms Submission",
+            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on Web Forms."
+          },
+          "body": {
+            "string": "You have completed filling out a form using ODK Web Forms.",
+            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on Web Forms."
+          }
+        }
       }
     },
     "FormHead": {
