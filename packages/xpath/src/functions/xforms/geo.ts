@@ -1,6 +1,7 @@
 import { pairwise } from 'itertools-ts/lib/single';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
+import { JRCompatibleError } from '../../error/JRCompatibleError.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 
@@ -213,7 +214,9 @@ export const distance = new NumberFunction(
 		const lines = evaluateLines(context, args);
 
 		if (lines.some(isInvalidLine)) {
-			return NaN;
+			throw new JRCompatibleError(
+				"The function 'distance' received a value that does not represent GPS coordinates"
+			);
 		}
 
 		const distances = lines.map(geodesicDistance);
