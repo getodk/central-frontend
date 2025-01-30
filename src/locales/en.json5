@@ -488,14 +488,7 @@
       "problem": {
         // A "resource" is a generic term for something in Central, for example,
         // a Project, a Web User, or a Form.
-        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted.",
-        "409_17": {
-          "message": "This Form attempts to create a new Entity property that matches with an existing one except for capitalization: | This Form attempts to create new Entity properties that match with existing ones except for capitalization:",
-          // Error message format for the duplicate properties (different capitalization) in an Entity-list.
-          // {provided} is the property name in the uploaded Form.
-          // {current} is the existing property name in the Entity-list.
-          "duplicateProperty": "{provided} (existing: {current})"
-        }
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
       }
     },
     "session": {

@@ -1,5 +1,6 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
+import Alert40917 from '../../../src/components/alert/40917.vue';
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 
@@ -297,10 +298,10 @@ describe('FormDraftPublish', () => {
         details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
       })
       .afterResponse(modal => {
-        modal.should.alert(
-          'danger',
-          /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
-        );
+        modal.should.alert('danger', [
+          Alert40917,
+          { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+        ]);
       });
   });
 

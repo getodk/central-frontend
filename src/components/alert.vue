@@ -16,7 +16,12 @@ except according to the terms contained in the LICENSE file.
       @click="alert.blank()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <span class="alert-message">{{ alert.message }}</span>
+
+    <span v-if="alert.message != null" class="alert-message">
+      {{ alert.message }}
+    </span>
+    <component v-else-if="alert.content != null" :is="alert.content[0]"
+      v-bind="alert.content[1]"/>
   </div>
 </template>
 
