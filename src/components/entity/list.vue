@@ -65,7 +65,6 @@ import EntityResolve from './resolve.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
 
-import useEntities from '../../request-data/entities';
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
@@ -114,8 +113,7 @@ export default {
   setup() {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
-    const { dataset, deletedEntityCount } = useRequestData();
-    const { odataEntities } = useEntities();
+    const { dataset, deletedEntityCount, odataEntities } = useRequestData();
     // We do not reconcile `odataEntities` with either dataset.lastEntity or
     // project.lastEntity.
     watchEffect(() => {

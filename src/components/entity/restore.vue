@@ -53,10 +53,6 @@ defineOptions({
 const props = defineProps({
   state: Boolean,
   checkbox: Boolean,
-  label: {
-    type: String,
-    default: ''
-  },
   awaitingResponse: Boolean,
   entity: Object
 });
@@ -89,6 +85,7 @@ const restore = () => {
       "If the Entity is deleted again, it will be another 30 days before it is removed."
     ],
     "field": {
+      // @transifexKey component.SubmissionRestore.field.noConfirm
       "noConfirm": "Undelete immediately without confirmation until I leave the page"
     }
   }

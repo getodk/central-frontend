@@ -14,6 +14,7 @@ import { mockResponse } from '../../util/axios';
 import { loadEntityList } from '../../util/entity';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { testRouter } from '../../util/router';
 
 // Create entities along with the associated project and dataset.
 const createEntities = (count, factoryOptions = {}) => {
@@ -1121,6 +1122,67 @@ describe('EntityList', () => {
             requestData.localResources.odataEntities.originalCount.should.equal(251);
           });
       });
+    });
+  });
+
+  describe('deleted entities', () => {
+    it('show deleted entities', () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+      testData.extendedEntities.createPast(1, { label: 'deleted 2', deletedAt: new Date().toISOString() });
+      return loadEntityList({ props: { deleted: true } })
+        .afterResponse(component => {
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
+          component.findAll('.table-freeze-scrolling tbody tr').forEach((r, i) => {
+            r.find('td').text().should.be.equal(`deleted ${2 - i}`);
+          });
+        });
+    });
+
+    it('emits event to refresh deleted count when live entities are on display', () => {
+      testData.extendedEntities.createPast(1);
+      return loadEntityList()
+        .complete()
+        .request(component =>
+          component.get('#entity-list-refresh-button').trigger('click'))
+        .respondWithData(testData.entityOData)
+        .afterResponse(component => {
+          component.emitted().should.have.property('fetch-deleted-count');
+        });
+    });
+
+    it('updates the deleted count', () => {
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/truee/entities', { root: false, container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.get('.toggle-deleted-entities').trigger('click'))
+        .respondWithData(testData.entityDeletedOData)
+        .afterResponses((component) => {
+          component.find('.toggle-deleted-entities').text().should.equal('1 deleted Entity');
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
+        })
+        .request(component =>
+          component.get('#entity-list-refresh-button').trigger('click'))
+        .beforeAnyResponse(() => {
+          testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+        })
+        .respondWithData(testData.entityDeletedOData)
+        .afterResponses((component) => {
+          component.find('.toggle-deleted-entities').text().should.equal('2 deleted Entities');
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
+        });
+    });
+
+    it('disables filters and download button', () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+      testData.extendedEntities.createPast(1, { label: 'deleted 2', deletedAt: new Date().toISOString() });
+      return loadEntityList({ props: { deleted: true } })
+        .afterResponse(component => {
+          component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
+          component.getComponent('#entity-filters').props().disabled.should.be.true;
+        });
     });
   });
 });

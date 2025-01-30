@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span>
+  <span id="entity-filters">
     <div class="form-group">
       <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
     </div>
