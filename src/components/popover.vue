@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { arrow, computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { arrow, computePosition, flip, inline, offset, shift } from '@floating-ui/dom';
 
 export default {
   name: 'Popover',
@@ -61,8 +61,9 @@ export default {
         placement: this.placement,
         middleware: [
           offset(0),
-          shift(),
-          flip({ fallbackPlacements: ['bottom', 'left', 'right'] }),
+          shift({ padding: 5 }),
+          inline(),
+          flip({ fallbackPlacements: ['bottom', 'left', 'right', 'top'] }),
           arrow({ element: arrowEl }),
         ]
       })
@@ -88,7 +89,7 @@ export default {
             Object.assign(arrowEl.style, {
               left: x != null ? `${x + 10}px` : '',
               top: y != null ? `${y + 10}px` : '',
-              [staticSide]: `${-arrowEl.offsetWidth}px`
+              [staticSide]: y != null ? `${-arrowEl.offsetWidth}px` : `${-arrowEl.offsetHeight}px`
             });
           }
         });
