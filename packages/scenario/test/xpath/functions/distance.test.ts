@@ -188,4 +188,39 @@ describe('XPath function support: `distance`', () => {
 			expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
 		});
 	});
+
+	describe('multiple arguments, mixed value types', () => {
+		it('produces an error for a non-geopoint value in a multiple argument call', async () => {
+			const init = async () => {
+				await Scenario.init(
+					'geoshape distance',
+					html(
+						head(
+							title('Geoshape distance'),
+							model(
+								mainInstance(
+									t(
+										'data id="geoshape-distance"',
+										t('polygon-start-trace', '0 1 0 0; 0 91 0 0;'),
+										t('polygon-close-point', '0 1 0 0'),
+										t('distance')
+									)
+								),
+								bind('/data/polygon-start-trace').type('geotrace'),
+								bind('/data/polygon-close-point').type('geopoint'),
+								bind('/data/distance')
+									.type('decimal')
+									.calculate('distance(/data/polygon-start-trace, /data/polygon-close-point)')
+							)
+						),
+						body(input('/data/polygon-start-trace'), input('/data/polygon-close-point'))
+					)
+				);
+			};
+
+			await expect(init).rejects.toThrowError(
+				"The function 'distance' received a value that does not represent GPS coordinates"
+			);
+		});
+	});
 });
