@@ -153,6 +153,13 @@ export default {
 
       event.preventDefault();
       this.managed = !this.managed;
+
+      if (this.popover.target != null) {
+        this.$nextTick(() => {
+          document.querySelector('.popover .field-key-qr-panel .switch-code')
+            .focus();
+        });
+      }
     },
     afterCreate(fieldKey) {
       this.fetchData(true);
