@@ -181,8 +181,7 @@ const restToOData = (filterExpression) => (top = 250, skip = 0) => {
   return {
     '@odata.count': data.length,
     value: data.slice(skip, skip + top)
-      .map(submission => submission._odata),
-    '@odata.nextLink': top > 0 && (top + skip < data.length) ? `https://test/Submissions?$top=${top}&$skipToken=thetoken` : undefined
+      .map(submission => submission._odata)
   };
 };
 

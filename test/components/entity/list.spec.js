@@ -1,4 +1,5 @@
 import faker from 'faker';
+import { nextTick } from 'vue';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityDelete from '../../../src/components/entity/delete.vue';
@@ -7,10 +8,8 @@ import EntityList from '../../../src/components/entity/list.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import EntityResolve from '../../../src/components/entity/resolve.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
-import Spinner from '../../../src/components/spinner.vue';
 
 import testData from '../../data';
-import { mockResponse } from '../../util/axios';
 import { loadEntityList } from '../../util/entity';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -22,24 +21,6 @@ const createEntities = (count, factoryOptions = {}) => {
   testData.extendedDatasets.createPast(1, { entities: count });
   testData.extendedEntities.createPast(count, factoryOptions);
 };
-const _scroll = (component, scrolledToBottom) => {
-  const method = component.vm.scrolledToBottom;
-  if (method == null) {
-    _scroll(component.getComponent(EntityList), scrolledToBottom);
-    return;
-  }
-  // eslint-disable-next-line no-param-reassign
-  component.vm.scrolledToBottom = () => scrolledToBottom;
-  document.dispatchEvent(new Event('scroll'));
-  // eslint-disable-next-line no-param-reassign
-  component.vm.scrolledToBottom = method;
-};
-// eslint-disable-next-line consistent-return
-const scroll = (componentOrBoolean) => {
-  if (componentOrBoolean === true || componentOrBoolean === false)
-    return (component) => _scroll(component, componentOrBoolean);
-  _scroll(componentOrBoolean, true);
-};
 
 describe('EntityList', () => {
   beforeEach(mockLogin);
@@ -50,8 +31,22 @@ describe('EntityList', () => {
       '/projects/1/entity-lists/trees/entities',
       { root: false }
     ).testRequests([
-      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=0&%24count=true&%24filter=__system%2FdeletedAt+ne+null' },
-      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true' }
+      {
+        url: ({ pathname, searchParams }) => {
+          // Request to get count of deleted Entities
+          pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
+          searchParams.get('$filter').should.match(/__system\/deletedAt ne null/);
+          searchParams.get('$top').should.be.eql('0');
+        }
+      },
+      {
+        url: ({ pathname, searchParams }) => {
+          // Request to get all the Entities created before now and ( not deleted or deleted after now)
+          pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
+          searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+          searchParams.get('$top').should.be.eql('250');
+        }
+      }
     ]);
   });
 
@@ -517,8 +512,8 @@ describe('EntityList', () => {
 
       it('hides the row', async () => {
         const component = await del();
-        const row = component.getComponent(EntityMetadataRow);
-        row.element.dataset.markRowsDeleted.should.equal('true');
+        const row = component.findComponent(EntityMetadataRow);
+        row.exists().should.be.false;
       });
 
       it('updates the entity count', async () => {
@@ -540,17 +535,17 @@ describe('EntityList', () => {
       };
 
       it('hides the table', () =>
-        load('/projects/1/entity-lists/trees/entities', { root: false })
+        load('/projects/1/entity-lists/trees/entities', { root: false, attachTo: document.body })
           .complete()
           .request(del(1))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.get('#entity-table').should.be.visible();
+            component.get('#entity-table table').should.be.visible(true);
           })
           .request(del(0))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.get('#entity-table').should.be.hidden();
+            component.get('#entity-table table').should.be.hidden(true);
           }));
 
       it('shows a message', () =>
@@ -672,6 +667,7 @@ describe('EntityList', () => {
   describe('restore', () => {
     const uuid = faker.random.uuid();
     const loadDeletedEntities = () => {
+      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, {
         uuid,
         label: 'My Entity',
@@ -679,7 +675,7 @@ describe('EntityList', () => {
       });
       return load(
         '/projects/1/entity-lists/trees/entities?deleted=true',
-        { root: false },
+        { root: false, attachTo: document.body },
         {
           deletedEntityCount: false,
           odataEntities: testData.entityDeletedOData
@@ -744,14 +740,14 @@ describe('EntityList', () => {
 
       it('hides the row', async () => {
         const component = await restore();
-        const row = component.getComponent(EntityMetadataRow);
-        row.element.dataset.markRowsDeleted.should.equal('true');
+        const row = component.findComponent(EntityMetadataRow);
+        row.exists().should.be.false;
       });
 
       it('updates the entity count', async () => {
         const component = await restore();
-        const text = component.get('#entity-download-button').text();
-        text.should.equal('Download 1 Entity');
+        const text = component.get('.toggle-deleted-entities').text();
+        text.should.equal('0 deleted Entities');
       });
     });
 
@@ -773,12 +769,12 @@ describe('EntityList', () => {
         .request(restore(1))
         .respondWithSuccess()
         .afterResponse(component => {
-          component.get('#entity-table').should.be.visible();
+          component.get('#entity-table table').should.be.visible(true);
         })
         .request(restore(0))
         .respondWithSuccess()
         .afterResponse(component => {
-          component.get('#entity-table').should.be.hidden();
+          component.get('#entity-table table').should.be.hidden(true);
         }));
 
       it('shows a message', () => loadDeletedEntities()
@@ -882,10 +878,7 @@ describe('EntityList', () => {
     });
   });
 
-  describe('infinite loading', () => {
-    const checkTop = ({ url }, top) => {
-      url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
-    };
+  describe('pagination', () => {
     const checkIds = (component, count, offset = 0) => {
       const rows = component.findAllComponents(EntityDataRow);
       rows.length.should.equal(count);
@@ -896,232 +889,104 @@ describe('EntityList', () => {
         text.should.equal(entities[i + offset].uuid);
       }
     };
-    const checkMessage = (component, text) => {
-      const message = component.get('#odata-loading-message');
-      if (text == null) {
-        message.should.be.hidden();
-      } else {
-        message.should.not.be.hidden();
-        message.get('#odata-loading-message-text').text().should.equal(text);
 
-        const spinner = component.findAllComponents(Spinner).find(wrapper =>
-          message.element.contains(wrapper.element));
-        spinner.props().state.should.be.true;
-      }
-    };
-
-    it('loads a single entity', () => {
-      createEntities(1);
-      return loadEntityList()
-        .beforeEachResponse((component, { url }) => {
-          if (url.includes('.svc/Entities'))
-            checkMessage(component, 'Loading 1 Entity…');
-        });
-    });
-
-    it('loads all entities if there are few of them', () => {
-      createEntities(2);
-      return loadEntityList()
-        .beforeEachResponse((component, { url }) => {
-          if (url.includes('.svc/Entities'))
-            checkMessage(component, 'Loading 2 Entities…');
-        });
-    });
-
-    it('initially loads only the first chunk if there are many entities', () => {
+    it('should load all entities if there are less than page size', async () => {
       createEntities(3);
-      return loadEntityList({
-        props: { top: () => 2 }
-      })
-        .beforeEachResponse((component, config) => {
-          if (config.url.includes('.svc/Entities')) {
-            checkMessage(component, 'Loading the first 2 of 3 Entities…');
-            checkTop(config, 2);
-          }
+      const component = await loadEntityList();
+      checkIds(component, 3);
+    });
+
+    it('should load next page', async () => {
+      createEntities(251);
+      return loadEntityList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.entityOData(250, 250))
+        .afterResponse(component => {
+          checkIds(component, 1, 250);
         });
     });
 
-    it('clicking refresh button loads only first chunk of entities', () => {
-      createEntities(3);
-      return loadEntityList({
-        props: { top: () => 2 }
-      })
+    it('should load previous page', async () => {
+      createEntities(251);
+      return loadEntityList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.entityOData(250, 250))
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Previous page"]').trigger('click'))
+        .respondWithData(() => testData.entityOData(250))
+        .afterResponse(async component => {
+          checkIds(component, 250);
+        });
+    });
+
+    it('should change the page size', async () => {
+      createEntities(251);
+      return loadEntityList()
+        .complete()
+        .request(component => {
+          const sizeDropdown = component.find('.pagination select:has(option[value="500"])');
+          return sizeDropdown.setValue(500);
+        })
+        .respondWithData(() => testData.entityOData(500))
+        .afterResponse(async component => {
+          checkIds(component, 251);
+        });
+    });
+
+    it('should load first page on refresh', async () => {
+      createEntities(251);
+      return loadEntityList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.entityOData(250, 250))
         .complete()
         .request(component =>
           component.get('#entity-list-refresh-button').trigger('click'))
-        .beforeEachResponse((_, config) => {
-          checkTop(config, 2);
-        })
-        .respondWithData(() => testData.entityOData(2, 0))
-        .afterResponse(component => {
-          checkIds(component, 2);
+        .respondWithData(() => testData.entityOData(250))
+        .afterResponse(async component => {
+          checkIds(component, 250);
         });
     });
 
-    describe('scrolling', () => {
-      it('scrolling to the bottom loads the next chunk of entity', () => {
-        createEntities(12);
-        // Chunk 1
-        return loadEntityList({
-          props: { top: (loaded) => (loaded < 8 ? 2 : 3) }
+    it('should show correct row number', () => {
+      createEntities(251);
+      return loadEntityList()
+        .afterResponse(async component => {
+          await nextTick();
+          const rows = component.findAllComponents(EntityMetadataRow);
+          rows[0].find('.row-number').text().should.be.eql('251');
+          rows[249].find('.row-number').text().should.be.eql('2');
+          rows.length.should.be.eql(250);
         })
-          .beforeEachResponse((component, { url }) => {
-            if (url.includes('.svc/Entities'))
-              checkMessage(component, 'Loading the first 2 of 12 Entities…');
-          })
-          .afterResponses(component => {
-            checkMessage(component, null);
-          })
-          // Chunk 2
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2);
-            checkMessage(component, 'Loading 2 more of 10 remaining Entities…');
-          })
-          .respondWithData(() => testData.entityOData(2, 2))
-          .afterResponse(component => {
-            checkIds(component, 4);
-            checkMessage(component, null);
-          })
-          // Chunk 3
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2);
-            checkMessage(component, 'Loading 2 more of 8 remaining Entities…');
-          })
-          .respondWithData(() => testData.entityOData(2, 4))
-          .afterResponse(component => {
-            checkIds(component, 6);
-            checkMessage(component, null);
-          })
-          // Chunk 4 (last small chunk)
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2, 6);
-            checkMessage(component, 'Loading 2 more of 6 remaining Entities…');
-          })
-          .respondWithData(() => testData.entityOData(2, 6))
-          .afterResponse(component => {
-            checkIds(component, 8);
-            checkMessage(component, null);
-          })
-          // Chunk 5
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 3, 8);
-            checkMessage(component, 'Loading 3 more of 4 remaining Entities…');
-          })
-          .respondWithData(() => testData.entityOData(3, 8))
-          .afterResponse(component => {
-            checkIds(component, 11);
-            checkMessage(component, null);
-          })
-          // Chunk 6
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 3, 11);
-            checkMessage(component, 'Loading the last Entity…');
-          })
-          .respondWithData(() => testData.entityOData(3, 11))
-          .afterResponse(component => {
-            checkIds(component, 12);
-            checkMessage(component, null);
-          });
-      });
-
-      it('does nothing upon scroll if entity request results in error', () => {
-        createEntities(251);
-        return load('/projects/1/entity-lists/trees/entities', { root: false }, {
-          odataEntities: mockResponse.problem
-        })
-          .complete()
-          .testNoRequest(scroll);
-      });
-
-      it('does nothing after user scrolls somewhere other than bottom of page', () => {
-        createEntities(5);
-        return loadEntityList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          .testNoRequest(scroll(false));
-      });
-
-      it('clicking refresh button loads first chunk, even after scrolling', () => {
-        createEntities(5);
-        return loadEntityList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          .request(scroll)
-          .respondWithData(() => testData.entityOData(2, 2))
-          .complete()
-          .request(component =>
-            component.get('#entity-list-refresh-button').trigger('click'))
-          .beforeEachResponse((_, config) => {
-            checkTop(config, 2, 0);
-          })
-          .respondWithData(() => testData.entityOData(2, 0))
-          .afterResponse(component => {
-            checkIds(component, 2);
-          })
-          .request(scroll)
-          .beforeEachResponse((_, config) => {
-            checkTop(config, 2, 2);
-          })
-          .respondWithData(() => testData.entityOData(2, 2));
-      });
-
-      it('scrolling to the bottom has no effect if awaiting response', () => {
-        createEntities(5);
-        return loadEntityList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          // Sends a request.
-          .request(scroll)
-          // This should not send a request. If it does, then the number of
-          // requests will exceed the number of responses, and the mockHttp()
-          // object will throw an error.
-          .beforeAnyResponse(scroll)
-          .respondWithData(() => testData.entityOData(2, 2))
-          .complete()
-          .request(component =>
-            component.get('#entity-list-refresh-button').trigger('click'))
-          // Should not send a request.
-          .beforeAnyResponse(scroll)
-          .respondWithData(() => testData.entityOData(2, 0));
-      });
-
-      it('scrolling has no effect after all entities have been loaded', () => {
-        createEntities(2);
-        return loadEntityList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          .testNoRequest(scroll);
-      });
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.entityOData(250, 250))
+        .afterResponse(component => {
+          const rows = component.findAllComponents(EntityMetadataRow);
+          rows[0].find('.row-number').text().should.be.eql('1');
+        });
     });
 
-    describe('count update', () => {
-      it('does not update requestData.odataEntities.originalCount', () => {
-        createEntities(251);
-        return load('/projects/1/entity-lists/trees/entities', { root: false })
-          .afterResponses(component => {
-            const { requestData } = component.vm.$container;
-            requestData.localResources.odataEntities.originalCount.should.equal(251);
-            requestData.dataset.entities.should.equal(251);
-          })
-          .request(scroll)
-          .respondWithData(() => {
-            testData.extendedEntities.createPast(1);
-            return testData.entityOData(2, 250);
-          })
-          .afterResponse(component => {
-            const { requestData } = component.vm.$container;
-            requestData.localResources.odataEntities.originalCount.should.equal(251);
-          });
-      });
+    it('should load correct page on clicking next twice', () => {
+      createEntities(501);
+      return loadEntityList()
+        .complete()
+        .request(async component => {
+          await component.find('button[aria-label="Next page"]').trigger('click');
+          component.find('button[aria-label="Next page"]').trigger('click');
+        })
+        .respondWithData(() => testData.entityOData(250, 250))
+        .respondWithData(() => testData.entityOData(250, 500))
+        .afterResponses(async component => {
+          checkIds(component, 1, 500);
+          component.find('.pagination select').element.value.should.be.eql('2');
+        });
     });
   });
 
