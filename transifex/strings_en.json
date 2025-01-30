@@ -731,6 +731,9 @@
     },
     "submissionRestored": {
       "string": "The Submission has been undeleted."
+    },
+    "entityRestored": {
+      "string": "Entity “{label}” has been undeleted."
     }
   },
   "moreInfo": {
@@ -1526,6 +1529,18 @@
         "upload": {
           "string": "Success! Your Entities have been uploaded."
         }
+      },
+      "purgeDescription": {
+        "string": "Entities are deleted after 30 days in the Trash"
+      },
+      "action": {
+        "toggleDeletedEntities": {
+          "string": "{count, plural, one {{count} deleted Entity} other {{count} deleted Entities}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "OData access is unavailable for deleted Entities"
       }
     },
     "DatasetList": {
@@ -2006,6 +2021,14 @@
           "update_resolve": {
             "string": "Conflict warning resolved by {name}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "delete": {
+            "string": "Entity {label} deleted by {name}",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "restore": {
+            "string": "Entity {label} undeleted by {name}",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
       },
@@ -2060,6 +2083,12 @@
         "delete": {
           "string": "Entity “{label}” has been deleted."
         }
+      },
+      "filterDisabledMessage": {
+        "string": "Filtering is unavailable for deleted Entities"
+      },
+      "downloadDisabled": {
+        "string": "Download is unavailable for deleted Entities"
       },
       "action": {
         "download": {
@@ -2132,6 +2161,24 @@
         }
       }
     },
+    "EntityRestore": {
+      "title": {
+        "string": "Undelete {label}",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to undelete “{label}”?",
+          "developer_comment": "{label} is the label of an Entity."
+        },
+        "1": {
+          "string": "The Entity will be restored to its previous state."
+        },
+        "2": {
+          "string": "If the Entity is deleted again, it will be another 30 days before it is removed."
+        }
+      }
+    },
     "EntityShow": {
       "back": {
         "title": {
@@ -2149,6 +2196,10 @@
         "updatedAtAndActions": {
           "string": "Last Updated / Actions",
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
+        },
+        "deletedAt": {
+          "string": "Deleted at",
+          "developer_comment": "Heading of the column that shows Entity deletion timestamp"
         }
       }
     },

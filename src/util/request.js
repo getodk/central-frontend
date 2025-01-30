@@ -174,6 +174,7 @@ export const apiPaths = {
   entity: entityPath(''),
   entityAudits: entityPath('/audits'),
   entityVersions: entityPath('/versions'),
+  entityRestore: entityPath('/restore'),
   fieldKeys: projectPath('/app-users'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,

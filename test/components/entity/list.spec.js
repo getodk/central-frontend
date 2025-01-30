@@ -1,6 +1,8 @@
+import faker from 'faker';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityDelete from '../../../src/components/entity/delete.vue';
+import EntityRestore from '../../../src/components/entity/restore.vue';
 import EntityList from '../../../src/components/entity/list.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import EntityResolve from '../../../src/components/entity/resolve.vue';
@@ -12,6 +14,7 @@ import { mockResponse } from '../../util/axios';
 import { loadEntityList } from '../../util/entity';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { testRouter } from '../../util/router';
 
 // Create entities along with the associated project and dataset.
 const createEntities = (count, factoryOptions = {}) => {
@@ -47,6 +50,7 @@ describe('EntityList', () => {
       '/projects/1/entity-lists/trees/entities',
       { root: false }
     ).testRequests([
+      { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=0&%24count=true&%24filter=__system%2FdeletedAt+ne+null' },
       { url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true' }
     ]);
   });
@@ -88,9 +92,11 @@ describe('EntityList', () => {
     it('completes a background refresh', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
-      const assertRowCount = (count) => (component) => {
-        component.findAllComponents(EntityMetadataRow).length.should.equal(count);
-        component.findAllComponents(EntityDataRow).length.should.equal(count);
+      const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
+        if (i === responseIndex) {
+          component.findAllComponents(EntityMetadataRow).length.should.equal(count);
+          component.findAllComponents(EntityDataRow).length.should.equal(count);
+        }
       };
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .afterResponses(assertRowCount(1))
@@ -101,6 +107,7 @@ describe('EntityList', () => {
           testData.extendedEntities.createNew();
           return testData.entityOData();
         })
+        .respondWithData(testData.entityDeletedOData)
         .afterResponse(assertRowCount(2));
     });
 
@@ -114,7 +121,8 @@ describe('EntityList', () => {
         .beforeEachResponse(component => {
           component.get('#odata-loading-message').should.be.hidden();
         })
-        .respondWithData(testData.entityOData);
+        .respondWithData(testData.entityOData)
+        .respondWithData(testData.entityDeletedOData);
     });
   });
 
@@ -186,6 +194,7 @@ describe('EntityList', () => {
           component.getComponent(EntityUpdate).props().state.should.be.false;
         })
         .respondWithData(testData.entityOData)
+        .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
           component.getComponent(EntityUpdate).props().state.should.be.false;
         });
@@ -316,6 +325,7 @@ describe('EntityList', () => {
           component.getComponent(EntityResolve).props().state.should.be.false;
         })
         .respondWithData(testData.entityOData)
+        .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
           component.getComponent(EntityResolve).props().state.should.be.false;
         });
@@ -445,14 +455,14 @@ describe('EntityList', () => {
         });
     });
 
-    it('passes the entity label to the modal', async () => {
+    it('passes the entity to the modal', async () => {
       testData.extendedEntities.createPast(1, { label: 'My Entity' });
       const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
       });
       await component.get('.entity-metadata-row .delete-button').trigger('click');
-      const { label } = component.getComponent(EntityDelete).props();
-      label.should.equal('My Entity');
+      const { entity } = component.getComponent(EntityDelete).props();
+      entity.label.should.equal('My Entity');
     });
 
     it('implements some standard button things', () => {
@@ -631,6 +641,7 @@ describe('EntityList', () => {
             testData.extendedEntities.createNew();
             return testData.entityOData();
           })
+          .respondWithData(testData.entityDeletedOData)
           .respondWithSuccess()
           .afterResponses(component => {
             // Even though there were 2 entities before, and there are 2
@@ -653,6 +664,219 @@ describe('EntityList', () => {
             case, this latest deletion would increase the delete count to 2,
             which would hide the table. Here, we check that that doesn't
             happen. */
+            component.get('#entity-table').should.be.visible();
+          }));
+    });
+  });
+
+  describe('restore', () => {
+    const uuid = faker.random.uuid();
+    const loadDeletedEntities = () => {
+      testData.extendedEntities.createPast(1, {
+        uuid,
+        label: 'My Entity',
+        deletedAt: new Date().toISOString()
+      });
+      return load(
+        '/projects/1/entity-lists/trees/entities?deleted=true',
+        { root: false },
+        {
+          deletedEntityCount: false,
+          odataEntities: testData.entityDeletedOData
+        }
+      );
+    };
+
+    it('toggles the modal', () => loadDeletedEntities()
+      .complete()
+      .testModalToggles({
+        modal: EntityRestore,
+        show: '.entity-metadata-row .restore-button',
+        hide: '.btn-link'
+      }));
+
+    it('passes the entity to the modal', async () => {
+      const component = await loadDeletedEntities();
+      await component.get('.entity-metadata-row .restore-button').trigger('click');
+      const { entity } = component.getComponent(EntityRestore).props();
+      entity.label.should.equal('My Entity');
+    });
+
+    it('implements some standard button things', () => loadDeletedEntities()
+      .afterResponses(component =>
+        component.get('.entity-metadata-row .restore-button').trigger('click'))
+      .testStandardButton({
+        button: '#entity-restore .btn-danger',
+        disabled: ['#entity-restore .btn-link'],
+        modal: EntityRestore
+      }));
+
+    it('sends the correct request', () => loadDeletedEntities()
+      .complete()
+      .request(async (component) => {
+        await component.get('.entity-metadata-row .restore-button').trigger('click');
+        return component.get('#entity-restore .btn-danger').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: `/v1/projects/1/datasets/trees/entities/${uuid}/restore`
+      }]));
+
+    describe('after a successful response', () => {
+      const restore = () => loadDeletedEntities()
+        .complete()
+        .request(async (component) => {
+          await component.get('.entity-metadata-row .restore-button').trigger('click');
+          return component.get('#entity-restore .btn-danger').trigger('click');
+        })
+        .respondWithSuccess();
+
+      it('hides the modal', async () => {
+        const component = await restore();
+        component.getComponent(EntityRestore).props().state.should.be.false;
+      });
+
+      it('shows a success alert', async () => {
+        const component = await restore();
+        component.should.alert('success', 'Entity “My Entity” has been undeleted.');
+      });
+
+      it('hides the row', async () => {
+        const component = await restore();
+        const row = component.getComponent(EntityMetadataRow);
+        row.element.dataset.markRowsDeleted.should.equal('true');
+      });
+
+      it('updates the entity count', async () => {
+        const component = await restore();
+        const text = component.get('#entity-download-button').text();
+        text.should.equal('Download 1 Entity');
+      });
+    });
+
+    describe('last entity was restore', () => {
+      beforeEach(() => {
+        testData.extendedEntities.createPast(1, {
+          deletedAt: new Date().toISOString()
+        });
+      });
+
+      const restore = (index) => async (component) => {
+        const row = component.get(`.entity-metadata-row:nth-child(${index + 1})`);
+        await row.get('.restore-button').trigger('click');
+        return component.get('#entity-restore .btn-danger').trigger('click');
+      };
+
+      it('hides the table', () => loadDeletedEntities()
+        .complete()
+        .request(restore(1))
+        .respondWithSuccess()
+        .afterResponse(component => {
+          component.get('#entity-table').should.be.visible();
+        })
+        .request(restore(0))
+        .respondWithSuccess()
+        .afterResponse(component => {
+          component.get('#entity-table').should.be.hidden();
+        }));
+
+      it('shows a message', () => loadDeletedEntities()
+        .complete()
+        .request(restore(1))
+        .respondWithSuccess()
+        .afterResponse(component => {
+          component.get('.empty-table-message').should.be.hidden();
+        })
+        .request(restore(0))
+        .respondWithSuccess()
+        .afterResponse(component => {
+          component.get('.empty-table-message').should.be.visible();
+        }));
+    });
+
+    it('continues to show modal if checkbox was not checked', () => {
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return loadDeletedEntities()
+        .complete()
+        .request(async (component) => {
+          const row = component.get('.entity-metadata-row:last-child');
+          await row.get('.restore-button').trigger('click');
+          return component.get('#entity-restore .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(async (component) => {
+          await component.get('.entity-metadata-row .restore-button').trigger('click');
+          component.getComponent(EntityRestore).props().state.should.be.true;
+        });
+    });
+
+    describe('deleting after checking the checkbox', () => {
+      const restoreAndCheck = () => {
+        testData.extendedEntities
+          .createPast(1, { uuid: 'e1', label: 'Entity 1', deletedAt: new Date().toISOString() });
+        return loadDeletedEntities()
+          .complete()
+          .request(async (component) => {
+            const row = component.get('.entity-metadata-row:last-child');
+            await row.get('.restore-button').trigger('click');
+            const modal = component.getComponent(EntityRestore);
+            await modal.get('input').setChecked();
+            return modal.get('.btn-danger').trigger('click');
+          })
+          .respondWithSuccess()
+          .complete();
+      };
+
+      it('immediately sends a request', () =>
+        restoreAndCheck()
+          .request(component =>
+            component.get('.entity-metadata-row .restore-button').trigger('click'))
+          .respondWithProblem()
+          .testRequests([{
+            method: 'POST',
+            url: `/v1/projects/1/datasets/trees/entities/${uuid}/restore`
+          }]));
+
+      it('does not show the modal', () =>
+        restoreAndCheck()
+          .request(async (component) => {
+            await component.get('.entity-metadata-row .restore-button').trigger('click');
+            component.getComponent(EntityRestore).props().state.should.be.false;
+          })
+          .respondWithProblem());
+
+      it('shows the correct alert', () =>
+        restoreAndCheck()
+          .request(component =>
+            component.get('.entity-metadata-row .restore-button').trigger('click'))
+          .respondWithSuccess()
+          .afterResponse(component => {
+            component.should.alert('success', 'Entity “My Entity” has been undeleted.');
+          }));
+
+      // see the comment above in the similar test for delete Entity
+      it('does not hide table after undeleting last entity if entities are concurrently replaced', () =>
+        restoreAndCheck()
+          .request(async (component) => {
+            await component.get('#entity-list-refresh-button').trigger('click');
+            return component.get('.entity-metadata-row .restore-button').trigger('click');
+          })
+          .respondWithData(() => {
+            testData.extendedEntities.splice(0);
+            testData.extendedEntities.createNew({ deletedAt: new Date().toISOString() });
+            testData.extendedEntities.createNew({ deletedAt: new Date().toISOString() });
+            return testData.entityDeletedOData();
+          })
+          .respondWithSuccess()
+          .afterResponses(component => {
+            component.get('#entity-table').should.be.visible();
+            component.find('[data-mark-rows-deleted]').exists().should.be.false;
+          })
+          .request(component =>
+            component.get('.entity-metadata-row .restore-button').trigger('click'))
+          .respondWithSuccess()
+          .afterResponse(component => {
             component.get('#entity-table').should.be.visible();
           }));
     });
@@ -898,6 +1122,67 @@ describe('EntityList', () => {
             requestData.localResources.odataEntities.originalCount.should.equal(251);
           });
       });
+    });
+  });
+
+  describe('deleted entities', () => {
+    it('show deleted entities', () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+      testData.extendedEntities.createPast(1, { label: 'deleted 2', deletedAt: new Date().toISOString() });
+      return loadEntityList({ props: { deleted: true } })
+        .afterResponse(component => {
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
+          component.findAll('.table-freeze-scrolling tbody tr').forEach((r, i) => {
+            r.find('td').text().should.be.equal(`deleted ${2 - i}`);
+          });
+        });
+    });
+
+    it('emits event to refresh deleted count when live entities are on display', () => {
+      testData.extendedEntities.createPast(1);
+      return loadEntityList()
+        .complete()
+        .request(component =>
+          component.get('#entity-list-refresh-button').trigger('click'))
+        .respondWithData(testData.entityOData)
+        .afterResponse(component => {
+          component.emitted().should.have.property('fetch-deleted-count');
+        });
+    });
+
+    it('updates the deleted count', () => {
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/truee/entities', { root: false, container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.get('.toggle-deleted-entities').trigger('click'))
+        .respondWithData(testData.entityDeletedOData)
+        .afterResponses((component) => {
+          component.find('.toggle-deleted-entities').text().should.equal('1 deleted Entity');
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
+        })
+        .request(component =>
+          component.get('#entity-list-refresh-button').trigger('click'))
+        .beforeAnyResponse(() => {
+          testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+        })
+        .respondWithData(testData.entityDeletedOData)
+        .afterResponses((component) => {
+          component.find('.toggle-deleted-entities').text().should.equal('2 deleted Entities');
+          component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
+        });
+    });
+
+    it('disables filters and download button', () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+      testData.extendedEntities.createPast(1, { label: 'deleted 2', deletedAt: new Date().toISOString() });
+      return loadEntityList({ props: { deleted: true } })
+        .afterResponse(component => {
+          component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
+          component.getComponent('#entity-filters').props().disabled.should.be.true;
+        });
     });
   });
 });

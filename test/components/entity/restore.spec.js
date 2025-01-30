@@ -1,21 +1,13 @@
-import EntityDelete from '../../../src/components/entity/delete.vue';
+import EntityRestore from '../../../src/components/entity/restore.vue';
 
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
-  mount(EntityDelete, mergeMountOptions(options, {
-    props: { state: true, checkbox: true, label: 'Default label' }
+  mount(EntityRestore, mergeMountOptions(options, {
+    props: { state: true, checkbox: true }
   }));
 
-describe('EntityDelete', () => {
-  it('shows the entity label', () => {
-    const modal = mountComponent({
-      props: { entity: { label: 'My Entity' } }
-    });
-    modal.get('.modal-title').text().should.equal('Delete My Entity');
-    modal.get('.modal-introduction').text().should.include('My Entity');
-  });
-
+describe('EntityRestore', () => {
   it('focuses the checkbox', () => {
     const modal = mountComponent({ attachTo: document.body });
     modal.get('input').should.be.focused();

@@ -327,7 +327,10 @@
     "updateReviewState": "Review State saved!",
     "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
     "submissionDeleted": "The Submission has been deleted.",
-    "submissionRestored": "The Submission has been undeleted."
+    "submissionRestored": "The Submission has been undeleted.",
+    // @transifexKey component.EntityList.alert.delete
+    "entityDeleted": "Entity “{label}” has been deleted.",
+    "entityRestored": "Entity “{label}” has been undeleted."
   },
   "moreInfo": {
     "clickHere": {

@@ -183,7 +183,8 @@ entities = dataStore({
     trunkVersion = undefined,
     branchBaseVersion = undefined,
     source = undefined,
-    creator: creatorOption = undefined
+    creator: creatorOption = undefined,
+    deletedAt = null
   }) => {
     const newDataset = extendedDatasets.size === 0;
     if (newDataset) {
@@ -207,7 +208,8 @@ entities = dataStore({
       creatorId: creator.id,
       creator: toActor(creator),
       createdAt,
-      updatedAt: null
+      updatedAt: null,
+      deletedAt
     };
 
     const createVersion = inPast
@@ -261,19 +263,19 @@ export const standardEntities = view(entities, (entity) =>
   omit(['creator'], combineEntityWithVersions(entity)));
 
 // Converts entity response objects to OData.
-export const entityOData = (top = 250, skip = 0, asc = false) => {
+const restToOData = (filterExpression) => (top = 250, skip = 0, asc = false) => {
   if (extendedDatasets.size === 0) throw new Error('dataset not found');
   // There needs to be exactly one dataset for us to be able to identify the
   // correct one.
   if (extendedDatasets.size > 1) throw new Error('too many datasets');
 
-  const sorted = extendedEntities.sorted();
+  const sorted = extendedEntities.sorted().filter(filterExpression);
   if (asc) sorted.reverse();
 
   const { properties } = extendedDatasets.last();
   return {
-    '@odata.count': extendedEntities.size,
-    '@odata.nextLink': top > 0 && (top + skip < extendedEntities.size) ? `https://test/Entities?$top=${top}&$skipToken=thetoken` : undefined,
+    '@odata.count': sorted.length,
+    '@odata.nextLink': top > 0 && (top + skip < sorted.length) ? `https://test/Entities?$top=${top}&$skipToken=thetoken` : undefined,
     value: sorted.slice(skip, skip + top).map(entity => {
       const result = {
         label: entity.currentVersion.label,
@@ -285,7 +287,8 @@ export const entityOData = (top = 250, skip = 0, asc = false) => {
           creatorId: entity.creator.id.toString(),
           creatorName: entity.creator.displayName,
           createdAt: entity.createdAt,
-          updatedAt: entity.updatedAt
+          updatedAt: entity.updatedAt,
+          deletedAt: entity.deletedAt
         }
       };
 
@@ -364,3 +367,7 @@ extendedEntities.resolve = (index) => {
   // Update updatedAt.
   entities.update(index);
 };
+
+export const entityOData = restToOData(entity => entity.deletedAt == null);
+
+export const entityDeletedOData = restToOData(entity => entity.deletedAt != null);
