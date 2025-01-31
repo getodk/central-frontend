@@ -3,13 +3,13 @@ import type { SharedValueCodec } from '../getSharedValueCodec.ts';
 import { ValueArrayCodec } from '../ValueArrayCodec.ts';
 import type { CodecDecoder, CodecEncoder } from '../ValueCodec.ts';
 
-export type SelectValueType = 'string';
+export type BaseItemValueType = 'string';
 
-export type UnsupportedSelectValueType = Exclude<ValueType, SelectValueType>;
+export type UnsupportedBaseItemValueType = Exclude<ValueType, BaseItemValueType>;
 
-export abstract class BaseSelectCodec<
+export abstract class BaseItemCodec<
 	Values extends readonly string[] = readonly string[],
-> extends ValueArrayCodec<SelectValueType, Values> {
+> extends ValueArrayCodec<BaseItemValueType, Values> {
 	constructor(
 		baseCodec: SharedValueCodec<'string'>,
 		encodeValue: CodecEncoder<Values>,

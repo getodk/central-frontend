@@ -40,7 +40,7 @@ export type * from './client/submission/SubmissionState.ts';
 export type * from './client/SubtreeNode.ts';
 export type * from './client/TextRange.ts';
 export type * from './client/TriggerNode.ts';
-export type * from './client/unsupported/RankNode.ts';
+export type * from './client/RankNode.ts';
 export type * from './client/unsupported/UploadNode.ts';
 export type * from './client/validation.ts';
 export type * from './client/ValueType.ts';

@@ -11,7 +11,7 @@ import type { Root } from './Root.ts';
 import type { SelectControl } from './SelectControl.ts';
 import type { Subtree } from './Subtree.ts';
 import type { TriggerControl } from './TriggerControl.ts';
-import type { RankControl } from './unsupported/RankControl.ts';
+import type { RankControl } from './RankControl.ts';
 import type { UploadControl } from './unsupported/UploadControl.ts';
 
 export type RepeatRange = RepeatRangeControlled | RepeatRangeUncontrolled;

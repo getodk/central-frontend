@@ -5,10 +5,8 @@ import type { ModelValueDefinition } from '../client/ModelValueNode.ts';
 import type { SelectDefinition } from '../client/SelectNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../client/TriggerNode.ts';
-import type { RankNodeDefinition } from '../client/unsupported/RankNode.ts';
-import type { UnsupportedControlDefinition } from '../client/unsupported/UnsupportedControlNode.ts';
+import type { RankDefinition } from '../client/RankNode.ts';
 import type { UploadNodeDefinition } from '../client/unsupported/UploadNode.ts';
-import type { ValueType } from '../client/ValueType.ts';
 import { ErrorProductionDesignPendingError } from '../error/ErrorProductionDesignPendingError.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
@@ -29,7 +27,7 @@ import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import { SelectControl } from './SelectControl.ts';
 import { Subtree } from './Subtree.ts';
 import { TriggerControl } from './TriggerControl.ts';
-import { RankControl } from './unsupported/RankControl.ts';
+import { RankControl } from './RankControl.ts';
 import { UploadControl } from './unsupported/UploadControl.ts';
 
 const isSubtreeDefinition = (
@@ -39,9 +37,7 @@ const isSubtreeDefinition = (
 };
 
 // prettier-ignore
-type AnyUnsupportedControlDefinition =
-	| RankNodeDefinition
-	| UploadNodeDefinition;
+type AnyUnsupportedControlDefinition = UploadNodeDefinition;
 
 // prettier-ignore
 type ControlNodeDefinition =
@@ -49,6 +45,7 @@ type ControlNodeDefinition =
 	| InputDefinition
 	| RangeLeafNodeDefinition
 	| SelectDefinition
+	| RankDefinition
 	| TriggerNodeDefinition
 	| AnyUnsupportedControlDefinition;
 
@@ -66,6 +63,10 @@ const isInputDefinition = (definition: ControlNodeDefinition): definition is Inp
 
 const isSelectDefinition = (definition: ControlNodeDefinition): definition is SelectDefinition => {
 	return definition.bodyElement.type === 'select' || definition.bodyElement.type === 'select1';
+};
+
+const isRankDefinition = (definition: ControlNodeDefinition): definition is RankDefinition => {
+	return definition.bodyElement.type === 'rank';
 };
 
 const isRangeLeafNodeDefinition = (
@@ -111,12 +112,6 @@ const assertRangeNodeDefinition: AssertRangeNodeDefinition = (definition) => {
 	throw new ErrorProductionDesignPendingError(
 		`Invalid <range> definition with value type: ${definition.valueType}`
 	);
-};
-
-const isRankNodeDefinition = (
-	definition: UnsupportedControlDefinition
-): definition is RankNodeDefinition => {
-	return definition.bodyElement.type === 'rank';
 };
 
 const isTriggerNodeDefinition = (
@@ -175,6 +170,10 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 					return SelectControl.from(parent, leafChild);
 				}
 
+				if (isRankDefinition(leafChild)) {
+					return RankControl.from(parent, leafChild);
+				}
+
 				if (isTriggerNodeDefinition(leafChild)) {
 					return TriggerControl.from(parent, leafChild);
 				}
@@ -183,10 +182,6 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 					assertRangeNodeDefinition(leafChild);
 
 					return RangeControl.from(parent, leafChild);
-				}
-
-				if (isRankNodeDefinition(leafChild)) {
-					return new RankControl(parent, leafChild);
 				}
 
 				if (isUploadNodeDefinition(leafChild)) {

@@ -218,6 +218,22 @@ export const proposed_selectDynamic: Proposed_selectDynamic = (
 
 export { proposed_selectDynamic as selectDynamic };
 
+export const proposed_rankDynamic = (ref: string, nodesetRef: string): XFormsElement => {
+	const value = t('value ref="value"');
+	const label = t('label ref="label"');
+
+	const itemsetAttributes = new Map<string, string>();
+	itemsetAttributes.set('nodeset', nodesetRef);
+
+	const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
+	const rankAttributes = new Map<string, string>();
+	rankAttributes.set('ref', ref);
+
+	return new TagXFormsElement('odk:rank', rankAttributes, [itemset]) as XFormsElement;
+};
+
+export { proposed_rankDynamic as rankDynamic };
+
 export const group = (ref: string, ...children: XFormsElement[]): XFormsElement => {
 	return t(`group ref="${ref}"`, ...children);
 };

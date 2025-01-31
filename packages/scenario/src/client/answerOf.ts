@@ -6,10 +6,12 @@ import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
 import { TriggerNodeAnswer } from '../answer/TriggerNodeAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { getNodeForReference } from './traversal.ts';
+import { RankNodeAnswer } from '../answer/RankNodeAnswer.ts';
 
 const isValueNode = (node: AnyNode) => {
 	return (
 		node.nodeType === 'model-value' ||
+		node.nodeType === 'rank' ||
 		node.nodeType === 'select' ||
 		node.nodeType === 'input' ||
 		node.nodeType === 'trigger'
@@ -26,6 +28,9 @@ export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAn
 	switch (node.nodeType) {
 		case 'model-value':
 			return new ModelValueNodeAnswer(node);
+
+		case 'rank':
+			return new RankNodeAnswer(node);
 
 		case 'select':
 			return new SelectNodeAnswer(node);

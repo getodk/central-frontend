@@ -13,6 +13,7 @@ import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, assert, expect } from 'vitest';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
+import { RankValuesAnswer } from '../answer/RankValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { InitializeTestFormOptions, TestFormResource } from '../client/init.ts';
@@ -110,15 +111,17 @@ type GetQuestionAtIndexParameters<
 	expectedType?: ExpectedQuestionType | null
 ];
 
-type AnswerSelectParameters = readonly [reference: string, ...selectionValues: string[]];
+type AnswerItemCollectionParameters = readonly [reference: string, ...selectionValues: string[]];
 
 // prettier-ignore
 type AnswerParameters =
-	| AnswerSelectParameters
+	| AnswerItemCollectionParameters
 	| readonly [reference: string, value: unknown]
 	| readonly [value: unknown];
 
-const isAnswerSelectParams = (args: AnswerParameters): args is AnswerSelectParameters => {
+const isAnswerItemCollectionParams = (
+	args: AnswerParameters
+): args is AnswerItemCollectionParameters => {
 	return args.length > 2 && args.every((arg) => typeof arg === 'string');
 };
 
@@ -376,21 +379,30 @@ export class Scenario {
 		return this.setNonTerminalEventPosition(() => index, reference);
 	}
 
-	private answerSelect(reference: string, ...selectionValues: string[]): ValueNodeAnswer {
+	private answerItemCollectionQuestion(
+		reference: string,
+		...selectionValues: string[]
+	): ValueNodeAnswer {
 		const event = this.setPositionalStateToReference(reference);
+		const isSelect = isQuestionEventOfType(event, 'select');
+		const isRank = isQuestionEventOfType(event, 'rank');
 
-		if (!isQuestionEventOfType(event, 'select')) {
+		if (!(isSelect || isRank)) {
 			throw new Error(
-				`Cannot set selection values for reference ${reference}: event is type ${event.eventType}, node is type ${event.node?.nodeType}`
+				`Cannot set values for reference ${reference}: event is type ${event.eventType}, node is type ${event.node?.nodeType}`
 			);
+		}
+
+		if (isRank) {
+			return event.answerQuestion(new RankValuesAnswer(selectionValues));
 		}
 
 		return event.answerQuestion(new SelectValuesAnswer(selectionValues));
 	}
 
 	answer(...args: AnswerParameters): ValueNodeAnswer {
-		if (isAnswerSelectParams(args)) {
-			return this.answerSelect(...args);
+		if (isAnswerItemCollectionParams(args)) {
+			return this.answerItemCollectionQuestion(...args);
 		}
 
 		const [arg0, arg1, ...rest] = args;

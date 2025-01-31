@@ -3,7 +3,6 @@ import type {
 	KnownAttributeLocalNamedElement,
 	LocalNamedElement,
 } from '@getodk/common/types/dom.ts';
-import type { SelectElement } from '../../parse/body/control/SelectControlDefinition.ts';
 
 const hintLookup = new ScopedElementLookup(':scope > hint', 'hint');
 const itemLookup = new ScopedElementLookup(':scope > item', 'item');
@@ -38,7 +37,7 @@ export const getHintElement = (parent: Element): HintElement | null => {
 	return hintLookup.getElement<HintElement>(parent);
 };
 
-export const getItemElements = (parent: SelectElement): readonly ItemElement[] => {
+export const getItemElements = (parent: Element): readonly ItemElement[] => {
 	return Array.from(itemLookup.getElements<ItemElement>(parent));
 };
 

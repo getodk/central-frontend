@@ -11,19 +11,18 @@ import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 import type { TriggerNode } from './TriggerNode.ts';
-import type { RankNode } from './unsupported/RankNode.ts';
+import type { RankNode } from './RankNode.ts';
 import type { UploadNode } from './unsupported/UploadNode.ts';
 
 // prettier-ignore
-export type AnyUnsupportedControlNode =
-	| RankNode
-	| UploadNode;
+export type AnyUnsupportedControlNode = UploadNode;
 
 // prettier-ignore
 export type AnyControlNode =
 	| AnyInputNode
 	| AnyNoteNode
 	| AnyRangeNode
+	| RankNode
 	| SelectNode
 	| TriggerNode;
 

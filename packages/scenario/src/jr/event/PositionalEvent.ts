@@ -5,6 +5,7 @@ import type {
 	AnyRangeNode,
 	AnyUnsupportedControlNode,
 	GroupNode,
+	RankNode,
 	RepeatInstanceNode,
 	RepeatRangeUncontrolledNode,
 	RootNode,
@@ -17,6 +18,7 @@ import type { Scenario } from '../Scenario.ts';
 export type QuestionPositionalEventNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| AnyNoteNode
+	| RankNode
 	| SelectNode
 	| AnyInputNode
 	| AnyRangeNode

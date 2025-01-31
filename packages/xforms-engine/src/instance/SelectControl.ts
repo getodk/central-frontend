@@ -12,8 +12,8 @@ import type { TextRange } from '../client/TextRange.ts';
 import type { ValueType } from '../client/ValueType.ts';
 import { SelectValueTypeError } from '../error/SelectValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import { getSelectCodec } from '../lib/codecs/select/getSelectCodec.ts';
-import { createSelectItems } from '../lib/reactivity/createSelectItems.ts';
+import { getSelectCodec } from '../lib/codecs/getSelectCodec.ts';
+import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -93,7 +93,7 @@ export class SelectControl
 		this.appearances = definition.bodyElement.appearances;
 		this.selectType = definition.bodyElement.type;
 
-		const valueOptions = createSelectItems(this);
+		const valueOptions = createItemCollection(this);
 
 		const mapOptionsByValue: Accessor<SelectItemMap> = this.scope.runTask(() => {
 			return createMemo(() => {

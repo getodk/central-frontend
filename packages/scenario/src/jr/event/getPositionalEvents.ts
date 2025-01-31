@@ -12,12 +12,14 @@ import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
 import { TriggerQuestionEvent } from './TriggerQuestionEvent.ts';
 import { UnsupportedControlQuestionEvent } from './UnsupportedControlQuestionEvent.ts';
+import { RankQuestionEvent } from './RankQuestionEvent.ts';
 
 // prettier-ignore
 export type AnyQuestionEvent =
 	| InputQuestionEvent
 	| NoteQuestionEvent
 	| RangeQuestionEvent
+	| RankQuestionEvent
 	| SelectQuestionEvent
 	| TriggerQuestionEvent
 	| UnsupportedControlQuestionEvent;
@@ -92,6 +94,8 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 					return RangeQuestionEvent.from(node);
 
 				case 'rank':
+					return RankQuestionEvent.from(node);
+
 				case 'upload':
 					return UnsupportedControlQuestionEvent.from(node);
 

@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Rank with choice filter</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="decision_making-0">
+            <value>Health</value>
+          </text>
+          <text id="decision_making-1">
+            <value>Family and Friends</value>
+          </text>
+          <text id="decision_making-2">
+            <value>Career Growth and Learning Opportunities</value>
+          </text>
+          <text id="decision_making-3">
+            <value>Financial Stability</value>
+          </text>
+          <text id="decision_making-4">
+            <value>Pursuit of Hobbies and Passions</value>
+          </text>
+          <text id="decision_making-5">
+            <value>Environmental Sustainability</value>
+          </text>
+          <text id="decision_making-6">
+            <value>Time Management and Work-Life Balance</value>
+          </text>
+          <text id="decision_making-7">
+            <value>Building a Supportive Community</value>
+          </text>
+          <text id="decision_making-8">
+            <value>Personal Development and Mindfulness</value>
+          </text>
+          <text id="decision_making-9">
+            <value>Creativity and Innovation</value>
+          </text>
+          <text id="/data/decision_making:label">
+            <value>Choose the values that guide your decision-making</value>
+          </text>
+          <text id="/data/priorities:label">
+            <value>Please prioritize the values that guide your decision-making</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="decision_making-0">
+            <value>Santé</value>
+          </text>
+          <text id="decision_making-1">
+            <value>Famille et amis</value>
+          </text>
+          <text id="decision_making-2">
+            <value>Croissance professionnelle et opportunités d'apprentissage</value>
+          </text>
+          <text id="decision_making-3">
+            <value>Stabilité financière</value>
+          </text>
+          <text id="decision_making-4">
+            <value>Poursuite de loisirs et passions</value>
+          </text>
+          <text id="decision_making-5">
+            <value>Durabilité environnementale</value>
+          </text>
+          <text id="decision_making-6">
+            <value>Gestion du temps et équilibre vie professionnelle/vie personnelle</value>
+          </text>
+          <text id="decision_making-7">
+            <value>Construire une communauté solidaire</value>
+          </text>
+          <text id="decision_making-8">
+            <value>Développement personnel et pleine conscience</value>
+          </text>
+          <text id="decision_making-9">
+            <value>Créativité et innovation</value>
+          </text>
+          <text id="/data/decision_making:label">
+            <value>Choisissez les valeurs qui guident votre prise de décision</value>
+          </text>
+          <text id="/data/priorities:label">
+            <value>Veuillez prioriser les valeurs qui guident votre prise de décision</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="1_rank_with_choice_filter" version="2025011401">
+          <decision_making/>
+          <priorities/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="decision_making">
+        <root>
+          <item>
+            <itextId>decision_making-0</itextId>
+            <name>health</name>
+          </item>
+          <item>
+            <itextId>decision_making-1</itextId>
+            <name>family_and_friends</name>
+          </item>
+          <item>
+            <itextId>decision_making-2</itextId>
+            <name>career_growth_and_learning_opportunities</name>
+          </item>
+          <item>
+            <itextId>decision_making-3</itextId>
+            <name>financial_stability</name>
+          </item>
+          <item>
+            <itextId>decision_making-4</itextId>
+            <name>pursuit_of_hobbies_and_passions</name>
+          </item>
+          <item>
+            <itextId>decision_making-5</itextId>
+            <name>environmental_sustainability</name>
+          </item>
+          <item>
+            <itextId>decision_making-6</itextId>
+            <name>time_management_and_work_life_balance</name>
+          </item>
+          <item>
+            <itextId>decision_making-7</itextId>
+            <name>building_a_supportive_community</name>
+          </item>
+          <item>
+            <itextId>decision_making-8</itextId>
+            <name>personal_development_and_mindfulness</name>
+          </item>
+          <item>
+            <itextId>decision_making-9</itextId>
+            <name>creativity_and_innovation</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/decision_making" type="string" required="true()"/>
+      <bind nodeset="/data/priorities" type="odk:rank" required="true()"
+            relevant="count-selected( /data/decision_making )&gt;0"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select ref="/data/decision_making">
+      <label ref="jr:itext('/data/decision_making:label')"/>
+      <itemset nodeset="instance('decision_making')/root/item">
+        <value ref="name"/>
+        <label ref="jr:itext(itextId)"/>
+      </itemset>
+    </select>
+    <odk:rank ref="/data/priorities">
+      <label ref="jr:itext('/data/priorities:label')"/>
+      <itemset nodeset="instance('decision_making')/root/item[selected( /data/decision_making , name)]">
+        <value ref="name"/>
+        <label ref="jr:itext(itextId)"/>
+      </itemset>
+    </odk:rank>
+  </h:body>
+</h:html>

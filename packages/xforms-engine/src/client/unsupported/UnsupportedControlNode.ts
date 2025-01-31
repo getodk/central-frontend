@@ -1,5 +1,4 @@
 import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/unknownAppearanceParser.ts';
-import type { RankControlDefinition } from '../../parse/body/control/RankControlDefinition.ts';
 import type { UploadControlDefinition } from '../../parse/body/control/UploadControlDefinition.ts';
 import type { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
@@ -15,9 +14,7 @@ export interface UnsupportedControlNodeState extends BaseNodeState {
 }
 
 // prettier-ignore
-export type UnsupportedControlElementDefinition =
-	| RankControlDefinition
-	| UploadControlDefinition;
+export type UnsupportedControlElementDefinition = UploadControlDefinition;
 
 export interface UnsupportedControlDefinition extends LeafNodeDefinition {
 	readonly bodyElement: UnsupportedControlElementDefinition;

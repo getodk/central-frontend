@@ -4,6 +4,7 @@ import { ItemLabelDefinition } from '../../text/ItemLabelDefinition.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
 import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
+import { RankControlDefinition } from './RankControlDefinition.ts';
 
 export class ItemDefinition extends BodyElementDefinition<'item'> {
 	override readonly category = 'support';
@@ -14,7 +15,7 @@ export class ItemDefinition extends BodyElementDefinition<'item'> {
 
 	constructor(
 		form: XFormDefinition,
-		override readonly parent: AnySelectControlDefinition,
+		override readonly parent: AnySelectControlDefinition | RankControlDefinition,
 		element: ItemElement
 	) {
 		const valueElement = getValueElement(element);

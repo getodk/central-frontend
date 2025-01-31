@@ -3,10 +3,12 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { SelectItem } from '../../client/SelectNode.ts';
+import type { RankItem } from '../../client/RankNode.ts';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
 import type { SelectControl } from '../../instance/SelectControl.ts';
+import type { RankControl } from '../../instance/RankControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
@@ -17,6 +19,8 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
+export type ItemCollectionControl = RankControl | SelectControl;
+type Item = RankItem | SelectItem;
 type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
 
 const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
@@ -25,7 +29,7 @@ const derivedItemLabel = (context: TranslationContext, value: string): DerivedIt
 	return new TextRange('form-derived', 'item-label', [chunk]);
 };
 
-const createSelectItemLabel = (
+const createItemLabel = (
 	context: EvaluationContext,
 	definition: ItemDefinition
 ): Accessor<ClientTextRange<'item-label'>> => {
@@ -38,19 +42,14 @@ const createSelectItemLabel = (
 	return createTextRange(context, 'item-label', label);
 };
 
-interface SourceValueSelectItem {
-	readonly value: string;
-	readonly label: ClientTextRange<'item-label'>;
-}
-
-const createTranslatedStaticSelectItems = (
-	select: SelectControl,
+const createTranslatedStaticItems = (
+	control: ItemCollectionControl,
 	items: readonly ItemDefinition[]
-): Accessor<readonly SourceValueSelectItem[]> => {
-	return select.scope.runTask(() => {
+): Accessor<readonly Item[]> => {
+	return control.scope.runTask(() => {
 		const labeledItems = items.map((item) => {
 			const { value } = item;
-			const label = createSelectItemLabel(select, item);
+			const label = createItemLabel(control, item);
 
 			return () => ({
 				value,
@@ -72,18 +71,18 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 	readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
 	constructor(
-		select: SelectControl,
+		control: ItemCollectionControl,
 		readonly contextNode: EngineXPathNode
 	) {
-		this.isAttached = select.isAttached;
-		this.scope = select.scope;
-		this.evaluator = select.evaluator;
-		this.contextReference = select.contextReference;
-		this.getActiveLanguage = select.getActiveLanguage;
+		this.isAttached = control.isAttached;
+		this.scope = control.scope;
+		this.evaluator = control.evaluator;
+		this.contextReference = control.contextReference;
+		this.getActiveLanguage = control.getActiveLanguage;
 	}
 }
 
-const createSelectItemsetItemLabel = (
+const createItemsetItemLabel = (
 	context: EvaluationContext,
 	definition: ItemsetDefinition,
 	itemValue: Accessor<string>
@@ -105,11 +104,11 @@ interface ItemsetItem {
 }
 
 const createItemsetItems = (
-	select: SelectControl,
+	control: ItemCollectionControl,
 	itemset: ItemsetDefinition
 ): Accessor<readonly ItemsetItem[]> => {
-	return select.scope.runTask(() => {
-		const itemNodes = createComputedExpression(select, itemset.nodes, {
+	return control.scope.runTask(() => {
+		const itemNodes = createComputedExpression(control, itemset.nodes, {
 			defaultValue: [],
 		});
 		const itemsCache = new UpsertableMap<EngineXPathNode, ItemsetItem>();
@@ -117,11 +116,11 @@ const createItemsetItems = (
 		return createMemo(() => {
 			return itemNodes().map((itemNode) => {
 				return itemsCache.upsert(itemNode, () => {
-					const context = new ItemsetItemEvaluationContext(select, itemNode);
+					const context = new ItemsetItemEvaluationContext(control, itemNode);
 					const value = createComputedExpression(context, itemset.value, {
 						defaultValue: '',
 					});
-					const label = createSelectItemsetItemLabel(context, itemset, value);
+					const label = createItemsetItemLabel(context, itemset, value);
 
 					return {
 						label,
@@ -134,11 +133,11 @@ const createItemsetItems = (
 };
 
 const createItemset = (
-	select: SelectControl,
+	control: ItemCollectionControl,
 	itemset: ItemsetDefinition
-): Accessor<readonly SourceValueSelectItem[]> => {
-	return select.scope.runTask(() => {
-		const itemsetItems = createItemsetItems(select, itemset);
+): Accessor<readonly Item[]> => {
+	return control.scope.runTask(() => {
+		const itemsetItems = createItemsetItems(control, itemset);
 
 		return createMemo(() => {
 			return itemsetItems().map((item) => {
@@ -152,23 +151,23 @@ const createItemset = (
 };
 
 /**
- * Creates a reactive computation of a {@link SelectControl}'s
- * {@link SelectItem}s, in support of the field's `valueOptions`.
+ * Creates a reactive computation of a {@link ItemCollectionControl}'s
+ * {@link Item}s, in support of the field's `valueOptions`.
  *
- * - Selects defined with static `<item>`s will compute to an corresponding
+ * - The control defined with static `<item>`s will compute to an corresponding
  *   static list of items.
- * - Selects defined with a computed `<itemset>` will compute to a reactive list
+ * - The control defined with a computed `<itemset>` will compute to a reactive list
  *   of items.
- * - Items of both will produce {@link SelectItem.label | labels} reactive to
+ * - Items of both will produce {@link ItemType.label | labels} reactive to
  *   their appropriate dependencies (whether relative to the itemset item node,
  *   referencing a form's `itext` translations, etc).
  */
-export const createSelectItems = (select: SelectControl): Accessor<readonly SelectItem[]> => {
-	const { items, itemset } = select.definition.bodyElement;
+export const createItemCollection = (control: ItemCollectionControl): Accessor<readonly Item[]> => {
+	const { items, itemset } = control.definition.bodyElement;
 
 	if (itemset != null) {
-		return createItemset(select, itemset);
+		return createItemset(control, itemset);
 	}
 
-	return createTranslatedStaticSelectItems(select, items);
+	return createTranslatedStaticItems(control, items);
 };

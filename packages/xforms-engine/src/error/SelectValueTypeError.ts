@@ -1,5 +1,5 @@
 import type { SelectDefinition } from '../client/SelectNode.ts';
-import type { UnsupportedSelectValueType } from '../lib/codecs/select/BaseSelectCodec.ts';
+import type { UnsupportedBaseItemValueType } from '../lib/codecs/items/BaseItemCodec.ts';
 import { XFormsSpecViolationError } from './XFormsSpecViolationError.ts';
 
 /**
@@ -12,7 +12,7 @@ import { XFormsSpecViolationError } from './XFormsSpecViolationError.ts';
  * @see {@link https://github.com/getodk/web-forms/issues/276}
  */
 export class SelectValueTypeError extends XFormsSpecViolationError {
-	constructor(definition: SelectDefinition<UnsupportedSelectValueType>) {
+	constructor(definition: SelectDefinition<UnsupportedBaseItemValueType>) {
 		const { valueType } = definition;
 
 		super(

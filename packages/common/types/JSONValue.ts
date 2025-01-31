@@ -11,7 +11,6 @@ export type JSONValue =
 export type JSONArray = readonly JSONValue[];
 
 // This must be an interface to avoid a circular type reference error
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface JSONObject {
 	readonly [key: string]: JSONValue;
 }

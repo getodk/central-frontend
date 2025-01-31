@@ -3,6 +3,7 @@ import type {
 	InputNode,
 	ModelValueNode,
 	RangeNode,
+	RankNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
 import { ComparableAnswer } from './ComparableAnswer.ts';
@@ -13,6 +14,7 @@ export type ValueNode =
 	| InputNode
 	| ModelValueNode
 	| RangeNode
+	| RankNode
 	| SelectNode;
 
 export abstract class ValueNodeAnswer<Node extends ValueNode = ValueNode> extends ComparableAnswer {

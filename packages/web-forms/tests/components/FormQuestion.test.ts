@@ -1,10 +1,11 @@
 import InputControl from '@/components/controls/Input/InputControl.vue';
 import SelectControl from '@/components/controls/SelectControl.vue';
+import RankControl from '@/components/controls/RankControl.vue';
 import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import FormQuestion from '../../src/components/FormQuestion.vue';
+import FormQuestion from '@/components/FormQuestion.vue';
 import { fakeUnsupportedControlNode, getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (formPath: string, questionNumber: number) => {
@@ -37,6 +38,20 @@ describe('FormQuestion', () => {
 		expect(selectControl.exists()).toBe(true);
 
 		expect(component.find('label').text()).toEqual('1. Select a fruit');
+	});
+
+	it('shows Rank control for rank nodes', async () => {
+		const component = await mountComponent('1-rank.xml', 0);
+
+		const rankControl = component.findComponent(RankControl);
+
+		expect(rankControl.exists()).toBe(true);
+
+		expect(component.find('label').text()).toEqual('What values guide your decision-making?');
+		expect(component.find('#creativity_and_innovation .rank-label').text()).toEqual(
+			'Creativity and Innovation'
+		);
+		expect(component.find('#family_and_friends .rank-label').text()).toEqual('Family and Friends');
 	});
 
 	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
