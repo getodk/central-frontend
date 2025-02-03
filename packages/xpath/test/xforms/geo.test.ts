@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
@@ -30,9 +30,6 @@ describe('distance() and area() functions', () => {
 		{ argument: '0 0;0 1', expected: { area: 0.0, distance: 111318.85 } },
 		{ argument: '0 0;0 90', expected: { area: 0.0, distance: 10018696.05 } },
 		{ argument: '90 0;90 1', expected: { area: 0.0, distance: 0.0 } },
-		{ argument: '5000 5000; 5000 5000', expected: { area: NaN, distance: NaN } },
-		{ argument: 'a', expected: { area: NaN, distance: NaN } },
-		{ argument: '', expected: { area: NaN, distance: NaN } },
 	].forEach(({ argument, expected }, i) => {
 		it(`area(${argument}) works (${i + 1})`, () => {
 			testContext.assertNumberValue(`area("${argument}")`, expected.area);
@@ -40,6 +37,28 @@ describe('distance() and area() functions', () => {
 
 		it(`distance(${argument}) works (${i + 1})`, () => {
 			testContext.assertNumberValue(`distance("${argument}")`, expected.distance);
+		});
+	});
+
+	// Invalid arguments (for both distance/area functions)
+	[
+		// Invalid because points exceed supported degrees
+		'5000 5000; 5000 5000',
+		// Arbitrary string is not a valid point
+		'a',
+		// Empty/blank string is not a valid point
+		'',
+	].forEach((invalidArgument) => {
+		it(`area("${invalidArgument}") fails`, () => {
+			const evaluate = () => testContext.evaluator.evaluateNumber(`area("${invalidArgument}")`);
+
+			expect(evaluate).toThrowError();
+		});
+
+		it(`distance("${invalidArgument}") fails`, () => {
+			const evaluate = () => testContext.evaluator.evaluateNumber(`distance("${invalidArgument}")`);
+
+			expect(evaluate).toThrowError();
 		});
 	});
 

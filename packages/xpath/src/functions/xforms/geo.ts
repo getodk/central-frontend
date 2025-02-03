@@ -1,45 +1,16 @@
 import { pairwise } from 'itertools-ts/lib/single';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
-import { JRCompatibleError } from '../../error/JRCompatibleError.ts';
+import { JRCompatibleGeoValueError } from '../../error/JRCompatibleGeoValueError.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
-
-interface Point {
-	readonly latitude: number;
-	readonly longitude: number;
-}
-
-const DEGREES_MAX = {
-	latitude: 90,
-	longitude: 180,
-} as const;
-
-type GeographicAngleCoordinate = keyof typeof DEGREES_MAX;
-
-const toDegrees = (coordinate: GeographicAngleCoordinate, value: string): number => {
-	const degrees = Number(value);
-	const absolute = Math.abs(degrees);
-	const max = DEGREES_MAX[coordinate];
-
-	if (absolute > max) {
-		return NaN;
-	}
-
-	return degrees;
-};
-
-const INVALID_POINT: Point = {
-	latitude: NaN,
-	longitude: NaN,
-};
-
-const isInvalidPoint = (point: Point) => point === INVALID_POINT;
+import type { GeopointCoordinates } from '../../lib/geo/Geopoint.ts';
+import { geopointCodec } from '../../lib/geo/geopointCodec.ts';
 
 const evaluatePoints = <T extends XPathNode>(
 	context: EvaluationContext<T>,
 	expression: EvaluableArgument
-): Point[] => {
+): GeopointCoordinates[] => {
 	const results = expression.evaluate(context);
 
 	const stringResults = [...results].map((result) => result.toString());
@@ -50,38 +21,14 @@ const evaluatePoints = <T extends XPathNode>(
 	});
 
 	return geopointStrings.map((string) => {
-		const coordinates = string.split(/\s+/);
-
-		if (coordinates.length < 2 || coordinates.length > 4) {
-			return INVALID_POINT;
-		}
-
-		const [latitudeString, longitudeString, ...rest] = coordinates;
-
-		if (latitudeString == null || longitudeString == null || rest.length > 2) {
-			return INVALID_POINT;
-		}
-
-		const latitude = toDegrees('latitude', latitudeString);
-		const longitude = toDegrees('longitude', longitudeString);
-
-		if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
-			return INVALID_POINT;
-		}
-
-		return { latitude, longitude };
+		return geopointCodec.decodeValue(string);
 	});
 };
 
 interface Line {
-	readonly start: Point;
-	readonly end: Point;
+	readonly start: GeopointCoordinates;
+	readonly end: GeopointCoordinates;
 }
-
-const INVALID_LINE: Line = {
-	start: INVALID_POINT,
-	end: INVALID_POINT,
-};
 
 const evaluateLines = <T extends XPathNode>(
 	context: EvaluationContext<T>,
@@ -89,15 +36,11 @@ const evaluateLines = <T extends XPathNode>(
 ): Line[] => {
 	const points = expression.flatMap((el) => evaluatePoints(context, el));
 	if (points.length < 2) {
-		return [INVALID_LINE];
+		throw new JRCompatibleGeoValueError();
 	}
 
 	return Array.from(pairwise(points)).map((line) => {
 		const [start, end] = line;
-
-		if (start === INVALID_POINT || end === INVALID_POINT) {
-			return INVALID_LINE;
-		}
 
 		return {
 			start,
@@ -105,8 +48,6 @@ const evaluateLines = <T extends XPathNode>(
 		};
 	});
 };
-
-const isInvalidLine = (line: Line) => line === INVALID_LINE;
 
 const EARTH_EQUATORIAL_RADIUS_METERS = 6_378_100;
 const PRECISION = 100;
@@ -137,10 +78,6 @@ const geodesicArea = (lines: readonly Line[]): number => {
 		return 0;
 	}
 
-	if (lines.some(isInvalidLine)) {
-		return NaN;
-	}
-
 	const { start } = firstLine;
 	const { end } = lastLine;
 
@@ -149,11 +86,7 @@ const geodesicArea = (lines: readonly Line[]): number => {
 	if (start.latitude === end.latitude && start.longitude === end.longitude) {
 		shape = lines;
 	} else {
-		if (isInvalidPoint(end) || isInvalidPoint(start)) {
-			shape = [...lines, INVALID_LINE];
-		} else {
-			shape = [...lines, { start: end, end: start }];
-		}
+		shape = [...lines, { start: end, end: start }];
 	}
 
 	let total = 0;
@@ -173,10 +106,6 @@ export const area = new NumberFunction(
 	[{ arityType: 'required' }],
 	(context, [expression]) => {
 		const lines = evaluateLines(context, [expression!]);
-
-		if (lines.some(isInvalidLine)) {
-			return NaN;
-		}
 
 		const areaResult = geodesicArea(lines);
 
@@ -212,13 +141,6 @@ export const distance = new NumberFunction(
 	[{ arityType: 'required' }, { arityType: 'variadic' }],
 	(context, args) => {
 		const lines = evaluateLines(context, args);
-
-		if (lines.some(isInvalidLine)) {
-			throw new JRCompatibleError(
-				"The function 'distance' received a value that does not represent GPS coordinates"
-			);
-		}
-
 		const distances = lines.map(geodesicDistance);
 
 		return toAbsolutePrecision(sum(distances), PRECISION);
