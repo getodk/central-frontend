@@ -39,9 +39,12 @@ const collectLines = (geopoints: GeotracePoints): readonly GeotraceLine[] => {
 
 export class Geotrace {
 	static fromEncodedGeotrace(encoded: string): Geotrace {
-		const geopoints = encoded.split(/\s*;\s*/).map((value) => {
-			return Geopoint.fromNodeValue(value);
-		});
+		const geopoints = encoded
+			.replace(/\s*;\s*$/, '')
+			.split(/\s*;\s*/)
+			.map((value) => {
+				return Geopoint.fromNodeValue(value);
+			});
 
 		return this.fromGeopoints(geopoints);
 	}
