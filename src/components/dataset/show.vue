@@ -17,17 +17,17 @@ except according to the terms contained in the LICENSE file.
         {{ datasetName }}
       </template>
       <template #tabs>
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">
-            {{ $t('resource.properties') }}
-          </router-link>
-        </li>
         <li :class="tabClass('entities')" role="presentation">
           <router-link :to="tabPath('entities')">
             {{ $t('resource.entities') }}
             <span v-if="dataset.dataExists" class="badge">
               {{ $n(dataset.entities, 'default') }}
             </span>
+          </router-link>
+        </li>
+        <li :class="tabClass('')" role="presentation">
+          <router-link :to="tabPath('')">
+            {{ $t('resource.properties') }}
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')" role="presentation">

@@ -80,7 +80,7 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees');
       const text = app.findAll('#page-head-tabs li')
         .map(li => textWithout(li.get('a'), '.badge'));
-      text.should.eql(['Properties', 'Entities', 'Settings']);
+      text.should.eql(['Entities', 'Properties', 'Settings']);
     });
 
     it('shows the correct tabs to project viewer', async () => {
@@ -93,7 +93,7 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees');
       const text = app.findAll('#page-head-tabs li')
         .map(li => textWithout(li.get('a'), '.badge'));
-      text.should.eql(['Properties', 'Entities']);
+      text.should.eql(['Entities', 'Properties']);
     });
 
     it('shows the count of entities', async () => {
