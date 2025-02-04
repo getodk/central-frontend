@@ -580,7 +580,7 @@ const routes = [
         props: true,
         loading: 'tab',
         meta: {
-          title: () => [i18n.t('common.data'), dataset.name],
+          title: () => [i18n.t('resource.entities'), dataset.name],
           validateData: {
             project: () => project.permits(['dataset.read', 'entity.list'])
           },

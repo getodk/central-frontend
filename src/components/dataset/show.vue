@@ -24,7 +24,7 @@ except according to the terms contained in the LICENSE file.
         </li>
         <li :class="tabClass('entities')" role="presentation">
           <router-link :to="tabPath('entities')">
-            {{ $t('common.data') }}
+            {{ $t('resource.entities') }}
             <span v-if="dataset.dataExists" class="badge">
               {{ $n(dataset.entities, 'default') }}
             </span>

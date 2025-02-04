@@ -79,7 +79,7 @@ describe('DatasetShow', () => {
       testData.extendedDatasets.createPast(1);
       const app = await load('/projects/1/entity-lists/trees', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
-      li.map(wrapper => wrapper.get('a').text()).should.eql(['Overview', 'Data 0', 'Settings']);
+      li.map(wrapper => wrapper.get('a').text()).should.eql(['Overview', 'Entities 0', 'Settings']);
       li[0].should.be.visible(true);
     });
 
@@ -93,14 +93,14 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
       const text = li.map(wrapper => wrapper.get('a').text());
-      text.should.eql(['Overview', 'Data 0']);
+      text.should.eql(['Overview', 'Entities 0']);
       li[0].should.be.visible(true);
     });
 
     it('shows the count of entities', async () => {
       testData.extendedDatasets.createPast(1, { entities: 1000 });
       const app = await load('/projects/1/entity-lists/trees');
-      findTab(app, 'Data').get('.badge').text().should.equal('1,000');
+      findTab(app, 'Entities').get('.badge').text().should.equal('1,000');
     });
   });
 });
