@@ -1,19 +1,18 @@
-import { JRCompatibleGeoValueError } from '../../error/JRCompatibleGeoValueError.ts';
-import { Geopoint } from './Geopoint.ts';
+import type { Geopoint } from './Geopoint.ts';
+import { geopointCodec, type GeopointRuntimeValue } from './geopointCodec.ts';
 import { GeotraceLine } from './GeotraceLine.ts';
 
 export type GeotracePoints = readonly [Geopoint, Geopoint, ...Geopoint[]];
 
-const isGeotracePoints = (geopoints: readonly Geopoint[]): geopoints is GeotracePoints => {
-	return geopoints.length >= 2;
-};
-
-type AssertGeotracePoints = (geopoints: readonly Geopoint[]) => asserts geopoints is GeotracePoints;
-
-const assertGeotracePoints: AssertGeotracePoints = (geopoints) => {
-	if (!isGeotracePoints(geopoints)) {
-		throw new JRCompatibleGeoValueError();
-	}
+const isGeotracePoints = (
+	geopoints: readonly GeopointRuntimeValue[]
+): geopoints is GeotracePoints => {
+	return (
+		geopoints.length >= 2 &&
+		geopoints.every((geopoint) => {
+			return geopoint != null;
+		})
+	);
 };
 
 const collectLines = (geopoints: GeotracePoints): readonly GeotraceLine[] => {
@@ -38,22 +37,22 @@ const collectLines = (geopoints: GeotracePoints): readonly GeotraceLine[] => {
 };
 
 export class Geotrace {
-	static fromEncodedGeotrace(encoded: string): Geotrace {
+	static fromEncodedGeotrace(encoded: string): Geotrace | null {
 		const geopoints = encoded
 			.replace(/\s*;\s*$/, '')
 			.split(/\s*;\s*/)
 			.map((value) => {
-				return Geopoint.fromNodeValue(value);
+				return geopointCodec.decodeValue(value);
 			});
 
 		return this.fromGeopoints(geopoints);
 	}
 
-	static fromEncodedValues(values: readonly string[]): Geotrace {
+	static fromEncodedValues(values: readonly string[]): Geotrace | null {
 		const [head, ...tail] = values;
 
 		if (head == null) {
-			throw new JRCompatibleGeoValueError();
+			return null;
 		}
 
 		if (tail.length === 0) {
@@ -61,14 +60,16 @@ export class Geotrace {
 		}
 
 		const geopoints = values.map((value) => {
-			return Geopoint.fromNodeValue(value);
+			return geopointCodec.decodeValue(value);
 		});
 
 		return this.fromGeopoints(geopoints);
 	}
 
-	static fromGeopoints(geopoints: readonly Geopoint[]): Geotrace {
-		assertGeotracePoints(geopoints);
+	static fromGeopoints(geopoints: readonly GeopointRuntimeValue[]): Geotrace | null {
+		if (!isGeotracePoints(geopoints)) {
+			return null;
+		}
 
 		return new this(geopoints);
 	}

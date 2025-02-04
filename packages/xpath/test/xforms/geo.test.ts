@@ -49,12 +49,16 @@ describe('distance() and area() functions', () => {
 		// Empty/blank string is not a valid point
 		'',
 	].forEach((invalidArgument) => {
-		it(`area("${invalidArgument}") fails`, () => {
-			const evaluate = () => testContext.evaluator.evaluateNumber(`area("${invalidArgument}")`);
-
-			expect(evaluate).toThrowError();
+		// Note: previous iterations of this test, inherited from
+		// Enketo/openrosa-xpath-evaluator, expected `NaN`. Updated test reflects
+		// consistency with JavaRosa.
+		it(`area("${invalidArgument}") returns 0`, () => {
+			testContext.assertNumberValue(`area("${invalidArgument}")`, 0);
 		});
 
+		// Note: previous iterations of this test, inherited from
+		// Enketo/openrosa-xpath-evaluator, expected `NaN`. Updated test reflects
+		// consistency with JavaRosa.
 		it(`distance("${invalidArgument}") fails`, () => {
 			const evaluate = () => testContext.evaluator.evaluateNumber(`distance("${invalidArgument}")`);
 

@@ -1,21 +1,23 @@
-import { JRCompatibleGeoValueError } from '../../error/JRCompatibleGeoValueError.ts';
-
 // prettier-ignore
-type GeopointNodeSubstringValues = readonly [
+type GeopointEncodedSubstringValues = readonly [
 	latitude: string,
 	longitude: string,
 	altitude?: string,
 	accuracy?: string,
 ];
 
-type AssertGeopointNodeSubstringValues = (
+const isGeopointEncodedSubstringValues = (
 	values: ReadonlyArray<string | undefined>
-) => asserts values is GeopointNodeSubstringValues;
+): values is GeopointEncodedSubstringValues => {
+	const { length } = values;
 
-const assertGeopointNodeSubstringValues: AssertGeopointNodeSubstringValues = (values) => {
-	if (values[0] == null || values[1] == null || values.length > 4) {
-		throw new JRCompatibleGeoValueError();
-	}
+	return (
+		length >= 2 &&
+		length <= 4 &&
+		values.every((value) => {
+			return value != null;
+		})
+	);
 };
 
 const DEGREES_MAX = {
@@ -25,13 +27,13 @@ const DEGREES_MAX = {
 
 type GeographicAngleCoordinate = keyof typeof DEGREES_MAX;
 
-const decodeDegrees = (coordinate: GeographicAngleCoordinate, value: string): number => {
+const decodeDegrees = (coordinate: GeographicAngleCoordinate, value: string): number | null => {
 	const degrees = Number(value);
 	const absolute = Math.abs(degrees);
 	const max = DEGREES_MAX[coordinate];
 
 	if (absolute > max) {
-		throw new JRCompatibleGeoValueError();
+		return null;
 	}
 
 	return degrees;
@@ -42,15 +44,21 @@ export interface GeopointCoordinates {
 	readonly longitude: number;
 }
 
-const decodeGeopointCoordinates = (nodeValue: string): GeopointCoordinates => {
+const decodeGeopointCoordinates = (nodeValue: string): GeopointCoordinates | null => {
 	const substringValues = nodeValue.split(/\s+/);
 
-	assertGeopointNodeSubstringValues(substringValues);
+	if (!isGeopointEncodedSubstringValues(substringValues)) {
+		return null;
+	}
 
 	const [latitudeValue, longitudeValue] = substringValues;
 
 	const latitude = decodeDegrees('latitude', latitudeValue);
 	const longitude = decodeDegrees('longitude', longitudeValue);
+
+	if (latitude == null || longitude == null) {
+		return null;
+	}
 
 	return {
 		latitude,
@@ -77,8 +85,12 @@ const decodeGeopointCoordinates = (nodeValue: string): GeopointCoordinates => {
  * with a {@link https://geojson.org/ | GeoJSON format}.
  */
 export class Geopoint implements GeopointCoordinates {
-	static fromNodeValue(nodeValue: string): Geopoint {
+	static fromNodeValue(nodeValue: string): Geopoint | null {
 		const coordinates = decodeGeopointCoordinates(nodeValue);
+
+		if (coordinates == null) {
+			return null;
+		}
 
 		return new this(coordinates);
 	}

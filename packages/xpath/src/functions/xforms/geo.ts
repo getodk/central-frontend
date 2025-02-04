@@ -1,5 +1,6 @@
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
+import { JRCompatibleGeoValueError } from '../../error/JRCompatibleGeoValueError.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { Geotrace } from '../../lib/geo/Geotrace.ts';
@@ -68,8 +69,8 @@ const evaluateArgumentValues = <T extends XPathNode>(
 
 export const area = new NumberFunction('area', [{ arityType: 'required' }], (context, args) => {
 	const values = evaluateArgumentValues(context, args);
-	const { lines } = Geotrace.fromEncodedValues(values);
-	const areaResult = geodesicArea(lines);
+	const geotrace = Geotrace.fromEncodedValues(values);
+	const areaResult = geodesicArea(geotrace?.lines ?? []);
 
 	return toAbsolutePrecision(areaResult, PRECISION);
 });
@@ -102,7 +103,12 @@ export const distance = new NumberFunction(
 	[{ arityType: 'required' }, { arityType: 'variadic' }],
 	(context, args) => {
 		const values = evaluateArgumentValues(context, args);
-		const { lines } = Geotrace.fromEncodedValues(values);
+		const lines = Geotrace.fromEncodedValues(values)?.lines;
+
+		if (lines == null) {
+			throw new JRCompatibleGeoValueError('distance');
+		}
+
 		const distances = lines.map(geodesicDistance);
 
 		return toAbsolutePrecision(sum(distances), PRECISION);

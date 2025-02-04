@@ -274,25 +274,52 @@ describe('Geopoint', () => {
 describe('Geoshape', () => {
 	describe('GeoAreaTest.java', () => {
 		describe('area', () => {
-			describe.each<TrailingSemicolonOptions>([
-				{ stripTrailingSemicolon: false },
-				{ stripTrailingSemicolon: true },
-			])('string trailing semicolon: $stripTrailingSemicolon', ({ stripTrailingSemicolon }) => {
-				let testFn: typeof it | typeof it.fails;
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Previously failed due to trailing semicolon. Addressed while extracting
+			 * XPath logic for decoding serialized geopoint lists.
+			 */
+			it('is computed for geoshape', async () => {
+				const scenario = await Scenario.init(
+					'geoshape area',
+					html(
+						head(
+							title('Geoshape area'),
+							model(
+								mainInstance(
+									t(
+										'data id="geoshape-area"',
+										t(
+											'polygon',
+											'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.25146813817506 21.758421137528785 0 0;'
+										),
+										t('area')
+									)
+								),
+								bind('/data/polygon').type('geoshape'),
+								bind('/data/area').type('decimal').calculate('area(/data/polygon)')
+							)
+						),
+						body(input('/data/polygon'))
+					)
+				);
 
-				if (stripTrailingSemicolon) {
-					testFn = it;
-				} else {
-					testFn = it.fails;
-				}
+				// JR:
+				//
+				// http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
+				// assertThat(Double.parseDouble(scenario.answerOf("/data/area").getDisplayText()),
+				// 		closeTo(151452, 0.5));
+				expect(scenario.answerOf('/data/area')).toHaveAnswerCloseTo(expectedArea(151452, 0.5));
+			});
 
+			describe('when shape has fewer than three points', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - Direct port fails due to trailing semicolon in `/data/polygon` value,
-				 *   as demonstrated by parameterized alternate test.
+				 * Previously failed with trailing semicolon, and lack of logic to enforce a minimum number of points. Both addressed while extracting XPath logic for decoding serializeed geopoint lists.
 				 */
-				testFn('is computed for geoshape', async () => {
+				it('is zero', async () => {
 					const scenario = await Scenario.init(
 						'geoshape area',
 						html(
@@ -302,87 +329,29 @@ describe('Geoshape', () => {
 									mainInstance(
 										t(
 											'data id="geoshape-area"',
+											t('polygon1', '38.253094215699576 21.756382658677467 0 0;'),
 											t(
-												'polygon',
-												geopointListValue(
-													'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.25146813817506 21.758421137528785 0 0;',
-													{ stripTrailingSemicolon }
-												)
+												'polygon2',
+												'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0;'
 											),
-											t('area')
+											t('area1'),
+											t('area2')
 										)
 									),
-									bind('/data/polygon').type('geoshape'),
-									bind('/data/area').type('decimal').calculate('area(/data/polygon)')
+									bind('/data/polygon1').type('geoshape'),
+									bind('/data/polygon2').type('geoshape'),
+									bind('/data/area1').type('decimal').calculate('area(/data/polygon1)'),
+									bind('/data/area2').type('decimal').calculate('area(/data/polygon2)')
 								)
 							),
-							body(input('/data/polygon'))
+							body(input('/data/polygon1'), input('/data/polygon2'))
 						)
 					);
 
-					// JR:
-					//
-					// http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
-					// assertThat(Double.parseDouble(scenario.answerOf("/data/area").getDisplayText()),
-					// 		closeTo(151452, 0.5));
-					expect(scenario.answerOf('/data/area')).toHaveAnswerCloseTo(expectedArea(151452, 0.5));
-				});
-
-				describe('when shape has fewer than three points', () => {
-					/**
-					 * **PORTING NOTES**
-					 *
-					 * - Direct port is currently expected to fail due to trailing
-					 *   semicolons in `/data/polygon1` and `/data/polygon2` values.
-					 *
-					 * - Parameterized alternate test stripping those trailing semicolons
-					 *   also fails, producing {@link NaN} where the value is expected to be
-					 *   zero. This is presumably a bug in the XPath `area` function's
-					 *   handling of this specific case (and would likely affect Enketo as
-					 *   well, since the extant tests were ported from ORXE).
-					 */
-					it.fails('is zero', async () => {
-						const scenario = await Scenario.init(
-							'geoshape area',
-							html(
-								head(
-									title('Geoshape area'),
-									model(
-										mainInstance(
-											t(
-												'data id="geoshape-area"',
-												t(
-													'polygon1',
-													geopointListValue('38.253094215699576 21.756382658677467 0 0;', {
-														stripTrailingSemicolon,
-													})
-												),
-												t(
-													'polygon2',
-													geopointListValue(
-														'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0;',
-														{ stripTrailingSemicolon }
-													)
-												),
-												t('area1'),
-												t('area2')
-											)
-										),
-										bind('/data/polygon1').type('geoshape'),
-										bind('/data/polygon2').type('geoshape'),
-										bind('/data/area1').type('decimal').calculate('area(/data/polygon1)'),
-										bind('/data/area2').type('decimal').calculate('area(/data/polygon2)')
-									)
-								),
-								body(input('/data/polygon1'), input('/data/polygon2'))
-							)
-						);
-
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/area1").getDisplayText()), is(0.0));
-						expect(scenario.answerOf('/data/area1')).toEqualAnswer(floatAnswer(0.0));
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/area2").getDisplayText()), is(0.0));
-						expect(scenario.answerOf('/data/area2')).toEqualAnswer(floatAnswer(0.0));
-					});
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/area1").getDisplayText()), is(0.0));
+					expect(scenario.answerOf('/data/area1')).toEqualAnswer(floatAnswer(0.0));
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/area2").getDisplayText()), is(0.0));
+					expect(scenario.answerOf('/data/area2')).toEqualAnswer(floatAnswer(0.0));
 				});
 			});
 		});
