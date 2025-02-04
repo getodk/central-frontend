@@ -568,7 +568,7 @@ const routes = [
         props: true,
         loading: 'tab',
         meta: {
-          title: () => [dataset.name],
+          title: () => [i18n.t('resource.properties'), dataset.name],
           validateData: {
             project: () => project.permits('dataset.read')
           }

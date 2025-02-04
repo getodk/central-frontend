@@ -2,7 +2,7 @@ import DatasetOverview from '../../../src/components/dataset/overview.vue';
 import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
-import { findTab } from '../../util/dom';
+import { findTab, textWithout } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -77,10 +77,10 @@ describe('DatasetShow', () => {
   describe('tabs', () => {
     it('shows all tabs to an administrator', async () => {
       testData.extendedDatasets.createPast(1);
-      const app = await load('/projects/1/entity-lists/trees', { attachTo: document.body });
-      const li = app.findAll('#page-head-tabs li');
-      li.map(wrapper => wrapper.get('a').text()).should.eql(['Overview', 'Entities 0', 'Settings']);
-      li[0].should.be.visible(true);
+      const app = await load('/projects/1/entity-lists/trees');
+      const text = app.findAll('#page-head-tabs li')
+        .map(li => textWithout(li.get('a'), '.badge'));
+      text.should.eql(['Properties', 'Entities', 'Settings']);
     });
 
     it('shows the correct tabs to project viewer', async () => {
@@ -90,11 +90,10 @@ describe('DatasetShow', () => {
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       testData.extendedDatasets.createPast(1);
 
-      const app = await load('/projects/1/entity-lists/trees', { attachTo: document.body });
-      const li = app.findAll('#page-head-tabs li');
-      const text = li.map(wrapper => wrapper.get('a').text());
-      text.should.eql(['Overview', 'Entities 0']);
-      li[0].should.be.visible(true);
+      const app = await load('/projects/1/entity-lists/trees');
+      const text = app.findAll('#page-head-tabs li')
+        .map(li => textWithout(li.get('a'), '.badge'));
+      text.should.eql(['Properties', 'Entities']);
     });
 
     it('shows the count of entities', async () => {

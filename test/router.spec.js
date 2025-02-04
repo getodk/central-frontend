@@ -1107,7 +1107,7 @@ describe('createCentralRouter()', () => {
     // Dataset routes
     it('shows dataset name in title for /projects/1/entity-lists/:datasetName', async () => {
       await load('/projects/1/entity-lists/trees');
-      document.title.should.equal('trees | ODK Central');
+      document.title.should.equal('Properties | trees | ODK Central');
     });
 
     it('shows dataset name in title for /projects/1/entity-lists/:datasetName/entities', async () => {

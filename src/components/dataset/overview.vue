@@ -18,16 +18,16 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <div class="row">
-          <div class="col-md-6 creation-forms">
+          <div class="col-md-6">
             <connection-to-forms/>
           </div>
-          <div class="col-md-6 linked-forms">
+          <div class="col-md-6">
             <linked-forms/>
           </div>
         </div>
       </template>
     </page-section>
-    <page-section id="dataset-overview-properties">
+    <page-section>
       <template #heading>
         <span>{{ $t('entityProperties') }}</span>
         <button v-if="project.dataExists && project.permits('dataset.update')"
@@ -57,6 +57,8 @@ import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
+  // This component is named DatasetOverview for historical reasons. Today, the
+  // component is the properties page, but it used to be the overview page.
   name: 'DatasetOverview'
 });
 defineProps({

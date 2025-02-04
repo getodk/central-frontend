@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #tabs>
         <li :class="tabClass('')" role="presentation">
           <router-link :to="tabPath('')">
-            {{ $t('common.tab.overview') }}
+            {{ $t('resource.properties') }}
           </router-link>
         </li>
         <li :class="tabClass('entities')" role="presentation">
