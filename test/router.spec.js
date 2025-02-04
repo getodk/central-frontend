@@ -128,9 +128,13 @@ describe('createCentralRouter()', () => {
       return load('/projects/1/entity-lists/trees/settings')
         .complete()
         .route('/projects/1/entity-lists/trees')
-        .then(app => {
+        .respondFor('/projects/1/entity-lists/trees/entities', {
+          project: false,
+          dataset: false
+        })
+        .afterResponses(app => {
           const { path } = app.vm.$route;
-          path.should.equal('/projects/1/entity-lists/trees/properties');
+          path.should.equal('/projects/1/entity-lists/trees/entities');
         });
     });
   });

@@ -564,7 +564,6 @@ const routes = [
     children: [
       asyncRoute({
         path: 'properties',
-        alias: '',
         component: 'DatasetOverview',
         props: true,
         loading: 'tab',
@@ -577,6 +576,7 @@ const routes = [
       }),
       asyncRoute({
         path: 'entities',
+        alias: '',
         component: 'DatasetEntities',
         props: true,
         loading: 'tab',
