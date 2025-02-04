@@ -394,8 +394,6 @@
     "conflict": "Conflict",
     "conflicts": "Conflicts",
     // This is a title shown above a section of the page.
-    "currentDraft": "Your Current Draft",
-    // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
     // This is shown in the tab above a table of data.
     "data": "Data",
@@ -428,8 +426,7 @@
     "system": "System",
     "yes": "Yes",
     "tab": {
-      "settings": "Settings",
-      "overview": "Overview"
+      "settings": "Settings"
     },
     "total": "Total",
     "totalSubmissions": "Total Submissions",

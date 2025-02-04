@@ -115,10 +115,6 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-draft-testing" */
     '../components/form-draft/testing.vue'
   )))
-  .set('FormOverview', loader(() => import(
-    /* webpackChunkName: "component-form-overview" */
-    '../components/form/overview.vue'
-  )))
   .set('FormSettings', loader(() => import(
     /* webpackChunkName: "component-form-settings" */
     '../components/form/settings.vue'

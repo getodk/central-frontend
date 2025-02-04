@@ -96,7 +96,7 @@ A component can also communicate with other components using the Vuex store. For
 
 We specify a name for every component, which facilitates the use of the Vue devtools. In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect.
 
-Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormOverview`. The following are common suffixes:
+Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormRow`. The following are common suffixes:
 
 * `List`. A component that lists resources of a particular type. The component often includes a table, an empty table message, text and buttons above the table, and one or more modals.
 * `Table`. A table for a particular type of resource. A `Table` component should just be the `<table>` element and should not include an empty table message or other content.

@@ -375,22 +375,6 @@ const routes = [
       `/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}`,
     children: [
       asyncRoute({
-        path: '',
-        component: 'FormOverview',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            // Including form.update in order to exclude project viewers and
-            // Data Collectors.
-            project: () => project.permits(['form.read', 'form.update', 'dataset.list']),
-            form: () => form.publishedAt != null
-          },
-          title: () => [form.nameOrId],
-          fullWidth: true
-        }
-      }),
-      asyncRoute({
         path: 'versions',
         component: 'FormVersionList',
         props: true,
@@ -406,6 +390,7 @@ const routes = [
       }),
       asyncRoute({
         path: 'submissions',
+        alias: '',
         component: 'FormSubmissions',
         props: true,
         loading: 'tab',
@@ -801,7 +786,6 @@ const routesByName = new Map();
     'ProjectSettings'
   ];
   const formRoutes = [
-    'FormOverview',
     'FormVersionList',
     'FormSubmissions',
     'PublicLinkList',

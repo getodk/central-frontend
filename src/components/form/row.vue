@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
       <td class="last-submission">
         <span v-tooltip.no-aria="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
-            <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)">
+            <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')">
               <date-time :iso="form.lastSubmission" relative="past"
                 :tooltip="false"/>
               <span class="icon-clock-o"></span>
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="total-submissions">
-        <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)"
+        <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>

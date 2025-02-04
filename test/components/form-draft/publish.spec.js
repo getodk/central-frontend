@@ -359,26 +359,38 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted());
+        .respondFor('/projects/1/forms/f/submissions', {
+          form: false,
+          formDraft: false,
+          attachments: false
+        });
     };
 
-    it('sends requests for the project and form', () =>
-      publish().testRequests([
-        null,
-        { url: '/v1/projects/1/forms/f', extended: true },
-        { url: '/v1/projects/1', extended: true },
-        { url: '/v1/projects/1/forms/f/attachments' }
-      ]));
+    it('sends requests for the project and form', () => {
+      let count = 0;
+      return publish()
+        .beforeEachResponse((_, { url }, i) => {
+          if (i === 1) {
+            url.should.equal('/v1/projects/1/forms/f');
+            count += 1;
+          } else if (i === 2) {
+            url.should.equal('/v1/projects/1');
+            count += 1;
+          }
+        })
+        .afterResponses(() => {
+          count.should.equal(2);
+        });
+    });
 
     it('shows a success alert', () =>
       publish().then(app => {
         app.should.alert('success');
       }));
 
-    it('redirects to the form overview', () =>
+    it('redirects to the submissions page', () =>
       publish().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f');
+        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
       }));
 
     it('updates requestData', async () => {
@@ -414,8 +426,11 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondFor('/projects/1/forms/f/submissions', {
+          form: false,
+          formDraft: false,
+          attachments: false
+        })
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())

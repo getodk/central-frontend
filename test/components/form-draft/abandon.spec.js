@@ -126,7 +126,12 @@ describe('FormDraftAbandon', () => {
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
-        .respondWithData(() => testData.standardFormAttachments.sorted());
+        .respondFor('/projects/1/forms/f/submissions', {
+          project: false,
+          form: false,
+          formDraft: false,
+          attachments: false
+        });
     };
 
     it('shows a success alert', () =>
@@ -134,9 +139,9 @@ describe('FormDraftAbandon', () => {
         app.should.alert('success', 'The Draft version of this Form has been successfully deleted.');
       }));
 
-    it('redirects to the form overview', () =>
+    it('redirects to the submissions page', () =>
       abandon().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f');
+        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
       }));
 
     it('shows the create draft button', () =>

@@ -1,6 +1,5 @@
 import { clone } from 'ramda';
 
-import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
@@ -391,39 +390,6 @@ describe('FormNew', () => {
         .afterResponses(app => {
           const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
           badge.text().should.equal('2');
-        });
-    });
-
-    it('updates the checklist', () => {
-      testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, {
-        submissions: 1,
-        draft: true
-      });
-      testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          const steps = app.findAllComponents(ChecklistStep);
-          steps.length.should.equal(4);
-          steps[2].props().stage.should.equal('complete');
-        })
-        .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
-          return upload(app);
-        })
-        .respondWithData(() => {
-          testData.extendedFormVersions.createNew({
-            version: 'v2',
-            draft: true
-          });
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .afterResponses(app => {
-          const steps = app.findAllComponents(ChecklistStep);
-          steps.length.should.equal(4);
-          steps[2].props().stage.should.equal('current');
         });
     });
   });

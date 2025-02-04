@@ -79,12 +79,9 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
     return _formPath(projectIdOrSuffix, xmlFormId, suffix);
   };
-  const publishedFormPath = (projectId, xmlFormId) => {
-    const path = formPath(projectId, xmlFormId);
-    // A project viewer can't navigate to the form overview, but anyone who can
-    // navigate to the form should be able to navigate to .../submissions.
-    return canRouteToLocation(path) ? path : `${path}/submissions`;
-  };
+  // Returns the path to the primary page of a published form.
+  const publishedFormPath = (projectId, xmlFormId) =>
+    formPath(projectId, xmlFormId, 'submissions');
   // Returns the path to the primary page for a form. This changes based on the
   // current user's role, as well as whether the form has a published version.
   const primaryFormPath = (form) => {

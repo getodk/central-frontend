@@ -43,25 +43,6 @@ describe('FormSubmissions', () => {
       const text = component.getComponent(SubmissionDownloadButton).text();
       text.should.equal('Download 1 Submission…');
     });
-
-    it('updates the form overview if the count changes', () => {
-      testData.extendedForms.createPast(1, { submissions: 10 });
-      testData.extendedSubmissions.createPast(11);
-      return load('/projects/1/forms/f')
-        .afterResponses(app => {
-          const item = app.get('#form-overview-right-now-submissions');
-          item.get('.summary-item-heading').text().should.equal('10');
-        })
-        .load('/projects/1/forms/f/submissions', {
-          project: false, form: false, formDraft: false, attachments: false
-        })
-        .complete()
-        .route('/projects/1/forms/f')
-        .then(app => {
-          const item = app.get('#form-overview-right-now-submissions');
-          item.get('.summary-item-heading').text().should.equal('11');
-        });
-    });
   });
 
   describe('deleted submissions', () => {
