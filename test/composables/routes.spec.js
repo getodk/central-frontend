@@ -136,7 +136,7 @@ describe('useRoutes()', () => {
 
     it('infers projectId and datasetName if given one argument', () => {
       const container = createTestContainer({
-        router: mockRouter('/projects/1/entity-lists/trees')
+        router: mockRouter('/projects/1/entity-lists/trees/properties')
       });
       const { datasetPath } = withSetup(useRoutes, { container });
       const path = datasetPath('entities');

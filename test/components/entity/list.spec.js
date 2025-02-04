@@ -57,7 +57,7 @@ describe('EntityList', () => {
 
   it('updates dataset.entities using the OData count', () => {
     testData.extendedEntities.createPast(1);
-    return load('/projects/1/entity-lists/trees')
+    return load('/projects/1/entity-lists/trees/properties')
       .afterResponses(() => {
         testData.extendedEntities.createNew();
       })

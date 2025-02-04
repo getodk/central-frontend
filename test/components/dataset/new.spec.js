@@ -96,7 +96,7 @@ describe('DatasetNew', () => {
         .respondWithData(() => testData.extendedDatasets.last())
         .complete()
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset/properties');
         }));
 
     it('increments the count of entity lists', () =>

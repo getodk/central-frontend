@@ -563,7 +563,8 @@ const routes = [
       `/projects/${projectId}/entity-lists/${encodeURIComponent(datasetName)}`,
     children: [
       asyncRoute({
-        path: '',
+        path: 'properties',
+        alias: '',
         component: 'DatasetOverview',
         props: true,
         loading: 'tab',

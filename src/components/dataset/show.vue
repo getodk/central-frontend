@@ -25,8 +25,8 @@ except according to the terms contained in the LICENSE file.
             </span>
           </router-link>
         </li>
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">
+        <li :class="tabClass('properties')" role="presentation">
+          <router-link :to="tabPath('properties')">
             {{ $t('resource.properties') }}
           </router-link>
         </li>
