@@ -17,27 +17,11 @@ import { floatAnswer } from '../../src/answer/ExpectedFloatAnswer.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
 import { EARTH_EQUATORIAL_CIRCUMFERENCE_METERS } from '../../src/jr/core/util/GeoUtils.ts';
 
-interface TrailingSemicolonOptions {
-	readonly stripTrailingSemicolon: boolean;
-}
-
-const geopointListValue = (portedValue: string, options: TrailingSemicolonOptions) => {
-	if (options.stripTrailingSemicolon) {
-		return portedValue.replace(/;$/, '');
-	}
-
-	return portedValue;
-};
-
 const NINETY_DEGREES_ON_EQUATOR_KM = EARTH_EQUATORIAL_CIRCUMFERENCE_METERS / 4;
 
 interface RelaxedPrecisionOptions {
 	readonly relaxAssertionPrecision: boolean;
 }
-
-interface CombinedParameterizationOptions
-	extends RelaxedPrecisionOptions,
-		TrailingSemicolonOptions {}
 
 /**
  * **PORTING NOTES**
@@ -362,68 +346,55 @@ describe('Geoshape', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * Fails on both of:
-			 *
-			 * - Directly ported precision. Same notes as previous test in first
-			 *   geopoint distance test.
-			 *
-			 * - Trailing semicolon in `/data/polygon` value.
-			 *
-			 * Parameterized to demonstrate passage when accommodating both.
+			 * Fails on directly ported precision. Same notes as previous test in
+			 * first geopoint distance test. Parameterized to demonstrate passage when
+			 * accommodated.
 			 */
-			describe.each<CombinedParameterizationOptions>([
-				{ relaxAssertionPrecision: false, stripTrailingSemicolon: false },
-				{ relaxAssertionPrecision: true, stripTrailingSemicolon: true },
-			])(
-				'relax assertion precision: $relaxAssertionPrecision; strip triling semicolon: $stripTrailingSemicolon',
-				({ relaxAssertionPrecision, stripTrailingSemicolon }) => {
-					let testFn: typeof it | typeof it.fails;
+			describe.each<RelaxedPrecisionOptions>([
+				{ relaxAssertionPrecision: false },
+				{ relaxAssertionPrecision: true },
+			])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
+				let testFn: typeof it | typeof it.fails;
 
-					if (relaxAssertionPrecision && stripTrailingSemicolon) {
-						testFn = it;
-					} else {
-						testFn = it.fails;
-					}
-
-					testFn('is computed for geoshape', async () => {
-						const scenario = await Scenario.init(
-							'geoshape distance',
-							html(
-								head(
-									title('Geoshape distance'),
-									model(
-										mainInstance(
-											t(
-												'data id="geoshape-distance"',
-												t(
-													'polygon',
-													geopointListValue('0 1 0 0; 0 91 0 0; 0 1 0 0;', {
-														stripTrailingSemicolon,
-													})
-												),
-												t('distance')
-											)
-										),
-										bind('/data/polygon').type('geoshape'),
-										bind('/data/distance').type('decimal').calculate('distance(/data/polygon)')
-									)
-								),
-								body(input('/data/polygon'))
-							)
-						);
-
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-						// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7));
-						// })
-						expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-							expectedDistance(
-								NINETY_DEGREES_ON_EQUATOR_KM * 2,
-								relaxAssertionPrecision ? 0.0999999 : 1e-7
-							)
-						);
-					});
+				if (relaxAssertionPrecision) {
+					testFn = it;
+				} else {
+					testFn = it.fails;
 				}
-			);
+
+				testFn('is computed for geoshape', async () => {
+					const scenario = await Scenario.init(
+						'geoshape distance',
+						html(
+							head(
+								title('Geoshape distance'),
+								model(
+									mainInstance(
+										t(
+											'data id="geoshape-distance"',
+											t('polygon', '0 1 0 0; 0 91 0 0; 0 1 0 0;'),
+											t('distance')
+										)
+									),
+									bind('/data/polygon').type('geoshape'),
+									bind('/data/distance').type('decimal').calculate('distance(/data/polygon)')
+								)
+							),
+							body(input('/data/polygon'))
+						)
+					);
+
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+					// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7));
+					// })
+					expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+						expectedDistance(
+							NINETY_DEGREES_ON_EQUATOR_KM * 2,
+							relaxAssertionPrecision ? 0.0999999 : 1e-7
+						)
+					);
+				});
+			});
 		});
 	});
 });
@@ -434,109 +405,78 @@ describe('Geotrace', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * Fails on both of:
-			 *
-			 * - Directly ported precision. Same notes as previous test in first
-			 *   geopoint distance test.
-			 *
-			 * - Trailing semicolon in `/data/line` value.
-			 *
-			 * Parameterized to demonstrate passage when accommodating both.
+			 * Fails on directly ported precision. Same notes as previous test in
+			 * first geopoint distance test. Parameterized to demonstrate passage with
+			 * relaxed precision.
 			 */
-			describe.each<CombinedParameterizationOptions>([
-				{ relaxAssertionPrecision: false, stripTrailingSemicolon: false },
-				{ relaxAssertionPrecision: true, stripTrailingSemicolon: true },
-			])(
-				'relax assertion precision: $relaxAssertionPrecision; strip triling semicolon: $stripTrailingSemicolon',
-				({ relaxAssertionPrecision, stripTrailingSemicolon }) => {
-					let testFn: typeof it | typeof it.fails;
+			describe.each<RelaxedPrecisionOptions>([
+				{ relaxAssertionPrecision: false },
+				{ relaxAssertionPrecision: true },
+			])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
+				let testFn: typeof it | typeof it.fails;
 
-					if (relaxAssertionPrecision && stripTrailingSemicolon) {
-						testFn = it;
-					} else {
-						testFn = it.fails;
-					}
-
-					testFn('is computed for geotrace', async () => {
-						const scenario = await Scenario.init(
-							'geotrace distance',
-							html(
-								head(
-									title('Geotrace distance'),
-									model(
-										mainInstance(
-											t(
-												'data id="geotrace-distance"',
-												t(
-													'line',
-													geopointListValue('0 1 0 0; 0 91 0 0;', { stripTrailingSemicolon })
-												),
-												t('distance')
-											)
-										),
-										bind('/data/line').type('geotrace'),
-										bind('/data/distance').type('decimal').calculate('distance(/data/line)')
-									)
-								),
-								body(input('/data/line'))
-							)
-						);
-
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-						// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
-						expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-							expectedDistance(
-								NINETY_DEGREES_ON_EQUATOR_KM,
-								relaxAssertionPrecision ? 0.0999999 : 1e-7
-							)
-						);
-					});
+				if (relaxAssertionPrecision) {
+					testFn = it;
+				} else {
+					testFn = it.fails;
 				}
-			);
+
+				testFn('is computed for geotrace', async () => {
+					const scenario = await Scenario.init(
+						'geotrace distance',
+						html(
+							head(
+								title('Geotrace distance'),
+								model(
+									mainInstance(
+										t('data id="geotrace-distance"', t('line', '0 1 0 0; 0 91 0 0;'), t('distance'))
+									),
+									bind('/data/line').type('geotrace'),
+									bind('/data/distance').type('decimal').calculate('distance(/data/line)')
+								)
+							),
+							body(input('/data/line'))
+						)
+					);
+
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+					// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
+					expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+						expectedDistance(
+							NINETY_DEGREES_ON_EQUATOR_KM,
+							relaxAssertionPrecision ? 0.0999999 : 1e-7
+						)
+					);
+				});
+			});
 
 			describe('when [`geotrace`] trace has fewer than two points', () => {
-				describe.each<TrailingSemicolonOptions>([
-					{ stripTrailingSemicolon: false },
-					{ stripTrailingSemicolon: true },
-				])('strip trailing semicolons: $stripTrailingSemicolons', ({ stripTrailingSemicolon }) => {
-					/**
-					 * **PORTING NOTES**
-					 *
-					 * - Direct port is currently expected to fail due to trailing
-					 *   semicolon in `/data/line` value.
-					 *
-					 * - Parameterized alternate test stripping that trailing semicolon
-					 *   also fails, producing {@link NaN} where the value is expected to
-					 *   be zero. This is presumably a bug in the XPath `distance`
-					 *   function's handling of this specific case (and would likely
-					 *   affect Enketo as well, since the extant tests were ported from
-					 *   ORXE).
-					 */
-					it.fails('is zero', async () => {
-						const scenario = await Scenario.init(
-							'geotrace distance',
-							html(
-								head(
-									title('Geotrace distance'),
-									model(
-										mainInstance(
-											t(
-												'data id="geotrace-distance"',
-												t('line', geopointListValue('0 1 0 0;', { stripTrailingSemicolon })),
-												t('distance')
-											)
-										),
-										bind('/data/line').type('geotrace'),
-										bind('/data/distance').type('decimal').calculate('distance(/data/line)')
-									)
-								),
-								body(input('/data/line'))
-							)
-						);
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Fails due to another nuance of `distance` fallibility. Evidently
+				 *
+				 */
+				it.fails('is zero', async () => {
+					const scenario = await Scenario.init(
+						'geotrace distance',
+						html(
+							head(
+								title('Geotrace distance'),
+								model(
+									mainInstance(
+										t('data id="geotrace-distance"', t('line', '0 1 0 0;'), t('distance'))
+									),
+									bind('/data/line').type('geotrace'),
+									bind('/data/distance').type('decimal').calculate('distance(/data/line)')
+								)
+							),
+							body(input('/data/line'))
+						)
+					);
 
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()), is(0.0));
-						expect(scenario.answerOf('/data/distance')).toEqualAnswer(floatAnswer(0.0));
-					});
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()), is(0.0));
+					expect(scenario.answerOf('/data/distance')).toEqualAnswer(floatAnswer(0.0));
 				});
 			});
 		});
