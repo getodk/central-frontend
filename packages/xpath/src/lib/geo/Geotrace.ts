@@ -39,7 +39,10 @@ const collectLines = (geopoints: GeotracePoints): readonly GeotraceLine[] => {
 export class Geotrace {
 	static fromEncodedGeotrace(encoded: string): Geotrace | null {
 		const geopoints = encoded
-			.replace(/\s*;\s*$/, '')
+			.trim()
+			// Consistency with JavaRosa: any number of trailing semicolons are
+			// ignored, with any amount of whitespace between them.
+			.replace(/(\s*;)+$/, '')
 			.split(/\s*;\s*/)
 			.map((value) => {
 				return geopointCodec.decodeValue(value);
