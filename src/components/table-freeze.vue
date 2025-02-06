@@ -150,7 +150,7 @@ defineExpose({ getRowPair });
 
   .table {
     margin-bottom: 0;
-    width: auto;
+    width: 100%;
   }
 }
 
