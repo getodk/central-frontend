@@ -98,14 +98,4 @@ describe('Popover', () => {
     popoversForBar.length.should.equal(1);
     popoversForBar[0].querySelector('p').textContent.should.equal('bar');
   });
-
-  it.skip('uses the placement prop', async () => {
-    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
-    document.querySelector('#show-foo').click();
-    await component.vm.$nextTick();
-    await component.vm.$nextTick();
-    const popover = document.querySelector('.popover');
-    // classList doesn't have anything in it, not sure why
-    popover.classList.contains('left').should.be.true;
-  });
 });

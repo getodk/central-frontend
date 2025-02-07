@@ -140,13 +140,11 @@ useEventListener(document.body, 'click', (event) => {
     console.log(props.settings); // eslint-disable-line no-console
 });
 
-watch(() => props.settings, (newSettings) => {
+watch(() => props.settings, () => {
   // If the settings change, we should re-render the QR code.
   // This whole component could probably change again now that
   // the popover is allowed to have a reactive component within it.
-  if (newSettings != null) {
-    renderQrCode();
-  }
+  renderQrCode();
 });
 </script>
 

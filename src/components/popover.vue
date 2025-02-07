@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     show() {
-      const arrowEl = document.querySelector('.popover .arrow');
+      const arrowEl = this.$el.querySelector('.arrow');
 
       computePosition(this.target, this.$el, {
         placement: this.placement,
@@ -86,6 +86,7 @@ export default {
           if (middlewareData.arrow) {
             // eslint-disable-next-line no-shadow
             const { x, y } = middlewareData.arrow;
+            // 10px represents the width of the popover arrow from Bootstrap CSS.
             Object.assign(arrowEl.style, {
               left: x != null ? `${x + 10}px` : '',
               top: y != null ? `${y + 10}px` : '',
@@ -117,6 +118,7 @@ export default {
   display: block;
   border: none;
   box-shadow: $box-shadow-popover;
+  font-family: inherit;
   max-width: none;
   padding: 0;
 }
