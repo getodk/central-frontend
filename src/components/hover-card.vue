@@ -91,8 +91,6 @@ const resize = () => {
   for (const sibling of siblings) sibling.style.display = '';
 
   if (newWidth > currentWidth)
-    // Persist the new width in width.value so that it is added to the `style`
-    // attribute. That's needed for the style to be copied to the popover.
     el.value.style.width = px(el.value.getBoundingClientRect().width + newWidth - currentWidth);
 };
 onMounted(resize);
