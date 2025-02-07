@@ -94,7 +94,7 @@ describe('HoverCard', () => {
 
     it('allows the <dd> to grow up to the width of the <dt>', async () => {
       const { component, dtWidth, ddWidth } = await setupResize({
-        dt: xs(50),
+        dt: xs(40),
         dd: xs(100)
       });
       dtWidth.should.be.above(300);
