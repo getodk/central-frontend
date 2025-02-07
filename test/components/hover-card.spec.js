@@ -1,6 +1,7 @@
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 
 import HoverCard from '../../src/components/hover-card.vue';
+import Popover from '../../src/components/popover.vue';
 
 import { truncatesText } from '../../src/util/dom';
 
@@ -17,14 +18,17 @@ describe('HoverCard', () => {
 
   describe('truncateDt prop', () => {
     const Parent = {
-      template: `<hover-card icon="file" :truncate-dt="truncateDt">
+      template: `<a ref="target" href="#">Some link</a>
+      <popover :target="target">
+        <hover-card icon="file" :truncate-dt="truncateDt">
           <template #title>{{ title }}</template>
           <template #subtitle>foo</template>
           <template #body>
             <dl class="dl-horizontal"><dt>{{ dt }}</dt><dd>{{ dd }}</dd></dl>
           </template>
-        </hover-card>`,
-      components: { HoverCard },
+        </hover-card>
+      </popover>`,
+      components: { HoverCard, Popover },
       props: {
         title: {
           type: String,
@@ -43,11 +47,15 @@ describe('HoverCard', () => {
           // This is the opposite of the default in HoverCard.
           default: false
         }
+      },
+      setup() {
+        const target = ref(null);
+        return { target };
       }
     };
     const setupResize = async (props) => {
       const component = mount(Parent, { props, attachTo: document.body });
-      // Wait a tick for the resize to happen.
+      // Wait a tick for the popover to be positioned.
       await nextTick();
 
       const { width: hoverCardWidth } = component.get('.hover-card').element
@@ -76,13 +84,12 @@ describe('HoverCard', () => {
     });
 
     it('allows the <dt> to grow if truncateDt is false', async () => {
-      const { component, dtWidth } = await setupResize({
+      const { component, dtWidth, ddWidth } = await setupResize({
         dt: xs(50)
       });
       dtWidth.should.be.above(300);
       truncatesText(component.get('dt').element).should.be.false;
-      // FIX: text is truncated but ddWidth is about 400
-      //ddWidth.should.be.below(50);
+      ddWidth.should.be.below(50);
     });
 
     it('allows the <dd> to grow up to the width of the <dt>', async () => {
@@ -96,14 +103,13 @@ describe('HoverCard', () => {
     });
 
     it('does not allow the title to grow arbitrarily wide', async () => {
-      const { component } = await setupResize({
+      const { component, ddWidth } = await setupResize({
         dt: xs(50),
         title: xs(100)
       });
       truncatesText(component.get('.hover-card-title').element).should.be.true;
       // The long title should not cause the <dd> to grow.
-      // FIX: text is truncated but ddWidth is about 400
-      //ddWidth.should.be.below(50);
+      ddWidth.should.be.below(50);
     });
   });
 });
