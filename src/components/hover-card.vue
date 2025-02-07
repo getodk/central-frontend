@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="el" class="hover-card" :style="{ width }">
+  <div ref="el" class="hover-card">
     <div class="hover-card-heading">
       <span :class="`icon-${icon}`"></span>
       <div>
@@ -53,7 +53,6 @@ const props = defineProps({
   }
 });
 
-const width = ref('');
 const el = ref(null);
 // Returns the desired width of .hover-card-body based on the width of the <dl>.
 // Returning 0 means that the default width should be used.
@@ -92,9 +91,7 @@ const resize = () => {
   for (const sibling of siblings) sibling.style.display = '';
 
   if (newWidth > currentWidth)
-    // Persist the new width in width.value so that it is added to the `style`
-    // attribute. That's needed for the style to be copied to the popover.
-    width.value = px(el.value.getBoundingClientRect().width + newWidth - currentWidth);
+    el.value.style.width = px(el.value.getBoundingClientRect().width + newWidth - currentWidth);
 };
 onMounted(resize);
 </script>

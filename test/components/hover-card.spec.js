@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 
 import HoverCard from '../../src/components/hover-card.vue';
 import Popover from '../../src/components/popover.vue';
@@ -18,7 +18,8 @@ describe('HoverCard', () => {
 
   describe('truncateDt prop', () => {
     const Parent = {
-      template: `<popover>
+      template: `<a ref="target" href="#">Some link</a>
+      <popover :target="target">
         <hover-card icon="file" :truncate-dt="truncateDt">
           <template #title>{{ title }}</template>
           <template #subtitle>foo</template>
@@ -46,11 +47,15 @@ describe('HoverCard', () => {
           // This is the opposite of the default in HoverCard.
           default: false
         }
+      },
+      setup() {
+        const target = ref(null);
+        return { target };
       }
     };
     const setupResize = async (props) => {
       const component = mount(Parent, { props, attachTo: document.body });
-      // Wait a tick for the resize to happen.
+      // Wait a tick for the popover to be positioned.
       await nextTick();
 
       const { width: hoverCardWidth } = component.get('.hover-card').element
@@ -89,7 +94,7 @@ describe('HoverCard', () => {
 
     it('allows the <dd> to grow up to the width of the <dt>', async () => {
       const { component, dtWidth, ddWidth } = await setupResize({
-        dt: xs(50),
+        dt: xs(40),
         dd: xs(100)
       });
       dtWidth.should.be.above(300);

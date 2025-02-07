@@ -23,7 +23,7 @@ let id = 0;
 <script setup>
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
-import { inject, onMounted, ref } from 'vue';
+import { inject, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import useEventListener from '../composables/event-listener';
@@ -59,11 +59,7 @@ const imgHtml = ref('');
 const margin = 15;
 const textFontSize = 16;
 
-// The QR code is rendered to a canvas (possibly with additional icons and text)
-// and then the canvas data is converted to an image via toDataURL and used as the source
-// of an image tag.
-// It is assumed that props will not change and the QR image will only be rendered once.
-onMounted(() => {
+const renderQrCode = () => {
   const code = qrcode(0, props.errorCorrectionLevel);
   const json = JSON.stringify(props.settings);
   code.addData(btoa(pako.deflate(json, { to: 'string' })));
@@ -123,6 +119,14 @@ onMounted(() => {
   img.alt = t('altText');
 
   imgHtml.value = img.outerHTML;
+};
+
+// The QR code is rendered to a canvas (possibly with additional icons and text)
+// and then the canvas data is converted to an image via toDataURL and used as the source
+// of an image tag.
+// If the settings change, the QR code image is re-rendered.
+onMounted(() => {
+  renderQrCode();
 });
 
 id += 1;
@@ -134,6 +138,13 @@ const config = inject('config');
 useEventListener(document.body, 'click', (event) => {
   if (config.devTools && event.target.parentNode.classList.contains(idClass))
     console.log(props.settings); // eslint-disable-line no-console
+});
+
+watch(() => props.settings, () => {
+  // If the settings change, we should re-render the QR code.
+  // This whole component could probably change again now that
+  // the popover is allowed to have a reactive component within it.
+  renderQrCode();
 });
 </script>
 
