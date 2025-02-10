@@ -17,27 +17,11 @@ import { floatAnswer } from '../../src/answer/ExpectedFloatAnswer.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
 import { EARTH_EQUATORIAL_CIRCUMFERENCE_METERS } from '../../src/jr/core/util/GeoUtils.ts';
 
-interface TrailingSemicolonOptions {
-	readonly stripTrailingSemicolon: boolean;
-}
-
-const geopointListValue = (portedValue: string, options: TrailingSemicolonOptions) => {
-	if (options.stripTrailingSemicolon) {
-		return portedValue.replace(/;$/, '');
-	}
-
-	return portedValue;
-};
-
 const NINETY_DEGREES_ON_EQUATOR_KM = EARTH_EQUATORIAL_CIRCUMFERENCE_METERS / 4;
 
 interface RelaxedPrecisionOptions {
 	readonly relaxAssertionPrecision: boolean;
 }
-
-interface CombinedParameterizationOptions
-	extends RelaxedPrecisionOptions,
-		TrailingSemicolonOptions {}
 
 /**
  * **PORTING NOTES**
@@ -274,25 +258,52 @@ describe('Geopoint', () => {
 describe('Geoshape', () => {
 	describe('GeoAreaTest.java', () => {
 		describe('area', () => {
-			describe.each<TrailingSemicolonOptions>([
-				{ stripTrailingSemicolon: false },
-				{ stripTrailingSemicolon: true },
-			])('string trailing semicolon: $stripTrailingSemicolon', ({ stripTrailingSemicolon }) => {
-				let testFn: typeof it | typeof it.fails;
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Previously failed due to trailing semicolon. Addressed while extracting
+			 * XPath logic for decoding serialized geopoint lists.
+			 */
+			it('is computed for geoshape', async () => {
+				const scenario = await Scenario.init(
+					'geoshape area',
+					html(
+						head(
+							title('Geoshape area'),
+							model(
+								mainInstance(
+									t(
+										'data id="geoshape-area"',
+										t(
+											'polygon',
+											'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.25146813817506 21.758421137528785 0 0;'
+										),
+										t('area')
+									)
+								),
+								bind('/data/polygon').type('geoshape'),
+								bind('/data/area').type('decimal').calculate('area(/data/polygon)')
+							)
+						),
+						body(input('/data/polygon'))
+					)
+				);
 
-				if (stripTrailingSemicolon) {
-					testFn = it;
-				} else {
-					testFn = it.fails;
-				}
+				// JR:
+				//
+				// http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
+				// assertThat(Double.parseDouble(scenario.answerOf("/data/area").getDisplayText()),
+				// 		closeTo(151452, 0.5));
+				expect(scenario.answerOf('/data/area')).toHaveAnswerCloseTo(expectedArea(151452, 0.5));
+			});
 
+			describe('when shape has fewer than three points', () => {
 				/**
 				 * **PORTING NOTES**
 				 *
-				 * - Direct port fails due to trailing semicolon in `/data/polygon` value,
-				 *   as demonstrated by parameterized alternate test.
+				 * Previously failed with trailing semicolon, and lack of logic to enforce a minimum number of points. Both addressed while extracting XPath logic for decoding serializeed geopoint lists.
 				 */
-				testFn('is computed for geoshape', async () => {
+				it('is zero', async () => {
 					const scenario = await Scenario.init(
 						'geoshape area',
 						html(
@@ -302,87 +313,29 @@ describe('Geoshape', () => {
 									mainInstance(
 										t(
 											'data id="geoshape-area"',
+											t('polygon1', '38.253094215699576 21.756382658677467 0 0;'),
 											t(
-												'polygon',
-												geopointListValue(
-													'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.25146813817506 21.758421137528785 0 0;',
-													{ stripTrailingSemicolon }
-												)
+												'polygon2',
+												'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0;'
 											),
-											t('area')
+											t('area1'),
+											t('area2')
 										)
 									),
-									bind('/data/polygon').type('geoshape'),
-									bind('/data/area').type('decimal').calculate('area(/data/polygon)')
+									bind('/data/polygon1').type('geoshape'),
+									bind('/data/polygon2').type('geoshape'),
+									bind('/data/area1').type('decimal').calculate('area(/data/polygon1)'),
+									bind('/data/area2').type('decimal').calculate('area(/data/polygon2)')
 								)
 							),
-							body(input('/data/polygon'))
+							body(input('/data/polygon1'), input('/data/polygon2'))
 						)
 					);
 
-					// JR:
-					//
-					// http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
-					// assertThat(Double.parseDouble(scenario.answerOf("/data/area").getDisplayText()),
-					// 		closeTo(151452, 0.5));
-					expect(scenario.answerOf('/data/area')).toHaveAnswerCloseTo(expectedArea(151452, 0.5));
-				});
-
-				describe('when shape has fewer than three points', () => {
-					/**
-					 * **PORTING NOTES**
-					 *
-					 * - Direct port is currently expected to fail due to trailing
-					 *   semicolons in `/data/polygon1` and `/data/polygon2` values.
-					 *
-					 * - Parameterized alternate test stripping those trailing semicolons
-					 *   also fails, producing {@link NaN} where the value is expected to be
-					 *   zero. This is presumably a bug in the XPath `area` function's
-					 *   handling of this specific case (and would likely affect Enketo as
-					 *   well, since the extant tests were ported from ORXE).
-					 */
-					it.fails('is zero', async () => {
-						const scenario = await Scenario.init(
-							'geoshape area',
-							html(
-								head(
-									title('Geoshape area'),
-									model(
-										mainInstance(
-											t(
-												'data id="geoshape-area"',
-												t(
-													'polygon1',
-													geopointListValue('38.253094215699576 21.756382658677467 0 0;', {
-														stripTrailingSemicolon,
-													})
-												),
-												t(
-													'polygon2',
-													geopointListValue(
-														'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0;',
-														{ stripTrailingSemicolon }
-													)
-												),
-												t('area1'),
-												t('area2')
-											)
-										),
-										bind('/data/polygon1').type('geoshape'),
-										bind('/data/polygon2').type('geoshape'),
-										bind('/data/area1').type('decimal').calculate('area(/data/polygon1)'),
-										bind('/data/area2').type('decimal').calculate('area(/data/polygon2)')
-									)
-								),
-								body(input('/data/polygon1'), input('/data/polygon2'))
-							)
-						);
-
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/area1").getDisplayText()), is(0.0));
-						expect(scenario.answerOf('/data/area1')).toEqualAnswer(floatAnswer(0.0));
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/area2").getDisplayText()), is(0.0));
-						expect(scenario.answerOf('/data/area2')).toEqualAnswer(floatAnswer(0.0));
-					});
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/area1").getDisplayText()), is(0.0));
+					expect(scenario.answerOf('/data/area1')).toEqualAnswer(floatAnswer(0.0));
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/area2").getDisplayText()), is(0.0));
+					expect(scenario.answerOf('/data/area2')).toEqualAnswer(floatAnswer(0.0));
 				});
 			});
 		});
@@ -393,68 +346,55 @@ describe('Geoshape', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * Fails on both of:
-			 *
-			 * - Directly ported precision. Same notes as previous test in first
-			 *   geopoint distance test.
-			 *
-			 * - Trailing semicolon in `/data/polygon` value.
-			 *
-			 * Parameterized to demonstrate passage when accommodating both.
+			 * Fails on directly ported precision. Same notes as previous test in
+			 * first geopoint distance test. Parameterized to demonstrate passage when
+			 * accommodated.
 			 */
-			describe.each<CombinedParameterizationOptions>([
-				{ relaxAssertionPrecision: false, stripTrailingSemicolon: false },
-				{ relaxAssertionPrecision: true, stripTrailingSemicolon: true },
-			])(
-				'relax assertion precision: $relaxAssertionPrecision; strip triling semicolon: $stripTrailingSemicolon',
-				({ relaxAssertionPrecision, stripTrailingSemicolon }) => {
-					let testFn: typeof it | typeof it.fails;
+			describe.each<RelaxedPrecisionOptions>([
+				{ relaxAssertionPrecision: false },
+				{ relaxAssertionPrecision: true },
+			])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
+				let testFn: typeof it | typeof it.fails;
 
-					if (relaxAssertionPrecision && stripTrailingSemicolon) {
-						testFn = it;
-					} else {
-						testFn = it.fails;
-					}
-
-					testFn('is computed for geoshape', async () => {
-						const scenario = await Scenario.init(
-							'geoshape distance',
-							html(
-								head(
-									title('Geoshape distance'),
-									model(
-										mainInstance(
-											t(
-												'data id="geoshape-distance"',
-												t(
-													'polygon',
-													geopointListValue('0 1 0 0; 0 91 0 0; 0 1 0 0;', {
-														stripTrailingSemicolon,
-													})
-												),
-												t('distance')
-											)
-										),
-										bind('/data/polygon').type('geoshape'),
-										bind('/data/distance').type('decimal').calculate('distance(/data/polygon)')
-									)
-								),
-								body(input('/data/polygon'))
-							)
-						);
-
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-						// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7));
-						// })
-						expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-							expectedDistance(
-								NINETY_DEGREES_ON_EQUATOR_KM * 2,
-								relaxAssertionPrecision ? 0.0999999 : 1e-7
-							)
-						);
-					});
+				if (relaxAssertionPrecision) {
+					testFn = it;
+				} else {
+					testFn = it.fails;
 				}
-			);
+
+				testFn('is computed for geoshape', async () => {
+					const scenario = await Scenario.init(
+						'geoshape distance',
+						html(
+							head(
+								title('Geoshape distance'),
+								model(
+									mainInstance(
+										t(
+											'data id="geoshape-distance"',
+											t('polygon', '0 1 0 0; 0 91 0 0; 0 1 0 0;'),
+											t('distance')
+										)
+									),
+									bind('/data/polygon').type('geoshape'),
+									bind('/data/distance').type('decimal').calculate('distance(/data/polygon)')
+								)
+							),
+							body(input('/data/polygon'))
+						)
+					);
+
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+					// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7));
+					// })
+					expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+						expectedDistance(
+							NINETY_DEGREES_ON_EQUATOR_KM * 2,
+							relaxAssertionPrecision ? 0.0999999 : 1e-7
+						)
+					);
+				});
+			});
 		});
 	});
 });
@@ -465,109 +405,78 @@ describe('Geotrace', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * Fails on both of:
-			 *
-			 * - Directly ported precision. Same notes as previous test in first
-			 *   geopoint distance test.
-			 *
-			 * - Trailing semicolon in `/data/line` value.
-			 *
-			 * Parameterized to demonstrate passage when accommodating both.
+			 * Fails on directly ported precision. Same notes as previous test in
+			 * first geopoint distance test. Parameterized to demonstrate passage with
+			 * relaxed precision.
 			 */
-			describe.each<CombinedParameterizationOptions>([
-				{ relaxAssertionPrecision: false, stripTrailingSemicolon: false },
-				{ relaxAssertionPrecision: true, stripTrailingSemicolon: true },
-			])(
-				'relax assertion precision: $relaxAssertionPrecision; strip triling semicolon: $stripTrailingSemicolon',
-				({ relaxAssertionPrecision, stripTrailingSemicolon }) => {
-					let testFn: typeof it | typeof it.fails;
+			describe.each<RelaxedPrecisionOptions>([
+				{ relaxAssertionPrecision: false },
+				{ relaxAssertionPrecision: true },
+			])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
+				let testFn: typeof it | typeof it.fails;
 
-					if (relaxAssertionPrecision && stripTrailingSemicolon) {
-						testFn = it;
-					} else {
-						testFn = it.fails;
-					}
-
-					testFn('is computed for geotrace', async () => {
-						const scenario = await Scenario.init(
-							'geotrace distance',
-							html(
-								head(
-									title('Geotrace distance'),
-									model(
-										mainInstance(
-											t(
-												'data id="geotrace-distance"',
-												t(
-													'line',
-													geopointListValue('0 1 0 0; 0 91 0 0;', { stripTrailingSemicolon })
-												),
-												t('distance')
-											)
-										),
-										bind('/data/line').type('geotrace'),
-										bind('/data/distance').type('decimal').calculate('distance(/data/line)')
-									)
-								),
-								body(input('/data/line'))
-							)
-						);
-
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-						// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
-						expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-							expectedDistance(
-								NINETY_DEGREES_ON_EQUATOR_KM,
-								relaxAssertionPrecision ? 0.0999999 : 1e-7
-							)
-						);
-					});
+				if (relaxAssertionPrecision) {
+					testFn = it;
+				} else {
+					testFn = it.fails;
 				}
-			);
+
+				testFn('is computed for geotrace', async () => {
+					const scenario = await Scenario.init(
+						'geotrace distance',
+						html(
+							head(
+								title('Geotrace distance'),
+								model(
+									mainInstance(
+										t('data id="geotrace-distance"', t('line', '0 1 0 0; 0 91 0 0;'), t('distance'))
+									),
+									bind('/data/line').type('geotrace'),
+									bind('/data/distance').type('decimal').calculate('distance(/data/line)')
+								)
+							),
+							body(input('/data/line'))
+						)
+					);
+
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+					// 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
+					expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+						expectedDistance(
+							NINETY_DEGREES_ON_EQUATOR_KM,
+							relaxAssertionPrecision ? 0.0999999 : 1e-7
+						)
+					);
+				});
+			});
 
 			describe('when [`geotrace`] trace has fewer than two points', () => {
-				describe.each<TrailingSemicolonOptions>([
-					{ stripTrailingSemicolon: false },
-					{ stripTrailingSemicolon: true },
-				])('strip trailing semicolons: $stripTrailingSemicolons', ({ stripTrailingSemicolon }) => {
-					/**
-					 * **PORTING NOTES**
-					 *
-					 * - Direct port is currently expected to fail due to trailing
-					 *   semicolon in `/data/line` value.
-					 *
-					 * - Parameterized alternate test stripping that trailing semicolon
-					 *   also fails, producing {@link NaN} where the value is expected to
-					 *   be zero. This is presumably a bug in the XPath `distance`
-					 *   function's handling of this specific case (and would likely
-					 *   affect Enketo as well, since the extant tests were ported from
-					 *   ORXE).
-					 */
-					it.fails('is zero', async () => {
-						const scenario = await Scenario.init(
-							'geotrace distance',
-							html(
-								head(
-									title('Geotrace distance'),
-									model(
-										mainInstance(
-											t(
-												'data id="geotrace-distance"',
-												t('line', geopointListValue('0 1 0 0;', { stripTrailingSemicolon })),
-												t('distance')
-											)
-										),
-										bind('/data/line').type('geotrace'),
-										bind('/data/distance').type('decimal').calculate('distance(/data/line)')
-									)
-								),
-								body(input('/data/line'))
-							)
-						);
+				/**
+				 * **PORTING NOTES**
+				 *
+				 * Fails due to another nuance of `distance` fallibility. Evidently
+				 *
+				 */
+				it.fails('is zero', async () => {
+					const scenario = await Scenario.init(
+						'geotrace distance',
+						html(
+							head(
+								title('Geotrace distance'),
+								model(
+									mainInstance(
+										t('data id="geotrace-distance"', t('line', '0 1 0 0;'), t('distance'))
+									),
+									bind('/data/line').type('geotrace'),
+									bind('/data/distance').type('decimal').calculate('distance(/data/line)')
+								)
+							),
+							body(input('/data/line'))
+						)
+					);
 
-						// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()), is(0.0));
-						expect(scenario.answerOf('/data/distance')).toEqualAnswer(floatAnswer(0.0));
-					});
+					// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()), is(0.0));
+					expect(scenario.answerOf('/data/distance')).toEqualAnswer(floatAnswer(0.0));
 				});
 			});
 		});
