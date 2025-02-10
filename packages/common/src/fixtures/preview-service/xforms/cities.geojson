@@ -1,0 +1,65 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+		"title": "Warsaw",
+                "info": "Capital city of Poland",
+                "id": "1"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+		    21.0122,
+                    52.2297
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+		"title": "Berlin",
+                "info": "Capital city of Germany",
+                "id": "2"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    13.4050,
+		    52.5200
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+		"title": "Paris",
+                "info": "Capital city of France",
+                "id": "3"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    2.3522,
+                    48.8566
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+		"title": "Kyiv",
+                "info": "Capital city of Ukraine",
+                "id": "4"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    30.5234,
+	            50.4501
+                ]
+            }
+        }
+    ]
+}
