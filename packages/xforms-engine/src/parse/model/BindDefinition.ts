@@ -4,6 +4,7 @@ import { BindComputationExpression } from '../expression/BindComputationExpressi
 import { MessageDefinition } from '../text/MessageDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { BindElement } from './BindElement.ts';
+import { BindPreloadDefinition, type AnyBindPreloadDefinition } from './BindPreloadDefinition.ts';
 import type { BindType } from './BindTypeDefinition.ts';
 import { BindTypeDefinition } from './BindTypeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
@@ -11,6 +12,8 @@ import type { ModelDefinition } from './ModelDefinition.ts';
 export class BindDefinition<T extends BindType = BindType> extends DependencyContext {
 	readonly type: BindTypeDefinition<T>;
 	readonly parentNodeset: string | null;
+
+	readonly preload: AnyBindPreloadDefinition | null;
 
 	readonly calculate: BindComputationExpression<'calculate'> | null;
 	readonly readonly: BindComputationExpression<'readonly'>;
@@ -82,6 +85,7 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 
 		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
+		this.preload = BindPreloadDefinition.from(bindElement);
 		this.calculate = BindComputationExpression.forComputation(this, 'calculate');
 		this.readonly = BindComputationExpression.forComputation(this, 'readonly');
 		this.relevant = BindComputationExpression.forComputation(this, 'relevant');
