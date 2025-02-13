@@ -123,7 +123,7 @@ describe('createCentralRouter()', () => {
   describe('redirects', () => {
     beforeEach(mockLogin);
 
-    it('redirects to .../entities for entity lists', async () => {
+    it('redirects to .../entities from root path of entity list', async () => {
       testData.extendedDatasets.createPast(1);
       return load('/projects/1/entity-lists/trees/settings')
         .complete()
@@ -442,7 +442,7 @@ describe('createCentralRouter()', () => {
           .afterResponses(dataExists(['project', 'dataset'])));
     });
 
-    it('preserves project while navigating from .../properties', () => {
+    it('preserves project while navigating from entity list to project', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       return load('/projects/1/entity-lists/trees/properties')
         .complete()

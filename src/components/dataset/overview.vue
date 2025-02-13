@@ -58,7 +58,8 @@ import { useRequestData } from '../../request-data';
 
 defineOptions({
   // This component is named DatasetOverview for historical reasons. Today, the
-  // component is the properties page, but it used to be the overview page.
+  // component is the properties page, but it used to be the entity list
+  // overview page.
   name: 'DatasetOverview'
 });
 defineProps({
