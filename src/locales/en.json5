@@ -59,6 +59,12 @@
     // This is a note about a Form that is not yet published.
     "unpublished": "Not published yet"
   },
+  // @transifexKey component.FormOverviewRightNow.stateCaption
+  "formStateDescription": {
+    "open": "This Form is downloadable and is accepting Submissions.",
+    "closing": "This Form is not downloadable but still accepts Submissions.",
+    "closed": "This Form is not downloadable and does not accept Submissions."
+  },
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
@@ -394,8 +400,6 @@
     "conflict": "Conflict",
     "conflicts": "Conflicts",
     // This is a title shown above a section of the page.
-    "currentDraft": "Your Current Draft",
-    // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
     // This is shown in the tab above a table of data.
     "data": "Data",
@@ -416,8 +420,6 @@
     "noUndo": "This action cannot be undone.",
     // @transifexKey field.reviewState
     "reviewState": "Review State",
-    // This is the title of a section that shows status information for the entire server such as project count.
-    "rightNow": "Right Now",
     // This is shown for the row number.
     "rowNumber": "Row",
     // @transifexKey formHead.draftNav.tab.status
@@ -428,8 +430,7 @@
     "system": "System",
     "yes": "Yes",
     "tab": {
-      "settings": "Settings",
-      "overview": "Overview"
+      "settings": "Settings"
     },
     "total": "Total",
     "totalSubmissions": "Total Submissions",

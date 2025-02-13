@@ -26,10 +26,10 @@ describe('LinkedForms', () => {
     const rows = component.findAll('tr');
 
     rows[0].text().should.be.eql('Diagnosis');
-    rows[0].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/monthly_diagnosis');
+    rows[0].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/monthly_diagnosis/submissions');
 
     rows[1].text().should.be.eql('National Parks Survey');
-    rows[1].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/national_parks_survey');
+    rows[1].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/national_parks_survey/submissions');
   });
 
   it('does not break if there is no form', () => {

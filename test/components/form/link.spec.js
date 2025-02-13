@@ -34,10 +34,10 @@ describe('FormLink', () => {
     describe('administrator', () => {
       beforeEach(mockLogin);
 
-      it('links to form overview for a form with a published version', () => {
+      it('links to .../submissions for a form with a published version', () => {
         testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
         const { to } = mountComponent().getComponent(LinkIfCan).props();
-        to.should.equal('/projects/1/forms/a%20b');
+        to.should.equal('/projects/1/forms/a%20b/submissions');
       });
 
       it('links to .../draft for a form without a published version', () => {

@@ -13,20 +13,10 @@ except according to the terms contained in the LICENSE file.
   <div>
     <loading :state="formVersions.initiallyLoading"/>
     <div v-show="formVersions.dataExists" class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-6 col-xs-offset-6">
         <page-section>
           <template #heading>
-            <span>{{ $t('draftChecklist.title') }}</span>
-          </template>
-          <template #body>
-            <form-draft-checklist status/>
-          </template>
-        </page-section>
-      </div>
-      <div class="col-xs-6">
-        <page-section>
-          <template #heading>
-            <span>{{ $t('common.currentDraft') }}</span>
+            <span>{{ $t('currentDraft.title') }}</span>
           </template>
           <template #body>
             <summary-item v-if="formDraft.dataExists" icon="file-o">
@@ -88,7 +78,6 @@ except according to the terms contained in the LICENSE file.
 import { defineAsyncComponent } from 'vue';
 
 import FormDraftAbandon from './abandon.vue';
-import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
@@ -110,7 +99,6 @@ export default {
   name: 'FormDraftStatus',
   components: {
     FormDraftAbandon,
-    FormDraftChecklist,
     FormDraftPublish,
     FormNew,
     FormVersionStandardButtons,
@@ -135,10 +123,10 @@ export default {
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
     const { form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
-    const { projectPath, formPath } = useRoutes();
+    const { projectPath, publishedFormPath } = useRoutes();
     return {
       form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff,
-      projectPath, formPath
+      projectPath, publishedFormPath
     };
   },
   data() {
@@ -169,7 +157,7 @@ export default {
       this.alert.success(this.$t('alert.upload'));
     },
     afterPublish() {
-      // We need to clear the form before navigating to the form overview: if
+      // We need to clear the form before navigating to the submissions page: if
       // the form didn't already have a published version, then there would be a
       // validateData violation if we didn't clear it.
       this.$emit('fetch-form');
@@ -181,8 +169,8 @@ export default {
       this.formDraftDatasetDiff.reset();
 
       // We will update additional resources, but only after navigating to the
-      // form overview. We need to wait to update these resources because they
-      // are used on this page.
+      // submissions page. We need to wait to update these resources because
+      // they are used on the current page.
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);
@@ -191,7 +179,7 @@ export default {
 
         this.alert.success(this.$t('alert.publish'));
       });
-      this.$router.push(this.formPath());
+      this.$router.push(this.publishedFormPath());
     },
     afterAbandon() {
       this.formDraftDatasetDiff.reset();
@@ -200,7 +188,7 @@ export default {
           this.formDraft.setToNone();
           this.alert.success(this.$t('alert.abandon'));
         });
-        this.$router.push(this.formPath());
+        this.$router.push(this.publishedFormPath());
       } else {
         const { nameOrId } = this.form;
         afterNextNavigation(this.$router, () => {
@@ -221,11 +209,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "draftChecklist": {
-      // This is a title shown above a section of the page.
-      "title": "Draft Checklist"
-    },
     "currentDraft": {
+      // @transifexKey common.currentDraft
+      // This is a title shown above a section of the page.
+      "title": "Your Current Draft",
       "versionCaption": {
         "full": "{draftVersion} of this Form.",
         "draftVersion": "Draft version"

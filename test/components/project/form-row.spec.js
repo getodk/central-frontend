@@ -33,6 +33,7 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1);
       const link = mountComponent().get('.form-name').getComponent(FormLink);
       link.props().form.xmlFormId.should.equal('f');
+      link.props().to.should.equal('/projects/1/forms/f/submissions');
     });
 
     it('renders a FormLink for a project manager', () => {
@@ -41,6 +42,7 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1);
       const link = mountComponent().get('.form-name').getComponent(FormLink);
       link.props().form.xmlFormId.should.equal('f');
+      link.props().to.should.equal('/projects/1/forms/f/submissions');
     });
 
     // Note that draft forms are not shown in ProjectFormRow to project viewers.
@@ -50,6 +52,14 @@ describe('ProjectFormRow', () => {
       testData.extendedForms.createPast(1);
       const link = mountComponent().get('.form-name').getComponent(FormLink);
       link.props().form.xmlFormId.should.equal('f');
+      link.props().to.should.equal('/projects/1/forms/f/submissions');
+    });
+
+    it('links to the draft status page for a draft form', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { draft: true });
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      should.not.exist(link.props().to);
     });
 
     describe('Data Collector', () => {

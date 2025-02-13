@@ -854,10 +854,6 @@
     "conflicts": {
       "string": "Conflicts"
     },
-    "currentDraft": {
-      "string": "Your Current Draft",
-      "developer_comment": "This is a title shown above a section of the page."
-    },
     "dangerZone": {
       "string": "Danger Zone",
       "developer_comment": "This is a title shown above a section of the page."
@@ -901,10 +897,6 @@
     "noUndo": {
       "string": "This action cannot be undone."
     },
-    "rightNow": {
-      "string": "Right Now",
-      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
-    },
     "rowNumber": {
       "string": "Row",
       "developer_comment": "This is shown for the row number."
@@ -922,10 +914,6 @@
     "tab": {
       "settings": {
         "string": "Settings",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "overview": {
-        "string": "Overview",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -952,6 +940,10 @@
     "warning": {
       "string": "Warning",
       "developer_comment": "This text is shown on its own before details about a warning."
+    },
+    "currentDraft": {
+      "string": "Your Current Draft",
+      "developer_comment": "This is a title shown above a section of the page."
     }
   },
   "mixin": {
@@ -2863,110 +2855,6 @@
         }
       }
     },
-    "FormDraftChecklist": {
-      "clickForInfo": {
-        "string": "Click here to find out more."
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "Upload initial Form definition",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "Great work!"
-            },
-            "1": {
-              "string": "Your Form design has been loaded successfully."
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "Upload revised Form definition (optional)",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to upload the new XML or XLSForm using the button to the right.",
-                "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated."
-              },
-              "link": {
-                "full": {
-                  "string": "If you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm.",
-                  "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
-                },
-                "upload": {
-                  "string": "upload",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
-                }
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "Upload Form Attachments",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Your Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab.",
-                "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
-              },
-              "formAttachments": {
-                "string": "Form Attachments",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "Test the Form by creating a Submission",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "You can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data.",
-                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
-              },
-              "test": {
-                "string": "test",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
-              }
-            }
-          }
-        },
-        "4": {
-          "title": {
-            "string": "Publish the Draft",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "When you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can publish it using the button to the right."
-              },
-              "link": {
-                "full": {
-                  "string": "When you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it.",
-                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
-                },
-                "publish": {
-                  "string": "publish",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "FormDraftPublish": {
       "title": {
         "string": "Publish Draft",
@@ -3067,12 +2955,6 @@
       }
     },
     "FormDraftStatus": {
-      "draftChecklist": {
-        "title": {
-          "string": "Draft Checklist",
-          "developer_comment": "This is a title shown above a section of the page."
-        }
-      },
       "currentDraft": {
         "versionCaption": {
           "full": {
@@ -3309,42 +3191,7 @@
         }
       }
     },
-    "FormOverview": {
-      "draft": {
-        "none": {
-          "title": {
-            "string": "No Current Draft",
-            "developer_comment": "This is a title shown above a section of the page."
-          },
-          "body": {
-            "string": "There is not currently a Draft version of this Form. If you want to make changes to the Form or its Attachments, start by creating a Draft using the button above."
-          }
-        },
-        "any": {
-          "versionCaption": {
-            "full": {
-              "string": "{draftVersion} of this Form.",
-              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-            },
-            "draftVersion": {
-              "string": "Draft version",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-            }
-          }
-        }
-      }
-    },
     "FormOverviewRightNow": {
-      "version": {
-        "full": {
-          "string": "{publishedVersion} of this Form.",
-          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
-        },
-        "publishedVersion": {
-          "string": "Published version",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
-        }
-      },
       "stateCaption": {
         "open": {
           "string": "This Form is downloadable and is accepting Submissions."
@@ -3355,20 +3202,6 @@
         "closed": {
           "string": "This Form is not downloadable and does not accept Submissions."
         }
-      },
-      "submissions": {
-        "full": {
-          "string": "{count, plural, one {{submissions} has been saved for this Form.} other {{submissions} have been saved for this Form.}}",
-          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
-        },
-        "submissions": {
-          "string": "{count, plural, one {Submission} other {Submissions}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
-        }
-      },
-      "datasetsLinked": {
-        "string": "{count, plural, one {Entity List attached to this Form:} other {Entity Lists attached to this Form:}}",
-        "developer_comment": "The count of Entity List(s) is shown separately above this text."
       }
     },
     "FormPreview": {

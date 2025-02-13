@@ -26,16 +26,6 @@ except according to the terms contained in the LICENSE file.
         <div class="row">
           <div class="col-xs-6">
             <ul id="form-head-form-tabs" class="nav nav-tabs">
-              <!-- Using rendersFormTabs rather than canRoute(), because we want
-              to render the tabs even if the form does not have a published
-              version (in which case canRoute() will return `false`). -->
-              <li v-if="rendersFormTabs" :class="formTabClass('')"
-                role="presentation">
-                <router-link :to="tabPath('')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('common.tab.overview') }}
-                </router-link>
-              </li>
               <!-- No v-if, because anyone who can navigate to the form should
               be able to navigate to .../versions and .../submissions. -->
               <li :class="formTabClass('versions')" role="presentation">
@@ -53,6 +43,9 @@ except according to the terms contained in the LICENSE file.
                   </span>
                 </router-link>
               </li>
+              <!-- Using rendersFormTabs rather than canRoute(), because we want
+              to render the tabs even if the form does not have a published
+              version (in which case canRoute() will return `false`). -->
               <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
                 role="presentation">
                 <router-link :to="tabPath('public-links')"

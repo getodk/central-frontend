@@ -1,7 +1,3 @@
-import FormDraftStatus from '../../../src/components/form-draft/status.vue';
-import FormHead from '../../../src/components/form/head.vue';
-import FormOverview from '../../../src/components/form/overview.vue';
-import Loading from '../../../src/components/loading.vue';
 import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
@@ -16,7 +12,7 @@ describe('FormHead', () => {
     it("shows the project's name in the breadcrumb", () => {
       testData.extendedProjects.createPast(1, { name: 'My Project', forms: 1 });
       testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f').then(app => {
+      return load('/projects/1/forms/f/settings').then(app => {
         const breadcrumb = app.findAll('.breadcrumb-item')[0];
         breadcrumb.text().should.equal('My Project');
       });
@@ -29,7 +25,7 @@ describe('FormHead', () => {
         forms: 1
       });
       testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f').then(app => {
+      return load('/projects/1/forms/f/settings').then(app => {
         const breadcrumb = app.findAll('.breadcrumb-item')[0];
         breadcrumb.text().should.equal('My Project (archived)');
       });
@@ -37,7 +33,7 @@ describe('FormHead', () => {
 
     it("renders the project's name as a link in the breadcrumb", async () => {
       testData.extendedForms.createPast(1);
-      const component = await load('/projects/1/forms/f');
+      const component = await load('/projects/1/forms/f/settings');
       const { links } = component.getComponent(Breadcrumbs).props();
       links.length.should.equal(2);
       links[0].path.should.equal('/projects/1');
@@ -47,7 +43,7 @@ describe('FormHead', () => {
 
     it("shows the form's name", async () => {
       testData.extendedForms.createPast(1, { name: 'My Form' });
-      const app = await load('/projects/1/forms/f');
+      const app = await load('/projects/1/forms/f/settings');
       const h1 = app.get('#form-head-form-nav .h1');
       h1.text().should.equal('My Form');
       await h1.should.have.textTooltip();
@@ -55,7 +51,7 @@ describe('FormHead', () => {
 
     it("shows the form's xmlFormId if the form does not have a name", async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'my_form', name: null });
-      const app = await load('/projects/1/forms/my_form');
+      const app = await load('/projects/1/forms/my_form/settings');
       const h1 = app.get('#form-head-form-nav .h1');
       h1.text().should.equal('my_form');
       await h1.should.have.textTooltip();
@@ -70,7 +66,6 @@ describe('FormHead', () => {
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         tabs.map(tab => tab.text()).should.eql([
-          'Overview',
           'Versions',
           'Submissions 0',
           'Public Access 0',
@@ -99,7 +94,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
       const tabs = app.findAll('#form-head-form-tabs li');
-      tabs.length.should.equal(5);
+      tabs.length.should.equal(4);
       for (const tab of tabs) {
         tab.classes('disabled').should.be.true;
         const a = tab.get('a');
@@ -114,7 +109,7 @@ describe('FormHead', () => {
       testData.extendedFormVersions.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
       const tabs = app.findAll('#form-head-form-tabs li');
-      tabs.length.should.equal(5);
+      tabs.length.should.equal(4);
       for (const tab of tabs) {
         tab.classes('disabled').should.be.false;
         const a = tab.get('a');
@@ -126,21 +121,21 @@ describe('FormHead', () => {
     it('shows the count of submissions', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { submissions: 1000 });
-      const app = await load('/projects/1/forms/f');
+      const app = await load('/projects/1/forms/f/settings');
       findTab(app, 'Submissions').get('.badge').text().should.equal('1,000');
     });
 
     it('shows the number of active public links', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { publicLinks: 1000 });
-      const app = await load('/projects/1/forms/f');
+      const app = await load('/projects/1/forms/f/settings');
       findTab(app, 'Public Access').get('.badge').text().should.equal('1,000');
     });
 
     it('shows the form state', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { state: 'closing' });
-      const app = await load('/projects/1/forms/f');
+      const app = await load('/projects/1/forms/f/settings');
       findTab(app, 'Settings').get('.badge').text().should.equal('Closing');
     });
   });
@@ -204,7 +199,7 @@ describe('FormHead', () => {
     it('does not show the tabs for the form draft to an administrator', () => {
       mockLogin();
       testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f').then(app => {
+      return load('/projects/1/forms/f/settings').then(app => {
         app.get('#form-head-draft-nav .nav-tabs').should.be.hidden();
       });
     });
@@ -216,12 +211,12 @@ describe('FormHead', () => {
       });
 
       it('shows the button to an administrator', () =>
-        load('/projects/1/forms/f').then(app => {
+        load('/projects/1/forms/f/settings').then(app => {
           app.get('#form-head-create-draft-button').should.be.visible();
         }));
 
       it('posts to the correct endpoint', () =>
-        load('/projects/1/forms/f')
+        load('/projects/1/forms/f/settings')
           .complete()
           .request(app => app.get('#form-head-create-draft-button').trigger('click'))
           .beforeEachResponse((_, { method, url }) => {
@@ -231,7 +226,7 @@ describe('FormHead', () => {
           .respondWithProblem());
 
       it('redirects to .../draft after a successful response', () =>
-        load('/projects/1/forms/f')
+        load('/projects/1/forms/f/settings')
           .complete()
           .request(app => app.get('#form-head-create-draft-button').trigger('click'))
           .respondWithSuccess()
@@ -246,7 +241,7 @@ describe('FormHead', () => {
           }));
 
       it('shows a danger alert after a Problem response', () =>
-        load('/projects/1/forms/f')
+        load('/projects/1/forms/f/settings')
           .complete()
           .request(app => app.get('#form-head-create-draft-button').trigger('click'))
           .beforeAnyResponse(app => {
@@ -255,29 +250,6 @@ describe('FormHead', () => {
           .respondWithProblem()
           .afterResponse(app => {
             app.should.alert('danger');
-          }));
-
-      it('shows a loading message during the request', () =>
-        load('/projects/1/forms/f')
-          .complete()
-          .request(app => app.get('#form-head-create-draft-button').trigger('click'))
-          .beforeAnyResponse(app => {
-            app.getComponent(Loading).should.be.visible();
-            app.getComponent(FormHead).should.be.hidden();
-            app.getComponent(FormOverview).element.parentNode.should.be.hidden();
-          })
-          .respondWithSuccess()
-          .respondFor('/projects/1/forms/f/draft', {
-            project: false,
-            form: false,
-            formAttachments: false,
-            formDraft: () =>
-              testData.extendedFormDrafts.createNew({ draft: true })
-          })
-          .afterResponses(app => {
-            app.getComponent(Loading).should.be.hidden();
-            app.getComponent(FormHead).should.be.visible();
-            app.getComponent(FormDraftStatus).should.be.visible();
           }));
     });
   });
