@@ -44,7 +44,7 @@ describe('DatasetPropertyNew', () => {
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/entity-lists/trees').testModalToggles({
+    load('/projects/1/entity-lists/trees/properties').testModalToggles({
       modal: DatasetPropertyNew,
       show: '#dataset-property-new-button',
       hide: '.btn-link'
@@ -77,7 +77,7 @@ describe('DatasetPropertyNew', () => {
 
   describe('after a successful response', () => {
     const submit = (newPropertyName) =>
-      load('/projects/1/entity-lists/trees')
+      load('/projects/1/entity-lists/trees/properties')
         .complete()
         .request(async (app) => {
           await app.get('#dataset-property-new-button').trigger('click');

@@ -44,6 +44,7 @@ afterEach(() => {
 
 afterEach(() => {
   sinon.restore();
+  window.scrollTo(0, 0);
   document.documentElement.setAttribute('lang', 'en');
   localStorage.clear();
   testData.reset();

@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
+import { last } from 'ramda';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
@@ -107,6 +108,31 @@ router.afterEach(unlessFailure(to => {
 
     await localePromise.catch(noop);
     return config.loadError != null ? '/load-error' : true;
+  });
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+  // REDIRECTS
+
+  // If a route is nested, its relative path is '', and that path is an alias,
+  // then we redirect to the canonical path. That turned out to be easier than
+  // using the `redirect` option of Vue Router.
+  router.beforeEach(to => {
+    if (to.matched.length === 1) return true;
+    const routeRecord = last(to.matched);
+    const { aliasOf } = routeRecord;
+    if (aliasOf == null || !aliasOf.path.startsWith(`${routeRecord.path}/`))
+      return true;
+    const redirect = aliasOf.path.replace(`${routeRecord.path}/`, '');
+    // This `if` should never be `true` given how we structure route paths. It's
+    // just here as a double-check.
+    if (!/^[\w-]+$/.test(redirect)) return true;
+    return {
+      path: `${to.path}/${redirect}`,
+      query: to.query,
+      hash: to.hash
+    };
   });
 
 

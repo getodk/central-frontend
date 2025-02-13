@@ -563,12 +563,12 @@ const routes = [
       `/projects/${projectId}/entity-lists/${encodeURIComponent(datasetName)}`,
     children: [
       asyncRoute({
-        path: '',
+        path: 'properties',
         component: 'DatasetOverview',
         props: true,
         loading: 'tab',
         meta: {
-          title: () => [dataset.name],
+          title: () => [i18n.t('resource.properties'), dataset.name],
           validateData: {
             project: () => project.permits('dataset.read')
           }
@@ -576,11 +576,12 @@ const routes = [
       }),
       asyncRoute({
         path: 'entities',
+        alias: '',
         component: 'DatasetEntities',
         props: true,
         loading: 'tab',
         meta: {
-          title: () => [i18n.t('common.data'), dataset.name],
+          title: () => [i18n.t('resource.entities'), dataset.name],
           validateData: {
             project: () => project.permits(['dataset.read', 'entity.list'])
           },
