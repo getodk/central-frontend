@@ -167,7 +167,7 @@ export abstract class InstanceNode<
 			);
 		}
 
-		return `${parent.contextReference()}/${definition.nodeName}`;
+		return `${parent.contextReference()}/${definition.localName}`;
 	};
 
 	// EvaluationContext: node-specific

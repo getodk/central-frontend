@@ -54,7 +54,7 @@ export class RepeatRangeDefinition extends DescendentNodeDefinition<
 	readonly count: RepeatCountControlExpression | null;
 
 	readonly node = null;
-	readonly nodeName: string;
+	readonly localName: string;
 	readonly defaultValue = null;
 
 	private constructor(
@@ -68,7 +68,7 @@ export class RepeatRangeDefinition extends DescendentNodeDefinition<
 		const { template, instanceNodes } = RepeatTemplateDefinition.parseModelNodes(this, modelNodes);
 
 		this.template = template;
-		this.nodeName = template.nodeName;
+		this.localName = template.localName;
 		this.count = RepeatCountControlExpression.from(bodyElement, instanceNodes.length);
 
 		assertRepeatRangeDefinitionUnion(this);

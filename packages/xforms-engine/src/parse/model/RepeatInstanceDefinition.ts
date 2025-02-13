@@ -9,7 +9,7 @@ export class RepeatInstanceDefinition extends DescendentNodeDefinition<
 > {
 	readonly type = 'repeat-instance';
 
-	readonly nodeName: string;
+	readonly localName: string;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -22,7 +22,7 @@ export class RepeatInstanceDefinition extends DescendentNodeDefinition<
 
 		super(parent, bind, bodyElement);
 
-		this.nodeName = range.nodeName;
+		this.localName = range.localName;
 		this.children = root.buildSubtree(this);
 	}
 

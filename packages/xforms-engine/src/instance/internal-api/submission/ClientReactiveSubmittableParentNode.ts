@@ -12,7 +12,7 @@ interface ClientReactiveSubmittableParentNodeCurrentState<
 }
 
 export interface ClientReactiveSubmittableParentNodeDefinition {
-	readonly nodeName: string;
+	readonly localName: string;
 }
 
 export interface ClientReactiveSubmittableParentNode<

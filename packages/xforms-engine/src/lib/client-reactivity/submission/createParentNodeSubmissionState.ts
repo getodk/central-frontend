@@ -16,7 +16,7 @@ export const createParentNodeSubmissionState = (
 				return child.submissionState.submissionXML;
 			});
 
-			return serializeParentElementXML(node.definition.nodeName, serializedChildren);
+			return serializeParentElementXML(node.definition.localName, serializedChildren);
 		},
 	};
 };

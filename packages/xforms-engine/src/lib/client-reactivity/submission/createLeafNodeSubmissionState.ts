@@ -14,7 +14,7 @@ export const createLeafNodeSubmissionState = <Value>(
 			const value = node.encodeValue(node.currentState.value);
 			const xmlValue = escapeXMLText(value);
 
-			return serializeLeafElementXML(node.definition.nodeName, xmlValue);
+			return serializeLeafElementXML(node.definition.localName, xmlValue);
 		},
 	};
 };

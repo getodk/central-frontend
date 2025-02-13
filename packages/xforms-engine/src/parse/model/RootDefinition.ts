@@ -15,7 +15,7 @@ import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 export class RootDefinition extends NodeDefinition<'root'> {
 	readonly type = 'root';
-	readonly nodeName: string;
+	readonly localName: string;
 	readonly bodyElement = null;
 	readonly root = this;
 	readonly parent = null;
@@ -34,20 +34,17 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		readonly submission: FormSubmissionDefinition,
 		readonly classes: BodyClassList
 	) {
-		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
-		// namespaced. It also may make more sense to determine the root nodeset
-		// earlier (i.e. in the appropriate definition class).
-		//
 		// TODO: while it's unlikely a form actually defines a <bind> for the root,
 		// if it did, bind nodesets are not yet normalized, so `/root` may currently
 		// be defined as `/ root` (or even `/ *` or any other valid expression
 		// resolving to the root).
 		const { primaryInstanceRoot } = form.xformDOM;
-		const { localName: rootNodeName } = primaryInstanceRoot;
+		const { localName } = primaryInstanceRoot;
 
-		const nodeName = rootNodeName;
-
-		const nodeset = `/${rootNodeName}`;
+		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
+		// namespaced. It also may make more sense to determine the root nodeset
+		// earlier (i.e. in the appropriate definition class).
+		const nodeset = `/${localName}`;
 		const bind = model.binds.get(nodeset);
 
 		if (bind == null) {
@@ -56,7 +53,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 
 		super(bind);
 
-		this.nodeName = nodeName;
+		this.localName = localName;
 		this.node = primaryInstanceRoot;
 
 		const attributes = Array.from(primaryInstanceRoot.attributes).map((attr) => {

@@ -57,7 +57,7 @@ export const getEngineXPathNodeLocalName = (node: EngineXPathNode): string => {
 			return '';
 
 		default:
-			return node.definition.nodeName;
+			return node.definition.localName;
 	}
 };
 

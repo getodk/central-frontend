@@ -115,7 +115,7 @@ export class RepeatTemplateDefinition extends DescendentNodeDefinition<
 	readonly type = 'repeat-template';
 
 	readonly node: Element;
-	readonly nodeName: string;
+	readonly localName: string;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -133,7 +133,7 @@ export class RepeatTemplateDefinition extends DescendentNodeDefinition<
 		node.removeAttributeNS(JAVAROSA_NAMESPACE_URI, 'template');
 
 		this.node = node;
-		this.nodeName = node.localName;
+		this.localName = node.localName;
 		this.children = root.buildSubtree(this);
 	}
 

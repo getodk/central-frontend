@@ -89,7 +89,7 @@ interface ElementXMLSerializationOptions {
 }
 
 const serializeElementXML = (
-	nodeName: string,
+	localName: string,
 	children: string,
 	options: ElementXMLSerializationOptions = {}
 ): string => {
@@ -105,27 +105,27 @@ const serializeElementXML = (
 				return attribute.serializeAttributeXML();
 			})
 			.join('') ?? '';
-	const prefix = `<${nodeName}${namespaceDeclarations}${attributes}`;
+	const prefix = `<${localName}${namespaceDeclarations}${attributes}`;
 
 	if (children === '') {
 		return `${prefix}/>`;
 	}
 
-	return `${prefix}>${children}</${nodeName}>`;
+	return `${prefix}>${children}</${localName}>`;
 };
 
 export const serializeParentElementXML = (
-	nodeName: string,
+	localName: string,
 	serializedChildren: readonly string[],
 	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(nodeName, serializedChildren.join(''), options);
+	return serializeElementXML(localName, serializedChildren.join(''), options);
 };
 
 export const serializeLeafElementXML = (
-	nodeName: string,
+	localName: string,
 	xmlValue: EscapedXMLText,
 	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(nodeName, xmlValue.normalize(), options);
+	return serializeElementXML(localName, xmlValue.normalize(), options);
 };

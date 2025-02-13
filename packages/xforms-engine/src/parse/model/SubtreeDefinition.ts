@@ -12,7 +12,7 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 > {
 	readonly type = 'subtree';
 
-	readonly nodeName: string;
+	readonly localName: string;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -34,7 +34,7 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 
 		const { root } = parent;
 
-		this.nodeName = node.localName;
+		this.localName = node.localName;
 		this.children = root.buildSubtree(this);
 	}
 

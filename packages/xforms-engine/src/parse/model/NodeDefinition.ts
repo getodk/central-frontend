@@ -85,7 +85,7 @@ export type ChildNodeInstanceDefinition =
 
 export abstract class NodeDefinition<Type extends NodeDefinitionType> {
 	abstract readonly type: Type;
-	abstract readonly nodeName: string;
+	abstract readonly localName: string;
 	abstract readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
 	abstract readonly isTranslated: boolean;
 	abstract readonly root: RootDefinition;

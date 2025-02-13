@@ -11,7 +11,7 @@ export class LeafNodeDefinition<V extends ValueType = ValueType> extends Descend
 	readonly type = 'leaf-node';
 	readonly valueType: V;
 
-	readonly nodeName: string;
+	readonly localName: string;
 	readonly children = null;
 	readonly instances = null;
 	readonly defaultValue: string;
@@ -29,7 +29,7 @@ export class LeafNodeDefinition<V extends ValueType = ValueType> extends Descend
 		super(parent, bind, bodyElement);
 
 		this.valueType = bind.type.resolved satisfies ValueType as V;
-		this.nodeName = node.localName;
+		this.localName = node.localName;
 		this.defaultValue = node.textContent ?? '';
 	}
 

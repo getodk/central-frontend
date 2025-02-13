@@ -13,7 +13,7 @@ interface ClientReactiveSubmittableLeafNodeCurrentState<RuntimeValue> {
 export type SerializedSubmissionValue = string;
 
 interface ClientReactiveSubmittableLeafNodeDefinition {
-	readonly nodeName: string;
+	readonly localName: string;
 }
 
 export interface ClientReactiveSubmittableLeafNode<RuntimeValue> {
