@@ -14,8 +14,7 @@ export const loadEntityList = (mountOptions = {}) => {
   const mergedOptions = mergeMountOptions(mountOptions, {
     props: {
       projectId: project.id.toString(),
-      datasetName: dataset.name,
-      top: EntityList.props.top.default
+      datasetName: dataset.name
     },
     container: {
       requestData: testRequestData([useEntities], {
@@ -23,10 +22,13 @@ export const loadEntityList = (mountOptions = {}) => {
         dataset
       }),
       router: mockRouter('')
+    },
+    global: {
+      provide: { projectId: project.id.toString(), datasetName: dataset.name }
     }
   });
-  const { top, deleted } = mergedOptions.props;
+  const { deleted } = mergedOptions.props;
   return mockHttp()
     .mount(EntityList, mergedOptions)
-    .respondWithData(() => (deleted ? testData.entityDeletedOData(top(0)) : testData.entityOData(top(0))));
+    .respondWithData(() => (deleted ? testData.entityDeletedOData() : testData.entityOData()));
 };

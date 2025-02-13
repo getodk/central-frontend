@@ -46,7 +46,7 @@ describe('FormDraftTesting', () => {
         root: false
       });
       const text = component.getComponent(SubmissionDownloadButton).text();
-      text.should.equal('Download 2 Submissions…');
+      text.should.equal('Download');
     });
 
     it('updates the draft checklist if the count changes', () => {
