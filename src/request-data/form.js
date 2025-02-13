@@ -28,7 +28,12 @@ export default () => {
   }));
   const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
   const formDatasetDiff = createResource('formDatasetDiff');
-  const publishedAttachments = createResource('publishedAttachments'); // Published Form attachments
+  // Published form attachments
+  const publishedAttachments = createResource('publishedAttachments', () => ({
+    linkedDatasets: computeIfExists(() => publishedAttachments
+      .filter(a => a.datasetExists)
+      .map(a => a.name.replace(/\.csv$/i, '')))
+  }));
 
   watchSyncEffect(() => {
     if (form.dataExists && publicLinks.dataExists &&

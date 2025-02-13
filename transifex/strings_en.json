@@ -897,10 +897,6 @@
     "noUndo": {
       "string": "This action cannot be undone."
     },
-    "rightNow": {
-      "string": "Right Now",
-      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
-    },
     "rowNumber": {
       "string": "Row",
       "developer_comment": "This is shown for the row number."
@@ -3192,6 +3188,19 @@
           "update": {
             "string": "If you are sure these problems can be ignored, click the button to update the Draft anyway:"
           }
+        }
+      }
+    },
+    "FormOverviewRightNow": {
+      "stateCaption": {
+        "open": {
+          "string": "This Form is downloadable and is accepting Submissions."
+        },
+        "closing": {
+          "string": "This Form is not downloadable but still accepts Submissions."
+        },
+        "closed": {
+          "string": "This Form is not downloadable and does not accept Submissions."
         }
       }
     },

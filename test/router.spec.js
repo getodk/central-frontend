@@ -123,7 +123,7 @@ describe('createCentralRouter()', () => {
   describe('redirects', () => {
     beforeEach(mockLogin);
 
-    it('redirects to .../submissions for forms', async () => {
+    it('redirects to .../submissions from root path of form', async () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/settings')
         .complete()

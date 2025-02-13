@@ -1203,7 +1203,7 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => {
             testData.extendedFormDrafts.publish(-1);
             testData.extendedDatasets.createPast(1, { name: 'trees' });
-            testData.extendedProjects.update(-1, { datasets: 1, updatedAt: null });
+            testData.extendedProjects.update(-1, { datasets: 2, updatedAt: null });
             return { success: true };
           })
           .respondWithData(() => testData.extendedForms.last())

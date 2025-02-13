@@ -15,7 +15,10 @@ except according to the terms contained in the LICENSE file.
       <span v-if="showIcon" class="icon-file"></span>
     </td>
     <td class="form-name">
-      <template v-if="canLinkToSubmissions">
+      <template v-if="canLinkToDraftStatus">
+        <form-link :form="form"/>
+      </template>
+      <template v-else-if="canLinkToSubmissions">
         <form-link :form="form" :to="submissionsPath.all"/>
       </template>
       <template v-else>
@@ -130,6 +133,9 @@ export default {
     };
   },
   computed: {
+    canLinkToDraftStatus() {
+      return this.form.publishedAt == null && this.project.permits('form.update');
+    },
     canLinkToSubmissions() {
       return this.project.permits('submission.list');
     },
