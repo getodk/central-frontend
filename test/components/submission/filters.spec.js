@@ -1,7 +1,5 @@
 import { DateTime, Settings } from 'luxon';
 
-import sinon from 'sinon';
-
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
 import SubmissionFilters from '../../../src/components/submission/filters.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
@@ -66,7 +64,7 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('(__system/submitterId eq 1 or __system/submitterId eq 2)');
+            filter.should.match(/__system\/submitterId eq 1 or __system\/submitterId eq 2/);
           }
         })
         .afterResponses(component => {
@@ -79,7 +77,7 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal("(__system/reviewState eq 'approved' or __system/reviewState eq null)");
+            filter.should.match(/__system\/reviewState eq 'approved' or __system\/reviewState eq null/);
           }
         })
         .afterResponses(component => {
@@ -92,7 +90,7 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           if (url.includes('.svc')) {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('__system/submissionDate ge 1970-01-01T00:00:00.000Z and __system/submissionDate le 1970-01-02T23:59:59.999Z');
+            filter.should.match(/__system\/submissionDate ge 1970-01-01T00:00:00.000Z and __system\/submissionDate le 1970-01-02T23:59:59.999Z/);
           }
         })
         .afterResponses(component => {
@@ -133,8 +131,9 @@ describe('SubmissionFilters', () => {
         it(`does not filter if the query string is ?${queryString}`, () =>
           loadComponent(queryString)
             .beforeEachResponse((_, { url }) => {
+              // we have default filters for submissionDate and deletedAt
               if (url.includes('.svc'))
-                relativeUrl(url).searchParams.has('$filter').should.be.false;
+                relativeUrl(url).searchParams.get('$filter').split(' and ').length.should.be.eql(2);
             })
             .afterResponses(component => {
               const filters = component.getComponent(SubmissionFilters).props();
@@ -164,7 +163,7 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           const filter = relativeUrl(url).searchParams.get('$filter');
           const { id } = testData.extendedFieldKeys.first();
-          filter.should.equal(`(__system/submitterId eq ${id})`);
+          filter.should.include(`(__system/submitterId eq ${id})`);
         })
         .respondWithData(() => ({
           ...testData.submissionOData(1),
@@ -185,21 +184,21 @@ describe('SubmissionFilters', () => {
           submitterId.should.eql([id.toString()]);
         }));
 
-    it('re-renders the table', () =>
-      loadComponent({ props: { top: () => 2 }, attachTo: document.body })
+    it('re-renders the table', () => {
+      testData.extendedSubmissions.createPast(250);
+      return loadComponent({ attachTo: document.body })
         .complete()
         .request(component => {
-          sinon.replace(component.vm, 'scrolledToBottom', () => true);
-          document.dispatchEvent(new Event('scroll'));
+          component.get('button[aria-label="Next page"]').trigger('click');
         })
-        .respondWithData(() => testData.submissionOData(2, 2))
+        .respondWithData(() => testData.submissionOData(250, 250))
         .afterResponse(component => {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
         })
         .request(changeMultiselect('#submission-filters-submitter', [0]))
         .beforeEachResponse((component, { url }) => {
           component.findComponent(SubmissionMetadataRow).exists().should.be.false;
-          relativeUrl(url).searchParams.has('$skiptoken').should.be.false;
+          relativeUrl(url).searchParams.get('$skip').should.be.eql('0');
         })
         .respondWithData(() => ({
           ...testData.submissionOData(1),
@@ -207,7 +206,8 @@ describe('SubmissionFilters', () => {
         }))
         .afterResponse(component => {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(1);
-        }));
+        });
+    });
 
     it('allows multiple submitters to be selected', () =>
       loadComponent({ attachTo: document.body })
@@ -217,7 +217,7 @@ describe('SubmissionFilters', () => {
           const filter = relativeUrl(url).searchParams.get('$filter');
           const id0 = testData.extendedFieldKeys.get(0).id;
           const id1 = testData.extendedFieldKeys.get(1).id;
-          filter.should.equal(`(__system/submitterId eq ${id0} or __system/submitterId eq ${id1})`);
+          filter.should.include(`(__system/submitterId eq ${id0} or __system/submitterId eq ${id1})`);
         })
         .respondWithData(() => ({
           ...testData.submissionOData(2),
@@ -240,14 +240,13 @@ describe('SubmissionFilters', () => {
           ]);
         })
         .beforeEachResponse((_, { url }) => {
-          const match = url.match(/&%24filter=__system%2FsubmissionDate\+ge\+([^+]+)\+and\+__system%2FsubmissionDate\+le\+([^&]+)(&|$)/);
-          should.exist(match);
+          const filters = new URL(url, window.location.origin).searchParams.get('$filter').split(' and ');
 
-          const start = decodeURIComponent(match[1]);
+          const start = filters[0].split(' ge ')[1];
           start.should.equal('1970-01-01T00:00:00.000Z');
           DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
 
-          const end = decodeURIComponent(match[2]);
+          const end = filters[1].split(' le ')[1];
           end.should.equal('1970-01-02T23:59:59.999Z');
           DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
         })
@@ -281,7 +280,7 @@ describe('SubmissionFilters', () => {
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeEachResponse((_, { url }) => {
           const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.equal("(__system/reviewState eq 'hasIssues')");
+          filter.should.include("(__system/reviewState eq 'hasIssues')");
         })
         .respondWithData(testData.submissionOData));
 
@@ -300,9 +299,41 @@ describe('SubmissionFilters', () => {
         .request(changeMultiselect('#submission-filters-review-state', [0, 1]))
         .beforeEachResponse((_, { url }) => {
           const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.equal("(__system/reviewState eq null or __system/reviewState eq 'hasIssues')");
+          filter.should.match(/__system\/reviewState eq null or __system\/reviewState eq 'hasIssues'/);
         })
         .respondWithData(testData.submissionOData));
+  });
+
+  it('specifies the default filters', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 2 });
+    const fieldKeys = createFieldKeys(2);
+    testData.extendedSubmissions
+      .createPast(1, { submitter: fieldKeys[1] })
+      .createPast(1, { submitter: fieldKeys[0] });
+    return loadComponent({ attachTo: document.body })
+      .beforeEachResponse((_, { url }) => {
+        if (url.includes('.svc')) {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.match(/^__system\/submissionDate le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)$/);
+        }
+      })
+      .complete();
+  });
+
+  it('specifies the default filters for deleted', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 2 });
+    const fieldKeys = createFieldKeys(2);
+    testData.extendedSubmissions
+      .createPast(1, { submitter: fieldKeys[1] })
+      .createPast(1, { submitter: fieldKeys[0] });
+    return loadComponent({ attachTo: document.body, props: { deleted: true } })
+      .beforeEachResponse((_, { url }) => {
+        if (url.includes('.svc')) {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.match(/^__system\/deletedAt le \S+$/);
+        }
+      })
+      .complete();
   });
 
   it('specifies the filters together', () => {
@@ -330,7 +361,7 @@ describe('SubmissionFilters', () => {
       .request(changeMultiselect('#submission-filters-review-state', [0]))
       .beforeEachResponse((_, { url }) => {
         const filter = relativeUrl(url).searchParams.get('$filter');
-        filter.should.match(/^\(__system\/submitterId eq \d+\) and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)$/);
+        filter.should.match(/^\(__system\/submitterId eq \d+\) and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)/);
       })
       .respondWithData(() => ({ value: [], '@odata.count': 0 }))
       .afterResponse(component => {
@@ -381,86 +412,6 @@ describe('SubmissionFilters', () => {
       .afterResponse(app => {
         app.vm.$container.requestData.form.submissions.should.equal(2);
       });
-  });
-
-  describe('loading message', () => {
-    const createData = (submissionCount) => {
-      testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
-      testData.extendedForms.createPast(1, { submissions: submissionCount });
-      const fieldKey = testData.extendedFieldKeys.createPast(1).last();
-      testData.extendedSubmissions.createPast(submissionCount, {
-        reviewState: null,
-        submitter: fieldKey
-      });
-    };
-
-    it('shows the correct message for the first chunk', () => {
-      createData(3);
-      return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
-        .complete()
-        .request(changeMultiselect('#submission-filters-review-state', [0]))
-        .beforeEachResponse(component => {
-          const text = component.get('#odata-loading-message-text').text();
-          text.trim().should.equal('Loading matching Submissions…');
-        })
-        .respondWithData(() => testData.submissionOData(2, 0));
-    });
-
-    it('shows the correct message for the second chunk', () => {
-      createData(5);
-      return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
-        .complete()
-        .request(changeMultiselect('#submission-filters-review-state', [0]))
-        .respondWithData(() => testData.submissionOData(2, 0))
-        .complete()
-        .request(component => {
-          sinon.replace(component.vm, 'scrolledToBottom', () => true);
-          document.dispatchEvent(new Event('scroll'));
-        })
-        .beforeEachResponse(component => {
-          const text = component.get('#odata-loading-message-text').text();
-          text.trim().should.equal('Loading 2 more of 3 remaining matching Submissions…');
-        })
-        .respondWithData(() => testData.submissionOData(2, 2));
-    });
-
-    describe('last chunk', () => {
-      it('shows correct message if there is one submission remaining', () => {
-        createData(3);
-        return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
-          .complete()
-          .request(changeMultiselect('#submission-filters-review-state', [0]))
-          .respondWithData(() => testData.submissionOData(2, 0))
-          .complete()
-          .request(component => {
-            sinon.replace(component.vm, 'scrolledToBottom', () => true);
-            document.dispatchEvent(new Event('scroll'));
-          })
-          .beforeEachResponse(component => {
-            const text = component.get('#odata-loading-message-text').text();
-            text.trim().should.equal('Loading the last matching Submission…');
-          })
-          .respondWithData(() => testData.submissionOData(2, 2));
-      });
-
-      it('shows correct message if there is are multiple submissions remaining', () => {
-        createData(4);
-        return loadComponent({ props: { top: () => 2 }, attachTo: document.body })
-          .complete()
-          .request(changeMultiselect('#submission-filters-review-state', [0]))
-          .respondWithData(() => testData.submissionOData(2, 0))
-          .complete()
-          .request(component => {
-            sinon.replace(component.vm, 'scrolledToBottom', () => true);
-            document.dispatchEvent(new Event('scroll'));
-          })
-          .beforeEachResponse(component => {
-            const text = component.get('#odata-loading-message-text').text();
-            text.trim().should.equal('Loading the last 2 matching Submissions…');
-          })
-          .respondWithData(() => testData.submissionOData(2, 2));
-      });
-    });
   });
 
   it('disables all filters', () => {

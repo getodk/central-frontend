@@ -392,7 +392,12 @@ describe('EntityUpload', () => {
       upload().testRequests([
         null,
         {
-          url: '/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true'
+          url: ({ pathname, searchParams }) => {
+            pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
+            searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+            searchParams.get('$top').should.be.eql('250');
+            searchParams.get('$count').should.be.eql('true');
+          }
         }
       ]));
 
@@ -409,8 +414,13 @@ describe('EntityUpload', () => {
     it('resets the filter', () =>
       upload('?conflict=true').beforeEachResponse((app, { url }, i) => {
         if (i === 0) return;
-        // There should be no $filter query parameter.
-        url.should.equal('/v1/projects/1/datasets/trees.svc/Entities?%24top=250&%24count=true');
+        // There should be only snapshot $filter query parameter.
+        const { pathname, searchParams } = relativeUrl(url);
+        pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
+        searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+        searchParams.get('$top').should.be.eql('250');
+        searchParams.get('$count').should.be.eql('true');
+
         app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
         const filters = app.getComponent(EntityFilters).props();
         filters.conflict.should.eql([true, false]);
