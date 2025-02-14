@@ -1,16 +1,21 @@
 import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME, XPathNodeKindKey } from '@getodk/xpath';
+import { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EngineDOMAdapter } from '../adapter/engineDOMAdapter.ts';
 import type { XFormsXPathElement } from '../adapter/XFormsXPathNode.ts';
 import { StaticAttribute } from './StaticAttribute.ts';
-import type { StaticNamedNodeOptions } from './StaticNamedNode.ts';
-import { StaticNamedNode } from './StaticNamedNode.ts';
+import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticChildNode, StaticParentNode } from './StaticNode.ts';
+import { StaticNode } from './StaticNode.ts';
 
 export type StaticElementAttributesFactory = (element: StaticElement) => readonly StaticAttribute[];
 
 export type StaticElementChildNodesFactory = (element: StaticElement) => readonly StaticChildNode[];
 
-export interface StaticElementOptions extends StaticNamedNodeOptions {}
+export interface StaticElementOptions {
+	readonly namespaceURI: string | null;
+	readonly prefix?: string | null;
+	readonly localName: string;
+}
 
 type StaticElementKnownAttributeValue<
 	T extends StaticElement,
@@ -34,7 +39,7 @@ const assertStaticElementKnownAttributeValue: AssertStaticElementKnownAttributeV
 };
 
 export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
-	extends StaticNamedNode<'element'>
+	extends StaticNode<'element'>
 	implements XFormsXPathElement
 {
 	readonly [XFORMS_LOCAL_NAME]?: string;
@@ -42,25 +47,33 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 
 	readonly [XPathNodeKindKey] = 'element';
 	readonly nodeType = 'static-element';
+	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
+	readonly qualifiedName: QualifiedName;
 	readonly attributes: readonly StaticAttribute[];
 	readonly children: readonly StaticChildNode[];
+	readonly value = null;
 
 	constructor(
-		parent: Parent,
+		readonly parent: Parent,
 		attributesFactory: StaticElementAttributesFactory,
 		childNodesFactory: StaticElementChildNodesFactory,
 		options: StaticElementOptions
 	) {
-		super(parent, options);
+		super();
+
+		const { rootDocument } = parent;
+
+		this.rootDocument = rootDocument;
 
 		// Account for the fact that we may be constructing the document root!
-		if (parent === this.rootDocument) {
+		if (parent === rootDocument) {
 			this.root = this;
 		} else {
 			this.root = parent.root;
 		}
 
+		this.qualifiedName = new QualifiedName(options);
 		this.attributes = attributesFactory(this);
 		this.children = childNodesFactory(this);
 	}
@@ -73,7 +86,7 @@ export class StaticElement<Parent extends StaticParentNode = StaticParentNode>
 	protected getAttributeNode(localName: string): StaticAttribute | null {
 		return (
 			this.attributes.find((attribute) => {
-				return attribute.localName === localName;
+				return attribute.qualifiedName.localName === localName;
 			}) ?? null
 		);
 	}

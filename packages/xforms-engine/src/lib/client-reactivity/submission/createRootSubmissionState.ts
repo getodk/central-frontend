@@ -10,9 +10,9 @@ export const createRootSubmissionState = (node: Root): SubmissionState => {
 				return child.submissionState.submissionXML;
 			});
 
-			return serializeParentElementXML(node.definition.localName, serializedChildren, {
+			return serializeParentElementXML(node.definition.qualifiedName, serializedChildren, {
 				namespaceDeclarations,
-				attributes,
+				attributes: Array.from(attributes.values()),
 			});
 		},
 	};

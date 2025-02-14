@@ -15,49 +15,54 @@ import {
 	XHTML_NAMESPACE_URI,
 } from '@getodk/common/constants/xmlns.ts';
 import { XPathFunctionalityNotSupportedError } from '../../../error/XPathFunctionalityNotSupportedError.ts';
-import type { InstanceNode } from '../../../instance/abstract/InstanceNode.ts';
-import type { StaticNode } from '../static-dom/StaticNode.ts';
+import type { AnyStaticNode } from '../static-dom/StaticNode.ts';
 import type { EngineXPathNode } from './kind.ts';
-import type { getNamespaceDeclarations } from './traversal.ts';
 
 export const getEngineXPathNodeNamespaceURI = (node: EngineXPathNode): string | null => {
 	switch (node.nodeType) {
 		case 'primary-instance':
+		case 'static-document':
 		case 'static-text':
+		case 'repeat-range:controlled':
+		case 'repeat-range:uncontrolled':
 			return null;
 
 		case 'static-attribute':
 		case 'static-element':
-			return node.namespaceURI;
+			return node.qualifiedName.namespaceURI?.href ?? null;
 
 		default:
-			return XFORMS_NAMESPACE_URI;
+			return node.definition.qualifiedName.namespaceURI?.href ?? null;
 	}
 };
 
-/**
- * @todo currently, neither {@link InstanceNode} nor {@link StaticNode} account
- * for prefixes in qualified names. This was already a general enough gap that
- * it makes sense to defer to a broader solution as it becomes a priority
- * (likely prompted by a bug report about unexpected behavior of the XPath
- * `name` function).
- */
 export const getEngineXPathNodeQualifiedName = (node: EngineXPathNode): string => {
-	return getEngineXPathNodeLocalName(node);
-};
-
-export const getEngineXPathNodeLocalName = (node: EngineXPathNode): string => {
 	switch (node.nodeType) {
 		case 'static-attribute':
 		case 'static-element':
-			return node.localName;
+			return node.qualifiedName.getPrefixedName();
 
 		case 'static-document':
 		case 'static-text':
 			return '';
 
 		default:
-			return node.definition.localName;
+			return node.definition.qualifiedName.getPrefixedName();
+	}
+};
+
+export const getEngineXPathNodeLocalName = (node: EngineXPathNode): string => {
+	switch (node.nodeType) {
+		case 'static-attribute':
+		case 'static-element':
+			return node.qualifiedName.localName;
+
+		case 'static-document':
+		case 'static-text':
+			return '';
+
+		default:
+			return node.definition.qualifiedName.localName;
 	}
 };
 
@@ -65,9 +70,23 @@ export const getEngineProcessingInstructionName =
 	XPathFunctionalityNotSupportedError.createStubImplementation('processing-instruction');
 
 /**
- * @todo @see {@link getNamespaceDeclarations}
+ * @todo in most cases we should not have **custom** namespace resolution from a
+ * static node (e.g. external secondary instance, itext translation) context.
+ * The main exception to that would be _XML external secondary instances_, which
+ * of course can declare arbitrary namespaces on any arbitrary subtree, just
+ * like a form definition's XML. In all other cases, we'd want to resolve a
+ * prefix here from the _primary instance_ context. However, we don't (yet) have
+ * access to the primary instance context from a static node. So we currently
+ * fall back to the previous (incomplete/potentially wrong) default mapping.
+ *
+ * Note that this is relatively safe for the general case, and only potentially
+ * wrong for:
+ *
+ * 1. Forms authored as XML, with arbitrary/non-default namespace declarations
+ * 2. XML external secondary instances, also with arbitrary/non-default
+ *    namespace declarations
  */
-export const resolveEngineXPathNodeNamespaceURI = (_: EngineXPathNode, prefix: string | null) => {
+const resolveNamespaceURIFromStaticNodeContext = (_: AnyStaticNode, prefix: string | null) => {
 	switch (prefix) {
 		case null:
 			return XFORMS_NAMESPACE_URI;
@@ -95,5 +114,35 @@ export const resolveEngineXPathNodeNamespaceURI = (_: EngineXPathNode, prefix: s
 
 		default:
 			return null;
+	}
+};
+
+export const resolveEngineXPathNodeNamespaceURI = (
+	node: EngineXPathNode,
+	prefix: string | null
+): string | null => {
+	switch (node.nodeType) {
+		case 'static-attribute':
+		case 'static-document':
+		case 'static-element':
+		case 'static-text':
+			return resolveNamespaceURIFromStaticNodeContext(node, prefix);
+
+		case 'group':
+		case 'input':
+		case 'model-value':
+		case 'note':
+		case 'primary-instance':
+		case 'range':
+		case 'rank':
+		case 'repeat-instance':
+		case 'repeat-range:controlled':
+		case 'repeat-range:uncontrolled':
+		case 'root':
+		case 'select':
+		case 'subtree':
+		case 'trigger':
+		case 'upload':
+			return node.definition.namespaceDeclarations.get(prefix)?.declaredURI?.href ?? null;
 	}
 };

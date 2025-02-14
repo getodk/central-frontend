@@ -1,4 +1,5 @@
 import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EscapedXMLText } from '../../../lib/xml-serialization.ts';
 import type {
 	ClientReactiveSubmittableChildNode,
@@ -13,7 +14,7 @@ interface ClientReactiveSubmittableLeafNodeCurrentState<RuntimeValue> {
 export type SerializedSubmissionValue = string;
 
 interface ClientReactiveSubmittableLeafNodeDefinition {
-	readonly localName: string;
+	readonly qualifiedName: QualifiedName;
 }
 
 export interface ClientReactiveSubmittableLeafNode<RuntimeValue> {

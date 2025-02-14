@@ -5,7 +5,7 @@ import { escapeXMLText, serializeLeafElementXML } from '../../xml-serialization.
 export const createValueNodeSubmissionState = (
 	node: ClientReactiveSubmittableValueNode
 ): SubmissionState => {
-	const { localName } = node.definition;
+	const { qualifiedName } = node.definition;
 
 	return {
 		get submissionXML() {
@@ -15,7 +15,7 @@ export const createValueNodeSubmissionState = (
 
 			const xmlValue = escapeXMLText(node.currentState.instanceValue);
 
-			return serializeLeafElementXML(localName, xmlValue);
+			return serializeLeafElementXML(qualifiedName, xmlValue);
 		},
 	};
 };

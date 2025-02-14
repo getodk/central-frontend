@@ -1,4 +1,6 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
+import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
@@ -115,7 +117,8 @@ export class RepeatTemplateDefinition extends DescendentNodeDefinition<
 	readonly type = 'repeat-template';
 
 	readonly node: Element;
-	readonly localName: string;
+	readonly namespaceDeclarations: NamespaceDeclarationMap;
+	readonly qualifiedName: QualifiedName;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -133,7 +136,8 @@ export class RepeatTemplateDefinition extends DescendentNodeDefinition<
 		node.removeAttributeNS(JAVAROSA_NAMESPACE_URI, 'template');
 
 		this.node = node;
-		this.localName = node.localName;
+		this.qualifiedName = new QualifiedName(node);
+		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
 		this.children = root.buildSubtree(this);
 	}
 

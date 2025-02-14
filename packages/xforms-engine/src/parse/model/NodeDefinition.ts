@@ -1,3 +1,8 @@
+import type {
+	NamedSubtreeDefinition,
+	NamespaceDeclarationMap,
+} from '../../lib/names/NamespaceDeclarationMap.ts';
+import type { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
@@ -83,9 +88,12 @@ export type ChildNodeInstanceDefinition =
 	| SubtreeDefinition
 	| LeafNodeDefinition;
 
-export abstract class NodeDefinition<Type extends NodeDefinitionType> {
+export abstract class NodeDefinition<Type extends NodeDefinitionType>
+	implements NamedSubtreeDefinition
+{
 	abstract readonly type: Type;
-	abstract readonly localName: string;
+	abstract readonly namespaceDeclarations: NamespaceDeclarationMap;
+	abstract readonly qualifiedName: QualifiedName;
 	abstract readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
 	abstract readonly isTranslated: boolean;
 	abstract readonly root: RootDefinition;

@@ -1,3 +1,5 @@
+import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
+import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { RepeatCountControlExpression } from '../expression/RepeatCountControlExpression.ts';
 import type { BindDefinition } from './BindDefinition.ts';
@@ -54,7 +56,8 @@ export class RepeatRangeDefinition extends DescendentNodeDefinition<
 	readonly count: RepeatCountControlExpression | null;
 
 	readonly node = null;
-	readonly localName: string;
+	readonly namespaceDeclarations: NamespaceDeclarationMap;
+	readonly qualifiedName: QualifiedName;
 	readonly defaultValue = null;
 
 	private constructor(
@@ -68,7 +71,8 @@ export class RepeatRangeDefinition extends DescendentNodeDefinition<
 		const { template, instanceNodes } = RepeatTemplateDefinition.parseModelNodes(this, modelNodes);
 
 		this.template = template;
-		this.localName = template.localName;
+		this.qualifiedName = template.qualifiedName;
+		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
 		this.count = RepeatCountControlExpression.from(bodyElement, instanceNodes.length);
 
 		assertRepeatRangeDefinitionUnion(this);

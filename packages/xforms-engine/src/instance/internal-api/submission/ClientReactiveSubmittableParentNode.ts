@@ -1,4 +1,5 @@
 import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 
 export interface ClientReactiveSubmittableChildNode {
 	readonly submissionState: SubmissionState;
@@ -12,7 +13,7 @@ interface ClientReactiveSubmittableParentNodeCurrentState<
 }
 
 export interface ClientReactiveSubmittableParentNodeDefinition {
-	readonly localName: string;
+	readonly qualifiedName: QualifiedName;
 }
 
 export interface ClientReactiveSubmittableParentNode<

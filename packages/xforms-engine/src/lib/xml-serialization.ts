@@ -1,3 +1,6 @@
+import type { NamespaceDeclarationMap } from './names/NamespaceDeclarationMap.ts';
+import type { QualifiedName } from './names/QualifiedName.ts';
+
 declare const ESCAPED_XML_TEXT_BRAND: unique symbol;
 
 export type EscapedXMLText = string & { readonly [ESCAPED_XML_TEXT_BRAND]: true };
@@ -75,57 +78,86 @@ export const escapeXMLText = <Text extends string>(
 		: (out as EscapedXMLText);
 };
 
-interface SerializableNamespaceDeclaration {
-	serializeNamespaceDeclarationXML(): string;
-}
-
 interface SerializableElementAttribute {
 	serializeAttributeXML(): string;
 }
 
 interface ElementXMLSerializationOptions {
-	readonly namespaceDeclarations?: readonly SerializableNamespaceDeclaration[];
+	readonly namespaceDeclarations?: NamespaceDeclarationMap;
 	readonly attributes?: readonly SerializableElementAttribute[];
 }
 
+const serializeElementNamespaceDeclarationXML = (
+	namespaceDeclarations?: NamespaceDeclarationMap
+): string => {
+	if (namespaceDeclarations == null) {
+		return '';
+	}
+
+	return Array.from(namespaceDeclarations.values())
+		.map((namespaceDeclaration) => {
+			return namespaceDeclaration.serializeNamespaceDeclarationXML({
+				omitDefaultNamespace: true,
+			});
+		})
+		.join('');
+};
+
+const serializeElementAttributeXML = (
+	attributes?: readonly SerializableElementAttribute[]
+): string => {
+	if (attributes == null) {
+		return '';
+	}
+
+	return attributes
+		.map((attribute) => {
+			return attribute.serializeAttributeXML();
+		})
+		.join('');
+};
+
 const serializeElementXML = (
-	localName: string,
+	qualifiedName: QualifiedName,
 	children: string,
 	options: ElementXMLSerializationOptions = {}
 ): string => {
-	const namespaceDeclarations =
+	// See JSDoc for the `getPrefixedName` method. If we find we do actually need
+	// custom element (subtree) prefix resolution, we'd uncomment the argument
+	// below. (Either way, at time of writing the affected tests pass where
+	// expected when the option is passed. It's omitted on the presumption that it
+	// would be redundant, since the nodes being serialized are already resolved
+	// with the same set of namespace declarations which would affect them.)
+	//
+	// prettier-ignore
+	const nodeName = qualifiedName.getPrefixedName(
+		// options.namespaceDeclarations
+	);
+	const namespaceDeclarations = serializeElementNamespaceDeclarationXML(
 		options.namespaceDeclarations
-			?.map((namespaceDeclaration) => {
-				return namespaceDeclaration.serializeNamespaceDeclarationXML();
-			})
-			.join('') ?? '';
-	const attributes =
-		options.attributes
-			?.map((attribute) => {
-				return attribute.serializeAttributeXML();
-			})
-			.join('') ?? '';
-	const prefix = `<${localName}${namespaceDeclarations}${attributes}`;
+	);
+	const attributes = serializeElementAttributeXML(options.attributes);
+	const prefix = `<${nodeName}${namespaceDeclarations}${attributes}`;
 
 	if (children === '') {
 		return `${prefix}/>`;
 	}
 
-	return `${prefix}>${children}</${localName}>`;
+	return `${prefix}>${children}</${nodeName}>`;
 };
 
 export const serializeParentElementXML = (
-	localName: string,
+	qualifiedName: QualifiedName,
 	serializedChildren: readonly string[],
 	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(localName, serializedChildren.join(''), options);
+	return serializeElementXML(qualifiedName, serializedChildren.join(''), options);
 };
 
 export const serializeLeafElementXML = (
-	localName: string,
+	qualifiedName: QualifiedName,
 	xmlValue: EscapedXMLText,
 	options?: ElementXMLSerializationOptions
 ): string => {
-	return serializeElementXML(localName, xmlValue.normalize(), options);
+	return serializeElementXML(qualifiedName, xmlValue.normalize(), options);
 };

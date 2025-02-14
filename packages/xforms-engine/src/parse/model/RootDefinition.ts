@@ -1,3 +1,5 @@
+import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
+import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import type { FormSubmissionDefinition } from './FormSubmissionDefinition.ts';
@@ -8,19 +10,17 @@ import { NodeDefinition } from './NodeDefinition.ts';
 import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RangeNodeDefinition } from './RangeNodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
-import { RootAttributeDefinition } from './RootAttributeDefinition.ts';
-import type { RootNamespaceDeclaration } from './RootNamespaceDeclaration.ts';
-import { RootNamespaceDeclarations } from './RootNamespaceDeclarations.ts';
+import { RootAttributeMap } from './RootAttributeMap.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 export class RootDefinition extends NodeDefinition<'root'> {
 	readonly type = 'root';
-	readonly localName: string;
+	readonly qualifiedName: QualifiedName;
 	readonly bodyElement = null;
 	readonly root = this;
 	readonly parent = null;
-	readonly namespaceDeclarations: readonly RootNamespaceDeclaration[];
-	readonly attributes: readonly RootAttributeDefinition[];
+	readonly namespaceDeclarations: NamespaceDeclarationMap;
+	readonly attributes: RootAttributeMap;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly node: Element;
@@ -34,17 +34,14 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		readonly submission: FormSubmissionDefinition,
 		readonly classes: BodyClassList
 	) {
-		// TODO: while it's unlikely a form actually defines a <bind> for the root,
-		// if it did, bind nodesets are not yet normalized, so `/root` may currently
-		// be defined as `/ root` (or even `/ *` or any other valid expression
-		// resolving to the root).
 		const { primaryInstanceRoot } = form.xformDOM;
-		const { localName } = primaryInstanceRoot;
+		const qualifiedName = new QualifiedName(primaryInstanceRoot);
+		const nodeName = qualifiedName.getPrefixedName();
 
 		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
 		// namespaced. It also may make more sense to determine the root nodeset
 		// earlier (i.e. in the appropriate definition class).
-		const nodeset = `/${localName}`;
+		const nodeset = `/${nodeName}`;
 		const bind = model.binds.get(nodeset);
 
 		if (bind == null) {
@@ -53,17 +50,10 @@ export class RootDefinition extends NodeDefinition<'root'> {
 
 		super(bind);
 
-		this.localName = localName;
+		this.qualifiedName = qualifiedName;
 		this.node = primaryInstanceRoot;
-
-		const attributes = Array.from(primaryInstanceRoot.attributes).map((attr) => {
-			return new RootAttributeDefinition(attr);
-		});
-		const namespaceDeclarationMap = new RootNamespaceDeclarations(primaryInstanceRoot, attributes);
-
-		this.attributes = attributes;
-		this.namespaceDeclarations = Array.from(namespaceDeclarationMap.values());
-
+		this.attributes = RootAttributeMap.from(this, primaryInstanceRoot);
+		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
 		this.children = this.buildSubtree(this);
 	}
 
@@ -77,13 +67,13 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		const childrenByName = new Map<string, [Element, ...Element[]]>();
 
 		for (const child of node.children) {
-			const { localName } = child;
+			const { nodeName } = child;
 
-			let elements = childrenByName.get(localName);
+			let elements = childrenByName.get(nodeName);
 
 			if (elements == null) {
 				elements = [child];
-				childrenByName.set(localName, elements);
+				childrenByName.set(nodeName, elements);
 			} else {
 				// TODO: check if previous element exists, was it previous element
 				// sibling. Highly likely this should otherwise fail!
@@ -91,8 +81,8 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			}
 		}
 
-		return Array.from(childrenByName).map(([localName, children]) => {
-			const nodeset = `${parentNodeset}/${localName}`;
+		return Array.from(childrenByName).map(([nodeName, children]) => {
+			const nodeset = `${parentNodeset}/${nodeName}`;
 			const bind = binds.getOrCreateBindDefinition(nodeset);
 			const bodyElement = body.getBodyElement(nodeset);
 			const [firstChild, ...restChildren] = children;

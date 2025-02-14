@@ -1,3 +1,5 @@
+import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
+import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { ChildNodeDefinition } from './NodeDefinition.ts';
@@ -9,7 +11,8 @@ export class RepeatInstanceDefinition extends DescendentNodeDefinition<
 > {
 	readonly type = 'repeat-instance';
 
-	readonly localName: string;
+	readonly namespaceDeclarations: NamespaceDeclarationMap;
+	readonly qualifiedName: QualifiedName;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -22,7 +25,8 @@ export class RepeatInstanceDefinition extends DescendentNodeDefinition<
 
 		super(parent, bind, bodyElement);
 
-		this.localName = range.localName;
+		this.qualifiedName = new QualifiedName(node);
+		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
 		this.children = root.buildSubtree(this);
 	}
 
