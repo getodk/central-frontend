@@ -314,7 +314,8 @@ class MockHttp {
     mount = null,
     request = null,
     // Array of response callbacks
-    responses = [],
+    orderedResponses = [],
+    respondIf = [],
     beforeAnyResponse = null,
     beforeEachResponse = null
   } = {}) {
@@ -323,7 +324,8 @@ class MockHttp {
     this._location = location;
     this._mount = mount;
     this._request = request;
-    this._responses = responses;
+    this._orderedResponses = orderedResponses;
+    this._respondIf = respondIf;
     this._beforeAnyResponse = beforeAnyResponse;
     this._beforeEachResponse = beforeEachResponse;
   }
@@ -335,7 +337,8 @@ class MockHttp {
       location: this._location,
       mount: this._mount,
       request: this._request,
-      responses: this._responses,
+      orderedResponses: this._orderedResponses,
+      respondIf: this._respondIf,
       beforeAnyResponse: this._beforeAnyResponse,
       beforeEachResponse: this._beforeEachResponse,
       ...options
@@ -411,7 +414,9 @@ class MockHttp {
   // `callback` must return a response object (specifically, an object with
   // `status` and `data` properties).
   respond(callback) {
-    return this._with({ responses: [...this._responses, callback] });
+    return this._with({
+      orderedResponses: [...this._orderedResponses, callback]
+    });
   }
 
   respondWithData(callback) {
@@ -424,6 +429,12 @@ class MockHttp {
 
   respondWithProblem(problemOrCode = 500.1) {
     return this.respond(() => mockResponse.problem(problemOrCode));
+  }
+
+  respondIf(f, responseCallback) {
+    return this._with({
+      respondIf: [...this._respondIf, [f, responseCallback]]
+    });
   }
 
   restoreSession(restore = true) {
@@ -440,13 +451,20 @@ class MockHttp {
   // respondForComponent() responds with all the responses expected for the
   // specified component. This method is used in respondFor() and elsewhere, but
   // it is rarely used directly in tests.
-  respondForComponent(component, options = undefined) {
-    return requestDataByComponent(component.name).responses.reduce(
-      (series, [name, callback]) => {
-        const option = options != null ? options[name] : null;
+  respondForComponent(name, options = undefined) {
+    return requestDataByComponent(name).responses.reduce(
+      (series, [resourceName, response]) => {
+        const option = options != null ? options[resourceName] : null;
         if (option === false) return series;
-        return series.respond(() =>
-          (option != null ? mockResponse.of(option()) : callback()));
+        if (typeof response === 'function')
+          return series.respond(() => mockResponse.of((option ?? response)()));
+        if (Array.isArray(response)) {
+          return series.respondIf(
+            response[0],
+            () => mockResponse.of((option ?? response[1])())
+          );
+        }
+        throw new Error('invalid response for component');
       },
       this
     );
@@ -483,7 +501,7 @@ class MockHttp {
   */
   respondFor(location, options = undefined) {
     return routeComponents(resolveRoute(location)).reduce(
-      (series, component) => series.respondForComponent(component, options),
+      (series, component) => series.respondForComponent(component.name, options),
       this
     );
   }
@@ -592,8 +610,9 @@ class MockHttp {
       this._component = component;
     }
 
-    this._requestCount = 0;
-    this._responseCount = 0;
+    this._requestWithoutResponse = false;
+    this._orderedResponsesRequested = 0;
+    this._orderedResponsesReturned = 0;
     this._errorFromBeforeAnyResponse = null;
     this._errorFromBeforeEachResponse = null;
     this._errorFromResponse = null;
@@ -661,15 +680,38 @@ class MockHttp {
     the first promise if something unexpected happens in the second promise.
     */
     let promise = Promise.resolve();
+
+    let requestCount = 0;
+    // Tracks the responses returned from this._respondIf. We return each
+    // response only once.
+    const respondedIf = new Set();
+
     return (config) => {
       const requestToLog = pick(['method', 'url', 'headers', 'data'], config);
       if (requestToLog.method == null) requestToLog.method = 'GET';
       this._requestResponseLog.push(requestToLog);
 
-      const index = this._requestCount;
-      this._requestCount += 1;
-      if (this._requestCount > this._responses.length)
-        return Promise.reject(new Error());
+      const index = requestCount;
+      requestCount += 1;
+
+      let responseCallback;
+      let isOrdered = false;
+      for (const [i, [f, ifCallback]] of this._respondIf.entries()) {
+        if (!respondedIf.has(i) && f(config)) {
+          responseCallback = ifCallback;
+          respondedIf.add(i);
+          break;
+        }
+      }
+      if (responseCallback == null) {
+        if (this._orderedResponsesRequested >= this._orderedResponses.length) {
+          this._requestWithoutResponse = true;
+          return Promise.reject(new Error());
+        }
+        responseCallback = this._orderedResponses[this._orderedResponsesRequested];
+        this._orderedResponsesRequested += 1;
+        isOrdered = true;
+      }
 
       promise = promise
         // If this is not the first response, and the previous response was an
@@ -684,12 +726,11 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
-          this._responseCount += 1;
+          if (isOrdered) this._orderedResponsesReturned += 1;
 
           let responseWithoutConfig;
           try {
-            const callback = this._responses[index];
-            responseWithoutConfig = callback();
+            responseWithoutConfig = responseCallback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
@@ -776,14 +817,14 @@ class MockHttp {
       console.error(this._errorFromResponse);
       throw new Error('a response callback threw an error');
     }
-    if (this._requestCount !== this._responses.length) {
+
+    if (this._requestWithoutResponse) {
       this._listRequestResponseLog();
-      if (this._requestCount > this._responses.length)
-        throw new Error('request without response: no response specified for request');
-      else
-        throw new Error('response without request: not all responses were requested');
-    }
-    if (this._responseCount !== this._responses.length) {
+      throw new Error('request without response: no response specified for request');
+    } else if (this._orderedResponsesRequested < this._orderedResponses.length) {
+      this._listRequestResponseLog();
+      throw new Error('response without request: not all responses were requested');
+    } else if (this._orderedResponsesReturned !== this._orderedResponses.length) {
       this._listRequestResponseLog();
       throw new Error('All responses were requested, but not all were returned in time. By default, all responses are expected to be returned in microtasks, before the next task. You may need to use the pollWork option of afterResponses().');
     }
@@ -797,8 +838,8 @@ class MockHttp {
   toPromise() {
     const anySetup = this._container != null || this._location != null ||
       this._mount != null || this._request != null ||
-      this._responses.length !== 0 || this._beforeAnyResponse != null ||
-      this._beforeEachResponse != null;
+      this._orderedResponses.length !== 0 || this._respondIf.length !== 0 ||
+      this._beforeAnyResponse != null || this._beforeEachResponse != null;
     if (!anySetup && this._previousPromise == null) return Promise.resolve();
     const promise = anySetup
       ? this.complete()._previousPromise
@@ -849,11 +890,14 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
     const { composables, responses } = requestDataByComponent(components[i].name);
     allComposables.push(...composables);
     if (respondForOptions !== false) {
-      for (const [name, callback] of responses) {
+      for (const [name, response] of responses) {
         const option = respondForOptions != null
           ? respondForOptions[name]
           : null;
-        allResponses[name] = option != null ? option() : callback();
+        if (option != null)
+          allResponses[name] = option();
+        else if (typeof response === 'function')
+          allResponses[name] = response();
       }
     }
   }
@@ -875,7 +919,7 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
   return mockHttp()
     .mount(bottomComponent, fullMountOptions, throwIfEmit)
     .modify(series => (respondForOptions !== false
-      ? series.respondForComponent(bottomComponent, respondForOptions)
+      ? series.respondForComponent(bottomComponent.name, respondForOptions)
       : series));
 };
 

@@ -233,8 +233,11 @@ describe('FormHead', () => {
           .respondFor('/projects/1/forms/f/draft', {
             project: false,
             form: false,
+            publishedAttachments: false,
+            formDatasetDiff: false,
             formDraft: () =>
-              testData.extendedFormDrafts.createNew({ draft: true })
+              testData.extendedFormDrafts.createNew({ draft: true }),
+            appUserCount: false
           })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/projects/1/forms/f/draft');

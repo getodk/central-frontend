@@ -482,9 +482,9 @@ describe('SubmissionFilters', () => {
     testData.extendedFormVersions.createPast(1, { draft: true });
     return load('/projects/1/forms/f/submissions?reviewState=%27approved%27')
       .complete()
-      // If an extra request is sent, then .load() will fail.
-      .load('/projects/1/forms/f/draft/testing', {
-        project: false, form: false, formDraft: false, attachments: false
-      });
+      // If an extra request is sent, there will be no response specified for
+      // the request, causing the test to fail.
+      .route('/projects/1/forms/f/draft/testing')
+      .respondForComponent('FormDraftTesting');
   });
 });

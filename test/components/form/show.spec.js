@@ -20,7 +20,10 @@ describe('FormShow', () => {
       { url: '/v1/projects/1', extended: true },
       { url: '/v1/projects/1/forms/a%20b', extended: true },
       { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
-      { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
+      { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
+      { url: '/v1/projects/1/forms/a%20b/attachments' },
+      { url: '/v1/projects/1/forms/a%20b/dataset-diff' },
+      { url: '/v1/projects/1/forms/a%20b/assignments/app-user' }
     ]);
   });
 

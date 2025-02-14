@@ -19,96 +19,111 @@ except according to the terms contained in the LICENSE file.
       responded to the requests from FormShow. -->
       <router-view v-show="dataExists && !awaitingResponse"
         @fetch-project="fetchProject" @fetch-form="fetchForm"
-        @fetch-draft="fetchDraft"/>
+        @fetch-draft="fetchDraft" @fetch-linked-datasets="fetchLinkedDatasets"/>
     </page-body>
   </div>
 </template>
 
-<script>
+<script setup>
+import { useRouter } from 'vue-router';
+import { nextTick, watchEffect } from 'vue';
+
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 
-import useForm from '../../request-data/form';
 import useDatasets from '../../request-data/datasets';
+import useForm from '../../request-data/form';
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'FormShow',
-  components: { FormHead, Loading, PageBody },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    }
+defineOptions({
+  name: 'FormShow'
+});
+const props = defineProps({
+  projectId: {
+    type: String,
+    required: true
   },
-  setup() {
-    const { project, resourceStates } = useRequestData();
-    const { form, formDraft, attachments } = useForm();
-    useDatasets();
-
-    const { request, awaitingResponse } = useRequest();
-    const { formPath } = useRoutes();
-    return {
-      project, form, formDraft, attachments,
-      ...resourceStates([project, form, formDraft, attachments]),
-      request, awaitingResponse, formPath
-    };
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchProject(resend) {
-      this.project.request({
-        url: apiPaths.project(this.projectId),
-        extended: true,
-        resend
-      }).catch(noop);
-    },
-    fetchForm() {
-      const url = apiPaths.form(this.projectId, this.xmlFormId);
-      this.form.request({ url, extended: true })
-        .catch(noop);
-    },
-    fetchDraft() {
-      const draftUrl = apiPaths.formDraft(this.projectId, this.xmlFormId);
-      Promise.allSettled([
-        this.formDraft.request({
-          url: draftUrl,
-          extended: true,
-          fulfillProblem: ({ code }) => code === 404.1
-        }),
-        this.attachments.request({
-          url: apiPaths.formDraftAttachments(this.projectId, this.xmlFormId),
-          fulfillProblem: ({ code }) => code === 404.1
-        })
-      ]);
-    },
-    fetchData() {
-      this.fetchProject(false);
-      this.fetchForm();
-      this.fetchDraft();
-    },
-    createDraft() {
-      this.request({
-        method: 'POST',
-        url: apiPaths.formDraft(this.projectId, this.xmlFormId)
-      })
-        .then(() => {
-          this.fetchDraft();
-          this.$router.push(this.formPath('draft'));
-        })
-        .catch(noop);
-    }
+  xmlFormId: {
+    type: String,
+    required: true
   }
+});
+
+const { project, resourceStates } = useRequestData();
+const { form, formDraft, attachments, publishedAttachments, formDatasetDiff, appUserCount } = useForm();
+useDatasets();
+const { initiallyLoading, dataExists } = resourceStates([project, form, formDraft, attachments]);
+
+const fetchProject = (resend) => {
+  project.request({
+    url: apiPaths.project(props.projectId),
+    extended: true,
+    resend
+  }).catch(noop);
+};
+const fetchForm = () => {
+  form.request({
+    url: apiPaths.form(props.projectId, props.xmlFormId),
+    extended: true
+  }).catch(noop);
+};
+const fetchDraft = () => {
+  Promise.allSettled([
+    formDraft.request({
+      url: apiPaths.formDraft(props.projectId, props.xmlFormId),
+      extended: true,
+      fulfillProblem: ({ code }) => code === 404.1
+    }),
+    attachments.request({
+      url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
+      fulfillProblem: ({ code }) => code === 404.1
+    })
+  ]);
+};
+const fetchLinkedDatasets = () => {
+  Promise.allSettled([
+    publishedAttachments.request({
+      url: apiPaths.publishedAttachments(props.projectId, props.xmlFormId)
+    }),
+    formDatasetDiff.request({
+      url: apiPaths.formDatasetDiff(props.projectId, props.xmlFormId)
+    })
+  ]);
+};
+
+fetchProject(false);
+fetchForm();
+fetchDraft();
+// Before sending certain requests, we wait for the project response in order to
+// check whether the user has the correct permissions.
+const stopWaitingForProject = watchEffect(() => {
+  if (!project.dataExists) return;
+  if (project.permits(['form.update', 'dataset.list'])) fetchLinkedDatasets();
+  if (project.permits('assignment.list')) {
+    appUserCount.request({
+      url: apiPaths.formActors(props.projectId, props.xmlFormId, 'app-user')
+    }).catch(noop);
+  }
+  nextTick(() => stopWaitingForProject());
+});
+
+const { request, awaitingResponse } = useRequest();
+const router = useRouter();
+const { formPath } = useRoutes();
+const createDraft = () => {
+  request({
+    method: 'POST',
+    url: apiPaths.formDraft(props.projectId, props.xmlFormId)
+  })
+    .then(() => {
+      fetchDraft();
+      router.push(formPath('draft'));
+    })
+    .catch(noop);
 };
 </script>

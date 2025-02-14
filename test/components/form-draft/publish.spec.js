@@ -346,6 +346,17 @@ describe('FormDraftPublish', () => {
   });
 
   describe('after a successful response', () => {
+    const respondToPublish = (series) => series
+      .respondWithData(() => {
+        testData.extendedFormDrafts.publish(-1);
+        return { success: true };
+      })
+      .respondWithData(() => testData.extendedForms.last())
+      .respondWithData(() => []) // publishedAttachments
+      .respondWithData(() => testData.formDatasetDiffs.sorted())
+      .respondWithData(() => testData.extendedProjects.last())
+      .respondForComponent('FormSubmissions');
+
     const publish = () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
@@ -354,32 +365,27 @@ describe('FormDraftPublish', () => {
           await app.get('#form-draft-status-publish-button').trigger('click');
           return app.get('#form-draft-publish .btn-primary').trigger('click');
         })
-        .respondWithData(() => {
-          testData.extendedFormDrafts.publish(-1);
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedForms.last())
-        .respondFor('/projects/1/forms/f/submissions', {
-          form: false,
-          formDraft: false,
-          attachments: false
-        });
+        .modify(respondToPublish);
     };
 
     it('sends requests for the project and form', () => {
       let count = 0;
+      const expectedUrls = [
+        null,
+        '/v1/projects/1/forms/f',
+        '/v1/projects/1/forms/f/attachments',
+        '/v1/projects/1/forms/f/dataset-diff',
+        '/v1/projects/1'
+      ];
       return publish()
         .beforeEachResponse((_, { url }, i) => {
-          if (i === 1) {
-            url.should.equal('/v1/projects/1/forms/f');
-            count += 1;
-          } else if (i === 2) {
-            url.should.equal('/v1/projects/1');
+          if (i >= 1 && i <= 4) {
+            url.should.equal(expectedUrls[i]);
             count += 1;
           }
         })
         .afterResponses(() => {
-          count.should.equal(2);
+          count.should.equal(4);
         });
     });
 
@@ -421,16 +427,7 @@ describe('FormDraftPublish', () => {
           await app.get('#form-draft-status-publish-button').trigger('click');
           return app.get('#form-draft-publish .btn-primary').trigger('click');
         })
-        .respondWithData(() => {
-          testData.extendedFormDrafts.publish(-1);
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedForms.last())
-        .respondFor('/projects/1/forms/f/submissions', {
-          form: false,
-          formDraft: false,
-          attachments: false
-        })
+        .modify(respondToPublish)
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())

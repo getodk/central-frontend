@@ -1129,12 +1129,8 @@ describe('FormAttachmentList', () => {
         });
         return load('/projects/1/forms/f/draft/attachments')
           .complete()
-          .load('/projects/1/forms/f/draft', {
-            project: false,
-            form: false,
-            formDraft: false,
-            attachments: false
-          })
+          .route('/projects/1/forms/f/draft')
+          .respondWithData(() => testData.extendedFormVersions.published())
           .complete()
           .request(async (app) => {
             await app.get('#form-draft-status-publish-button').trigger('click');
@@ -1147,11 +1143,10 @@ describe('FormAttachmentList', () => {
             return { success: true };
           })
           .respondWithData(() => testData.extendedForms.last())
-          .respondFor('/projects/1/forms/f/submissions', {
-            form: false,
-            formDraft: false,
-            attachments: false
-          })
+          .respondWithData(() => []) // publishedAttachments
+          .respondWithData(() => testData.formDatasetDiffs.sorted())
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondForComponent('FormSubmissions')
           .complete()
           .request(app =>
             app.get('#form-head-create-draft-button').trigger('click'))
@@ -1161,7 +1156,10 @@ describe('FormAttachmentList', () => {
           })
           .respondFor('/projects/1/forms/f/draft', {
             project: false,
-            form: false
+            form: false,
+            publishedAttachments: false,
+            formDatasetDiff: false,
+            appUserCount: false
           })
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
@@ -1189,12 +1187,8 @@ describe('FormAttachmentList', () => {
         return load('/projects/1/forms/f/draft/attachments')
           .respondWithData(() => testData.extendedDatasets.sorted())
           .complete()
-          .load('/projects/1/forms/f/draft', {
-            project: false,
-            form: false,
-            formDraft: false,
-            attachments: false
-          })
+          .route('/projects/1/forms/f/draft')
+          .respondWithData(() => testData.extendedFormVersions.published())
           .complete()
           .request(async (app) => {
             await app.get('#form-draft-status-publish-button').trigger('click');
@@ -1207,11 +1201,10 @@ describe('FormAttachmentList', () => {
             return { success: true };
           })
           .respondWithData(() => testData.extendedForms.last())
-          .respondFor('/projects/1/forms/f/submissions', {
-            form: false,
-            formDraft: false,
-            attachments: false
-          })
+          .respondWithData(() => []) // publishedAttachments
+          .respondWithData(() => testData.formDatasetDiffs.sorted())
+          .respondWithData(() => testData.extendedProjects.last())
+          .respondForComponent('FormSubmissions')
           .complete()
           .request(app =>
             app.get('#form-head-create-draft-button').trigger('click'))
@@ -1221,7 +1214,10 @@ describe('FormAttachmentList', () => {
           })
           .respondFor('/projects/1/forms/f/draft', {
             project: false,
-            form: false
+            form: false,
+            publishedAttachments: false,
+            formDatasetDiff: false,
+            appUserCount: false
           })
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
