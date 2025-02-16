@@ -35,12 +35,16 @@ describe('ModelDefinition', () => {
 							`root id="model-definition"`,
 							t('first-question'),
 							t('second-question'),
-							t('third-question')
+							t('third-question'),
+							// prettier-ignore
+							t('orx:meta',
+								t('orx:instanceID'))
 						)
 					),
 					bind('/root/first-question').type('string'),
 					bind('/root/second-question').type('string'),
-					bind('/root/third-question').type('string')
+					bind('/root/third-question').type('string'),
+					bind('/root/orx:meta/orx:instanceID').preload('uid')
 				)
 			),
 			// prettier-ignore
@@ -95,6 +99,21 @@ describe('ModelDefinition', () => {
 						nodeset: '/root/third-question',
 					},
 					children: null,
+				},
+				{
+					type: 'subtree',
+					bind: {
+						nodeset: '/root/orx:meta',
+					},
+					children: [
+						{
+							type: 'leaf-node',
+							bind: {
+								nodeset: '/root/orx:meta/orx:instanceID',
+							},
+							children: null,
+						},
+					],
 				},
 			],
 		});
