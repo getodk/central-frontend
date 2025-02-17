@@ -1,4 +1,3 @@
-import { UpsertableWeakMap } from '@getodk/common/lib/collections/UpsertableWeakMap.ts';
 import type { XPathDOMAdapter } from '@getodk/xpath';
 import { NamespaceURL } from './NamespaceURL.ts';
 
@@ -108,7 +107,6 @@ interface PrefixResolutionOptions {
  */
 export class QualifiedName implements DeferredPrefixedQualifiedNameSource {
 	private readonly defaultPrefixResolutionOptions: PrefixResolutionOptions;
-	private readonly prefixedNameCache = new UpsertableWeakMap<PrefixResolutionOptions, string>();
 
 	readonly namespaceURI: NamespaceURI;
 
@@ -160,15 +158,13 @@ export class QualifiedName implements DeferredPrefixedQualifiedNameSource {
 	 * in e.g. "debug/form design/dev mode" scenarios.
 	 */
 	getPrefixedName(options: PrefixResolutionOptions = this.defaultPrefixResolutionOptions): string {
-		return this.prefixedNameCache.upsert(options, () => {
-			const { namespaceURI, localName } = this;
-			const prefix = options.lookupPrefix(namespaceURI);
+		const { namespaceURI, localName } = this;
+		const prefix = options.lookupPrefix(namespaceURI);
 
-			if (prefix == null) {
-				return localName;
-			}
+		if (prefix == null) {
+			return localName;
+		}
 
-			return `${prefix}:${localName}`;
-		});
+		return `${prefix}:${localName}`;
 	}
 }
