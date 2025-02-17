@@ -31,10 +31,14 @@ export class NamespaceURL extends URL {
 			return null;
 		}
 
-		return new this(namespaceURI);
+		return new this(String(namespaceURI));
 	}
 
-	private constructor(namespaceURI: NamespaceURL | string) {
-		super(namespaceURI);
+	override readonly href: string;
+
+	private constructor(href: string) {
+		super(href);
+
+		this.href = href;
 	}
 }
