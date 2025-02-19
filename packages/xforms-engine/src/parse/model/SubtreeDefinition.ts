@@ -1,3 +1,5 @@
+import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
+import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type {
 	AnyBodyElementDefinition,
 	AnyGroupElementDefinition,
@@ -12,7 +14,8 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 > {
 	readonly type = 'subtree';
 
-	readonly nodeName: string;
+	readonly namespaceDeclarations: NamespaceDeclarationMap;
+	readonly qualifiedName: QualifiedName;
 	readonly children: readonly ChildNodeDefinition[];
 	readonly instances = null;
 	readonly defaultValue = null;
@@ -34,7 +37,8 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 
 		const { root } = parent;
 
-		this.nodeName = node.localName;
+		this.qualifiedName = new QualifiedName(node);
+		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
 		this.children = root.buildSubtree(this);
 	}
 

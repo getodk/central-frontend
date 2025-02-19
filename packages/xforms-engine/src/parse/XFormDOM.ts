@@ -1,4 +1,9 @@
-import { XFORMS_NAMESPACE_URI, XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import {
+	JAVAROSA_NAMESPACE_URI,
+	OPENROSA_XFORMS_NAMESPACE_URI,
+	XFORMS_NAMESPACE_URI,
+	XMLNS_NAMESPACE_URI,
+} from '@getodk/common/constants/xmlns.ts';
 import type {
 	KnownAttributeLocalNamedElement,
 	LocalNamedElement,
@@ -6,6 +11,118 @@ import type {
 import { DefaultEvaluator } from '@getodk/xpath';
 
 interface DOMBindElement extends KnownAttributeLocalNamedElement<'bind', 'nodeset'> {}
+
+const getMetaElement = (primaryInstanceRoot: Element): Element | null => {
+	for (const child of primaryInstanceRoot.children) {
+		const { localName, namespaceURI } = child;
+
+		if (
+			(namespaceURI === OPENROSA_XFORMS_NAMESPACE_URI || namespaceURI === XFORMS_NAMESPACE_URI) &&
+			localName === 'meta'
+		) {
+			return child;
+		}
+	}
+
+	return null;
+};
+
+const getMetaChildElement = (meta: Element | null, localName: string): Element | null => {
+	if (meta == null) {
+		return null;
+	}
+
+	const { namespaceURI } = meta;
+
+	for (const child of meta.children) {
+		if (child.localName === localName && child.namespaceURI === namespaceURI) {
+			return child;
+		}
+	}
+
+	return null;
+};
+
+const getQualifiedName = (
+	contextNode: Node,
+	namespaceURI: string | null,
+	localName: string
+): string => {
+	const prefix = contextNode.lookupPrefix(namespaceURI);
+
+	if (prefix == null) {
+		return localName;
+	}
+
+	return `${prefix}:${localName}`;
+};
+
+const createNamespacedChildElement = (
+	parent: Element,
+	namespaceURI: string | null,
+	localName: string
+): Element => {
+	const qualifiedName = getQualifiedName(parent, namespaceURI, localName);
+	const child = parent.ownerDocument.createElementNS(namespaceURI, qualifiedName);
+
+	parent.append(child);
+
+	return child;
+};
+
+const setNamespacedAttributeValue = (
+	element: Element,
+	namespaceURI: string | null,
+	localName: string,
+	value: string
+) => {
+	const qualifiedName = getQualifiedName(element, namespaceURI, localName);
+
+	element.setAttributeNS(namespaceURI, qualifiedName, value);
+};
+
+const createDefaultInstanceIDBinding = (
+	model: Element,
+	primaryInstanceRoot: Element,
+	meta: Element,
+	instanceID: Element
+): DOMBindElement => {
+	const bind = createNamespacedChildElement(model, model.namespaceURI, 'bind');
+	const nodeset = `/${primaryInstanceRoot.nodeName}/${meta.nodeName}/${instanceID.nodeName}`;
+
+	bind.setAttribute('nodeset', nodeset);
+	setNamespacedAttributeValue(bind, JAVAROSA_NAMESPACE_URI, 'preload', 'uid');
+
+	return bind as DOMBindElement;
+};
+
+const normalizeDefaultMetaBindings = (
+	model: Element,
+	primaryInstanceRoot: Element,
+	binds: readonly DOMBindElement[]
+): readonly DOMBindElement[] => {
+	let meta = getMetaElement(primaryInstanceRoot);
+	let instanceID = getMetaChildElement(meta, 'instanceID');
+
+	if (meta == null) {
+		meta = createNamespacedChildElement(primaryInstanceRoot, OPENROSA_XFORMS_NAMESPACE_URI, 'meta');
+	}
+
+	if (instanceID == null) {
+		instanceID = createNamespacedChildElement(meta, meta.namespaceURI, 'instanceID');
+
+		const instanceIDBinding = createDefaultInstanceIDBinding(
+			model,
+			primaryInstanceRoot,
+			meta,
+			instanceID
+		);
+
+		return [...binds, instanceIDBinding];
+	}
+
+	return binds;
+};
 
 export interface DOMItextTranslationElement
 	extends KnownAttributeLocalNamedElement<'translation', 'lang'> {}
@@ -238,23 +355,6 @@ export class XFormDOM {
 		const html = evaluator.evaluateNonNullElement('/h:html', {
 			contextNode: xformDocument,
 		});
-
-		let body = evaluator.evaluateNonNullElement('./h:body', {
-			contextNode: html,
-		});
-		let normalizedXML: string;
-
-		if (options.isNormalized) {
-			normalizedXML = sourceXML;
-		} else {
-			body = normalizeXFormBody(body);
-
-			// TODO: if we keep doing normalization this way long term (or using the DOM
-			// for parsing long term, for that matter!), we should measure this. And we
-			// should measure against XMLSerializer while we're at it!
-			normalizedXML = xformDocument.documentElement.outerHTML;
-		}
-
 		const head = evaluator.evaluateNonNullElement('./h:head', {
 			contextNode: html,
 		});
@@ -264,9 +364,12 @@ export class XFormDOM {
 		const model = evaluator.evaluateNonNullElement('./xf:model', {
 			contextNode: head,
 		});
-		const binds = evaluator.evaluateNodes<DOMBindElement>('./xf:bind[@nodeset]', {
-			contextNode: model,
-		});
+		let binds: readonly DOMBindElement[] = evaluator.evaluateNodes<DOMBindElement>(
+			'./xf:bind[@nodeset]',
+			{
+				contextNode: model,
+			}
+		);
 
 		const instances = evaluator.evaluateNodes<DOMInstanceElement>('./xf:instance', {
 			contextNode: model,
@@ -291,6 +394,23 @@ export class XFormDOM {
 				contextNode: model,
 			}
 		);
+
+		let body = evaluator.evaluateNonNullElement('./h:body', {
+			contextNode: html,
+		});
+		let normalizedXML: string;
+
+		if (options.isNormalized) {
+			normalizedXML = sourceXML;
+		} else {
+			body = normalizeXFormBody(body);
+			binds = normalizeDefaultMetaBindings(model, primaryInstanceRoot, binds);
+
+			// TODO: if we keep doing normalization this way long term (or using the DOM
+			// for parsing long term, for that matter!), we should measure this. And we
+			// should measure against XMLSerializer while we're at it!
+			normalizedXML = xformDocument.documentElement.outerHTML;
+		}
 
 		this.normalizedXML = normalizedXML;
 		this.xformDocument = xformDocument;

@@ -1,28 +1,36 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
+import { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { XFormsXPathAttribute } from '../adapter/XFormsXPathNode.ts';
+import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticElement } from './StaticElement.ts';
-import type { StaticNamedNodeOptions } from './StaticNamedNode.ts';
-import { StaticNamedNode } from './StaticNamedNode.ts';
+import { StaticNode } from './StaticNode.ts';
 
-interface StaticAttributeOptions extends StaticNamedNodeOptions {
+interface StaticAttributeOptions {
+	readonly namespaceURI: string | null;
+	readonly prefix?: string | null;
+	readonly localName: string;
 	readonly value: string;
 }
 
-export class StaticAttribute extends StaticNamedNode<'attribute'> implements XFormsXPathAttribute {
+export class StaticAttribute extends StaticNode<'attribute'> implements XFormsXPathAttribute {
 	readonly [XPathNodeKindKey] = 'attribute';
 	readonly nodeType = 'static-attribute';
+	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
+	readonly qualifiedName: QualifiedName;
 	readonly attributes = [] as const;
 	readonly children = null;
-	override readonly value: string;
+	readonly value: string;
 
 	constructor(
-		override readonly parent: StaticElement,
+		readonly parent: StaticElement,
 		options: StaticAttributeOptions
 	) {
-		super(parent, options);
+		super();
 
+		this.rootDocument = parent.rootDocument;
 		this.root = parent.root;
+		this.qualifiedName = new QualifiedName(options);
 		this.value = options.value;
 	}
 

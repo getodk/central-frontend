@@ -1,6 +1,7 @@
 import type { XFormsItextTranslationElement } from '@getodk/xpath';
 import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME } from '@getodk/xpath';
 import { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
+import type { ItextTranslationDefinition } from './ItextTranslationDefinition.ts';
 
 // prettier-ignore
 type ItextTranslationRootKnownAttributeValue<LocalName extends string> =
@@ -21,7 +22,7 @@ const assertItextTranslationRootKnownAttributeValue: AssertItextTranslationRootK
 	};
 
 export class ItextTranslationRootDefinition
-	extends StaticElement
+	extends StaticElement<ItextTranslationDefinition>
 	implements XFormsItextTranslationElement<ItextTranslationRootDefinition>
 {
 	override readonly [XFORMS_LOCAL_NAME] = 'translation';

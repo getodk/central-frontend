@@ -8,9 +8,9 @@ import type {
 import type {
 	StaticElementAttributesFactory,
 	StaticElementChildNodesFactory,
+	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
-import type { StaticNamedNodeOptions } from '../../integration/xpath/static-dom/StaticNamedNode.ts';
 import type { StaticParentNode } from '../../integration/xpath/static-dom/StaticNode.ts';
 import { StaticText } from '../../integration/xpath/static-dom/StaticText.ts';
 
@@ -115,12 +115,12 @@ export type StaticElementConstructor<
 				parent: Parent,
 				attributesFactory: StaticElementAttributesFactory,
 				childNodesFactory: StaticElementChildNodesFactory,
-				options: StaticNamedNodeOptions
+				options: StaticElementOptions
 			): T;
 	};
 
 const parseStaticElementFromDOMElement = <
-	T extends StaticElement,
+	T extends StaticElement<Parent>,
 	Parent extends StaticParentNode = StaticParentNode,
 >(
 	parent: Parent,

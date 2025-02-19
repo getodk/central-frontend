@@ -24,10 +24,7 @@ export class XFormDefinition {
 		this.xformDocument = xformDocument;
 		this.id = id;
 		this.title = title.textContent ?? '';
-
-		// TODO: highly unlikely primary instance root will need a namespace prefix
-		// but noting it just in case there is such weird usage...
-		this.rootReference = `/${primaryInstanceRoot.localName}`;
+		this.rootReference = `/${primaryInstanceRoot.nodeName}`;
 
 		this.body = new BodyDefinition(this);
 		this.model = new ModelDefinition(this);

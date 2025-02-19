@@ -8,6 +8,13 @@ import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 
 type InitialValueSource = 'FORM_DEFAULT' | 'PRIMARY_INSTANCE';
 
+/**
+ * @todo {@link InitialValueSource} naming leaves a lot to be desired. As described in {@link InstanceValueStateOptions.initialValueSource}, this check (for now) will effectively answer the question: "are we **NOT** editing instance state (e.g. a submission)?". This answer, in turn, determines whether to {@link setPreloadUIDValue}
+ */
+const isInstanceFirstLoad = (valueSource?: InitialValueSource) => {
+	return valueSource === 'FORM_DEFAULT';
+};
+
 export interface InstanceValueStateOptions {
 	/**
 	 * Specifies the source of a {@link createInstanceValueState} signal's initial
@@ -107,9 +114,46 @@ const guardDownstreamReadonlyWrites = (
 };
 
 /**
+ * Per {@link https://getodk.github.io/xforms-spec/#preload-attributes:~:text=concatenation%20of%20%E2%80%98uuid%3A%E2%80%99%20and%20uuid()}
+ */
+const PRELOAD_UID_EXPRESSION = 'concat("uuid:", uuid())';
+
+/**
+ * @todo This is a temporary one-off, until we support the full range of
+ * {@link https://getodk.github.io/xforms-spec/#preload-attributes | preloads}.
+ *
+ * @todo ALSO, IMPORTANTLY(!): the **call site** for this function is
+ * semantically where we would expect to trigger a
+ * {@link https://getodk.github.io/xforms-spec/#event:odk-instance-first-load | odk-instance-first-load event},
+ * _and compute_ preloads semantically associated with that event.
+ */
+const setPreloadUIDValue = (
+	context: InstanceValueContext,
+	valueState: RelevantValueState,
+	options: InstanceValueStateOptions
+): void => {
+	const { preload } = context.definition.bind;
+
+	if (preload?.type !== 'uid' || !isInstanceFirstLoad(options?.initialValueSource)) {
+		return;
+	}
+
+	const preloadUIDValue = context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION, {
+		contextNode: context.contextNode,
+	});
+
+	const [, setValue] = valueState;
+
+	setValue(preloadUIDValue);
+};
+
+/**
  * Defines a reactive effect which writes the result of `calculate` bind
  * computations to the provided value setter, on initialization and any
  * subsequent reactive update.
+ *
+ * @see {@link setPreloadUIDValue} for important details about spec ordering of
+ * events and computations.
  */
 const createCalculation = (
 	context: InstanceValueContext,
@@ -153,6 +197,12 @@ export const createInstanceValueState = (
 		const initialValue = getInitialValue(context, options);
 		const baseValueState = createSignal(initialValue);
 		const relevantValueState = createRelevantValueState(context, baseValueState);
+
+		/**
+		 * @see {@link setPreloadUIDValue} for important details about spec ordering of events and computations.
+		 */
+		setPreloadUIDValue(context, relevantValueState, options);
+
 		const { calculate } = context.definition.bind;
 
 		if (calculate != null) {

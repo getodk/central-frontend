@@ -27,16 +27,17 @@ export const getEngineXPathAttributes = (node: EngineXPathNode): Iterable<Engine
 };
 
 /**
- * @todo XML XForms may actually define explicit namespace declarations on
- * non-root elements (i.e. elements other than the form definition's `h:html`,
- * itext `translation`, secondary `instance`). Expressions defined in such forms
- * may also expect to use those namespace declarations. It would even seem
- * likely! Why declare namespaces on a subtree if you don't intend to use them?
- * We don't currently capture namespace declarations below `h:html` in the parse
- * stage (which, if we intend to support the use case, is where we should
- * start).
+ * @todo We've now laid most of the groundwork necessary to implement this
+ * properly. At time of writing it has still been deferred because:
  *
- * @todo At the very least, we should probably produce a set of default namespace declarations. At least for `h:html`, maybe for other "root" nodes.
+ * 1. The scope of changes enabling it is already a fairly large yak shave.
+ * 2. It is only used to support XPath LocationPath Steps whose AxisName is
+ *    `namespace`. If we _ever_ support this, it would probably be for extremely
+ *    niche use cases!
+ *
+ * @todo Since we've consciously deferred implementing this (twice now!), should
+ * it throw? It might be nice to be alerted if the assumptions in point 2 above
+ * are somehow wrong (or become wrong).
  */
 export const getNamespaceDeclarations = (): Iterable<never> => [];
 

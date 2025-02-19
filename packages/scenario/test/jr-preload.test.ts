@@ -38,7 +38,7 @@ describe('`jr:preload`', () => {
 			 *   the {@link ComparableAnswer} (`actual` value) to utilize a custom
 			 *   `toStartWith` assertion generalized over answer types.
 			 */
-			it.fails('preloads [specified data in bound] elements', async () => {
+			it('preloads [specified data in bound] elements', async () => {
 				const scenario = await Scenario.init(
 					'Preload attribute',
 					html(

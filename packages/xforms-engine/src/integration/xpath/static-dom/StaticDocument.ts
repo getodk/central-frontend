@@ -15,7 +15,6 @@ export abstract class StaticDocument<DocumentRoot extends StaticElement = Static
 	readonly nodeType = 'static-document';
 	readonly rootDocument: StaticDocument;
 	readonly root: DocumentRoot;
-	readonly isXFormsNamespace: boolean;
 	readonly parent = null;
 	readonly children: readonly [root: DocumentRoot];
 
@@ -27,7 +26,6 @@ export abstract class StaticDocument<DocumentRoot extends StaticElement = Static
 		const root = rootFactory(this);
 
 		this.root = root;
-		this.isXFormsNamespace = root.isXFormsNamespace;
 		this.children = [root];
 	}
 
