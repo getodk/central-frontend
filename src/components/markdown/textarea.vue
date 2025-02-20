@@ -84,7 +84,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 .markdown-textarea {
   border: 1px solid transparent;
@@ -120,9 +120,11 @@ export default {
   }
 
   .markdown-textarea-actions {
+    @include clearfix;
     display: flex;
     align-content: stretch;
     align-items: center;
+    margin-top: 5px;
   }
 
   .markdown-textarea-actions > .btn {
@@ -142,7 +144,6 @@ export default {
     &:hover, &:focus, &:active:focus { color: #777; }
   }
 }
-
 </style>
 
 <i18n lang="json5">
