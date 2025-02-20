@@ -121,10 +121,6 @@ export default {
 
   .markdown-textarea-actions {
     @include clearfix;
-    animation-duration: 0.4s;
-    animation-iteration-count: 1;
-    animation-name: expand;
-    animation-timing-function: $ease-extreme-out;
     display: flex;
     align-content: stretch;
     align-items: center;
@@ -147,11 +143,6 @@ export default {
     padding: 10px;
     &:hover, &:focus, &:active:focus { color: #777; }
   }
-}
-
-@keyframes expand {
-  0% { margin-bottom: -12px; }
-  100% { margin-bottom: 0; }
 }
 </style>
 
