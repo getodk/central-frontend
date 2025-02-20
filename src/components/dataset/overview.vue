@@ -18,16 +18,16 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <div class="row">
-          <div class="col-md-6 creation-forms">
-            <connection-to-forms :properties="dataset.properties" :source-forms="dataset.sourceForms" :project-id="projectId"/>
+          <div class="col-md-6">
+            <connection-to-forms/>
           </div>
-          <div class="col-md-6 linked-forms">
-            <linked-forms :linked-forms="dataset.linkedForms" :project-id="projectId"/>
+          <div class="col-md-6">
+            <linked-forms/>
           </div>
         </div>
       </template>
     </page-section>
-    <page-section id="dataset-overview-properties">
+    <page-section>
       <template #heading>
         <span>{{ $t('entityProperties') }}</span>
         <button v-if="project.dataExists && project.permits('dataset.update')"
@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template #body>
-        <dataset-properties :properties="dataset.properties" :project-id="projectId"/>
+        <dataset-properties/>
       </template>
     </page-section>
     <dataset-property-new v-bind="newDatasetPropertyModal"
@@ -57,6 +57,9 @@ import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
+  // This component is named DatasetOverview for historical reasons. Today, the
+  // component is the properties page, but it used to be the entity list
+  // overview page.
   name: 'DatasetOverview'
 });
 defineProps({
@@ -129,6 +132,11 @@ const afterCreateProperty = () => {
     "connectionsToForms": "Connessioni ai formulari",
     "entityProperties": "Proprietà della Entità",
     "new": "Nuova"
+  },
+  "pt": {
+    "connectionsToForms": "Conexões com Formulários",
+    "entityProperties": "Propriedades da Entidade",
+    "new": "Nova"
   },
   "sw": {
     "connectionsToForms": "Viunganisho kwa Fomu",

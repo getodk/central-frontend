@@ -135,11 +135,7 @@ const hidePopover = () => { popoverData.target = null; };
 {
   "cs": {
     "title": "Testování konceptu",
-    "body": [
-      "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče.",
-      "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
-    ],
-    "collectProjectName": "[Návrh] {name}",
+    "introduction": "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny.",
     "entitiesTesting": {
       "title": "Tento formulář může aktualizovat entity.",
       "body": [
@@ -150,11 +146,7 @@ const hidePopover = () => { popoverData.target = null; };
   },
   "de": {
     "title": "Entwurfs-Test",
-    "body": [
-      "Sie können den Konfigurations-Code rechts benutzen, damit Ihr Mobilgerät diesen Entwurf herunterladen kann. Sie können auch die Schaltfläche \"Neu\" oben klicken, um eine neue Übermittlung mit Ihrem Browser zu erstellen.",
-      "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt."
-    ],
-    "collectProjectName": "[Entwurf] {name}",
+    "introduction": "Entwurfs-Übermittlungen werden in der Testtabelle unten dargestellt. Sie können Sie dort ansehen und herunterladen. Wenn Sie dieses Entwurfsformular veröffentlichen, werden die Test-Übermittlungen irreversibel entfernt.",
     "entitiesTesting": {
       "title": "Dieses Formular kann Objekte aktualisieren.",
       "body": [
@@ -165,11 +157,7 @@ const hidePopover = () => { popoverData.target = null; };
   },
   "es": {
     "title": "Prueba de borrador",
-    "body": [
-      "Puede usar el código de configuración de la derecha para configurar un dispositivo móvil y descargar este borrador. También puede dar clic al botón Nuevo de abajo para crear un nuevo envío desde el navegador web.",
-      "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente."
-    ],
-    "collectProjectName": "borrador {name}",
+    "introduction": "El borrador de los envíos van a la tabla de prueba a continuación, donde puede obtener una vista previa y descargar. Cuando publique este borrador de Formulario, sus envíos de prueba se eliminarán permanentemente.",
     "entitiesTesting": {
       "title": "Este Formulario puede actualizar Entidades",
       "body": [
@@ -180,11 +168,7 @@ const hidePopover = () => { popoverData.target = null; };
   },
   "fr": {
     "title": "Test de l'ébauche",
-    "body": [
-      "Vous pouvez utiliser le code de configuration à droite pour configurer un appareil mobile afin de télécharger cette ébauche. Vous pouvez aussi cliquer le bouton Nouveau ci-dessus pour créer une nouvelle soumission depuis votre navigateur.",
-      "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées."
-    ],
-    "collectProjectName": "[Brouillon] {name}",
+    "introduction": "Les soumissions de test vont dans le tableau ci-dessous où vous pouvez les prévisualiser et télécharger. Quand vous publierez cette ébauche, ses soumissions de test seront définitivement supprimées.",
     "entitiesTesting": {
       "title": "Ce formulaire peut mettre à jour des Entités.",
       "body": [
@@ -195,19 +179,11 @@ const hidePopover = () => { popoverData.target = null; };
   },
   "id": {
     "title": "Pengujian Draf",
-    "body": [
-      "Anda bisa menggunakan kode konfigurasi di sebelah kanan untuk mengatur perangkat seluler untuk mengunduh draf ini. Anda juga bisa mengklik tombol \"Baru\" untuk membuat kiriman data baru lewat web browser Anda.",
-      "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
-    ],
-    "collectProjectName": "[Draf]{name}"
+    "introduction": "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
   },
   "it": {
     "title": "Testando la bozza",
-    "body": [
-      "Puoi utilizzare il codice di configurazione a destra per configurare un dispositivo mobile per scaricare questa bozza. Puoi anche fare clic sul pulsante Nuovo sopra per creare un nuovo invio dal tuo browser web.",
-      "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente."
-    ],
-    "collectProjectName": "[Draft] {name}",
+    "introduction": "Le bozze inviate vanno nella tabella di prova sottostante, dove puoi visualizzarle in anteprima e scaricarle. Quando pubblichi questa bozza di formulario, i suoi Invii di prova verranno rimossi in modo permanente.",
     "entitiesTesting": {
       "title": "Questo Formulario può aggiornare Entità",
       "body": [
@@ -218,27 +194,26 @@ const hidePopover = () => { popoverData.target = null; };
   },
   "ja": {
     "title": "下書きのテスト",
-    "body": [
-      "右の設定コードを利用してモバイル端末に、この下書きフォームをダウンロードする設定ができます。また上の「新規作成」ボタンをクリックすると、Webブラウザからフォームの作成と提出が可能です。",
-      "下書きにテスト提出されたフォームは、以下の表に示されます。ここではデータのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト提出済フォームは永久に削除されます。"
-    ],
-    "collectProjectName": "[下書き] {name}"
+    "introduction": "下書きにテスト提出されたフォームは、以下の表に示されます。ここではデータのプレビューやダウンロードが可能です。この下書きフォームを公開した場合、テスト提出済フォームは永久に削除されます。"
+  },
+  "pt": {
+    "title": "Teste do rascunho",
+    "introduction": "As respostas do rascunho vão para a tabela de teste abaixo, onde você pode visualizá-las e baixá-las. Quando você publicar este formulário de rascunho, seus envios de teste serão removidos permanentemente.",
+    "entitiesTesting": {
+      "title": "Este Formulário pode atualizar Entidades",
+      "body": [
+        "As Entidades são atualizadas apenas para Formulários publicados. Em uma versão futura do Central, você poderá testar a funcionalidade da Entidade em um status de Rascunho.",
+        "Por enquanto, recomendamos testar sua definição de Formulário em status de Rascunho para verificar sua lógica. Antes de publicar, você pode verificar se ele atualiza todas as propriedades desejadas."
+      ]
+    }
   },
   "sw": {
     "title": "Mtihani wa Rasimu",
-    "body": [
-      "Unaweza kutumia msimbo wa usanidi ulio kulia ili kusanidi kifaa cha mkononi ili kupakua Rasimu hii. Unaweza pia kubofya kitufe kipya hapo juu ili kuunda Wasilisho jipya kutoka kwa kivinjari chako cha wavuti.",
-      "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."
-    ],
-    "collectProjectName": "[Rasimu] {name}"
+    "introduction": "Rasimu ya Mawasilisho huenda kwenye jedwali la majaribio hapa chini, ambapo unaweza kuhakiki na kupakua. Unapochapisha Rasimu ya Fomu hii, Mawasilisho yake ya majaribio yataondolewa kabisa."
   },
   "zh-Hant": {
     "title": "草稿測試",
-    "body": [
-      "您可以使用右側的設定代碼設定行動裝置來下載此草稿。您也可以點擊上面的「新增」按鈕，從網頁瀏覽器建立新的提交內容。",
-      "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發布此表單草稿時，其測試提交內容將會永久刪除。"
-    ],
-    "collectProjectName": "[草稿] {name}",
+    "introduction": "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發布此表單草稿時，其測試提交內容將會永久刪除。",
     "entitiesTesting": {
       "title": "該表單可以更新實體",
       "body": [

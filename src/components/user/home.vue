@@ -77,6 +77,9 @@ const { tabPath, tabClass } = useTabs('/users');
   "ja": {
     "title": "ユーザー管理"
   },
+  "pt": {
+    "title": "Configurações de usuário"
+  },
   "sw": {
     "title": "Mipangilio ya Mtumiaji"
   },

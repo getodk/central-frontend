@@ -127,6 +127,17 @@ const text = computed(() => (props.odataFilter == null
       }
     }
   },
+  "pt": {
+    "action": {
+      "download": {
+        "unfiltered": "Baixar {count} Entidade | Baixar {count} Entidades | Baixar {count} Entidades",
+        "filtered": {
+          "withCount": "Baixar {count} Entidade correspondente | Baixar {count} Entidades correspondentes | Baixar {count} Entidades correspondentes",
+          "withoutCount": "Baixar Entidades correspondentes"
+        }
+      }
+    }
+  },
   "sw": {
     "action": {
       "download": {

@@ -341,7 +341,7 @@ export default {
   "fr": {
     "encrypted": "Chiffré",
     "encryptionTip": "Ce projet utilise un chiffrement des données.",
-    "showMore": "Afficher tous les {count} Formulaires | Afficher tous les {count} Formulaires | Afficher tous les {count} Formulaires",
+    "showMore": "Afficher tous les {count} Formulaires | Afficher tous les {count} Formulaires | Afficher les {count} Formulaires",
     "showMoreDatasets": "Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités",
     "showFewer": "Voir moins que ce {count} formulaire | Voir moins que ces {count} formulaires | Voir moins que ces {count} formulaires",
     "showFewerDatasets": "Voir moins que cette {count} Liste d'Entités | Voir moins que ces {count} Listes d'Entités | Voir moins que ces {count} Listes d'Entités",
@@ -359,6 +359,15 @@ export default {
     "showFewer": "Mostra meno {count} del totale Formulario | Mostra meno {count} del totale Formulari | Mostra meno {count} del totale Formulari",
     "showFewerDatasets": "Mostra meno del {count} totale Lista Entità | Mostra meno del {count} totale Lista Entità | Mostra meno del {count} totale Lista Entità",
     "hidden": "nascosto"
+  },
+  "pt": {
+    "encrypted": "Encriptado",
+    "encryptionTip": "Este Projeto usa encriptação gerenciada.",
+    "showMore": "Mostrar {count} Formulário | Mostrar {count} total de Formulários | Mostrar {count} total de Formulários",
+    "showMoreDatasets": "Mostrar {count} Lista de Entidades | Mostrar {count} total de Listas de Entidades | Mostrar {count} total de Listas de Entidades",
+    "showFewer": "Mostrar menos de {count} Formulário | Mostrar menos de {count} total de Formulários | Mostrar menos de {count} total de Formulários",
+    "showFewerDatasets": "Mostrar menos de {count} Lista de Entidades | Mostrar menos de {count} total de Listas de Entidades | Mostrar menos de {count} total de Listas de Entidades",
+    "hidden": "oculto"
   },
   "sw": {
     "encrypted": "Imesimbwa kwa njia fiche",

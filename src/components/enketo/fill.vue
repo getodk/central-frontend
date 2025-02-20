@@ -111,6 +111,12 @@ export default {
       "notOpen": "このフォームは現在、新規のフォーム提出を受け付けていません。"
     }
   },
+  "pt": {
+    "disabled": {
+      "processing": "O formulário da web não está disponível ainda. O processamento dele ainda não terminou. Por favor, atualize a página mais tarde e tente novamente.",
+      "notOpen": "Esse formulário não está aceitando respostas nesse momento."
+    }
+  },
   "sw": {
     "disabled": {
       "processing": "Fomu ya Wavuti bado haipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena",

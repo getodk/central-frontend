@@ -260,6 +260,18 @@ const sizeModel = computed({
       "size": "per pagina"
     }
   },
+  "pt": {
+    "action": {
+      "first": "Primeira página",
+      "previous": "Página anterior",
+      "next": "Próxima página",
+      "last": "Última página"
+    },
+    "rows": "Linha {range} de {count} | Linhas {range} de {count} | Linhas {range} de {count}",
+    "field": {
+      "size": "por página"
+    }
+  },
   "zh-Hant": {
     "action": {
       "first": "第一頁",

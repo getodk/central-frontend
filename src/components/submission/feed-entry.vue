@@ -35,10 +35,9 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="updateOrEdit">
         <i18n-t :keypath="`title.updateReviewState.${reviewState}.full`">
           <template #reviewState>
-            <span class="review-state" :class="reviewState">
-              <span :class="reviewStateIcon(reviewState)"></span>
-              <span>{{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}</span>
-            </span>
+            <submission-review-state :value="reviewState" color-text>
+              {{ $t(`title.updateReviewState.${reviewState}.reviewState`) }}
+            </submission-review-state>
           </template>
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
@@ -47,17 +46,13 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
-            </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -65,17 +60,13 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic-wand entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <router-link v-if="entry.details?.entity?.currentVersion?.label != null" :to="entityPath(projectId, entry.details.entity.dataset, entry.details.entity.uuid)">
-              {{ entry.details.entity.currentVersion.label }}
-            </router-link>
-            <template v-else>
-              <span class="entity-label">{{ entry.details.entity.uuid }}</span>
-            </template>
+            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+              :project-id="projectId" :dataset="entityDetails.dataset"
+              :entity="entityDetails"/>
+            <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath(projectId, entry.details.entity.dataset)">
-              {{ entry.details.entity.dataset }}
-            </router-link>
+            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
           </template>
         </i18n-t>
       </template>
@@ -114,17 +105,26 @@ except according to the terms contained in the LICENSE file.
 import { last } from 'ramda';
 
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
+import EntityLink from '../entity/link.vue';
 import FeedEntry from '../feed-entry.vue';
 import MarkdownView from '../markdown/view.vue';
 import SubmissionDiffItem from './diff-item.vue';
+import SubmissionReviewState from './review-state.vue';
 
-import useReviewState from '../../composables/review-state';
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionFeedEntry',
-  components: { ActorLink, FeedEntry, MarkdownView, SubmissionDiffItem },
+  components: {
+    ActorLink,
+    DatasetLink,
+    EntityLink,
+    FeedEntry,
+    MarkdownView,
+    SubmissionDiffItem,
+    SubmissionReviewState
+  },
   props: {
     projectId: {
       type: String,
@@ -145,9 +145,7 @@ export default {
   },
   setup() {
     const { diffs } = useRequestData();
-    const { reviewStateIcon } = useReviewState();
-    const { datasetPath, entityPath } = useRoutes();
-    return { diffs, reviewStateIcon, datasetPath, entityPath };
+    return { diffs };
   },
   computed: {
     updateOrEdit() {
@@ -158,6 +156,9 @@ export default {
       return this.entry.action === 'submission.update'
         ? this.entry.details.reviewState
         : 'edited';
+    },
+    entityDetails() {
+      return this.entry.details.entity;
     },
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
@@ -214,13 +215,6 @@ export default {
   }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
-  .review-state {
-    color: #999;
-    &.hasIssues { color: $color-warning; }
-    &.edited { color: #666; }
-    &.approved { color: $color-success; }
-    &.rejected { color: $color-danger; }
-  }
   .entity-label { font-weight: normal; }
 }
 </style>
@@ -451,7 +445,9 @@ export default {
           "reviewState": "Abgelehnt"
         }
       },
-      "comment": "Kommentiert von {name}"
+      "comment": "Kommentiert von {name}",
+      "delete": "Gelöscht von {name}",
+      "undelete": "Wiederhergestellt von {name}"
     }
   },
   "es": {
@@ -484,7 +480,14 @@ export default {
           "reviewState": "Rechazado"
         }
       },
-      "comment": "Comentario por {name}"
+      "comment": "Comentario por {name}",
+      "delete": "Eliminado por {name}",
+      "undelete": "Restablecido por {name}",
+      "submissionBacklog": {
+        "hold": "Esperar al envío anterior en la cadena de actualización offline antes de actualizar la entidad",
+        "force": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
+        "reprocess": "Se ha recibido el envío anterior en la cadena de actualización offline"
+      }
     }
   },
   "fr": {
@@ -517,7 +520,14 @@ export default {
           "reviewState": "Rejetée"
         }
       },
-      "comment": "Commentaire de {name}"
+      "comment": "Commentaire de {name}",
+      "delete": "Supprimée par {name}",
+      "undelete": "Restaurée par {name}",
+      "submissionBacklog": {
+        "hold": "En attente d'une soumission précédente dans une série de mises à jour effectuées hors ligne avant de mettre l'Entité à jour",
+        "force": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne",
+        "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
+      }
     }
   },
   "id": {
@@ -578,7 +588,14 @@ export default {
           "reviewState": "Respinto"
         }
       },
-      "comment": "Commenti di {name}"
+      "comment": "Commenti di {name}",
+      "delete": "Eliminato da {name}",
+      "undelete": "Ripristinato da {name}",
+      "submissionBacklog": {
+        "hold": "Attesa di un invio precedente nella catena di aggiornamento offline prima di aggiornare l'entità",
+        "force": "Invio elaborato dall'arretrato senza un invio precedente nella catena di aggiornamento offline",
+        "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
+      }
     }
   },
   "ja": {
@@ -607,6 +624,46 @@ export default {
         }
       },
       "comment": "{name}によるコメント"
+    }
+  },
+  "pt": {
+    "title": {
+      "create": "Enviado por {name}",
+      "entity": {
+        "create": "Entidade {label} criada na Lista de Entidades {dataset}",
+        "update": "Entidade {label} atualizada na Lista de Entidades {dataset}",
+        "error": "Problema ao processar a Entidade"
+      },
+      "updateReviewState": {
+        "null": {
+          "full": "{reviewState}por {name}",
+          "reviewState": "Recebido"
+        },
+        "hasIssues": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Contém erros"
+        },
+        "edited": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Editado"
+        },
+        "approved": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Aprovado"
+        },
+        "rejected": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Rejeitado"
+        }
+      },
+      "comment": "Comentado por {name}",
+      "delete": "Deletado por {name}",
+      "undelete": "Exclusão desfeita por {name}",
+      "submissionBacklog": {
+        "hold": "Aguardando Resposta anterior na cadeia de atualização offline antes de atualizar a Entidade",
+        "force": "Resposta processada do backlog sem Resposta anterior na cadeia de atualização offline",
+        "reprocess": "Resposta anterior na cadeia de atualização offline foi recebida"
+      }
     }
   },
   "sw": {
@@ -672,7 +729,14 @@ export default {
           "reviewState": "拒絕"
         }
       },
-      "comment": "由{name}評論"
+      "comment": "由{name}評論",
+      "delete": "已由 {name} 刪除",
+      "undelete": "已由 {name}復原",
+      "submissionBacklog": {
+        "hold": "在更新實體之前等待離線更新鏈中的先前提交",
+        "force": "已處理來自積壓的提交，而離線更新鏈中沒有先前的提交",
+        "reprocess": "前次離線更新鏈提交已收到"
+      }
     }
   }
 }

@@ -20,9 +20,8 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
           </button>
           <enketo-fill v-if="formVersion.dataExists"
-            id="submission-list-test-in-browser" :form-version="formVersion"
-            btn="default">
-            <span class="icon-plus-circle"></span>{{ $t('action.testInBrowser') }}
+            id="submission-list-test-in-browser" :form-version="formVersion">
+            <span class="icon-desktop"></span>{{ $t('action.testInBrowser') }}
           </enketo-fill>
         </template>
         <form class="form-inline" @submit.prevent>
@@ -33,13 +32,13 @@ except according to the terms contained in the LICENSE file.
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
-          <button id="submission-list-refresh-button" type="button"
-            class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(false, true)">
-            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-            <spinner :state="refreshing"/>
-          </button>
         </form>
+        <button id="submission-list-refresh-button" type="button"
+          class="btn btn-default" :aria-disabled="refreshing"
+          @click="fetchChunk(false, true)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
         <submission-download-button :form-version="formVersion"
           :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
           :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
@@ -485,27 +484,48 @@ export default {
 }
 
 #submission-list-actions {
-  align-items: baseline;
+  align-items: center;
   display: flex;
   flex-wrap: wrap-reverse;
+  // This results in 10px of space between elements on the row, as well as 10px
+  // between rows if elements start wrapping. The main example of that is that
+  // the download button can wrap above the other actions if the viewport is not
+  // wide enough.
+  gap: 10px;
+  margin-bottom: 30px;
+
+  .form-inline {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 }
 #submission-field-dropdown {
+  // This is the entire spacing between the dropdown and the filters to its
+  // left. Since they're both child elements of the form, the flexbox gap does
+  // not apply to them.
   margin-left: 15px;
+  // Additional space between the dropdown and the refresh button
   margin-right: 5px;
 }
-#submission-list-refresh-button {
-  margin-left: 10px;
-  margin-right: 5px;
-}
-#submission-download-button {
-  // The bottom margin is for if the download button wraps above the other
-  // actions.
-  margin-bottom: 10px;
-  margin-left: auto;
-}
+#submission-download-button { margin-left: auto; }
 
+// Adjust the spacing between actions on the draft testing page.
 #submission-list-test-in-browser {
-  margin-left: 10px;
+  ~ .form-inline {
+    // It is possible for .form-inline to be :empty, but we still render it so
+    // that the buttons that follow it are shown on the righthand side of the
+    // page.
+    margin-left: auto;
+
+    #submission-field-dropdown {
+      // There are no filters, so no need for margin-left.
+      margin-left: 0;
+      // Further increase the space between the dropdown and the refresh button.
+      margin-right: 10px;
+    }
+  }
+
+  ~ #submission-download-button { margin-left: 0; }
 }
 </style>
 
@@ -533,28 +553,85 @@ export default {
     "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
-    "noMatching": "Es gibt keine passenden Übermittlungen."
+    "action": {
+      "testOnDevice": "Test am Gerät",
+      "testInBrowser": "Test im Browser"
+    },
+    "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
+    "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
+    "deletedSubmission": {
+      "emptyTable": "Es gibt keine gelöschten Übermittlungen."
+    }
   },
   "es": {
-    "noMatching": "No hay envíos coincidentes."
+    "action": {
+      "testOnDevice": "Prueba en el dispositivo",
+      "testInBrowser": "Prueba en el navegador"
+    },
+    "noMatching": "No hay envíos coincidentes.",
+    "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
+    "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
+    "deletedSubmission": {
+      "emptyTable": "No hay envíos eliminados."
+    }
   },
   "fr": {
-    "noMatching": "Il n'y a pas de soumission correspondante."
+    "action": {
+      "testOnDevice": "Tester sur un appareil",
+      "testInBrowser": "Tester dans le naviguateur"
+    },
+    "noMatching": "Il n'y a pas de soumission correspondante.",
+    "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
+    "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
+    "deletedSubmission": {
+      "emptyTable": "Il n'y a pas de Soumissions supprimées"
+    }
   },
   "id": {
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
   "it": {
-    "noMatching": "Non sono presenti invii corrispondenti."
+    "action": {
+      "testOnDevice": "Testa sul dispositivo",
+      "testInBrowser": "Testa nel browser"
+    },
+    "noMatching": "Non sono presenti invii corrispondenti.",
+    "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
+    "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
+    "deletedSubmission": {
+      "emptyTable": "Non ci sono invii cancellati."
+    }
   },
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"
+  },
+  "pt": {
+    "action": {
+      "testOnDevice": "Testar no dispositivo'",
+      "testInBrowser": "Testar no navegador"
+    },
+    "noMatching": "Não foram encontradas respostas com esses parâmetros.",
+    "downloadDisabled": "O download está indisponível para Respostas excluídas",
+    "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
+    "deletedSubmission": {
+      "emptyTable": "Não há Respostas excluídas"
+    }
   },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
   },
   "zh-Hant": {
-    "noMatching": "沒有符合的提交內容。"
+    "action": {
+      "testOnDevice": "在設備上測試",
+      "testInBrowser": "在瀏覽器中測試"
+    },
+    "noMatching": "沒有符合的提交內容。",
+    "downloadDisabled": "已刪除的提交內容無法下載",
+    "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
+    "deletedSubmission": {
+      "emptyTable": "沒有已刪除的提交內容。"
+    }
   }
 }
 </i18n>

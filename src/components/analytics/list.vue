@@ -134,6 +134,12 @@ export default {
     ],
     "auditsTitle": "最新の利用情報"
   },
+  "pt": {
+    "heading": [
+      "Abaixo, você pode escolher se esse servidor Central irá compartilhar informações de uso anônimas com a equipe do Central. Essa configuração afeta o servidor como um todo."
+    ],
+    "auditsTitle": "Relatórios de uso mais recentes"
+  },
   "sw": {
     "heading": [
       "Hapo chini, unaweza kuchagua kama seva hii ya Central itashiriki maelezo ya matumizi yasiyokutambulisha na timu ya Central. Mpangilio huu unaathiri seva nzima"

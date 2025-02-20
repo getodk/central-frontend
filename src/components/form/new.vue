@@ -472,7 +472,8 @@ export default {
       "Advertencias sobre el flujo de trabajo:",
       {
         "deletedFormExists": "Hay un formulario con ID \"{value}\" en la Papelera. Si carga este formulario, no podrá recuperar el otro con la identificación coincidente.",
-        "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada."
+        "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada.",
+        "oldEntityVersion": "La versión \"{version}\" de la especificación de entidades no es compatible con las entidades sin conexión. Se recomienda utilizar la versión 2024.1.0 o posterior."
       },
       "Por favor, corrija los problemas e intente nuevamente.",
       {
@@ -519,7 +520,8 @@ export default {
       "Avertissements sur le déroulement des opérations :",
       {
         "deletedFormExists": "Il y a un formualire avec l'identifiant \"{value}\" dans la corbeille. Si vous envoyez ce Formulaire, vous ne serez pas en mesure restaurer l'autre ayant le même ID.",
-        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut."
+        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut.",
+        "oldEntityVersion": "La version \"{version}\" de la spécification des entités n'est pas compatible avec les entités hors-ligne. Nous recommandons d'utiliser la version 2024.1.0 ou supérieure."
       },
       "Merci de corriger le problème et d'essayer à nouveau.",
       {
@@ -597,7 +599,8 @@ export default {
       "Avvertenze sul flusso di lavoro:",
       {
         "deletedFormExists": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di annullare l'eliminazione dell'altro con l'ID corrispondente.",
-        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
+        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti.",
+        "oldEntityVersion": "Versione delle specifiche delle entità “{version}” non è compatibile con le Entità offline. Si consiglia di utilizzare la versione 2024.1.0 o successiva."
       },
       "Correggi i problemi e riprova.",
       {
@@ -636,6 +639,54 @@ export default {
       "400_15": "XLSFormを変換できませんでした：{error}",
       "409_3": "このプロジェクトには、フォームID\"{xmlFormId}\"のフォームがすでに存在しています。"
     }
+  },
+  "pt": {
+    "title": {
+      "create": "Criar formulário",
+      "update": "Carregar nova definição de formulário"
+    },
+    "introduction": [
+      {
+        "create": "Para criar um formulário, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel.",
+        "update": "Para atualizar o rascunho, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel."
+      },
+      {
+        "full": "Se você não tem nenhum ainda, existem {tools} que podem ajudar você a construir seu formulário.",
+        "tools": "ferramentas disponíveis"
+      },
+      "Se você tiver Anexos do Formulário, poderá fornecê-los na próxima página, após o Formulário ter sido criado."
+    ],
+    "dropZone": {
+      "full": "Solte o arquivo aqui, ou {chooseOne}para carregar.",
+      "chooseOne": "escolha um"
+    },
+    "action": {
+      "uploadAnyway": "Carregar assim mesmo"
+    },
+    "alert": {
+      "fileRequired": "Por favor, selecione um arquivo."
+    },
+    "problem": {
+      "400_8": "A especificação de formulário que você carregou não parece ser para esse formulário. Ela contém uma identificação de formulário errada (era esperado \"{expected}\", mas encontramos \"{actual}\").",
+      "400_15": "O XLSForm não pode ser convertido: {error}",
+      "409_3": "Já existe um formulário nesse projeto com o ID de formulário \"{xmlFormId}\"."
+    },
+    "fields": "Campos:",
+    "warningsText": [
+      "Este arquivo pode ser usado, mas tem os seguintes problemas possíveis:",
+      "Avisos de design do formulário:",
+      "Avisos de fluxo de trabalho:",
+      {
+        "deletedFormExists": "Há um formulário com ID \"{value}\" na Lixeira. Se você fizer upload deste Formulário, não poderá desfazer a exclusão do outro com a ID correspondente.",
+        "structureChanged": "Os seguintes campos foram excluídos, renomeados ou agora estão em grupos diferentes ou repetições. Esses campos não estarão visíveis na tabela de Resposta ou incluídos nas exportações por padrão.",
+        "oldEntityVersion": "A versão “{version}” da especificação de Entidades não é compatível com Entidades Offline. Recomendamos utilizar a versão 2024.1.0 ou alguma mais recente."
+      },
+      "Por favor, corrija os problemas e tente novamente.",
+      {
+        "create": "Se tiver certeza de que esses problemas podem ser ignorados, clique no botão para criar o Formulário mesmo assim:",
+        "update": "Se tiver certeza de que esses problemas podem ser ignorados, clique no botão para atualizar o Rascunho mesmo assim:"
+      }
+    ]
   },
   "sw": {
     "title": {
@@ -722,7 +773,8 @@ export default {
       "工作流程警告：",
       {
         "deletedFormExists": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法取消刪除具有符合 ID 的另一張表單。",
-        "structureChanged": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。"
+        "structureChanged": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。",
+        "oldEntityVersion": "實體規範版本 “{version}” 與離線實體不相容。我們建議使用2024.1.0或更高版本。"
       },
       "請更正問題並重試。",
       {

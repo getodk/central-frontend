@@ -1,5 +1,3 @@
-import Popover from '../../src/components/popover.vue';
-
 import TestUtilPopoverLinks from '../util/components/popover-links.vue';
 
 import { mount } from '../util/lifecycle';
@@ -23,6 +21,28 @@ describe('Popover', () => {
     await component.vm.$nextTick();
     document.querySelectorAll('.popover').length.should.equal(1);
     document.querySelector('#hide').click();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(0);
+  });
+
+  it('hides the popover after close button of popover is clicked', async () => {
+    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
+    document.querySelector('#show-foo').click();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(1);
+    document.querySelector('.popover button').click();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(0);
+  });
+
+  it('hides on escape', async () => {
+    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
+    document.querySelector('#show-foo').click();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    document.querySelectorAll('.popover').length.should.equal(1);
+    await component.trigger('keydown', { key: 'Escape' });
     await component.vm.$nextTick();
     document.querySelectorAll('.popover').length.should.equal(0);
   });
@@ -77,31 +97,5 @@ describe('Popover', () => {
     const popoversForBar = document.querySelectorAll('.popover');
     popoversForBar.length.should.equal(1);
     popoversForBar[0].querySelector('p').textContent.should.equal('bar');
-  });
-
-  it('updates the popover after update() is called', async () => {
-    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
-    document.querySelector('#show-foo').click();
-    await component.vm.$nextTick();
-    await component.vm.$nextTick();
-    document.querySelector('.popover p').textContent.should.equal('foo');
-    component.vm.popover.text = 'baz';
-    await component.vm.$nextTick();
-    // The Popover component updates automatically, but the .popover element
-    // does not.
-    const popoverComponent = component.getComponent(Popover);
-    popoverComponent.get('p').text().should.equal('baz');
-    document.querySelector('.popover p').textContent.should.equal('foo');
-    popoverComponent.vm.update();
-    document.querySelector('.popover p').textContent.should.equal('baz');
-  });
-
-  it('uses the placement prop', async () => {
-    const component = mount(TestUtilPopoverLinks, { attachTo: document.body });
-    document.querySelector('#show-foo').click();
-    await component.vm.$nextTick();
-    await component.vm.$nextTick();
-    const popover = document.querySelector('.popover');
-    popover.classList.contains('left').should.be.true;
   });
 });

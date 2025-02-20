@@ -475,4 +475,16 @@ describe('SubmissionFilters', () => {
         multiselects[1].attributes('aria-disabled').should.equal('true');
       });
   });
+
+  // https://github.com/getodk/central/issues/756
+  it('does not send an extra OData request after filtering, then navigating away', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { draft: true });
+    return load('/projects/1/forms/f/submissions?reviewState=%27approved%27')
+      .complete()
+      // If an extra request is sent, then .load() will fail.
+      .load('/projects/1/forms/f/draft/testing', {
+        project: false, form: false, formDraft: false, attachments: false
+      });
+  });
 });

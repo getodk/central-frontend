@@ -100,6 +100,12 @@ defineEmits(['update:modelValue']);
       "newest": "Il più nuovo"
     }
   },
+  "pt": {
+    "sortOptions": {
+      "alphabetical": "Em ordem alfabética",
+      "newest": "Mais recentes"
+    }
+  },
   "sw": {
     "sortOptions": {
       "alphabetical": "Kialfabeti",

@@ -67,7 +67,7 @@ export default {
     link() {
       this.request({
         method: 'PATCH',
-        url: apiPaths.formDraftAttachment(this.form.projectId, this.form.xmlFormId, this.attachment.name),
+        url: apiPaths.formAttachment(this.form.projectId, this.form.xmlFormId, true, this.attachment.name),
         data: { dataset: true }
       })
         .then(() => {
@@ -145,6 +145,16 @@ export default {
     ],
     "action": {
       "link": "Collegamento"
+    }
+  },
+  "pt": {
+    "title": "Vincular Lista de Entidades",
+    "introduction": [
+      "Tem certeza de que deseja vincular a Lista de Entidades?",
+      "O aquivo que você carregou via upload vai ser deletado. Você sempre pode carregá-lo novamente."
+    ],
+    "action": {
+      "link": "Link"
     }
   },
   "sw": {

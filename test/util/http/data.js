@@ -81,9 +81,6 @@ const responsesByComponent = {
       ? testData.standardFormAttachments.sorted()
       : mockResponse.problem(404.1))
   }),
-  FormOverview: componentResponses({
-    publishedAttachments: () => testData.standardFormAttachments.sorted()
-  }),
   FormPreview: componentResponses({
     form: () => testData.extendedForms.last(),
     xml: () => mockResponse.of(simpleXml)
@@ -131,6 +128,7 @@ const responsesByComponent = {
   }),
   DatasetOverview: [],
   DatasetEntities: componentResponses({
+    deletedEntityCount: () => testData.entityDeletedOData(0),
     odataEntities: true
   }),
   DatasetSettings: [],

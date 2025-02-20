@@ -111,6 +111,11 @@ const config = inject('config');
       "Benvenuto su Central"
     ]
   },
+  "pt": {
+    "heading": [
+      "Bem-vindo ao Central."
+    ]
+  },
   "sw": {
     "heading": [
       "Karibu Central"

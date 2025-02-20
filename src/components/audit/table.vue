@@ -109,6 +109,13 @@ const { audits } = useRequestData();
       "details": "詳細"
     }
   },
+  "pt": {
+    "header": {
+      "initiator": "Initiator",
+      "target": "Target",
+      "details": "Detalhes"
+    }
+  },
   "sw": {
     "header": {
       "initiator": "Mwanzilishi",

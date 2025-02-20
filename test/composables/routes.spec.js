@@ -2,7 +2,6 @@ import useRoutes from '../../src/composables/routes';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
-import { mockLogin } from '../util/session';
 import { mockRouter } from '../util/router';
 import { withSetup } from '../util/lifecycle';
 
@@ -88,20 +87,8 @@ describe('useRoutes()', () => {
   });
 
   describe('publishedFormPath', () => {
-    it('returns form overview URL when user can route', () => {
-      mockLogin({ role: 'admin' });
+    it('returns a path', () => {
       const project = testData.extendedProjects.createNew();
-      const container = createTestContainer({
-        router: mockRouter('/projects/1'),
-        requestData: { project }
-      });
-      const { publishedFormPath } = withSetup(useRoutes, { container });
-      publishedFormPath(1, 'f').should.equal('/projects/1/forms/f');
-    });
-
-    it('returns submissions page URL when user can not route', () => {
-      mockLogin({ role: 'none' });
-      const project = testData.extendedProjects.createNew({ role: 'viewer' });
       const container = createTestContainer({
         router: mockRouter('/projects/1'),
         requestData: { project }
@@ -136,7 +123,7 @@ describe('useRoutes()', () => {
 
     it('infers projectId and datasetName if given one argument', () => {
       const container = createTestContainer({
-        router: mockRouter('/projects/1/entity-lists/trees')
+        router: mockRouter('/projects/1/entity-lists/trees/properties')
       });
       const { datasetPath } = withSetup(useRoutes, { container });
       const path = datasetPath('entities');

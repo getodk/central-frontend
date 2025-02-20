@@ -77,4 +77,43 @@ describe('createResources()', () => {
       });
     });
   });
+
+  describe('dataset', () => {
+    const createResource = () => {
+      const { requestData } = createTestContainer({
+        requestData: { dataset: testData.extendedDatasets.last() }
+      });
+      return requestData.dataset;
+    };
+
+    it('adds projectId to forms', () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [
+          {
+            name: 'height',
+            forms: [
+              { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+              { name: 'Tree Registration Adv', xmlFormId: 'tree_registration_adv' }
+            ]
+          }
+        ],
+        sourceForms: [
+          { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+          { name: 'Tree Registration Adv', xmlFormId: 'tree_registration_adv' }
+        ],
+        linkedForms: [
+          { name: 'Diagnosis', xmlFormId: 'monthly_diagnosis' },
+          { name: 'National Parks Survey', xmlFormId: 'national_parks_survey' }
+        ]
+      });
+      const dataset = createResource();
+      const forms = [
+        ...dataset.sourceForms,
+        ...dataset.linkedForms,
+        ...dataset.properties[0].forms
+      ];
+      forms.length.should.equal(6);
+      for (const form of forms) form.projectId.should.equal(1);
+    });
+  });
 });

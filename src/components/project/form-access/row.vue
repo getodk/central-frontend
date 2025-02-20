@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <template v-if="frozen">
       <td class="project-form-access-row-form-name">
         <span v-if="form.publishedAt == null" class="icon-edit" v-tooltip.sr-only></span>
-        <router-link :to="primaryFormPath(form)" v-tooltip.text>{{ form.nameOrId }}</router-link>
+        <form-link :form="form" v-tooltip.text/>
         <span v-if="form.publishedAt == null" class="sr-only">&nbsp;{{ $t('draftTitle') }}</span>
       </td>
       <td>
@@ -50,11 +50,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import useRoutes from '../../../composables/routes';
+import FormLink from '../../form/link.vue';
+
 import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectFormAccessRow',
+  components: { FormLink },
   props: {
     form: {
       type: Object,
@@ -72,8 +74,7 @@ export default {
   emits: ['update:state', 'update:fieldKeyAccess'],
   setup() {
     const { fieldKeys } = useRequestData();
-    const { primaryFormPath } = useRoutes();
-    return { fieldKeys, primaryFormPath };
+    return { fieldKeys };
   },
   computed: {
     htmlClass() {
@@ -194,6 +195,13 @@ export default {
     "field": {
       "state": "状態",
       "appUserAccess": "アプリユーザーのアクセス"
+    }
+  },
+  "pt": {
+    "draftTitle": "Este formulário ainda não possui uma versão publicada. Ele não aparecerá nos dispositivos até que um rascunho seja publicado. Depois de publicar o formulário, as configurações exibidas aqui serão usadas.",
+    "field": {
+      "state": "Status",
+      "appUserAccess": "Acesso de usuários de aplicativo"
     }
   },
   "sw": {

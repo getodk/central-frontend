@@ -113,6 +113,12 @@ const { publicLinks } = useRequestData();
       "accessLink": "アクセスリンク"
     }
   },
+  "pt": {
+    "header": {
+      "once": "Resposta única",
+      "accessLink": "Link de acesso"
+    }
+  },
   "sw": {
     "header": {
       "once": "Uwasilishaji Mmoja",

@@ -21,7 +21,9 @@ except according to the terms contained in the LICENSE file.
         <tbody>
           <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
             <td>
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
+              <form-link :form="form"
+                :to="publishedFormPath(form.projectId, form.xmlFormId)"
+                v-tooltip.text/>
             </td>
           </tr>
         </tbody>
@@ -31,23 +33,20 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
+import FormLink from '../../form/link.vue';
 import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
+import { useRequestData } from '../../../request-data';
 
 defineOptions({
   name: 'LinkedForms'
 });
-defineProps({
-  linkedForms: {
-    type: Array,
-    required: true
-  },
-  projectId: {
-    type: String,
-    required: true
-  }
-});
+
+const { dataset } = useRequestData();
+const linkedForms = computed(() => dataset.linkedForms);
 
 const { publishedFormPath } = useRoutes();
 </script>
@@ -99,6 +98,9 @@ const { publishedFormPath } = useRoutes();
   },
   "it": {
     "formsConsumeData": "Il formulario utilizza questo elenco di entità | I formulari utilizzano questo elenco di entità | I formulari utilizzano questo elenco di entità"
+  },
+  "pt": {
+    "formsConsumeData": "Formulário usa esta Lista de Entidades | Formulários usam esta Lista de Entidades | Formulários usam esta Lista de Entidades"
   },
   "sw": {
     "formsConsumeData": "Fomu hutumia Orodha hii ya Huluki | Fomu hutumia Orodha hii ya Huluki"

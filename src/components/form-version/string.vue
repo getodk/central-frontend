@@ -68,6 +68,9 @@ export default {
   "ja": {
     "blank": "(未設定)"
   },
+  "pt": {
+    "blank": "(em branco)"
+  },
   "sw": {
     "blank": "(tupu)"
   },

@@ -241,6 +241,16 @@ const showsAccuracyWarning = computed(() =>
     "accuracyWarning": "In questo caso, l'opinione dell'autore potrebbe non essere accurata.",
     "offlineUpdate": "Aggiornamento offline"
   },
+  "pt": {
+    "header": {
+      "oldValue": "Valor antigo",
+      "newValue": "Novo valor"
+    },
+    "comparing": "Comparando",
+    "version": "{version} {source}",
+    "accuracyWarning": "Nesse caso, a visualização do autor pode não ser precisa.",
+    "offlineUpdate": "Atualização offline"
+  },
   "zh-Hant": {
     "header": {
       "oldValue": "舊值",

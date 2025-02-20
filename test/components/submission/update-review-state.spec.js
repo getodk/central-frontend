@@ -1,5 +1,6 @@
-import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 import MarkdownTextarea from '../../../src/components/markdown/textarea.vue';
+import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
@@ -23,19 +24,11 @@ describe('SubmissionUpdateReviewState', () => {
     const modal = mount(SubmissionUpdateReviewState, mountOptions());
     await modal.setProps({ state: true });
     const radios = modal.findAll('.radio label');
-    radios.length.should.equal(3);
-
-    radios[0].get('input').attributes().value.should.equal('approved');
-    radios[0].find('.icon-check-circle').exists().should.be.true;
-    radios[0].text().should.equal('Approved');
-
-    radios[1].get('input').attributes().value.should.equal('hasIssues');
-    radios[1].find('.icon-comments').exists().should.be.true;
-    radios[1].text().should.equal('Has issues');
-
-    radios[2].get('input').attributes().value.should.equal('rejected');
-    radios[2].find('.icon-times-circle').exists().should.be.true;
-    radios[2].text().should.equal('Rejected');
+    const values = radios.map(radio => radio.get('input').attributes().value);
+    values.should.eql(['approved', 'hasIssues', 'rejected']);
+    const props = radios.map(radio =>
+      radio.getComponent(SubmissionReviewState).props().value);
+    props.should.eql(values);
   });
 
   describe('review state selection', () => {

@@ -212,6 +212,20 @@ const placeholder = (counts) => t('placeholder', counts);
       }
     }
   },
+  "pt": {
+    "placeholder": "{selected} de {total}",
+    "field": {
+      "columns": "Colunas exibidas",
+      "search": "Colunas de busca..."
+    },
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Nenhum"
+      }
+    },
+    "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
+  },
   "sw": {
     "placeholder": "{selected} kati ya {total}",
     "field": {

@@ -1,6 +1,6 @@
 import DatasetPropertyNew from '../../../../src/components/dataset/property/new.vue';
 import DatasetProperties from '../../../../src/components/dataset/overview/dataset-properties.vue';
-import ConnectionToForm from '../../../../src/components/dataset/overview/connection-to-forms.vue';
+import ConnectionToForms from '../../../../src/components/dataset/overview/connection-to-forms.vue';
 
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
@@ -44,7 +44,7 @@ describe('DatasetPropertyNew', () => {
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/entity-lists/trees').testModalToggles({
+    load('/projects/1/entity-lists/trees/properties').testModalToggles({
       modal: DatasetPropertyNew,
       show: '#dataset-property-new-button',
       hide: '.btn-link'
@@ -77,7 +77,7 @@ describe('DatasetPropertyNew', () => {
 
   describe('after a successful response', () => {
     const submit = (newPropertyName) =>
-      load('/projects/1/entity-lists/trees')
+      load('/projects/1/entity-lists/trees/properties')
         .complete()
         .request(async (app) => {
           await app.get('#dataset-property-new-button').trigger('click');
@@ -101,7 +101,7 @@ describe('DatasetPropertyNew', () => {
 
     it('updates property count in form summary', async () => {
       const app = await submit('width_cm');
-      const connections = app.findComponent(ConnectionToForm);
+      const connections = app.findComponent(ConnectionToForms);
       connections.find('.caption-cell').text().should.equal('1 of 2 properties');
     });
   });

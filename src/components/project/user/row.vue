@@ -194,6 +194,12 @@ export default {
       "projectRole": "プロジェクトでの役割"
     }
   },
+  "pt": {
+    "cannotAssignRole": "Você não pode alterar a sua própria função no projeto.",
+    "field": {
+      "projectRole": "Função de projeto"
+    }
+  },
   "sw": {
     "cannotAssignRole": "Huenda usihariri Jukumu lako la Mradi.",
     "field": {

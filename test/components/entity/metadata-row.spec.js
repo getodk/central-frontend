@@ -10,7 +10,9 @@ import { mount } from '../../util/lifecycle';
 
 const mountComponent = (props = undefined) => {
   const mergedProps = {
-    entity: testData.entityOData().value[0],
+    entity: props?.deleted
+      ? testData.entityDeletedOData().value[0]
+      : testData.entityOData().value[0],
     rowNumber: 1,
     verbs: new Set(testData.extendedUsers.first().verbs),
     ...props
@@ -133,5 +135,33 @@ describe('EntityMetadataRow', () => {
     btn.element.tagName.should.equal('A');
     btn.attributes('target').should.equal('_blank');
     btn.attributes('href').should.equal('/projects/1/entity-lists/%C3%A1/entities/e');
+  });
+
+  describe('showing deleted entity', () => {
+    it('shows the deleted date', () => {
+      testData.extendedDatasets.createPast(1);
+      const { deletedAt } = testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
+      mountComponent({ deleted: true }).get('.action-cell').getComponent(DateTime).props().iso.should.equal(deletedAt);
+    });
+
+    it('does not have delete button', () => {
+      testData.extendedDatasets.createPast(1);
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
+      mountComponent({ deleted: true }).find('.delete-button').exists().should.be.false;
+    });
+
+    it('shows restore button', () => {
+      testData.extendedDatasets.createPast(1);
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
+      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Undelete');
+    });
+
+    it('does not show the restore button if user does not have entity restore permission', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer' });
+      testData.extendedDatasets.createPast(1);
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      mountComponent({ deleted: true }).find('.restore-button').exists().should.be.false;
+    });
   });
 });

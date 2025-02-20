@@ -1,10 +1,10 @@
-
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ActorLink from '../../../src/components/actor-link.vue';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import EntityLink from '../../../src/components/entity/link.vue';
 import MarkdownView from '../../../src/components/markdown/view.vue';
 import SubmissionFeedEntry from '../../../src/components/submission/feed-entry.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 
 import useFields from '../../../src/request-data/fields';
 import useSubmission from '../../../src/request-data/submission';
@@ -93,10 +93,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Received per Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.attributes().class.should.equal('review-state');
-        reviewState.find('.icon-dot-circle-o').exists().should.be.true;
-        reviewState.text().should.equal('Received');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        expect(value).to.be.null;
       });
 
       it('renders correctly for hasIssues', () => {
@@ -106,10 +104,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Has Issues per Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('hasIssues').should.be.true;
-        reviewState.find('.icon-comments').exists().should.be.true;
-        reviewState.text().should.equal('Has Issues');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('hasIssues');
       });
 
       it('renders correctly for edited', () => {
@@ -119,10 +115,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Edited by Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('edited').should.be.true;
-        reviewState.find('.icon-pencil').exists().should.be.true;
-        reviewState.text().should.equal('Edited');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('edited');
       });
 
       it('renders correctly for approved', () => {
@@ -132,10 +126,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Approved by Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('approved').should.be.true;
-        reviewState.find('.icon-check-circle').exists().should.be.true;
-        reviewState.text().should.equal('Approved');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('approved');
       });
 
       it('renders correctly for rejected', () => {
@@ -145,10 +137,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const title = mountComponent().get('.feed-entry-title');
         title.text().should.equal('Rejected by Alice');
-        const reviewState = title.get('.review-state');
-        reviewState.classes('rejected').should.be.true;
-        reviewState.find('.icon-times-circle').exists().should.be.true;
-        reviewState.text().should.equal('Rejected');
+        const { value } = title.getComponent(SubmissionReviewState).props();
+        value.should.equal('rejected');
       });
     });
 
@@ -158,10 +148,8 @@ describe('SubmissionFeedEntry', () => {
       });
       const title = mountComponent().get('.feed-entry-title');
       title.text().should.equal('Edited by Alice');
-      const reviewState = title.get('.review-state');
-      reviewState.classes('edited').should.be.true;
-      reviewState.find('.icon-pencil').exists().should.be.true;
-      reviewState.text().should.equal('Edited');
+      const { value } = title.getComponent(SubmissionReviewState).props();
+      value.should.equal('edited');
     });
 
     it('renders correctly for a comment', () => {
@@ -228,12 +216,21 @@ describe('SubmissionFeedEntry', () => {
             }
           }
         });
-        const links = mountComponent().findAllComponents(RouterLinkStub);
-        links.length.should.equal(2);
-        links.map(link => link.props().to).should.eql([
-          '/projects/1/entity-lists/DatasetName/entities/xyz',
-          '/projects/1/entity-lists/DatasetName'
-        ]);
+        const component = mountComponent();
+
+        const entityLink = component.getComponent(EntityLink);
+        entityLink.props().should.include({
+          projectId: '1',
+          dataset: 'DatasetName'
+        });
+        const { entity } = entityLink.props();
+        entity.uuid.should.equal('xyz');
+        entity.currentVersion.label.should.equal('EntityName');
+
+        component.getComponent(DatasetLink).props().should.eql({
+          projectId: '1',
+          name: 'DatasetName'
+        });
       });
 
       it('does not render link if entity deleted (no currentVersion.label)', () => {
@@ -243,28 +240,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const component = mountComponent();
         component.get('.feed-entry-title').text().should.equal('Created Entity xyz in DatasetName Entity List');
-        const links = component.findAllComponents(RouterLinkStub);
-        links.length.should.equal(1);
-        links.map(link => link.props().to).should.eql([
-          '/projects/1/entity-lists/DatasetName'
-        ]);
-      });
-
-      it('renders okay and does not crash for action where entity details are missing', () => {
-        // This test exists because of a difference between 2022.3 and 2023.1 where the entity label
-        // was added to the audit log and used in rendering, but may not have been present in entities
-        // created in the earlier version.
-        // However, in 2023.4, we removed the label from the audit log again and dynamically compute
-        // entity.currentVersion (including currentVersion.label) for undeleted entities.
-        // Within the audit details, entity.uuid and entity.dataset have been consistently available
-        // for all entities across all versions, though this is a test that the component doesn't break
-        // catastrophically even if those are missing.
-        testData.extendedAudits.createPast(1, {
-          action: 'entity.create',
-          details: { entity: { } }
-        });
-        const title = mountComponent().get('.feed-entry-title');
-        title.text().should.equal('Created Entity  in  Entity List');
+        component.findComponent(EntityLink).exists().should.be.false;
+        component.findComponent(DatasetLink).exists().should.be.true;
       });
     });
 
@@ -295,12 +272,21 @@ describe('SubmissionFeedEntry', () => {
             }
           }
         });
-        const links = mountComponent().findAllComponents(RouterLinkStub);
-        links.length.should.equal(2);
-        links.map(link => link.props().to).should.eql([
-          '/projects/1/entity-lists/DatasetName/entities/xyz',
-          '/projects/1/entity-lists/DatasetName'
-        ]);
+        const component = mountComponent();
+
+        const entityLink = component.getComponent(EntityLink);
+        entityLink.props().should.include({
+          projectId: '1',
+          dataset: 'DatasetName'
+        });
+        const { entity } = entityLink.props();
+        entity.uuid.should.equal('xyz');
+        entity.currentVersion.label.should.equal('EntityName');
+
+        component.getComponent(DatasetLink).props().should.eql({
+          projectId: '1',
+          name: 'DatasetName'
+        });
       });
 
       it('does not render link if entity deleted (no currentVersion.label)', () => {
@@ -310,11 +296,8 @@ describe('SubmissionFeedEntry', () => {
         });
         const component = mountComponent();
         component.get('.feed-entry-title').text().should.equal('Updated Entity xyz in DatasetName Entity List');
-        const links = component.findAllComponents(RouterLinkStub);
-        links.length.should.equal(1);
-        links.map(link => link.props().to).should.eql([
-          '/projects/1/entity-lists/DatasetName'
-        ]);
+        component.findComponent(EntityLink).exists().should.be.false;
+        component.findComponent(DatasetLink).exists().should.be.true;
       });
     });
 

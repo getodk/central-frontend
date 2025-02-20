@@ -12,9 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="form-row">
     <td class="name">
-      <link-if-can :to="primaryFormPath(form)">
-        {{ form.nameOrId }}
-      </link-if-can>
+      <form-link :form="form"/>
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
 
@@ -32,7 +30,7 @@ except according to the terms contained in the LICENSE file.
       <td class="last-submission">
         <span v-tooltip.no-aria="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
-            <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)">
+            <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')">
               <date-time :iso="form.lastSubmission" relative="past"
                 :tooltip="false"/>
               <span class="icon-clock-o"></span>
@@ -42,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="total-submissions">
-        <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)"
+        <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
@@ -89,6 +87,7 @@ import { DateTime } from 'luxon';
 import DateTimeComponent from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
+import FormLink from './link.vue';
 import LinkIfCan from '../link-if-can.vue';
 
 import useReviewState from '../../composables/review-state';
@@ -98,7 +97,13 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormRow',
-  components: { DateTime: DateTimeComponent, EnketoFill, EnketoPreview, LinkIfCan },
+  components: {
+    DateTime: DateTimeComponent,
+    EnketoFill,
+    EnketoPreview,
+    FormLink,
+    LinkIfCan
+  },
   props: {
     form: {
       type: Object,
@@ -111,11 +116,11 @@ export default {
   },
   setup() {
     const { project, duplicateFormNames } = useRequestData();
-    const { formPath, primaryFormPath } = useRoutes();
+    const { formPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       project, duplicateFormNames,
-      formPath, primaryFormPath,
+      formPath,
       reviewStateIcon
     };
   },
@@ -287,6 +292,13 @@ export default {
     "action": {
       "fill": "フォームに記入"
     }
+  },
+  "pt": {
+    "action": {
+      "fill": "Preencher formulário",
+      "test": "Teste"
+    },
+    "formClosingTip": "Este Formulário está sendo fechado e aceitando suas respostas finais. Ele não pode ser baixado, mas ainda aceita Respostas."
   },
   "sw": {
     "action": {

@@ -139,6 +139,12 @@ watch([action, dateRange], fetchData);
     ],
     "emptyTable": "照合できる監査ログの記録がありません。"
   },
+  "pt": {
+    "heading": [
+      "Aqui você encontrará um registro de auditoria de ações importantes realizadas nesse servidor. Alterações feitas a configurações de usuários, projetos ou formulários podem ser encontradas aqui."
+    ],
+    "emptyTable": "Não existem entradas correspondentes no registro de auditoria."
+  },
   "sw": {
     "heading": [
       "Hapa utapata logi ya vitendo muhimu vilivyofanywa kwenye seva hii. Mabadiliko yaliyofanywa kwa mipangilio ya mtumiaji, Mradi, au Fomu yanaweza kupatikana hapa."

@@ -187,6 +187,10 @@ export default {
     "markdownSupported": "マークダウンがサポートされています。",
     "preview": "プレビュー"
   },
+  "pt": {
+    "markdownSupported": "Formatação em estilo Markdown suportada",
+    "preview": "Visualização"
+  },
   "sw": {
     "markdownSupported": "Markdown inatumika",
     "preview": "Hakiki"

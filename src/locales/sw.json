@@ -158,7 +158,8 @@
     "expand": "Panua",
     "collapse": "Punguza",
     "reviewParallelUpdates": "Kagua masasisho sambamba",
-    "upload": "pakia"
+    "upload": "pakia",
+    "restore": "Ondoa kufuta"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -171,7 +172,6 @@
     "passphrase": "Nenosiri",
     "password": "Password",
     "passwordConfirm": "Password mpya (thibitisha)",
-    "reviewState": "Kagua hali",
     "type": "Aina"
   },
   "header": {
@@ -211,8 +211,8 @@
     "appUser": "mtumiaji wa programu",
     "appUsers": "watumiaji wa programu",
     "config": "usanidi wa seva",
-    "entityList": "Orodha ya Huluki",
     "entities": "vyombo",
+    "entityList": "Orodha ya Huluki",
     "form": "Fomu",
     "forms": "fomu",
     "formAttachments": "Viambatisho vya Fomu",
@@ -302,6 +302,7 @@
     "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}",
     "new": "Mpya!",
     "totalEntities": "Jumla ya Mashirika",
+    "reviewState": "Kagua hali",
     "status": "Hali",
     "version": "Toleo"
   },

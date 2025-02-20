@@ -336,6 +336,24 @@ export default {
       "401_2": "メールアドレスとパスワードの一方、または両方が違います。"
     }
   },
+  "pt": {
+    "alert": {
+      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar.",
+      "changePassword": "Sua senha é menor que 10 caracteres. Para proteger sua conta, por favor crie uma senha mais longa."
+    },
+    "oidc": {
+      "body": "Clique em Continuar para prosseguir para a página de login.",
+      "error": {
+        "auth-ok-user-not-found": "Não há nenhuma conta no Central associada ao seu endereço de e-mail. Peça ao seu administrador do Central para criar uma conta para você continuar.",
+        "email-not-verified": "Seu endereço de e-mail não foi verificado pelo seu servidor de login. Por favor, entre em contato com o administrador do seu servidor.",
+        "email-claim-not-provided": "O Central não conseguiu acessar o endereço de e-mail associado à sua conta. Isso pode ter ocorrido porque o administrador do servidor configurou algo incorretamente ou não definiu um endereço de e-mail para a sua conta. Também pode ser resultado de opções de privacidade que você pode escolher durante o processo de login. Nesse caso, tente novamente e certifique-se de que seu e-mail seja compartilhado.",
+        "internal-server-error": "Algo deu errado durante o login. Por favor, entre em contato com o administrador do seu servidor."
+      }
+    },
+    "problem": {
+      "401_2": "Endereço de email e/ou senha incorretos."
+    }
+  },
   "sw": {
     "alert": {
       "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea.",

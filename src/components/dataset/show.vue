@@ -9,7 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <div id="dataset-show">
     <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
@@ -18,17 +17,17 @@ except according to the terms contained in the LICENSE file.
         {{ datasetName }}
       </template>
       <template #tabs>
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">
-            {{ $t('common.tab.overview') }}
-          </router-link>
-        </li>
         <li :class="tabClass('entities')" role="presentation">
           <router-link :to="tabPath('entities')">
-            {{ $t('common.data') }}
+            {{ $t('resource.entities') }}
             <span v-if="dataset.dataExists" class="badge">
               {{ $n(dataset.entities, 'default') }}
             </span>
+          </router-link>
+        </li>
+        <li :class="tabClass('properties')" role="presentation">
+          <router-link :to="tabPath('properties')">
+            {{ $t('resource.properties') }}
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')" role="presentation">
@@ -84,7 +83,7 @@ export default {
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, datasetPath, tabPath, tabClass, canRoute
+      projectPath, tabPath, tabClass, canRoute
     };
   },
   computed: {
@@ -147,6 +146,9 @@ export default {
   },
   "it": {
     "back": "Torna alle Entità del progetto"
+  },
+  "pt": {
+    "back": "Voltar para Entidades do Projeto"
   },
   "sw": {
     "back": "Rudi kwenye vyombo vya Mradi"

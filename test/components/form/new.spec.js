@@ -1,6 +1,5 @@
 import { clone } from 'ramda';
 
-import ChecklistStep from '../../../src/components/checklist-step.vue';
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
@@ -393,39 +392,6 @@ describe('FormNew', () => {
           badge.text().should.equal('2');
         });
     });
-
-    it('updates the checklist', () => {
-      testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, {
-        submissions: 1,
-        draft: true
-      });
-      testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          const steps = app.findAllComponents(ChecklistStep);
-          steps.length.should.equal(4);
-          steps[2].props().stage.should.equal('complete');
-        })
-        .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
-          return upload(app);
-        })
-        .respondWithData(() => {
-          testData.extendedFormVersions.createNew({
-            version: 'v2',
-            draft: true
-          });
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .afterResponses(app => {
-          const steps = app.findAllComponents(ChecklistStep);
-          steps.length.should.equal(4);
-          steps[2].props().stage.should.equal('current');
-        });
-    });
   });
 
   describe('custom alert messages', () => {
@@ -486,6 +452,24 @@ describe('FormNew', () => {
           modal.should.alert(
             'danger',
             'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “expected_id”, got “uploaded_id”).'
+          );
+        });
+    });
+
+    it('shows a message for duplicate entity property', () => {
+      testData.extendedForms.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 409.17,
+          message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+          details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+        })
+        .afterResponse(modal => {
+          modal.should.alert(
+            'danger',
+            /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
           );
         });
     });

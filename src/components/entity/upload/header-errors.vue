@@ -11,38 +11,42 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <dl id="entity-upload-header-errors" class="dl-horizontal">
-    <div>
-      <dt>{{ $t('expectedHeader') }}</dt>
-      <dd :ref="setHeaderElement(0)" class="csv-header" @scroll="scrollHeader">
+    <dt>{{ $t('expectedHeader') }}</dt>
+    <dd>
+      <div :ref="setHeaderElement(0)" class="csv-header" @scroll="scrollHeader">
         {{ expectedHeader }}
-      </dd>
-    </div>
-    <div>
-      <dt v-tooltip.text>{{ filename }}</dt>
-      <dd :ref="setHeaderElement(1)" class="csv-header" @scroll="scrollHeader">
+      </div>
+    </dd>
+
+    <dt id="entity-upload-header-errors-filename" v-tooltip.text>
+      {{ filename }}
+    </dt>
+    <dd>
+      <div :ref="setHeaderElement(1)" class="csv-header" @scroll="scrollHeader">
         {{ header }}
-      </dd>
-    </div>
-    <div v-if="hasSuggestion" id="entity-upload-header-errors-suggestions">
-      <dt>{{ $t('suggestions.title') }}</dt>
-      <dd>
-        <p v-if="invalidQuotes">{{ $t('suggestions.invalidQuotes') }}</p>
-        <i18n-t v-if="missingLabel" tag="p" keypath="suggestions.missingLabel">
-          <template #label>
-            <span class="text-monospace">label</span>
-          </template>
-        </i18n-t>
-        <p v-if="unknownProperty">{{ $t('suggestions.unknownProperty') }}</p>
-        <p v-if="duplicateColumn">{{ $t('suggestions.duplicateColumn') }}</p>
-        <p v-if="emptyColumn">{{ $t('suggestions.emptyColumn') }}</p>
-        <i18n-t v-if="delimiter !== ','" tag="p"
-          keypath="suggestions.delimiterNotComma">
-          <template #delimiter>
-            <code>{{ formattedDelimiter }}</code>
-          </template>
-        </i18n-t>
-      </dd>
-    </div>
+      </div>
+    </dd>
+
+    <dt v-if="hasSuggestion" class="entity-upload-header-errors-suggestions">
+      {{ $t('suggestions.title') }}
+    </dt>
+    <dd v-if="hasSuggestion" class="entity-upload-header-errors-suggestions">
+      <p v-if="invalidQuotes">{{ $t('suggestions.invalidQuotes') }}</p>
+      <i18n-t v-if="missingLabel" tag="p" keypath="suggestions.missingLabel">
+        <template #label>
+          <span class="text-monospace">label</span>
+        </template>
+      </i18n-t>
+      <p v-if="unknownProperty">{{ $t('suggestions.unknownProperty') }}</p>
+      <p v-if="duplicateColumn">{{ $t('suggestions.duplicateColumn') }}</p>
+      <p v-if="emptyColumn">{{ $t('suggestions.emptyColumn') }}</p>
+      <i18n-t v-if="delimiter !== ','" tag="p"
+        keypath="suggestions.delimiterNotComma">
+        <template #delimiter>
+          <code>{{ formattedDelimiter }}</code>
+        </template>
+      </i18n-t>
+    </dd>
   </dl>
 </template>
 
@@ -108,20 +112,18 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 #entity-upload-header-errors {
   margin-bottom: 0;
 
-  div {
-    padding-left: $padding-panel-body;
-    padding-right: $padding-panel-body;
-  }
-
   .csv-header {
     @include line-clamp(3);
     font-family: $font-family-monospace;
     overflow-x: auto;
     white-space: break-spaces;
   }
+  dd:has(.csv-header) { overflow-x: hidden; }
 }
 
-#entity-upload-header-errors-suggestions {
+#entity-upload-header-errors-filename { @include text-overflow-ellipsis; }
+
+.entity-upload-header-errors-suggestions {
   color: $color-danger;
 
   p:last-child { margin-bottom: 0; }
@@ -200,6 +202,18 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "duplicateColumn": "Sembra che due o più colonne abbiano la stessa intestazione. Assicurarsi che le intestazioni delle colonne siano uniche.",
       "emptyColumn": "Sembra che ci sia una cella vuota nell'intestazione. Eliminare le colonne vuote nel file.",
       "delimiterNotComma": "Ciò potrebbe essere dovuto al fatto che abbiamo sbagliato il delimitatore di cella. Abbiamo usato {delimiter}."
+    }
+  },
+  "pt": {
+    "expectedHeader": "Cabeçalho esperado",
+    "suggestions": {
+      "title": "Sugestões",
+      "invalidQuotes": "Um campo entre aspas é inválido. Verifique a linha de cabeçalho do seu arquivo para ver se há valores incomuns.",
+      "missingLabel": "Uma propriedade de {label} é obrigatória. O rótulo indica o nome a ser usado para cada Entidade no Central e em outros lugares.",
+      "unknownProperty": "Se quiser adicionar propriedades a esta Lista de Entidades, você pode fazê-lo na seção Propriedades da Entidade na página Visão Geral desta Lista de Entidades, ou pode carregar e publicar um Formulário que faça referência à propriedade.",
+      "duplicateColumn": "Parece que duas ou mais colunas têm o mesmo cabeçalho. Certifique-se de que os cabeçalhos das colunas sejam exclusivos.",
+      "emptyColumn": "Parece que você tem uma célula vazia no cabeçalho. Remova todas as colunas vazias do seu arquivo.",
+      "delimiterNotComma": "Isso pode ter ocorrido porque definimos o delimitador de célula errado. Usamos {delimiter}."
     }
   },
   "zh-Hant": {

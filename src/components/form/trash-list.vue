@@ -102,44 +102,54 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+#form-trash-list {
+  #form-trash-list-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 
-#form-trash-list-header {
-  display: flex;
-  align-items: baseline;
+    #form-trash-expander {
+      // Fixate the width as icon-chevron-down and icon-chevron-right have unequal width :-(
+      display: inline-block;
+      width: 1em;
+      margin-right: 15px;
+      font-size: 12px;
+    }
 
-  #form-trash-expander {
-    // Fixate the width as icon-chevron-down and icon-chevron-right have unequal width :-(
-    display: inline-block;
-    width: 1em;
+    .icon-trash {
+      padding-right: 8px;
+    }
+
+    .trash-count {
+      font-weight: normal;
+      color: black;
+    }
+
+    #form-trash-list-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: $color-danger;
+      display: flex;
+      align-items: center;
+    }
+
+    #form-trash-list-count {
+      font-size: 20px;
+      color: #888;
+      padding-left: 4px;
+    }
+
+    #form-trash-list-note {
+      margin-left: auto;
+      color: #888
+    }
   }
 
-  .icon-trash {
-    padding-right: 8px;
-  }
-
-  .trash-count {
-    font-weight: normal;
-    color: black;
-  }
-
-  #form-trash-list-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: $color-danger;
-  }
-
-  #form-trash-list-count {
-    font-size: 20px;
-    color: #888;
-    padding-left: 4px;
-  }
-
-  #form-trash-list-note {
-    margin-left: auto;
-    color: #888
+  // Hides default chevron in safari
+  summary::-webkit-details-marker {
+    display: none;
   }
 }
-
 </style>
 
 <i18n lang="json5">
@@ -209,6 +219,14 @@ export default {
       "restore": "フォーム”{name}”は復元されました。"
     },
     "message": "フォームとフォームに関連したデータは30日後に削除されます。"
+  },
+  "pt": {
+    "title": "Lixeira",
+    "trashCount": "({count})",
+    "alert": {
+      "restore": "A exclusão do Formulário \"{name}\" foi desfeita."
+    },
+    "message": "Formulários e dados relacionados a Formulários são excluídos após 30 dias na Lixeira"
   },
   "sw": {
     "title": "Takataka",

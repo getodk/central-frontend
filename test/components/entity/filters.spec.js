@@ -18,23 +18,23 @@ describe('EntityFilters', () => {
     describe('initial request', () => {
       it('does not filter by default', () =>
         load('/projects/1/entity-lists/trees/entities', { root: false })
-          .beforeEachResponse((_, { url }) => {
-            if (!url.includes('.svc')) return;
+          .beforeEachResponse((_, { url }, index) => {
+            if (index !== 1) return;
             relativeUrl(url).searchParams.has('$filter').should.be.false;
           }));
 
       it('sends the correct request for ?conflict=true', () =>
         load('/projects/1/entity-lists/trees/entities?conflict=true', { root: false })
-          .beforeEachResponse((_, { url }) => {
-            if (!url.includes('.svc')) return;
+          .beforeEachResponse((_, { url }, index) => {
+            if (index !== 1) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
             filter.should.equal('__system/conflict ne null');
           }));
 
       it('sends the correct request for ?conflict=false', () =>
         load('/projects/1/entity-lists/trees/entities?conflict=false', { root: false })
-          .beforeEachResponse((_, { url }) => {
-            if (!url.includes('.svc')) return;
+          .beforeEachResponse((_, { url }, index) => {
+            if (index !== 1) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
             filter.should.equal('__system/conflict eq null');
           }));
@@ -76,8 +76,8 @@ describe('EntityFilters', () => {
       for (const query of cases) {
         it(`falls back to the default for ?${query}`, () =>
           load(`/projects/1/entity-lists/trees/entities?${query}`, { root: false })
-            .beforeEachResponse((_, { url }) => {
-              if (!url.includes('.svc')) return;
+            .beforeEachResponse((_, { url }, index) => {
+              if (index !== 1) return;
               relativeUrl(url).searchParams.has('$filter').should.be.false;
             }));
       }
@@ -191,6 +191,20 @@ describe('EntityFilters', () => {
       }))
       .afterResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(2);
+      });
+  });
+
+  it('disables the filter', () => {
+    testData.extendedDatasets.createPast(1);
+    testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+    return load('/projects/1/entity-lists/trees/entities?deleted=true', {
+      attachTo: document.body
+    }, {
+      deletedEntityCount: false
+    })
+      .afterResponses(component => {
+        const conflictFilter = component.findAll('.multiselect select');
+        conflictFilter[0].attributes('aria-disabled').should.equal('true');
       });
   });
 });

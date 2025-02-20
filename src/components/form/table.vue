@@ -171,6 +171,14 @@ export default {
       "idAndVersion": "フォームIDとバージョン"
     }
   },
+  "pt": {
+    "header": {
+      "closedForms": "Formulários Fechados",
+      "reviewStates": "Status de Revisão",
+      "latest": "Mais recentes",
+      "idAndVersion": "ID e versão"
+    }
+  },
   "sw": {
     "header": {
       "closedForms": "Fomu Zilizofungwa",

@@ -172,6 +172,16 @@ export default {
       "ファイル名が一致しないため、ダブルチェックしています。"
     ]
   },
+  "pt": {
+    "title": {
+      "upload": "Subir arquivo",
+      "replace": "Substituir arquivo"
+    },
+    "introduction": [
+      "Você tem certeza que deseja carregar o arquivo {filename}como {attachmentName}?",
+      "Nós estamos verificando novamente porque os nomes dos arquivos não coincidem."
+    ]
+  },
   "sw": {
     "title": {
       "upload": "Pakia Faili",

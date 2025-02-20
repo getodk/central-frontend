@@ -2,6 +2,7 @@ import EnketoFill from '../../../src/components/enketo/fill.vue';
 import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
 import testData from '../../data';
+import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -44,22 +45,20 @@ describe('FormSubmissions', () => {
       text.should.equal('Download 1 Submission…');
     });
 
-    it('updates the form overview if the count changes', () => {
+    it('updates the tab badge if the count changes', () => {
       testData.extendedForms.createPast(1, { submissions: 10 });
       testData.extendedSubmissions.createPast(11);
-      return load('/projects/1/forms/f')
+      return load('/projects/1/forms/f/settings')
         .afterResponses(app => {
-          const item = app.get('#form-overview-right-now-submissions');
-          item.get('.summary-item-heading').text().should.equal('10');
+          findTab(app, 'Submissions').get('.badge').text().should.equal('10');
         })
         .load('/projects/1/forms/f/submissions', {
           project: false, form: false, formDraft: false, attachments: false
         })
         .complete()
-        .route('/projects/1/forms/f')
+        .route('/projects/1/forms/f/settings')
         .then(app => {
-          const item = app.get('#form-overview-right-now-submissions');
-          item.get('.summary-item-heading').text().should.equal('11');
+          findTab(app, 'Submissions').get('.badge').text().should.equal('11');
         });
     });
   });

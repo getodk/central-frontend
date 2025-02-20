@@ -83,6 +83,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-download" */
     '../components/download.vue'
   )))
+  .set('EntityBranchData', loader(() => import(
+    /* webpackChunkName: "component-entity-branch-data" */
+    '../components/entity/branch-data.vue'
+  )))
   .set('EntityShow', loader(() => import(
     /* webpackChunkName: "component-entity-show" */
     '../components/entity/show.vue'
@@ -110,10 +114,6 @@ const loaders = new Map()
   .set('FormDraftTesting', loader(() => import(
     /* webpackChunkName: "component-form-draft-testing" */
     '../components/form-draft/testing.vue'
-  )))
-  .set('FormOverview', loader(() => import(
-    /* webpackChunkName: "component-form-overview" */
-    '../components/form/overview.vue'
   )))
   .set('FormSettings', loader(() => import(
     /* webpackChunkName: "component-form-settings" */
@@ -147,9 +147,17 @@ const loaders = new Map()
     /* webpackChunkName: "component-home-config-section" */
     '../components/home/config-section.vue'
   )))
+  .set('HoverCards', loader(() => import(
+    /* webpackChunkName: "component-hover-cards" */
+    '../components/hover-cards.vue'
+  )))
   .set('NotFound', loader(() => import(
     /* webpackChunkName: "component-not-found" */
     '../components/not-found.vue'
+  )))
+  .set('OutdatedVersion', loader(() => import(
+    /* webpackChunkName: "component-outdated-version" */
+    '../components/outdated-version.vue'
   )))
   .set('ProjectFormAccess', loader(() => import(
     /* webpackChunkName: "component-project-form-access" */

@@ -10,7 +10,7 @@ const mountComponent = (options = undefined) =>
 describe('EntityDelete', () => {
   it('shows the entity label', () => {
     const modal = mountComponent({
-      props: { label: 'My Entity' }
+      props: { entity: { label: 'My Entity' } }
     });
     modal.get('.modal-title').text().should.equal('Delete My Entity');
     modal.get('.modal-introduction').text().should.include('My Entity');

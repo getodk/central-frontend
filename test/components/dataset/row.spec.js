@@ -1,5 +1,6 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import DatasetRow from '../../../src/components/dataset/row.vue';
 
 import testData from '../../data';
@@ -14,10 +15,8 @@ const mountComponent = () => mount(DatasetRow, {
 describe('DatasetRow', () => {
   it('shows the name', async () => {
     testData.extendedDatasets.createPast(1, { name: 'my_dataset' });
-    const row = mountComponent();
-    const link = row.getComponent(RouterLinkStub);
-    link.props().to.should.equal('/projects/1/entity-lists/my_dataset');
-    link.text().should.equal('my_dataset');
+    const link = mountComponent().getComponent(DatasetLink);
+    link.props().should.eql({ projectId: 1, name: 'my_dataset' });
     await link.should.have.textTooltip();
   });
 

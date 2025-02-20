@@ -1,5 +1,3 @@
-import ChecklistStep from '../../../src/components/checklist-step.vue';
-import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
 import testData from '../../data';
@@ -20,6 +18,19 @@ describe('FormDraftTesting', () => {
     should.not.exist(document.querySelector('.popover'));
   });
 
+  it('hides QR code on close button', async () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { draft: true });
+    const component = await load('/projects/1/forms/f/draft/testing', {
+      root: false,
+      attachTo: document.body
+    });
+    await component.get('#submission-list-test-on-device').trigger('click');
+    should.exist(document.querySelector('.popover .form-draft-qr-panel'));
+    await document.querySelector('.popover button').click();
+    should.not.exist(document.querySelector('.popover'));
+  });
+
   describe('submission count', () => {
     beforeEach(mockLogin);
 
@@ -34,30 +45,6 @@ describe('FormDraftTesting', () => {
       });
       const text = component.getComponent(SubmissionDownloadButton).text();
       text.should.equal('Download 2 Submissions…');
-    });
-
-    it('updates the draft checklist if the count changes', () => {
-      testData.extendedForms.createPast(1);
-      const draft = testData.extendedFormVersions
-        .createPast(1, { draft: true, submissions: 0 })
-        .last();
-      testData.extendedSubmissions.createPast(1, { form: draft });
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          const steps = app.getComponent(FormDraftStatus)
-            .findAllComponents(ChecklistStep);
-          steps[1].props().stage.should.equal('current');
-        })
-        .load('/projects/1/forms/f/draft/testing', {
-          project: false, form: false, formDraft: false, attachments: false
-        })
-        .complete()
-        .route('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          const steps = app.getComponent(FormDraftStatus)
-            .findAllComponents(ChecklistStep);
-          steps[1].props().stage.should.equal('complete');
-        });
     });
   });
 

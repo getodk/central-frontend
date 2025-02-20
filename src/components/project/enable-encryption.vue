@@ -680,6 +680,60 @@ export default {
       "passphraseTooShort": "パスフレーズを10文字以上で入力してください。"
     }
   },
+  "pt": {
+    "title": "Habilitar encriptação",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "Se você habilitar a encriptação, ocorrerá o seguinte:",
+            "Dados de respostas finalizadas serão encriptados nos dispositivos móveis.",
+            "Dados de respostas atualmente armazenados nesse servidor Central serão criptografados.",
+            [
+              "Formulários configurados com chaves manuais de encriptação {submission} continuarão a utilizar essas chaves e precisarão ser descriptografados manualmente.",
+              "Para usar o processo de encriptação automático do Central nesses formulários, remova a configuração da chave {base64RsaPublicKey}."
+            ],
+            "Você não poderá mais editar ou visualizar dados de Resposta on-line.",
+            "Você não poderá mais analisar dados via OData.",
+            "Você não poderá mais editar respostas no seu navegador de internet.",
+            "Novas Respostas não serão mais processadas em Entidades."
+          ],
+          [
+            "Além disso, as informações a seguir são verdadeiras nessa versão do ODK Central:",
+            [
+              "As respostas existentes permanecerão sem encriptação."
+            ],
+            [
+              "A encriptação não poderá ser desligada uma vez que tenha sido habilitada."
+            ],
+            "Respostas de teste para Rascunhos de Formulários existentes serão removidos permanentemente."
+          ],
+          {
+            "full": "Você pode aprender mais sobre encriptação {here}. Se isso soa como algo que você deseja, pressione próximo para continuar.",
+            "here": "aqui"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "Primeiro, você precisará escolher uma senha longa. Esta senha será necessária para descriptografar suas respostas. Para garantir sua privacidade, o servidor não se lembrará desta frase secreta: somente as pessoas com a frase secreta poderão decifrar e ler seus dados de respostas.",
+          {
+            "full": "Se você perder a dica de senha, não há {no} maneira de recuperar ela ou seus dados!",
+            "no": "não"
+          }
+        ]
+      }
+    ],
+    "success": [
+      "Encriptação foi configurada para este Projeto. Todos os dispositivos móveis terão que buscar ou buscar novamente os Formulários mais recentes para que a encriptação ocorra."
+    ],
+    "field": {
+      "hint": "Dica de senha (opcional)"
+    },
+    "alert": {
+      "passphraseTooShort": "Insira uma dica de senha com pelo menos 10 caracteres."
+    }
+  },
   "sw": {
     "title": "Washa Usimbaji",
     "steps": [

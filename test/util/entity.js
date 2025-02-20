@@ -5,6 +5,7 @@ import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
 import { mockRouter } from './router';
 import { testRequestData } from './request-data';
+import useEntities from '../../src/request-data/entities';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadEntityList = (mountOptions = {}) => {
@@ -17,15 +18,15 @@ export const loadEntityList = (mountOptions = {}) => {
       top: EntityList.props.top.default
     },
     container: {
-      requestData: testRequestData([], {
+      requestData: testRequestData([useEntities], {
         project,
         dataset
       }),
       router: mockRouter('')
     }
   });
-  const { top } = mergedOptions.props;
+  const { top, deleted } = mergedOptions.props;
   return mockHttp()
     .mount(EntityList, mergedOptions)
-    .respondWithData(() => testData.entityOData(top(0)));
+    .respondWithData(() => (deleted ? testData.entityDeletedOData(top(0)) : testData.entityOData(top(0))));
 };

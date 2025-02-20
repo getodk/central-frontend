@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div id="entity-list">
     <div id="entity-list-actions">
       <form class="form-inline" @submit.prevent>
-        <entity-filters v-model:conflict="conflict"/>
+        <entity-filters v-model:conflict="conflict" :disabled="deleted"
+        :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         <button id="entity-list-refresh-button" type="button"
           class="btn btn-default" :aria-disabled="refreshing"
           @click="fetchChunk(false, true)">
@@ -21,11 +22,15 @@ except according to the terms contained in the LICENSE file.
           <spinner :state="refreshing"/>
         </button>
       </form>
-      <entity-download-button :odata-filter="odataFilter"/>
+      <entity-download-button :odata-filter="deleted ? null : odataFilter"
+      :aria-disabled="deleted"
+      v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
     </div>
     <entity-table v-show="showsTable" ref="table"
-      :properties="dataset.properties" @update="showUpdate"
-      @resolve="showResolve" @delete="showDelete"/>
+      :properties="dataset.properties"
+      :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+      @update="showUpdate"
+      @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
     <p v-show="showsEmptyMessage" class="empty-table-message">
       {{ odataFilter == null ? $t('noEntities') : $t('noMatching') }}
     </p>
@@ -38,15 +43,20 @@ except according to the terms contained in the LICENSE file.
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
-    <entity-delete v-bind="del" checkbox @hide="hideDelete"
-      @delete="requestDelete(uuidToDelete, del.label, $event)"/>
+    <entity-delete v-bind="deleteModal" checkbox
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.entity.__id)"
+      @hide="deleteModal.hide()" @delete="requestDelete"/>
+    <entity-restore v-bind="restoreModal" checkbox
+      :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.entity.__id)"
+      @hide="restoreModal.hide()" @restore="requestRestore"/>
   </div>
 </template>
 
 <script>
-import { watchEffect } from 'vue';
+import { watchEffect, reactive } from 'vue';
 
 import EntityDelete from './delete.vue';
+import EntityRestore from './restore.vue';
 import EntityDownloadButton from './download-button.vue';
 import EntityFilters from './filters.vue';
 import EntityTable from './table.vue';
@@ -55,7 +65,6 @@ import EntityResolve from './resolve.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
 
-import useEntities from '../../request-data/entities';
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
@@ -68,6 +77,7 @@ export default {
   name: 'EntityList',
   components: {
     EntityDelete,
+    EntityRestore,
     EntityDownloadButton,
     EntityFilters,
     EntityTable,
@@ -89,17 +99,21 @@ export default {
       type: String,
       required: true
     },
+    deleted: {
+      type: Boolean,
+      required: false
+    },
     // Returns the value of the $top query parameter.
     top: {
       type: Function,
       default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
+  emits: ['fetch-deleted-count'],
   setup() {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
-    const { dataset } = useRequestData();
-    const odataEntities = useEntities();
+    const { dataset, deletedEntityCount, odataEntities } = useRequestData();
     // We do not reconcile `odataEntities` with either dataset.lastEntity or
     // project.lastEntity.
     watchEffect(() => {
@@ -121,7 +135,7 @@ export default {
 
     const { request } = useRequest();
 
-    return { dataset, odataEntities, conflict, request };
+    return { dataset, odataEntities, conflict, request, deletedEntityCount };
   },
   data() {
     return {
@@ -135,13 +149,21 @@ export default {
       resolveIndex: null,
       resolve: modalData(),
 
+      // state that indicates whether we need to show delete confirmation dialog
       confirmDelete: true,
-      uuidToDelete: null,
-      del: modalData()
+      deleteModal: modalData(),
+
+      // state that indicates whether we need to show restore confirmation dialog
+      confirmRestore: true,
+      restoreModal: modalData(),
+
+      awaitingResponses: new Set()
     };
   },
   computed: {
     odataFilter() {
+      if (this.deleted) return '__system/deletedAt ne null';
+
       return this.conflict.length === 2
         ? null
         : (this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
@@ -149,7 +171,7 @@ export default {
     showsTable() {
       if (!this.odataEntities.dataExists) return false;
       const { length } = this.odataEntities.value;
-      return length !== 0 && length !== this.odataEntities.deletedCount;
+      return length !== 0 && length !== this.odataEntities.removedCount;
     },
     showsEmptyMessage() {
       // If there are more entities to fetch, then we don't show the message
@@ -198,8 +220,22 @@ export default {
           ? (response) => this.odataEntities.addChunk(response.data)
           : null
       })
+        .then(() => {
+          if (this.deleted) {
+            this.deletedEntityCount.cancelRequest();
+            if (!this.deletedEntityCount.dataExists) {
+              this.deletedEntityCount.data = reactive({});
+            }
+            this.deletedEntityCount.value = this.odataEntities.originalCount;
+          }
+        })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // emit event to parent component to re-fetch deleted Submissions count
+      if (refresh && !this.deleted) {
+        this.$emit('fetch-deleted-count');
+      }
     },
     // This method is called directly by DatasetEntities.
     reset() {
@@ -279,28 +315,27 @@ export default {
 
       this.$refs.table.afterUpdate(this.resolveIndex);
     },
-    showDelete(index) {
-      const entity = this.odataEntities.value[index];
+    showDelete(entity) {
       if (this.confirmDelete) {
-        this.uuidToDelete = entity.__id;
-        this.del.show({ label: entity.label });
+        this.deleteModal.show({ entity });
       } else {
-        this.requestDelete(entity.__id, entity.label);
+        this.requestDelete([entity, this.confirmDelete]);
       }
     },
-    hideDelete() {
-      this.del.hide();
-      this.uuidToDelete = null;
-    },
-    requestDelete(uuid, label, confirm = undefined) {
-      if (this.del.state) this.del.awaitingResponse = true;
+    requestDelete(event) {
+      const [{ __id: uuid, label }, confirm] = event;
+
+      this.awaitingResponses.add(uuid);
+
       this.request({
         method: 'DELETE',
         url: apiPaths.entity(this.projectId, this.datasetName, uuid)
       })
         .then(() => {
-          this.hideDelete();
-          this.alert.success(this.$t('alert.delete', { label }));
+          this.deleteModal.hide();
+          if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
+
+          this.alert.success(this.$t('alert.entityDeleted', { label }));
           if (confirm != null) this.confirmDelete = confirm;
 
           /* Before doing a couple more things, we first determine whether
@@ -316,11 +351,53 @@ export default {
             ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
             : -1;
           if (index !== -1) {
-            this.odataEntities.countDeletion();
+            this.odataEntities.countRemoved();
             this.$refs.table.afterDelete(index);
           }
         })
-        .catch(() => { this.del.awaitingResponse = false; });
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(uuid);
+        });
+    },
+    showRestore(entity) {
+      if (this.confirmRestore) {
+        this.restoreModal.show({ entity });
+      } else {
+        this.requestRestore([entity, this.confirmRestore]);
+      }
+    },
+    requestRestore(event) {
+      const [{ __id: uuid, label }, confirm] = event;
+
+      this.awaitingResponses.add(uuid);
+
+      this.request({
+        method: 'POST',
+        url: apiPaths.entityRestore(this.projectId, this.datasetName, uuid)
+      })
+        .then(() => {
+          this.restoreModal.hide();
+          if (this.deletedEntityCount.dataExists && this.deletedEntityCount.value > 0) {
+            this.deletedEntityCount.value -= 1;
+          }
+
+          this.alert.success(this.$t('alert.entityRestored', { label }));
+          if (confirm != null) this.confirmRestore = confirm;
+
+          // See the comments in requestDelete().
+          const index = this.odataEntities.dataExists
+            ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
+            : -1;
+          if (index !== -1) {
+            this.odataEntities.countRemoved();
+            this.$refs.table.afterDelete(index);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(uuid);
+        });
     },
     scrolledToBottom() {
       // Using pageYOffset rather than scrollY in order to support IE.
@@ -371,7 +448,9 @@ export default {
     "noMatching": "There are no matching Entities.",
     "alert": {
       "delete": "Entity “{label}” has been deleted."
-    }
+    },
+    "filterDisabledMessage": "Filtering is unavailable for deleted Entities",
+    "downloadDisabled": "Download is unavailable for deleted Entities",
   }
 }
 </i18n>
@@ -409,6 +488,13 @@ export default {
     "noMatching": "Non sono presenti Entità corrispondenti.",
     "alert": {
       "delete": "La Entità “{label}” è stata cancellata."
+    }
+  },
+  "pt": {
+    "noEntities": "Não há Entidades para mostrar.",
+    "noMatching": "Não há Entidades correspondentes.",
+    "alert": {
+      "delete": "A Entidade \"{label}\" foi excluída."
     }
   },
   "sw": {

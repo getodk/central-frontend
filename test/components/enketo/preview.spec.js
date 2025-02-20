@@ -6,7 +6,7 @@ import { mockRouter } from '../../util/router';
 
 const mountComponent = (options) =>
   mount(EnketoPreview, mergeMountOptions(options, {
-    container: { router: mockRouter('/projects/1/forms/f') }
+    container: { router: mockRouter('/projects/1') }
   }));
 
 describe('EnketoPreview', () => {

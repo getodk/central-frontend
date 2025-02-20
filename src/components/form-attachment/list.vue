@@ -282,9 +282,10 @@ export default {
 
       return this.request({
         method: 'POST',
-        url: apiPaths.formDraftAttachment(
+        url: apiPaths.formAttachment(
           this.form.projectId,
           this.form.xmlFormId,
+          true,
           attachment.name
         ),
         headers: {
@@ -618,6 +619,32 @@ export default {
     },
     "alert": {
       "success": "{count}のファイルのアップロードに成功"
+    }
+  },
+  "pt": {
+    "action": {
+      "upload": "Subir arquivos"
+    },
+    "heading": [
+      "Com base no formulário que você carregou, os seguintes anexos de formulário são esperados. Você pode ver quais foram fornecidos ou ainda estão faltando.",
+      "Para carregar arquivos, arraste e solte um ou mais arquivos nessa página"
+    ],
+    "header": {
+      "uploaded": "Carregado"
+    },
+    "problem": {
+      "noneUploaded": "{message}Nenhum arquivo foi carregado.",
+      "someUploaded": "{message} Apenas {uploaded} de{total} arquivo foi carregado com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso."
+    },
+    "alert": {
+      "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso.",
+      "link": "Lista de Entidades vinculada com sucesso."
+    },
+    "entitiesTesting": {
+      "title": "Testando Entidades",
+      "body": [
+        "Um ou mais Anexos do Formulário têm nomes de arquivo que correspondem aos nomes da Lista de Entidades. Por padrão, eles são vinculados às listas de entidades. Para testar, você pode querer carregar dados temporários como arquivos .csv e, em seguida, vincular às listas de entidades depois de verificar a lógica do seu formulário."
+      ]
     }
   },
   "sw": {

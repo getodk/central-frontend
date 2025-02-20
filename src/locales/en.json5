@@ -59,6 +59,12 @@
     // This is a note about a Form that is not yet published.
     "unpublished": "Not published yet"
   },
+  // @transifexKey component.FormOverviewRightNow.stateCaption
+  "formStateDescription": {
+    "open": "This Form is downloadable and is accepting Submissions.",
+    "closing": "This Form is not downloadable but still accepts Submissions.",
+    "closed": "This Form is not downloadable and does not accept Submissions."
+  },
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
@@ -234,7 +240,6 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
-    "reviewState": "Review State",
     "type": "Type"
   },
   "header": {
@@ -296,9 +301,10 @@
     "appUser": "App User",
     "appUsers": "App Users",
     "config": "Server Configuration",
+    "entity": "Entity",
+    "entities": "Entities",
     "entityList": "Entity List",
     "entityLists": "Entity Lists",
-    "entities": "Entities",
     "form": "Form",
     "forms": "Forms",
     // @transifexKey component.FormHead.draftNav.title
@@ -308,12 +314,15 @@
     "projects": "Projects",
     // This is a data property of an Entity.
     "property": "Property",
+    // This refers to the data properties of an Entity.
+    "properties": "Properties",
     "publicLink": "Public Access Link",
     "user": "User",
     "users": "Users",
     "webUser": "Web User",
     "webUsers": "Web Users",
     "session": "Session",
+    "submission": "Submission",
     "submissions": "Submissions",
     "projectRoles": "Project Roles",
     "formPreview": "Form Preview"
@@ -324,7 +333,10 @@
     "updateReviewState": "Review State saved!",
     "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
     "submissionDeleted": "The Submission has been deleted.",
-    "submissionRestored": "The Submission has been undeleted."
+    "submissionRestored": "The Submission has been undeleted.",
+    // @transifexKey component.EntityList.alert.delete
+    "entityDeleted": "Entity “{label}” has been deleted.",
+    "entityRestored": "Entity “{label}” has been undeleted."
   },
   "moreInfo": {
     "clickHere": {
@@ -388,8 +400,6 @@
     "conflict": "Conflict",
     "conflicts": "Conflicts",
     // This is a title shown above a section of the page.
-    "currentDraft": "Your Current Draft",
-    // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
     // This is shown in the tab above a table of data.
     "data": "Data",
@@ -402,13 +412,14 @@
     "filter": "Filter",
     // This is the text of a link that links to the ODK forum.
     "forum": "Forum",
+    "lastUpdate": "Last update",
     "loading": "Loading…",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
     "noUndo": "This action cannot be undone.",
-    // This is the title of a section that shows status information for the entire server such as project count.
-    "rightNow": "Right Now",
+    // @transifexKey field.reviewState
+    "reviewState": "Review State",
     // This is shown for the row number.
     "rowNumber": "Row",
     // @transifexKey formHead.draftNav.tab.status
@@ -419,8 +430,7 @@
     "system": "System",
     "yes": "Yes",
     "tab": {
-      "settings": "Settings",
-      "overview": "Overview"
+      "settings": "Settings"
     },
     "total": "Total",
     "totalSubmissions": "Total Submissions",
@@ -479,7 +489,14 @@
       "problem": {
         // A "resource" is a generic term for something in Central, for example,
         // a Project, a Web User, or a Form.
-        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted.",
+        "409_17": {
+          "message": "This Form attempts to create a new Entity property that matches with an existing one except for capitalization: | This Form attempts to create new Entity properties that match with existing ones except for capitalization:",
+          // Error message format for the duplicate properties (different capitalization) in an Entity-list.
+          // {provided} is the property name in the uploaded Form.
+          // {current} is the existing property name in the Entity-list.
+          "duplicateProperty": "{provided} (existing: {current})"
+        }
       }
     },
     "session": {

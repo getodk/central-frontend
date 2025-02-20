@@ -126,6 +126,13 @@ const changeInput = (event) => {
     },
     "parsing": "Lettura dei dati…"
   },
+  "pt": {
+    "text": {
+      "full": "Arraste um arquivo .csv aqui ou {chooseOne} para importar.",
+      "chooseOne": "escolha um"
+    },
+    "parsing": "Lendo dados…"
+  },
   "zh-Hant": {
     "text": {
       "full": "拖曳一個 .csv 檔案到這，或者 {chooseOne}進行匯入。",

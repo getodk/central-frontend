@@ -182,6 +182,17 @@ const submit = () => {
       "success": "プロジェクト設定の保存完了！"
     }
   },
+  "pt": {
+    "title": "Detalhes básicos",
+    "field": {
+      "name": "Nome do projeto",
+      "description": "Descrição do projeto",
+      "note": "Adicione notas, links, instruções e outros recursos aqui."
+    },
+    "alert": {
+      "success": "Configurações do projeto salvas!"
+    }
+  },
   "sw": {
     "title": "Maelezo ya Msingi",
     "field": {

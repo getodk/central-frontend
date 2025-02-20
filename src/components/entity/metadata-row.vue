@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
     <td><date-time :iso="entity.__system.createdAt"/></td>
-    <td class="action-cell">
+    <td v-if="!deleted" class="action-cell">
       <div class="col-content">
         <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
         <span class="updates">
@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
         <button v-if="verbs.has('entity.delete')" type="button"
           class="delete-button btn btn-default"
           :aria-label="$t('action.delete')" v-tooltip.aria-label>
-          <span class="icon-trash"></span>
+          <span class="icon-trash"></span><spinner :state="awaitingResponse"/>
         </button>
         <button v-if="verbs.has('entity.update')" type="button"
           class="update-button btn btn-default" :aria-label="updateLabel"
@@ -57,6 +57,19 @@ except according to the terms contained in the LICENSE file.
         </router-link>
       </div>
     </td>
+    <td v-else class="action-cell">
+      <div class="col-content col-deleted-at">
+        <date-time :iso="entity.__system.deletedAt"/>
+      </div>
+      <div v-if="verbs.has('entity.restore')" class="btn-group">
+        <button type="button"
+          class="restore-button btn btn-default"
+          :aria-disabled="awaitingResponse"
+          :aria-label="$t('action.restore')" v-tooltip.aria-label>
+          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
+        </button>
+      </div>
+    </td>
   </tr>
 </template>
 
@@ -64,6 +77,7 @@ except according to the terms contained in the LICENSE file.
 import { computed, inject } from 'vue';
 
 import DateTime from '../date-time.vue';
+import Spinner from '../spinner.vue';
 
 import useRoutes from '../../composables/routes';
 
@@ -82,7 +96,12 @@ const props = defineProps({
   verbs: {
     type: Set,
     required: true
-  }
+  },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
+  awaitingResponse: Boolean
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');

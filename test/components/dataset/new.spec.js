@@ -93,17 +93,20 @@ describe('DatasetNew', () => {
       submit('MyNewDataset')
         .complete()
         .request((app) => app.get('#dataset-new-done-button').trigger('click'))
-        .respondWithData(() => testData.extendedDatasets.last())
-        .complete()
+        .respondFor('/projects/1/entity-lists/MyNewDataset/entities', {
+          project: false
+        })
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists/MyNewDataset/entities');
         }));
 
     it('increments the count of entity lists', () =>
       submit('MyNewDataset')
         .complete()
         .request(app => app.get('#dataset-new-done-button').trigger('click'))
-        .respondWithData(() => testData.extendedDatasets.last())
+        .respondFor('/projects/1/entity-lists/MyNewDataset/entities', {
+          project: false
+        })
         .complete()
         .load('/projects/1', { project: false })
         .afterResponses(app => {

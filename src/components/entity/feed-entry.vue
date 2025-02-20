@@ -18,9 +18,8 @@ except according to the terms contained in the LICENSE file.
         <i18n-t v-if="submission.currentVersion != null"
           keypath="title.submission.create.notDeleted">
           <template #instanceName>
-            <router-link :to="sourceSubmissionPath">
-              {{ submission.currentVersion.instanceName ?? submission.instanceId }}
-            </router-link>
+            <submission-link :project-id="projectId"
+              :xml-form-id="submission.xmlFormId" :submission="submission"/>
           </template>
           <template #submitter><actor-link :actor="submission.submitter"/></template>
         </i18n-t>
@@ -36,10 +35,9 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'submission.update'">
         <i18n-t keypath="title.submission.approval.full">
           <template #reviewState>
-            <span class="approval">
-              <span :class="reviewStateIcon('approved')"></span>
-              <span>{{ $t('title.submission.approval.reviewState') }}</span>
-            </span>
+            <submission-review-state value="approved" color-text>
+              {{ $t('title.submission.approval.reviewState') }}
+            </submission-review-state>
           </template>
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
@@ -52,7 +50,7 @@ except according to the terms contained in the LICENSE file.
             <span class="entity-label">{{ entity.currentVersion.label }}</span>
           </template>
           <template #dataset>
-            <router-link :to="datasetPath()">{{ datasetName }}</router-link>
+            <dataset-link :project-id="projectId" :name="datasetName"/>
           </template>
         </i18n-t>
         <i18n-t v-else keypath="title.entity.create.api">
@@ -80,7 +78,7 @@ except according to the terms contained in the LICENSE file.
               <span class="entity-label">{{ entity.currentVersion.label }}</span>
             </template>
             <template #dataset>
-              <router-link :to="datasetPath()">{{ datasetName }}</router-link>
+              <dataset-link :project-id="projectId" :name="datasetName"/>
             </template>
           </i18n-t>
         </div>
@@ -99,9 +97,8 @@ except according to the terms contained in the LICENSE file.
           <i18n-t v-if="submission.currentVersion != null"
             keypath="title.entity.update_version.submission.notDeleted">
             <template #instanceName>
-              <router-link :to="sourceSubmissionPath">
-                {{ submission.currentVersion.instanceName ?? submission.instanceId }}
-              </router-link>
+              <submission-link :project-id="projectId"
+                :xml-form-id="submission.xmlFormId" :submission="submission"/>
             </template>
           </i18n-t>
           <i18n-t v-else keypath="title.entity.update_version.submission.deleted.full">
@@ -132,6 +129,21 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
+      <template v-else-if="entry.action === 'entity.delete'">
+        <span class="icon-trash"></span>
+        <i18n-t keypath="title.entity.delete">
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
+      <template v-else-if="entry.action === 'entity.restore'">
+        <span class="icon-recycle"></span>
+        <i18n-t keypath="title.entity.restore">
+          <template #label>
+            <span class="entity-label">{{ entity.currentVersion.label }}</span>
+          </template>
+          <template #name><actor-link :actor="entry.actor"/></template>
+        </i18n-t>
+      </template>
     </template>
     <template #body>
       <entity-diff v-if="entityVersion != null && entityVersion.version !== 1"/>
@@ -144,11 +156,12 @@ import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
 import EntityDiff from './diff.vue';
 import FeedEntry from '../feed-entry.vue';
+import SubmissionLink from '../submission/link.vue';
+import SubmissionReviewState from '../submission/review-state.vue';
 
-import useReviewState from '../../composables/review-state';
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -180,27 +193,18 @@ const wrapTitle = computed(() => {
 });
 
 // submission.create, entity.update.version
-const { submissionPath, datasetPath } = useRoutes();
-const sourceSubmissionPath = computed(() => submissionPath(
-  projectId,
-  props.submission.xmlFormId,
-  props.submission.instanceId
-));
 const { t } = useI18n();
 const deletedSubmission = (key) => t(key, { id: props.submission.instanceId });
 
-// submission.update
-const { reviewStateIcon } = useReviewState();
-
 // entity.create, entity.update.version
 const versionAnchor = (v) => `#v${v}`;
+const config = inject('config');
 const showBranchData = () => {
-  emit('branch-data', props.entityVersion.version);
+  if (config.devTools) emit('branch-data', props.entityVersion.version);
 };
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
 @import '../../assets/scss/mixins';
 
 .entity-feed-entry {
@@ -211,10 +215,11 @@ const showBranchData = () => {
     color: #bbb;
     vertical-align: -2px;
   }
+  .icon-trash { color: #bbb; }
+  .icon-recycle {color: #bbb; }
 
   .deleted-submission, .entity-label, .source-name { font-weight: normal; }
   .deleted-submission { color: $color-danger; }
-  .approval { color: $color-success; }
 
   .entity-version-tag, .feed-entry-title .offline-update {
     font-size: 12px;
@@ -294,7 +299,13 @@ const showBranchData = () => {
         },
         // This text is shown in a list of events. {name} is the name of a Web
         // User.
-        "update_resolve": "Conflict warning resolved by {name}"
+        "update_resolve": "Conflict warning resolved by {name}",
+        // This text is shown in a list of events. {name} is the name of a Web
+        // User.
+        "delete": "Entity {label} deleted by {name}",
+        // This text is shown in a list of events. {name} is the name of a Web
+        // User.
+        "restore": "Entity {label} undeleted by {name}"
       }
     },
     // This is shown for an update to an Entity when the update was made offline
@@ -511,6 +522,42 @@ const showBranchData = () => {
         }
       }
     }
+  },
+  "pt": {
+    "title": {
+      "submission": {
+        "create": {
+          "notDeleted": "Resposta {instanceName} carregada por {submitter}",
+          "deleted": {
+            "full": "{deletedSubmission} carregada por {name}",
+            "deletedSubmission": "(Resposta {id} excluída)"
+          }
+        },
+        "approval": {
+          "full": "{reviewState} por {name}",
+          "reviewState": "Aprovado"
+        }
+      },
+      "entity": {
+        "create": {
+          "api": "{label} da Entidade criada por {name}",
+          "bulkSource": "Arquivo {name} carregado por {actor}",
+          "submission": "Entidade {label} criada na Lista de Entidades {dataset}"
+        },
+        "update_version": {
+          "submission": {
+            "notDeleted": "Dados atualizados pela Resposta {instanceName}",
+            "deleted": {
+              "full": "Dados atualizados por {deletedSubmission}",
+              "deletedSubmission": "(Resposta {id} excluída)"
+            }
+          },
+          "api": "Dados atualizados por {name}"
+        },
+        "update_resolve": "Aviso de conflito resolvido por {name}"
+      }
+    },
+    "offlineUpdate": "Atualização offline"
   },
   "sw": {
     "title": {

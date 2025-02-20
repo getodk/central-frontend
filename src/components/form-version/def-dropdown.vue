@@ -163,6 +163,14 @@ export default {
       "downloadXlsForm": "XLSFormとしてダウンロード（{extension}形式）"
     }
   },
+  "pt": {
+    "action": {
+      "def": "Definição",
+      "viewXml": "Exibir XML no browser",
+      "downloadXForm": "Baixar como XForm (.xml)",
+      "downloadXlsForm": "Baixar como XLSForm ({extension})"
+    }
+  },
   "sw": {
     "action": {
       "def": "Ufafanuzi",

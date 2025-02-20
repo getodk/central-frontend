@@ -562,6 +562,11 @@ const emptyMessage = computed(() => (searchValue.value === ''
       "select": "Seleziona {all} / {none}"
     }
   },
+  "pt": {
+    "action": {
+      "select": "Selecionar {all} / {none}"
+    }
+  },
   "sw": {
     "action": {
       "select": "Changua {all} / {none}"

@@ -533,6 +533,42 @@ export default {
       "unassignRole": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
     }
   },
+  "pt": {
+    "heading": [
+      "Administradores são automaticamente considerados gerentes de todos os projetos. Outros usuários de site podem ter funções específicas para esse projeto:",
+      {
+        "full": "{projectManagers} podem realizar qualquer tarefa administrativa relacionada a esse projeto e podem preencher formulários no navegador de internet.",
+        "projectManagers": "Gerentes de projeto"
+      },
+      {
+        "full": "{projectViewers} pode acessar e baixar todos os dados de Formulário e entidade neste projeto, mas não pode fazer nenhuma alteração em configurações ou dados",
+        "projectViewers": "Observadores de projeto"
+      },
+      {
+        "full": "{dataCollectors}pode preencher formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
+        "dataCollectors": "Coletores de dados"
+      }
+    ],
+    "action": {
+      "clearSearch": "Limpar a busca"
+    },
+    "field": {
+      "q": {
+        "canList": "Localizar um usuário...",
+        "cannotList": "Entre com o endereço de email completo do usuário"
+      }
+    },
+    "header": {
+      "user": "Usuário",
+      "projectRole": "Função de projeto"
+    },
+    "emptyTable": "Não existem usuário designados para esse projeto ainda. Para adicionar um usuário utilize a busca acima.",
+    "alert": {
+      "unassignWithoutReassign": "Algo deu errado. \"{displayName}\" foi removido do projeto.",
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto.",
+      "unassignRole": "Sucesso! \"{displayName}\" foi removido deste projeto."
+    }
+  },
   "sw": {
     "heading": [
       "Wasimamizi wa Tovuti nzima wanazingatiwa kiotomatiki Wasimamizi wa kila Mradi. Watumiaji Wengine wanaweza kuwa na Majukumu mahususi kwa Mradi huu",

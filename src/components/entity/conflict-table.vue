@@ -441,6 +441,24 @@ defineExpose({ resize });
     },
     "branch": "Catena di aggiornamento offline"
   },
+  "pt": {
+    "noConflicts": "Não há conflitos para mostrar.",
+    "basedOn": {
+      "label": "Com base em",
+      "description": "A versão desta Entidade que o autor viu quando fez suas alterações"
+    },
+    "source": {
+      "label": "Fonte",
+      "description": "A atualização que gerou esta versão"
+    },
+    "status": {
+      "historical": "Esta versão histórica está incluída porque uma atualização paralela recente foi feita com base nesta versão desta Entidade.",
+      "lastGoodVersion": "Esta é a versão consensual mais recente. Após essa atualização, atualizações potencialmente conflitantes foram feitas em paralelo.",
+      "softConflict": "Esta versão pode ter sido feita com base em dados antigos.",
+      "hardConflict": "Esta versão foi feita em paralelo com outras atualizações, algumas das quais tentam gravar nas mesmas propriedades desta atualização."
+    },
+    "branch": "Cadeia de atualização offline"
+  },
   "zh-Hant": {
     "noConflicts": "沒有可顯示的衝突。",
     "basedOn": {
