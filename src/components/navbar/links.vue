@@ -103,8 +103,14 @@ export default {
   "ja": {
     "current": "現在"
   },
+  "pt": {
+    "current": "atual"
+  },
   "sw": {
     "current": "sasa"
+  },
+  "zh-Hant": {
+    "current": "目前"
   }
 }
 </i18n>

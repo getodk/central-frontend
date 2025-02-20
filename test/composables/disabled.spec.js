@@ -27,8 +27,8 @@ describe('useDisabled()', () => {
     for (const type of ['click', 'beforeinput', 'mousedown', 'keydown'])
       document[method](type, storeEvent, true);
   };
-  before(() => { toggleEventListeners(true); });
-  after(() => { toggleEventListeners(false); });
+  beforeAll(() => { toggleEventListeners(true); });
+  afterAll(() => { toggleEventListeners(false); });
 
   it('disables a button that has the attribute aria-disabled="true"', () => {
     const [component, handler] = mountComponent(`<div>
@@ -39,15 +39,15 @@ describe('useDisabled()', () => {
     const buttons = component.findAll('button');
 
     buttons[0].trigger('click');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(1);
 
     buttons[1].trigger('click');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(2);
 
     buttons[2].trigger('click');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(2);
   });
 
@@ -57,7 +57,7 @@ describe('useDisabled()', () => {
       <span class="icon-plus-circle"></span>
     </button>`);
     component.get('span').trigger('click');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(0);
   });
 
@@ -69,11 +69,11 @@ describe('useDisabled()', () => {
     const a = component.findAll('a');
 
     a[0].trigger('click');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(1);
 
     a[1].trigger('click');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(1);
   });
 
@@ -82,7 +82,7 @@ describe('useDisabled()', () => {
       <span class="icon-question-circle"></span>
     </a>`);
     component.get('span').trigger('click');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(0);
   });
 
@@ -94,11 +94,11 @@ describe('useDisabled()', () => {
     const a = component.findAll('a');
 
     a[0].trigger('click');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(1);
 
     a[1].trigger('click');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(1);
   });
 
@@ -111,15 +111,15 @@ describe('useDisabled()', () => {
     const inputs = component.findAll('input');
 
     inputs[0].trigger('beforeinput');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(1);
 
     inputs[1].trigger('beforeinput');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(2);
 
     inputs[2].trigger('beforeinput');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(2);
   });
 
@@ -132,19 +132,19 @@ describe('useDisabled()', () => {
     const selects = component.findAll('select');
 
     selects[0].trigger('mousedown');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(1);
 
     selects[1].trigger('mousedown');
-    event.defaultPrevented.should.be.false();
+    event.defaultPrevented.should.be.false;
     handler.callCount.should.equal(2);
 
     selects[2].trigger('mousedown');
-    event.defaultPrevented.should.be.true();
+    event.defaultPrevented.should.be.true;
     handler.callCount.should.equal(2);
   });
 
-  for (const key of [' ', 'ArrowDown', 'ArrowUp']) {
+  for (const key of [' ', 'ArrowDown', 'ArrowUp', 'Enter']) {
     // eslint-disable-next-line no-loop-func
     it(`disables keydown of '${key}' for <select> with aria-disabled="true"`, () => {
       const [component, handler] = mountComponent(`<div>
@@ -155,15 +155,15 @@ describe('useDisabled()', () => {
       const selects = component.findAll('select');
 
       selects[0].trigger('keydown', { key });
-      event.defaultPrevented.should.be.false();
+      event.defaultPrevented.should.be.false;
       handler.callCount.should.equal(1);
 
       selects[1].trigger('keydown', { key });
-      event.defaultPrevented.should.be.false();
+      event.defaultPrevented.should.be.false;
       handler.callCount.should.equal(2);
 
       selects[2].trigger('keydown', { key });
-      event.defaultPrevented.should.be.true();
+      event.defaultPrevented.should.be.true;
       handler.callCount.should.equal(2);
     });
   }

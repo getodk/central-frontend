@@ -13,20 +13,10 @@ except according to the terms contained in the LICENSE file.
   <div>
     <loading :state="formVersions.initiallyLoading"/>
     <div v-show="formVersions.dataExists" class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-6 col-xs-offset-6">
         <page-section>
           <template #heading>
-            <span>{{ $t('draftChecklist.title') }}</span>
-          </template>
-          <template #body>
-            <form-draft-checklist status/>
-          </template>
-        </page-section>
-      </div>
-      <div class="col-xs-6">
-        <page-section>
-          <template #heading>
-            <span>{{ $t('common.currentDraft') }}</span>
+            <span>{{ $t('currentDraft.title') }}</span>
           </template>
           <template #body>
             <summary-item v-if="formDraft.dataExists" icon="file-o">
@@ -41,11 +31,11 @@ except according to the terms contained in the LICENSE file.
                 </i18n-t>
                 <div id="form-draft-status-standard-buttons-container">
                   <form-version-standard-buttons :version="formDraft.get()"
-                    @view-xml="showModal('viewXml')"/>
+                    @view-xml="viewXml.show()"/>
                 </div>
                 <div>
                   <button id="form-draft-status-upload-button" type="button"
-                    class="btn btn-primary" @click="showModal('upload')">
+                    class="btn btn-primary" @click="upload.show()">
                     <span class="icon-upload"></span>{{ $t('currentDraft.action.upload') }}&hellip;
                   </button>
                 </div>
@@ -63,11 +53,11 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #body>
             <button id="form-draft-status-publish-button" type="button"
-              class="btn btn-primary" @click="showModal('publish')">
+              class="btn btn-primary" @click="publish.show()">
               <span class="icon-check"></span>{{ $t('actions.action.publish') }}&hellip;
             </button>
             <button id="form-draft-status-abandon-button" type="button"
-              class="btn btn-danger" @click="showModal('abandon')">
+              class="btn btn-danger" @click="abandon.show()">
               <span class="icon-trash"></span>{{ $t('actions.action.abandon') }}&hellip;
             </button>
           </template>
@@ -75,13 +65,12 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
 
-    <form-version-view-xml v-bind="viewXml" @hide="hideModal('viewXml')"/>
-    <form-new v-bind="upload" @hide="hideModal('upload')"
-      @success="afterUpload"/>
-    <form-draft-publish v-bind="publish" @hide="hideModal('publish')"
+    <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
+    <form-new v-bind="upload" @hide="upload.hide()" @success="afterUpload"/>
+    <form-draft-publish v-bind="publish" @hide="publish.hide()"
       @success="afterPublish"/>
     <form-draft-abandon v-if="form.dataExists" v-bind="abandon"
-      @hide="hideModal('abandon')" @success="afterAbandon"/>
+      @hide="abandon.hide()" @success="afterAbandon"/>
   </div>
 </template>
 
@@ -89,7 +78,6 @@ except according to the terms contained in the LICENSE file.
 import { defineAsyncComponent } from 'vue';
 
 import FormDraftAbandon from './abandon.vue';
-import FormDraftChecklist from './checklist.vue';
 import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
@@ -99,11 +87,11 @@ import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 import DatasetSummary from '../dataset/summary.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -111,7 +99,6 @@ export default {
   name: 'FormDraftStatus',
   components: {
     FormDraftAbandon,
-    FormDraftChecklist,
     FormDraftPublish,
     FormNew,
     FormVersionStandardButtons,
@@ -122,7 +109,6 @@ export default {
     SummaryItem,
     DatasetSummary
   },
-  mixins: [modal({ viewXml: 'FormVersionViewXml' })],
   inject: ['alert'],
   props: {
     projectId: {
@@ -136,28 +122,20 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
   setup() {
-    const { form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
-    const { projectPath, formPath } = useRoutes();
+    const { form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    const { projectPath, publishedFormPath } = useRoutes();
     return {
-      form, publishedAttachments, formVersions, formDraft, formDatasetDiff, formDraftDatasetDiff,
-      projectPath, formPath
+      form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff,
+      projectPath, publishedFormPath
     };
   },
   data() {
     return {
       // Modals
-      viewXml: {
-        state: false
-      },
-      upload: {
-        state: false
-      },
-      publish: {
-        state: false
-      },
-      abandon: {
-        state: false
-      }
+      viewXml: modalData('FormVersionViewXml'),
+      upload: modalData(),
+      publish: modalData(),
+      abandon: modalData()
     };
   },
   created() {
@@ -175,25 +153,33 @@ export default {
     afterUpload() {
       this.$emit('fetch-draft');
       this.formDraftDatasetDiff.reset();
-      this.hideModal('upload');
+      this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
     },
     afterPublish() {
-      // We need to clear the form before navigating to the form overview: if
+      // We need to clear the form before navigating to the submissions page: if
       // the form didn't already have a published version, then there would be a
       // validateData violation if we didn't clear it.
       this.$emit('fetch-form');
-      this.formDraftDatasetDiff.reset();
-      this.formDatasetDiff.reset();
+
+      // Other resources that may have changed after publish
       this.publishedAttachments.reset();
+      this.datasets.reset();
+      this.formDatasetDiff.reset();
+      this.formDraftDatasetDiff.reset();
+
+      // We will update additional resources, but only after navigating to the
+      // submissions page. We need to wait to update these resources because
+      // they are used on the current page.
       afterNextNavigation(this.$router, () => {
         // Re-request the project in case its `datasets` property has changed.
         this.$emit('fetch-project', true);
         this.formVersions.data = null;
         this.formDraft.setToNone();
+
         this.alert.success(this.$t('alert.publish'));
       });
-      this.$router.push(this.formPath());
+      this.$router.push(this.publishedFormPath());
     },
     afterAbandon() {
       this.formDraftDatasetDiff.reset();
@@ -202,7 +188,7 @@ export default {
           this.formDraft.setToNone();
           this.alert.success(this.$t('alert.abandon'));
         });
-        this.$router.push(this.formPath());
+        this.$router.push(this.publishedFormPath());
       } else {
         const { nameOrId } = this.form;
         afterNextNavigation(this.$router, () => {
@@ -223,11 +209,10 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "draftChecklist": {
-      // This is a title shown above a section of the page.
-      "title": "Draft Checklist"
-    },
     "currentDraft": {
+      // @transifexKey common.currentDraft
+      // This is a title shown above a section of the page.
+      "title": "Your Current Draft",
       "versionCaption": {
         "full": "{draftVersion} of this Form.",
         "draftVersion": "Draft version"
@@ -306,6 +291,7 @@ export default {
     },
     "alert": {
       "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
+      "publish": "Ihr Entwurf ist jetzt veröffentlicht. Alle Geräte, die Formulare für dieses Projekt beziehen, erhalten ab jetzt die neuen Formularedefinitionen und Anhängen.",
       "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
       "delete": "Das Formular \"{name}\" wurde gelöscht."
     }
@@ -332,6 +318,7 @@ export default {
     },
     "alert": {
       "upload": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador",
+      "publish": "Su borrador ya está publicado. Todos los dispositivos que obtengan formularios para este proyecto ahora recibirán la nueva definición del formulario y los archivos adjuntos del formulario.",
       "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
       "delete": "El formulario {name} fue eliminado."
     }
@@ -442,6 +429,33 @@ export default {
       "delete": "フォーム\"{name}\"は削除されました。"
     }
   },
+  "pt": {
+    "draftChecklist": {
+      "title": "Lista de verificação do rascunho"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "{draftVersion}desse formulário.",
+        "draftVersion": "Versão de rascunho"
+      },
+      "action": {
+        "upload": "Carregar nova definição"
+      }
+    },
+    "actions": {
+      "title": "Ações",
+      "action": {
+        "publish": "Publicar rascunho",
+        "abandon": "Abandonar rascunho"
+      }
+    },
+    "alert": {
+      "upload": "Sucesso! A nova definição de formulário foi armazenada como o seu rascunho.",
+      "publish": "Seu Rascunho agora está publicado. Todos os dispositivos que obtêm Formulários deste Projeto agora receberão a nova definição de Formulário e Anexos do Formulário.",
+      "abandon": "A versão de rascunho desse formulário foi excluída com sucesso.",
+      "delete": "O formulário \"{name}\" foi excluído."
+    }
+  },
   "sw": {
     "draftChecklist": {
       "title": "Orodha ya rasimu"
@@ -464,8 +478,36 @@ export default {
     },
     "alert": {
       "upload": "Mafanikio! Ufafanuzi mpya wa Fomu umehifadhiwa kama Rasimu yako",
+      "publish": "Rasimu yako sasa imechapishwa. Kifaa chochote kinachorejesha Fomu za Mradi huu sasa kitapokea ufafanuzi mpya wa Fomu na Viambatisho vya Fomu.",
       "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi.",
       "delete": "Fomu \"{name}\" ilifutwa."
+    }
+  },
+  "zh-Hant": {
+    "draftChecklist": {
+      "title": "草案清單"
+    },
+    "currentDraft": {
+      "versionCaption": {
+        "full": "此表格的{draftVersion}。",
+        "draftVersion": "草稿版本"
+      },
+      "action": {
+        "upload": "上傳新定義"
+      }
+    },
+    "actions": {
+      "title": "行動",
+      "action": {
+        "publish": "發布草稿",
+        "abandon": "放棄草案"
+      }
+    },
+    "alert": {
+      "upload": "成功！新的表單定義已儲存為您的草稿。",
+      "publish": "您的草稿現已發布。任何檢索該專案表單的裝置現在都將收到新的表單定義和表單附件。",
+      "abandon": "此表格的草稿版本已成功刪除。",
+      "delete": "表單「{name}」已刪除。"
     }
   }
 }

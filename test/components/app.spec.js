@@ -6,6 +6,7 @@ import { logOut } from '../../src/util/session';
 
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
+import FeedbackButton from '../../src/components/feedback-button.vue';
 
 describe('App', () => {
   describe('change in Central version', () => {
@@ -20,7 +21,7 @@ describe('App', () => {
         })
         // This isn't actually what a version looks like. However, the value
         // itself doesn't really matter, but rather only whether it changes.
-        .respondWithData(() => 'v1.2')
+        .respondWithData(() => '(v2024.1.2-sha)')
         .testRequests([{ url: '/version.txt' }]);
     });
 
@@ -31,12 +32,12 @@ describe('App', () => {
         .request(() => {
           clock.tick(15000);
         })
-        .respondWithData(() => 'v1.2')
+        .respondWithData(() => '(v2024.1.2-sha)')
         .complete()
         .request(() => {
           clock.tick(60000);
         })
-        .respondWithData(() => 'v1.2')
+        .respondWithData(() => '(v2024.1.2-sha)')
         .testRequests([{ url: '/version.txt' }]);
     });
 
@@ -48,21 +49,21 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .afterResponse(app => {
             app.should.not.alert();
           })
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .afterResponse(app => {
             app.should.not.alert();
           })
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(app => {
             clock.tick(0);
             app.should.alert('info', (message) => {
@@ -78,12 +79,12 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .complete()
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .complete()
           .testNoRequest(() => {
             clock.tick(60000);
@@ -97,12 +98,12 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .complete()
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(async (app) => {
             clock.tick(0);
             app.vm.$container.alert.blank();
@@ -141,7 +142,7 @@ describe('App', () => {
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .testRequests([{ url: '/version.txt' }]);
       });
 
@@ -155,13 +156,13 @@ describe('App', () => {
           .beforeEachResponse((app, { url }) => {
             if (url === '/version.txt') logOut(app.vm.$container, false);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .respondWithSuccess()
           .complete()
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .testRequests([{ url: '/version.txt' }]);
       });
 
@@ -172,7 +173,7 @@ describe('App', () => {
           .request(() => {
             clock.tick(15000);
           })
-          .respondWithData(() => 'v1.2')
+          .respondWithData(() => '(v2024.1.2-sha)')
           .complete()
           .request(() => {
             clock.tick(60000);
@@ -182,7 +183,7 @@ describe('App', () => {
           .request(() => {
             clock.tick(60000);
           })
-          .respondWithData(() => 'v1.3')
+          .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(app => {
             clock.tick(0);
             app.should.alert('info', (message) => {
@@ -197,10 +198,10 @@ describe('App', () => {
     beforeEach(mockLogin);
 
     const preventDefault = (event) => { event.preventDefault(); };
-    before(() => {
+    beforeAll(() => {
       document.addEventListener('click', preventDefault);
     });
-    after(() => {
+    afterAll(() => {
       document.removeEventListener('click', preventDefault);
     });
 
@@ -219,6 +220,37 @@ describe('App', () => {
       });
       a.trigger('click');
       app.should.alert();
+    });
+  });
+
+  describe('feedback button', () => {
+    it('is shown if a user is logged in and config is true', async () => {
+      const container = {
+        config: { showsFeedbackButton: true }
+      };
+      mockLogin();
+
+      const app = await load('/', { container });
+      app.findComponent(FeedbackButton).exists().should.be.true;
+    });
+
+    it('is hidden if a user is logged in and config is false', async () => {
+      const container = {
+        config: { showsFeedbackButton: false }
+      };
+      mockLogin();
+
+      const app = await load('/', { container });
+      app.findComponent(FeedbackButton).exists().should.be.false;
+    });
+
+    it('is hidden if no user is logged in and config is true', async () => {
+      const container = {
+        config: { showsFeedbackButton: true }
+      };
+
+      const app = await load('/login', { container }).restoreSession(false);
+      app.findComponent(FeedbackButton).exists().should.be.false;
     });
   });
 });

@@ -15,9 +15,11 @@ except according to the terms contained in the LICENSE file.
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
     <select :id="toggleId" ref="toggle" class="form-control"
-      :aria-disabled="options == null" data-toggle="dropdown" role="button"
+      :aria-disabled="options == null || disabled"
+      :data-toggle="(options == null || disabled) ? null : 'dropdown'" role="button"
+      v-tooltip.aria-describedby="disabledMessage"
       aria-haspopup="true" aria-expanded="false" :aria-label="label"
-      @keydown="toggleAfterEnter" @mousedown.prevent>
+      @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
       <option value="">{{ selectOption }}</option>
     </select>
     <span class="form-label" aria-hidden="true">{{ label }}</span>
@@ -76,7 +78,9 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computed, inject, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+
+import { noop } from '../util/util';
 
 const props = defineProps({
   /*
@@ -115,6 +119,11 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  // By default, the user can uncheck all options. However, if defaultToAll is
+  // `true`, then at least one option must be selected. If all options are
+  // unchecked, then the selection falls back to all options. That can be useful
+  // in cases where selecting none is guaranteed to lead to an empty result.
+  defaultToAll: Boolean,
 
   // `true` if the options are loading and `false` if not.
   loading: Boolean,
@@ -141,6 +150,16 @@ const props = defineProps({
     required: false
   },
   empty: {
+    type: String,
+    required: false
+  },
+
+  // disabled the control
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  disabledMessage: {
     type: String,
     required: false
   }
@@ -214,16 +233,30 @@ const changeCheckbox = ({ target }) => {
   change(props.options[target.dataset.index].value);
 };
 
-// emittedValue holds the last value that has been emitted since
-// props.modelValue was last set. It equals `null` if no value has been emitted
-// since then, or if no value has ever been emitted. We use emittedValue for an
-// optimization in order to avoid an extra sync.
+// emittedValue is used for an optimization, to avoid an unnecessary sync.
+// Unless it is `null`, it holds the last value emitted since props.modelValue
+// was last set. It equals `null` if no value has been emitted since then (or if
+// no value has ever been emitted).
 let emittedValue = null;
 const emitIfChanged = () => {
   if (changes.size === 0) return;
   changes.clear();
-  emittedValue = [...selected];
-  emit('update:modelValue', emittedValue);
+
+  if (props.defaultToAll && selected.size === 0) {
+    if (props.modelValue.length === props.options.length) {
+      // If props.modelValue is already all options, then there hasn't been a
+      // change. We don't need to emit a new value, but we do need to sync the
+      // checkboxes.
+      needsSync = true;
+    } else {
+      // Setting emittedValue to `null` so that checkboxes are synced.
+      emittedValue = null;
+      emit('update:modelValue', props.options.map(({ value }) => value));
+    }
+  } else {
+    emittedValue = [...selected];
+    emit('update:modelValue', emittedValue);
+  }
 };
 
 watch(
@@ -333,17 +366,13 @@ const toggleAfterEnter = ({ key }) => {
   if (key === 'Enter') $toggle.value.dropdown('toggle');
 };
 
-if (process.env.NODE_ENV === 'test') {
-  const verifyAttached = ({ target }) => {
+const verifyAttached = process.env.NODE_ENV === 'test'
+  ? ({ target }) => {
     if (target.closest('body') == null)
       // eslint-disable-next-line no-console
       console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
-  };
-  onMounted(() => { toggle.value.addEventListener('click', verifyAttached); });
-  onBeforeUnmount(() => {
-    toggle.value.removeEventListener('click', verifyAttached);
-  });
-}
+  }
+  : noop;
 
 
 
@@ -422,6 +451,12 @@ const emptyMessage = computed(() => (searchValue.value === ''
       &::placeholder {
         color: #666;
         font-style: italic;
+      }
+      &:lang(ja), &:lang(zh) {
+        &::placeholder {
+          font-style: normal;
+          font-weight: bold;
+        }
       }
     }
 
@@ -507,6 +542,16 @@ const emptyMessage = computed(() => (searchValue.value === ''
       "select": "Vyberte {all} / {none}"
     }
   },
+  "de": {
+    "action": {
+      "select": "{all} / {none} auswählen"
+    }
+  },
+  "es": {
+    "action": {
+      "select": "Seleccionar {all} / {none}"
+    }
+  },
   "fr": {
     "action": {
       "select": "Sélectionner {all}/{none}"
@@ -515,6 +560,21 @@ const emptyMessage = computed(() => (searchValue.value === ''
   "it": {
     "action": {
       "select": "Seleziona {all} / {none}"
+    }
+  },
+  "pt": {
+    "action": {
+      "select": "Selecionar {all} / {none}"
+    }
+  },
+  "sw": {
+    "action": {
+      "select": "Changua {all} / {none}"
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "select": "選擇 {all} / {none}"
     }
   }
 }

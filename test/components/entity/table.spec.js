@@ -6,18 +6,28 @@ import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
 
 const mountComponent = (props = undefined) => mount(EntityTable, {
+  global: {
+    provide: { projectId: '1', datasetName: 'trees' }
+  },
   props: {
     properties: testData.extendedDatasets.last().properties,
+    awaitingDeletedResponses: new Set(),
     ...props
   },
   container: {
+    router: mockRouter('/projects/1/entity-lists/trees/entities'),
     requestData: testRequestData([useProject, useEntities], {
       project: testData.extendedProjects.last(),
-      odataEntities: testData.entityOData()
+      odataEntities: {
+        status: 200,
+        data: testData.entityOData(),
+        config: { url: '/v1/projects/1/datasets/trees.svc/Entities' }
+      }
     })
   }
 });
@@ -26,12 +36,17 @@ const headers = (table) => table.findAll('th').map(th => th.text());
 
 describe('EntityTable', () => {
   describe('metadata headers', () => {
-    it('renders the correct headers for a form', () => {
+    it('renders the correct headers', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1);
       const component = mountComponent();
-      const table = component.get('#entity-table-metadata');
-      headers(table).should.eql(['', 'Created by', 'Created at']);
+      const table = component.get('.table-freeze-frozen');
+      headers(table).should.eql([
+        'Row',
+        'Created by',
+        'Created at',
+        'Last Updated / Actions'
+      ]);
     });
   });
 
@@ -43,7 +58,7 @@ describe('EntityTable', () => {
       });
       testData.extendedEntities.createPast(1);
 
-      const table = mountComponent().get('#entity-table-data');
+      const table = mountComponent().get('.table-freeze-scrolling');
       headers(table).should.eql(['p1', 'p2', 'Label', 'Entity ID']);
     });
   });

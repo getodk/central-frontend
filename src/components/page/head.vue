@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="page-head" class="row">
     <div class="col-xs-12">
       <div id="page-head-title" class="h1"><slot name="title"></slot></div>
-      <p id="page-head-body"><slot name="body"></slot></p>
+      <div id="page-description"><slot name="description"></slot></div>
       <ul id="page-head-tabs" class="nav nav-tabs">
         <slot name="tabs"></slot>
       </ul>
@@ -21,10 +21,10 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
+defineOptions({
   name: 'PageHead'
-};
+});
 </script>
 
 <style lang="scss">
@@ -34,6 +34,12 @@ export default {
   background-color: $color-subpanel-background;
   border-bottom: 1px solid $color-subpanel-border-strong;
 }
+
+.breadcrumbs + #page-head .h1 {
+  margin-top: 0;
+}
+
+#page-head-title { overflow-wrap: break-word; }
 
 #page-head-body {
   color: #555;

@@ -1,11 +1,11 @@
 import { clone } from 'ramda';
-import ChecklistStep from '../../../src/components/checklist-step.vue';
+
+import FileDropZone from '../../../src/components/file-drop-zone.vue';
 import FormNew from '../../../src/components/form/new.vue';
-import FormRow from '../../../src/components/form/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
-import { dragAndDrop, fileDataTransfer, setFiles } from '../../util/trigger';
+import { dragAndDrop, setFiles } from '../../util/trigger';
 import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
@@ -64,7 +64,7 @@ describe('FormNew', () => {
       it('renders the paragraph about form attachments', () => {
         const modal = mount(FormNew, mountOptions());
         const text = modal.findAll('.modal-introduction p')[1].text();
-        text.should.containEql('Form Attachments');
+        text.should.include('Form Attachments');
       });
     });
   });
@@ -120,11 +120,11 @@ describe('FormNew', () => {
       modal.should.not.alert();
     });
 
-    describe('after the file is selected using the file input', () => {
-      it('sets the file data property', async () => {
+    describe('after a file is selected using the file input', () => {
+      it('shows the filename', async () => {
         const modal = mount(FormNew, mountOptions());
         await setFiles(modal.get('input'), [xlsForm()]);
-        modal.vm.file.name.should.equal('my_form.xlsx');
+        modal.get('#form-new-filename').text().should.equal('my_form.xlsx');
       });
 
       it('resets the input', async () => {
@@ -134,45 +134,41 @@ describe('FormNew', () => {
       });
     });
 
-    describe('drag and drop', () => {
-      it('adds a class to drop zone while file is dragged', async () => {
-        const modal = mount(FormNew, mountOptions());
-        const dropZone = modal.get('#form-new-drop-zone');
-        await dropZone.trigger('dragenter', {
-          dataTransfer: fileDataTransfer([xlsForm()])
-        });
-        dropZone.classes('form-new-dragover').should.be.true();
-      });
-
-      it('sets the file data property after the file is dropped', async () => {
-        const modal = mount(FormNew, mountOptions());
-        await dragAndDrop(modal.get('#form-new-drop-zone'), [xlsForm()]);
-        modal.vm.file.name.should.equal('my_form.xlsx');
-      });
+    it('shows the filename after a file is dropped', async () => {
+      const modal = mount(FormNew, mountOptions());
+      await dragAndDrop(modal.getComponent(FileDropZone), [xlsForm()]);
+      modal.get('#form-new-filename').text().should.equal('my_form.xlsx');
     });
   });
 
-  describe('request URL', () => {
+  describe('request', () => {
     beforeEach(mockLogin);
 
-    it('sends a request to .../forms when creating a form', () => {
+    it('sends the correct request when creating a form', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
         .mount(FormNew, mountOptions())
         .request(upload)
-        .beforeEachResponse((_, { url }) => {
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms');
+          data.should.be.an.instanceof(File);
+          data.name.should.equal('my_form.xlsx');
+          // We test request headers separately below.
         })
         .respondWithProblem();
     });
 
-    it('sends a request to .../draft when uploading a new definition', () => {
+    it('sends the correct request when uploading a new definition', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return mockHttp()
         .mount(FormNew, mountOptions())
         .request(upload)
-        .beforeEachResponse((_, { url }) => {
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/draft');
+          data.should.be.an.instanceof(File);
+          data.name.should.equal('my_form.xlsx');
         })
         .respondWithProblem();
     });
@@ -249,9 +245,8 @@ describe('FormNew', () => {
       .mount(FormNew, mountOptions())
       .request(upload)
       .beforeEachResponse(modal => {
-        modal.vm.disabled.should.be.true();
-        const dropZone = modal.get('#form-new-drop-zone');
-        dropZone.classes('form-new-disabled').should.be.true();
+        const dropZone = modal.getComponent(FileDropZone);
+        dropZone.props().disabled.should.be.true;
         const button = dropZone.get('.btn-primary');
         button.attributes('aria-disabled').should.equal('true');
       })
@@ -286,12 +281,14 @@ describe('FormNew', () => {
         app.should.alert('success', 'Your new Form “Form 2” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use.');
       }));
 
-    it('renders the correct number of rows in the forms table', () =>
+    it('increments the form count', () =>
       createForm()
         .complete()
         .load('/projects/1', { project: false })
-        .afterResponses(app => {
-          app.findAllComponents(FormRow).length.should.equal(2);
+        .beforeAnyResponse(app => {
+          // The form count should be seen to be incremented even before the
+          // updated form list is received.
+          app.get('#page-head-tabs li.active .badge').text().should.equal('2');
         }));
   });
 
@@ -316,7 +313,7 @@ describe('FormNew', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          app.getComponent(FormNew).props().state.should.be.false();
+          app.getComponent(FormNew).props().state.should.be.false;
         });
     });
 
@@ -395,39 +392,6 @@ describe('FormNew', () => {
           badge.text().should.equal('2');
         });
     });
-
-    it('updates the checklist', () => {
-      testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, {
-        submissions: 1,
-        draft: true
-      });
-      testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          const steps = app.findAllComponents(ChecklistStep);
-          steps.length.should.equal(4);
-          steps[2].props().stage.should.equal('complete');
-        })
-        .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
-          return upload(app);
-        })
-        .respondWithData(() => {
-          testData.extendedFormVersions.createNew({
-            version: 'v2',
-            draft: true
-          });
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
-        .afterResponses(app => {
-          const steps = app.findAllComponents(ChecklistStep);
-          steps.length.should.equal(4);
-          steps[2].props().stage.should.equal('current');
-        });
-    });
   });
 
   describe('custom alert messages', () => {
@@ -491,6 +455,24 @@ describe('FormNew', () => {
           );
         });
     });
+
+    it('shows a message for duplicate entity property', () => {
+      testData.extendedForms.createPast(1);
+      return mockHttp()
+        .mount(FormNew, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 409.17,
+          message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+          details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+        })
+        .afterResponse(modal => {
+          modal.should.alert(
+            'danger',
+            /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+          );
+        });
+    });
   });
 
   describe('XLSForm warnings', () => {
@@ -506,7 +488,8 @@ describe('FormNew', () => {
           xlsFormWarnings: ['warning 1', 'warning 2'],
           workflowWarnings: [
             { type: 'structureChanged', details: ['Name', 'Age'] },
-            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } }
+            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } },
+            { type: 'oldEntityVersion', details: { version: '2022.1.0' } }
           ]
         }
       }
@@ -546,7 +529,10 @@ describe('FormNew', () => {
           items[0].get('span').text().should.eql('Fields: Name, Age');
 
           items[1].text().should.startWith('There is a form with ID "simple" in the Trash');
-          items[1].find('span').exists().should.be.false();
+          items[1].find('span').exists().should.be.false;
+
+          items[2].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[2].find('span').exists().should.be.false;
         });
     });
 
@@ -568,7 +554,10 @@ describe('FormNew', () => {
           items[2].get('span').text().should.eql('Fields: Name, Age');
 
           items[3].text().should.startWith('There is a form with ID "simple" in the Trash');
-          items[3].find('span').exists().should.be.false();
+          items[3].find('span').exists().should.be.false;
+
+          items[4].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[4].find('span').exists().should.be.false;
         });
     });
 
@@ -656,7 +645,7 @@ describe('FormNew', () => {
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
             const text = component.findAll('.modal-warnings p')[3].text();
-            text.should.containEql('create the Form');
+            text.should.include('create the Form');
           });
       });
 
@@ -668,7 +657,7 @@ describe('FormNew', () => {
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
             const text = component.findAll('.modal-warnings p')[3].text();
-            text.should.containEql('update the Draft');
+            text.should.include('update the Draft');
           });
       });
     });

@@ -5,21 +5,30 @@ import useProject from '../../../src/request-data/project';
 import useEntities from '../../../src/request-data/entities';
 
 import testData from '../../data';
+import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
-
 
 const mountComponent = () => {
   // Mounting EntityTable in order to test tooltops on EntityDataRow
   // because text-overflow-ellipsis is defined for td and th on table.
   const table = mount(EntityTable, {
+    global: {
+      provide: { projectId: '1', datasetName: 'trees' }
+    },
     props: {
-      properties: testData.extendedDatasets.last().properties
+      properties: testData.extendedDatasets.last().properties,
+      awaitingDeletedResponses: new Set()
     },
     container: {
+      router: mockRouter('/projects/1/entity-lists/trees/entities/e'),
       requestData: testRequestData([useProject, useEntities], {
         project: testData.extendedProjects.last(),
-        odataEntities: testData.entityOData()
+        odataEntities: {
+          status: 200,
+          data: testData.entityOData(),
+          config: { url: '/v1/projects/1/datasets/trees.svc/Entities' }
+        }
       })
     }
   });
@@ -32,7 +41,7 @@ describe('EntityDataRow', () => {
       name: 'trees',
       properties: [{ name: 'height' }]
     });
-    testData.extendedEntities.createPast(1, { height: null });
+    testData.extendedEntities.createPast(1, { data: {} });
 
     const td = mountComponent().get('td');
     td.text().should.equal('');
@@ -43,14 +52,14 @@ describe('EntityDataRow', () => {
       name: 'trees',
       properties: [{ name: 'height' }]
     });
-    testData.extendedEntities.createPast(1, { label: 'foo', entityId: 'abcd1234' });
+    testData.extendedEntities.createPast(1, { label: 'foo', uuid: 'abcd1234' });
     const td = mountComponent().findAll('td');
     td.length.should.equal(3);
     td[1].text().should.equal('foo');
     td[2].text().should.equal('abcd1234');
   });
 
-  it('renders a cell for each field', () => {
+  it('renders a cell for each property', () => {
     testData.extendedDatasets.createPast(1, {
       name: 'trees',
       properties: [
@@ -60,9 +69,8 @@ describe('EntityDataRow', () => {
     });
     testData.extendedEntities.createPast(1, {
       label: 'foo',
-      entityId: 'abcd1234',
-      height: '444',
-      circumference: '555'
+      uuid: 'abcd1234',
+      data: { height: '444', circumference: '555' }
     });
     const text = mountComponent().findAll('td').map(td => td.text());
     text.should.eql(['444', '555', 'foo', 'abcd1234']);
@@ -77,13 +85,24 @@ describe('EntityDataRow', () => {
     });
     testData.extendedEntities.createPast(1, {
       label: 'foo',
-      entityId: 'abcd1234',
-      p1: 'foobar'
+      uuid: 'abcd1234',
+      data: { p1: 'foobar' }
     });
     const td = mountComponent().get('td');
     td.classes().length.should.equal(0);
     const span = td.get('span');
     span.text().should.equal('foobar');
     await span.should.have.textTooltip();
+  });
+
+  it('uses the odataName of the property', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'circumference.cm', odataName: 'circumference_cm' }],
+      entities: 1
+    });
+    testData.extendedEntities.createPast(1, {
+      data: { 'circumference.cm': '555' }
+    });
+    mountComponent().get('td').text().should.equal('555');
   });
 });

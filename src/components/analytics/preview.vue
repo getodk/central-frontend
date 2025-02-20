@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="analytics-preview" :state="state" hideable backdrop large @hide="$emit('hide')">
+  <modal id="analytics-preview" :state="state" hideable backdrop size="large"
+    @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -21,30 +22,32 @@ except according to the terms contained in the LICENSE file.
       <loading :state="analyticsPreview.initiallyLoading"/>
       <template v-if="analyticsPreview.dataExists">
         <analytics-metrics-table :title="$t('common.system')" :metrics="systemSummary"/>
-        <div id="analytics-preview-project-summary">
-          <span class="header">{{ $t('projects.title') }}</span>
-          <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
-        </div>
-        <div id="analytics-preview-project-tables">
-          <div id="users-forms-column">
-            <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
-            <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
+        <template v-if="numProjects > 0">
+          <div id="analytics-preview-project-summary">
+            <span class="header">{{ $t('projects.title') }}</span>
+            <span class="explanation">{{ $tcn('projects.subtitle', numProjects) }}</span>
           </div>
-          <div id="submissions-column">
-            <analytics-metrics-table :title="$t('resource.submissions')"
-              :metrics="submissionSummary"/>
-            <analytics-metrics-table :title="$t('submissionStates')"
-              :metrics="submissionStateSummary"/>
-            <analytics-metrics-table :title="$t('other')"
-              :metrics="otherSummary"/>
+          <div id="analytics-preview-project-tables">
+            <div id="users-forms-column">
+              <analytics-metrics-table :title="$t('resource.users')" :metrics="userSummary"/>
+              <analytics-metrics-table :title="$t('resource.forms')" :metrics="formSummary"/>
+            </div>
+            <div id="submissions-column">
+              <analytics-metrics-table :title="$t('resource.submissions')"
+                :metrics="submissionSummary"/>
+              <analytics-metrics-table :title="$t('submissionStates')"
+                :metrics="submissionStateSummary"/>
+              <analytics-metrics-table :title="$t('other')"
+                :metrics="otherSummary"/>
+            </div>
           </div>
-        </div>
+        </template>
         <template v-if="numDatasets > 0">
           <div id="analytics-preview-dataset-summary">
-            <span class="header">{{ $t('datasets.title') }}</span>
-            <span class="explanation">{{ $tcn('datasets.subtitle', numDatasets) }}</span>
+            <span class="header">{{ $t('entities.title') }}</span>
+            <span class="explanation">{{ $tcn('entities.subtitle', numDatasets) }}</span>
           </div>
-          <analytics-metrics-table :title="$t('resource.datasets')"
+          <analytics-metrics-table :title="$t('resource.entities')"
             :metrics="firstDataset"/>
         </template>
       </template>
@@ -94,10 +97,7 @@ export default {
       return this.analyticsPreview.system;
     },
     firstProject() {
-      // eslint-disable-next-line arrow-body-style
-      return this.analyticsPreview.projects.reduce((a, b) => {
-        return (a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b;
-      });
+      return this.analyticsPreview.projects.reduce((a, b) => ((a.submissions.num_submissions_received.recent > b.submissions.num_submissions_received.recent) ? a : b));
     },
     firstDataset() {
       const { id, ...ds } = flatten(this.analyticsPreview.projects.map(p => p.datasets)).reduce((a, b) => ((a.num_entities.recent > b.num_entities.recent) ? a : b), { num_entities: {} });
@@ -197,10 +197,10 @@ export default {
     // This is the title of a single table in the analytics metrics report
     // of metrics about submission state (approved, rejected, etc)
     "submissionStates": "Submission States",
-    "datasets": {
-      // This is the title shown above a series of metrics about Datasets and Entities usage.
-      "title": "Dataset and Entity Summaries",
-      "subtitle": "(Showing the most active Dataset of {count} Dataset) | (Showing the most active Dataset of {count} Datasets)"
+    "entities": {
+      // This is the title shown above a series of metrics about Entities usage.
+      "title": "Entities Summaries",
+      "subtitle": "(Showing the most active Entity List of {count} Entity List) | (Showing the most active Entity List of {count} Entity Lists)"
     },
     // This is the title of a single table in the analytics metrics report
     // of other additional metrics that don't fit into other categories
@@ -224,8 +224,8 @@ export default {
       "subtitle": "(Zobrazuje {count} nejaktivnější projekt projektu) | (Zobrazuje {count} nejaktivnější projekty projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu) | (Zobrazuje {count} nejaktivnějších projektů projektu)"
     },
     "submissionStates": "Stavy odeslání",
-    "datasets": {
-      "title": "Souhrny datových sad a entit"
+    "entities": {
+      "title": "Souhrny subjektů"
     },
     "other": "Jiné"
   },
@@ -241,6 +241,10 @@ export default {
       "subtitle": "(Zeigt das aktivste Projekt der {count} Projekt) | (Zeigt das aktivste Projekt der {count} Projekte)"
     },
     "submissionStates": "Einsendungenstatus",
+    "entities": {
+      "title": "Entitätszusammenfassungen",
+      "subtitle": "(Zeigt die aktivste Entitätsliste von {count} Entitätsliste) | (Zeigt die aktivste Entitätsliste von {count} Entitätslisten)"
+    },
     "other": "Anderes"
   },
   "es": {
@@ -255,6 +259,10 @@ export default {
       "subtitle": "(Mostrando el Proyecto más activo de {count} Proyecto) | (Mostrando el Proyecto más activo de {count} Proyectos) | (Mostrando el Proyecto más activo de {count} Proyectos)"
     },
     "submissionStates": "Estados de envío",
+    "entities": {
+      "title": "Resúmenes de entidades",
+      "subtitle": "(Mostrando la lista de entidades más activa de {count} lista de entidades) | (Mostrando las listas de entidades más activas de {count} listas de entidades) | (Mostrando las listas de entidades más activas de {count} listas de entidades)"
+    },
     "other": "Otro"
   },
   "fr": {
@@ -269,9 +277,9 @@ export default {
       "subtitle": "(Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets) | (Affichage du projet le plus actif parmi {count} projets)"
     },
     "submissionStates": "États des soumissions",
-    "datasets": {
-      "title": "Résumé des Datasets et des Entités",
-      "subtitle": "(Affiche le plus Dataset le plus actif parmi {count} Datasets) | (Affiche le plus Dataset le plus actif parmi {count} Datasets) | (Affiche le plus Dataset le plus actif parmi {count} Datasets)"
+    "entities": {
+      "title": "Résumés des entités",
+      "subtitle": "(Montre la liste d'entités la plus active de {count} liste d'entités) | (Montre la liste d'entités la plus active de {count} listes d'entités) | (Montre la liste d'entités la plus active de {count} listes d'entités)"
     },
     "other": "Autre"
   },
@@ -287,9 +295,9 @@ export default {
       "subtitle": "(Visualizzazione del progetto più attivo di {count} Progetto) | (Visualizzazione del progetto più attivo di {count} Progetti) | (Visualizzazione del progetto più attivo di {count} Progetti)"
     },
     "submissionStates": "Stato invio",
-    "datasets": {
-      "title": "Riepiloghi di set di dati e entità",
-      "subtitle": "(Mostra il set di dati più attivo {count} di set di dati) | (Mostra il set di dati più attivo {count} di set di dati) | (Mostra il set di dati più attivo {count} di set di dati)"
+    "entities": {
+      "title": "Riassunti delle entità",
+      "subtitle": "(Visualizzazione della Lista Entità più attiva di {count} Lista Entità) | (Visualizzazione delle Liste Entità più attive di {count} Liste Entità) | (Visualizzazione della Lista Entità più attiva di {count} Liste Entità)"
     },
     "other": "Altro"
   },
@@ -306,6 +314,24 @@ export default {
     },
     "submissionStates": "提出済フォームの状態"
   },
+  "pt": {
+    "title": "Relatório de uso com dados anônimos",
+    "introduction": [
+      "Obrigado por considerar o envio de algumas informações de utilização. Esses dados nos ajudarão a priorizar suas necessidades!",
+      "O relatório do que está sendo coletado atualmente está exibido aqui. Para atender a novas funcionalidades e necessidades, nós poderemos às vezes mudar o que é reportado, mas nós sempre usaremos apenas médias de resumo de uso como as que você vê aqui.",
+      "Você sempre pode vir aqui para ver o que está sendo coletado."
+    ],
+    "projects": {
+      "title": "Resumo do projeto",
+      "subtitle": "(Mostrando o projeto mais ativo de {count} projeto) | (Mostrando o projeto mais ativo de {count} projetos) | (Mostrando o projeto mais ativo de {count} projetos)"
+    },
+    "submissionStates": "Status de envio",
+    "entities": {
+      "title": "Resumos de Entidades",
+      "subtitle": "(Mostrando a Lista de Entidades mais ativa de {count} Lista de Entidades) | (Mostrando a Lista de Entidades mais ativa de {count} Listas de Entidades) | (Mostrando a Lista de Entidades mais ativa de {count} Listas de Entidades)"
+    },
+    "other": "Outro"
+  },
   "sw": {
     "title": "Ripoti ya Matumizi Isiyojulikana",
     "introduction": [
@@ -317,7 +343,30 @@ export default {
       "title": "Muhtasari wa Mradi",
       "subtitle": "(Inaonyesha Mradi amilifu zaidi wa Mradi ya {count}) | (Inaonyesha Mradi amilifu zaidi wa Miradi ya {count})"
     },
-    "submissionStates": "Nchi za Uwasilishaji"
+    "submissionStates": "Nchi za Uwasilishaji",
+    "entities": {
+      "title": "Muhtasari wa Vyombo",
+      "subtitle": "(Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha ya Huluki) | (Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha za Huluki)"
+    },
+    "other": "Nyingine"
+  },
+  "zh-Hant": {
+    "title": "匿名使用報告",
+    "introduction": [
+      "感謝您考慮發送一些使用資訊。這些數據將幫助我們優先考慮您的需求！",
+      "這裡顯示的是我們目前正在收集的報告。為了回應新功能和需求，我們有時會更改報告的內容，但我們只會收集匯總平均值，就像您在此處看到的那樣。",
+      "您可以隨時來這裡看看正在收集什麼。"
+    ],
+    "projects": {
+      "title": "專案概要",
+      "subtitle": "(顯示 {count} 個專案中最活躍的專案)"
+    },
+    "submissionStates": "提交狀態",
+    "entities": {
+      "title": "實體摘要",
+      "subtitle": "(顯示 {count} 個實體清單中最活躍的實體清單)"
+    },
+    "other": "其他"
   }
 }
 </i18n>

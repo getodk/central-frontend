@@ -35,14 +35,14 @@ except according to the terms contained in the LICENSE file.
       <project-form-access-table :changes-by-form="changesByForm"
         @update:state="updateState"
         @update:field-key-access="updateFieldKeyAccess"
-        @show-states="showModal('statesModal')"/>
+        @show-states="statesModal.show()"/>
       <p v-if="forms.length === 0" class="empty-table-message">
         {{ $t('emptyTable') }}
       </p>
     </template>
 
     <project-form-access-states v-bind="statesModal"
-      @hide="hideModal('statesModal')"/>
+      @hide="statesModal.hide()"/>
   </div>
 </template>
 
@@ -54,9 +54,9 @@ import ProjectFormAccessTable from './form-access/table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import modal from '../../mixins/modal';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -70,7 +70,6 @@ export default {
     SentenceSeparator,
     Spinner
   },
-  mixins: [modal()],
   inject: ['alert', 'unsavedChanges'],
   props: {
     projectId: {
@@ -92,9 +91,7 @@ export default {
     return {
       changesByForm: null,
       changeCount: 0,
-      statesModal: {
-        state: false
-      }
+      statesModal: modalData()
     };
   },
   computed: {
@@ -322,6 +319,15 @@ export default {
       "success": "変更が保存されました。"
     }
   },
+  "pt": {
+    "heading": [
+      "Usuários de aplicativo apenas pode ver e preencher formulários a que lhes for dada autorização explicita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
+    ],
+    "emptyTable": "Não há formulários para exibir.",
+    "alert": {
+      "success": "Suas alterações foram gravadas!"
+    }
+  },
   "sw": {
     "heading": [
       "Watumiaji wa Programu wanaweza tu kuona na kujaza Fomu ambazo wamepewa ufikiaji wa uwazi katika jedwali lililo hapa chini. Wasimamizi wa Miradi na Wakusanyaji Data wanaweza kutumia kivinjari cha wavuti kujaza Fomu yoyote katika Mradi ambayo iko katika hali ya Wazi."
@@ -329,6 +335,15 @@ export default {
     "emptyTable": "Hakuna Fomu za kuonyesha.",
     "alert": {
       "success": "Mabadiliko yako yamehifadhiwa!"
+    }
+  },
+  "zh-Hant": {
+    "heading": [
+      "於下表中，明確授予 APP使用者 只能查看並填寫表格的存取權限。專案管理員和資料收集者可以使用 Web 瀏覽器填寫，於專案處於公開狀態的任何表格。"
+    ],
+    "emptyTable": "沒有可顯示的表格。",
+    "alert": {
+      "success": "你的修改已被儲存！"
     }
   }
 }

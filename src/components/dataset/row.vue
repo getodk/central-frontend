@@ -12,13 +12,24 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="dataset-row">
     <td class="name">
-      <router-link :to="datasetOverviewPage" v-tooltip.text>{{ dataset.name }}</router-link>
+      <dataset-link :project-id="dataset.projectId" :name="dataset.name"
+        v-tooltip.text/>
     </td>
     <td class="entities">
       <span>{{ $n(dataset.entities, 'default') }}</span>
     </td>
     <td>
       <span> <date-time :iso="dataset.lastEntity"/> </span>
+    </td>
+    <td class="conflicts">
+      <span v-if="dataset.conflicts > 0">
+        <router-link :to="datasetPath(dataset.projectId, dataset.name, 'entities?conflict=true')">
+          <span class="wrap-circle">
+            <span class="icon-warning"></span>
+          </span>
+          {{ $tcn('possibleConflictsCount', dataset.conflicts) }}
+        </router-link>
+      </span>
     </td>
     <td>
       <a class="btn btn-primary" :href="href">
@@ -29,6 +40,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import DatasetLink from './link.vue';
 import DateTime from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
@@ -36,7 +48,7 @@ import { apiPaths } from '../../util/request';
 
 export default {
   name: 'DatasetRow',
-  components: { DateTime },
+  components: { DatasetLink, DateTime },
   props: {
     dataset: {
       type: Object,
@@ -49,10 +61,7 @@ export default {
   },
   computed: {
     href() {
-      return apiPaths.entities(this.dataset.projectId, this.dataset.name);
-    },
-    datasetOverviewPage() {
-      return this.datasetPath(this.dataset.projectId, this.dataset.name);
+      return apiPaths.entities(this.dataset.projectId, this.dataset.name, '.csv');
     }
   }
 };
@@ -70,6 +79,21 @@ export default {
     text-align: right;
     padding-right: 10%;
   }
+  .wrap-circle {
+    width: 22px;
+    display: inline-block;
+    background: $color-danger;
+    height: 22px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+
+    margin-right: 3px;
+  }
+  .icon-warning { font-size: 12px; }
+  .conflicts a {
+    color: $color-danger;
+  }
 }
 </style>
 
@@ -78,7 +102,8 @@ export default {
   "en": {
     "action": {
       "download": "Download data (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} possible conflict | {count} possible conflicts"
   }
 }
 </i18n>
@@ -91,20 +116,46 @@ export default {
       "download": "Stáhnout data (.csv)"
     }
   },
+  "de": {
+    "action": {
+      "download": "Daten herunterladen (.csv)"
+    },
+    "possibleConflictsCount": "{count} möglicher Konflikt | {count} mögliche Konflikte"
+  },
   "es": {
     "action": {
       "download": "Descargar datos (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} posible conflicto | {count} posibles conflictos | {count} posibles conflictos"
   },
   "fr": {
     "action": {
       "download": "Télécharger les données (.csv)"
-    }
+    },
+    "possibleConflictsCount": "{count} conflit possible | {count} conflits possibles | {count} conflits possibles"
   },
   "it": {
     "action": {
       "download": "Scarica dati (.csv)"
+    },
+    "possibleConflictsCount": "{count} possibile conflitto | {count} possibili conflitti | {count} possibili conflitti"
+  },
+  "pt": {
+    "action": {
+      "download": "Baixar dados (.csv)"
+    },
+    "possibleConflictsCount": "{count} possível conflito | {count} possíveis conflitos | {count} possíveis conflitos"
+  },
+  "sw": {
+    "action": {
+      "download": "Pakua data (.csv)"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": "下載資料 (.csv)"
+    },
+    "possibleConflictsCount": "{count} 筆資料可能衝突"
   }
 }
 </i18n>

@@ -11,10 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <page-back :to="[projectPath(), projectPath()]">
-      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.forms') }}</template>
-    </page-back>
+    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <div id="form-head-form-nav" class="row">
       <div class="col-xs-12">
         <div class="row">
@@ -29,16 +26,6 @@ except according to the terms contained in the LICENSE file.
         <div class="row">
           <div class="col-xs-6">
             <ul id="form-head-form-tabs" class="nav nav-tabs">
-              <!-- Using rendersFormTabs rather than canRoute(), because we want
-              to render the tabs even if the form does not have a published
-              version (in which case canRoute() will return `false`). -->
-              <li v-if="rendersFormTabs" :class="formTabClass('')"
-                role="presentation">
-                <router-link :to="tabPath('')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('common.tab.overview') }}
-                </router-link>
-              </li>
               <!-- No v-if, because anyone who can navigate to the form should
               be able to navigate to .../versions and .../submissions. -->
               <li :class="formTabClass('versions')" role="presentation">
@@ -51,13 +38,22 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('submissions')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('resource.submissions') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $n(form.submissions, 'default') }}
+                  </span>
                 </router-link>
               </li>
+              <!-- Using rendersFormTabs rather than canRoute(), because we want
+              to render the tabs even if the form does not have a published
+              version (in which case canRoute() will return `false`). -->
               <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
                 role="presentation">
                 <router-link :to="tabPath('public-links')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('formHead.tab.publicAccess') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $n(form.publicLinks, 'default') }}
+                  </span>
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
@@ -65,13 +61,16 @@ except according to the terms contained in the LICENSE file.
                 <router-link :to="tabPath('settings')"
                   v-tooltip.aria-describedby="formTabDescription">
                   {{ $t('common.tab.settings') }}
+                  <span v-if="form.dataExists" class="badge">
+                    {{ $t(`formState.${form.state}`) }}
+                  </span>
                 </router-link>
               </li>
             </ul>
           </div>
           <div v-if="rendersDraftNav" id="form-head-draft-nav"
             class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
-            <span id="form-head-draft-nav-title">{{ $t('draftNav.title') }}</span>
+            <span id="form-head-draft-nav-title">{{ $t('resource.draft') }}</span>
             <button v-show="formDraft.isEmpty()"
               id="form-head-create-draft-button" type="button"
               class="btn btn-primary" @click="$emit('create-draft')">
@@ -81,7 +80,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
                 role="presentation">
                 <router-link :to="tabPath('draft')">
-                  {{ $t('formHead.draftNav.tab.status') }}
+                  {{ $t('common.status') }}
                 </router-link>
               </li>
               <li v-if="canRoute(tabPath('draft/attachments'))"
@@ -110,7 +109,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import PageBack from '../page/back.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
 
 import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';
@@ -118,7 +117,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
-  components: { PageBack },
+  components: { Breadcrumbs },
   emits: ['create-draft'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -145,6 +144,12 @@ export default {
     rendersDraftNav() {
       return this.dataExists &&
         (this.formDraft.isDefined() || this.project.permits('form.update'));
+    },
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
+        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
+      ];
     }
   },
   methods: {
@@ -163,6 +168,10 @@ export default {
 
 $draft-nav-padding: 23px;
 $tab-li-margin-top: 5px;
+
+.breadcrumbs + #form-head-form-nav .h1 {
+  margin-top: 0;
+}
 
 #form-head-form-nav {
   background-color: $color-subpanel-background;
@@ -234,8 +243,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "These functions will become available once you publish your Draft Form"
     },
     "draftNav": {
-      // This is shown above the navigation tabs for the Form Draft.
-      "title": "Draft",
       "action": {
         "create": "Create a new Draft"
       },
@@ -257,7 +264,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře"
     },
     "draftNav": {
-      "title": "Koncept",
       "action": {
         "create": "Vytvořit nový koncept"
       }
@@ -273,7 +279,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
     },
     "draftNav": {
-      "title": "Entwurf",
       "action": {
         "create": "Neuen Entwurf erstellen"
       }
@@ -289,7 +294,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
     },
     "draftNav": {
-      "title": "Borrador",
       "action": {
         "create": "Crear un nuevo borrador"
       }
@@ -305,7 +309,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Ces fonctions seront disponibles quand vous publierez votre ébauche"
     },
     "draftNav": {
-      "title": "Ébauche",
       "action": {
         "create": "Créer une nouvelle ébauche"
       }
@@ -321,7 +324,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
     },
     "draftNav": {
-      "title": "Draf",
       "action": {
         "create": "Buat draf baru"
       }
@@ -337,7 +339,6 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Queste funzioni diventeranno disponibili una volta che avrai pubblicato la tua bozza del formulario"
     },
     "draftNav": {
-      "title": "Bozza",
       "action": {
         "create": "Crea una nuova bozza"
       }
@@ -353,9 +354,23 @@ $tab-li-margin-top: 5px;
       "tabTitle": "これらの機能は下書きフォームが公開された際に有効になります。"
     },
     "draftNav": {
-      "title": "下書き",
       "action": {
         "create": "新規下書きの作成"
+      }
+    }
+  },
+  "pt": {
+    "projectNav": {
+      "action": {
+        "back": "Voltar à visão geral do projeto"
+      }
+    },
+    "formNav": {
+      "tabTitle": "Essas funções estarão disponíveis quando você publicar o seu formulário de rascunho"
+    },
+    "draftNav": {
+      "action": {
+        "create": "Criar um novo rascunho"
       }
     }
   },
@@ -369,9 +384,23 @@ $tab-li-margin-top: 5px;
       "tabTitle": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako"
     },
     "draftNav": {
-      "title": "Rasimu",
       "action": {
         "create": "Unda Rasimu mpya"
+      }
+    }
+  },
+  "zh-Hant": {
+    "projectNav": {
+      "action": {
+        "back": "返回專案概覽"
+      }
+    },
+    "formNav": {
+      "tabTitle": "一旦您發布草稿表單，這些功能將可用"
+    },
+    "draftNav": {
+      "action": {
+        "create": "建立新草稿"
       }
     }
   }

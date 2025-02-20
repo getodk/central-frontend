@@ -95,7 +95,7 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('.modal-warnings').exists().should.be.false();
+      modal.find('.modal-warnings').exists().should.be.false;
     });
   });
 
@@ -123,7 +123,7 @@ describe('FormDraftPublish', () => {
       });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('input').exists().should.be.false();
+      modal.find('input').exists().should.be.false;
       modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
@@ -131,7 +131,7 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('input').exists().should.be.false();
+      modal.find('input').exists().should.be.false;
       modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
@@ -282,6 +282,28 @@ describe('FormDraftPublish', () => {
       });
   });
 
+  it('shows a custom alert message for a duplicate property name', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+    return mockHttp()
+      .mount(FormDraftPublish, mountOptions())
+      .request(async (modal) => {
+        await modal.setProps({ state: true });
+        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+      })
+      .respondWithProblem({
+        code: 409.17,
+        message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+        details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+      })
+      .afterResponse(modal => {
+        modal.should.alert(
+          'danger',
+          /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+        );
+      });
+  });
+
   it('shows the version input field after request returns duplicate version problem', () => {
     // The scenario here is a user trying to publish a form that conflicts with
     // a form/version combo probably found in the trash. This component doesn't
@@ -318,7 +340,7 @@ describe('FormDraftPublish', () => {
       .respondWithProblem(500.1)
       .afterResponse(modal => {
         modal.should.alert('danger');
-        modal.find('input').exists().should.be.false();
+        modal.find('input').exists().should.be.false;
         modal.findAll('.modal-introduction p').length.should.equal(3);
       });
   });
@@ -337,34 +359,46 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted());
+        .respondFor('/projects/1/forms/f/submissions', {
+          form: false,
+          formDraft: false,
+          attachments: false
+        });
     };
 
-    it('sends requests for the project and form', () =>
-      publish().testRequests([
-        null,
-        { url: '/v1/projects/1/forms/f', extended: true },
-        { url: '/v1/projects/1', extended: true },
-        { url: '/v1/projects/1/forms/f/attachments' }
-      ]));
+    it('sends requests for the project and form', () => {
+      let count = 0;
+      return publish()
+        .beforeEachResponse((_, { url }, i) => {
+          if (i === 1) {
+            url.should.equal('/v1/projects/1/forms/f');
+            count += 1;
+          } else if (i === 2) {
+            url.should.equal('/v1/projects/1');
+            count += 1;
+          }
+        })
+        .afterResponses(() => {
+          count.should.equal(2);
+        });
+    });
 
     it('shows a success alert', () =>
       publish().then(app => {
         app.should.alert('success');
       }));
 
-    it('redirects to the form overview', () =>
+    it('redirects to the submissions page', () =>
       publish().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f');
+        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
       }));
 
     it('updates requestData', async () => {
       const app = await publish();
       const { requestData } = app.vm.$container;
-      requestData.localResources.formVersions.dataExists.should.be.false();
-      requestData.formDraft.isEmpty().should.be.true();
-      requestData.attachments.isEmpty().should.be.true();
+      requestData.localResources.formVersions.dataExists.should.be.false;
+      requestData.formDraft.isEmpty().should.be.true;
+      requestData.attachments.isEmpty().should.be.true;
     });
 
     it('shows the create draft button', () =>
@@ -392,8 +426,11 @@ describe('FormDraftPublish', () => {
           return { success: true };
         })
         .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondFor('/projects/1/forms/f/submissions', {
+          form: false,
+          formDraft: false,
+          attachments: false
+        })
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())
@@ -409,9 +446,9 @@ describe('FormDraftPublish', () => {
           testData.extendedDatasets.createPast(1);
         })
         .complete()
-        .load('/projects/1/datasets', { project: false })
+        .load('/projects/1/entity-lists', { project: false })
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/datasets');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists');
         }));
   });
 
@@ -427,11 +464,11 @@ describe('FormDraftPublish', () => {
     let liCounter = -1;
     testData.formDraftDatasetDiffs.sorted().forEach(ds => {
       if (ds.isNew) {
-        delta[liCounter += 1].text().should.match(/A new Dataset \w+ will be created./);
+        delta[liCounter += 1].text().should.match(/A new Entity List \w+ will be created./);
       }
       ds.properties.forEach(p => {
         if (p.isNew) {
-          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new property \w+ will be created./);
+          delta[liCounter += 1].text().should.match(/In Entity List \w+, a new property \w+ will be created./);
         }
       });
     });

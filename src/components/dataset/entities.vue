@@ -9,31 +9,57 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
-    <div>
+  <div id="dataset-entities">
     <page-section>
       <template #heading>
         <span>{{ $t('resource.entities') }}</span>
-        <odata-data-access @analyze="showModal('analyze')"/>
+        <button v-if="project.dataExists && project.permits('entity.create')"
+          id="dataset-entities-upload-button" type="button"
+          class="btn btn-primary" @click="upload.show()">
+          <span class="icon-upload"></span>{{ $t('action.upload') }}
+        </button>
+        <template v-if="deletedEntityCount.dataExists">
+          <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
+            class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
+            @click="toggleDeleted">
+            <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedEntities', deletedEntityCount.value) }}
+            <span v-show="deleted" class="icon-close"></span>
+          </button>
+        </template>
+        <odata-data-access :analyze-disabled="deleted"
+          :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
+          @analyze="analyze.show()"/>
       </template>
       <template #body>
-        <entity-list :project-id="projectId" :dataset-name="datasetName"/>
+        <entity-list ref="list" :project-id="projectId"
+        :dataset-name="datasetName" :deleted="deleted"
+        @fetch-deleted-count="fetchDeletedCount"/>
       </template>
     </page-section>
-    <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="hideModal('analyze')"/>
+
+    <entity-upload v-if="dataset.dataExists" v-bind="upload"
+      @hide="upload.hide()" @success="afterUpload"/>
+    <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
   </div>
 </template>
 
 <script>
-import OdataAnalyze from '../submission/analyze.vue';
-import OdataDataAccess from '../odata/data-access.vue';
+import { defineAsyncComponent, watchEffect, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
 import EntityList from '../entity/list.vue';
+import OdataAnalyze from '../odata/analyze.vue';
+import OdataDataAccess from '../odata/data-access.vue';
 import PageSection from '../page/section.vue';
+import useEntities from '../../request-data/entities';
+import useQueryRef from '../../composables/query-ref';
 
-
-import modal from '../../mixins/modal';
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
+import { modalData } from '../../util/reactivity';
+import { useRequestData } from '../../request-data';
+import { noop } from '../../util/util';
 
 export default {
   name: 'DatasetEntities',
@@ -41,9 +67,10 @@ export default {
     OdataAnalyze,
     OdataDataAccess,
     EntityList,
+    EntityUpload: defineAsyncComponent(loadAsync('EntityUpload')),
     PageSection
   },
-  mixins: [modal()],
+  inject: ['alert'],
   props: {
     projectId: {
       type: String,
@@ -54,11 +81,35 @@ export default {
       required: true
     }
   },
+  setup() {
+    const { project, dataset } = useRequestData();
+    const { deletedEntityCount } = useEntities();
+    const router = useRouter();
+
+    const deleted = useQueryRef({
+      fromQuery: (query) => {
+        if (typeof query.deleted === 'string' && query.deleted === 'true') {
+          return true;
+        }
+        return false;
+      },
+      toQuery: (value) => ({
+        deleted: value === true ? 'true' : null
+      })
+    });
+
+    const canDelete = computed(() => project.dataExists && project.permits('entity.delete'));
+
+    watchEffect(() => {
+      if (deleted.value && project.dataExists && !canDelete.value) router.push('/');
+    });
+
+    return { project, dataset, deletedEntityCount, deleted, canDelete };
+  },
   data() {
     return {
-      analyze: {
-        state: false
-      }
+      upload: modalData('EntityUpload'),
+      analyze: modalData()
     };
   },
   computed: {
@@ -66,10 +117,114 @@ export default {
       const path = apiPaths.odataEntitiesSvc(this.projectId, this.datasetName);
       return `${window.location.origin}${path}`;
     }
+  },
+  created() {
+    if (!this.deleted) this.fetchDeletedCount();
+  },
+  methods: {
+    afterUpload(count) {
+      this.upload.hide();
+      this.alert.success(this.$t('alert.upload'));
+      this.$refs.list.reset();
+      // Update dataset.entities so that the count in the OData loading message
+      // reflects the new entities.
+      this.dataset.entities += count;
+    },
+    fetchDeletedCount() {
+      this.deletedEntityCount.request({
+        method: 'GET',
+        url: apiPaths.odataEntities(
+          this.projectId,
+          this.datasetName,
+          {
+            $top: 0,
+            $count: true,
+            $filter: '__system/deletedAt ne null',
+          }
+        ),
+      }).catch(noop);
+    },
+    toggleDeleted() {
+      const { path } = this.$route;
+      this.$router.push(this.deleted ? path : `${path}?deleted=true`);
+    }
   }
 };
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #odata-data-access { float: right; }
+
+#dataset-entities {
+  .toggle-deleted-entities {
+    margin-left: 8px;
+
+    &.btn-link {
+      color: $color-danger;
+    }
+
+    .icon-close { margin-left: 3px; }
+  }
+
+  .purge-description {
+    display: inline;
+    position: relative;
+    top: -5px;
+    left: 12px;
+    font-size: 14px;
+  }
+}
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      "upload": "Success! Your Entities have been uploaded."
+    },
+    "purgeDescription": "Entities are deleted after 30 days in the Trash",
+    "action": {
+      "toggleDeletedEntities": "{count} deleted Entity | {count} deleted Entities"
+    },
+    "analyzeDisabledDeletedData": "OData access is unavailable for deleted Entities",
+  }
+}
+</i18n>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "de": {
+    "alert": {
+      "upload": "Erfolgreich! Ihre Entitäten wurden hochgeladen."
+    }
+  },
+  "es": {
+    "alert": {
+      "upload": "¡Éxito! Tus entidades han sido cargadas."
+    }
+  },
+  "fr": {
+    "alert": {
+      "upload": "Succès : Vos Entités ont été téléversées.."
+    }
+  },
+  "it": {
+    "alert": {
+      "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
+    }
+  },
+  "pt": {
+    "alert": {
+      "upload": "Sucesso! Suas entidades foram carregadas."
+    }
+  },
+  "zh-Hant": {
+    "alert": {
+      "upload": "成功！您的實體已上傳。"
+    }
+  }
+}
+</i18n>

@@ -1,7 +1,6 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ProjectFormRow from '../../../src/components/project/form-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import FormLink from '../../../src/components/form/link.vue';
 
 import useProjects from '../../../src/request-data/projects';
 
@@ -13,7 +12,7 @@ import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = () => {
+const mountComponent = (showIcon = false) => {
   const projectData = { ...testData.extendedProjects.last() };
   projectData.formList = testData.extendedForms.sorted();
   const container = createTestContainer({
@@ -22,77 +21,45 @@ const mountComponent = () => {
   });
   const project = container.requestData.localResources.projects[0];
   return mount(ProjectFormRow, {
-    props: { form: project.formList[0], project },
+    props: { form: project.formList[0], project, showIcon },
     container
   });
 };
 
 describe('ProjectFormRow', () => {
-  describe('form name', () => {
-    beforeEach(mockLogin);
-
-    it('renders the form name correctly', () => {
-      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
-      const link = mountComponent().find('.form-name a');
-      link.text().should.equal('My Form');
-    });
-
-    it('shows the xmlFormId if the form does not have a name', () => {
-      testData.extendedForms.createPast(1, { name: null, xmlFormId: 'f' });
-      const link = mountComponent().getComponent(RouterLinkStub);
-      link.text().should.equal('f');
-    });
-  });
-
   describe('form link', () => {
-    describe('Administrator', () => {
-      beforeEach(mockLogin);
-
-      it('links to form overview for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b');
-      });
-
-      it('links to .../draft for a form without a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b/draft');
-      });
+    it('renders a FormLink for a sitewide administrator', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1);
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      link.props().form.xmlFormId.should.equal('f');
+      link.props().to.should.equal('/projects/1/forms/f/submissions');
     });
 
-    describe('Project Manager', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
-      });
-
-      it('links to form overview for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b');
-      });
-
-      it('links to .../draft for a form without a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b/draft');
-      });
+    it('renders a FormLink for a project manager', () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'manager', forms: 1 });
+      testData.extendedForms.createPast(1);
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      link.props().form.xmlFormId.should.equal('f');
+      link.props().to.should.equal('/projects/1/forms/f/submissions');
     });
 
-    describe('Project Viewer', () => {
-      beforeEach(() => {
-        mockLogin({ role: 'none' });
-        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      });
+    // Note that draft forms are not shown in ProjectFormRow to project viewers.
+    it('renders a FormLink for a project viewer', () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
+      testData.extendedForms.createPast(1);
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      link.props().form.xmlFormId.should.equal('f');
+      link.props().to.should.equal('/projects/1/forms/f/submissions');
+    });
 
-      it('links to .../submissions for a form with a published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-        const link = mountComponent().getComponent('.form-name a');
-        link.props().to.should.equal('/projects/1/forms/a%20b/submissions');
-      });
-
-      // draft forms not shown in project-form-row to project viewers
+    it('links to the draft status page for a draft form', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { draft: true });
+      const link = mountComponent().get('.form-name').getComponent(FormLink);
+      should.not.exist(link.props().to);
     });
 
     describe('Data Collector', () => {
@@ -113,7 +80,7 @@ describe('ProjectFormRow', () => {
         testData.extendedForms.createPast(1, { name: 'My Form', enketoId: 'xyz', state: 'closed' });
         const row = mountComponent();
         const name = row.get('.form-name');
-        name.find('a').exists().should.be.false();
+        name.find('a').exists().should.be.false;
         name.text().should.equal('My Form');
       });
 
@@ -121,7 +88,7 @@ describe('ProjectFormRow', () => {
         testData.extendedForms.createPast(1, { name: 'My Form', enketoId: null, state: 'open' });
         const row = mountComponent();
         const name = row.get('.form-name');
-        name.find('a').exists().should.be.false();
+        name.find('a').exists().should.be.false;
         name.text().should.equal('My Form');
       });
 
@@ -137,9 +104,9 @@ describe('ProjectFormRow', () => {
       const columns = mountComponent().findAll('.review-state');
       columns.length.should.equal(3);
       columns.map((col) => col.get('a').text()).should.eql(['2,345', '1', '3']);
-      columns[0].find('.icon-dot-circle-o').exists().should.be.true();
-      columns[1].find('.icon-comments').exists().should.be.true();
-      columns[2].find('.icon-pencil').exists().should.be.true();
+      columns[0].find('.icon-dot-circle-o').exists().should.be.true;
+      columns[1].find('.icon-comments').exists().should.be.true;
+      columns[2].find('.icon-pencil').exists().should.be.true;
       await columns[0].get('span').should.have.tooltip('Received');
       await columns[1].get('span').should.have.tooltip('Has issues');
       await columns[2].get('span').should.have.tooltip('Edited');
@@ -170,7 +137,7 @@ describe('ProjectFormRow', () => {
     it('shows the correct icon', () => {
       testData.extendedForms.createPast(1, { submissions: 4 });
       const cell = mountComponent().get('.last-submission');
-      cell.find('.icon-clock-o').exists().should.be.true();
+      cell.find('.icon-clock-o').exists().should.be.true;
     });
 
     it('shows (none) if no submission', async () => {
@@ -182,7 +149,7 @@ describe('ProjectFormRow', () => {
 
     it('shows blank last submission column when the form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      mountComponent().find('.last-submission').exists().should.be.false();
+      mountComponent().find('.last-submission').exists().should.be.false;
     });
   });
 
@@ -197,14 +164,14 @@ describe('ProjectFormRow', () => {
     it('shows "not published yet" when form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       const row = mountComponent();
-      row.find('.total-submissions').exists().should.be.false();
+      row.find('.total-submissions').exists().should.be.false;
       row.find('.not-published').text().should.equal('Not published yet');
     });
 
     it('shows the correct icon', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
-      cell.find('.icon-asterisk').exists().should.be.true();
+      cell.find('.icon-asterisk').exists().should.be.true;
       await cell.get('span').should.have.tooltip('Total Submissions');
     });
   });
@@ -302,22 +269,36 @@ describe('ProjectFormRow', () => {
         const columns = mountComponent().findAll('.review-state');
         columns.length.should.equal(3);
         for (const col of columns) {
-          col.find('a').exists().should.be.false();
+          col.find('a').exists().should.be.false;
           col.text().should.equal('2');
         }
       });
 
       it('does not render a link for last submission', () => {
         const nonLink = mountComponent().get('.last-submission');
-        nonLink.find('a').exists().should.be.false();
+        nonLink.find('a').exists().should.be.false;
         nonLink.text().should.match(/ago$/);
       });
 
       it('does not render a link for submission count', () => {
         const nonLink = mountComponent().get('.total-submissions');
-        nonLink.find('a').exists().should.be.false();
+        nonLink.find('a').exists().should.be.false;
         nonLink.text().should.equal('6');
       });
+    });
+  });
+
+  describe('show icon', () => {
+    beforeEach(mockLogin);
+
+    it('should show form icon', () => {
+      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
+      mountComponent(true).find('.col-icon span.icon-file').exists().should.be.true;
+    });
+
+    it('should not show form icon', () => {
+      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
+      mountComponent().find('.col-icon span.icon-file').exists().should.be.false;
     });
   });
 });

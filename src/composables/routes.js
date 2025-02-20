@@ -26,6 +26,11 @@ const _formPath = (projectId, xmlFormId, suffix = '') => {
   const slash = suffix !== '' ? '/' : '';
   return `/projects/${projectId}/forms/${encodedFormId}${slash}${suffix}`;
 };
+const _datasetPath = (projectId, datasetName, suffix = '') => {
+  const encodedName = encodeURIComponent(datasetName);
+  const slash = suffix !== '' ? '/' : '';
+  return `/projects/${projectId}/entity-lists/${encodedName}${slash}${suffix}`;
+};
 
 export default memoizeForContainer(({ router, requestData }) => {
   const route = useRoute();
@@ -74,12 +79,9 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
     return _formPath(projectIdOrSuffix, xmlFormId, suffix);
   };
-  const publishedFormPath = (projectId, xmlFormId) => {
-    const path = formPath(projectId, xmlFormId);
-    // A project viewer can't navigate to the form overview, but anyone who can
-    // navigate to the form should be able to navigate to .../submissions.
-    return canRouteToLocation(path) ? path : `${path}/submissions`;
-  };
+  // Returns the path to the primary page of a published form.
+  const publishedFormPath = (projectId, xmlFormId) =>
+    formPath(projectId, xmlFormId, 'submissions');
   // Returns the path to the primary page for a form. This changes based on the
   // current user's role, as well as whether the form has a published version.
   const primaryFormPath = (form) => {
@@ -91,14 +93,33 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
   };
 
-  const datasetPath = (projectId, datasetName) =>
-    `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`;
+  const submissionPath = (projectId, xmlFormId, instanceId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    const encodedInstanceId = encodeURIComponent(instanceId);
+    return `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+  };
+
+  const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
+    if (datasetName == null) {
+      const { params } = route;
+      return _datasetPath(params.projectId, params.datasetName, projectIdOrSuffix);
+    }
+    return _datasetPath(projectIdOrSuffix, datasetName, suffix);
+  };
+
+  const entityPath = (projectId, datasetName, entityUuid) => {
+    const encodedName = encodeURIComponent(datasetName);
+    return `/projects/${projectId}/entity-lists/${encodedName}/entities/${entityUuid}`;
+  };
+
   const userPath = (id) => `/users/${id}/edit`;
 
   return {
     projectPath,
     formPath, publishedFormPath, primaryFormPath,
+    submissionPath,
     datasetPath,
+    entityPath,
     userPath,
     canRoute: canRouteToLocation
   };

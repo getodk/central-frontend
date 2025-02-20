@@ -26,15 +26,19 @@ except according to the terms contained in the LICENSE file.
             {{ property.name }}
           </td>
           <td>
-            <router-link v-if="property.forms.length > 0" :to="publishedFormPath(projectId, property.forms[0].xmlFormId)" v-tooltip.text>
-              {{ property.forms[0].name }}
-            </router-link>
+            <form-link v-if="property.forms.length > 0"
+              :form="property.forms[0]"
+              :to="publishedFormPath(property.forms[0].projectId, property.forms[0].xmlFormId)"
+              v-tooltip.text/>
+            <div v-else class="empty-update-form">{{ $t('none') }}</div>
           </td>
         </tr>
         <template v-for="(form, index) in property.forms" :key="form.xmlFormId">
           <tr v-if="index > 0">
             <td>
-              <router-link :to="publishedFormPath(projectId, form.xmlFormId)" v-tooltip.text>{{ form.name }}</router-link>
+              <form-link :form="form"
+                :to="publishedFormPath(form.projectId, form.xmlFormId)"
+                v-tooltip.text/>
             </td>
           </tr>
         </template>
@@ -47,26 +51,22 @@ except according to the terms contained in the LICENSE file.
     </p>
 </template>
 
-<script>
-import useRoutes from '../../../composables/routes';
+<script setup>
+import { computed } from 'vue';
 
-export default {
-  name: 'DatasetProperties',
-  props: {
-    properties: {
-      type: Array,
-      required: true
-    },
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    const { publishedFormPath } = useRoutes();
-    return { publishedFormPath };
-  }
-};
+import FormLink from '../../form/link.vue';
+
+import useRoutes from '../../../composables/routes';
+import { useRequestData } from '../../../request-data';
+
+defineOptions({
+  name: 'DatasetProperties'
+});
+
+const { dataset } = useRequestData();
+const properties = computed(() => dataset.properties);
+
+const { publishedFormPath } = useRoutes();
 </script>
 
 <style lang="scss">
@@ -89,13 +89,19 @@ export default {
     }
   }
 
+  .empty-update-form {
+    @include italic;
+    color: #888;
+  }
 }
 </style>
 
 <i18n lang="json5">
   {
     "en": {
-      "emptyTable": "There are no Properties in this Dataset."
+      "emptyTable": "The Entities in this Entity List do not have any user-defined properties.",
+      // This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms.
+      "none": "(None)"
     }
   }
   </i18n>
@@ -104,10 +110,34 @@ export default {
 <i18n>
 {
   "cs": {
-    "emptyTable": "V této datové sadě nejsou žádné vlastnosti."
+    "emptyTable": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
+  },
+  "de": {
+    "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften.",
+    "none": "(Keine)"
+  },
+  "es": {
+    "emptyTable": "Las entidades de esta lista no tienen propiedades definidas por el usuario.",
+    "none": "(ninguno)"
   },
   "fr": {
-    "emptyTable": "Il n'y a pas de propriété dans ce Dataset"
+    "emptyTable": "Les entités dans cette liste n'ont pas de propriétés définies par l'utilisateur",
+    "none": "Aucun"
+  },
+  "it": {
+    "emptyTable": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente.",
+    "none": "(Nessuna)"
+  },
+  "pt": {
+    "emptyTable": "As Entidades nesta Lista de Entidades não têm nenhuma propriedade definida pelo usuário.",
+    "none": "(Nenhum)"
+  },
+  "sw": {
+    "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
+  },
+  "zh-Hant": {
+    "emptyTable": "此實體清單中的實體沒有任何使用者定義的屬性。",
+    "none": "(無)"
   }
 }
 </i18n>

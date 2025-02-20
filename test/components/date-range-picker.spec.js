@@ -211,7 +211,7 @@ describe('DateRangePicker', () => {
       const component = mountComponent({
         props: { modelValue: ['1970-01-02', '1970-01-03'], required: true }
       });
-      component.find('.close').exists().should.be.false();
+      component.find('.close').exists().should.be.false;
     });
 
     it('hides the button if the modelValue prop is an empty array', () => {
@@ -263,8 +263,8 @@ describe('DateRangePicker', () => {
         props: { placeholder: 'My date range', required: true }
       });
       const { placeholder } = component.get('input').attributes();
-      placeholder.should.equal('My date range*');
-      component.get('.form-label').text().should.equal('My date range*');
+      placeholder.should.equal('My date range *');
+      component.get('.form-label').text().should.equal('My date range *');
     });
   });
 
@@ -272,34 +272,80 @@ describe('DateRangePicker', () => {
     const component = mountComponent({
       props: { required: true }
     });
-    component.get('input').classes('required').should.be.true();
+    component.get('input').classes('required').should.be.true;
   });
 
   describe('i18n', () => {
-    it('renders correctly for en', async () => {
-      const component = mountComponent({ attachTo: document.body });
-      await component.get('input').trigger('click');
-      const text = document.querySelector('.flatpickr-weekday').textContent.trim();
-      text.should.equal('Sun');
+    it('renders correctly for en', () => {
+      const component = mountComponent({
+        props: { modelValue: ['1970-01-02', '1970-01-03'] }
+      });
+      const input = component.get('input');
+      // Check the text between the two dates (" to ").
+      input.element.value.should.equal('1970/01/02 to 1970/01/03');
     });
 
     it('renders correctly for es', async () => {
       const container = createTestContainer();
       await loadLocale(container, 'es');
-      const component = mountComponent({ container, attachTo: document.body });
-      await component.get('input').trigger('click');
-      const text = document.querySelector('.flatpickr-weekday').textContent.trim();
-      text.should.equal('Lun');
+      const component = mountComponent({
+        props: { modelValue: ['1970-01-02', '1970-01-03'] },
+        container
+      });
+      const input = component.get('input');
+      input.element.value.should.equal('1970/01/02 a 1970/01/03');
     });
 
-    // There is not a flatpickr localization for sw.
-    it('renders correctly for sw', async () => {
-      const container = createTestContainer();
-      await loadLocale(container, 'sw');
-      const component = mountComponent({ container, attachTo: document.body });
-      await component.get('input').trigger('click');
-      const text = document.querySelector('.flatpickr-weekday').textContent.trim();
-      text.should.equal('Sun');
+    describe('no flatpickr localization', () => {
+      it('falls back to en', async () => {
+        const container = createTestContainer();
+        await loadLocale(container, 'sw');
+        const component = mountComponent({
+          props: { modelValue: ['1970-01-02', '1970-01-03'] },
+          container
+        });
+        const input = component.get('input');
+        input.element.value.should.equal('1970/01/02 to 1970/01/03');
+      });
+
+      it('falls back to en after switching from a third language', async () => {
+        const container = createTestContainer();
+        await loadLocale(container, 'es');
+        const component = mountComponent({
+          props: { modelValue: ['1970-01-02', '1970-01-03'] },
+          container
+        });
+        await loadLocale(container, 'sw');
+        const input = component.get('input');
+        input.element.value.should.equal('1970/01/02 to 1970/01/03');
+      });
+    });
+  });
+
+  describe('disabled', () => {
+    it('does not show calendar on click', async () => {
+      const component = mountComponent({
+        props: { modelValue: [], disabled: true }
+      });
+      const flatpickr = component.getComponent('.form-control');
+      await flatpickr.trigger('click');
+      flatpickr.classes().should.not.contain('active');
+    });
+
+    it('does not show calendar on focus', async () => {
+      const component = mountComponent({
+        props: { modelValue: [], disabled: true }
+      });
+      const flatpickr = component.getComponent('.form-control');
+      await flatpickr.trigger('focus');
+      flatpickr.classes().should.not.contain('active');
+    });
+
+    it('should not display clear button', async () => {
+      const component = mountComponent({
+        props: { modelValue: ['1970-01-02', '1970-01-03'], disabled: true }
+      });
+      component.find('.close').should.be.hidden();
     });
   });
 });

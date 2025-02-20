@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </i18n-t>
         <p>{{ $t('introduction[1]') }}</p>
-        <p>{{ $t('introduction[2]') }}</p>
+        <p>{{ $t('common.noUndo') }}</p>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-danger"
@@ -80,8 +80,7 @@ export default {
     "introduction": [
       // {displayName} is formatted in bold.
       "Are you sure you want to revoke access from the App User {displayName}?",
-      "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions.",
-      "This action cannot be undone."
+      "Existing Submissions from this user will remain, but anybody relying on this user will have to create a new one to continue downloading Forms or uploading Submissions."
     ]
   }
 }
@@ -94,64 +93,70 @@ export default {
     "title": "Odebrat přístup uživatele",
     "introduction": [
       "Opravdu chcete odebrat přístup uživateli aplikace {displayName}?",
-      "Stávající příspěvky od tohoto uživatele zůstanou, ale kdokoli se na tohoto uživatele obrátí, bude muset vytvořit nové, aby pokračoval ve stahování formulářů nebo odesílání příspěvků.",
-      "Tuto akci nelze vrátit zpět."
+      "Stávající příspěvky od tohoto uživatele zůstanou, ale kdokoli se na tohoto uživatele obrátí, bude muset vytvořit nové, aby pokračoval ve stahování formulářů nebo odesílání příspěvků."
     ]
   },
   "de": {
     "title": "Zugriffsberechtigung entziehen",
     "introduction": [
       "Wollen Sie dem Benutzer {displayName} wirklich die Zugriffsberechtigung entziehen?",
-      "Bestehende Übermittlungen dieses Benutzers bleiben erhalten. Bei jedem Bezug auf diesen Benutzer muss ein neuer erstellt werden, um Formulare herunterzuladen oder Übermittlungen einzureichen.",
-      "Diese Aktion kann nicht rückgängig gemacht werden."
+      "Bestehende Übermittlungen dieses Benutzers bleiben erhalten. Bei jedem Bezug auf diesen Benutzer muss ein neuer erstellt werden, um Formulare herunterzuladen oder Übermittlungen einzureichen."
     ]
   },
   "es": {
     "title": "Revocar acceso de usuario",
     "introduction": [
       "¿Está seguro de que desea revocar el acceso del usuario móvil {displayName}?",
-      "Los envíos existentes de este usuario permanecerán, pero cualquiera que confíe en este usuario tendrá que crear uno nuevo para continuar descargando formularios o cargando envíos.",
-      "Esta acción no se puede deshacer."
+      "Los envíos existentes de este usuario permanecerán, pero cualquiera que confíe en este usuario tendrá que crear uno nuevo para continuar descargando formularios o cargando envíos."
     ]
   },
   "fr": {
     "title": "Révoquer l'accès des utilisateurs",
     "introduction": [
       "Êtes vous sûr de vouloir révoquer l'accès de l'utilisateur mobile {displayName}?",
-      "Les soumissions existantes de cet utilisateur seront conservées, mais toute personne s'appuyant sur cet utilisateur devra en créer une nouvelle pour continuer à télécharger des formulaires ou des soumissions.",
-      "Cette action ne peut être annulée."
+      "Les soumissions existantes de cet utilisateur seront conservées, mais toute personne s'appuyant sur cet utilisateur devra en créer une nouvelle pour continuer à télécharger des formulaires ou des soumissions."
     ]
   },
   "id": {
     "title": "Cabut Akses Pengguna",
     "introduction": [
       "Apakah Anda yakin ingin mencabut akses dari Pengguna Aplikasi {displayName}?",
-      "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data.",
-      "Tindakan ini tidak bisa dibatalkan/dikembalikan."
+      "Kiriman data yang sudah ada dari Pengguna ini akan tetap ada, tetapi siapapun yang bergantung pada Pengguna ini harus membuat akun Pengguna baru untuk melanjutkan pengunduhan formulir atau pengunggahan kiriman data."
     ]
   },
   "it": {
     "title": "Revoca l'accesso utente",
     "introduction": [
       "Sei sicuro di voler revocare l'accesso all'App User {displayName}?",
-      "Gli invii esistenti di questo utente rimarranno, ma chiunque faccia affidamento su questo utente dovrà crearne uno nuovo per continuare a scaricare i formulari o caricare invii.",
-      "Questa operazione è irreversibile."
+      "Gli invii esistenti di questo utente rimarranno, ma chiunque faccia affidamento su questo utente dovrà crearne uno nuovo per continuare a scaricare i formulari o caricare invii."
     ]
   },
   "ja": {
     "title": "アプリユーザーのアクセス権の取消",
     "introduction": [
       "アプリユーザー\"{displayName}\"のアクセス権を本当に取り消しますか？",
-      "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。",
-      "この操作は取り消しできません。"
+      "このユーザーからこれまでに提出されたフォームは残りますが、このユーザーに依存している人は、フォームのダウンロードや提出フォームのアップロードを継続するために、新しいユーザーを作成する必要があります。"
+    ]
+  },
+  "pt": {
+    "title": "Remover acesso do usuário",
+    "introduction": [
+      "Você tem certeza que deseja remover o acesso do usuário de aplicativo {displayName}?",
+      "Respostas existentes para esse usuário serão mantidas, mas qualquer pessoa utilizando esse usuário precisará criar outro para continuar obtendo formulários e enviando respostas."
     ]
   },
   "sw": {
     "title": "Batilisha Ufikiaji wa Mtumiaji",
     "introduction": [
       "Je, una uhakika unataka kubatilisha ufikiaji kutoka kwa Mtumiaji wa Programu {displayName}?",
-      "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho",
-      "Kitendo hiki hakiwezi kutenduliwa"
+      "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho"
+    ]
+  },
+  "zh-Hant": {
+    "title": "撤銷使用者存取權限",
+    "introduction": [
+      "您確定要撤銷APP使用者 {displayName} 的存取權限嗎？",
+      "該用戶的現有提交內容將保留，但依賴該用戶的任何人都必須建立一個新提交內容才能繼續下載表格或上傳提交內容。"
     ]
   }
 }

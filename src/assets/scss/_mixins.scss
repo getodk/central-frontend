@@ -1,9 +1,31 @@
 @import './variables';
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TEXT
+
+@mixin italic {
+  font-style: italic;
+
+  &:lang(ja), &:lang(zh) {
+    font-style: normal;
+    font-weight: bold;
+  }
+}
+
 @mixin text-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// Truncates content after the specified number of lines.
+@mixin line-clamp($lines) {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  display: -webkit-box;
+  overflow: hidden;
 }
 
 @mixin text-link {
@@ -16,8 +38,9 @@
 @mixin text-block {
   // 15-17 words per line in English
   max-width: 77ch;
+  overflow-wrap: break-word;
   // 35 characters per line in Hiragino Kaku Gothic ProN
-  &:lang(ja) { max-width: 54ch; }
+  &:lang(ja), &:lang(zh) { max-width: 54ch; }
 }
 
 // A list that shows descriptive text
@@ -27,10 +50,26 @@
   li { margin-bottom: 5px; }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FORMS
+
+@mixin form-control-background {
+  background-color: #eee;
+  .panel-body &, .modal-body & { background-color: #f7f7f7; }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UTILITIES
+
 @mixin clearfix {
-  &::after {
-    clear: both;
+  &::before, &::after {
     content: " ";
     display: table;
   }
+
+  &::after { clear: both; }
 }

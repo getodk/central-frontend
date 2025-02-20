@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span id="odata-data-access">
+  <span v-if="!oidcEnabled" id="odata-data-access">
     <a class="btn btn-default"
-      href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints"
+      href="https://docs.getodk.org/central-api-odata-endpoints/"
       target="_blank" rel="noopener">
       <span class="icon-plug"></span>{{ $t('action.apiAccess') }}
     </a>
@@ -25,15 +25,19 @@ except according to the terms contained in the LICENSE file.
   </span>
 </template>
 
-<script>
-export default {
-  name: 'OdataDataAccess',
-  props: {
-    analyzeDisabled: Boolean,
-    analyzeDisabledMessage: String
-  },
-  emits: ['analyze']
-};
+<script setup>
+import { inject } from 'vue';
+
+defineOptions({
+  name: 'OdataDataAccess'
+});
+defineProps({
+  analyzeDisabled: Boolean,
+  analyzeDisabledMessage: String
+});
+defineEmits(['analyze']);
+
+const { oidcEnabled } = inject('config');
 </script>
 
 <style lang="scss">
@@ -60,10 +64,52 @@ export default {
       "analyze": "Analýza přes OData"
     }
   },
+  "de": {
+    "action": {
+      "apiAccess": "API-Zugriff",
+      "analyze": "Mittels OData analysieren"
+    }
+  },
+  "es": {
+    "action": {
+      "apiAccess": "Acceso API",
+      "analyze": "Analizar a través de OData"
+    }
+  },
   "fr": {
     "action": {
       "apiAccess": "Accès via l'API",
       "analyze": "Analyser via OData"
+    }
+  },
+  "id": {
+    "action": {
+      "apiAccess": "Akses API",
+      "analyze": "Analisis melalui OData"
+    }
+  },
+  "it": {
+    "action": {
+      "apiAccess": "accesso attraverso API",
+      "analyze": "Analizzare attraverso OData"
+    }
+  },
+  "pt": {
+    "action": {
+      "apiAccess": "Acesso à API",
+      "analyze": "Analisar via OData"
+    }
+  },
+  "sw": {
+    "action": {
+      "apiAccess": "Ufikiaji wa API",
+      "analyze": "Changanua kupitia OData"
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "apiAccess": "API 存取",
+      "analyze": "透過 OData 分析"
     }
   }
 }

@@ -18,11 +18,6 @@ except according to the terms contained in the LICENSE file.
     @update:model-value="update"/>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFiltersSubmitter'
-};
-</script>
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -31,6 +26,9 @@ import Multiselect from '../../multiselect.vue';
 
 import { useRequestData } from '../../../request-data';
 
+defineOptions({
+  name: 'SubmissionFiltersSubmitter'
+});
 const props = defineProps({
   modelValue: {
     type: Array,
@@ -98,7 +96,8 @@ const placeholder = (counts) => t('placeholder', counts);
 {
   "en": {
     "field": {
-      // This is the text of a form field that shows the names of submitters.
+      // This is the text of a form field that shows the names of users and
+      // Public Access Links that have submitted Submissions.
       "submitter": "Submitted by",
       "search": "Search submitters…"
     },
@@ -109,13 +108,21 @@ const placeholder = (counts) => t('placeholder', counts);
     "placeholder": "{selected} of {total}",
     "action": {
       "select": {
-        /* This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:
+        /*
+        This is the text of a dropdown that allows the user to select one or
+        more submitters. It will be inserted where {all} is in the following
+        text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "all": "All",
-        /* This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:
+        /*
+        This is the text of a dropdown that allows the user to select one or
+        more submitters. It will be inserted where {none} is in the following
+        text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "none": "None"
       }
     },
@@ -143,13 +150,22 @@ Select {all} / {none} */
   },
   "de": {
     "field": {
-      "submitter": "Übermittelt von"
+      "submitter": "Übermittelt von",
+      "search": "Einsender suchen…"
+    },
+    "placeholder": "{selected} von {total}",
+    "action": {
+      "select": {
+        "all": "Alle",
+        "none": "Keine"
+      }
     },
     "unknown": "Unbekannter Einsender"
   },
   "es": {
     "field": {
-      "submitter": "Enviado por"
+      "submitter": "Enviado por",
+      "search": "Buscar remitentes…"
     },
     "placeholder": "{selected} de {total}",
     "action": {
@@ -177,6 +193,13 @@ Select {all} / {none} */
   "id": {
     "field": {
       "submitter": "Terkirim oleh"
+    },
+    "placeholder": "{selected} dari {total}",
+    "action": {
+      "select": {
+        "all": "Semua",
+        "none": "Tidak Ada"
+      }
     }
   },
   "it": {
@@ -198,10 +221,47 @@ Select {all} / {none} */
       "submitter": "フォーム送信者"
     }
   },
+  "pt": {
+    "field": {
+      "submitter": "Enviado por",
+      "search": "Pesquisar remetentes…"
+    },
+    "placeholder": "{selected} de {total}",
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Nenhum"
+      }
+    },
+    "unknown": "Remetente desconhecido"
+  },
   "sw": {
     "field": {
-      "submitter": "Iliyowasilishwa na"
-    }
+      "submitter": "Iliyowasilishwa na",
+      "search": "Tafuta wawasilishaji..."
+    },
+    "placeholder": "{selected} kati ya {total}",
+    "action": {
+      "select": {
+        "all": "Wote",
+        "none": "Hakuna"
+      }
+    },
+    "unknown": "Mwasilishaji asiyejulikana"
+  },
+  "zh-Hant": {
+    "field": {
+      "submitter": "由提交者",
+      "search": "搜尋提交者..."
+    },
+    "placeholder": "{selected} /{total}",
+    "action": {
+      "select": {
+        "all": "全部",
+        "none": "無"
+      }
+    },
+    "unknown": "未知提交者"
   }
 }
 </i18n>

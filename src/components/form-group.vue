@@ -13,26 +13,26 @@ except according to the terms contained in the LICENSE file.
   <label class="form-group" :class="htmlClass">
     <slot name="before"></slot>
     <input ref="input" v-bind="$attrs" class="form-control" :value="modelValue"
-      :placeholder="`${placeholder}${star}`" :required="required"
-      :autocomplete="autocomplete"
+      :placeholder="requiredLabel(placeholder, required)" :required="required"
+      v-tooltip.aria-describedby="tooltip" :autocomplete="autocomplete"
       @input="$emit('update:modelValue', $event.target.value)">
     <password-strength v-if="autocomplete === 'new-password'"
       :password="modelValue"/>
-    <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
     <slot name="after"></slot>
   </label>
 </template>
 
-<script>
-export default {
-  inheritAttrs: false
-};
-</script>
 <script setup>
 import { computed, ref } from 'vue';
 
 import PasswordStrength from './password-strength.vue';
 
+import { requiredLabel } from '../util/dom';
+
+defineOptions({
+  inheritAttrs: false
+});
 const props = defineProps({
   modelValue: {
     type: String,
@@ -43,6 +43,7 @@ const props = defineProps({
     required: true
   },
   required: Boolean,
+  tooltip: String,
   hasError: Boolean,
   autocomplete: {
     type: String,
@@ -55,7 +56,6 @@ const htmlClass = computed(() => ({
   'new-password': props.autocomplete === 'new-password',
   'has-error': props.hasError
 }));
-const star = computed(() => (props.required ? ' *' : ''));
 
 const input = ref(null);
 const focus = () => { input.value.focus(); };

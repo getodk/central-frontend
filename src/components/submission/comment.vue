@@ -146,8 +146,14 @@ export default {
   "ja": {
     "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。"
   },
+  "pt": {
+    "editWithoutComment": "Você fez alterações nesse registro. Por favor, descreva as mudanças efetuadas."
+  },
   "sw": {
     "editWithoutComment": "Umefanya mabadiliko kwenye data hii. Tafadhali eleza mabadiliko uliyofanya."
+  },
+  "zh-Hant": {
+    "editWithoutComment": "您已對此資料進行了編輯。請描述您所做的變更。"
   }
 }
 </i18n>

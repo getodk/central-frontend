@@ -15,11 +15,29 @@ except according to the terms contained in the LICENSE file.
       <template v-if="project.dataExists" #title>
         {{ project.nameWithArchived }}
       </template>
-      <template #tabs>
+      <template #description>
+        <project-overview-description v-if="project.dataExists"
+        :description="project.description" :can-update="canUpdate"/>
+      </template>
+        <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
-        the project overview. -->
+        the forms page. -->
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">{{ $t('common.tab.overview') }}</router-link>
+          <router-link :to="tabPath('')">
+            {{ $t('resource.forms') }}
+            <span v-if="project.dataExists" class="badge">
+              {{ $n(project.forms, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <li v-if="canRoute(tabPath('entity-lists'))" :class="tabClass('entity-lists')"
+          role="presentation">
+          <router-link :to="tabPath('entity-lists')">
+            {{ $t('resource.entities') }}
+            <span v-if="project.dataExists" class="badge">
+              {{ $n(project.datasets, 'default') }}
+            </span>
+          </router-link>
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
           role="presentation">
@@ -37,12 +55,6 @@ except according to the terms contained in the LICENSE file.
           :class="tabClass('form-access')" role="presentation">
           <router-link :to="tabPath('form-access')">
             {{ $t('projectShow.tab.formAccess') }}
-          </router-link>
-        </li>
-        <li v-if="canRoute(tabPath('datasets'))" :class="tabClass('datasets')"
-          role="presentation">
-          <router-link :to="tabPath('datasets')">
-            {{ $t('resource.datasets') }}
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')"
@@ -67,6 +79,7 @@ except according to the terms contained in the LICENSE file.
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import ProjectOverviewDescription from './overview/description.vue';
 
 import useDatasets from '../../request-data/datasets';
 import useProject from '../../request-data/project';
@@ -77,7 +90,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectShow',
-  components: { Loading, PageBody, PageHead },
+  components: { Loading, PageBody, PageHead, ProjectOverviewDescription },
   props: {
     projectId: {
       type: String,
@@ -93,6 +106,11 @@ export default {
       project, forms, datasets, fieldKeys,
       tabPath, tabClass, projectPath, canRoute
     };
+  },
+  computed: {
+    canUpdate() {
+      return this.project.dataExists && this.project.permits('project.update');
+    }
   },
   created() {
     this.fetchProject(false);

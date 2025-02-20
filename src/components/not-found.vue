@@ -24,10 +24,10 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
+defineOptions({
   name: 'NotFound'
-};
+});
 </script>
 
 <i18n lang="json5">
@@ -62,8 +62,14 @@ export default {
   "ja": {
     "body": "リクエストされたページは見つかりません。"
   },
+  "pt": {
+    "body": "A página que você solicitou não pode ser encontrada."
+  },
   "sw": {
     "body": "Ukurasa ulioomba haukupatikana."
+  },
+  "zh-Hant": {
+    "body": "您請求的頁面無法找到。"
   }
 }
 </i18n>

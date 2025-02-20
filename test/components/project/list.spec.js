@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import ProjectList from '../../../src/components/project/list.vue';
 import ProjectHomeBlock from '../../../src/components/project/home-block.vue';
 import FormRow from '../../../src/components/project/form-row.vue';
+import DatasetRow from '../../../src/components/project/dataset-row.vue';
 
 import useProjects from '../../../src/request-data/projects';
 import { ago } from '../../../src/util/date-time';
@@ -22,16 +23,22 @@ const mountComponent = () => mount(ProjectList, {
   }
 });
 
-const createProjectsWithForms = (projects, forms) => {
+const createProjects = (projects, forms = [], datasets = []) => {
   // Input: Two arrays of same length with options for creating
   // projects and corresponding form lists
   // [{ proj }, { proj }]
   // [[{ form }, { form }, { form }], [{ form }, { form }]]
   for (const [i, projectOptions] of projects.entries()) {
     const project = testData.extendedProjects.createPast(1, projectOptions).last();
-    for (const formOptions of forms[i]) {
+    const projectForms = forms[i] || [];
+    const projectDatasets = datasets[i] || [];
+    for (const formOptions of projectForms) {
       const form = testData.extendedForms.createPast(1, { project, ...formOptions }).last();
       project.formList.push(form);
+    }
+    for (const datasetOptions of projectDatasets) {
+      const dataset = testData.extendedDatasets.createPast(1, { project, ...datasetOptions }).last();
+      project.datasetList.push(dataset);
     }
   }
 };
@@ -61,7 +68,7 @@ describe('ProjectList', () => {
 
   it('renders a row for each project', () => {
     mockLogin();
-    createProjectsWithForms(
+    createProjects(
       [{ name: 'Alpha Project' }, { name: 'Bravo Project' }],
       [[{}, {}], [{}, {}, {}, {}, {}]]
     );
@@ -79,13 +86,13 @@ describe('ProjectList', () => {
 
   it('does not show archived header if no archived projects exist', () => {
     mockLogin();
-    mountComponent().find('#project-list-archived').exists().should.be.false();
+    mountComponent().find('#project-list-archived').exists().should.be.false;
   });
 
   describe('sorting', () => {
     beforeEach(() => {
       mockLogin();
-      createProjectsWithForms(
+      createProjects(
         [
           { name: 'A', lastSubmission: ago({ days: 15 }).toISO() },
           { name: 'B', lastSubmission: ago({ days: 5 }).toISO() },
@@ -138,7 +145,7 @@ describe('ProjectList', () => {
 
     it('does not render the list in chunks again after sorting', async () => {
       const clock = sinon.useFakeTimers(Date.now());
-      createProjectsWithForms(new Array(25).fill({}), new Array(25).fill([]));
+      createProjects(new Array(25).fill({}), new Array(25).fill([]));
       const component = mountComponent();
       component.findAllComponents(ProjectHomeBlock).length.should.equal(25);
       clock.tick(25);
@@ -165,7 +172,7 @@ describe('ProjectList', () => {
     beforeEach(mockLogin);
 
     it('sorts projects alphabetically when last submission is null', async () => {
-      createProjectsWithForms(
+      createProjects(
         [
           { name: 'C_no_subs' },
           { name: 'B_no_subs' },
@@ -200,7 +207,7 @@ describe('ProjectList', () => {
     beforeEach(mockLogin);
 
     it('renders correctly when there is one project with many forms', () => {
-      createProjectsWithForms(
+      createProjects(
         [{ name: 'Project 1' }, { name: 'Project 2' }],
         [
           [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -215,8 +222,33 @@ describe('ProjectList', () => {
       blocks[1].findAllComponents(FormRow).length.should.equal(1);
     });
 
+    it('renders correctly when there are many empty projects', () => {
+      createProjects(
+        [{ name: 'Project 01' }, { name: 'Project 02' }, { name: 'Project 03' },
+          { name: 'Project 04' }, { name: 'Project 05' }, { name: 'Project 06' },
+          { name: 'Project 07' }, { name: 'Project 08' }, { name: 'Project 09' },
+          { name: 'Project 10' }, { name: 'Project 11' }, { name: 'Project 12' },
+          { name: 'Project 13' }, { name: 'Project 14' }, { name: 'Project 15' },
+          { name: 'Project 16' }, { name: 'Project 17' }, { name: 'Project 18' }],
+        [
+          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}], [{}], [],
+          [], [], [],
+          [], [], [],
+          [], [], [],
+          [], [], [],
+          [], [], []
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(FormRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxForms.should.equal(14);
+      blocks[0].findAllComponents(FormRow).length.should.equal(14);
+      blocks[1].findAllComponents(FormRow).length.should.equal(1);
+    });
+
     it('renders correctly when exactly 15 forms evenly distributed between projects', () => {
-      createProjectsWithForms(
+      createProjects(
         [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
         [
           [{}, {}, {}, {}, {}],
@@ -234,7 +266,7 @@ describe('ProjectList', () => {
     });
 
     it('renders 15 of 16 almost-evenly distributed forms', () => {
-      createProjectsWithForms(
+      createProjects(
         [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
         [
           [{}, {}, {}, {}, {}],
@@ -252,7 +284,7 @@ describe('ProjectList', () => {
     });
 
     it('uses the same form limit across home blocks', () => {
-      createProjectsWithForms(
+      createProjects(
         [
           { name: 'Project 1' },
           { name: 'Project 2' },
@@ -277,7 +309,7 @@ describe('ProjectList', () => {
     });
 
     it('renders correctly with a small number of forms where one project is above the original limit', () => {
-      createProjectsWithForms(
+      createProjects(
         [
           { name: 'Project 1' },
           { name: 'Project 2' }
@@ -296,7 +328,7 @@ describe('ProjectList', () => {
     });
 
     it('it renders correctly with a small number of forms', () => {
-      createProjectsWithForms(
+      createProjects(
         [
           { name: 'Project 1' },
           { name: 'Project 2' }
@@ -309,13 +341,13 @@ describe('ProjectList', () => {
       const component = mountComponent();
       component.findAllComponents(FormRow).length.should.equal(5);
       const blocks = component.findAllComponents(ProjectHomeBlock);
-      blocks[0].props().maxForms.should.equal(4);
+      blocks[0].props().maxForms.should.equal(3);
       blocks[0].findAllComponents(FormRow).length.should.equal(3);
       blocks[1].findAllComponents(FormRow).length.should.equal(2);
     });
 
     it('takes into account closed forms', () => {
-      createProjectsWithForms(
+      createProjects(
         [
           { name: 'Project 1' },
           { name: 'Project 2' }
@@ -327,9 +359,160 @@ describe('ProjectList', () => {
       );
       const component = mountComponent();
       const blocks = component.findAllComponents(ProjectHomeBlock);
-      blocks[0].props().maxForms.should.equal(4);
+      blocks[0].props().maxForms.should.equal(3);
       blocks[0].findAllComponents(FormRow).length.should.equal(3);
       blocks[1].findAllComponents(FormRow).length.should.equal(2);
+    });
+  });
+
+  describe('dynamic numbers of datasets', () => {
+    beforeEach(mockLogin);
+
+    it('renders correctly when there is one project with many datasets', () => {
+      createProjects(
+        [{ name: 'Project 1' }, { name: 'Project 2' }],
+        [],
+        [
+          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+          [{}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(14);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(14);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(1);
+    });
+
+    it('renders correctly when there are many empty projects', () => {
+      createProjects(
+        [{ name: 'Project 01' }, { name: 'Project 02' }, { name: 'Project 03' },
+          { name: 'Project 04' }, { name: 'Project 05' }, { name: 'Project 06' },
+          { name: 'Project 07' }, { name: 'Project 08' }, { name: 'Project 09' },
+          { name: 'Project 10' }, { name: 'Project 11' }, { name: 'Project 12' },
+          { name: 'Project 13' }, { name: 'Project 14' }, { name: 'Project 15' },
+          { name: 'Project 16' }, { name: 'Project 17' }, { name: 'Project 18' }],
+        [],
+        [
+          [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}], [{}], [],
+          [], [], [],
+          [], [], [],
+          [], [], [],
+          [], [], [],
+          [], [], []
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(14);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(14);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(1);
+    });
+
+    it('renders correctly when exactly 15 datasets evenly distributed between projects', () => {
+      createProjects(
+        [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
+        [],
+        [
+          [{}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(5);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(5);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(5);
+      blocks[2].findAllComponents(DatasetRow).length.should.equal(5);
+    });
+
+    it('renders 15 of 16 almost-evenly distributed datasets', () => {
+      createProjects(
+        [{ name: 'Project 1' }, { name: 'Project 2' }, { name: 'Project 3' }],
+        [],
+        [
+          [{}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}, {}],
+          [{}, {}, {}, {}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(15);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(5);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(5);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(5);
+      blocks[2].findAllComponents(DatasetRow).length.should.equal(5);
+    });
+
+    it('uses the same datasets limit across home blocks', () => {
+      createProjects(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' },
+          { name: 'Project 3' },
+          { name: 'Project 4' }
+        ],
+        [],
+        [
+          [{}, {}, {}, {}],
+          [{}, {}, {}, {}],
+          [{}, {}, {}, {}],
+          [{}, {}, {}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(12);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(3);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(3);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(3);
+      blocks[2].findAllComponents(DatasetRow).length.should.equal(3);
+      blocks[3].findAllComponents(DatasetRow).length.should.equal(3);
+    });
+
+    it('renders correctly with a small number of datasets where one project is above the original limit', () => {
+      createProjects(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' }
+        ],
+        [],
+        [
+          [{}, {}, {}, {}],
+          [{}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(6);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(4);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(4);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(2);
+    });
+
+    it('it renders correctly with a small number of datasets', () => {
+      createProjects(
+        [
+          { name: 'Project 1' },
+          { name: 'Project 2' }
+        ],
+        [],
+        [
+          [{}, {}, {}],
+          [{}, {}]
+        ]
+      );
+      const component = mountComponent();
+      component.findAllComponents(DatasetRow).length.should.equal(5);
+      const blocks = component.findAllComponents(ProjectHomeBlock);
+      blocks[0].props().maxDatasets.should.equal(3);
+      blocks[0].findAllComponents(DatasetRow).length.should.equal(3);
+      blocks[1].findAllComponents(DatasetRow).length.should.equal(2);
     });
   });
 
@@ -337,7 +520,7 @@ describe('ProjectList', () => {
     beforeEach(mockLogin);
 
     it('calculates duplicate form names per project', () => {
-      createProjectsWithForms(
+      createProjects(
         [{ name: 'Project 1' }, { name: 'Project 2' }],
         [
           [{ name: 'A', xmlFormId: 'a_1' }, { name: 'A', xmlFormId: 'a_2' }, { name: 'B', xmlFormId: 'b_1' }],

@@ -46,11 +46,20 @@ describe('FormGroup', () => {
     });
   });
 
+  it('uses the tooltip prop', async () => {
+    const formGroup = mountComponent({
+      props: { tooltip: 'Some description' }
+    });
+    const input = formGroup.get('input');
+    input.should.have.ariaDescription('Some description');
+    await input.should.have.tooltip('Some description');
+  });
+
   it('has the correct class if hasError is true', () => {
     const formGroup = mountComponent({
       props: { hasError: true }
     });
-    formGroup.classes('has-error').should.be.true();
+    formGroup.classes('has-error').should.be.true;
   });
 
   it('passes the autocomplete prop to the input', () => {
@@ -86,7 +95,7 @@ describe('FormGroup', () => {
     children[2].textContent.should.equal('Some span text');
   });
 
-  specify('focus() focuses the input', () => {
+  test('focus() focuses the input', () => {
     const formGroup = mountComponent({ attachTo: document.body });
     formGroup.vm.focus();
     formGroup.get('input').should.be.focused();
@@ -105,7 +114,7 @@ describe('FormGroup', () => {
       const formGroup = mountComponent({
         props: { autocomplete: 'off' }
       });
-      formGroup.findComponent(PasswordStrength).exists().should.be.false();
+      formGroup.findComponent(PasswordStrength).exists().should.be.false;
     });
 
     it('hides the strength meter for a password confirmation input', () => {

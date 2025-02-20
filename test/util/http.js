@@ -99,13 +99,13 @@ cycles: series can be chained. For example:
     .mount(AuditList)
     .respondWithData(() => testData.extendedAudits.sorted())
     .afterResponses(component => {
-      component.findComponent(AuditRow).exists().should.be.true();
+      component.findComponent(AuditRow).exists().should.be.true;
     })
     .request(component =>
       component.get('#audit-filters-action select').setValue('user.delete'))
     .respondWithData(() => [])
     .afterResponses(component => {
-      component.findComponent(AuditRow).exists().should.be.false();
+      component.findComponent(AuditRow).exists().should.be.false;
     });
 
 Notice how the mounted component is passed to each request() and
@@ -593,6 +593,7 @@ class MockHttp {
     }
 
     this._requestCount = 0;
+    this._responseCount = 0;
     this._errorFromBeforeAnyResponse = null;
     this._errorFromBeforeEachResponse = null;
     this._errorFromResponse = null;
@@ -683,6 +684,8 @@ class MockHttp {
           ? this._tryBeforeEachResponse(config, index)
           : null))
         .then(() => new Promise((resolve, reject) => {
+          this._responseCount += 1;
+
           let responseWithoutConfig;
           try {
             const callback = this._responses[index];
@@ -700,6 +703,7 @@ class MockHttp {
           this._requestResponseLog.push(responseWithoutConfig);
 
           const response = { ...responseWithoutConfig, config };
+          response.headers = new Map([['date', new Date()], ...(response.headers ?? [])]);
           if (response.status >= 200 && response.status < 300)
             resolve(response);
           else
@@ -778,6 +782,10 @@ class MockHttp {
         throw new Error('request without response: no response specified for request');
       else
         throw new Error('response without request: not all responses were requested');
+    }
+    if (this._responseCount !== this._responses.length) {
+      this._listRequestResponseLog();
+      throw new Error('All responses were requested, but not all were returned in time. By default, all responses are expected to be returned in microtasks, before the next task. You may need to use the pollWork option of afterResponses().');
     }
   }
 

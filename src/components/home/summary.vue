@@ -43,17 +43,16 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeSummary'
-};
-</script>
 <script setup>
 import HomeSummaryItem from './summary/item.vue';
 import Loading from '../loading.vue';
 
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'HomeSummary'
+});
 
 const { currentUser, projects, createResource } = useRequestData();
 const users = createResource('users');
@@ -185,6 +184,48 @@ if (currentUser.can('user.list'))
     },
     "forum": {
       "body": "Puoi sempre ottenere aiuto dagli altri sul forum, dove puoi anche cercare domande precedenti."
+    }
+  },
+  "pt": {
+    "projects": {
+      "body": "O Central é organizado em Projetos, cada um contendo seus próprios Formulários e dados relacionados."
+    },
+    "users": {
+      "body": "Usuários podem ser associados a Projetos para gerenciá-los ou para coletar ou revisar dados enviados."
+    },
+    "docs": {
+      "body": "Há um guia de iniciação e uma documentação de usuário disponíveis no website ODK Docs."
+    },
+    "forum": {
+      "body": "Você sempre pode obter ajuda de outras pessoas no fórum, onde também pode pesquisar perguntas anteriores."
+    }
+  },
+  "sw": {
+    "projects": {
+      "body": "Central imepangwa katika Miradi, ambayo kila moja ina Fomu zake na data zinazohusiana."
+    },
+    "users": {
+      "body": "Watumiaji wanaweza kupewa Miradi ili kuisimamia, au kukusanya au kukagua data iliyowasilishwa."
+    },
+    "docs": {
+      "body": "Kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye tovuti ya Hati za ODK."
+    },
+    "forum": {
+      "body": "Unaweza kupata usaidizi kutoka kwa wengine kila wakati kwenye mijadala, ambapo unaweza pia kutafuta maswali yaliyotangulia."
+    }
+  },
+  "zh-Hant": {
+    "projects": {
+      "body": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
+    },
+    "users": {
+      "body": "可以將使用者指派到專案來管理它們，或收集或審查提交的資料。"
+    },
+    "docs": {
+      "body": "ODK 文件網站上提供了入門指南和使用者文件。"
+    },
+    "forum": {
+      "body": "您始終可在論壇上獲得其他人的幫助，您也可以在其中搜尋先前的問題。"
     }
   }
 }

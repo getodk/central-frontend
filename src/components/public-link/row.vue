@@ -181,6 +181,16 @@ export default {
       "title": "一般公開リンクはまだ利用できません。処理が終了していません。後ほどページを更新し、もう一度試して下さい。"
     }
   },
+  "pt": {
+    "action": {
+      "revoke": "Revogar"
+    },
+    "revoked": "Revogado",
+    "unavailable": {
+      "text": "Não disponível ainda",
+      "title": "O link de acesso público não está disponível ainda. Ele não terminou de ser processado. Por favor atualize a página mais tarde e tente novamente."
+    }
+  },
   "sw": {
     "action": {
       "revoke": "Batilisha"
@@ -189,6 +199,16 @@ export default {
     "unavailable": {
       "text": "Haipatikani bado",
       "title": "Kiungo cha Ufikiaji wa Umma bado hakipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena."
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "revoke": "撤銷"
+    },
+    "revoked": "已撤銷",
+    "unavailable": {
+      "text": "還不可用",
+      "title": "公共訪問連結尚不可用。它尚未完成處理。請稍後刷新並重試。"
     }
   }
 }

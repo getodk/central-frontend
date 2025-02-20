@@ -146,21 +146,18 @@ export default {
         this.shownDuringUpload;
     },
     percentUploaded() {
-      const { progress } = this.uploadStatus;
-      const fraction = progress != null && progress.lengthComputable
-        ? progress.loaded / progress.total
-        : 0;
-      return this.$n(fraction, 'percent');
+      return this.$n(this.uploadStatus.progress, 'percent');
     }
   },
   updated() {
     if (this.shownAfterSelection)
-      $(this.$refs.popups).find('.btn-primary').focus();
+      this.$refs.popups.querySelector('.btn-primary').focus();
   }
 };
 </script>
 
 <style lang="scss">
+@use 'sass:math';
 @import '../../assets/scss/variables';
 
 $z-index-backdrop: 1;
@@ -176,7 +173,7 @@ $popup-width: 300px;
 #form-attachment-popups-main {
   bottom: $edge-offset;
   position: fixed;
-  right: $edge-offset;
+  right: calc($edge-offset + max(50% - #{math.div($max-width-page-body, 2)}, 0px));
   width: $popup-width;
   z-index: $z-index-main;
 
@@ -339,6 +336,7 @@ $popup-width: 300px;
     "title": "Dateien hochladen",
     "duringDragover": {
       "dropToUpload": "Jetzt loslassen, um die Datei als {attachmentName} hochzuladen.",
+      "dragover": "Verwenden Sie Drag-and-Drop, um den Formularanhang hochzuladen und der existierende Formularanhang zu ersetzen.",
       "dropToPrepare": {
         "full": "Lassen Sie die {countOfFiles} hier fallen, um sie hochzuladen.",
         "countOfFiles": "{count} Datei | {count} Dateien"
@@ -368,6 +366,7 @@ $popup-width: 300px;
     "title": "Subir archivos",
     "duringDragover": {
       "dropToUpload": "Suelta ahora para cargar este archivo como {attachmentName}",
+      "dragover": "Arrastre sobre el archivo adjunto del formulario que deseas reemplazar con el archivo y suéltalo para cargarlo.",
       "dropToPrepare": {
         "full": "Suelte ahora para preparar {countOfFiles} para subir a este formulario.",
         "countOfFiles": "{count} archivo | {count} archivos | {count} archivos"
@@ -511,10 +510,41 @@ $popup-width: 300px;
       }
     }
   },
+  "pt": {
+    "title": "Subir arquivos",
+    "duringDragover": {
+      "dropToUpload": "Solte agora para carregar esse arquivo como {attachmentName}.",
+      "dragover": "Arraste o Anexo do Formulário que deseja substituir pelo arquivo e solte para carregar.",
+      "dropToPrepare": {
+        "full": "Solte agora para preparar {countOfFiles} para carregar nesse formulário.",
+        "countOfFiles": "{count}arquivo | {count}arquivos | {count}arquivos"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles}pronto para carregar. | {countOfFiles}prontos para carregar. | {countOfFiles}prontos para carregar.",
+        "countOfFiles": "{count}arquivo | {count}arquivos | {count}arquivos"
+      },
+      "someUnmatched": {
+        "full": "{countOfFiles}tem nome que não foi reconhecido e será ignorado. Para carregá-lo, troque o nomes dele ou arraste individualmente sobre o destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.",
+        "countOfFiles": "{count} arquivo | {count}arquivos | {count}arquivos"
+      },
+      "noneMatched": "Nós não reconhecemos o nome do arquivo que você está tentando carregar. Por favor, troque o nome dele para corresponder ao nome da lista acima, ou solte-o individualmente sobre o destino correto. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino."
+    },
+    "duringUpload": {
+      "total": "Por favor aguarde, carregando{count} arquivo: | Por favor aguarde, carregando {count}arquivos: | Por favor aguarde, carregando {count}arquivos:",
+      "current": "Enviando {filename}({percentUploaded})",
+      "remaining": {
+        "beforeLast": "{count} arquivo permanece. | {count} arquivos permanecem. | {count} arquivos permanecem.",
+        "last": "Esse é o último arquivo."
+      }
+    }
+  },
   "sw": {
     "title": "Pakia Faili",
     "duringDragover": {
       "dropToUpload": "Dondosha sasa ili upakie faili hii kama {attachmentName}.",
+      "dragover": "Buruta juu ya Kiambatisho cha Fomu unachotaka kubadilisha na faili na uangushe ili upakie",
       "dropToPrepare": {
         "full": "Dondosha sasa ili kuandaa {countOfFiles} kwa ajili ya kupakiwa kwenye Fomu hii.",
         "countOfFiles": "faili {count} | faili {count}"
@@ -537,6 +567,36 @@ $popup-width: 300px;
       "remaining": {
         "beforeLast": "faili {count} itasalia. | faili {count} zitasalia.",
         "last": "Hili ndilo faili la mwisho."
+      }
+    }
+  },
+  "zh-Hant": {
+    "title": "上傳多個檔案",
+    "duringDragover": {
+      "dropToUpload": "立即將此文件上傳為 {attachmentName}。",
+      "dragover": "將您想要替換為文件的表單附件拖曳並拖曳以上傳。",
+      "dropToPrepare": {
+        "full": "立即準備 {countOfFiles} 上傳到此表單。",
+        "countOfFiles": "{count} 個檔案"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles} 個檔案準備上傳",
+        "countOfFiles": "{count} 個檔案"
+      },
+      "someUnmatched": {
+        "full": "{countOfFiles} 個檔案，有我們不認識的名字並且會被忽略。要上傳它們，請重新命名它們或將它們單獨拖曳到目標上。",
+        "countOfFiles": "{count} 個檔案"
+      },
+      "noneMatched": "我們無法識別您嘗試上傳的任何文件。請重新命名它們以符合上面列出的名稱，或將它們單獨拖曳到目標上。"
+    },
+    "duringUpload": {
+      "total": "請稍候，正在上傳您的 {count} 個檔案：",
+      "current": "正在傳送{filename} ({percentUploaded})",
+      "remaining": {
+        "beforeLast": "{count} 個檔案仍然存在。",
+        "last": "這是最後一個檔案。"
       }
     }
   }

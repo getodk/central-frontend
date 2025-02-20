@@ -13,7 +13,9 @@ except according to the terms contained in the LICENSE file.
   <div class="feed-entry">
     <div class="feed-entry-heading">
       <date-time :iso="iso"/>
-      <div class="feed-entry-title"><slot name="title"></slot></div>
+      <div class="feed-entry-title" :class="{ truncate: !wrapTitle }">
+        <slot name="title"></slot>
+      </div>
     </div>
     <div class="feed-entry-body"><slot name="body"></slot></div>
   </div>
@@ -26,19 +28,24 @@ defineProps({
   iso: {
     type: String,
     required: true
-  }
+  },
+  wrapTitle: Boolean
 });
 </script>
 
 <style lang="scss">
 @import '../assets/scss/mixins';
 
+$margin-bottom: 20px;
 .feed-entry {
+  @include clearfix;
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
+  margin-bottom: $margin-bottom;
 }
 
-.feed-entry-heading, .feed-entry-body .markdown-view { padding: 10px 15px; }
+.feed-entry-heading, .feed-entry-body .markdown-view {
+  padding: 10px $hpadding-feed-entry;
+}
 
 .feed-entry-heading {
   background-color: #fff;
@@ -52,18 +59,23 @@ defineProps({
 }
 
 .feed-entry-title {
-  @include text-overflow-ellipsis;
+  $padding-left: 25px;
   font-size: 17px;
   font-weight: bold;
   letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+  padding-left: $padding-left;
+  text-indent: -$padding-left;
   width: 70%;
 
+  &.truncate { @include text-overflow-ellipsis; }
+
+  // 18px (width) + 7px (margin-right) = $padding-left
   [class^="icon-"] {
-    display: block;
-    float: left;
+    display: inline-block;
     margin-right: 7px;
-    padding-top: 3px;
     text-align: center;
+    text-indent: 0;
     width: 18px;
   }
 
@@ -71,8 +83,17 @@ defineProps({
 }
 
 .feed-entry-body {
-  background-color: #f9f9f9;
+  background-color: $background-color-feed-entry;
 
   .markdown-view > p:last-child { margin: 0 0 0px; }
+}
+
+// Container of multiple FeedEntry components
+.feed-entry-group {
+  // Move the bottom margin to the container, but keep 1px between FeedEntry
+  // components.
+  margin-bottom: $margin-bottom;
+  .feed-entry { margin-bottom: 0; }
+  .feed-entry + .feed-entry { margin-top: 1px; }
 }
 </style>

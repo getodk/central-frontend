@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "ステータス",
         "testing": "テスト"
       }
     }
@@ -148,7 +147,9 @@
     "update": "更新",
     "yesProceed": "はい、続けます。",
     "showPreview": "プレビュー",
-    "hidePreview": "プレビューを隠す"
+    "hidePreview": "プレビューを隠す",
+    "upload": "アップロード",
+    "restore": "復元"
   },
   "field": {
     "comment": "コメントを残す...",
@@ -161,7 +162,6 @@
     "passphrase": "パスフレーズ",
     "password": "パスワード",
     "passwordConfirm": "新しいパスワード（確認用）",
-    "reviewState": "レビュー・ステータス",
     "type": "タイプ"
   },
   "header": {
@@ -205,7 +205,8 @@
     "webUsers": "Webユーザー",
     "session": "セッション",
     "submissions": "提出済フォーム",
-    "projectRoles": "プロジェクトでの役割"
+    "projectRoles": "プロジェクトでの役割",
+    "draft": "下書き"
   },
   "alert": {
     "passwordTooShort": "10文字以上の長さのパスワードを入力してください。",
@@ -255,18 +256,16 @@
       "settings": "設定",
       "overview": "概要"
     },
-    "total": "全期間"
+    "total": "全期間",
+    "reviewState": "レビュー・ステータス",
+    "status": "ステータス",
+    "version": "バージョン"
   },
   "mixin": {
     "request": {
       "alert": {
         "fileSize": "アップロードを試みているファイル\"{name}\"は、100MB制限を超過しています。"
       }
-    }
-  },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name}（アーカイブ済）"
     }
   },
   "util": {
@@ -285,5 +284,10 @@
   },
   "router": {
     "unsavedChanges": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name}（アーカイブ済）"
+    }
   }
 }

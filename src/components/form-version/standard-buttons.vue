@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss">
-.form-version-standard-buttons .enketo-preview {
-  margin-right: 5px;
+.form-version-standard-buttons {
+  > :not(:last-child) { margin-right: 5px; }
 }
 </style>

@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('title') }}</span>
         <button v-if="project.dataExists && project.permits('form.create')"
           id="form-list-create-button" type="button" class="btn btn-primary"
-          @click="showModal('newForm')">
+          @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
         <form-sort v-model="sortMode"/>
@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         </p>
       </template>
     </page-section>
-    <form-new v-bind="newForm" @hide="hideModal('newForm')"
+    <form-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
   </div>
 </template>
@@ -43,15 +43,14 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import FormSort from './sort.vue';
 
-import modal from '../../mixins/modal';
 import sortFunctions from '../../util/sort';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
   components: { FormTable, FormNew, FormSort, Loading, PageSection },
-  mixins: [modal()],
   inject: ['alert'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -62,9 +61,7 @@ export default {
   },
   data() {
     return {
-      newForm: {
-        state: false
-      },
+      createModal: modalData(),
       sortMode: 'alphabetical'
     };
   },
@@ -74,19 +71,28 @@ export default {
     }
   },
   methods: {
-    afterCreate(form) {
+    async afterCreate(form) {
       const message = this.$t('alert.create', {
         name: form.name != null ? form.name : form.xmlFormId
       });
-      this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
-        .then(() => { this.alert.success(message); });
+      await this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'));
+      // Increment the count so that if the user returns to a project page, they
+      // will see the new count.
+      this.project.forms += 1;
+      this.alert.success(message);
     }
   }
 };
 </script>
 
 <style lang="scss">
-#form-list { margin-bottom: 35px; }
+#form-list {
+  margin-bottom: 35px;
+
+  .empty-table-message{
+    margin-top: 20px;
+  }
+}
 </style>
 
 <i18n lang="json5">
@@ -179,6 +185,16 @@ export default {
       "create": "新規フォーム\"{name}\"が下書きとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用できます。"
     }
   },
+  "pt": {
+    "title": "Formulários",
+    "action": {
+      "create": "Novo"
+    },
+    "emptyTable": "Não há formulários para exibir.",
+    "alert": {
+      "create": "O seu novo formulário \"{name}\" foi criado como rascunho. Dê uma olhada na lista de verificação abaixo e, quando você sentir que está pronto, publique o formulário para utilização."
+    }
+  },
   "sw": {
     "title": "Fomu",
     "action": {
@@ -187,6 +203,16 @@ export default {
     "emptyTable": "hakuna Fomu za kuonyesha",
     "alert": {
       "create": "Fomu yako mpya \"{name}\" imeundwa kama Rasimu. Angalia orodha hapa chini, na unapohisi iko tayari, unaweza kuchapisha Fomu kwa matumizi."
+    }
+  },
+  "zh-Hant": {
+    "title": "表單",
+    "action": {
+      "create": "新增"
+    },
+    "emptyTable": "沒有可顯示的表單。",
+    "alert": {
+      "create": "您的新表單「{name}」已建立為草稿。查看下面的清單，當您認為準備就緒時，您可以發發布單以供使用。"
     }
   }
 }

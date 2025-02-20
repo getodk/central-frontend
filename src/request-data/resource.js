@@ -9,22 +9,38 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, isRef, readonly, toRef } from 'vue';
+import { computed, isRef, readonly, shallowReactive, toRef } from 'vue';
 
-import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
 import { noop } from '../util/util';
 import { setCurrentResource } from './util';
 import { unlessFailure } from '../util/router';
 
+/*
+This file uses Symbols for internal properties. Private properties are usually
+nice, but they don't work well in this case:
+
+  - The _store property is used in subclasses.
+  - Our use of proxies in this file doesn't seem to play well with private
+    properties.
+
+Internal properties are not intended to be used outside this file.
+*/
 const _store = Symbol('store');
+
 // Subclasses must define a property named `data`.
 class BaseResource {
+  /*
+  - name. Every resource must be provided a name. This can be helpful for
+    logging/debugging. Resource names do not have to be unique.
+  - store. The reactive state of the resource.
+  */
   constructor(name, store) {
-    // We don't use a Symbol for this property so that it is easy to access it
-    // for display in testing. Not using a Symbol also means that calling
-    // Object.keys() on the resource will return a non-empty array. Vue I18n
-    // uses Object.keys() to determine whether an object is empty.
-    this._name = name;
+    // In addition to logging/debugging, another reason to add this property is
+    // so that calling Object.keys() on the resource will return a non-empty
+    // array. Vue I18n uses Object.keys() to determine whether an object is
+    // empty.
+    this.resourceName = name;
     this[_store] = store;
   }
 
@@ -40,21 +56,13 @@ class BaseResource {
       dataExists: computed(() => this.dataExists)
     };
   }
-
-  patch(data) {
-    this[_store].$patch(() => {
-      if (typeof data === 'function')
-        data(this.data);
-      else
-        Object.assign(this.data, data);
-    });
-  }
 }
 
 const _container = Symbol('container');
 const _abortController = Symbol('abortController');
 class Resource extends BaseResource {
-  constructor(container, name, store) {
+  constructor(container, name) {
+    const store = shallowReactive({ data: null, awaitingResponse: false });
     super(name, store);
     this[_container] = container;
     this[_abortController] = null;
@@ -67,12 +75,8 @@ class Resource extends BaseResource {
   cancelRequest() { if (this.awaitingResponse) this[_abortController].abort(); }
 
   reset() {
-    if (this.dataExists || this.awaitingResponse) {
-      this[_store].$patch(() => {
-        this.data = null;
-        this.cancelRequest();
-      });
-    }
+    this.data = null;
+    this.cancelRequest();
   }
 
   transformResponse(response) { return response.data; }
@@ -272,15 +276,27 @@ class Resource extends BaseResource {
           this.setFromResponse(response);
         } else {
           if (!this.dataExists) throw new Error('data does not exist');
-          this[_store].$patch(() => { patch(response, this); });
+          patch(response, this);
         }
       });
   }
 }
 
 const proxyHandler = {
-  get: (resource, prop) => {
-    if (prop in resource) return resource[prop];
+  get: (resource, prop, proxy) => {
+    // First check the resource for the property.
+    if (prop in resource) {
+      // We want to call withHttpMethods() on Resource.prototype.request().
+      // However, because the request() method references `this`, we must first
+      // bind it to the proxy. For example, if resource.request.post() is
+      // called, we need `this` to be the proxy in post().
+      if (prop === 'request')
+        return withHttpMethods(resource.request.bind(proxy));
+
+      return resource[prop];
+    }
+
+    // Fall back to getting the property from resource.data.
     const { data } = resource;
     if (data == null) return undefined;
     const value = data[prop];
@@ -297,8 +313,8 @@ const proxyHandler = {
   /* eslint-enable no-param-reassign */
 };
 
-export const createResource = (container, name, store, setup = undefined) => {
-  const resource = new Resource(container, name, store);
+export const createResource = (container, name, setup = undefined) => {
+  const resource = new Resource(container, name);
   const proxy = new Proxy(resource, proxyHandler);
 
   if (setup != null) {
@@ -329,7 +345,7 @@ const _view = Symbol('view');
 class ResourceView extends BaseResource {
   constructor(resource, lens) {
     const store = resource[_store];
-    super(`${resource._name} view`, store);
+    super(`${resource.resourceName} view`, store);
     this[_view] = computed(() =>
       (store.data != null ? lens(store.data) : null));
   }

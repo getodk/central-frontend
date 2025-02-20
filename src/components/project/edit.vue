@@ -33,11 +33,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ProjectEdit'
-};
-</script>
 <script setup>
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -49,6 +44,10 @@ import MarkdownTextarea from '../markdown/textarea.vue';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'ProjectEdit'
+});
 
 // The component assumes that this data will exist when the component is
 // created.
@@ -156,7 +155,8 @@ const submit = () => {
   "id": {
     "title": "Rincian Dasar",
     "field": {
-      "name": "Nama Proyek"
+      "name": "Nama Proyek",
+      "description": "Deskripsi Proyek"
     },
     "alert": {
       "success": "Pengaturan proyek tersimpan!"
@@ -182,13 +182,37 @@ const submit = () => {
       "success": "プロジェクト設定の保存完了！"
     }
   },
+  "pt": {
+    "title": "Detalhes básicos",
+    "field": {
+      "name": "Nome do projeto",
+      "description": "Descrição do projeto",
+      "note": "Adicione notas, links, instruções e outros recursos aqui."
+    },
+    "alert": {
+      "success": "Configurações do projeto salvas!"
+    }
+  },
   "sw": {
     "title": "Maelezo ya Msingi",
     "field": {
-      "name": "Jina la mradi"
+      "name": "Jina la mradi",
+      "description": "Maelezo ya mradi",
+      "note": "Ongeza vidokezo, viungo, maagizo na nyenzo zingine hapa."
     },
     "alert": {
       "success": "Mipangilio ya mradi imehifadhiwa!"
+    }
+  },
+  "zh-Hant": {
+    "title": "基本訊息",
+    "field": {
+      "name": "專案名稱",
+      "description": "專案描述",
+      "note": "在此處新增註釋、連結、指示和其他資源。"
+    },
+    "alert": {
+      "success": "專案設定已儲存！"
     }
   }
 }

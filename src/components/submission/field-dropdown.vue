@@ -23,11 +23,6 @@ except according to the terms contained in the LICENSE file.
   </multiselect>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFieldDropdown'
-};
-</script>
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -35,6 +30,9 @@ import { useI18n } from 'vue-i18n';
 import Multiselect from '../multiselect.vue';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'SubmissionFieldDropdown'
+});
 defineProps({
   modelValue: {
     type: Array,
@@ -92,13 +90,21 @@ const placeholder = (counts) => t('placeholder', counts);
     },
     "action": {
       "select": {
-        /* This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:
+        /*
+        This text is shown in a dropdown that allows the user to select which
+        columns to display in a table. It will be inserted where {all} is in the
+        following text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "all": "All",
-        /* This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:
+        /*
+        This text is shown in a dropdown that allows the user to select which
+        columns to display in a table. It will be inserted where {none} is in
+        the following text:
 
-Select {all} / {none} */
+        Select {all} / {none}
+        */
         "none": "None"
       }
     },
@@ -135,7 +141,8 @@ Select {all} / {none} */
         "all": "Alle",
         "none": "Keine"
       }
-    }
+    },
+    "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
     "placeholder": "{selected} de {total}",
@@ -148,7 +155,8 @@ Select {all} / {none} */
         "all": "Todas",
         "none": "Ninguna"
       }
-    }
+    },
+    "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
     "placeholder": "{selected} sur {total}",
@@ -204,6 +212,20 @@ Select {all} / {none} */
       }
     }
   },
+  "pt": {
+    "placeholder": "{selected} de {total}",
+    "field": {
+      "columns": "Colunas exibidas",
+      "search": "Colunas de busca..."
+    },
+    "action": {
+      "select": {
+        "all": "Todos",
+        "none": "Nenhum"
+      }
+    },
+    "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
+  },
   "sw": {
     "placeholder": "{selected} kati ya {total}",
     "field": {
@@ -215,7 +237,22 @@ Select {all} / {none} */
         "all": "zote",
         "none": "hakuna"
       }
-    }
+    },
+    "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
+  },
+  "zh-Hant": {
+    "placeholder": "{selected}/{total}",
+    "field": {
+      "columns": "顯示欄位",
+      "search": "搜尋欄位..."
+    },
+    "action": {
+      "select": {
+        "all": "全部",
+        "none": "無"
+      }
+    },
+    "warning": "選擇太多列可能會降低計算機的速度。"
   }
 }
 </i18n>

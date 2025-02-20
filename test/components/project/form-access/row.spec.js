@@ -1,3 +1,4 @@
+import FormLink from '../../../../src/components/form/link.vue';
 import ProjectFormAccessRow from '../../../../src/components/project/form-access/row.vue';
 
 import testData from '../../../data';
@@ -11,7 +12,7 @@ describe('ProjectFormAccessRow', () => {
     testData.extendedForms.createPast(1, { draft: true });
     return load('/projects/1/form-access').then(app => {
       const row = app.getComponent(ProjectFormAccessRow);
-      row.classes('project-form-access-row-draft').should.be.true();
+      row.classes('project-form-access-row-draft').should.be.true;
     });
   });
 
@@ -23,40 +24,13 @@ describe('ProjectFormAccessRow', () => {
     });
   });
 
-  describe('form name and xmlFormId', () => {
-    it("shows the form's name if the form has one", async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f', name: 'My Form' });
-      const app = await load('/projects/1/form-access');
-      const a = app.get('.project-form-access-row-form-name a');
-      a.text().should.equal('My Form');
-      await a.should.have.textTooltip();
-    });
-
-    it('shows the xmlFormId if the form does not have a name', async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'my_form', name: null });
-      const app = await load('/projects/1/form-access');
-      const a = app.get('.project-form-access-row-form-name a');
-      a.text().should.equal('my_form');
-      await a.should.have.textTooltip();
-    });
-  });
-
-  describe('form link', () => {
-    it('links to the form overview for a form with a published version', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      return load('/projects/1/form-access').then(app => {
-        const a = app.get('.project-form-access-row-form-name a');
-        a.attributes().href.should.endWith('/projects/1/forms/a%20b');
-      });
-    });
-
-    it('links to .../draft for a form without a published version', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      return load('/projects/1/form-access').then(app => {
-        const a = app.get('.project-form-access-row-form-name a');
-        a.attributes().href.should.endWith('/projects/1/forms/a%20b/draft');
-      });
-    });
+  it("shows the form's name", async () => {
+    testData.extendedForms.createPast(1, { name: 'My Form' });
+    const app = await load('/projects/1/form-access');
+    const link = app.get('.project-form-access-row-form-name')
+      .getComponent(FormLink);
+    link.props().form.name.should.equal('My Form');
+    await link.should.have.textTooltip();
   });
 
   it('shows the form state', () => {
@@ -95,7 +69,7 @@ describe('ProjectFormAccessRow', () => {
         xmlFormId: 'f'
       });
       return load('/projects/1/form-access').then(app => {
-        app.find('.project-form-access-row-access').exists().should.be.false();
+        app.find('.project-form-access-row-access').exists().should.be.false;
       });
     });
   });

@@ -27,8 +27,8 @@ v-tooltip.no-aria="someValue"
 If the text of an element may overflow and be truncated, specify v-tooltip.text.
 This will show a tooltip with the text of the element, but only if the text is
 truncated. The text must be inside an element that sets the text-overflow CSS
-property: either the element with the tooltip or (more likely) an ancestor
-element.
+property or the -webkit-line-clamp property: either the element with the tooltip
+or (more likely) an ancestor element.
 
 If an element is disabled, it will often have a tooltip that explains why. In
 this case, we will also make the explanation available to screen readers using
@@ -80,6 +80,7 @@ is asynchronous, so you must use `await`. For example:
 import { computePosition, detectOverflow, flip, inline, offset } from '@floating-ui/dom';
 
 import { noop } from '../util/util';
+import { truncatesText } from '../util/dom';
 
 const types = ['text', 'aria-describedby', 'aria-label', 'sr-only', 'no-aria'];
 const placements = ['top', 'right', 'bottom', 'left'];
@@ -128,14 +129,14 @@ class Tooltip {
     /*
     For v-tooltip.text, we check whether the text is more than 5 characters
     rather than checking whether tooltip.text() != null because the element that
-    sets text-overflow might not be visible yet. In that case, clientWidth === 0
-    on that element, so tooltip.text() == null even if the text will be
-    truncated once the element is visible. Rather than trying to watch the
-    visibility of the element, we add event listeners if the text is more than 5
-    characters. If/when an event listener is triggered for show, we will
-    evaluate then whether the text is truncated and show the tooltip if so.
-    Presumably the text won't ever be truncated if it is 5 characters or fewer.
-    We check textContent here rather than innerText to avoid triggering a
+    sets text-overflow or -webkit-line-clamp might not be visible yet. In that
+    case, clientWidth === 0 on that element, so tooltip.text() == null even if
+    the text will be truncated once the element is visible. Rather than trying
+    to watch the visibility of the element, we add event listeners if the text
+    is more than 5 characters. If/when an event listener is triggered for show,
+    we will evaluate then whether the text is truncated and show the tooltip if
+    so. Presumably the text won't ever be truncated if it is 5 characters or
+    fewer. We check textContent here rather than innerText to avoid triggering a
     reflow.
 
     For v-tooltip.sr-only, we always add event listeners because we can't easily
@@ -147,7 +148,7 @@ class Tooltip {
     shown: we just need to check tooltip.text().
     */
     if (type === 'text'
-      ? anchor.textContent.trim().length > 5
+      ? anchor.textContent.length > 5
       : type === 'sr-only' || tooltip.text() != null) {
       tooltip.addEventListeners();
       if (type === 'aria-describedby') tooltip.render();
@@ -180,10 +181,7 @@ class Tooltip {
         // safeguard.
         if (closestBlock == null || closestBlock === document.body) return null;
       }
-      // Check whether the text is truncated.
-      return closestBlock.scrollWidth > closestBlock.clientWidth
-        ? this.anchor.innerText
-        : null;
+      return truncatesText(closestBlock) ? this.anchor.innerText : null;
     }
     if (this.type === 'aria-label')
       return this.anchor.getAttribute('aria-label');
@@ -236,16 +234,13 @@ class Tooltip {
   }
 
   position() {
-    const initialPlacement = 'top';
-    const middleware = [
-      offset(9),
-      inline(),
-      flip({ fallbackPlacements: ['bottom', 'left', 'right'] })
-    ];
-    if (this.type === 'text') middleware.push(detectTextOverflow);
     return computePosition(this.anchor, this.element, {
-      placement: initialPlacement,
-      middleware
+      placement: 'top',
+      middleware: [
+        offset(9),
+        this.type === 'text' ? detectTextOverflow : inline(),
+        flip({ fallbackPlacements: ['bottom', 'left', 'right'] })
+      ]
     })
       .then(({ x, y, placement, strategy }) => {
         const { style } = this.element;
@@ -266,7 +261,7 @@ class Tooltip {
     }
 
     this.position()
-      .then(() => { this.element.classList.add('in', 'fade'); })
+      .then(() => { this.element.classList.add('in'); })
       .catch(noop);
     this.shown = true;
   }
@@ -286,7 +281,7 @@ class Tooltip {
       this.remove();
     } else {
       const { classList, style } = this.element;
-      classList.remove('in', 'fade', ...placements);
+      classList.remove('in', ...placements);
       style.top = '';
       style.left = '';
       style.position = '';

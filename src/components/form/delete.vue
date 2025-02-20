@@ -61,9 +61,9 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { form } = useRequestData();
+    const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
+    return { project, form, request, awaitingResponse };
   },
   methods: {
     del() {
@@ -72,9 +72,10 @@ export default {
         url: apiPaths.form(this.form.projectId, this.form.xmlFormId)
       })
         .then(() => {
-          // project.forms and project.lastSubmission may now be out-of-date. If
-          // the user navigates to ProjectOverview, project.forms should be
-          // updated. project.lastSubmission is not used within ProjectShow.
+          this.project.forms -= 1;
+          // project.lastSubmission may now be out-of-date. However,
+          // project.lastSubmission is not used within ProjectShow.
+
           this.$emit('success');
         })
         .catch(noop);
@@ -113,14 +114,16 @@ export default {
     "introduction": [
       "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?",
       "Diese Aktion verschiebt das Formular in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
-    ]
+    ],
+    "noDeleteEntities": "Alle durch die Einreichungen dieses Formulars erstellten Entitäten werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Entitäten zu löschen."
   },
   "es": {
     "title": "Borrar formulario",
     "introduction": [
       "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?",
       "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede recuperar antes de esa fecha."
-    ]
+    ],
+    "noDeleteEntities": "No se eliminará ninguna entidad creada por los envíos de este formulario. En una versión futura de Central, será posible eliminar Entidades."
   },
   "fr": {
     "title": "Supprimer le formulaire",
@@ -151,12 +154,29 @@ export default {
       "この操作はフォームをゴミ箱に移動します。ゴミ箱に入れた30日後、完全に削除されますが、それ以前であれば削除を取り消せます。"
     ]
   },
+  "pt": {
+    "title": "Excluir formulário",
+    "introduction": [
+      "Você tem certeza que deseja excluir o formulário {name} e todas as suas respostas?",
+      "Esta ação moverá o Formulário para a Lixeira. Após 30 dias na Lixeira, ele será permanentemente eliminado, mas pode ser recuperado antes desse prazo."
+    ],
+    "noDeleteEntities": "Nenhuma Entidade criada pelas Respostas deste Formulário será excluída. Em uma versão futura do Central, será possível excluir Entidades."
+  },
   "sw": {
     "title": "Futa Fomu",
     "introduction": [
       "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?",
       "kitendo hiki kitahamisha Fomu hadi kwenye Tupio. Baada ya siku 30 kwenye Tupio, itasafishwa kabisa, lakini inaweza kufutwa kabla ya wakati huo."
-    ]
+    ],
+    "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
+  },
+  "zh-Hant": {
+    "title": "刪除表單",
+    "introduction": [
+      "您確定要刪除表單{name}及其所有提交內容嗎？",
+      "此操作會將表單移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+    ],
+    "noDeleteEntities": "透過此表單提交建立的任何實體都不會被刪除。在 Central 的未來版本中，將可以刪除實體。"
   }
 }
 </i18n>

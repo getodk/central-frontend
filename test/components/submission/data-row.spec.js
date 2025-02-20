@@ -15,6 +15,7 @@ const mountComponent = (props = undefined) => {
   const draft = props != null && props.draft === true;
   const container = createTestContainer({
     requestData: testRequestData([useFields, useSubmissions], {
+      project: testData.extendedProjects.last(),
       fields: testData.extendedForms.last()._fields,
       odata: {
         status: 200,
@@ -39,6 +40,7 @@ const mountComponent = (props = undefined) => {
       xmlFormId: 'f',
       draft: false,
       fields: fields.data,
+      awaitingDeletedResponses: new Set(),
       ...props
     },
     container
@@ -77,7 +79,7 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { i: 1000 });
-      mountComponent().get('td').classes('int-field').should.be.true();
+      mountComponent().get('td').classes('int-field').should.be.true;
     });
 
     it('correct formats the value', () => {
@@ -89,7 +91,7 @@ describe('SubmissionDataRow', () => {
       const td = mountComponent().get('td');
       td.text().should.equal('1,000');
       // No tooltip
-      td.find('span').exists().should.be.false();
+      td.find('span').exists().should.be.false;
     });
   });
 
@@ -100,7 +102,7 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1);
-      mountComponent().get('td').classes('decimal-field').should.be.true();
+      mountComponent().get('td').classes('decimal-field').should.be.true;
     });
 
     // Array of test cases, where each case is an array with the following
@@ -136,7 +138,7 @@ describe('SubmissionDataRow', () => {
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
         // No tooltip
-        td.find('span').exists().should.be.false();
+        td.find('span').exists().should.be.false;
       });
     }
   });
@@ -164,7 +166,7 @@ describe('SubmissionDataRow', () => {
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
         // No tooltip
-        td.find('span').exists().should.be.false();
+        td.find('span').exists().should.be.false;
       });
     }
   });
@@ -207,7 +209,7 @@ describe('SubmissionDataRow', () => {
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
         // No tooltip
-        td.find('span').exists().should.be.false();
+        td.find('span').exists().should.be.false;
       });
     }
   });
@@ -250,7 +252,7 @@ describe('SubmissionDataRow', () => {
         const td = mountComponent().get('td');
         td.text().should.equal(formattedValue);
         // No tooltip
-        td.find('span').exists().should.be.false();
+        td.find('span').exists().should.be.false;
       });
     }
   });
@@ -262,7 +264,7 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1);
-      mountComponent().get('td').classes('geopoint-field').should.be.true();
+      mountComponent().get('td').classes('geopoint-field').should.be.true;
     });
 
     it('does not render a <span> element for a tooltip', () => {
@@ -271,7 +273,7 @@ describe('SubmissionDataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1);
-      mountComponent().get('td').find('span').exists().should.be.false();
+      mountComponent().get('td').find('span').exists().should.be.false;
     });
   });
 
@@ -286,13 +288,13 @@ describe('SubmissionDataRow', () => {
         b: 'c d.jpg'
       });
       const td = mountComponent().get('td');
-      td.classes('binary-field').should.be.true();
+      td.classes('binary-field').should.be.true;
       const a = td.get('a');
       const { href } = a.attributes();
       href.should.equal('/v1/projects/1/forms/f/submissions/a%20b/attachments/c%20d.jpg');
       await a.should.have.tooltip('File was submitted. Click to download.');
-      a.find('.icon-check').exists().should.be.true();
-      a.find('.icon-download').exists().should.be.true();
+      a.find('.icon-check').exists().should.be.true;
+      a.find('.icon-download').exists().should.be.true;
     });
 
     it('correctly renders a binary field of unknown type', () => {
@@ -307,7 +309,7 @@ describe('SubmissionDataRow', () => {
         b: 'bar.jpg'
       });
       const td = mountComponent().get('td');
-      td.classes('binary-field').should.be.true();
+      td.classes('binary-field').should.be.true;
       const { href } = td.get('a').attributes();
       href.should.equal('/v1/projects/1/forms/f/submissions/foo/attachments/bar.jpg');
     });
@@ -319,8 +321,26 @@ describe('SubmissionDataRow', () => {
       });
       testData.extendedSubmissions.createPast(1, { b: null });
       const td = mountComponent().get('td');
-      td.find('a').exists().should.be.false();
+      td.find('a').exists().should.be.false;
       td.text().should.equal('');
+    });
+
+    it('disables the link if the Submission is deleted', async () => {
+      testData.extendedForms.createPast(1, {
+        fields: [testData.fields.binary('/b')],
+        submissions: 1
+      });
+      testData.extendedSubmissions.createPast(1, {
+        instanceId: 'a b',
+        b: 'c d.jpg'
+      });
+      const td = mountComponent({ deleted: true }).get('td');
+      td.classes('binary-field').should.be.true;
+      const a = td.get('a');
+      a.attributes()['aria-disabled'].should.equal('true');
+      await a.should.have.tooltip('File download is not available for deleted Submissions.');
+      a.find('.icon-check').exists().should.be.true;
+      a.find('.icon-download').exists().should.be.true;
     });
   });
 
@@ -361,7 +381,7 @@ describe('SubmissionDataRow', () => {
       });
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
       const row = mountComponent();
-      row.classes('encrypted-submission').should.be.true();
+      row.classes('encrypted-submission').should.be.true;
       const td = row.findAll('td');
       td.length.should.equal(2);
       td[0].attributes().colspan.should.equal('2');

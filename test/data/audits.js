@@ -1,6 +1,7 @@
 import { comparator, omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
+import { extendedDatasets } from './datasets';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
@@ -8,7 +9,13 @@ import { toActor } from './actors';
 
 const actionsWithDefaultActor = new Set([
   'config.set',
+  'entity.create',
+  'entity.bulk.create',
+  'entity.update.version',
+  'entity.update.resolve',
   'submission.create',
+  'submission.delete',
+  'submission.restore',
   'submission.update',
   'submission.update.version',
   'user.session.create'
@@ -17,7 +24,11 @@ const defaultActor = (action) =>
   (actionsWithDefaultActor.has(action) ? extendedUsers.first() : null);
 
 const defaultActee = (action) => {
+  if (action === 'entity.create' || action === 'entity.update.version' ||
+    action === 'entity.update.resolve')
+    return extendedDatasets.last();
   if (action === 'submission.create' || action === 'submission.update' ||
+    action === 'submission.delete' || action === 'submission.restore' ||
     action === 'submission.update.version')
     return extendedForms.last();
   if (action === 'user.session.create')

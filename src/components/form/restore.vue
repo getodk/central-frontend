@@ -137,12 +137,28 @@ export default {
       "フォームを再削除した場合、完全に削除されるまで、さらに30日を要します。"
     ]
   },
+  "pt": {
+    "title": "Desfazer exclusão do Formulário",
+    "introduction": [
+      "Tem certeza de que deseja desfazer a exclusão do formulário {name}?",
+      "O Formulário será restaurado ao seu status anterior, incluindo todos os dados, configurações e permissões.",
+      "Se o Formulário for excluído novamente, serão necessários mais 30 dias para que seja removido."
+    ]
+  },
   "sw": {
     "title": "Ondoa kufuta fomu",
     "introduction": [
       "Je, una uhakika unataka kutengua Fomu ya {name}?",
       "Fomu itarejeshwa katika hali yake ya awali, ikijumuisha data, mipangilio na ruhusa zote.",
       "Ikiwa Fomu itafutwa tena, itapita siku 30 kabla ya kuondolewa."
+    ]
+  },
+  "zh-Hant": {
+    "title": "取消刪除表單",
+    "introduction": [
+      "您確定要取消刪除表單{name}嗎？",
+      "表單將恢復到先前的狀態，包括所有資料、設定和權限。",
+      "如果再次刪除該表格，則需要再過 30 天才會被刪除。"
     ]
   }
 }

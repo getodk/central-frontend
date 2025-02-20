@@ -10,10 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-list" ref="dropZone">
+  <file-drop-zone id="form-attachment-list" :disabled="uploading"
+    :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
     <div class="heading-with-button">
       <button type="button" class="btn btn-primary"
-        @click="showModal('uploadFilesModal')">
+        @click="uploadFilesModal.show()">
         <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}&hellip;
       </button>
       <p>{{ $t('heading[0]') }}</p>
@@ -23,12 +24,12 @@ except according to the terms contained in the LICENSE file.
       <div class="panel-heading">
         <span class="panel-title">
           <span class="icon-database"></span>
-          {{ $t('common.datasetsPreview') }}
+          {{ $t('entitiesTesting.title') }}
         </span>
       </div>
       <div class="panel-body">
         <p>
-          <span>{{ $t('datasetsPreview.body[0]') }}</span>
+          <span>{{ $t('entitiesTesting.body[0]') }}</span>
           <sentence-separator/>
           <i18n-t keypath="moreInfo.clickHere.full">
             <template #clickHere>
@@ -50,12 +51,12 @@ except according to the terms contained in the LICENSE file.
       <tbody v-if="form.dataExists && attachments.dataExists">
         <form-attachment-row v-for="attachment of attachments.values()"
           :key="attachment.name" :attachment="attachment"
-          :file-is-over-drop-zone="fileIsOverDropZone && !disabled"
+          :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
           :dragover-attachment="dragoverAttachment"
           :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments" :data-name="attachment.name"
           :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
-          @link="showLinkDatasetModal($event)"/>
+          @link="linkDatasetModal.show({ attachment: $event })"/>
       </tbody>
     </table>
     <form-attachment-popups
@@ -66,48 +67,45 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
-      @hide="hideModal('uploadFilesModal')" @select="afterFileInputSelection"/>
-    <form-attachment-name-mismatch :state="nameMismatch.state"
-      :planned-uploads="plannedUploads" @hide="hideModal('nameMismatch')"
+      @hide="uploadFilesModal.hide()" @select="afterFileInputSelection"/>
+    <form-attachment-name-mismatch v-bind="nameMismatch"
+      :planned-uploads="plannedUploads" @hide="nameMismatch.hide()"
       @confirm="uploadFiles" @cancel="cancelUploads"/>
-
-
-    <form-attachment-link-dataset v-bind="linkDatasetModal" @hide="hideModal('linkDatasetModal')"
-      @success="afterLinkDataset"/>
-  </div>
+    <form-attachment-link-dataset v-bind="linkDatasetModal"
+      @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
+  </file-drop-zone>
 </template>
 
 <script>
 import { any } from 'ramda';
-import { markRaw } from 'vue';
 
+import DocLink from '../doc-link.vue';
+import FileDropZone from '../file-drop-zone.vue';
+import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import FormAttachmentLinkDataset from './link-dataset.vue';
-import DocLink from '../doc-link.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import dropZone from '../../mixins/drop-zone';
-import modal from '../../mixins/modal';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormAttachmentList',
   components: {
+    DocLink,
+    FileDropZone,
+    FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    FormAttachmentLinkDataset,
-    DocLink,
     SentenceSeparator
   },
-  mixins: [dropZone(), modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -123,7 +121,6 @@ export default {
   },
   data() {
     return {
-      dragDepth: 0,
       /*
       Most properties fall into exactly one of four groups:
 
@@ -148,7 +145,8 @@ export default {
              - total. The total number of files to upload.
              - remaining. The number of files that have not been uploaded yet.
              - current. The name of the file currently being uploaded.
-             - progress. The latest ProgressEvent for the current upload.
+             - progress. The upload progress for the current upload as a
+               fraction.
         4. Properties set once the uploads have finished or stopped and reset
            once a new drag is started or another file input selection is made
            - updatedAttachments. A Set of the names of the attachments for which
@@ -162,26 +160,17 @@ export default {
         total: 0,
         remaining: 0,
         current: null,
-        progress: null
+        progress: 0
       },
       updatedAttachments: new Set(),
       // Modals
-      uploadFilesModal: {
-        state: false
-      },
-      nameMismatch: {
-        state: false
-      },
-      linkDatasetModal: {
-        state: false,
-        attachmentName: ''
-      },
-      // Used for testing
-      uploading: false
+      uploadFilesModal: modalData(),
+      nameMismatch: modalData(),
+      linkDatasetModal: modalData()
     };
   },
   computed: {
-    disabled() {
+    uploading() {
       return this.uploadStatus.total !== 0;
     },
     dsHashset() {
@@ -206,7 +195,7 @@ export default {
     // FILE INPUT
 
     afterFileInputSelection(files) {
-      this.hideModal('uploadFilesModal');
+      this.uploadFilesModal.hide();
       this.updatedAttachments.clear();
       this.matchFilesToAttachments(files);
     },
@@ -222,12 +211,11 @@ export default {
         if (items[i].kind === 'file') count += 1;
       return count;
     },
-    ondragenter(jQueryEvent) {
-      const { items } = jQueryEvent.originalEvent.dataTransfer;
+    dragenter(event) {
+      const { items } = event.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);
       if (this.countOfFilesOverDropZone === 1) {
-        const tr = jQueryEvent.target
-          .closest('#form-attachment-list-table tbody tr');
+        const tr = event.target.closest('.form-attachment-row');
         this.dragoverAttachment = tr != null
           ? this.attachments.get(tr.dataset.name)
           : null;
@@ -235,15 +223,15 @@ export default {
       this.cancelUploads();
       this.updatedAttachments.clear();
     },
-    ondragleave() {
-      if (!this.fileIsOverDropZone) {
+    dragleave(_, leftDropZone) {
+      if (leftDropZone) {
         if (this.countOfFilesOverDropZone === 1) this.dragoverAttachment = null;
         this.countOfFilesOverDropZone = 0;
       }
     },
-    ondrop(jQueryEvent) {
+    drop(event) {
       this.countOfFilesOverDropZone = 0;
-      const { files } = jQueryEvent.originalEvent.dataTransfer;
+      const { files } = event.dataTransfer;
       if (this.dragoverAttachment != null) {
         const upload = { attachment: this.dragoverAttachment, file: files[0] };
         this.dragoverAttachment = null;
@@ -251,7 +239,7 @@ export default {
         if (upload.file.name === upload.attachment.name)
           this.uploadFiles();
         else
-          this.showModal('nameMismatch');
+          this.nameMismatch.show();
       } else {
         // The else case can be reached even if this.countOfFilesOverDropZone
         // was 1, if the drop was not over a row.
@@ -290,13 +278,14 @@ export default {
       // sync.
       this.uploadStatus.remaining -= 1;
       this.uploadStatus.current = file.name;
-      this.uploadStatus.progress = null;
+      this.uploadStatus.progress = 0;
 
       return this.request({
         method: 'POST',
-        url: apiPaths.formDraftAttachment(
+        url: apiPaths.formAttachment(
           this.form.projectId,
           this.form.xmlFormId,
+          true,
           attachment.name
         ),
         headers: {
@@ -304,8 +293,8 @@ export default {
           'Content-Encoding': 'identity'
         },
         data: file,
-        onUploadProgress: (progressEvent) => {
-          this.uploadStatus.progress = markRaw(progressEvent);
+        onUploadProgress: (event) => {
+          this.uploadStatus.progress = event.progress ?? 0;
         },
         problemToAlert: (problem) => {
           const { total } = this.uploadStatus;
@@ -328,7 +317,6 @@ export default {
         });
     },
     uploadFiles() {
-      this.uploading = true;
       this.alert.blank();
       this.uploadStatus.total = this.plannedUploads.length;
       // This will soon be decremented by 1.
@@ -350,19 +338,18 @@ export default {
           if (this.$route !== initialRoute) return;
           if (updates.length === this.uploadStatus.total)
             this.alert.success(this.$tcn('alert.success', updates.length));
-          this.attachments.patch(() => {
-            for (const [name, updatedAt] of updates) {
-              const attachment = this.attachments.get(name);
-              attachment.blobExists = true;
-              attachment.datasetExists = false;
-              attachment.exists = true;
-              attachment.updatedAt = updatedAt;
 
-              this.updatedAttachments.add(name);
-            }
-          });
-          this.uploadStatus = { total: 0, remaining: 0, current: null, progress: null };
-          this.uploading = false;
+          for (const [name, updatedAt] of updates) {
+            const attachment = this.attachments.get(name);
+            attachment.blobExists = true;
+            attachment.datasetExists = false;
+            attachment.exists = true;
+            attachment.updatedAt = updatedAt;
+
+            this.updatedAttachments.add(name);
+          }
+
+          this.uploadStatus = { total: 0, remaining: 0, current: null, progress: 0 };
         });
       this.plannedUploads = [];
       this.unmatchedFiles = [];
@@ -373,24 +360,16 @@ export default {
         resend: false
       }).catch(noop);
     },
-    showLinkDatasetModal({ name, blobExists }) {
-      this.linkDatasetModal.attachmentName = name;
-      this.linkDatasetModal.blobExists = blobExists;
-      this.showModal('linkDatasetModal');
-    },
     afterLinkDataset() {
+      const { attachment } = this.linkDatasetModal;
+      this.linkDatasetModal.hide();
       this.alert.success(this.$t('alert.link', {
-        attachmentName: this.linkDatasetModal.attachmentName
+        attachmentName: attachment.name
       }));
 
-      this.attachments.patch(() => {
-        const attachment = this.attachments.get(this.linkDatasetModal.attachmentName);
-        attachment.datasetExists = true;
-        attachment.blobExists = false;
-        attachment.exists = true;
-      });
-
-      this.hideModal('linkDatasetModal');
+      attachment.datasetExists = true;
+      attachment.blobExists = false;
+      attachment.exists = true;
     }
   }
 };
@@ -466,11 +445,13 @@ export default {
     },
     "alert": {
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
-      "link": "Dataset linked successfully."
+      "link": "Entity List linked successfully."
     },
-    "datasetsPreview": {
+    // @transifexKey component.FormAttachmentList.datasetsPreview
+    "entitiesTesting": {
+      "title": "Testing Entities",
       "body": [
-        "One or more Form Attachments have filenames that match Dataset names. By default, those are linked to Datasets. For testing, you may want to upload temporary data as .csv files, then link to the Datasets once you have verified your form logic."
+        "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
       ]
     }
   }
@@ -497,11 +478,12 @@ export default {
     },
     "alert": {
       "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
-      "link": "Datová sada byla úspěšně propojena."
+      "link": "Seznam entit byl úspěšně propojen."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
+      "title": "Testování entit",
       "body": [
-        "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy datových sad. Ve výchozím nastavení jsou tyto soubory propojeny s datovými sadami. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit s Datasety, jakmile ověříte logiku formuláře."
+        "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy seznamu entit. Ty jsou ve výchozím nastavení propojeny se seznamy entit. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit se seznamy entit, jakmile ověříte logiku formuláře."
       ]
     }
   },
@@ -509,6 +491,10 @@ export default {
     "action": {
       "upload": "Dateien hochladen"
     },
+    "heading": [
+      "Bei der Analyse des Formulars ergab sich, dass die folgenden Formularanhänge erwartet. Es wird angezeigt, welche Formularanhänge schon hochgeladen wurden und welche noch fehlen.",
+      "Um Dateien hochzuladen, verwenden Sie Drag-and-Drop auf die Seite."
+    ],
     "header": {
       "uploaded": "Hochgeladen"
     },
@@ -517,13 +503,24 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
+      "link": "Entitätsliste erfolgreich verknüpft."
+    },
+    "entitiesTesting": {
+      "title": "Entitäten testen",
+      "body": [
+        "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
+      ]
     }
   },
   "es": {
     "action": {
       "upload": "Subir archivos"
     },
+    "heading": [
+      "Según el formulario que cargó, se esperan los siguientes archivos adjuntos del formulario. Puede ver cuáles se han proporcionado o cuáles aún faltan.",
+      "Para cargar archivos, arrastre y suelte uno o más archivos en la página."
+    ],
     "header": {
       "uploaded": "Subido"
     },
@@ -532,7 +529,14 @@ export default {
       "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
     },
     "alert": {
-      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente."
+      "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente.",
+      "link": "Lista de entidades enlazada correctamente."
+    },
+    "entitiesTesting": {
+      "title": "Comprobación de las entidades",
+      "body": [
+        "Uno o más archivos adjuntos de formulario tienen nombres de archivo que coinciden con los nombres de la lista de entidades. De forma predeterminada, están vinculados a listas de entidades. Para realizar pruebas, es posible que desee cargar datos temporales como archivos .csv y luego vincularlos a las Listas de entidades una vez que haya verificado la lógica de su formulario."
+      ]
     }
   },
   "fr": {
@@ -552,11 +556,12 @@ export default {
     },
     "alert": {
       "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés.",
-      "link": "Dataset lié avec succès"
+      "link": "Liste d'entités liée avec succès."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
+      "title": "Tester les entités",
       "body": [
-        "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de Datasets. Par défaut, ils sont liés aux Datasets. Pour tester, vous pouvez envoyer des de fichiers .csv de données temporaires, puis les lier aux Datasets une fois que vous aurez vérifié la logique de votre formulaire."
+        "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de listes d'entités. Par défaut, ils sont liés aux listes d'entités. Pour tester, vous pouvez joindre des fichiers .csv de données temporaires. Vous pourrez ensuite rétablir les liens aux listes d'entités une fois que vous aurez vérifié la logique de votre formulaire."
       ]
     }
   },
@@ -592,11 +597,12 @@ export default {
     },
     "alert": {
       "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
-      "link": "Set di dati collegato correttamente."
+      "link": "Lista Entità collegata correttamente."
     },
-    "datasetsPreview": {
+    "entitiesTesting": {
+      "title": "Testando le Entità",
       "body": [
-        "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi dei set di dati. Per impostazione predefinita, questi sono collegati ai set di dati. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti ai set di dati dopo aver verificato la logica del formulario."
+        "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi della Lista Entità. Per impostazione predefinita, questi sono collegati alle Liste Entità. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti alle Liste Entità dopo aver verificato la logica del formulario."
       ]
     }
   },
@@ -615,10 +621,40 @@ export default {
       "success": "{count}のファイルのアップロードに成功"
     }
   },
+  "pt": {
+    "action": {
+      "upload": "Subir arquivos"
+    },
+    "heading": [
+      "Com base no formulário que você carregou, os seguintes anexos de formulário são esperados. Você pode ver quais foram fornecidos ou ainda estão faltando.",
+      "Para carregar arquivos, arraste e solte um ou mais arquivos nessa página"
+    ],
+    "header": {
+      "uploaded": "Carregado"
+    },
+    "problem": {
+      "noneUploaded": "{message}Nenhum arquivo foi carregado.",
+      "someUploaded": "{message} Apenas {uploaded} de{total} arquivo foi carregado com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso."
+    },
+    "alert": {
+      "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso.",
+      "link": "Lista de Entidades vinculada com sucesso."
+    },
+    "entitiesTesting": {
+      "title": "Testando Entidades",
+      "body": [
+        "Um ou mais Anexos do Formulário têm nomes de arquivo que correspondem aos nomes da Lista de Entidades. Por padrão, eles são vinculados às listas de entidades. Para testar, você pode querer carregar dados temporários como arquivos .csv e, em seguida, vincular às listas de entidades depois de verificar a lógica do seu formulário."
+      ]
+    }
+  },
   "sw": {
     "action": {
       "upload": "Pakia faili"
     },
+    "heading": [
+      "Kulingana na Fomu uliyopakia, Viambatisho vya Fomu vifuatavyo vinatarajiwa. Unaweza kuona ni zipi zimetolewa au bado hazipo.",
+      "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa"
+    ],
     "header": {
       "uploaded": "Imepakiwa"
     },
@@ -627,7 +663,40 @@ export default {
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
     },
     "alert": {
-      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
+      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa.",
+      "link": "Orodha ya Huluki imeunganishwa."
+    },
+    "entitiesTesting": {
+      "title": "Vyombo vya Kujaribu",
+      "body": [
+        "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Orodha ya Huluki. Kwa chaguomsingi, hizo zimeunganishwa kwenye Orodha za Huluki. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe kwenye Orodha za Huluki mara tu utakapothibitisha mantiki ya fomu yako."
+      ]
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "upload": "上傳檔案"
+    },
+    "heading": [
+      "根據您上傳的表格，需要以下表格附件。您可以查看哪些已提供或仍然缺少。",
+      "若要上傳文件，請將一個或多個文件拖曳到頁面上。"
+    ],
+    "header": {
+      "uploaded": "已上傳"
+    },
+    "problem": {
+      "noneUploaded": "{message} 沒有文件上傳成功。",
+      "someUploaded": "{message} 僅 {uploaded} 個檔案成功上傳，共 {total} 個檔案。"
+    },
+    "alert": {
+      "success": "{count} 個文件已成功上傳。",
+      "link": "實體列表連結成功。"
+    },
+    "entitiesTesting": {
+      "title": "測試實體",
+      "body": [
+        "一個或多個表單附件的檔案名稱與實體清單名稱相符。預設情況下，這些連結到實體列表。為了進行測試，您可能需要將臨時資料上傳為 .csv 文件，然後在驗證表單邏輯後連結到實體清單。"
+      ]
     }
   }
 }

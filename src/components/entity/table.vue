@@ -10,85 +10,89 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <table id="entity-table-metadata" class="table table-frozen">
-      <thead>
-        <tr>
-          <th><!-- Row number --></th>
-          <th>{{ $t('header.createdBy') }}</th>
-          <th>{{ $t('header.createdAt') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-if="odataEntities.dataExists">
-          <entity-metadata-row v-for="(entity, index) in odataEntities.value"
-            :key="entity.__id" :entity="entity"
-            :row-number="odataEntities.value.length - index"/>
-        </template>
-      </tbody>
-    </table>
-    <div class="table-container">
-      <table id="entity-table-data" class="table">
-        <thead>
-          <tr v-if="properties != null">
-            <th v-for="property of properties" :key="property.id">
-              <span v-tooltip.text>{{ property.name }}</span>
-            </th>
-            <th>{{ $t('entity.label') }}</th>
-            <th>{{ $t('entity.entityId') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template v-if="odataEntities.dataExists && properties != null">
-            <entity-data-row v-for="(entity) in odataEntities.value"
-              :key="entity.__id" :entity="entity"
-              :properties="properties"/>
-          </template>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <table-freeze v-if="project.dataExists" id="entity-table" ref="table"
+    :data="odataEntities.value" key-prop="__id"
+    :frozen-only="properties == null" divider @action="afterAction">
+    <template #head-frozen>
+      <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
+      <th>{{ $t('header.createdBy') }}</th>
+      <th>{{ $t('header.createdAt') }}</th>
+      <th v-if="!deleted">{{ $t('header.updatedAtAndActions') }}</th>
+      <th v-else class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
+    </template>
+    <template #head-scrolling>
+      <template v-if="properties != null">
+        <th v-for="property of properties" :key="property.name">
+          <span v-tooltip.text>{{ property.name }}</span>
+        </th>
+      </template>
+      <th>{{ $t('entity.label') }}</th>
+      <th>{{ $t('entity.entityId') }}</th>
+    </template>
+
+    <template #data-frozen="{ data, index }">
+      <entity-metadata-row :entity="data"
+        :row-number="odataEntities.originalCount - index"
+        :verbs="project.verbs" :deleted="deleted"
+        :awaiting-response="awaitingDeletedResponses.has(data.__id)"/>
+    </template>
+    <template #data-scrolling="{ data }">
+      <entity-data-row :entity="data" :properties="properties"/>
+    </template>
+  </table-freeze>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
+import TableFreeze from '../table-freeze.vue';
 
+import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
-
-export default {
-  name: 'EntityTable',
-  components: { EntityDataRow, EntityMetadataRow },
-  props: {
-    properties: Array
+defineOptions({
+  name: 'EntityTable'
+});
+defineProps({
+  properties: Array,
+  deleted: {
+    type: Boolean,
+    default: false
   },
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { odataEntities } = useRequestData();
-    return { odataEntities };
+  awaitingDeletedResponses: {
+    type: Set,
+    required: true
   }
+});
+const emit = defineEmits(['update', 'resolve', 'delete', 'restore']);
+
+// The component does not assume that this data will exist when the component is
+// created.
+const { project, odataEntities } = useRequestData();
+
+const afterAction = ({ target, data, index }) => {
+  const { classList } = target;
+  if (classList.contains('delete-button'))
+    emit('delete', data);
+  else if (classList.contains('update-button'))
+    emit('update', index);
+  else if (classList.contains('resolve-button'))
+    emit('resolve', index);
+  else if (target.classList.contains('restore-button'))
+    emit('restore', data);
 };
+const table = ref(null);
+const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
+const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+defineExpose({ afterUpdate, afterDelete });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#entity-table-metadata {
-  box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
-  position: relative;
-  // Adding z-index so that the background color of the other table's thead does
-  // not overlay the box shadow.
-  z-index: 1;
-
-  th:last-child { border-right: $border-bottom-table-heading; }
-  td:last-child { border-right: $border-top-table-data; }
-}
-
-#entity-table-data {
-  width: auto;
-
+#entity-table .table-freeze-scrolling {
   th, td {
     @include text-overflow-ellipsis;
     max-width: 250px;
@@ -96,3 +100,64 @@ export default {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "header": {
+      // This is the text of a column header of a table of Entities. The column
+      // shows when each Entity was last updated, as well as actions that can be
+      // taken on the Entity.
+      "updatedAtAndActions": "Last Updated / Actions",
+      // Heading of the column that shows Entity deletion timestamp
+      "deletedAt": "Deleted at"
+    }
+  }
+}
+</i18n>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "cs": {
+    "header": {
+      "updatedAtAndActions": "Poslední aktualizace / Akce"
+    }
+  },
+  "de": {
+    "header": {
+      "updatedAtAndActions": "Letzte Aktualisierung / Aktionen"
+    }
+  },
+  "es": {
+    "header": {
+      "updatedAtAndActions": "Última actualización / Acciones"
+    }
+  },
+  "fr": {
+    "header": {
+      "updatedAtAndActions": "Dernières mises à jour / Actions"
+    }
+  },
+  "it": {
+    "header": {
+      "updatedAtAndActions": "Ultimo aggiornamento/ azioni"
+    }
+  },
+  "pt": {
+    "header": {
+      "updatedAtAndActions": "Última Atualização / Ações"
+    }
+  },
+  "sw": {
+    "header": {
+      "updatedAtAndActions": "Ilisasishwa Mwisho / Vitendo"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "updatedAtAndActions": "最後更新/操作"
+    }
+  }
+}
+</i18n>

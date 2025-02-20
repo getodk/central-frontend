@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Status",
         "testing": "Testen"
       }
     }
@@ -60,8 +59,10 @@
       "form": "Formular-Aktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
+      "dataset": "Entitätslistenaktionen",
       "config": "Server-Konfigurationsaktionen",
-      "upgrade": "Server-Aktualisierung"
+      "upgrade": "Server-Aktualisierung",
+      "task": "Systembetrieb"
     },
     "action": {
       "default": {
@@ -71,10 +72,16 @@
         "delete": "Löschen"
       },
       "analytics": "Berichtsnutzung",
+      "blobs": {
+        "s3_upload": "Dateien in den Speicher hochladen",
+        "s3_failed_to_pending": "Dateien für erneuten Upload zum Speicher markieren"
+      },
       "config": {
         "set": "Setzen"
       },
       "dataset": {
+        "update": "Aktualisieren",
+        "update_publish": "Veröffentlichen",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -86,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Entwurf verfassen oder aktualisieren",
+        "update_draft_replace": "Ersetzen des Entwurfs",
         "update_publish": "Entwurf veröffentlichen",
         "update_draft_delete": "Entwurf löschen",
         "attachment_update": "Anhänge aktualisieren",
@@ -103,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Übermittlungen bereinigen"
+      },
       "upgrade": {
         "process_form": "Formular verarbeiten",
-        "process_form_draft": "Formularentwurf verarbeiten"
+        "process_form_draft": "Formularentwurf verarbeiten",
+        "process_form_entities_version": "Formular für Upgrade markieren"
       },
       "user": {
         "assignment_create": "Rolle zuweisen",
@@ -127,12 +139,15 @@
     "clear": "Löschen",
     "close": "Schließen",
     "comment": "Kommentieren",
+    "continue": "Weitermachen",
     "create": "Anlegen",
     "createSubmission": "Neu",
+    "delete": "Löschen",
     "done": "Fertig",
     "download": "Herunterladen",
     "edit": "Bearbeiten",
     "editProfile": "Profil bearbeiten",
+    "finish": "Beenden",
     "logIn": "Einloggen",
     "looksGood": "Sieht gut aus, weiter",
     "more": "Mehr",
@@ -150,7 +165,13 @@
     "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren",
     "showPreview": "Vorschau",
-    "hidePreview": "Vorschau ausblenden"
+    "hidePreview": "Vorschau ausblenden",
+    "newPreview": "Neue Vorschau",
+    "expand": "Vergrössern",
+    "collapse": "Verkleinern",
+    "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "upload": "Hochladen",
+    "restore": "Wiederherstellen"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -163,22 +184,27 @@
     "passphrase": "Passphrase",
     "password": "Passwort",
     "passwordConfirm": "Neues Passwort (bestätigen)",
-    "reviewState": "Überprüfungsstatus",
     "type": "Typ"
   },
   "header": {
     "actions": "Aktionen",
     "created": "Erstellt",
     "createdBy": "Erstellt von",
+    "createdAt": "Erstellt am",
+    "updatedBy": "Aktualisiert von",
     "displayName": "Anzeigename",
     "email": "E-Mail-Adresse",
     "instanceId": "Instanz-ID",
     "lastSubmission": "Letzte Übermittlung",
+    "recentActivity": "Letzte Aktivität",
     "name": "Name",
+    "listName": "Name der Liste",
     "submitterName": "Übermittelt von",
     "submissionDate": "Übermittelt um",
     "time": "Zeit",
-    "type": "Typ"
+    "type": "Typ",
+    "entities": "Entitäten insgesamt",
+    "lastEntity": "Neueste Entität"
   },
   "plural": {
     "appUser": "App-Benutzer | App-Benutzer",
@@ -191,29 +217,43 @@
   "count": {
     "appUser": "{count} App-Benutzer | {count} App-Benutzer",
     "form": "{count} Formular | {count} Formulare",
-    "submission": "{count} Übermittlung | {count} Übermittlungen"
+    "submission": "{count} Übermittlung | {count} Übermittlungen",
+    "warning": "{count} Warnung | {count} Warnungen"
   },
   "resource": {
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
     "config": "Server-Konfiguration",
+    "entity": "Entität",
+    "entities": "Entitäten",
+    "entityList": "Entitätsliste",
+    "entityLists": "Entitätslisten",
     "form": "Formular",
     "forms": "Formulare",
+    "formAttachments": "Formularanhänge",
     "project": "Projekt",
     "projects": "Projekte",
+    "property": "Eigenschaft",
+    "properties": "Eigenschaften",
     "publicLink": "Öffentlicher Zugangslink",
     "user": "Benutzer",
     "users": "Benutzer",
     "webUser": "Web-Benutzer",
     "webUsers": "Web-Benutzer",
     "session": "Sitzung",
+    "submission": "Übermittlung",
     "submissions": "Übermittlungen",
-    "projectRoles": "Projektrollen"
+    "projectRoles": "Projektrollen",
+    "formPreview": "Formular Vorschau",
+    "draft": "Entwurf"
   },
   "alert": {
     "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
+    "updateEntity": "Das Objekt wurde aktualisiert!",
     "updateReviewState": "Überprüfungsstatus gespeichert!",
-    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden."
+    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden.",
+    "submissionDeleted": "Die Übermittlung wurde gelöscht.",
+    "submissionRestored": "Die Übermittlung wurde wiederhergestellt."
   },
   "moreInfo": {
     "clickHere": {
@@ -234,28 +274,47 @@
     }
   },
   "submission": {
+    "missingAttachment": "Fehlender Anhang",
     "action": {
       "edit": "Bearbeiten ({count})"
     },
     "editDisabled": "Sie können verschlüsselte Übermittlungen nicht bearbeiten.",
     "binaryLinkTitle": "Datei wurde übermittelt. Zum Downloaden klicken.",
     "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar",
-    "noSubmission": "(keine)"
+    "noSubmission": "(keine)",
+    "emptyTable": "Es gibt noch keine Übermittlungen.",
+    "fileDownloadUnavailable": "Datei-Download ist für gelöschte Einsendungen nicht verfügbar."
+  },
+  "entity": {
+    "label": "Etikett",
+    "entityLabel": "Objektbezeichnung",
+    "entityId": "Entitäts-ID",
+    "noProperties": "Dieses Formular legt nur das \"Label“ fest.",
+    "noEntity": "(keine)",
+    "conflictsCount": "{count} Konflikt | {count} Konflikte"
   },
   "common": {
     "activity": "Aktivität",
     "anybody": "(Jeder)",
     "areYouSure": "Wollen Sie wirklich fortfahren?",
     "basicInfo": "Basis-Informationen",
+    "conflict": "Konflikt",
+    "conflicts": "Konflikte",
     "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
+    "data": "Daten",
     "docs": "Dokumentation",
+    "emptyValue": "(leer)",
+    "error": "Fehler",
     "filter": "Filter",
     "forum": "Forum",
+    "lastUpdate": "Letzte Aktualisierung",
     "loading": "Wird geladen...",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
+    "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
     "rightNow": "Aktuell",
+    "rowNumber": "Reihe",
     "success": "Das hat geklappt!",
     "system": "System",
     "yes": "Ja",
@@ -263,25 +322,41 @@
       "settings": "Einstellungen",
       "overview": "Übersicht"
     },
-    "total": "Total"
+    "total": "Total",
+    "totalSubmissions": "Gesamtzahl der Übermittlungen",
+    "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
+    "new": "Neu!",
+    "totalEntities": "Entitäten insgesamt",
+    "versionShort": "v{version}",
+    "warning": "Warnung",
+    "reviewState": "Überprüfungsstatus",
+    "status": "Status",
+    "version": "Version"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Die Datei \"{name}\", die Sie versuchen hochzuladen ist größer als das 100 MB Limit."
+        "fileSize": "Die Datei \"{name}\", die Sie versuchen hochzuladen ist größer als das 100 MB Limit.",
+        "entityTooLarge": "Die Daten, die Sie hochzuladen versuchen, sind zu gross."
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archiviert)"
-    }
-  },
   "util": {
+    "csv": {
+      "readError": "Beim Lesen Ihrer Datei ist ein Problem aufgetreten: {message}",
+      "invalidCSV": "Die Datei “{name}” ist keine gültige .csv-Datei. Sie kann nicht gelesen werden.",
+      "rowError": "Es gibt ein Problem in Zeile {row} der Datei: {message}",
+      "invalidQuotes": "Ein angegebenes Feld ist ungültig. Überprüfen Sie die Zeile, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt.",
+      "emptyRow": "Die Reihe ist leer.",
+      "dataWithoutHeader": "Erwartet {expected} column, but found {actual}. | Erwartet {expected} Spalte, aber {actual} gefunden."
+    },
     "request": {
       "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
       "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
-      "errorNotProblem": "Etwas ging schief: Fehlercode {status}."
+      "errorNotProblem": "Etwas ging schief: Fehlercode {status}.",
+      "problem": {
+        "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+      }
     },
     "session": {
       "alert": {
@@ -293,5 +368,10 @@
   },
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archiviert)"
+    }
   }
 }

@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
@@ -40,30 +40,22 @@ import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
-export default {
-  name: 'PublicLinkRevoke',
-  components: { Modal, Spinner },
-  props: {
-    state: Boolean,
-    publicLink: Object
-  },
-  emits: ['hide', 'success'],
-  setup() {
-    const { request, awaitingResponse } = useRequest();
-    return { request, awaitingResponse };
-  },
-  methods: {
-    revoke() {
-      this.request({
-        method: 'DELETE',
-        url: apiPaths.session(this.publicLink.token)
-      })
-        .then(() => {
-          this.$emit('success', this.publicLink);
-        })
-        .catch(noop);
-    }
-  }
+defineOptions({
+  name: 'PublicLinkRevoke'
+});
+const props = defineProps({
+  state: Boolean,
+  publicLink: Object
+});
+const emit = defineEmits(['hide', 'success']);
+
+const { request, awaitingResponse } = useRequest();
+const revoke = () => {
+  request({ method: 'DELETE', url: apiPaths.session(props.publicLink.token) })
+    .then(() => {
+      emit('success', props.publicLink);
+    })
+    .catch(noop);
 };
 </script>
 
@@ -124,10 +116,22 @@ export default {
       "一般公開リンクを無効化しようとしています。これにより、この一般公開リンクを用いた全てのデータの提出が出来なくなります。これには現在すでに入力が開始されたフォームの提出も含まれます。"
     ]
   },
+  "pt": {
+    "title": "Revogar link de acesso público",
+    "introduction": [
+      "Você está prestes a revogar esse link de acesso público. Isso significa que todas as tentativas de enviar dados usando esse link serão negadas, incluindo preenchimentos que já tenham sido iniciados."
+    ]
+  },
   "sw": {
     "title": "Batilisha Kiungo cha Ufikiaji wa Umma",
     "introduction": [
       "Unakaribia kubatilisha Kiungo hiki cha Ufikiaji wa Umma. Hii ina maana kwamba majaribio yote ya kuwasilisha data kwa kutumia kiungo yatakataliwa, ikiwa ni pamoja na rekodi ambazo tayari zimeanzishwa"
+    ]
+  },
+  "zh-Hant": {
+    "title": "撤銷公共訪問鏈接",
+    "introduction": [
+      "您即將撤銷此公共存取連結。這意味著所有使用該連結提交資料的嘗試都將被拒絕，包括已經開始的記錄。"
     ]
   }
 }

@@ -58,11 +58,9 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
-    // The component assumes that this data will exist when the component is
-    // created.
-    const { form } = useRequestData();
+    const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
+    return { project, form, request, awaitingResponse };
   },
   computed: {
     title() {
@@ -80,9 +78,7 @@ export default {
           : apiPaths.form(this.form.projectId, this.form.xmlFormId)
       })
         .then(() => {
-          // project.forms and project.lastSubmission may now be out-of-date. If
-          // the user navigates to ProjectOverview, project.forms should be
-          // updated. project.lastSubmission is not used within ProjectShow.
+          if (this.form.publishedAt == null) this.project.forms -= 1;
           this.$emit('success');
         })
         .catch(noop);
@@ -141,6 +137,15 @@ export default {
       "abandon": "Entwurf verwerfen",
       "deleteForm": "Entwurf verwerfen und Formular löschen"
     },
+    "introduction": {
+      "abandon": [
+        "Sie sind dabei, die Entwurfsversion dieses Formulars zu löschen. Das bedeutet, dass das Formular, hochgeladene dazugehörige Formularanhänge und alle Test-Übermittlungen entfernt werden.",
+        "Ihre veröffentlichte Formulardefinition, ihre Formularanhänge und Übermittlungen sind davon nicht betroffen."
+      ],
+      "deleteForm": [
+        "Sie sind im Begriff, diese Definition des Formularentwurfes zusammen mit allen Entwürfen von Formularanhängen, die Sie hochgeladen haben, und allen Testübermittlungen zu löschen. Da Sie dieses Formular noch nicht veröffentlicht haben, wird dieses gesamte Formular gelöscht und in den Papierkorb verschoben."
+      ]
+    },
     "action": {
       "abandon": "Ja, Löschen"
     }
@@ -149,6 +154,15 @@ export default {
     "title": {
       "abandon": "Abandonar borrador",
       "deleteForm": "Abandonar borrador y borrar formulario"
+    },
+    "introduction": {
+      "abandon": [
+        "Está a punto de borrar permanentemente la versión borrador de este formulario. Esto significa que se eliminarán el borrador de la definición del formulario, cualquier archivo adjunto del borrador del formulario que haya cargado y todos los envíos de prueba.",
+        "Su definición de formulario publicado, sus adjuntos de formulario y envíos no se verán afectados."
+      ],
+      "deleteForm": [
+        "Está a punto de eliminar este borrador de definición de formulario, junto con cualquier borrador de archivos adjuntos de formulario que haya cargado y todos los envíos de prueba. Debido a que aún no lo ha publicado, este Formulario completo se eliminará y se moverá a la Papelera."
+      ]
     },
     "action": {
       "abandon": "Abandonar"
@@ -208,13 +222,58 @@ export default {
       "abandon": "削除"
     }
   },
+  "pt": {
+    "title": {
+      "abandon": "Abandonar rascunho",
+      "deleteForm": "Abandonar rascunho e apagar formulário"
+    },
+    "introduction": {
+      "abandon": [
+        "Você está prestes a excluir permanentemente a versão Rascunho deste Formulário. Isso significa que a definição de Formulário de rascunho, quaisquer Anexos do Formulário de rascunho que você carregou e todas as Respostas de teste serão removidos.",
+        "Sua definição de Formulário publicada, seus Anexos de Formulário e suas Respostas não serão afetados."
+      ],
+      "deleteForm": [
+        "Você está prestes a excluir esta definição de Formulário de rascunho, juntamente com todos os Anexos de Formulário de rascunho que você carregou e todos as Respostas de teste. Como você ainda não o publicou, este Formulário será totalmente excluído e movido para a Lixeira."
+      ]
+    },
+    "action": {
+      "abandon": "Abandonar"
+    }
+  },
   "sw": {
     "title": {
       "abandon": "acha rasimu",
       "deleteForm": "Achana na Rasimu na ufute Fomu"
     },
+    "introduction": {
+      "abandon": [
+        "Unakaribia kufuta kabisa Rasimu ya toleo la Fomu hii. Hii ina maana kwamba ufafanuzi wa Fomu ya rasimu, Viambatisho vya Fomu vya rasimu ambavyo umepakia, na Mawasilisho yote ya majaribio yataondolewa.",
+        "Ufafanuzi wako wa Fomu uliochapishwa, Viambatisho vyake vya Fomu, na Mawasilisho hayataathiriwa."
+      ],
+      "deleteForm": [
+        "Unakaribia kufuta ufafanuzi wa Fomu hii ya rasimu, pamoja na Viambatisho vyovyote vya rasimu ambavyo umepakia, na Mawasilisho yote ya majaribio. Kwa sababu bado hujaichapisha, Fomu hii yote itafutwa na kuhamishiwa kwenye tupio."
+      ]
+    },
     "action": {
       "abandon": "Achana"
+    }
+  },
+  "zh-Hant": {
+    "title": {
+      "abandon": "放棄草稿",
+      "deleteForm": "放棄草稿並刪除表單"
+    },
+    "introduction": {
+      "abandon": [
+        "您將永久刪除此表單的草稿版本。這意味著草稿表單定義、您上傳的任何草稿表單附件以及所有測試提交都將被刪除。",
+        "您發布的表單定義、其表單附件和提交內容不會受到影響。"
+      ],
+      "deleteForm": [
+        "您將刪除此草稿的表單定義以及您已上傳的任何附件以及所有測試提交。由於您尚未發布該表單，因此整個表單將被刪除並移至垃圾桶。"
+      ]
+    },
+    "action": {
+      "abandon": "放棄"
     }
   }
 }

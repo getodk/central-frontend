@@ -59,14 +59,23 @@ export default {
   "fr": {
     "blank": "(vierge)"
   },
+  "id": {
+    "blank": "(kosong)"
+  },
   "it": {
     "blank": "(vuoto)"
   },
   "ja": {
     "blank": "(未設定)"
   },
+  "pt": {
+    "blank": "(em branco)"
+  },
   "sw": {
     "blank": "(tupu)"
+  },
+  "zh-Hant": {
+    "blank": "(空白)"
   }
 }
 </i18n>

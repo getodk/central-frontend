@@ -10,7 +10,7 @@ describe('ProjectArchive', () => {
   it('does not render the button for an archived project', async () => {
     testData.extendedProjects.createPast(1, { archived: true });
     const component = await load('/projects/1/settings', { root: false });
-    component.find('#project-settings-archive-button').exists().should.be.false();
+    component.find('#project-settings-archive-button').exists().should.be.false;
   });
 
   it('toggles the modal', () => {
@@ -51,12 +51,12 @@ describe('ProjectArchive', () => {
         .respondWithData(() => []);
     };
 
-    it('redirects the user to the project overview', async () => {
+    it('redirects the user to the forms page', async () => {
       const app = await submit();
       app.vm.$route.path.should.equal('/projects/1');
     });
 
-    it("appends (archived) to project's name in project overview", async () => {
+    it("appends (archived) to the project's name", async () => {
       const app = await submit();
       app.get('#page-head-title').text().should.equal('My Project (archived)');
     });

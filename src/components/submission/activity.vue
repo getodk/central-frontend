@@ -14,9 +14,8 @@ except according to the terms contained in the LICENSE file.
     <template #heading>
       <span>{{ $t('common.activity') }}</span>
       <template v-if="project.dataExists && project.permits('submission.update')">
-        <button id="submission-activity-update-review-state-button"
-          type="button" class="btn btn-default"
-          @click="$emit('update-review-state')">
+        <button id="submission-activity-review-button" type="button"
+          class="btn btn-default" @click="$emit('review')">
           <span class="icon-check"></span>{{ $t('action.review') }}
         </button>
         <template v-if="submission.dataExists">
@@ -31,6 +30,11 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-pencil"></span>{{ $t('action.edit') }}
           </button>
         </template>
+        <button v-if="project.dataExists && project.permits('submission.delete')"
+          id="submission-activity-delete-button" type="button" class="btn btn-default"
+          @click="$emit('delete')">
+          <span class="icon-trash"></span>{{ $t('action.delete') }}
+        </button>
       </template>
     </template>
     <template #body>
@@ -74,7 +78,7 @@ export default {
       required: true
     }
   },
-  emits: ['update-review-state', 'comment'],
+  emits: ['review', 'comment', 'delete'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -106,6 +110,10 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #submission-activity { margin-bottom: 35px; }
-#submission-activity-update-review-state-button { margin-right: 5px; }
+#submission-activity-review-button { margin-right: 5px; }
+#submission-activity-edit-button { margin-right: 5px; }
+#submission-activity-delete-button .icon-trash { color: $color-danger; }
 </style>

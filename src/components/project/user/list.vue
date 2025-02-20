@@ -252,7 +252,7 @@ export default {
       },
       {
         // This text is shown in a list of Roles.
-        "full": "{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data",
+        "full": "{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data",
         "projectViewers": "Project Viewers"
       },
       {
@@ -295,7 +295,7 @@ export default {
         "projectManagers": "Projektoví manažeři"
       },
       {
-        "full": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
+        "full": "{projectViewers} může přistupovat ke všem datům formulářů a entit v tomto projektu a stahovat je, ale nemůže provádět žádné změny nastavení nebo dat.",
         "projectViewers": "Prohlížeči Projektu"
       },
       {
@@ -331,7 +331,7 @@ export default {
         "projectManagers": "Projekt-Manager"
       },
       {
-        "full": "{projectViewers} können auf alle Formulardaten in diesem Projekt zugreifen und sie herunterladen, aber können keine Änderungen an Einstellungen oder Daten durchführen.",
+        "full": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
         "projectViewers": "Projekt-Viewer"
       },
       {
@@ -367,7 +367,7 @@ export default {
         "projectManagers": "Administradores de proyecto"
       },
       {
-        "full": "{projectViewers} puede acceder y descargar todos los datos del Formulario en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
+        "full": "{projectViewers} puede acceder y descargar todos los datos de formularios y entidades en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
         "projectViewers": "Visores de proyecto"
       },
       {
@@ -403,7 +403,7 @@ export default {
         "projectManagers": "gestionnaires de projet"
       },
       {
-        "full": "Les {projectViewers} ont accès aux données de tous les formulaires de ce projet et peuvent les télécharger mais ne peuvent apporter aucune modification aux données ou paramètres.",
+        "full": "{projectViewers} peut/peuvent accéder et télécharger tous les Formulaires et entités dans ce Projet, mais ne peut/peuvent apporter aucun changement aux paramètres ou aux données.",
         "projectViewers": "lecteurs de projet"
       },
       {
@@ -438,10 +438,7 @@ export default {
         "full": "{projectManagers} bisa melakukan pekerjaan administratif apapun sehubungan dengan Proyek ini dan bisa mengisi formulir lewat web browser.",
         "projectManagers": "Manajer Proyek"
       },
-      {
-        "full": "{projectViewers} dapat mengakses dan mengunduh semua data formulir di Proyek ini, tetapi tidak bisa membuat perubahan terhadap pengaturan maupun data",
-        "projectViewers": "Pemerhati Proyek"
-      },
+      {},
       {
         "full": "{dataCollectors} dapat mengisi formulir di web browser, tetapi tidak bisa melihat atau mengubah data atau pengaturan.",
         "dataCollectors": "Pengumpul Data"
@@ -475,7 +472,7 @@ export default {
         "projectManagers": "Responsabili del progetto"
       },
       {
-        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
+        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario e delle Entità di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
         "projectViewers": "Visualizzatori del progetto"
       },
       {
@@ -510,10 +507,7 @@ export default {
         "full": "{projectManagers}は、このプロジェクトに関連するあらゆる管理作業を行うことができ、Webブラウザでフォームを入力できます。",
         "projectManagers": "プロジェクト・マネージャー"
       },
-      {
-        "full": "{projectViewers}は、このプロジェクトの全てのフォームにアクセスし、ダウンロードできますが、設定やデータの変更はできません。",
-        "projectViewers": "プロジェクト・閲覧者"
-      },
+      {},
       {
         "full": "{dataCollectors}は、Webブラウザでフォームを入力できますが、データや設定を閲覧・変更はできません。",
         "dataCollectors": "データ収集者"
@@ -539,6 +533,42 @@ export default {
       "unassignRole": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
     }
   },
+  "pt": {
+    "heading": [
+      "Administradores são automaticamente considerados gerentes de todos os projetos. Outros usuários de site podem ter funções específicas para esse projeto:",
+      {
+        "full": "{projectManagers} podem realizar qualquer tarefa administrativa relacionada a esse projeto e podem preencher formulários no navegador de internet.",
+        "projectManagers": "Gerentes de projeto"
+      },
+      {
+        "full": "{projectViewers} pode acessar e baixar todos os dados de Formulário e entidade neste projeto, mas não pode fazer nenhuma alteração em configurações ou dados",
+        "projectViewers": "Observadores de projeto"
+      },
+      {
+        "full": "{dataCollectors}pode preencher formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
+        "dataCollectors": "Coletores de dados"
+      }
+    ],
+    "action": {
+      "clearSearch": "Limpar a busca"
+    },
+    "field": {
+      "q": {
+        "canList": "Localizar um usuário...",
+        "cannotList": "Entre com o endereço de email completo do usuário"
+      }
+    },
+    "header": {
+      "user": "Usuário",
+      "projectRole": "Função de projeto"
+    },
+    "emptyTable": "Não existem usuário designados para esse projeto ainda. Para adicionar um usuário utilize a busca acima.",
+    "alert": {
+      "unassignWithoutReassign": "Algo deu errado. \"{displayName}\" foi removido do projeto.",
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto.",
+      "unassignRole": "Sucesso! \"{displayName}\" foi removido deste projeto."
+    }
+  },
   "sw": {
     "heading": [
       "Wasimamizi wa Tovuti nzima wanazingatiwa kiotomatiki Wasimamizi wa kila Mradi. Watumiaji Wengine wanaweza kuwa na Majukumu mahususi kwa Mradi huu",
@@ -547,7 +577,7 @@ export default {
         "projectManagers": "Wasimamizi wa Mradi"
       },
       {
-        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
+        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu na Huluki katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data.",
         "projectViewers": "Watazamaji wa Mradi"
       },
       {
@@ -573,6 +603,42 @@ export default {
       "unassignWithoutReassign": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi.",
       "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu.",
       "unassignRole": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
+    }
+  },
+  "zh-Hant": {
+    "heading": [
+      "網站管理員自動被視為每個專案的管理者。其他使用者可以擁有特定於此專案的角色：",
+      {
+        "full": "{projectManagers}可以執行與該專案相關的任何管理任務，並可以在網頁瀏覽器中填寫表格",
+        "projectManagers": "專案管理員"
+      },
+      {
+        "full": "{projectViewers}可以存取和下載此專案中的所有表單和實體數據，但無法對設定或數據進行任何更改",
+        "projectViewers": "專案瀏覽者"
+      },
+      {
+        "full": "{dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
+        "dataCollectors": "資料收集者"
+      }
+    ],
+    "action": {
+      "clearSearch": "清除搜尋"
+    },
+    "field": {
+      "q": {
+        "canList": "搜尋使用者",
+        "cannotList": "輸入準確的使用者電子郵件地址..."
+      }
+    },
+    "header": {
+      "user": "使用者",
+      "projectRole": "專案角色"
+    },
+    "emptyTable": "尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶。",
+    "alert": {
+      "unassignWithoutReassign": "出了些問題。 「{displayName}」已從專案中刪除。",
+      "assignRole": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。",
+      "unassignRole": "成功！ 「{displayName}」已從此項目中刪除。"
     }
   }
 }

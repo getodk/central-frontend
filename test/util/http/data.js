@@ -6,12 +6,14 @@ import useDatasets from '../../../src/request-data/datasets';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
+import simpleXml from '../../data/simple';
 
 // The names of the following properties correspond to requestData resources.
 const responseDefaults = {
   // Resources created in createResources()
   roles: () => testData.standardRoles.sorted(),
   project: () => testData.extendedProjects.last(),
+  dataset: () => testData.extendedDatasets.last(),
 
   // useProject()
   forms: () => testData.extendedForms.sorted(),
@@ -42,6 +44,8 @@ const componentResponses = (map) => Object.entries(map)
   });
 
 const responsesByComponent = {
+  ConfigError: [],
+
   AccountLogin: [],
   AccountResetPassword: [],
   AccountClaim: [],
@@ -63,17 +67,9 @@ const responsesByComponent = {
     roles: true,
     formSummaryAssignments: () => testData.standardFormSummaryAssignments.sorted()
   }),
-  DatasetEntities: componentResponses({
-    odataEntities: true
-  }),
   DatasetList: componentResponses({
     datasets: () => testData.extendedDatasets.sorted()
   }),
-  DatasetShow: componentResponses({
-    project: true,
-    dataset: () => testData.extendedDatasets.last()
-  }),
-  DatasetOverview: [],
   ProjectSettings: [],
   FormShow: componentResponses({
     project: true,
@@ -85,12 +81,14 @@ const responsesByComponent = {
       ? testData.standardFormAttachments.sorted()
       : mockResponse.problem(404.1))
   }),
-  FormOverview: componentResponses({
-    publishedAttachments: () => testData.standardFormAttachments.sorted()
+  FormPreview: componentResponses({
+    form: () => testData.extendedForms.last(),
+    xml: () => mockResponse.of(simpleXml)
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
     keys: true,
+    deletedSubmissionCount: () => testData.submissionDeletedOData(0),
     fields: true,
     odata: true,
     submitters: () => testData.extendedFieldKeys
@@ -112,16 +110,35 @@ const responsesByComponent = {
   }),
   SubmissionShow: componentResponses({
     project: true,
+    form: () => testData.extendedForms.last(),
     submission: () => {
       const odata = testData.submissionOData();
-      const value = odata.value.map(pick(['__id', '__system', 'meta']));
-      return { ...odata, value };
+      const selected = odata.value.map(pick(['__id', '__system', 'meta']));
+      return { ...odata, value: selected };
     },
     submissionVersion: () => ({}),
     fields: true,
     audits: true,
     comments: () => testData.extendedComments.sorted(),
     diffs: () => ({})
+  }),
+  DatasetShow: componentResponses({
+    project: true,
+    dataset: true
+  }),
+  DatasetOverview: [],
+  DatasetEntities: componentResponses({
+    deletedEntityCount: () => testData.entityDeletedOData(0),
+    odataEntities: true
+  }),
+  DatasetSettings: [],
+  EntityShow: componentResponses({
+    entity: () => testData.extendedEntities.last(),
+    project: true,
+    dataset: true,
+    audits: () => testData.extendedAudits.sorted()
+      .filter(({ action }) => action.startsWith('entity.')),
+    entityVersions: () => testData.extendedEntityVersions.sorted()
   }),
 
   UserHome: [],

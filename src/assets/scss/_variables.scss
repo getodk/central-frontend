@@ -15,6 +15,12 @@ $color-accent-primary: #bd006b;
 $color-accent-secondary: #8d0050;
 $color-page-background: #f7f7f7;
 
+// Media query breakpoints - copied from bootstrap
+$screen-xs-min: 480px;
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+
 // Text
 $color-text: #333;
 $font-family-monospace: Monaco, Menlo, Consolas, "Courier New", monospace;
@@ -31,9 +37,12 @@ $color-info-light: #d9edf7;
 $color-info-dark: darken($color-info, 10%);
 $color-warning: #f29e00;
 $color-warning-light: #f5c93b;
+$color-warning-dark: #e06f0b;
 $color-danger: #de2a11;
+$color-danger-lighter: #dd5454; // Between $color-danger and $color-danger-light
 $color-danger-light: #ffe6e6;
 $color-danger-dark: darken($color-danger, 10%);
+$color-highlight: #faf1cd;
 
 // Buttons and inputs
 $color-action-foreground: #0c7bd1;
@@ -43,8 +52,6 @@ $color-action-background-disabled: #999;
 $color-action-overlay: #0096c1;
 $color-input: #555;
 $color-input-inactive: #777;
-$color-input-background: #eee;
-$color-panel-input-background: #f7f7f7;
 $font-size-btn: 12px;
 $hpadding-btn: 10px;
 $padding-bottom-btn: 5px;
@@ -53,6 +60,11 @@ $padding-top-btn: 6px;
 // Dropdowns
 $font-size-dropdown-menu: $font-size-btn;
 $min-width-dropdown-menu: 150px;
+
+$padding-block-dl: 10px;
+
+// Forms
+$padding-top-form-control: 6px;
 
 // Tables
 $margin-bottom-table: 20px;
@@ -70,6 +82,10 @@ $padding-top-table-data: 8px;
 
 // Panels
 $box-shadow-panel-main: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+$padding-panel-body: 15px;
+
+// Navs
+$hpadding-nav-tab: 8px;
 
 $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;
@@ -80,20 +96,25 @@ $color-subpanel-border-strong: #c3c3c3;
 $ease-extreme-out: cubic-bezier(.05, .9, 0, 1);
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // COMPONENTS
 
+// FeedEntry
+$background-color-feed-entry: #f9f9f9;
+$hpadding-feed-entry: 15px;
+
+// FileDropZone
+$padding-file-drop-zone: 15px;
+
 // Modal
 $padding-modal-body: 15px;
+$padding-left-modal-header: 15px;
+$padding-right-modal-header: 15px;
 
 // PageBody
 $margin-top-page-body: 20px;
+$max-width-page-body: 1280px;
 
 // Popover
 $box-shadow-popover: 0 5px 10px rgba(0, 0, 0, 0.2);
-
-// Media query breakpoints - copied from bootstrap
-$screen-xs-min: 480px;
-$screen-sm-min: 768px;
-$screen-md-min: 992px;
-$screen-lg-min: 1200px;

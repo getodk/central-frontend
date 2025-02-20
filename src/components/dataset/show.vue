@@ -9,40 +9,44 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <div id="dataset-show">
-    <page-back v-show="dataExists" :to="[projectPath(), projectPath('datasets')]">
-      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.datasets') }}</template>
-    </page-back>
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
       </template>
       <template #tabs>
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">
-            {{ $t('common.tab.overview') }}
-          </router-link>
-        </li>
         <li :class="tabClass('entities')" role="presentation">
           <router-link :to="tabPath('entities')">
-            {{ $t('common.data') }}
+            {{ $t('resource.entities') }}
+            <span v-if="dataset.dataExists" class="badge">
+              {{ $n(dataset.entities, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <li :class="tabClass('properties')" role="presentation">
+          <router-link :to="tabPath('properties')">
+            {{ $t('resource.properties') }}
+          </router-link>
+        </li>
+        <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')" role="presentation">
+          <router-link :to="tabPath('settings')">
+            {{ $t('common.tab.settings') }}
           </router-link>
         </li>
       </template>
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
-      <router-view v-show="dataExists"/>
+      <router-view v-show="dataExists" @fetch-dataset="fetchDataset"/>
     </page-body>
   </div>
 </template>
 
 <script>
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -55,8 +59,8 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetShow',
   components: {
+    Breadcrumbs,
     Loading,
-    PageBack,
     PageBody,
     PageHead
   },
@@ -70,18 +74,25 @@ export default {
       required: true
     }
   },
-  setup(props) {
+  setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, dataset, resourceStates } = useRequestData();
 
-    const { projectPath, datasetPath } = useRoutes();
-    const tabPrefix = datasetPath(props.projectId, props.datasetName);
-    const { tabPath, tabClass } = useTabs(tabPrefix);
+    const { projectPath, datasetPath, canRoute } = useRoutes();
+    const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, datasetPath, tabPath, tabClass
+      projectPath, tabPath, tabClass, canRoute
     };
+  },
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.nameWithArchived, path: this.projectPath() },
+        { text: this.$t('resource.entities'), path: this.projectPath('entity-lists'), icon: 'icon-database' }
+      ];
+    }
   },
   created() {
     this.fetchData();
@@ -113,7 +124,7 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Datasets"
+    "back": "Back to Project Entities"
   }
 }
 </i18n>
@@ -122,13 +133,28 @@ export default {
 <i18n>
 {
   "cs": {
-    "back": "Zpět na datové sady projektu"
+    "back": "Zpět na projektové entity"
+  },
+  "de": {
+    "back": "Zurück zu den Projekteinheiten"
+  },
+  "es": {
+    "back": "Back to Project Entities"
   },
   "fr": {
-    "back": "Retour aux Dataset du Projet"
+    "back": "Retour aux entités du projet"
   },
   "it": {
-    "back": "Torna ai set di dati del progetto"
+    "back": "Torna alle Entità del progetto"
+  },
+  "pt": {
+    "back": "Voltar para Entidades do Projeto"
+  },
+  "sw": {
+    "back": "Rudi kwenye vyombo vya Mradi"
+  },
+  "zh-Hant": {
+    "back": "返回專案實體"
   }
 }
 </i18n>

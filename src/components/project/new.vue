@@ -146,10 +146,22 @@ export default {
       "プロジェクトでは、フォームやアプリユーザーをグループ化して、このWebサイトとデータ収集デバイスの両方で、整理と管理を簡易化します。"
     ]
   },
+  "pt": {
+    "title": "Criar projeto",
+    "introduction": [
+      "Os projetos agrupam formulários e usuários de aplicativos para torná-los mais fáceis de organizar e gerenciar, tanto neste site quanto em seu dispositivo de coleta de dados."
+    ]
+  },
   "sw": {
     "title": "Unda Mradi",
     "introduction": [
       "Miradi huweka pamoja Fomu na Watumiaji wa Programu ili kurahisisha kupanga na kudhibiti, kwenye tovuti hii na kwenye kifaa chako cha kukusanya data."
+    ]
+  },
+  "zh-Hant": {
+    "title": "建立專案",
+    "introduction": [
+      "專案將表單和APP使用者分組在一起，以便在本網站和資料收集設備上更輕鬆地組織和管理它們"
     ]
   }
 }

@@ -55,6 +55,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-audit-list" */
     '../components/audit/list.vue'
   )))
+  .set('ConfigError', loader(() => import(
+    /* webpackChunkName: "component-config-error" */
+    '../components/config-error.vue'
+  )))
   .set('DatasetList', loader(() => import(
     /* webpackChunkName: "component-dataset-list" */
     '../components/dataset/list.vue'
@@ -71,9 +75,29 @@ const loaders = new Map()
     /* webpackChunkName: "component-dataset-entities" */
     '../components/dataset/entities.vue'
   )))
+  .set('DatasetSettings', loader(() => import(
+    /* webpackChunkName: "component-dataset-settings" */
+    '../components/dataset/settings.vue'
+  )))
   .set('Download', loader(() => import(
     /* webpackChunkName: "component-download" */
     '../components/download.vue'
+  )))
+  .set('EntityBranchData', loader(() => import(
+    /* webpackChunkName: "component-entity-branch-data" */
+    '../components/entity/branch-data.vue'
+  )))
+  .set('EntityShow', loader(() => import(
+    /* webpackChunkName: "component-entity-show" */
+    '../components/entity/show.vue'
+  )))
+  .set('EntityUpload', loader(() => import(
+    /* webpackChunkName: "component-entity-upload" */
+    '../components/entity/upload.vue'
+  )))
+  .set('FeedbackButton', loader(() => import(
+    /* webpackChunkName: "component-feedback-button" */
+    '../components/feedback-button.vue'
   )))
   .set('FieldKeyList', loader(() => import(
     /* webpackChunkName: "component-field-key-list" */
@@ -91,10 +115,6 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-draft-testing" */
     '../components/form-draft/testing.vue'
   )))
-  .set('FormOverview', loader(() => import(
-    /* webpackChunkName: "component-form-overview" */
-    '../components/form/overview.vue'
-  )))
   .set('FormSettings', loader(() => import(
     /* webpackChunkName: "component-form-settings" */
     '../components/form/settings.vue'
@@ -106,6 +126,10 @@ const loaders = new Map()
   .set('FormSubmissions', loader(() => import(
     /* webpackChunkName: "component-form-submissions" */
     '../components/form/submissions.vue'
+  )))
+  .set('FormPreview', loader(() => import(
+    /* webpackChunkName: "component-form-preview" */
+    '../components/form/preview.vue'
   )))
   .set('FormVersionList', loader(() => import(
     /* webpackChunkName: "component-form-version-list" */
@@ -123,9 +147,17 @@ const loaders = new Map()
     /* webpackChunkName: "component-home-config-section" */
     '../components/home/config-section.vue'
   )))
+  .set('HoverCards', loader(() => import(
+    /* webpackChunkName: "component-hover-cards" */
+    '../components/hover-cards.vue'
+  )))
   .set('NotFound', loader(() => import(
     /* webpackChunkName: "component-not-found" */
     '../components/not-found.vue'
+  )))
+  .set('OutdatedVersion', loader(() => import(
+    /* webpackChunkName: "component-outdated-version" */
+    '../components/outdated-version.vue'
   )))
   .set('ProjectFormAccess', loader(() => import(
     /* webpackChunkName: "component-project-form-access" */

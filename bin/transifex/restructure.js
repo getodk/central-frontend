@@ -3,14 +3,15 @@
 
 const fs = require('fs');
 
-const { readSourceMessages, restructure, sourceLocale } = require('../util/transifex');
 const { mapComponentsToFiles } = require('../util/util');
+const { readSourceMessages, rekeySource, restructure, sourceLocale } = require('../util/transifex');
 
-const messages = readSourceMessages(
+const { messages, transifexPaths } = readSourceMessages(
   'src/locales',
   mapComponentsToFiles('src/components')
 );
 const structured = restructure(messages);
+rekeySource(structured, transifexPaths);
 fs.writeFileSync(
   `transifex/strings_${sourceLocale}.json`,
   JSON.stringify(structured, null, 2)

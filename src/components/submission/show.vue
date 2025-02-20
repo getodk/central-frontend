@@ -11,11 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <page-back v-show="submission.dataExists" :to="formPath('submissions')">
-      <template #title>{{ $t('back.title') }}</template>
-      <template #back>{{ $t('back.back') }}</template>
-    </page-back>
-    <page-head v-show="submission.dataExists">
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+    <page-head v-show="dataExists">
       <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
     </page-head>
     <page-body>
@@ -26,49 +23,53 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="col-xs-8">
           <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
-            :instance-id="instanceId"
-            @update-review-state="showModal('updateReviewState')"
-            @comment="fetchActivityData"/>
+            :instance-id="instanceId" @review="reviewModal.show()"
+            @comment="fetchActivityData" @delete="deleteModal.show()"/>
         </div>
       </div>
     </page-body>
-    <submission-update-review-state :state="updateReviewState.state"
-      :project-id="projectId" :xml-form-id="xmlFormId" :submission="submission"
-      @hide="hideModal('updateReviewState')" @success="afterUpdateReviewState"/>
+    <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
+      :xml-form-id="xmlFormId" :submission="submission"
+      @hide="reviewModal.hide()" @success="afterReview"/>
+    <submission-delete v-bind="deleteModal" :submission="submission"
+      :awaiting-response="awaitingResponse" @hide="deleteModal.hide()"
+      @delete="requestDelete"/>
   </div>
 </template>
 
 <script>
 import { useI18n } from 'vue-i18n';
 
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
+import SubmissionDelete from './delete.vue';
 
-import modal from '../../mixins/modal';
 import useFields from '../../request-data/fields';
 import useRoutes from '../../composables/routes';
+import useRequest from '../../composables/request';
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
-import { setDocumentTitle } from '../../util/reactivity';
+import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
+import { noop } from '../../util/util';
 
 export default {
   name: 'SubmissionShow',
   components: {
+    Breadcrumbs,
     Loading,
-    PageBack,
     PageBody,
     PageHead,
     SubmissionActivity,
     SubmissionBasicDetails,
+    SubmissionDelete,
     SubmissionUpdateReviewState
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -85,7 +86,9 @@ export default {
     }
   },
   setup() {
-    const { project, resourceStates } = useRequestData();
+    const { project, form, resourceStates } = useRequestData();
+    const { request, awaitingResponse } = useRequest();
+
     const { submission, submissionVersion, audits, comments, diffs } = useSubmission();
     const fields = useFields();
 
@@ -94,19 +97,22 @@ export default {
       ? [`${t('title.details')}: ${submission.instanceNameOrId}`]
       : [t('title.details')]));
 
-    const { formPath } = useRoutes();
+    const { formPath, projectPath } = useRoutes();
     return {
-      project, submission, submissionVersion, audits, comments, diffs, fields,
-      ...resourceStates([project, submission]),
-      formPath
+      project, form, submission, submissionVersion, audits, comments, diffs, fields,
+      request, awaitingResponse, ...resourceStates([project, form, submission]),
+      reviewModal: modalData(), deleteModal: modalData(),
+      formPath, projectPath
     };
   },
-  data() {
-    return {
-      updateReviewState: {
-        state: false
-      }
-    };
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
+        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' },
+        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath('submissions') }
+      ];
+    }
   },
   created() {
     this.fetchData();
@@ -148,6 +154,10 @@ export default {
           extended: true,
           resend: false
         }),
+        this.form.request({
+          url: apiPaths.form(this.projectId, this.xmlFormId),
+          extended: false
+        }),
         this.submission.request({
           url: apiPaths.odataSubmission(
             this.projectId,
@@ -170,11 +180,23 @@ export default {
       ]);
       this.fetchActivityData();
     },
-    afterUpdateReviewState(submission, reviewState) {
+    afterReview(submission, reviewState) {
       this.fetchActivityData();
-      this.hideModal('updateReviewState');
+      this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
       this.submission.__system.reviewState = reviewState;
+    },
+    requestDelete([{ __id: instanceId }]) {
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          const message = this.$t('alert.submissionDeleted');
+          this.$router.push(this.formPath('submissions'))
+            .then(() => { this.alert.success(message); });
+        })
+        .catch(noop);
     }
   }
 };
@@ -237,10 +259,22 @@ export default {
       "back": "提出フォームの一覧に戻る"
     }
   },
+  "pt": {
+    "back": {
+      "title": "Detalhes da resposta",
+      "back": "Voltar à tabela de respostas"
+    }
+  },
   "sw": {
     "back": {
       "title": "Maelezo ya Uwasilishaji",
       "back": "Rudi kwenye Jedwali la Mawasilisho"
+    }
+  },
+  "zh-Hant": {
+    "back": {
+      "title": "提交詳情",
+      "back": "返回提交表"
     }
   }
 }

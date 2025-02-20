@@ -136,11 +136,25 @@ export default {
       "resetPassword": "パスワードのリセット"
     }
   },
+  "pt": {
+    "title": "Redefinir senha",
+    "introduction": {
+      "full": "Assim que você clicar em {resetPassword}abaixo, a senha para o usuário \"{displayName}\" \u003c{email}> será imediatamente invalidada. Um email será enviado para {email} com instruções de como prosseguir.",
+      "resetPassword": "Redefinir senha"
+    }
+  },
   "sw": {
     "title": "Weka upya Nenosiri",
     "introduction": {
       "full": "Ukibofya {resetPassword} hapa chini, nenosiri la mtumiaji “{displayName}” \u003c{email}> litabatilishwa mara moja. Barua pepe itatumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea.",
       "resetPassword": "Weka upya nenosiri"
+    }
+  },
+  "zh-Hant": {
+    "title": "重設密碼",
+    "introduction": {
+      "full": "一旦您點擊下面的{resetPassword}，使用者「{displayName}」\u003c{email}>的密碼將立即失效。一封電子郵件將發送至 {email}，其中包含有關如何繼續操作的說明。",
+      "resetPassword": "重設密碼"
     }
   }
 }

@@ -34,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <div class="panel-body">
             <p>
               <button type="button" class="btn btn-danger"
-                @click="showModal('deleteForm')">
+                @click="deleteModal.show()">
                 {{ $t('action.delete') }}&hellip;
               </button>
             </p>
@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </div>
-    <form-delete v-bind="deleteForm" @hide="hideModal('deleteForm')"
+    <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
   </div>
 </template>
@@ -50,26 +50,18 @@ except according to the terms contained in the LICENSE file.
 <script>
 import FormDelete from './delete.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormSettings',
   components: { FormDelete },
-  mixins: [modal()],
   inject: ['alert'],
   setup() {
     const { form } = useRequestData();
     const { projectPath } = useRoutes();
-    return { form, projectPath };
-  },
-  data() {
-    return {
-      deleteForm: {
-        state: false
-      }
-    };
+    return { form, deleteModal: modalData(), projectPath };
   },
   methods: {
     afterDelete() {
@@ -218,6 +210,21 @@ export default {
       "delete": "フォーム\"{name}\"は削除されました。"
     }
   },
+  "pt": {
+    "state": {
+      "title": "Status do formulário",
+      "body": {
+        "full": "Para definir o estado desse formulário, por favor visite a {formAccessSettings}do projeto.",
+        "formAccessSettings": "Configurações de acesso ao formulário"
+      }
+    },
+    "action": {
+      "delete": "Excluir esse formulário"
+    },
+    "alert": {
+      "delete": "O formulário \"{name}\" foi excluído."
+    }
+  },
   "sw": {
     "state": {
       "title": "Jimbo la Fomu",
@@ -231,6 +238,21 @@ export default {
     },
     "alert": {
       "delete": "Fomu \"{name}\" ilifutwa."
+    }
+  },
+  "zh-Hant": {
+    "state": {
+      "title": "表單狀態",
+      "body": {
+        "full": "若要設定此表單的狀態，請存取專案 {formAccessSettings}。",
+        "formAccessSettings": "表單存取設定"
+      }
+    },
+    "action": {
+      "delete": "刪除此表單"
+    },
+    "alert": {
+      "delete": "表單「{name}」已刪除。"
     }
   }
 }

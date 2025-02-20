@@ -27,16 +27,14 @@ except according to the terms contained in the LICENSE file.
   </table>
 </template>
 
-<script>
-export default {
-  name: 'PublicLinkTable'
-};
-</script>
 <script setup>
 import PublicLinkRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'PublicLinkTable'
+});
 defineProps({
   highlighted: Number
 });
@@ -115,10 +113,22 @@ const { publicLinks } = useRequestData();
       "accessLink": "アクセスリンク"
     }
   },
+  "pt": {
+    "header": {
+      "once": "Resposta única",
+      "accessLink": "Link de acesso"
+    }
+  },
   "sw": {
     "header": {
       "once": "Uwasilishaji Mmoja",
       "accessLink": "Kiungo cha Ufikiaji"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "once": "單次提交",
+      "accessLink": "訪問連結"
     }
   }
 }

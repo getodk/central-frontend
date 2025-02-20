@@ -39,10 +39,10 @@ except according to the terms contained in the LICENSE file.
             <strong>{{ $t('enabled.true[0].weWillShare') }}</strong>
           </template>
           <template #termsOfService>
-            <a href="https://getodk.org/legal/tos.html" target="_blank">{{ $t('enabled.true[0].termsOfService') }}</a>
+            <a href="https://getodk.org/tos" target="_blank">{{ $t('enabled.true[0].termsOfService') }}</a>
           </template>
           <template #privacyPolicy>
-            <a href="https://getodk.org/legal/privacy.html" target="_blank">{{ $t('enabled.true[0].privacyPolicy') }}</a>
+            <a href="https://getodk.org/privacy" target="_blank">{{ $t('enabled.true[0].privacyPolicy') }}</a>
           </template>
         </i18n-t>
       </label>
@@ -326,6 +326,28 @@ export default {
     }
   },
   "id": {
+    "enabled": {
+      "null": [
+        "Ingatkan kami nanti.",
+        "Administrator akan terus melihat pesan di bagian atas layar."
+      ],
+      "true": [
+        {},
+        "Metrik apa yang dikirim?"
+      ],
+      "false": [
+        "Kami tidak tertarik untuk berbagi informasi apapun.",
+        "Anda tidak akan melihat pengingat tentang ini lagi."
+      ]
+    },
+    "contact": [
+      "Saya bersedia menyertakan informasi kontak saya dengan laporan tersebut.",
+      "Kami dapat menghubungi anda untuk mempelajari lebih lanjut tentang penggunaan Central oleh anda."
+    ],
+    "field": {
+      "workEmail": "Alamat email kantor",
+      "organization": "Nama Organisasi"
+    },
     "alert": {
       "success": "Pengaturan disimpan!"
     }
@@ -394,6 +416,38 @@ export default {
       "success": "設定が保存されました！"
     }
   },
+  "pt": {
+    "enabled": {
+      "null": [
+        "Lembrar-nos depois.",
+        "Os administradores continuarão a ver a mensagem no topo da tela."
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} e nós aceitamos os {termsOfService} e a {privacyPolicy}.",
+          "weWillShare": "Nós concordamos em compartilhar dados anônimos de uso mensalmente com a equipe do Central,",
+          "termsOfService": "Termos de serviço",
+          "privacyPolicy": "Política de privacidade"
+        },
+        "Quais métricas são enviadas?"
+      ],
+      "false": [
+        "Nós não desejamos em compartilhar nenhuma informação.",
+        "Você não verá nenhum aviso sobre isso novamente."
+      ]
+    },
+    "contact": [
+      "Desejo incluir minhas informações de contato com o relatório.",
+      "Nós poderemos entrar em contato com você para saber mais sobre o uso do Central."
+    ],
+    "field": {
+      "workEmail": "Endereço de email de trabalho",
+      "organization": "Nome da organização"
+    },
+    "alert": {
+      "success": "Configurações gravadas com sucesso!"
+    }
+  },
   "sw": {
     "enabled": {
       "null": [
@@ -424,6 +478,38 @@ export default {
     },
     "alert": {
       "success": "Mipangilio imehifadhiwa!"
+    }
+  },
+  "zh-Hant": {
+    "enabled": {
+      "null": [
+        "稍後提醒我們。",
+        "管理員將繼續在畫面上方看到該訊息。"
+      ],
+      "true": [
+        {
+          "full": "{weWillShare} 與我們接受 {termsOfService} 與 {privacyPolicy}。",
+          "weWillShare": "我們願意每月與 Central 團隊分享匿名使用資料。",
+          "termsOfService": "服務條款",
+          "privacyPolicy": "隱私權政策"
+        },
+        "發送哪些指標？"
+      ],
+      "false": [
+        "我們無意分享任何資訊。",
+        "您將不會再看到有關此問題的提醒。"
+      ]
+    },
+    "contact": [
+      "我願意於報告中包含我的聯絡資訊。",
+      "我們可能會與您聯繫，以了解有關 Central 使用情況的更多資訊。"
+    ],
+    "field": {
+      "workEmail": "工作電子郵件地址",
+      "organization": "組織名稱"
+    },
+    "alert": {
+      "success": "設定已儲存！"
     }
   }
 }

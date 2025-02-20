@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Stato",
         "testing": "Testare"
       }
     }
@@ -58,11 +57,12 @@
       "user": "Azioni utente web",
       "project": "Azioni di progetto",
       "form": "Azioni del form",
-      "dataset": "Azioni del set di dati",
       "field_key": "Azioni utente applicazione",
       "public_link": "Azioni del link di accesso pubblico",
+      "dataset": "Azioni dell'elenco delle entità",
       "config": "Azioni di configurazione del server",
-      "upgrade": "Aggiornamento del server"
+      "upgrade": "Aggiornamento del server",
+      "task": "Funzionamento del sistema"
     },
     "action": {
       "default": {
@@ -72,6 +72,10 @@
         "delete": "Cancellare"
       },
       "analytics": "Rapporto di utilizzo",
+      "blobs": {
+        "s3_upload": "Caricare i file in memoria",
+        "s3_failed_to_pending": "Contrassegnare i file da caricare nuovamente in memoria"
+      },
       "config": {
         "set": "Configura"
       },
@@ -89,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Crea o aggiorna bozza",
+        "update_draft_replace": "Sostituire la bozza",
         "update_publish": "Pubblica bozza",
         "update_draft_delete": "Abbandona bozza",
         "attachment_update": "Aggiorna allegati",
@@ -106,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Eliminare gli invii"
+      },
       "upgrade": {
         "process_form": "Processare il formulario",
-        "process_form_draft": "Elabora la bozza del formulario"
+        "process_form_draft": "Elabora la bozza del formulario",
+        "process_form_entities_version": "Segnala formulario per l'Aggiornamento"
       },
       "user": {
         "assignment_create": "Assegna ruolo",
@@ -130,8 +139,10 @@
     "clear": "Cancella",
     "close": "Chiudere",
     "comment": "Aggiungere un commento",
+    "continue": "Continua",
     "create": "Crea",
     "createSubmission": "Nuovo",
+    "delete": "Cancellare",
     "done": "Fatto",
     "download": "Scaricare",
     "edit": "Modificare",
@@ -155,8 +166,12 @@
     "yesProceed": "Si, procedere",
     "showPreview": "Anteprima",
     "hidePreview": "Nascondi anteprima",
+    "newPreview": "Nuova anteprima",
     "expand": "Espandere",
-    "collapse": "Chiudere"
+    "collapse": "Chiudere",
+    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
+    "upload": "Carica",
+    "restore": "Ripristina"
   },
   "field": {
     "comment": "Lascia un commento...",
@@ -169,19 +184,21 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "Nuova password (conferma)",
-    "reviewState": "Stato Revisione",
     "type": "Tipo"
   },
   "header": {
     "actions": "Azioni",
     "created": "Creato",
     "createdBy": "Creato da",
+    "createdAt": "Creato il",
     "updatedBy": "Aggiornato da",
     "displayName": "Nome visualizzato",
     "email": "Indirizzo email",
     "instanceId": "ID della istanza",
     "lastSubmission": "Ultimo invio",
+    "recentActivity": "Attività recente",
     "name": "Nome",
+    "listName": "Nome dell'elenco",
     "submitterName": "Inviato da",
     "submissionDate": "Inviato alle",
     "time": "Tempo",
@@ -200,32 +217,43 @@
   "count": {
     "appUser": "{count} Utente dell'applicazione | {count} Utenti dell'applicazione | {count} Utenti dell'applicazione",
     "form": "{count} Formulario | {count} Formulari | {count} Formulari",
-    "submission": "{count} Invio | {count} Invii | {count} Invii"
+    "submission": "{count} Invio | {count} Invii | {count} Invii",
+    "warning": "{count} avvertimento | {count} avvertimenti | {count} avvertimenti"
   },
   "resource": {
     "appUser": "Utente dell'applicazione",
     "appUsers": "Utenti dell'applicazione",
     "config": "Configurazione del Server",
-    "dataset": "Set di dati",
-    "datasets": "Set di dati",
+    "entity": "Entità",
+    "entities": "Entità",
+    "entityList": "Lista Entità",
+    "entityLists": "Liste Entità",
     "form": "Formulario",
     "forms": "Formulari",
     "formAttachments": "Allegati del formulario",
     "project": "Progetto",
     "projects": "Progetti",
+    "property": "Proprietà",
+    "properties": "Proprietà",
     "publicLink": "Link con accesso pubblico",
     "user": "Utente",
     "users": "Utenti",
     "webUser": "Utente Web",
     "webUsers": "Utenti web",
     "session": "Sessioni",
+    "submission": "Invio",
     "submissions": "Invii",
-    "projectRoles": "Ruoli del progetto"
+    "projectRoles": "Ruoli del progetto",
+    "formPreview": "Anteprima formulario",
+    "draft": "Bozza"
   },
   "alert": {
     "passwordTooShort": "Si prega di inserire una password di almeno 10 caratteri.",
+    "updateEntity": "L'Entità è stata aggiornata!",
     "updateReviewState": "Stato revisione salvato!",
-    "versionChange": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili."
+    "versionChange": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili.",
+    "submissionDeleted": "L'invio è stato cancellato.",
+    "submissionRestored": "L'invio è stata ripristinata."
   },
   "moreInfo": {
     "clickHere": {
@@ -254,23 +282,39 @@
     "binaryLinkTitle": "Il file è stato inviato. Clicca per scaricare.",
     "encryptionMessage": "L'anteprima dei dati non è disponibile a causa della crittografia.",
     "noSubmission": "(nessuno)",
-    "emptyTable": "Non ci sono ancora invii."
+    "emptyTable": "Non ci sono ancora invii.",
+    "fileDownloadUnavailable": "Il download dei documenti non è disponibile per gli invii cancellati"
+  },
+  "entity": {
+    "label": "Label",
+    "entityLabel": "Etichetta dell'entità",
+    "entityId": "ID dell'Entità",
+    "noProperties": "Questo formulario imposta solo l'\"etichetta\".",
+    "noEntity": "(nessuno)",
+    "conflictsCount": "{count} conflitto | {count} conflitti | {count} conflitti"
   },
   "common": {
     "activity": "Attività",
     "anybody": "(Chiunque)",
     "areYouSure": "Sei sicuro di voler procedere?",
     "basicInfo": "Informazioni di base",
+    "conflict": "Conflitto",
+    "conflicts": "Conflitti",
     "currentDraft": "La tua bozza attuale",
     "dangerZone": "Zona pericolo",
+    "data": "Dati",
     "docs": "Documentazione",
+    "emptyValue": "(vuoto)",
     "error": "Errore",
     "filter": "Filtro",
     "forum": "Forum",
+    "lastUpdate": "Ultima aggiornamento",
     "loading": "Caricando...",
     "no": "No",
     "noResults": "Nessun risultato",
+    "noUndo": "Quest'azione non può essere annullata",
     "rightNow": "Adesso",
+    "rowNumber": "Riga",
     "success": "Successo!",
     "system": "Sistema",
     "yes": "Si",
@@ -280,28 +324,43 @@
     },
     "total": "Totale",
     "totalSubmissions": "Invii totali",
-    "punctuations": {
-      "comma": ","
-    },
-    "datasetsPreview": "Anteprima dei set di dati"
+    "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà",
+    "new": "Novità!",
+    "totalEntities": "Entità totali",
+    "versionShort": "v{version}",
+    "warning": "Avvertimento",
+    "reviewState": "Stato Revisione",
+    "status": "Stato",
+    "version": "Versione"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Il file “{name}” che stai tentando di caricare è più grande del limite di 100 MB."
+        "fileSize": "Il file “{name}” che stai tentando di caricare è più grande del limite di 100 MB.",
+        "entityTooLarge": "I dati che stai tentando di caricare sono troppo grandi."
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archiviato)"
-    }
-  },
   "util": {
+    "csv": {
+      "readError": "Si è verificato un problema durante la lettura del file:{message}",
+      "invalidCSV": "Il file “{name}” non è un file .csv valido. Non può essere letto.",
+      "rowError": "C'è un problema sulla riga {row} del file:{message}",
+      "invalidQuotes": "Un campo tra virgolette non è valido. Controlla la riga per vedere se sono presenti valori insoliti.",
+      "emptyRow": "La riga è vuota.",
+      "dataWithoutHeader": "Attesa {expected} colonna, ma trovate {actual}. | Attese {expected} colonne, ma trovate {actual}. | Attese {expected} colonne, ma trovate {actual}."
+    },
     "request": {
       "noRequest": "Qualcosa è andato storto: non c'era nessuna request.",
       "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",
-      "errorNotProblem": "Qualcosa è andato storto: codice error {status}."
+      "errorNotProblem": "Qualcosa è andato storto: codice error {status}.",
+      "problem": {
+        "404_1": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata.",
+        "409_17": {
+          "message": "Questo formulario tenta di creare nuove proprietà dell'entità che corrisponde a una esistente, tranne che per la capitalizzazione: | Questo formulario tenta di creare nuove proprietà dell'entità che corrispondano a quelle esistenti, tranne che per la capitalizzazione: | Questo formulario tenta di creare nuove proprietà dell'entità che corrispondano a quelle esistenti, tranne che per la capitalizzazione:",
+          "duplicateProperty": "{provided} (esistente: {current})"
+        }
+      }
     },
     "session": {
       "alert": {
@@ -313,5 +372,10 @@
   },
   "router": {
     "unsavedChanges": "Sei sicuro di voler lasciare questa pagina? Le tue modifiche potrebbero non essere salvate."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archiviato)"
+    }
   }
 }

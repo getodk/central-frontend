@@ -55,7 +55,7 @@ const forms = dataStore({
         })
         .last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
-    name = faker.random.boolean() ? faker.name.findName() : null,
+    name = null,
     enketoId = 'xyz',
     draft = !inPast,
     publishedAt = undefined,
@@ -66,6 +66,7 @@ const forms = dataStore({
       : extendedUsers.createPast(1).last(),
     fields = [testDataFields.string('/s')],
     entityRelated = false,
+    publicLinks = 0,
 
     ...extraVersionOptions
   }) => {
@@ -78,6 +79,7 @@ const forms = dataStore({
       enketoOnceId,
       state,
       entityRelated,
+      publicLinks,
       // If publishedAt was specified, set createdAt to publishedAt in order to
       // ensure that createdAt is not after publishedAt.
       createdAt: !draft && publishedAt != null
@@ -233,7 +235,10 @@ export const extendedForms = view(
   (form) => {
     const version = findVersionForForm(form);
     return {
-      ...pick([...basicFormProps, 'enketoId', 'createdBy', 'entityRelated'], form),
+      ...pick(
+        [...basicFormProps, 'enketoId', 'createdBy', 'entityRelated', 'publicLinks'],
+        form
+      ),
       ...pick([...basicVersionProps, 'excelContentType'], version),
       ...pick(
         ['submissions', 'lastSubmission', 'reviewStates'],
@@ -266,7 +271,10 @@ export const standardFormDrafts = view(
 export const extendedFormDrafts = view(
   formVersions,
   (version) => ({
-    ...pick([...basicFormProps, 'createdBy', 'entityRelated'], findFormForVersion(version)),
+    ...pick(
+      [...basicFormProps, 'createdBy', 'entityRelated', 'publicLinks'],
+      findFormForVersion(version)
+    ),
     ...pick(
       [...basicVersionProps, 'enketoId', 'excelContentType', 'submissions', 'reviewStates'],
       version

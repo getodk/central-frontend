@@ -11,6 +11,24 @@ import createTestContainer from './container';
 ////////////////////////////////////////////////////////////////////////////////
 // MOUNT
 
+/* For many components, it is no longer possible to access global properties
+from the vm property of the Vue Test Utils wrapper: see
+https://github.com/vuejs/test-utils/issues/2140. In practice, the only global
+properties that we try to access in testing are $router and $route. We can
+provide access to them by copying $router to each component, then computing
+$route based on $router. */
+const shadowRouterProps = {
+  created() {
+    // eslint-disable-next-line no-self-assign
+    if (this.$router != null) this.$router = this.$router;
+  },
+  computed: {
+    $route() {
+      return this.$router != null ? this.$router.currentRoute.value : undefined;
+    }
+  }
+};
+
 /*
 TODO/vue3. Update these comments.
 
@@ -28,6 +46,8 @@ export const mount = (component, options = {}) => {
   g.plugins = g.plugins != null ? [container, ...g.plugins] : [container];
   g.directives = { tooltip: vTooltip, ...g.directives };
   g.mocks = { $container: container, ...g.mocks };
+  if (g.mixins != null) throw new Error('unexpected mixin');
+  g.mixins = [shadowRouterProps];
   return vtuMount(component, { ...mountOptions, global: g });
 };
 

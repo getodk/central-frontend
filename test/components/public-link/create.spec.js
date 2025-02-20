@@ -35,11 +35,11 @@ describe('PublicLinkCreate', () => {
   it('resets the form after the modal is hidden', async () => {
     const modal = mount(PublicLinkCreate, mountOptions());
     await modal.get('input').setValue('My Public Link');
-    await modal.get('input[type="checkbox"]').setChecked();
+    await modal.get('input[type="checkbox"]').setValue(true);
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
     modal.get('input').element.value.should.equal('');
-    modal.get('input[type="checkbox"]').element.checked.should.be.false();
+    modal.get('input[type="checkbox"]').element.checked.should.be.false;
   });
 
   describe('request', () => {
@@ -62,11 +62,11 @@ describe('PublicLinkCreate', () => {
         .mount(PublicLinkCreate, mountOptions())
         .request(async (modal) => {
           await modal.get('input').setValue('My Public Link');
-          await modal.get('input[type="checkbox"]').setChecked();
+          await modal.get('input[type="checkbox"]').setValue(true);
           return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { data }) => {
-          data.once.should.be.true();
+          data.once.should.be.true;
         })
         .respondWithProblem());
   });
@@ -87,7 +87,7 @@ describe('PublicLinkCreate', () => {
   describe('after a successful response', () => {
     const submit = () => {
       testData.standardPublicLinks.createPast(1);
-      return load('/projects/1/forms/f/public-links', { root: false })
+      return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
           await app.get('.heading-with-button .btn-primary').trigger('click');
@@ -103,7 +103,7 @@ describe('PublicLinkCreate', () => {
 
     it('hides the modal', async () => {
       const app = await submit();
-      app.getComponent(PublicLinkCreate).props().state.should.be.false();
+      app.getComponent(PublicLinkCreate).props().state.should.be.false;
     });
 
     it('shows a success alert', async () => {
@@ -118,7 +118,12 @@ describe('PublicLinkCreate', () => {
 
     it('highlights the new public link', async () => {
       const app = await submit();
-      app.get('.public-link-row').classes('success').should.be.true();
+      app.get('.public-link-row').classes('success').should.be.true;
+    });
+
+    it('updates the count in the tab', async () => {
+      const app = await submit();
+      app.get('#form-head .nav-tabs li.active .badge').text().should.equal('2');
     });
   });
 });

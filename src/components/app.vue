@@ -10,63 +10,100 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div :class="features">
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
-    <navbar v-show="routerReady"/>
+    <navbar v-if="!$route.meta.standalone" v-show="routerReady"/>
+    <outdated-version/>
     <alert id="app-alert"/>
+    <feedback-button v-if="showsFeedbackButton"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
+    <!-- v-document-color: Using this directive to add background color to the html tag;
+    this is done to avoid magenta splash on standalone routes such as FormPreview   -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !$route.meta.standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
+    <template v-else-if="$route.meta.standalone">
+      <router-view/>
+    </template>
+
     <div id="tooltips"></div>
+    <hover-cards/>
   </div>
 </template>
 
 <script>
-import { START_LOCATION } from 'vue-router';
+import { defineAsyncComponent } from 'vue';
+
+import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
 import Alert from './alert.vue';
 import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
+import useFeatureFlags from '../composables/feature-flags';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
+import { loadAsync } from '../util/load-async';
 
 export default {
   name: 'App',
-  components: { Alert, Navbar },
-  inject: ['alert'],
+  components: {
+    Alert,
+    HoverCards: defineAsyncComponent(loadAsync('HoverCards')),
+    Navbar,
+    FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
+    OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))
+  },
+  inject: ['alert', 'config'],
   setup() {
-    useSessions();
+    const { visiblyLoggedIn } = useSessions();
     useDisabled();
+
+    const router = useRouter();
+    const route = useRoute();
+    router.isReady()
+      .then(() => {
+        if (!route.meta.standalone)
+          document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
+      });
+
+    const { features } = useFeatureFlags();
 
     const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();
-    return { centralVersion, callWait };
+    return { visiblyLoggedIn, centralVersion, callWait, features };
   },
   computed: {
     routerReady() {
       return this.$route !== START_LOCATION;
-    }
+    },
+    showsFeedbackButton() {
+      return this.config.loaded && this.config.showsFeedbackButton &&
+        this.visiblyLoggedIn;
+    },
   },
   created() {
     this.callWait('checkVersion', this.checkVersion, (tries) =>
       (tries === 0 ? 15000 : 60000));
   },
+  // Reset backgroundColor after each test.
+  beforeUnmount() {
+    document.documentElement.style.backgroundColor = '';
+  },
   methods: {
     checkVersion() {
-      const previousVersion = this.centralVersion.data;
+      const previousVersion = this.centralVersion.versionText;
       return this.centralVersion.request({
         url: '/version.txt',
         clear: false,
         alert: false
       })
         .then(() => {
-          if (previousVersion == null || this.centralVersion.data === previousVersion)
+          if (previousVersion == null || this.centralVersion.versionText === previousVersion)
             return false;
 
           // Alert the user about the version change, then keep alerting them.

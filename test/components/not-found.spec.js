@@ -8,11 +8,16 @@ describe('NotFound', () => {
 
   it('renders NotFound for an unknown route', async () => {
     const app = await load('/not-found');
-    app.findComponent(NotFound).exists().should.be.true();
+    app.findComponent(NotFound).exists().should.be.true;
   });
 
   it('renders NotFound if the route path has multiple components', async () => {
     const app = await load('/not/found');
-    app.findComponent(NotFound).exists().should.be.true();
+    app.findComponent(NotFound).exists().should.be.true;
+  });
+
+  it('renders NotFound for /404', async () => {
+    const app = await load('/404');
+    app.findComponent(NotFound).exists().should.be.true;
   });
 });

@@ -26,7 +26,7 @@ describe('SubmissionComment', () => {
 
     it('does not show the alert if the feed is loading', () => {
       const component = mount(SubmissionComment, mountOptions({ feed: null }));
-      component.find('[role="alert"]').exists().should.be.false();
+      component.find('[role="alert"]').exists().should.be.false;
     });
 
     it('does not show the alert if the user did not make an edit', () => {
@@ -40,7 +40,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       }));
-      component.find('[role="alert"]').exists().should.be.false();
+      component.find('[role="alert"]').exists().should.be.false;
     });
 
     it('does not show the alert if the user commented after their edit', () => {
@@ -53,7 +53,7 @@ describe('SubmissionComment', () => {
           testData.extendedComments.createNew()
         ].reverse()
       }));
-      component.find('[role="alert"]').exists().should.be.false();
+      component.find('[role="alert"]').exists().should.be.false;
     });
 
     it('shows the alert if the user did not comment', () => {
@@ -65,7 +65,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       }));
-      component.find('[role="alert"]').exists().should.be.true();
+      component.find('[role="alert"]').exists().should.be.true;
     });
 
     it('shows the alert if the user commented before their edit', () => {
@@ -78,7 +78,7 @@ describe('SubmissionComment', () => {
           })
         ].reverse()
       }));
-      component.find('[role="alert"]').exists().should.be.true();
+      component.find('[role="alert"]').exists().should.be.true;
     });
 
     it('shows the alert if another user commented', () => {
@@ -92,7 +92,7 @@ describe('SubmissionComment', () => {
           testData.extendedComments.createNew({ actor: user })
         ].reverse()
       }));
-      component.find('[role="alert"]').exists().should.be.true();
+      component.find('[role="alert"]').exists().should.be.true;
     });
   });
 
@@ -106,7 +106,7 @@ describe('SubmissionComment', () => {
         })
       ].reverse()
     }));
-    component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+    component.getComponent(MarkdownTextarea).props().showFooter.should.be.true;
   });
 
   it('shows the actions during the request', () => {
@@ -119,7 +119,7 @@ describe('SubmissionComment', () => {
       })
       .beforeAnyResponse(async (component) => {
         await component.setData({ body: '' }); // Linked to child's 'value' prop and textarea
-        component.getComponent(MarkdownTextarea).props().showFooter.should.be.true();
+        component.getComponent(MarkdownTextarea).props().showFooter.should.be.true;
       })
       .respondWithProblem();
   });

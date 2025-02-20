@@ -18,58 +18,72 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <div class="row">
-          <div class="col-md-6 creation-forms">
-            <connection-to-forms :properties="dataset.properties" :project-id="projectId"/>
+          <div class="col-md-6">
+            <connection-to-forms/>
           </div>
-          <div class="col-md-6 linked-forms">
-            <linked-forms :linked-forms="dataset.linkedForms" :project-id="projectId"/>
+          <div class="col-md-6">
+            <linked-forms/>
           </div>
         </div>
       </template>
     </page-section>
-    <page-section id="dataset-overview-properties">
+    <page-section>
       <template #heading>
-        <span>{{ $t('datasetProperties') }}</span>
+        <span>{{ $t('entityProperties') }}</span>
+        <button v-if="project.dataExists && project.permits('dataset.update')"
+          id="dataset-property-new-button" type="button" class="btn btn-primary"
+          @click="newDatasetPropertyModal.show()">
+          <span class="icon-plus-circle"></span>{{ $t('new') }}
+        </button>
       </template>
       <template #body>
-        <dataset-properties :properties="dataset.properties" :project-id="projectId"/>
+        <dataset-properties/>
       </template>
     </page-section>
+    <dataset-property-new v-bind="newDatasetPropertyModal"
+      @hide="newDatasetPropertyModal.hide()"
+      @success="afterCreateProperty"/>
   </div>
 </template>
 
-<script>
+<script setup>
 import PageSection from '../page/section.vue';
 import ConnectionToForms from './overview/connection-to-forms.vue';
 import LinkedForms from './overview/linked-forms.vue';
+import DatasetPropertyNew from './property/new.vue';
 import DatasetProperties from './overview/dataset-properties.vue';
 
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'DatasetOverview',
-  components: {
-    PageSection,
-    ConnectionToForms,
-    LinkedForms,
-    DatasetProperties
+defineOptions({
+  // This component is named DatasetOverview for historical reasons. Today, the
+  // component is the properties page, but it used to be the entity list
+  // overview page.
+  name: 'DatasetOverview'
+});
+defineProps({
+  projectId: {
+    type: String,
+    required: true
   },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    datasetName: {
-      type: String,
-      required: true
-    }
-  },
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { dataset } = useRequestData();
-    return { dataset };
+  datasetName: {
+    type: String,
+    required: true
   }
+});
+
+const emit = defineEmits(['fetch-dataset']);
+
+// The component does not assume that this data will exist when the component is
+// created.
+const { project, dataset } = useRequestData();
+
+const newDatasetPropertyModal = modalData();
+
+const afterCreateProperty = () => {
+  newDatasetPropertyModal.hide();
+  emit('fetch-dataset', true);
 };
 </script>
 
@@ -85,7 +99,9 @@ export default {
     // This is a title shown above a section of the page.
     "connectionsToForms": "Connections to Forms",
     // This is a title shown above a section of the page.
-    "datasetProperties" : "Dataset Properties"
+    "entityProperties" : "Entity Properties",
+    // This is shown on a button for creating new Entity Properties
+    "new": "New",
   }
 }
 </i18n>
@@ -95,15 +111,41 @@ export default {
 {
   "cs": {
     "connectionsToForms": "Připojení k formulářům",
-    "datasetProperties": "Vlastnosti datové sady"
+    "entityProperties": "Vlastnosti entity"
+  },
+  "de": {
+    "connectionsToForms": "Verbindungen zu Formularen",
+    "entityProperties": "Entitätseigenschaften",
+    "new": "Neu"
+  },
+  "es": {
+    "connectionsToForms": "Conexiones a formularios",
+    "entityProperties": "Propiedades de la entidad",
+    "new": "Nueva"
   },
   "fr": {
     "connectionsToForms": "Connexions aux formulaires",
-    "datasetProperties": "Propriétés du Dataset"
+    "entityProperties": "Propriétés",
+    "new": "Nouvelle"
   },
   "it": {
     "connectionsToForms": "Connessioni ai formulari",
-    "datasetProperties": "Proprietà dei set di dati"
+    "entityProperties": "Proprietà della Entità",
+    "new": "Nuova"
+  },
+  "pt": {
+    "connectionsToForms": "Conexões com Formulários",
+    "entityProperties": "Propriedades da Entidade",
+    "new": "Nova"
+  },
+  "sw": {
+    "connectionsToForms": "Viunganisho kwa Fomu",
+    "entityProperties": "Sifa za Mashirika"
+  },
+  "zh-Hant": {
+    "connectionsToForms": "與表單的連接",
+    "entityProperties": "實體屬性",
+    "new": "新增"
   }
 }
 </i18n>

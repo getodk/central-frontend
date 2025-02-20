@@ -57,14 +57,27 @@ describe('UserEditPassword', () => {
       });
   });
 
-  it("does not render form if it is not current user's own account", async () => {
+  it('renders correctly if OIDC is enabled', () => {
+    const component = mount(UserEditPassword, {
+      container: {
+        config: { oidcEnabled: true }
+      }
+    });
+    component.find('form').exists().should.be.false;
+    const text = component.get('p').text();
+    text.should.equal('This Central server does not manage any login passwords.');
+  });
+
+  it("renders correctly if it is not the current user's own account", () => {
     const user = testData.standardUsers.createPast(1).last();
     const component = mount(UserEditPassword, mountOptions({
       container: {
         requestData: { user }
       }
     }));
-    component.find('form').exists().should.be.false();
+    component.find('form').exists().should.be.false;
+    const text = component.get('p').text();
+    text.should.equal('Only the owner of the account may directly set their own password.');
   });
 
   describe('new passwords do not match', () => {
@@ -79,8 +92,8 @@ describe('UserEditPassword', () => {
       await submit(component, { mismatch: true });
       const formGroups = component.findAllComponents(FormGroup);
       formGroups.length.should.equal(3);
-      formGroups[1].props().hasError.should.be.true();
-      formGroups[2].props().hasError.should.be.true();
+      formGroups[1].props().hasError.should.be.true;
+      formGroups[2].props().hasError.should.be.true;
     });
 
     it('marks the inputs as valid after the passwords match', () =>
@@ -94,8 +107,8 @@ describe('UserEditPassword', () => {
         .beforeAnyResponse(component => {
           const formGroups = component.findAllComponents(FormGroup);
           formGroups.length.should.equal(3);
-          formGroups[1].props().hasError.should.be.false();
-          formGroups[2].props().hasError.should.be.false();
+          formGroups[1].props().hasError.should.be.false;
+          formGroups[2].props().hasError.should.be.false;
         })
         .respondWithSuccess());
   });
@@ -112,7 +125,7 @@ describe('UserEditPassword', () => {
       await submit(component, { tooShort: true });
       const formGroups = component.findAllComponents(FormGroup);
       formGroups.length.should.equal(3);
-      formGroups[1].props().hasError.should.be.true();
+      formGroups[1].props().hasError.should.be.true;
     });
 
     it('marks the input as valid after the password is long enough', () =>
@@ -127,7 +140,7 @@ describe('UserEditPassword', () => {
         .beforeAnyResponse(component => {
           const formGroups = component.findAllComponents(FormGroup);
           formGroups.length.should.equal(3);
-          formGroups[1].props().hasError.should.be.false();
+          formGroups[1].props().hasError.should.be.false;
         })
         .respondWithSuccess());
   });

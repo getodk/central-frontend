@@ -1,0 +1,381 @@
+{
+  "title": {
+    "resetPassword": "重設密碼",
+    "setPassword": "設定密碼",
+    "editProfile": "編輯個人資料",
+    "download": "下載",
+    "pageNotFound": "頁面不存在",
+    "details": "細節"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "表單存取"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "versions": "版本",
+      "publicAccess": "公共存取"
+    },
+    "draftNav": {
+      "tab": {
+        "testing": "進行測試"
+      }
+    }
+  },
+  "systemHome": {
+    "title": "系統管理",
+    "tab": {
+      "audits": "伺服器數據軌跡",
+      "analytics": "使用情況報告"
+    }
+  },
+  "role": {
+    "none": "無",
+    "admin": "管理者",
+    "manager": "專案管理員",
+    "viewer": "專案檢視人員",
+    "formfill": "資料收集人員"
+  },
+  "formState": {
+    "open": "開放",
+    "closing": "結案中",
+    "closed": "關閉",
+    "unpublished": "尚未發布"
+  },
+  "reviewState": {
+    "received": "已收到",
+    "hasIssues": "有疑問",
+    "edited": "已編輯",
+    "approved": "核可",
+    "rejected": "否決",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "所有活動",
+      "user": "網頁使用者活動",
+      "project": "專案活動",
+      "form": "表單活動",
+      "field_key": "手機軟體使用者活動",
+      "public_link": "公共連結活動",
+      "dataset": "實體清單活動",
+      "config": "伺服器設定活動",
+      "upgrade": "伺服器更新",
+      "task": "作業系統"
+    },
+    "action": {
+      "default": {
+        "create": "建立",
+        "update": "更新細節",
+        "session_end": "撤銷",
+        "delete": "刪除"
+      },
+      "analytics": "報告使用情況",
+      "blobs": {
+        "s3_upload": "上傳檔案至儲存空間",
+        "s3_failed_to_pending": "標記檔案以重傳到存儲空間"
+      },
+      "config": {
+        "set": "設定"
+      },
+      "dataset": {
+        "update": "更新",
+        "update_publish": "發布",
+        "create": "@:audit.action.default.create"
+      },
+      "field_key": {
+        "assignment_create": "授予存取",
+        "assignment_delete": "移除存取",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "建立或更新草稿",
+        "update_draft_replace": "替換草稿",
+        "update_publish": "發布草稿",
+        "update_draft_delete": "放棄草稿",
+        "attachment_update": "更新附件",
+        "submission_export": "下載提交內容",
+        "restore": "復原刪除",
+        "purge": "清除",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "給予存取",
+        "assignment_delete": "移除存取",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "submission": {
+        "purge": "清除提交內容"
+      },
+      "upgrade": {
+        "process_form": "處理表單",
+        "process_form_draft": "處理草稿",
+        "process_form_entities_version": "升級標記表格"
+      },
+      "user": {
+        "assignment_create": "指派角色",
+        "assignment_delete": "撤銷角色",
+        "delete": "退出",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "取消",
+    "clear": "清除",
+    "close": "關閉",
+    "comment": "評論",
+    "continue": "繼續",
+    "create": "建立",
+    "createSubmission": "新增",
+    "delete": "刪除",
+    "done": "完成",
+    "download": "下載",
+    "edit": "編輯",
+    "editProfile": "編輯個人檔案",
+    "finish": "結束",
+    "logIn": "登入",
+    "looksGood": "看起來不錯，繼續",
+    "more": "更多",
+    "neverMind": "沒關係，取消",
+    "next": "下一步",
+    "noCancel": "不，取消",
+    "ok": "好",
+    "proceed": "繼續",
+    "refresh": "重整",
+    "resetPassword": "重設密碼",
+    "review": "審核",
+    "save": "儲存",
+    "saveSettings": "保存設定",
+    "sort": "排序",
+    "update": "更新",
+    "yesProceed": "是的，請繼續",
+    "showPreview": "預覽",
+    "hidePreview": "隱藏預覽",
+    "newPreview": "新預覽",
+    "expand": "開啟",
+    "collapse": "閉合",
+    "reviewParallelUpdates": "查看並行更新",
+    "upload": "上傳",
+    "restore": "復原刪除"
+  },
+  "field": {
+    "comment": "發表評論...",
+    "dateRange": "資料範圍",
+    "displayName": "顯示名稱",
+    "email": "Email地址",
+    "name": "名稱",
+    "newPassword": "新密碼",
+    "oldPassword": "舊密碼",
+    "passphrase": "密碼片語",
+    "password": "密碼",
+    "passwordConfirm": "新密碼(確認)",
+    "type": "類型"
+  },
+  "header": {
+    "actions": "行動",
+    "created": "建立",
+    "createdBy": "建立人員",
+    "createdAt": "建立日期",
+    "updatedBy": "更新人員",
+    "displayName": "顯示名稱",
+    "email": "Email地址",
+    "instanceId": "實例ID",
+    "lastSubmission": "最新提交",
+    "recentActivity": "近期活動",
+    "name": "名稱",
+    "listName": "列表名稱",
+    "submitterName": "提交人員",
+    "submissionDate": "提交日期",
+    "time": "時間",
+    "type": "類型",
+    "entities": "實體總數",
+    "lastEntity": "最新實體"
+  },
+  "plural": {
+    "appUser": "APP 使用者",
+    "form": "表單",
+    "project": "專案",
+    "submission": "提交清單",
+    "user": "使用者",
+    "webUser": "網頁使用者"
+  },
+  "count": {
+    "appUser": "{count} App 使用者",
+    "form": "{count} 表單",
+    "submission": "{count} 提交",
+    "warning": "{count} 警告"
+  },
+  "resource": {
+    "appUser": "App 使用者",
+    "appUsers": "App 使用者",
+    "config": "伺服器設置",
+    "entity": "實體資料",
+    "entities": "實體",
+    "entityList": "實體清單",
+    "entityLists": "實體清單",
+    "form": "表單",
+    "forms": "表單",
+    "formAttachments": "表單附件",
+    "project": "專案",
+    "projects": "專案",
+    "property": "属性",
+    "properties": "資料屬性",
+    "publicLink": "公共存取連結",
+    "user": "使用者",
+    "users": "使用者",
+    "webUser": "網頁使用者",
+    "webUsers": "網頁使用者",
+    "session": "區域",
+    "submission": "提交資料",
+    "submissions": "提交",
+    "projectRoles": "專案角色",
+    "formPreview": "預覽表單",
+    "draft": "草稿"
+  },
+  "alert": {
+    "passwordTooShort": "請輸入長度至少為 10 個字元的密碼。",
+    "updateEntity": "實體已更新！",
+    "updateReviewState": "審核狀態已儲存！",
+    "versionChange": "服器已更新。請更新頁面以避免出現不可預測的問題。",
+    "submissionDeleted": "提交內容已刪除。",
+    "submissionRestored": "提交的內容已取消刪除。"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "可以{clickHere}了解更多訊息。",
+      "clickHere": "點選這裡"
+    },
+    "helpArticle": {
+      "full": "更多資訊請參閱 {helpArticle}.",
+      "helpArticle": "此說明文件"
+    },
+    "learnMore": "了解更多。"
+  },
+  "analytics": {
+    "alwaysImprove": "我們一直努力改進 ODK Central.",
+    "needFeedback": {
+      "full": "為此，我們需要 {your} 的回饋，以便我們了解您如何使用 ODK Central，以及它如何對您更好。",
+      "your": "您"
+    }
+  },
+  "submission": {
+    "missingAttachment": "遺失附件",
+    "action": {
+      "edit": "編輯({count})"
+    },
+    "editDisabled": "您無法編輯加密的提交內容。",
+    "binaryLinkTitle": "文件已提交。點擊下載。",
+    "encryptionMessage": "由於資料加密，無法預覽。",
+    "noSubmission": "(無)",
+    "emptyTable": "還沒有提交內容。",
+    "fileDownloadUnavailable": "文件下載不適用於已刪除的提交內容。"
+  },
+  "entity": {
+    "label": "標籤",
+    "entityLabel": "實體標籤",
+    "entityId": "實體ID",
+    "noProperties": "此表格僅設定「標籤」。",
+    "noEntity": "(無)",
+    "conflictsCount": "{count} 衝突"
+  },
+  "common": {
+    "activity": "活動",
+    "anybody": "(任何人)",
+    "areYouSure": "您確定要繼續嗎？",
+    "basicInfo": "基本資訊",
+    "conflict": "衝突",
+    "conflicts": "衝突",
+    "currentDraft": "您目前的草稿",
+    "dangerZone": "危險區域",
+    "data": "資料",
+    "docs": "文件",
+    "emptyValue": "(空)",
+    "error": "錯誤",
+    "filter": "過濾",
+    "forum": "論壇",
+    "lastUpdate": "最後更新日期",
+    "loading": "載入...",
+    "no": "無",
+    "noResults": "沒有結果",
+    "noUndo": "此操作無法撤銷。",
+    "rightNow": "現在",
+    "rowNumber": "排",
+    "success": "成功！",
+    "system": "系統",
+    "yes": "是",
+    "tab": {
+      "settings": "設定",
+      "overview": "概述"
+    },
+    "total": "總計",
+    "totalSubmissions": "提交總數",
+    "propertiesCount": "{inform} / {count} 特性",
+    "new": "新！",
+    "totalEntities": "實體總數",
+    "versionShort": "v{version}",
+    "warning": "警告",
+    "reviewState": "審核狀態",
+    "status": "狀態",
+    "version": "版本"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "您嘗試上傳的檔案「 “{name}” 大於 100 MB 限制。",
+        "entityTooLarge": "您嘗試上傳的資料太大。"
+      }
+    }
+  },
+  "util": {
+    "csv": {
+      "readError": "讀取您的文件時出現問題：{message}",
+      "invalidCSV": "“{name}” 此檔案非有效的 .csv 檔案，它無法被讀取。",
+      "rowError": "在檔案的第 {row}行有錯誤發生: {message}",
+      "invalidQuotes": "帶引號的欄位無效。檢查該行是否有任何異常值。",
+      "emptyRow": "The row is empty.",
+      "dataWithoutHeader": "預期有{expected} 列，但實際找到 {actual}列。"
+    },
+    "request": {
+      "noRequest": "出了點問題：沒有請求。",
+      "noResponse": "出了點問題：您的請求沒有得到回應。",
+      "errorNotProblem": "出了點問題：錯誤代碼 {status}.",
+      "problem": {
+        "404_1": "找不到您要找的資源。該資源可能已被刪除。",
+        "409_17": {
+          "message": "此表單嘗試建立與現有屬性相符的新實體屬性（大小寫除外）：",
+          "duplicateProperty": "{provided} (已存在: {current})"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "您的登入狀態將於 2 分鐘後過期，並且您將自動登出。",
+        "expired": "您的登入狀態已過期。若要繼續作業，請重新登入。",
+        "logoutError": "出現問題，您尚未完全登出。請重新載入頁面並嘗試再次登出。 {message}"
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "您確定要離開此頁面嗎？您的變更可能不會儲存。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (已歸檔)"
+    }
+  }
+}

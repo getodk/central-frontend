@@ -1,3 +1,17 @@
+const _mockError = (message, config) => {
+  const error = new Error(message);
+  error.config = config;
+  error.request = {};
+  return error;
+};
+
+// Mocks an error response thrown by axios.
+export const mockAxiosError = (response) => {
+  const error = _mockError('axios response error', response.config);
+  error.response = response;
+  return error;
+};
+
 const logUnhandledRequest = (config) => {
   // eslint-disable-next-line no-console
   console.error(config);
@@ -10,15 +24,9 @@ export const mockAxios = () => {
   let respond = logUnhandledRequest;
   const http = async (config) => {
     const response = await respond(config);
-
     const { signal } = config;
-    if (signal != null && signal.aborted) {
-      const error = new Error('axios abort error');
-      error.config = config;
-      error.request = {};
-      throw error;
-    }
-
+    if (signal != null && signal.aborted)
+      throw _mockError('axios abort error', config);
     return response;
   };
   http.respond = (f) => { respond = f != null ? f : logUnhandledRequest; };
@@ -56,12 +64,4 @@ export const mockResponse = {
       return responseOrData;
     return { status: 200, data: responseOrData };
   }
-};
-
-export const mockAxiosError = (response) => {
-  const error = new Error('axios response error');
-  error.config = response.config;
-  error.request = {};
-  error.response = response;
-  return error;
 };

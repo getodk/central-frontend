@@ -14,40 +14,32 @@ const createResource = () => {
 };
 
 describe('useSubmission()', () => {
-  describe('instanceNameOrId', () => {
+  describe('instanceName', () => {
     it('returns the instance name if it is string', () => {
-      testData.extendedForms.createPast(1, {
-        fields: [
-          testData.fields.string('/meta/instanceName'),
-          testData.fields.string('/s')
-        ],
-        submissions: 1
-      });
       testData.extendedSubmissions.createPast(1, {
-        instanceId: 's',
         meta: { instanceName: 'My Submission' }
       });
-      createResource().instanceNameOrId.should.equal('My Submission');
+      createResource().instanceName.should.equal('My Submission');
     });
 
-    it('returns the instance ID if there is no instance name', () => {
-      testData.extendedSubmissions.createPast(1, { instanceId: 's' });
-      createResource().instanceNameOrId.should.equal('s');
+    it('returns null if there is no instance name', () => {
+      testData.extendedSubmissions.createPast(1);
+      expect(createResource().instanceName).to.be.null;
     });
 
-    it('returns the instance ID if /meta/instanceName is not a string', () => {
+    it('returns null if /meta/instanceName is not a string', () => {
       testData.extendedForms.createPast(1, {
         fields: [
+          testData.fields.group('/meta'),
           testData.fields.int('/meta/instanceName'),
           testData.fields.string('/s')
         ],
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, {
-        instanceId: 's',
         meta: { instanceName: 1 }
       });
-      createResource().instanceNameOrId.should.equal('s');
+      expect(createResource().instanceName).to.be.null;
     });
   });
 });

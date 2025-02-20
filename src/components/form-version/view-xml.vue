@@ -121,8 +121,14 @@ export default {
   "ja": {
     "title": "XMLの閲覧"
   },
+  "pt": {
+    "title": "Exibir XML"
+  },
   "sw": {
     "title": "Tazama XML"
+  },
+  "zh-Hant": {
+    "title": "檢視XML"
   }
 }
 </i18n>

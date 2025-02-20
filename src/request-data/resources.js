@@ -9,26 +9,47 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { reactive, shallowReactive, watchSyncEffect } from 'vue';
+import { computed, reactive, shallowReactive, watchSyncEffect } from 'vue';
+import { mergeDeepLeft } from 'ramda';
 
+import UserPreferences from './user-preferences/preferences';
+import configDefaults from '../config';
 import { computeIfExists, hasVerbs, setupOption, transformForm } from './util';
 import { noargs } from '../util/util';
 
-export default ({ i18n }, createResource) => {
+export default (container, createResource) => {
+  const { i18n } = container;
+
   // Resources related to the session
   createResource('session');
   createResource('currentUser', () => ({
-    /* eslint-disable no-param-reassign */
     transformResponse: ({ data }) => {
+      /* eslint-disable no-param-reassign */
       data.verbs = new Set(data.verbs);
       data.can = hasVerbs;
+      data.preferences = new UserPreferences(data.preferences, container);
+      /* eslint-enable no-param-reassign */
       return shallowReactive(data);
     }
-    /* eslint-enable no-param-reassign */
   }));
 
   // Resources related to the system
-  createResource('centralVersion');
+  createResource('config', (config) => ({
+    // If client-config.json is completely invalid JSON, `data` seems to be a
+    // string (e.g., '{]').
+    transformResponse: ({ data }) => (typeof data === 'object' && data != null
+      ? mergeDeepLeft(data, configDefaults)
+      : configDefaults),
+    loaded: computed(() => config.dataExists && config.loadError == null)
+  }));
+  createResource('centralVersion', () => ({
+    transformResponse: ({ data, headers }) =>
+      shallowReactive({
+        versionText: data,
+        currentVersion: data.match(/\(v(\d{4}[^-]*)/)[1],
+        currentDate: new Date(headers.get('date'))
+      })
+  }));
   createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({
     bySystem: computeIfExists(() => {
@@ -56,14 +77,27 @@ export default ({ i18n }, createResource) => {
     },
     /* eslint-enable no-param-reassign */
     nameWithArchived: computeIfExists(() => (project.archived
-      ? i18n.t('presenter.Project.nameWithArchived', project)
+      ? i18n.t('requestData.project.nameWithArchived', project)
       : project.name))
   }));
   createResource('form', () => ({
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
 
-  createResource('dataset');
+  createResource('dataset', () => ({
+    transformResponse: ({ data }) => {
+      // Add projectId to forms. FormLink expects this property to exist on form
+      // objects.
+      const { projectId } = data;
+      for (const form of data.sourceForms) form.projectId = projectId;
+      for (const form of data.linkedForms) form.projectId = projectId;
+      for (const property of data.properties) {
+        for (const form of property.forms) form.projectId = projectId;
+      }
+
+      return shallowReactive(data);
+    }
+  }));
 
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));

@@ -128,9 +128,19 @@ export default {
       "success": "{email}に詳細の対応についての情報が記されたメールが送信されました。"
     }
   },
+  "pt": {
+    "alert": {
+      "success": "Um email foi enviado para {email} com mais instruções."
+    }
+  },
   "sw": {
     "alert": {
       "success": "Barua pepe imetumwa kwa {email} ikiwa na maagizo zaidi."
+    }
+  },
+  "zh-Hant": {
+    "alert": {
+      "success": "一封電子郵件已發送至 {email} 並附有進一步說明。"
     }
   }
 }

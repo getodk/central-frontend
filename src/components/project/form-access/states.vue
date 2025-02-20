@@ -239,6 +239,27 @@ export default {
       }
     ]
   },
+  "pt": {
+    "title": "Status de formulário",
+    "introduction": [
+      "Os status do formulário controlam o ciclo de vida de cada formulário. Normalmente, mas nem sempre, um formulário começará como Aberto, em seguida Em fechamento, e mudará para Fechado quando não precisar mais ser usado.",
+      {
+        "full": "Formulários com status {open}ficam disponíveis para baixar e aceitarão novas respostas.",
+        "open": "Aberto"
+      },
+      {
+        "full": "Formulários com o status {closing} aceitarão novas respostas, mas {not}estarão disponíveis para baixar.",
+        "closing": "Em fechamento",
+        "not": "não"
+      },
+      {
+        "full": "Formulários com o status {closed}{not1}estão disponíveis para baixar e {not2}aceitam novas respostas.",
+        "closed": "Fechado",
+        "not1": "não",
+        "not2": "não"
+      }
+    ]
+  },
   "sw": {
     "title": "Hali ya fomu",
     "introduction": [
@@ -257,6 +278,27 @@ export default {
         "closed": "Imefungwa",
         "not1": "Sivyo",
         "not2": "Sivyo"
+      }
+    ]
+  },
+  "zh-Hant": {
+    "title": "表單狀態",
+    "introduction": [
+      "表單狀態，可控制每個表單的生命週期狀態。 通常，但不總是，表單會從「公開」（Open）狀態開始，當表單不再需要時，經過「結案中」（Closing）狀態，最後變為「已結案」（Closed）狀態。",
+      {
+        "full": "{open}表格可供下載，並將接受新的提交。",
+        "open": "公開"
+      },
+      {
+        "full": "{closing} 表格將接受新的提交，但{not}可供下載。",
+        "closing": "結案中",
+        "not": "不"
+      },
+      {
+        "full": "{closed}表格{not1}可供下載，並且{not2}接受新的提交。",
+        "closed": "已結案",
+        "not1": "不",
+        "not2": "不"
       }
     ]
   }

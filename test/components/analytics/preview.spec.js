@@ -34,7 +34,8 @@ const analyticsPreview = {
           num_creation_forms: 1,
           num_followup_forms: 1,
           num_entities: { total: 10, recent: 5 },
-          num_failed_entities: { total: 2, recent: 1 }
+          num_failed_entities: { total: 2, recent: 1 },
+          num_entity_updates: { total: 15, recent: 8 }
         }
       ]
     }
@@ -68,6 +69,23 @@ describe('AnalyticsPreview', () => {
     const modal = await mockHttpForComponent();
     const table = modal.getComponent(AnalyticsMetricsTable);
     table.props().metrics.should.eql(analyticsPreview.system);
+  });
+
+  it('shows preview even when there are zero projects (fresh central install)', async () => {
+    const emptyProjects = {
+      system: { num_admins: { recent: 1, total: 1 } },
+      projects: []
+    };
+    const container = await mockHttp()
+      .mount(AnalyticsPreview)
+      .request(modal => modal.setProps({ state: true }))
+      .respondWithData(() => emptyProjects);
+    // Only the system preview table should be shown
+    const tables = container.findAllComponents(AnalyticsMetricsTable);
+    tables.length.should.equal(1);
+    tables[0].props().metrics.should.eql(emptyProjects.system);
+    // Project summary should not exist
+    container.find('#analytics-preview-project-summary').exists().should.be.false;
   });
 
   it('shows the project number and plurailization for a single project', async () => {
@@ -132,7 +150,8 @@ describe('AnalyticsPreview', () => {
       num_creation_forms: 1,
       num_followup_forms: 1,
       num_entities: { total: 10, recent: 5 },
-      num_failed_entities: { total: 2, recent: 1 }
+      num_failed_entities: { total: 2, recent: 1 },
+      num_entity_updates: { total: 15, recent: 8 }
     };
     table.props().metrics.should.eql(subMetrics);
   });
@@ -143,7 +162,7 @@ describe('AnalyticsPreview', () => {
       .request(modal => modal.setProps({ state: true }))
       .respondWithData(() => assocPath(['projects', 1, 'datasets'], [], analyticsPreview));
 
-    component.find('#analytics-preview-dataset-summary').exists().should.be.false();
+    component.find('#analytics-preview-dataset-summary').exists().should.be.false;
     should.not.exist(component.findAllComponents(AnalyticsMetricsTable)[6]);
   });
 });

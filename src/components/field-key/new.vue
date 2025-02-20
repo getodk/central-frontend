@@ -32,14 +32,16 @@ except according to the terms contained in the LICENSE file.
         </form>
       </template>
       <template v-else>
-        <div id="field-key-new-success" class="modal-introduction">
-          <p>
+        <div class="modal-introduction">
+          <div id="field-key-new-success">
             <span class="icon-check-circle"></span>
-            <strong>{{ $t('common.success') }}</strong>
-            <sentence-separator/>
-            <span>{{ $t('success[0]', created) }}</span>
-          </p>
-          <field-key-qr-panel :field-key="created" :managed="managed"/>
+            <p>
+              <strong>{{ $t('common.success') }}</strong>
+              <sentence-separator/>
+              <span>{{ $t('success[0]', created) }}</span>
+            </p>
+          </div>
+          <field-key-qr-panel :field-key="created" :managed="managed" :show-close="false"/>
           <p>{{ $t('success[1]', created) }}</p>
           <i18n-t tag="p" keypath="success[2].full">
             <template #formAccessSettings>
@@ -167,18 +169,26 @@ export default {
 @import '../../assets/scss/variables';
 
 #field-key-new-success {
+  display: flex;
+  align-items: center;
+
   .icon-check-circle {
     color: $color-success;
     font-size: 32px;
-    margin-right: 6px;
-    vertical-align: middle;
+    margin-right: 10px;
   }
 
-  .field-key-qr-panel {
-    box-shadow: $box-shadow-popover;
+  > p {
+    width: 80%;
+    margin-bottom: 0px;
+  }
+
+  + .field-key-qr-panel {
     margin: 15px auto 30px;
+    box-shadow: $box-shadow-popover;
   }
 }
+
 </style>
 
 <i18n lang="json5">
@@ -328,6 +338,23 @@ export default {
       "createAnother": "別のものを作成"
     }
   },
+  "pt": {
+    "title": "Criar usuário de aplicativo",
+    "introduction": [
+      "Esse usuário não terá acesso a nenhum formulário inicialmente. Você poderá atribuir acesso a formulários após a criação do usuário."
+    ],
+    "success": [
+      "O usuário de aplicativo \"{displayName}\" foi criado.",
+      "Você pode configurar um dispositivo móvel para \"{displayName}\" agora, ou você pode fazer isso mais tarde clicando na opção \"Exibir código\" da tabela de usuários de aplicativo.",
+      {
+        "full": "Você pode querer visitar a página de {formAccessSettings}desse projeto para dar acesso a formulários para esse usuário.",
+        "formAccessSettings": "Configurações de acesso ao formulário"
+      }
+    ],
+    "action": {
+      "createAnother": "Criar outro"
+    }
+  },
   "sw": {
     "title": "Unda Mtumiaji wa Programu",
     "introduction": [
@@ -343,6 +370,23 @@ export default {
     ],
     "action": {
       "createAnother": "Unda nyingine"
+    }
+  },
+  "zh-Hant": {
+    "title": "建立App使用者",
+    "introduction": [
+      "使用者剛開始無存取任何表單的權限。建立使用者後，您才能夠分配表單權限。"
+    ],
+    "success": [
+      "APP使用者「{displayName}」已建立。",
+      "您可以立即為「{displayName}」設定行動裝置，也可以稍後透過點選「檢視代碼」從APP使用者表格中進行設定。",
+      {
+        "full": "您可能想要存取此專案的 {formAccessSettings} 以授予此使用者對表單的存取權限。",
+        "formAccessSettings": "表格存取設定"
+      }
+    ],
+    "action": {
+      "createAnother": "建立另一個"
     }
   }
 }

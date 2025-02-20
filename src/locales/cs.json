@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Stav",
         "testing": "Testování"
       }
     }
@@ -58,9 +57,9 @@
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
-      "dataset": "Akce datové sady",
       "field_key": "Akce uživatelů aplikace",
       "public_link": "Akce s veřejným přístupem",
+      "dataset": "Seznam akcí entit",
       "config": "Akce konfigurace serveru",
       "upgrade": "Upgrade serveru"
     },
@@ -72,6 +71,10 @@
         "delete": "Smazat"
       },
       "analytics": "Zpráva o použití",
+      "blobs": {
+        "s3_upload": "Nahrávání souborů do úložiště",
+        "s3_failed_to_pending": "Označení souborů k opětovnému nahrání do úložiště"
+      },
       "config": {
         "set": "Nastavit"
       },
@@ -89,6 +92,7 @@
       },
       "form": {
         "update_draft_set": "Vytvořit nebo aktualizovat koncept",
+        "update_draft_replace": "Nahrazení návrhu",
         "update_publish": "Zveřejnit koncept",
         "update_draft_delete": "Opustit koncept",
         "attachment_update": "Aktualizovat přílohy",
@@ -130,8 +134,10 @@
     "clear": "Vymazat",
     "close": "Zavřít",
     "comment": "Komentář",
+    "continue": "Pokračovat",
     "create": "Vytvořit",
     "createSubmission": "Nový",
+    "delete": "Smazat",
     "done": "Hotovo",
     "download": "Stáhnout",
     "edit": "Upravit",
@@ -155,8 +161,11 @@
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
     "hidePreview": "Skrýt náhled",
+    "newPreview": "Nový náhled",
     "expand": "Rozbalit",
-    "collapse": "Sbalit"
+    "collapse": "Sbalit",
+    "upload": "Nahrát",
+    "restore": "Zrušit smazání"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -169,7 +178,6 @@
     "passphrase": "Přístupová fráze",
     "password": "Heslo",
     "passwordConfirm": "Nové heslo (potvrzení)",
-    "reviewState": "Přezkoumání stavu",
     "type": "Typ"
   },
   "header": {
@@ -182,7 +190,9 @@
     "email": "E-mailová adresa",
     "instanceId": "Instance ID",
     "lastSubmission": "Poslední podání",
+    "recentActivity": "Nedávná aktivita",
     "name": "Jméno",
+    "listName": "Název seznamu",
     "submitterName": "Odesláno od",
     "submissionDate": "Odesláno v",
     "time": "Čas",
@@ -207,14 +217,15 @@
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
-    "dataset": "Datová sada",
-    "datasets": "Datové sady",
     "entities": "Subjekty",
+    "entityList": "Seznam entit",
+    "entityLists": "Seznamy entit",
     "form": "Formulář",
     "forms": "Formuláře",
     "formAttachments": "Přílohy formuláře",
     "project": "Projekt",
     "projects": "Projekty",
+    "property": "Vlastnost",
     "publicLink": "Veřejný odkaz",
     "user": "Uživatel",
     "users": "Uživatelé",
@@ -222,10 +233,13 @@
     "webUsers": "Uživatelé webu",
     "session": "Relace",
     "submissions": "Příspěvky",
-    "projectRoles": "Role projektu"
+    "projectRoles": "Role projektu",
+    "formPreview": "Náhled formuláře",
+    "draft": "Koncept"
   },
   "alert": {
     "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",
+    "updateEntity": "Entita byla aktualizována!",
     "updateReviewState": "Stav kontroly uložen!",
     "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
   },
@@ -260,17 +274,24 @@
   },
   "entity": {
     "label": "Štítek",
-    "entityId": "ID subjektu"
+    "entityLabel": "Štítek Entity",
+    "entityId": "ID subjektu",
+    "noProperties": "Tento formulář nastavuje pouze \"štítek\".",
+    "noEntity": "(žádný)",
+    "conflictsCount": "{count} konflikt | {count} konflikty | {count} konfliktů | {count} konfliktů"
   },
   "common": {
     "activity": "Aktivita",
     "anybody": "(Kdokoli)",
     "areYouSure": "Opravdu chcete pokračovat?",
     "basicInfo": "Základní informace",
+    "conflict": "Konflikt",
+    "conflicts": "Konflikty",
     "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
     "data": "Data",
     "docs": "Dokumentace",
+    "emptyValue": "(prázdný)",
     "error": "Chyba",
     "filter": "Filtr",
     "forum": "Fórum",
@@ -287,28 +308,32 @@
     },
     "total": "Celkem",
     "totalSubmissions": "Celkem odeslání",
-    "punctuations": {
-      "comma": ","
-    },
-    "datasetsPreview": "Náhled datových sad"
+    "new": "Novinka!",
+    "totalEntities": "Celkem entit",
+    "versionShort": "v{version}",
+    "reviewState": "Přezkoumání stavu",
+    "status": "Stav",
+    "version": "Verze"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Soubor \"{name}\" který se pokoušíte nahrát, je větší než limit 100 MB."
+        "fileSize": "Soubor \"{name}\" který se pokoušíte nahrát, je větší než limit 100 MB.",
+        "entityTooLarge": "Data, která se snažíte nahrát, jsou příliš velká."
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archivováno)"
-    }
-  },
   "util": {
+    "csv": {
+      "emptyRow": "Řádek je prázdný."
+    },
     "request": {
       "noRequest": "Něco se pokazilo: nebyl žádný požadavek.",
       "noResponse": "Něco se pokazilo: nebyla žádná odezva na váš požadavek.",
-      "errorNotProblem": "Něco se pokazilo: chybový kód {status}."
+      "errorNotProblem": "Něco se pokazilo: chybový kód {status}.",
+      "problem": {
+        "404_1": "Hledaný zdroj nelze nalézt. Zdroj mohl být smazán."
+      }
     },
     "session": {
       "alert": {
@@ -320,5 +345,10 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivováno)"
+    }
   }
 }

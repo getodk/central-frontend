@@ -13,35 +13,37 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div id="home-heading">{{ $t('heading[0]') }}</div>
     <home-summary/>
-    <div id="home-news-container">
-      <home-news/>
-      <home-config-section v-if="config.home.title != null"
-        :title="config.home.title" :body="config.home.body"/>
-    </div>
-    <project-list/>
+    <page-body>
+      <div id="home-news-container">
+        <home-news/>
+        <home-config-section v-if="config.home.title != null"
+          :title="config.home.title" :body="config.home.body"/>
+      </div>
+      <project-list/>
+    </page-body>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Home'
-};
-</script>
 <script setup>
 import { defineAsyncComponent, inject } from 'vue';
 
 import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
+import PageBody from './page/body.vue';
 import ProjectList from './project/list.vue';
 
 import useProjects from '../request-data/projects';
 import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
+defineOptions({
+  name: 'Home'
+});
+
 const HomeConfigSection = defineAsyncComponent(loadAsync('HomeConfigSection'));
 
 const projects = useProjects();
-projects.request({ url: '/v1/projects?forms=true' }).catch(noop);
+projects.request({ url: '/v1/projects?forms=true&datasets=true' }).catch(noop);
 
 const config = inject('config');
 </script>
@@ -99,9 +101,29 @@ const config = inject('config');
       "Bienvenue sur Central"
     ]
   },
+  "id": {
+    "heading": [
+      "Selamat datang di Central."
+    ]
+  },
   "it": {
     "heading": [
       "Benvenuto su Central"
+    ]
+  },
+  "pt": {
+    "heading": [
+      "Bem-vindo ao Central."
+    ]
+  },
+  "sw": {
+    "heading": [
+      "Karibu Central"
+    ]
+  },
+  "zh-Hant": {
+    "heading": [
+      "歡迎來到 Central."
     ]
   }
 }

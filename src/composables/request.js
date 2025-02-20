@@ -11,24 +11,19 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-The most common way to send a request is using requestData. After that, the next
-most common way is to use the useRequest() composable. A component may call
-useRequest() if it needs to send a request that will not modify requestData. It
-is rare for useRequest() to be used for a GET request: requestData is usually
-preferred.
+The most common way to send a request is by using requestData. After that, the
+next most common way is to use the useRequest() composable here. A component can
+call useRequest() if it needs to send a request that will not modify
+requestData. It is rare for useRequest() to be used for a GET request:
+requestData is usually preferred.
 
 useRequest() returns an object with two properties: request() and
 awaitingResponse. request() is a function that sends a request and returns a
-promise. awaitingResponse is a ref whose value is `true` if the component has
-called request() and the resulting request is in progress; its value is `false`
-if not.
+promise. awaitingResponse is a ref with a boolean value that indicates whether
+the latest request from the component is currently in progress.
 
-Because awaitingResponse stores a single boolean, useRequest() is not set up to
-support concurrent requests from a single component. It is the component's
-responsibility to ensure that the user is not able to send concurrent requests,
-for example, by disabling a submit button while a request is in progress.
-Separate components can send concurrent requests, but a single component can
-only send one request at a time.
+useRequest() can be used to send concurrent requests. However, awaitingResponse
+only provides information about the latest request.
 
 request() accepts all the options that axios.request() does. It also accepts the
 following options:
@@ -67,23 +62,28 @@ request() returns a promise. The promise will be rejected if the request is
 invalid or results in an error response, or if the user navigates away from the
 route that sent the request. Otherwise, the promise should be fulfilled.
 
-If you call then() on the promise, note that the request will not be in progress
-when the then() callback is run (awaitingResponse.value will be `false`). If you
-call catch() on the promise, your logic should not assume that the request
-resulted in an error response. Before the then() or catch() callback is run, Vue
-will react to the change of awaitingResponse.value from `true` to `false`,
-running watchers and updating the DOM.
+If you call then() or catch() on the promise, note that the request will not be
+in progress when the callback is run. That means that awaitingResponse.value
+will be `false` unless the component has sent a newer, additional request.
+Before the callback is run, Vue will react to the change of
+awaitingResponse.value from `true` to `false`, running watchers and updating the
+DOM.
+
+If you call catch() on the promise, your logic should not assume that the
+request resulted in an error response. In many cases, it is possible that the
+user simply navigated away from the route.
 */
 
 import { inject, readonly, ref, watch } from 'vue';
 
-import { isProblem, logAxiosError, requestAlertMessage, withAuth } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
 
 const _request = (container, awaitingResponse) => (config) => {
   const { router, i18n, requestData, alert, http, logger } = container;
   const {
     fulfillProblem = undefined,
     problemToAlert = undefined,
+    alert: alertOption = true,
     ...axiosConfig
   } = config;
 
@@ -111,8 +111,10 @@ const _request = (container, awaitingResponse) => (config) => {
       // eslint-disable-next-line no-param-reassign
       awaitingResponse.value = false;
 
-      logAxiosError(logger, error);
-      alert.danger(requestAlertMessage(i18n, error, problemToAlert));
+      if (alertOption) {
+        logAxiosError(logger, error);
+        alert.danger(requestAlertMessage(i18n, error, problemToAlert));
+      }
       throw error;
     })
     .then(response => {
@@ -128,7 +130,7 @@ const _request = (container, awaitingResponse) => (config) => {
 export default () => {
   const container = inject('container');
   const awaitingResponse = ref(false);
-  const request = _request(container, awaitingResponse);
+  const request = withHttpMethods(_request(container, awaitingResponse));
 
   const { router } = container;
   // `router` may be `null` in testing.

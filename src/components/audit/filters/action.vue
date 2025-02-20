@@ -35,8 +35,8 @@ export default {
   },
   emits: ['update:modelValue'],
   setup() {
-    const { actionMessage } = useAudit();
-    return { actionMessage };
+    const { categoryMessage, actionMessage } = useAudit();
+    return { categoryMessage, actionMessage };
   },
   computed: {
     options() {
@@ -59,6 +59,7 @@ export default {
         this.actionOption('form.update.draft.set'),
         this.actionOption('form.update.publish'),
         this.actionOption('form.update.draft.delete'),
+        this.actionOption('form.update.draft.replace'),
         this.actionOption('form.attachment.update'),
         this.actionOption('form.submission.export'),
         this.actionOption('form.delete'),
@@ -79,7 +80,6 @@ export default {
         this.categoryOption('dataset'),
         this.actionOption('dataset.create'),
         this.actionOption('dataset.update'),
-        this.actionOption('dataset.update.publish'),
         this.categoryOption('config'),
         this.actionOption('config.set')
       ];
@@ -88,7 +88,7 @@ export default {
   methods: {
     categoryOption(category) {
       return {
-        text: this.$t(`audit.category.${category}`),
+        text: this.categoryMessage(category),
         value: category,
         htmlClass: 'audit-filters-action-category'
       };

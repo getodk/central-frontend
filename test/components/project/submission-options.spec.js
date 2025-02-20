@@ -18,10 +18,10 @@ describe('ProjectSubmissionOptions', () => {
   describe('link to .../app-users', () => {
     it('links to .../app-users', () => {
       const modal = mountComponent({
-        container: { router: mockRouter('/projects/1/forms/f') }
+        container: { router: mockRouter('/projects/1/forms/f/public-links') }
       });
       const link = modal.getComponent(RouterLinkStub);
-      modal.get('li').element.contains(link.element).should.be.true();
+      modal.get('li').element.contains(link.element).should.be.true;
       link.props().to.should.equal('/projects/1/app-users');
       link.text().should.equal('App Users');
     });
@@ -41,10 +41,14 @@ describe('ProjectSubmissionOptions', () => {
   describe('link to .../public-links', () => {
     it('links to .../public-links', () => {
       const modal = mountComponent({
+        // Since we've removed the form overview, this page no longer renders
+        // ProjectSubmissionOptions. However, we still want to test that if
+        // ProjectSubmissionOptions were rendered on a form page, it would link
+        // to .../public-links.
         container: { router: mockRouter('/projects/1/forms/f') }
       });
       const link = modal.findAllComponents(RouterLinkStub)[1];
-      modal.findAll('li')[1].element.contains(link.element).should.be.true();
+      modal.findAll('li')[1].element.contains(link.element).should.be.true;
       link.props().to.should.equal('/projects/1/forms/f/public-links');
       link.text().should.equal('Public Access Links');
     });
@@ -65,7 +69,7 @@ describe('ProjectSubmissionOptions', () => {
         container: { router: mockRouter('/projects/1/app-users') }
       });
       const li = modal.findAll('li')[1];
-      li.find('a').exists().should.be.false();
+      li.find('a').exists().should.be.false;
       li.get('strong').text().should.equal('Public Access Links');
     });
   });

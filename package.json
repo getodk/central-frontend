@@ -4,19 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "nf start",
+    "dev:oidc": "VUE_APP_OIDC_ENABLED=true npm run dev",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint --no-fix --max-warnings 0 src/ bin/ test/ *.js",
+    "lint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ *.js",
+    "lint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ bin/ test/ *.js",
     "test": "./test/run.sh"
   },
   "volta": {
-    "node": "16.19.1"
+    "node": "22.12.0"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
-    "axios": "^0.22.0",
+    "@getodk/web-forms": "^0.6.0",
+    "axios": "^1.6.2",
     "bootstrap": "~3",
     "dompurify": "~2",
     "flatpickr": "~4.6",
@@ -24,7 +27,7 @@
     "luxon": "~1",
     "marked": "~4",
     "pako": "~1.0",
-    "pinia": "^2.0.23",
+    "papaparse": "^5.4.1",
     "qrcode-generator": "~1",
     "ramda": "~0.27",
     "vue": "~3",
@@ -35,11 +38,12 @@
   },
   "devDependencies": {
     "@intlify/vue-i18n-loader": "~4",
-    "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
-    "@vue/test-utils": "~2",
+    "@vue/test-utils": "^2.4.1",
+    "chai": "^5.1.1",
+    "chai-as-promised": "^8.0.0",
     "comment-json": "~4",
     "eslint": "^8.28.0",
     "eslint-plugin-import": "~2",
@@ -56,13 +60,13 @@
     "mocha": "^10.1.0",
     "sass": "~1",
     "sass-loader": "^13.2.0",
-    "should": "~13.2",
     "sinon": "~9",
     "util": "^0.12.5",
-    "vue-cli-plugin-i18n": "~2"
+    "vue-cli-plugin-i18n": "~2",
+    "yorkie": "^2.0.0"
   },
   "engines": {
-    "node": "16",
-    "npm": "8"
+    "node": "22",
+    "npm": "10"
   }
 }

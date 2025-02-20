@@ -35,11 +35,11 @@ describe('createResource()', () => {
           }))
           .respondWithData(() => projectData)
           .afterResponse(() => {
-            patch.called.should.be.true();
+            patch.called.should.be.true;
             const [response, resource] = patch.args[0];
             response.status.should.equal(200);
             response.data.should.eql(projectData);
-            (resource === requestData.project).should.be.true();
+            (resource === requestData.project).should.be.true;
           });
       });
 
@@ -54,7 +54,7 @@ describe('createResource()', () => {
             .request(() => requestData.project.request({
               url: '/v1/projects/1',
               patch: noop
-            }).should.be.rejected())
+            }).should.be.rejected)
             .beforeAnyResponse(() => { requestData.project.data = null; })
             .respondWithData(() => projectData);
         });
@@ -73,7 +73,7 @@ describe('createResource()', () => {
             .beforeAnyResponse(() => { requestData.project.data = null; })
             .respondWithData(() => projectData)
             .afterResponse(() => {
-              requestData.project.awaitingResponse.should.be.false();
+              requestData.project.awaitingResponse.should.be.false;
             });
         });
       });
@@ -91,7 +91,35 @@ describe('createResource()', () => {
           }).catch(noop))
           .respondWithData(() => projectData)
           .afterResponse(() => {
-            requestData.project.awaitingResponse.should.be.false();
+            requestData.project.awaitingResponse.should.be.false;
+          });
+      });
+    });
+
+    describe('convenience methods for HTTP verbs', () => {
+      it('sends the correct request', () => {
+        const container = createTestContainer();
+        const { project } = container.requestData;
+        return mockHttp(container)
+          .request(() => project.request.get('/v1/projects/1', {
+            // This option should be passed to request() even though it is a
+            // request() option, not an axios option.
+            extended: true
+          }))
+          .respondWithData(() => testData.extendedProjects.createNew())
+          .testRequests([
+            { method: 'GET', url: '/v1/projects/1', extended: true }
+          ]);
+      });
+
+      it('stores the response', () => {
+        const container = createTestContainer();
+        const { project } = container.requestData;
+        return mockHttp(container)
+          .request(() => project.request.get('/v1/projects/1'))
+          .respondWithData(() => testData.standardProjects.createNew())
+          .afterResponse(() => {
+            project.dataExists.should.be.true;
           });
       });
     });
@@ -102,7 +130,7 @@ describe('createResource()', () => {
       const container = createTestContainer();
       const { roles } = container.requestData;
       return mockHttp(container)
-        .request(() => roles.request({ url: '/v1/roles' }).should.be.rejected())
+        .request(() => roles.request({ url: '/v1/roles' }).should.be.rejected)
         .beforeAnyResponse(() => { roles.cancelRequest(); })
         .respondWithData(() => []);
     });
@@ -111,7 +139,7 @@ describe('createResource()', () => {
       const container = createTestContainer();
       const { roles } = container.requestData;
       return mockHttp(container)
-        .request(() => roles.request({ url: '/v1/roles' }).should.be.rejected())
+        .request(() => roles.request({ url: '/v1/roles' }).should.be.rejected)
         .beforeAnyResponse(() => { roles.cancelRequest(); })
         .respondWithProblem();
     });
@@ -123,7 +151,7 @@ describe('createResource()', () => {
         .request(() => roles.request({ url: '/v1/roles' }).catch(noop))
         .beforeAnyResponse(() => { roles.cancelRequest(); })
         .respondWithData(() => [])
-        .afterResponse(() => { roles.dataExists.should.be.false(); });
+        .afterResponse(() => { roles.dataExists.should.be.false; });
     });
 
     it('sets awaitingResponse to false', () => {
@@ -133,7 +161,7 @@ describe('createResource()', () => {
         .request(() => roles.request({ url: '/v1/roles' }).catch(noop))
         .beforeAnyResponse(() => { roles.cancelRequest(); })
         .respondWithData(() => [])
-        .afterResponse(() => { roles.awaitingResponse.should.be.false(); });
+        .afterResponse(() => { roles.awaitingResponse.should.be.false; });
     });
 
     it('does not show an alert', () => {
@@ -143,7 +171,7 @@ describe('createResource()', () => {
         .request(() => roles.request({ url: '/v1/roles' }).catch(noop))
         .beforeAnyResponse(() => { roles.cancelRequest(); })
         .respondWithProblem()
-        .afterResponse(() => { alert.state.should.be.false(); });
+        .afterResponse(() => { alert.state.should.be.false; });
     });
   });
 });

@@ -62,7 +62,7 @@ describe('PublicLinkRevoke', () => {
         .modify(revoke)
         .afterResponses(app => {
           app.should.alert('success', (message) => {
-            message.should.containEql('My Public Link');
+            message.should.include('My Public Link');
           });
         }));
 
@@ -73,6 +73,16 @@ describe('PublicLinkRevoke', () => {
         .afterResponses(app => {
           const text = app.get('.public-link-row .access-link').text();
           text.should.equal('Revoked');
+        }));
+
+    it('decreases the count in the tab', () =>
+      load('/projects/1/forms/f/public-links')
+        .afterResponses(app => {
+          app.get('#form-head .nav-tabs li.active .badge').text().should.equal('1');
+        })
+        .modify(revoke)
+        .afterResponses(app => {
+          app.get('#form-head .nav-tabs li.active .badge').text().should.equal('0');
         }));
 
     it('no longer highlights a new public link', () =>
@@ -91,7 +101,7 @@ describe('PublicLinkRevoke', () => {
         .complete()
         .modify(revoke)
         .afterResponses(app => {
-          app.find('.public-link-row.success').exists().should.be.false();
+          app.find('.public-link-row.success').exists().should.be.false;
         }));
   });
 });

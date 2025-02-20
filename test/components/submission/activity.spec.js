@@ -45,6 +45,7 @@ describe('SubmissionActivity', () => {
     testData.extendedAudits.createPast(1, { action: 'submission.create' });
     return load("/projects/1/forms/a%20b/submissions/'c%20d'").testRequests([
       { url: '/v1/projects/1', extended: true },
+      { url: '/v1/projects/1/forms/a%20b', extended: false },
       { url: "/v1/projects/1/forms/a%20b.svc/Submissions('''c%20d''')?%24select=__id%2C__system%2Cmeta" },
       { url: "/v1/projects/1/forms/a%20b/submissions/'c%20d'/versions/'c%20d'" },
       { url: '/v1/projects/1/forms/a%20b/fields' },
@@ -62,7 +63,7 @@ describe('SubmissionActivity', () => {
       return load('/projects/1/forms/f/submissions/s', { root: false })
         .testModalToggles({
           modal: SubmissionUpdateReviewState,
-          show: '#submission-activity-update-review-state-button',
+          show: '#submission-activity-review-button',
           hide: '.btn-link'
         });
     });
@@ -73,7 +74,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-update-review-state-button').exists().should.be.false();
+      component.find('#submission-activity-review-button').exists().should.be.false;
     });
 
     describe('after a successful response', () => {
@@ -88,10 +89,10 @@ describe('SubmissionActivity', () => {
         return load('/projects/1/forms/a%20b/submissions/c%20d', { root: false })
           .complete()
           .request(async (component) => {
-            const button = component.get('#submission-activity-update-review-state-button');
+            const button = component.get('#submission-activity-review-button');
             await button.trigger('click');
             const modal = component.getComponent(SubmissionUpdateReviewState);
-            await modal.get('input[value="hasIssues"]').setChecked();
+            await modal.get('input[value="hasIssues"]').setValue(true);
             return modal.get('form').trigger('submit');
           })
           .respondWithData(() => {
@@ -118,7 +119,7 @@ describe('SubmissionActivity', () => {
       it('hides the modal', async () => {
         const component = await submit();
         const modal = component.getComponent(SubmissionUpdateReviewState);
-        modal.props().state.should.be.false();
+        modal.props().state.should.be.false;
       });
 
       it('shows a success alert', async () => {
@@ -148,7 +149,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-edit-button').exists().should.be.true();
+      component.find('#submission-activity-edit-button').exists().should.be.true;
     });
 
     it('does not render button if user cannot submission.update', () => {
@@ -157,7 +158,7 @@ describe('SubmissionActivity', () => {
       testData.extendedSubmissions.createPast(1);
       testData.extendedAudits.createPast(1, { action: 'submission.create' });
       const component = mountComponent();
-      component.find('#submission-activity-edit-button').exists().should.be.false();
+      component.find('#submission-activity-edit-button').exists().should.be.false;
     });
 
     it('disables the button if the submission is encrypted', async () => {

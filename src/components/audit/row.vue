@@ -29,7 +29,9 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="target">
       <template v-if="target != null">
-        <router-link v-if="target.path != null" :to="target.path"
+        <component v-if="target.component != null" :is="target.component"
+          v-bind="target.props" v-tooltip.text/>
+        <router-link v-else-if="target.path != null" :to="target.path"
           v-tooltip.text>
           {{ target.title }}
         </router-link>
@@ -47,21 +49,36 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { pick } from 'ramda';
+
 import ActorLink from '../actor-link.vue';
+import DatasetLink from '../dataset/link.vue';
+import FormLink from '../form/link.vue';
 import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
 import useAudit from '../../composables/audit';
 import useRoutes from '../../composables/routes';
 
-const typeByCategory = {
+// If the Type column for an audit log entry has two parts, typeByFirstPart
+// indicates the i18n path to use for the first part. typeByFirstPart is keyed
+// by the first part/segment of the audit log action.
+const typeByFirstPart = {
+  // Resources for which filtering is available
   user: 'resource.user',
   project: 'resource.project',
   form: 'resource.form',
-  dataset: 'resource.dataset',
-  public_link: 'resource.publicLink',
   field_key: 'resource.appUser',
+  public_link: 'resource.publicLink',
+  dataset: 'resource.entityList',
   config: 'resource.config',
+
+  // System Operation
+  analytics: 'audit.category.task',
+  blobs: 'audit.category.task',
+  submission: 'audit.category.task',
+
+  // Server Upgrade
   upgrade: 'audit.category.upgrade'
 };
 
@@ -77,10 +94,13 @@ const acteeSpeciesByCategory = {
   },
   form: {
     title: (actee) => (actee.name != null ? actee.name : actee.xmlFormId),
-    path: (actee, { primaryFormPath }) => primaryFormPath(actee)
+    component: FormLink,
+    props: (actee) => ({ form: actee })
   },
   dataset: {
-    title: (actee) => actee.name
+    title: (actee) => actee.name,
+    component: DatasetLink,
+    props: pick(['projectId', 'name'])
   },
   public_link: {
     title: getDisplayName
@@ -96,7 +116,7 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 
 export default {
   name: 'AuditRow',
-  components: { ActorLink, DateTime, Selectable },
+  components: { ActorLink, DatasetLink, DateTime, FormLink, Selectable },
   props: {
     audit: {
       type: Object,
@@ -105,37 +125,51 @@ export default {
   },
   setup() {
     const { actionMessage } = useAudit();
-    const { projectPath, primaryFormPath, userPath } = useRoutes();
-    return { actionMessage, projectPath, primaryFormPath, userPath };
+    const { projectPath, userPath } = useRoutes();
+    return { actionMessage, projectPath, userPath };
   },
   computed: {
+    // When an audit log action has multiple parts/segments, we treat it as
+    // having a "category" indicated by the first part. For example, the
+    // category of project.create is project.
     category() {
       const index = this.audit.action.indexOf('.');
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
     type() {
-      const actionMessage = this.actionMessage(this.audit.action);
-      if (actionMessage == null) return [this.audit.action];
-      return this.category != null
-        ? [this.$t(typeByCategory[this.category]), actionMessage]
-        : [actionMessage];
+      const { action } = this.audit;
+      const actionMessage = this.actionMessage(action);
+      if (actionMessage == null) return [action];
+      const result = [actionMessage];
+
+      // The first part/segment of `action`.
+      const firstPart = this.category ?? action;
+      const typeOfFirstPart = typeByFirstPart[firstPart];
+      if (typeOfFirstPart != null) result.unshift(this.$t(typeOfFirstPart));
+
+      return result;
     },
     target() {
       if (this.category == null) return null;
       const species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
+
       const { actee } = this.audit;
-
-      // purged actee (used purgedName as title)
-      if (actee.purgedAt != null)
-        return { title: actee.purgedName, purged: true };
-
-      const title = species.title(actee);
-      // soft-deleted actee (use species title but don't make a link)
-      if (actee.deletedAt != null) return { title, deleted: true };
-
-      const result = { title };
-      if (species.path != null) result.path = species.path(actee, this);
+      const deleted = actee.deletedAt != null;
+      const purged = actee.purgedAt != null;
+      const result = {
+        title: purged ? actee.purgedName : species.title(actee),
+        deleted,
+        purged
+      };
+      if (!(deleted || purged)) {
+        if (species.path != null) {
+          result.path = species.path(actee, this);
+        } else if (species.component != null) {
+          result.component = species.component;
+          result.props = species.props(actee);
+        }
+      }
       return result;
     },
     details() {
@@ -178,7 +212,6 @@ export default {
 }
 </i18n>
 
-
 <!-- Autogenerated by destructure.js -->
 <i18n>
 {
@@ -206,9 +239,17 @@ export default {
     "deletedMessage": "これは削除されました。",
     "purgedMessage": "これは完全に削除されました。"
   },
+  "pt": {
+    "deletedMessage": "Esse recurso foi deletado.",
+    "purgedMessage": "Esse recurso foi limpo."
+  },
   "sw": {
     "deletedMessage": "Rasimali hii imefutwa",
     "purgedMessage": "Rasilimali hii imesafishwa."
+  },
+  "zh-Hant": {
+    "deletedMessage": "該資源已被刪除。",
+    "purgedMessage": "該資源已清除。"
   }
 }
 </i18n>

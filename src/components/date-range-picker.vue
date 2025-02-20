@@ -16,15 +16,17 @@ except according to the terms contained in the LICENSE file.
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
     <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control" :class="{ required }"
-      :placeholder="`${placeholder}${star}`" autocomplete="off"
+      :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
+      :placeholder="requiredLabel(placeholder, required)" autocomplete="off"
+      @keydown="stopPropagationIfDisabled"
       @on-close="close"/>
     <template v-if="!required">
-      <button v-show="modelValue.length === 2" type="button" class="close"
+      <button v-show="modelValue.length === 2 && !disabled" type="button" class="close"
         :aria-label="$t('action.clear')" @click="clear">
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <span class="form-label">{{ placeholder }}{{ star }}</span>
+    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
   </label>
 </template>
 
@@ -41,6 +43,19 @@ import 'flatpickr/dist/l10n/fr';
 import 'flatpickr/dist/l10n/id';
 import 'flatpickr/dist/l10n/it';
 import 'flatpickr/dist/l10n/ja';
+import 'flatpickr/dist/l10n/pt';
+import 'flatpickr/dist/l10n/zh-tw';
+
+import { locales } from '../i18n';
+import { requiredLabel } from '../util/dom';
+
+// Map locales.
+const l10ns = {};
+for (const locale of locales.keys()) {
+  const l10n = flatpickr.l10ns[locale];
+  if (l10n != null) l10ns[locale] = l10n;
+}
+l10ns['zh-Hant'] = flatpickr.l10ns.zh_tw;
 
 export default {
   name: 'DateRangePicker',
@@ -58,9 +73,20 @@ export default {
     placeholder: {
       type: String,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    disabledMessage: {
+      type: String,
+      required: false
     }
   },
   emits: ['update:modelValue'],
+  setup() {
+    return { requiredLabel };
+  },
   data() {
     return {
       // We initialize this.flatpickrValue as an array of Date objects, but
@@ -71,17 +97,13 @@ export default {
   },
   computed: {
     config() {
-      const config = {
+      return {
         mode: 'range',
         // See https://github.com/flatpickr/flatpickr/issues/1549
-        dateFormat: 'Y/m/d'
+        dateFormat: 'Y/m/d',
+        locale: l10ns[this.$i18n.locale] ?? l10ns[this.$i18n.fallbackLocale],
+        clickOpens: !this.disabled
       };
-      const l10n = flatpickr.l10ns[this.$i18n.locale];
-      if (l10n != null) config.locale = l10n;
-      return config;
-    },
-    star() {
-      return this.required ? '*' : '';
     }
   },
   watch: {
@@ -139,6 +161,11 @@ export default {
       // https://github.com/ankurk91/vue-flatpickr-component/issues/33
       this.$refs.flatpickr.$el.focus();
       this.$refs.flatpickr.fp.close();
+    },
+    stopPropagationIfDisabled(e) {
+      if (this.disabled) {
+        e.stopPropagation();
+      }
     }
   }
 };
@@ -153,6 +180,10 @@ export default {
   color: $color-input;
 
   &::placeholder { color: $color-text; }
+}
+
+.form-group .flatpickr-input[aria-disabled="true"]::placeholder {
+  color: $color-input-inactive;
 }
 
 .form-inline .flatpickr-input {

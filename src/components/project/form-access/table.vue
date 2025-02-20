@@ -10,56 +10,49 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="project-form-access-table" class="clearfix">
-    <table class="table table-frozen"
-      :class="{ 'no-field-keys': fieldKeys.withToken.length === 0 }">
-      <thead>
-        <tr>
-          <th>{{ $t('header.form') }}</th>
-          <th>
-            <span>{{ $t('header.state') }}</span>
-            <button type="button" class="btn btn-link"
-              @click="$emit('show-states')">
-              <span class="icon-question-circle"></span>
-            </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody v-if="forms.length !== 0">
-        <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
-          :form="form" :changes="changesByForm[form.xmlFormId]" frozen
-          @update:state="updateState"/>
-      </tbody>
-    </table>
-    <div v-if="fieldKeys.withToken.length !== 0" class="table-container">
-      <table class="table">
-        <thead>
-          <tr>
-            <th><div>{{ $t('resource.appUsers') }}</div></th>
-            <th v-for="fieldKey of fieldKeys.withToken" :key="fieldKey.id">
-              <div><span v-tooltip.text>{{ fieldKey.displayName }}</span></div>
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody v-if="forms.length !== 0">
-          <project-form-access-row v-for="form of forms" :key="form.xmlFormId"
-            :form="form" :changes="changesByForm[form.xmlFormId]"
-            @update:field-key-access="updateFieldKeyAccess"/>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <table-freeze id="project-form-access-table"
+    :class="{ 'no-field-keys': noFieldKeys }" :data="forms.data"
+    key-prop="xmlFormId" :frozen-only="noFieldKeys">
+    <template #head-frozen>
+      <th>{{ $t('header.form') }}</th>
+      <th>
+        <span>{{ $t('header.state') }}</span>
+        <button type="button" class="btn btn-link"
+          @click="$emit('show-states')">
+          <span class="icon-question-circle"></span>
+        </button>
+      </th>
+    </template>
+    <template #head-scrolling>
+      <th><div>{{ $t('resource.appUsers') }}</div></th>
+      <th v-for="fieldKey of fieldKeys.withToken" :key="fieldKey.id">
+        <div><span v-tooltip.text>{{ fieldKey.displayName }}</span></div>
+      </th>
+      <th></th>
+    </template>
+
+    <template #data-frozen="{ data: form }">
+      <project-form-access-row :form="form"
+        :changes="changesByForm[form.xmlFormId]" frozen
+        @update:state="updateState"/>
+    </template>
+    <template #data-scrolling="{ data: form }">
+      <project-form-access-row :form="form"
+        :changes="changesByForm[form.xmlFormId]"
+        @update:field-key-access="updateFieldKeyAccess"/>
+    </template>
+  </table-freeze>
 </template>
 
 <script>
 import ProjectFormAccessRow from './row.vue';
+import TableFreeze from '../../table-freeze.vue';
 
 import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectFormAccessTable',
-  components: { ProjectFormAccessRow },
+  components: { ProjectFormAccessRow, TableFreeze },
   props: {
     changesByForm: {
       type: Object,
@@ -70,6 +63,11 @@ export default {
   setup() {
     const { forms, fieldKeys } = useRequestData();
     return { forms, fieldKeys };
+  },
+  computed: {
+    noFieldKeys() {
+      return this.fieldKeys.dataExists && this.fieldKeys.withToken.length === 0;
+    }
   },
   methods: {
     updateState(form, state) {
@@ -87,14 +85,14 @@ export default {
 
 #project-form-access-table {
   // Space above the tables
-  .table-frozen {
+  .table-freeze-frozen {
     margin-top: 70px;
 
     &.no-field-keys {
       margin-top: 0;
     }
   }
-  .table-container {
+  .table-freeze-scrolling-container {
     // Using padding rather than margin so that the rotated column header text
     // does not overflow the container, which would cause the text to be hidden.
     padding-top: 70px;
@@ -111,7 +109,7 @@ export default {
     }
   }
 
-  .table-frozen {
+  .table-freeze-frozen {
     $form-name-width: 250px;
     $state-width: 200px;
 
@@ -133,9 +131,7 @@ export default {
     }
   }
 
-  .table-container .table {
-    width: auto;
-
+  .table-freeze-scrolling {
     thead {
       background-color: transparent;
     }
@@ -260,10 +256,22 @@ export default {
       "state": "状態"
     }
   },
+  "pt": {
+    "header": {
+      "form": "Formulário",
+      "state": "Status"
+    }
+  },
   "sw": {
     "header": {
       "form": "fomu",
       "state": "hali"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "form": "表單",
+      "state": "狀態"
     }
   }
 }

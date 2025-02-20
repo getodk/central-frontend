@@ -37,6 +37,25 @@ describe('SubmissionFilters', () => {
     setLuxon({ defaultZoneName: 'UTC' });
   });
 
+  it('selects all submitters by default', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+    return loadComponent()
+      .beforeEachResponse((component, { url }) => {
+        if (url.includes('/submitters')) {
+          const filters = component.getComponent(SubmissionFilters).props();
+          // filters.submitterId is initialized as [], but it is changed after
+          // the response from .../submitters.
+          filters.submitterId.should.eql([]);
+        }
+      })
+      .afterResponses(component => {
+        const filters = component.getComponent(SubmissionFilters).props();
+        filters.submitterId.should.eql([fieldKey.id]);
+      });
+  });
+
   describe('initial filters', () => {
     beforeEach(() => {
       testData.extendedForms.createPast(1);
@@ -115,7 +134,7 @@ describe('SubmissionFilters', () => {
           loadComponent(queryString)
             .beforeEachResponse((_, { url }) => {
               if (url.includes('.svc'))
-                relativeUrl(url).searchParams.has('$filter').should.be.false();
+                relativeUrl(url).searchParams.has('$filter').should.be.false;
             })
             .afterResponses(component => {
               const filters = component.getComponent(SubmissionFilters).props();
@@ -178,8 +197,9 @@ describe('SubmissionFilters', () => {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(3);
         })
         .request(changeMultiselect('#submission-filters-submitter', [0]))
-        .beforeEachResponse(component => {
-          component.findComponent(SubmissionMetadataRow).exists().should.be.false();
+        .beforeEachResponse((component, { url }) => {
+          component.findComponent(SubmissionMetadataRow).exists().should.be.false;
+          relativeUrl(url).searchParams.has('$skiptoken').should.be.false;
         })
         .respondWithData(() => ({
           ...testData.submissionOData(1),
@@ -342,7 +362,7 @@ describe('SubmissionFilters', () => {
       });
   });
 
-  it('does not update form.submissions', () => {
+  it('does not update form.submissions after filtering', () => {
     testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
     testData.extendedForms.createPast(1, { submissions: 2 });
     const submitter = testData.extendedFieldKeys.createPast(1).last();
@@ -380,7 +400,7 @@ describe('SubmissionFilters', () => {
         .complete()
         .request(changeMultiselect('#submission-filters-review-state', [0]))
         .beforeEachResponse(component => {
-          const text = component.get('#submission-list-message-text').text();
+          const text = component.get('#odata-loading-message-text').text();
           text.trim().should.equal('Loading matching Submissions…');
         })
         .respondWithData(() => testData.submissionOData(2, 0));
@@ -398,7 +418,7 @@ describe('SubmissionFilters', () => {
           document.dispatchEvent(new Event('scroll'));
         })
         .beforeEachResponse(component => {
-          const text = component.get('#submission-list-message-text').text();
+          const text = component.get('#odata-loading-message-text').text();
           text.trim().should.equal('Loading 2 more of 3 remaining matching Submissions…');
         })
         .respondWithData(() => testData.submissionOData(2, 2));
@@ -417,7 +437,7 @@ describe('SubmissionFilters', () => {
             document.dispatchEvent(new Event('scroll'));
           })
           .beforeEachResponse(component => {
-            const text = component.get('#submission-list-message-text').text();
+            const text = component.get('#odata-loading-message-text').text();
             text.trim().should.equal('Loading the last matching Submission…');
           })
           .respondWithData(() => testData.submissionOData(2, 2));
@@ -435,11 +455,36 @@ describe('SubmissionFilters', () => {
             document.dispatchEvent(new Event('scroll'));
           })
           .beforeEachResponse(component => {
-            const text = component.get('#submission-list-message-text').text();
+            const text = component.get('#odata-loading-message-text').text();
             text.trim().should.equal('Loading the last 2 matching Submissions…');
           })
           .respondWithData(() => testData.submissionOData(2, 2));
       });
     });
+  });
+
+  it('disables all filters', () => {
+    testData.extendedProjects.createPast(1, { forms: 1, appUsers: 1 });
+    const fieldKey = testData.extendedFieldKeys.createPast(1).last();
+    testData.extendedSubmissions.createPast(1, { submitter: fieldKey });
+    return loadComponent({ props: { deleted: true } })
+      .afterResponses(component => {
+        component.getComponent(DateRangePicker).props().disabled.should.be.true;
+        const multiselects = component.findAll('.multiselect select');
+        multiselects[0].attributes('aria-disabled').should.equal('true');
+        multiselects[1].attributes('aria-disabled').should.equal('true');
+      });
+  });
+
+  // https://github.com/getodk/central/issues/756
+  it('does not send an extra OData request after filtering, then navigating away', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { draft: true });
+    return load('/projects/1/forms/f/submissions?reviewState=%27approved%27')
+      .complete()
+      // If an extra request is sent, then .load() will fail.
+      .load('/projects/1/forms/f/draft/testing', {
+        project: false, form: false, formDraft: false, attachments: false
+      });
   });
 });

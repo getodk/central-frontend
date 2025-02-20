@@ -1,31 +1,20 @@
 import sinon from 'sinon';
 
+import NotFound from '../src/components/not-found.vue';
+
 import { noop } from '../src/util/util';
+import { userLocale } from '../src/util/i18n';
 
 import testData from './data';
 import { load } from './util/http';
 import { mockLogin } from './util/session';
 import { mockResponse } from './util/axios';
+import { setLanguages } from './util/i18n';
 
 describe('createCentralRouter()', () => {
   describe('i18n', () => {
-    before(() => {
-      const has = Object.prototype.hasOwnProperty.call(navigator, 'language');
-      has.should.be.false();
-    });
-    afterEach(() => {
-      delete navigator.language;
-    });
-
-    const setLanguage = (locale) => {
-      Object.defineProperty(navigator, 'language', {
-        value: locale,
-        configurable: true
-      });
-    };
-
     it("loads the user's preferred language", () => {
-      setLanguage('es');
+      setLanguages(['es']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(app => {
@@ -33,17 +22,8 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('loads a less specific locale', () => {
-      setLanguage('es-ES');
-      return load('/login')
-        .restoreSession(false)
-        .afterResponses(app => {
-          app.vm.$i18n.locale.should.equal('es');
-        });
-    });
-
-    it('falls back to en for a locale that is not defined', () => {
-      setLanguage('la');
+    it("falls back to en if no locale matches the user's preferences", () => {
+      setLanguages(['la']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(app => {
@@ -51,21 +31,13 @@ describe('createCentralRouter()', () => {
         });
     });
 
-    it('loads the locale saved to local storage', () => {
-      localStorage.setItem('locale', 'es');
-      return load('/login')
-        .restoreSession(false)
-        .afterResponses(app => {
-          app.vm.$i18n.locale.should.equal('es');
-        });
-    });
-
     it('only loads the locale during the initial navigation', () => {
-      setLanguage('es');
+      setLanguages(['es']);
       return load('/login')
         .restoreSession(false)
         .afterResponses(() => {
-          setLanguage('en');
+          setLanguages(['en']);
+          userLocale().should.equal('en');
         })
         .route('/reset-password')
         .then(app => {
@@ -93,27 +65,93 @@ describe('createCentralRouter()', () => {
     });
 
     describe('restoreSession is true for the first route', () => {
-      beforeEach(() => {
+      it('sends the correct requests', () => {
         testData.extendedUsers.createPast(1, { role: 'none' });
-      });
-
-      it('sends the correct requests', () =>
-        load('/account/edit', {}, false)
+        return load('/account/edit', {}, false)
           .restoreSession()
           .respondFor('/account/edit')
           .testRequests([
             { url: '/v1/sessions/restore' },
             { url: '/v1/users/current', extended: true },
             null
-          ]));
+          ]);
+      });
 
-      it('does not redirect the user from a location that requires login', () =>
-        load('/account/edit', {}, false)
+      it('does not redirect the user from a location that requires login', () => {
+        testData.extendedUsers.createPast(1, { role: 'none' });
+        return load('/account/edit', {}, false)
           .restoreSession()
           .respondFor('/account/edit')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/account/edit');
-          }));
+          });
+      });
+
+      describe('OIDC is enabled', () => {
+        const container = {
+          config: { oidcEnabled: true }
+        };
+
+        it('sets sessionExpires if it is not set in local storage', () => {
+          sinon.useFakeTimers();
+          testData.extendedUsers.createPast(1, { role: 'none' });
+          testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
+          return load('/account/edit', { container }, false)
+            .restoreSession()
+            .respondFor('/account/edit')
+            .afterResponses(() => {
+              localStorage.getItem('sessionExpires').should.equal('300000');
+            });
+        });
+
+        it('sets sessionExpires if it is set to something different', () => {
+          sinon.useFakeTimers();
+          testData.extendedUsers.createPast(1, { role: 'none' });
+          testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
+          localStorage.setItem('sessionExpires', '299999');
+          return load('/account/edit', { container }, false)
+            .restoreSession()
+            .respondFor('/account/edit')
+            .afterResponses(() => {
+              localStorage.getItem('sessionExpires').should.equal('300000');
+            });
+        });
+      });
+    });
+  });
+
+  describe('redirects', () => {
+    beforeEach(mockLogin);
+
+    it('redirects to .../submissions from root path of form', async () => {
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f/settings')
+        .complete()
+        .route('/projects/1/forms/f')
+        .respondFor('/projects/1/forms/f/submissions', {
+          project: false,
+          form: false,
+          formDraft: false,
+          attachments: false
+        })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+        });
+    });
+
+    it('redirects to .../entities from root path of entity list', async () => {
+      testData.extendedDatasets.createPast(1);
+      return load('/projects/1/entity-lists/trees/settings')
+        .complete()
+        .route('/projects/1/entity-lists/trees')
+        .respondFor('/projects/1/entity-lists/trees/entities', {
+          project: false,
+          dataset: false
+        })
+        .afterResponses(app => {
+          const { path } = app.vm.$route;
+          path.should.equal('/projects/1/entity-lists/trees/entities');
+        });
     });
   });
 
@@ -124,11 +162,12 @@ describe('createCentralRouter()', () => {
       '/projects/1/users',
       '/projects/1/app-users',
       '/projects/1/form-access',
-      '/projects/1/datasets',
-      '/projects/1/datasets/trees',
-      '/projects/1/datasets/trees/entities',
+      '/projects/1/entity-lists',
+      '/projects/1/entity-lists/trees/properties',
+      '/projects/1/entity-lists/trees/settings',
+      '/projects/1/entity-lists/trees/entities',
+      '/projects/1/entity-lists/trees/entities/e',
       '/projects/1/settings',
-      '/projects/1/forms/f',
       '/projects/1/forms/f/versions',
       '/projects/1/forms/f/submissions',
       '/projects/1/forms/f/public-links',
@@ -144,7 +183,7 @@ describe('createCentralRouter()', () => {
       '/account/edit',
       '/system/audits',
       '/system/analytics',
-      '/dl/foo.txt'
+      '/dl/projects/1/forms/f/submissions/s/attachments/a'
     ];
     for (const path of paths) {
       it(`redirects an anonymous user navigating to ${path}`, () =>
@@ -156,6 +195,17 @@ describe('createCentralRouter()', () => {
             $route.query.next.should.equal(path);
           }));
     }
+
+    it('redirects an anonymous user navigating to a redirect', () =>
+      load('/projects/1/entity-lists/trees', {}, false)
+        .restoreSession(false)
+        .afterResponse(app => {
+          const { $route } = app.vm;
+          $route.path.should.equal('/login');
+          const { next } = $route.query;
+          // The `next` query parameter reflects the redirect.
+          next.should.equal('/projects/1/entity-lists/trees/entities');
+        }));
   });
 
   describe('requireAnonymity', () => {
@@ -204,9 +254,23 @@ describe('createCentralRouter()', () => {
         const resource = requestData[name] != null
           ? requestData[name]
           : requestData.localResources[name];
-        resource.dataExists.should.be.true();
+        resource.dataExists.should.be.true;
       }
     };
+
+    it('preserves data if the path is the same', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {}
+      });
+      return load('/projects/1/entity-lists/trees/entities/e', {
+        attachTo: document.body
+      })
+        .complete()
+        .route('/projects/1/entity-lists/trees/entities/e?foo=bar#v1')
+        .then(dataExists(['project', 'dataset']));
+    });
 
     describe('navigating between project routes', () => {
       beforeEach(() => {
@@ -215,7 +279,7 @@ describe('createCentralRouter()', () => {
         testData.extendedForms.createPast(1);
       });
 
-      it('preserves data while navigating to/from the project overview', () =>
+      it('preserves data while navigating to/from the forms page', () =>
         load('/projects/1/form-access')
           .complete()
           .load('/projects/1', { project: false, forms: false }) // allow deletedForms to be fetched
@@ -301,12 +365,12 @@ describe('createCentralRouter()', () => {
             .then(dataExists(['formSummaryAssignments'])));
       });
 
-      it('preserves data while navigating to/from .../datasets', () =>
-        load('/projects/1/datasets')
+      it('preserves data while navigating to/from .../entity-lists', () =>
+        load('/projects/1/entity-lists')
           .complete()
           .route('/projects/1/settings')
           .complete()
-          .route('/projects/1/datasets')
+          .route('/projects/1/entity-lists')
           .then(dataExists(['project', 'datasets'])));
 
       it('preserves data while navigating to/from .../settings', () =>
@@ -349,20 +413,6 @@ describe('createCentralRouter()', () => {
       });
     });
 
-    describe('navigating between dataset routes', () => {
-      beforeEach(() => {
-        testData.extendedDatasets.createPast(1, { name: 'trees' });
-      });
-
-      it('preserves project and dataset', () =>
-        load('/projects/1/datasets/trees')
-          .complete()
-          .load('/projects/1/datasets/trees/entities', { project: false, dataset: false })
-          .complete()
-          .load('/projects/1/datasets/trees', { project: false, dataset: false })
-          .afterResponses(dataExists(['project', 'dataset'])));
-    });
-
     describe('navigating between project and form routes', () => {
       beforeEach(() => {
         testData.extendedForms.createPast(1);
@@ -393,11 +443,33 @@ describe('createCentralRouter()', () => {
         .afterResponses(dataExists(['project']));
     });
 
-    it('preserves project while navigating from dataset detail page', () => {
+    describe('navigating between dataset routes', () => {
+      beforeEach(() => {
+        testData.extendedDatasets.createPast(1, { name: 'trees' });
+      });
+
+      it('preserves project and dataset', () =>
+        load('/projects/1/entity-lists/trees/properties')
+          .complete()
+          .load('/projects/1/entity-lists/trees/entities', { project: false, dataset: false })
+          .complete()
+          .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false })
+          .afterResponses(dataExists(['project', 'dataset'])));
+    });
+
+    it('preserves project while navigating from entity list to project', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
-      return load('/projects/1/datasets/trees')
+      return load('/projects/1/entity-lists/trees/properties')
         .complete()
-        .load('/projects/1/datasets', { project: false })
+        .load('/projects/1/entity-lists', { project: false })
+        .afterResponses(dataExists(['project']));
+    });
+
+    it('preserves project while navigating from entity detail page', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      return load('/projects/1/entity-lists/trees/entities/e')
+        .complete()
+        .load('/projects/1/entity-lists/trees/entities', { project: false })
         .afterResponses(dataExists(['project']));
     });
   });
@@ -499,7 +571,7 @@ describe('createCentralRouter()', () => {
           testData.extendedFieldKeys.createPast(1);
         });
 
-        it('does not redirect the user from the project overview', async () => {
+        it('does not redirect the user from the forms page', async () => {
           const app = await load('/projects/1', {}, { deletedForms: false });
           app.vm.$route.path.should.equal('/projects/1');
         });
@@ -532,9 +604,9 @@ describe('createCentralRouter()', () => {
               app.vm.$route.path.should.equal('/');
             }));
 
-        it('does not redirect the user from .../datasets', async () => {
-          const app = await load('/projects/1/datasets');
-          app.vm.$route.path.should.equal('/projects/1/datasets');
+        it('does not redirect the user from .../entity-lists', async () => {
+          const app = await load('/projects/1/entity-lists');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists');
         });
       });
 
@@ -545,13 +617,6 @@ describe('createCentralRouter()', () => {
           testData.extendedFormVersions.createPast(1, { draft: true });
           testData.standardFormAttachments.createPast(1);
         });
-
-        it('redirects the user from the form overview', () =>
-          load('/projects/1/forms/f')
-            .respondFor('/', { users: false })
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
 
         it('does not redirect the user from .../versions', async () => {
           const app = await load('/projects/1/forms/f/versions');
@@ -596,6 +661,53 @@ describe('createCentralRouter()', () => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/draft/testing');
         });
       });
+
+      it('does not redirect user from submission detail page', async () => {
+        testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
+        testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+        const app = await load('/projects/1/forms/f/submissions/s');
+        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions/s');
+      });
+
+      describe('dataset routes', () => {
+        beforeEach(() => {
+          testData.extendedProjects.createPast(1, {
+            role: 'viewer',
+            datasets: 1
+          });
+          testData.extendedDatasets.createPast(1);
+        });
+
+        it('does not redirect the user from .../properties', async () => {
+          const app = await load('/projects/1/entity-lists/trees/properties');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists/trees/properties');
+        });
+
+        it('does not redirect the user from .../entities', async () => {
+          const app = await load('/projects/1/entity-lists/trees/entities');
+          const { path } = app.vm.$route;
+          path.should.equal('/projects/1/entity-lists/trees/entities');
+        });
+
+        it('redirects the user from .../settings', async () => {
+          await load('/projects/1/entity-lists/trees/settings')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            });
+        });
+      });
+
+      it('does not redirect the user from the entity detail page', async () => {
+        testData.extendedProjects.createPast(1, {
+          role: 'viewer',
+          datasets: 1
+        });
+        testData.extendedEntities.createPast(1, { uuid: 'e' });
+        const app = await load('/projects/1/entity-lists/trees/entities/e');
+        const { path } = app.vm.$route;
+        path.should.equal('/projects/1/entity-lists/trees/entities/e');
+      });
     });
 
     describe('Data Collector', () => {
@@ -609,7 +721,7 @@ describe('createCentralRouter()', () => {
         testData.extendedDatasets.createPast(1, { name: 'trees' });
       });
 
-      it('does not redirect the user from the project overview', async () => {
+      it('does not redirect the user from the forms page', async () => {
         const app = await load('/projects/1', {}, { deletedForms: false });
         app.vm.$route.path.should.equal('/projects/1');
       });
@@ -619,8 +731,7 @@ describe('createCentralRouter()', () => {
         '/projects/1/users',
         '/projects/1/app-users',
         '/projects/1/form-access',
-        '/projects/1/datasets',
-        '/projects/1/datasets/trees',
+        '/projects/1/entity-lists',
         '/projects/1/settings',
         // FormShow
         '/projects/1/forms/f',
@@ -634,8 +745,12 @@ describe('createCentralRouter()', () => {
         // SubmissionShow
         '/projects/1/forms/f/submissions/s',
         // DatasetShow
-        '/projects/1/datasets/trees',
-        '/projects/1/datasets/trees/entities'
+        '/projects/1/entity-lists/trees',
+        '/projects/1/entity-lists/trees/properties',
+        '/projects/1/entity-lists/trees/entities',
+        '/projects/1/entity-lists/trees/settings',
+        // EntityShow
+        '/projects/1/entity-lists/trees/entities/e'
       ]) {
         it(`redirects the user from ${path}`, () =>
           load('/projects/1', {}, { deletedForms: false })
@@ -648,46 +763,6 @@ describe('createCentralRouter()', () => {
       }
     });
 
-    describe('project without datasets', () => {
-      beforeEach(mockLogin);
-
-      it('redirects a user whose first navigation is to the route', () => {
-        testData.extendedProjects.createPast(1);
-        return load('/projects/1/datasets')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-
-      it('redirects a user navigating from a different project route', () => {
-        testData.extendedProjects.createPast(1);
-        return load('/projects/1')
-          .complete()
-          .route('/projects/1/datasets')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-
-      it('redirects a user navigating from a different project', () => {
-        // Creating the dataset will also create a project.
-        testData.extendedDatasets.createPast(1);
-        // Create a second project.
-        testData.extendedProjects.createPast(1);
-        return load('/projects/1/datasets', {}, {
-          project: () => testData.extendedProjects.first()
-        })
-          .complete()
-          .load('/projects/2/datasets', { datasets: () => [] })
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
-    });
-
     describe('form without a published version', () => {
       beforeEach(() => {
         mockLogin();
@@ -697,9 +772,9 @@ describe('createCentralRouter()', () => {
           .createPast(1, { xmlFormId: 'f', draft: true });
       });
 
-      describe('form overview', () => {
+      describe('.../settings', () => {
         it('redirects a user whose first navigation is to the route', () =>
-          load('/projects/1/forms/f')
+          load('/projects/1/forms/f/settings')
             .respondFor('/')
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
@@ -708,20 +783,20 @@ describe('createCentralRouter()', () => {
         it('redirects a user navigating from a different form route', () =>
           load('/projects/1/forms/f/draft')
             .complete()
-            .route('/projects/1/forms/f')
+            .route('/projects/1/forms/f/settings')
             .respondFor('/')
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
 
         it('redirects a user navigating from a different form', () =>
-          load('/projects/1/forms/f2', {}, {
+          load('/projects/1/forms/f2/settings', {}, {
             form: () => testData.extendedForms.first(),
             formDraft: () => mockResponse.problem(404.1),
             attachments: () => mockResponse.problem(404.1)
           })
             .complete()
-            .load('/projects/1/forms/f', { project: false })
+            .load('/projects/1/forms/f/settings', { project: false })
             .respondFor('/')
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
@@ -749,8 +824,8 @@ describe('createCentralRouter()', () => {
             app.vm.$route.path.should.equal('/');
           }));
 
-      it('redirects the user from .../settings', () =>
-        load('/projects/1/forms/f/settings')
+      it('redirects the user from the root path for the form', () =>
+        load('/projects/1/forms/f')
           .respondFor('/')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -775,7 +850,7 @@ describe('createCentralRouter()', () => {
             }));
 
         it('redirects a user navigating from a different form route', () =>
-          load('/projects/1/forms/f')
+          load('/projects/1/forms/f/settings')
             .complete()
             .route('/projects/1/forms/f/draft')
             .respondFor('/')
@@ -898,7 +973,7 @@ describe('createCentralRouter()', () => {
         .load('/')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/');
-          confirm.called.should.be.false();
+          confirm.called.should.be.false;
         });
     });
 
@@ -960,7 +1035,7 @@ describe('createCentralRouter()', () => {
         datasets: 1
       });
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'My Form Name' });
-      testData.extendedDatasets.createPast(1, { name: 'Trees' });
+      testData.extendedDatasets.createPast(1);
     });
 
     // There is approximately 1 test per route
@@ -975,10 +1050,10 @@ describe('createCentralRouter()', () => {
     it('inspects title before and after project data loaded', () =>
       load('/projects/1')
         .beforeAnyResponse(() => {
-          document.title.should.equal('ODK Central');
+          document.title.should.equal('Forms | ODK Central');
         })
         .afterResponses(() => {
-          document.title.should.equal('My Project Name | ODK Central');
+          document.title.should.equal('Forms | My Project Name | ODK Central');
         }));
 
     it('shows project name in title for /projects/1/user', async () => {
@@ -996,39 +1071,17 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Form Access | My Project Name | ODK Central');
     });
 
-    it('shows project name in title for /projects/1/datasets', async () => {
-      await load('/projects/1/datasets');
-      document.title.should.equal('Datasets | My Project Name | ODK Central');
+    it('shows project name in title for /projects/1/entity-lists', async () => {
+      await load('/projects/1/entity-lists');
+      document.title.should.equal('Entities | My Project Name | ODK Central');
     });
-
-    it('shows dataset name in title for /projects/1/datasets/:datasetName', async () => {
-      await load('/projects/1/datasets/trees');
-      document.title.should.equal('Trees | ODK Central');
-    });
-
-    it('shows dataset name in title for /projects/1/datasets/:datasetName/entities', async () => {
-      await load('/projects/1/datasets/trees/entities');
-      document.title.should.equal('Data | Trees | ODK Central');
-    });
-
 
     it('shows project name in title for /projects/1/settings', async () => {
       await load('/projects/1/settings');
       document.title.should.equal('Settings | My Project Name | ODK Central');
     });
 
-    // Special cases of project routes
-    it('does not show project name if null for /projects/1', async () => {
-      testData.extendedProjects.createPast(1, { name: null });
-      await load('/projects/2');
-      document.title.should.equal('ODK Central');
-    });
-
     // Form routes
-    it('shows form name in title for <form url>/', async () => {
-      await load('/projects/1/forms/f1');
-      document.title.should.equal('My Form Name | ODK Central');
-    });
 
     it('shows form name in title for <form url>/versions', async () => {
       await load('/projects/1/forms/f1/versions');
@@ -1074,8 +1127,8 @@ describe('createCentralRouter()', () => {
     // Special cases of form routes
     it('shows form id when form has no name', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'my-xml-id', name: null });
-      await load('/projects/1/forms/my-xml-id');
-      document.title.should.equal('my-xml-id | ODK Central');
+      await load('/projects/1/forms/my-xml-id/settings');
+      document.title.should.equal('Settings | my-xml-id | ODK Central');
     });
 
     // Submission routes
@@ -1083,6 +1136,33 @@ describe('createCentralRouter()', () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 's' });
       await load('/projects/1/forms/f1/submissions/s');
       document.title.should.equal('Details: s | ODK Central');
+    });
+
+    // Dataset routes
+
+    it('shows dataset name in title for /projects/1/entity-lists/:datasetName/properties', async () => {
+      await load('/projects/1/entity-lists/trees/properties');
+      document.title.should.equal('Properties | trees | ODK Central');
+    });
+
+    it('shows dataset name in title for /projects/1/entity-lists/:datasetName/entities', async () => {
+      await load('/projects/1/entity-lists/trees/entities');
+      document.title.should.equal('Entities | trees | ODK Central');
+    });
+
+    it('shows dataset name in title for /projects/1/entity-lists/:datasetName/settings', async () => {
+      await load('/projects/1/entity-lists/trees/settings');
+      document.title.should.equal('Settings | trees | ODK Central');
+    });
+
+    // Entity routes
+    it('shows the entity label', async () => {
+      testData.extendedEntities.createPast(1, {
+        uuid: 'e',
+        label: 'My Entity'
+      });
+      await load('/projects/1/entity-lists/trees/entities/e');
+      document.title.should.equal('My Entity | ODK Central');
     });
 
     // User routes
@@ -1123,6 +1203,16 @@ describe('createCentralRouter()', () => {
   });
 
   describe('title meta field - logged out', () => {
+    it('shows static title for /load-error', () => {
+      const container = { config: false };
+      return load('/login', { container })
+        .restoreSession(false)
+        .respond(() => ({ status: 502 })) // config
+        .afterResponses(() => {
+          document.title.should.equal('Error | ODK Central');
+        });
+    });
+
     it('shows page title on login screen', () =>
       load('/login')
         .restoreSession(false)
@@ -1132,17 +1222,115 @@ describe('createCentralRouter()', () => {
   });
 
   describe('config', () => {
-    beforeEach(mockLogin);
+    it('requests the config', () => {
+      // Using a role of 'none' in order to prevent some requests.
+      const user = testData.extendedUsers
+        .createPast(1, { role: 'none' })
+        .first();
+      const session = testData.sessions.createPast(1).last();
+      const container = { config: false };
+      return load('/', { container }, false)
+        .respondWithData(() => session)
+        .respondWithData(() => ({})) // config
+        .respondWithData(() => user)
+        .respondFor('/', { users: false })
+        .beforeAnyResponse(app => {
+          app.vm.$container.requestData.config.dataExists.should.be.false;
+        })
+        .testRequests([
+          { url: '/v1/sessions/restore' },
+          { url: '/client-config.json' },
+          { url: '/v1/users/current', extended: true },
+          { url: '/v1/projects?forms=true&datasets=true' }
+        ])
+        .afterResponses(app => {
+          const { config } = app.vm.$container.requestData;
+          config.data.should.include({ oidcEnabled: false });
+        });
+    });
 
-    it('redirects user from /system/analytics if showsAnalytics is false', () => {
+    describe('error loading config', () => {
+      it('redirects to /load-error', () => {
+        const container = { config: false };
+        return load('/login', { container })
+          .restoreSession(false)
+          .respond(() => ({ status: 502 })) // config
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/load-error');
+          });
+      });
+
+      it('does not request the current user', () => {
+        testData.extendedUsers.createPast(1);
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/login', { container })
+          .respondWithData(() => session)
+          .respond(() => ({ status: 502 }))
+          .testRequests([
+            { url: '/v1/sessions/restore' },
+            { url: '/client-config.json' }
+          ]);
+      });
+
+      it('clears the session', () => {
+        testData.extendedUsers.createPast(1);
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/login', { container })
+          .respondWithData(() => session)
+          .respond(() => ({ status: 502 }))
+          .beforeEachResponse((app, config, i) => {
+            if (i === 1)
+              app.vm.$container.requestData.session.dataExists.should.be.true;
+          })
+          .afterResponses(app => {
+            app.vm.$container.requestData.session.dataExists.should.be.false;
+          });
+      });
+
+      it('redirects from /load-error if there was not an error', () =>
+        load('/load-error')
+          .restoreSession(false)
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/login');
+          }));
+    });
+
+    describe('OIDC is enabled', () => {
+      const container = {
+        config: { oidcEnabled: true }
+      };
+
+      it('renders NotFound for /reset-password', () =>
+        load('/reset-password', { container })
+          .restoreSession(false)
+          .afterResponses(app => {
+            app.findComponent(NotFound).exists().should.be.true;
+          }));
+
+      it('renders NotFound for /account/claim', async () => {
+        const app = await load(`/account/claim?token=${'a'.repeat(64)}`, {
+          container
+        });
+        app.findComponent(NotFound).exists().should.be.true;
+      });
+    });
+
+    it('renders NotFound for /system/analytics if showsAnalytics is false', async () => {
+      mockLogin();
       const container = {
         config: { showsAnalytics: false }
       };
-      return load('/system/analytics', { container }, false)
-        .respondFor('/')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/');
-        });
+      const app = await load('/system/analytics', { container }, false);
+      app.findComponent(NotFound).exists().should.be.true;
+    });
+  });
+
+  describe('standalone field', () => {
+    it('adds a background color if standalone is false', async () => {
+      await load('/login').restoreSession(false);
+      document.documentElement.style.backgroundColor.should.equal('var(--color-accent-secondary)');
     });
   });
 });

@@ -27,7 +27,7 @@ definition for an existing form -->
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.xlsFormWarnings">
-{{ removeLearnMore(warning) }}
+              {{ removeLearnMore(warning) }}
               <template v-if="hasLearnMoreLink(warning)">
                 <sentence-separator/>
                 <a :href="getLearnMoreLink(warning)" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
@@ -41,12 +41,22 @@ definition for an existing form -->
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.workflowWarnings">
-              {{ $t('warningsText[3].' + warning.type, { value: warning.details.xmlFormId }) }}
-              <doc-link :to="documentLinks[warning.type]">{{ $t('moreInfo.learnMore') }}</doc-link>
-              <span v-if="warning.type === 'structureChanged'">
-                <br>
-                <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
-              </span>
+              <template v-if="warning.type === 'deletedFormExists'">
+                {{ $t('warningsText[3].deletedFormExists', { value: warning.details.xmlFormId }) }}
+                <doc-link to="central-forms/#deleting-a-form">{{ $t('moreInfo.learnMore') }}</doc-link>
+              </template>
+              <template v-else-if="warning.type === 'structureChanged'">
+                {{ $t('warningsText[3].structureChanged') }}
+                <doc-link to="central-forms/#central-forms-updates">{{ $t('moreInfo.learnMore') }}</doc-link>
+                <span>
+                  <br>
+                  <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
+                </span>
+              </template>
+              <template v-else-if="warning.type === 'oldEntityVersion'">
+                {{ $t('warningsText[3].oldEntityVersion', { version: warning.details.version }) }}
+                <a href="https://getodk.github.io/xforms-spec/entities" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
+              </template>
             </li>
           </ul>
         </p>
@@ -77,11 +87,13 @@ definition for an existing form -->
         </p>
         <p v-if="!formDraft.dataExists">{{ $t('introduction[2]') }}</p>
       </div>
-      <div id="form-new-drop-zone" ref="dropZone" :class="dropZoneClass">
+      <file-drop-zone :disabled="awaitingResponse"
+        @drop="afterFileSelection($event.dataTransfer.files[0])">
         <i18n-t tag="div" keypath="dropZone.full">
           <template #chooseOne>
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml" @change="afterChange">
+            <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml"
+              @change="afterInputChange">
             <button type="button" class="btn btn-primary"
               :aria-disabled="awaitingResponse" @click="$refs.input.click()">
               <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
@@ -91,7 +103,7 @@ definition for an existing form -->
         <div v-show="file != null" id="form-new-filename">
           {{ file != null ? file.name : '' }}
         </div>
-      </div>
+      </file-drop-zone>
       <div class="modal-actions">
         <button id="form-new-upload-button" type="button"
           class="btn btn-primary" :aria-disabled="awaitingResponse"
@@ -109,19 +121,18 @@ definition for an existing form -->
 
 <script>
 import DocLink from '../doc-link.vue';
+import FileDropZone from '../file-drop-zone.vue';
 import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
-import dropZone from '../../mixins/drop-zone';
 import useRequest from '../../composables/request';
 import { apiPaths, isProblem } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormNew',
-  components: { DocLink, Modal, SentenceSeparator, Spinner },
-  mixins: [dropZone()],
+  components: { DocLink, FileDropZone, Modal, SentenceSeparator, Spinner },
   inject: ['alert'],
   props: {
     state: {
@@ -141,25 +152,11 @@ export default {
   },
   data() {
     return {
-      dragDepth: 0,
       file: null,
-      warnings: null,
-      documentLinks: {
-        deletedFormExists: 'central-forms/#deleting-a-form',
-        structureChanged: 'central-forms/#central-forms-updates'
-      }
+      warnings: null
     };
   },
   computed: {
-    disabled() {
-      return this.awaitingResponse;
-    },
-    dropZoneClass() {
-      return {
-        'form-new-disabled': this.awaitingResponse,
-        'form-new-dragover': this.fileIsOverDropZone
-      };
-    },
     // Returns the inferred content type of the file based on its extension. (We
     // first tried using this.file.type rather than inferring the content type,
     // but that didn't work in Edge.)
@@ -185,12 +182,9 @@ export default {
       this.file = file;
       this.warnings = null;
     },
-    afterChange(event) {
+    afterInputChange(event) {
       this.afterFileSelection(event.target.files[0]);
       this.$refs.input.value = '';
-    },
-    ondrop(jQueryEvent) {
-      this.afterFileSelection(jQueryEvent.originalEvent.dataTransfer.files[0]);
     },
     upload(ignoreWarnings) {
       if (this.file == null) {
@@ -238,9 +232,6 @@ export default {
             this.alert.blank();
             this.warnings = data.details.warnings;
           } else {
-            // project.forms may now be out-of-date. However, if the user
-            // navigates to the project overview, it should be updated.
-
             this.$emit('success', data);
           }
         })
@@ -264,36 +255,26 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-$drop-zone-vpadding: 15px;
-
-#form-new .modal-warnings ul {
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  margin-top: 10px;
-}
-
-#form-new-drop-zone {
-  background-color: $color-panel-input-background;
-  border: 1px dashed $color-subpanel-border;
-  padding-bottom: $drop-zone-vpadding;
-  padding-top: $drop-zone-vpadding;
-  text-align: center;
-
-  &.form-new-dragover {
-    opacity: 0.65;
+#form-new {
+  .modal-warnings ul {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    margin-top: 10px;
   }
 
-  &.form-new-disabled {
-    cursor: not-allowed;
-    opacity: 0.65;
+  .file-drop-zone {
+    // Zero out the horizontal padding so that the border above the filename
+    // stretches across the entire width of the drop zone.
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
 #form-new-filename {
-  background-color: $color-input-background;
+  background-color: #eee;
   border-top: 1px solid #ddd;
   font-family: $font-family-monospace;
-  margin-bottom: -$drop-zone-vpadding;
+  margin-bottom: -$padding-file-drop-zone;
   margin-top: 10px;
   padding: 6px 0;
 }
@@ -324,7 +305,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "choose one"
     },
     "action": {
-      "upload": "Upload",
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
@@ -344,7 +324,8 @@ $drop-zone-vpadding: 15px;
       "Workflow warnings:",
       {
         "deletedFormExists": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID.",
-        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+        "structureChanged": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default.",
+        "oldEntityVersion": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
       },
       "Please correct the problems and try again.",
       {
@@ -380,7 +361,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "vyberte jeden"
     },
     "action": {
-      "upload": "Nahrát",
       "uploadAnyway": "Přesto nahrát"
     },
     "alert": {
@@ -420,14 +400,14 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Wenn Sie noch kein Formular haben, gibt es {tools} mit denen Sie Ihr Formular entwickeln können.",
         "tools": "Werkzeuge"
-      }
+      },
+      "Wenn Sie Anhängen haben, können Sie diese auf der folgenden Seite hochladen, nachdem das Formular erstellt wurde."
     ],
     "dropZone": {
       "full": "Fügen Sie hier eine Datei mit Drag-and-Drop ein, oder {chooseOne} zum Hochladen.",
       "chooseOne": "eine auswählen"
     },
     "action": {
-      "upload": "Hochladen",
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
@@ -437,7 +417,22 @@ $drop-zone-vpadding: 15px;
       "400_8": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten).",
       "400_15": "Das XLSForm konnte nicht konvertiert werden: {error}",
       "409_3": "Es gibt bereits ein Formular in diesem Projekt mit der Formular ID \"{xmlFormId}\"."
-    }
+    },
+    "fields": "Felder:",
+    "warningsText": [
+      "Die Datei kann verwendet werden, aber sie hat die folgenden möglichen Probleme:",
+      "Warnungen zum Formulardesign:",
+      "Workflow-Warnungen:",
+      {
+        "deletedFormExists": "Im Papierkorb befindet sich ein Formular mit der ID \"{value}\". Wenn Sie dieses Formular hochladen, können Sie das andere mit der übereinstimmenden ID nicht wiederherstellen.",
+        "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
+      },
+      "Bitte beheben Sie die Probleme und versuchen es erneut.",
+      {
+        "create": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um das Formular trotzdem zu erzeugen:",
+        "update": "Wenn Sie sicher sind, dass diese Probleme ignoriert werden können, klicken Sie den Button, um den Entwurf trotzdem zu aktualisieren:"
+      }
+    ]
   },
   "es": {
     "title": {
@@ -452,14 +447,14 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Si aún no tiene uno, hay {tools} para ayudarlo a diseñar su formulario.",
         "tools": "herramientas disponibles"
-      }
+      },
+      "Si tiene archivos adjuntos de formulario, podrá cargarlos en la página siguiente, después de que se haya creado el formulario."
     ],
     "dropZone": {
       "full": "Suelta un archivo aquí o {chooseOne} para subir.",
       "chooseOne": "elige uno"
     },
     "action": {
-      "upload": "Subir",
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
@@ -469,7 +464,23 @@ $drop-zone-vpadding: 15px;
       "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
       "400_15": "El XLSForm no se pudo convertir: {error}",
       "409_3": "Un formulario ya existe en este proyecto con el ID formulario de {xmlFormId}"
-    }
+    },
+    "fields": "Campos:",
+    "warningsText": [
+      "Este archivo se puede utilizar, pero tiene los siguientes problemas posibles:",
+      "Advertencias sobre el diseño del formulario:",
+      "Advertencias sobre el flujo de trabajo:",
+      {
+        "deletedFormExists": "Hay un formulario con ID \"{value}\" en la Papelera. Si carga este formulario, no podrá recuperar el otro con la identificación coincidente.",
+        "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada.",
+        "oldEntityVersion": "La versión \"{version}\" de la especificación de entidades no es compatible con las entidades sin conexión. Se recomienda utilizar la versión 2024.1.0 o posterior."
+      },
+      "Por favor, corrija los problemas e intente nuevamente.",
+      {
+        "create": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para crear el formulario de todos modos:",
+        "update": "Si esta seguro que estos errores pueden ser ignorados, haga clic en el botón para actualizar el borrador de todos modos:"
+      }
+    ]
   },
   "fr": {
     "title": {
@@ -492,7 +503,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "Choisissez un"
     },
     "action": {
-      "upload": "Téléverser",
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
@@ -510,7 +520,8 @@ $drop-zone-vpadding: 15px;
       "Avertissements sur le déroulement des opérations :",
       {
         "deletedFormExists": "Il y a un formualire avec l'identifiant \"{value}\" dans la corbeille. Si vous envoyez ce Formulaire, vous ne serez pas en mesure restaurer l'autre ayant le même ID.",
-        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut."
+        "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut.",
+        "oldEntityVersion": "La version \"{version}\" de la spécification des entités n'est pas compatible avec les entités hors-ligne. Nous recommandons d'utiliser la version 2024.1.0 ou supérieure."
       },
       "Merci de corriger le problème et d'essayer à nouveau.",
       {
@@ -539,7 +550,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "pilih satu"
     },
     "action": {
-      "upload": "Unggah",
       "uploadAnyway": "Lanjutkan unggah"
     },
     "alert": {
@@ -572,7 +582,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "scegli uno"
     },
     "action": {
-      "upload": "Carica",
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
@@ -589,7 +598,9 @@ $drop-zone-vpadding: 15px;
       "Avvertenze sulla progettazione del formulario:",
       "Avvertenze sul flusso di lavoro:",
       {
-        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti."
+        "deletedFormExists": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di annullare l'eliminazione dell'altro con l'ID corrispondente.",
+        "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti.",
+        "oldEntityVersion": "Versione delle specifiche delle entità “{version}” non è compatibile con le Entità offline. Si consiglia di utilizzare la versione 2024.1.0 o successiva."
       },
       "Correggi i problemi e riprova.",
       {
@@ -618,7 +629,6 @@ $drop-zone-vpadding: 15px;
       "chooseOne": "１つ選択"
     },
     "action": {
-      "upload": "アップロード",
       "uploadAnyway": "ひとまず、アップロード"
     },
     "alert": {
@@ -629,6 +639,54 @@ $drop-zone-vpadding: 15px;
       "400_15": "XLSFormを変換できませんでした：{error}",
       "409_3": "このプロジェクトには、フォームID\"{xmlFormId}\"のフォームがすでに存在しています。"
     }
+  },
+  "pt": {
+    "title": {
+      "create": "Criar formulário",
+      "update": "Carregar nova definição de formulário"
+    },
+    "introduction": [
+      {
+        "create": "Para criar um formulário, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel.",
+        "update": "Para atualizar o rascunho, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel."
+      },
+      {
+        "full": "Se você não tem nenhum ainda, existem {tools} que podem ajudar você a construir seu formulário.",
+        "tools": "ferramentas disponíveis"
+      },
+      "Se você tiver Anexos do Formulário, poderá fornecê-los na próxima página, após o Formulário ter sido criado."
+    ],
+    "dropZone": {
+      "full": "Solte o arquivo aqui, ou {chooseOne}para carregar.",
+      "chooseOne": "escolha um"
+    },
+    "action": {
+      "uploadAnyway": "Carregar assim mesmo"
+    },
+    "alert": {
+      "fileRequired": "Por favor, selecione um arquivo."
+    },
+    "problem": {
+      "400_8": "A especificação de formulário que você carregou não parece ser para esse formulário. Ela contém uma identificação de formulário errada (era esperado \"{expected}\", mas encontramos \"{actual}\").",
+      "400_15": "O XLSForm não pode ser convertido: {error}",
+      "409_3": "Já existe um formulário nesse projeto com o ID de formulário \"{xmlFormId}\"."
+    },
+    "fields": "Campos:",
+    "warningsText": [
+      "Este arquivo pode ser usado, mas tem os seguintes problemas possíveis:",
+      "Avisos de design do formulário:",
+      "Avisos de fluxo de trabalho:",
+      {
+        "deletedFormExists": "Há um formulário com ID \"{value}\" na Lixeira. Se você fizer upload deste Formulário, não poderá desfazer a exclusão do outro com a ID correspondente.",
+        "structureChanged": "Os seguintes campos foram excluídos, renomeados ou agora estão em grupos diferentes ou repetições. Esses campos não estarão visíveis na tabela de Resposta ou incluídos nas exportações por padrão.",
+        "oldEntityVersion": "A versão “{version}” da especificação de Entidades não é compatível com Entidades Offline. Recomendamos utilizar a versão 2024.1.0 ou alguma mais recente."
+      },
+      "Por favor, corrija os problemas e tente novamente.",
+      {
+        "create": "Se tiver certeza de que esses problemas podem ser ignorados, clique no botão para criar o Formulário mesmo assim:",
+        "update": "Se tiver certeza de que esses problemas podem ser ignorados, clique no botão para atualizar o Rascunho mesmo assim:"
+      }
+    ]
   },
   "sw": {
     "title": {
@@ -643,14 +701,14 @@ $drop-zone-vpadding: 15px;
       {
         "full": "Ikiwa tayari huna, kuna {tools} za kukusaidia kuunda Fomu yako.",
         "tools": "zana zinazopatikana"
-      }
+      },
+      "Kwa sasa, tuwasilishe uchapishe Fomu zako na Seti ya Data, na usiidhinishe yoyotesho (na kwa hivyo usiunde pesa zisizohitajika) hadi uhakikishe kuwa Fomu iko tayari."
     ],
     "dropZone": {
       "full": "Dondosha faili hapa, au {chooseOne} ili upakie.",
       "chooseOne": "Chagua moja"
     },
     "action": {
-      "upload": "pakia",
       "uploadAnyway": "Pakia hata hivyo"
     },
     "alert": {
@@ -660,7 +718,70 @@ $drop-zone-vpadding: 15px;
       "400_8": "Ufafanuzi wa Fomu uliyopakia hauonekani kuwa wa Fomu hii. Ina formId isiyo sahihi (expected \"{expected}\", imepata \"{actual}\").",
       "400_15": "XLSForm haikuweza kubadilishwa: {error}",
       "409_3": "Tayari kuna Fomu katika Mradi huu yenye Kitambulisho cha Fomu ya “{xmlFormId}”."
-    }
+    },
+    "fields": "Viwanja:",
+    "warningsText": [
+      "Faili hii inaweza kutumika, lakini ina matatizo yafuatayo:",
+      "Maonyo ya muundo wa fomu:",
+      "Maonyo ya mtiririko wa kazi:",
+      {
+        "deletedFormExists": "Kuna fomu yenye kitambulisho \"{value}\" kwenye Tupio. Ukipakia Fomu hii, hutaweza kutendua nyingine kwa kutumia kitambulisho kinacholingana",
+        "structureChanged": "Sehemu zifuatazo zimefutwa, zimepewa jina jipya au sasa ziko katika vikundi tofauti au marudio. Sehemu hizi hazitaonekana katika jedwali la Wasilisho au kujumuishwa katika uhamishaji kwa chaguo msingi"
+      },
+      "Tafadhali sahihisha matatizo na ujaribu tena.",
+      {
+        "create": "Ikiwa una uhakika kuwa matatizo haya yanaweza kupuuzwa, bofya kitufe ili kuunda Fomu hata hivyo:",
+        "update": "Ikiwa una uhakika matatizo haya yanaweza kupuuzwa, bofya kitufe ili kusasisha Rasimu hata hivyo:"
+      }
+    ]
+  },
+  "zh-Hant": {
+    "title": {
+      "create": "建立表單",
+      "update": "上傳新表單定義"
+    },
+    "introduction": [
+      {
+        "create": "若要建立表單，請上傳 XForms XML 檔案或 XLSForm Excel 檔案。",
+        "update": "若要更新草稿，請上傳 XForms XML 檔案或 XLSForm Excel 檔案。"
+      },
+      {
+        "full": "如果您還沒有，可以使用{tools}來幫助您設計表單。",
+        "tools": "可用的工具"
+      },
+      "如果您有表單附件，則可以在建立表單後，於下個頁面提供這些附件。"
+    ],
+    "dropZone": {
+      "full": "將檔案拖曳到此處，或{chooseOne} 上傳。",
+      "chooseOne": "選擇一個檔案"
+    },
+    "action": {
+      "uploadAnyway": "無論如何上傳"
+    },
+    "alert": {
+      "fileRequired": "請選擇檔案"
+    },
+    "problem": {
+      "400_8": "您上傳的表單定義似乎不適用於此表單。它的 formId (表單 ID)錯誤（預期為“{expected}”，得到“{actual}”）。",
+      "400_15": "無法轉換 XLSForm：{error}",
+      "409_3": "此專案中已存在表單 ID 為「{xmlFormId}」的表單。"
+    },
+    "fields": "欄位：",
+    "warningsText": [
+      "該檔案可以使用，但可能存在以下問題：",
+      "表單設計警告：",
+      "工作流程警告：",
+      {
+        "deletedFormExists": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法取消刪除具有符合 ID 的另一張表單。",
+        "structureChanged": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。",
+        "oldEntityVersion": "實體規範版本 “{version}” 與離線實體不相容。我們建議使用2024.1.0或更高版本。"
+      },
+      "請更正問題並重試。",
+      {
+        "create": "如果您確定可以忽略這些問題，請按一下按鈕來建立表單：",
+        "update": "如果您確定可以忽略這些問題，請按一下按鈕來更新草稿："
+      }
+    ]
   }
 }
 </i18n>

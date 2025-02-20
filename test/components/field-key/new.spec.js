@@ -72,7 +72,7 @@ describe('FieldKeyNew', () => {
         .modify(create)
         .afterResponses(app => {
           const p = app.get('#field-key-new .modal-introduction p');
-          p.text().should.containEql('My App User');
+          p.text().should.include('My App User');
         }));
 
     describe('QR code', () => {
@@ -92,7 +92,7 @@ describe('FieldKeyNew', () => {
           .modify(create)
           .afterResponses(app => {
             const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
-            panel.props().managed.should.be.true();
+            panel.props().managed.should.be.true;
           }));
 
       describe('after user clicks link to switch to a legacy QR code', () => {
@@ -103,7 +103,7 @@ describe('FieldKeyNew', () => {
             .afterResponses(async (app) => {
               const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
               await panel.get('.switch-code').trigger('click');
-              panel.props().managed.should.be.false();
+              panel.props().managed.should.be.false;
             }));
 
         it('shows a legacy QR code in the next popover', () =>
@@ -120,7 +120,7 @@ describe('FieldKeyNew', () => {
               await app.get('.field-key-row-popover-link').trigger('click');
               await app.vm.$nextTick();
               const panel = document.querySelector('.popover .field-key-qr-panel');
-              panel.classList.contains('legacy').should.be.true();
+              panel.classList.contains('legacy').should.be.true;
             }));
 
         it('allows the user to switch back to a managed QR code', () =>
@@ -131,7 +131,7 @@ describe('FieldKeyNew', () => {
               const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
               await panel.get('.switch-code').trigger('click');
               await panel.get('.switch-code').trigger('click');
-              panel.props().managed.should.be.true();
+              panel.props().managed.should.be.true;
             }));
       });
 
@@ -145,7 +145,7 @@ describe('FieldKeyNew', () => {
           .modify(create)
           .afterResponses(app => {
             const panel = app.getComponent(FieldKeyNew).getComponent(FieldKeyQrPanel);
-            panel.props().managed.should.be.false();
+            panel.props().managed.should.be.false;
           }));
     });
 
@@ -158,7 +158,7 @@ describe('FieldKeyNew', () => {
           .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
-            app.getComponent(FieldKeyNew).props().state.should.be.false();
+            app.getComponent(FieldKeyNew).props().state.should.be.false;
           }));
 
       it('updates the number of rows in the table', () =>
@@ -191,7 +191,7 @@ describe('FieldKeyNew', () => {
           .modify(create)
           .afterResponses(async (app) => {
             await app.get('#field-key-new .btn-link').trigger('click');
-            app.getComponent(FieldKeyNew).props().state.should.be.true();
+            app.getComponent(FieldKeyNew).props().state.should.be.true;
           }));
 
       it('shows a blank input', () =>
@@ -225,7 +225,7 @@ describe('FieldKeyNew', () => {
           })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
           .afterResponse(app => {
-            app.getComponent(FieldKeyNew).props().state.should.be.false();
+            app.getComponent(FieldKeyNew).props().state.should.be.false;
           }));
 
       it('updates the number of rows in the table', () =>

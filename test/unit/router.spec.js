@@ -1,6 +1,7 @@
 import sinon from 'sinon';
+import { F } from 'ramda';
 
-import { afterNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
+import { afterNextNavigation, beforeNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -76,6 +77,49 @@ describe('util/router', () => {
     });
   });
 
+  describe('beforeNextNavigation()', () => {
+    beforeEach(mockLogin);
+
+    it('runs the callback during the next navigation', () => {
+      const callback = sinon.fake();
+      return load('/')
+        .afterResponses(app => {
+          beforeNextNavigation(app.vm.$router, callback);
+        })
+        .load('/users')
+        .afterResponses(() => {
+          callback.called.should.be.true;
+          const args = callback.args[0];
+          args[0].path.should.equal('/users');
+          args[1].path.should.equal('/');
+        });
+    });
+
+    it('returns the return value of the callback to the router', () =>
+      load('/')
+        .afterResponses(app => {
+          beforeNextNavigation(app.vm.$router, F);
+        })
+        .route('/users')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
+
+    it('does not run the callback during a later navigation', () => {
+      const callback = sinon.fake();
+      return load('/')
+        .afterResponses(app => {
+          beforeNextNavigation(app.vm.$router, callback);
+        })
+        .load('/users')
+        .complete()
+        .load('/account/edit')
+        .afterResponses(() => {
+          callback.callCount.should.equal(1);
+        });
+    });
+  });
+
   describe('afterNextNavigation()', () => {
     beforeEach(mockLogin);
 
@@ -87,7 +131,7 @@ describe('util/router', () => {
         })
         .load('/users')
         .afterResponses(() => {
-          callback.called.should.be.true();
+          callback.called.should.be.true;
           const args = callback.args[0];
           args[0].path.should.equal('/users');
           args[1].path.should.equal('/');
@@ -117,8 +161,8 @@ describe('util/router', () => {
         })
         .load('/users')
         .afterResponses(() => {
-          callbacks[0].called.should.be.true();
-          callbacks[1].called.should.be.true();
+          callbacks[0].called.should.be.true;
+          callbacks[1].called.should.be.true;
         });
     });
   });
@@ -139,7 +183,7 @@ describe('util/router', () => {
 
     it('returns a promise', () => {
       const container = createTestContainer({ router: testRouter() });
-      forceReplace(container, '/').should.be.a.Promise();
+      forceReplace(container, '/').should.be.an.instanceof(Promise);
     });
 
     describe('unsaved changes', () => {
@@ -150,7 +194,7 @@ describe('util/router', () => {
         const confirm = sinon.fake();
         sinon.replace(window, 'confirm', confirm);
         await forceReplace(container, '/');
-        confirm.called.should.be.false();
+        confirm.called.should.be.false;
       });
 
       it('resets unsavedChanges', async () => {

@@ -8,7 +8,6 @@ import useSubmissions from '../../../src/request-data/submissions';
 import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
-import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
 
@@ -17,7 +16,8 @@ const mountComponent = (options = undefined) => {
     props: {
       projectId: '1',
       xmlFormId: 'f',
-      draft: false
+      draft: false,
+      awaitingDeletedResponses: new Set()
     },
     container: {
       requestData: testRequestData([useFields, useSubmissions], {
@@ -49,8 +49,13 @@ describe('SubmissionTable', () => {
       const component = mountComponent({
         props: { draft: false }
       });
-      const table = component.get('#submission-table-metadata');
-      headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
+      const table = component.get('.table-freeze-frozen');
+      headers(table).should.eql([
+        'Row',
+        'Submitted by',
+        'Submitted at',
+        'State and actions'
+      ]);
     });
 
     it('renders the correct headers for a form draft', () => {
@@ -59,8 +64,22 @@ describe('SubmissionTable', () => {
       const component = mountComponent({
         props: { draft: true }
       });
-      const table = component.get('#submission-table-metadata');
-      headers(table).should.eql(['', 'Submitted at']);
+      const table = component.get('.table-freeze-frozen');
+      headers(table).should.eql(['Row', 'Submitted at']);
+    });
+
+    it('renders the correct headers for deleted submissions', () => {
+      testData.extendedSubmissions.createPast(1);
+      const component = mountComponent({
+        props: { draft: false, deleted: true }
+      });
+      const table = component.get('.table-freeze-frozen');
+      headers(table).should.eql([
+        'Row',
+        'Submitted by',
+        'Submitted at',
+        'Deleted at'
+      ]);
     });
   });
 
@@ -71,7 +90,7 @@ describe('SubmissionTable', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1);
-      const table = mountComponent().get('#submission-table-data');
+      const table = mountComponent().get('.table-freeze-scrolling');
       headers(table).should.eql(['s1', 's2', 'Instance ID']);
     });
 
@@ -83,7 +102,7 @@ describe('SubmissionTable', () => {
       testData.extendedForms.createPast(1, { fields, submissions: 1 });
       testData.extendedSubmissions.createPast(1);
       const component = mountComponent();
-      const table = component.get('#submission-table-data');
+      const table = component.get('.table-freeze-scrolling');
       headers(table).should.eql(['g-s', 'Instance ID']);
     });
   });
@@ -114,71 +133,5 @@ describe('SubmissionTable', () => {
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
     rows.map(row => row.props().rowNumber).should.eql([10, 9]);
-  });
-
-  describe('canUpdate prop of SubmissionMetadataRow', () => {
-    it('passes true if the user can submission.update', () => {
-      mockLogin();
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.true();
-    });
-
-    it('passes false if the user cannot submission.update', () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.false();
-    });
-  });
-
-  describe('visibility of actions', () => {
-    it('shows actions if user hovers over a SubmissionDataRow', async () => {
-      testData.extendedForms.createPast(1, { submissions: 2 });
-      testData.extendedSubmissions.createPast(2);
-      const component = mountComponent();
-      await component.getComponent(SubmissionDataRow).trigger('mouseover');
-      const metadataRows = component.findAllComponents(SubmissionMetadataRow);
-      metadataRows[0].classes('data-hover').should.be.true();
-      metadataRows[1].classes('data-hover').should.be.false();
-    });
-
-    it('toggles actions if user hovers over a new SubmissionDataRow', async () => {
-      testData.extendedForms.createPast(1, { submissions: 2 });
-      testData.extendedSubmissions.createPast(2);
-      const component = mountComponent();
-      const dataRows = component.findAllComponents(SubmissionDataRow);
-      await dataRows[0].trigger('mouseover');
-      await dataRows[1].trigger('mouseover');
-      const metadataRows = component.findAllComponents(SubmissionMetadataRow);
-      metadataRows[0].classes('data-hover').should.be.false();
-      metadataRows[1].classes('data-hover').should.be.true();
-    });
-
-    it('hides the actions if the cursor leaves the table', async () => {
-      testData.extendedForms.createPast(1, { submissions: 2 });
-      testData.extendedSubmissions.createPast(2);
-      const component = mountComponent();
-      await component.getComponent(SubmissionDataRow).trigger('mouseover');
-      await component.get('#submission-table-data tbody').trigger('mouseleave');
-      const metadataRow = component.getComponent(SubmissionMetadataRow);
-      metadataRow.classes('data-hover').should.be.false();
-    });
-
-    it('adds a class for the actions trigger', async () => {
-      testData.extendedSubmissions.createPast(1);
-      const component = mountComponent({ attachTo: document.body });
-      const tbody = component.get('#submission-table-metadata tbody');
-      tbody.classes('submission-table-actions-trigger-hover').should.be.true();
-      const btn = tbody.findAll('.btn');
-      await btn[0].trigger('focusin');
-      tbody.classes('submission-table-actions-trigger-focus').should.be.true();
-      await component.getComponent(SubmissionMetadataRow).trigger('mousemove');
-      tbody.classes('submission-table-actions-trigger-hover').should.be.true();
-      await btn[1].trigger('focusin');
-      await component.getComponent(SubmissionDataRow).trigger('mousemove');
-      tbody.classes('submission-table-actions-trigger-hover').should.be.true();
-    });
   });
 });

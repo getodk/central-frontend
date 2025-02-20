@@ -15,6 +15,6 @@ describe('PageSection', () => {
     const component = mountComponent({
       props: { horizontal: true }
     });
-    component.classes('horizontal').should.be.true();
+    component.classes('horizontal').should.be.true;
   });
 });

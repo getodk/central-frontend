@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Statut",
         "testing": "Test"
       }
     }
@@ -58,11 +57,12 @@
       "user": "Actions d'utilisateur web",
       "project": "Actions de projet",
       "form": "Actions de formulaire",
-      "dataset": "Actions sur les Datasets",
       "field_key": "Actions d'utilisateurs mobiles",
       "public_link": "Actions de liens d'accès public",
+      "dataset": "Actions de listes d'entités",
       "config": "Actions de configuration du serveur",
-      "upgrade": "Mise à jour du serveur"
+      "upgrade": "Mise à jour du serveur",
+      "task": "Opération système"
     },
     "action": {
       "default": {
@@ -72,6 +72,10 @@
         "delete": "Supprimer"
       },
       "analytics": "Rapport d'utilisation",
+      "blobs": {
+        "s3_upload": "Téléverser les Fichiers sur le Stockage",
+        "s3_failed_to_pending": "Marquer les fichiers pour réessayer envoi au stockage"
+      },
       "config": {
         "set": "Spécifier"
       },
@@ -89,6 +93,7 @@
       },
       "form": {
         "update_draft_set": "Créer ou mettre à jour l'ébauche",
+        "update_draft_replace": "Remplacer ébauche",
         "update_publish": "Publier l'ébauche",
         "update_draft_delete": "Abandonner l'ébauche",
         "attachment_update": "Mettre à jour les fichiers joints",
@@ -106,9 +111,13 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Purger les Soumissions"
+      },
       "upgrade": {
         "process_form": "Traiter le formulaire",
-        "process_form_draft": "Traiter l'ébauche du formulaire"
+        "process_form_draft": "Traiter l'ébauche du formulaire",
+        "process_form_entities_version": "Marquer le formulaire pour mise à jour"
       },
       "user": {
         "assignment_create": "Attribuer un rôle",
@@ -130,8 +139,10 @@
     "clear": "Effacer",
     "close": "Fermer",
     "comment": "Ajouter commentaire",
+    "continue": "Continuer",
     "create": "Créer",
     "createSubmission": "Nouveau",
+    "delete": "Supprimer",
     "done": "Fait",
     "download": "Télécharger",
     "edit": "Éditer",
@@ -152,11 +163,15 @@
     "saveSettings": "Enregistrer les réglages",
     "sort": "Trier",
     "update": "Actualiser",
-    "yesProceed": "Oui, procéder",
+    "yesProceed": "Oui, continuer",
     "showPreview": "Aperçu",
     "hidePreview": "Cacher l'aperçu",
+    "newPreview": "Nouvel Aperçu",
     "expand": "Déplier",
-    "collapse": "Replier"
+    "collapse": "Replier",
+    "reviewParallelUpdates": "Examiner les mises à jour parallèles",
+    "upload": "Téléverser",
+    "restore": "Restaurer"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -169,7 +184,6 @@
     "passphrase": "Phrase de passe",
     "password": "Mot de passe",
     "passwordConfirm": "Nouveau mot de passe (confirmez)",
-    "reviewState": "État",
     "type": "Type"
   },
   "header": {
@@ -182,7 +196,9 @@
     "email": "Adresse de courriel",
     "instanceId": "ID de l'instance",
     "lastSubmission": "Dernière soumission",
+    "recentActivity": "Activité récente",
     "name": "Nom",
+    "listName": "Nom de la liste",
     "submitterName": "Soumis par",
     "submissionDate": "Soumis à",
     "time": "Heure",
@@ -201,33 +217,43 @@
   "count": {
     "appUser": "{count} utilisateur mobile | {count} utilisateurs mobiles | {count} utilisateurs mobiles",
     "form": "{count} Formulaire | {count} Formulaires | {count} Formulaires",
-    "submission": "{count} Soumission | {count} Soumissions | {count} Soumissions"
+    "submission": "{count} Soumission | {count} Soumissions | {count} Soumissions",
+    "warning": "{count} message d'avertissement | {count} messages d'avertissement | {count} messages d'avertissement"
   },
   "resource": {
     "appUser": "Utilisateur mobile",
     "appUsers": "Utilisateurs mobiles",
     "config": "Configuration du serveur",
-    "dataset": "Dataset",
-    "datasets": "Datasets",
+    "entity": "Entité",
     "entities": "Entités",
+    "entityList": "Liste d'entités",
+    "entityLists": "Listes d'Entités",
     "form": "Formulaire",
     "forms": "Formulaires",
     "formAttachments": "Fichiers joints du formulaire",
     "project": "Projet",
     "projects": "Projets",
+    "property": "Propriété",
+    "properties": "Propriétés",
     "publicLink": "Lien d'accès public",
     "user": "Utilisateur",
     "users": "Utilisateurs",
     "webUser": "Utilisateur web",
     "webUsers": "Utilisateurs web",
     "session": "Session",
+    "submission": "Soumission",
     "submissions": "Soumissions",
-    "projectRoles": "Rôles du projet"
+    "projectRoles": "Rôles du projet",
+    "formPreview": "Aperçu du Formulaire",
+    "draft": "Ébauche"
   },
   "alert": {
     "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",
-    "updateReviewState": "État sauvegardé!",
-    "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu."
+    "updateEntity": "L'entité a été mise à jour !",
+    "updateReviewState": "État sauvegardé !",
+    "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu.",
+    "submissionDeleted": "La soumission a été supprimée",
+    "submissionRestored": "La soumission a été restaurée."
   },
   "moreInfo": {
     "clickHere": {
@@ -255,29 +281,40 @@
     "editDisabled": "Vous ne pouvez pas éditer les soumissions chiffrées",
     "binaryLinkTitle": "Le fichier a été soumis. Cliquez pour le télécharger.",
     "encryptionMessage": "La prévisualisation des données n'est pas disponible en raison du chiffrement.",
-    "noSubmission": "(aucun)",
-    "emptyTable": "Il n'y a pas encore de Soumission"
+    "noSubmission": "(aucune)",
+    "emptyTable": "Il n'y a pas encore de Soumission",
+    "fileDownloadUnavailable": "Le téléchargement de fichiers n'est pas disponible pour les Soumissions supprimées."
   },
   "entity": {
-    "label": "Étiquettes",
-    "entityId": "ID de l'entité"
+    "label": "Étiquette",
+    "entityLabel": "Étiquette de l'entité",
+    "entityId": "ID de l'entité",
+    "noProperties": "Ce formulaire définit seulement l'étiquette.",
+    "noEntity": "(aucune)",
+    "conflictsCount": "{count} conflit | {count} conflits | {count} conflits"
   },
   "common": {
     "activity": "Activité",
     "anybody": "(n'importe qui)",
-    "areYouSure": "Êtes vous sûr de vouloir procéder ?",
+    "areYouSure": "Êtes vous sûr de vouloir continuer ?",
     "basicInfo": "Information de base",
+    "conflict": "Conflit",
+    "conflicts": "Conflits",
     "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
     "data": "Données",
     "docs": "Documents",
+    "emptyValue": "(vide)",
     "error": "Erreur",
     "filter": "Filtrer",
     "forum": "Forum",
+    "lastUpdate": "Dernière mise à jour",
     "loading": "Chargement...",
     "no": "Non",
     "noResults": "Aucun résultat",
+    "noUndo": "Cette action ne pourra pas être annulée",
     "rightNow": "Présentement",
+    "rowNumber": "Ligne",
     "success": "Succès !",
     "system": "Système",
     "yes": "Oui",
@@ -287,29 +324,43 @@
     },
     "total": "Total",
     "totalSubmissions": "Nombre total de soumissions",
-    "punctuations": {
-      "comma": ","
-    },
-    "datasetsPreview": "Aperçu des Dataset",
-    "propertiesCount": "{inform} entité sur {count} | {inform} entités sur {count} | {inform} entité(s) sur {count}"
+    "propertiesCount": "{inform} de {count} propriété | {inform} de {count} propriétés | {inform} de {count} propriété(s)",
+    "new": "Nouveau !",
+    "totalEntities": "Nombre d'entités",
+    "versionShort": "v {version}",
+    "warning": "Avertissement",
+    "reviewState": "État",
+    "status": "Statut",
+    "version": "Version"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "Le fichier “{name}” que vous essayez de charger dépasse la limite des 100MB acceptés."
+        "fileSize": "Le fichier “{name}” que vous essayez de charger dépasse la limite des 100MB acceptés.",
+        "entityTooLarge": "Les données que vous essayez d'envoyer sont trop volumineuses."
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (archivé)"
-    }
-  },
   "util": {
+    "csv": {
+      "readError": "Il y a eu un problème à la lecture de votre fichier : {message}",
+      "invalidCSV": "Le fichier \"{name}\" n'est pas un fichier .csv valide. Il ne peut pas être lu.",
+      "rowError": "Il y a un problème à la {row} ligne du fichier : {message}",
+      "invalidQuotes": "Un champ entre guillemets n'est pas valide. Vérifiez la ligne pour voir s'il n'y a pas de valeurs inhabituelles.",
+      "emptyRow": "La ligne est vide.",
+      "dataWithoutHeader": "{expected} colonne attendue, mais {actual} trouvée(s). | {expected} colonnes attendues, mais {actual} trouvée(s). | {expected} colonnes attendues, mais {actual} trouvée(s)."
+    },
     "request": {
       "noRequest": "Quelque-chose s'est mal passé : il n'y avait pas de requête.",
       "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
-      "errorNotProblem": "Quelque-chose s'est mal passé : code d'erreur {status}."
+      "errorNotProblem": "Quelque-chose s'est mal passé : code d'erreur {status}.",
+      "problem": {
+        "404_1": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée.",
+        "409_17": {
+          "message": "Ce formulaire tente de créer une nouvelle propriété d'Entité qui correspond à une propriété existante, à l'exception des majuscules : | Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules : | Ce formulaire tente de créer de nouvelles propriétés d'Entité qui correspondent à des propriétés existantes, à l'exception des majuscules :",
+          "duplicateProperty": "{provided}(existante : {current})"
+        }
+      }
     },
     "session": {
       "alert": {
@@ -321,5 +372,10 @@
   },
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivé)"
+    }
   }
 }

@@ -31,7 +31,7 @@ describe('FormDelete', () => {
       const modal = mount(FormDelete, mountOptions());
       const p = modal.findAll('.modal-introduction p');
       p.length.should.equal(3);
-      p[2].text().should.containEql('Entities');
+      p[2].text().should.include('Entities');
     });
 
     it('shows the correct text if the form does not create entities', () => {
@@ -69,7 +69,7 @@ describe('FormDelete', () => {
         .respondWithData(() => []); // Empty list of deleted forms
     };
 
-    it('navigates to the project overview', async () => {
+    it('navigates to the forms page', async () => {
       const app = await del();
       app.vm.$route.path.should.equal('/projects/1');
     });
@@ -78,5 +78,11 @@ describe('FormDelete', () => {
       const app = await del();
       app.should.alert('success');
     });
+
+    it('decreases the form count even before the forms response', () =>
+      del().beforeEachResponse((app, _, i) => {
+        if (i === 0) return;
+        app.get('#page-head-tabs li.active .badge').text().should.equal('0');
+      }));
   });
 });

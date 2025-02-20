@@ -19,7 +19,6 @@
     },
     "draftNav": {
       "tab": {
-        "status": "Hali",
         "testing": "Upimaji"
       }
     }
@@ -41,7 +40,8 @@
   "formState": {
     "open": "Fungua",
     "closing": "Kufunga",
-    "closed": "imefungwa"
+    "closed": "imefungwa",
+    "unpublished": "Bado haijachapishwa"
   },
   "reviewState": {
     "received": "Imepokelewa",
@@ -59,6 +59,7 @@
       "form": "Vitendo vya fomu",
       "field_key": "Vitendo vya mtumiaji wa programu",
       "public_link": "vitendo vya kiungo cha ufikiaji wa umma",
+      "dataset": "Vitendo vya Orodha ya Huluki",
       "config": "vitendo vya usanidi wa seva",
       "upgrade": "uboreshaji wa seva"
     },
@@ -74,6 +75,8 @@
         "set": "weka"
       },
       "dataset": {
+        "update": "Sasisha",
+        "update_publish": "Kuchapisha",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -126,12 +129,14 @@
     "clear": "Safisha",
     "close": "Funga",
     "comment": "Maoni",
+    "continue": "Endelea",
     "create": "Unda",
     "createSubmission": "Mpya",
     "done": "Imekamilika",
     "download": "Pakua",
     "edit": "Hariri",
     "editProfile": "Hariri wasifu",
+    "finish": "Maliza",
     "logIn": "Ingia",
     "looksGood": "Inaonekana vizuri, endelea",
     "more": "Zaidi",
@@ -145,10 +150,16 @@
     "review": "hakiki",
     "save": "hifadhi",
     "saveSettings": "hifadhi mipangilio",
+    "sort": "Panga",
     "update": "sasisha",
     "yesProceed": "Ndio,endelea",
     "showPreview": "Hakiki",
-    "hidePreview": "Ficha hakiki"
+    "hidePreview": "Ficha hakiki",
+    "expand": "Panua",
+    "collapse": "Punguza",
+    "reviewParallelUpdates": "Kagua masasisho sambamba",
+    "upload": "pakia",
+    "restore": "Ondoa kufuta"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -161,28 +172,34 @@
     "passphrase": "Nenosiri",
     "password": "Password",
     "passwordConfirm": "Password mpya (thibitisha)",
-    "reviewState": "Kagua hali",
     "type": "Aina"
   },
   "header": {
     "actions": "Vitendo",
     "created": "Imeundwa",
     "createdBy": "Imeundwa na",
+    "createdAt": "Imeundwa saa",
+    "updatedBy": "Imesasishwa na",
     "displayName": "Onyesha jina",
     "email": "Barua pepe",
     "instanceId": "Kitambulisho cha Mfano",
     "lastSubmission": "uwasilishaji wa hivi karibuni",
+    "recentActivity": "Shughuli ya Hivi Karibuni",
     "name": "Jina",
+    "listName": "Jina la Orodha",
     "submitterName": "iliyowasilishwa na",
     "submissionDate": "imewasilishwa kwa",
     "time": "Muda",
-    "type": "Aina"
+    "type": "Aina",
+    "entities": "Jumla ya Mashirika",
+    "lastEntity": "huluki karibuni"
   },
   "plural": {
     "appUser": "mtumiaji wa programu | Watumiaji wa programu",
     "form": "Fomu | Fomu",
     "project": "Mradi | Miradi",
     "submission": "Uwasilishaji | Mawasilisho",
+    "user": "Mtumiaji | Watumiaji",
     "webUser": "mtumiaji wa wavuti | watumiaji wa mtandao"
   },
   "count": {
@@ -194,10 +211,14 @@
     "appUser": "mtumiaji wa programu",
     "appUsers": "watumiaji wa programu",
     "config": "usanidi wa seva",
+    "entities": "vyombo",
+    "entityList": "Orodha ya Huluki",
     "form": "Fomu",
     "forms": "fomu",
+    "formAttachments": "Viambatisho vya Fomu",
     "project": "Mradi",
     "projects": "miradi",
+    "property": "Mali",
     "publicLink": "Kiungo cha ufikiaji wa umma",
     "user": "mtumiaji",
     "users": "Watumiaji",
@@ -205,11 +226,14 @@
     "webUsers": "watumiaji wa mtandao",
     "session": "kipindi",
     "submissions": "mawasilisho",
-    "projectRoles": "majukumu ya mradi"
+    "projectRoles": "majukumu ya mradi",
+    "draft": "Rasimu"
   },
   "alert": {
     "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",
-    "updateReviewState": "Kagua Jimbo limehifadhiwa!"
+    "updateEntity": "Huluki imesasishwa!",
+    "updateReviewState": "Kagua Jimbo limehifadhiwa!",
+    "versionChange": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka tabia isiyotabirika."
   },
   "moreInfo": {
     "clickHere": {
@@ -230,21 +254,39 @@
     }
   },
   "submission": {
+    "missingAttachment": "Kiambatisho kinakosekana",
     "action": {
       "edit": "Hariri ({count})"
     },
     "editDisabled": "Huwezi kuhariri mawasilisho yaliyosimbwa kwa njia fiche",
     "binaryLinkTitle": "Faili iliwasilishwa. Bofya ili kupakua.",
-    "encryptionMessage": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche"
+    "encryptionMessage": "Onyesho la kukagua data halipatikani kwa sababu ya usimbaji fiche",
+    "noSubmission": "(hakuna)",
+    "emptyTable": "Bado hakuna Mawasilisho."
+  },
+  "entity": {
+    "label": "Label",
+    "entityLabel": "Lebo ya Huluki",
+    "entityId": "Kitambulisho cha huluki",
+    "noProperties": "Fomu hii huweka \"lebo\" pekee.",
+    "noEntity": "(hakuna)",
+    "conflictsCount": "{count} mzozo | {count} migogoro"
   },
   "common": {
     "activity": "shughuli",
     "anybody": "(Mtu yeyote)",
     "areYouSure": "Je, una uhakika ungependa kuendelea?",
     "basicInfo": "Taarifa za Msingi",
+    "conflicts": "migogoro",
     "currentDraft": "Rasimu Yako ya Sasa",
     "dangerZone": "Eneo la Hatari",
+    "data": "Data",
+    "docs": "Hati",
+    "emptyValue": "(tupu)",
+    "error": "Hitilafu",
     "filter": "chujio",
+    "forum": "Jukwaa",
+    "loading": "Inapakia...",
     "no": "Hapana",
     "noResults": "Hakuna majibu",
     "rightNow": "Sasaivi",
@@ -255,18 +297,20 @@
       "settings": "mipangilio",
       "overview": "muhtasari"
     },
-    "total": "jumla"
+    "total": "jumla",
+    "totalSubmissions": "Jumla ya Mawasilisho",
+    "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}",
+    "new": "Mpya!",
+    "totalEntities": "Jumla ya Mashirika",
+    "reviewState": "Kagua hali",
+    "status": "Hali",
+    "version": "Toleo"
   },
   "mixin": {
     "request": {
       "alert": {
         "fileSize": "faili \"{name}\" ambayo unajaribu kupakia ni kubwa kuliko kikomo cha MB 100"
       }
-    }
-  },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (iliyohifadhiwa)"
     }
   },
   "util": {
@@ -285,5 +329,10 @@
   },
   "router": {
     "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (iliyohifadhiwa)"
+    }
   }
 }
