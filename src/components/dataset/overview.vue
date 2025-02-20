@@ -50,7 +50,7 @@ except according to the terms contained in the LICENSE file.
 import PageSection from '../page/section.vue';
 import ConnectionToForms from './overview/connection-to-forms.vue';
 import LinkedForms from './overview/linked-forms.vue';
-import DatasetPropertyNew from './overview/new-property.vue';
+import DatasetPropertyNew from './property/new.vue';
 import DatasetProperties from './overview/dataset-properties.vue';
 
 import { modalData } from '../../util/reactivity';

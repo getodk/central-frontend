@@ -1,4 +1,4 @@
-import DatasetPropertyNew from '../../../../src/components/dataset/overview/new-property.vue';
+import DatasetPropertyNew from '../../../../src/components/dataset/property/new.vue';
 import DatasetProperties from '../../../../src/components/dataset/overview/dataset-properties.vue';
 import ConnectionToForms from '../../../../src/components/dataset/overview/connection-to-forms.vue';
 
