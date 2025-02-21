@@ -352,7 +352,7 @@ describe('FormDraftPublish', () => {
         return { success: true };
       })
       .respondWithData(() => testData.extendedForms.last())
-      .respondWithData(() => []) // publishedAttachments
+      .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
       .respondWithData(() => testData.formDatasetDiffs.sorted())
       .respondWithData(() => testData.extendedProjects.last())
       .respondForComponent('FormSubmissions');

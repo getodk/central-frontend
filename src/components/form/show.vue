@@ -109,6 +109,13 @@ const stopWaitingForProject = watchEffect(() => {
       url: apiPaths.formActors(props.projectId, props.xmlFormId, 'app-user')
     }).catch(noop);
   }
+  /* It doesn't work to call stopWaitingForProject() synchronously. You can see
+  that if you remove the nextTick() and try running tests. I think the reason
+  why is that if you navigate from another page that has fetched `project`
+  already (e.g., the form list), then project.dataExists will be `true`, so the
+  watch effect will complete synchronously during component setup. But in that
+  case, watchEffect() won't have had a chance to return a value:
+  stopWaitingForProject won't be assigned yet. */
   nextTick(() => stopWaitingForProject());
 });
 

@@ -78,12 +78,14 @@ const responsesByComponent = {
     attachments: () => (testData.extendedFormVersions.last().publishedAt == null
       ? testData.standardFormAttachments.sorted()
       : mockResponse.problem(404.1)),
+
+    // Conditional responses (mockHttp().respondIf())
     publishedAttachments: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/attachments$/.test(url),
       () => []
     ],
     formDatasetDiff: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/dataset-diff/.test(url),
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/dataset-diff$/.test(url),
       () => testData.formDatasetDiffs.sorted()
     ],
     appUserCount: [

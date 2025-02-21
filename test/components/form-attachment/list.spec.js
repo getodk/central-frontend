@@ -1143,7 +1143,7 @@ describe('FormAttachmentList', () => {
             return { success: true };
           })
           .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => []) // publishedAttachments
+          .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
           .respondWithData(() => testData.formDatasetDiffs.sorted())
           .respondWithData(() => testData.extendedProjects.last())
           .respondForComponent('FormSubmissions')
@@ -1156,10 +1156,7 @@ describe('FormAttachmentList', () => {
           })
           .respondFor('/projects/1/forms/f/draft', {
             project: false,
-            form: false,
-            publishedAttachments: false,
-            formDatasetDiff: false,
-            appUserCount: false
+            form: false
           })
           .complete()
           .route('/projects/1/forms/f/draft/attachments')
@@ -1201,7 +1198,7 @@ describe('FormAttachmentList', () => {
             return { success: true };
           })
           .respondWithData(() => testData.extendedForms.last())
-          .respondWithData(() => []) // publishedAttachments
+          .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
           .respondWithData(() => testData.formDatasetDiffs.sorted())
           .respondWithData(() => testData.extendedProjects.last())
           .respondForComponent('FormSubmissions')
@@ -1214,10 +1211,7 @@ describe('FormAttachmentList', () => {
           })
           .respondFor('/projects/1/forms/f/draft', {
             project: false,
-            form: false,
-            publishedAttachments: false,
-            formDatasetDiff: false,
-            appUserCount: false
+            form: false
           })
           .complete()
           .route('/projects/1/forms/f/draft/attachments')

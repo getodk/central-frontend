@@ -431,6 +431,7 @@ class MockHttp {
     return this.respond(() => mockResponse.problem(problemOrCode));
   }
 
+  // Specifies a response to return for a matching request.
   respondIf(f, responseCallback) {
     return this._with({
       respondIf: [...this._respondIf, [f, responseCallback]]
@@ -449,10 +450,10 @@ class MockHttp {
   }
 
   // respondForComponent() responds with all the responses expected for the
-  // specified component. This method is used in respondFor() and elsewhere, but
-  // it is rarely used directly in tests.
-  respondForComponent(name, options = undefined) {
-    return requestDataByComponent(name).responses.reduce(
+  // specified route component. Most tests should use respondFor() instead of
+  // this method.
+  respondForComponent(componentName, options = undefined) {
+    return requestDataByComponent(componentName).responses.reduce(
       (series, [resourceName, response]) => {
         const option = options != null ? options[resourceName] : null;
         if (option === false) return series;
@@ -464,7 +465,7 @@ class MockHttp {
             () => mockResponse.of((option ?? response[1])())
           );
         }
-        throw new Error('invalid response for component');
+        throw new Error(`invalid response for component ${componentName}`);
       },
       this
     );
