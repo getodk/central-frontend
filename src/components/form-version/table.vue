@@ -19,8 +19,9 @@ except according to the terms contained in the LICENSE file.
       </tr>
     </thead>
     <tbody v-if="formVersions.dataExists">
-      <form-version-row v-for="version of formVersions" :key="version.version"
-        :version="version" @view-xml="$emit('view-xml')"/>
+      <form-version-row v-for="(version, index) in formVersions"
+        :key="version.version" :version="version" :current="index === 0"
+        @view-xml="$emit('view-xml')"/>
     </tbody>
   </table>
 </template>

@@ -12,7 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="form-version-row">
     <td class="version">
-      <form-version-string :version="version.version"/>
+      <div>
+        <div><form-version-string :version="version.version"/></div>
+        <div v-if="current"><span class="chip">{{ $t('current') }}</span></div>
+      </div>
     </td>
     <td>
       <time-and-user :iso="version.publishedAt" :user="version.publishedBy"/>
@@ -24,22 +27,22 @@ except according to the terms contained in the LICENSE file.
   </tr>
 </template>
 
-<script>
+<script setup>
 import FormVersionDefDropdown from './def-dropdown.vue';
 import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
 
-export default {
-  name: 'FormVersionRow',
-  components: { FormVersionDefDropdown, FormVersionString, TimeAndUser },
-  props: {
-    version: {
-      type: Object,
-      required: true
-    }
+defineOptions({
+  name: 'FormVersionRow'
+});
+defineProps({
+  version: {
+    type: Object,
+    required: true
   },
-  emits: ['view-xml']
-};
+  current: Boolean
+});
+defineEmits(['view-xml']);
 </script>
 
 <style lang="scss">
@@ -47,6 +50,27 @@ export default {
 
 .form-version-row {
   .table tbody & td { vertical-align: middle; }
-  .version { @include text-overflow-ellipsis; }
+
+  .version > div {
+    column-gap: 15px;
+    display: flex;
+
+    > :first-child {
+      @include text-overflow-ellipsis;
+      // This is needed to prevent overflow when the flexbox only has one child.
+      max-width: 100%;
+    }
+
+    > :last-child { flex-shrink: 0; }
+  }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    // This is a label shown for the current version of a Form.
+    "current": "Current Published Version"
+  }
+}
+</i18n>
