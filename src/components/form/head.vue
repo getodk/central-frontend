@@ -17,10 +17,34 @@ except according to the terms contained in the LICENSE file.
         <div class="row">
           <!-- Using .col-xs-6 so that if the form name is long, it is not
           behind #form-head-draft-nav. -->
-          <div class="col-xs-6">
-            <div v-if="form.dataExists" class="h1" v-tooltip.text>
-              {{ form.nameOrId }}
-            </div>
+          <div class="col-xs-6 form-head-form-title">
+              <div v-if="form.dataExists" class="h1" v-tooltip.text>
+                {{ form.nameOrId }}
+              </div>
+              <infonav v-if="formDatasetDiff.dataExists && publishedAttachments.dataExists
+               && (updatedDatasets.length > 0 || attachedDatasets.length > 0)">
+                <template #title>
+                  <span class="icon-magic-wand"></span>{{ relatedDatasetInfonavTitle }}
+                </template>
+                <template #dropdown>
+                  <li v-if="updatedDatasets.length > 0">
+                    <span class="dropdown-header">{{ $t('infoNav.updatedDatasets') }}</span>
+                  </li>
+                  <li v-for="dataset in updatedDatasets" :key="dataset.name">
+                    <dataset-link :name="dataset.name" :project-id="project.id"/>
+                  </li>
+                  <li v-if="updatedDatasets.length > 0 && attachedDatasets.length > 0"><hr class="dropdown-divider"></li>
+                  <li v-if="attachedDatasets.length > 0">
+                    <span class="dropdown-header">{{ $t('infoNav.attachedDatasets') }}</span>
+                  </li>
+                  <li v-for="dataset in attachedDatasets" :key="dataset.name">
+                    <dataset-link :name="dataset.name" :project-id="project.id"/>
+                  </li>
+                </template>
+              </infonav>
+              <infonav v-if="appUserCount.dataExists" :link="projectPath('form-access')">
+                <template #title><span class="icon-user"></span>{{ appUserCountTitle }}</template>
+              </infonav>
           </div>
         </div>
         <div class="row">
@@ -110,6 +134,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Breadcrumbs from '../breadcrumbs.vue';
+import Infonav from '../infonav.vue';
+import DatasetLink from '../dataset/link.vue';
 
 import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';
@@ -117,18 +143,19 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
-  components: { Breadcrumbs },
+  components: { Breadcrumbs, DatasetLink, Infonav },
   emits: ['create-draft'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, form, formDraft, attachments, resourceStates } = useRequestData();
+    const { project, form, formDraft, formDatasetDiff, attachments, appUserCount, publishedAttachments, resourceStates } = useRequestData();
     const { dataExists } = resourceStates([project, form, formDraft, attachments]);
 
     const { projectPath, formPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(formPath());
     return {
       project, form, formDraft, attachments, dataExists,
+      appUserCount, formDatasetDiff, publishedAttachments,
       projectPath, formPath, canRoute, tabPath, tabClass
     };
   },
@@ -150,6 +177,20 @@ export default {
         { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
       ];
+    },
+    attachedDatasets() {
+      return this.publishedAttachments.data
+        .filter(attachment => attachment.datasetExists)
+        .map(attachment => ({ name: attachment.name.replace(/.csv/, '') }));
+    },
+    updatedDatasets() {
+      return this.formDatasetDiff.data;
+    },
+    relatedDatasetInfonavTitle() {
+      return this.$t('infoNav.entityLists', { count: this.updatedDatasets.length + this.attachedDatasets.length });
+    },
+    appUserCountTitle() {
+      return this.$t('infoNav.appUsers', { count: this.appUserCount.data });
     }
   },
   methods: {
@@ -186,6 +227,11 @@ $tab-li-margin-top: 5px;
     // It might be simpler to move this margin to the .nav-tabs element so that
     // fewer elements have margin.
     margin-top: $tab-li-margin-top;
+  }
+
+  .form-head-form-title {
+    display: flex;
+    align-items: baseline;
   }
 }
 
@@ -246,6 +292,14 @@ $tab-li-margin-top: 5px;
       "action": {
         "create": "Create a new Draft"
       },
+    },
+    "infoNav": {
+      "entityLists": "{count} Related Entity List | {count} Related Entity Lists",
+      // This text is shown as a header in a dropdown about related entity lists updated by this form.
+      "updatedDatasets": "Updates",
+      // This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form.
+      "attachedDatasets": "Uses",
+      "appUsers": "{count} App User assigned | {count} App Users assigned",
     }
   }
 }
