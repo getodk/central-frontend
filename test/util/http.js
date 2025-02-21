@@ -451,11 +451,11 @@ class MockHttp {
 
   // respondForComponent() responds with all the responses expected for the
   // specified route component. Most tests should use respondFor() instead of
-  // this method.
+  // this method. `options` here work the same way as they do in respondFor().
   respondForComponent(componentName, options = undefined) {
     return requestDataByComponent(componentName).responses.reduce(
       (series, [resourceName, response]) => {
-        const option = options != null ? options[resourceName] : null;
+        const option = options?.[resourceName];
         if (option === false) return series;
         if (typeof response === 'function')
           return series.respond(() => mockResponse.of((option ?? response)()));
@@ -622,7 +622,7 @@ class MockHttp {
     http.respond(this._http());
 
     this._errorFromRouter = null;
-    const removeHandler = router != null
+    const removeRouterHandler = router != null
       ? router.onError(error => { this._errorFromRouter = error; })
       : noop;
 
@@ -649,7 +649,7 @@ class MockHttp {
       await wait();
       if (pollWork != null) await waitUntil(() => pollWork(this._component));
       http.respond(null);
-      removeHandler();
+      removeRouterHandler();
     }
 
     this._checkStateAfterWait();
@@ -705,7 +705,7 @@ class MockHttp {
         }
       }
       if (responseCallback == null) {
-        if (this._orderedResponsesRequested >= this._orderedResponses.length) {
+        if (this._orderedResponsesRequested === this._orderedResponses.length) {
           this._requestWithoutResponse = true;
           return Promise.reject(new Error());
         }
@@ -897,6 +897,9 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
           : null;
         if (option != null)
           allResponses[name] = option();
+        // Ordered responses are set automatically, but conditional responses
+        // are not. Without there being actual requests to match against, we
+        // can't tell which conditional responses should be set.
         else if (typeof response === 'function')
           allResponses[name] = response();
       }

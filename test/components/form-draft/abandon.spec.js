@@ -156,7 +156,7 @@ describe('FormDraftAbandon', () => {
         })
         .respondWithSuccess()
         .respondWithData(() => []) // forms
-        .respondWithData(() => []); // deleted forms
+        .respondWithData(() => []); // deletedForms
     };
 
     it('shows a success alert', () =>

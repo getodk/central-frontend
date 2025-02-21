@@ -122,10 +122,10 @@ export default {
   },
   emits: ['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets'],
   setup() {
-    const { form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    const { form, formVersions, formDraft, datasets, formDraftDatasetDiff } = useRequestData();
     const { projectPath, publishedFormPath } = useRoutes();
     return {
-      form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff,
+      form, formVersions, formDraft, datasets, formDraftDatasetDiff,
       projectPath, publishedFormPath
     };
   },

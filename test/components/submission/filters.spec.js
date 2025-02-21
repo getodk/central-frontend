@@ -480,11 +480,16 @@ describe('SubmissionFilters', () => {
   it('does not send an extra OData request after filtering, then navigating away', () => {
     testData.extendedForms.createPast(1);
     testData.extendedFormVersions.createPast(1, { draft: true });
+    let odataRequests = 0;
     return load('/projects/1/forms/f/submissions?reviewState=%27approved%27')
       .complete()
-      // If an extra request is sent, there will be no response specified for
-      // the request, causing the test to fail.
       .route('/projects/1/forms/f/draft/testing')
-      .respondForComponent('FormDraftTesting');
+      .respondForComponent('FormDraftTesting')
+      .beforeEachResponse((_, { url }) => {
+        if (url.includes('.svc')) odataRequests += 1;
+      })
+      .afterResponses(() => {
+        odataRequests.should.equal(1);
+      });
   });
 });

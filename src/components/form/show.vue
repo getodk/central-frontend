@@ -25,8 +25,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
 import { nextTick, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
 
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
