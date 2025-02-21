@@ -1,7 +1,7 @@
 import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 
 import testData from '../../data';
-import { findTab } from '../../util/dom';
+import { findTab, textWithout } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
@@ -65,13 +65,13 @@ describe('FormHead', () => {
       testData.standardFormAttachments.createPast(1, { blobExists: false });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
-        tabs.map(tab => tab.text()).should.eql([
+        tabs.map(tab => textWithout(tab, '.badge')).should.eql([
+          'Submissions',
+          'Public Access',
           'Versions',
-          'Submissions 0',
-          'Public Access 0',
-          'Settings Open',
+          'Settings',
           'Status',
-          'Form Attachments 1',
+          'Form Attachments',
           'Testing'
         ]);
       });
@@ -84,8 +84,8 @@ describe('FormHead', () => {
       testData.standardFormAttachments.createPast(1);
       return load('/projects/1/forms/f/draft/testing').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
-        const text = tabs.map(tab => tab.text());
-        text.should.eql(['Versions', 'Submissions 0', 'Testing']);
+        const text = tabs.map(tab => textWithout(tab, '.badge'));
+        text.should.eql(['Submissions', 'Versions', 'Testing']);
       });
     });
 
