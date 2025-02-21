@@ -23,9 +23,9 @@ describe('FormShow', () => {
         { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
         { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
         { url: '/v1/projects/1/forms/a%20b/versions', extended: true },
+        { url: '/v1/projects/1/forms/a%20b/assignments/app-user' },
         { url: '/v1/projects/1/forms/a%20b/attachments' },
-        { url: '/v1/projects/1/forms/a%20b/dataset-diff' },
-        { url: '/v1/projects/1/forms/a%20b/assignments/app-user' }
+        { url: '/v1/projects/1/forms/a%20b/dataset-diff' }
       ]);
     });
 
@@ -39,6 +39,19 @@ describe('FormShow', () => {
         { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
         { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
         { url: '/v1/projects/1/forms/a%20b/versions', extended: true }
+      ]);
+    });
+
+    it('does not send requests for entity lists if form is a draft', () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
+      return load('/projects/1/forms/a%20b/draft').testRequests([
+        { url: '/v1/projects/1', extended: true },
+        { url: '/v1/projects/1/forms/a%20b', extended: true },
+        { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
+        { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
+        { url: '/v1/projects/1/forms/a%20b/versions', extended: true },
+        { url: '/v1/projects/1/forms/a%20b/assignments/app-user' }
       ]);
     });
   });
