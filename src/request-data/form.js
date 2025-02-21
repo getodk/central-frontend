@@ -34,6 +34,9 @@ export default () => {
       .filter(a => a.datasetExists)
       .map(a => a.name.replace(/\.csv$/i, '')))
   }));
+  const appUserCount = createResource('appUserCount', () => ({
+    transformResponse: ({ data }) => data.length
+  }));
 
   watchSyncEffect(() => {
     if (form.dataExists && publicLinks.dataExists &&
@@ -42,6 +45,6 @@ export default () => {
   });
 
   return {
-    form, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff, publishedAttachments
+    form, formDraft, attachments, formVersions, formVersionXml, publicLinks, formDraftDatasetDiff, formDatasetDiff, publishedAttachments, appUserCount
   };
 };

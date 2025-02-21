@@ -52,9 +52,8 @@ describe('FormSubmissions', () => {
         .afterResponses(app => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('10');
         })
-        .load('/projects/1/forms/f/submissions', {
-          project: false, form: false, formDraft: false, attachments: false
-        })
+        .route('/projects/1/forms/f/submissions')
+        .respondForComponent('FormSubmissions')
         .complete()
         .route('/projects/1/forms/f/settings')
         .then(app => {

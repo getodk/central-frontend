@@ -120,12 +120,12 @@ export default {
       required: true
     }
   },
-  emits: ['fetch-project', 'fetch-form', 'fetch-draft'],
+  emits: ['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets'],
   setup() {
-    const { form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    const { form, formVersions, formDraft, datasets, formDraftDatasetDiff } = useRequestData();
     const { projectPath, publishedFormPath } = useRoutes();
     return {
-      form, publishedAttachments, formVersions, formDraft, datasets, formDatasetDiff, formDraftDatasetDiff,
+      form, formVersions, formDraft, datasets, formDraftDatasetDiff,
       projectPath, publishedFormPath
     };
   },
@@ -163,9 +163,8 @@ export default {
       this.$emit('fetch-form');
 
       // Other resources that may have changed after publish
-      this.publishedAttachments.reset();
+      this.$emit('fetch-linked-datasets');
       this.datasets.reset();
-      this.formDatasetDiff.reset();
       this.formDraftDatasetDiff.reset();
 
       // We will update additional resources, but only after navigating to the

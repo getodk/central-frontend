@@ -36,12 +36,10 @@ for (const [resourceName, callback] of Object.entries(responseDefaults))
   responseDefaults[resourceName] = () => mockResponse.of(callback());
 
 const componentResponses = (map) => Object.entries(map)
-  .map(([resourceName, callbackOrTrue]) => {
-    const callback = callbackOrTrue === true
-      ? responseDefaults[resourceName]
-      : () => mockResponse.of(callbackOrTrue());
-    return [resourceName, callback];
-  });
+  .map(([resourceName, response]) => [
+    resourceName,
+    response === true ? responseDefaults[resourceName] : response
+  ]);
 
 const responsesByComponent = {
   ConfigError: [],
@@ -79,7 +77,21 @@ const responsesByComponent = {
       : mockResponse.problem(404.1)),
     attachments: () => (testData.extendedFormVersions.last().publishedAt == null
       ? testData.standardFormAttachments.sorted()
-      : mockResponse.problem(404.1))
+      : mockResponse.problem(404.1)),
+
+    // Conditional responses (mockHttp().respondIf())
+    publishedAttachments: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/attachments$/.test(url),
+      () => []
+    ],
+    formDatasetDiff: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/dataset-diff$/.test(url),
+      () => testData.formDatasetDiffs.sorted()
+    ],
+    appUserCount: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/assignments\/app-user$/.test(url),
+      () => []
+    ]
   }),
   FormPreview: componentResponses({
     form: () => testData.extendedForms.last(),

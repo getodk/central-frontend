@@ -126,12 +126,7 @@ describe('FormDraftAbandon', () => {
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
-        .respondFor('/projects/1/forms/f/submissions', {
-          project: false,
-          form: false,
-          formDraft: false,
-          attachments: false
-        });
+        .respondForComponent('FormSubmissions');
     };
 
     it('shows a success alert', () =>
@@ -161,7 +156,7 @@ describe('FormDraftAbandon', () => {
         })
         .respondWithSuccess()
         .respondWithData(() => []) // forms
-        .respondWithData(() => []); // deleted forms
+        .respondWithData(() => []); // deletedForms
     };
 
     it('shows a success alert', () =>

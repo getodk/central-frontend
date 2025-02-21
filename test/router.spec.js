@@ -128,12 +128,7 @@ describe('createCentralRouter()', () => {
       return load('/projects/1/forms/f/settings')
         .complete()
         .route('/projects/1/forms/f')
-        .respondFor('/projects/1/forms/f/submissions', {
-          project: false,
-          form: false,
-          formDraft: false,
-          attachments: false
-        })
+        .respondForComponent('FormSubmissions')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
         });
@@ -393,15 +388,19 @@ describe('createCentralRouter()', () => {
         it('preserves data that FormShow uses', () =>
           load('/projects/1/forms/f/settings')
             .complete()
-            .load('/projects/1/forms/f/public-links', {
-              project: false,
-              form: false,
-              formDraft: false,
-              attachments: false
-            })
+            .route('/projects/1/forms/f/public-links')
+            .respondForComponent('PublicLinkList')
             .complete()
             .route('/projects/1/forms/f/settings')
-            .then(dataExists(['project', 'form', 'formDraft', 'attachments'])));
+            .then(dataExists([
+              'project',
+              'form',
+              'formDraft',
+              'attachments',
+              'publishedAttachments',
+              'formDatasetDiff',
+              'appUserCount'
+            ])));
 
         it('preserves publicLinks', () =>
           load('/projects/1/forms/f/public-links')
