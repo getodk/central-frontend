@@ -27,13 +27,7 @@ except according to the terms contained in the LICENSE file.
           <div class="col-xs-6">
             <ul id="form-head-form-tabs" class="nav nav-tabs">
               <!-- No v-if, because anyone who can navigate to the form should
-              be able to navigate to .../versions and .../submissions. -->
-              <li :class="formTabClass('versions')" role="presentation">
-                <router-link :to="tabPath('versions')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('formHead.tab.versions') }}
-                </router-link>
-              </li>
+              be able to navigate to .../submissions and .../versions. -->
               <li :class="formTabClass('submissions')" role="presentation">
                 <router-link :to="tabPath('submissions')"
                   v-tooltip.aria-describedby="formTabDescription">
@@ -54,6 +48,12 @@ except according to the terms contained in the LICENSE file.
                   <span v-if="form.dataExists" class="badge">
                     {{ $n(form.publicLinks, 'default') }}
                   </span>
+                </router-link>
+              </li>
+              <li :class="formTabClass('versions')" role="presentation">
+                <router-link :to="tabPath('versions')"
+                  v-tooltip.aria-describedby="formTabDescription">
+                  {{ $t('formHead.tab.versions') }}
                 </router-link>
               </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
