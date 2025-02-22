@@ -13,14 +13,41 @@ describe('FormVersionRow', () => {
     mockLogin({ displayName: 'Alice' });
   });
 
-  it('shows the version string', async () => {
-    testData.extendedForms.createPast(1);
-    const component = await load('/projects/1/forms/f/versions', { root: false });
-    const row = component.getComponent(FormVersionRow);
-    row.getComponent(FormVersionString).props().version.should.equal('v1');
+  describe('name column', () => {
+    it('shows the version string', async () => {
+      testData.extendedForms.createPast(1);
+      const component = await load('/projects/1/forms/f/versions', { root: false });
+      const row = component.getComponent(FormVersionRow);
+      row.getComponent(FormVersionString).props().version.should.equal('v1');
+    });
+
+    it('shows a tag for the current version', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1);
+      const component = await load('/projects/1/forms/f/versions', { root: false });
+      const rows = component.findAllComponents(FormVersionRow);
+      rows.length.should.equal(2);
+      const chip = rows[0].get('.chip');
+      chip.text().should.equal('Current Published Version');
+      rows[1].find('.chip').exists().should.be.false;
+    });
+
+    it('shows tooltips', async () => {
+      // The text truncation works slightly differently for the current version
+      // vs. other versions. With the current version, the flexbox has two
+      // children, whereas for other versions, it only has one. Here, we test
+      // the current version and another version.
+      testData.extendedForms.createPast(1, { version: 'x'.repeat(1000) });
+      testData.extendedFormVersions.createPast(1, { version: 'y'.repeat(1000) });
+      const component = await load('/projects/1/forms/f/versions', { root: false });
+      const versionStrings = component.findAllComponents(FormVersionString);
+      versionStrings.length.should.equal(2);
+      await versionStrings[0].should.have.textTooltip();
+      await versionStrings[1].should.have.textTooltip();
+    });
   });
 
-  describe('published', () => {
+  describe('published column', () => {
     it('shows publishedAt', () => {
       const form = testData.extendedForms.createPast(1).last();
       return load('/projects/1/forms/f/versions').then(app => {
