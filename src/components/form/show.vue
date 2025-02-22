@@ -101,22 +101,27 @@ fetchForm();
 fetchDraft();
 // Before sending certain requests, we wait for the project response in order to
 // check whether the user has the correct permissions.
-const stopWaitingForProject = watchEffect(() => {
+const stopAppUsersEffect = watchEffect(() => {
   if (!project.dataExists) return;
-  if (project.permits(['form.update', 'dataset.list'])) fetchLinkedDatasets();
   if (project.permits('assignment.list')) {
     appUserCount.request({
       url: apiPaths.formActors(props.projectId, props.xmlFormId, 'app-user')
     }).catch(noop);
   }
-  /* It doesn't work to call stopWaitingForProject() synchronously. You can see
+  /* It doesn't work to call stopAppUsersEffect() synchronously. You can see
   that if you remove the nextTick() and try running tests. I think the reason
   why is that if you navigate from another page that has fetched `project`
   already (e.g., the form list), then project.dataExists will be `true`, so the
   watch effect will complete synchronously during component setup. But in that
   case, watchEffect() won't have had a chance to return a value:
-  stopWaitingForProject won't be assigned yet. */
-  nextTick(() => stopWaitingForProject());
+  stopAppUsersEffect won't be assigned yet. */
+  nextTick(() => stopAppUsersEffect());
+});
+const stopDatasetsEffect = watchEffect(() => {
+  if (!(project.dataExists && form.dataExists)) return;
+  if (project.permits(['form.update', 'dataset.list']) && form.publishedAt != null)
+    fetchLinkedDatasets();
+  stopDatasetsEffect();
 });
 
 const { request, awaitingResponse } = useRequest();
