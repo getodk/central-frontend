@@ -69,7 +69,7 @@ export const markRowsChanged = (trs) => {
   // transition: see app.scss. The CSS specifies the duration of the transition.
   setTimeout(() => {
     for (const tr of trs) tr.dataset.markRowsChanged = 'false';
-  });
+  }, 6000);
 };
 export const markRowChanged = (tr) => { markRowsChanged([tr]); };
 

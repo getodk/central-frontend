@@ -13,36 +13,34 @@ import { shallowReactive, reactive } from 'vue';
 
 import { useRequestData } from './index';
 
+const transformValue = (data, config) => {
+  const { searchParams } = new URL(config.url, window.location.origin);
+
+  const skip = searchParams.get('$skip') ?? 0;
+  const count = data['@odata.count'];
+  return data.value.map((entity, index) => ({
+    ...entity,
+    __system: {
+      ...entity.__system,
+      rowNumber: count - skip - index
+    }
+  }));
+};
+
 export default () => {
   const { createResource } = useRequestData();
   const entityOData = createResource('odataEntities', () => ({
     transformResponse: ({ data, config }) => shallowReactive({
-      value: shallowReactive(data.value),
-      originalCount: data['@odata.count'],
+      value: reactive(transformValue(data, config)),
       count: data['@odata.count'],
-      removedCount: 0,
-      filtered: new URL(config.url, window.location.origin).searchParams.has('$filter'),
-      nextLink: data['@odata.nextLink']
+      removedEntities: reactive(new Set())
     }),
-    addChunk: (chunk) => {
-      for (const e of chunk.value) {
-        entityOData.value.push(e);
-      }
-      entityOData.count = chunk['@odata.count'];
-      entityOData.nextLink = chunk['@odata.nextLink'];
-    },
-    // countRemoved() updates the counts after an entity is deleted. We do not
-    // modify entityOData.value when an entity is deleted: doing so is possible,
-    // but it would cause EntityTable to re-render and overall doesn't seem
-    // simpler.
-    countRemoved: () => {
-      // This change to entityOData.count will be overwritten if/when the next
-      // chunk is received with the latest count. However, the change to
-      // entityOData.removedCount will persist as long as entityOData is not
-      // cleared (e.g., when the refresh button is clicked or a filter is
-      // changed).
-      entityOData.count -= 1;
-      entityOData.removedCount += 1;
+    replaceData(data, config) {
+      entityOData.count = data['@odata.count'];
+      entityOData.value = reactive(transformValue({
+        ...data,
+        value: data.value.filter(e => !entityOData.removedEntities.has(e.__id))
+      }, config));
     }
   }));
   const deletedEntityCount = createResource('deletedEntityCount', () => ({

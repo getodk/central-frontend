@@ -2071,6 +2071,12 @@
       "noMatching": {
         "string": "There are no matching Entities."
       },
+      "allDeleted": {
+        "string": "All Entities are deleted."
+      },
+      "allDeletedOnPage": {
+        "string": "All Entities on the page have been deleted."
+      },
       "alert": {
         "delete": {
           "string": "Entity “{label}” has been deleted."
@@ -2081,6 +2087,17 @@
       },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Entities"
+      },
+      "deletedEntity": {
+        "emptyTable": {
+          "string": "There are no deleted Entities."
+        },
+        "allRestored": {
+          "string": "All deleted Entities are undeleted."
+        },
+        "allRestoredOnPage": {
+          "string": "All Entities on the page have been undeleted."
+        }
       },
       "action": {
         "download": {
@@ -4681,6 +4698,12 @@
       "noMatching": {
         "string": "There are no matching Submissions."
       },
+      "allDeleted": {
+        "string": "All Submissions are deleted."
+      },
+      "allDeletedOnPage": {
+        "string": "All Submissions on the page have been deleted."
+      },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Submissions"
       },
@@ -4690,6 +4713,12 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "There are no deleted Submissions."
+        },
+        "allRestored": {
+          "string": "All deleted Submissions are undeleted."
+        },
+        "allRestoredOnPage": {
+          "string": "All Submissions on the page have been undeleted."
         }
       },
       "loading": {
