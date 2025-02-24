@@ -210,7 +210,7 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, formDraft, dataset } = requestData;
+const { currentUser, project, form, dataset } = requestData;
 const routes = [
   asyncRoute({
     path: '/load-error',
@@ -363,9 +363,6 @@ const routes = [
       })
     ]
   }),
-  // Note the unlikely possibility that
-  // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
-  // will be unable to navigate to a form route.
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId',
     component: 'FormShow',
@@ -456,8 +453,7 @@ const routes = [
               'entity.list',
               'submission.list',
               'submission.read'
-            ]),
-            formDraft: () => formDraft.isDefined()
+            ])
           },
           title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
           fullWidth: true

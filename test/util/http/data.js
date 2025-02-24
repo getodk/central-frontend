@@ -19,21 +19,17 @@ const responseDefaults = {
   forms: () => testData.extendedForms.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
   // useForm()
-  formVersions: () => testData.extendedFormVersions.published(),
-  // useFields()
-  fields: () => testData.extendedForms.last()._fields,
+  formVersions: [
+    ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/versions$/.test(url),
+    () => testData.extendedFormVersions.published()
+  ],
 
   // Common local resources
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
-  odata: testData.submissionOData,
   odataEntities: testData.entityOData,
-  keys: () => testData.standardKeys.sorted(),
   audits: () => testData.extendedAudits.sorted()
 };
-
-for (const [resourceName, callback] of Object.entries(responseDefaults))
-  responseDefaults[resourceName] = () => mockResponse.of(callback());
 
 const componentResponses = (map) => Object.entries(map)
   .map(([resourceName, response]) => [
@@ -98,10 +94,10 @@ const responsesByComponent = {
     xml: () => mockResponse.of(simpleXml)
   }),
   FormSubmissions: componentResponses({
-    keys: true,
+    keys: () => testData.standardKeys.sorted(),
     deletedSubmissionCount: () => testData.submissionDeletedOData(0),
-    fields: true,
-    odata: true,
+    fields: () => testData.extendedForms.last()._fields,
+    odata: testData.submissionOData,
     submitters: () => testData.extendedFieldKeys
       .sorted()
       .sort((fieldKey1, fieldKey2) =>
@@ -114,11 +110,6 @@ const responsesByComponent = {
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({
     formVersions: true,
-    keys: true,
-    fields: true,
-    odata: true,
-
-    // Conditional responses
     formDraftDatasetDiff: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/dataset-diff$/.test(url),
       () => testData.formDraftDatasetDiffs.sorted()
@@ -126,6 +117,18 @@ const responsesByComponent = {
     datasets: [
       ({ url }) => /^\/v1\/projects\/\d+\/datasets$/.test(url),
       () => testData.extendedDatasets.sorted()
+    ],
+    keys: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/submissions\/keys$/.test(url),
+      () => testData.standardKeys.sorted()
+    ],
+    fields: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/fields\?/.test(url),
+      () => testData.extendedForms.last()._fields
+    ],
+    odata: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\.svc\/Submissions\?/.test(url),
+      testData.submissionOData
     ]
   }),
   FormSettings: [],
@@ -138,7 +141,7 @@ const responsesByComponent = {
       return { ...odata, value: selected };
     },
     submissionVersion: () => ({}),
-    fields: true,
+    fields: () => testData.extendedForms.last()._fields,
     audits: true,
     comments: () => testData.extendedComments.sorted(),
     diffs: () => ({})

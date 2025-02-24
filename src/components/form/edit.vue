@@ -11,11 +11,19 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-draft-status @fetch-project="$emit('fetch-project', $event)"
-      @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
-      @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
-    <form-attachment-list v-if="rendersAttachments"/>
-    <form-draft-testing/>
+    <div class="row">
+      <div class="col-xs-6">
+        <form-edit-create-draft v-if="formDraft.dataExists && formDraft.isEmpty()"
+          @success="$emit('fetch-draft')"/>
+      </div>
+    </div>
+    <template v-if="formDraft.dataExists && formDraft.isDefined()">
+      <form-draft-status @fetch-project="$emit('fetch-project', $event)"
+        @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
+        @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
+      <form-attachment-list v-if="rendersAttachments"/>
+      <form-draft-testing/>
+    </template>
   </div>
 </template>
 
@@ -25,6 +33,7 @@ import { computed, provide } from 'vue';
 import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
+import FormEditCreateDraft from './edit/create-draft.vue';
 
 import { useRequestData } from '../../request-data';
 
@@ -45,7 +54,7 @@ defineEmits(['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-dataset
 provide('projectId', props.projectId);
 provide('xmlFormId', props.xmlFormId);
 
-const { attachments } = useRequestData();
+const { formDraft, attachments } = useRequestData();
 
 const rendersAttachments = computed(() => attachments.dataExists &&
   attachments.isDefined() && attachments.get().size !== 0);

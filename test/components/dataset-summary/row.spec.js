@@ -19,7 +19,10 @@ describe('DatasetSummaryRow', () => {
       const dataset = testData.formDraftDatasetDiffs.createPast(1, options).last();
       const inFormProperties = dataset.properties.filter(p => p.inForm);
       const component = mount(Row, {
-        props: { dataset, projectId: 1 },
+        props: { dataset },
+        global: {
+          provide: { projectId: 1 }
+        },
         container: {
           router: mockRouter('/')
         }
@@ -58,7 +61,10 @@ describe('DatasetSummaryRow', () => {
   it('should show help text when there is no properties', async () => {
     const dataset = testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [] }).last();
     const component = mount(Row, {
-      props: { dataset, projectId: 1 },
+      props: { dataset },
+      global: {
+        provide: { projectId: 1 }
+      },
       container: {
         router: mockRouter('/')
       }

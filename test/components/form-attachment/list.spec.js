@@ -1142,16 +1142,16 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.last())
           .respondForComponent('FormSubmissions')
           .complete()
+          .route('/projects/1/forms/f/draft')
           .request(app =>
-            app.get('#form-head-create-draft-button').trigger('click'))
+            app.get('#form-edit-create-draft-button').trigger('click'))
           .respondWithData(() => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondFor('/projects/1/forms/f/draft', {
-            project: false,
-            form: false
-          })
+          .respondWithData(() => testData.extendedFormDrafts.last())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondForComponent('FormEdit')
           // Now that a dataset has been published, a request should be sent for
           // `datasets`, even though one wasn't sent before.
           .testRequestsInclude([{ url: '/v1/projects/1/datasets' }])
@@ -1190,18 +1190,16 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.last())
           .respondForComponent('FormSubmissions')
           .complete()
+          .route('/projects/1/forms/f/draft')
           .request(app =>
-            app.get('#form-head-create-draft-button').trigger('click'))
+            app.get('#form-edit-create-draft-button').trigger('click'))
           .respondWithData(() => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondFor('/projects/1/forms/f/draft', {
-            project: false,
-            form: false
-          })
-          // After the form draft is published, a new request should be sent for
-          // `datasets`.
+          .respondWithData(() => testData.extendedFormDrafts.last())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondForComponent('FormEdit')
           .testRequestsInclude([{ url: '/v1/projects/1/datasets' }])
           .afterResponses(app => {
             const button = app.find('.form-attachment-row .btn-link-dataset');

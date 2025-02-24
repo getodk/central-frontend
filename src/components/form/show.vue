@@ -11,22 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-head v-show="dataExists && !awaitingResponse"
-      @create-draft="createDraft"/>
+    <form-head v-show="dataExists"/>
     <page-body>
-      <loading :state="initiallyLoading || awaitingResponse"/>
+      <loading :state="initiallyLoading"/>
       <!-- <router-view> may send its own requests before the server has
       responded to the requests from FormShow. -->
-      <router-view v-show="dataExists && !awaitingResponse"
-        @fetch-project="fetchProject" @fetch-form="fetchForm"
-        @fetch-draft="fetchDraft" @fetch-linked-datasets="fetchLinkedDatasets"/>
+      <router-view v-show="dataExists" @fetch-project="fetchProject"
+        @fetch-form="fetchForm" @fetch-draft="fetchDraft"
+        @fetch-linked-datasets="fetchLinkedDatasets"/>
     </page-body>
   </div>
 </template>
 
 <script setup>
 import { nextTick, watchEffect } from 'vue';
-import { useRouter } from 'vue-router';
 
 import FormHead from './head.vue';
 import Loading from '../loading.vue';
@@ -34,8 +32,6 @@ import PageBody from '../page/body.vue';
 
 import useDatasets from '../../request-data/datasets';
 import useForm from '../../request-data/form';
-import useRequest from '../../composables/request';
-import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -123,19 +119,4 @@ const stopDatasetsEffect = watchEffect(() => {
     fetchLinkedDatasets();
   stopDatasetsEffect();
 });
-
-const { request, awaitingResponse } = useRequest();
-const router = useRouter();
-const { formPath } = useRoutes();
-const createDraft = () => {
-  request({
-    method: 'POST',
-    url: apiPaths.formDraft(props.projectId, props.xmlFormId)
-  })
-    .then(() => {
-      fetchDraft();
-      router.push(formPath('draft'));
-    })
-    .catch(noop);
-};
 </script>

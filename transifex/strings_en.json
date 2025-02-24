@@ -3036,6 +3036,22 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
+    "FormEditCreateDraft": {
+      "title": {
+        "string": "Draft version",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "subtitle": {
+        "string": "No active Draft for this Form"
+      },
+      "toMakeChanges": {
+        "string": "to make changes to this Form or its attachments",
+        "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
+      },
+      "noEffectUntilPublish": {
+        "string": "The published version will not be affected until you publish your Draft."
+      }
+    },
     "FormHead": {
       "projectNav": {
         "action": {

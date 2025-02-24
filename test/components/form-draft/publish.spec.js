@@ -402,9 +402,13 @@ describe('FormDraftPublish', () => {
     });
 
     it('shows the create draft button', () =>
-      publish().then(app => {
-        app.get('#form-head-create-draft-button').should.be.visible();
-      }));
+      publish()
+        .complete()
+        .route('/projects/1/forms/f/draft')
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          app.get('#form-edit-create-draft-button').should.be.visible();
+        }));
 
     it('shows the published version in .../versions', () => {
       testData.extendedForms.createPast(1);

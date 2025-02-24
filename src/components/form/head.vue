@@ -15,16 +15,14 @@ except according to the terms contained in the LICENSE file.
     <div id="form-head-form-nav" class="row">
       <div class="col-xs-12">
         <div class="row">
-          <!-- Using .col-xs-6 so that if the form name is long, it is not
-          behind #form-head-draft-nav. -->
-          <div class="col-xs-6">
+          <div class="col-xs-12">
             <div v-if="form.dataExists" class="h1" v-tooltip.text>
               {{ form.nameOrId }}
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-6">
+          <div class="col-xs-12">
             <ul id="form-head-form-tabs" class="nav nav-tabs">
               <!-- No v-if, because anyone who can navigate to the form should
               be able to navigate to .../submissions and .../versions. -->
@@ -74,15 +72,6 @@ except according to the terms contained in the LICENSE file.
               </li>
             </ul>
           </div>
-          <div v-if="rendersDraftNav" id="form-head-draft-nav"
-            class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
-            <span id="form-head-draft-nav-title">{{ $t('resource.draft') }}</span>
-            <button v-show="formDraft.isEmpty()"
-              id="form-head-create-draft-button" type="button"
-              class="btn btn-primary" @click="$emit('create-draft')">
-              <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -99,17 +88,15 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormHead',
   components: { Breadcrumbs },
-  emits: ['create-draft'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, form, formDraft, attachments, resourceStates } = useRequestData();
-    const { dataExists } = resourceStates([project, form, formDraft, attachments]);
+    const { project, form } = useRequestData();
 
     const { projectPath, formPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(formPath());
     return {
-      project, form, formDraft, attachments, dataExists,
+      project, form,
       projectPath, formPath, canRoute, tabPath, tabClass
     };
   },
@@ -121,10 +108,6 @@ export default {
       return this.form.dataExists && this.form.publishedAt == null
         ? this.$t('formNav.tabTitle')
         : null;
-    },
-    rendersDraftNav() {
-      return this.dataExists &&
-        (this.formDraft.isDefined() || this.project.permits('form.update'));
     },
     breadcrumbLinks() {
       return [
@@ -147,9 +130,6 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-$draft-nav-padding: 23px;
-$tab-li-margin-top: 5px;
-
 .breadcrumbs + #form-head-form-nav .h1 {
   margin-top: 0;
 }
@@ -166,47 +146,13 @@ $tab-li-margin-top: 5px;
   .nav-tabs > li {
     // It might be simpler to move this margin to the .nav-tabs element so that
     // fewer elements have margin.
-    margin-top: $tab-li-margin-top;
+    margin-top: 5px;
   }
 }
 
 #form-head-form-tabs {
-  margin-top: $draft-nav-padding;
-
   > li.active > a {
     &, &:hover, &:focus { background-color: $color-subpanel-active; }
-  }
-}
-
-#form-head-draft-nav {
-  background-color: #ddd;
-  padding-top: $draft-nav-padding;
-  position: relative;
-
-  #form-head-draft-nav-title {
-    color: #666;
-    font-size: 12px;
-    position: absolute;
-    top: 7px;
-  }
-  &.draft-exists #form-head-draft-nav-title {
-    left: /* .col-xs-6 padding-left */ 15px +
-      /* .nav-tabs > li > a padding-left */ 8px;
-  }
-
-  #form-head-create-draft-button {
-    /*
-    6px =   1px (.nav-tabs > li > a has more top padding than .btn)
-          + 1px (.nav-tabs > li > a has more bottom padding)
-          + 1px (.nav-tabs > li > a has a bottom border)
-          + 3px (because .nav-tabs > li > a has a higher font size?)
-    */
-    margin-bottom: 6px;
-    margin-top: $tab-li-margin-top;
-  }
-
-  .nav-tabs > li.active > a {
-    &, &:hover, &:focus { background-color: $color-page-background; }
   }
 }
 </style>
@@ -222,11 +168,6 @@ $tab-li-margin-top: 5px;
     "formNav": {
       // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.
       "tabTitle": "These functions will become available once you publish your Draft Form"
-    },
-    "draftNav": {
-      "action": {
-        "create": "Create a new Draft"
-      },
     }
   }
 }
