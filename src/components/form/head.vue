@@ -82,14 +82,6 @@ except according to the terms contained in the LICENSE file.
               class="btn btn-primary" @click="$emit('create-draft')">
               <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
             </button>
-            <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
-              <li v-if="canRoute(tabPath('draft/testing'))"
-                :class="tabClass('draft/testing')" role="presentation">
-                <router-link :to="tabPath('draft/testing')">
-                  {{ $t('formHead.draftNav.tab.testing') }}
-                </router-link>
-              </li>
-            </ul>
           </div>
         </div>
       </div>

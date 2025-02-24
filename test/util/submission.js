@@ -31,7 +31,7 @@ export const loadSubmissionList = (mountOptions = {}) => {
       }),
       router: mockRouter(form.publishedAt != null
         ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
-        : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`)
+        : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft`)
     }
   });
   const { top, deleted } = mergedOptions.props;

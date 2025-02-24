@@ -25,9 +25,7 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
           <i18n-t v-if="rendersTestingWarning" tag="li"
             keypath="warnings.testing.full">
-            <template #tested>
-              <router-link :to="formPath('draft/testing')">{{ $t('warnings.testing.tested') }}</router-link>
-            </template>
+            <template #tested>{{ $t('warnings.testing.tested') }}</template>
           </i18n-t>
         </ul>
       </div>

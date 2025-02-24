@@ -148,7 +148,7 @@ export default {
   },
   emits: ['fetch-keys', 'fetch-deleted-count', 'toggle-qr'],
   setup(props) {
-    const { form, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
+    const { form, formDraft, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
     const formVersion = props.draft
       ? resourceView('formDraft', (data) => data.get())
       : form;
@@ -157,7 +157,8 @@ export default {
     // We do not reconcile `odata` with either form.lastSubmission or
     // project.lastSubmission.
     watchEffect(() => {
-      if (formVersion.dataExists && odata.dataExists && !odata.filtered)
+      if (formVersion.dataExists && !(props.draft && formDraft.isEmpty()) &&
+        odata.dataExists && !odata.filtered)
         formVersion.submissions = odata.count;
     });
 

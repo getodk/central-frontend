@@ -168,7 +168,6 @@ describe('createCentralRouter()', () => {
       '/projects/1/forms/f/public-links',
       '/projects/1/forms/f/settings',
       '/projects/1/forms/f/draft',
-      '/projects/1/forms/f/draft/testing',
       '/projects/1/forms/f/submissions/s',
       '/users',
       // The redirect should pass through the query string and hash.
@@ -646,11 +645,6 @@ describe('createCentralRouter()', () => {
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
-
-        it('does not redirect the user from .../draft/testing', async () => {
-          const app = await load('/projects/1/forms/f/draft/testing');
-          app.vm.$route.path.should.equal('/projects/1/forms/f/draft/testing');
-        });
       });
 
       it('does not redirect user from submission detail page', async () => {
@@ -731,7 +725,6 @@ describe('createCentralRouter()', () => {
         '/projects/1/forms/f/public-links',
         '/projects/1/forms/f/settings',
         '/projects/1/forms/f/draft',
-        '/projects/1/forms/f/draft/testing',
         // SubmissionShow
         '/projects/1/forms/f/submissions/s',
         // DatasetShow
@@ -862,13 +855,6 @@ describe('createCentralRouter()', () => {
               app.vm.$route.path.should.equal('/');
             }));
       });
-
-      it('redirects the user from .../draft/testing', () =>
-        load('/projects/1/forms/f/draft/testing')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
 
       it('redirects user after a 404 for formDraft but a 200 for attachments', () =>
         load('/projects/1/forms/f/draft', {}, {
@@ -1040,17 +1026,10 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Settings | My Form Name | ODK Central');
     });
 
-    // Draft form routes
     it('shows form name in title for <form url>/draft', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
       await load('/projects/1/forms/f2/draft');
       document.title.should.equal('Edit Form | My Draft Form | ODK Central');
-    });
-
-    it('shows form name in title for <form url>/draft/testing', async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
-      await load('/projects/1/forms/f2/draft/testing');
-      document.title.should.equal('Testing | My Draft Form | ODK Central');
     });
 
     // Special cases of form routes

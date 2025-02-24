@@ -16,6 +16,7 @@ except according to the terms contained in the LICENSE file.
       @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
       @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
     <form-attachment-list v-if="rendersAttachments" :project-id="projectId"/>
+    <form-draft-testing :project-id="projectId" :xml-form-id="xmlFormId"/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import { computed } from 'vue';
 
 import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
+import FormDraftTesting from '../form-draft/testing.vue';
 
 import { useRequestData } from '../../request-data';
 

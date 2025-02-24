@@ -483,8 +483,8 @@ describe('SubmissionFilters', () => {
     let odataRequests = 0;
     return load('/projects/1/forms/f/submissions?reviewState=%27approved%27')
       .complete()
-      .route('/projects/1/forms/f/draft/testing')
-      .respondForComponent('FormDraftTesting')
+      .route('/projects/1/forms/f/draft')
+      .respondForComponent('FormEdit')
       .beforeEachResponse((_, { url }) => {
         if (url.includes('.svc')) odataRequests += 1;
       })

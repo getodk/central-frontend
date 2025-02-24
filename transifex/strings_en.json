@@ -50,10 +50,6 @@
     },
     "draftNav": {
       "tab": {
-        "testing": {
-          "string": "Testing",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "status": {
           "string": "Status"
         }
@@ -3248,10 +3244,6 @@
         "fill": {
           "string": "Fill Form",
           "developer_comment": "This appears on a button linking to a fillable Form"
-        },
-        "test": {
-          "string": "Test",
-          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {

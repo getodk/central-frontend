@@ -61,16 +61,16 @@ describe('FormHead', () => {
   describe('tabs', () => {
     it('shows all tabs to an administrator', () => {
       mockLogin();
-      testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft').then(app => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/submissions').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         tabs.map(tab => textWithout(tab, '.badge')).should.eql([
           'Submissions',
           'Public Access',
           'Versions',
           'Edit Form',
-          'Settings',
-          'Testing'
+          'Settings'
         ]);
       });
     });
@@ -78,11 +78,12 @@ describe('FormHead', () => {
     it('shows only select tabs to a project viewer', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      testData.extendedForms.createPast(1, { draft: true });
-      return load('/projects/1/forms/f/draft/testing').then(app => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/submissions').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         const text = tabs.map(tab => textWithout(tab, '.badge'));
-        text.should.eql(['Submissions', 'Versions', 'Testing']);
+        text.should.eql(['Submissions', 'Versions']);
       });
     });
 
@@ -145,14 +146,6 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/submissions').then(app => {
         app.find('#form-head-draft-nav').exists().should.be.false;
-      });
-    });
-
-    it('does not show the tabs for the form draft to an administrator', () => {
-      mockLogin();
-      testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f/settings').then(app => {
-        app.get('#form-head-draft-nav .nav-tabs').should.be.hidden();
       });
     });
 

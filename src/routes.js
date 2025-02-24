@@ -453,32 +453,13 @@ const routes = [
               'form.update',
               'form.delete',
               'dataset.list',
-              'entity.list'
-            ]),
-            formDraft: () => formDraft.isDefined()
-          },
-          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
-          fullWidth: true
-        }
-      }),
-      asyncRoute({
-        path: 'draft/testing',
-        component: 'FormDraftTesting',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            project: () => project.permits([
-              'form.read',
+              'entity.list',
               'submission.list',
               'submission.read'
             ]),
             formDraft: () => formDraft.isDefined()
           },
-          title: () => [
-            i18n.t('formHead.draftNav.tab.testing'),
-            form.nameOrId
-          ],
+          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
           fullWidth: true
         }
       })
@@ -773,8 +754,7 @@ const routesByName = new Map();
     'PublicLinkList',
     'FormVersionList',
     'FormEdit',
-    'FormSettings',
-    'FormDraftTesting'
+    'FormSettings'
   ];
   const datasetRoutes = [
     'DatasetEntities',

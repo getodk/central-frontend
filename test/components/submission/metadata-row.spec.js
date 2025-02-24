@@ -27,7 +27,7 @@ const mountComponent = (props = undefined) => {
     container: {
       router: mockRouter(!mergedProps.draft
         ? `/projects/1/forms/${encodeURIComponent(xmlFormId)}/submissions`
-        : `/projects/1/forms/${encodeURIComponent(xmlFormId)}/draft/testing`)
+        : `/projects/1/forms/${encodeURIComponent(xmlFormId)}/draft`)
     }
   });
 };

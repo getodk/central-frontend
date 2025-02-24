@@ -114,6 +114,9 @@ const responsesByComponent = {
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({
     formVersions: true,
+    keys: true,
+    fields: true,
+    odata: true,
 
     // Conditional responses
     formDraftDatasetDiff: [
@@ -126,11 +129,6 @@ const responsesByComponent = {
     ]
   }),
   FormSettings: [],
-  FormDraftTesting: componentResponses({
-    keys: true,
-    fields: true,
-    odata: true
-  }),
   SubmissionShow: componentResponses({
     project: true,
     form: () => testData.extendedForms.last(),

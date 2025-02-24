@@ -12,7 +12,7 @@ const mountComponent = () => {
       provide: { projectId: 1, xmlFormId: 'f' }
     },
     container: {
-      router: mockRouter('/projects/1/forms/f/draft/testing'),
+      router: mockRouter('/projects/1/forms/f/draft'),
       requestData: { formDraft }
     }
   });

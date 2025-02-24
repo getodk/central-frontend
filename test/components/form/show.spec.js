@@ -51,6 +51,11 @@ describe('FormShow', () => {
         { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
         { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
         { url: '/v1/projects/1/forms/a%20b/versions', extended: true },
+        { url: '/v1/projects/1/forms/a%20b/draft/submissions/keys' },
+        { url: '/v1/projects/1/forms/a%20b/draft/fields?odata=true' },
+        {
+          url: ({ pathname }) => { pathname.should.include('.svc'); }
+        },
         { url: '/v1/projects/1/forms/a%20b/assignments/app-user' }
       ]);
     });
