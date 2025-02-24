@@ -15,11 +15,17 @@ except according to the terms contained in the LICENSE file.
       @fetch-project="$emit('fetch-project', $event)"
       @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
       @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
+    <form-attachment-list v-if="rendersAttachments" :project-id="projectId"/>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
+import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
+
+import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'FormEdit'
@@ -35,4 +41,9 @@ defineProps({
   }
 });
 defineEmits(['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets']);
+
+const { attachments } = useRequestData();
+
+const rendersAttachments = computed(() => attachments.dataExists &&
+  attachments.isDefined() && attachments.get().size !== 0);
 </script>

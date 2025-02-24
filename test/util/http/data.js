@@ -119,10 +119,13 @@ const responsesByComponent = {
     formDraftDatasetDiff: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/dataset-diff$/.test(url),
       () => testData.formDraftDatasetDiffs.sorted()
+    ],
+    datasets: [
+      ({ url }) => /^\/v1\/projects\/\d+\/datasets$/.test(url),
+      () => testData.extendedDatasets.sorted()
     ]
   }),
   FormSettings: [],
-  FormAttachmentList: [],
   FormDraftTesting: componentResponses({
     keys: true,
     fields: true,

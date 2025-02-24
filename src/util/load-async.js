@@ -103,10 +103,6 @@ const loaders = new Map()
     /* webpackChunkName: "component-field-key-list" */
     '../components/field-key/list.vue'
   )))
-  .set('FormAttachmentList', loader(() => import(
-    /* webpackChunkName: "component-form-attachment-list" */
-    '../components/form-attachment/list.vue'
-  )))
   .set('FormDraftTesting', loader(() => import(
     /* webpackChunkName: "component-form-draft-testing" */
     '../components/form-draft/testing.vue'

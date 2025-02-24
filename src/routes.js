@@ -210,7 +210,7 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, formDraft, attachments, dataset } = requestData;
+const { currentUser, project, form, formDraft, dataset } = requestData;
 const routes = [
   asyncRoute({
     path: '/load-error',
@@ -452,31 +452,13 @@ const routes = [
               'form.read',
               'form.update',
               'form.delete',
-              'dataset.list'
+              'dataset.list',
+              'entity.list'
             ]),
             formDraft: () => formDraft.isDefined()
           },
           title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
           fullWidth: true
-        }
-      }),
-      asyncRoute({
-        path: 'draft/attachments',
-        component: 'FormAttachmentList',
-        loading: 'tab',
-        props: true,
-        meta: {
-          validateData: {
-            project: () => project.permits([
-              'form.read',
-              'form.update',
-              'dataset.list',
-              'entity.list'
-            ]),
-            attachments: () => attachments.isDefined() &&
-              attachments.get().size !== 0
-          },
-          title: () => [i18n.t('resource.formAttachments'), form.nameOrId]
         }
       }),
       asyncRoute({
@@ -792,7 +774,6 @@ const routesByName = new Map();
     'FormVersionList',
     'FormEdit',
     'FormSettings',
-    'FormAttachmentList',
     'FormDraftTesting'
   ];
   const datasetRoutes = [

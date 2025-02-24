@@ -83,17 +83,6 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
             </button>
             <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
-              <li v-if="canRoute(tabPath('draft/attachments'))"
-                :class="tabClass('draft/attachments')" role="presentation">
-                <router-link :to="tabPath('draft/attachments')">
-                  {{ $t('resource.formAttachments') }}
-                  <template v-if="attachments.dataExists">
-                    <span v-show="attachments.missingCount !== 0" class="badge">
-                      {{ $n(attachments.missingCount, 'default') }}
-                    </span>
-                  </template>
-                </router-link>
-              </li>
               <li v-if="canRoute(tabPath('draft/testing'))"
                 :class="tabClass('draft/testing')" role="presentation">
                 <router-link :to="tabPath('draft/testing')">

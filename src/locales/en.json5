@@ -301,6 +301,7 @@
   "resource": {
     "appUser": "App User",
     "appUsers": "App Users",
+    "attachments": "Attachments",
     "config": "Server Configuration",
     "entity": "Entity",
     "entities": "Entities",

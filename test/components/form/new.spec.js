@@ -365,13 +365,12 @@ describe('FormNew', () => {
         });
     });
 
-    it('shows the updated count of missing attachments', () => {
+    it('updates the list of attachments', () => {
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1, { blobExists: false });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().should.equal('1');
+          app.findAll('.form-attachment-row').length.should.equal(1);
         })
         .request(async (app) => {
           await app.get('#form-draft-status-upload-button').trigger('click');
@@ -388,8 +387,7 @@ describe('FormNew', () => {
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
         .afterResponses(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().should.equal('2');
+          app.findAll('.form-attachment-row').length.should.equal(2);
         });
     });
   });

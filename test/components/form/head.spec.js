@@ -62,7 +62,6 @@ describe('FormHead', () => {
     it('shows all tabs to an administrator', () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
-      testData.standardFormAttachments.createPast(1, { blobExists: false });
       return load('/projects/1/forms/f/draft').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         tabs.map(tab => textWithout(tab, '.badge')).should.eql([
@@ -71,7 +70,6 @@ describe('FormHead', () => {
           'Versions',
           'Edit Form',
           'Settings',
-          'Form Attachments',
           'Testing'
         ]);
       });
@@ -81,7 +79,6 @@ describe('FormHead', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
       testData.extendedForms.createPast(1, { draft: true });
-      testData.standardFormAttachments.createPast(1);
       return load('/projects/1/forms/f/draft/testing').then(app => {
         const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
         const text = tabs.map(tab => textWithout(tab, '.badge'));
@@ -138,52 +135,6 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1, { state: 'closing' });
       const app = await load('/projects/1/forms/f/settings');
       findTab(app, 'Settings').get('.badge').text().should.equal('Closing');
-    });
-  });
-
-  describe('Form Attachments tab', () => {
-    beforeEach(() => {
-      mockLogin();
-      testData.extendedForms.createPast(1, { draft: true });
-    });
-
-    it('is not shown if there are no form attachments', async () => {
-      const app = await load('/projects/1/forms/f/draft');
-      findTab(app, 'Form Attachments').exists().should.be.false;
-    });
-
-    it('is shown if there are form attachments', async () => {
-      testData.standardFormAttachments.createPast(2, { blobExists: false });
-      const app = await load('/projects/1/forms/f/draft');
-      findTab(app, 'Form Attachments').exists().should.be.true;
-    });
-
-    describe('badge', () => {
-      it('shows the correct count if all form attachments are missing', () => {
-        testData.standardFormAttachments.createPast(2, { blobExists: false });
-        return load('/projects/1/forms/f/draft/attachments').then(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().should.equal('2');
-        });
-      });
-
-      it('shows correct count if only some form attachments are missing', () => {
-        testData.standardFormAttachments
-          .createPast(1, { blobExists: true })
-          .createPast(2, { blobExists: false });
-        return load('/projects/1/forms/f/draft/attachments').then(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().should.equal('2');
-        });
-      });
-
-      it('is not shown if all form attachments exist', () => {
-        testData.standardFormAttachments.createPast(2, { blobExists: true });
-        return load('/projects/1/forms/f/draft/attachments').then(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.should.be.hidden();
-        });
-      });
     });
   });
 

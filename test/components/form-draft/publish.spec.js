@@ -60,8 +60,6 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(1);
-      const { to } = modal.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/draft/attachments');
     });
 
     it('shows a warning if there are no test submissions', async () => {
