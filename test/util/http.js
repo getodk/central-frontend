@@ -729,27 +729,41 @@ class MockHttp {
         .then(() => new Promise((resolve, reject) => {
           if (isOrdered) this._orderedResponsesReturned += 1;
 
-          let responseWithoutConfig;
+          let response;
           try {
-            responseWithoutConfig = responseCallback();
+            response = responseCallback();
           } catch (e) {
             if (this._errorFromResponse == null) this._errorFromResponse = e;
             reject(e);
             return;
           }
 
-          const { data } = responseWithoutConfig;
-          if (typeof data === 'object' && data != null)
-            responseWithoutConfig.data = clone(data);
-
-          this._requestResponseLog.push(responseWithoutConfig);
-
-          const response = { ...responseWithoutConfig, config };
           response.headers = new Map([['date', new Date()], ...(response.headers ?? [])]);
+
+          // The response data returned by responseCallback may be mutated in
+          // the future, e.g., by testData. We clone the response data before
+          // adding it to the log to ensure that any such mutations do not
+          // appear in the log.
+          const cloneResponse = () => {
+            const result = { ...response };
+            const { data } = response;
+            if (typeof data === 'object' && data != null)
+              result.data = clone(data);
+            return result;
+          };
+          this._requestResponseLog.push(cloneResponse());
+
+          /* Before adding `config` to the response, we clone the response data
+          once again, this time because Frontend may mutate the data (e.g.,
+          requestData does this sometimes). We want to ensure that changes by
+          testData don't reach Frontend and also that changes by Frontend don't
+          reach the request/response log. It's for the latter reason that we
+          don't pass the same cloned data to Frontend as we do the log. */
+          const responseWithConfig = { ...cloneResponse(), config };
           if (response.status >= 200 && response.status < 300)
-            resolve(response);
+            resolve(responseWithConfig);
           else
-            reject(mockAxiosError(response));
+            reject(mockAxiosError(responseWithConfig));
         }));
       return promise;
     };
