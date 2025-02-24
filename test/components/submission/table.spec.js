@@ -32,7 +32,7 @@ const mountComponent = (options = undefined) => {
     }
   });
   merged.container.router = mockRouter(merged.props.draft
-    ? '/projects/1/forms/f/draft/testing'
+    ? '/projects/1/forms/f/draft'
     : '/projects/1/forms/f/submissions');
   merged.container = createTestContainer(merged.container);
   const { requestData } = merged.container;

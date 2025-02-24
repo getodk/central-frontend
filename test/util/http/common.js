@@ -6,6 +6,42 @@ import Spinner from '../../../src/components/spinner.vue';
 import { relativeUrl } from '../request';
 import { withAuth } from '../../../src/util/request';
 
+const assertRequestsMatch = (actual, expected, component) => {
+  const { extended = false, ...expectedNormalized } = expected;
+  if (expectedNormalized.headers == null) expectedNormalized.headers = {};
+  if (extended) {
+    expectedNormalized.headers = { ...expectedNormalized.headers };
+    expectedNormalized.headers['X-Extended-Metadata'] = 'true';
+  }
+
+  (actual.method ?? 'GET').should.equal(expectedNormalized.method ?? 'GET');
+
+  if (typeof expectedNormalized.url === 'function') {
+    expectedNormalized.url.call(null, relativeUrl(actual.url));
+    // Replace expectedNormalized.url now that actual.url has passed validation.
+    // This is needed because withAuth() expects the URL.
+    expectedNormalized.url = actual.url;
+  } else {
+    actual.url.should.equal(expectedNormalized.url);
+  }
+
+  try {
+    expect(actual.data).to.eql(expectedNormalized.data);
+  } catch (error) {
+    try {
+      expect(JSON.stringify(actual.data)).to.equal(JSON.stringify(expectedNormalized.data));
+    } catch (_) {
+      throw error;
+    }
+  }
+
+  const token = component != null
+    ? component.vm.$container.requestData.session.token
+    : null;
+  const { headers: expectedHeaders = {} } = withAuth(expectedNormalized, token);
+  (actual.headers ?? {}).should.eql(expectedHeaders);
+};
+
 export function testRequests(expectedConfigs) {
   let count = 0;
   return this
@@ -16,41 +52,8 @@ export function testRequests(expectedConfigs) {
       // requests, and the afterResponses() hook will throw an error. If
       // expectedConfigs[i] == null, the request is intentionally not checked
       // (presumably because it is checked elsewhere).
-      if (i < expectedConfigs.length && expectedConfigs[i] != null) {
-        const { extended = false, ...expectedConfig } = expectedConfigs[i];
-        (config.method ?? 'GET').should.equal(expectedConfig.method ?? 'GET');
-
-        if (typeof expectedConfig.url === 'function') {
-          expectedConfig.url.call(null, relativeUrl(config.url));
-          // Replace expectedConfig.url now that config.url has passed
-          // validation. This is needed because withAuth() expects the URL.
-          expectedConfig.url = config.url;
-        } else {
-          config.url.should.equal(expectedConfig.url);
-        }
-
-        try {
-          expect(config.data).to.eql(expectedConfig.data);
-        } catch (error) {
-          try {
-            expect(JSON.stringify(config.data)).to.equal(JSON.stringify(expectedConfig.data));
-          } catch (_) {
-            throw error;
-          }
-        }
-
-        if (extended) {
-          expectedConfig.headers = {
-            ...expectedConfig.headers,
-            'X-Extended-Metadata': 'true'
-          };
-        }
-        const token = component != null
-          ? component.vm.$container.requestData.session.token
-          : null;
-        const { headers: expectedHeaders = {} } = withAuth(expectedConfig, token);
-        (config.headers ?? {}).should.eql(expectedHeaders);
-      }
+      if (i < expectedConfigs.length && expectedConfigs[i] != null)
+        assertRequestsMatch(config, expectedConfigs[i], component);
     })
     .afterResponses(() => {
       if (count !== expectedConfigs.length) {
@@ -62,6 +65,25 @@ export function testRequests(expectedConfigs) {
           : `${expectedConfigs.length} were expected`;
         throw new Error(`${messageActual}, but ${messageExpected}`);
       }
+    });
+}
+
+export function testRequestsInclude(expectedConfigs) {
+  const matched = [];
+  return this
+    .beforeEachResponse((component, config) => {
+      for (const [i, expected] of expectedConfigs.entries()) {
+        if (matched.includes(i)) continue; // eslint-disable-line no-continue
+        try {
+          assertRequestsMatch(config, expected, component);
+          matched.push(i);
+          return;
+        } catch (_) {}
+      }
+    })
+    .afterResponses(() => {
+      if (matched.length !== expectedConfigs.length)
+        throw new Error('an expected request was not sent');
     });
 }
 

@@ -59,10 +59,14 @@ describe('FormLink', () => {
         to.should.equal('/projects/1/forms/a%20b/submissions');
       });
 
-      it('links to .../draft/testing for form without published version', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-        const { to } = mountComponent().getComponent(LinkIfCan).props();
-        to.should.equal('/projects/1/forms/a%20b/draft/testing');
+      // We probably just don't show form drafts to project viewers. But if we
+      // do, this checks that we don't link them to a page that they can't
+      // access.
+      it('does not render link for form without published version', () => {
+        testData.extendedForms.createPast(1, { name: 'My Form', draft: true });
+        const component = mountComponent();
+        component.find('a').exists().should.be.false;
+        component.text().should.equal('My Form');
       });
     });
 

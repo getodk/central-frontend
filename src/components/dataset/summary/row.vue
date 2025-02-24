@@ -55,13 +55,10 @@ import I18nList from '../../i18n/list.vue';
 export default {
   name: 'DatasetSummaryRow',
   components: { DatasetLink, I18nList },
+  inject: ['projectId'],
   props: {
     dataset: {
       type: Object,
-      required: true
-    },
-    projectId: {
-      type: Number,
       required: true
     }
   },

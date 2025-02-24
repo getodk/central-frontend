@@ -1,10 +1,11 @@
+import FormDraftStatus from '../../../src/components/form-draft/status.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 import FormVersionViewXml from '../../../src/components/form-version/view-xml.vue';
 
+import Property from '../../util/ds-property-enum';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import Property from '../../util/ds-property-enum';
 
 describe('FormDraftStatus', () => {
   beforeEach(mockLogin);
@@ -13,7 +14,10 @@ describe('FormDraftStatus', () => {
     testData.extendedForms.createPast(1);
     testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
     const component = await load('/projects/1/forms/f/draft', { root: false });
-    component.getComponent(FormVersionString).props().version.should.equal('v2');
+    const { version } = component.getComponent(FormDraftStatus)
+      .getComponent(FormVersionString)
+      .props();
+    version.should.equal('v2');
   });
 
   it('toggles the "View XML" modal', () => {
@@ -31,7 +35,6 @@ describe('FormDraftStatus', () => {
     testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
     testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
     await load('/projects/1/forms/f/draft')
-      .respondWithData(() => testData.formDraftDatasetDiffs.sorted())
       .beforeEachResponse((_, config) => requests.push(config.url))
       .afterResponses(() => requests.should.include('/v1/projects/1/forms/f/draft/dataset-diff'));
   });

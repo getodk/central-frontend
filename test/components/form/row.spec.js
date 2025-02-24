@@ -273,13 +273,13 @@ describe('FormRow', () => {
       row.findComponent(EnketoFill).exists().should.be.false;
     });
 
-    it('shows a "Test" button to admin on non-published version', () => {
+    it('shows an "Edit" button to admin on non-published version', () => {
       mockLogin();
       testData.extendedForms.createPast(1, { state: 'open', draft: true });
       const actions = mountComponent().find('.actions');
-      actions.text().should.equal('Test');
+      actions.text().should.equal('Edit');
       actions.find('.icon-pencil').exists().should.be.true;
-      actions.getComponent('a').props().to.should.equal('/projects/1/forms/f/draft/testing');
+      actions.getComponent('a').props().to.should.equal('/projects/1/forms/f/draft');
     });
   });
 });

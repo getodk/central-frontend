@@ -55,7 +55,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { provide, shallowReactive } from 'vue';
+import { inject, shallowReactive } from 'vue';
 
 import DocLink from '../doc-link.vue';
 import FormDraftQrPanel from './qr-panel.vue';
@@ -73,18 +73,8 @@ import { useRequestData } from '../../request-data';
 defineOptions({
   name: 'FormDraftTesting'
 });
-const props = defineProps({
-  projectId: {
-    type: String,
-    required: true
-  },
-  xmlFormId: {
-    type: String,
-    required: true
-  }
-});
-provide('projectId', props.projectId);
-provide('xmlFormId', props.xmlFormId);
+const projectId = inject('projectId');
+const xmlFormId = inject('xmlFormId');
 
 const { resourceView, createResource } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
@@ -94,9 +84,8 @@ useSubmissions();
 const keys = createResource('keys');
 const fetchKeys = () => {
   // We do not reconcile `keys` and formDraft.keyId.
-  keys.request({
-    url: apiPaths.submissionKeys(props.projectId, props.xmlFormId, true)
-  }).catch(noop);
+  keys.request({ url: apiPaths.submissionKeys(projectId, xmlFormId, true) })
+    .catch(noop);
 };
 fetchKeys();
 
