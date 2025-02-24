@@ -11,17 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <form-draft-status :project-id="projectId" :xml-form-id="xmlFormId"
-      @fetch-project="$emit('fetch-project', $event)"
+    <form-draft-status @fetch-project="$emit('fetch-project', $event)"
       @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
       @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
-    <form-attachment-list v-if="rendersAttachments" :project-id="projectId"/>
-    <form-draft-testing :project-id="projectId" :xml-form-id="xmlFormId"/>
+    <form-attachment-list v-if="rendersAttachments"/>
+    <form-draft-testing/>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, provide } from 'vue';
 
 import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
@@ -32,7 +31,7 @@ import { useRequestData } from '../../request-data';
 defineOptions({
   name: 'FormEdit'
 });
-defineProps({
+const props = defineProps({
   projectId: {
     type: String,
     required: true
@@ -43,6 +42,8 @@ defineProps({
   }
 });
 defineEmits(['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets']);
+provide('projectId', props.projectId);
+provide('xmlFormId', props.xmlFormId);
 
 const { attachments } = useRequestData();
 

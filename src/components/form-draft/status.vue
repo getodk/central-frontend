@@ -42,9 +42,7 @@ except according to the terms contained in the LICENSE file.
               </template>
             </summary-item>
             <dataset-summary v-if="formDraft.dataExists && formDraft.get().entityRelated"
-              :is-draft="true"
-              :project-id="Number(projectId)"
-              :xml-form-id="xmlFormId"/>
+              :is-draft="true"/>
           </template>
         </page-section>
         <page-section>
@@ -109,17 +107,7 @@ export default {
     SummaryItem,
     DatasetSummary
   },
-  inject: ['alert'],
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    }
-  },
+  inject: ['alert', 'projectId', 'xmlFormId'],
   emits: ['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets'],
   setup() {
     const { form, formVersions, formDraft, datasets, formDraftDatasetDiff } = useRequestData();

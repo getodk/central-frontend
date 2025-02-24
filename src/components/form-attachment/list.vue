@@ -113,13 +113,7 @@ export default {
     PageSection,
     SentenceSeparator
   },
-  inject: ['alert'],
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    }
-  },
+  inject: ['alert', 'projectId'],
   setup() {
     const { project, form, resourceView, datasets } = useRequestData();
     const attachments = resourceView('attachments', (data) => data.get());

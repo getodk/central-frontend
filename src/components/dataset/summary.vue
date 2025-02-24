@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <p>{{ $tc('datasetUpdates', datasetDiff.length) }}</p>
       <template v-for="(dataset, index) in datasetDiff" :key="dataset.name">
         <!-- TODO replace it with expandable-row -->
-        <dataset-summary-row :dataset="dataset" :project-id="projectId"/>
+        <dataset-summary-row :dataset="dataset"/>
         <hr v-if="index < datasetDiff.length - 1">
       </template>
     </template>
@@ -35,18 +35,11 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetSummary',
   components: { SummaryItem, DatasetSummaryRow },
+  inject: ['projectId', 'xmlFormId'],
   props: {
     isDraft: {
       type: Boolean,
       Default: false
-    },
-    projectId: {
-      type: Number,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
     }
   },
   setup(props) {
