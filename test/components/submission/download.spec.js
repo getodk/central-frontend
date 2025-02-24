@@ -4,6 +4,7 @@ import Modal from '../../../src/components/modal.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
 
 import useFields from '../../../src/request-data/fields';
+import useForm from '../../../src/request-data/form';
 import { noop } from '../../../src/util/util';
 import { useRequestData } from '../../../src/request-data';
 
@@ -26,7 +27,7 @@ const mountComponent = (options = undefined) => {
   // Next, use that test data to set requestData.
   if (merged.container == null) merged.container = {};
   const { props } = merged;
-  merged.container.requestData = testRequestData(['keys', useFields], {
+  merged.container.requestData = testRequestData([useForm, 'keys', useFields], {
     [props.formVersion.publishedAt != null ? 'form' : 'formDraft']: props.formVersion,
     fields: props.formVersion._fields,
     keys: testData.standardKeys.sorted()

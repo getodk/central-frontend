@@ -12,18 +12,19 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = () => {
-  const requestData = { project: testData.extendedProjects.last() };
-  if (testData.extendedForms.size !== 0 &&
-    testData.extendedFormVersions.last().publishedAt == null) {
-    requestData.formDraft = testData.extendedFormDrafts.last();
-  }
+  const formVersion = testData.extendedForms.size !== 0
+    ? testData.extendedFormVersions.last()
+    : null;
+  const draft = formVersion != null && formVersion.publishedAt == null;
+  const encodedFormId = draft
+    ? encodeURIComponent(formVersion.xmlFormId)
+    : null;
   return {
     props: { state: true },
     container: {
-      router: mockRouter(requestData.formDraft == null
+      router: mockRouter(!draft
         ? '/projects/1'
-        : '/projects/1/forms/f/draft'),
-      requestData
+        : `/projects/1/forms/${encodedFormId}/draft`)
     }
   };
 };

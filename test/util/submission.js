@@ -1,4 +1,6 @@
 import SubmissionList from '../../src/components/submission/list.vue';
+
+import useForm from '../../src/request-data/form';
 import useSubmissions from '../../src/request-data/submissions';
 
 import testData from '../data';
@@ -21,7 +23,7 @@ export const loadSubmissionList = (mountOptions = {}) => {
       deleted: false
     },
     container: {
-      requestData: testRequestData(['keys', useSubmissions], {
+      requestData: testRequestData([useForm, 'keys', useSubmissions], {
         project,
         form,
         formDraft: form.publishedAt == null

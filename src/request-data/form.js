@@ -9,19 +9,21 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { reactive, watchSyncEffect } from 'vue';
+import { reactive, shallowReactive, watchSyncEffect } from 'vue';
 
-import { computeIfExists, setupOption, transformForms } from './util';
+import { computeIfExists, setupOption, transformForm, transformForms } from './util';
 import { useRequestData } from './index';
 
 export default () => {
-  const { form, formDraft, createResource } = useRequestData();
+  const { form, createResource } = useRequestData();
 
   const formVersions = createResource('formVersions', () => ({
     transformResponse: transformForms
   }));
   const formVersionXml = createResource('formVersionXml');
 
+  const formDraft = createResource('formDraft', () =>
+    setupOption(data => shallowReactive(transformForm(data))));
   // Form draft attachments
   const attachments = createResource('attachments', () => ({
     ...setupOption((data) => data.reduce(
@@ -74,9 +76,9 @@ export default () => {
 
   return {
     form,
-    formDraft,
     formVersions,
     formVersionXml,
+    formDraft,
     attachments,
     publishedAttachments,
     publicLinks,

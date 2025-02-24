@@ -83,7 +83,6 @@ export default (container, createResource) => {
   createResource('form', () => ({
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
-
   createResource('dataset', () => ({
     transformResponse: ({ data }) => {
       // Add projectId to forms. FormLink expects this property to exist on form
@@ -98,7 +97,4 @@ export default (container, createResource) => {
       return shallowReactive(data);
     }
   }));
-
-  createResource('formDraft', () =>
-    setupOption(data => shallowReactive(transformForm(data))));
 };

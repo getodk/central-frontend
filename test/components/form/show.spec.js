@@ -79,7 +79,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f/settings', {}, {
         attachments: () => mockResponse.problem(404.1)
       });
-      app.vm.$container.requestData.formDraft.isEmpty().should.be.true;
+      app.vm.$container.requestData.localResources.formDraft.isEmpty().should.be.true;
     });
   });
 

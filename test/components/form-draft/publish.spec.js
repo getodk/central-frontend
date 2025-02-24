@@ -397,7 +397,7 @@ describe('FormDraftPublish', () => {
       const app = await publish();
       const { requestData } = app.vm.$container;
       requestData.localResources.formVersions.dataExists.should.be.false;
-      requestData.formDraft.isEmpty().should.be.true;
+      requestData.localResources.formDraft.isEmpty().should.be.true;
       requestData.localResources.attachments.isEmpty().should.be.true;
     });
 

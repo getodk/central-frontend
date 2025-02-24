@@ -16,7 +16,7 @@ definition for an existing form -->
   <modal id="form-new" :state="state" :hideable="!awaitingResponse" backdrop
     @hide="$emit('hide')">
     <template #title>
-      {{ !formDraft.dataExists ? $t('title.create') : $t('title.update') }}
+      {{ !draft ? $t('title.create') : $t('title.update') }}
     </template>
     <template #body>
       <div v-show="warnings != null" class="modal-warnings">
@@ -64,7 +64,7 @@ definition for an existing form -->
         <p>
           <span>{{ $t('warningsText[4]') }}</span>
           <sentence-separator/>
-          <template v-if="!formDraft.dataExists">{{ $t('warningsText[5].create') }}</template>
+          <template v-if="!draft">{{ $t('warningsText[5].create') }}</template>
           <template v-else>{{ $t('warningsText[5].update') }}</template>
         </p>
         <p>
@@ -76,7 +76,7 @@ definition for an existing form -->
       </div>
       <div class="modal-introduction">
         <p>
-          <template v-if="!formDraft.dataExists">{{ $t('introduction[0].create') }}</template>
+          <template v-if="!draft">{{ $t('introduction[0].create') }}</template>
           <template v-else>{{ $t('introduction[0].update') }}</template>
           <sentence-separator/>
           <i18n-t keypath="introduction[1].full">
@@ -85,7 +85,7 @@ definition for an existing form -->
             </template>
           </i18n-t>
         </p>
-        <p v-if="!formDraft.dataExists">{{ $t('introduction[2]') }}</p>
+        <p v-if="!draft">{{ $t('introduction[2]') }}</p>
       </div>
       <file-drop-zone :disabled="awaitingResponse"
         @drop="afterFileSelection($event.dataTransfer.files[0])">
@@ -128,7 +128,6 @@ import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
 import { apiPaths, isProblem } from '../../util/request';
-import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormNew',
@@ -142,13 +141,8 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { project, resourceView } = useRequestData();
-    const formDraft = resourceView('formDraft', (data) => data.get());
-
     const { request, awaitingResponse } = useRequest();
-    return { project, formDraft, request, awaitingResponse };
+    return { request, awaitingResponse };
   },
   data() {
     return {
@@ -157,6 +151,16 @@ export default {
     };
   },
   computed: {
+    projectId() {
+      return this.$route.params.projectId;
+    },
+    xmlFormId() {
+      return this.$route.params.xmlFormId;
+    },
+    // Is the component creating a new form or uploading a new form draft?
+    draft() {
+      return this.xmlFormId != null;
+    },
     // Returns the inferred content type of the file based on its extension. (We
     // first tried using this.file.type rather than inferring the content type,
     // but that didn't work in Edge.)
@@ -201,9 +205,9 @@ export default {
       const initialRoute = this.$route;
       this.request({
         method: 'POST',
-        url: !this.formDraft.dataExists
-          ? apiPaths.forms(this.project.id, query)
-          : apiPaths.formDraft(this.project.id, this.formDraft.xmlFormId, query),
+        url: !this.draft
+          ? apiPaths.forms(this.projectId, query)
+          : apiPaths.formDraft(this.projectId, this.xmlFormId, query),
         headers,
         data: this.file,
         fulfillProblem: ({ code }) => code === 400.16,
@@ -213,14 +217,12 @@ export default {
           if (code === 409.3 && details.table === 'forms') {
             const { fields } = details;
             if (fields.length === 2 && fields[0] === 'projectId' &&
-              fields[1] === 'xmlFormId') {
-              const xmlFormId = details.values[1];
-              return this.$t('problem.409_3', { xmlFormId });
-            }
+              fields[1] === 'xmlFormId')
+              return this.$t('problem.409_3', { xmlFormId: details.values[1] });
           }
           if (code === 400.8 && details.field === 'xmlFormId') {
             return this.$t('problem.400_8', {
-              expected: this.formDraft.xmlFormId,
+              expected: this.xmlFormId,
               actual: details.value
             });
           }
