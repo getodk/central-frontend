@@ -65,7 +65,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f/settings', {}, {
         attachments: () => attachments
       });
-      app.vm.$container.requestData.attachments.isEmpty().should.be.true;
+      app.vm.$container.requestData.localResources.attachments.isEmpty().should.be.true;
     });
 
     it('updates formDraft if it is defined but attachments is not', async () => {

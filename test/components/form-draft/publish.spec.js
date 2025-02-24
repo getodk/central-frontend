@@ -402,7 +402,7 @@ describe('FormDraftPublish', () => {
       const { requestData } = app.vm.$container;
       requestData.localResources.formVersions.dataExists.should.be.false;
       requestData.formDraft.isEmpty().should.be.true;
-      requestData.attachments.isEmpty().should.be.true;
+      requestData.localResources.attachments.isEmpty().should.be.true;
     });
 
     it('shows the create draft button', () =>

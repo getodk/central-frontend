@@ -468,7 +468,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -482,7 +482,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -496,7 +496,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -550,7 +550,7 @@ describe('FormAttachmentList', () => {
           .afterResponse(component => {
             const oldUpdatedAt = testData.standardFormAttachments.sorted()
               .map(attachment => attachment.updatedAt);
-            const { attachments } = component.vm.$container.requestData;
+            const { attachments } = component.vm.$container.requestData.localResources;
             const newUpdatedAt = [...attachments.get().values()]
               .map(attachment => attachment.updatedAt);
             newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -672,7 +672,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(3);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -715,7 +715,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(2);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -744,7 +744,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(1);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -773,7 +773,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(0);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
