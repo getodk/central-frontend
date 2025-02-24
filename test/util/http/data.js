@@ -97,7 +97,6 @@ const responsesByComponent = {
     form: () => testData.extendedForms.last(),
     xml: () => mockResponse.of(simpleXml)
   }),
-  FormVersionList: componentResponses({ formVersions: true }),
   FormSubmissions: componentResponses({
     keys: true,
     deletedSubmissionCount: () => testData.submissionDeletedOData(0),
@@ -112,8 +111,17 @@ const responsesByComponent = {
   PublicLinkList: componentResponses({
     publicLinks: () => testData.standardPublicLinks.sorted()
   }),
+  FormVersionList: componentResponses({ formVersions: true }),
+  FormEdit: componentResponses({
+    formVersions: true,
+
+    // Conditional responses
+    formDraftDatasetDiff: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/dataset-diff$/.test(url),
+      () => testData.formDraftDatasetDiffs.sorted()
+    ]
+  }),
   FormSettings: [],
-  FormDraftStatus: componentResponses({ formVersions: true }),
   FormAttachmentList: [],
   FormDraftTesting: componentResponses({
     keys: true,

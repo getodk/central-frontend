@@ -443,7 +443,7 @@ const routes = [
       }),
       asyncRoute({
         path: 'draft',
-        component: 'FormDraftStatus',
+        component: 'FormEdit',
         props: true,
         loading: 'tab',
         meta: {
@@ -456,7 +456,8 @@ const routes = [
             ]),
             formDraft: () => formDraft.isDefined()
           },
-          title: () => [i18n.t('common.status'), form.nameOrId]
+          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
+          fullWidth: true
         }
       }),
       asyncRoute({
@@ -786,11 +787,11 @@ const routesByName = new Map();
     'ProjectSettings'
   ];
   const formRoutes = [
-    'FormVersionList',
     'FormSubmissions',
     'PublicLinkList',
+    'FormVersionList',
+    'FormEdit',
     'FormSettings',
-    'FormDraftStatus',
     'FormAttachmentList',
     'FormDraftTesting'
   ];

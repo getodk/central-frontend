@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <loading :state="formVersions.initiallyLoading"/>
     <div v-show="formVersions.dataExists" class="row">
-      <div class="col-xs-6 col-xs-offset-6">
+      <div class="col-xs-12">
         <page-section>
           <template #heading>
             <span>{{ $t('currentDraft.title') }}</span>

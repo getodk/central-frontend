@@ -35,12 +35,16 @@
   },
   "formHead": {
     "tab": {
-      "versions": {
-        "string": "Versions",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
       "publicAccess": {
         "string": "Public Access",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "editForm": {
+        "string": "Edit Form",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "versions": {
+        "string": "Versions",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },

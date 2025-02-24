@@ -56,6 +56,12 @@ except according to the terms contained in the LICENSE file.
                   {{ $t('formHead.tab.versions') }}
                 </router-link>
               </li>
+              <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
+                role="presentation">
+                <router-link :to="tabPath('draft')">
+                  {{ $t('formHead.tab.editForm') }}
+                </router-link>
+              </li>
               <li v-if="rendersFormTabs" :class="formTabClass('settings')"
                 role="presentation">
                 <router-link :to="tabPath('settings')"
@@ -77,12 +83,6 @@ except according to the terms contained in the LICENSE file.
               <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
             </button>
             <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
-              <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
-                role="presentation">
-                <router-link :to="tabPath('draft')">
-                  {{ $t('common.status') }}
-                </router-link>
-              </li>
               <li v-if="canRoute(tabPath('draft/attachments'))"
                 :class="tabClass('draft/attachments')" role="presentation">
                 <router-link :to="tabPath('draft/attachments')">

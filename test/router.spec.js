@@ -1106,7 +1106,7 @@ describe('createCentralRouter()', () => {
     it('shows form name in title for <form url>/draft', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
       await load('/projects/1/forms/f2/draft');
-      document.title.should.equal('Status | My Draft Form | ODK Central');
+      document.title.should.equal('Edit Form | My Draft Form | ODK Central');
     });
 
     it('shows form name in title for <form url>/draft/attachments', async () => {

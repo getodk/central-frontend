@@ -69,8 +69,8 @@ describe('FormHead', () => {
           'Submissions',
           'Public Access',
           'Versions',
+          'Edit Form',
           'Settings',
-          'Status',
           'Form Attachments',
           'Testing'
         ]);
@@ -94,8 +94,9 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
       const tabs = app.findAll('#form-head-form-tabs li');
-      tabs.length.should.equal(4);
+      tabs.length.should.equal(5);
       for (const tab of tabs) {
+        if (tab.text() === 'Edit Form') continue; // eslint-disable-line no-continue
         tab.classes('disabled').should.be.true;
         const a = tab.get('a');
         a.should.have.ariaDescription('These functions will become available once you publish your Draft Form');
@@ -109,7 +110,7 @@ describe('FormHead', () => {
       testData.extendedFormVersions.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
       const tabs = app.findAll('#form-head-form-tabs li');
-      tabs.length.should.equal(4);
+      tabs.length.should.equal(5);
       for (const tab of tabs) {
         tab.classes('disabled').should.be.false;
         const a = tab.get('a');
