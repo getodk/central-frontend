@@ -3058,6 +3058,14 @@
           "string": "Draft",
           "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
         }
+      },
+      "infoNav": {
+        "entityLists": {
+          "string": "{count, plural, one {Updates {count} Entity List} other {Updates {count} Entity Lists}}"
+        },
+        "appUsers": {
+          "string": "{count, plural, one {{count} App User assigned} other {{count} App Users assigned}}"
+        }
       }
     },
     "FormList": {
