@@ -11,44 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-      <loading :state="formVersionXml.initiallyLoading"/>
-
-      <template v-if="formVersionXml.dataExists">
-        <OdkWebForm :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
-      </template>
-
-      <modal v-bind="previewModal" hideable backdrop @hide="previewModal.hide()">
-          <template #title>{{ $t('webFormPreview.submissionModal.title') }}</template>
-          <template #body>
-            {{ $t('webFormPreview.submissionModal.body') }}
-            <div class="modal-actions">
-              <button type="button" class="btn btn-primary" @click="previewModal.hide()">
-                {{ $t('action.close') }}
-              </button>
-            </div>
-          </template>
-      </modal>
+  <loading :state="form.initiallyLoading"/>
+  <WebFormRenderer v-if="form.dataExists" action-type="preview"/>
 </template>
 
 <script setup>
-import { createApp, getCurrentInstance } from 'vue';
-/* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
-import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
 import useForm from '../../request-data/form';
 import { apiPaths } from '../../util/request';
-import Modal from '../modal.vue';
 import Loading from '../loading.vue';
-import { modalData } from '../../util/reactivity';
-import useRequest from '../../composables/request';
-
-// Install WebFormsPlugin in the component instead of installing it at the
-// application level so that @getodk/web-forms package is not loaded for every
-// page, thus increasing the initial bundle
-const app = createApp({});
-app.use(webFormsPlugin);
-const inst = getCurrentInstance();
-// webFormsPlugin just adds config property to the appContext
-inst.appContext.config = app._context.config;
+import WebFormRenderer from '../web-form-renderer.vue';
 
 defineOptions({
   name: 'FormPreview'
@@ -69,70 +40,17 @@ const props = defineProps({
   }
 });
 
-const { form, formVersionXml } = useForm();
-const { request } = useRequest();
-
-const previewModal = modalData();
+const { form } = useForm();
 
 const fetchForm = () => {
-  Promise.allSettled([
-    form.request({ url: apiPaths.form(props.projectId, props.xmlFormId), extended: true, alert: false }),
-    formVersionXml.request({ url: apiPaths.formXml(props.projectId, props.xmlFormId, props.draft) })
-  ]);
+  form.request({
+    url: apiPaths.form(props.projectId, props.xmlFormId),
+    extended: true,
+    alert: false
+  });
 };
 
 fetchForm();
-
-const handleSubmit = () => {
-  previewModal.show();
-};
-
-
-
-/**
- * Web Form expects host application to provide a function that it can use to
- * fetch attachments. Signature of the function is (url) => Response; where
- * Response is subset of web standard  {@link Response}.
- */
-const getAttachment = (url) => request({
-  url: apiPaths.formAttachment(
-    props.projectId,
-    props.xmlFormId,
-    props.draft,
-    url.pathname.substring(1)
-  ),
-  alert: false
-}).then(axiosResponse => {
-  const { data, status, statusText, headers } = axiosResponse;
-
-  const fetchHeaders = new Headers();
-  for (const [key, value] of Object.entries(headers)) {
-    if (key === 'content-type') {
-      // because web-forms doens't want space between media type and charset
-      // https://github.com/getodk/web-forms/pull/259#discussion_r1887227207
-      fetchHeaders.append(key, value.replace('; charset', ';charset'));
-    } else {
-      fetchHeaders.append(key, value);
-    }
-  }
-
-  let body;
-  if (typeof (data) === 'string') {
-    body = data;
-  } else if (headers['content-type'].includes('application/json') ||
-             headers['content-type'].includes('application/geo+json')) {
-    body = JSON.stringify(data);
-  } else {
-    // eslint-disable-next-line no-console
-    console.error('response data is not a known text format');
-  }
-
-  return new Response(body, {
-    status,
-    statusText,
-    headers: fetchHeaders,
-  });
-});
 </script>
 
 <style lang="scss">

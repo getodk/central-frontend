@@ -11,11 +11,7 @@
     "editProfile": "Edit Profile",
     "download": "Download",
     "pageNotFound": "Page Not Found",
-    "details": "Details",
-    "formSubmission": "Form submission", 
-    "formPublicSubmission": "Form submission (public link)",
-    "formPreview": "Form preview",
-    "formEdit": "Form editor",
+    "details": "Details"
   },
   "projectShow": {
     "tab": {
@@ -325,8 +321,7 @@
     "session": "Session",
     "submission": "Submission",
     "submissions": "Submissions",
-    "projectRoles": "Project Roles",
-    "formPreview": "Form Preview"
+    "projectRoles": "Project Roles"
   },
   "alert": {
     "passwordTooShort": "Please input a password at least 10 characters long.",
