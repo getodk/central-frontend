@@ -32,7 +32,7 @@ describe('FormAttachmentList', () => {
       for (const [type, text] of cases) {
         it(`is correct for ${type}`, async () => {
           testData.standardFormAttachments.createPast(1, { type });
-          const component = await load('/projects/1/forms/f/draft/attachments', {
+          const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           component.get('td.form-attachment-list-type').text().should.equal(text);
@@ -45,7 +45,7 @@ describe('FormAttachmentList', () => {
         name: 'foo.jpg',
         blobExists: false
       });
-      const component = await load('/projects/1/forms/f/draft/attachments', {
+      const component = await load('/projects/1/forms/f/draft', {
         root: false
       });
       const span = component.get('td.form-attachment-list-name span');
@@ -58,7 +58,7 @@ describe('FormAttachmentList', () => {
         name: 'foo bar.jpg',
         blobExists: true
       });
-      const component = await load('/projects/1/forms/f/draft/attachments', {
+      const component = await load('/projects/1/forms/f/draft', {
         root: false
       });
       const a = component.get('td.form-attachment-list-name a');
@@ -73,7 +73,7 @@ describe('FormAttachmentList', () => {
         const { updatedAt } = testData.standardFormAttachments
           .createPast(1, { blobExists: true })
           .last();
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const row = component.getComponent(FormAttachmentRow);
@@ -86,7 +86,7 @@ describe('FormAttachmentList', () => {
           exists: false,
           hasUpdatedAt: false
         });
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const span = component.get('td.form-attachment-list-uploaded span');
@@ -101,7 +101,7 @@ describe('FormAttachmentList', () => {
           exists: false,
           hasUpdatedAt: true
         });
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const span = component.get('td.form-attachment-list-uploaded span');
@@ -140,7 +140,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('highlights only matching rows', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a', 'b', 'd']));
@@ -150,7 +150,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows a Replace label for the correct row', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a', 'b', 'd']));
@@ -173,7 +173,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('unhighlights the rows', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a', 'b', 'd']));
@@ -182,7 +182,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('hides the popup', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a', 'b', 'd']));
@@ -202,7 +202,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly if there are no unmatched files', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false,
           attachTo: document.body
         });
@@ -215,7 +215,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly if there is one unmatched file', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false,
           attachTo: document.body
         });
@@ -231,7 +231,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly if there are multiple unmatched files', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false,
           attachTo: document.body
         });
@@ -247,7 +247,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly if all files are unmatched', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false,
           attachTo: document.body
         });
@@ -260,7 +260,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('allows user to close popup if all files are unmatched', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['d', 'e']));
@@ -305,7 +305,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('highlights only the matching row', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a']));
@@ -316,7 +316,7 @@ describe('FormAttachmentList', () => {
 
       describe('Replace label', () => {
         it('shows label when file matches an existing attachment', async () => {
-          const component = await load('/projects/1/forms/f/draft/attachments', {
+          const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           await select(component, blankFiles(['a']));
@@ -328,7 +328,7 @@ describe('FormAttachmentList', () => {
         });
 
         it('does not show label when file matches a missing attachment', async () => {
-          const component = await load('/projects/1/forms/f/draft/attachments', {
+          const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           await select(component, blankFiles(['b']));
@@ -341,7 +341,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows the popup with the correct text', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a']));
@@ -352,7 +352,7 @@ describe('FormAttachmentList', () => {
 
       describe('after the uploads are canceled', () => {
         it('unhighlights the rows', async () => {
-          const component = await load('/projects/1/forms/f/draft/attachments', {
+          const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           await select(component, blankFiles(['a']));
@@ -361,7 +361,7 @@ describe('FormAttachmentList', () => {
         });
 
         it('hides the popup', async () => {
-          const component = await load('/projects/1/forms/f/draft/attachments', {
+          const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           await select(component, blankFiles(['a']));
@@ -380,7 +380,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('correctly renders if the file matches', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false,
           attachTo: document.body
         });
@@ -393,7 +393,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('correctly renders if the file does not match', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false,
           attachTo: document.body
         });
@@ -406,7 +406,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('allows user to close popup if file does not match', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['c']));
@@ -468,7 +468,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -482,7 +482,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -496,7 +496,7 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -550,7 +550,7 @@ describe('FormAttachmentList', () => {
           .afterResponse(component => {
             const oldUpdatedAt = testData.standardFormAttachments.sorted()
               .map(attachment => attachment.updatedAt);
-            const { attachments } = component.vm.$container.requestData;
+            const { attachments } = component.vm.$container.requestData.localResources;
             const newUpdatedAt = [...attachments.get().values()]
               .map(attachment => attachment.updatedAt);
             newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -588,7 +588,7 @@ describe('FormAttachmentList', () => {
           });
 
           it('highlights all the rows of the table', async () => {
-            const component = await load('/projects/1/forms/f/draft/attachments', {
+            const component = await load('/projects/1/forms/f/draft', {
               root: false
             });
             await component.get('#form-attachment-list').trigger('dragenter', {
@@ -599,7 +599,7 @@ describe('FormAttachmentList', () => {
           });
 
           it('shows the popup with the correct text', async () => {
-            const component = await load('/projects/1/forms/f/draft/attachments', {
+            const component = await load('/projects/1/forms/f/draft', {
               root: false
             });
             await component.get('#form-attachment-list').trigger('dragenter', {
@@ -628,7 +628,7 @@ describe('FormAttachmentList', () => {
           });
 
           const confirmUploads = (successCount) =>
-            load('/projects/1/forms/f/draft/attachments', { root: false })
+            load('/projects/1/forms/f/draft', { root: false })
               .complete()
               .request(async (component) => {
                 await dragAndDrop(
@@ -672,7 +672,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(3);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -715,7 +715,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(2);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -744,7 +744,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(1);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
@@ -773,7 +773,7 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(0);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData;
+              const { attachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...attachments.get().values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
@@ -805,7 +805,7 @@ describe('FormAttachmentList', () => {
           });
 
           it('highlights all the rows of the table', async () => {
-            const component = await load('/projects/1/forms/f/draft/attachments', {
+            const component = await load('/projects/1/forms/f/draft', {
               root: false
             });
             await component.get('#form-attachment-list').trigger('dragenter', {
@@ -816,7 +816,7 @@ describe('FormAttachmentList', () => {
           });
 
           it('shows the popup with the correct text', async () => {
-            const component = await load('/projects/1/forms/f/draft/attachments', {
+            const component = await load('/projects/1/forms/f/draft', {
               root: false
             });
             await component.get('#form-attachment-list').trigger('dragenter', {
@@ -834,7 +834,7 @@ describe('FormAttachmentList', () => {
 
         describe('confirming the upload', () => {
           testSingleFileUpload(attachmentName =>
-            load('/projects/1/forms/f/draft/attachments', { root: false })
+            load('/projects/1/forms/f/draft', { root: false })
               .complete()
               .request(async (component) => {
                 await dragAndDrop(
@@ -855,10 +855,10 @@ describe('FormAttachmentList', () => {
       testData.standardFormAttachments
         .createPast(1, { name: 'a' })
         .createPast(1, { name: 'b' });
-      return load('/projects/1/forms/f/draft/attachments', { root: false })
+      return load('/projects/1/forms/f/draft', { root: false })
         .testModalToggles({
           modal: FormAttachmentUploadFiles,
-          show: '.heading-with-button button',
+          show: '#form-attachment-list-upload-button',
           hide: '.btn-primary'
         });
     });
@@ -901,7 +901,7 @@ describe('FormAttachmentList', () => {
 
       it('highlights only the target row', async () => {
         testData.standardFormAttachments.createPast(2);
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const rows = component.findAll('.form-attachment-row');
@@ -915,7 +915,7 @@ describe('FormAttachmentList', () => {
 
       it('shows a Replace label if the attachment exists', async () => {
         testData.standardFormAttachments.createPast(2, { blobExists: true });
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const rows = component.findAll('.form-attachment-row');
@@ -928,7 +928,7 @@ describe('FormAttachmentList', () => {
 
       it('shows a Override label if the dataset exists', async () => {
         testData.standardFormAttachments.createPast(2, { datasetExists: true });
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const rows = component.findAll('.form-attachment-row');
@@ -942,7 +942,7 @@ describe('FormAttachmentList', () => {
 
       it('does not show a Replace label if attachment does not exist', async () => {
         testData.standardFormAttachments.createPast(2, { blobExists: false });
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await component.get('.form-attachment-row').trigger('dragenter', {
@@ -955,7 +955,7 @@ describe('FormAttachmentList', () => {
         testData.standardFormAttachments
           .createPast(1, { name: 'first_attachment' })
           .createPast(1, { name: 'second_attachment' });
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await component.get('.form-attachment-row').trigger('dragenter', {
@@ -970,7 +970,7 @@ describe('FormAttachmentList', () => {
 
     describe('dropping over an attachment with the same name', () => {
       testSingleFileUpload(attachmentName =>
-        load('/projects/1/forms/f/draft/attachments', { root: false })
+        load('/projects/1/forms/f/draft', { root: false })
           .complete()
           .request(component =>
             dragAndDropOntoRow(component, attachmentName, attachmentName)));
@@ -985,7 +985,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('is shown after the drop', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         const modal = component.getComponent(FormAttachmentNameMismatch);
@@ -995,7 +995,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('is hidden upon cancel', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await dragAndDropOntoRow(component, 'a', 'mismatching_file');
@@ -1005,7 +1005,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly for an existing attachment', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await dragAndDropOntoRow(component, 'a', 'mismatching_file');
@@ -1014,7 +1014,7 @@ describe('FormAttachmentList', () => {
       });
 
       it('renders correctly for a missing attachment', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await dragAndDropOntoRow(component, 'b', 'mismatching_file');
@@ -1025,7 +1025,7 @@ describe('FormAttachmentList', () => {
 
     describe('uploading after a name mismatch', () => {
       testSingleFileUpload(attachmentName =>
-        load('/projects/1/forms/f/draft/attachments', { root: false })
+        load('/projects/1/forms/f/draft', { root: false })
           .complete()
           .request(async (component) => {
             await dragAndDropOntoRow(component, attachmentName, 'mismatching_file');
@@ -1041,9 +1041,8 @@ describe('FormAttachmentList', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1);
-      return load('/projects/1/forms/f/draft/attachments', { root: false })
-        .respondWithData(() => testData.extendedDatasets.sorted())
-        .testRequests([{ url: '/v1/projects/1/datasets' }]);
+      return load('/projects/1/forms/f/draft', { root: false })
+        .testRequestsInclude([{ url: '/v1/projects/1/datasets' }]);
     });
 
     it('renders correctly for an attachment linked to a dataset', async () => {
@@ -1051,10 +1050,9 @@ describe('FormAttachmentList', () => {
       testData.extendedDatasets.createPast(1, { name: 'shovels' });
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
-      const component = await load('/projects/1/forms/f/draft/attachments', {
+      const component = await load('/projects/1/forms/f/draft', {
         root: false
-      })
-        .respondWithData(() => testData.extendedDatasets.sorted());
+      });
       component.get('td.form-attachment-list-uploaded .dataset-label').text().should.equal('Linked to Entity List shovels');
       component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');
       const a = component.get('td.form-attachment-list-name a');
@@ -1069,20 +1067,21 @@ describe('FormAttachmentList', () => {
         testData.extendedForms.createPast(1, { draft: true });
       });
 
-      const loadAttachmentComponent = () => load('/projects/1/forms/f/draft/attachments', {
-        root: false
-      }).respondWithData(() => testData.extendedDatasets.sorted());
 
       it('shows Datasets preview hint', async () => {
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
-        const component = await loadAttachmentComponent();
-        component.get('.panel-dialog').exists().should.be.true;
+        const component = await load('/projects/1/forms/f/draft', {
+          root: false
+        });
+        component.get('#form-attachment-list .panel-dialog').exists().should.be.true;
       });
 
       it('does not show Datasets preview hint if there is no linkable dataset', async () => {
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'people.csv', datasetExists: false });
-        const component = await loadAttachmentComponent();
-        component.find('.panel-dialog').exists().should.be.false;
+        const component = await load('/projects/1/forms/f/draft', {
+          root: false
+        });
+        component.find('#form-attachment-list .panel-dialog').exists().should.be.false;
       });
     });
 
@@ -1095,16 +1094,14 @@ describe('FormAttachmentList', () => {
       });
 
       it('shows the button if an attachment can be linked', async () => {
-        const component = await load('/projects/1/forms/f/draft/attachments', {
+        const component = await load('/projects/1/forms/f/draft', {
           root: false
-        })
-          .respondWithData(() => testData.extendedDatasets.sorted());
+        });
         component.get('td.form-attachment-list-action .btn-link-dataset').exists().should.be.true;
       });
 
       it('updates the attachment after it is linked', () =>
-        load('/projects/1/forms/f/draft/attachments', { root: false })
-          .respondWithData(() => testData.extendedDatasets.sorted())
+        load('/projects/1/forms/f/draft', { root: false })
           .complete()
           .request(async (component) => {
             await component.get('td.form-attachment-list-action .btn-link-dataset').trigger('click');
@@ -1127,10 +1124,7 @@ describe('FormAttachmentList', () => {
           name: 'shovels.csv',
           blobExists: true
         });
-        return load('/projects/1/forms/f/draft/attachments')
-          .complete()
-          .route('/projects/1/forms/f/draft')
-          .respondWithData(() => testData.extendedFormVersions.published())
+        return load('/projects/1/forms/f/draft')
           .complete()
           .request(async (app) => {
             await app.get('#form-draft-status-publish-button').trigger('click');
@@ -1148,23 +1142,20 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.last())
           .respondForComponent('FormSubmissions')
           .complete()
+          .route('/projects/1/forms/f/draft')
           .request(app =>
-            app.get('#form-head-create-draft-button').trigger('click'))
+            app.get('#form-edit-create-draft-button').trigger('click'))
           .respondWithData(() => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondFor('/projects/1/forms/f/draft', {
-            project: false,
-            form: false
-          })
-          .complete()
-          .route('/projects/1/forms/f/draft/attachments')
-          .respondWithData(() => testData.extendedDatasets.sorted())
+          .respondWithData(() => testData.extendedFormDrafts.last())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondForComponent('FormEdit')
           // Now that a dataset has been published, a request should be sent for
           // `datasets`, even though one wasn't sent before.
-          .testRequests([{ url: '/v1/projects/1/datasets' }])
-          .afterResponse(app => {
+          .testRequestsInclude([{ url: '/v1/projects/1/datasets' }])
+          .afterResponses(app => {
             const button = app.find('.form-attachment-row .btn-link-dataset');
             button.exists().should.be.true;
           });
@@ -1181,11 +1172,7 @@ describe('FormAttachmentList', () => {
           name: 'trees.csv',
           blobExists: true
         });
-        return load('/projects/1/forms/f/draft/attachments')
-          .respondWithData(() => testData.extendedDatasets.sorted())
-          .complete()
-          .route('/projects/1/forms/f/draft')
-          .respondWithData(() => testData.extendedFormVersions.published())
+        return load('/projects/1/forms/f/draft')
           .complete()
           .request(async (app) => {
             await app.get('#form-draft-status-publish-button').trigger('click');
@@ -1203,23 +1190,18 @@ describe('FormAttachmentList', () => {
           .respondWithData(() => testData.extendedProjects.last())
           .respondForComponent('FormSubmissions')
           .complete()
+          .route('/projects/1/forms/f/draft')
           .request(app =>
-            app.get('#form-head-create-draft-button').trigger('click'))
+            app.get('#form-edit-create-draft-button').trigger('click'))
           .respondWithData(() => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondFor('/projects/1/forms/f/draft', {
-            project: false,
-            form: false
-          })
-          .complete()
-          .route('/projects/1/forms/f/draft/attachments')
-          .respondWithData(() => testData.extendedDatasets.sorted())
-          // After the form draft is published, a new request should be sent for
-          // `datasets`.
-          .testRequests([{ url: '/v1/projects/1/datasets' }])
-          .afterResponse(app => {
+          .respondWithData(() => testData.extendedFormDrafts.last())
+          .respondWithData(() => testData.standardFormAttachments.sorted())
+          .respondForComponent('FormEdit')
+          .testRequestsInclude([{ url: '/v1/projects/1/datasets' }])
+          .afterResponses(app => {
             const button = app.find('.form-attachment-row .btn-link-dataset');
             button.exists().should.be.true;
           });

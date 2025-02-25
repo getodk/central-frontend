@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, reactive, shallowReactive, watchSyncEffect } from 'vue';
+import { computed, shallowReactive } from 'vue';
 import { mergeDeepLeft } from 'ramda';
 
 import UserPreferences from './user-preferences/preferences';
@@ -83,7 +83,6 @@ export default (container, createResource) => {
   createResource('form', () => ({
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
-
   createResource('dataset', () => ({
     transformResponse: ({ data }) => {
       // Add projectId to forms. FormLink expects this property to exist on form
@@ -98,31 +97,4 @@ export default (container, createResource) => {
       return shallowReactive(data);
     }
   }));
-
-  const formDraft = createResource('formDraft', () =>
-    setupOption(data => shallowReactive(transformForm(data))));
-
-  // Form draft attachments
-  const attachments = createResource('attachments', () => ({
-    ...setupOption((data) => data.reduce(
-      (map, attachment) => map.set(attachment.name, reactive(attachment)),
-      new Map()
-    )),
-    missingCount: computeIfExists(() => {
-      if (attachments.isEmpty()) return 0;
-      let count = 0;
-      for (const attachment of attachments.get().values()) {
-        if (!attachment.exists) count += 1;
-      }
-      return count;
-    })
-  }));
-  watchSyncEffect(() => {
-    if (formDraft.dataExists && attachments.dataExists) {
-      if (formDraft.isDefined() && attachments.isEmpty())
-        formDraft.setToNone();
-      else if (formDraft.isEmpty() && attachments.isDefined())
-        attachments.setToNone();
-    }
-  });
 };

@@ -140,9 +140,13 @@ describe('FormDraftAbandon', () => {
       }));
 
     it('shows the create draft button', () =>
-      abandon().then(app => {
-        app.get('#form-head-create-draft-button').should.be.visible();
-      }));
+      abandon()
+        .complete()
+        .route('/projects/1/forms/f/draft')
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          app.get('#form-edit-create-draft-button').should.be.visible();
+        }));
   });
 
   describe('after abandoning draft for a form without a published version', () => {

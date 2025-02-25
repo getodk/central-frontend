@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 
@@ -60,8 +58,6 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(1);
-      const { to } = modal.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/draft/attachments');
     });
 
     it('shows a warning if there are no test submissions', async () => {
@@ -79,8 +75,6 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(1);
-      const { to } = modal.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/draft/testing');
     });
 
     it('shows both warnings if both conditions are true', async () => {
@@ -403,14 +397,18 @@ describe('FormDraftPublish', () => {
       const app = await publish();
       const { requestData } = app.vm.$container;
       requestData.localResources.formVersions.dataExists.should.be.false;
-      requestData.formDraft.isEmpty().should.be.true;
-      requestData.attachments.isEmpty().should.be.true;
+      requestData.localResources.formDraft.isEmpty().should.be.true;
+      requestData.localResources.attachments.isEmpty().should.be.true;
     });
 
     it('shows the create draft button', () =>
-      publish().then(app => {
-        app.get('#form-head-create-draft-button').should.be.visible();
-      }));
+      publish()
+        .complete()
+        .route('/projects/1/forms/f/draft')
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          app.get('#form-edit-create-draft-button').should.be.visible();
+        }));
 
     it('shows the published version in .../versions', () => {
       testData.extendedForms.createPast(1);
@@ -423,6 +421,8 @@ describe('FormDraftPublish', () => {
           app.findAllComponents(FormVersionRow).length.should.equal(1);
         })
         .route('/projects/1/forms/f/draft')
+        .respondForComponent('FormEdit', { formVersions: false })
+        .complete()
         .request(async (app) => {
           await app.get('#form-draft-status-publish-button').trigger('click');
           return app.get('#form-draft-publish .btn-primary').trigger('click');

@@ -168,8 +168,6 @@ describe('createCentralRouter()', () => {
       '/projects/1/forms/f/public-links',
       '/projects/1/forms/f/settings',
       '/projects/1/forms/f/draft',
-      '/projects/1/forms/f/draft/attachments',
-      '/projects/1/forms/f/draft/testing',
       '/projects/1/forms/f/submissions/s',
       '/users',
       // The redirect should pass through the query string and hash.
@@ -647,18 +645,6 @@ describe('createCentralRouter()', () => {
             .afterResponses(app => {
               app.vm.$route.path.should.equal('/');
             }));
-
-        it('redirects the user from .../draft/attachments', () =>
-          load('/projects/1/forms/f/draft/attachments')
-            .respondFor('/', { users: false })
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-
-        it('does not redirect the user from .../draft/testing', async () => {
-          const app = await load('/projects/1/forms/f/draft/testing');
-          app.vm.$route.path.should.equal('/projects/1/forms/f/draft/testing');
-        });
       });
 
       it('does not redirect user from submission detail page', async () => {
@@ -739,8 +725,6 @@ describe('createCentralRouter()', () => {
         '/projects/1/forms/f/public-links',
         '/projects/1/forms/f/settings',
         '/projects/1/forms/f/draft',
-        '/projects/1/forms/f/draft/attachments',
-        '/projects/1/forms/f/draft/testing',
         // SubmissionShow
         '/projects/1/forms/f/submissions/s',
         // DatasetShow
@@ -829,131 +813,6 @@ describe('createCentralRouter()', () => {
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           }));
-    });
-
-    describe('form without a draft', () => {
-      beforeEach(() => {
-        mockLogin();
-        testData.extendedProjects.createPast(1, { forms: 2 });
-        testData.extendedForms
-          .createPast(1, { xmlFormId: 'f2', draft: true })
-          .createPast(1, { xmlFormId: 'f' });
-      });
-
-      describe('.../draft', () => {
-        it('redirects a user whose first navigation is to the route', () =>
-          load('/projects/1/forms/f/draft')
-            .respondFor('/')
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-
-        it('redirects a user navigating from a different form route', () =>
-          load('/projects/1/forms/f/settings')
-            .complete()
-            .route('/projects/1/forms/f/draft')
-            .respondFor('/')
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-
-        it('redirects a user navigating from a different form', () =>
-          load('/projects/1/forms/f2/draft', {}, {
-            form: () => testData.extendedForms.first(),
-            formDraft: () => testData.extendedFormDrafts.first(),
-            attachments: () => [],
-            formVersions: () => []
-          })
-            .complete()
-            .load('/projects/1/forms/f/draft', { project: false })
-            .respondFor('/')
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/');
-            }));
-      });
-
-      it('redirects the user from .../draft/attachments', () =>
-        load('/projects/1/forms/f/draft/attachments')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects the user from .../draft/testing', () =>
-        load('/projects/1/forms/f/draft/testing')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects user after a 404 for formDraft but a 200 for attachments', () =>
-        load('/projects/1/forms/f/draft/attachments', {}, {
-          attachments: () => testData.standardFormAttachments
-            .createPast(1, { form: testData.extendedForms.last() })
-            .sorted()
-        })
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects user after a 200 for formDraft but a 404 for attachments', () =>
-        load('/projects/1/forms/f2/draft', {}, {
-          form: () => testData.extendedForms.first(),
-          formDraft: () => testData.extendedFormDrafts.first(),
-          attachments: () => mockResponse.problem(404.1),
-          formVersions: () => []
-        })
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-    });
-
-    describe('form draft without attachments', () => {
-      beforeEach(() => {
-        mockLogin();
-        testData.extendedProjects.createPast(1, { forms: 2 });
-        testData.extendedForms
-          .createPast(1, { xmlFormId: 'f2', draft: true })
-          .createPast(1, { xmlFormId: 'f', draft: true });
-      });
-
-      it('redirects a user whose first navigation is to the route', () =>
-        load('/projects/1/forms/f/draft/attachments')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a user navigating from a different form route', () =>
-        load('/projects/1/forms/f/draft')
-          .complete()
-          .route('/projects/1/forms/f/draft/attachments')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
-
-      it('redirects a user navigating from a different form', () => {
-        testData.standardFormAttachments.createPast(1, {
-          form: testData.extendedForms.first()
-        });
-        return load('/projects/1/forms/f2/draft/attachments', {}, {
-          form: () => testData.extendedForms.first(),
-          formDraft: () => testData.extendedFormDrafts.first(),
-          attachments: () => testData.standardFormAttachments.sorted()
-        })
-          .complete()
-          .load('/projects/1/forms/f/draft/attachments', {
-            project: false,
-            attachments: () => []
-          })
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          });
-      });
     });
   });
 
@@ -1102,25 +961,10 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Settings | My Form Name | ODK Central');
     });
 
-    // Draft form routes
     it('shows form name in title for <form url>/draft', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
       await load('/projects/1/forms/f2/draft');
-      document.title.should.equal('Status | My Draft Form | ODK Central');
-    });
-
-    it('shows form name in title for <form url>/draft/attachments', async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
-      testData.standardFormAttachments.createPast(1, { form: testData.extendedForms.last() });
-      await load('/projects/1/forms/f2/draft/attachments')
-        .respondWithData(() => testData.extendedDatasets.sorted());
-      document.title.should.equal('Form Attachments | My Draft Form | ODK Central');
-    });
-
-    it('shows form name in title for <form url>/draft/testing', async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'f2', name: 'My Draft Form', draft: true });
-      await load('/projects/1/forms/f2/draft/testing');
-      document.title.should.equal('Testing | My Draft Form | ODK Central');
+      document.title.should.equal('Edit Form | My Draft Form | ODK Central');
     });
 
     // Special cases of form routes

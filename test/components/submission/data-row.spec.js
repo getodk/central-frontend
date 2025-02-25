@@ -29,7 +29,7 @@ const mountComponent = (props = undefined) => {
     }),
     router: mockRouter(!draft
       ? '/projects/1/forms/f/submissions'
-      : '/projects/1/forms/f/draft/testing')
+      : '/projects/1/forms/f/draft')
   });
   const { fields } = container.requestData.localResources;
   // Mounting SubmissionTable because it sets text-overflow for
