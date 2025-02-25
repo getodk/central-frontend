@@ -78,16 +78,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import '../../jquery';
+import '../jquery';
 import { createApp, getCurrentInstance, reactive } from 'vue';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
-import useForm from '../../request-data/form';
-import { apiPaths } from '../../util/request';
+import useForm from '../request-data/form';
+import { apiPaths } from '../util/request';
 import Loading from '../loading.vue';
 import Modal from '../modal.vue';
-import { modalData } from '../../util/reactivity';
-import useRequest from '../../composables/request';
+import { modalData } from '../util/reactivity';
+import useRequest from '../composables/request';
 
 // Install WebFormsPlugin in the component instead of installing it at the
 // application level so that @getodk/web-forms package is not loaded for every
