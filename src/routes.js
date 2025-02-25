@@ -13,7 +13,7 @@ import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-import FormSubmission from './components/form/formsubmission.vue';
+import FormSubmission from './components/web-form-renderer.vue';
 
 import { routeProps } from './util/router';
 
