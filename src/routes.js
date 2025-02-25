@@ -13,8 +13,6 @@ import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-import FormSubmission from './components/web-form-renderer.vue';
-
 import { routeProps } from './util/router';
 
 export default (container) => {
@@ -213,55 +211,6 @@ const asyncRoute = (options) => {
 const { i18n, requestData, config } = container;
 const { currentUser, project, form, dataset } = requestData;
 const routes = [
-  {
-    path: '/formsubmission/:enketoId',
-    component: FormSubmission,
-    standalone: false,
-    props: (route) => ({
-      ...route.params,
-      actionType: 'fill',
-    }),
-    meta: {
-      title: () => [i18n.t('title.formSubmission')]
-    }
-  },
-  {
-    path: '/formsubmission/:enketoId/publiclink/:enketoPath/:sessionToken',
-    component: FormSubmission,
-    standalone: true,
-    props: (route) => ({
-      ...route.params,
-      actionType: 'publicfill',
-    }),
-    meta: {
-      requireLogin: false,
-      title: () => [i18n.t('title.formPublicSubmission')]
-    }
-  },
-  {
-    path: '/formsubmission/:enketoId/preview',
-    component: FormSubmission,
-    standalone: false,
-    props: (route) => ({
-      ...route.params,
-      actionType: 'preview',
-    }),
-    meta: {
-      title: () => [i18n.t('title.formPreview')]
-    }
-  },
-  {
-    path: '/formsubmission/:enketoId/edit/:instanceId',
-    component: FormSubmission,
-    standalone: false,
-    props: (route) => ({
-      ...route.params,
-      actionType: 'edit',
-    }),
-    meta: {
-      title: () => [i18n.t('title.formEdit')]
-    }
-  },
   asyncRoute({
     path: '/load-error',
     component: 'ConfigError',
@@ -707,6 +656,41 @@ const routes = [
     loading: 'page',
     meta: {
       title: () => [i18n.t('title.download')]
+    }
+  }),
+
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/edit',
+    component: 'FormSubmission',
+    name: 'WebFormEditSubmission',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new',
+    component: 'FormSubmission',
+    name: 'WebFormNewSubmission',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/f/:path(.*)',
+    component: 'FormSubmission',
+    name: 'WebFormPublicLink',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      requireLogin: false,
+      title: () => [form.nameOrId]
     }
   }),
 

@@ -20,7 +20,8 @@ except according to the terms contained in the LICENSE file.
     <td class="access-link">
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>
       <template v-else-if="form.dataExists">
-        <selectable v-if="enketoId != null">{{ url }}</selectable>
+        <selectable v-if="form.webformsEnabled">{{ webformUrl }}</selectable>
+        <selectable v-else-if="enketoId != null">{{ url }}</selectable>
         <template v-else>
           <span class="unavailable" aria-hidden="true" v-tooltip.sr-only>
             <span>{{ $t('unavailable.text') }}</span>
@@ -75,6 +76,10 @@ export default {
     url() {
       const encodedId = encodeURIComponent(this.enketoId);
       return `${window.location.origin}${enketoBasePath}/single/${encodedId}?st=${this.publicLink.token}`;
+    },
+    webformUrl() {
+      const encodedId = encodeURIComponent(this.enketoId);
+      return `${window.location.origin}/f/${encodedId}?st=${this.publicLink.token}`;
     }
   }
 };
