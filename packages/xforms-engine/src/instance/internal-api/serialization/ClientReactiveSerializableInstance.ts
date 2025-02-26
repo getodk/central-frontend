@@ -1,4 +1,4 @@
-import type { SubmissionDefinition } from '../../../client/submission/SubmissionDefinition.ts';
+import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
 import type { AncestorNodeValidationState } from '../../../client/validation.ts';
 import type { Root } from '../../Root.ts';
 import type {
@@ -8,7 +8,7 @@ import type {
 
 interface ClientReactiveSerializableInstanceDefinition
 	extends ClientReactiveSerializableParentNodeDefinition {
-	readonly submission: SubmissionDefinition;
+	readonly submission: SubmissionMeta;
 }
 
 export interface ClientReactiveSerializableInstance

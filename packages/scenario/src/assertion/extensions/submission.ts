@@ -56,7 +56,7 @@ const assertInstancePayload: AssertIs<AnyInstancePayload> = (value) => {
 	if (value.violations !== null) {
 		assertUnknownArray(value.violations);
 	}
-	assertUnknownObject(value.definition);
+	assertUnknownObject(value.submissionMeta);
 
 	if (Array.isArray(value.data)) {
 		value.data.forEach((item) => {

@@ -1,4 +1,4 @@
-import type { SubmissionDefinition } from '../submission/SubmissionDefinition.ts';
+import type { SubmissionMeta } from '../submission/SubmissionMeta.ts';
 import type { AnyViolation, DescendantNodeViolationReference } from '../validation.ts';
 import type { InstanceData } from './InstanceData.ts';
 import type { InstancePayloadOptions, InstancePayloadType } from './InstancePayloadOptions.ts';
@@ -80,7 +80,8 @@ type InstancePayloadViolation =
 
 interface BaseInstancePayload<PayloadType extends InstancePayloadType> {
 	readonly status: InstancePayloadStatus;
-	readonly definition: SubmissionDefinition;
+	readonly submissionMeta: SubmissionMeta;
+
 	get violations(): readonly InstancePayloadViolation[] | null;
 
 	/**

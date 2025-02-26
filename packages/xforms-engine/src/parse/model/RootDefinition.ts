@@ -2,7 +2,6 @@ import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { FormSubmissionDefinition } from './FormSubmissionDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
@@ -11,6 +10,7 @@ import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RangeNodeDefinition } from './RangeNodeDefinition.ts';
 import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
 import { RootAttributeMap } from './RootAttributeMap.ts';
+import type { SubmissionDefinition } from './SubmissionDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 export class RootDefinition extends NodeDefinition<'root'> {
@@ -31,7 +31,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 	constructor(
 		protected readonly form: XFormDefinition,
 		protected readonly model: ModelDefinition,
-		readonly submission: FormSubmissionDefinition,
+		readonly submission: SubmissionDefinition,
 		readonly classes: BodyClassList
 	) {
 		const { primaryInstanceRoot } = form.xformDOM;

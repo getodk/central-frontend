@@ -37,7 +37,7 @@ export type * from './client/serialization/InstanceFile.ts';
 export type * from './client/serialization/InstancePayload.ts';
 export type * from './client/serialization/InstancePayloadOptions.ts';
 export type * from './client/serialization/InstanceState.ts';
-export type * from './client/submission/SubmissionDefinition.ts';
+export type * from './client/submission/SubmissionMeta.ts';
 export type * from './client/SubtreeNode.ts';
 export type * from './client/TextRange.ts';
 export type * from './client/TriggerNode.ts';

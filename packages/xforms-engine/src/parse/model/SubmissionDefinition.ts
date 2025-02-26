@@ -1,8 +1,8 @@
-import type { SubmissionDefinition } from '../../client/submission/SubmissionDefinition.ts';
+import type { SubmissionMeta } from '../../client/submission/SubmissionMeta.ts';
 import { getSubmissionElement } from '../../lib/dom/query.ts';
 import type { XFormDOM } from '../XFormDOM.ts';
 
-export class FormSubmissionDefinition implements SubmissionDefinition {
+export class SubmissionDefinition implements SubmissionMeta {
 	readonly submissionAction!: URL | null;
 	readonly submissionMethod = 'post';
 	readonly encryptionKey!: string | null;

@@ -8,7 +8,7 @@ import type {
 	MonolithicInstancePayload,
 } from '../../../client/serialization/InstancePayload.ts';
 import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
-import type { SubmissionDefinition } from '../../../client/submission/SubmissionDefinition.ts';
+import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
 import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
 
@@ -96,7 +96,7 @@ const validateInstance = (
 
 const monolithicInstancePayload = (
 	validation: InstanceStateValidation,
-	definition: SubmissionDefinition,
+	submissionMeta: SubmissionMeta,
 	instanceFile: InstanceFile,
 	attachments: readonly File[]
 ): MonolithicInstancePayload => {
@@ -104,7 +104,7 @@ const monolithicInstancePayload = (
 
 	return {
 		...validation,
-		definition,
+		submissionMeta,
 		data,
 	};
 };
@@ -115,7 +115,7 @@ interface ChunkedInstancePayloadOptions {
 
 const chunkedInstancePayload = (
 	validation: InstanceStateValidation,
-	definition: SubmissionDefinition,
+	submissionMeta: SubmissionMeta,
 	instanceFile: InstanceFile,
 	attachments: readonly File[],
 	options: ChunkedInstancePayloadOptions
@@ -128,7 +128,7 @@ const chunkedInstancePayload = (
 
 	return {
 		...validation,
-		definition,
+		submissionMeta,
 		data: [data],
 	};
 };
@@ -143,7 +143,7 @@ export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
 	options: PrepareInstancePayloadOptions<PayloadType>
 ): InstancePayload<PayloadType> => {
 	const validation = validateInstance(instanceRoot);
-	const definition = instanceRoot.definition.submission;
+	const submissionMeta = instanceRoot.definition.submission;
 	const instanceFile = new InstanceFile(instanceRoot);
 	const attachments: readonly File[] = [];
 
@@ -151,7 +151,7 @@ export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
 		case 'chunked':
 			return chunkedInstancePayload(
 				validation,
-				definition,
+				submissionMeta,
 				instanceFile,
 				attachments,
 				options
@@ -160,7 +160,7 @@ export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
 		case 'monolithic':
 			return monolithicInstancePayload(
 				validation,
-				definition,
+				submissionMeta,
 				instanceFile,
 				attachments
 			) satisfies MonolithicInstancePayload as InstancePayload<PayloadType>;

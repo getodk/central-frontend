@@ -750,26 +750,26 @@ describe('Form submission', () => {
 			return scenario;
 		};
 
-		describe('submission definition', () => {
-			it('includes a default submission definition', async () => {
+		describe('submission meta', () => {
+			it('includes default submission meta', async () => {
 				const scenario = await buildSubmissionPayloadScenario();
 				const submissionResult = await scenario.prepareWebFormsSubmission();
 
-				expect(submissionResult.definition).toMatchObject({
+				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionAction: null,
 					submissionMethod: 'post',
 					encryptionKey: null,
 				});
 			});
 
-			it('includes a form-specified submission definition URL', async () => {
+			it('includes a form-specified submission URL', async () => {
 				const submissionAction = 'https://example.org';
 				const scenario = await buildSubmissionPayloadScenario({
 					submissionElements: [t(`submission action="${submissionAction}"`)],
 				});
 				const submissionResult = await scenario.prepareWebFormsSubmission();
 
-				expect(submissionResult.definition).toMatchObject({
+				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionAction: new URL(submissionAction),
 				});
 			});
@@ -780,7 +780,7 @@ describe('Form submission', () => {
 				});
 				const submissionResult = await scenario.prepareWebFormsSubmission();
 
-				expect(submissionResult.definition).toMatchObject({
+				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionMethod: 'post',
 				});
 			});
@@ -791,7 +791,7 @@ describe('Form submission', () => {
 				});
 				const submissionResult = await scenario.prepareWebFormsSubmission();
 
-				expect(submissionResult.definition).toMatchObject({
+				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionMethod: 'post',
 				});
 			});
@@ -825,7 +825,7 @@ describe('Form submission', () => {
 				});
 				const submissionResult = await scenario.prepareWebFormsSubmission();
 
-				expect(submissionResult.definition).toMatchObject({
+				expect(submissionResult.submissionMeta).toMatchObject({
 					encryptionKey: base64RsaPublicKey,
 				});
 			});
