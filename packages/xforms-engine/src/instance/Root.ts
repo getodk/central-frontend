@@ -3,12 +3,12 @@ import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
-	SubmissionChunkedType,
-	SubmissionOptions,
-} from '../client/submission/SubmissionOptions.ts';
-import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
-import type { SubmissionState } from '../client/submission/SubmissionState.ts';
+	InstancePayloadOptions,
+	InstancePayloadType,
+} from '../client/serialization/InstancePayloadOptions.ts';
+import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createRootSubmissionState } from '../lib/client-reactivity/submission/createRootSubmissionState.ts';
@@ -79,7 +79,7 @@ export class Root
 	readonly classes: BodyClassList;
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 	readonly languages: FormLanguages;
 
 	constructor(parent: PrimaryInstance) {
@@ -129,7 +129,7 @@ export class Root
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
-		this.submissionState = createRootSubmissionState(this);
+		this.instanceState = createRootSubmissionState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {
@@ -143,9 +143,9 @@ export class Root
 		return this;
 	}
 
-	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
-		options?: SubmissionOptions<ChunkedType>
-	): Promise<SubmissionResult<ChunkedType>> {
-		return this.rootDocument.prepareSubmission(options);
+	prepareInstancePayload<PayloadType extends InstancePayloadType = 'monolithic'>(
+		options?: InstancePayloadOptions<PayloadType>
+	): Promise<InstancePayload<PayloadType>> {
+		return this.rootDocument.prepareInstancePayload(options);
 	}
 }

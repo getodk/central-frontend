@@ -1,14 +1,14 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { ClientReactiveSubmittableParentNode } from '../../../instance/internal-api/submission/ClientReactiveSubmittableParentNode.ts';
 import type { RepeatInstance } from '../../../instance/repeat/RepeatInstance.ts';
 
 export const createNodeRangeSubmissionState = (
 	node: ClientReactiveSubmittableParentNode<RepeatInstance>
-): SubmissionState => {
+): InstanceState => {
 	return {
-		get submissionXML() {
+		get instanceXML() {
 			const serializedChildren = node.currentState.children.map((child) => {
-				return child.submissionState.submissionXML;
+				return child.instanceState.instanceXML;
 			});
 
 			return serializedChildren.join('');

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { xformFixturesByCategory, XFormResource } from '@getodk/common/fixtures/xforms.ts';
 import type {
-	ChunkedSubmissionResult,
+	ChunkedInstancePayload,
 	FetchFormAttachment,
 	MissingResourceBehavior,
-	MonolithicSubmissionResult,
+	MonolithicInstancePayload,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { ref } from 'vue';
@@ -55,14 +55,14 @@ xformResource
 		alert('Failed to load the Form XML');
 	});
 
-const handleSubmit = (payload: MonolithicSubmissionResult) => {
+const handleSubmit = (payload: MonolithicInstancePayload) => {
 	// eslint-disable-next-line no-console
 	console.log('submission payload:', payload);
 
 	alert(`Submit button was pressed`);
 };
 
-const handleSubmitChunked = (payload: ChunkedSubmissionResult) => {
+const handleSubmitChunked = (payload: ChunkedInstancePayload) => {
 	// eslint-disable-next-line no-console
 	console.log('CHUNKED submission payload:', payload);
 };

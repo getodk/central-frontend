@@ -1,13 +1,13 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { Root } from '../../../instance/Root.ts';
 import { serializeParentElementXML } from '../../xml-serialization.ts';
 
-export const createRootSubmissionState = (node: Root): SubmissionState => {
+export const createRootSubmissionState = (node: Root): InstanceState => {
 	return {
-		get submissionXML() {
+		get instanceXML() {
 			const { namespaceDeclarations, attributes } = node.definition;
 			const serializedChildren = node.currentState.children.map((child) => {
-				return child.submissionState.submissionXML;
+				return child.instanceState.instanceXML;
 			});
 
 			return serializeParentElementXML(node.definition.qualifiedName, serializedChildren, {

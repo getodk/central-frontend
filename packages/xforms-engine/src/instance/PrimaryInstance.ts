@@ -4,12 +4,12 @@ import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
+import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
-	SubmissionChunkedType,
-	SubmissionOptions,
-} from '../client/submission/SubmissionOptions.ts';
-import type { SubmissionResult } from '../client/submission/SubmissionResult.ts';
-import type { SubmissionState } from '../client/submission/SubmissionState.ts';
+	InstancePayloadOptions,
+	InstancePayloadType,
+} from '../client/serialization/InstancePayloadOptions.ts';
+import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathDocument } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
@@ -107,7 +107,7 @@ export class PrimaryInstance
 	readonly root: Root;
 	readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;
 	readonly validationState: AncestorNodeValidationState;
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 	readonly languages: FormLanguages;
 
 	// TranslationContext (+ EvaluationContext)
@@ -187,7 +187,7 @@ export class PrimaryInstance
 				return root.validationState.violations;
 			},
 		};
-		this.submissionState = createInstanceSubmissionState(this);
+		this.instanceState = createInstanceSubmissionState(this);
 
 		childrenState.setChildren([root]);
 		setIsAttached(true);
@@ -231,12 +231,12 @@ export class PrimaryInstance
 		return this.setActiveLanguage(availableFormLanguage);
 	}
 
-	// PrimaryInstanceDocument, ClientReactiveSubmittableInstance
-	prepareSubmission<ChunkedType extends SubmissionChunkedType = 'monolithic'>(
-		options?: SubmissionOptions<ChunkedType>
-	): Promise<SubmissionResult<ChunkedType>> {
+	// PrimaryInstanceDocument
+	prepareInstancePayload<PayloadType extends InstancePayloadType = 'monolithic'>(
+		options?: InstancePayloadOptions<PayloadType>
+	): Promise<InstancePayload<PayloadType>> {
 		const result = prepareSubmission(this, {
-			chunked: (options?.chunked ?? 'monolithic') as ChunkedType,
+			payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
 			maxSize: options?.maxSize ?? Infinity,
 		});
 

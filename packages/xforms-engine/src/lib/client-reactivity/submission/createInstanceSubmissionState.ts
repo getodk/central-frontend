@@ -1,12 +1,12 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { ClientReactiveSubmittableInstance } from '../../../instance/internal-api/submission/ClientReactiveSubmittableInstance.ts';
 
 export const createInstanceSubmissionState = (
 	node: ClientReactiveSubmittableInstance
-): SubmissionState => {
+): InstanceState => {
 	return {
-		get submissionXML(): string {
-			return node.root.submissionState.submissionXML;
+		get instanceXML(): string {
+			return node.root.instanceState.instanceXML;
 		},
 	};
 };

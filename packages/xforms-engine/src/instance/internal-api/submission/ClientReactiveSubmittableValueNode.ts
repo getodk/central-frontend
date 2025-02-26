@@ -1,4 +1,4 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type {
 	ClientReactiveSubmittableChildNode,
@@ -7,6 +7,10 @@ import type {
 
 interface ClientReactiveSubmittableValueNodeCurrentState {
 	get relevant(): boolean;
+
+	/**
+	 * @todo Consider moving into {@link InstanceState}
+	 */
 	get instanceValue(): string;
 }
 
@@ -20,5 +24,5 @@ export interface ClientReactiveSubmittableValueNode {
 	readonly definition: ClientReactiveSubmittableValueNodeDefinition;
 	readonly parent: ClientReactiveSubmittableParentNode<ClientReactiveSubmittableChildNode>;
 	readonly currentState: ClientReactiveSubmittableValueNodeCurrentState;
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 }

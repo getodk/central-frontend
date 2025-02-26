@@ -70,8 +70,8 @@ type ValidationTextDefaults = typeof VALIDATION_TEXT;
 
 export type ValidationTextDefault<Role extends ValidationTextRole> = ValidationTextDefaults[Role];
 
-export const SUBMISSION_INSTANCE_FILE_NAME = 'xml_submission_file';
-export type SubmissionInstanceFileName = typeof SUBMISSION_INSTANCE_FILE_NAME;
+export const INSTANCE_FILE_NAME = 'xml_submission_file';
+export type INSTANCE_FILE_NAME = typeof INSTANCE_FILE_NAME;
 
-export const SUBMISSION_INSTANCE_FILE_TYPE = 'text/xml';
-export type SubmissionInstanceFileType = typeof SUBMISSION_INSTANCE_FILE_TYPE;
+export const INSTANCE_FILE_TYPE = 'text/xml';
+export type INSTANCE_FILE_TYPE = typeof INSTANCE_FILE_TYPE;

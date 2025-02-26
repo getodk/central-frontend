@@ -1,4 +1,4 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EscapedXMLText } from '../../../lib/xml-serialization.ts';
 import type {
@@ -24,11 +24,11 @@ export interface ClientReactiveSubmittableLeafNode<RuntimeValue> {
 
 	/**
 	 * A client-reactive submittable leaf node is responsible for producing a
-	 * string representation of its value state, suitable for serialization for
-	 * submission. It **MUST NOT** perform any further submission-specific
-	 * serialization duties: in particular, the value **MUST NOT** be escaped for
-	 * XML. This responsibility is delegated up the stack, to avoid repeat
-	 * escaping.
+	 * string representation of its value state, suitable for instance
+	 * serialization. It **MUST NOT** perform any further instance
+	 * serialization-specific serialization duties: in particular, the value
+	 * **MUST NOT** be escaped for XML. This responsibility is delegated up the
+	 * stack, to avoid repeat escaping.
 	 *
 	 * Note: excluding {@link EscapedXMLText} here does not have an effect on the
 	 * type system, it is a documentation-only hint, to help guard against future
@@ -39,5 +39,5 @@ export interface ClientReactiveSubmittableLeafNode<RuntimeValue> {
 		runtimeValue: RuntimeValue
 	) => Exclude<string, EscapedXMLText>;
 
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 }

@@ -1,7 +1,7 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { FormNodeID } from '../client/identity.ts';
-import type { SubmissionState } from '../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
@@ -52,7 +52,7 @@ export class Subtree
 	readonly nodeOptions = null;
 	readonly currentState: MaterializedChildren<CurrentState<SubtreeStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 
 	constructor(parent: GeneralParentNode, definition: SubtreeDefinition) {
 		super(parent, definition);
@@ -92,7 +92,7 @@ export class Subtree
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
-		this.submissionState = createParentNodeSubmissionState(this);
+		this.instanceState = createParentNodeSubmissionState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

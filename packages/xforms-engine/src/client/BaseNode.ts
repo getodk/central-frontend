@@ -5,7 +5,7 @@ import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.
 import type { TextRange } from './TextRange.ts';
 import type { FormNodeID } from './identity.ts';
 import type { InstanceNodeType } from './node-types.ts';
-import type { SubmissionState } from './submission/SubmissionState.ts';
+import type { InstanceState } from './serialization/InstanceState.ts';
 import type {
 	AncestorNodeValidationState,
 	LeafNodeValidationState,
@@ -256,14 +256,14 @@ export interface BaseNode {
 	readonly validationState: NodeValidationState;
 
 	/**
-	 * Represents the current submission state of the node.
+	 * Represents the current instance state of the node.
 	 *
-	 * @see {@link SubmissionState.submissionXML} for additional detail.
+	 * @see {@link InstanceState.instanceXML} for additional detail.
 	 *
 	 * @todo Consider whether this can (should) be merged with
 	 * {@link currentState}, while providing the same client-reactivity
 	 * guarantees. (The challenge there is in defining client-reactive state which
 	 * self-referentially derives state from its own definition.)
 	 */
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 }

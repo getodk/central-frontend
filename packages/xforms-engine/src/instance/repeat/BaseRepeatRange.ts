@@ -6,7 +6,7 @@ import type { RepeatRangeNode } from '../../client/hierarchy.ts';
 import type { FormNodeID } from '../../client/identity.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
-import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../client/serialization/InstanceState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
 import type {
@@ -149,7 +149,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	abstract override readonly validationState: AncestorNodeValidationState;
 
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 
 	constructor(parent: GeneralParentNode, definition: Definition) {
 		super(parent, definition);
@@ -188,7 +188,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 			state.currentState,
 			childrenState
 		);
-		this.submissionState = createNodeRangeSubmissionState(this);
+		this.instanceState = createNodeRangeSubmissionState(this);
 	}
 
 	protected getLastIndex(): number {

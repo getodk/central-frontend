@@ -1,14 +1,14 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { ClientReactiveSubmittableValueNode } from '../../../instance/internal-api/submission/ClientReactiveSubmittableValueNode.ts';
 import { escapeXMLText, serializeLeafElementXML } from '../../xml-serialization.ts';
 
 export const createValueNodeSubmissionState = (
 	node: ClientReactiveSubmittableValueNode
-): SubmissionState => {
+): InstanceState => {
 	const { qualifiedName } = node.definition;
 
 	return {
-		get submissionXML() {
+		get instanceXML() {
 			if (!node.currentState.relevant) {
 				return '';
 			}

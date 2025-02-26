@@ -2,7 +2,7 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { BaseValueNode } from '../../client/BaseValueNode.ts';
 import type { LeafNodeType as ValueNodeType } from '../../client/node-types.ts';
-import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../client/serialization/InstanceState.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
@@ -80,7 +80,7 @@ export abstract class ValueNode<
 		return this.validation.currentState;
 	}
 
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 
 	constructor(
 		parent: GeneralParentNode,
@@ -109,7 +109,7 @@ export abstract class ValueNode<
 		this.validation = createValidationState(this, {
 			clientStateFactory: this.engineConfig.stateFactory,
 		});
-		this.submissionState = createValueNodeSubmissionState(this);
+		this.instanceState = createValueNodeSubmissionState(this);
 	}
 
 	// ValidationContext

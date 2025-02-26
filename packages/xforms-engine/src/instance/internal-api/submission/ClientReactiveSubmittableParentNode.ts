@@ -1,8 +1,8 @@
-import type { SubmissionState } from '../../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 
 export interface ClientReactiveSubmittableChildNode {
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 }
 
 interface ClientReactiveSubmittableParentNodeCurrentState<
@@ -22,5 +22,5 @@ export interface ClientReactiveSubmittableParentNode<
 	readonly definition: ClientReactiveSubmittableParentNodeDefinition;
 	readonly parent: ClientReactiveSubmittableParentNode<ClientReactiveSubmittableChildNode> | null;
 	readonly currentState: ClientReactiveSubmittableParentNodeCurrentState<Child>;
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 }

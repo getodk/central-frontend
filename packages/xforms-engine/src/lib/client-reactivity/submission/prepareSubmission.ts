@@ -1,41 +1,42 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import {
-	SUBMISSION_INSTANCE_FILE_NAME,
-	SUBMISSION_INSTANCE_FILE_TYPE,
-} from '../../../client/constants.ts';
-import type { SubmissionData } from '../../../client/submission/SubmissionData.ts';
+import { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } from '../../../client/constants.ts';
+import type { InstanceData } from '../../../client/serialization/InstanceData.ts';
+import type { InstanceFile as ClientInstanceFile } from '../../../client/serialization/InstanceFile.ts';
+import type {
+	ChunkedInstancePayload,
+	InstancePayload,
+	MonolithicInstancePayload,
+} from '../../../client/serialization/InstancePayload.ts';
+import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
 import type { SubmissionDefinition } from '../../../client/submission/SubmissionDefinition.ts';
-import type { SubmissionInstanceFile } from '../../../client/submission/SubmissionInstanceFile.ts';
-import type { SubmissionChunkedType } from '../../../client/submission/SubmissionOptions.ts';
-import type { SubmissionResult } from '../../../client/submission/SubmissionResult.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
 import type { ClientReactiveSubmittableInstance } from '../../../instance/internal-api/submission/ClientReactiveSubmittableInstance.ts';
 
-class InstanceFile extends File implements SubmissionInstanceFile {
-	override readonly name = SUBMISSION_INSTANCE_FILE_NAME;
-	override readonly type = SUBMISSION_INSTANCE_FILE_TYPE;
+class InstanceFile extends File implements ClientInstanceFile {
+	override readonly name = INSTANCE_FILE_NAME;
+	override readonly type = INSTANCE_FILE_TYPE;
 
 	constructor(instanceRoot: ClientReactiveSubmittableInstance) {
-		const { submissionXML } = instanceRoot.submissionState;
+		const { instanceXML } = instanceRoot.instanceState;
 
-		super([submissionXML], SUBMISSION_INSTANCE_FILE_NAME, {
-			type: SUBMISSION_INSTANCE_FILE_TYPE,
+		super([instanceXML], INSTANCE_FILE_NAME, {
+			type: INSTANCE_FILE_TYPE,
 		});
 	}
 }
 
-type AssertSubmissionData = (data: FormData) => asserts data is SubmissionData;
+type AssertSubmissionData = (data: FormData) => asserts data is InstanceData;
 
 const assertSubmissionData: AssertSubmissionData = (data) => {
-	const instanceFile = data.get(SUBMISSION_INSTANCE_FILE_NAME);
+	const instanceFile = data.get(INSTANCE_FILE_NAME);
 
 	if (!(instanceFile instanceof InstanceFile)) {
-		throw new Error(`Invalid SubmissionData`);
+		throw new Error(`Invalid InstanceData`);
 	}
 };
 
 class InstanceSubmissionData extends FormData {
-	static from(instanceFile: InstanceFile, attachments: readonly File[]): SubmissionData {
+	static from(instanceFile: InstanceFile, attachments: readonly File[]): InstanceData {
 		const data = new this(instanceFile, attachments);
 
 		assertSubmissionData(data);
@@ -49,15 +50,13 @@ class InstanceSubmissionData extends FormData {
 	) {
 		super();
 
-		this.set(SUBMISSION_INSTANCE_FILE_NAME, instanceFile);
+		this.set(INSTANCE_FILE_NAME, instanceFile);
 
 		attachments.forEach((attachment) => {
 			const { name } = attachment;
 
-			if (name === SUBMISSION_INSTANCE_FILE_NAME && attachment !== instanceFile) {
-				throw new Error(
-					`Failed to add conflicting attachment with name ${SUBMISSION_INSTANCE_FILE_NAME}`
-				);
+			if (name === INSTANCE_FILE_NAME && attachment !== instanceFile) {
+				throw new Error(`Failed to add conflicting attachment with name ${INSTANCE_FILE_NAME}`);
 			}
 
 			this.set(name, attachment);
@@ -95,12 +94,12 @@ const validateSubmission = (
 	};
 };
 
-const monolithicSubmissionResult = (
+const monolithicInstancePayload = (
 	validation: SubmissionInstanceStateValidation,
 	definition: SubmissionDefinition,
 	instanceFile: InstanceFile,
 	attachments: readonly File[]
-): SubmissionResult<'monolithic'> => {
+): MonolithicInstancePayload => {
 	const data = InstanceSubmissionData.from(instanceFile, attachments);
 
 	return {
@@ -110,17 +109,17 @@ const monolithicSubmissionResult = (
 	};
 };
 
-interface ChunkedSubmissionResultOptions {
+interface ChunkedInstancePayloadOptions {
 	readonly maxSize: number;
 }
 
-const chunkedSubmissionResult = (
+const chunkedInstancePayload = (
 	validation: SubmissionInstanceStateValidation,
 	definition: SubmissionDefinition,
 	instanceFile: InstanceFile,
 	attachments: readonly File[],
-	options: ChunkedSubmissionResultOptions
-): SubmissionResult<'chunked'> => {
+	options: ChunkedInstancePayloadOptions
+): ChunkedInstancePayload => {
 	if (attachments.length > 0 || options.maxSize !== Infinity) {
 		throw new Error('Submission chunking pending implementation');
 	}
@@ -134,39 +133,39 @@ const chunkedSubmissionResult = (
 	};
 };
 
-export interface PrepareSubmissionOptions<ChunkedType extends SubmissionChunkedType> {
-	readonly chunked: ChunkedType;
+export interface PrepareSubmissionOptions<PayloadType extends InstancePayloadType> {
+	readonly payloadType: PayloadType;
 	readonly maxSize: number;
 }
 
-export const prepareSubmission = <ChunkedType extends SubmissionChunkedType>(
+export const prepareSubmission = <PayloadType extends InstancePayloadType>(
 	instanceRoot: ClientReactiveSubmittableInstance,
-	options: PrepareSubmissionOptions<ChunkedType>
-): SubmissionResult<ChunkedType> => {
+	options: PrepareSubmissionOptions<PayloadType>
+): InstancePayload<PayloadType> => {
 	const validation = validateSubmission(instanceRoot);
 	const definition = instanceRoot.definition.submission;
 	const instanceFile = new InstanceFile(instanceRoot);
 	const attachments: readonly File[] = [];
 
-	switch (options.chunked) {
+	switch (options.payloadType) {
 		case 'chunked':
-			return chunkedSubmissionResult(
+			return chunkedInstancePayload(
 				validation,
 				definition,
 				instanceFile,
 				attachments,
 				options
-			) satisfies SubmissionResult<'chunked'> as SubmissionResult<ChunkedType>;
+			) satisfies ChunkedInstancePayload as InstancePayload<PayloadType>;
 
 		case 'monolithic':
-			return monolithicSubmissionResult(
+			return monolithicInstancePayload(
 				validation,
 				definition,
 				instanceFile,
 				attachments
-			) satisfies SubmissionResult<'monolithic'> as SubmissionResult<ChunkedType>;
+			) satisfies MonolithicInstancePayload as InstancePayload<PayloadType>;
 
 		default:
-			throw new UnreachableError(options.chunked);
+			throw new UnreachableError(options.payloadType);
 	}
 };

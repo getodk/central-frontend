@@ -2,7 +2,7 @@ import { identity } from '@getodk/common/lib/identity.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { UnsupportedControlNodeType } from '../../client/node-types.ts';
-import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../client/serialization/InstanceState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type {
 	UnsupportedControlDefinition,
@@ -99,7 +99,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		return this.validation.currentState;
 	}
 
-	readonly submissionState: SubmissionState;
+	readonly instanceState: InstanceState;
 
 	// ValueContext
 	abstract override readonly contextNode: AnyUnsupportedControl & this;
@@ -146,7 +146,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
-		this.submissionState = createLeafNodeSubmissionState(this);
+		this.instanceState = createLeafNodeSubmissionState(this);
 	}
 
 	// XFormsXPathElement

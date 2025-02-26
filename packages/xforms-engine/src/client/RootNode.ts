@@ -3,12 +3,12 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { SubmissionOptions } from './submission/SubmissionOptions.ts';
 import type {
-	ChunkedSubmissionResult,
-	MonolithicSubmissionResult,
-	SubmissionResult,
-} from './submission/SubmissionResult.ts';
+	ChunkedInstancePayload,
+	InstancePayload,
+	MonolithicInstancePayload,
+} from './serialization/InstancePayload.ts';
+import type { InstancePayloadOptions } from './serialization/InstancePayloadOptions.ts';
 import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
@@ -64,33 +64,41 @@ export interface RootNode extends BaseNode {
 	setLanguage(language: FormLanguage): RootNode;
 
 	/**
-	 * Prepares the current form instance state for submission.
+	 * Prepares the current form instance state as an {@link InstancePayload}.
 	 *
-	 * A {@link SubmissionResult} will be prepared even if the current form state
-	 * includes `constraint` or `required` violations. This is intended to serve
-	 * two purposes:
+	 * A payload will be prepared even if the current form state includes
+	 * `constraint` or `required` violations. This supports serveral purposes:
 	 *
-	 * - A client may effectively use this method as a part of its own "submit"
-	 *   routine, and use any violations included in the {@link SubmissionResult}
+	 * - A client may effectively use this method as a part of its "submit"
+	 *   workflow, and use any violations included in the {@link InstancePayload}
 	 *   to prompt users to address those violations.
 	 *
-	 * - A client may inspect the submission state of a form at any time.
+	 * - A client may inspect the serialized instance state of a form at any time.
 	 *   Depending on the client and use case, this may be a convenience (e.g. for
 	 *   developers to inspect that form state at a current point in time); or it
 	 *   may provide necessary functionality (e.g. for test or tooling clients).
 	 *
-	 * Note on asynchrony: preparing a {@link SubmissionResult} is expected to be
-	 * a fast operation. It may even be nearly instantaneous, or roughly
+	 * - A client may capture _incomplete_ instance state (e.g. for storage in
+	 *   client-side storage or similar persistance layer), to resume filling the
+	 *   instance at a later time.
+	 *
+	 * Note on asynchrony: preparing a {@link InstancePayload} is expected to be a
+	 * fast operation. It may even be nearly instantaneous, or roughly
 	 * proportionate to the size of the form itself. However, this method is
 	 * designed to be asynchronous out of an abundance of caution, anticipating
 	 * that some as-yet undeveloped operations on binary data (e.g. form
 	 * attachments) may themselves impose asynchrony (i.e. by interfaces provided
 	 * by the platform and/or external dependencies).
 	 *
-	 * A client may specify {@link SubmissionOptions<'chunked'>}, in which case a
-	 * {@link SubmissionResult<'chunked'>} will be produced, with form attachments
+	 * A client may specify {@link InstancePayloadOptions<'chunked'>}, in which
+	 * case a {@link ChunkedInstancePayload} will be produced, with form
+	 * attachments
 	 */
-	prepareSubmission(): Promise<MonolithicSubmissionResult>;
-	prepareSubmission(options: SubmissionOptions<'monolithic'>): Promise<MonolithicSubmissionResult>;
-	prepareSubmission(options: SubmissionOptions<'chunked'>): Promise<ChunkedSubmissionResult>;
+	prepareInstancePayload(): Promise<MonolithicInstancePayload>;
+	prepareInstancePayload(
+		options: InstancePayloadOptions<'monolithic'>
+	): Promise<MonolithicInstancePayload>;
+	prepareInstancePayload(
+		options: InstancePayloadOptions<'chunked'>
+	): Promise<ChunkedInstancePayload>;
 }
