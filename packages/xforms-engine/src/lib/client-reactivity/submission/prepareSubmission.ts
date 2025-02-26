@@ -134,14 +134,14 @@ const chunkedSubmissionResult = (
 	};
 };
 
-export interface PrepeareSubmissionOptions<ChunkedType extends SubmissionChunkedType> {
+export interface PrepareSubmissionOptions<ChunkedType extends SubmissionChunkedType> {
 	readonly chunked: ChunkedType;
 	readonly maxSize: number;
 }
 
 export const prepareSubmission = <ChunkedType extends SubmissionChunkedType>(
 	instanceRoot: ClientReactiveSubmittableInstance,
-	options: PrepeareSubmissionOptions<ChunkedType>
+	options: PrepareSubmissionOptions<ChunkedType>
 ): SubmissionResult<ChunkedType> => {
 	const validation = validateSubmission(instanceRoot);
 	const definition = instanceRoot.definition.submission;
