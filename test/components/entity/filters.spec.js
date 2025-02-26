@@ -16,11 +16,12 @@ describe('EntityFilters', () => {
     });
 
     describe('initial request', () => {
-      it('does not filter by default', () =>
+      it('does not filter by conflict by default', () =>
         load('/projects/1/entity-lists/trees/entities', { root: false })
           .beforeEachResponse((_, { url }, index) => {
             if (index !== 1) return;
-            relativeUrl(url).searchParams.has('$filter').should.be.false;
+            const filter = relativeUrl(url).searchParams.get('$filter');
+            filter.should.not.match(/__system\/conflict ne null/);
           }));
 
       it('sends the correct request for ?conflict=true', () =>
@@ -28,7 +29,7 @@ describe('EntityFilters', () => {
           .beforeEachResponse((_, { url }, index) => {
             if (index !== 1) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('__system/conflict ne null');
+            filter.should.match(/__system\/conflict ne null/);
           }));
 
       it('sends the correct request for ?conflict=false', () =>
@@ -36,7 +37,7 @@ describe('EntityFilters', () => {
           .beforeEachResponse((_, { url }, index) => {
             if (index !== 1) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('__system/conflict eq null');
+            filter.should.match(/__system\/conflict eq null/);
           }));
     });
 
@@ -78,7 +79,7 @@ describe('EntityFilters', () => {
           load(`/projects/1/entity-lists/trees/entities?${query}`, { root: false })
             .beforeEachResponse((_, { url }, index) => {
               if (index !== 1) return;
-              relativeUrl(url).searchParams.has('$filter').should.be.false;
+              relativeUrl(url).searchParams.get('$filter').should.not.match(/conflict/);
             }));
       }
     });
@@ -92,7 +93,7 @@ describe('EntityFilters', () => {
           .request(changeMultiselect('#entity-filters-conflict', [0]))
           .beforeEachResponse((_, { url }) => {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('__system/conflict ne null');
+            filter.should.match(/__system\/conflict ne null/);
           })
           .respondWithData(testData.entityOData));
 
@@ -145,7 +146,7 @@ describe('EntityFilters', () => {
           .route('/projects/1/entity-lists/trees/entities?conflict=true')
           .beforeEachResponse((_, { url }) => {
             const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.equal('__system/conflict ne null');
+            filter.should.match(/__system\/conflict ne null/);
           })
           .respondWithData(testData.entityOData));
 
