@@ -3,7 +3,6 @@ import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
-import type { SubmissionDefinition } from '../client/submission/SubmissionDefinition.ts';
 import type {
 	SubmissionChunkedType,
 	SubmissionOptions,
@@ -81,13 +80,6 @@ export class Root
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
 	readonly submissionState: SubmissionState;
-
-	// ClientReactiveSubmittableInstance
-	get submissionDefinition(): SubmissionDefinition {
-		return this.definition.submission;
-	}
-
-	// RootNode
 	readonly languages: FormLanguages;
 
 	constructor(parent: PrimaryInstance) {
