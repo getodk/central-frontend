@@ -158,10 +158,10 @@ const submit = () => {
   "pt": {
     "title": "Adicionar Propriedade da Entidade",
     "introduction": [
-      "Para adicionar uma propriedade de Entidade, escolha um nome de propriedade exclusivo abaixo.",
+      "Para adicionar uma propriedade de Entidade, escolha abaixo um nome exclusivo de propriedade.",
       "Você também pode adicionar novas propriedades carregando um Formulário que as referencie; nesse caso, as propriedades são criadas quando o Formulário é publicado."
     ],
-    "newPropertyName": "Novo nome da propriedade",
+    "newPropertyName": "Nome da nova propriedade",
     "problem": {
       "409_3": "Uma propriedade já existe nesta Lista de Entidades com o nome de “{propertyName}”."
     }

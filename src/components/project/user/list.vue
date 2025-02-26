@@ -541,11 +541,11 @@ export default {
         "projectManagers": "Gerentes de projeto"
       },
       {
-        "full": "{projectViewers} pode acessar e baixar todos os dados de Formulário e entidade neste projeto, mas não pode fazer nenhuma alteração em configurações ou dados",
+        "full": "{projectViewers} podem acessar e baixar todos os dados de Formulários e Entidades neste projeto, mas não podem fazer nenhuma alteração em configurações ou dados",
         "projectViewers": "Observadores de projeto"
       },
       {
-        "full": "{dataCollectors}pode preencher formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
+        "full": "{dataCollectors} podem preencher Formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
         "dataCollectors": "Coletores de dados"
       }
     ],
@@ -555,7 +555,7 @@ export default {
     "field": {
       "q": {
         "canList": "Localizar um usuário...",
-        "cannotList": "Entre com o endereço de email completo do usuário"
+        "cannotList": "Inclua o endereço de email completo do(a) usuário(a)"
       }
     },
     "header": {

@@ -448,7 +448,7 @@ export default {
     },
     "currentDraft": {
       "versionCaption": {
-        "full": "{draftVersion}desse formulário.",
+        "full": "{draftVersion} desse formulário.",
         "draftVersion": "Versão de rascunho"
       },
       "action": {

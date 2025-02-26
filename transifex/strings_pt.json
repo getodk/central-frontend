@@ -342,7 +342,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "Novo",
+      "string": "Nova",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
     },
     "delete": {
@@ -1612,14 +1612,14 @@
       },
       "introduction": {
         "0": {
-          "string": "Para adicionar uma propriedade de Entidade, escolha um nome de propriedade exclusivo abaixo."
+          "string": "Para adicionar uma propriedade de Entidade, escolha abaixo um nome exclusivo de propriedade."
         },
         "1": {
           "string": "Você também pode adicionar novas propriedades carregando um Formulário que as referencie; nesse caso, as propriedades são criadas quando o Formulário é publicado."
         }
       },
       "newPropertyName": {
-        "string": "Novo nome da propriedade"
+        "string": "Nome da nova propriedade"
       },
       "problem": {
         "409_3": {
@@ -2027,7 +2027,7 @@
       },
       "field": {
         "conflict": {
-          "string": "Status do conflito",
+          "string": "Status de conflitos",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -3025,7 +3025,7 @@
       "currentDraft": {
         "versionCaption": {
           "full": {
-            "string": "{draftVersion}desse formulário.",
+            "string": "{draftVersion} desse formulário.",
             "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
           },
           "draftVersion": {
@@ -3374,7 +3374,7 @@
         },
         "body": {
           "full": {
-            "string": "Para definir o estado desse formulário, por favor visite a {formAccessSettings}do projeto.",
+            "string": "Para definir o status desse formulário, visite as {formAccessSettings} aos formulários do projeto.",
             "developer_comment": "{formAccessSettings} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Access settings"
           },
           "formAccessSettings": {
@@ -3891,7 +3891,7 @@
     "ProjectFormAccess": {
       "heading": {
         "0": {
-          "string": "Usuários de aplicativo apenas pode ver e preencher formulários a que lhes for dada autorização explicita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
+          "string": "Usuários de aplicativo somente podem ver e preencher os formulários para os quais receberem autorização explícita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
         }
       },
       "emptyTable": {
@@ -4197,7 +4197,7 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} pode acessar e baixar todos os dados de Formulário e entidade neste projeto, mas não pode fazer nenhuma alteração em configurações ou dados",
+            "string": "{projectViewers} podem acessar e baixar todos os dados de Formulários e Entidades neste projeto, mas não podem fazer nenhuma alteração em configurações ou dados",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -4207,7 +4207,7 @@
         },
         "3": {
           "full": {
-            "string": "{dataCollectors}pode preencher formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
+            "string": "{dataCollectors} podem preencher Formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{dataCollectors} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nData Collectors"
           },
           "dataCollectors": {
@@ -4229,7 +4229,7 @@
             "developer_comment": "This is the text of a form field."
           },
           "cannotList": {
-            "string": "Entre com o endereço de email completo do usuário",
+            "string": "Inclua o endereço de email completo do(a) usuário(a)",
             "developer_comment": "This is the text of a form field."
           }
         }
@@ -4311,7 +4311,7 @@
         },
         "1": {
           "full": {
-            "string": "Links públicos destinam-se a preenchimento autônomo. Se você está trabalhando com coletores de dados que precisam responder o mesmo formulário várias vezes, {clickHere}para outras opções.",
+            "string": "Links públicos destinam-se a preenchimento autônomo. Se você está trabalhando com coletores de dados que precisam responder o mesmo formulário várias vezes, {clickHere} para outras opções.",
             "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
           },
           "clickHere": {

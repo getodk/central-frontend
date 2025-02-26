@@ -214,7 +214,7 @@ export default {
     "state": {
       "title": "Status do formulário",
       "body": {
-        "full": "Para definir o estado desse formulário, por favor visite a {formAccessSettings}do projeto.",
+        "full": "Para definir o status desse formulário, visite as {formAccessSettings} aos formulários do projeto.",
         "formAccessSettings": "Configurações de acesso ao formulário"
       }
     },
