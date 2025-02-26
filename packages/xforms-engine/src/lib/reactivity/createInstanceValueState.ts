@@ -182,7 +182,7 @@ export type InstanceValueState = SimpleAtomicState<string>;
  * Provides a consistent interface for value nodes of any type which:
  *
  * - derives initial state from either an existing instance (e.g. for edits) or
- *   the node's definition (e.g. initializing a new submission)
+ *   the node's definition (e.g. initializing a new instance)
  * - decodes current primary instance state into the value node's runtime type
  * - encodes updated runtime values to store updated instance state
  * - initializes reactive computation of `calculate` bind expressions for those

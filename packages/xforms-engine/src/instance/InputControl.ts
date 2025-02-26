@@ -22,7 +22,7 @@ import type { InputControlDefinition } from '../parse/body/control/InputControlD
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { Root } from './Root.ts';
 
@@ -78,7 +78,7 @@ export class InputControl<V extends ValueType = ValueType>
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	static from(parent: GeneralParentNode, definition: InputDefinition): AnyInputControl;
 	static from<V extends ValueType>(

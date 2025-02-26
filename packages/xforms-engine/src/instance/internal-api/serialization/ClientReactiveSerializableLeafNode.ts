@@ -2,28 +2,28 @@ import type { InstanceState } from '../../../client/serialization/InstanceState.
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EscapedXMLText } from '../../../lib/xml-serialization.ts';
 import type {
-	ClientReactiveSubmittableChildNode,
-	ClientReactiveSubmittableParentNode,
-} from './ClientReactiveSubmittableParentNode.ts';
+	ClientReactiveSerializableChildNode,
+	ClientReactiveSerializableParentNode,
+} from './ClientReactiveSerializableParentNode.ts';
 
-interface ClientReactiveSubmittableLeafNodeCurrentState<RuntimeValue> {
+interface ClientReactiveSerializableLeafNodeCurrentState<RuntimeValue> {
 	get relevant(): boolean;
 	get value(): RuntimeValue;
 }
 
-export type SerializedSubmissionValue = string;
+export type SerializedInstanceValue = string;
 
-interface ClientReactiveSubmittableLeafNodeDefinition {
+interface ClientReactiveSerializableLeafNodeDefinition {
 	readonly qualifiedName: QualifiedName;
 }
 
-export interface ClientReactiveSubmittableLeafNode<RuntimeValue> {
-	readonly definition: ClientReactiveSubmittableLeafNodeDefinition;
-	readonly parent: ClientReactiveSubmittableParentNode<ClientReactiveSubmittableChildNode>;
-	readonly currentState: ClientReactiveSubmittableLeafNodeCurrentState<RuntimeValue>;
+export interface ClientReactiveSerializableLeafNode<RuntimeValue> {
+	readonly definition: ClientReactiveSerializableLeafNodeDefinition;
+	readonly parent: ClientReactiveSerializableParentNode<ClientReactiveSerializableChildNode>;
+	readonly currentState: ClientReactiveSerializableLeafNodeCurrentState<RuntimeValue>;
 
 	/**
-	 * A client-reactive submittable leaf node is responsible for producing a
+	 * A client-reactive serializble leaf node is responsible for producing a
 	 * string representation of its value state, suitable for instance
 	 * serialization. It **MUST NOT** perform any further instance
 	 * serialization-specific serialization duties: in particular, the value

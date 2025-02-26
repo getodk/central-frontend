@@ -19,7 +19,7 @@ import type { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 
 interface NoteStateSpec<V extends ValueType> extends ValueNodeStateSpec<NoteValue<V>> {
@@ -37,7 +37,7 @@ export class Note<V extends ValueType = ValueType>
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';

@@ -2,7 +2,7 @@ import type { InstanceState } from '../../../client/serialization/InstanceState.
 import type { Root } from '../../../instance/Root.ts';
 import { serializeParentElementXML } from '../../xml-serialization.ts';
 
-export const createRootSubmissionState = (node: Root): InstanceState => {
+export const createRootInstanceState = (node: Root): InstanceState => {
 	return {
 		get instanceXML() {
 			const { namespaceDeclarations, attributes } = node.definition;

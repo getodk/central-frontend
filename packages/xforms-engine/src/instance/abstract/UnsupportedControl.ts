@@ -11,7 +11,7 @@ import type {
 } from '../../client/unsupported/UnsupportedControlNode.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createLeafNodeSubmissionState } from '../../lib/client-reactivity/submission/createLeafNodeSubmissionState.ts';
+import { createLeafNodeInsstanceState } from '../../lib/client-reactivity/instance-state/createLeafNodeInsstanceState.ts';
 import { createValueState } from '../../lib/reactivity/createValueState.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -29,7 +29,7 @@ import {
 import type { UnknownAppearanceDefinition } from '../../parse/body/appearance/unknownAppearanceParser.ts';
 import type { AnyUnsupportedControl, GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableLeafNode } from '../internal-api/submission/ClientReactiveSubmittableLeafNode.ts';
+import type { ClientReactiveSerializableLeafNode } from '../internal-api/serialization/ClientReactiveSerializableLeafNode.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { ValueContext } from '../internal-api/ValueContext.ts';
 import { DescendantNode, type DescendantNodeStateSpec } from './DescendantNode.ts';
@@ -77,7 +77,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		EvaluationContext,
 		ValidationContext,
 		ValueContext<unknown>,
-		ClientReactiveSubmittableLeafNode<unknown>
+		ClientReactiveSerializableLeafNode<unknown>
 {
 	private readonly validation: SharedValidationState;
 	protected readonly state: SharedNodeState<UnsupportedControlStateSpec>;
@@ -146,7 +146,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.validation = createValidationState(this, sharedStateOptions);
-		this.instanceState = createLeafNodeSubmissionState(this);
+		this.instanceState = createLeafNodeInsstanceState(this);
 	}
 
 	// XFormsXPathElement

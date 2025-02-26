@@ -13,8 +13,8 @@ import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathDocument } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
-import { createInstanceSubmissionState } from '../lib/client-reactivity/submission/createInstanceSubmissionState.ts';
-import { prepareSubmission } from '../lib/client-reactivity/submission/prepareSubmission.ts';
+import { createPrimaryInstanceState } from '../lib/client-reactivity/instance-state/createPrimaryInstanceState.ts';
+import { prepareInstancePayload } from '../lib/client-reactivity/instance-state/prepareInstancePayload.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -33,7 +33,7 @@ import { InstanceNode } from './abstract/InstanceNode.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocument.ts';
-import type { ClientReactiveSubmittableInstance } from './internal-api/submission/ClientReactiveSubmittableInstance.ts';
+import type { ClientReactiveSerializableInstance } from './internal-api/serialization/ClientReactiveSerializableInstance.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import { Root } from './Root.ts';
 
@@ -81,7 +81,7 @@ export class PrimaryInstance
 		XFormsXPathDocument,
 		TranslationContext,
 		EvaluationContext,
-		ClientReactiveSubmittableInstance
+		ClientReactiveSerializableInstance
 {
 	// InstanceNode
 	protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -99,7 +99,7 @@ export class PrimaryInstance
 	// XFormsXPathDocument
 	readonly [XPathNodeKindKey] = 'document';
 
-	// PrimaryInstanceDocument, ClientReactiveSubmittableInstance
+	// PrimaryInstanceDocument, ClientReactiveSerializableInstance
 	readonly nodeType = 'primary-instance';
 	readonly appearances = null;
 	readonly nodeOptions = null;
@@ -187,7 +187,7 @@ export class PrimaryInstance
 				return root.validationState.violations;
 			},
 		};
-		this.instanceState = createInstanceSubmissionState(this);
+		this.instanceState = createPrimaryInstanceState(this);
 
 		childrenState.setChildren([root]);
 		setIsAttached(true);
@@ -235,7 +235,7 @@ export class PrimaryInstance
 	prepareInstancePayload<PayloadType extends InstancePayloadType = 'monolithic'>(
 		options?: InstancePayloadOptions<PayloadType>
 	): Promise<InstancePayload<PayloadType>> {
-		const result = prepareSubmission(this, {
+		const result = prepareInstancePayload(this, {
 			payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
 			maxSize: options?.maxSize ?? Infinity,
 		});

@@ -14,7 +14,7 @@ import type {
 	XFormsXPathNodeRangeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createNodeRangeSubmissionState } from '../../lib/client-reactivity/submission/createNodeRangeSubmissionState.ts';
+import { createNodeRangeInstanceState } from '../../lib/client-reactivity/instance-state/createNodeRangeInstanceState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -35,7 +35,7 @@ import type {
 import { DescendantNode } from '../abstract/DescendantNode.ts';
 import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableParentNode } from '../internal-api/submission/ClientReactiveSubmittableParentNode.ts';
+import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
@@ -58,7 +58,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 		BaseRepeatRangeNode,
 		XFormsXPathNodeRange,
 		EvaluationContext,
-		ClientReactiveSubmittableParentNode<RepeatInstance>
+		ClientReactiveSerializableParentNode<RepeatInstance>
 {
 	protected readonly childrenState: ChildrenState<RepeatInstance>;
 
@@ -188,7 +188,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 			state.currentState,
 			childrenState
 		);
-		this.instanceState = createNodeRangeSubmissionState(this);
+		this.instanceState = createNodeRangeInstanceState(this);
 	}
 
 	protected getLastIndex(): number {

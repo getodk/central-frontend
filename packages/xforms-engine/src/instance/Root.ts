@@ -11,7 +11,7 @@ import type {
 import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createRootSubmissionState } from '../lib/client-reactivity/submission/createRootSubmissionState.ts';
+import { createRootInstanceState } from '../lib/client-reactivity/instance-state/createRootInstanceState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -27,7 +27,7 @@ import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
+import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
 
@@ -53,7 +53,7 @@ export class Root
 		XFormsXPathElement,
 		EvaluationContext,
 		TranslationContext,
-		ClientReactiveSubmittableParentNode<GeneralChildNode>
+		ClientReactiveSerializableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
@@ -129,7 +129,7 @@ export class Root
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
-		this.instanceState = createRootSubmissionState(this);
+		this.instanceState = createRootInstanceState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

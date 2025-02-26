@@ -5,7 +5,7 @@ import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createParentNodeSubmissionState } from '../lib/client-reactivity/submission/createParentNodeSubmissionState.ts';
+import { createParentNodeInstanceState } from '../lib/client-reactivity/instance-state/createParentNodeInstanceState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -20,7 +20,7 @@ import { DescendantNode } from './abstract/DescendantNode.ts';
 import { buildChildren } from './children.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { ClientReactiveSubmittableParentNode } from './internal-api/submission/ClientReactiveSubmittableParentNode.ts';
+import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 
 interface SubtreeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: null;
@@ -36,7 +36,7 @@ export class Subtree
 		SubtreeNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		ClientReactiveSubmittableParentNode<GeneralChildNode>
+		ClientReactiveSerializableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 
@@ -92,7 +92,7 @@ export class Subtree
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, sharedStateOptions);
-		this.instanceState = createParentNodeSubmissionState(this);
+		this.instanceState = createParentNodeInstanceState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

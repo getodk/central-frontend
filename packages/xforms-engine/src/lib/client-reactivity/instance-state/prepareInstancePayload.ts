@@ -1,6 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } from '../../../client/constants.ts';
-import type { InstanceData } from '../../../client/serialization/InstanceData.ts';
+import type { InstanceData as ClientInstanceData } from '../../../client/serialization/InstanceData.ts';
 import type { InstanceFile as ClientInstanceFile } from '../../../client/serialization/InstanceFile.ts';
 import type {
 	ChunkedInstancePayload,
@@ -10,13 +10,13 @@ import type {
 import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
 import type { SubmissionDefinition } from '../../../client/submission/SubmissionDefinition.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
-import type { ClientReactiveSubmittableInstance } from '../../../instance/internal-api/submission/ClientReactiveSubmittableInstance.ts';
+import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
 
 class InstanceFile extends File implements ClientInstanceFile {
 	override readonly name = INSTANCE_FILE_NAME;
 	override readonly type = INSTANCE_FILE_TYPE;
 
-	constructor(instanceRoot: ClientReactiveSubmittableInstance) {
+	constructor(instanceRoot: ClientReactiveSerializableInstance) {
 		const { instanceXML } = instanceRoot.instanceState;
 
 		super([instanceXML], INSTANCE_FILE_NAME, {
@@ -25,9 +25,9 @@ class InstanceFile extends File implements ClientInstanceFile {
 	}
 }
 
-type AssertSubmissionData = (data: FormData) => asserts data is InstanceData;
+type AssertInstanceData = (data: FormData) => asserts data is ClientInstanceData;
 
-const assertSubmissionData: AssertSubmissionData = (data) => {
+const assertInstanceData: AssertInstanceData = (data) => {
 	const instanceFile = data.get(INSTANCE_FILE_NAME);
 
 	if (!(instanceFile instanceof InstanceFile)) {
@@ -35,11 +35,11 @@ const assertSubmissionData: AssertSubmissionData = (data) => {
 	}
 };
 
-class InstanceSubmissionData extends FormData {
-	static from(instanceFile: InstanceFile, attachments: readonly File[]): InstanceData {
+class InstanceData extends FormData {
+	static from(instanceFile: InstanceFile, attachments: readonly File[]): ClientInstanceData {
 		const data = new this(instanceFile, attachments);
 
-		assertSubmissionData(data);
+		assertInstanceData(data);
 
 		return data;
 	}
@@ -74,11 +74,11 @@ interface ReadyValidation {
 	readonly violations: null;
 }
 
-type SubmissionInstanceStateValidation = PendingValidation | ReadyValidation;
+type InstanceStateValidation = PendingValidation | ReadyValidation;
 
-const validateSubmission = (
-	instanceRoot: ClientReactiveSubmittableInstance
-): SubmissionInstanceStateValidation => {
+const validateInstance = (
+	instanceRoot: ClientReactiveSerializableInstance
+): InstanceStateValidation => {
 	const { violations } = instanceRoot.validationState;
 
 	if (violations.length === 0) {
@@ -95,12 +95,12 @@ const validateSubmission = (
 };
 
 const monolithicInstancePayload = (
-	validation: SubmissionInstanceStateValidation,
+	validation: InstanceStateValidation,
 	definition: SubmissionDefinition,
 	instanceFile: InstanceFile,
 	attachments: readonly File[]
 ): MonolithicInstancePayload => {
-	const data = InstanceSubmissionData.from(instanceFile, attachments);
+	const data = InstanceData.from(instanceFile, attachments);
 
 	return {
 		...validation,
@@ -114,17 +114,17 @@ interface ChunkedInstancePayloadOptions {
 }
 
 const chunkedInstancePayload = (
-	validation: SubmissionInstanceStateValidation,
+	validation: InstanceStateValidation,
 	definition: SubmissionDefinition,
 	instanceFile: InstanceFile,
 	attachments: readonly File[],
 	options: ChunkedInstancePayloadOptions
 ): ChunkedInstancePayload => {
 	if (attachments.length > 0 || options.maxSize !== Infinity) {
-		throw new Error('Submission chunking pending implementation');
+		throw new Error('InstancePayload chunking pending implementation');
 	}
 
-	const data = InstanceSubmissionData.from(instanceFile, attachments);
+	const data = InstanceData.from(instanceFile, attachments);
 
 	return {
 		...validation,
@@ -133,16 +133,16 @@ const chunkedInstancePayload = (
 	};
 };
 
-export interface PrepareSubmissionOptions<PayloadType extends InstancePayloadType> {
+export interface PrepareInstancePayloadOptions<PayloadType extends InstancePayloadType> {
 	readonly payloadType: PayloadType;
 	readonly maxSize: number;
 }
 
-export const prepareSubmission = <PayloadType extends InstancePayloadType>(
-	instanceRoot: ClientReactiveSubmittableInstance,
-	options: PrepareSubmissionOptions<PayloadType>
+export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
+	instanceRoot: ClientReactiveSerializableInstance,
+	options: PrepareInstancePayloadOptions<PayloadType>
 ): InstancePayload<PayloadType> => {
-	const validation = validateSubmission(instanceRoot);
+	const validation = validateInstance(instanceRoot);
 	const definition = instanceRoot.definition.submission;
 	const instanceFile = new InstanceFile(instanceRoot);
 	const attachments: readonly File[] = [];

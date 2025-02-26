@@ -6,7 +6,7 @@ import type { InstanceState } from '../../client/serialization/InstanceState.ts'
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createValueNodeSubmissionState } from '../../lib/client-reactivity/submission/createValueNodeSubmissionState.ts';
+import { createValueNodeInstanceState } from '../../lib/client-reactivity/instance-state/createValueNodeInstanceState.ts';
 import type {
 	RuntimeValueSetter,
 	RuntimeValueState,
@@ -26,7 +26,7 @@ import type {
 	DecodeInstanceValue,
 	InstanceValueContext,
 } from '../internal-api/InstanceValueContext.ts';
-import type { ClientReactiveSubmittableValueNode } from '../internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from '../internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
 import { DescendantNode } from './DescendantNode.ts';
@@ -52,7 +52,7 @@ export abstract class ValueNode<
 		EvaluationContext,
 		InstanceValueContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	protected readonly validation: SharedValidationState;
 	protected readonly getInstanceValue: Accessor<string>;
@@ -109,7 +109,7 @@ export abstract class ValueNode<
 		this.validation = createValidationState(this, {
 			clientStateFactory: this.engineConfig.stateFactory,
 		});
-		this.instanceState = createValueNodeSubmissionState(this);
+		this.instanceState = createValueNodeInstanceState(this);
 	}
 
 	// ValidationContext

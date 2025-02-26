@@ -19,7 +19,7 @@ import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 interface TriggerControlStateSpec extends ValueNodeStateSpec<TriggerRuntimeValue> {
 	readonly label: Accessor<TextRange<'label'> | null>;
@@ -45,7 +45,7 @@ export class TriggerControl
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	static from(parent: GeneralParentNode, definition: TriggerNodeDefinition): TriggerControl;
 	static from(parent: GeneralParentNode, definition: AnyTriggerNodeDefinition): TriggerControl {
