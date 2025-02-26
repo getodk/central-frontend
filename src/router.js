@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
+import { START_LOCATION, createRouter, createWebHistory } from 'vue-router';
 import { last } from 'ramda';
 import { watchEffect } from 'vue';
 
@@ -24,7 +24,7 @@ import { noop } from './util/util';
 import { setDocumentTitle } from './util/reactivity';
 
 export default (container, {
-  history = createWebHashHistory(),
+  history = createWebHistory(),
   scrollBehavior = createScrollBehavior()
 } = {}) => {
   const routes = createRoutes(container);
