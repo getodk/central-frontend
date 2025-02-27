@@ -103,6 +103,7 @@ const monolithicInstancePayload = (
 	const data = InstanceData.from(instanceFile, attachments);
 
 	return {
+		payloadType: 'monolithic',
 		...validation,
 		submissionMeta,
 		data: [data],
@@ -127,6 +128,7 @@ const chunkedInstancePayload = (
 	const data = InstanceData.from(instanceFile, attachments);
 
 	return {
+		payloadType: 'chunked',
 		...validation,
 		submissionMeta,
 		data: [data],

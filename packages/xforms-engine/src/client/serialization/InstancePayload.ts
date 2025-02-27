@@ -79,6 +79,7 @@ type InstancePayloadViolation =
 	| MaxSizeViolation;
 
 interface BaseInstancePayload<PayloadType extends InstancePayloadType> {
+	readonly payloadType: PayloadType;
 	readonly status: InstancePayloadStatus;
 	readonly submissionMeta: SubmissionMeta;
 
