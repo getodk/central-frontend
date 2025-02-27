@@ -753,7 +753,7 @@ describe('Form submission', () => {
 		describe('submission meta', () => {
 			it('includes default submission meta', async () => {
 				const scenario = await buildSubmissionPayloadScenario();
-				const submissionResult = await scenario.prepareWebFormsSubmission();
+				const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionAction: null,
@@ -767,7 +767,7 @@ describe('Form submission', () => {
 				const scenario = await buildSubmissionPayloadScenario({
 					submissionElements: [t(`submission action="${submissionAction}"`)],
 				});
-				const submissionResult = await scenario.prepareWebFormsSubmission();
+				const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionAction: new URL(submissionAction),
@@ -778,7 +778,7 @@ describe('Form submission', () => {
 				const scenario = await buildSubmissionPayloadScenario({
 					submissionElements: [t('submission method="post"')],
 				});
-				const submissionResult = await scenario.prepareWebFormsSubmission();
+				const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionMethod: 'post',
@@ -789,7 +789,7 @@ describe('Form submission', () => {
 				const scenario = await buildSubmissionPayloadScenario({
 					submissionElements: [t('submission method="form-data-post"')],
 				});
-				const submissionResult = await scenario.prepareWebFormsSubmission();
+				const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 				expect(submissionResult.submissionMeta).toMatchObject({
 					submissionMethod: 'post',
@@ -823,7 +823,7 @@ describe('Form submission', () => {
 						),
 					],
 				});
-				const submissionResult = await scenario.prepareWebFormsSubmission();
+				const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 				expect(submissionResult.submissionMeta).toMatchObject({
 					encryptionKey: base64RsaPublicKey,
@@ -858,13 +858,13 @@ describe('Form submission', () => {
 				});
 
 				it('is ready for submission when instance state is valid', async () => {
-					const submissionResult = await scenario.prepareWebFormsSubmission();
+					const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 					expect(submissionResult).toBeReadyForSubmission();
 				});
 
 				it('includes submission instance XML file data', async () => {
-					const submissionResult = await scenario.prepareWebFormsSubmission();
+					const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 					await expect(submissionResult).toHavePreparedSubmissionXML(validSubmissionXML);
 				});
@@ -895,13 +895,13 @@ describe('Form submission', () => {
 				});
 
 				it('is pending submission with violations', async () => {
-					const submissionResult = await scenario.prepareWebFormsSubmission();
+					const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 					expect(submissionResult).toBePendingSubmissionWithViolations();
 				});
 
 				it('produces submission instance XML file data even when current instance state is invalid', async () => {
-					const submissionResult = await scenario.prepareWebFormsSubmission();
+					const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 					await expect(submissionResult).toHavePreparedSubmissionXML(invalidSubmissionXML);
 				});

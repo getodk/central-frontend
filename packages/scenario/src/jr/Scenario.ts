@@ -974,7 +974,7 @@ export class Scenario {
 	 * more about Collect's responsibility for submission (beyond serialization,
 	 * already handled by {@link proposed_serializeInstance}).
 	 */
-	prepareWebFormsSubmission() {
+	prepareWebFormsInstancePayload() {
 		return this.instanceRoot.prepareInstancePayload();
 	}
 
