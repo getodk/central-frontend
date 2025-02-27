@@ -13,7 +13,7 @@ export type InstancePayloadStatus =
 // prettier-ignore
 type InstancePayloadData<PayloadType extends InstancePayloadType> = {
 	chunked: readonly [InstanceData, ...InstanceData[]];
-	monolithic: InstanceData;
+	monolithic: readonly [InstanceData];
 }[PayloadType];
 
 /**

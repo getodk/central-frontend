@@ -11,12 +11,7 @@ import {
 } from '@getodk/common/test/assertions/helpers.ts';
 import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import type { AssertIs } from '@getodk/common/types/assertions/AssertIs.ts';
-import type {
-	InstanceData,
-	InstanceFile,
-	InstancePayload,
-	InstancePayloadType,
-} from '@getodk/xforms-engine';
+import type { InstanceFile, InstancePayload, InstancePayloadType } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
 import { Scenario } from '../../jr/Scenario.ts';
@@ -83,28 +78,8 @@ const assertInstanceFile: AssertIs<InstanceFile> = (value) => {
 	}
 };
 
-type ChunkedInstanceData = readonly [InstanceData, ...InstanceData[]];
-
-const isChunkedSubmissionData = (
-	data: ChunkedInstanceData | InstanceData
-): data is ChunkedInstanceData => {
-	return Array.isArray(data);
-};
-
-const getInstanceData = (payload: AnyInstancePayload): InstanceData => {
-	const { data } = payload;
-
-	if (isChunkedSubmissionData(data)) {
-		const [first] = data;
-
-		return first;
-	}
-
-	return data;
-};
-
 const getInstanceFile = (payload: AnyInstancePayload): InstanceFile => {
-	const instanceData = getInstanceData(payload);
+	const [instanceData] = payload.data;
 	const file = instanceData.get(INSTANCE_FILE_NAME);
 
 	assertInstanceFile(file);

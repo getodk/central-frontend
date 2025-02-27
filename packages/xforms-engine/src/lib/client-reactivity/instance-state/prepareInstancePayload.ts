@@ -105,7 +105,7 @@ const monolithicInstancePayload = (
 	return {
 		...validation,
 		submissionMeta,
-		data,
+		data: [data],
 	};
 };
 
