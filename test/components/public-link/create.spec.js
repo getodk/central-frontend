@@ -123,7 +123,7 @@ describe('PublicLinkCreate', () => {
 
     it('updates the count in the tab', async () => {
       const app = await submit();
-      app.get('#form-head .nav-tabs li.active .badge').text().should.equal('2');
+      app.get('#page-head-tabs li.active .badge').text().should.equal('2');
     });
   });
 });

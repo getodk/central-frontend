@@ -78,11 +78,11 @@ describe('PublicLinkRevoke', () => {
     it('decreases the count in the tab', () =>
       load('/projects/1/forms/f/public-links')
         .afterResponses(app => {
-          app.get('#form-head .nav-tabs li.active .badge').text().should.equal('1');
+          app.get('#page-head-tabs li.active .badge').text().should.equal('1');
         })
         .modify(revoke)
         .afterResponses(app => {
-          app.get('#form-head .nav-tabs li.active .badge').text().should.equal('0');
+          app.get('#page-head-tabs li.active .badge').text().should.equal('0');
         }));
 
     it('no longer highlights a new public link', () =>

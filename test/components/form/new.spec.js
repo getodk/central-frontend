@@ -274,7 +274,7 @@ describe('FormNew', () => {
 
     it('shows the form name', () =>
       createForm().then(app => {
-        app.get('#form-head-form-nav .h1').text().should.equal('Form 2');
+        app.get('#page-head-title').text().should.equal('Form 2');
       }));
 
     it('shows a success alert', () =>

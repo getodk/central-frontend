@@ -10,76 +10,65 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-head">
+  <div>
     <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
-    <div id="form-head-form-nav" class="row">
-      <div class="col-xs-12">
-        <div class="row">
-          <div class="col-xs-12">
-            <div v-if="form.dataExists" class="h1" v-tooltip.text>
-              {{ form.nameOrId }}
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <ul id="form-head-form-tabs" class="nav nav-tabs">
-              <!-- No v-if, because anyone who can navigate to the form should
-              be able to navigate to .../submissions and .../versions. -->
-              <li :class="formTabClass('submissions')" role="presentation">
-                <router-link :to="tabPath('submissions')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('resource.submissions') }}
-                  <span v-if="form.dataExists" class="badge">
-                    {{ $n(form.submissions, 'default') }}
-                  </span>
-                </router-link>
-              </li>
-              <!-- Using rendersFormTabs rather than canRoute(), because we want
-              to render the tabs even if the form does not have a published
-              version (in which case canRoute() will return `false`). -->
-              <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
-                role="presentation">
-                <router-link :to="tabPath('public-links')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('formHead.tab.publicAccess') }}
-                  <span v-if="form.dataExists" class="badge">
-                    {{ $n(form.publicLinks, 'default') }}
-                  </span>
-                </router-link>
-              </li>
-              <li :class="formTabClass('versions')" role="presentation">
-                <router-link :to="tabPath('versions')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('formHead.tab.versions') }}
-                </router-link>
-              </li>
-              <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
-                role="presentation">
-                <router-link :to="tabPath('draft')">
-                  {{ $t('formHead.tab.editForm') }}
-                </router-link>
-              </li>
-              <li v-if="rendersFormTabs" :class="formTabClass('settings')"
-                role="presentation">
-                <router-link :to="tabPath('settings')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('common.tab.settings') }}
-                  <span v-if="form.dataExists" class="badge">
-                    {{ $t(`formState.${form.state}`) }}
-                  </span>
-                </router-link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <page-head>
+      <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
+      <template #tabs>
+        <!-- No v-if, because anyone who can navigate to the form should be able
+        to navigate to .../submissions and .../versions. -->
+        <li :class="formTabClass('submissions')" role="presentation">
+          <router-link :to="tabPath('submissions')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('resource.submissions') }}
+            <span v-if="form.dataExists" class="badge">
+              {{ $n(form.submissions, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <!-- Using rendersFormTabs rather than canRoute(), because we want to
+        render the tabs even if the form does not have a published version (in
+        which case canRoute() will return `false`). -->
+        <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
+          role="presentation">
+          <router-link :to="tabPath('public-links')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('formHead.tab.publicAccess') }}
+            <span v-if="form.dataExists" class="badge">
+              {{ $n(form.publicLinks, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <li :class="formTabClass('versions')" role="presentation">
+          <router-link :to="tabPath('versions')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('formHead.tab.versions') }}
+          </router-link>
+        </li>
+        <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
+          role="presentation">
+          <router-link :to="tabPath('draft')">
+            {{ $t('formHead.tab.editForm') }}
+          </router-link>
+        </li>
+        <li v-if="rendersFormTabs" :class="formTabClass('settings')"
+          role="presentation">
+          <router-link :to="tabPath('settings')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('common.tab.settings') }}
+            <span v-if="form.dataExists" class="badge">
+              {{ $t(`formState.${form.state}`) }}
+            </span>
+          </router-link>
+        </li>
+      </template>
+    </page-head>
   </div>
 </template>
 
 <script>
 import Breadcrumbs from '../breadcrumbs.vue';
+import PageHead from '../page/head.vue';
 
 import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';
@@ -87,7 +76,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
-  components: { Breadcrumbs },
+  components: { Breadcrumbs, PageHead },
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -126,36 +115,6 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-@import '../../assets/scss/mixins';
-
-.breadcrumbs + #form-head-form-nav .h1 {
-  margin-top: 0;
-}
-
-#form-head-form-nav {
-  background-color: $color-subpanel-background;
-  border-bottom: 1px solid $color-subpanel-border-strong;
-
-  .h1 {
-    @include text-overflow-ellipsis;
-    margin-bottom: -10px;
-  }
-
-  .nav-tabs > li {
-    // It might be simpler to move this margin to the .nav-tabs element so that
-    // fewer elements have margin.
-    margin-top: 5px;
-  }
-}
-
-#form-head-form-tabs {
-  > li.active > a {
-    &, &:hover, &:focus { background-color: $color-subpanel-active; }
-  }
-}
-</style>
 
 <i18n lang="json5">
 {

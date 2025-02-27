@@ -44,17 +44,13 @@ describe('FormHead', () => {
     it("shows the form's name", async () => {
       testData.extendedForms.createPast(1, { name: 'My Form' });
       const app = await load('/projects/1/forms/f/settings');
-      const h1 = app.get('#form-head-form-nav .h1');
-      h1.text().should.equal('My Form');
-      await h1.should.have.textTooltip();
+      app.get('#page-head-title').text().should.equal('My Form');
     });
 
     it("shows the form's xmlFormId if the form does not have a name", async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'my_form', name: null });
       const app = await load('/projects/1/forms/my_form/settings');
-      const h1 = app.get('#form-head-form-nav .h1');
-      h1.text().should.equal('my_form');
-      await h1.should.have.textTooltip();
+      app.get('#page-head-title').text().should.equal('my_form');
     });
   });
 
@@ -64,7 +60,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       return load('/projects/1/forms/f/submissions').then(app => {
-        const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
+        const tabs = app.findAll('#page-head-tabs a');
         tabs.map(tab => textWithout(tab, '.badge')).should.eql([
           'Submissions',
           'Public Access',
@@ -81,7 +77,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       return load('/projects/1/forms/f/submissions').then(app => {
-        const tabs = app.findAll('#form-head-form-nav .nav-tabs a');
+        const tabs = app.findAll('#page-head-tabs a');
         const text = tabs.map(tab => textWithout(tab, '.badge'));
         text.should.eql(['Submissions', 'Versions']);
       });
@@ -91,7 +87,7 @@ describe('FormHead', () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
-      const tabs = app.findAll('#form-head-form-tabs li');
+      const tabs = app.findAll('#page-head-tabs li');
       tabs.length.should.equal(5);
       for (const tab of tabs) {
         if (tab.text() === 'Edit Form') continue; // eslint-disable-line no-continue
@@ -107,7 +103,7 @@ describe('FormHead', () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
-      const tabs = app.findAll('#form-head-form-tabs li');
+      const tabs = app.findAll('#page-head-tabs li');
       tabs.length.should.equal(5);
       for (const tab of tabs) {
         tab.classes('disabled').should.be.false;
