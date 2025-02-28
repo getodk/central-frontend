@@ -23,7 +23,7 @@ describe('SubmissionDownloadButton', () => {
   describe('text', () => {
     it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
-      mountComponent().text().should.equal('Download 2 Submissions…');
+      mountComponent().text().should.equal('Download');
     });
 
     describe('submissions are filtered', () => {
@@ -32,7 +32,7 @@ describe('SubmissionDownloadButton', () => {
         const component = mountComponent({
           props: { filtered: true }
         });
-        component.text().should.equal('Download matching Submissions…');
+        component.text().should.equal('Download');
       });
 
       it('shows correct text after first chunk of submissions has loaded', () => {
@@ -45,7 +45,7 @@ describe('SubmissionDownloadButton', () => {
             }
           }
         });
-        component.text().should.equal('Download 1 matching Submission…');
+        component.text().should.equal('Download');
       });
     });
   });

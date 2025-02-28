@@ -45,8 +45,17 @@ const options = reviewStates.map(reviewState => ({
 }));
 
 const { t } = useI18n();
-const placeholder = (counts) => t('placeholder', counts);
+const placeholder = (counts) => {
+  if (counts.total === counts.selected) return t('common.none');
+  return t('placeholder', counts);
+};
 </script>
+
+<style lang="scss">
+#submission-filters-review-state .none {
+  font-style: italic;
+}
+</style>
 
 <i18n lang="json5">
 {

@@ -19,7 +19,7 @@ describe('EntityDownloadButton', () => {
   describe('text', () => {
     it('shows the correct text', () => {
       testData.extendedDatasets.createPast(1, { entities: 1000 });
-      mountComponent().text().should.equal('Download 1,000 Entities');
+      mountComponent().text().should.equal('Download');
     });
 
     describe('entities are filtered', () => {
@@ -28,7 +28,7 @@ describe('EntityDownloadButton', () => {
         const component = mountComponent({
           props: { odataFilter: '__system/conflict ne null' }
         });
-        component.text().should.equal('Download matching Entities');
+        component.text().should.equal('Download');
       });
 
       it('shows correct text after first chunk of entities has loaded', () => {
@@ -41,7 +41,7 @@ describe('EntityDownloadButton', () => {
             }
           }
         });
-        component.text().should.equal('Download 1,000 matching Entities');
+        component.text().should.equal('Download');
       });
     });
   });

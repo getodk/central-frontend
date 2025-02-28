@@ -11,17 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <a id="entity-download-button" class="btn btn-primary" :href="href">
-    <span class="icon-arrow-circle-down"></span>{{ text }}
+    <span class="icon-arrow-circle-down"></span>
+    <span>{{ $t('action.download') }}</span>
   </a>
 </template>
 
 <script setup>
 import { computed, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
-
 import { apiPaths } from '../../util/request';
-import { useI18nUtils } from '../../util/i18n';
-import { useRequestData } from '../../request-data';
 
 const props = defineProps({
   odataFilter: String
@@ -33,16 +30,6 @@ const datasetName = inject('datasetName');
 const href = computed(() =>
   apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter }));
 
-const { dataset, odataEntities } = useRequestData();
-const { t } = useI18n();
-const { tn } = useI18nUtils();
-const text = computed(() => (props.odataFilter == null
-  ? (dataset.dataExists
-    ? tn('action.download.unfiltered', dataset.entities)
-    : '') // The button is not visible in this case.
-  : (odataEntities.dataExists
-    ? tn('action.download.filtered.withCount', odataEntities.count)
-    : t('action.download.filtered.withoutCount'))));
 </script>
 
 <i18n lang="json5">

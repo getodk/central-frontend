@@ -42,7 +42,7 @@ describe('FormSubmissions', () => {
         root: false
       });
       const text = component.getComponent(SubmissionDownloadButton).text();
-      text.should.equal('Download 1 Submission…');
+      text.should.equal('Download');
     });
 
     it('updates the tab badge if the count changes', () => {

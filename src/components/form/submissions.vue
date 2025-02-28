@@ -14,26 +14,30 @@ except according to the terms contained in the LICENSE file.
     <loading :state="keys.initiallyLoading"/>
     <page-section v-show="keys.dataExists">
       <template #heading>
-        <span>{{ $t('resource.submissions') }}</span>
-        <enketo-fill v-if="rendersEnketoFill" :form-version="form">
-          <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
-        </enketo-fill>
-        <template v-if="deletedSubmissionCount.dataExists">
-          <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
-            class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-            @click="toggleDeleted">
-            <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
-            <span v-show="deleted" class="icon-close"></span>
-          </button>
+        <div class="form-submissions-heading-row">
+          <enketo-fill v-if="rendersEnketoFill" :form-version="form">
+            <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+          </enketo-fill>
+          <template v-if="deletedSubmissionCount.dataExists">
+            <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
+              class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
+              @click="toggleDeleted">
+              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
+              <span v-show="deleted" class="icon-close"></span>
+            </button>
+          </template>
+          <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
+          <odata-data-access :analyze-disabled="analyzeDisabled"
+            :analyze-disabled-message="analyzeDisabledMessage"
+            @analyze="analyzeModal.show()"/>
+          <submission-download-button :form-version="form"
+            :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+            @download="showDownloadModal"/>
+        </div>
         </template>
-        <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-        <odata-data-access :analyze-disabled="analyzeDisabled"
-          :analyze-disabled-message="analyzeDisabledMessage"
-          @analyze="analyzeModal.show()"/>
-      </template>
       <template #body>
-        <submission-list :project-id="projectId" :xml-form-id="xmlFormId"
-          :deleted="deleted" @fetch-keys="fetchKeys"
+        <submission-list ref="submissionList" :project-id="projectId"
+          :xml-form-id="xmlFormId" :deleted="deleted" @fetch-keys="fetchKeys"
           @fetch-deleted-count="fetchDeletedCount"/>
       </template>
     </page-section>
@@ -43,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { watchEffect, computed } from 'vue';
+import { watchEffect, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import EnketoFill from '../enketo/fill.vue';
@@ -54,6 +58,7 @@ import OdataDataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 import useQueryRef from '../../composables/query-ref';
 import useSubmissions from '../../request-data/submissions';
+import SubmissionDownloadButton from '../submission/download-button.vue';
 
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
@@ -65,10 +70,11 @@ export default {
   components: {
     EnketoFill,
     Loading,
-    PageSection,
     OdataAnalyze,
     OdataDataAccess,
-    SubmissionList
+    PageSection,
+    SubmissionDownloadButton,
+    SubmissionList,
   },
   props: {
     projectId: {
@@ -104,9 +110,11 @@ export default {
       if (deleted.value && project.dataExists && !canDelete.value) router.push('/');
     });
 
+    const downloadModalState = ref(false);
+
     return {
-      project, form, keys, analyzeModal: modalData(),
-      deletedSubmissionCount, canDelete, deleted
+      project, form, keys, analyzeModal: modalData(), downloadModal: modalData(),
+      deletedSubmissionCount, canDelete, deleted, downloadModalState
     };
   },
   computed: {
@@ -168,6 +176,9 @@ export default {
     toggleDeleted() {
       const { path } = this.$route;
       this.$router.push(this.deleted ? path : `${path}?deleted=true`);
+    },
+    showDownloadModal() {
+      this.$refs.submissionList.showDownloadModal();
     }
   }
 };
@@ -175,8 +186,6 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
-
-#odata-data-access { float: right; }
 
 #form-submissions {
   .toggle-deleted-submissions {
@@ -195,6 +204,17 @@ export default {
     top: -5px;
     left: 12px;
     font-size: 14px;
+  }
+
+  .form-submissions-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #odata-data-access {
+    margin-left: auto;
+    font-size: initial;
   }
 }
 </style>

@@ -342,8 +342,8 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "New",
-      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+      "string": "New Submission",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
       "string": "Delete",
@@ -951,6 +951,9 @@
     },
     "beta": {
       "string": "Beta"
+    },
+    "none": {
+      "string": "(none)"
     }
   },
   "mixin": {
@@ -1524,6 +1527,9 @@
       }
     },
     "DatasetEntities": {
+      "upload": {
+        "string": "Upload Entities"
+      },
       "alert": {
         "upload": {
           "string": "Success! Your Entities have been uploaded."
@@ -3659,12 +3665,8 @@
     },
     "OdataDataAccess": {
       "action": {
-        "apiAccess": {
-          "string": "API access",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analyze via OData",
+        "connectData": {
+          "string": "Connect Data",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4605,20 +4607,8 @@
     "SubmissionDownloadDropdown": {
       "action": {
         "download": {
-          "unfiltered": {
-            "string": "{count, plural, one {Download {count} Submission} other {Download {count} Submissions}}",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "filtered": {
-            "withoutCount": {
-              "string": "Download matching Submissions",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
-            },
-            "withCount": {
-              "string": "{count, plural, one {Download {count} matching Submission} other {Download {count} matching Submissions}}",
-              "developer_comment": "This is the text for an action, for example, the text of a button."
-            }
-          }
+          "string": "Download",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4721,7 +4711,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{selected} of {total}",
+        "string": "{count, plural, one {{selected} of {total} column shown} other {{selected} of {total} columns shown}}",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {

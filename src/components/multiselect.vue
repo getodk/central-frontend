@@ -10,11 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="dropdown" class="multiselect form-group">
+  <label ref="dropdown" :for="toggleId" class="multiselect form-group">
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
     <select :id="toggleId" ref="toggle" class="form-control"
+      :class="{ none: modelValue?.length === options?.length }"
       :aria-disabled="options == null || disabled"
       :data-toggle="(options == null || disabled) ? null : 'dropdown'" role="button"
       v-tooltip.aria-describedby="disabledMessage"
@@ -22,7 +23,10 @@ except according to the terms contained in the LICENSE file.
       @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
       <option value="">{{ selectOption }}</option>
     </select>
-    <span class="form-label" aria-hidden="true">{{ label }}</span>
+    <span v-show="!hideLabel" class="form-label">
+      {{ label }}
+    </span>
+    <span class="icon-angle-down"></span>
     <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
     hide it. -->
     <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
@@ -71,7 +75,7 @@ except according to the terms contained in the LICENSE file.
         <slot name="after-list" :selected="selected"></slot>
       </li>
     </ul>
-  </div>
+  </label>
 </template>
 
 <script>
@@ -132,6 +136,10 @@ const props = defineProps({
   label: {
     type: String,
     required: true
+  },
+  hideLabel: {
+    type: Boolean,
+    default: false
   },
   placeholder: {
     type: Function,
@@ -419,7 +427,21 @@ const emptyMessage = computed(() => (searchValue.value === ''
 @import '../assets/scss/mixins';
 
 .multiselect {
-  select { min-width: 111px; }
+  select {
+    min-width: 111px;
+    appearance: none;
+  }
+
+  .icon-angle-down {
+    font-size: 16px;
+    color: #555555;
+    font-weight: bold;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    pointer-events: none;
+    z-index: 1;
+  }
 
   $line-height: 1;
   .dropdown-menu {

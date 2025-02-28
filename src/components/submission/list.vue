@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="submission-list">
     <loading :state="fields.initiallyLoading"/>
     <div v-show="selectedFields != null">
-      <div id="submission-list-actions">
+      <div id="submission-list-actions" class="table-actions-bar">
         <template v-if="draft">
           <button id="submission-list-test-on-device" type="button"
             class="btn btn-default" @click="$emit('toggle-qr', $event.target)">
@@ -29,17 +29,19 @@ except according to the terms contained in the LICENSE file.
             v-model:submissionDate="submissionDateRange"
             v-model:reviewState="reviewStates"
             :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
+        </form>
+        <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
           <submission-field-dropdown
-            v-if="selectedFields != null && fields.selectable.length > 11"
-            v-model="selectedFields"/>
+          v-if="selectedFields != null && fields.selectable.length > 11"
+          v-model="selectedFields"/>
         </form>
         <button id="submission-list-refresh-button" type="button"
-          class="btn btn-default" :aria-disabled="refreshing"
+          class="btn btn-outlined" :aria-disabled="refreshing"
           @click="fetchChunk(false, true)">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          {{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
-        <submission-download-button :form-version="formVersion"
+        <submission-download-button v-if="draft" :form-version="formVersion"
           :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
           :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
       </div>
@@ -306,11 +308,15 @@ export default {
           this.formVersion.submissions += this.deleted ? size : -size;
         }
       }
+    },
+    downloadModalState(newState) {
+      this.downloadModal.state = newState;
     }
   },
   created() {
     this.fetchData();
   },
+  expose: ['showDownloadModal'],
   methods: {
     // `clear` indicates whether this.odata should be cleared before sending the
     // request. `refresh` indicates whether the request is a background refresh.
@@ -502,6 +508,9 @@ export default {
       // less than the lowest size option, hence we don't need to make a request.
       if (this.odata.count < this.pageSizeOptions[0]) return;
       this.fetchChunk(false);
+    },
+    showDownloadModal() {
+      this.downloadModal.show();
     }
   }
 };
@@ -525,11 +534,9 @@ export default {
   // the download button can wrap above the other actions if the viewport is not
   // wide enough.
   gap: 10px;
-  margin-bottom: 30px;
 
-  .form-inline {
-    margin-bottom: 0;
-    padding-bottom: 0;
+  .field-dropdown-form {
+    margin-left: auto;
   }
 }
 #submission-field-dropdown {
@@ -540,7 +547,6 @@ export default {
   // Additional space between the dropdown and the refresh button
   margin-right: 5px;
 }
-#submission-download-button { margin-left: auto; }
 
 // Adjust the spacing between actions on the draft testing page.
 #submission-list-test-in-browser {

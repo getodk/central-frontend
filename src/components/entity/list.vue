@@ -11,20 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-list">
-    <div id="entity-list-actions">
+    <div id="entity-list-actions" class="table-actions-bar">
       <form class="form-inline" @submit.prevent>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
-        <button id="entity-list-refresh-button" type="button"
-          class="btn btn-default" :aria-disabled="refreshing"
-          @click="fetchChunk(false, true)">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
       </form>
-      <entity-download-button :odata-filter="deleted ? null : odataFilter"
-      :aria-disabled="deleted"
-      v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
+      <button id="entity-list-refresh-button" type="button"
+        class="btn btn-outlined" :aria-disabled="refreshing"
+        @click="fetchChunk(false, true)">
+        <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+        <spinner :state="refreshing"/>
+      </button>
     </div>
     <entity-table v-show="odataEntities.dataExists" ref="table"
       :properties="dataset.properties"
@@ -65,7 +62,6 @@ import { reactive } from 'vue';
 
 import EntityDelete from './delete.vue';
 import EntityRestore from './restore.vue';
-import EntityDownloadButton from './download-button.vue';
 import EntityFilters from './filters.vue';
 import EntityTable from './table.vue';
 import EntityUpdate from './update.vue';
@@ -87,7 +83,6 @@ export default {
   components: {
     EntityDelete,
     EntityRestore,
-    EntityDownloadButton,
     EntityFilters,
     EntityResolve,
     EntityTable,
@@ -97,9 +92,6 @@ export default {
     Spinner,
   },
   inject: ['alert'],
-  provide() {
-    return { projectId: this.projectId, datasetName: this.datasetName };
-  },
   props: {
     projectId: {
       type: String,
@@ -457,13 +449,6 @@ export default {
   flex-wrap: wrap-reverse;
 }
 #entity-list-refresh-button {
-  margin-left: 10px;
-  margin-right: 5px;
-}
-#entity-download-button {
-  // The bottom margin is for if the download button wraps above the other
-  // actions.
-  margin-bottom: 10px;
   margin-left: auto;
 }
 

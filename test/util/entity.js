@@ -22,6 +22,9 @@ export const loadEntityList = (mountOptions = {}) => {
         dataset
       }),
       router: mockRouter('')
+    },
+    global: {
+      provide: { projectId: project.id.toString(), datasetName: dataset.name }
     }
   });
   const { deleted } = mergedOptions.props;
