@@ -115,8 +115,6 @@ following cases in mind:
 */
 watch(() => props.data, removeHoverClass);
 
-
-
 const actionClick = (event) => {
   const action = event.target.closest('.btn-group .btn');
   if (action != null) {

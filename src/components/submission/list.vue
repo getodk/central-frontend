@@ -564,6 +564,10 @@ export default {
 #submission-list table:has(tbody:empty) {
   display: none;
 }
+
+#submission-table:has(tbody tr) + .empty-table-message {
+  display: none;
+}
 </style>
 
 <i18n lang="json5">

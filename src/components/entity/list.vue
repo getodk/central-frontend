@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       :aria-disabled="deleted"
       v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
     </div>
-    <entity-table v-show="showsTable" ref="table"
+    <entity-table v-show="odataEntities.dataExists" ref="table"
       :properties="dataset.properties"
       :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
       @update="showUpdate"
@@ -168,9 +168,6 @@ export default {
       return this.conflict.length === 2
         ? null
         : (this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
-    },
-    showsTable() {
-      return this.odataEntities.dataExists;
     },
     emptyTableMessage() {
       if (!this.odataEntities.dataExists) return '';
@@ -473,6 +470,10 @@ export default {
 #entity-list table:has(tbody:empty) {
     display: none;
   }
+
+#entity-table:has(tbody tr) + .empty-table-message {
+  display: none;
+}
 </style>
 
 <i18n lang="json5">
