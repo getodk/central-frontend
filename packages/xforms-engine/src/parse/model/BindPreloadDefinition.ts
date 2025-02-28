@@ -1,69 +1,29 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
-import { getPropertyKeys } from '@getodk/common/lib/objects/structure.ts';
-import { UnknownPreloadAttributeValueNotice } from '../../error/UnknownPreloadAttributeValueNotice.ts';
+import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
 import type { BindElement } from './BindElement.ts';
 
-const preloadParametersByType = {
-	uid: [null],
-	date: ['today'],
-	timestamp: ['start', 'end'],
-	property: ['deviceid', 'email', 'username', 'phonenumber'],
-} as const;
+type PartiallyKnownPreloadParameter<Known extends string> =
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	PartiallyKnownString<NonNullable<Known>> | Extract<Known, null>;
 
-const preloadParameterTypes = getPropertyKeys(preloadParametersByType);
+interface PreloadParametersByType {
+	readonly uid: string | null;
+	readonly date: PartiallyKnownPreloadParameter<'today'>;
+	readonly timestamp: PartiallyKnownPreloadParameter<'end' | 'start'>;
 
-type PreloadParametersByType = typeof preloadParametersByType;
+	readonly property: PartiallyKnownPreloadParameter<
+		// prettier-ignore
+		'deviceid' | 'email' | 'phonenumber' | 'username'
+	>;
+}
 
-type PreloadType = keyof PreloadParametersByType;
+type PreloadType = PartiallyKnownString<keyof PreloadParametersByType>;
 
-type AssertPreloadType = (type: string) => asserts type is PreloadType;
-
-const assertPreloadType: AssertPreloadType = (type) => {
-	if (!preloadParameterTypes.includes(type as PreloadType)) {
-		throw new UnknownPreloadAttributeValueNotice('jr:preload', preloadParameterTypes, type);
-	}
-};
-
-const getPreloadType = (bindElement: BindElement): PreloadType | null => {
-	const type = bindElement.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'preload');
-
-	if (type == null) {
-		return null;
-	}
-
-	assertPreloadType(type);
-
-	return type;
-};
-
-type PreloadParameter<Type extends PreloadType> = PreloadParametersByType[Type][number];
-
-type AssertPreloadParameter = <Type extends PreloadType>(
-	type: Type,
-	parameter: string | null
-) => asserts parameter is PreloadParameter<Type>;
-
-const assertPreloadParameter: AssertPreloadParameter = <Type extends PreloadType>(
-	type: Type,
-	parameter: string | null
-) => {
-	const parameters: ReadonlyArray<PreloadParameter<Type>> = preloadParametersByType[type];
-
-	if (!parameters.includes(parameter as PreloadParameter<Type>)) {
-		throw new UnknownPreloadAttributeValueNotice('jr:preloadParams', parameters, parameter);
-	}
-};
-
-const getPreloadParameter = <Type extends PreloadType>(
-	bindElement: BindElement,
-	type: Type
-): PreloadParameter<Type> => {
-	const parameter = bindElement.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'preloadParams');
-
-	assertPreloadParameter(type, parameter);
-
-	return parameter;
-};
+// prettier-ignore
+type PreloadParameter<Type extends PreloadType> =
+	Type extends keyof PreloadParametersByType
+		? PreloadParametersByType[Type]
+		: string | null;
 
 interface PreloadInput<Type extends PreloadType> {
 	readonly type: Type;
@@ -75,20 +35,21 @@ type AnyPreloadInput = {
 }[PreloadType];
 
 const getPreloadInput = (bindElement: BindElement): AnyPreloadInput | null => {
-	const type = getPreloadType(bindElement);
+	const type = bindElement.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'preload');
 
 	if (type == null) {
 		return null;
 	}
 
-	type Type = typeof type;
-
-	const parameter: PreloadParameter<Type> = getPreloadParameter(bindElement, type);
+	const parameter: PreloadParameter<typeof type> = bindElement.getAttributeNS(
+		JAVAROSA_NAMESPACE_URI,
+		'preloadParams'
+	);
 
 	return {
 		type,
 		parameter,
-	} satisfies PreloadInput<Type> as AnyPreloadInput;
+	};
 };
 
 /**
@@ -118,7 +79,7 @@ export class BindPreloadDefinition<Type extends PreloadType> implements PreloadI
 			return null;
 		}
 
-		return new this(input) satisfies BindPreloadDefinition<PreloadType> as AnyBindPreloadDefinition;
+		return new this(input);
 	}
 
 	readonly type: Type;
@@ -135,4 +96,5 @@ export type AnyBindPreloadDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| BindPreloadDefinition<'uid'>
 	| BindPreloadDefinition<'timestamp'>
-	| BindPreloadDefinition<'property'>;
+	| BindPreloadDefinition<'property'>
+	| BindPreloadDefinition<string>;
