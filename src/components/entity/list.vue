@@ -26,20 +26,28 @@ except according to the terms contained in the LICENSE file.
       :aria-disabled="deleted"
       v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
     </div>
-    <entity-table v-show="showsTable" ref="table"
+    <entity-table v-show="odataEntities.dataExists" ref="table"
       :properties="dataset.properties"
       :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
       @update="showUpdate"
       @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
-    <p v-show="showsEmptyMessage" class="empty-table-message">
-      {{ odataFilter == null ? $t('noEntities') : $t('noMatching') }}
+
+    <p v-show="emptyTableMessage" class="empty-table-message">
+      {{ emptyTableMessage }}
     </p>
     <odata-loading-message type="entity"
-      :top="top(odataEntities.dataExists ? odataEntities.value.length : 0)"
+      :top="pagination.size"
       :odata="odataEntities"
       :filter="odataFilter != null"
       :refreshing="refreshing"
       :total-count="dataset.dataExists ? dataset.entities : 0"/>
+
+    <!-- @update:page is emitted on size change as well -->
+    <pagination v-if="pagination.count > 0"
+            v-model:page="pagination.page" v-model:size="pagination.size"
+            :count="pagination.count" :size-options="pageSizeOptions"
+            :spinner="odataEntities.awaitingResponse"
+            @update:page="handlePageChange()"/>
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
@@ -53,7 +61,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { watchEffect, reactive } from 'vue';
+import { reactive } from 'vue';
 
 import EntityDelete from './delete.vue';
 import EntityRestore from './restore.vue';
@@ -64,6 +72,7 @@ import EntityUpdate from './update.vue';
 import EntityResolve from './resolve.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
+import Pagination from '../pagination.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
@@ -80,11 +89,12 @@ export default {
     EntityRestore,
     EntityDownloadButton,
     EntityFilters,
+    EntityResolve,
     EntityTable,
     EntityUpdate,
     OdataLoadingMessage,
+    Pagination,
     Spinner,
-    EntityResolve
   },
   inject: ['alert'],
   provide() {
@@ -102,11 +112,6 @@ export default {
     deleted: {
       type: Boolean,
       required: false
-    },
-    // Returns the value of the $top query parameter.
-    top: {
-      type: Function,
-      default: (loaded) => (loaded < 1000 ? 250 : 1000)
     }
   },
   emits: ['fetch-deleted-count'],
@@ -114,13 +119,6 @@ export default {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
     const { dataset, deletedEntityCount, odataEntities } = useRequestData();
-    // We do not reconcile `odataEntities` with either dataset.lastEntity or
-    // project.lastEntity.
-    watchEffect(() => {
-      if (dataset.dataExists && odataEntities.dataExists &&
-        !odataEntities.filtered)
-        dataset.entities = odataEntities.count;
-    });
 
     // Array of conflict statuses, where a conflict status is represented as a
     // boolean
@@ -135,7 +133,9 @@ export default {
 
     const { request } = useRequest();
 
-    return { dataset, odataEntities, conflict, request, deletedEntityCount };
+    const pageSizeOptions = [250, 500, 1000];
+
+    return { dataset, odataEntities, conflict, request, deletedEntityCount, pageSizeOptions };
   },
   data() {
     return {
@@ -157,44 +157,55 @@ export default {
       confirmRestore: true,
       restoreModal: modalData(),
 
-      awaitingResponses: new Set()
+      awaitingResponses: new Set(),
+
+      pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
+      now: new Date().toISOString()
     };
   },
   computed: {
     odataFilter() {
-      if (this.deleted) return '__system/deletedAt ne null';
-
       return this.conflict.length === 2
         ? null
         : (this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
     },
-    showsTable() {
-      if (!this.odataEntities.dataExists) return false;
-      const { length } = this.odataEntities.value;
-      return length !== 0 && length !== this.odataEntities.removedCount;
-    },
-    showsEmptyMessage() {
-      // If there are more entities to fetch, then we don't show the message
-      // even if all entities on the page are deleted. That case is pretty
-      // unlikely though, because the user would have had to delete 250+
-      // entities.
-      return this.odataEntities.dataExists && !this.showsTable &&
-        this.odataEntities.nextLink == null;
+    emptyTableMessage() {
+      if (!this.odataEntities.dataExists) return '';
+      if (this.odataEntities.value.length > 0) return '';
+
+      if (this.odataEntities.removedEntities.size === this.odataEntities.count && this.odataEntities.count > 0) {
+        return this.deleted ? this.$t('deletedEntity.allRestored') : this.$t('allDeleted');
+      }
+      if (this.odataEntities.removedEntities.size > 0 && this.odataEntities.value.length === 0) {
+        return this.deleted ? this.$t('deletedEntity.allRestoredOnPage') : this.$t('allDeletedOnPage');
+      }
+      return this.deleted ? this.$t('deletedEntity.emptyTable')
+        : (this.odataFilter ? this.$t('noMatching') : this.$t('noEntities'));
     }
   },
   watch: {
     odataFilter() {
       this.fetchChunk(true);
+    },
+    deleted() {
+      this.fetchChunk(true);
+    },
+    'odataEntities.count': {
+      handler() {
+        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted)
+          this.dataset.entities = this.odataEntities.count;
+      }
+    },
+    'odataEntities.removedEntities.size': {
+      handler(size) {
+        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted) {
+          this.dataset.entities = this.odataEntities.count - size;
+        }
+      }
     }
   },
   created() {
     this.fetchChunk(true);
-  },
-  mounted() {
-    document.addEventListener('scroll', this.afterScroll);
-  },
-  beforeUnmount() {
-    document.removeEventListener('scroll', this.afterScroll);
   },
   methods: {
     // `clear` indicates whether this.odataEntities should be cleared before
@@ -204,35 +215,53 @@ export default {
       this.refreshing = refresh;
       // Are we fetching the first chunk of entities or the next chunk?
       const first = clear || refresh;
+
+      if (first) {
+        this.now = new Date().toISOString();
+        this.pagination.page = 0;
+      }
+
+      // Add snapshot filters
+      let $filter = this.odataFilter ? `${this.odataFilter} and ` : '';
+      if (this.deleted) {
+        $filter += `__system/deletedAt le ${this.now}`;
+      } else {
+        $filter += `__system/createdAt le ${this.now} and `;
+        $filter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
+      }
+
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
           this.datasetName,
           {
-            $top: this.top(first ? 0 : this.odataEntities.value.length),
+            $top: this.pagination.size,
+            $skip: this.pagination.page * this.pagination.size,
             $count: true,
-            $filter: this.odataFilter,
-            $skiptoken: !first ? new URL(this.odataEntities.nextLink).searchParams.get('$skiptoken') : null
+            $filter,
+            $orderby: '__system/createdAt desc'
           }
         ),
         clear,
         patch: !first
-          ? (response) => this.odataEntities.addChunk(response.data)
+          ? (response) => this.odataEntities.replaceData(response.data, response.config)
           : null
       })
         .then(() => {
+          this.pagination.count = this.odataEntities.count;
+
           if (this.deleted) {
             this.deletedEntityCount.cancelRequest();
             if (!this.deletedEntityCount.dataExists) {
               this.deletedEntityCount.data = reactive({});
             }
-            this.deletedEntityCount.value = this.odataEntities.originalCount;
+            this.deletedEntityCount.value = this.odataEntities.count;
           }
         })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
 
-      // emit event to parent component to re-fetch deleted Submissions count
+      // emit event to parent component to re-fetch deleted Entity count
       if (refresh && !this.deleted) {
         this.$emit('fetch-deleted-count');
       }
@@ -338,6 +367,8 @@ export default {
           this.alert.success(this.$t('alert.entityDeleted', { label }));
           if (confirm != null) this.confirmDelete = confirm;
 
+          this.odataEntities.removedEntities.add(uuid);
+
           /* Before doing a couple more things, we first determine whether
           this.odataEntities.value still includes the entity and if so, what the
           current index of the entity is. If a request to refresh
@@ -351,8 +382,8 @@ export default {
             ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
             : -1;
           if (index !== -1) {
-            this.odataEntities.countRemoved();
             this.$refs.table.afterDelete(index);
+            this.odataEntities.value.splice(index, 1);
           }
         })
         .catch(noop)
@@ -385,13 +416,15 @@ export default {
           this.alert.success(this.$t('alert.entityRestored', { label }));
           if (confirm != null) this.confirmRestore = confirm;
 
+          this.odataEntities.removedEntities.add(uuid);
+
           // See the comments in requestDelete().
           const index = this.odataEntities.dataExists
             ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
             : -1;
           if (index !== -1) {
-            this.odataEntities.countRemoved();
             this.$refs.table.afterDelete(index);
+            this.odataEntities.value.splice(index, 1);
           }
         })
         .catch(noop)
@@ -399,16 +432,11 @@ export default {
           this.awaitingResponses.delete(uuid);
         });
     },
-    scrolledToBottom() {
-      // Using pageYOffset rather than scrollY in order to support IE.
-      return window.pageYOffset + window.innerHeight >=
-        document.body.offsetHeight - 5;
-    },
-    afterScroll() {
-      if (this.dataset.dataExists && this.odataEntities.dataExists &&
-        this.odataEntities.nextLink &&
-        !this.odataEntities.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk(false);
+    handlePageChange() {
+      // This function is called for size change as well. So when the total number of entities are
+      // less than the lowest size option, hence we don't need to make a request.
+      if (this.odataEntities.count < this.pageSizeOptions[0]) return;
+      this.fetchChunk(false);
     }
   }
 };
@@ -438,6 +466,14 @@ export default {
   margin-bottom: 10px;
   margin-left: auto;
 }
+
+#entity-list table:has(tbody:empty) {
+    display: none;
+  }
+
+#entity-table:has(tbody tr) + .empty-table-message {
+  display: none;
+}
 </style>
 
 <i18n lang="json5">
@@ -446,11 +482,18 @@ export default {
     // This text is shown when there are no Entities to show in a table.
     "noEntities": "There are no Entities to show.",
     "noMatching": "There are no matching Entities.",
+    "allDeleted": "All Entities are deleted.",
+    "allDeletedOnPage": "All Entities on the page have been deleted.",
     "alert": {
       "delete": "Entity “{label}” has been deleted."
     },
     "filterDisabledMessage": "Filtering is unavailable for deleted Entities",
     "downloadDisabled": "Download is unavailable for deleted Entities",
+    "deletedEntity": {
+      "emptyTable": "There are no deleted Entities.",
+      "allRestored": "All deleted Entities are undeleted.",
+      "allRestoredOnPage": "All Entities on the page have been undeleted."
+    }
   }
 }
 </i18n>

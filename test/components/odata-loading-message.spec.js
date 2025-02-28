@@ -10,12 +10,12 @@ describe('OdataLoadingMessage', () => {
     ['Loading Submissions…',                                  { dataExists: false, awaitingResponse: true, top: 0, refreshing: false, filter: false, totalCount: 0 }],
     ['Loading 10 Submissions…',                               { dataExists: false, awaitingResponse: true, top: 250, refreshing: false, filter: false, totalCount: 10 }],
     ['Loading the first 10 of 100 Submissions…',              { dataExists: false, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 100 }],
-    ['Loading 10 more of 90 remaining Submissions…',          { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 100, originalCount: 100, dataLength: 10 }],
-    ['Loading the last 5 Submissions…',                       { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 15, originalCount: 15, dataLength: 10 }],
-    ['Loading the last Submission…',                          { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 11, originalCount: 11, dataLength: 10 }],
-    ['Loading 10 more of 90 remaining matching Submissions…', { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 100, originalCount: 100, dataLength: 10 }],
-    ['Loading the last 5 matching Submissions…',              { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 15, originalCount: 15, dataLength: 10 }],
-    ['Loading the last matching Submission…',                 { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 11, originalCount: 11, dataLength: 10 }],
+    ['',                                                      { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 100, originalCount: 100, dataLength: 10 }],
+    ['',                                                      { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 15, originalCount: 15, dataLength: 10 }],
+    ['',                                                      { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: false, totalCount: 11, originalCount: 11, dataLength: 10 }],
+    ['',                                                      { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 100, originalCount: 100, dataLength: 10 }],
+    ['',                                                      { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 15, originalCount: 15, dataLength: 10 }],
+    ['',                                                      { dataExists: true, awaitingResponse: true, top: 10, refreshing: false, filter: true, totalCount: 11, originalCount: 11, dataLength: 10 }],
 
     ['Loading Entities…',                                     { dataExists: false, awaitingResponse: true, type: 'entity', top: 0, refreshing: false, filter: false, totalCount: 0 }],
     ['Loading matching Entities…',                            { dataExists: false, awaitingResponse: true, type: 'entity', top: 0, refreshing: false, filter: true, totalCount: 0 }]

@@ -29,10 +29,10 @@ except according to the terms contained in the LICENSE file.
       <th>{{ $t('header.instanceId') }}</th>
     </template>
 
-    <template #data-frozen="{ data, index }">
+    <template #data-frozen="{ data }">
       <submission-metadata-row :project-id="projectId" :xml-form-id="xmlFormId"
         :draft="draft" :submission="data" :deleted="deleted" :awaiting-response="awaitingDeletedResponses.has(data.__id)"
-        :row-number="odata.originalCount - index" :verbs="project.verbs"/>
+        :row-number="data.__system.rowNumber" :verbs="project.verbs"/>
     </template>
     <template #data-scrolling="{ data }">
       <submission-data-row :project-id="projectId" :xml-form-id="xmlFormId"
