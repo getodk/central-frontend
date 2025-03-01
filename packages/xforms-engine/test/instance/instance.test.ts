@@ -13,8 +13,8 @@ import {
 import { createRoot } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { createInstance } from '../../src/entrypoints/createInstance.ts';
 import type { AnyInputNode, AnyNode, RootNode } from '../../src/index.ts';
-import { initializeForm } from '../../src/index.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 import type { AnyNode as AnyPrimaryInstanceNode } from '../../src/instance/hierarchy.ts';
@@ -34,25 +34,25 @@ interface IntializedTestForm {
 
 const initializeTestForm = async (xformXML: string): Promise<IntializedTestForm> => {
 	return createRoot(async (dispose) => {
-		const rootNode = await initializeForm(xformXML, {
-			config: {
+		const { root } = await createInstance(xformXML, {
+			instance: {
 				stateFactory: createMutable,
 			},
 		});
 
 		let internalRoot: Root;
 
-		if (rootNode instanceof Root) {
-			internalRoot = rootNode;
+		if (root instanceof Root) {
+			internalRoot = root;
 		} else {
 			expect.fail(
-				'Instance created with `initializeForm` is not an instance of `Root`. Testing internals will likely fail!'
+				'Instance created with `createInstance` is not an instance of `Root`. Testing internals will likely fail!'
 			);
 		}
 
 		return {
 			dispose,
-			rootNode,
+			rootNode: root,
 			internalRoot,
 		};
 	});

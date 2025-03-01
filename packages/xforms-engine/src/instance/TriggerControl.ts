@@ -76,10 +76,6 @@ export class TriggerControl
 
 		this.appearances = definition.bodyElement.appearances;
 
-		const sharedStateOptions = {
-			clientStateFactory: this.engineConfig.stateFactory,
-		};
-
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -95,7 +91,7 @@ export class TriggerControl
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
 			},
-			sharedStateOptions
+			this.instanceConfig
 		);
 
 		this.state = state;

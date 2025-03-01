@@ -109,10 +109,6 @@ export class InputControl<V extends ValueType = ValueType>
 		this.appearances = definition.bodyElement.appearances;
 		this.nodeOptions = nodeOptionsFactoryByType[definition.valueType](definition.bodyElement);
 
-		const sharedStateOptions = {
-			clientStateFactory: this.engineConfig.stateFactory,
-		};
-
 		const state = createSharedNodeState(
 			this.scope,
 			{
@@ -128,7 +124,7 @@ export class InputControl<V extends ValueType = ValueType>
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
 			},
-			sharedStateOptions
+			this.instanceConfig
 		);
 
 		this.state = state;

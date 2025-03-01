@@ -16,7 +16,8 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { VALIDATION_TEXT } from '../../../src/client/constants.ts';
-import { initializeForm, type ValidationCondition } from '../../../src/index.ts';
+import type { ValidationCondition } from '../../../src/client/validation.ts';
+import { createInstance } from '../../../src/entrypoints/createInstance.ts';
 import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
 
 describe('createAggregatedViolations - reactive aggregated `constraint` and `required` validation violations on ancestor nodes', () => {
@@ -96,8 +97,8 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 	describe('check assumptions: ensure observing violation state is effective', () => {
 		it('observes violations of a direct string input child', async () => {
 			const observed = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(definition.asXml(), {
-					config: {
+				const { root } = await createInstance(definition.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});
@@ -159,8 +160,8 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 
 		it('observes violations of a direct select child', async () => {
 			const observed = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(definition.asXml(), {
-					config: {
+				const { root } = await createInstance(definition.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});
@@ -224,8 +225,8 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 	describe('direct children', () => {
 		it('reactively updates when a direct string input child becomes valid', async () => {
 			const observed = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(definition.asXml(), {
-					config: {
+				const { root } = await createInstance(definition.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});
@@ -302,8 +303,8 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 
 		it('reactively updates when a direct select child becomes valid', async () => {
 			const observed = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(definition.asXml(), {
-					config: {
+				const { root } = await createInstance(definition.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});
@@ -388,8 +389,8 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 	describe('deeper descendants', () => {
 		it('reactively updates when a deeper string input descendant becomes valid', async () => {
 			const observed = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(definition.asXml(), {
-					config: {
+				const { root } = await createInstance(definition.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});
@@ -483,8 +484,8 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 
 		it('reactively updates when a deeper select descendant becomes valid', async () => {
 			const observed = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(definition.asXml(), {
-					config: {
+				const { root } = await createInstance(definition.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});

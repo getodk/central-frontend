@@ -23,12 +23,8 @@ export class RepeatRangeUncontrolled
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;
-
 		this.addChildren(-1, definition.instances);
-
-		this.validationState = createAggregatedViolations(this, {
-			clientStateFactory: this.engineConfig.stateFactory,
-		});
+		this.validationState = createAggregatedViolations(this, this.instanceConfig);
 	}
 
 	// RepeatRangeUncontrolledNode

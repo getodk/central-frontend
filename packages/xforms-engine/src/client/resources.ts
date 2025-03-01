@@ -1,5 +1,5 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import type { initializeForm } from '../instance/index.ts';
+import type { loadForm } from '../entrypoints/loadForm.ts';
 
 interface FetchResourceHeadersIterator<T>
 	extends IteratorObject<
@@ -85,7 +85,7 @@ export interface FetchResourceResponseHeaders {
  *
  * Furthermore, if the engine intends to read {@link body} (or its indirect
  * {@link blob} or {@link text} consumers), it will do so in the course of a
- * client's call to {@link initializeForm}, and before the
+ * client's call to {@link loadForm}, and before the
  * {@link Promise<PrimaryInstance>} returned by that call is resolved.
  */
 export interface FetchResourceResponse {

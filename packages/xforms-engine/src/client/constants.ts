@@ -1,21 +1,19 @@
-import type { PrimaryInstance } from '../instance/PrimaryInstance.ts';
-import type { InitializeForm } from './index.ts';
+import type { LoadForm } from './form/LoadForm.ts';
 import type { ValidationTextRole } from './TextRange.ts';
 
 export const MISSING_RESOURCE_BEHAVIOR = {
 	/**
-	 * When this behavior is configured, {@link InitializeForm | initializing} a
-	 * {@link PrimaryInstance} for a form which references any **missing**
-	 * resources will fail, producing an error to the calling client.
+	 * When this behavior is configured, {@link LoadForm | loading a form} which
+	 * references any **missing** resources will fail, producing an error to the
+	 * calling client.
 	 *
 	 * @see {@link MissingResourceBehavior}
 	 */
 	ERROR: 'ERROR',
 
 	/**
-	 * When this behavior is configured, {@link InitializeForm | initializing} a
-	 * {@link PrimaryInstance} for a form which references any **missing**
-	 * resources will succeed (producing a warning).
+	 * When this behavior is configured, {@link LoadForm | loading a form} which
+	 * references any **missing** resources will succeed (producing a warning).
 	 *
 	 * Such missing resources will be parsed as if they are blank, as appropriate
 	 * for the resource's XForm semantic usage and/or format.
@@ -39,8 +37,8 @@ export type MissingResourceBehaviorBlank = typeof MISSING_RESOURCE_BEHAVIOR.BLAN
 export type MissingResourceBehaviorDefault = typeof MISSING_RESOURCE_BEHAVIOR.DEFAULT;
 
 /**
- * Specifies behavior for {@link InitializeForm | initializing} a form's
- * {@link PrimaryInstance} which references any **missing** resources.
+ * Specifies behavior for {@link LoadForm | loading a form} which references any
+ * **missing** resources.
  *
  * Here the term "missing" is consistent with
  * {@link https://www.rfc-editor.org/rfc/rfc9110#status.404 | HTTP 404 status}
