@@ -9,7 +9,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import type { EngineConfig, InitializeFormOptions } from '@getodk/xforms-engine';
+import type { LoadFormOptions } from '@getodk/xforms-engine';
 import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -175,8 +175,7 @@ describe('ExternalSecondaryInstanceParseTest.java', () => {
 		 * - Insofar as we may find ourselves implementing similar logic (albeit
 		 *   serving other purposes), how can we establish a clear interface
 		 *   contract around behaviors like this? Should it be more consistent? Does
-		 *   our current {@link EngineConfig.fetchFormDefinition}
-		 *   option—configurable in {@link InitializeFormOptions}—provide enough
+		 *   our current {@link LoadFormOptions.fetchFormDefinition} provide enough
 		 *   informational surface area to communicate such intent (and allow both
 		 *   clients and engine alike to have clarity of that intent at
 		 *   call/handling sites)?

@@ -1,12 +1,12 @@
 import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type {
-	EngineConfig,
 	FormResource,
+	LoadFormOptions,
 	OpaqueReactiveObjectFactory,
 	RootNode,
 } from '@getodk/xforms-engine';
-import { initializeForm } from '@getodk/xforms-engine';
+import { createInstance } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
 import { createRoot, getOwner, runWithOwner } from 'solid-js';
 import type { MissingResourceBehavior } from '../../../xforms-engine/dist/client/constants';
@@ -62,7 +62,7 @@ export interface InitializeTestFormOptions {
 
 const defaultConfig = {
 	fetchFormDefinition: fetchFormDefinitionStub,
-} as const satisfies Omit<EngineConfig, 'stateFactory'>;
+} as const satisfies LoadFormOptions;
 
 interface InitializedTestForm {
 	readonly instanceRoot: RootNode;
@@ -82,19 +82,21 @@ export const initializeTestForm = async (
 		}
 
 		const formResource = await getFormResource(testForm);
-		const instanceRoot = await runWithOwner(owner, async () => {
-			return initializeForm(formResource, {
-				config: {
+		const instance = await runWithOwner(owner, async () => {
+			return createInstance(formResource, {
+				form: {
 					...defaultConfig,
 					fetchFormAttachment: options.resourceService.handleRequest,
 					missingResourceBehavior: options.missingResourceBehavior,
+				},
+				instance: {
 					stateFactory: options.stateFactory,
 				},
 			});
 		})!;
 
 		return {
-			instanceRoot,
+			instanceRoot: instance.root,
 			owner,
 			dispose,
 		};
