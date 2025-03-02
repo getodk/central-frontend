@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type {
 	ChunkedInstancePayload,
+	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
+	RootNode,
 } from '@getodk/xforms-engine';
-import { initializeForm, type FetchFormAttachment, type RootNode } from '@getodk/xforms-engine';
+import { loadForm } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
@@ -107,19 +109,30 @@ const odkForm = ref<RootNode>();
 const submitPressed = ref(false);
 const initializeFormError = ref<FormInitializationError | null>();
 
-initializeForm(props.formXml, {
-	config: {
-		fetchFormAttachment: props.fetchFormAttachment,
-		missingResourceBehavior: props.missingResourceBehavior,
-		stateFactory: reactive,
-	},
-})
-	.then((f) => {
-		odkForm.value = f;
-	})
-	.catch((cause) => {
-		initializeFormError.value = new FormInitializationError(cause);
+const init = async () => {
+	const { formXml, fetchFormAttachment, missingResourceBehavior } = props;
+
+	const formResult = await loadForm(formXml, {
+		fetchFormAttachment,
+		missingResourceBehavior,
 	});
+
+	if (formResult.status === 'failure') {
+		initializeFormError.value = FormInitializationError.fromError(formResult.error);
+
+		return;
+	}
+
+	try {
+		const { root } = formResult.createInstance({ stateFactory: reactive });
+
+		odkForm.value = root;
+	} catch (error) {
+		initializeFormError.value = FormInitializationError.from(error);
+	}
+};
+
+void init();
 
 const handleSubmit = () => {
 	const root = odkForm.value;
