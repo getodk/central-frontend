@@ -32,6 +32,7 @@ export interface RankDefinition<V extends ValueType = ValueType> extends LeafNod
 export interface RankNode extends BaseValueNode<'string', readonly string[]> {
 	readonly nodeType: 'rank';
 	readonly appearances: UnknownAppearanceDefinition;
+	readonly nodeOptions: null;
 	readonly valueType: 'string';
 	readonly definition: RankDefinition<'string'>;
 	readonly root: RootNode;

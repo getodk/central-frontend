@@ -760,7 +760,7 @@ describe('ChildVaccinationTest.java', () => {
 
 			scenario.next('/data/not_single');
 			scenario.next('/data/not_single/gps');
-			scenario.answer('1.234 5.678');
+			scenario.answer('1.234 5.678 0 2.3'); // an accuracy of 0m or greater than 5m makes a second geopoint question relevant
 			scenario.next('/data/building_name');
 			scenario.answer('Some building');
 			scenario.next('/data/full_address1');

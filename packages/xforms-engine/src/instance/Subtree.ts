@@ -49,6 +49,7 @@ export class Subtree
 	// SubtreeNode
 	readonly nodeType = 'subtree';
 	readonly appearances = null;
+	readonly nodeOptions = null;
 	readonly currentState: MaterializedChildren<CurrentState<SubtreeStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
 	readonly submissionState: SubmissionState;

@@ -5,6 +5,7 @@ import type {
 	InputNode,
 	InputNodeAppearances,
 	InputNodeInputValue,
+	InputNodeOptions,
 } from '../client/InputNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { ValueType } from '../client/ValueType.ts';
@@ -17,16 +18,52 @@ import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedN
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
-import type { Root } from './Root.ts';
+import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
-import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ValidationContext } from './internal-api/ValidationContext.ts';
+import type { Root } from './Root.ts';
 
 export type AnyInputDefinition = {
 	[V in ValueType]: InputDefinition<V>;
 }[ValueType];
+
+const stringInputNodeOptions = (control: InputControlDefinition): InputNodeOptions<'string'> => ({
+	rows: control.rows,
+});
+
+const geoInputNodeOptions = (
+	control: InputControlDefinition
+): InputNodeOptions<'geopoint' | 'geoshape' | 'geotrace'> => ({
+	accuracyThreshold: control.accuracyThreshold,
+	unacceptableAccuracyThreshold: control.unacceptableAccuracyThreshold,
+});
+
+type NodeOptionsFactory<V extends ValueType> = (
+	controlDefinition: InputControlDefinition
+) => InputNodeOptions<V>;
+
+type NodeOptionsFactoryByType = {
+	[V in ValueType]: NodeOptionsFactory<V>;
+};
+
+const nodeOptionsFactoryByType: NodeOptionsFactoryByType = {
+	string: stringInputNodeOptions,
+	int: () => null,
+	boolean: () => null,
+	decimal: () => null,
+	date: () => null,
+	time: () => null,
+	dateTime: () => null,
+	geopoint: geoInputNodeOptions,
+	geotrace: geoInputNodeOptions,
+	geoshape: geoInputNodeOptions,
+	binary: () => null,
+	barcode: () => null,
+	intent: () => null,
+};
 
 interface InputControlStateSpec<V extends ValueType> extends ValueNodeStateSpec<RuntimeValue<V>> {
 	readonly label: Accessor<TextRange<'label'> | null>;
@@ -61,6 +98,7 @@ export class InputControl<V extends ValueType = ValueType>
 	// InputNode
 	readonly nodeType = 'input';
 	readonly appearances: InputNodeAppearances;
+	readonly nodeOptions: InputNodeOptions<V>;
 	readonly currentState: CurrentState<InputControlStateSpec<V>>;
 
 	constructor(parent: GeneralParentNode, definition: InputDefinition<V>) {
@@ -69,6 +107,7 @@ export class InputControl<V extends ValueType = ValueType>
 		super(parent, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
+		this.nodeOptions = nodeOptionsFactoryByType[definition.valueType](definition.bodyElement);
 
 		const sharedStateOptions = {
 			clientStateFactory: this.engineConfig.stateFactory,

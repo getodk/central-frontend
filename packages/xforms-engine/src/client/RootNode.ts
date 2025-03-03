@@ -33,6 +33,8 @@ export interface RootNode extends BaseNode {
 	 */
 	readonly appearances: null;
 
+	readonly nodeOptions: null;
+
 	/**
 	 * @todo This is another odd deviation in {@link RootNode}. Unlike
 	 * {@link languages}, it doesn't feel particularly **essential**. While it

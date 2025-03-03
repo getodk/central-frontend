@@ -25,6 +25,7 @@ export interface TriggerNode extends BaseValueNode<TriggerValueType, TriggerValu
 	readonly nodeType: 'trigger';
 	readonly definition: TriggerNodeDefinition<TriggerValueType>;
 	readonly appearances: UnknownAppearanceDefinition;
+	readonly nodeOptions: null;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: TriggerNodeState;

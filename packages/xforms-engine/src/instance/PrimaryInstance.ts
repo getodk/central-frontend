@@ -102,6 +102,7 @@ export class PrimaryInstance
 	// PrimaryInstanceDocument, ClientReactiveSubmittableInstance
 	readonly nodeType = 'primary-instance';
 	readonly appearances = null;
+	readonly nodeOptions = null;
 	readonly classes: BodyClassList;
 	readonly root: Root;
 	readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;

@@ -70,6 +70,7 @@ export type NoteNodeAppearances = NodeAppearances<NoteDefinition>;
 export interface NoteNode<V extends ValueType = ValueType> extends BaseValueNode<V, NoteValue<V>> {
 	readonly nodeType: 'note';
 	readonly appearances: NoteNodeAppearances;
+	readonly nodeOptions: null;
 	readonly definition: NoteDefinition<V>;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
@@ -77,16 +78,23 @@ export interface NoteNode<V extends ValueType = ValueType> extends BaseValueNode
 	readonly validationState: LeafNodeValidationState;
 }
 
+export type StringNoteValue = NoteValue<'string'>;
+export type IntNoteValue = NoteValue<'int'>;
+export type DecimalNoteValue = NoteValue<'decimal'>;
+export type GeopointNoteValue = NoteValue<'geopoint'>;
+
 export type StringNoteNode = NoteNode<'string'>;
 export type IntNoteNode = NoteNode<'int'>;
 export type DecimalNoteNode = NoteNode<'decimal'>;
+export type GeopointNoteNode = NoteNode<'geopoint'>;
 
 // prettier-ignore
 type SupportedNoteValueType =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| 'string'
 	| 'int'
-	| 'decimal';
+	| 'decimal'
+	| 'geopoint';
 
 type TemporaryStringValueType = Exclude<ValueType, SupportedNoteValueType>;
 
@@ -98,4 +106,5 @@ export type AnyNoteNode =
 	| StringNoteNode
 	| IntNoteNode
 	| DecimalNoteNode
+	| GeopointNoteNode
 	| TemporaryStringValueNoteNode;

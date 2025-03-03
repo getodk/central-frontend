@@ -4,6 +4,8 @@ import {
 	type DecimalInputValue,
 	type DecimalRuntimeValue,
 } from './DecimalValueCodec.ts';
+import type { GeopointInputValue, GeopointRuntimeValue } from './Geopoint/Geopoint.ts';
+import { GeopointValueCodec } from './Geopoint/GeopointValueCodec.ts';
 import { IntValueCodec, type IntInputValue, type IntRuntimeValue } from './IntValueCodec.ts';
 import { StringValueCodec } from './StringValueCodec.ts';
 import type { ValueCodec } from './ValueCodec.ts';
@@ -17,7 +19,7 @@ interface RuntimeValuesByType {
 	readonly date: string;
 	readonly time: string;
 	readonly dateTime: string;
-	readonly geopoint: string;
+	readonly geopoint: GeopointRuntimeValue;
 	readonly geotrace: string;
 	readonly geoshape: string;
 	readonly binary: string;
@@ -35,7 +37,7 @@ interface RuntimeInputValuesByType {
 	readonly date: string;
 	readonly time: string;
 	readonly dateTime: string;
-	readonly geopoint: string;
+	readonly geopoint: GeopointInputValue;
 	readonly geotrace: string;
 	readonly geoshape: string;
 	readonly binary: string;
@@ -64,7 +66,7 @@ export const sharedValueCodecs: SharedValueCodecs = {
 	date: new ValueTypePlaceholderCodec('date'),
 	time: new ValueTypePlaceholderCodec('time'),
 	dateTime: new ValueTypePlaceholderCodec('dateTime'),
-	geopoint: new ValueTypePlaceholderCodec('geopoint'),
+	geopoint: new GeopointValueCodec(),
 	geotrace: new ValueTypePlaceholderCodec('geotrace'),
 	geoshape: new ValueTypePlaceholderCodec('geoshape'),
 	binary: new ValueTypePlaceholderCodec('binary'),

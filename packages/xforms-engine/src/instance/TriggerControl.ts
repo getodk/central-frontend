@@ -68,6 +68,7 @@ export class TriggerControl
 	// TriggerNode
 	readonly nodeType = 'trigger';
 	readonly appearances: UnknownAppearanceDefinition;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<TriggerControlStateSpec>;
 
 	private constructor(parent: GeneralParentNode, definition: TriggerNodeDefinition<'string'>) {

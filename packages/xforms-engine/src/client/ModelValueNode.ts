@@ -40,6 +40,7 @@ export interface ModelValueNode<V extends ValueType = ValueType>
 	readonly nodeType: 'model-value';
 	readonly valueType: V;
 	readonly appearances: null;
+	readonly nodeOptions: null;
 	readonly definition: ModelValueDefinition<V>;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

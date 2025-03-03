@@ -62,6 +62,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 	// RangeNode
 	readonly nodeType = 'range';
 	readonly appearances: RangeNodeAppearances;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<RangeControlStateSpec<V>>;
 
 	constructor(parent: GeneralParentNode, definition: RangeNodeDefinition<V>) {

@@ -142,6 +142,8 @@ export abstract class InstanceNode<
 
 	abstract readonly appearances: NodeAppearances<Definition>;
 
+	abstract readonly nodeOptions: object | null;
+
 	abstract readonly currentState: InstanceNodeCurrentState<Spec, Child>;
 
 	abstract readonly validationState: NodeValidationState;

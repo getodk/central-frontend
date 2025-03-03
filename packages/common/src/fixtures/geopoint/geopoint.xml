@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Geopoint</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="/data/intro:label">
+            <value>The browser will display a permission prompt to allow or block location access. Click 'Allow' to enable location services. If dismissed, the prompt may not appear again unless permissions are reset in browser settings.</value>
+          </text>
+          <text id="/data/location_no_autosave:label">
+            <value>Where are you filling out the survey?</value>
+          </text>
+          <text id="/data/location_with_big_threshold:label">
+            <value>Where are you within the target area?</value>
+          </text>
+          <text id="/data/location_with_default_attributes:label">
+            <value>Where are you within the default threshold area?</value>
+          </text>
+          <text id="/data/location_with_unacceptable_accuracy_only:label">
+            <value>Try to provide a more specific location</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="/data/intro:label">
+            <value>Le navigateur affichera une demande d'autorisation pour permettre ou bloquer l'accès à la localisation. Cliquez sur 'Autoriser' pour activer les services de localisation. Si vous ignorez la demande, elle pourrait ne plus réapparaître, sauf si vous réinitialisez les autorisations dans les paramètres du navigateur.</value>
+          </text>
+          <text id="/data/location_no_autosave:label">
+            <value>Où remplissez-vous le sondage?</value>
+          </text>
+          <text id="/data/location_with_big_threshold:label">
+            <value>Où êtes-vous dans la zone cible?</value>
+          </text>
+          <text id="/data/location_with_default_attributes:label">
+            <value>Où êtes-vous dans la zone de seuil par défaut?</value>
+          </text>
+          <text id="/data/location_with_unacceptable_accuracy_only:label">
+            <value>Essayez de fournir un emplacement plus précis</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="1_geopoint" version="2025020401">
+          <intro/>
+          <location_no_autosave/>
+          <location_with_big_threshold/>
+          <location_with_default_attributes/>
+          <location_with_unacceptable_accuracy_only/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/intro" readonly="true()" type="string"/>
+      <bind nodeset="/data/location_no_autosave" type="geopoint"/>
+      <bind nodeset="/data/location_with_big_threshold" type="geopoint"/>
+      <bind nodeset="/data/location_with_default_attributes" type="geopoint" required="true()"/>
+      <bind nodeset="/data/location_with_unacceptable_accuracy_only" type="geopoint"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/intro">
+      <label ref="jr:itext('/data/intro:label')"/>
+    </input>
+    <input accuracyThreshold="0" ref="/data/location_no_autosave">
+      <label ref="jr:itext('/data/location_no_autosave:label')"/>
+      <hint>(No autosave)</hint>
+    </input>
+    <input accuracyThreshold="100" unacceptableAccuracyThreshold="400" ref="/data/location_with_big_threshold">
+      <label ref="jr:itext('/data/location_with_big_threshold:label')"/>
+      <hint>(Acceptable accuracy: 100m, unacceptable: 500m)</hint>
+    </input>
+    <input ref="/data/location_with_default_attributes">
+      <label ref="jr:itext('/data/location_with_default_attributes:label')"/>
+      <hint>(Default acceptable accuracy: 5m, unacceptable: 100m)</hint>
+    </input>
+    <input unacceptableAccuracyThreshold="7" ref="/data/location_with_unacceptable_accuracy_only">
+      <label ref="jr:itext('/data/location_with_unacceptable_accuracy_only:label')"/>
+      <hint>(Unacceptable accuracy: 7m)</hint>
+    </input>
+  </h:body>
+</h:html>

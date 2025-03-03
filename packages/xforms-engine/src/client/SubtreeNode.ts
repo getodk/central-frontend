@@ -52,6 +52,7 @@ export interface SubtreeDefinition extends BaseSubtreeDefinition {
 export interface SubtreeNode extends BaseNode {
 	readonly nodeType: 'subtree';
 	readonly appearances: null;
+	readonly nodeOptions: null;
 	readonly definition: SubtreeDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

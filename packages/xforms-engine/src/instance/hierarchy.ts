@@ -17,9 +17,7 @@ import type { UploadControl } from './unsupported/UploadControl.ts';
 export type RepeatRange = RepeatRangeControlled | RepeatRangeUncontrolled;
 
 // prettier-ignore
-export type AnyUnsupportedControl =
-	| RankControl
-	| UploadControl;
+export type AnyUnsupportedControl = UploadControl;
 
 // prettier-ignore
 export type AnyNode =
@@ -34,6 +32,7 @@ export type AnyNode =
 	| AnyModelValue
 	| AnyInputControl
 	| AnyRangeControl
+	| RankControl
 	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
@@ -68,6 +67,7 @@ export type AnyChildNode =
 	| AnyNote
 	| AnyInputControl
 	| AnyRangeControl
+	| RankControl
 	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
@@ -82,6 +82,7 @@ export type GeneralChildNode =
 	| AnyNote
 	| AnyInputControl
 	| AnyRangeControl
+	| RankControl
 	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;
@@ -93,6 +94,7 @@ export type AnyValueNode =
 	| AnyNote
 	| AnyInputControl
 	| AnyRangeControl
+	| RankControl
 	| SelectControl
 	| TriggerControl
 	| AnyUnsupportedControl;

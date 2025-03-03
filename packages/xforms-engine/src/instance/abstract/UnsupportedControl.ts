@@ -92,6 +92,7 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 	abstract override readonly nodeType: Type;
 
 	readonly appearances: UnknownAppearanceDefinition;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<UnsupportedControlStateSpec>;
 
 	get validationState(): LeafNodeValidationState {

@@ -154,6 +154,11 @@ export interface BaseNode {
 	readonly appearances: NodeAppearances<any> | null;
 
 	/**
+	 * A node can have options that determine its behavior.
+	 */
+	readonly nodeOptions: object | null;
+
+	/**
 	 * Each node has a definition which specifies aspects of the node defined in
 	 * the form. These aspects include (but are not limited to) the node's data
 	 * type, its body presentation constraints (if any), its bound nodeset, and

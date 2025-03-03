@@ -19,6 +19,7 @@
             <read_only_int />
             <read_only_int_value>3</read_only_int_value>
             <note_calc_decimal_from_int />
+            <geopoint-note>38.253094215699576 21.756382658677467 0 150</geopoint-note>
           </group>
           <meta>
             <instanceID />
@@ -38,6 +39,7 @@
       <bind nodeset="/data/group/note_calc_decimal_from_int" type="decimal"
         calculate="/data/group/read_only_int_value + 1.5" readonly="true()" />
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+      <bind nodeset="/data/group/geopoint-note" type="geopoint" readonly="true()" />
     </model>
   </h:head>
   <h:body>
@@ -75,6 +77,9 @@
       </input>
       <input ref="/data/group/note_calc_decimal_from_int">
         <label>A note with decimal type calculated from int</label>
+      </input>
+      <input ref="/data/group/geopoint-note">
+        <label>A note with geopoint type</label>
       </input>
     </group>
   </h:body>

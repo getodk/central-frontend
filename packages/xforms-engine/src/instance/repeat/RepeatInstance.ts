@@ -92,6 +92,7 @@ export class RepeatInstance
 	 * @see {@link RepeatRange.appearances}
 	 */
 	readonly appearances: RepeatInstanceNodeAppearances;
+	readonly nodeOptions = null;
 
 	readonly currentState: MaterializedChildren<
 		CurrentState<RepeatInstanceStateSpec>,

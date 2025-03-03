@@ -31,6 +31,7 @@ export type GroupNodeAppearances = NodeAppearances<GroupDefinition>;
 export interface GroupNode extends BaseNode {
 	readonly nodeType: 'group';
 	readonly appearances: GroupNodeAppearances;
+	readonly nodeOptions: null;
 	readonly definition: GroupDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

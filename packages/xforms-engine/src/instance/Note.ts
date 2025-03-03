@@ -49,6 +49,7 @@ export class Note<V extends ValueType = ValueType>
 	// NoteNode
 	readonly nodeType = 'note';
 	readonly appearances: NoteNodeAppearances;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<NoteStateSpec<V>>;
 
 	constructor(parent: GeneralParentNode, definition: NoteNodeDefinition<V>) {

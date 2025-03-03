@@ -47,6 +47,7 @@ export class ModelValue<V extends ValueType = ValueType>
 	// ModelValueNode
 	readonly nodeType = 'model-value';
 	readonly appearances = null;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<ModelValueStateSpec<V>>;
 
 	constructor(parent: GeneralParentNode, definition: ModelValueDefinition<V>) {

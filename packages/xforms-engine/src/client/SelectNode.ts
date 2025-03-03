@@ -49,6 +49,7 @@ export interface SelectNode extends BaseValueNode<'string', readonly string[]> {
 	readonly valueType: 'string';
 	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
+	readonly nodeOptions: null;
 	readonly definition: SelectDefinition<'string'>;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

@@ -88,6 +88,7 @@ export class RankControl
 	// RankNode
 	readonly nodeType = 'rank';
 	readonly appearances: UnknownAppearanceDefinition;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<RankControlStateSpec>;
 
 	private constructor(parent: GeneralParentNode, definition: RankDefinition<'string'>) {

@@ -143,6 +143,8 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 	 */
 	abstract override readonly appearances: NodeAppearances<Definition>;
 
+	readonly nodeOptions = null;
+
 	readonly currentState: MaterializedChildren<CurrentState<RepeatRangeStateSpec>, RepeatInstance>;
 
 	abstract override readonly validationState: AncestorNodeValidationState;

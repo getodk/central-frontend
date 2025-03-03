@@ -52,6 +52,7 @@ export class Group
 	// GroupNode
 	readonly nodeType = 'group';
 	readonly appearances: GroupNodeAppearances;
+	readonly nodeOptions = null;
 	readonly currentState: MaterializedChildren<CurrentState<GroupStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;
 	readonly submissionState: SubmissionState;

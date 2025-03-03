@@ -28,6 +28,7 @@ export interface RangeNode<V extends RangeValueType = RangeValueType>
 	readonly nodeType: 'range';
 	readonly valueType: V;
 	readonly appearances: RangeNodeAppearances;
+	readonly nodeOptions: null;
 	readonly definition: RangeNodeDefinition<V>;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;

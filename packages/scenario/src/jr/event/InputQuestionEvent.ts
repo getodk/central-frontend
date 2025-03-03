@@ -1,4 +1,10 @@
-import type { AnyInputNode, DecimalInputNode, IntInputNode } from '@getodk/xforms-engine';
+import type {
+	AnyInputNode,
+	DecimalInputNode,
+	GeopointInputNode,
+	GeopointInputValue,
+	IntInputNode,
+} from '@getodk/xforms-engine';
 import { InputNodeAnswer } from '../../answer/InputNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
 import type { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
@@ -40,6 +46,18 @@ export class InputQuestionEvent extends QuestionEvent<'input'> {
 		}
 	}
 
+	private answerGeopointQuestionNode(
+		node: GeopointInputNode,
+		answerValue: unknown
+	): ValueNodeAnswer {
+		if (answerValue === null || typeof answerValue === 'object') {
+			node.setValue(answerValue as GeopointInputValue);
+			return new InputNodeAnswer(node);
+		}
+
+		return this.answerDefault(node, answerValue);
+	}
+
 	answerQuestion(answerValue: unknown): ValueNodeAnswer {
 		const { node } = this;
 
@@ -47,6 +65,9 @@ export class InputQuestionEvent extends QuestionEvent<'input'> {
 			case 'int':
 			case 'decimal':
 				return this.answerNumericQuestionNode(node, answerValue);
+
+			case 'geopoint':
+				return this.answerGeopointQuestionNode(node, answerValue);
 
 			default:
 				return this.answerDefault(node, answerValue);

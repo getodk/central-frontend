@@ -4,6 +4,7 @@ import { computed, inject, provide, ref } from 'vue';
 import ControlText from '../../ControlText.vue';
 import ValidationMessage from '../../ValidationMessage.vue';
 import InputDecimal from './InputDecimal.vue';
+import InputGeopoint from './Geopoint/InputGeopoint.vue';
 import InputInt from './InputInt.vue';
 import InputNumbersAppearance from './InputNumbersAppearance.vue';
 import InputText from './InputText.vue';
@@ -35,13 +36,20 @@ provide('isInvalid', isInvalid);
 		<template v-else-if="node.valueType === 'string' && node.appearances.numbers">
 			<InputNumbersAppearance :node="node" />
 		</template>
+		<template v-else-if="node.valueType === 'geopoint'">
+			<InputGeopoint :question="node" />
+		</template>
 		<template v-else>
 			<InputText :node="node" />
 		</template>
 
-		<i v-show="isInvalid && (doneAnswering || submitPressed)" class="icon-error" />
+		<!-- Excluding Geopoint since it doesn't display an error icon in the input box like other input types. TODO: Refactor to allow each input type to determine how errors are displayed. -->
+		<i v-show="isInvalid && (doneAnswering || submitPressed) && node.valueType !== 'geopoint'" class="icon-error" />
 	</div>
-	<ValidationMessage :message="node.validationState.violation?.message.asString" :show-message="doneAnswering || submitPressed" />
+	<ValidationMessage
+		:message="node.validationState.violation?.message.asString"
+		:show-message="doneAnswering || submitPressed"
+	/>
 </template>
 
 <style scoped lang="scss">

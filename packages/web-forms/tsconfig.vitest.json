@@ -8,6 +8,7 @@
     "tests",
     "tests-examples",
     "src/components/**/*.vue",
+    "src/components/**/*.ts",
     "src/directives/**/*.ts",
     "src/lib/**/*.ts"
   ],

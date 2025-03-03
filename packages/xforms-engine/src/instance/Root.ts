@@ -76,6 +76,7 @@ export class Root
 	// RootNode
 	readonly nodeType = 'root';
 	readonly appearances = null;
+	readonly nodeOptions = null;
 	readonly classes: BodyClassList;
 	readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
 	readonly validationState: AncestorNodeValidationState;

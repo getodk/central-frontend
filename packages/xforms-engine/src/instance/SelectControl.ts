@@ -83,6 +83,7 @@ export class SelectControl
 	readonly nodeType = 'select';
 	readonly selectType: SelectType;
 	readonly appearances: SelectNodeAppearances;
+	readonly nodeOptions = null;
 	readonly currentState: CurrentState<SelectControlStateSpec>;
 
 	private constructor(parent: GeneralParentNode, definition: SelectDefinition<'string'>) {
