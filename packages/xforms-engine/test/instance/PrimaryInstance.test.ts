@@ -78,6 +78,8 @@ describe('PrimaryInstance engine representation of instance state', () => {
 	): PrimaryInstance => {
 		return scope.runTask(() => {
 			return new PrimaryInstance({
+				mode: 'create',
+				initialState: null,
 				scope,
 				model: xformDefinition.model,
 				secondaryInstances,

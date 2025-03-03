@@ -6,6 +6,7 @@ export type * from './form/FormInstanceConfig.ts';
 export type * from './form/FormResource.ts';
 export type * from './form/LoadForm.ts';
 export type * from './form/LoadFormResult.ts';
+export type * from './form/RestoreFormInstance.ts';
 export type * from './FormLanguage.ts';
 export type * from './GroupNode.ts';
 export type {

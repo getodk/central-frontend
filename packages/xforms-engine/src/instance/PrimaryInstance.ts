@@ -1,9 +1,9 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
+import type { FormInstanceInitializationMode } from '../client/form/FormInstance.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
-import type { FormInstanceInitializationMode } from '../client/index.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
@@ -32,6 +32,7 @@ import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
+import type { InitialInstanceState } from './input/InitialInstanceState.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocument.ts';
@@ -76,14 +77,33 @@ interface PrimaryInstanceStateSpec {
 	readonly activeLanguage: Accessor<ActiveLanguage>;
 }
 
-export interface PrimaryInstanceOptions {
+interface PrimaryInstanceStateInputByMode {
+	readonly create: null;
+	readonly restore: InitialInstanceState;
+}
+
+export type PrimaryInstanceInitialState<Mode extends FormInstanceInitializationMode> =
+	PrimaryInstanceStateInputByMode[Mode];
+
+export interface BasePrimaryInstanceOptions {
 	readonly scope: ReactiveScope;
 	readonly model: ModelDefinition;
 	readonly secondaryInstances: SecondaryInstancesDefinition;
+}
+
+export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptions {
 	readonly config: InstanceConfig;
 }
 
-export class PrimaryInstance
+export interface PrimaryInstanceOptions<Mode extends FormInstanceInitializationMode>
+	extends ModelessPrimaryInstanceOptions {
+	readonly mode: Mode;
+	readonly initialState: PrimaryInstanceInitialState<Mode>;
+}
+
+export class PrimaryInstance<
+		Mode extends FormInstanceInitializationMode = FormInstanceInitializationMode,
+	>
 	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root>
 	implements
 		PrimaryInstanceDocument,
@@ -135,8 +155,8 @@ export class PrimaryInstance
 	readonly evaluator: EngineXPathEvaluator;
 	override readonly contextNode = this;
 
-	constructor(options: PrimaryInstanceOptions) {
-		const { scope, model, secondaryInstances, config } = options;
+	constructor(options: PrimaryInstanceOptions<Mode>) {
+		const { mode, scope, model, secondaryInstances, config } = options;
 		const { instance: modelInstance } = model;
 		const definition = model.getRootDefinition(modelInstance);
 
@@ -145,6 +165,7 @@ export class PrimaryInstance
 			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
 		});
 
+		this.initializationMode = mode;
 		this.model = model;
 		this.instanceNode = modelInstance;
 
