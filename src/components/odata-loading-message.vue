@@ -78,19 +78,7 @@ const message = computed(() => {
       top: props.top
     });
   }
-
-  const pathPrefix = props.filter
-    ? `${props.type}.filtered`
-    : `${props.type}`;
-  const remaining = props.odata.originalCount - props.odata.value.length;
-  if (remaining > props.top) {
-    return tn(`${pathPrefix}.middle`, remaining, {
-      top: props.top
-    });
-  }
-  return remaining > 1
-    ? tn(`${pathPrefix}.last.multiple`, remaining)
-    : t(`${pathPrefix}.last.one`);
+  return null;
 });
 
 </script>

@@ -1,8 +1,8 @@
+import sinon from 'sinon';
+import { nextTick } from 'vue';
 import EnketoFill from '../../../src/components/enketo/fill.vue';
-import Spinner from '../../../src/components/spinner.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
-import SubmissionList from '../../../src/components/submission/list.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionRestore from '../../../src/components/submission/restore.vue';
@@ -12,7 +12,6 @@ import { changeMultiselect } from '../../util/trigger';
 import { load } from '../../util/http';
 import { loadSubmissionList } from '../../util/submission';
 import { mockLogin } from '../../util/session';
-import { mockResponse } from '../../util/axios';
 import { relativeUrl } from '../../util/request';
 import { testRouter } from '../../util/router';
 
@@ -20,24 +19,6 @@ import { testRouter } from '../../util/router';
 const createSubmissions = (count, factoryOptions = {}) => {
   testData.extendedForms.createPast(1, { submissions: count });
   testData.extendedSubmissions.createPast(count, factoryOptions);
-};
-const _scroll = (component, scrolledToBottom) => {
-  const method = component.vm.scrolledToBottom;
-  if (method == null) {
-    _scroll(component.getComponent(SubmissionList), scrolledToBottom);
-    return;
-  }
-  // eslint-disable-next-line no-param-reassign
-  component.vm.scrolledToBottom = () => scrolledToBottom;
-  document.dispatchEvent(new Event('scroll'));
-  // eslint-disable-next-line no-param-reassign
-  component.vm.scrolledToBottom = method;
-};
-// eslint-disable-next-line consistent-return
-const scroll = (componentOrBoolean) => {
-  if (componentOrBoolean === true || componentOrBoolean === false)
-    return (component) => _scroll(component, componentOrBoolean);
-  _scroll(componentOrBoolean, true);
 };
 
 describe('SubmissionList', () => {
@@ -146,405 +127,83 @@ describe('SubmissionList', () => {
     });
   });
 
-  describe('load by chunk', () => {
-    const checkTop = ({ url }, top) => {
-      url.should.match(new RegExp(`[?&]%24top=${top}(&|$)`));
-    };
-    const checkIds = (component, count, offset = 0) => {
-      const rows = component.findAllComponents(SubmissionDataRow);
-      rows.length.should.equal(count);
-      const submissions = testData.extendedSubmissions.sorted();
-      submissions.length.should.be.at.least(count + offset);
-      for (let i = 0; i < rows.length; i += 1) {
-        const text = rows[i].get('td:last-child').text();
-        text.should.equal(submissions[i + offset].instanceId);
-      }
-    };
-    const checkMessage = (component, text) => {
-      const message = component.get('#odata-loading-message');
-      if (text == null) {
-        message.should.be.hidden();
-      } else {
-        message.should.not.be.hidden();
-        message.get('#odata-loading-message-text').text().should.equal(text);
-
-        const spinner = component.findAllComponents(Spinner).find(wrapper =>
-          message.element.contains(wrapper.element));
-        spinner.props().state.should.be.true;
-      }
-    };
-
-    it('loads a single submission', () => {
-      createSubmissions(1);
-      return loadSubmissionList()
-        .beforeEachResponse((component, { url }) => {
-          if (url.includes('.svc/Submissions'))
-            checkMessage(component, 'Loading 1 Submission…');
-        });
-    });
-
-    it('loads all submissions if there are few of them', () => {
-      createSubmissions(2);
-      return loadSubmissionList()
-        .beforeEachResponse((component, { url }) => {
-          if (url.includes('.svc/Submissions'))
-            checkMessage(component, 'Loading 2 Submissions…');
-        });
-    });
-
-    it('initially loads only the first chunk if there are many submissions', () => {
-      createSubmissions(3);
-      return loadSubmissionList({
-        props: { top: () => 2 }
+  describe('refreshing keys', () => {
+    it('opens modal with encrpytion password after refreshing keys', () => {
+      // create project with managed encryption, form, and 0 submissions to start
+      testData.extendedProjects.createPast(1, {
+        key: testData.standardKeys.createPast(1, { managed: true }).last()
+      });
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f/submissions', { root: false }, {
+        keys: () => [] // if there are 0 submissions, backend returns empty key array
       })
-        .beforeEachResponse((component, config) => {
-          if (config.url.includes('.svc/Submissions')) {
-            checkMessage(component, 'Loading the first 2 of 3 Submissions…');
-            checkTop(config, 2);
-          }
+        .complete()
+        .request(async (app) => {
+          await app.get('#submission-download-button').trigger('click');
+          const modal = app.getComponent(SubmissionDownload);
+          await modal.find('input[type="password"]').exists().should.be.false;
+          return app.get('#submission-list-refresh-button').trigger('click');
         })
-        .afterResponses(component => {
-          checkIds(component, 2);
+        .beforeAnyResponse(() => {
+          testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
+        })
+        .respondWithData(() => testData.submissionOData(1, 0))
+        .respondWithData(() => testData.submissionDeletedOData())
+        .respondWithData(() => testData.standardKeys.sorted())
+        .complete()
+        .request(async (app) => {
+          await app.get('#submission-download-button').trigger('click');
+          const modal = app.getComponent(SubmissionDownload);
+          await modal.find('input[type="password"]').exists().should.be.true;
         });
     });
 
-    it('clicking refresh button loads only first chunk of submissions', () => {
-      createSubmissions(3);
-      return loadSubmissionList({
-        props: { top: () => 2 }
+    it('sends request for encryption keys on draft/testing submission refresh', () => {
+      // create project with managed encryption, form, and 0 submissions to start
+      testData.extendedProjects.createPast(1, {
+        key: testData.standardKeys.createPast(1, { managed: true }).last(),
+        forms: 1
+      });
+      testData.extendedForms.createPast(1, { xmlFormId: 'e', draft: true });
+      return load('/projects/1/forms/e/draft', { root: false }, {
+        keys: () => [] // if there are 0 submissions, backend returns empty key array
       })
         .complete()
         .request(component =>
           component.get('#submission-list-refresh-button').trigger('click'))
-        .beforeEachResponse((_, config) => {
-          checkTop(config, 2, 0);
+        .beforeAnyResponse(() => {
+          testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
         })
-        .respondWithData(() => testData.submissionOData(2, 0))
-        .afterResponse(component => {
-          checkIds(component, 2);
-        });
+        .respondWithData(() => testData.submissionOData(1, 0))
+        .respondWithData(() => testData.standardKeys.sorted())
+        .testRequestsInclude([{
+          url: '/v1/projects/1/forms/e/draft/submissions/keys'
+        }]);
     });
 
-    describe('scrolling', () => {
-      it('scrolling to the bottom loads the next chunk of submissions', () => {
-        createSubmissions(12);
-        // Chunk 1
-        return loadSubmissionList({
-          props: { top: (loaded) => (loaded < 8 ? 2 : 3) }
+    it('sends request for encryption keys on published submission refresh', () => {
+      // create project with managed encryption, form, and 0 submissions to start
+      testData.extendedProjects.createPast(1, {
+        key: testData.standardKeys.createPast(1, { managed: true }).last()
+      });
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f/submissions', { root: false }, {
+        keys: () => [] // if there are 0 submissions, backend returns empty key array
+      })
+        .complete()
+        .request(component =>
+          component.get('#submission-list-refresh-button').trigger('click'))
+        .beforeAnyResponse(() => {
+          testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
         })
-          .beforeEachResponse((component, { url }) => {
-            if (url.includes('.svc/Submissions'))
-              checkMessage(component, 'Loading the first 2 of 12 Submissions…');
-          })
-          .afterResponses(component => {
-            checkMessage(component, null);
-          })
-          // Chunk 2
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2);
-            checkMessage(component, 'Loading 2 more of 10 remaining Submissions…');
-          })
-          .respondWithData(() => testData.submissionOData(2, 2))
-          .afterResponse(component => {
-            checkIds(component, 4);
-            checkMessage(component, null);
-          })
-          // Chunk 3
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2, 4);
-            checkMessage(component, 'Loading 2 more of 8 remaining Submissions…');
-          })
-          .respondWithData(() => testData.submissionOData(2, 4))
-          .afterResponse(component => {
-            checkIds(component, 6);
-            checkMessage(component, null);
-          })
-          // Chunk 4 (last small chunk)
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2, 6);
-            checkMessage(component, 'Loading 2 more of 6 remaining Submissions…');
-          })
-          .respondWithData(() => testData.submissionOData(2, 6))
-          .afterResponse(component => {
-            checkIds(component, 8);
-            checkMessage(component, null);
-          })
-          // Chunk 5
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 3, 8);
-            checkMessage(component, 'Loading 3 more of 4 remaining Submissions…');
-          })
-          .respondWithData(() => testData.submissionOData(3, 8))
-          .afterResponse(component => {
-            checkIds(component, 11);
-            checkMessage(component, null);
-          })
-          // Chunk 6
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 3, 11);
-            checkMessage(component, 'Loading the last Submission…');
-          })
-          .respondWithData(() => testData.submissionOData(3, 11))
-          .afterResponse(component => {
-            checkIds(component, 12);
-            checkMessage(component, null);
-          });
-      });
-
-      it('does nothing upon scroll if keys request results in error', () => {
-        createSubmissions(251);
-        return load('/projects/1/forms/f/submissions', { root: false }, {
-          keys: mockResponse.problem
-        })
-          .complete()
-          .testNoRequest(scroll);
-      });
-
-      it('does nothing upon scroll if fields request results in error', () => {
-        createSubmissions(251);
-        return load('/projects/1/forms/f/submissions', { root: false }, {
-          fields: mockResponse.problem
-        })
-          .complete()
-          .testNoRequest(scroll);
-      });
-
-      it('does nothing upon scroll if submissions request results in error', () => {
-        createSubmissions(251);
-        return load('/projects/1/forms/f/submissions', { root: false }, {
-          odata: mockResponse.problem
-        })
-          .complete()
-          .testNoRequest(scroll);
-      });
-
-      it('does nothing after user scrolls somewhere other than bottom of page', () => {
-        createSubmissions(5);
-        return loadSubmissionList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          .testNoRequest(scroll(false));
-      });
-
-      it('clicking refresh button loads first chunk, even after scrolling', () => {
-        createSubmissions(5);
-        return loadSubmissionList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          .request(scroll)
-          .respondWithData(() => testData.submissionOData(2, 2))
-          .complete()
-          .request(component =>
-            component.get('#submission-list-refresh-button').trigger('click'))
-          .beforeEachResponse((_, config) => {
-            checkTop(config, 2, 0);
-          })
-          .respondWithData(() => testData.submissionOData(2, 0))
-          .afterResponse(component => {
-            checkIds(component, 2);
-          })
-          .request(scroll)
-          .beforeEachResponse((_, config) => {
-            checkTop(config, 2, 2);
-          })
-          .respondWithData(() => testData.submissionOData(2, 2));
-      });
-
-      it('scrolling to the bottom has no effect if awaiting response', () => {
-        createSubmissions(5);
-        return loadSubmissionList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          // Sends a request.
-          .request(scroll)
-          // This should not send a request. If it does, then the number of
-          // requests will exceed the number of responses, and the mockHttp()
-          // object will throw an error.
-          .beforeAnyResponse(scroll)
-          .respondWithData(() => testData.submissionOData(2, 2))
-          .complete()
-          .request(component =>
-            component.get('#submission-list-refresh-button').trigger('click'))
-          // Should not send a request.
-          .beforeAnyResponse(scroll)
-          .respondWithData(() => testData.submissionOData(2, 0));
-      });
-
-      it('scrolling has no effect after all submissions have been loaded', () => {
-        createSubmissions(2);
-        return loadSubmissionList({
-          props: { top: () => 2 }
-        })
-          .complete()
-          .testNoRequest(scroll);
-      });
-    });
-
-    describe('refreshing keys', () => {
-      it('opens modal with encrpytion password after refreshing keys', () => {
-        // create project with managed encryption, form, and 0 submissions to start
-        testData.extendedProjects.createPast(1, {
-          key: testData.standardKeys.createPast(1, { managed: true }).last()
-        });
-        testData.extendedForms.createPast(1);
-        return load('/projects/1/forms/f/submissions', { root: false }, {
-          keys: () => [] // if there are 0 submissions, backend returns empty key array
-        })
-          .complete()
-          .request(async (app) => {
-            await app.get('#submission-download-button').trigger('click');
-            const modal = app.getComponent(SubmissionDownload);
-            await modal.find('input[type="password"]').exists().should.be.false;
-            return app.get('#submission-list-refresh-button').trigger('click');
-          })
-          .beforeAnyResponse(() => {
-            testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-          })
-          .respondWithData(() => testData.submissionOData(1, 0))
-          .respondWithData(() => testData.submissionDeletedOData())
-          .respondWithData(() => testData.standardKeys.sorted())
-          .complete()
-          .request(async (app) => {
-            await app.get('#submission-download-button').trigger('click');
-            const modal = app.getComponent(SubmissionDownload);
-            await modal.find('input[type="password"]').exists().should.be.true;
-          });
-      });
-
-      it('sends request for encryption keys on draft submission refresh', () => {
-        // create project with managed encryption, form, and 0 submissions to start
-        testData.extendedProjects.createPast(1, {
-          key: testData.standardKeys.createPast(1, { managed: true }).last(),
-          forms: 1
-        });
-        testData.extendedForms.createPast(1, { xmlFormId: 'e', draft: true });
-        return load('/projects/1/forms/e/draft', { root: false }, {
-          keys: () => [] // if there are 0 submissions, backend returns empty key array
-        })
-          .complete()
-          .request(component =>
-            component.get('#submission-list-refresh-button').trigger('click'))
-          .beforeAnyResponse(() => {
-            testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-          })
-          .respondWithData(() => testData.submissionOData(1, 0))
-          .respondWithData(() => testData.standardKeys.sorted())
-          .testRequestsInclude([{
-            url: '/v1/projects/1/forms/e/draft/submissions/keys'
-          }]);
-      });
-
-      it('sends request for encryption keys on published submission refresh', () => {
-        // create project with managed encryption, form, and 0 submissions to start
-        testData.extendedProjects.createPast(1, {
-          key: testData.standardKeys.createPast(1, { managed: true }).last()
-        });
-        testData.extendedForms.createPast(1);
-        return load('/projects/1/forms/f/submissions', { root: false }, {
-          keys: () => [] // if there are 0 submissions, backend returns empty key array
-        })
-          .complete()
-          .request(component =>
-            component.get('#submission-list-refresh-button').trigger('click'))
-          .beforeAnyResponse(() => {
-            testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-          })
-          .respondWithData(() => testData.submissionOData(1, 0))
-          .respondWithData(() => testData.submissionDeletedOData())
-          .respondWithData(() => testData.standardKeys.sorted())
-          .testRequests([
-            null,
-            null,
-            { url: '/v1/projects/1/forms/f/submissions/keys' }
-          ]);
-      });
-    });
-
-    describe('count update', () => {
-      it.skip('scrolling to the bottom continues to fetch the next chunk', () => {
-        createSubmissions(4);
-        // 4 submissions exist. About to request $top=2, $skip=0.
-        return loadSubmissionList({
-          props: { top: () => 2 }
-        })
-          .beforeEachResponse((component, config) => {
-            if (config.url.includes('.svc/Submissions')) {
-              checkTop(config, 2, 0);
-              checkMessage(component, 'Loading the first 2 of 4 Submissions…');
-            }
-          })
-          .complete()
-          // 4 submissions exist, but 4 more are about to be created. About to
-          // request $top=2, $skip=2.
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2, 2);
-            checkMessage(component, 'Loading the last 2 Submissions…');
-          })
-          .respondWithData(() => {
-            testData.extendedSubmissions.createPast(4);
-            // This returns 2 of the 4 new submissions.
-            return testData.submissionOData(2, 2);
-          })
-          .afterResponse(component => {
-            checkIds(component, 2, 4);
-            checkMessage(component, null);
-          })
-          // 8 submissions exist. About to request $top=2, $skip=4.
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2, 4);
-            checkMessage(component, 'Loading the last 2 Submissions…');
-          })
-          // Returns the 2 submissions that are already shown in the table.
-          .respondWithData(() => testData.submissionOData(2, 4))
-          .afterResponse(component => {
-            checkIds(component, 2, 4);
-            checkMessage(component, null);
-          })
-          // 8 submissions exist. About to request $top=2, $skip=6.
-          .request(scroll)
-          .beforeEachResponse((component, config) => {
-            checkTop(config, 2, 6);
-            checkMessage(component, 'Loading the last 2 Submissions…');
-          })
-          // Returns the last 2 submissions.
-          .respondWithData(() => testData.submissionOData(2, 6))
-          .afterResponse(component => {
-            checkIds(component, 4, 4);
-            checkMessage(component, null);
-          })
-          // 8 submissions exist. No request will be sent.
-          .testNoRequest(scroll);
-      });
-
-      it('does not update requestData.odata.originalCount', () => {
-        createSubmissions(251);
-        return load('/projects/1/forms/f/submissions', { root: false })
-          .afterResponses(component => {
-            const { requestData } = component.vm.$container;
-            requestData.localResources.odata.originalCount.should.equal(251);
-            requestData.form.submissions.should.equal(251);
-          })
-          .request(scroll)
-          .respondWithData(() => {
-            testData.extendedSubmissions.createPast(1);
-            return testData.submissionOData(2, 250);
-          })
-          .afterResponse(component => {
-            const { requestData } = component.vm.$container;
-            requestData.localResources.odata.originalCount.should.equal(251);
-            requestData.form.submissions.should.equal(252);
-          });
-      });
+        .respondWithData(() => testData.submissionOData(1, 0))
+        .respondWithData(() => testData.submissionDeletedOData())
+        .respondWithData(() => testData.standardKeys.sorted())
+        .testRequests([
+          null,
+          null,
+          { url: '/v1/projects/1/forms/f/submissions/keys' }
+        ]);
     });
   });
 
@@ -565,17 +224,17 @@ describe('SubmissionList', () => {
         if (url.includes('.svc/Submissions')) should.not.exist($select(url));
       }));
 
-    it('specifies $select for the second chunk', () => {
-      testData.extendedSubmissions.createPast(2);
-      return loadSubmissionList({
-        props: { top: () => 1 }
-      })
+    it('specifies $select if the next button is clicked', () => {
+      testData.extendedSubmissions.createPast(251);
+      return loadSubmissionList()
         .complete()
-        .request(scroll)
+        .request(component => {
+          component.get('button[aria-label="Next page"]').trigger('click');
+        })
         .beforeEachResponse((_, { url }) => {
           $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
         })
-        .respondWithData(() => testData.submissionOData(1, 1));
+        .respondWithData(() => testData.submissionOData(1, 0));
     });
 
     it('specifies $select if the refresh button is clicked', () =>
@@ -738,10 +397,10 @@ describe('SubmissionList', () => {
         component.should.alert('success', 'The Submission has been deleted.');
       });
 
-      it('hides the row', async () => {
+      it('removes the row', async () => {
         const component = await del();
-        const row = component.getComponent(SubmissionMetadataRow);
-        row.element.dataset.markRowsDeleted.should.equal('true');
+        const row = component.findComponent(SubmissionMetadataRow);
+        row.exists().should.be.false;
       });
 
       it('updates the submission count', async () => {
@@ -768,21 +427,21 @@ describe('SubmissionList', () => {
       };
 
       it('hides the table', () =>
-        load('/projects/1/forms/f/submissions', { root: false })
+        load('/projects/1/forms/f/submissions', { root: false, attachTo: document.body })
           .complete()
           .request(del(1))
           .respondWithSuccess()
-          .afterResponse(component => {
-            component.get('#submission-table').should.be.visible();
+          .afterResponse(async component => {
+            component.get('#submission-table table').should.be.visible(true);
           })
           .request(del(0))
           .respondWithSuccess()
-          .afterResponse(component => {
-            component.get('#submission-table').should.be.hidden();
+          .afterResponse(async component => {
+            component.get('#submission-table table').should.be.hidden(true);
           }));
 
       it('shows a message', () =>
-        load('/projects/1/forms/f/submissions', { root: false })
+        load('/projects/1/forms/f/submissions', { root: false, attachTo: document.body })
           .complete()
           .request(del(1))
           .respondWithSuccess()
@@ -859,7 +518,7 @@ describe('SubmissionList', () => {
           })
           .respondWithSuccess()
           .afterResponse(component => {
-            component.find('.delete-button .spinner').classes().should.not.contain('active');
+            component.find('tbody tr').exists().should.be.false;
           }));
 
       it('shows the correct alert', () =>
@@ -970,8 +629,8 @@ describe('SubmissionList', () => {
 
       it('hides the row', async () => {
         const component = await restore();
-        const row = component.getComponent(SubmissionMetadataRow);
-        row.element.dataset.markRowsDeleted.should.equal('true');
+        const row = component.findComponent(SubmissionMetadataRow);
+        row.exists().should.be.false;
       });
 
       it('updates the submission count', async () => {
@@ -993,7 +652,7 @@ describe('SubmissionList', () => {
       };
 
       it('hides the table', () =>
-        load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
+        load('/projects/1/forms/f/submissions?deleted=true', { root: false, attachTo: document.body }, {
           deletedSubmissionCount: false,
           odata: testData.submissionDeletedOData
         })
@@ -1001,12 +660,12 @@ describe('SubmissionList', () => {
           .request(restore(1))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.get('#submission-table').should.be.visible();
+            component.get('#submission-table table').should.be.visible(true);
           })
           .request(restore(0))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.get('#submission-table').should.be.hidden();
+            component.get('#submission-table table').should.be.hidden(true);
           }));
 
       it('shows a message', () =>
@@ -1024,7 +683,7 @@ describe('SubmissionList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.get('.empty-table-message').should.be.visible();
-            component.get('.empty-table-message').text().should.be.equal('There are no deleted Submissions.');
+            component.get('.empty-table-message').text().should.be.equal('All deleted Submissions are undeleted.');
           }));
     });
 
@@ -1097,7 +756,7 @@ describe('SubmissionList', () => {
           })
           .respondWithSuccess()
           .afterResponse(component => {
-            component.find('.restore-button .spinner').classes().should.not.contain('active');
+            component.find('tbody tr').exists().should.be.false;
           }));
 
       it('shows the correct alert', () =>
@@ -1145,6 +804,132 @@ describe('SubmissionList', () => {
             happen. */
             component.get('#submission-table').should.be.visible();
           }));
+    });
+  });
+
+  describe('pagination', () => {
+    const checkIds = (component, count, offset = 0) => {
+      const rows = component.findAllComponents(SubmissionDataRow);
+      rows.length.should.equal(count);
+      const submissions = testData.extendedSubmissions.sorted();
+      submissions.length.should.be.at.least(count + offset);
+      for (let i = 0; i < rows.length; i += 1) {
+        const text = rows[i].get('td:last-child').text();
+        text.should.equal(submissions[i + offset].instanceId);
+      }
+    };
+
+    it('should load all submission if there are less than page size', async () => {
+      createSubmissions(3);
+      const component = await loadSubmissionList();
+      checkIds(component, 3);
+    });
+
+    it('should load next page', async () => {
+      createSubmissions(251);
+      return loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .afterResponse(component => {
+          checkIds(component, 1, 250);
+        });
+    });
+
+    it('should load previous page', async () => {
+      createSubmissions(251);
+      const clock = sinon.useFakeTimers();
+      return loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Previous page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250))
+        .afterResponse(async component => {
+          // we still use chunky array which load 25 rows at a time
+          clock.tick(1000);
+          await nextTick();
+          checkIds(component, 250);
+        });
+    });
+
+    it('should change the page size', async () => {
+      createSubmissions(251);
+      const clock = sinon.useFakeTimers();
+      return loadSubmissionList()
+        .complete()
+        .request(component => {
+          const sizeDropdown = component.find('.pagination select:has(option[value="500"])');
+          return sizeDropdown.setValue(500);
+        })
+        .respondWithData(() => testData.submissionOData(500))
+        .afterResponse(async component => {
+          clock.tick(1000);
+          await nextTick();
+          checkIds(component, 251);
+        });
+    });
+
+    it('should load first page on refresh', async () => {
+      createSubmissions(251);
+      const clock = sinon.useFakeTimers();
+      return loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .complete()
+        .request(component =>
+          component.get('#submission-list-refresh-button').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250))
+        .afterResponse(async component => {
+          // we still use chunky array which load 25 rows at a time
+          clock.tick(1000);
+          await nextTick();
+          checkIds(component, 250);
+        });
+    });
+
+    it('should show correct row number', () => {
+      createSubmissions(251);
+      const clock = sinon.useFakeTimers();
+      return loadSubmissionList()
+        .afterResponse(async component => {
+          clock.tick(1000);
+          await nextTick();
+          const rows = component.findAllComponents(SubmissionMetadataRow);
+          rows[0].find('.row-number').text().should.be.eql('251');
+          rows[249].find('.row-number').text().should.be.eql('2');
+          rows.length.should.be.eql(250);
+        })
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .afterResponse(component => {
+          const rows = component.findAllComponents(SubmissionMetadataRow);
+          rows[0].find('.row-number').text().should.be.eql('1');
+        });
+    });
+
+    it('should load correct page on clicking next twice', () => {
+      createSubmissions(501);
+      return loadSubmissionList()
+        .complete()
+        .request(async component => {
+          await component.find('button[aria-label="Next page"]').trigger('click');
+          component.find('button[aria-label="Next page"]').trigger('click');
+        })
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .respondWithData(() => testData.submissionOData(250, 500))
+        .afterResponses(async component => {
+          await nextTick();
+          checkIds(component, 1, 500);
+          component.find('.pagination select').element.value.should.be.eql('2');
+        });
     });
   });
 });

@@ -1,7 +1,7 @@
+import sinon from 'sinon';
 import { markRowChanged, markRowsChanged, px, requiredLabel, styleBox } from '../../src/util/dom';
 
 import { mount } from '../util/lifecycle';
-import { wait } from '../util/util';
 
 describe('util/dom', () => {
   describe('px()', () => {
@@ -39,6 +39,7 @@ describe('util/dom', () => {
 
   describe('markRowChanged(), markRowsChanged()', () => {
     it('toggles data-mark-rows-changed for a single row', async () => {
+      const clock = sinon.useFakeTimers();
       const table = mount({
         template: `<table>
           <tbody>
@@ -49,11 +50,12 @@ describe('util/dom', () => {
       const row = table.get('tr').element;
       markRowChanged(row);
       row.dataset.markRowsChanged.should.equal('true');
-      await wait();
+      clock.tick(6000);
       row.dataset.markRowsChanged.should.equal('false');
     });
 
     it('toggles data-mark-rows-changed for multiple rows', async () => {
+      const clock = sinon.useFakeTimers();
       const table = mount({
         template: `<table>
           <tbody>
@@ -66,7 +68,7 @@ describe('util/dom', () => {
       markRowsChanged(rows);
       rows[0].dataset.markRowsChanged.should.equal('true');
       rows[1].dataset.markRowsChanged.should.equal('true');
-      await wait();
+      clock.tick(6000);
       rows[0].dataset.markRowsChanged.should.equal('false');
       rows[1].dataset.markRowsChanged.should.equal('false');
     });

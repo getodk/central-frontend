@@ -19,7 +19,6 @@ export const loadSubmissionList = (mountOptions = {}) => {
       projectId: project.id.toString(),
       xmlFormId: form.xmlFormId,
       draft: form.publishedAt == null,
-      top: SubmissionList.props.top.default,
       deleted: false
     },
     container: {
@@ -36,11 +35,11 @@ export const loadSubmissionList = (mountOptions = {}) => {
         : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft`)
     }
   });
-  const { top, deleted } = mergedOptions.props;
+  const { deleted } = mergedOptions.props;
   return mockHttp()
     .mount(SubmissionList, mergedOptions)
     .respondWithData(() => form._fields)
-    .respondWithData(() => (deleted ? testData.submissionDeletedOData(top(0)) : testData.submissionOData(top(0))))
+    .respondWithData(() => (deleted ? testData.submissionDeletedOData() : testData.submissionOData()))
     .modify(series => {
       if (form.publishedAt == null) return series;
       return series.respondWithData(() => testData.extendedFieldKeys
