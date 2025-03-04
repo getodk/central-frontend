@@ -21,8 +21,8 @@
   "formHead": {
     "tab": {
       "publicAccess": "Public Access",
-      "editForm": "Edit Form",
-      "versions": "Versions"
+      "versions": "Versions",
+      "editForm": "Edit Form"
     }
   },
   "systemHome": {

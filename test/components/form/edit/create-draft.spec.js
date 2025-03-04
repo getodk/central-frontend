@@ -1,3 +1,5 @@
+import FormDraftTesting from '../../../../src/components/form-draft/testing.vue';
+
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
@@ -53,5 +55,10 @@ describe('FormEditCreateDraft', () => {
           url: ({ pathname }) => { pathname.should.include('.svc'); }
         }
       ]));
+
+    it('shows the draft', async () => {
+      const app = await create();
+      app.findComponent(FormDraftTesting).exists().should.be.true;
+    });
   });
 });
