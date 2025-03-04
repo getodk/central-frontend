@@ -50,8 +50,13 @@ describe('FormShow', () => {
         { url: '/v1/projects/1/forms/a%20b', extended: true },
         { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
         { url: '/v1/projects/1/forms/a%20b/draft/attachments' },
+        { url: '/v1/projects/1/forms/a%20b/assignments/app-user' },
         { url: '/v1/projects/1/forms/a%20b/versions', extended: true },
-        { url: '/v1/projects/1/forms/a%20b/assignments/app-user' }
+        { url: '/v1/projects/1/forms/a%20b/draft/submissions/keys' },
+        { url: '/v1/projects/1/forms/a%20b/draft/fields?odata=true' },
+        {
+          url: ({ pathname }) => { pathname.should.include('.svc'); }
+        }
       ]);
     });
   });
@@ -65,7 +70,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f/settings', {}, {
         attachments: () => attachments
       });
-      app.vm.$container.requestData.attachments.isEmpty().should.be.true;
+      app.vm.$container.requestData.localResources.attachments.isEmpty().should.be.true;
     });
 
     it('updates formDraft if it is defined but attachments is not', async () => {
@@ -74,7 +79,7 @@ describe('FormShow', () => {
       const app = await load('/projects/1/forms/f/settings', {}, {
         attachments: () => mockResponse.problem(404.1)
       });
-      app.vm.$container.requestData.formDraft.isEmpty().should.be.true;
+      app.vm.$container.requestData.localResources.formDraft.isEmpty().should.be.true;
     });
   });
 

@@ -82,16 +82,11 @@ export default memoizeForContainer(({ router, requestData }) => {
   // Returns the path to the primary page of a published form.
   const publishedFormPath = (projectId, xmlFormId) =>
     formPath(projectId, xmlFormId, 'submissions');
-  // Returns the path to the primary page for a form. This changes based on the
-  // current user's role, as well as whether the form has a published version.
-  const primaryFormPath = (form) => {
-    if (form.publishedAt != null) {
-      return publishedFormPath(form.projectId, form.xmlFormId);
-    } else { // eslint-disable-line no-else-return
-      const path = formPath(form.projectId, form.xmlFormId, 'draft');
-      return canRouteToLocation(path) ? path : `${path}/testing`;
-    }
-  };
+  // Returns the path to the primary page for a form. This changes based on
+  // whether the form has a published version.
+  const primaryFormPath = (form) => (form.publishedAt != null
+    ? publishedFormPath(form.projectId, form.xmlFormId)
+    : formPath(form.projectId, form.xmlFormId, 'draft'));
 
   const submissionPath = (projectId, xmlFormId, instanceId) => {
     const encodedFormId = encodeURIComponent(xmlFormId);

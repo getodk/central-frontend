@@ -8,7 +8,7 @@ describe('FormDraftTesting', () => {
   it('toggles the QR code for testing', async () => {
     mockLogin();
     testData.extendedForms.createPast(1, { draft: true });
-    const component = await load('/projects/1/forms/f/draft/testing', {
+    const component = await load('/projects/1/forms/f/draft', {
       root: false,
       attachTo: document.body
     });
@@ -21,7 +21,7 @@ describe('FormDraftTesting', () => {
   it('hides QR code on close button', async () => {
     mockLogin();
     testData.extendedForms.createPast(1, { draft: true });
-    const component = await load('/projects/1/forms/f/draft/testing', {
+    const component = await load('/projects/1/forms/f/draft', {
       root: false,
       attachTo: document.body
     });
@@ -40,7 +40,7 @@ describe('FormDraftTesting', () => {
         .createPast(1, { draft: true, submissions: 2 })
         .last();
       testData.extendedSubmissions.createPast(2, { formVersion: draft });
-      const component = await load('/projects/1/forms/f/draft/testing', {
+      const component = await load('/projects/1/forms/f/draft', {
         root: false
       });
       const text = component.getComponent(SubmissionDownloadButton).text();
@@ -48,25 +48,19 @@ describe('FormDraftTesting', () => {
     });
   });
 
-  describe('dataset preview box', () => {
+  describe('dataset preview box', async () => {
     it('shows the dataset preview box', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
-      const path = '/projects/1/forms/f/draft/testing';
-      return load(path)
-        .then(c => {
-          c.find('.panel-dialog').exists().should.be.true;
-        });
+      const app = await load('/projects/1/forms/f/draft');
+      app.find('#form-draft-testing-info .panel-dialog').exists().should.be.true;
     });
 
     it('does not show the dataset preview box', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
-      const path = '/projects/1/forms/f/draft/testing';
-      return load(path)
-        .then(c => {
-          c.find('.panel-dialog').exists().should.be.false;
-        });
+      const app = await load('/projects/1/forms/f/draft');
+      app.find('#form-draft-testing-info .panel-dialog').exists().should.be.false;
     });
   });
 });

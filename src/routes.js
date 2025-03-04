@@ -210,7 +210,7 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, formDraft, attachments, dataset } = requestData;
+const { currentUser, project, form, dataset } = requestData;
 const routes = [
   asyncRoute({
     path: '/load-error',
@@ -363,9 +363,6 @@ const routes = [
       })
     ]
   }),
-  // Note the unlikely possibility that
-  // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
-  // will be unable to navigate to a form route.
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId',
     component: 'FormShow',
@@ -443,7 +440,7 @@ const routes = [
       }),
       asyncRoute({
         path: 'draft',
-        component: 'FormDraftStatus',
+        component: 'FormEdit',
         props: true,
         loading: 'tab',
         meta: {
@@ -452,50 +449,13 @@ const routes = [
               'form.read',
               'form.update',
               'form.delete',
-              'dataset.list'
-            ]),
-            formDraft: () => formDraft.isDefined()
-          },
-          title: () => [i18n.t('common.status'), form.nameOrId]
-        }
-      }),
-      asyncRoute({
-        path: 'draft/attachments',
-        component: 'FormAttachmentList',
-        loading: 'tab',
-        props: true,
-        meta: {
-          validateData: {
-            project: () => project.permits([
-              'form.read',
-              'form.update',
               'dataset.list',
-              'entity.list'
-            ]),
-            attachments: () => attachments.isDefined() &&
-              attachments.get().size !== 0
-          },
-          title: () => [i18n.t('resource.formAttachments'), form.nameOrId]
-        }
-      }),
-      asyncRoute({
-        path: 'draft/testing',
-        component: 'FormDraftTesting',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            project: () => project.permits([
-              'form.read',
+              'entity.list',
               'submission.list',
               'submission.read'
-            ]),
-            formDraft: () => formDraft.isDefined()
+            ])
           },
-          title: () => [
-            i18n.t('formHead.draftNav.tab.testing'),
-            form.nameOrId
-          ],
+          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
           fullWidth: true
         }
       })
@@ -786,13 +746,11 @@ const routesByName = new Map();
     'ProjectSettings'
   ];
   const formRoutes = [
-    'FormVersionList',
     'FormSubmissions',
     'PublicLinkList',
-    'FormSettings',
-    'FormDraftStatus',
-    'FormAttachmentList',
-    'FormDraftTesting'
+    'FormVersionList',
+    'FormEdit',
+    'FormSettings'
   ];
   const datasetRoutes = [
     'DatasetEntities',

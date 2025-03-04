@@ -161,10 +161,11 @@ describe('SubmissionList', () => {
     it('sends request for encryption keys on draft/testing submission refresh', () => {
       // create project with managed encryption, form, and 0 submissions to start
       testData.extendedProjects.createPast(1, {
-        key: testData.standardKeys.createPast(1, { managed: true }).last()
+        key: testData.standardKeys.createPast(1, { managed: true }).last(),
+        forms: 1
       });
       testData.extendedForms.createPast(1, { xmlFormId: 'e', draft: true });
-      return load('/projects/1/forms/e/draft/testing', { root: false }, {
+      return load('/projects/1/forms/e/draft', { root: false }, {
         keys: () => [] // if there are 0 submissions, backend returns empty key array
       })
         .complete()
@@ -175,10 +176,9 @@ describe('SubmissionList', () => {
         })
         .respondWithData(() => testData.submissionOData(1, 0))
         .respondWithData(() => testData.standardKeys.sorted())
-        .testRequests([
-          null,
-          { url: '/v1/projects/1/forms/e/draft/submissions/keys' }
-        ]);
+        .testRequestsInclude([{
+          url: '/v1/projects/1/forms/e/draft/submissions/keys'
+        }]);
     });
 
     it('sends request for encryption keys on published submission refresh', () => {

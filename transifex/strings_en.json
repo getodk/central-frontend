@@ -35,21 +35,21 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": {
+        "string": "Public Access",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "versions": {
         "string": "Versions",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
-      "publicAccess": {
-        "string": "Public Access",
+      "editForm": {
+        "string": "Edit Form",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
     "draftNav": {
       "tab": {
-        "testing": {
-          "string": "Testing",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "status": {
           "string": "Status"
         }
@@ -622,6 +622,10 @@
     },
     "appUsers": {
       "string": "App Users",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "attachments": {
+      "string": "Attachments",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -3049,6 +3053,22 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
+    "FormEditCreateDraft": {
+      "title": {
+        "string": "Draft version",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "subtitle": {
+        "string": "No active Draft for this Form"
+      },
+      "toMakeChanges": {
+        "string": "to make changes to this Form or its attachments",
+        "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
+      },
+      "noEffectUntilPublish": {
+        "string": "The published version will not be affected until you publish your Draft."
+      }
+    },
     "FormHead": {
       "projectNav": {
         "action": {
@@ -3257,10 +3277,6 @@
         "fill": {
           "string": "Fill Form",
           "developer_comment": "This appears on a button linking to a fillable Form"
-        },
-        "test": {
-          "string": "Test",
-          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {

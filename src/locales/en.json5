@@ -20,13 +20,9 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Versions",
       "publicAccess": "Public Access",
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Testing"
-      }
+      "versions": "Versions",
+      "editForm": "Edit Form"
     }
   },
   "systemHome": {
@@ -300,6 +296,7 @@
   "resource": {
     "appUser": "App User",
     "appUsers": "App Users",
+    "attachments": "Attachments",
     "config": "Server Configuration",
     "entity": "Entity",
     "entities": "Entities",

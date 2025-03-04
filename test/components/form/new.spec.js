@@ -12,18 +12,19 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountOptions = () => {
-  const requestData = { project: testData.extendedProjects.last() };
-  if (testData.extendedForms.size !== 0 &&
-    testData.extendedFormVersions.last().publishedAt == null) {
-    requestData.formDraft = testData.extendedFormDrafts.last();
-  }
+  const formVersion = testData.extendedForms.size !== 0
+    ? testData.extendedFormVersions.last()
+    : null;
+  const draft = formVersion != null && formVersion.publishedAt == null;
+  const encodedFormId = draft
+    ? encodeURIComponent(formVersion.xmlFormId)
+    : null;
   return {
     props: { state: true },
     container: {
-      router: mockRouter(requestData.formDraft == null
+      router: mockRouter(!draft
         ? '/projects/1'
-        : '/projects/1/forms/f/draft'),
-      requestData
+        : `/projects/1/forms/${encodedFormId}/draft`)
     }
   };
 };
@@ -273,7 +274,7 @@ describe('FormNew', () => {
 
     it('shows the form name', () =>
       createForm().then(app => {
-        app.get('#form-head-form-nav .h1').text().should.equal('Form 2');
+        app.get('#page-head-title').text().should.equal('Form 2');
       }));
 
     it('shows a success alert', () =>
@@ -312,6 +313,7 @@ describe('FormNew', () => {
         })
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.getComponent(FormNew).props().state.should.be.false;
         });
@@ -334,6 +336,7 @@ describe('FormNew', () => {
         })
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.should.alert('success', 'Success! The new Form definition has been saved as your Draft.');
         });
@@ -359,19 +362,19 @@ describe('FormNew', () => {
         })
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondForComponent('FormEdit')
         .afterResponses(app => {
           const { version } = app.getComponent(FormVersionString).props();
           version.should.equal('v2');
         });
     });
 
-    it('shows the updated count of missing attachments', () => {
+    it('updates the list of attachments', () => {
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments.createPast(1, { blobExists: false });
       return load('/projects/1/forms/f/draft')
         .afterResponses(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().should.equal('1');
+          app.findAll('.form-attachment-row').length.should.equal(1);
         })
         .request(async (app) => {
           await app.get('#form-draft-status-upload-button').trigger('click');
@@ -387,9 +390,9 @@ describe('FormNew', () => {
         })
         .respondWithData(() => testData.extendedFormDrafts.last())
         .respondWithData(() => testData.standardFormAttachments.sorted())
+        .respondForComponent('FormEdit')
         .afterResponses(app => {
-          const badge = app.get('#form-head-draft-nav .nav-tabs .badge');
-          badge.text().should.equal('2');
+          app.findAll('.form-attachment-row').length.should.equal(2);
         });
     });
   });

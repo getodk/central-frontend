@@ -71,9 +71,9 @@ except according to the terms contained in the LICENSE file.
           </enketo-fill>
         </template>
         <template v-else>
-          <router-link :to="draftTestingPath" class="btn btn-default">
+          <router-link :to="editPath" class="btn btn-default">
             <span class="icon-pencil"></span>
-            <span>{{ $t('action.test') }}</span>
+            <span>{{ $t('action.edit') }}</span>
           </router-link>
         </template>
       </template>
@@ -132,11 +132,11 @@ export default {
         .set('hasIssues', '%27hasIssues%27')
         .set('edited', '%27edited%27');
     },
-    draftTestingPath() {
+    editPath() {
       return this.formPath(
         this.form.projectId,
         this.form.xmlFormId,
-        'draft/testing'
+        'draft'
       );
     },
     showIdForDuplicateName() {
@@ -236,9 +236,7 @@ export default {
   "en": {
     "action": {
       // This appears on a button linking to a fillable Form
-      "fill": "Fill Form",
-      // This appears on a button linking to the draft testing form page
-      "test": "Test"
+      "fill": "Fill Form"
     },
     "formClosingTip": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
   }
