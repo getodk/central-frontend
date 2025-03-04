@@ -240,15 +240,17 @@ const postSubmission = async () => {
  * event payload.
  */
 const handleSubmit = async (payload) => {
-  if (props.actionType === 'preview') {
+  // TODO: waiting for web-forms v0.7, current version doesn't return any payload.
+  // eslint-disable-next-line no-constant-condition
+  if (true || props.actionType === 'preview') {
     previewModal.show();
   } else {
     submissionModal.show();
     // eslint-disable-next-line no-unused-vars
     const { data, definition, status, violations } = payload;
     if (status !== 'ready') {
-      console.log('submission payload is not ready');
-      // TODO: what to do now?
+      // Status is not ready when Form is not valid and in that case submit button will be disabled,
+      // hence this branch should never execute.
       return;
     }
 
