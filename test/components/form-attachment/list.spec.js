@@ -1149,8 +1149,6 @@ describe('FormAttachmentList', () => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondWithData(() => testData.extendedFormDrafts.last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondForComponent('FormEdit')
           // Now that a dataset has been published, a request should be sent for
           // `datasets`, even though one wasn't sent before.
@@ -1197,8 +1195,6 @@ describe('FormAttachmentList', () => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondWithData(() => testData.extendedFormDrafts.last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondForComponent('FormEdit')
           .testRequestsInclude([{ url: '/v1/projects/1/datasets' }])
           .afterResponses(app => {

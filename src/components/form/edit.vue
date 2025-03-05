@@ -14,12 +14,12 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <form-edit-create-draft v-if="formDraft.dataExists && formDraft.isEmpty()"
-          @success="$emit('fetch-draft')"/>
+          @success="fetchDraft(true)"/>
       </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
       <form-draft-status @fetch-project="$emit('fetch-project', $event)"
-        @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
+        @fetch-form="$emit('fetch-form')" @fetch-draft="fetchDraft(true)"
         @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
       <form-attachment-list v-if="rendersAttachments"/>
       <form-draft-testing/>
@@ -35,6 +35,7 @@ import FormDraftStatus from '../form-draft/status.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 
+import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -50,11 +51,28 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets']);
+defineEmits(['fetch-project', 'fetch-form', 'fetch-linked-datasets']);
 provide('projectId', props.projectId);
 provide('xmlFormId', props.xmlFormId);
 
 const { formDraft, attachments } = useRequestData();
+
+const fetchDraft = (resend) => {
+  Promise.allSettled([
+    formDraft.request({
+      url: apiPaths.formDraft(props.projectId, props.xmlFormId),
+      extended: true,
+      fulfillProblem: ({ code }) => code === 404.1,
+      resend
+    }),
+    attachments.request({
+      url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
+      fulfillProblem: ({ code }) => code === 404.1,
+      resend
+    })
+  ]);
+};
+fetchDraft(false);
 
 const rendersAttachments = computed(() => attachments.dataExists &&
   attachments.isDefined() && attachments.get().size !== 0);
