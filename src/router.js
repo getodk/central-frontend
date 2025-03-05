@@ -135,6 +135,9 @@ router.afterEach(unlessFailure(to => {
     };
   });
 
+  // We used to have hash-based navigation, we have now switched to web-history-based
+  // navigation. To support, bookmarked links, we are redirecting old URL to the new one.
+  router.beforeEach(to => (to.path === '/' && to.hash.startsWith('#/') ? to.hash.substring(1) : true));
 
 
   //////////////////////////////////////////////////////////////////////////////
