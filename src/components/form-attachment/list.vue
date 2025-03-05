@@ -53,8 +53,8 @@ except according to the terms contained in the LICENSE file.
           <th class="form-attachment-list-action"></th>
         </tr>
       </thead>
-      <tbody v-if="form.dataExists && attachments.dataExists">
-        <form-attachment-row v-for="attachment of attachments.values()"
+      <tbody v-if="form.dataExists && draftAttachments.dataExists">
+        <form-attachment-row v-for="attachment of draftAttachments.values()"
           :key="attachment.name" :attachment="attachment"
           :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
           :dragover-attachment="dragoverAttachment"
@@ -115,9 +115,9 @@ export default {
   },
   inject: ['alert', 'projectId'],
   setup() {
-    const { project, form, attachments, datasets } = useRequestData();
+    const { project, form, draftAttachments, datasets } = useRequestData();
     const { request } = useRequest();
-    return { project, form, attachments, datasets, request };
+    return { project, form, draftAttachments, datasets, request };
   },
   data() {
     return {
@@ -177,9 +177,9 @@ export default {
       return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}`)) : null;
     },
     datasetLinkable() {
-      return this.attachments.dataExists &&
+      return this.draftAttachments.dataExists &&
         this.dsHashset &&
-        any(a => a.type === 'file' && this.dsHashset.has(a.name.replace(/\.[^.]+$/i, '')), Array.from(this.attachments.values()));
+        any(a => a.type === 'file' && this.dsHashset.has(a.name.replace(/\.[^.]+$/i, '')), Array.from(this.draftAttachments.values()));
     }
   },
   watch: {
@@ -217,7 +217,7 @@ export default {
       if (this.countOfFilesOverDropZone === 1) {
         const tr = event.target.closest('.form-attachment-row');
         this.dragoverAttachment = tr != null
-          ? this.attachments.get(tr.dataset.name)
+          ? this.draftAttachments.get(tr.dataset.name)
           : null;
       }
       this.cancelUploads();
@@ -256,7 +256,7 @@ export default {
       // files is a FileList, not an Array, hence the style of for-loop.
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
-        const attachment = this.attachments.get(file.name);
+        const attachment = this.draftAttachments.get(file.name);
         if (attachment != null)
           this.plannedUploads.push({ attachment, file });
         else
@@ -340,7 +340,7 @@ export default {
             this.alert.success(this.$tcn('alert.success', updates.length));
 
           for (const [name, updatedAt] of updates) {
-            const attachment = this.attachments.get(name);
+            const attachment = this.draftAttachments.get(name);
             attachment.blobExists = true;
             attachment.datasetExists = false;
             attachment.exists = true;

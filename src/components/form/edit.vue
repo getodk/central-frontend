@@ -56,7 +56,7 @@ defineEmits(['fetch-project', 'fetch-form', 'fetch-linked-datasets']);
 provide('projectId', props.projectId);
 provide('xmlFormId', props.xmlFormId);
 
-const { formDraft, attachments } = useRequestData();
+const { formDraft, draftAttachments } = useRequestData();
 
 const fetchDraft = (resend) => {
   formDraft.request({
@@ -70,12 +70,12 @@ fetchDraft(false);
 
 watchEffect(() => {
   if (!(formDraft.dataExists && formDraft.isDefined())) return;
-  attachments.request({
+  draftAttachments.request({
     url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
     resend: false
   }).catch(noop);
 });
 
 const rendersAttachments = computed(() =>
-  attachments.dataExists && attachments.size !== 0);
+  draftAttachments.dataExists && draftAttachments.size !== 0);
 </script>

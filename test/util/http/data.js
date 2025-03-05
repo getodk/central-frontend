@@ -107,7 +107,7 @@ const responsesByComponent = {
       ? testData.extendedFormDrafts.last()
       : mockResponse.problem(404.1)),
 
-    attachments: [
+    draftAttachments: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/attachments$/.test(url),
       () => testData.standardFormAttachments.sorted()
     ],

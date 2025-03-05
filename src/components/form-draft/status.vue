@@ -110,10 +110,10 @@ export default {
   inject: ['alert', 'projectId', 'xmlFormId'],
   emits: ['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets'],
   setup() {
-    const { form, formVersions, formDraft, attachments, datasets, formDraftDatasetDiff } = useRequestData();
+    const { form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff } = useRequestData();
     const { projectPath, publishedFormPath } = useRoutes();
     return {
-      form, formVersions, formDraft, attachments, datasets, formDraftDatasetDiff,
+      form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff,
       projectPath, publishedFormPath
     };
   },
@@ -140,7 +140,7 @@ export default {
     },
     afterUpload() {
       this.$emit('fetch-draft');
-      this.attachments.reset();
+      this.draftAttachments.reset();
       this.formDraftDatasetDiff.reset();
       this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
@@ -164,7 +164,7 @@ export default {
         this.$emit('fetch-project', true);
         this.formVersions.data = null;
         this.formDraft.setToNone();
-        this.attachments.reset();
+        this.draftAttachments.reset();
 
         this.alert.success(this.$t('alert.publish'));
       });
@@ -175,7 +175,7 @@ export default {
       if (this.form.publishedAt != null) {
         afterNextNavigation(this.$router, () => {
           this.formDraft.setToNone();
-          this.attachments.reset();
+          this.draftAttachments.reset();
           this.alert.success(this.$t('alert.abandon'));
         });
         this.$router.push(this.publishedFormPath());

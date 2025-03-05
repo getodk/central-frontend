@@ -25,14 +25,14 @@ export default () => {
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
   // Form draft attachments
-  const attachments = createResource('attachments', () => ({
+  const draftAttachments = createResource('draftAttachments', () => ({
     transformResponse: ({ data }) => data.reduce(
       (map, attachment) => map.set(attachment.name, reactive(attachment)),
       new Map()
     ),
     missingCount: computeIfExists(() => {
       let count = 0;
-      for (const attachment of attachments.values()) {
+      for (const attachment of draftAttachments.values()) {
         if (!attachment.exists) count += 1;
       }
       return count;
@@ -70,7 +70,7 @@ export default () => {
     formVersions,
     formVersionXml,
     formDraft,
-    attachments,
+    draftAttachments,
     publishedAttachments,
     publicLinks,
     formDatasetDiff,
