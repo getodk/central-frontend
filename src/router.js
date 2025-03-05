@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
+import { START_LOCATION, createRouter, createWebHistory } from 'vue-router';
 import { last } from 'ramda';
 import { watchEffect } from 'vue';
 
@@ -24,7 +24,7 @@ import { noop } from './util/util';
 import { setDocumentTitle } from './util/reactivity';
 
 export default (container, {
-  history = createWebHashHistory(),
+  history = createWebHistory(),
   scrollBehavior = createScrollBehavior()
 } = {}) => {
   const routes = createRoutes(container);
@@ -135,6 +135,9 @@ router.afterEach(unlessFailure(to => {
     };
   });
 
+  // We used to have hash-based navigation, we have now switched to web-history-based
+  // navigation. To support, bookmarked links, we are redirecting old URL to the new one.
+  router.beforeEach(to => (to.path === '/' && to.hash.startsWith('#/') ? to.hash.substring(1) : true));
 
 
   //////////////////////////////////////////////////////////////////////////////
