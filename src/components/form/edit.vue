@@ -56,7 +56,7 @@ defineEmits(['fetch-project', 'fetch-form', 'fetch-linked-datasets']);
 provide('projectId', props.projectId);
 provide('xmlFormId', props.xmlFormId);
 
-const { formDraft, draftAttachments } = useRequestData();
+const { formVersions, formDraft, draftAttachments } = useRequestData();
 
 const fetchDraft = (resend) => {
   formDraft.request({
@@ -68,12 +68,21 @@ const fetchDraft = (resend) => {
 };
 fetchDraft(false);
 
+// Most requests only need to be sent if there is a form draft. Here, we check
+// whether there is a form draft before sending additional requests.
 watchEffect(() => {
   if (!(formDraft.dataExists && formDraft.isDefined())) return;
-  draftAttachments.request({
-    url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
-    resend: false
-  }).catch(noop);
+  Promise.allSettled([
+    draftAttachments.request({
+      url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
+      resend: false
+    }),
+    formVersions.request({
+      url: apiPaths.formVersions(props.projectId, props.xmlFormId),
+      extended: true,
+      resend: false
+    })
+  ]);
 });
 
 const rendersAttachments = computed(() =>

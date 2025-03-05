@@ -87,10 +87,8 @@ import DatasetSummary from '../dataset/summary.vue';
 
 import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
-import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { modalData } from '../../util/reactivity';
-import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -126,18 +124,7 @@ export default {
       abandon: modalData()
     };
   },
-  created() {
-    this.fetchData();
-  },
   methods: {
-    fetchData() {
-      this.formVersions.request({
-        url: apiPaths.formVersions(this.projectId, this.xmlFormId),
-        extended: true,
-        resend: false
-      })
-        .catch(noop);
-    },
     afterUpload() {
       this.$emit('fetch-draft');
       this.draftAttachments.reset();
