@@ -468,8 +468,8 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.not.exist(newUpdatedAt[1]);
@@ -482,8 +482,8 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.exist(newUpdatedAt[1]);
@@ -496,8 +496,8 @@ describe('FormAttachmentList', () => {
             .afterResponse(component => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);
@@ -550,8 +550,8 @@ describe('FormAttachmentList', () => {
           .afterResponse(component => {
             const oldUpdatedAt = testData.standardFormAttachments.sorted()
               .map(attachment => attachment.updatedAt);
-            const { attachments } = component.vm.$container.requestData.localResources;
-            const newUpdatedAt = [...attachments.get().values()]
+            const { draftAttachments } = component.vm.$container.requestData.localResources;
+            const newUpdatedAt = [...draftAttachments.values()]
               .map(attachment => attachment.updatedAt);
             newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
             should.not.exist(newUpdatedAt[1]);
@@ -672,8 +672,8 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(3);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.exist(newUpdatedAt[1]);
@@ -715,8 +715,8 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(2);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.exist(newUpdatedAt[1]);
@@ -744,8 +744,8 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(1);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.not.exist(newUpdatedAt[1]);
@@ -773,8 +773,8 @@ describe('FormAttachmentList', () => {
               const component = await confirmUploads(0);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
-              const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const { draftAttachments } = component.vm.$container.requestData.localResources;
+              const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);
@@ -1149,8 +1149,6 @@ describe('FormAttachmentList', () => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondWithData(() => testData.extendedFormDrafts.last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondForComponent('FormEdit')
           // Now that a dataset has been published, a request should be sent for
           // `datasets`, even though one wasn't sent before.
@@ -1197,8 +1195,6 @@ describe('FormAttachmentList', () => {
             testData.extendedFormVersions.createNew({ draft: true });
             return { success: true };
           })
-          .respondWithData(() => testData.extendedFormDrafts.last())
-          .respondWithData(() => testData.standardFormAttachments.sorted())
           .respondForComponent('FormEdit')
           .testRequestsInclude([{ url: '/v1/projects/1/datasets' }])
           .afterResponses(app => {

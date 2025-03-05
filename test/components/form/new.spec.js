@@ -311,8 +311,6 @@ describe('FormNew', () => {
           });
           return { success: true };
         })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.getComponent(FormNew).props().state.should.be.false;
@@ -334,8 +332,6 @@ describe('FormNew', () => {
           });
           return { success: true };
         })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.should.alert('success', 'Success! The new Form definition has been saved as your Draft.');
@@ -360,8 +356,6 @@ describe('FormNew', () => {
           });
           return { success: true };
         })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondForComponent('FormEdit')
         .afterResponses(app => {
           const { version } = app.getComponent(FormVersionString).props();
@@ -388,8 +382,6 @@ describe('FormNew', () => {
           testData.standardFormAttachments.createNew({ blobExists: false });
           return { success: true };
         })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.findAll('.form-attachment-row').length.should.equal(2);

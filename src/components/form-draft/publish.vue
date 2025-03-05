@@ -125,13 +125,13 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { formVersions, attachments, resourceView, formDraftDatasetDiff } = useRequestData();
+    const { formVersions, draftAttachments, resourceView, formDraftDatasetDiff } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
 
     const { request, awaitingResponse } = useRequest();
     const { formPath } = useRoutes();
     return {
-      formVersions, formDraft, attachments, formDraftDatasetDiff,
+      formVersions, formDraft, draftAttachments, formDraftDatasetDiff,
       request, awaitingResponse, formPath
     };
   },
@@ -155,7 +155,7 @@ export default {
         version.version === this.formDraft.version);
     },
     rendersAttachmentsWarning() {
-      return this.attachments.dataExists && this.attachments.missingCount !== 0;
+      return this.draftAttachments.dataExists && this.draftAttachments.missingCount !== 0;
     },
     rendersTestingWarning() {
       return this.formDraft.dataExists && this.formDraft.submissions === 0;

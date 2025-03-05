@@ -87,10 +87,8 @@ import DatasetSummary from '../dataset/summary.vue';
 
 import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
-import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { modalData } from '../../util/reactivity';
-import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -110,10 +108,10 @@ export default {
   inject: ['alert', 'projectId', 'xmlFormId'],
   emits: ['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets'],
   setup() {
-    const { form, formVersions, formDraft, datasets, formDraftDatasetDiff } = useRequestData();
+    const { form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff } = useRequestData();
     const { projectPath, publishedFormPath } = useRoutes();
     return {
-      form, formVersions, formDraft, datasets, formDraftDatasetDiff,
+      form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff,
       projectPath, publishedFormPath
     };
   },
@@ -126,20 +124,10 @@ export default {
       abandon: modalData()
     };
   },
-  created() {
-    this.fetchData();
-  },
   methods: {
-    fetchData() {
-      this.formVersions.request({
-        url: apiPaths.formVersions(this.projectId, this.xmlFormId),
-        extended: true,
-        resend: false
-      })
-        .catch(noop);
-    },
     afterUpload() {
       this.$emit('fetch-draft');
+      this.draftAttachments.reset();
       this.formDraftDatasetDiff.reset();
       this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
@@ -163,6 +151,7 @@ export default {
         this.$emit('fetch-project', true);
         this.formVersions.data = null;
         this.formDraft.setToNone();
+        this.draftAttachments.reset();
 
         this.alert.success(this.$t('alert.publish'));
       });
@@ -173,6 +162,7 @@ export default {
       if (this.form.publishedAt != null) {
         afterNextNavigation(this.$router, () => {
           this.formDraft.setToNone();
+          this.draftAttachments.reset();
           this.alert.success(this.$t('alert.abandon'));
         });
         this.$router.push(this.publishedFormPath());

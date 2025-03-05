@@ -14,12 +14,12 @@ except according to the terms contained in the LICENSE file.
     <div class="row">
       <div class="col-xs-6">
         <form-edit-create-draft v-if="formDraft.dataExists && formDraft.isEmpty()"
-          @success="$emit('fetch-draft')"/>
+          @success="fetchDraft(true)"/>
       </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
       <form-draft-status @fetch-project="$emit('fetch-project', $event)"
-        @fetch-form="$emit('fetch-form')" @fetch-draft="$emit('fetch-draft')"
+        @fetch-form="$emit('fetch-form')" @fetch-draft="fetchDraft(true)"
         @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
       <form-attachment-list v-if="rendersAttachments"/>
       <form-draft-testing/>
@@ -28,13 +28,15 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, provide } from 'vue';
+import { computed, provide, watchEffect } from 'vue';
 
 import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -50,12 +52,39 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets']);
+defineEmits(['fetch-project', 'fetch-form', 'fetch-linked-datasets']);
 provide('projectId', props.projectId);
 provide('xmlFormId', props.xmlFormId);
 
-const { formDraft, attachments } = useRequestData();
+const { formVersions, formDraft, draftAttachments } = useRequestData();
 
-const rendersAttachments = computed(() => attachments.dataExists &&
-  attachments.isDefined() && attachments.get().size !== 0);
+const fetchDraft = (resend) => {
+  formDraft.request({
+    url: apiPaths.formDraft(props.projectId, props.xmlFormId),
+    extended: true,
+    fulfillProblem: ({ code }) => code === 404.1,
+    resend
+  }).catch(noop);
+};
+fetchDraft(false);
+
+// Most requests only need to be sent if there is a form draft. Here, we check
+// whether there is a form draft before sending additional requests.
+watchEffect(() => {
+  if (!(formDraft.dataExists && formDraft.isDefined())) return;
+  Promise.allSettled([
+    draftAttachments.request({
+      url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
+      resend: false
+    }),
+    formVersions.request({
+      url: apiPaths.formVersions(props.projectId, props.xmlFormId),
+      extended: true,
+      resend: false
+    })
+  ]);
+});
+
+const rendersAttachments = computed(() =>
+  draftAttachments.dataExists && draftAttachments.size !== 0);
 </script>

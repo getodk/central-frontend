@@ -68,12 +68,6 @@ const responsesByComponent = {
   FormShow: componentResponses({
     project: true,
     form: () => testData.extendedForms.last(),
-    formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
-      ? testData.extendedFormDrafts.last()
-      : mockResponse.problem(404.1)),
-    attachments: () => (testData.extendedFormVersions.last().publishedAt == null
-      ? testData.standardFormAttachments.sorted()
-      : mockResponse.problem(404.1)),
 
     // Conditional responses (mockHttp().respondIf())
     publishedAttachments: [
@@ -109,6 +103,14 @@ const responsesByComponent = {
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({
+    formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
+      ? testData.extendedFormDrafts.last()
+      : mockResponse.problem(404.1)),
+
+    draftAttachments: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/attachments$/.test(url),
+      () => testData.standardFormAttachments.sorted()
+    ],
     formVersions: true,
     formDraftDatasetDiff: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/dataset-diff$/.test(url),

@@ -17,8 +17,7 @@ except according to the terms contained in the LICENSE file.
       <!-- <router-view> may send its own requests before the server has
       responded to the requests from FormShow. -->
       <router-view v-show="dataExists" @fetch-project="fetchProject"
-        @fetch-form="fetchForm" @fetch-draft="fetchDraft"
-        @fetch-linked-datasets="fetchLinkedDatasets"/>
+        @fetch-form="fetchForm" @fetch-linked-datasets="fetchLinkedDatasets"/>
     </page-body>
   </div>
 </template>
@@ -51,9 +50,9 @@ const props = defineProps({
 });
 
 const { project, resourceStates } = useRequestData();
-const { form, formDraft, attachments, publishedAttachments, formDatasetDiff, appUserCount } = useForm();
+const { form, publishedAttachments, formDatasetDiff, appUserCount } = useForm();
 useDatasets();
-const { initiallyLoading, dataExists } = resourceStates([project, form, formDraft, attachments]);
+const { initiallyLoading, dataExists } = resourceStates([project, form]);
 
 const fetchProject = (resend) => {
   project.request({
@@ -68,19 +67,6 @@ const fetchForm = () => {
     extended: true
   }).catch(noop);
 };
-const fetchDraft = () => {
-  Promise.allSettled([
-    formDraft.request({
-      url: apiPaths.formDraft(props.projectId, props.xmlFormId),
-      extended: true,
-      fulfillProblem: ({ code }) => code === 404.1
-    }),
-    attachments.request({
-      url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
-      fulfillProblem: ({ code }) => code === 404.1
-    })
-  ]);
-};
 const fetchLinkedDatasets = () => {
   Promise.allSettled([
     publishedAttachments.request({
@@ -94,7 +80,6 @@ const fetchLinkedDatasets = () => {
 
 fetchProject(false);
 fetchForm();
-fetchDraft();
 // Before sending certain requests, we wait for the project response in order to
 // check whether the user has the correct permissions.
 const stopAppUsersEffect = watchEffect(() => {
