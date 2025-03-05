@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, provide } from 'vue';
+import { computed, provide, watchEffect } from 'vue';
 
 import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
@@ -36,6 +36,7 @@ import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 
 import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -58,22 +59,23 @@ provide('xmlFormId', props.xmlFormId);
 const { formDraft, attachments } = useRequestData();
 
 const fetchDraft = (resend) => {
-  Promise.allSettled([
-    formDraft.request({
-      url: apiPaths.formDraft(props.projectId, props.xmlFormId),
-      extended: true,
-      fulfillProblem: ({ code }) => code === 404.1,
-      resend
-    }),
-    attachments.request({
-      url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
-      fulfillProblem: ({ code }) => code === 404.1,
-      resend
-    })
-  ]);
+  formDraft.request({
+    url: apiPaths.formDraft(props.projectId, props.xmlFormId),
+    extended: true,
+    fulfillProblem: ({ code }) => code === 404.1,
+    resend
+  }).catch(noop);
 };
 fetchDraft(false);
 
-const rendersAttachments = computed(() => attachments.dataExists &&
-  attachments.isDefined() && attachments.get().size !== 0);
+watchEffect(() => {
+  if (!(formDraft.dataExists && formDraft.isDefined())) return;
+  attachments.request({
+    url: apiPaths.formDraftAttachments(props.projectId, props.xmlFormId),
+    resend: false
+  }).catch(noop);
+});
+
+const rendersAttachments = computed(() =>
+  attachments.dataExists && attachments.size !== 0);
 </script>

@@ -115,8 +115,7 @@ export default {
   },
   inject: ['alert', 'projectId'],
   setup() {
-    const { project, form, resourceView, datasets } = useRequestData();
-    const attachments = resourceView('attachments', (data) => data.get());
+    const { project, form, attachments, datasets } = useRequestData();
     const { request } = useRequest();
     return { project, form, attachments, datasets, request };
   },

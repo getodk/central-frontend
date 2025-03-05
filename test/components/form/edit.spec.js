@@ -10,8 +10,7 @@ describe('FormEdit', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
       return load('/projects/1/forms/a%20b/draft', { root: false })
         .testRequests([
-          { url: '/v1/projects/1/forms/a%20b/draft', extended: true },
-          { url: '/v1/projects/1/forms/a%20b/draft/attachments' }
+          { url: '/v1/projects/1/forms/a%20b/draft', extended: true }
         ]);
     });
 

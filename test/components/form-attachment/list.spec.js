@@ -469,7 +469,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.not.exist(newUpdatedAt[1]);
@@ -483,7 +483,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.exist(newUpdatedAt[1]);
@@ -497,7 +497,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);
@@ -551,7 +551,7 @@ describe('FormAttachmentList', () => {
             const oldUpdatedAt = testData.standardFormAttachments.sorted()
               .map(attachment => attachment.updatedAt);
             const { attachments } = component.vm.$container.requestData.localResources;
-            const newUpdatedAt = [...attachments.get().values()]
+            const newUpdatedAt = [...attachments.values()]
               .map(attachment => attachment.updatedAt);
             newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
             should.not.exist(newUpdatedAt[1]);
@@ -673,7 +673,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.exist(newUpdatedAt[1]);
@@ -716,7 +716,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.exist(newUpdatedAt[1]);
@@ -745,7 +745,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.not.exist(newUpdatedAt[1]);
@@ -774,7 +774,7 @@ describe('FormAttachmentList', () => {
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
               const { attachments } = component.vm.$container.requestData.localResources;
-              const newUpdatedAt = [...attachments.get().values()]
+              const newUpdatedAt = [...attachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);
