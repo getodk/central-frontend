@@ -22,7 +22,7 @@ const mountComponent = (options) => {
   const merged = mergeMountOptions(options, {
     props: {
       modelValue: ['1970-01-01', '1970-01-01'],
-      placeholder: 'Date range'
+      label: 'Date range'
     }
   });
   merged.props.modelValue = merged.props.modelValue.map(fromISO);
@@ -245,26 +245,6 @@ describe('DateRangePicker', () => {
         await component.get('.close').trigger('click');
         component.get('input').should.be.focused();
       });
-    });
-  });
-
-  describe('placeholder prop', () => {
-    it('uses the placeholder prop', () => {
-      const component = mountComponent({
-        props: { placeholder: 'My date range', required: false }
-      });
-      const { placeholder } = component.get('input').attributes();
-      placeholder.should.equal('My date range');
-      component.get('.form-label').text().should.equal('My date range');
-    });
-
-    it('appends * to the placeholder if the required prop is true', () => {
-      const component = mountComponent({
-        props: { placeholder: 'My date range', required: true }
-      });
-      const { placeholder } = component.get('input').attributes();
-      placeholder.should.equal('My date range *');
-      component.get('.form-label').text().should.equal('My date range *');
     });
   });
 

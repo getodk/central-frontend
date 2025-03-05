@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <button id="submission-download-button" type="button" class="btn btn-primary"
     @click="$emit('download')">
     <span class="icon-arrow-circle-down"></span>
-    <span>{{ text }}&hellip;</span>
+    <span>{{ $t('action.download') }}</span>
   </button>
 </template>
 
@@ -30,21 +30,6 @@ export default {
   setup() {
     const { odata } = useRequestData();
     return { odata };
-  },
-  computed: {
-    text() {
-      if (!this.filtered) {
-        if (!this.formVersion.dataExists) return '';
-        return this.$tcn(
-          'action.download.unfiltered',
-          this.formVersion.submissions
-        );
-      }
-
-      return !this.odata.dataExists
-        ? this.$t('action.download.filtered.withoutCount')
-        : this.$tcn('action.download.filtered.withCount', this.odata.count);
-    }
   }
 };
 </script>
@@ -54,15 +39,7 @@ export default {
   // @transifexKey component.SubmissionDownloadDropdown
   "en": {
     "action": {
-      "download": {
-        "unfiltered": "Download {count} Submission | Download {count} Submissions",
-        "filtered": {
-          // This is the text of a button. This text is shown when the number of
-          // matching Submissions is unknown.
-          "withoutCount": "Download matching Submissions",
-          "withCount": "Download {count} matching Submission | Download {count} matching Submissions"
-        }
-      }
+      "download": "Download"
     }
   }
 }
