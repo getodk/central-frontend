@@ -119,6 +119,8 @@ const setMarkdownHeight = () => {
 
   if (!expanded && targetHeight.value) {
     markdownRef.value.$el.style.height = `${targetHeight.value}px`;
+  } else {
+    markdownRef.value.$el.style.height = 'auto';
   }
 };
 
