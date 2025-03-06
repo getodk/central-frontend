@@ -41,6 +41,14 @@ describe('HoverCardDataset', () => {
     dd.getComponent(DateTime).props().iso.should.equal(lastEntity);
   });
 
+  it('shows the timestamp of the latest updated entity', () => {
+    const lastUpdate = new Date().toISOString();
+    testData.extendedDatasets.createPast(1, { lastUpdate });
+    const dd = findDd(mountComponent(), 'Last update');
+    // console.log(dd.html(), testData.extendedDatasets.last());
+    dd.getComponent(DateTime).props().iso.should.equal(lastUpdate);
+  });
+
   it('shows the property list', () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }, { name: 'circumference' }]
