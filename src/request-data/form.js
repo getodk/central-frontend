@@ -25,28 +25,19 @@ export default () => {
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
   // Form draft attachments
-  const attachments = createResource('attachments', () => ({
-    ...setupOption((data) => data.reduce(
+  const draftAttachments = createResource('draftAttachments', () => ({
+    transformResponse: ({ data }) => data.reduce(
       (map, attachment) => map.set(attachment.name, reactive(attachment)),
       new Map()
-    )),
+    ),
     missingCount: computeIfExists(() => {
-      if (attachments.isEmpty()) return 0;
       let count = 0;
-      for (const attachment of attachments.get().values()) {
+      for (const attachment of draftAttachments.values()) {
         if (!attachment.exists) count += 1;
       }
       return count;
     })
   }));
-  watchSyncEffect(() => {
-    if (formDraft.dataExists && attachments.dataExists) {
-      if (formDraft.isDefined() && attachments.isEmpty())
-        formDraft.setToNone();
-      else if (formDraft.isEmpty() && attachments.isDefined())
-        attachments.setToNone();
-    }
-  });
 
   // Published form attachments
   const publishedAttachments = createResource('publishedAttachments', () => ({
@@ -79,7 +70,7 @@ export default () => {
     formVersions,
     formVersionXml,
     formDraft,
-    attachments,
+    draftAttachments,
     publishedAttachments,
     publicLinks,
     formDatasetDiff,

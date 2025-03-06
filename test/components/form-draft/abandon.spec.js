@@ -143,7 +143,6 @@ describe('FormDraftAbandon', () => {
       abandon()
         .complete()
         .route('/projects/1/forms/f/draft')
-        .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.get('#form-edit-create-draft-button').should.be.visible();
         }));

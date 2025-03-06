@@ -393,8 +393,6 @@ describe('createCentralRouter()', () => {
             .then(dataExists([
               'project',
               'form',
-              'formDraft',
-              'attachments',
               'publishedAttachments',
               'formDatasetDiff',
               'appUserCount'
@@ -611,8 +609,6 @@ describe('createCentralRouter()', () => {
         beforeEach(() => {
           testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
           testData.extendedForms.createPast(1);
-          testData.extendedFormVersions.createPast(1, { draft: true });
-          testData.standardFormAttachments.createPast(1);
         });
 
         it('does not redirect the user from .../versions', async () => {
@@ -774,9 +770,7 @@ describe('createCentralRouter()', () => {
 
         it('redirects a user navigating from a different form', () =>
           load('/projects/1/forms/f2/settings', {}, {
-            form: () => testData.extendedForms.first(),
-            formDraft: () => mockResponse.problem(404.1),
-            attachments: () => mockResponse.problem(404.1)
+            form: () => testData.extendedForms.first()
           })
             .complete()
             .load('/projects/1/forms/f/settings', { project: false })

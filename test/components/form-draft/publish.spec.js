@@ -18,7 +18,7 @@ const mountOptions = (options = undefined) => ({
     requestData: testRequestData([useForm], {
       formVersions: testData.extendedFormVersions.published(),
       formDraft: testData.extendedFormDrafts.last(),
-      attachments: testData.standardFormAttachments.sorted(),
+      draftAttachments: testData.standardFormAttachments.sorted(),
       formDraftDatasetDiff: testData.formDraftDatasetDiffs.sorted()
     })
   },
@@ -398,14 +398,13 @@ describe('FormDraftPublish', () => {
       const { requestData } = app.vm.$container;
       requestData.localResources.formVersions.dataExists.should.be.false;
       requestData.localResources.formDraft.isEmpty().should.be.true;
-      requestData.localResources.attachments.isEmpty().should.be.true;
+      requestData.localResources.draftAttachments.dataExists.should.be.false;
     });
 
     it('shows the create draft button', () =>
       publish()
         .complete()
         .route('/projects/1/forms/f/draft')
-        .respondForComponent('FormEdit')
         .afterResponses(app => {
           app.get('#form-edit-create-draft-button').should.be.visible();
         }));

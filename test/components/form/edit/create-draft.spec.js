@@ -38,8 +38,6 @@ describe('FormEditCreateDraft', () => {
           testData.extendedFormVersions.createNew({ draft: true });
           return { success: true };
         })
-        .respondWithData(() => testData.extendedFormDrafts.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
         .respondForComponent('FormEdit');
     };
 
