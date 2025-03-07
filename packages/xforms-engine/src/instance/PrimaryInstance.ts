@@ -156,18 +156,19 @@ export class PrimaryInstance<
 	override readonly contextNode = this;
 
 	constructor(options: PrimaryInstanceOptions<Mode>) {
-		const { mode, scope, model, secondaryInstances, config } = options;
+		const { mode, initialState, scope, model, secondaryInstances, config } = options;
 		const { instance: modelInstance } = model;
-		const definition = model.getRootDefinition(modelInstance);
+		const activeInstance = initialState?.document ?? modelInstance;
+		const definition = model.getRootDefinition(activeInstance);
 
-		super(config, null, modelInstance, definition, {
+		super(config, null, activeInstance, definition, {
 			scope,
 			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
 		});
 
 		this.initializationMode = mode;
 		this.model = model;
-		this.instanceNode = modelInstance;
+		this.instanceNode = activeInstance;
 
 		const [isAttached, setIsAttached] = createSignal(false);
 
