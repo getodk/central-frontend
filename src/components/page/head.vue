@@ -12,7 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="page-head" class="row">
     <div class="col-xs-12">
-      <div id="page-head-title" class="h1"><slot name="title"></slot></div>
+      <div id="page-head-title-infonav">
+        <div id="page-head-title" class="h1"><slot name="title"></slot></div>
+        <slot name="infonav"></slot>
+      </div>
       <div id="page-description"><slot name="description"></slot></div>
       <ul id="page-head-tabs" class="nav nav-tabs">
         <slot name="tabs"></slot>
@@ -37,6 +40,11 @@ defineOptions({
 
 .breadcrumbs + #page-head .h1 {
   margin-top: 0;
+}
+
+#page-head-title-infonav {
+  display: flex;
+  align-items: baseline;
 }
 
 #page-head-title { overflow-wrap: break-word; }
