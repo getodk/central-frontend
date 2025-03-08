@@ -579,10 +579,19 @@ describe('SelectChoiceTest.java', () => {
 	/**
 	 * **PORTING NOTES**
 	 *
-	 * This test is select-specific, and comes from a select-specific JavaRosa
-	 * file (er "bag"/"vat" 😂 @lognaturel), but falls into the same category as
-	 * those from `FormDefSerializationTest.java` (also skipped in
-	 * {@link ./serialization.test.ts}).
+	 * - Call to {@link Scenario.newInstance} has been updated to reflect the fact
+	 *   that it returns a new {@link Scenario} instance (more detail on the
+	 *   method's JSDoc).
+	 *
+	 * - This test is select-specific, and comes from a select-specific JavaRosa
+	 *   file (er "bag"/"vat" 😂 @lognaturel), but falls into the same category as
+	 *   those from `FormDefSerializationTest.java` (also skipped in
+	 *   {@link ./serialization.test.ts}).
+	 *
+	 * - Note: this test would hypothetically pass with a call to
+	 *   {@link Scenario.proposed_serializeAndRestoreInstanceState}, but the test
+	 *   would lose its meaning with that change. It is clearly intended to
+	 *   exercise **form serde**.
 	 */
 	it.skip('value_should_continue_being_an_empty_string_after_deserialization', async () => {
 		const scenario = await Scenario.init(
@@ -605,11 +614,11 @@ describe('SelectChoiceTest.java', () => {
 
 		const deserializedScenario = await scenario.serializeAndDeserializeForm();
 
-		await deserializedScenario.newInstance();
+		const newInstance = deserializedScenario.newInstance();
 
-		deserializedScenario.next('/data/the-choice');
+		newInstance.next('/data/the-choice');
 
-		expect(deserializedScenario.getQuestionAtIndex('select').getChoice(0).getValue()).toBe('');
+		expect(newInstance.getQuestionAtIndex('select').getChoice(0).getValue()).toBe('');
 	});
 
 	/**

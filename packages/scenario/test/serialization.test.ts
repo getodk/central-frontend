@@ -42,7 +42,7 @@ describe('Serialization', () => {
 	 * offline functionality. As such, we may want to revisit these skipped
 	 * JavaRosa tests if they seem valuable for that effort when we get to it.
 	 */
-	describe.skip('FormDefSerializationTest.java', () => {
+	describe('FormDefSerializationTest.java', () => {
 		const getSimplestFormScenario = async (): Promise<Scenario> => {
 			return Scenario.init(
 				'Simplest',
@@ -84,17 +84,18 @@ describe('SameRefDifferentInstancesIssue449Test.java (regression tests)', () => 
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * - Fails before call to {@link Scenario.serializeAndDeserializeForm}.
-		 *   Pending support for external secondary instances.
+		 * - Test has been revised to reference
+		 *   {@link Scenario.proposed_serializeAndRestoreInstanceState}, as the test
+		 *   does exercise instance state serialization/deserialization.
 		 *
-		 * - Test may not be pertinent, see notes on `FormDefSerializationTest.java`
-		 *   suite. Logic was already ported before I looked up and remembered that!
+		 * - Test has been revised to remove superfluous XPath position predicates
+		 *   (i.e. `[0]`) in references to non-repeat instance nodes.
 		 *
-		 * - If we determine this test is pertinent... rephrase?
-		 *   "Successfully" in a test description is implied, like "correct". Prefer
-		 *   to describe actual behavior under test, which is vague here.
+		 * - Rephrase? "Successfully" in a test description is implied, like
+		 *   "correct". Prefer to describe actual behavior under test, which is
+		 *   vague here.
 		 */
-		it.fails('is [~~]successfully[~~] deserialized', async () => {
+		it('is [~~]successfully[~~] deserialized', async () => {
 			const formFile = r('issue_449.xml');
 			setUpSimpleReferenceManager(formFile.getParent(), 'file');
 
@@ -104,17 +105,36 @@ describe('SameRefDifferentInstancesIssue449Test.java (regression tests)', () => 
 
 			expect(scenario.answerOf('/data/aggregated')).toEqualAnswer(stringAnswer('a b c'));
 
-			const deserialized = await scenario.serializeAndDeserializeForm();
+			const deserialized = await scenario.proposed_serializeAndRestoreInstanceState();
 
-			expect(deserialized.answerOf('/data/new-part[0]')).toEqualAnswer(stringAnswer('c'));
-			expect(deserialized.answerOf('/data/aggregated[0]')).toEqualAnswer(stringAnswer('a b c'));
+			expect(deserialized.answerOf('/data/new-part')).toEqualAnswer(stringAnswer('c'));
+			expect(deserialized.answerOf('/data/aggregated')).toEqualAnswer(stringAnswer('a b c'));
 
 			deserialized.answer('/data/new-part', 'c2');
 
-			expect(deserialized.answerOf('/data/aggregated[0]')).toEqualAnswer(stringAnswer('a b c2'));
+			expect(deserialized.answerOf('/data/aggregated')).toEqualAnswer(stringAnswer('a b c2'));
 		});
 
-		it.skip('[applies constraints] constraints are correctly applied after deserialization');
+		/**
+		 * **PORTING NOTES**
+		 *
+		 * JavaRosa's equivalent of this test does actually exercize instance state
+		 * serde, and specifically exercises constraint validation behavior before
+		 * and after the same set of value changes. It may or may not be worth
+		 * porting the test, but that's still deferred to avoid getting sidetracked
+		 * by JavaRosa's different semantics for **setting** constraint-violating
+		 * values:
+		 *
+		 * - JR: blocks value assignment
+		 * - WF: accepts assignment, reports constraint violation in validation
+		 *   state as consequence
+		 *
+		 * There is also a test exercising very similar semantics in
+		 * {@link ./validity-state.test.ts}, also updated (now passing!) in this
+		 * commit. It is similar enough that we might consider porting this one
+		 * effectively redundant.
+		 */
+		it.todo('[applies constraints] constraints are correctly applied after deserialization');
 	});
 });
 

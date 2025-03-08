@@ -1,50 +1,17 @@
 import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
-import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import type {
 	FormResource,
 	LoadFormOptions,
+	LoadFormSuccessResult,
+	LoadFormWarningResult,
+	MissingResourceBehavior,
 	OpaqueReactiveObjectFactory,
 	RootNode,
 } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
-import { createRoot, getOwner, runWithOwner } from 'solid-js';
-import type { MissingResourceBehavior } from '../../../xforms-engine/dist/client/constants';
-import { FormDefinitionResource } from '../jr/resource/FormDefinitionResource.ts';
-
-/**
- * @todo It's anticipated that this will be expanded to support the various ways
- * that JavaRosa's tests load form resources. This initially supports the (also
- * ported) in-source DSL. We'll likely also need to support loading fixtures by
- * file name (and various ambiguities that come with that, which we may want to
- * disambiguate as we port).
- */
-export type TestFormResource = FormDefinitionResource | XFormsElement;
-
-const isPathResource = (resource: TestFormResource): resource is FormDefinitionResource => {
-	return resource instanceof FormDefinitionResource;
-};
-
-const isXFormsElement = (resource: TestFormResource): resource is XFormsElement => {
-	return typeof (resource as XFormsElement).asXml === 'function';
-};
-
-export const getFormResource = async (
-	testFormResource: TestFormResource
-	// It's also anticipated that we will need to perform async IO as we expand
-	// the `TestFormResource` type.
-	// eslint-disable-next-line @typescript-eslint/require-await
-): Promise<FormResource> => {
-	if (isPathResource(testFormResource)) {
-		return testFormResource.textContents;
-	}
-
-	if (isXFormsElement(testFormResource)) {
-		return testFormResource.asXml();
-	}
-
-	throw new Error('Unknown test form resource');
-};
+import { createRoot } from 'solid-js';
+import { getAssertedOwner, runInSolidScope } from './solid-helpers.ts';
 
 /**
  * @todo Currently we stub resource fetching. We can address this as needed
@@ -54,7 +21,7 @@ const fetchFormDefinitionStub: typeof fetch = () => {
 	throw new Error('TODO: fetching form definition not implemented');
 };
 
-export interface InitializeTestFormOptions {
+export interface TestFormOptions {
 	readonly resourceService: JRResourceService;
 	readonly missingResourceBehavior: MissingResourceBehavior;
 	readonly stateFactory: OpaqueReactiveObjectFactory;
@@ -64,25 +31,26 @@ const defaultConfig = {
 	fetchFormDefinition: fetchFormDefinitionStub,
 } as const satisfies LoadFormOptions;
 
+// prettier-ignore
+export type InitializableForm =
+	| LoadFormSuccessResult
+	| LoadFormWarningResult;
+
 interface InitializedTestForm {
+	readonly formResult: InitializableForm;
 	readonly instanceRoot: RootNode;
 	readonly owner: Owner;
 	readonly dispose: VoidFunction;
 }
 
 export const initializeTestForm = async (
-	testForm: TestFormResource,
-	options: InitializeTestFormOptions
+	formResource: FormResource,
+	options: TestFormOptions
 ): Promise<InitializedTestForm> => {
 	return createRoot(async (dispose) => {
-		const owner = getOwner();
+		const owner = getAssertedOwner();
 
-		if (owner == null) {
-			throw new Error('Must have reactive context owner');
-		}
-
-		const formResource = await getFormResource(testForm);
-		const instance = await runWithOwner(owner, async () => {
+		const { formResult, root: instanceRoot } = await runInSolidScope(owner, async () => {
 			return createInstance(formResource, {
 				form: {
 					...defaultConfig,
@@ -93,10 +61,11 @@ export const initializeTestForm = async (
 					stateFactory: options.stateFactory,
 				},
 			});
-		})!;
+		});
 
 		return {
-			instanceRoot: instance.root,
+			formResult,
+			instanceRoot,
 			owner,
 			dispose,
 		};

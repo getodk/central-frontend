@@ -244,12 +244,13 @@ describe('`constraint`', () => {
 	 *   type, which we can make more specific if we agree to introduce such a
 	 *   substantial difference in the {@link Scenario} API.)
 	 *
-	 * - Test exercises (de)serialization (which we do not support), as well as
-	 *   validation. The former is the nature of failure as ported. An alternate
-	 *   test has been added below demonstrating that validation otherwise works
-	 *   as expected.
+	 * - This test exercises instance serde, which we now support. In the original
+	 *   JavaRosa test porting effort, and prior to support for instance serde, we
+	 *   added an alternate test below exercising only the validation-specific
+	 *   logic. That test is pertinent to this suite, and we may now want to
+	 *   consider moving **this test** into {@link ./serialization.test.ts}.
 	 */
-	it.fails('enforces `constraint`s when [an] instance is deserialized', async () => {
+	it('enforces `constraint`s when [an] instance is deserialized', async () => {
 		const formDef = html(
 			head(
 				title('Some form'),
