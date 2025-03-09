@@ -1,16 +1,18 @@
 import {
 	bind,
 	body,
+	group,
 	head,
 	html,
 	input,
+	label,
 	mainInstance,
 	model,
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type { LoadFormOptions } from '@getodk/xforms-engine';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
@@ -270,5 +272,133 @@ describe('ExternalSecondaryInstanceParseTest.java', () => {
 		it.skip(
 			'exceptionFromChoiceSelection_whenFormIsDeserialized_afterPlaceholderInstanceUsed_andFileMissingColumns'
 		);
+	});
+});
+
+/**
+ * @todo Maybe we should consider either:
+ *
+ * - A corresponding "deserialization" suite/module
+ * - Renaming this suite/module "serde" (or come up with some more obvious term
+ *   for this concept as it applies to the scope of serializing and
+ *   deserializing instance state)?
+ */
+describe('Restoring serialized instance state', () => {
+	/**
+	 * Note: this is _implicitly covered_ by tests exercising less basic concepts,
+	 * e.g. restoration of non-relevant nodes. Is there any value (maybe social?)
+	 * in explicitly testing basics here?
+	 */
+	describe.skip('basic restoration of instance state');
+
+	describe('non-relevant nodes omitted from instance payload', () => {
+		let scenario: Scenario;
+
+		beforeEach(async () => {
+			// prettier-ignore
+			scenario = await Scenario.init('XML serialization - relevance', html(
+					head(
+						title('XML serialization - relevance'),
+						model(
+							mainInstance(
+								t('data id="xml-serialization-relevance"',
+									t('grp-rel', '1'),
+									t('inp-rel', '1'),
+									t('grp',
+										t('inp', 'inp default value')),
+										t('meta', t('instanceID')))
+							),
+							bind('/data/grp-rel'),
+							bind('/data/inp-rel'),
+							bind('/data/grp').relevant('/data/grp-rel = 1'),
+							bind('/data/grp/inp').relevant('/data/inp-rel = 1'),
+							bind('/data/meta/instanceID').preload('uid')
+						)
+					),
+					body(
+						input('/data/grp-rel',
+							label('`grp` is relevant when this value is 1')),
+						input('/data/inp-rel',
+							label('`inp` is relevant when this value is 1')),
+						group('/data/grp',
+							label('grp'),
+
+							input('/data/grp/inp',
+								label('inp'))))
+				));
+		});
+
+		it('restores an omitted leaf node as non-relevant', async () => {
+			scenario.answer('/data/inp-rel', 0);
+
+			// Sanity check precondition: non-relevant leaf node is blank
+			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+
+			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+			// Assertion of non-relevance and blank value will fail if the node,
+			// omitted as non-relevant from serialization, is not restored.
+			expect(restored.getInstanceNode('/data/grp/inp')).toBeNonRelevant();
+			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+		});
+
+		it('restores a non-relevant leaf node with its model default value when it becomes relevant', async () => {
+			// Sanity check precondition: relevant default value
+			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+
+			scenario.answer('/data/inp-rel', 0);
+
+			// Sanity check precondition: non-relevant leaf node is blank
+			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+
+			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+			// Sanity check precondition: node restored, continues to be
+			// non-relevant (and blank)
+			expect(restored.getInstanceNode('/data/grp/inp')).toBeNonRelevant();
+			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+
+			restored.answer('/data/inp-rel', 1);
+
+			expect(restored.getInstanceNode('/data/grp/inp')).toBeRelevant();
+			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+		});
+
+		it('restores an omitted subtree node as non-relevant', async () => {
+			scenario.answer('/data/grp-rel', 0);
+
+			// Sanity check precondition: non-relevant leaf node is blank
+			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+
+			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+			expect(restored.getInstanceNode('/data/grp')).toBeNonRelevant();
+		});
+
+		it("restores a non-relevant subtree node's descendant leaf node with its model default value when the restored subtree becomes relevant", async () => {
+			// Sanity check precondition: relevant default value
+			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+
+			scenario.answer('/data/grp-rel', 0);
+
+			// Sanity check precondition: subtree non-relevant, descendant blank by
+			// inheriting non-relevance
+			expect(scenario.getInstanceNode('/data/grp')).toBeNonRelevant();
+			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+
+			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+			// Sanity check precondition: node restored, continues to be non-relevant,
+			// descendant leaf node is still blank
+			expect(restored.getInstanceNode('/data/grp')).toBeNonRelevant();
+			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+
+			restored.answer('/data/grp-rel', 1);
+
+			// Once restored subtree node is relevant, descendant leaf node is
+			// restored with the model-defined default for that node
+			expect(restored.getInstanceNode('/data/grp')).toBeRelevant();
+			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+		});
 	});
 });
