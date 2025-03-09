@@ -23,6 +23,7 @@ import type {
 import { constants } from '@getodk/xforms-engine';
 import type { MockInstance } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ComparableAnswer } from '../src/answer/ComparableAnswer.ts';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -887,6 +888,87 @@ describe('Restoring serialized instance state', () => {
 				expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(14));
 				expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(28));
 			});
+
+			interface MissingRepeatInstanceRestoredStateExpectation {
+				readonly inner1: ComparableAnswer;
+				readonly inner2: ComparableAnswer;
+				readonly inner3: ComparableAnswer;
+			}
+
+			const NAN_ANSWER = stringAnswer(String(NaN));
+
+			interface MissingRepeatInstanceInputCase {
+				readonly detail: string;
+				readonly serializedInput: XFormsElement;
+				readonly expectedState: MissingRepeatInstanceRestoredStateExpectation[];
+			}
+
+			const missingRepeatInstanceInputs: readonly MissingRepeatInstanceInputCase[] = [
+				{
+					detail: 'repeat instances not serialized at all',
+					// prettier-ignore
+					serializedInput:
+						t('data id="repeat-serde-count"'),
+					expectedState: [
+						{ inner1: stringAnswer(''), inner2: NAN_ANSWER, inner3: NAN_ANSWER },
+						{ inner1: stringAnswer(''), inner2: NAN_ANSWER, inner3: NAN_ANSWER },
+					],
+				},
+
+				{
+					detail: 'single repeat instance missing',
+					// prettier-ignore
+					serializedInput:
+						t('data id="repeat-serde-count"',
+							t('repeat',
+								t('inner1', '3'),
+								t('inner2', '6'),
+								t('inner3', '12'))),
+					expectedState: [
+						{ inner1: intAnswer(3), inner2: intAnswer(6), inner3: intAnswer(12) },
+						{ inner1: stringAnswer(''), inner2: NAN_ANSWER, inner3: NAN_ANSWER },
+					],
+				},
+
+				{
+					detail: 'child/leaf nodes missing',
+					// prettier-ignore
+					serializedInput:
+						t('data id="repeat-serde-count"',
+							t('repeat',
+								t('inner1', '4')),
+							t('repeat',
+								t('inner2', '8'))),
+					expectedState: [
+						{ inner1: intAnswer(4), inner2: intAnswer(8), inner3: intAnswer(16) },
+						{ inner1: stringAnswer(''), inner2: NAN_ANSWER, inner3: NAN_ANSWER },
+					],
+				},
+			];
+
+			describe.each<MissingRepeatInstanceInputCase>(missingRepeatInstanceInputs)(
+				'missing repeat instance input ($detail)',
+				({ serializedInput, expectedState }) => {
+					it('restores complete repeat instance state from the form-defined template', async () => {
+						const instanceInput = fabricateInstanceInput(serializedInput);
+						const restored = await scenario.restoreWebFormsInstanceState(instanceInput);
+
+						const expectedCount = expectedState.length;
+
+						expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(expectedCount);
+
+						for (const entry of expectedState.entries()) {
+							const [index, { inner1, inner2, inner3 }] = entry;
+							const expectedRepeatPosition = index + 1;
+							const nodesetPrefix = `/data/repeat[${expectedRepeatPosition}]`;
+
+							expect(restored.answerOf(`${nodesetPrefix}/inner1`)).toEqualAnswer(inner1);
+							expect(restored.answerOf(`${nodesetPrefix}/inner2`)).toEqualAnswer(inner2);
+							expect(restored.answerOf(`${nodesetPrefix}/inner3`)).toEqualAnswer(inner3);
+						}
+					});
+				}
+			);
 		});
 	});
 });
