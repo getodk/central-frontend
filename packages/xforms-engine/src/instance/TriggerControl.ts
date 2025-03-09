@@ -50,12 +50,12 @@ export class TriggerControl
 {
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: TriggerNodeDefinition
 	): TriggerControl;
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: AnyTriggerNodeDefinition
 	): TriggerControl {
 		if (definition.valueType !== 'string') {
@@ -82,7 +82,7 @@ export class TriggerControl
 
 	private constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: TriggerNodeDefinition<'string'>
 	) {
 		super(parent, instanceNode, definition, codec);

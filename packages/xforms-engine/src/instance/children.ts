@@ -11,6 +11,7 @@ import { ErrorProductionDesignPendingError } from '../error/ErrorProductionDesig
 import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { NodeDefinition } from '../parse/model/NodeDefinition.ts';
 import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import type {
 	AnyRangeNodeDefinition,
@@ -18,6 +19,7 @@ import type {
 } from '../parse/model/RangeNodeDefinition.ts';
 import { RangeNodeDefinition } from '../parse/model/RangeNodeDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../parse/model/SubtreeDefinition.ts';
+import type { InstanceNode } from './abstract/InstanceNode.ts';
 import { Group } from './Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import { InputControl } from './InputControl.ts';
@@ -150,13 +152,49 @@ const isUploadNodeDefinition = (
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
-	const { model } = parent.rootDocument;
-	const grouped = groupChildElementsByNodeset(parent.instanceNode);
-	const groups = Array.from(grouped.values());
+	/**
+	 * Child nodesets are collected from the {@link parent}'s
+	 * {@link NodeDefinition.template}, ensuring that we produce
+	 * {@link InstanceNode}s for every **model-defined** node, even if a
+	 * corresponding node was not serialized in a {@link parent.instanceNode}.
+	 *
+	 * In other words, by referencing the model-defined template, we are able to
+	 * reproduce nodes which were omitted as non-relevant in a prior serialization
+	 * and/or submission.
+	 */
+	const childNodesets = Array.from(
+		new Set(
+			parent.definition.template.childElements.map((childElement) => {
+				return childElement.nodeset;
+			})
+		)
+	);
 
-	return groups.map((instanceNodes): GeneralChildNode => {
-		const instanceNode: StaticElement = instanceNodes[0];
-		const definition = model.getNodeDefinition(instanceNode);
+	let instanceChildrenByNodeset: InstanceNodesByNodeset | null;
+
+	if (parent.instanceNode == null) {
+		instanceChildrenByNodeset = null;
+	} else {
+		instanceChildrenByNodeset = groupChildElementsByNodeset(parent.instanceNode);
+	}
+
+	const { model } = parent.rootDocument;
+
+	return childNodesets.map((nodeset): GeneralChildNode => {
+		/**
+		 * Get children of the target nodeset from {@link parent.instanceNode}, if
+		 * that node exists, and if children with that nodeset exist.
+		 *
+		 * If either does not exist (e.g. it was omitted as non-relevant in a prior
+		 * serialization), we continue to reference model-defined templates as we
+		 * recurse down the {@link InstanceNode} subtree.
+		 *
+		 * @see {@link childNodesets}
+		 */
+		const instanceNodes = instanceChildrenByNodeset?.get(nodeset) ?? [];
+		const [instanceNode = null] = instanceNodes;
+
+		const definition = model.getNodeDefinition(nodeset);
 
 		switch (definition.type) {
 			case 'root': {
@@ -183,7 +221,9 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 			}
 
 			case 'leaf-node': {
-				instanceNode.assertLeafElement();
+				if (instanceNode != null && !instanceNode.isLeafElement()) {
+					throw new ErrorProductionDesignPendingError();
+				}
 
 				if (definition instanceof NoteNodeDefinition) {
 					return new Note(parent, instanceNode, definition);

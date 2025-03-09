@@ -71,12 +71,12 @@ export class RankControl
 {
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: RankDefinition
 	): RankControl;
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: AnyRankDefinition
 	): RankControl {
 		assertRankNodeDefinition(definition);
@@ -102,7 +102,7 @@ export class RankControl
 
 	private constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: RankDefinition<'string'>
 	) {
 		const codec = new MultipleValueItemCodec(sharedValueCodecs.string);

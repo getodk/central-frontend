@@ -20,10 +20,10 @@ export class RootDefinition extends NodeDefinition<'root'> {
 	readonly bodyElement = null;
 	readonly root = this;
 	readonly parent = null;
+	readonly template: StaticElement;
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly attributes: RootAttributeMap;
 	readonly children: readonly ChildNodeDefinition[];
-	readonly defaultValue = null;
 
 	readonly isTranslated = false;
 
@@ -33,8 +33,8 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		readonly submission: SubmissionDefinition,
 		readonly classes: BodyClassList
 	) {
-		const node = model.instance.root;
-		const qualifiedName = node.qualifiedName;
+		const template = model.instance.root;
+		const qualifiedName = template.qualifiedName;
 		const nodeName = qualifiedName.getPrefixedName();
 
 		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
@@ -50,9 +50,10 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		super(bind);
 
 		this.qualifiedName = qualifiedName;
-		this.attributes = RootAttributeMap.from(this, node);
+		this.template = template;
+		this.attributes = RootAttributeMap.from(this, template);
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
-		this.children = this.buildSubtree(this, node);
+		this.children = this.buildSubtree(this, template);
 	}
 
 	buildSubtree(parent: ParentNodeDefinition, node: StaticElement): readonly ChildNodeDefinition[] {

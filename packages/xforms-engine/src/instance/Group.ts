@@ -58,7 +58,11 @@ export class Group
 	readonly validationState: AncestorNodeValidationState;
 	readonly instanceState: InstanceState;
 
-	constructor(parent: GeneralParentNode, instanceNode: StaticElement, definition: GroupDefinition) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticElement | null,
+		definition: GroupDefinition
+	) {
 		super(parent, instanceNode, definition);
 
 		this.appearances = definition.bodyElement.appearances;

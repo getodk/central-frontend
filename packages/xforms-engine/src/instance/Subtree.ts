@@ -57,7 +57,7 @@ export class Subtree
 
 	constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticElement,
+		instanceNode: StaticElement | null,
 		definition: SubtreeDefinition
 	) {
 		super(parent, instanceNode, definition);

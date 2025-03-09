@@ -47,12 +47,12 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 {
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: AnyRangeNodeDefinition
 	): AnyRangeControl;
 	static from<V extends RangeValueType>(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: RangeNodeDefinition<V>
 	): RangeControl<V> {
 		return new this<V>(parent, instanceNode, definition);
@@ -73,7 +73,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 
 	constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: RangeNodeDefinition<V>
 	) {
 		const baseCodec = getSharedValueCodec(definition.valueType);

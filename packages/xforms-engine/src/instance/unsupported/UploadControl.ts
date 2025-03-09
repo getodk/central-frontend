@@ -81,7 +81,7 @@ export class UploadControl
 
 	constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: UploadNodeDefinition
 	) {
 		const codec = codecs[definition.valueType];
