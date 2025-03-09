@@ -1,3 +1,4 @@
+import { OPENROSA_XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import {
 	bind,
 	body,
@@ -12,7 +13,9 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type { LoadFormOptions } from '@getodk/xforms-engine';
+import { constants } from '@getodk/xforms-engine';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManagerTestUtils.ts';
@@ -399,6 +402,117 @@ describe('Restoring serialized instance state', () => {
 			// restored with the model-defined default for that node
 			expect(restored.getInstanceNode('/data/grp')).toBeRelevant();
 			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+		});
+	});
+
+	describe('calculate', () => {
+		const IGNORED_INSTANCE_ID = 'ignored for purposes of functionality under test';
+
+		let scenario: Scenario;
+
+		beforeEach(async () => {
+			scenario = await Scenario.init(
+				'Calculate serde',
+				// prettier-ignore
+				html(
+					head(
+						title('Calculate serde'),
+						model(
+							mainInstance(
+								t('data id="calculate-serde"',
+									t('a', '2'),
+									t('b'),
+									t('c'),
+									t('orx:meta',
+										t('orx:instanceID', IGNORED_INSTANCE_ID)))),
+							bind('/data/a').type('int'),
+							bind('/data/b').type('int').calculate('/data/a * 3'),
+							bind('/data/c').type('int').calculate('(/data/a + /data/b) * 5'))),
+					body(
+						input('/data/a', label('a')),
+						input('/data/b', label('b')),
+						input('/data/c', label('c'))))
+			);
+
+			// Sanity check default state
+			expect(scenario.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
+			expect(scenario.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
+			expect(scenario.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
+		});
+
+		it('restores calculated values', async () => {
+			const restored1 = await scenario.proposed_serializeAndRestoreInstanceState();
+
+			expect(restored1.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
+			expect(restored1.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
+			expect(restored1.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
+
+			restored1.answer('/data/a', 3);
+
+			expect(restored1.answerOf('/data/a')).toEqualAnswer(intAnswer(3));
+			expect(restored1.answerOf('/data/b')).toEqualAnswer(intAnswer(9));
+			expect(restored1.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
+
+			const restored2 = await restored1.proposed_serializeAndRestoreInstanceState();
+
+			expect(restored2.answerOf('/data/a')).toEqualAnswer(intAnswer(3));
+			expect(restored2.answerOf('/data/b')).toEqualAnswer(intAnswer(9));
+			expect(restored2.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
+		});
+
+		/**
+		 * @todo this should eventually be moved to {@link ./submission.test.ts}.
+		 * It's here temporarily because it adds context for the next test,
+		 * exercising recalculation of the same nodes **once restored** from
+		 * serialized instance state.
+		 *
+		 * Specifically: when we fix the bug causing this test to fail, we'll want
+		 * to revise _that test_ to restore _arbitrarily crafted instance XML_ with
+		 * the same manually entered values... as if editing an instance which was
+		 * submitted with this bug!
+		 *
+		 * @todo it also seems likely we can address this bug in the broader story
+		 * for actions/events. For instnace, we might re-trigger `calculate` for
+		 * nodes with stale/overwritten values based on some notion of
+		 * {@link https://www.w3.org/TR/xforms/#evt-revalidate | xforms-revalidate}
+		 * (which is explicitly linked by the ODK XForms spec, associated with
+		 * {@link https://getodk.github.io/xforms-spec/#preload-attributes | preload attributes}
+		 * for `jr:preload="timestamp" jr:preloadParams="timeEnd"`).
+		 */
+		it.fails('recalculates manually overwritten values before serializing state', async () => {
+			scenario.answer('/data/a', 2);
+			scenario.answer('/data/b', 2);
+			scenario.answer('/data/c', 2);
+
+			const payload = await scenario.prepareWebFormsInstancePayload();
+			const instanceFile = payload.data[0].get(constants.INSTANCE_FILE_NAME);
+			const instanceXML = await instanceFile.text();
+
+			expect(instanceXML).toBe(
+				t(
+					`data xmlns:orx="${OPENROSA_XFORMS_NAMESPACE_URI}" id="calculate-serde"`,
+					t('a', '2'),
+					t('b', '6'),
+					t('c', '40'),
+					t('orx:meta', t('orx:instanceID', IGNORED_INSTANCE_ID))
+				).asXml()
+			);
+		});
+
+		/**
+		 * @todo See notes on test directly above. When that test passes, this test
+		 * will need to be updated to retain any meaning.
+		 */
+		it('recalculates, overwriting manually entered values', async () => {
+			scenario.answer('/data/a', 2);
+			scenario.answer('/data/b', 2);
+			scenario.answer('/data/c', 2);
+
+			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+			expect(restored.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
+			expect(restored.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
+			expect(restored.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
 		});
 	});
 });
