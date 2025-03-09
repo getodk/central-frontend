@@ -579,5 +579,112 @@ describe('Restoring serialized instance state', () => {
 			expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(8));
 			expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(16));
 		});
+
+		describe('jr:count', () => {
+			let scenario: Scenario;
+
+			beforeEach(async () => {
+				scenario = await Scenario.init(
+					'Repeat serde (count)',
+					// prettier-ignore
+					html(
+						head(
+							title('Repeat serde (count)'),
+							model(
+								mainInstance(t('data id="repeat-serde-count"',
+									t('rep-count'),
+									t('repeat jr:template=""',
+										t('inner1'),
+										t('inner2'),
+										t('inner3')
+									))),
+								bind('/data/rep-count').type('int'),
+								bind('/data/repeat/inner1').calculate('position(..)'),
+								bind('/data/repeat/inner2').calculate('2 * ../inner1'),
+								bind('/data/repeat/inner3').calculate('2 * ../inner2'))),
+
+						body(
+							input('/data/rep-count', label('Repeat count')),
+							repeat('/data/repeat', '/data/rep-count',
+								input('/data/repeat/inner1', label('inner1')))))
+				);
+			});
+
+			it('restores count-controlled repeat instances in their state prior to serialization', async () => {
+				scenario.answer('/data/rep-count', 2);
+
+				// Sanity check preconditions
+				expect(scenario.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
+				expect(scenario.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
+				expect(scenario.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(4));
+				expect(scenario.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
+				expect(scenario.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
+				expect(scenario.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
+
+				const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+				expect(restored.answerOf('/data/rep-count')).toEqualAnswer(intAnswer(2));
+				expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
+				expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
+				expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
+				expect(restored.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(4));
+				expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
+				expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
+				expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
+			});
+		});
+
+		describe('jr:noAddRemove', () => {
+			let scenario: Scenario;
+
+			beforeEach(async () => {
+				scenario = await Scenario.init(
+					'Repeat serde (noAddRemove)',
+					// prettier-ignore
+					html(
+						head(
+							title('Repeat serde (noAddRemove)'),
+							model(
+								mainInstance(t('data id="repeat-serde-no-add-remove"',
+									t('repeat',
+										t('inner1', '2'),
+										t('inner2'),
+										t('inner3')
+									),
+									t('repeat',
+										t('inner1', '7'),
+										t('inner2'),
+										t('inner3')
+									))),
+								bind('/data/repeat/inner2').calculate('2 * ../inner1'),
+								bind('/data/repeat/inner3').calculate('2 * ../inner2'))),
+
+						body(
+							input('/data/rep-count', label('Repeat count')),
+							t('repeat nodeset="/data/repeat" jr:noAddRemove="true()"',
+								input('/data/repeat/inner1', label('inner1')))))
+				);
+			});
+
+			it('restores fixed repeat instances in their state prior to serialization', async () => {
+				// Sanity check preconditions
+				expect(scenario.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(2));
+				expect(scenario.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(4));
+				expect(scenario.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(8));
+				expect(scenario.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(7));
+				expect(scenario.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(14));
+				expect(scenario.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(28));
+
+				const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+
+				expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
+				expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(2));
+				expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(4));
+				expect(restored.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(8));
+				expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(7));
+				expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(14));
+				expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(28));
+			});
+		});
 	});
 });
