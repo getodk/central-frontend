@@ -1,4 +1,5 @@
 import { OPENROSA_XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import {
 	bind,
 	body,
@@ -13,7 +14,12 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import type { LoadFormOptions } from '@getodk/xforms-engine';
+import type {
+	InstanceData,
+	InstanceFile,
+	LoadFormOptions,
+	RestoreFormInstanceInput,
+} from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
@@ -580,6 +586,38 @@ describe('Restoring serialized instance state', () => {
 			expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(16));
 		});
 
+		const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
+
+		class FabricatedInstanceFile extends File implements InstanceFile {
+			override readonly name = INSTANCE_FILE_NAME;
+			override readonly type = INSTANCE_FILE_TYPE;
+
+			constructor(instanceElement: XFormsElement) {
+				super([instanceElement.asXml()], INSTANCE_FILE_NAME);
+			}
+		}
+
+		type AssertInstanceData = (data: FormData) => asserts data is InstanceData;
+
+		const assertInstanceData: AssertInstanceData = (data) => {
+			const instanceFile = data.get(INSTANCE_FILE_NAME);
+
+			expect(instanceFile).toBeInstanceOf(FabricatedInstanceFile);
+		};
+
+		const fabricateInstanceInput = (instanceElement: XFormsElement): RestoreFormInstanceInput => {
+			const instanceFile = new FabricatedInstanceFile(instanceElement);
+			const instanceData = new FormData();
+
+			instanceData.set(INSTANCE_FILE_NAME, instanceFile);
+
+			assertInstanceData(instanceData);
+
+			return {
+				data: [instanceData],
+			};
+		};
+
 		describe('jr:count', () => {
 			let scenario: Scenario;
 
@@ -632,6 +670,99 @@ describe('Restoring serialized instance state', () => {
 				expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
 				expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
 			});
+
+			interface MissingRepeatInstanceRestoredStateExpectation {
+				readonly inner1: number;
+				readonly inner2: number;
+				readonly inner3: number;
+			}
+
+			interface MissingRepeatInstanceInputCase {
+				readonly detail: string;
+				readonly serializedInput: XFormsElement;
+				readonly expectedState: MissingRepeatInstanceRestoredStateExpectation[];
+			}
+
+			const missingRepeatInstanceInputs: readonly MissingRepeatInstanceInputCase[] = [
+				{
+					detail: 'repeat instances not serialized at all',
+					// prettier-ignore
+					serializedInput:
+						t('data id="repeat-serde-count"',
+							t('rep-count', '2')),
+					expectedState: [
+						{ inner1: 1, inner2: 2, inner3: 4 },
+						{ inner1: 2, inner2: 4, inner3: 8 },
+					],
+				},
+
+				{
+					detail: 'single repeat instance missing',
+					// prettier-ignore
+					serializedInput:
+						t('data id="repeat-serde-count"',
+							t('rep-count', '3'),
+							t('repeat',
+								t('inner1', '1'),
+								t('inner2', '2'),
+								t('inner3', '4')),
+							t('repeat',
+								t('inner1', '2'),
+								t('inner2', '4'),
+								t('inner3', '8'))),
+					expectedState: [
+						{ inner1: 1, inner2: 2, inner3: 4 },
+						{ inner1: 2, inner2: 4, inner3: 8 },
+						{ inner1: 3, inner2: 6, inner3: 12 },
+					],
+				},
+
+				{
+					detail: 'child/leaf nodes missing',
+					// prettier-ignore
+					serializedInput:
+						t('data id="repeat-serde-count"',
+							t('rep-count', '4'),
+							t('repeat',
+								t('inner1', '1')),
+							t('repeat',
+								t('inner2', '4')),
+							t('repeat',
+								t('inner3', '12')),
+							t('repeat')),
+					expectedState: [
+						{ inner1: 1, inner2: 2, inner3: 4 },
+						{ inner1: 2, inner2: 4, inner3: 8 },
+						{ inner1: 3, inner2: 6, inner3: 12 },
+						{ inner1: 4, inner2: 8, inner3: 16 },
+					],
+				},
+			];
+
+			describe.each<MissingRepeatInstanceInputCase>(missingRepeatInstanceInputs)(
+				'missing repeat instance input ($detail)',
+				({ serializedInput, expectedState }) => {
+					it('restores complete repeat instance state from the form-defined template', async () => {
+						const instanceInput = fabricateInstanceInput(serializedInput);
+						const restored = await scenario.restoreWebFormsInstanceState(instanceInput);
+
+						const expectedCount = expectedState.length;
+
+						expect(restored.answerOf('/data/rep-count')).toEqualAnswer(intAnswer(expectedCount));
+						expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(expectedCount);
+
+						for (const entry of expectedState.entries()) {
+							const [index, { inner1, inner2, inner3 }] = entry;
+							const expectedRepeatPosition = index + 1;
+							const nodesetPrefix = `/data/repeat[${expectedRepeatPosition}]`;
+
+							expect(restored.answerOf(`${nodesetPrefix}/inner1`)).toEqualAnswer(intAnswer(inner1));
+							expect(restored.answerOf(`${nodesetPrefix}/inner2`)).toEqualAnswer(intAnswer(inner2));
+							expect(restored.answerOf(`${nodesetPrefix}/inner3`)).toEqualAnswer(intAnswer(inner3));
+						}
+					});
+				}
+			);
 		});
 
 		describe('jr:noAddRemove', () => {

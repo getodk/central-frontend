@@ -3,9 +3,11 @@ import { xmlElement } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type {
 	AnyNode,
 	FormResource,
+	MonolithicInstancePayload,
 	RepeatRangeControlledNode,
 	RepeatRangeNode,
 	RepeatRangeUncontrolledNode,
+	RestoreFormInstanceInput,
 	RootNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
@@ -1079,8 +1081,33 @@ export class Scenario {
 	 * more about Collect's responsibility for submission (beyond serialization,
 	 * already handled by {@link proposed_serializeInstance}).
 	 */
-	prepareWebFormsInstancePayload() {
+	prepareWebFormsInstancePayload(): Promise<MonolithicInstancePayload> {
 		return this.instanceRoot.prepareInstancePayload();
+	}
+
+	/**
+	 * @todo We may also want a conceptually equivalent static method, composing
+	 * `loadForm`/`restoreInstance` behavior.
+	 */
+	async restoreWebFormsInstanceState(payload: RestoreFormInstanceInput): Promise<this> {
+		const { dispose, owner, formName, formElement, formOptions, formResult } = this;
+
+		const instance = await runInSolidScope(owner, () => {
+			return this.formResult.restoreInstance(payload, formOptions);
+		});
+		const instanceRoot = instance.root;
+
+		return runInSolidScope(owner, () => {
+			return new this.constructor({
+				owner,
+				dispose,
+				formName,
+				formElement,
+				formOptions,
+				formResult,
+				instanceRoot,
+			});
+		});
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
@@ -1183,24 +1210,9 @@ export class Scenario {
 	 *   definition and instance state.
 	 */
 	async proposed_serializeAndRestoreInstanceState(): Promise<this> {
-		const { dispose, owner, formName, formElement, formOptions, formResult } = this;
 		const payload = await this.instanceRoot.prepareInstancePayload();
-		const instance = await runInSolidScope(owner, () => {
-			return this.formResult.restoreInstance(payload, formOptions);
-		});
-		const instanceRoot = instance.root;
 
-		return runInSolidScope(owner, () => {
-			return new this.constructor({
-				owner,
-				dispose,
-				formName,
-				formElement,
-				formOptions,
-				formResult,
-				instanceRoot,
-			});
-		});
+		return this.restoreWebFormsInstanceState(payload);
 	}
 }
 
