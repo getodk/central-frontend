@@ -21,7 +21,8 @@ import type {
 	RestoreFormInstanceInput,
 } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
-import { beforeEach, describe, expect, it } from 'vitest';
+import type { MockInstance } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
@@ -763,6 +764,76 @@ describe('Restoring serialized instance state', () => {
 					});
 				}
 			);
+
+			describe('excess count-controlled repeat instances', () => {
+				/**
+				 * @todo We previously discussed warning when dropping repeat instances.
+				 * In hindsight, I think that would be both less valuable and much more
+				 * difficult to achieve fo `jr:count` than for `jr:noAddRemove`. This is
+				 * here so we can discuss further and decide if/how to prioritize.
+				 */
+				const ASSERT_EXCESS_COUNT_CONTROLLED_REPEAT_INSTANCE_WARNING = false;
+
+				afterEach(() => {
+					vi.clearAllMocks();
+				});
+
+				class WarningTracker {
+					private readonly mock: MockInstance;
+					private readonly initialCallCount: number;
+
+					constructor() {
+						this.mock = vi.spyOn(console, 'warn');
+						this.initialCallCount = this.mock.mock.calls.length;
+					}
+
+					/**
+					 * @todo when we actually design a way to convey warnings from the
+					 * engine, this isn't even remotely how we'll do it or test for it!
+					 */
+					assertExcessRepeatInstanceWarningProduced() {
+						if (ASSERT_EXCESS_COUNT_CONTROLLED_REPEAT_INSTANCE_WARNING) {
+							expect(this.mock).toHaveBeenCalledTimes(this.initialCallCount + 1);
+						}
+					}
+				}
+
+				it('ignores repeat instances in excess of specified count', async () => {
+					const warningTracker = new WarningTracker();
+
+					// prettier-ignore
+					const serializedInput = t('data id="repeat-serde-count"',
+						t('rep-count', '2'),
+						t('repeat',
+							t('inner1', '1'),
+							t('inner2', '2'),
+							t('inner3', '4')),
+						t('repeat',
+							t('inner1', '2'),
+							t('inner2', '4'),
+							t('inner3', '8')),
+						t('repeat',
+							t('inner1', '86'),
+							t('inner2', '75'),
+							t('inner3', '309')));
+
+					const instanceInput = fabricateInstanceInput(serializedInput);
+
+					const restored = await scenario.restoreWebFormsInstanceState(instanceInput);
+
+					warningTracker.assertExcessRepeatInstanceWarningProduced();
+
+					expect(restored.answerOf('/data/rep-count')).toEqualAnswer(intAnswer(2));
+					expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
+
+					expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
+					expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
+					expect(restored.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(4));
+					expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
+					expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
+					expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
+				});
+			});
 		});
 
 		describe('jr:noAddRemove', () => {
