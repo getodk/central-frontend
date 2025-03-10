@@ -19,6 +19,9 @@ except according to the terms contained in the LICENSE file.
         <form-edit-draft-controls v-else @publish="publishModal.show()"
           @abandon="abandonModal.show()"/>
       </div>
+      <div class="col-xs-6">
+        <form-edit-published-version v-if="form.dataExists"/>
+      </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
       <form-draft-status @fetch-draft="fetchDraft(true)"/>
@@ -46,6 +49,7 @@ import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';
 import FormEditLoadingDraft from './edit/loading-draft.vue';
+import FormEditPublishedVersion from './edit/published-version.vue';
 
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';

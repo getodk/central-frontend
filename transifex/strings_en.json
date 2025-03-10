@@ -3077,6 +3077,22 @@
         }
       }
     },
+    "FormEditPublishedVersion": {
+      "title": {
+        "string": "Published version",
+        "developer_comment": "This refers to the published version of a Form."
+      },
+      "subtitle": {
+        "draft": {
+          "string": "Not yet published",
+          "developer_comment": "This refers to the Form."
+        },
+        "published": {
+          "string": "Published {dateTime}",
+          "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+        }
+      }
+    },
     "FormHead": {
       "projectNav": {
         "action": {
