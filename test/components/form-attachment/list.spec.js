@@ -1127,7 +1127,7 @@ describe('FormAttachmentList', () => {
         return load('/projects/1/forms/f/draft')
           .complete()
           .request(async (app) => {
-            await app.get('#form-draft-status-publish-button').trigger('click');
+            await app.get('#form-edit-publish-button').trigger('click');
             return app.get('#form-draft-publish .btn-primary').trigger('click');
           })
           .respondWithData(() => {
@@ -1173,7 +1173,7 @@ describe('FormAttachmentList', () => {
         return load('/projects/1/forms/f/draft')
           .complete()
           .request(async (app) => {
-            await app.get('#form-draft-status-publish-button').trigger('click');
+            await app.get('#form-edit-publish-button').trigger('click');
             return app.get('#form-draft-publish .btn-primary').trigger('click');
           })
           .respondWithData(() => {

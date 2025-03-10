@@ -31,6 +31,7 @@ defineProps({
   icon: {
     type: String,
     required: true
-  }
+  },
+  dotted: Boolean
 });
 </script>

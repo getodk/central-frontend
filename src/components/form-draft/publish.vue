@@ -125,7 +125,7 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { formVersions, draftAttachments, resourceView, formDraftDatasetDiff } = useRequestData();
+    const { formVersions, draftAttachments, formDraftDatasetDiff, resourceView } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
 
     const { request, awaitingResponse } = useRequest();

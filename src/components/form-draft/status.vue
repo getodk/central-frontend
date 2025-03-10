@@ -45,38 +45,17 @@ except according to the terms contained in the LICENSE file.
               :is-draft="true"/>
           </template>
         </page-section>
-        <page-section>
-          <template #heading>
-            <span>{{ $t('actions.title') }}</span>
-          </template>
-          <template #body>
-            <button id="form-draft-status-publish-button" type="button"
-              class="btn btn-primary" @click="publish.show()">
-              <span class="icon-check"></span>{{ $t('actions.action.publish') }}&hellip;
-            </button>
-            <button id="form-draft-status-abandon-button" type="button"
-              class="btn btn-danger" @click="abandon.show()">
-              <span class="icon-trash"></span>{{ $t('actions.action.abandon') }}&hellip;
-            </button>
-          </template>
-        </page-section>
       </div>
     </div>
 
     <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
     <form-new v-bind="upload" @hide="upload.hide()" @success="afterUpload"/>
-    <form-draft-publish v-bind="publish" @hide="publish.hide()"
-      @success="afterPublish"/>
-    <form-draft-abandon v-if="form.dataExists" v-bind="abandon"
-      @hide="abandon.hide()" @success="afterAbandon"/>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
 
-import FormDraftAbandon from './abandon.vue';
-import FormDraftPublish from './publish.vue';
 import FormNew from '../form/new.vue';
 import FormVersionStandardButtons from '../form-version/standard-buttons.vue';
 import FormVersionString from '../form-version/string.vue';
@@ -85,8 +64,6 @@ import PageSection from '../page/section.vue';
 import SummaryItem from '../summary-item.vue';
 import DatasetSummary from '../dataset/summary.vue';
 
-import useRoutes from '../../composables/routes';
-import { afterNextNavigation } from '../../util/router';
 import { loadAsync } from '../../util/load-async';
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
@@ -94,8 +71,6 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormDraftStatus',
   components: {
-    FormDraftAbandon,
-    FormDraftPublish,
     FormNew,
     FormVersionStandardButtons,
     FormVersionString,
@@ -106,22 +81,18 @@ export default {
     DatasetSummary
   },
   inject: ['alert', 'projectId', 'xmlFormId'],
-  emits: ['fetch-project', 'fetch-form', 'fetch-draft', 'fetch-linked-datasets'],
+  emits: ['fetch-draft'],
   setup() {
     const { form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff } = useRequestData();
-    const { projectPath, publishedFormPath } = useRoutes();
     return {
-      form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff,
-      projectPath, publishedFormPath
+      form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff
     };
   },
   data() {
     return {
       // Modals
       viewXml: modalData('FormVersionViewXml'),
-      upload: modalData(),
-      publish: modalData(),
-      abandon: modalData()
+      upload: modalData()
     };
   },
   methods: {
@@ -131,48 +102,6 @@ export default {
       this.formDraftDatasetDiff.reset();
       this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
-    },
-    afterPublish() {
-      // We need to clear the form before navigating to the submissions page: if
-      // the form didn't already have a published version, then there would be a
-      // validateData violation if we didn't clear it.
-      this.$emit('fetch-form');
-
-      // Other resources that may have changed after publish
-      this.$emit('fetch-linked-datasets');
-      this.datasets.reset();
-      this.formDraftDatasetDiff.reset();
-
-      // We will update additional resources, but only after navigating to the
-      // submissions page. We need to wait to update these resources because
-      // they are used on the current page.
-      afterNextNavigation(this.$router, () => {
-        // Re-request the project in case its `datasets` property has changed.
-        this.$emit('fetch-project', true);
-        this.formVersions.data = null;
-        this.formDraft.setToNone();
-        this.draftAttachments.reset();
-
-        this.alert.success(this.$t('alert.publish'));
-      });
-      this.$router.push(this.publishedFormPath());
-    },
-    afterAbandon() {
-      this.formDraftDatasetDiff.reset();
-      if (this.form.publishedAt != null) {
-        afterNextNavigation(this.$router, () => {
-          this.formDraft.setToNone();
-          this.draftAttachments.reset();
-          this.alert.success(this.$t('alert.abandon'));
-        });
-        this.$router.push(this.publishedFormPath());
-      } else {
-        const { nameOrId } = this.form;
-        afterNextNavigation(this.$router, () => {
-          this.alert.success(this.$t('alert.delete', { name: nameOrId }));
-        });
-        this.$router.push(this.projectPath());
-      }
     }
   }
 };
@@ -180,7 +109,6 @@ export default {
 
 <style lang="scss">
 #form-draft-status-standard-buttons-container { margin-bottom: 5px; }
-#form-draft-status-publish-button { margin-right: 10px; }
 </style>
 
 <i18n lang="json5">
@@ -198,19 +126,8 @@ export default {
         "upload": "Upload new definition"
       }
     },
-    "actions": {
-      // This is a title shown above a section of the page.
-      "title": "Actions",
-      "action": {
-        "publish": "Publish Draft",
-        "abandon": "Abandon Draft"
-      }
-    },
     "alert": {
-      "upload": "Success! The new Form definition has been saved as your Draft.",
-      "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments.",
-      "abandon": "The Draft version of this Form has been successfully deleted.",
-      "delete": "The Form “{name}” was deleted."
+      "upload": "Success! The new Form definition has been saved as your Draft."
     }
   }
 }

@@ -19,7 +19,7 @@ describe('FormDraftAbandon', () => {
     testData.extendedForms.createPast(1, { draft: true });
     return load('/projects/1/forms/f/draft', { root: false }).testModalToggles({
       modal: FormDraftAbandon,
-      show: '#form-draft-status-abandon-button',
+      show: '#form-edit-abandon-button',
       hide: '.btn-link'
     });
   });
@@ -122,7 +122,7 @@ describe('FormDraftAbandon', () => {
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(async (app) => {
-          await app.get('#form-draft-status-abandon-button').trigger('click');
+          await app.get('#form-edit-abandon-button').trigger('click');
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
@@ -154,7 +154,7 @@ describe('FormDraftAbandon', () => {
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(async (app) => {
-          await app.get('#form-draft-status-abandon-button').trigger('click');
+          await app.get('#form-edit-abandon-button').trigger('click');
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
         .respondWithSuccess()
