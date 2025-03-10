@@ -18,6 +18,7 @@ import type {
 	InstanceData,
 	InstanceFile,
 	LoadFormOptions,
+	LoadFormWarnings,
 	RestoreFormInstanceInput,
 } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
@@ -296,6 +297,39 @@ describe('ExternalSecondaryInstanceParseTest.java', () => {
  *   deserializing instance state)?
  */
 describe('Restoring serialized instance state', () => {
+	let cleanupCallbacks = Array<VoidFunction>();
+
+	class WarningTracker {
+		private readonly mock: MockInstance;
+		private readonly initialCallCount: number;
+
+		constructor() {
+			this.mock = vi.spyOn(console, 'warn');
+			this.initialCallCount = this.mock.mock.calls.length;
+
+			cleanupCallbacks.push(() => {
+				this.mock.mockRestore();
+			});
+		}
+
+		/**
+		 * @todo when we actually design a way to convey
+		 * {@link LoadFormWarnings | warnings} from the engine, this isn't
+		 * even remotely how we'll do it or test for it!
+		 */
+		assertExcessRepeatInstanceWarningProduced(): void {
+			expect(this.mock).toHaveBeenCalledTimes(this.initialCallCount + 1);
+		}
+	}
+
+	afterEach(() => {
+		for (const callback of cleanupCallbacks) {
+			callback();
+		}
+
+		cleanupCallbacks = [];
+	});
+
 	/**
 	 * Note: this is _implicitly covered_ by tests exercising less basic concepts,
 	 * e.g. restoration of non-relevant nodes. Is there any value (maybe social?)
@@ -767,38 +801,6 @@ describe('Restoring serialized instance state', () => {
 			);
 
 			describe('excess count-controlled repeat instances', () => {
-				/**
-				 * @todo We previously discussed warning when dropping repeat instances.
-				 * In hindsight, I think that would be both less valuable and much more
-				 * difficult to achieve fo `jr:count` than for `jr:noAddRemove`. This is
-				 * here so we can discuss further and decide if/how to prioritize.
-				 */
-				const ASSERT_EXCESS_COUNT_CONTROLLED_REPEAT_INSTANCE_WARNING = false;
-
-				afterEach(() => {
-					vi.clearAllMocks();
-				});
-
-				class WarningTracker {
-					private readonly mock: MockInstance;
-					private readonly initialCallCount: number;
-
-					constructor() {
-						this.mock = vi.spyOn(console, 'warn');
-						this.initialCallCount = this.mock.mock.calls.length;
-					}
-
-					/**
-					 * @todo when we actually design a way to convey warnings from the
-					 * engine, this isn't even remotely how we'll do it or test for it!
-					 */
-					assertExcessRepeatInstanceWarningProduced() {
-						if (ASSERT_EXCESS_COUNT_CONTROLLED_REPEAT_INSTANCE_WARNING) {
-							expect(this.mock).toHaveBeenCalledTimes(this.initialCallCount + 1);
-						}
-					}
-				}
-
 				it('ignores repeat instances in excess of specified count', async () => {
 					const warningTracker = new WarningTracker();
 
@@ -971,32 +973,6 @@ describe('Restoring serialized instance state', () => {
 			);
 
 			describe('excess fixed repeat instances', () => {
-				const ASSERT_EXCESS_COUNT_CONTROLLED_REPEAT_INSTANCE_WARNING = true;
-
-				afterEach(() => {
-					vi.clearAllMocks();
-				});
-
-				class WarningTracker {
-					private readonly mock: MockInstance;
-					private readonly initialCallCount: number;
-
-					constructor() {
-						this.mock = vi.spyOn(console, 'warn');
-						this.initialCallCount = this.mock.mock.calls.length;
-					}
-
-					/**
-					 * @todo when we actually design a way to convey warnings from the
-					 * engine, this isn't even remotely how we'll do it or test for it!
-					 */
-					assertExcessRepeatInstanceWarningProduced() {
-						if (ASSERT_EXCESS_COUNT_CONTROLLED_REPEAT_INSTANCE_WARNING) {
-							expect(this.mock).toHaveBeenCalledTimes(this.initialCallCount + 1);
-						}
-					}
-				}
-
 				it('ignores repeat instances in excess of specified count', async () => {
 					const warningTracker = new WarningTracker();
 
