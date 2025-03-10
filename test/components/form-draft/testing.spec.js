@@ -48,19 +48,19 @@ describe('FormDraftTesting', () => {
     });
   });
 
-  describe('dataset preview box', async () => {
-    it('shows the dataset preview box', async () => {
+  describe('entities info box', async () => {
+    it('shows the info box', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
       const app = await load('/projects/1/forms/f/draft');
-      app.find('#form-draft-testing-info .panel-dialog').exists().should.be.true;
+      app.find('#form-draft-testing-entities').exists().should.be.true;
     });
 
-    it('does not show the dataset preview box', async () => {
+    it('does not show the info box', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
-      app.find('#form-draft-testing-info .panel-dialog').exists().should.be.false;
+      app.find('#form-draft-testing-entities').exists().should.be.false;
     });
   });
 });

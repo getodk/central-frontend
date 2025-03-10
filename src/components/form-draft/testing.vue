@@ -10,48 +10,36 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
-    <page-section id="form-draft-testing-info">
-      <template #heading>
-        <span>{{ $t('title') }}</span>
-      </template>
-      <template #body>
-        <div v-if="formDraft.entityRelated" class="panel-dialog">
-          <div class="panel-heading">
-            <span class="panel-title">
-              <span class="icon-database"></span>
-              {{ $t('entitiesTesting.title') }}
-            </span>
-          </div>
-          <div class="panel-body">
-            <p>
-              {{ $t('entitiesTesting.body[0]') }}
-            </p>
-            <p>
-              {{ $t('entitiesTesting.body[1]') }}
-            </p>
-          </div>
-        </div>
-        <p>
-          <span>{{ $t('introduction') }}</span>
-          <sentence-separator/>
-          <i18n-t keypath="moreInfo.helpArticle.full">
-            <template #helpArticle>
-              <doc-link to="central-forms/#working-with-form-drafts">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
-            </template>
-          </i18n-t>
-        </p>
-      </template>
-    </page-section>
-    <loading :state="keys.initiallyLoading"/>
-    <submission-list v-show="keys.dataExists" :project-id="projectId"
-      :xml-form-id="xmlFormId" draft @fetch-keys="fetchKeys"
-      @toggle-qr="togglePopover"/>
+  <form-edit-section icon="eye">
+    <template #title>{{ $t('title') }}</template>
+    <template #subtitle>
+      <i18n-t keypath="subtitle.full">
+        <template #willBeDeleted>
+          <strong>{{ $t('subtitle.willBeDeleted') }}</strong>
+        </template>
+      </i18n-t>
+    </template>
+    <template #body>
+      <div v-if="formDraft.entityRelated" id="form-draft-testing-entities">
+        <span>{{ $t('entitiesTesting') }}</span>
+        <sentence-separator/>
+        <i18n-t keypath="moreInfo.helpArticle.full">
+          <template #helpArticle>
+            <doc-link to="central-entities/#testing-forms-with-entities">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+          </template>
+        </i18n-t>
+      </div>
 
-    <popover :target="popoverData.target" placement="right" @hide="hidePopover">
-      <form-draft-qr-panel/>
-    </popover>
-  </div>
+      <loading :state="keys.initiallyLoading"/>
+      <submission-list v-show="keys.dataExists" :project-id="projectId"
+        :xml-form-id="xmlFormId" draft @fetch-keys="fetchKeys"
+        @toggle-qr="togglePopover"/>
+
+      <popover :target="popoverData.target" placement="right" @hide="hidePopover">
+        <form-draft-qr-panel/>
+      </popover>
+    </template>
+  </form-edit-section>
 </template>
 
 <script setup>
@@ -59,8 +47,8 @@ import { inject, shallowReactive } from 'vue';
 
 import DocLink from '../doc-link.vue';
 import FormDraftQrPanel from './qr-panel.vue';
+import FormEditSection from '../form/edit/section.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
 import Popover from '../popover.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import SubmissionList from '../submission/list.vue';
@@ -97,24 +85,19 @@ const hidePopover = () => { popoverData.target = null; };
 </script>
 
 <style lang="scss">
-#form-draft-testing-info { margin-bottom: 25px; }
+#form-draft-testing-entities { margin-bottom: 25px; }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
     // This is a title shown above a section of the page.
-    "title": "Draft Testing",
-    // @transifexKey component.FormDraftTesting.body.1
-    "introduction": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed.",
-    // @transifexKey component.FormDraftTesting.datasetsPreview
-    "entitiesTesting": {
-      "title": "This Form can update Entities",
-      "body": [
-        "Entities are only updated for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state.",
-        "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
-      ]
-    }
+    "title": "Test this Draft",
+    "subtitle": {
+      "full": "Submissions made here {willBeDeleted} when you publish this Draft!",
+      "willBeDeleted": "will be deleted"
+    },
+    "entitiesTesting": "This Form Definition creates or updates Entities. For now, Entities are not created or updated by Draft Forms, so you will need to publish the Form to verify Entity functionality."
   }
 }
 </i18n>
