@@ -1136,13 +1136,11 @@ describe('FormAttachmentList', () => {
             testData.extendedProjects.update(-1, { datasets: 1, updatedAt: null });
             return { success: true };
           })
+          .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
           .respondWithData(() => testData.formDatasetDiffs.sorted())
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondForComponent('FormSubmissions')
           .complete()
-          .route('/projects/1/forms/f/draft')
           .request(app =>
             app.get('#form-edit-create-draft-button').trigger('click'))
           .respondWithData(() => {
@@ -1182,13 +1180,11 @@ describe('FormAttachmentList', () => {
             testData.extendedProjects.update(-1, { datasets: 2, updatedAt: null });
             return { success: true };
           })
+          .respondWithData(() => testData.extendedProjects.last())
           .respondWithData(() => testData.extendedForms.last())
           .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
           .respondWithData(() => testData.formDatasetDiffs.sorted())
-          .respondWithData(() => testData.extendedProjects.last())
-          .respondForComponent('FormSubmissions')
           .complete()
-          .route('/projects/1/forms/f/draft')
           .request(app =>
             app.get('#form-edit-create-draft-button').trigger('click'))
           .respondWithData(() => {

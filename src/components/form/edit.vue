@@ -48,7 +48,6 @@ import FormEditDraftControls from './edit/draft-controls.vue';
 import FormEditLoadingDraft from './edit/loading-draft.vue';
 
 import useRoutes from '../../composables/routes';
-import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
@@ -103,49 +102,35 @@ watchEffect(() => {
 const publishModal = modalData();
 const { router, alert } = inject('container');
 const { t } = useI18n();
-const { projectPath, publishedFormPath } = useRoutes();
 const afterPublish = () => {
-  // We need to clear the form before navigating to the submissions page: if the
-  // form didn't already have a published version, then there would be a
-  // validateData violation if we didn't clear it.
+  // Re-request the project in case its `datasets` property has changed.
+  emit('fetch-project', true);
   emit('fetch-form');
-
-  // Other resources that may have changed after publish
   emit('fetch-linked-datasets');
+  formDraft.setToNone();
+  formVersions.reset();
+  draftAttachments.reset();
   datasets.reset();
   formDraftDatasetDiff.reset();
 
-  // We will update additional resources, but only after navigating to the
-  // submissions page. We need to wait to update these resources because they
-  // are used on the current page.
-  afterNextNavigation(router, () => {
-    // Re-request the project in case its `datasets` property has changed.
-    emit('fetch-project', true);
-    formVersions.data = null;
-    formDraft.setToNone();
-    draftAttachments.reset();
-
-    alert.success(t('alert.publish'));
-  });
-  router.push(publishedFormPath());
+  publishModal.hide();
+  alert.success(t('alert.publish'));
 };
 
 const abandonModal = modalData();
+const { projectPath } = useRoutes();
 const afterAbandon = () => {
-  formDraftDatasetDiff.reset();
   if (form.publishedAt != null) {
-    afterNextNavigation(router, () => {
-      formDraft.setToNone();
-      draftAttachments.reset();
-      alert.success(t('alert.abandon'));
-    });
-    router.push(publishedFormPath());
+    abandonModal.hide();
+    alert.success(t('alert.abandon'));
+
+    formDraft.setToNone();
+    draftAttachments.reset();
+    formDraftDatasetDiff.reset();
   } else {
     const { nameOrId } = form;
-    afterNextNavigation(router, () => {
-      alert.success(t('alert.delete', { name: nameOrId }));
-    });
-    router.push(projectPath());
+    router.push(projectPath())
+      .then(() => { alert.success(t('alert.delete', { name: nameOrId })); });
   }
 };
 

@@ -125,27 +125,23 @@ describe('FormDraftAbandon', () => {
           await app.get('#form-edit-abandon-button').trigger('click');
           return app.get('#form-draft-abandon .btn-danger').trigger('click');
         })
-        .respondWithSuccess()
-        .respondForComponent('FormSubmissions');
+        .respondWithSuccess();
     };
 
-    it('shows a success alert', () =>
-      abandon().then(app => {
-        app.should.alert('success', 'The Draft version of this Form has been successfully deleted.');
-      }));
+    it('hides the modal', async () => {
+      const app = await abandon();
+      app.getComponent(FormDraftAbandon).props().state.should.be.false;
+    });
 
-    it('redirects to the submissions page', () =>
-      abandon().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
-      }));
+    it('shows a success alert', async () => {
+      const app = await abandon();
+      app.should.alert('success', 'The Draft version of this Form has been successfully deleted.');
+    });
 
-    it('shows the create draft button', () =>
-      abandon()
-        .complete()
-        .route('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          app.get('#form-edit-create-draft-button').should.be.visible();
-        }));
+    it('shows the create draft button', async () => {
+      const app = await abandon();
+      app.get('#form-edit-create-draft-button').should.be.visible();
+    });
   });
 
   describe('after abandoning draft for a form without a published version', () => {

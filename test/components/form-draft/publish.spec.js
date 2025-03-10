@@ -345,12 +345,10 @@ describe('FormDraftPublish', () => {
         testData.extendedFormDrafts.publish(-1);
         return { success: true };
       })
+      .respondWithData(() => testData.extendedProjects.last())
       .respondWithData(() => testData.extendedForms.last())
       .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
-      .respondWithData(() => testData.formDatasetDiffs.sorted())
-      .respondWithData(() => testData.extendedProjects.last())
-      .respondForComponent('FormSubmissions');
-
+      .respondWithData(() => testData.formDatasetDiffs.sorted());
     const publish = () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
@@ -362,36 +360,39 @@ describe('FormDraftPublish', () => {
         .modify(respondToPublish);
     };
 
-    it('sends requests for the project and form', () => {
-      let count = 0;
-      const expectedUrls = [
+    it('sends the correct requests', () =>
+      publish().testRequests([
         null,
-        '/v1/projects/1/forms/f',
-        '/v1/projects/1/forms/f/attachments',
-        '/v1/projects/1/forms/f/dataset-diff',
-        '/v1/projects/1'
-      ];
-      return publish()
-        .beforeEachResponse((_, { url }, i) => {
-          if (i >= 1 && i <= 4) {
-            url.should.equal(expectedUrls[i]);
-            count += 1;
-          }
+        { url: '/v1/projects/1', extended: true },
+        { url: '/v1/projects/1/forms/f', extended: true },
+        { url: '/v1/projects/1/forms/f/attachments' },
+        { url: '/v1/projects/1/forms/f/dataset-diff' }
+      ]));
+
+    it('hides the modal', () =>
+      publish()
+        .afterResponses(app => {
+          // After the form draft is published, the modal is removed from the
+          // DOM.
+          app.findComponent(FormDraftPublish).exists().should.be.false;
         })
-        .afterResponses(() => {
-          count.should.equal(4);
-        });
+        .request(app =>
+          app.get('#form-edit-create-draft-button').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({ draft: true });
+          return { success: true };
+        })
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          // After a new draft is created, the modal should be rendered, but it
+          // should still be hidden.
+          app.getComponent(FormDraftPublish).props().state.should.be.false;
+        }));
+
+    it('shows a success alert', async () => {
+      const app = await publish();
+      app.should.alert('success');
     });
-
-    it('shows a success alert', () =>
-      publish().then(app => {
-        app.should.alert('success');
-      }));
-
-    it('redirects to the submissions page', () =>
-      publish().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
-      }));
 
     it('updates requestData', async () => {
       const app = await publish();
@@ -401,13 +402,10 @@ describe('FormDraftPublish', () => {
       requestData.localResources.draftAttachments.dataExists.should.be.false;
     });
 
-    it('shows the create draft button', () =>
-      publish()
-        .complete()
-        .route('/projects/1/forms/f/draft')
-        .afterResponses(app => {
-          app.get('#form-edit-create-draft-button').should.be.visible();
-        }));
+    it('shows the create draft button', async () => {
+      const app = await publish();
+      app.get('#form-edit-create-draft-button').should.be.visible();
+    });
 
     it('shows the published version in .../versions', () => {
       testData.extendedForms.createPast(1);
