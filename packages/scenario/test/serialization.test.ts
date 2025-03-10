@@ -23,7 +23,7 @@ import type {
 } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import type { MockInstance } from 'vitest';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, assert, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ComparableAnswer } from '../src/answer/ComparableAnswer.ts';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
@@ -322,6 +322,38 @@ describe('Restoring serialized instance state', () => {
 		}
 	}
 
+	const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
+
+	class FabricatedInstanceFile extends File implements InstanceFile {
+		override readonly name = INSTANCE_FILE_NAME;
+		override readonly type = INSTANCE_FILE_TYPE;
+
+		constructor(instanceElement: XFormsElement) {
+			super([instanceElement.asXml()], INSTANCE_FILE_NAME);
+		}
+	}
+
+	type AssertInstanceData = (data: FormData) => asserts data is InstanceData;
+
+	const assertInstanceData: AssertInstanceData = (data) => {
+		const instanceFile = data.get(INSTANCE_FILE_NAME);
+
+		expect(instanceFile).toBeInstanceOf(FabricatedInstanceFile);
+	};
+
+	const fabricateInstanceInput = (instanceElement: XFormsElement): RestoreFormInstanceInput => {
+		const instanceFile = new FabricatedInstanceFile(instanceElement);
+		const instanceData = new FormData();
+
+		instanceData.set(INSTANCE_FILE_NAME, instanceFile);
+
+		assertInstanceData(instanceData);
+
+		return {
+			data: [instanceData],
+		};
+	};
+
 	afterEach(() => {
 		for (const callback of cleanupCallbacks) {
 			callback();
@@ -336,6 +368,69 @@ describe('Restoring serialized instance state', () => {
 	 * in explicitly testing basics here?
 	 */
 	describe.skip('basic restoration of instance state');
+
+	describe('instance id', () => {
+		const FORM_DEFINED_INSTANCE_ID = 'restore-instance-id';
+
+		interface InvalidInstanceIdCase {
+			readonly instanceId: string | null;
+		}
+
+		it.each<InvalidInstanceIdCase>([
+			{ instanceId: `__WRONG_INSTANCE_ID__${FORM_DEFINED_INSTANCE_ID}__WRONG_INSTANCE_ID__` },
+			{ instanceId: null },
+		])(
+			`produces an error on attempt to restore an instance (id: $instanceId) for form (id: ${FORM_DEFINED_INSTANCE_ID})`,
+			async ({ instanceId }) => {
+				// prettier-ignore
+				const scenario = await Scenario.init('Restore instance id', html(
+				head(
+					title('Restore instance id'),
+					model(
+						mainInstance(
+							t(`data id="${FORM_DEFINED_INSTANCE_ID}"`,
+								t('meta', t('instanceID')))
+						),
+						bind('/data/meta/instanceID').preload('uid')
+					)
+				),
+				body()
+			));
+
+				let serializedInput: XFormsElement;
+
+				if (instanceId == null) {
+					serializedInput =
+						// prettier-ignore
+						t(`data`,
+							t('meta',
+								t('instanceID', 'does not matter for this test')));
+				} else {
+					serializedInput =
+						// prettier-ignore
+						t(`data id="${instanceId}"`,
+							t('meta',
+								t('instanceID', 'does not matter for this test')));
+				}
+
+				const instanceInput = fabricateInstanceInput(serializedInput);
+
+				let caught: Error | null = null;
+
+				try {
+					await scenario.restoreWebFormsInstanceState(instanceInput);
+				} catch (error) {
+					assert(error instanceof Error);
+					caught = error;
+				}
+
+				assert(
+					caught instanceof Error,
+					'Expected restoring instance to produce error for mismatch between form and instance `id`'
+				);
+			}
+		);
+	});
 
 	describe('non-relevant nodes omitted from instance payload', () => {
 		let scenario: Scenario;
@@ -622,38 +717,6 @@ describe('Restoring serialized instance state', () => {
 			expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(16));
 		});
 
-		const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
-
-		class FabricatedInstanceFile extends File implements InstanceFile {
-			override readonly name = INSTANCE_FILE_NAME;
-			override readonly type = INSTANCE_FILE_TYPE;
-
-			constructor(instanceElement: XFormsElement) {
-				super([instanceElement.asXml()], INSTANCE_FILE_NAME);
-			}
-		}
-
-		type AssertInstanceData = (data: FormData) => asserts data is InstanceData;
-
-		const assertInstanceData: AssertInstanceData = (data) => {
-			const instanceFile = data.get(INSTANCE_FILE_NAME);
-
-			expect(instanceFile).toBeInstanceOf(FabricatedInstanceFile);
-		};
-
-		const fabricateInstanceInput = (instanceElement: XFormsElement): RestoreFormInstanceInput => {
-			const instanceFile = new FabricatedInstanceFile(instanceElement);
-			const instanceData = new FormData();
-
-			instanceData.set(INSTANCE_FILE_NAME, instanceFile);
-
-			assertInstanceData(instanceData);
-
-			return {
-				data: [instanceData],
-			};
-		};
-
 		describe('jr:count', () => {
 			let scenario: Scenario;
 
@@ -910,7 +973,7 @@ describe('Restoring serialized instance state', () => {
 					detail: 'repeat instances not serialized at all',
 					// prettier-ignore
 					serializedInput:
-						t('data id="repeat-serde-count"'),
+						t('data id="repeat-serde-no-add-remove"'),
 					expectedState: [
 						{ inner1: stringAnswer(''), inner2: NAN_ANSWER, inner3: NAN_ANSWER },
 						{ inner1: stringAnswer(''), inner2: NAN_ANSWER, inner3: NAN_ANSWER },
@@ -921,7 +984,7 @@ describe('Restoring serialized instance state', () => {
 					detail: 'single repeat instance missing',
 					// prettier-ignore
 					serializedInput:
-						t('data id="repeat-serde-count"',
+						t('data id="repeat-serde-no-add-remove"',
 							t('repeat',
 								t('inner1', '3'),
 								t('inner2', '6'),
@@ -936,7 +999,7 @@ describe('Restoring serialized instance state', () => {
 					detail: 'child/leaf nodes missing',
 					// prettier-ignore
 					serializedInput:
-						t('data id="repeat-serde-count"',
+						t('data id="repeat-serde-no-add-remove"',
 							t('repeat',
 								t('inner1', '4')),
 							t('repeat',
@@ -977,7 +1040,7 @@ describe('Restoring serialized instance state', () => {
 					const warningTracker = new WarningTracker();
 
 					// prettier-ignore
-					const serializedInput = t('data id="repeat-serde-fixed"',
+					const serializedInput = t('data id="repeat-serde-no-add-remove"',
 						t('repeat',
 							t('inner1', '1'),
 							t('inner2', '2'),
