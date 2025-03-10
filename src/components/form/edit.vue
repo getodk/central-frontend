@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div class="row">
       <div class="col-xs-6">
-        <form-edit-create-draft v-if="formDraft.dataExists && formDraft.isEmpty()"
+        <form-edit-loading-draft v-if="!formDraft.dataExists"/>
+        <form-edit-create-draft v-else-if="formDraft.isEmpty()"
           @success="fetchDraft(true)"/>
       </div>
     </div>
@@ -34,6 +35,7 @@ import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftStatus from '../form-draft/status.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
+import FormEditLoadingDraft from './edit/loading-draft.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
