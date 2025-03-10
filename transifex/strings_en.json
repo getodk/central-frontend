@@ -3062,7 +3062,7 @@
         "string": "No active Draft for this Form"
       },
       "toMakeChanges": {
-        "string": "to make changes to this Form or its attachments",
+        "string": "to make changes to this Form or its attachments.",
         "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
       },
       "noEffectUntilPublish": {

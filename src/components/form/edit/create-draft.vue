@@ -69,7 +69,7 @@ const create = () => {
       "create": "Create a new Draft"
     },
     // This text is shown below a button with the text "Create a new Draft".
-    "toMakeChanges": "to make changes to this Form or its attachments",
+    "toMakeChanges": "to make changes to this Form or its attachments.",
     "noEffectUntilPublish": "The published version will not be affected until you publish your Draft."
   }
 }
