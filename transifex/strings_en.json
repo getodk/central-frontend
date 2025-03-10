@@ -2613,17 +2613,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Upload files",
+          "string": "Choose files",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
-      "heading": {
-        "0": {
-          "string": "Based on the Form you uploaded, the following Form Attachments are expected. You can see which ones have been provided or are still missing."
-        },
-        "1": {
-          "string": "To upload files, drag and drop one or more files onto the page."
-        }
+      "orDrag": {
+        "string": "or drag files onto this page to upload",
+        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "header": {
         "uploaded": {
