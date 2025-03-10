@@ -10,20 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section>
-    <template #heading>
-      <span><slot name="title"></slot></span>
-    </template>
-    <template #body>
-      <p><slot name="subtitle"></slot></p>
-      <slot name="body"></slot>
-    </template>
-  </page-section>
+  <div class="form-edit-section">
+    <div>
+      <div class="form-edit-section-icon-container">
+        <span :class="`icon-${icon}`"></span>
+      </div>
+      <div v-if="dotted" class="form-edit-section-dots"></div>
+    </div>
+    <div>
+      <p class="form-edit-section-title"><slot name="title"></slot></p>
+      <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
+      <div><slot name="body"></slot></div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import PageSection from '../../page/section.vue';
-
 defineOptions({
   name: 'FormEditSection'
 });
@@ -35,3 +37,49 @@ defineProps({
   dotted: Boolean
 });
 </script>
+
+<style lang="scss">
+.form-edit-section {
+  column-gap: 15px;
+  display: flex;
+
+  > :first-child {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  > :nth-child(2) {
+    padding-block: 16px 35px;
+  }
+}
+
+.form-edit-section-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  $radius: 36px;
+  width: #{2 * $radius};
+  height: #{2 * $radius};
+  border-radius: $radius;
+  background-color: #eee;
+
+  flex-shrink: 0;
+  font-size: 35px;
+}
+
+.form-edit-section-dots {
+  border-left: 2px dotted #999;
+  height: 100%;
+  margin-top: 9px;
+}
+
+.form-edit-section-title {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 0;
+}
+</style>

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="form-edit">
     <div class="row">
       <div class="col-xs-6">
         <form-edit-loading-draft v-if="!formDraft.dataExists"/>
@@ -141,6 +141,14 @@ const afterAbandon = () => {
 const rendersAttachments = computed(() =>
   draftAttachments.dataExists && draftAttachments.size !== 0);
 </script>
+
+<style lang="scss">
+#form-edit {
+  padding-inline: 10px;
+}
+
+body:has(#form-edit) { background-color: #fff; }
+</style>
 
 <i18n lang="json5">
 {
