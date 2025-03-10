@@ -125,8 +125,8 @@ export default {
       }
     },
     "formNav": {
-      // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.
-      "tabTitle": "These functions will become available once you publish your Draft Form"
+      // Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc.
+      "tabTitle": "Publish this Draft Form to enable these functions"
     }
   }
 }
