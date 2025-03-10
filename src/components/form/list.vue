@@ -106,7 +106,7 @@ export default {
     },
     "emptyTable": "There are no Forms to show.",
     "alert": {
-      "create": "Your new Form “{name}” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use."
+      "create": "Your new Form “{name}” has been created as a Draft. Upload files and test your Form below, and when you feel it’s ready, you can publish the Form for use."
     }
   }
 }
