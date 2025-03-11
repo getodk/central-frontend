@@ -90,6 +90,12 @@ module.exports = {
     'vue/no-template-target-blank': 'off',
     'vue/object-curly-newline': 'off',
     'vue/require-default-prop': 'off',
-    'vue/singleline-html-element-content-newline': 'off'
+    'vue/singleline-html-element-content-newline': 'off',
+    'vuejs-accessibility/label-has-for': ['error', {
+      controlComponents: ['flatpickr'],
+      required: {
+        some: ['nesting', 'id']
+      }
+    }]
   }
 };

@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <span id="entity-filters">
     <div class="form-group">
-      <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
+      <span class="icon-filter"></span>
     </div>
     <entity-filters-conflict :model-value="conflict" :disabled="disabled"
       :disabled-message="disabledMessage" @update:model-value="$emit('update:conflict', $event)"/>

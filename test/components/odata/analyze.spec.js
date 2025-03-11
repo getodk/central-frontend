@@ -62,8 +62,8 @@ describe('OdataAnalyze', () => {
 
     it('renders the Other tab correctly', async () => {
       const modal = mountComponent();
-      await clickTab(modal, 'Other');
-      assertContent(modal, 'Other', 'For a full description of our OData support,');
+      await clickTab(modal, 'Other (API)');
+      assertContent(modal, 'Other (API)', 'For a full description of our OData support,');
     });
   });
 

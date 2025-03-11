@@ -1,5 +1,3 @@
-import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
-
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -29,23 +27,6 @@ describe('FormDraftTesting', () => {
     should.exist(document.querySelector('.popover .form-draft-qr-panel'));
     await document.querySelector('.popover button').click();
     should.not.exist(document.querySelector('.popover'));
-  });
-
-  describe('submission count', () => {
-    beforeEach(mockLogin);
-
-    it('shows the count for the form draft, not the form', async () => {
-      testData.extendedForms.createPast(1, { submissions: 1 });
-      const draft = testData.extendedFormVersions
-        .createPast(1, { draft: true, submissions: 2 })
-        .last();
-      testData.extendedSubmissions.createPast(2, { formVersion: draft });
-      const component = await load('/projects/1/forms/f/draft', {
-        root: false
-      });
-      const text = component.getComponent(SubmissionDownloadButton).text();
-      text.should.equal('Download 2 Submissions…');
-    });
   });
 
   describe('dataset preview box', async () => {

@@ -12,7 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div>
     <p class="page-body-heading">{{ $t('heading[0]') }}</p>
-    <audit-filters v-model:action="action" v-model:dateRange="dateRange"/>
+    <div class="table-actions-bar">
+      <audit-filters v-model:action="action" v-model:dateRange="dateRange"/>
+    </div>
     <audit-table/>
     <loading :state="audits.initiallyLoading"/>
     <p v-show="audits.dataExists && audits.length === 0"

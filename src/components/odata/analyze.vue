@@ -180,7 +180,7 @@ export default {
     "tab": {
       "microsoft": "Power BI or Excel",
       // This is the text of a navigation tab. "Other" refers to "other tool".
-      "other": "Other"
+      "other": "Other (API)"
     },
     "help": {
       "microsoft": {

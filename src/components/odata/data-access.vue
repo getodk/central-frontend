@@ -10,19 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <span v-if="!oidcEnabled" id="odata-data-access">
-    <a class="btn btn-default"
-      href="https://docs.getodk.org/central-api-odata-endpoints/"
-      target="_blank" rel="noopener">
-      <span class="icon-plug"></span>{{ $t('action.apiAccess') }}
-    </a>
+  <div v-if="!oidcEnabled" id="odata-data-access">
     <button id="odata-data-access-analyze-button" type="button"
       class="btn btn-default" :aria-disabled="analyzeDisabled"
       v-tooltip.aria-describedby="analyzeDisabled ? analyzeDisabledMessage : null"
       @click="$emit('analyze')">
-      <span class="icon-bar-chart"></span>{{ $t('action.analyze') }}&hellip;
+      <span class="icon-bar-chart"></span>{{ $t('action.connectData') }}
     </button>
-  </span>
+  </div>
 </template>
 
 <script setup>
@@ -48,8 +43,7 @@ const { oidcEnabled } = inject('config');
 {
   "en": {
     "action": {
-      "apiAccess": "API access",
-      "analyze": "Analyze via OData"
+      "connectData": "Connect Data"
     }
   }
 }
