@@ -1475,6 +1475,12 @@
         }
       }
     },
+    "AuditFilters": {
+      "noLogDateSelected": {
+        "string": "(none)",
+        "developer_comment": "Text shown when no Audit log date is selected in the filter"
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {
@@ -2075,6 +2081,10 @@
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
+      },
+      "noSelectedConflictSelected": {
+        "string": "(none)",
+        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2116,16 +2126,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {Download {count} Entity} other {Download {count} Entities}}",
+            "string": "{count, plural, one {Download {count} Entity} other {Download all {count} Entities}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {Download {count} matching Entity} other {Download {count} matching Entities}}",
+              "string": "{count, plural, one {Download {count} Entity matching the filter} other {Download all {count} Entities matching the filter}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "Download matching Entities",
+              "string": "Download all Entities matching the filter",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -4425,7 +4435,7 @@
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
-          "string": "Other",
+          "string": "Other (API)",
           "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
         }
       },
@@ -4607,8 +4617,20 @@
     "SubmissionDownloadDropdown": {
       "action": {
         "download": {
-          "string": "Download",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "unfiltered": {
+            "string": "{count, plural, one {Download {count} Submission} other {Download all {count} Submissions}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withoutCount": {
+              "string": "Download all Submissions matching the filter",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
+            },
+            "withCount": {
+              "string": "{count, plural, one {Download {count} Submission matching the filter} other {Download {count} Submissions matching the filter}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            }
+          }
         }
       }
     },
@@ -4746,6 +4768,10 @@
           "string": "Submitted at",
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
+      },
+      "noSubmissionDateSelected": {
+        "string": "(none)",
+        "developer_comment": "Text shown when no Submission date is selected in the filter"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4764,6 +4790,10 @@
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
+      },
+      "noReviewStateSelected": {
+        "string": "(none)",
+        "developer_comment": "Text shown when no Review State is selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4795,6 +4825,10 @@
       },
       "unknown": {
         "string": "Unknown submitter"
+      },
+      "noSubmitterSelected": {
+        "string": "(none)",
+        "developer_comment": "Text shown when no Submitter is selected in the filter"
       }
     },
     "SubmissionList": {

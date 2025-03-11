@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label id="date-range-picker-container" for="datepicker" class="date-range-picker form-group">
+  <label id="date-range-picker-container" class="date-range-picker form-group" :class="{ disabled }">
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       class="form-control"
       :class="{ required, 'flatpickr-input': true, 'has-value': modelValue.length === 2, none: modelValue.length === 0 }"
       :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
-      :placeholder="$t('common.none')" autocomplete="off"
+      :placeholder="placeholder" autocomplete="off"
       @keydown="stopPropagationIfDisabled"
       @on-close="close"/>
     <template v-if="!required">
@@ -74,6 +74,11 @@ export default {
       default: false
     },
     label: {
+      type: String,
+      required: true
+    },
+    // Displayed when no date is selected
+    placeholder: {
       type: String,
       required: true
     },
@@ -209,6 +214,10 @@ export default {
 }
 
 #date-range-picker-container {
+  cursor: pointer;
+  &.disabled {
+    cursor: not-allowed;
+  }
   .icon-angle-down {
     font-size: 16px;
     color: #555555;

@@ -22,6 +22,11 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-refresh"></span>{{ $t('action.refresh') }}
         <spinner :state="refreshing"/>
       </button>
+      <Teleport v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
+        <entity-download-button :odata-filter="deleted ? null : odataFilter"
+        :snapshot-filter="snapshotFilter" :disabled="deleted"
+        v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
+      </Teleport>
     </div>
     <entity-table v-show="odataEntities.dataExists" ref="table"
       :properties="dataset.properties"
@@ -60,6 +65,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { reactive } from 'vue';
 
+import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
 import EntityRestore from './restore.vue';
 import EntityFilters from './filters.vue';
@@ -82,6 +88,7 @@ export default {
   name: 'EntityList',
   components: {
     EntityDelete,
+    EntityDownloadButton,
     EntityRestore,
     EntityFilters,
     EntityResolve,
@@ -152,7 +159,8 @@ export default {
       awaitingResponses: new Set(),
 
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
-      now: new Date().toISOString()
+      now: new Date().toISOString(),
+      snapshotFilter: ''
     };
   },
   computed: {
@@ -210,16 +218,13 @@ export default {
 
       if (first) {
         this.now = new Date().toISOString();
+        this.setSnapshotFilter();
         this.pagination.page = 0;
       }
 
-      // Add snapshot filters
-      let $filter = this.odataFilter ? `${this.odataFilter} and ` : '';
-      if (this.deleted) {
-        $filter += `__system/deletedAt le ${this.now}`;
-      } else {
-        $filter += `__system/createdAt le ${this.now} and `;
-        $filter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
+      let $filter = this.snapshotFilter;
+      if (this.odataFilter) {
+        $filter += ` and ${this.odataFilter}`;
       }
 
       this.odataEntities.request({
@@ -256,6 +261,15 @@ export default {
       // emit event to parent component to re-fetch deleted Entity count
       if (refresh && !this.deleted) {
         this.$emit('fetch-deleted-count');
+      }
+    },
+    setSnapshotFilter() {
+      this.snapshotFilter = '';
+      if (this.deleted) {
+        this.snapshotFilter += `__system/deletedAt le ${this.now}`;
+      } else {
+        this.snapshotFilter += `__system/createdAt le ${this.now} and `;
+        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
       }
     },
     // This method is called directly by DatasetEntities.

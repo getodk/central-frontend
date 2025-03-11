@@ -22,7 +22,8 @@ const mountComponent = (options) => {
   const merged = mergeMountOptions(options, {
     props: {
       modelValue: ['1970-01-01', '1970-01-01'],
-      label: 'Date range'
+      label: 'Date range',
+      placeholder: '(none)'
     }
   });
   merged.props.modelValue = merged.props.modelValue.map(fromISO);

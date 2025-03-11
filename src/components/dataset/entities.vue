@@ -27,12 +27,10 @@ except according to the terms contained in the LICENSE file.
               <span v-show="deleted" class="icon-close"></span>
             </button>
           </template>
+          <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
           <odata-data-access :analyze-disabled="deleted"
             :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
             @analyze="analyze.show()"/>
-          <entity-download-button
-            :aria-disabled="deleted"
-            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
         </div>
       </template>
       <template #body>
@@ -58,7 +56,6 @@ import OdataDataAccess from '../odata/data-access.vue';
 import PageSection from '../page/section.vue';
 import useEntities from '../../request-data/entities';
 import useQueryRef from '../../composables/query-ref';
-import EntityDownloadButton from '../entity/download-button.vue';
 
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
@@ -73,7 +70,6 @@ export default {
     OdataDataAccess,
     EntityList,
     EntityUpload: defineAsyncComponent(loadAsync('EntityUpload')),
-    EntityDownloadButton,
     PageSection
   },
   inject: ['alert'],
@@ -178,9 +174,9 @@ export default {
   .purge-description {
     display: inline;
     position: relative;
-    top: -5px;
     left: 12px;
     font-size: 14px;
+    margin-bottom: 0;
   }
 
   .dataset-entities-heading-row {

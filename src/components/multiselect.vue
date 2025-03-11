@@ -10,23 +10,25 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label ref="dropdown" :for="toggleId" class="multiselect form-group">
+  <div ref="dropdown" class="multiselect form-group" :class="{ disabled }">
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
-    <select :id="toggleId" ref="toggle" class="form-control"
-      :class="{ none: modelValue?.length === options?.length }"
-      :aria-disabled="options == null || disabled"
-      :data-toggle="(options == null || disabled) ? null : 'dropdown'" role="button"
-      v-tooltip.aria-describedby="disabledMessage"
-      aria-haspopup="true" aria-expanded="false" :aria-label="label"
-      @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
-      <option value="">{{ selectOption }}</option>
-    </select>
-    <span v-show="!hideLabel" class="form-label">
-      {{ label }}
-    </span>
-    <span class="icon-angle-down"></span>
+    <div :data-toggle="(options == null || disabled) ? null : 'dropdown'">
+      <select :id="toggleId" ref="toggle" class="form-control"
+        :class="{ none: modelValue?.length === options?.length || modelValue?.length === 0 }"
+        :aria-disabled="options == null || disabled"
+        role="button"
+        v-tooltip.aria-describedby="disabledMessage"
+        aria-haspopup="true" aria-expanded="false" :aria-label="label"
+        @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
+        <option value="">{{ selectOption }}</option>
+      </select>
+      <span v-show="!hideLabel" class="form-label">
+        {{ label }}
+      </span>
+      <span class="icon-angle-down"></span>
+    </div>
     <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
     hide it. -->
     <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
@@ -75,7 +77,7 @@ except according to the terms contained in the LICENSE file.
         <slot name="after-list" :selected="selected"></slot>
       </li>
     </ul>
-  </label>
+  </div>
 </template>
 
 <script>
@@ -137,10 +139,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  hideLabel: {
-    type: Boolean,
-    default: false
-  },
   placeholder: {
     type: Function,
     required: true
@@ -170,6 +168,10 @@ const props = defineProps({
   disabledMessage: {
     type: String,
     required: false
+  },
+  hideLabel: {
+    type: Boolean,
+    default: false
   }
 });
 const emit = defineEmits(['update:modelValue']);
@@ -427,6 +429,12 @@ const emptyMessage = computed(() => (searchValue.value === ''
 @import '../assets/scss/mixins';
 
 .multiselect {
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
   select {
     min-width: 111px;
     appearance: none;

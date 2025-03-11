@@ -10,11 +10,29 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <button id="submission-download-button" type="button" class="btn btn-primary"
-    @click="$emit('download')">
-    <span class="icon-arrow-circle-down"></span>
-    <span>{{ $t('action.download') }}</span>
-  </button>
+  <div id="submission-download-button" class="dropdown">
+    <button type="button" class="btn btn-primary"
+      :data-toggle="filtered ? 'dropdown' : null"
+      v-bind="$attrs"
+      @click="download">
+      <span class="icon-arrow-circle-down"></span>
+      <span>{{ $t('action.download') }}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li>
+        <button type="button" class="btn btn-link dropdown-item"
+          @click="$emit('downloadFiltered')">
+          <span>{{ downloadFiltered }}</span>
+        </button>
+      </li>
+      <li>
+        <button type="button" class="btn btn-link dropdown-item"
+          @click="$emit('download')">
+          <span>{{ $tcn('action.download.unfiltered', formVersion.submissions) }}</span>
+        </button>
+      </li>
+    </ul>
+</div>
 </template>
 
 <script>
@@ -26,20 +44,64 @@ export default {
     formVersion: Object,
     filtered: Boolean
   },
-  emits: ['download'],
+  emits: ['download', 'downloadFiltered'],
   setup() {
     const { odata } = useRequestData();
     return { odata };
+  },
+  computed: {
+    downloadFiltered() {
+      return !this.odata.dataExists
+        ? this.$t('action.download.filtered.withoutCount')
+        : this.$tcn('action.download.filtered.withCount', this.odata.count);
+    }
+  },
+  methods: {
+    download() {
+      if (!this.filtered) {
+        this.$emit('download');
+      }
+    }
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#submission-download-button{
+  .btn-primary {
+    display: block;
+  }
+
+  .dropdown-item {
+    width: 100%;
+    text-align: left;
+    color: $color-text;
+
+    &:hover {
+      color: #262626;
+      text-decoration: none;
+      background-color: #f5f5f5;
+    }
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
   // @transifexKey component.SubmissionDownloadDropdown
   "en": {
     "action": {
-      "download": "Download"
+      "download": {
+        "unfiltered": "Download {count} Submission | Download all {count} Submissions",
+        "filtered": {
+          // This is the text of a button. This text is shown when the number of
+          // matching Submissions is unknown.
+          "withoutCount": "Download all Submissions matching the filter",
+          "withCount": "Download {count} Submission matching the filter | Download {count} Submissions matching the filter"
+        }
+      }
     }
   }
 }

@@ -46,7 +46,7 @@ const options = reviewStates.map(reviewState => ({
 
 const { t } = useI18n();
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('common.none');
+  if (counts.total === counts.selected) return t('noReviewStateSelected');
   return t('placeholder', counts);
 };
 </script>
@@ -83,7 +83,9 @@ const placeholder = (counts) => {
         */
         "none": "None"
       }
-    }
+    },
+    // Text shown when no Review State is selected in the filter
+    "noReviewStateSelected": "(none)"
   }
 }
 </i18n>

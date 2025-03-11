@@ -38,7 +38,7 @@ const { t } = useI18n();
 const options = computed(() => [true, false].map(value =>
   ({ value, text: t(`conflict.${value}`) })));
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('common.none');
+  if (counts.total === counts.selected) return t('noSelectedConflictSelected');
 
   return t('placeholder', counts);
 };
@@ -85,7 +85,9 @@ const placeholder = (counts) => {
         */
         "none": "None"
       }
-    }
+    },
+    // Text shown when no conflict is selected in the filter dropdown
+    "noSelectedConflictSelected": "(none)"
   }
 }
 </i18n>

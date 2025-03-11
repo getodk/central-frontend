@@ -18,6 +18,7 @@ except according to the terms contained in the LICENSE file.
       @update:model-value="$emit('update:action', $event)"/>
     <date-range-picker :model-value="dateRange"
       :label="$t('field.dateRange')" required
+      :placeholder="$t('noLogDateSelected')"
       @update:model-value="$emit('update:dateRange', $event)"/>
   </form>
 </template>
@@ -42,3 +43,12 @@ export default {
   emits: ['update:action', 'update:dateRange']
 };
 </script>
+
+<i18n lang="json5">
+  {
+    "en": {
+      // Text shown when no Audit log date is selected in the filter
+      "noLogDateSelected": "(none)"
+    }
+  }
+  </i18n>

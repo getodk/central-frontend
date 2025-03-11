@@ -90,7 +90,7 @@ const update = (value) => {
 };
 
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('common.none');
+  if (counts.total === counts.selected) return t('noSubmitterSelected');
 
   return t('placeholder', counts);
 };
@@ -136,7 +136,9 @@ const placeholder = (counts) => {
         "none": "None"
       }
     },
-    "unknown": "Unknown submitter"
+    "unknown": "Unknown submitter",
+    // Text shown when no Submitter is selected in the filter
+    "noSubmitterSelected": "(none)"
   }
 }
 </i18n>

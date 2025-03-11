@@ -30,9 +30,6 @@ except according to the terms contained in the LICENSE file.
           <odata-data-access :analyze-disabled="analyzeDisabled"
             :analyze-disabled-message="analyzeDisabledMessage"
             @analyze="analyzeModal.show()"/>
-          <submission-download-button :form-version="form"
-            :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
-            @download="showDownloadModal"/>
         </div>
         </template>
       <template #body>
@@ -47,7 +44,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { watchEffect, computed, ref } from 'vue';
+import { watchEffect, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import EnketoFill from '../enketo/fill.vue';
@@ -58,7 +55,6 @@ import OdataDataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 import useQueryRef from '../../composables/query-ref';
 import useSubmissions from '../../request-data/submissions';
-import SubmissionDownloadButton from '../submission/download-button.vue';
 
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
@@ -73,7 +69,6 @@ export default {
     OdataAnalyze,
     OdataDataAccess,
     PageSection,
-    SubmissionDownloadButton,
     SubmissionList,
   },
   props: {
@@ -110,11 +105,9 @@ export default {
       if (deleted.value && project.dataExists && !canDelete.value) router.push('/');
     });
 
-    const downloadModalState = ref(false);
-
     return {
-      project, form, keys, analyzeModal: modalData(), downloadModal: modalData(),
-      deletedSubmissionCount, canDelete, deleted, downloadModalState
+      project, form, keys, analyzeModal: modalData(),
+      deletedSubmissionCount, canDelete, deleted
     };
   },
   computed: {
@@ -176,9 +169,6 @@ export default {
     toggleDeleted() {
       const { path } = this.$route;
       this.$router.push(this.deleted ? path : `${path}?deleted=true`);
-    },
-    showDownloadModal() {
-      this.$refs.submissionList.showDownloadModal();
     }
   }
 };
@@ -201,7 +191,7 @@ export default {
   .purge-description {
     display: inline;
     position: relative;
-    top: -5px;
+    top: 5px;
     left: 12px;
     font-size: 14px;
   }
