@@ -23,19 +23,27 @@ describe('SubmissionDownloadButton', () => {
   describe('text', () => {
     it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
-      mountComponent().text().should.equal('Download');
+      mountComponent().find('.btn-primary').text().should.equal('Download');
     });
 
     describe('submissions are filtered', () => {
-      it('shows correct text while first chunk of submissions is loading', () => {
+      it('show the dropdown menu', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const component = mountComponent({
           props: { filtered: true }
         });
-        component.text().should.equal('Download');
+        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
       });
 
-      it('shows correct text after first chunk of submissions has loaded', () => {
+      it('shows correct text while first chunk of submissions is loading for the first button', () => {
+        testData.extendedForms.createPast(1, { submissions: 2 });
+        const component = mountComponent({
+          props: { filtered: true }
+        });
+        component.find('li:nth-of-type(1)').text().should.equal('Download all Submissions matching the filter');
+      });
+
+      it('shows correct text after first chunk of submissions has loaded for the first button', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
         const component = mountComponent({
           props: { filtered: true },
@@ -45,7 +53,15 @@ describe('SubmissionDownloadButton', () => {
             }
           }
         });
-        component.text().should.equal('Download');
+        component.find('li:nth-of-type(1)').text().should.equal('Download 1 Submission matching the filter');
+      });
+
+      it('shows correct text while first chunk of submissions is loading for the second button', () => {
+        testData.extendedForms.createPast(1, { submissions: 2 });
+        const component = mountComponent({
+          props: { filtered: true }
+        });
+        component.find('li:nth-of-type(2)').text().should.equal('Download all 2 Submissions');
       });
     });
   });

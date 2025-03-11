@@ -1,4 +1,4 @@
-<!--
+ <!--
 Copyright 2020 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
@@ -20,6 +20,7 @@ except according to the terms contained in the LICENSE file.
     <date-range-picker :model-value="submissionDate"
       :label="$t('field.submissionDate')"
       :disabled="disabled" :disabled-message="disabledMessage"
+      :placeholder="$t('noSubmissionDateSelected')"
       @update:model-value="$emit('update:submissionDate', $event)"/>
     <submission-filters-review-state :model-value="reviewState"
       :disabled="disabled" :disabled-message="disabledMessage"
@@ -72,7 +73,9 @@ export default {
       // This is the text of a form field that allows the user to filter
       // Submissions by a date range.
       "submissionDate": "Submitted at"
-    }
+    },
+    // Text shown when no Submission date is selected in the filter
+    "noSubmissionDateSelected": "(none)"
   }
 }
 </i18n>

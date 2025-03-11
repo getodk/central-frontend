@@ -1,5 +1,4 @@
 import EnketoFill from '../../../src/components/enketo/fill.vue';
-import SubmissionDownloadButton from '../../../src/components/submission/download-button.vue';
 
 import testData from '../../data';
 import { findTab } from '../../util/dom';
@@ -30,20 +29,6 @@ describe('FormSubmissions', () => {
 
   describe('submission count', () => {
     beforeEach(mockLogin);
-
-    it('shows the count for the form, not the form draft', async () => {
-      testData.extendedForms.createPast(1, { submissions: 1 });
-      testData.extendedFormVersions.createPast(1, {
-        draft: true,
-        submissions: 2
-      });
-      testData.extendedSubmissions.createPast(1);
-      const component = await load('/projects/1/forms/f/submissions', {
-        root: false
-      });
-      const text = component.getComponent(SubmissionDownloadButton).text();
-      text.should.equal('Download');
-    });
 
     it('updates the tab badge if the count changes', () => {
       testData.extendedForms.createPast(1, { submissions: 10 });

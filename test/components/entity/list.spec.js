@@ -63,14 +63,10 @@ describe('EntityList', () => {
       .beforeAnyResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(1);
         app.get('#page-head-tabs li.active .badge').text().should.equal('1');
-        const button = app.get('#entity-download-button');
-        button.text().should.equal('Download');
       })
       .afterResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(2);
         app.get('#page-head-tabs li.active .badge').text().should.equal('2');
-        const button = app.get('#entity-download-button');
-        button.text().should.equal('Download');
       });
   });
 

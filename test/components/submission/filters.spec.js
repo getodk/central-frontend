@@ -242,11 +242,11 @@ describe('SubmissionFilters', () => {
         .beforeEachResponse((_, { url }) => {
           const filters = new URL(url, window.location.origin).searchParams.get('$filter').split(' and ');
 
-          const start = filters[0].split(' ge ')[1];
+          const start = filters[2].split(' ge ')[1];
           start.should.equal('1970-01-01T00:00:00.000Z');
           DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
 
-          const end = filters[1].split(' le ')[1];
+          const end = filters[3].split(' le ')[1];
           end.should.equal('1970-01-02T23:59:59.999Z');
           DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
         })
@@ -361,7 +361,7 @@ describe('SubmissionFilters', () => {
       .request(changeMultiselect('#submission-filters-review-state', [0]))
       .beforeEachResponse((_, { url }) => {
         const filter = relativeUrl(url).searchParams.get('$filter');
-        filter.should.match(/^\(__system\/submitterId eq \d+\) and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)/);
+        filter.should.match(/\(__system\/submitterId eq \d+\) and __system\/submissionDate ge \S+ and __system\/submissionDate le \S+ and \(__system\/reviewState eq null\)/);
       })
       .respondWithData(() => ({ value: [], '@odata.count': 0 }))
       .afterResponse(component => {

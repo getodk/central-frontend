@@ -41,9 +41,17 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
-        <submission-download-button v-if="draft" :form-version="formVersion"
-          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
-          :filtered="odataFilter != null && !deleted" @download="downloadModal.show()"/>
+        <!-- Have to add v-if and conditional :to, otherwise Teleport tries to locate
+          .form-submission-heading-row, can't find it and throws error -->
+        <Teleport v-if="formVersion.dataExists && odata.dataExists" :disabled="draft"
+          :to="!draft ? '.form-submissions-heading-row' : null">
+          <submission-download-button :form-version="formVersion"
+            :aria-disabled="deleted"
+            :filtered="odataFilter != null && !deleted"
+            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+            @download="showDownloadModal"
+            @download-filtered="showDownloadModal(true)"/>
+        </Teleport>
       </div>
       <submission-table v-show="odata.dataExists"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
@@ -71,7 +79,7 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
-      :odata-filter="odataFilter" @hide="downloadModal.hide()"/>
+      @hide="downloadModal.hide()"/>
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
@@ -86,7 +94,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watch, reactive } from 'vue';
+import { shallowRef, watch, reactive, Teleport } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -129,6 +137,7 @@ export default {
     SubmissionRestore,
     SubmissionTable,
     SubmissionUpdateReviewState,
+    Teleport
   },
   inject: ['alert'],
   props: {
@@ -232,6 +241,7 @@ export default {
 
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
       now: new Date().toISOString(),
+      snapshotFilter: ''
     };
   },
   computed: {
@@ -316,7 +326,6 @@ export default {
   created() {
     this.fetchData();
   },
-  expose: ['showDownloadModal'],
   methods: {
     // `clear` indicates whether this.odata should be cleared before sending the
     // request. `refresh` indicates whether the request is a background refresh.
@@ -327,19 +336,15 @@ export default {
 
       if (first) {
         this.now = new Date().toISOString();
+        this.setSnapshotFilter();
         this.pagination.page = 0;
       }
 
-      // Add snapshot filters
-      let $filter = this.odataFilter ? `${this.odataFilter} and ` : '';
-      if (this.deleted) {
-        // This is not foolproof. Missing clause: __system/deletedAt became null after `now`.
-        // We don't keep restore date, that would have helped here.
-        $filter += `__system/deletedAt le ${this.now}`;
-      } else {
-        $filter += `__system/submissionDate le ${this.now} and `;
-        $filter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
+      let $filter = this.snapshotFilter;
+      if (this.odataFilter) {
+        $filter += ` and ${this.odataFilter}`;
       }
+
       this.odata.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
@@ -401,6 +406,17 @@ export default {
         this.submitters.request({
           url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
         }).catch(noop);
+      }
+    },
+    setSnapshotFilter() {
+      this.snapshotFilter = '';
+      if (this.deleted) {
+        // This is not foolproof. Missing clause: __system/deletedAt became null after `now`.
+        // We don't keep restore date, that would have helped here.
+        this.snapshotFilter += `__system/deletedAt le ${this.now}`;
+      } else {
+        this.snapshotFilter += `__system/submissionDate le ${this.now} and `;
+        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
       }
     },
     // This method accounts for the unlikely case that the user clicked the
@@ -509,7 +525,11 @@ export default {
       if (this.odata.count < this.pageSizeOptions[0]) return;
       this.fetchChunk(false);
     },
-    showDownloadModal() {
+    showDownloadModal(filtered = false) {
+      this.downloadModal.odataFilter = this.snapshotFilter;
+      if (filtered) {
+        this.downloadModal.odataFilter += ` and ${this.odataFilter}`;
+      }
       this.downloadModal.show();
     }
   }
