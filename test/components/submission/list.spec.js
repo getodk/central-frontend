@@ -416,7 +416,7 @@ describe('SubmissionList', () => {
 
       it('updates the submission count', async () => {
         const component = await del();
-        const text = component.get('#form-head-form-tabs li:nth-of-type(1)').text();
+        const text = component.get('#page-head-tabs li:nth-of-type(1)').text();
         text.should.equal('Submissions 0');
       });
 
