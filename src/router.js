@@ -56,6 +56,32 @@ router.afterEach(unlessFailure(to => {
   }
 }));
 
+  //////////////////////////////////////////////////////////////////////////////
+  // REDIRECTS
+
+  // If a route is nested, its relative path is '', and that path is an alias,
+  // then we redirect to the canonical path. That turned out to be easier than
+  // using the `redirect` option of Vue Router.
+  router.beforeEach(to => {
+    if (to.matched.length === 1) return true;
+    const routeRecord = last(to.matched);
+    const { aliasOf } = routeRecord;
+    if (aliasOf == null || !aliasOf.path.startsWith(`${routeRecord.path}/`))
+      return true;
+    const redirect = aliasOf.path.replace(`${routeRecord.path}/`, '');
+    // This `if` should never be `true` given how we structure route paths. It's
+    // just here as a double-check.
+    if (!/^[\w-]+$/.test(redirect)) return true;
+    return {
+      path: `${to.path}/${redirect}`,
+      query: to.query,
+      hash: to.hash
+    };
+  });
+
+  // We used to have hash-based navigation, we have now switched to web-history-based
+  // navigation. To support, bookmarked links, we are redirecting old URL to the new one.
+  router.beforeEach(to => (to.path === '/' && to.hash.startsWith('#/') ? to.hash.substring(1) : true));
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -109,36 +135,6 @@ router.afterEach(unlessFailure(to => {
     await localePromise.catch(noop);
     return config.loadError != null ? '/load-error' : true;
   });
-
-
-
-  //////////////////////////////////////////////////////////////////////////////
-  // REDIRECTS
-
-  // If a route is nested, its relative path is '', and that path is an alias,
-  // then we redirect to the canonical path. That turned out to be easier than
-  // using the `redirect` option of Vue Router.
-  router.beforeEach(to => {
-    if (to.matched.length === 1) return true;
-    const routeRecord = last(to.matched);
-    const { aliasOf } = routeRecord;
-    if (aliasOf == null || !aliasOf.path.startsWith(`${routeRecord.path}/`))
-      return true;
-    const redirect = aliasOf.path.replace(`${routeRecord.path}/`, '');
-    // This `if` should never be `true` given how we structure route paths. It's
-    // just here as a double-check.
-    if (!/^[\w-]+$/.test(redirect)) return true;
-    return {
-      path: `${to.path}/${redirect}`,
-      query: to.query,
-      hash: to.hash
-    };
-  });
-
-  // We used to have hash-based navigation, we have now switched to web-history-based
-  // navigation. To support, bookmarked links, we are redirecting old URL to the new one.
-  router.beforeEach(to => (to.path === '/' && to.hash.startsWith('#/') ? to.hash.substring(1) : true));
-
 
   //////////////////////////////////////////////////////////////////////////////
   // LOGIN
