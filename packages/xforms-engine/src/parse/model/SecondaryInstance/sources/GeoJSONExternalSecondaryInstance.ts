@@ -11,9 +11,8 @@ import type {
 	FeatureCollection as GeoJSONFeatureCollection,
 } from 'geojson';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticDocument } from '../../../../integration/xpath/static-dom/StaticDocument.ts';
-import type { StaticElementChildOption } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { assertSecondaryInstanceDefinition } from '../assertSecondaryInstanceDefinition.ts';
+import type { StaticElementOptions } from '../../../../integration/xpath/static-dom/StaticElement.ts';
+import { defineSecondaryInstance } from '../defineSecondaryInstance.ts';
 import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
 
@@ -269,7 +268,7 @@ const geometryValues = (geometry: SupportedGeometry): readonly string[] => {
 	}
 };
 
-const geometryChildElementOption = (feature: Feature): StaticElementChildOption => {
+const geometryChildElementOption = (feature: Feature): StaticElementOptions => {
 	const { geometry } = feature;
 	const values = geometryValues(geometry);
 	const value = values.join('; ');
@@ -280,17 +279,14 @@ const geometryChildElementOption = (feature: Feature): StaticElementChildOption 
 	};
 };
 
-const propertyChildOption = (
-	propertyName: string,
-	propertyValue: string
-): StaticElementChildOption => {
+const propertyChildOption = (propertyName: string, propertyValue: string): StaticElementOptions => {
 	return {
 		name: propertyName,
 		children: [propertyValue],
 	};
 };
 
-function* propertyChildOptions(feature: Feature): Iterable<StaticElementChildOption> {
+function* propertyChildOptions(feature: Feature): Iterable<StaticElementOptions> {
 	const { properties } = feature;
 
 	if (properties == null) {
@@ -310,7 +306,7 @@ function* propertyChildOptions(feature: Feature): Iterable<StaticElementChildOpt
 	}
 }
 
-const itemChildOption = (feature: Feature): StaticElementChildOption => {
+const itemChildOption = (feature: Feature): StaticElementOptions => {
 	const geometry = geometryChildElementOption(feature);
 	const properties = propertyChildOptions(feature);
 
@@ -320,7 +316,7 @@ const itemChildOption = (feature: Feature): StaticElementChildOption => {
 	};
 };
 
-const rootChildOption = (featureCollection: FeatureCollection): StaticElementChildOption => {
+const rootChildOption = (featureCollection: FeatureCollection): StaticElementOptions => {
 	return {
 		name: 'root',
 		children: featureCollection.features.map(itemChildOption),
@@ -331,22 +327,7 @@ const geoJSONExternalSecondaryInstanceDefinition = (
 	instanceId: string,
 	featureCollection: FeatureCollection
 ): SecondaryInstanceDefinition => {
-	const doc = new StaticDocument({
-		documentRoot: {
-			name: 'instance',
-			attributes: [
-				{
-					name: 'id',
-					value: instanceId,
-				},
-			],
-			children: [rootChildOption(featureCollection)],
-		},
-	});
-
-	assertSecondaryInstanceDefinition(doc);
-
-	return doc;
+	return defineSecondaryInstance(instanceId, rootChildOption(featureCollection));
 };
 
 export class GeoJSONExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'geojson'> {

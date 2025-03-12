@@ -1,9 +1,8 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticDocument } from '../../../../integration/xpath/static-dom/StaticDocument.ts';
-import type { StaticElementChildOption } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { assertSecondaryInstanceDefinition } from '../assertSecondaryInstanceDefinition.ts';
+import type { StaticElementOptions } from '../../../../integration/xpath/static-dom/StaticElement.ts';
+import { defineSecondaryInstance } from '../defineSecondaryInstance.ts';
 import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
 
@@ -88,7 +87,7 @@ type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceIte
 
 const columnChildOption = (
 	column: CSVExternalSecondaryInstanceItemColumn
-): StaticElementChildOption => {
+): StaticElementOptions => {
 	const { columnName, cellValue } = column;
 
 	return {
@@ -97,7 +96,7 @@ const columnChildOption = (
 	};
 };
 
-const itemChildOption = (item: CSVExternalSecondaryInstanceItem): StaticElementChildOption => {
+const itemChildOption = (item: CSVExternalSecondaryInstanceItem): StaticElementOptions => {
 	return {
 		name: 'item',
 		children: item.map(columnChildOption),
@@ -106,7 +105,7 @@ const itemChildOption = (item: CSVExternalSecondaryInstanceItem): StaticElementC
 
 const rootChildOption = (
 	items: readonly CSVExternalSecondaryInstanceItem[]
-): StaticElementChildOption => {
+): StaticElementOptions => {
 	return {
 		name: 'root',
 		children: items.map(itemChildOption),
@@ -117,22 +116,7 @@ const csvExternalSecondaryInstanceDefinition = (
 	instanceId: string,
 	items: readonly CSVExternalSecondaryInstanceItem[]
 ): SecondaryInstanceDefinition => {
-	const doc = new StaticDocument({
-		documentRoot: {
-			name: 'instance',
-			attributes: [
-				{
-					name: 'id',
-					value: instanceId,
-				},
-			],
-			children: [rootChildOption(items)],
-		},
-	});
-
-	assertSecondaryInstanceDefinition(doc);
-
-	return doc;
+	return defineSecondaryInstance(instanceId, rootChildOption(items));
 };
 
 export class CSVExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'csv'> {
