@@ -11,6 +11,7 @@ import type {
 	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
+import type { QualifiedNameSource } from '../../lib/names/QualifiedName.ts';
 
 type ConcreteConstructor<T extends AnyConstructor> = Pick<T, keyof T>;
 
@@ -22,10 +23,17 @@ export type ConcreteStaticDocumentConstructor<
 	& ConcreteConstructor<typeof StaticDocument<Root>>
 	& (new (rootFactory: StaticDocumentRootFactory<T, Root>) => T);
 
+const parseNodeName = (domNode: Attr | Element): QualifiedNameSource => {
+	return {
+		namespaceURI: domNode.namespaceURI,
+		prefix: domNode.prefix,
+		localName: domNode.localName,
+	};
+};
+
 const parseStaticElementAttributes = (domElement: Element): readonly StaticAttributeOptions[] => {
 	return Array.from(domElement.attributes).map((attr) => ({
-		namespaceURI: attr.namespaceURI,
-		localName: attr.localName,
+		name: attr,
 		value: attr.value,
 	}));
 };
@@ -49,11 +57,8 @@ const parseStaticElementChildren = (domElement: Element): readonly StaticElement
 };
 
 const parseStaticElementOptions = (domElement: Element): StaticElementOptions => {
-	const { namespaceURI, localName } = domElement;
-
 	return {
-		namespaceURI,
-		localName,
+		name: parseNodeName(domElement),
 		attributes: parseStaticElementAttributes(domElement),
 		children: parseStaticElementChildren(domElement),
 	};

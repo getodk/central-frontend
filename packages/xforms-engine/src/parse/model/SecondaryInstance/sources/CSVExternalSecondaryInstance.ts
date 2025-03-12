@@ -1,4 +1,3 @@
-import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
@@ -92,16 +91,14 @@ const columnChildOption = (
 	const { columnName, cellValue } = column;
 
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: columnName,
+		name: columnName,
 		children: [cellValue],
 	};
 };
 
 const itemChildOption = (item: CSVExternalSecondaryInstanceItem): StaticElementChildOption => {
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: 'item',
+		name: 'item',
 		children: item.map(columnChildOption),
 	};
 };
@@ -110,8 +107,7 @@ const rootChildOption = (
 	items: readonly CSVExternalSecondaryInstanceItem[]
 ): StaticElementChildOption => {
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: 'root',
+		name: 'root',
 		children: items.map(itemChildOption),
 	};
 };
@@ -121,12 +117,10 @@ class CSVExternalSecondaryInstanceDefinition extends SecondaryInstanceDefinition
 		super({
 			DocumentRootConstructor: SecondaryInstanceRootDefinition,
 			documentRoot: {
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'instance',
+				name: 'instance',
 				attributes: [
 					{
-						namespaceURI: XFORMS_NAMESPACE_URI,
-						localName: 'id',
+						name: 'id',
 						value: instanceId,
 					},
 				],

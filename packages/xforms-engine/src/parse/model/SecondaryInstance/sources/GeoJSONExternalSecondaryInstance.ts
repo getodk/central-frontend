@@ -1,4 +1,3 @@
-import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { assertUnknownArray } from '@getodk/common/lib/type-assertions/assertUnknownArray.ts';
 import type { UnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
@@ -275,8 +274,7 @@ const geometryChildElementOption = (feature: Feature): StaticElementChildOption 
 	const value = values.join('; ');
 
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: 'geometry',
+		name: 'geometry',
 		children: [value],
 	};
 };
@@ -286,8 +284,7 @@ const propertyChildOption = (
 	propertyValue: string
 ): StaticElementChildOption => {
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: propertyName,
+		name: propertyName,
 		children: [propertyValue],
 	};
 };
@@ -317,16 +314,14 @@ const itemChildOption = (feature: Feature): StaticElementChildOption => {
 	const properties = propertyChildOptions(feature);
 
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: 'item',
+		name: 'item',
 		children: [geometry, ...properties],
 	};
 };
 
 const rootChildOption = (featureCollection: FeatureCollection): StaticElementChildOption => {
 	return {
-		namespaceURI: XFORMS_NAMESPACE_URI,
-		localName: 'root',
+		name: 'root',
 		children: featureCollection.features.map(itemChildOption),
 	};
 };
@@ -336,12 +331,10 @@ class GeoJSONExternalSecondaryInstanceDefinition extends SecondaryInstanceDefini
 		super({
 			DocumentRootConstructor: SecondaryInstanceRootDefinition,
 			documentRoot: {
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'instance',
+				name: 'instance',
 				attributes: [
 					{
-						namespaceURI: XFORMS_NAMESPACE_URI,
-						localName: 'id',
+						name: 'id',
 						value: instanceId,
 					},
 				],

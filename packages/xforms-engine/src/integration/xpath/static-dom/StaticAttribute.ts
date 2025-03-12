@@ -4,11 +4,10 @@ import type { XFormsXPathAttribute } from '../adapter/XFormsXPathNode.ts';
 import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticElement } from './StaticElement.ts';
 import { StaticNode } from './StaticNode.ts';
+import { staticNodeName, type StaticNodeNameSource } from './staticNodeName.ts';
 
 export interface StaticAttributeOptions {
-	readonly namespaceURI: string | null;
-	readonly prefix?: string | null;
-	readonly localName: string;
+	readonly name: StaticNodeNameSource;
 	readonly value: string;
 }
 
@@ -30,7 +29,7 @@ export class StaticAttribute extends StaticNode<'attribute'> implements XFormsXP
 
 		this.rootDocument = parent.rootDocument;
 		this.root = parent.root;
-		this.qualifiedName = new QualifiedName(options);
+		this.qualifiedName = staticNodeName(options.name);
 		this.value = options.value;
 	}
 

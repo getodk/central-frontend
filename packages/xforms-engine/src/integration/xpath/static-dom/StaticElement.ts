@@ -1,4 +1,5 @@
 import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME } from '@getodk/xpath';
+import type { QualifiedNameSource } from '../../../lib/names/QualifiedName.ts';
 import { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EngineDOMAdapter } from '../adapter/engineDOMAdapter.ts';
 import type { XFormsXPathElement } from '../adapter/XFormsXPathNode.ts';
@@ -6,6 +7,7 @@ import type { StaticAttributeOptions } from './StaticAttribute.ts';
 import { StaticAttribute } from './StaticAttribute.ts';
 import type { StaticDocument } from './StaticDocument.ts';
 import type { StaticChildNode } from './StaticNode.ts';
+import { staticNodeName } from './staticNodeName.ts';
 import { StaticParentNode } from './StaticParentNode.ts';
 import { StaticText } from './StaticText.ts';
 
@@ -20,9 +22,7 @@ export type StaticElementChildOption =
 	| string;
 
 export interface StaticElementOptions {
-	readonly namespaceURI: string | null;
-	readonly prefix?: string | null;
-	readonly localName: string;
+	readonly name: QualifiedNameSource | string;
 	readonly attributes?: readonly StaticAttributeOptions[];
 	readonly children?: readonly StaticElementChildOption[];
 }
@@ -79,10 +79,9 @@ export class StaticElement<Parent extends StaticElementParent = StaticElementPar
 			this.root = parent.root;
 		}
 
-		this.qualifiedName = new QualifiedName(options);
+		const { name, attributes = [], children = [] } = options;
 
-		const { attributes = [], children = [] } = options;
-
+		this.qualifiedName = staticNodeName(name);
 		this.attributes = attributes.map((attrOptions) => {
 			return new StaticAttribute(this, attrOptions);
 		});
