@@ -14,15 +14,13 @@ except according to the terms contained in the LICENSE file.
     <div v-if="!$slots.dropdown && link == null">
       <slot name="title"></slot>
     </div>
-    <router-link v-else-if="link != null" :to="link">
+    <router-link v-else-if="link != null" class="btn btn-link" :to="link">
       <slot name="title"></slot>
     </router-link>
-    <button v-else :id="toggleId" type="button" class="btn-link dropdown-toggle" data-toggle="dropdown"
+    <button v-else :id="toggleId" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
       aria-haspopup="menu" aria-expanded="false">
-      <a href="#">
         <slot name="title"></slot>
         <span class="icon-angle-down"></span>
-      </a>
     </button>
     <ul class="dropdown-menu" :aria-labelledby="toggleId">
       <slot name="dropdown"></slot>
@@ -48,13 +46,48 @@ const toggleId = `${idPrefix}-toggle`;
 </script>
 
 <style lang="scss">
+@import '../assets/scss/variables';
+
+  #page-head:not(:hover):not(:focus-within) .infonav-button {
+    color: #999;
+    a {
+      color: #999;
+      [class^="icon-"] {
+        color: #aaa;
+      }
+    }
+  }
+
+
   .infonav-button {
     margin-left: 10px;
-    font-size: 15px;
     white-space: nowrap;
+    color: $color-action-foreground;
+
+    .btn {
+      font-size: 15px;
+      box-shadow: none;
+
+      &:hover {
+        background-color: #fff;
+        color: $color-action-foreground;
+      }
+
+      &:focus {
+        background-color: $color-action-background;
+        color: #fff;
+      }
+    }
 
     .icon-angle-down {
       margin-left: 5px;
+    }
+
+    .dropdown-menu {
+      border: none;
+      border-radius: 2px;
+      margin-top: 0px;
+      min-width: 100%;
     }
   }
 

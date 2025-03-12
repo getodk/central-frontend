@@ -43,8 +43,9 @@ defineOptions({
 }
 
 #page-head-title-infonav {
+  padding: 10px 0px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
 }
 
 #page-head-title { overflow-wrap: break-word; }
