@@ -92,12 +92,16 @@ defineExpose({ afterUpdate, afterDelete });
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#entity-table .table-freeze-scrolling {
-  th, td {
-    @include text-overflow-ellipsis;
-    max-width: 250px;
-    &:last-child { max-width: 325px; }
+#entity-table {
+  .table-freeze-scrolling {
+    th, td {
+      @include text-overflow-ellipsis;
+      max-width: 250px;
+      &:last-child { max-width: 325px; }
+    }
   }
+
+th.col-deleted-at { color: $color-danger; }
 }
 </style>
 
