@@ -1,7 +1,7 @@
 import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../../../shared/parseStaticDocumentFromDOMSubtree.ts';
-import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
-import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
+import { assertSecondaryInstanceDefinition } from '../assertSecondaryInstanceDefinition.ts';
+import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
 import type { InternalSecondaryInstanceSource } from './InternalSecondaryInstanceSource.ts';
 
@@ -23,10 +23,10 @@ export class XMLExternalSecondaryInstanceSource extends ExternalSecondaryInstanc
 		instanceElement.setAttribute('id', this.instanceId);
 		instanceElement.innerHTML = this.resource.data;
 
-		return parseStaticDocumentFromDOMSubtree(
-			SecondaryInstanceDefinition,
-			SecondaryInstanceRootDefinition,
-			instanceElement
-		);
+		const doc = parseStaticDocumentFromDOMSubtree(instanceElement);
+
+		assertSecondaryInstanceDefinition(doc);
+
+		return doc;
 	}
 }

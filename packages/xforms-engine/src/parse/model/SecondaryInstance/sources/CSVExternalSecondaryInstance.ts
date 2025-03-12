@@ -1,9 +1,10 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
+import { StaticDocument } from '../../../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElementChildOption } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
-import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
+import { assertSecondaryInstanceDefinition } from '../assertSecondaryInstanceDefinition.ts';
+import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
 
 type CSVColumn = string;
@@ -112,23 +113,27 @@ const rootChildOption = (
 	};
 };
 
-class CSVExternalSecondaryInstanceDefinition extends SecondaryInstanceDefinition {
-	constructor(instanceId: string, items: readonly CSVExternalSecondaryInstanceItem[]) {
-		super({
-			DocumentRootConstructor: SecondaryInstanceRootDefinition,
-			documentRoot: {
-				name: 'instance',
-				attributes: [
-					{
-						name: 'id',
-						value: instanceId,
-					},
-				],
-				children: [rootChildOption(items)],
-			},
-		});
-	}
-}
+const csvExternalSecondaryInstanceDefinition = (
+	instanceId: string,
+	items: readonly CSVExternalSecondaryInstanceItem[]
+): SecondaryInstanceDefinition => {
+	const doc = new StaticDocument({
+		documentRoot: {
+			name: 'instance',
+			attributes: [
+				{
+					name: 'id',
+					value: instanceId,
+				},
+			],
+			children: [rootChildOption(items)],
+		},
+	});
+
+	assertSecondaryInstanceDefinition(doc);
+
+	return doc;
+};
 
 export class CSVExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'csv'> {
 	/**
@@ -241,6 +246,6 @@ export class CSVExternalSecondaryInstanceSource extends ExternalSecondaryInstanc
 		});
 		const items = this.toItems(columns, rows);
 
-		return new CSVExternalSecondaryInstanceDefinition(this.instanceId, items);
+		return csvExternalSecondaryInstanceDefinition(this.instanceId, items);
 	}
 }

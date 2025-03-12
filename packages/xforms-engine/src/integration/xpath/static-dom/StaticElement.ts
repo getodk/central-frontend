@@ -1,4 +1,3 @@
-import { XFORMS_KNOWN_ATTRIBUTE, XFORMS_LOCAL_NAME } from '@getodk/xpath';
 import type { QualifiedNameSource } from '../../../lib/names/QualifiedName.ts';
 import { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { EngineDOMAdapter } from '../adapter/engineDOMAdapter.ts';
@@ -12,11 +11,6 @@ import { StaticParentNode } from './StaticParentNode.ts';
 import { StaticText } from './StaticText.ts';
 
 // prettier-ignore
-type StaticElementParent =
-	| StaticDocument
-	| StaticElement;
-
-// prettier-ignore
 export type StaticElementChildOption =
 	| StaticElementOptions
 	| string;
@@ -27,34 +21,7 @@ export interface StaticElementOptions {
 	readonly children?: readonly StaticElementChildOption[];
 }
 
-type StaticElementKnownAttributeValue<
-	T extends StaticElement,
-	LocalName extends string,
-> = T extends { readonly [XFORMS_KNOWN_ATTRIBUTE]: LocalName } ? string : string | null;
-
-type AssertStaticElementKnownAttributeValue = <T extends StaticElement, LocalName extends string>(
-	element: T,
-	localName: LocalName,
-	value: string | null
-) => asserts value is StaticElementKnownAttributeValue<T, LocalName>;
-
-const assertStaticElementKnownAttributeValue: AssertStaticElementKnownAttributeValue = (
-	element,
-	localName,
-	value
-) => {
-	if (localName === element[XFORMS_KNOWN_ATTRIBUTE] && value == null) {
-		throw new Error(`Expected attribute: ${element[XFORMS_KNOWN_ATTRIBUTE]}`);
-	}
-};
-
-export class StaticElement<Parent extends StaticElementParent = StaticElementParent>
-	extends StaticParentNode<'element'>
-	implements XFormsXPathElement
-{
-	readonly [XFORMS_LOCAL_NAME]?: string;
-	readonly [XFORMS_KNOWN_ATTRIBUTE]?: string;
-
+export class StaticElement extends StaticParentNode<'element'> implements XFormsXPathElement {
 	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
 	readonly qualifiedName: QualifiedName;
@@ -63,7 +30,7 @@ export class StaticElement<Parent extends StaticElementParent = StaticElementPar
 	readonly value = null;
 
 	constructor(
-		readonly parent: Parent,
+		readonly parent: StaticDocument | StaticElement,
 		options: StaticElementOptions
 	) {
 		super('element');
@@ -116,14 +83,9 @@ export class StaticElement<Parent extends StaticElementParent = StaticElementPar
 	 * up. (This was put off because the types are already plenty complex as it
 	 * is.)
 	 */
-	getAttributeValue<This extends StaticElement, LocalName extends string>(
-		this: This,
-		localName: LocalName
-	): StaticElementKnownAttributeValue<This, LocalName> {
+	getAttributeValue(localName: string): string | null {
 		const attribute = this.getAttributeNode(localName);
 		const value = attribute?.value ?? null;
-
-		assertStaticElementKnownAttributeValue(this, localName, value);
 
 		return value;
 	}
@@ -133,18 +95,3 @@ export class StaticElement<Parent extends StaticElementParent = StaticElementPar
 		return this.children.map((child) => child.getXPathValue()).join('');
 	}
 }
-
-// prettier-ignore
-export type StaticElementConstructor<
-	T extends StaticElement<Parent>,
-	Parent extends StaticDocument<T> | StaticElement,
-> =
-	& Pick<typeof StaticElement, keyof typeof StaticElement>
-	& {
-			readonly prototype: T;
-
-			new (
-				parent: Parent,
-				options: StaticElementOptions
-			): T;
-	};

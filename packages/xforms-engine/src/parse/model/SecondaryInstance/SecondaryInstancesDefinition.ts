@@ -1,10 +1,15 @@
 import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { XFormsSecondaryInstanceMap } from '@getodk/xpath';
+import type {
+	XFORMS_KNOWN_ATTRIBUTE,
+	XFORMS_LOCAL_NAME,
+	XFormsSecondaryInstanceMap,
+} from '@getodk/xpath';
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
+import type { StaticDocument } from '../../../integration/xpath/static-dom/StaticDocument.ts';
+import type { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
 import type { XFormDOM } from '../../XFormDOM.ts';
-import { SecondaryInstanceRootDefinition } from './SecondaryInstanceRootDefinition.ts';
 import { BlankSecondaryInstanceSource } from './sources/BlankSecondaryInstanceSource.ts';
 import { CSVExternalSecondaryInstanceSource } from './sources/CSVExternalSecondaryInstance.ts';
 import type { ExternalSecondaryInstanceResourceLoadOptions } from './sources/ExternalSecondaryInstanceResource.ts';
@@ -13,6 +18,22 @@ import { GeoJSONExternalSecondaryInstanceSource } from './sources/GeoJSONExterna
 import { InternalSecondaryInstanceSource } from './sources/InternalSecondaryInstanceSource.ts';
 import type { SecondaryInstanceSource } from './sources/SecondaryInstanceSource.ts';
 import { XMLExternalSecondaryInstanceSource } from './sources/XMLExternalSecondaryInstanceSource.ts';
+
+export interface SecondaryInstanceDefinition extends StaticDocument {
+	readonly rootDocument: SecondaryInstanceDefinition;
+	readonly root: SecondaryInstanceRootDefinition;
+}
+
+export interface SecondaryInstanceRootDefinition extends StaticElement {
+	readonly [XFORMS_LOCAL_NAME]: 'instance';
+	readonly [XFORMS_KNOWN_ATTRIBUTE]: 'id';
+
+	readonly rootDocument: SecondaryInstanceDefinition;
+	readonly root: SecondaryInstanceRootDefinition;
+
+	getAttributeValue(localName: 'id'): string;
+	getAttributeValue(localName: string): string | null;
+}
 
 export class SecondaryInstancesDefinition
 	extends Map<string, SecondaryInstanceRootDefinition>

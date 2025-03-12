@@ -1,27 +1,10 @@
-import type { AnyConstructor } from '@getodk/common/types/helpers.js';
 import type { StaticAttributeOptions } from '../../integration/xpath/static-dom/StaticAttribute.ts';
-import type {
-	StaticDocument,
-	StaticDocumentConstructor,
-	StaticDocumentRootFactory,
-} from '../../integration/xpath/static-dom/StaticDocument.ts';
+import { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type {
 	StaticElementChildOption,
-	StaticElementConstructor,
 	StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
-import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { QualifiedNameSource } from '../../lib/names/QualifiedName.ts';
-
-type ConcreteConstructor<T extends AnyConstructor> = Pick<T, keyof T>;
-
-// prettier-ignore
-export type ConcreteStaticDocumentConstructor<
-	T extends StaticDocument<Root>,
-	Root extends StaticElement,
-> =
-	& ConcreteConstructor<typeof StaticDocument<Root>>
-	& (new (rootFactory: StaticDocumentRootFactory<T, Root>) => T);
 
 const parseNodeName = (domNode: Attr | Element): QualifiedNameSource => {
 	return {
@@ -64,18 +47,10 @@ const parseStaticElementOptions = (domElement: Element): StaticElementOptions =>
 	};
 };
 
-export const parseStaticDocumentFromDOMSubtree = <
-	T extends StaticDocument<Root>,
-	Root extends StaticElement<T>,
->(
-	DocumentConstructor: StaticDocumentConstructor<T, Root>,
-	DocumentRootConstructor: StaticElementConstructor<Root, T>,
-	subtreeRootElement: Element
-): T => {
+export const parseStaticDocumentFromDOMSubtree = (subtreeRootElement: Element): StaticDocument => {
 	const documentRoot = parseStaticElementOptions(subtreeRootElement);
 
-	return new DocumentConstructor({
-		DocumentRootConstructor,
+	return new StaticDocument({
 		documentRoot,
 	});
 };

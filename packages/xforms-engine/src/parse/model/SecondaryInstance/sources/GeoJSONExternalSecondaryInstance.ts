@@ -11,9 +11,10 @@ import type {
 	FeatureCollection as GeoJSONFeatureCollection,
 } from 'geojson';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
+import { StaticDocument } from '../../../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElementChildOption } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
-import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
+import { assertSecondaryInstanceDefinition } from '../assertSecondaryInstanceDefinition.ts';
+import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
 
 const FEATURE_COLLECTION = 'FeatureCollection';
@@ -326,23 +327,27 @@ const rootChildOption = (featureCollection: FeatureCollection): StaticElementChi
 	};
 };
 
-class GeoJSONExternalSecondaryInstanceDefinition extends SecondaryInstanceDefinition {
-	constructor(instanceId: string, featureCollection: FeatureCollection) {
-		super({
-			DocumentRootConstructor: SecondaryInstanceRootDefinition,
-			documentRoot: {
-				name: 'instance',
-				attributes: [
-					{
-						name: 'id',
-						value: instanceId,
-					},
-				],
-				children: [rootChildOption(featureCollection)],
-			},
-		});
-	}
-}
+const geoJSONExternalSecondaryInstanceDefinition = (
+	instanceId: string,
+	featureCollection: FeatureCollection
+): SecondaryInstanceDefinition => {
+	const doc = new StaticDocument({
+		documentRoot: {
+			name: 'instance',
+			attributes: [
+				{
+					name: 'id',
+					value: instanceId,
+				},
+			],
+			children: [rootChildOption(featureCollection)],
+		},
+	});
+
+	assertSecondaryInstanceDefinition(doc);
+
+	return doc;
+};
 
 export class GeoJSONExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'geojson'> {
 	parseDefinition(): SecondaryInstanceDefinition {
@@ -351,6 +356,6 @@ export class GeoJSONExternalSecondaryInstanceSource extends ExternalSecondaryIns
 
 		assertFeatureCollection(value);
 
-		return new GeoJSONExternalSecondaryInstanceDefinition(this.instanceId, value);
+		return geoJSONExternalSecondaryInstanceDefinition(this.instanceId, value);
 	}
 }

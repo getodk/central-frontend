@@ -1,5 +1,5 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import { ItextTranslationsDefinition } from './ItextTranslation/ItextTranslationsDefinition.ts';
+import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
 import { ModelBindMap } from './ModelBindMap.ts';
 import { RootDefinition } from './RootDefinition.ts';
 import { SubmissionDefinition } from './SubmissionDefinition.ts';
