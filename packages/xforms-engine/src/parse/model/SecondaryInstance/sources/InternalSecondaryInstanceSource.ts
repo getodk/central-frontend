@@ -10,7 +10,9 @@ export class InternalSecondaryInstanceSource extends SecondaryInstanceSource<'in
 	}
 
 	parseDefinition(): SecondaryInstanceDefinition {
-		const doc = parseStaticDocumentFromDOMSubtree(this.domElement);
+		const doc = parseStaticDocumentFromDOMSubtree(this.domElement, {
+			nodesetPrefix: `instance('${this.instanceId}')`,
+		});
 
 		assertSecondaryInstanceDefinition(doc);
 

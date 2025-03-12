@@ -5,17 +5,20 @@ import { StaticParentNode } from './StaticParentNode.ts';
 
 interface StaticDocumentOptions {
 	readonly documentRoot: StaticElementOptions;
+	readonly nodesetPrefix?: string;
 }
 
 export class StaticDocument extends StaticParentNode<'document'> implements XFormsXPathDocument {
 	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
 	readonly parent = null;
+	readonly nodeset: string;
 	readonly children: readonly [root: StaticElement];
 
 	constructor(options: StaticDocumentOptions) {
 		super('document');
 
+		this.nodeset = options.nodesetPrefix ?? '/';
 		this.rootDocument = this;
 
 		const { documentRoot } = options;

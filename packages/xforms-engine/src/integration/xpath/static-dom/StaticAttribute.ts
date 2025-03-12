@@ -17,6 +17,7 @@ export class StaticAttribute extends StaticNode<'attribute'> implements XFormsXP
 	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
 	readonly qualifiedName: QualifiedName;
+	readonly nodeset: string;
 	readonly attributes = [] as const;
 	readonly children = null;
 	readonly value: string;
@@ -30,6 +31,7 @@ export class StaticAttribute extends StaticNode<'attribute'> implements XFormsXP
 		this.rootDocument = parent.rootDocument;
 		this.root = parent.root;
 		this.qualifiedName = staticNodeName(options.name);
+		this.nodeset = `${parent.nodeset}/@${this.qualifiedName.getPrefixedName()}`;
 		this.value = options.value;
 	}
 

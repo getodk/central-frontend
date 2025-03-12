@@ -47,10 +47,18 @@ const parseStaticElementOptions = (domElement: Element): StaticElementOptions =>
 	};
 };
 
-export const parseStaticDocumentFromDOMSubtree = (subtreeRootElement: Element): StaticDocument => {
+interface ParseStaticDocumentFromDOMSubtreeOptions {
+	readonly nodesetPrefix?: string;
+}
+
+export const parseStaticDocumentFromDOMSubtree = (
+	subtreeRootElement: Element,
+	options: ParseStaticDocumentFromDOMSubtreeOptions = {}
+): StaticDocument => {
 	const documentRoot = parseStaticElementOptions(subtreeRootElement);
 
 	return new StaticDocument({
+		...options,
 		documentRoot,
 	});
 };

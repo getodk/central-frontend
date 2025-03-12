@@ -23,6 +23,7 @@ export const defineSecondaryInstance = (
 			],
 			children: [secondaryInstanceRoot],
 		},
+		nodesetPrefix: `instance('${instanceId}')`,
 	});
 
 	assertSecondaryInstanceDefinition(doc);

@@ -25,6 +25,7 @@ export class StaticElement extends StaticParentNode<'element'> implements XForms
 	readonly rootDocument: StaticDocument;
 	readonly root: StaticElement;
 	readonly qualifiedName: QualifiedName;
+	readonly nodeset: string;
 	readonly attributes: readonly StaticAttribute[];
 	readonly children: readonly StaticChildNode[];
 	readonly value = null;
@@ -36,12 +37,18 @@ export class StaticElement extends StaticParentNode<'element'> implements XForms
 		super('element');
 
 		const { rootDocument } = parent;
+		let nodesetPrefix = parent.nodeset;
 
 		this.rootDocument = rootDocument;
 
 		// Account for the fact that we may be constructing the document root!
 		if (parent === rootDocument) {
 			this.root = this;
+
+			// Avoid nodeset like `//foo` when `/foo` is expected/intended
+			if (nodesetPrefix === '/') {
+				nodesetPrefix = '';
+			}
 		} else {
 			this.root = parent.root;
 		}
@@ -49,6 +56,7 @@ export class StaticElement extends StaticParentNode<'element'> implements XForms
 		const { name, attributes = [], children = [] } = options;
 
 		this.qualifiedName = staticNodeName(name);
+		this.nodeset = `${nodesetPrefix}/${this.qualifiedName.getPrefixedName()}`;
 		this.attributes = attributes.map((attrOptions) => {
 			return new StaticAttribute(this, attrOptions);
 		});
