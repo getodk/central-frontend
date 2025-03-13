@@ -45,7 +45,6 @@ describe('HoverCardDataset', () => {
     const lastUpdate = new Date().toISOString();
     testData.extendedDatasets.createPast(1, { lastUpdate });
     const dd = findDd(mountComponent(), 'Last update');
-    // console.log(dd.html(), testData.extendedDatasets.last());
     dd.getComponent(DateTime).props().iso.should.equal(lastUpdate);
   });
 
