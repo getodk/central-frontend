@@ -3,6 +3,7 @@ import FormVersionString from '../../../../src/components/form-version/string.vu
 
 import testData from '../../../data';
 import { mount } from '../../../util/lifecycle';
+import { setLuxon } from '../../../util/date-time';
 
 const mountComponent = () => mount(FormEditPublishedVersion, {
   container: {
@@ -12,11 +13,15 @@ const mountComponent = () => mount(FormEditPublishedVersion, {
 
 describe('FormEditPublishedVersion', () => {
   it('renders correctly if the form is published', async () => {
-    testData.extendedForms.createPast(1, { version: 'foobar' });
+    setLuxon({ defaultZoneName: 'UTC' });
+    testData.extendedForms.createPast(1, {
+      version: 'foobar',
+      publishedAt: '2025-01-02T12:34:56.789Z'
+    });
     const component = mountComponent();
     component.classes('draft').should.be.false;
     const subtitle = component.get('.form-edit-section-subtitle').text();
-    subtitle.should.startWith('Published 20');
+    subtitle.should.equal('Published 2025/01/02 12:34');
     const versionString = component.getComponent(FormVersionString);
     versionString.text().should.equal('foobar');
     await versionString.should.have.textTooltip();

@@ -16,7 +16,7 @@ describe('FormEditDraftControls', () => {
     text.should.equal('Delete Form');
   });
 
-  it('shows an "Abandon Form" button if the form is published', () => {
+  it('shows an "Abandon Draft" button if the form is published', () => {
     testData.extendedForms.createPast(1);
     const text = mountComponent().get('#form-edit-abandon-button').text();
     text.should.equal('Abandon Draft');
