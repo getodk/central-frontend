@@ -93,7 +93,7 @@ describe('FormHead', () => {
         if (tab.text() === 'Edit Form') continue; // eslint-disable-line no-continue
         tab.classes('disabled').should.be.true;
         const a = tab.get('a');
-        a.should.have.ariaDescription('These functions will become available once you publish your Draft Form');
+        a.should.have.ariaDescription('Publish this Draft Form to enable these functions');
         await a.should.have.tooltip();
       }
     });

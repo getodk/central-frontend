@@ -279,7 +279,9 @@ describe('FormNew', () => {
 
     it('shows a success alert', () =>
       createForm().then(app => {
-        app.should.alert('success', 'Your new Form “Form 2” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use.');
+        app.should.alert('success', (message) => {
+          message.should.startWith('Your new Form “Form 2” has been created as a Draft.');
+        });
       }));
 
     it('increments the form count', () =>

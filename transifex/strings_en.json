@@ -2613,17 +2613,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Upload files",
+          "string": "Choose files",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
-      "heading": {
-        "0": {
-          "string": "Based on the Form you uploaded, the following Form Attachments are expected. You can see which ones have been provided or are still missing."
-        },
-        "1": {
-          "string": "To upload files, drag and drop one or more files onto the page."
-        }
+      "orDrag": {
+        "string": "or drag files onto this page to upload",
+        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "header": {
         "uploaded": {
@@ -3027,26 +3023,21 @@
     },
     "FormDraftTesting": {
       "title": {
-        "string": "Draft Testing",
+        "string": "Test this Draft",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "body": {
-        "1": {
-          "string": "Draft Submissions go into the test table below, where you can preview and download them. When you publish this Draft Form, its test Submissions will be permanently removed."
+      "subtitle": {
+        "full": {
+          "string": "Submissions made here {willBeDeleted} when you publish this Draft!",
+          "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
+        },
+        "willBeDeleted": {
+          "string": "will be deleted",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
       },
-      "datasetsPreview": {
-        "title": {
-          "string": "This Form can update Entities"
-        },
-        "body": {
-          "0": {
-            "string": "Entities are only updated for published Forms. In a future release of Central, you will be able to test Entity functionality in a Draft state."
-          },
-          "1": {
-            "string": "For now, we recommend trying your Form definition in Draft state to verify its logic. Before publishing, you can verify that it updates all of the desired properties."
-          }
-        }
+      "entitiesTesting": {
+        "string": "This Form Definition creates or updates Entities. For now, Entities are not created or updated by Draft Forms, so you will need to publish the Form to verify Entity functionality."
       },
       "collectProjectName": {
         "string": "[Draft] {name}",
@@ -3062,7 +3053,7 @@
         "string": "No active Draft for this Form"
       },
       "toMakeChanges": {
-        "string": "to make changes to this Form or its attachments",
+        "string": "to make changes to this Form or its attachments.",
         "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
       },
       "noEffectUntilPublish": {
@@ -3080,8 +3071,8 @@
       },
       "formNav": {
         "tabTitle": {
-          "string": "These functions will become available once you publish your Draft Form",
-          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+          "string": "Publish this Draft Form to enable these functions",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc."
         }
       },
       "draftNav": {
@@ -3113,7 +3104,7 @@
       },
       "alert": {
         "create": {
-          "string": "Your new Form “{name}” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use."
+          "string": "Your new Form “{name}” has been created as a Draft. Upload files and test your Form below, and when you feel it’s ready, you can publish the Form for use."
         }
       }
     },

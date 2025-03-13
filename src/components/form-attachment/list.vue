@@ -21,8 +21,7 @@ except according to the terms contained in the LICENSE file.
         </button>
       </template>
       <template #body>
-        <p>{{ $t('heading[0]') }}</p>
-        <p>{{ $t('heading[1]') }}</p>
+        <p>{{ $t('orDrag') }}</p>
       </template>
     </page-section>
     <div v-if="datasetLinkable" class="panel-dialog">
@@ -422,12 +421,10 @@ export default {
 {
   "en": {
     "action": {
-      "upload": "Upload files"
+      "upload": "Choose files"
     },
-    "heading": [
-      "Based on the Form you uploaded, the following Form Attachments are expected. You can see which ones have been provided or are still missing.",
-      "To upload files, drag and drop one or more files onto the page."
-    ],
+    // This text is shown next to a button with the text "Choose files".
+    "orDrag": "or drag files onto this page to upload",
     "header": {
       // This is the text of a table column header. The column shows when each
       // Media File was uploaded.
