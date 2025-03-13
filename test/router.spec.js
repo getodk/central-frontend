@@ -155,6 +155,15 @@ describe('createCentralRouter()', () => {
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/account/edit');
         }));
+
+    it('redirects if the hash is a path and it contains non-ascii characters', () => {
+      testData.extendedForms.createPast(1);
+      return load("/#/projects/1/forms/'%3D%2B%2F*-451%25%2F%25/submissions", {}, false)
+        .respondFor("/projects/1/forms/'%3D%2B%2F*-451%25%2F%25/submissions")
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal("/projects/1/forms/'%3D%2B%2F*-451%25%2F%25/submissions");
+        });
+    });
   });
 
   describe('requireLogin', () => {
