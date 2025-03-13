@@ -148,6 +148,13 @@ describe('createCentralRouter()', () => {
           path.should.equal('/projects/1/entity-lists/trees/entities');
         });
     });
+
+    it('redirects if the hash is a path', () =>
+      load('/#/account/edit', {}, false)
+        .respondFor('/account/edit')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/account/edit');
+        }));
   });
 
   describe('requireLogin', () => {
