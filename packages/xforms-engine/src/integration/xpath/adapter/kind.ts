@@ -1,12 +1,6 @@
 import type { XPathNodeKind } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
-import type {
-	AnyChildNode,
-	AnyNode,
-	AnyParentNode,
-	AnyValueNode,
-} from '../../../instance/hierarchy.ts';
-import type { ValueContext } from '../../../instance/internal-api/ValueContext.ts';
+import type { AnyChildNode, AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import type { PrimaryInstance } from '../../../instance/PrimaryInstance.ts';
 import type { StaticAttribute } from '../static-dom/StaticAttribute.ts';
 import type { StaticDocument } from '../static-dom/StaticDocument.ts';
@@ -30,12 +24,6 @@ export type PrimaryInstanceXPathChildNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| PrimaryInstanceXPathElement
 	| PrimaryInstanceXPathComment;
-
-// prettier-ignore
-export type PrimaryInstanceXPathValueElement<Value> =
-	& AnyValueNode
-	& ValueContext<Value>
-	& XFormsXPathElement;
 
 // prettier-ignore
 export type EngineXPathDocument =
