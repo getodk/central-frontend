@@ -1,5 +1,16 @@
 # @getodk/common
 
+## 0.5.1
+
+### Patch Changes
+
+- 81a57c3: Support for rank question types (`<odk:rank>`)
+- e6d01b0: Partial support for `<range>` (basic horizontal and vertical sliders)
+  - **FIX** setting `<select1>` values with spaces
+  - **BREAKING CHANGE** (`@getodk/xforms-engine`): `SelectNode`'s write methods have been replaced with more ergonomic alternatives
+- 99295eb: Support for geopoint questions with no appearance
+  - Support for geopoint notes
+
 ## 0.5.0
 
 ### Minor Changes

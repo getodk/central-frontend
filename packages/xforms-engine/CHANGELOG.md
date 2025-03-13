@@ -1,5 +1,31 @@
 # @getodk/xforms-engine
 
+## 0.6.0
+
+### Minor Changes
+
+- 4d97e54: Compute `jr:preload="uid"` on form initialization.
+  - Ensure submission XML incluces `instanceID` metadata. If not present in form definition, defaults to computing `jr:preload="uid"`.
+  - Support for use of non-default (XForms) namespaces by primary instance elements, including:
+    - Production of form-defined namespace declarations in submission XML;
+    - Preservation of form-defined namespace prefix;
+    - Use of namespace prefix in bind nodeset;
+    - Use of namespace prefix in computed expressions.
+  - Support for use of non-default namespaces by internal secondary instances.
+  - Partial support for use of non-default namespaces by external XML secondary instances. (Namespaces may be resolved to engine-internal defaults.)
+- 8892010: The `xf:distance` XPath function now accepts multiple arguments. This makes it easier to compute the distance between multiple points within a form's primary instance. Previously, to achieve this, you'd have to introduce a `calculate` which concatenates those points together, then call the distance function with a reference to that `calculate` as the argument.
+- 81a57c3: Support for rank question types (`<odk:rank>`)
+- 99295eb: Support for geopoint questions with no appearance
+  - Support for geopoint notes
+
+### Patch Changes
+
+- 0287a16: Fix: include namespace declarations in submission XML
+- a08e77b: Fix: include primary instance root attributes in submission XML
+- 2bf859e: Fix: relax parsing of `jr:preload` and `jr:preloadParams`. Any value for either attribute is accepted. Known (specified in ODK XForms, at time of writing) values are provided as type hints, similarly to how known appearances are specified.
+- dac0d0b: Fix: correct types for chunked/monolithic submission result
+- 00517c2: Fix: illegal invocation when fetching form xml
+
 ## 0.5.0
 
 ### Minor Changes
