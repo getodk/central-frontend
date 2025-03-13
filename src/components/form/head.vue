@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="form-head">
     <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <page-head>
       <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
@@ -49,6 +49,7 @@ except according to the terms contained in the LICENSE file.
           role="presentation">
           <router-link :to="tabPath('draft')">
             {{ $t('formHead.tab.editForm') }}
+            <span class="icon-pencil-square"></span>
           </router-link>
         </li>
         <li v-if="rendersFormTabs" :class="formTabClass('settings')"
@@ -115,6 +116,22 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#form-head {
+  .icon-pencil-square {
+    color: $color-accent-primary;
+    font-size: 18px;
+    margin-left: 3px;
+
+    vertical-align: bottom;
+    position: relative;
+    bottom: 1px;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {

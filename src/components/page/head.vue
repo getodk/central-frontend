@@ -63,5 +63,7 @@ defineOptions({
       }
     }
   }
+
+  .badge { margin-left: 2px; }
 }
 </style>
