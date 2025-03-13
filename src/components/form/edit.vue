@@ -10,32 +10,50 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="form-edit">
     <div class="row">
       <div class="col-xs-6">
-        <form-edit-create-draft v-if="formDraft.dataExists && formDraft.isEmpty()"
+        <form-edit-loading-draft v-if="!formDraft.dataExists"/>
+        <form-edit-create-draft v-else-if="formDraft.isEmpty()"
           @success="fetchDraft(true)"/>
+        <form-edit-draft-controls v-else @publish="publishModal.show()"
+          @abandon="abandonModal.show()"/>
+      </div>
+      <div class="col-xs-6">
+        <form-edit-published-version v-if="form.dataExists"/>
       </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
-      <form-draft-status @fetch-project="$emit('fetch-project', $event)"
-        @fetch-form="$emit('fetch-form')" @fetch-draft="fetchDraft(true)"
-        @fetch-linked-datasets="$emit('fetch-linked-datasets')"/>
+      <form-draft-status @fetch-draft="fetchDraft(true)"/>
       <form-attachment-list v-if="rendersAttachments"/>
       <form-draft-testing/>
     </template>
+
+    <form-draft-publish v-if="formDraft.dataExists && formDraft.isDefined()"
+      v-bind="publishModal" @hide="publishModal.hide()"
+      @success="afterPublish"/>
+    <form-draft-abandon v-bind="abandonModal" @hide="abandonModal.hide()"
+      @success="afterAbandon"/>
   </div>
 </template>
 
 <script setup>
-import { computed, provide, watchEffect } from 'vue';
+import { computed, inject, provide, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import FormAttachmentList from '../form-attachment/list.vue';
+import FormDraftAbandon from '../form-draft/abandon.vue';
+import FormDraftPublish from '../form-draft/publish.vue';
 import FormDraftStatus from '../form-draft/status.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
+import FormEditDraftControls from './edit/draft-controls.vue';
+import FormEditLoadingDraft from './edit/loading-draft.vue';
+import FormEditPublishedVersion from './edit/published-version.vue';
 
+import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -52,11 +70,11 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['fetch-project', 'fetch-form', 'fetch-linked-datasets']);
+const emit = defineEmits(['fetch-project', 'fetch-form', 'fetch-linked-datasets']);
 provide('projectId', props.projectId);
 provide('xmlFormId', props.xmlFormId);
 
-const { formVersions, formDraft, draftAttachments } = useRequestData();
+const { form, formVersions, formDraft, draftAttachments, datasets, formDraftDatasetDiff } = useRequestData();
 
 const fetchDraft = (resend) => {
   formDraft.request({
@@ -85,6 +103,64 @@ watchEffect(() => {
   ]);
 });
 
+const publishModal = modalData();
+const { router, alert } = inject('container');
+const { t } = useI18n();
+const afterPublish = () => {
+  // Re-request the project in case its `datasets` property has changed.
+  emit('fetch-project', true);
+  emit('fetch-form');
+  emit('fetch-linked-datasets');
+  formDraft.setToNone();
+  formVersions.reset();
+  draftAttachments.reset();
+  datasets.reset();
+  formDraftDatasetDiff.reset();
+
+  publishModal.hide();
+  alert.success(t('alert.publish'));
+};
+
+const abandonModal = modalData();
+const { projectPath } = useRoutes();
+const afterAbandon = () => {
+  if (form.publishedAt != null) {
+    abandonModal.hide();
+    alert.success(t('alert.abandon'));
+
+    formDraft.setToNone();
+    draftAttachments.reset();
+    formDraftDatasetDiff.reset();
+  } else {
+    const { nameOrId } = form;
+    router.push(projectPath())
+      .then(() => { alert.success(t('alert.delete', { name: nameOrId })); });
+  }
+};
+
 const rendersAttachments = computed(() =>
   draftAttachments.dataExists && draftAttachments.size !== 0);
 </script>
+
+<style lang="scss">
+#form-edit {
+  padding-inline: 10px;
+}
+
+body:has(#form-edit) { background-color: #fff; }
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "alert": {
+      // @transifexKey component.FormDraftStatus.alert.publish
+      "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments.",
+      // @transifexKey component.FormDraftStatus.alert.abandon
+      "abandon": "The Draft version of this Form has been successfully deleted.",
+      // @transifexKey component.FormDraftStatus.alert.delete
+      "delete": "The Form “{name}” was deleted."
+    }
+  }
+}
+</i18n>

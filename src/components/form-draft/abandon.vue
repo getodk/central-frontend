@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ title }}</template>
     <template #body>
       <div class="modal-introduction">
-        <template v-if="form.publishedAt != null">
+        <template v-if="form.dataExists && form.publishedAt != null">
           <p>{{ $t('introduction.abandon[0]') }}</p>
           <p>{{ $t('introduction.abandon[1]') }}</p>
         </template>
@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     title() {
-      return this.form.publishedAt != null
+      return this.form.dataExists && this.form.publishedAt != null
         ? this.$t('title.abandon')
         : this.$t('title.deleteForm');
     }

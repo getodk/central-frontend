@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <button id="form-edit-create-draft-button" type="button"
         class="btn btn-primary" :aria-disabled="awaitingResponse"
         @click="create">
-        <span class="icon-plus-circle"></span>{{ $t('action.create') }}
+        <span class="icon-pencil"></span>{{ $t('action.create') }}
         <spinner :state="awaitingResponse"/>
       </button>
       <p>{{ $t('toMakeChanges') }}</p>
@@ -55,7 +55,12 @@ const create = () => {
 </script>
 
 <style lang="scss">
-#form-edit-create-draft-button + p { margin-bottom: 0; }
+#form-edit-create-draft-button {
+  font-size: 14px;
+
+  ~ p { color: #666; }
+  + p { margin-block: 3px 0; }
+}
 </style>
 
 <i18n lang="json5">
