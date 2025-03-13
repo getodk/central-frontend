@@ -35,11 +35,12 @@ export const extendedDatasets = dataStore({
     approvalRequired = false,
     entities = undefined,
     lastEntity = undefined,
+    lastUpdate = undefined,
     conflicts = 0,
     linkedForms = [],
     sourceForms = []
   }) => {
-    const entityStats = normalizeEntityStats({ entities, lastEntity, conflicts });
+    const entityStats = normalizeEntityStats({ entities, lastEntity, lastUpdate, conflicts });
     const project = projectOption ?? extendedProjects
       .createPast(1, { datasets: 1, lastEntity: entityStats.lastEntity })
       .last();

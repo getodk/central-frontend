@@ -23,6 +23,9 @@ except according to the terms contained in the LICENSE file.
 
         <dt>{{ $t('header.lastEntity') }}</dt>
         <dd><date-time :iso="dataset.lastEntity"/></dd>
+
+        <dt>{{ $t('common.lastUpdate') }}</dt>
+        <dd><date-time :iso="dataset.lastUpdate"/></dd>
       </dl>
     </template>
     <template #footer>
