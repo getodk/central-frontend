@@ -26,7 +26,7 @@ import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 interface RangeControlStateSpec<V extends RangeValueType>
 	extends ValueNodeStateSpec<RangeValue<V>> {
@@ -42,7 +42,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	static from(parent: GeneralParentNode, definition: AnyRangeNodeDefinition): AnyRangeControl;
 	static from<V extends RangeValueType>(

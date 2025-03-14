@@ -1,8 +1,8 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import { FormSubmissionDefinition } from './FormSubmissionDefinition.ts';
 import { ItextTranslationsDefinition } from './ItextTranslation/ItextTranslationsDefinition.ts';
 import { ModelBindMap } from './ModelBindMap.ts';
 import { RootDefinition } from './RootDefinition.ts';
+import { SubmissionDefinition } from './SubmissionDefinition.ts';
 
 export class ModelDefinition {
 	readonly binds: ModelBindMap;
@@ -10,7 +10,8 @@ export class ModelDefinition {
 	readonly itextTranslations: ItextTranslationsDefinition;
 
 	constructor(readonly form: XFormDefinition) {
-		const submission = new FormSubmissionDefinition(form.xformDOM);
+		const submission = new SubmissionDefinition(form.xformDOM);
+
 		this.binds = ModelBindMap.fromModel(this);
 		this.root = new RootDefinition(form, this, submission, form.body.classes);
 		this.itextTranslations = ItextTranslationsDefinition.from(form.xformDOM);

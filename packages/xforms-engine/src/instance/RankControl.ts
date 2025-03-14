@@ -3,7 +3,13 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { RankDefinition, RankItem, RankNode, RankValueOptions } from '../client/RankNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
+import type { ValueType } from '../client/ValueType.ts';
+import { RankMissingValueError } from '../error/RankMissingValueError.ts';
+import { RankValueTypeError } from '../error/RankValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import { sharedValueCodecs } from '../lib/codecs/getSharedValueCodec.ts';
+import { MultipleValueItemCodec } from '../lib/codecs/items/MultipleValueItemCodec.ts';
+import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -11,20 +17,14 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
+import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
-import { MultipleValueItemCodec } from '../lib/codecs/items/MultipleValueItemCodec.ts';
-import { sharedValueCodecs } from '../lib/codecs/getSharedValueCodec.ts';
-import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
-import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
-import type { ValueType } from '../client/ValueType.ts';
-import { RankMissingValueError } from '../error/RankMissingValueError.ts';
-import { RankValueTypeError } from '../error/RankValueTypeError.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 export type AnyRankDefinition = {
 	[V in ValueType]: RankDefinition<V>;
@@ -66,7 +66,7 @@ export class RankControl
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	static from(parent: GeneralParentNode, definition: RankDefinition): RankControl;
 	static from(parent: GeneralParentNode, definition: AnyRankDefinition): RankControl {

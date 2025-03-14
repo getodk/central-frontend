@@ -4,7 +4,7 @@ import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';
 import type { InstanceNodeType as ClientInstanceNodeType } from '../../client/node-types.ts';
-import type { SubmissionState } from '../../client/submission/SubmissionState.ts';
+import type { InstanceState } from '../../client/serialization/InstanceState.ts';
 import type { NodeValidationState } from '../../client/validation.ts';
 import type { ActiveLanguage, TextRange } from '../../index.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
@@ -148,7 +148,7 @@ export abstract class InstanceNode<
 
 	abstract readonly validationState: NodeValidationState;
 
-	abstract readonly submissionState: SubmissionState;
+	abstract readonly instanceState: InstanceState;
 
 	// EvaluationContext: instance-global/shared
 	abstract readonly evaluator: EngineXPathEvaluator;

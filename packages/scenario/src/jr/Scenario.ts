@@ -12,8 +12,8 @@ import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Setter } from 'solid-js';
 import { createMemo, createSignal, runWithOwner } from 'solid-js';
 import { afterEach, assert, expect } from 'vitest';
-import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import { RankValuesAnswer } from '../answer/RankValuesAnswer.ts';
+import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
 import type { InitializeTestFormOptions, TestFormResource } from '../client/init.ts';
@@ -964,7 +964,7 @@ export class Scenario {
 	}
 
 	proposed_serializeInstance(): string {
-		return this.instanceRoot.submissionState.submissionXML;
+		return this.instanceRoot.instanceState.instanceXML;
 	}
 
 	/**
@@ -974,8 +974,8 @@ export class Scenario {
 	 * more about Collect's responsibility for submission (beyond serialization,
 	 * already handled by {@link proposed_serializeInstance}).
 	 */
-	prepareWebFormsSubmission() {
-		return this.instanceRoot.prepareSubmission();
+	prepareWebFormsInstancePayload() {
+		return this.instanceRoot.prepareInstancePayload();
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use

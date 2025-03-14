@@ -1,4 +1,4 @@
-export interface SubmissionDefinition {
+export interface SubmissionMeta {
 	/**
 	 * @see {@link https://getodk.github.io/xforms-spec/#submission-attributes | `action` submission attribute}
 	 */

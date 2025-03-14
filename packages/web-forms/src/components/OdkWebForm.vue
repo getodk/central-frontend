@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type {
-	ChunkedSubmissionResult,
+	ChunkedInstancePayload,
 	MissingResourceBehavior,
-	MonolithicSubmissionResult,
+	MonolithicInstancePayload,
 } from '@getodk/xforms-engine';
 import { initializeForm, type FetchFormAttachment, type RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
@@ -33,8 +33,8 @@ const props = defineProps<OdkWebFormsProps>();
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
-	submit: [submissionPayload: MonolithicSubmissionResult];
-	submitChunked: [submissionPayload: ChunkedSubmissionResult];
+	submit: [submissionPayload: MonolithicInstancePayload];
+	submitChunked: [submissionPayload: ChunkedInstancePayload];
 };
 
 /**
@@ -76,8 +76,8 @@ const isEmitSubscribed = (eventKey: EventKey): boolean => {
 
 const emitSubmit = async (root: RootNode) => {
 	if (isEmitSubscribed('onSubmit')) {
-		const payload = await root.prepareSubmission({
-			chunked: 'monolithic',
+		const payload = await root.prepareInstancePayload({
+			payloadType: 'monolithic',
 		});
 
 		emit('submit', payload);
@@ -92,8 +92,8 @@ const emitSubmitChunked = async (root: RootNode) => {
 			throw new Error('The `submissionMaxSize` prop is required for chunked submissions');
 		}
 
-		const payload = await root.prepareSubmission({
-			chunked: 'chunked',
+		const payload = await root.prepareInstancePayload({
+			payloadType: 'chunked',
 			maxSize,
 		});
 

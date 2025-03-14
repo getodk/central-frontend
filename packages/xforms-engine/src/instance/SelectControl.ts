@@ -28,7 +28,7 @@ import { ValueNode } from './abstract/ValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type { ClientReactiveSubmittableValueNode } from './internal-api/submission/ClientReactiveSubmittableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 export type AnySelectDefinition = {
 	[V in ValueType]: SelectDefinition<V>;
@@ -59,7 +59,7 @@ export class SelectControl
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSubmittableValueNode
+		ClientReactiveSerializableValueNode
 {
 	static from(parent: GeneralParentNode, definition: SelectDefinition): SelectControl;
 	static from(parent: GeneralParentNode, definition: AnySelectDefinition): SelectControl {

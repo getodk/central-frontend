@@ -11,12 +11,7 @@ import {
 } from '@getodk/common/test/assertions/helpers.ts';
 import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import type { AssertIs } from '@getodk/common/types/assertions/AssertIs.ts';
-import type {
-	SubmissionChunkedType,
-	SubmissionData,
-	SubmissionInstanceFile,
-	SubmissionResult,
-} from '@getodk/xforms-engine';
+import type { InstanceFile, InstancePayload, InstancePayloadType } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
 import { Scenario } from '../../jr/Scenario.ts';
@@ -38,10 +33,10 @@ const compareSubmissionXML = (actual: string, expected: string): SimpleAssertion
 
 const assertFormData: AssertIs<FormData> = instanceAssertion(FormData);
 
-type AnySubmissionResult = SubmissionResult<SubmissionChunkedType>;
+type AnyInstancePayload = InstancePayload<InstancePayloadType>;
 
 /**
- * Validating the full {@link SubmissionResult} type is fairly involved. We
+ * Validating the full {@link InstancePayload} type is fairly involved. We
  * check the basic object shape (expected keys present, gut check a few easy to
  * check property types), on the assumption that downstream assertions will fail
  * if the runtime and static types disagree.
@@ -50,13 +45,13 @@ type AnySubmissionResult = SubmissionResult<SubmissionChunkedType>;
  * more complete validation here, serving as a smoke test for all tests
  * exercising aspects of a prepared submission result.
  */
-const assertSubmissionResult: AssertIs<AnySubmissionResult> = (value) => {
+const assertInstancePayload: AssertIs<AnyInstancePayload> = (value) => {
 	assertUnknownObject(value);
 	assertString(value.status);
 	if (value.violations !== null) {
 		assertUnknownArray(value.violations);
 	}
-	assertUnknownObject(value.definition);
+	assertUnknownObject(value.submissionMeta);
 
 	if (Array.isArray(value.data)) {
 		value.data.forEach((item) => {
@@ -69,47 +64,25 @@ const assertSubmissionResult: AssertIs<AnySubmissionResult> = (value) => {
 
 const assertFile: AssertIs<File> = instanceAssertion(File);
 
-const { SUBMISSION_INSTANCE_FILE_NAME, SUBMISSION_INSTANCE_FILE_TYPE } = constants;
+const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
 
-const assertSubmissionInstanceFile: AssertIs<SubmissionInstanceFile> = (value) => {
+const assertInstanceFile: AssertIs<InstanceFile> = (value) => {
 	assertFile(value);
 
-	if (value.name !== SUBMISSION_INSTANCE_FILE_NAME) {
-		throw new Error(`Expected file named ${SUBMISSION_INSTANCE_FILE_NAME}, got ${value.name}`);
+	if (value.name !== INSTANCE_FILE_NAME) {
+		throw new Error(`Expected file named ${INSTANCE_FILE_NAME}, got ${value.name}`);
 	}
 
-	if (value.type !== SUBMISSION_INSTANCE_FILE_TYPE) {
-		throw new Error(`Expected file of type ${SUBMISSION_INSTANCE_FILE_TYPE}, got ${value.type}`);
+	if (value.type !== INSTANCE_FILE_TYPE) {
+		throw new Error(`Expected file of type ${INSTANCE_FILE_TYPE}, got ${value.type}`);
 	}
 };
 
-type ChunkedSubmissionData = readonly [SubmissionData, ...SubmissionData[]];
+const getInstanceFile = (payload: AnyInstancePayload): InstanceFile => {
+	const [instanceData] = payload.data;
+	const file = instanceData.get(INSTANCE_FILE_NAME);
 
-const isChunkedSubmissionData = (
-	data: ChunkedSubmissionData | SubmissionData
-): data is ChunkedSubmissionData => {
-	return Array.isArray(data);
-};
-
-const getSubmissionData = (submissionResult: AnySubmissionResult): SubmissionData => {
-	const { data } = submissionResult;
-
-	if (isChunkedSubmissionData(data)) {
-		const [first] = data;
-
-		return first;
-	}
-
-	return data;
-};
-
-const getSubmissionInstanceFile = (
-	submissionResult: AnySubmissionResult
-): SubmissionInstanceFile => {
-	const submissionData = getSubmissionData(submissionResult);
-	const file = submissionData.get(SUBMISSION_INSTANCE_FILE_NAME);
-
-	assertSubmissionInstanceFile(file);
+	assertInstanceFile(file);
 
 	return file;
 };
@@ -125,30 +98,27 @@ export const submissionExtensions = extendExpect(expect, {
 		}
 	),
 
-	toBeReadyForSubmission: new ArbitraryConditionExpectExtension(
-		assertSubmissionResult,
-		(result) => {
-			try {
-				expect(result).toMatchObject({
-					status: 'ready',
-					violations: null,
-				});
+	toBeReadyForSubmission: new ArbitraryConditionExpectExtension(assertInstancePayload, (result) => {
+		try {
+			expect(result).toMatchObject({
+				status: 'ready',
+				violations: null,
+			});
 
-				return true;
-			} catch (error) {
-				if (error instanceof Error) {
-					return error;
-				}
-
-				// eslint-disable-next-line no-console
-				console.error(error);
-				return new Error('Unknown error');
+			return true;
+		} catch (error) {
+			if (error instanceof Error) {
+				return error;
 			}
+
+			// eslint-disable-next-line no-console
+			console.error(error);
+			return new Error('Unknown error');
 		}
-	),
+	}),
 
 	toBePendingSubmissionWithViolations: new ArbitraryConditionExpectExtension(
-		assertSubmissionResult,
+		assertInstancePayload,
 		(result) => {
 			try {
 				expect(result.status).toBe('pending');
@@ -173,10 +143,10 @@ export const submissionExtensions = extendExpect(expect, {
 	),
 
 	toHavePreparedSubmissionXML: new AsyncAsymmetricTypedExpectExtension(
-		assertSubmissionResult,
+		assertInstancePayload,
 		assertString,
 		async (actual, expected): Promise<SimpleAssertionResult> => {
-			const instanceFile = getSubmissionInstanceFile(actual);
+			const instanceFile = getInstanceFile(actual);
 			const actualText = await getBlobText(instanceFile);
 
 			return compareSubmissionXML(actualText, expected);
