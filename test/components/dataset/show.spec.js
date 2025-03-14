@@ -101,5 +101,12 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees/properties');
       findTab(app, 'Entities').get('.badge').text().should.equal('1,000');
     });
+
+    it('shows the count of properties', async () => {
+      const properties = new Array(1000).fill({});
+      testData.extendedDatasets.createPast(1, { properties });
+      const app = await load('/projects/1/entity-lists/trees/properties');
+      findTab(app, 'Properties').get('.badge').text().should.equal('1,000');
+    });
   });
 });

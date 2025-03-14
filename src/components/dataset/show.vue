@@ -28,6 +28,9 @@ except according to the terms contained in the LICENSE file.
         <li :class="tabClass('properties')" role="presentation">
           <router-link :to="tabPath('properties')">
             {{ $t('resource.properties') }}
+            <span v-if="dataset.dataExists" class="badge">
+              {{ $n(dataset.properties.length, 'default') }}
+            </span>
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')" role="presentation">

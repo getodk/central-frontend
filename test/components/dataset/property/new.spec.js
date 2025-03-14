@@ -7,6 +7,7 @@ import { load, mockHttp } from '../../../util/http';
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
 import { mockLogin } from '../../../util/session';
 import { mockRouter } from '../../../util/router';
+import { findTab } from '../../../util/dom';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true },
@@ -91,6 +92,11 @@ describe('DatasetPropertyNew', () => {
       const propertyList = app.findComponent(DatasetProperties).findAll('tbody tr');
       propertyList.length.should.equal(2);
       propertyList.map(row => row.find('td').text()).should.eql(['height', 'width_cm']);
+    });
+
+    it('updates the property count in the tab', async () => {
+      const app = await submit('width_cm');
+      findTab(app, 'Properties').get('.badge').text().should.equal('2');
     });
 
     it('shows (none) in updated by column for new property', async () => {
