@@ -74,6 +74,13 @@ interface PrimaryInstanceStateSpec {
 	readonly activeLanguage: Accessor<ActiveLanguage>;
 }
 
+export interface PrimaryInstanceOptions {
+	readonly scope: ReactiveScope;
+	readonly model: ModelDefinition;
+	readonly secondaryInstances: SecondaryInstancesDefinition;
+	readonly config: InstanceConfig;
+}
+
 export class PrimaryInstance
 	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root>
 	implements
@@ -118,15 +125,11 @@ export class PrimaryInstance
 	readonly evaluator: EngineXPathEvaluator;
 	override readonly contextNode = this;
 
-	constructor(
-		scope: ReactiveScope,
-		model: ModelDefinition,
-		secondaryInstances: SecondaryInstancesDefinition,
-		engineConfig: InstanceConfig
-	) {
+	constructor(options: PrimaryInstanceOptions) {
+		const { scope, model, secondaryInstances, config } = options;
 		const { root: definition } = model;
 
-		super(engineConfig, null, definition, {
+		super(config, null, definition, {
 			scope,
 			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
 		});
@@ -170,9 +173,7 @@ export class PrimaryInstance
 			children: childrenState.childIds,
 		};
 
-		const state = createSharedNodeState(scope, stateSpec, {
-			clientStateFactory: engineConfig.stateFactory,
-		});
+		const state = createSharedNodeState(scope, stateSpec, config);
 
 		this.state = state;
 		this.engineState = state.engineState;

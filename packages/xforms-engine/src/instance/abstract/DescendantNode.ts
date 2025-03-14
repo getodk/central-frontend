@@ -131,7 +131,7 @@ export abstract class DescendantNode<
 		override readonly definition: Definition,
 		options?: DescendantNodeOptions
 	) {
-		super(parent.engineConfig, parent, definition, options);
+		super(parent.instanceConfig, parent, definition, options);
 
 		if (this.isRoot()) {
 			this.root = this;

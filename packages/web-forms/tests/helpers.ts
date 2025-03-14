@@ -1,7 +1,7 @@
 import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
-import { initializeForm } from '@getodk/xforms-engine';
+import { createInstance } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import type { MockInstance } from 'vitest';
@@ -45,12 +45,13 @@ export const getFormXml = (fileName: string): Promise<string> => {
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
 	const formXml = await getFormXml(formPath);
-
-	return await initializeForm(formXml, {
-		config: {
+	const instance = await createInstance(formXml, {
+		instance: {
 			stateFactory: reactive,
 		},
 	});
+
+	return instance.root;
 };
 
 type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];

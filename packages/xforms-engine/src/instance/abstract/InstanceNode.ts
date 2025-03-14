@@ -20,6 +20,7 @@ import type { SharedNodeState } from '../../lib/reactivity/node-state/createShar
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { createReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
+import { createUniqueId } from '../../lib/unique-id.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { PrimaryInstance } from '../PrimaryInstance.ts';
 import type { Root } from '../Root.ts';
@@ -186,7 +187,7 @@ export abstract class InstanceNode<
 		this as AnyInstanceNode as PrimaryInstanceXPathNode;
 
 	constructor(
-		readonly engineConfig: InstanceConfig,
+		readonly instanceConfig: InstanceConfig,
 		readonly parent: Parent,
 		readonly definition: Definition,
 		options?: InstanceNodeOptions
@@ -208,8 +209,8 @@ export abstract class InstanceNode<
 		this.computeReference = options?.computeReference ?? this.computeChildStepReference;
 
 		this.scope = options?.scope ?? createReactiveScope();
-		this.engineConfig = engineConfig;
-		this.nodeId = nodeID(engineConfig.createUniqueId());
+		this.instanceConfig = instanceConfig;
+		this.nodeId = nodeID(createUniqueId());
 		this.definition = definition;
 	}
 

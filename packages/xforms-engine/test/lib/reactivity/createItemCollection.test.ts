@@ -13,7 +13,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
-import { initializeForm } from '../../../src/instance/index.ts';
+import { createInstance } from '../../../src/entrypoints/createInstance.ts';
 import type {
 	createItemCollection,
 	ItemCollectionControl,
@@ -214,8 +214,8 @@ describe('createItemCollection - reactive `<select>`/`<select1>`/`<odk:rank>` it
 			},
 		])('triggers translated select label - $description', async ({ act, assert }) => {
 			const labelStatesByValue = await reactiveTestScope(async ({ effect, mutable }) => {
-				const root = await initializeForm(fixture.asXml(), {
-					config: {
+				const { root } = await createInstance(fixture.asXml(), {
+					instance: {
 						stateFactory: mutable,
 					},
 				});

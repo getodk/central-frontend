@@ -14,13 +14,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from '../../src/client/RootNode.ts';
-import { MISSING_RESOURCE_BEHAVIOR } from '../../src/client/constants.ts';
-import type { FetchResource } from '../../src/client/resources.ts';
 import { PrimaryInstance } from '../../src/instance/PrimaryInstance.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
 import { createReactiveScope, type ReactiveScope } from '../../src/lib/reactivity/scope.ts';
-import { createUniqueId } from '../../src/lib/unique-id.ts';
 import { XFormDOM } from '../../src/parse/XFormDOM.ts';
 import { XFormDefinition } from '../../src/parse/XFormDefinition.ts';
 import { SecondaryInstancesDefinition } from '../../src/parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
@@ -72,22 +69,21 @@ describe('PrimaryInstance engine representation of instance state', () => {
 		scope.dispose();
 	});
 
-	const fetchResource: FetchResource = () => {
-		throw new Error('Nothing should fetch in these tests');
-	};
-
 	// Warning: this is a convenience function to slightly reduce repetitive
 	// boilerplate across tests. Most tests should use `createRootNode` below.
 	// Tests concerned with some aspects of internals may use this function
 	// directly, with caution.
-	const createPrimaryInstance = (stateFactory: OpaqueReactiveObjectFactory): PrimaryInstance => {
+	const createPrimaryInstance = (
+		clientStateFactory: OpaqueReactiveObjectFactory
+	): PrimaryInstance => {
 		return scope.runTask(() => {
-			return new PrimaryInstance(scope, xformDefinition.model, secondaryInstances, {
-				createUniqueId,
-				fetchFormAttachment: fetchResource,
-				fetchFormDefinition: fetchResource,
-				missingResourceBehavior: MISSING_RESOURCE_BEHAVIOR.DEFAULT,
-				stateFactory,
+			return new PrimaryInstance({
+				scope,
+				model: xformDefinition.model,
+				secondaryInstances,
+				config: {
+					clientStateFactory,
+				},
 			});
 		});
 	};
@@ -108,8 +104,8 @@ describe('PrimaryInstance engine representation of instance state', () => {
 	// with graph computations), but the majority of tests should be focused on
 	// client-facing functionality. Those tests should use this convenience
 	// function if possible.
-	const createRootNode = (stateFactory: OpaqueReactiveObjectFactory): RootNode => {
-		return createPrimaryInstance(stateFactory).root;
+	const createRootNode = (clientStateFactory: OpaqueReactiveObjectFactory): RootNode => {
+		return createPrimaryInstance(clientStateFactory).root;
 	};
 
 	it('creates a Root instance', () => {

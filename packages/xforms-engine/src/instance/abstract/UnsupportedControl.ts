@@ -123,10 +123,6 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 
 		this.appearances = definition.bodyElement.appearances;
 
-		const sharedStateOptions = {
-			clientStateFactory: this.engineConfig.stateFactory,
-		};
-
 		const stateSpec: UnsupportedControlStateSpec = {
 			reference: this.contextReference,
 			readonly: this.isReadonly,
@@ -140,12 +136,12 @@ export abstract class UnsupportedControl<Type extends UnsupportedControlNodeType
 			value: createValueState<unknown>(this),
 		};
 
-		const state = createSharedNodeState(this.scope, stateSpec, sharedStateOptions);
+		const state = createSharedNodeState(this.scope, stateSpec, this.instanceConfig);
 
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
-		this.validation = createValidationState(this, sharedStateOptions);
+		this.validation = createValidationState(this, this.instanceConfig);
 		this.instanceState = createLeafNodeInsstanceState(this);
 	}
 

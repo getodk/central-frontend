@@ -106,9 +106,7 @@ export abstract class ValueNode<
 			return this.getInstanceValue();
 		};
 		this.valueState = valueState;
-		this.validation = createValidationState(this, {
-			clientStateFactory: this.engineConfig.stateFactory,
-		});
+		this.validation = createValidationState(this, this.instanceConfig);
 		this.instanceState = createValueNodeInstanceState(this);
 	}
 

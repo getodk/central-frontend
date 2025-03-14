@@ -24,12 +24,8 @@ export class RepeatRangeControlled
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;
-
 		this.initializeControlledChildrenState(definition);
-
-		this.validationState = createAggregatedViolations(this, {
-			clientStateFactory: this.engineConfig.stateFactory,
-		});
+		this.validationState = createAggregatedViolations(this, this.instanceConfig);
 	}
 
 	private initializeControlledChildrenState(definition: ControlledRepeatRangeDefinition): void {

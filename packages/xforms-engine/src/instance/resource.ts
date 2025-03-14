@@ -1,6 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
-import type { FormResource } from '../client/index.ts';
+import type { FormResource } from '../client/form/FormResource.ts';
 import type { FetchResource, FetchResourceResponse } from '../client/resources.ts';
 
 export type { FetchResource, FetchResourceResponse, FormResource };
@@ -75,4 +75,17 @@ export const retrieveSourceXMLResource = async (
 	assertResourceTextIsXML(text);
 
 	return text;
+};
+
+interface RetrieveFormDefinitionOptions {
+	readonly fetchFormDefinition: FetchResource;
+}
+
+export const retrieveFormDefinition = async (
+	resource: FormResource,
+	options: RetrieveFormDefinitionOptions
+): Promise<ResourceXML> => {
+	return retrieveSourceXMLResource(resource, {
+		fetchResource: options.fetchFormDefinition,
+	});
 };
