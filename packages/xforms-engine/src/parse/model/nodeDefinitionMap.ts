@@ -5,26 +5,26 @@ import type { RootDefinition } from './RootDefinition.ts';
 export type NodesetReference = string;
 
 const collectDefinitions = (
-	acc: Map<NodesetReference, AnyNodeDefinition>,
+	result: Map<NodesetReference, AnyNodeDefinition>,
 	definition: AnyNodeDefinition
 ): Map<NodesetReference, AnyNodeDefinition> => {
 	const { nodeset } = definition;
 
-	if (acc.has(nodeset)) {
+	if (result.has(nodeset)) {
 		throw new ErrorProductionDesignPendingError();
 	}
 
-	acc.set(nodeset, definition);
+	result.set(nodeset, definition);
 
 	if (definition.type === 'leaf-node') {
-		return acc;
+		return result;
 	}
 
 	for (const child of definition.children) {
-		collectDefinitions(acc, child);
+		collectDefinitions(result, child);
 	}
 
-	return acc;
+	return result;
 };
 
 export type NodeDefinitionMap = ReadonlyMap<NodesetReference, AnyNodeDefinition>;
