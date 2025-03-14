@@ -47,5 +47,8 @@
   "resolutions": {
     "**/tree-sitter": "0.22.1",
     "@asgerf/dts-tree-sitter/tree-sitter": "0.22.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -76,5 +76,8 @@
   },
   "dependencies": {
     "vue-draggable-plus": "^0.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

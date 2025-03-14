@@ -80,5 +80,8 @@
     "solid-js": {
       "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

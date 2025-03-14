@@ -73,5 +73,8 @@
     "vite-plugin-no-bundle": "^4.0.0",
     "vitest": "^2.1.8",
     "web-tree-sitter": "0.24.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
