@@ -52,9 +52,10 @@ const blankLeafElementChildrenResult = (parent: StaticElement): StaticElementChi
  * - An array of all of its {@link StaticChildNode | child nodes}
  * - A subset array of only its {@link StaticElement | child elements}
  * - A {@link StaticElementChildrenResult.leafValue | "leaf value"} which is
- *   populated with the text value of a {@link StaticText | text node} **IFF**
- *   that text node is the element's sole child node (which is in turn used to
- *   identify which _elements_ are {@link StaticLeafElement | leaf} nodes)
+ *   populated with the text value of a {@link StaticText | text node} if **and
+ *   only if** that text node is the element's sole child node (which is in turn
+ *   used to identify which _elements_ are {@link StaticLeafElement | leaf}
+ *   nodes)
  *
  * @todo this is awkwardly named and awkward to describe! It's done this way for
  * efficiency (which makes a substantial difference for large forms), at the
