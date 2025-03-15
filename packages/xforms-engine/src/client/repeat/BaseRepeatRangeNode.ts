@@ -1,4 +1,3 @@
-import type { AnyRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
 import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
 import type { NodeAppearances } from '../NodeAppearances.ts';
 import type { RootNode } from '../RootNode.ts';
@@ -6,7 +5,7 @@ import type { TextRange } from '../TextRange.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { RepeatRangeNodeType } from '../node-types.ts';
 import type { AncestorNodeValidationState } from '../validation.ts';
-import type { RepeatInstanceNode } from './RepeatInstanceNode.ts';
+import type { AnyRepeatDefinition, RepeatInstanceNode } from './RepeatInstanceNode.ts';
 
 export interface BaseRepeatRangeNodeState extends BaseNodeState {
 	get hint(): null;
@@ -26,7 +25,7 @@ export interface BaseRepeatRangeNodeState extends BaseNodeState {
 	get value(): null;
 }
 
-export type RepeatRangeNodeAppearances = NodeAppearances<AnyRepeatRangeDefinition>;
+export type RepeatRangeNodeAppearances = NodeAppearances<AnyRepeatDefinition>;
 
 /**
  * Represents a contiguous set of zero or more {@link RepeatInstanceNode}s
@@ -95,7 +94,7 @@ export type RepeatRangeNodeAppearances = NodeAppearances<AnyRepeatRangeDefinitio
 export interface BaseRepeatRangeNode extends BaseNode {
 	readonly nodeType: RepeatRangeNodeType;
 	readonly appearances: RepeatRangeNodeAppearances;
-	readonly definition: AnyRepeatRangeDefinition;
+	readonly definition: AnyRepeatDefinition;
 	readonly root: RootNode;
 	readonly parent: GeneralParentNode;
 	readonly currentState: BaseRepeatRangeNodeState;

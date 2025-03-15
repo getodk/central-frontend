@@ -1,5 +1,6 @@
 import type { NoteNode } from '../../client/NoteNode.ts';
 import type { ValueType } from '../../client/ValueType.ts';
+import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { InputControlDefinition } from '../body/control/InputControlDefinition.ts';
 import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
@@ -43,7 +44,7 @@ export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNod
 		parent: ParentNodeDefinition,
 		bind: BindDefinition<V>,
 		bodyElement: AnyBodyElementDefinition | null,
-		node: Element
+		node: StaticLeafElement
 	): NoteNodeDefinition<V> | null {
 		if (!isNoteBindDefinition(bind) || bodyElement?.type !== 'input') {
 			return null;
@@ -64,7 +65,7 @@ export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNod
 		override readonly bind: NoteBindDefinition<V>,
 		override readonly bodyElement: InputControlDefinition,
 		readonly noteTextDefinition: NoteTextDefinition,
-		node: Element
+		node: StaticLeafElement
 	) {
 		super(parent, bind, bodyElement, node);
 	}

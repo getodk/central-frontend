@@ -4,6 +4,7 @@ import type { Accessor } from 'solid-js';
 import { untrack } from 'solid-js';
 import type { RepeatRangeNode } from '../../client/hierarchy.ts';
 import type { FormNodeID } from '../../client/identity.ts';
+import type { AnyRepeatDefinition } from '../../client/index.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { InstanceState } from '../../client/serialization/InstanceState.ts';
@@ -14,6 +15,7 @@ import type {
 	XFormsXPathNodeRangeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createNodeRangeInstanceState } from '../../lib/client-reactivity/instance-state/createNodeRangeInstanceState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
@@ -24,10 +26,7 @@ import type { EngineState } from '../../lib/reactivity/node-state/createEngineSt
 import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createNodeLabel } from '../../lib/reactivity/text/createNodeLabel.ts';
-import type {
-	AnyRepeatRangeDefinition,
-	ControlledRepeatRangeDefinition,
-} from '../../parse/model/RepeatRangeDefinition.ts';
+import type { ControlledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type {
 	AnyDescendantNode,
 	DescendantNodeSharedStateSpec,
@@ -36,7 +35,7 @@ import { DescendantNode } from '../abstract/DescendantNode.ts';
 import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
-import { RepeatInstance, type RepeatDefinition } from './RepeatInstance.ts';
+import { RepeatInstance } from './RepeatInstance.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
@@ -47,12 +46,12 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 }
 
 // prettier-ignore
-type BaseRepeatRangeNodeType<Definition extends AnyRepeatRangeDefinition> =
-	Definition extends ControlledRepeatRangeDefinition
+type BaseRepeatRangeNodeType<Definition extends AnyRepeatDefinition> =
+	Definition extends ControlledRepeatDefinition
 		? 'repeat-range:controlled'
 		: 'repeat-range:uncontrolled';
 
-export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinition>
+export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 	extends DescendantNode<Definition, RepeatRangeStateSpec, GeneralParentNode, RepeatInstance>
 	implements
 		BaseRepeatRangeNode,
@@ -152,7 +151,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 	readonly instanceState: InstanceState;
 
 	constructor(parent: GeneralParentNode, definition: Definition) {
-		super(parent, definition);
+		super(parent, definition.template, definition);
 
 		const repeatRange = this as AnyDescendantNode as RepeatRange;
 
@@ -197,7 +196,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	private createChildren(
 		afterIndex: number,
-		definitions: readonly RepeatDefinition[]
+		instanceNodes: readonly StaticElement[]
 	): readonly RepeatInstance[] {
 		return this.scope.runTask(() => {
 			let initialPrecedingInstance: RepeatInstance | null;
@@ -216,7 +215,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 			const repeatRange = this as AnyDescendantNode as RepeatRange;
 
-			return definitions.reduce<RepeatInstance[]>((acc, definition) => {
+			return instanceNodes.reduce<RepeatInstance[]>((acc, definition) => {
 				const precedingInstance = acc[acc.length - 1] ?? initialPrecedingInstance;
 				const newInstance = new RepeatInstance(repeatRange, definition, {
 					precedingInstance,
@@ -231,11 +230,11 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatRangeDefinitio
 
 	protected addChildren(
 		afterIndex: number,
-		definitions: readonly RepeatDefinition[]
+		instanceNodes: readonly StaticElement[]
 	): readonly RepeatInstance[] {
 		return this.scope.runTask(() => {
 			const initialIndex = afterIndex + 1;
-			const newInstances = this.createChildren(afterIndex, definitions);
+			const newInstances = this.createChildren(afterIndex, instanceNodes);
 
 			return this.childrenState.setChildren((currentInstances) => {
 				return insertAtIndex(currentInstances, initialIndex, newInstances);

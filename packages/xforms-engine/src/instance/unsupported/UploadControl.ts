@@ -5,6 +5,7 @@ import type { ValueType } from '../../client/ValueType.ts';
 import type { UnsupportedControlNodeType } from '../../client/node-types.ts';
 import type { UploadNode, UploadNodeDefinition } from '../../client/unsupported/UploadNode.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type {
 	TempUnsupportedInputValue,
 	TempUnsupportedRuntimeValue,
@@ -78,10 +79,14 @@ export class UploadControl
 	readonly nodeOptions = null;
 	readonly currentState: CurrentState<UploadControlStateSpec>;
 
-	constructor(parent: GeneralParentNode, definition: UploadNodeDefinition) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: UploadNodeDefinition
+	) {
 		const codec = codecs[definition.valueType];
 
-		super(parent, definition, codec);
+		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
 

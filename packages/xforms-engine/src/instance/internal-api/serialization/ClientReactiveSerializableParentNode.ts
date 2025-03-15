@@ -5,7 +5,7 @@ export interface ClientReactiveSerializableChildNode {
 	readonly instanceState: InstanceState;
 }
 
-interface ClientReactiveSerializableParentNodeCurrentState<
+export interface ClientReactiveSerializableParentNodeCurrentState<
 	Child extends ClientReactiveSerializableChildNode,
 > {
 	get relevant(): boolean;

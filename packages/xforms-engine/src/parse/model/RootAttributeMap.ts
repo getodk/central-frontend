@@ -1,10 +1,16 @@
 import { XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import { RootAttributeDefinition } from './RootAttributeDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
-const isNonNamespaceDeclarationDOMAttr = (domAttr: Attr) => {
-	return domAttr.namespaceURI !== XMLNS_NAMESPACE_URI;
+/**
+ * @todo We should probably just distinguish these as separate `StaticNode`
+ * subclasses, probably as separate collections on `StaticElement`!
+ */
+const isNonNamespaceAttribute = (attribute: StaticAttribute) => {
+	return attribute.qualifiedName.namespaceURI?.href !== XMLNS_NAMESPACE_URI;
 };
 
 /**
@@ -24,19 +30,18 @@ const isNonNamespaceDeclarationDOMAttr = (domAttr: Attr) => {
  * @see {@link QualifiedName} for more detail.
  */
 export class RootAttributeMap extends Map<QualifiedName, RootAttributeDefinition> {
-	static from(root: RootDefinition, domRootSourceElement: Element) {
-		const domAttrs = Array.from(domRootSourceElement.attributes);
-		const nonNamespaceDeclarationDOMAttrs = domAttrs.filter(isNonNamespaceDeclarationDOMAttr);
-		const attributes = nonNamespaceDeclarationDOMAttrs.map((source) => {
-			return new RootAttributeDefinition(root, source);
+	static from(root: RootDefinition, instanceNode: StaticElement) {
+		const nonNamespaceAttributes = instanceNode.attributes.filter(isNonNamespaceAttribute);
+		const definitions = nonNamespaceAttributes.map((attribute) => {
+			return new RootAttributeDefinition(root, attribute);
 		});
 
-		return new this(attributes);
+		return new this(definitions);
 	}
 
-	private constructor(attributes: readonly RootAttributeDefinition[]) {
+	private constructor(definitions: readonly RootAttributeDefinition[]) {
 		super(
-			attributes.map((attribute) => {
+			definitions.map((attribute) => {
 				return [attribute.qualifiedName, attribute];
 			})
 		);

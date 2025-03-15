@@ -5,6 +5,7 @@ import type { NoteNode, NoteNodeAppearances, NoteValue } from '../client/NoteNod
 import type { TextRange } from '../client/TextRange.ts';
 import type { ValueType } from '../client/ValueType.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { getNoteCodec } from '../lib/codecs/getNoteCodec.ts';
 import type { NoteInputValue, NoteRuntimeValue } from '../lib/codecs/NoteCodec.ts';
 import { createNoteReadonlyThunk } from '../lib/reactivity/createNoteReadonlyThunk.ts';
@@ -52,10 +53,14 @@ export class Note<V extends ValueType = ValueType>
 	readonly nodeOptions = null;
 	readonly currentState: CurrentState<NoteStateSpec<V>>;
 
-	constructor(parent: GeneralParentNode, definition: NoteNodeDefinition<V>) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: NoteNodeDefinition<V>
+	) {
 		const codec = getNoteCodec(definition.valueType);
 
-		super(parent, definition, codec);
+		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
 

@@ -2,8 +2,9 @@ import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatR
 import type { RepeatRangeUncontrolledNode } from '../../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
 import type { XFormsXPathNodeRange } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { UncontrolledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
+import type { UncontrolledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { Root } from '../Root.ts';
@@ -11,7 +12,7 @@ import { BaseRepeatRange } from './BaseRepeatRange.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
 
 export class RepeatRangeUncontrolled
-	extends BaseRepeatRange<UncontrolledRepeatRangeDefinition>
+	extends BaseRepeatRange<UncontrolledRepeatDefinition>
 	implements RepeatRangeUncontrolledNode, XFormsXPathNodeRange, EvaluationContext
 {
 	// RepeatRangeUncontrolledNode
@@ -19,11 +20,15 @@ export class RepeatRangeUncontrolled
 	readonly appearances: RepeatRangeNodeAppearances;
 	readonly validationState: AncestorNodeValidationState;
 
-	constructor(parent: GeneralParentNode, definition: UncontrolledRepeatRangeDefinition) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNodes: readonly StaticElement[],
+		definition: UncontrolledRepeatDefinition
+	) {
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;
-		this.addChildren(-1, definition.instances);
+		this.addChildren(-1, definition.omitTemplate(instanceNodes));
 		this.validationState = createAggregatedViolations(this, this.instanceConfig);
 	}
 

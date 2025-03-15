@@ -13,6 +13,8 @@ import type {
 	XFormsXPathPrimaryInstanceNodeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { PrimaryInstanceXPathNode } from '../../integration/xpath/adapter/kind.ts';
+import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
 import type { CurrentState } from '../../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
@@ -189,6 +191,7 @@ export abstract class InstanceNode<
 	constructor(
 		readonly instanceConfig: InstanceConfig,
 		readonly parent: Parent,
+		readonly instanceNode: StaticDocument | StaticElement,
 		readonly definition: Definition,
 		options?: InstanceNodeOptions
 	) {

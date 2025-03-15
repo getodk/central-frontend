@@ -1,5 +1,6 @@
 import type { ValueType } from '../../client/ValueType.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
+import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { RuntimeValue, SharedValueCodec } from '../../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../../lib/codecs/getSharedValueCodec.ts';
 import type {
@@ -91,7 +92,7 @@ export class RangeNodeDefinition<V extends RangeValueType = RangeValueType>
 		parent: ParentNodeDefinition,
 		bind: BindDefinition<V>,
 		bodyElement: RangeControlDefinition,
-		node: Element
+		node: StaticLeafElement
 	): RangeNodeDefinition<Extract<V, RangeValueType>> {
 		assertRangeBindDefinition(bind);
 
@@ -104,7 +105,7 @@ export class RangeNodeDefinition<V extends RangeValueType = RangeValueType>
 		parent: ParentNodeDefinition,
 		override readonly bind: BindDefinition<V>,
 		override readonly bodyElement: RangeControlDefinition,
-		node: Element
+		node: StaticLeafElement
 	) {
 		super(parent, bind, bodyElement, node);
 

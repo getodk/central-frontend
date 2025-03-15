@@ -7,14 +7,12 @@ import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import type { LeafNodeDefinition } from './LeafNodeDefinition.ts';
-import type { RepeatInstanceDefinition } from './RepeatInstanceDefinition.ts';
-import type { AnyRepeatRangeDefinition } from './RepeatRangeDefinition.ts';
-import type { RepeatTemplateDefinition } from './RepeatTemplateDefinition.ts';
+import type { AnyRepeatDefinition } from './RepeatDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 import type { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 /**
- * Corresponds to the model/entry DOM root node, i.e.:
+ * Corresponds to a model instance root node, i.e.:
  *
  * - the element matching `/*` in primary instance expressions, a.k.a.
  * - `/h:html/h:head/xf:model/xf:instance[1]/*`
@@ -22,34 +20,25 @@ import type { SubtreeDefinition } from './SubtreeDefinition.ts';
 export type RootNodeType = 'root';
 
 /**
- * Corresponds to a range/sequence of model/entry DOM subtrees which in turn
- * corresponds to a <repeat> in the form body definition.
+ * Corresponds to the combined concepts defining a "repeat".
+ *
+ * @see {@link RepeatDefinition} for details on these concepts and how they are used to produce a "repeat definition", as such.
+ *
+ * , including or
+ * referencing all of the following:
+ *
  */
-export type RepeatRangeType = 'repeat-range';
+export type RepeatType = 'repeat';
 
 /**
- * Corresponds to a template definition for a repeat range, which either has
- * an explicit `jr:template=""` attribute in the form definition or is inferred
- * as a template from the form's first element matched by a <repeat nodeset>.
- */
-export type RepeatTemplateType = 'repeat-template';
-
-/**
- * Corresponds to a single instance of a model/entry DOM subtree which
- * in turn corresponds to a <repeat> in the form body definition, and a
- * 'repeat-range' definition.
- */
-export type RepeatInstanceType = 'repeat-instance';
-
-/**
- * Corresponds to a model/entry DOM subtree which **does not** correspond to a
+ * Corresponds to a model instance subtree which **does not** correspond to a
  * <repeat> in the form definition. This will typically correspond to a <group>,
  * but this is not strictly necessary per spec (hence the distinct name).
  */
 export type SubtreeNodeType = 'subtree';
 
 /**
- * Corresponds to a model/entry DOM leaf node, i.e. one of:
+ * Corresponds to a model instance leaf node, i.e. one of:
  *
  * - An element with no child elements
  * - Any attribute corresponding to a bind's `nodeset` expression
@@ -60,9 +49,7 @@ export type LeafNodeType = 'leaf-node';
 export type NodeDefinitionType =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootNodeType
-	| RepeatRangeType
-	| RepeatTemplateType
-	| RepeatInstanceType
+	| RepeatType
 	| SubtreeNodeType
 	| LeafNodeType;
 
@@ -70,23 +57,14 @@ export type NodeDefinitionType =
 export type ParentNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootDefinition
-	| RepeatTemplateDefinition
-	| RepeatInstanceDefinition
+	| AnyRepeatDefinition
 	| SubtreeDefinition;
 
 // prettier-ignore
 export type ChildNodeDefinition =
-	| AnyRepeatRangeDefinition
+	| AnyRepeatDefinition
 	| LeafNodeDefinition
 	| SubtreeDefinition;
-
-// prettier-ignore
-export type ChildNodeInstanceDefinition =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| RepeatTemplateDefinition
-	| RepeatInstanceDefinition
-	| SubtreeDefinition
-	| LeafNodeDefinition;
 
 export abstract class NodeDefinition<Type extends NodeDefinitionType>
 	implements NamedSubtreeDefinition
@@ -99,11 +77,7 @@ export abstract class NodeDefinition<Type extends NodeDefinitionType>
 	abstract readonly root: RootDefinition;
 	abstract readonly parent: ParentNodeDefinition | null;
 	abstract readonly children: readonly ChildNodeDefinition[] | null;
-	abstract readonly instances: readonly RepeatInstanceDefinition[] | null;
 	abstract readonly defaultValue: string | null;
-
-	/** @todo leaf-node may be Attr */
-	abstract readonly node: Element | null;
 
 	readonly nodeset: string;
 
@@ -112,11 +86,10 @@ export abstract class NodeDefinition<Type extends NodeDefinitionType>
 	}
 }
 
+// prettier-ignore
 export type AnyNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootDefinition
-	| AnyRepeatRangeDefinition
-	| RepeatTemplateDefinition
-	| RepeatInstanceDefinition
+	| AnyRepeatDefinition
 	| SubtreeDefinition
 	| LeafNodeDefinition;

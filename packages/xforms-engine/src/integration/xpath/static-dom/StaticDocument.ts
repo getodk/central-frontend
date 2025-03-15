@@ -14,6 +14,7 @@ export class StaticDocument extends StaticParentNode<'document'> implements XFor
 	readonly parent = null;
 	readonly nodeset: string;
 	readonly children: readonly [root: StaticElement];
+	readonly childElements: readonly [root: StaticElement];
 
 	constructor(options: StaticDocumentOptions) {
 		super('document');
@@ -26,6 +27,7 @@ export class StaticDocument extends StaticParentNode<'document'> implements XFor
 
 		this.root = root;
 		this.children = [root];
+		this.childElements = this.children;
 	}
 
 	// XFormsXPathDocument

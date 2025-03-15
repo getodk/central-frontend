@@ -6,6 +6,7 @@ import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createParentNodeInstanceState } from '../lib/client-reactivity/instance-state/createParentNodeInstanceState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -57,8 +58,8 @@ export class Group
 	readonly validationState: AncestorNodeValidationState;
 	readonly instanceState: InstanceState;
 
-	constructor(parent: GeneralParentNode, definition: GroupDefinition) {
-		super(parent, definition);
+	constructor(parent: GeneralParentNode, instanceNode: StaticElement, definition: GroupDefinition) {
+		super(parent, instanceNode, definition);
 
 		this.appearances = definition.bodyElement.appearances;
 

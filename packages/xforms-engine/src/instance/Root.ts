@@ -83,11 +83,12 @@ export class Root
 	readonly languages: FormLanguages;
 
 	constructor(parent: PrimaryInstance) {
-		const { definition } = parent;
+		const { definition, instanceNode: instance } = parent;
+		const instanceNode = instance.root;
 		const { nodeset: reference } = definition;
 		const computeReference: Accessor<string> = () => reference;
 
-		super(parent, definition, {
+		super(parent, instanceNode, definition, {
 			computeReference,
 		});
 
