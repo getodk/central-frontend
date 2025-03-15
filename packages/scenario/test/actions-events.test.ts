@@ -38,7 +38,7 @@ interface PredicateOptions {
  * Some tests were made to pass because they exercise other functionality (and
  * the previous top-level comment lagged that fact in confusing ways).
  *
- * At time of writing, the the following changes and observations are now
+ * At time of writing, the following changes and observations are now
  * applicable, either throughout the suite or where specified:
  *
  * - All calls to {@link Scenario.newInstance} have been updated to reference
