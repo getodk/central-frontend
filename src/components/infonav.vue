@@ -11,10 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="infonav-button dropdown">
-    <div v-if="!$slots.dropdown && link == null">
-      <slot name="title"></slot>
-    </div>
-    <router-link v-else-if="link != null" class="btn btn-link" :to="link">
+    <router-link v-if="link != null" class="btn btn-link" :to="link">
       <slot name="title"></slot>
     </router-link>
     <button v-else :id="toggleId" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
@@ -22,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <slot name="title"></slot>
         <span class="icon-angle-down"></span>
     </button>
-    <ul class="dropdown-menu" :aria-labelledby="toggleId">
+    <ul v-if="$slots.dropdown" class="dropdown-menu" :aria-labelledby="toggleId">
       <slot name="dropdown"></slot>
     </ul>
   </div>
@@ -33,7 +30,9 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-
+defineOptions({
+  name: 'InfoNav'
+});
 defineProps({
   // If a link is provided, the button will navigate to that link when clicked instead of dropping down.
   link: String
@@ -57,7 +56,6 @@ const toggleId = `${idPrefix}-toggle`;
       }
     }
   }
-
 
   .infonav-button {
     margin-left: 10px;
