@@ -72,7 +72,7 @@ const responsesByComponent = {
     // Conditional responses (mockHttp().respondIf())
     publishedAttachments: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/attachments$/.test(url),
-      () => []
+      () => testData.standardFormAttachments.sorted()
     ],
     formDatasetDiff: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/dataset-diff$/.test(url),
@@ -80,7 +80,7 @@ const responsesByComponent = {
     ],
     appUserCount: [
       ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/assignments\/app-user$/.test(url),
-      () => []
+      () => testData.extendedFieldKeys.sorted()
     ]
   }),
   FormPreview: componentResponses({

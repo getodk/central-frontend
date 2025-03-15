@@ -1723,6 +1723,14 @@
       "back": {
         "string": "Back to Project Entities",
         "developer_comment": "This is shown at the top of the page."
+      },
+      "infoNav": {
+        "connectedForms": {
+          "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}"
+        },
+        "linkedForms": {
+          "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}"
+        }
       }
     },
     "DatasetSummary": {
@@ -3097,6 +3105,22 @@
         "tabTitle": {
           "string": "Publish this Draft Form to enable these functions",
           "developer_comment": "Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc."
+        }
+      },
+      "infoNav": {
+        "entityLists": {
+          "string": "{count, plural, one {{count} Related Entity List} other {{count} Related Entity Lists}}"
+        },
+        "updatedDatasets": {
+          "string": "Updates",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists updated by this form."
+        },
+        "attachedDatasets": {
+          "string": "Uses",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
+        },
+        "appUsers": {
+          "string": "{count, plural, one {{count} App User assigned} other {{count} App Users assigned}}"
         }
       },
       "draftNav": {
