@@ -391,10 +391,6 @@ export default {
     max-width: 250px;
     min-width: 250px;
     width: 250px;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .form-attachment-list-uploaded {
