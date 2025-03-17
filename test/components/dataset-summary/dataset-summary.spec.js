@@ -16,7 +16,7 @@ const getContainer = () => ({
   })
 });
 
-describe('Dataset summary', () => {
+describe('DatasetSummary', () => {
   const theories = [0, 1, 2];
 
   theories.forEach(count => {
@@ -25,7 +25,7 @@ describe('Dataset summary', () => {
       const component = mount(DatasetSummary, {
         props: { isDraft: true },
         global: {
-          provide: { projectId: 1, xmlFormId: 'simple' }
+          provide: { projectId: '1', xmlFormId: 'simple' }
         },
         container: getContainer()
       });
@@ -44,7 +44,7 @@ describe('Dataset summary', () => {
       const component = mount(DatasetSummary, {
         props: { isDraft: false },
         global: {
-          provide: { projectId: 1, xmlFormId: 'simple' }
+          provide: { projectId: '1', xmlFormId: 'simple' }
         },
         container: getContainer()
       });

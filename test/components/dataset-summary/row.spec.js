@@ -1,5 +1,5 @@
 import DatasetLink from '../../../src/components/dataset/link.vue';
-import Row from '../../../src/components/dataset/summary/row.vue';
+import DatasetSummaryRow from '../../../src/components/dataset/summary/row.vue';
 
 import Property from '../../util/ds-property-enum';
 import testData from '../../data';
@@ -18,10 +18,10 @@ describe('DatasetSummaryRow', () => {
       const { case: _, ...options } = data;
       const dataset = testData.formDraftDatasetDiffs.createPast(1, options).last();
       const inFormProperties = dataset.properties.filter(p => p.inForm);
-      const component = mount(Row, {
+      const component = mount(DatasetSummaryRow, {
         props: { dataset },
         global: {
-          provide: { projectId: 1 }
+          provide: { projectId: '1' }
         },
         container: {
           router: mockRouter('/')
@@ -34,7 +34,7 @@ describe('DatasetSummaryRow', () => {
         name.text().should.equal(dataset.name);
       } else {
         const link = name.getComponent(DatasetLink);
-        link.props().should.eql({ projectId: 1, name: dataset.name });
+        link.props().should.eql({ projectId: '1', name: dataset.name });
       }
 
       component.find('.dataset-new').exists().should.be.equal(data.isNew);
@@ -60,17 +60,17 @@ describe('DatasetSummaryRow', () => {
 
   it('should show help text when there is no properties', async () => {
     const dataset = testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [] }).last();
-    const component = mount(Row, {
+    const component = mount(DatasetSummaryRow, {
       props: { dataset },
       global: {
-        provide: { projectId: 1 }
+        provide: { projectId: '1' }
       },
       container: {
         router: mockRouter('/')
       }
     });
     component.getComponent(DatasetLink).props().should.eql({
-      projectId: 1,
+      projectId: '1',
       name: dataset.name
     });
     component.get('.properties-count').text().should.be.equal('0 of 0 properties');

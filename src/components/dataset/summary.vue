@@ -27,24 +27,24 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import SummaryItem from '../summary-item.vue';
-import { useRequestData } from '../../request-data';
 import DatasetSummaryRow from './summary/row.vue';
+
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'DatasetSummary',
   components: { SummaryItem, DatasetSummaryRow },
   inject: ['projectId', 'xmlFormId'],
   props: {
-    isDraft: {
-      type: Boolean,
-      Default: false
-    }
+    isDraft: Boolean
   },
   setup(props) {
-    const { form, formDraftDatasetDiff, formDatasetDiff } = useRequestData();
-    return { form, datasetDiff: props.isDraft ? formDraftDatasetDiff : formDatasetDiff };
+    // The component does not assume that this data will exist when the
+    // component is created.
+    const { formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+    return { datasetDiff: props.isDraft ? formDraftDatasetDiff : formDatasetDiff };
   },
   created() {
     this.fetchDsDiff();
