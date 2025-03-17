@@ -55,17 +55,17 @@ describe('ConnectionToForms', () => {
 
     const rows = component.findAllComponents(ExpandableRow);
 
-    rows[0].get('.title-cell').text().should.be.eql('Tree Registration');
+    rows[0].get('.expandable-row-title').text().should.be.eql('Tree Registration');
     rows[0].get('.caption-cell').text().should.be.eql('2 of 3 properties');
     rows[0].get('.expanded-row').text().should.be.eql('height, type');
     rows[0].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration/submissions');
 
-    rows[1].get('.title-cell').text().should.be.eql('Tree Registration Adv');
+    rows[1].get('.expandable-row-title').text().should.be.eql('Tree Registration Adv');
     rows[1].get('.caption-cell').text().should.be.eql('3 of 3 properties');
     rows[1].get('.expanded-row').text().should.be.eql('height, circumference, type');
     rows[1].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
 
-    rows[2].get('.title-cell').text().should.be.eql('Form with no properties');
+    rows[2].get('.expandable-row-title').text().should.be.eql('Form with no properties');
     rows[2].get('.caption-cell').text().should.be.eql('0 of 3 properties');
     rows[2].get('.expanded-row').text().should.be.eql('This Form only sets the “label”.');
     rows[2].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/form_with_no_prop/submissions');

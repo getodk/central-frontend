@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="expandable-row">
-    <div class="title-cell">
+    <div class="expandable-row-title">
       <slot name="title"></slot>
     </div>
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
 
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div class="button-cell" @click="toggleExpanded">
-      <button type="button" class="btn btn-link">
+      <button type="button" class="expandable-row-toggle-button btn btn-link">
         <span v-if="!expanded" class="sr-only">{{ $t('action.expand') }}</span>
         <span v-else class="sr-only">{{ $t('action.collapse') }}</span>
         <span v-if="!expanded" class="icon-caret-left"></span>
@@ -64,7 +64,7 @@ export default {
     padding: 8px 0;
   }
 
-  .title-cell {
+  .expandable-row-title {
     flex-grow: 1;
   }
 
@@ -80,12 +80,6 @@ export default {
     text-align: center;
     padding: 0px;
     width: 30px;
-
-    button {
-      padding: 0;
-
-      @include text-link;
-    }
   }
 
   .expanded-row{
@@ -94,5 +88,8 @@ export default {
   }
 }
 
-
+.expandable-row-toggle-button {
+  @include text-link;
+  padding: 0;
+}
 </style>

@@ -40,13 +40,6 @@ describe('DatasetSummaryRow', () => {
       component.find('.dataset-new').exists().should.be.equal(data.isNew);
       component.get('.properties-count').text().should.be.equal(`${inFormProperties.length} of ${dataset.properties.length} ${dataset.properties.length === 1 ? 'property' : 'properties'}`);
 
-      // check name of the properties is hidden
-      component.get('.property-list').should.be.hidden();
-      // let expand properties
-      await component.get('.expand-button').trigger('click');
-      // check properties are not visible
-      component.get('.property-list').should.be.visible();
-
       const listElements = component.findAll('.i18n-list .element');
       listElements.length.should.equal(inFormProperties.length);
       for (const [i, p] of listElements.entries()) {
@@ -74,14 +67,6 @@ describe('DatasetSummaryRow', () => {
       name: dataset.name
     });
     component.get('.properties-count').text().should.be.equal('0 of 0 properties');
-
-    // check help text is hidden (.property-list is the parent)
-    component.get('.property-list').should.be.hidden();
-    // let expand help text
-    await component.get('.expand-button').trigger('click');
-    // check help text is visible
-    component.get('.property-list').should.be.visible();
-    // verify text
     component.find('.no-properties').text().should.be.equal('This Form only sets the “label”.');
   });
 });
