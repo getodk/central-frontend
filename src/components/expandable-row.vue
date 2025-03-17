@@ -18,7 +18,6 @@ except according to the terms contained in the LICENSE file.
     <div class="caption-cell" @click="toggleExpanded">
       <slot name="caption"></slot>
     </div>
-
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div class="button-cell" @click="toggleExpanded">
       <button type="button" class="expandable-row-toggle-button btn btn-link">
@@ -29,39 +28,31 @@ except according to the terms contained in the LICENSE file.
       </button>
     </div>
     <div v-show="expanded" class="expanded-row">
-        <slot name="details"></slot>
+      <slot name="details"></slot>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 
-export default {
-  name: 'ExpandableRow',
-  data() {
-    return {
-      expanded: false
-    };
-  },
-  methods: {
-    toggleExpanded() {
-      this.expanded = !this.expanded;
-    }
-  }
-};
+defineOptions({
+  name: 'ExpandableRow'
+});
 
+const expanded = ref(false);
+const toggleExpanded = () => { expanded.value = !expanded.value; };
 </script>
 
 <style lang="scss">
-@import '../assets/scss/_variables.scss';
 @import '../assets/scss/mixins';
 
 .expandable-row {
   display: flex;
   flex-wrap: wrap;
 
-  &> div {
-    padding: 8px 0;
+  > div {
+    padding-block: 8px;
   }
 
   .expandable-row-title {
@@ -78,11 +69,11 @@ export default {
   .button-cell {
     align-self: center;
     text-align: center;
-    padding: 0px;
+    padding-block: 0;
     width: 30px;
   }
 
-  .expanded-row{
+  .expanded-row {
     width: 100%;
     padding: 0 8px 16px 8px;
   }
