@@ -48,6 +48,10 @@ const abandonText = computed(() => (!form.dataExists
 </script>
 
 <style lang="scss">
+#form-edit-draft-controls {
+  .form-edit-section-body { margin-bottom: 30px; }
+}
+
 #form-edit-publish-button { margin-left: 10px; }
 </style>
 

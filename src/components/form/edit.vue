@@ -24,11 +24,16 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
-      <form-draft-status @fetch-draft="fetchDraft(true)"/>
+      <div class="row">
+        <div class="col-xs-12 col-lg-10">
+          <form-edit-def @upload="uploadModal.show()"/>
+        </div>
+      </div>
       <form-attachment-list v-if="rendersAttachments"/>
       <form-draft-testing/>
     </template>
 
+    <form-new v-bind="uploadModal" @hide="uploadModal.hide()" @success="afterUpload"/>
     <form-draft-publish v-if="formDraft.dataExists && formDraft.isDefined()"
       v-bind="publishModal" @hide="publishModal.hide()"
       @success="afterPublish"/>
@@ -44,12 +49,13 @@ import { useI18n } from 'vue-i18n';
 import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftAbandon from '../form-draft/abandon.vue';
 import FormDraftPublish from '../form-draft/publish.vue';
-import FormDraftStatus from '../form-draft/status.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
+import FormEditDef from './edit/def.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';
 import FormEditLoadingDraft from './edit/loading-draft.vue';
 import FormEditPublishedVersion from './edit/published-version.vue';
+import FormNew from './new.vue';
 
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
@@ -103,9 +109,19 @@ watchEffect(() => {
   ]);
 });
 
-const publishModal = modalData();
+const uploadModal = modalData();
 const { router, alert } = inject('container');
 const { t } = useI18n();
+const afterUpload = () => {
+  fetchDraft(true);
+  draftAttachments.reset();
+  formDraftDatasetDiff.reset();
+
+  uploadModal.hide();
+  alert.success(t('alert.upload'));
+};
+
+const publishModal = modalData();
 const afterPublish = () => {
   // Re-request the project in case its `datasets` property has changed.
   emit('fetch-project', true);
@@ -154,6 +170,8 @@ body:has(#form-edit) { background-color: #fff; }
 {
   "en": {
     "alert": {
+      // @transifexKey component.FormDraftStatus.alert.upload
+      "upload": "Success! The new Form definition has been saved as your Draft.",
       // @transifexKey component.FormDraftStatus.alert.publish
       "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments.",
       // @transifexKey component.FormDraftStatus.alert.abandon

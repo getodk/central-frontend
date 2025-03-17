@@ -1,3 +1,4 @@
+import Property from '../../util/ds-property-enum';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
@@ -30,6 +31,17 @@ describe('FormEdit', () => {
             }
           }
         ]);
+    });
+
+    it('requests the dataset diff if the form draft is entityRelated', () => {
+      testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
+      testData.formDraftDatasetDiffs.createPast(1, {
+        isNew: true,
+        properties: [Property.NewProperty]
+      });
+      return load('/projects/1/forms/f/draft').testRequestsInclude([{
+        url: '/v1/projects/1/forms/f/draft/dataset-diff'
+      }]);
     });
   });
 });

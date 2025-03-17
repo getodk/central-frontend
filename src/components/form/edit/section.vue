@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     <div>
       <p class="form-edit-section-title"><slot name="title"></slot></p>
       <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
-      <div><slot name="body"></slot></div>
+      <div class="form-edit-section-body"><slot name="body"></slot></div>
     </div>
   </div>
 </template>
@@ -39,9 +39,12 @@ defineProps({
 </script>
 
 <style lang="scss">
+$dots-margin-block: 9px;
+
 .form-edit-section {
   column-gap: 15px;
   display: flex;
+  margin-bottom: $dots-margin-block;
 
   > :first-child {
     align-items: center;
@@ -52,7 +55,7 @@ defineProps({
 
   > :nth-child(2) {
     flex-grow: 1;
-    padding-block: 16px 35px;
+    padding-top: 16px;
   }
 }
 
@@ -74,13 +77,18 @@ defineProps({
 .form-edit-section-dots {
   border-left: 2px dotted #999;
   height: 100%;
-  margin-top: 9px;
+  margin-top: $dots-margin-block;
 }
 
 .form-edit-section-title {
   font-size: 17px;
   font-weight: bold;
   line-height: 1.2;
-  margin-bottom: 0;
+}
+
+.form-edit-section-subtitle {
+  margin-top: -10px;
+
+  &:empty { display: none; }
 }
 </style>
