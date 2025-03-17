@@ -3065,6 +3065,10 @@
           "string": "Upload new Form Definition",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "withinDef": {
+        "string": "Within this Form Definition:",
+        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
       }
     },
     "FormEditDraftControls": {
