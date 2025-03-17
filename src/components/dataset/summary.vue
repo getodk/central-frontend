@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="datasetDiff.dataExists && datasetDiff.length > 0">
+  <div v-if="datasetDiff.dataExists && datasetDiff.length > 0"
+    class="dataset-summary">
     <template v-for="(dataset, index) in datasetDiff" :key="dataset.name">
       <dataset-summary-row :dataset="dataset"/>
       <hr v-if="index < datasetDiff.length - 1">

@@ -48,6 +48,14 @@ const { formDraftDatasetDiff, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
 </script>
 
+<style lang="scss">
+@import '../../../assets/scss/variables';
+
+#form-edit-entities {
+  .dataset-summary { margin-top: -$padding-top-expandable-row; }
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {

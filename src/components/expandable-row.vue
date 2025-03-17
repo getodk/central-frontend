@@ -52,7 +52,7 @@ const toggleExpanded = () => { expanded.value = !expanded.value; };
   flex-wrap: wrap;
 
   > div {
-    padding-block: 8px;
+    padding-block: $padding-top-expandable-row;
   }
 
   .expandable-row-title {
@@ -75,7 +75,7 @@ const toggleExpanded = () => { expanded.value = !expanded.value; };
 
   .expanded-row {
     width: 100%;
-    padding: 0 8px 16px 8px;
+    padding: 0 8px $padding-bottom-expandable-row 8px;
   }
 }
 

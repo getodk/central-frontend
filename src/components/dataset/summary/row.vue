@@ -105,6 +105,7 @@ const propertiesCount = computed(() => tn(
   }
 
   .properties-count {
+    color: #888;
     line-height: 28px;
   }
 
