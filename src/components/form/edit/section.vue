@@ -51,6 +51,7 @@ defineProps({
   }
 
   > :nth-child(2) {
+    flex-grow: 1;
     padding-block: 16px 35px;
   }
 }
