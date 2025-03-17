@@ -12,18 +12,6 @@ except according to the terms contained in the LICENSE file.
 <template>
   <file-drop-zone id="form-attachment-list" :disabled="uploading"
     :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
-    <page-section>
-      <template #heading>
-        <span>{{ $t('resource.attachments') }}</span>
-        <button id="form-attachment-list-upload-button" type="button"
-          class="btn btn-primary" @click="uploadFilesModal.show()">
-          <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}&hellip;
-        </button>
-      </template>
-      <template #body>
-        <p>{{ $t('orDrag') }}</p>
-      </template>
-    </page-section>
     <div v-if="datasetLinkable" class="panel-dialog">
       <div class="panel-heading">
         <span class="panel-title">
@@ -63,6 +51,13 @@ except according to the terms contained in the LICENSE file.
           @link="linkDatasetModal.show({ attachment: $event })"/>
       </tbody>
     </table>
+    <p>
+      <button id="form-attachment-list-upload-button" type="button"
+        class="btn btn-primary" @click="uploadFilesModal.show()">
+        <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}
+      </button>
+      <span>{{ $t('orDrag') }}</span>
+    </p>
     <form-attachment-popups
       :count-of-files-over-drop-zone="countOfFilesOverDropZone"
       :dragover-attachment="dragoverAttachment"
@@ -90,7 +85,6 @@ import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import PageSection from '../page/section.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import useRequest from '../../composables/request';
@@ -109,7 +103,6 @@ export default {
     FormAttachmentPopups,
     FormAttachmentRow,
     FormAttachmentUploadFiles,
-    PageSection,
     SentenceSeparator
   },
   inject: ['alert', 'projectId'],
@@ -376,10 +369,6 @@ export default {
 
 <style lang="scss">
 #form-attachment-list {
-  // Extend to the bottom of the page (or slightly beyond it) so that the drop
-  // zone includes the entire page below the PageHead.
-  min-height: calc(100vh - 146px);
-
   .panel-dialog {
     margin-top: -5px;
     margin-bottom: 25px;
@@ -387,6 +376,8 @@ export default {
 }
 
 #form-attachment-list-table {
+  margin-bottom: 5px;
+
   .form-attachment-list-type {
     // Fix the widths of the Type and Name columns so that the width of the
     // Uploaded column is also fixed. We do not want the width of the Uploaded
@@ -414,6 +405,12 @@ export default {
     // So that column doesn't grow infinitely
     width: 1px;
   }
+}
+
+#form-attachment-list-upload-button {
+  margin-right: 5px;
+
+  + span { color: #999; }
 }
 </style>
 

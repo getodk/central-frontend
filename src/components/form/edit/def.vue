@@ -27,6 +27,7 @@ except according to the terms contained in the LICENSE file.
           </button>
         </div>
       </div>
+      <form-edit-attachments/>
       <form-edit-entities/>
     </template>
   </form-edit-section>
@@ -37,6 +38,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { defineAsyncComponent } from 'vue';
 
+import FormEditAttachments from './attachments.vue';
 import FormEditEntities from './entities.vue';
 import FormEditSection from './section.vue';
 import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';

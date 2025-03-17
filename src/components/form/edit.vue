@@ -29,7 +29,6 @@ except according to the terms contained in the LICENSE file.
           <form-edit-def @upload="uploadModal.show()"/>
         </div>
       </div>
-      <form-attachment-list v-if="rendersAttachments"/>
       <form-draft-testing/>
     </template>
 
@@ -43,10 +42,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, inject, provide, watchEffect } from 'vue';
+import { inject, provide, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import FormAttachmentList from '../form-attachment/list.vue';
 import FormDraftAbandon from '../form-draft/abandon.vue';
 import FormDraftPublish from '../form-draft/publish.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
@@ -159,9 +157,6 @@ const afterAbandon = () => {
       .then(() => { alert.success(t('alert.delete', { name: nameOrId })); });
   }
 };
-
-const rendersAttachments = computed(() =>
-  draftAttachments.dataExists && draftAttachments.size !== 0);
 </script>
 
 <style lang="scss">
