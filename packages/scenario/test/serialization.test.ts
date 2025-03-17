@@ -543,6 +543,66 @@ describe('Restoring serialized instance state', () => {
 		});
 	});
 
+	/**
+	 * **PORTING NOTES**
+	 *
+	 * Writing these tests to determine the current behavior or compare with
+	 * JavaRosa's behavior has been deferred, per request by @lognaturel.
+	 *
+	 * **OPEN QUESTION**
+	 *
+	 * Given:
+	 *
+	 * 1. A form defined with a `relevant` expression
+	 * 2. A serialized instance where:
+	 *     - that `relevant` expression would evaluate to `false`
+	 *     - the non-relevant node has been serialized with a value different from
+	 *       its model default
+	 * 3. Form instance state is restored from that instance
+	 * 4. A state change is made to make the previously non-relevant node become
+	 *    relevant
+	 *
+	 * Should that node's value:
+	 *
+	 * - A: be restored from the instance-serialized value; OR
+	 * - B: be restored from the model-defined default value; OR
+	 * - C: either/both depending on other circumstances, e.g.
+	 *     - edit -> B
+	 *     - restore incomplete state -> A
+	 *
+	 * - - -
+	 *
+	 * **EDITORIAL**
+	 *
+	 * - Because testing this has been deferred, I can only speak to current
+	 *   behavior based on my understanding having developed it. So I may be
+	 *   mistaken, but I would expect the _current behavior_ to be A.
+	 *
+	 * - It would probably have been faster to write the tests and answer that
+	 *   with more certainty. At least speaking for myself, it takes longer to
+	 *   write prose than to mostly-copypasta and tweak some test code.
+	 *
+	 * - My instinct is that C (with its example) _feels like the right answer_.
+	 *
+	 * - Important to know: what is JavaRosa's behavior under the same
+	 *   circumstances, and does/should deserialization intent influence it?
+	 *
+	 * - - -
+	 *
+	 * Note that the descriptions of each test in this sub-suite is derived from a
+	 * corresponding equivalent, in the corresponding "omitted from instance
+	 * payload" sub-suite above.
+	 */
+	describe('non-relevant nodes included in instance payload', () => {
+		it.todo(
+			'restores a non-relevant leaf node with [its model default value? the serialized node value? TBD!] when it becomes relevant'
+		);
+
+		it.todo(
+			"restores a non-relevant subtree node's descendant leaf node with [its model default value? the serialized node value? TBD!] when the restored subtree becomes relevant"
+		);
+	});
+
 	describe('calculate', () => {
 		const IGNORED_INSTANCE_ID = 'ignored for purposes of functionality under test';
 
@@ -1070,6 +1130,16 @@ describe('Restoring serialized instance state', () => {
 					expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
 				});
 			});
+		});
+
+		describe('direct relevance on repeat instances', () => {
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * Writing this test to determine the current behavior or compare with
+			 * JavaRosa's behavior has been deferred, per request by @lognaturel.
+			 */
+			it.todo('restores relevant repeat instances in their relevant position');
 		});
 	});
 });
