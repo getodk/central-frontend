@@ -107,6 +107,12 @@ watchEffect(() => {
       resend: false
     })
   ]);
+  if (formDraft.get().entityRelated) {
+    formDraftDatasetDiff.request({
+      url: apiPaths.formDraftDatasetDiff(props.projectId, props.xmlFormId),
+      resend: false
+    }).catch(noop);
+  }
 });
 
 const uploadModal = modalData();

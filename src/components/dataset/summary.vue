@@ -25,41 +25,26 @@ except according to the terms contained in the LICENSE file.
   </summary-item>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+
 import SummaryItem from '../summary-item.vue';
 import DatasetSummaryRow from './summary/row.vue';
 
-import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'DatasetSummary',
-  components: { SummaryItem, DatasetSummaryRow },
-  inject: ['projectId', 'xmlFormId'],
-  props: {
-    isDraft: Boolean
-  },
-  setup(props) {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { formDatasetDiff, formDraftDatasetDiff } = useRequestData();
-    return { datasetDiff: props.isDraft ? formDraftDatasetDiff : formDatasetDiff };
-  },
-  created() {
-    this.fetchDsDiff();
-  },
-  methods: {
-    fetchDsDiff() {
-      const url = this.isDraft ? apiPaths.formDraftDatasetDiff : apiPaths.formDatasetDiff;
+defineOptions({
+  name: 'DatasetSummary'
+});
+const props = defineProps({
+  isDraft: Boolean
+});
 
-      this.datasetDiff.request({
-        url: url(this.projectId, this.xmlFormId),
-        resend: false
-      }).catch(noop);
-    }
-  }
-};
+// The component does not assume that this data will exist when the component is
+// created.
+const { formDatasetDiff, formDraftDatasetDiff } = useRequestData();
+const datasetDiff = computed(() =>
+  (props.isDraft ? formDraftDatasetDiff : formDatasetDiff));
 </script>
 
 <i18n lang="json5">
