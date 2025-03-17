@@ -1,57 +1,16 @@
 import type { Signal } from 'solid-js';
 import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
-import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { InstanceValueContext } from '../../instance/internal-api/InstanceValueContext.ts';
 import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 
-type InitialValueSource = 'FORM_DEFAULT' | 'PRIMARY_INSTANCE';
-
-/**
- * @todo {@link InitialValueSource} naming leaves a lot to be desired. As described in {@link InstanceValueStateOptions.initialValueSource}, this check (for now) will effectively answer the question: "are we **NOT** editing instance state (e.g. a submission)?". This answer, in turn, determines whether to {@link setPreloadUIDValue}
- */
-const isInstanceFirstLoad = (valueSource?: InitialValueSource) => {
-	return valueSource === 'FORM_DEFAULT';
+const isInstanceFirstLoad = (context: InstanceValueContext) => {
+	return context.rootDocument.initializationMode === 'create';
 };
 
-export interface InstanceValueStateOptions {
-	/**
-	 * Specifies the source of a {@link createInstanceValueState} signal's initial
-	 * value state, where:
-	 *
-	 * - 'FORM_DEFAULT': Derives the initial state from the form's definition of
-	 *   the node itself. This is the default option, appropriate when
-	 *   initializing a form without additional primary instance data. In other
-	 *   words, this value should not be used for edits.
-	 *
-	 * - 'PRIMARY_INSTANCE': Derives the initial state from the current text
-	 *   content of the {@link ValueNode.contextNode}. This option should be
-	 *   specified when initializing a form with existing primary instance data,
-	 *   such as when editing a previous submission.
-	 *
-	 * @default 'FORM_DEFAULT'
-	 *
-	 * Specifies whether a {@link createInstanceValueState} signal's initial state
-	 * should be derived from the current text content of the
-	 * {@link ValueNode.contextNode | primary instance DOM state}.
-	 */
-	readonly initialValueSource?: InitialValueSource;
-}
-
-const getInitialValue = (
-	context: InstanceValueContext,
-	options: InstanceValueStateOptions
-): string => {
-	const { initialValueSource = 'FORM_DEFAULT' } = options;
-
-	if (initialValueSource === 'FORM_DEFAULT') {
-		const { defaultValue } = context.definition;
-
-		return context.decodeInstanceValue(defaultValue);
-	}
-
-	throw new ErrorProductionDesignPendingError('Edit implementation pending');
+const getInitialValue = (context: InstanceValueContext): string => {
+	return context.decodeInstanceValue(context.instanceNode.value);
 };
 
 type BaseValueState = Signal<string>;
@@ -129,12 +88,11 @@ const PRELOAD_UID_EXPRESSION = 'concat("uuid:", uuid())';
  */
 const setPreloadUIDValue = (
 	context: InstanceValueContext,
-	valueState: RelevantValueState,
-	options: InstanceValueStateOptions
+	valueState: RelevantValueState
 ): void => {
 	const { preload } = context.definition.bind;
 
-	if (preload?.type !== 'uid' || !isInstanceFirstLoad(options?.initialValueSource)) {
+	if (preload?.type !== 'uid' || !isInstanceFirstLoad(context)) {
 		return;
 	}
 
@@ -189,19 +147,16 @@ export type InstanceValueState = SimpleAtomicState<string>;
  *   nodes defined with one
  * - prevents downstream writes to nodes in a readonly state
  */
-export const createInstanceValueState = (
-	context: InstanceValueContext,
-	options: InstanceValueStateOptions = {}
-): InstanceValueState => {
+export const createInstanceValueState = (context: InstanceValueContext): InstanceValueState => {
 	return context.scope.runTask(() => {
-		const initialValue = getInitialValue(context, options);
+		const initialValue = getInitialValue(context);
 		const baseValueState = createSignal(initialValue);
 		const relevantValueState = createRelevantValueState(context, baseValueState);
 
 		/**
 		 * @see {@link setPreloadUIDValue} for important details about spec ordering of events and computations.
 		 */
-		setPreloadUIDValue(context, relevantValueState, options);
+		setPreloadUIDValue(context, relevantValueState);
 
 		const { calculate } = context.definition.bind;
 

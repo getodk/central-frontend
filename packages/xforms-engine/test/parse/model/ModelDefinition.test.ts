@@ -1,5 +1,3 @@
-import { expectEqualNode } from '@getodk/common/test/assertions/dom.ts';
-import { xformsElement } from '@getodk/common/test/factories/xml.ts';
 import {
 	bind,
 	body,
@@ -18,7 +16,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { BindDefinition } from '../../../src/parse/model/BindDefinition.ts';
 import type { LeafNodeDefinition } from '../../../src/parse/model/LeafNodeDefinition.ts';
 import { ModelDefinition } from '../../../src/parse/model/ModelDefinition.ts';
-import type { RepeatRangeDefinition } from '../../../src/parse/model/RepeatRangeDefinition.ts';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';
 import { XFormDOM } from '../../../src/parse/XFormDOM.ts';
 
@@ -345,61 +342,21 @@ describe('ModelDefinition', () => {
 			{
 				index: 0,
 				expected: {
-					type: 'repeat-range',
+					type: 'repeat',
 					bind: { nodeset: '/root/rep' },
 					bodyElement: {
 						type: 'repeat',
 					},
-					instances: [
-						{
-							type: 'repeat-instance',
-							bodyElement: {
-								type: 'repeat',
-							},
-							children: [
-								{
-									type: 'leaf-node',
-									bind: { nodeset: '/root/rep/a' },
-									bodyElement: { type: 'input' },
-								},
-								{
-									type: 'leaf-node',
-									bind: { nodeset: '/root/rep/b' },
-									bodyElement: { type: 'input' },
-								},
-							],
-						},
-					],
 				},
 			},
 			{
 				index: 1,
 				expected: {
-					type: 'repeat-range',
+					type: 'repeat',
 					bind: { nodeset: '/root/rep2' },
 					bodyElement: {
 						type: 'repeat',
 					},
-					instances: [
-						{
-							type: 'repeat-instance',
-							bodyElement: {
-								type: 'repeat',
-							},
-							children: [
-								{
-									type: 'leaf-node',
-									bind: { nodeset: '/root/rep2/c' },
-									bodyElement: { type: 'input' },
-								},
-								{
-									type: 'leaf-node',
-									bind: { nodeset: '/root/rep2/d' },
-									bodyElement: null,
-								},
-							],
-						},
-					],
 				},
 			},
 		])(
@@ -415,165 +372,6 @@ describe('ModelDefinition', () => {
 				});
 			}
 		);
-
-		describe('templates', () => {
-			const expectRepeatTemplate = (definition: RepeatRangeDefinition, expectedXML: string) => {
-				const expected = xformsElement`${expectedXML}`;
-
-				expectEqualNode(definition.template.node, expected);
-			};
-
-			it('defines an explicit repeat template', () => {
-				const definition = modelDefinition.root.children[0] as RepeatRangeDefinition;
-
-				expectRepeatTemplate(definition, /* xml */ `<rep><a>a default</a><b>b default</b></rep>`);
-			});
-
-			it('derives a repeat template from a non-template instance in the form definition', () => {
-				const definition = modelDefinition.root.children[1] as RepeatRangeDefinition;
-
-				expectRepeatTemplate(definition, /* xml */ `<rep2><c /><d /></rep2>`);
-			});
-
-			it('clears default values from a derived template', () => {
-				const definition = modelDefinition.root.children[4] as RepeatRangeDefinition;
-
-				expectRepeatTemplate(definition, /* xml */ `<rep5><g /></rep5>`);
-			});
-
-			it.each([
-				{ index: 1, expected: 1 },
-				{ index: 4, expected: 2 },
-			])(
-				'defines $expected default instances from nodes in the form definition when a repeat template is implicitly derived',
-				({ index, expected }) => {
-					const definition = modelDefinition.root.children[index] as RepeatRangeDefinition;
-
-					expect(definition.instances.length).toBe(expected);
-				}
-			);
-
-			it.fails('rejects multiple templates for the same repeat', () => {
-				const xform = html(
-					head(
-						title('Model definition'),
-						model(
-							mainInstance(
-								// prettier-ignore
-								t(`root id="model-definition"`,
-									// prettier-ignore
-									t('rep',
-										t('rep2 jr:template=""'),
-										t('rep2',
-											t('a'),
-											t('b')
-										)
-									),
-									t('rep',
-										t('rep2 jr:template=""'),
-										t('rep2',
-											t('a'),
-											t('b')
-										)
-									)
-								)
-							),
-							bind('/root/rep/rep2/a').type('string'),
-							bind('/root/rep/rep2/b').type('string')
-						)
-					),
-					// prettier-ignore
-					body(
-						group('/root/rep',
-							repeat('/root/rep',
-								group('/root/rep/rep2',
-									repeat('/group/rep/rep2',
-										input('/root/rep/rep2/a'),
-										input('/root/rep/rep2/b')
-									)
-								)
-							)
-						)
-					)
-				);
-
-				const xformDOM = XFormDOM.from(xform.asXml());
-
-				expect(() => new XFormDefinition(xformDOM)).toThrow(
-					'Multiple explicit templates defined for /root/rep/rep2'
-				);
-			});
-		});
-
-		describe('default instances', () => {
-			it.each([
-				{
-					nodeset: '/root/rep',
-					index: 0,
-					expected: 1,
-				},
-
-				{
-					nodeset: '/root/rep2',
-					index: 1,
-					expected: 1,
-				},
-
-				// Not sure!
-				// {
-				// 	nodeset: '/root/rep3',
-				// 	index: 0,
-				// 	expected: NaN,
-				// },
-
-				{
-					nodeset: '/root/rep4',
-					index: 3,
-					expected: 3,
-				},
-			])('defines $expected default instances ($nodeset)', ({ index, nodeset, expected }) => {
-				const definition = modelDefinition.root.children[index] as RepeatRangeDefinition;
-
-				// Ensure we're testing the right range in the first place
-				expect(definition.nodeset).toBe(nodeset);
-
-				expect(definition.instances.length).toBe(expected);
-			});
-
-			it.each([
-				{
-					nodeset: '/root/rep4',
-					rangeIndex: 3,
-					instanceIndex: 0,
-					expectedXML: /* xml */ `<rep4><f>default instance f 0</f></rep4>`,
-				},
-				{
-					nodeset: '/root/rep4',
-					rangeIndex: 3,
-					instanceIndex: 1,
-					expectedXML: /* xml */ `<rep4><f /></rep4>`,
-				},
-				{
-					nodeset: '/root/rep4',
-					rangeIndex: 3,
-					instanceIndex: 2,
-					expectedXML: /* xml */ `<rep4><f>default instance f 2</f></rep4>`,
-				},
-			])(
-				'defines the default instance for nodeset $nodeset at index $instanceIndex with default values (xml: $expectedXML)',
-				({ nodeset, rangeIndex, instanceIndex, expectedXML }) => {
-					const definition = modelDefinition.root.children[rangeIndex] as RepeatRangeDefinition;
-
-					// Ensure we're testing the right range in the first place
-					expect(definition.nodeset).toBe(nodeset);
-
-					const instance = definition.instances[instanceIndex]!;
-					const expected = xformsElement`${expectedXML}`;
-
-					expectEqualNode(instance.node, expected);
-				}
-			);
-		});
 
 		describe.todo('nesting');
 	});

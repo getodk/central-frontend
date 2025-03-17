@@ -1,3 +1,4 @@
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type {
@@ -17,14 +18,13 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;
 	readonly children: readonly ChildNodeDefinition[];
-	readonly instances = null;
 	readonly defaultValue = null;
 
 	constructor(
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: AnyBodyElementDefinition | null,
-		readonly node: Element
+		node: StaticElement
 	) {
 		if (
 			bodyElement != null &&
@@ -37,9 +37,9 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 
 		const { root } = parent;
 
-		this.qualifiedName = new QualifiedName(node);
+		this.qualifiedName = node.qualifiedName;
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
-		this.children = root.buildSubtree(this);
+		this.children = root.buildSubtree(this, node);
 	}
 
 	toJSON() {

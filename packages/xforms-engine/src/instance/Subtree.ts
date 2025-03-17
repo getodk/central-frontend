@@ -5,6 +5,7 @@ import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { SubtreeDefinition, SubtreeNode } from '../client/SubtreeNode.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createParentNodeInstanceState } from '../lib/client-reactivity/instance-state/createParentNodeInstanceState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -54,8 +55,12 @@ export class Subtree
 	readonly validationState: AncestorNodeValidationState;
 	readonly instanceState: InstanceState;
 
-	constructor(parent: GeneralParentNode, definition: SubtreeDefinition) {
-		super(parent, definition);
+	constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticElement,
+		definition: SubtreeDefinition
+	) {
+		super(parent, instanceNode, definition);
 
 		const childrenState = createChildrenState<Subtree, GeneralChildNode>(this);
 

@@ -1,12 +1,9 @@
-import { XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
-import { StaticAttribute } from '../../../../integration/xpath/static-dom/StaticAttribute.ts';
-import { StaticElement } from '../../../../integration/xpath/static-dom/StaticElement.ts';
-import { StaticText } from '../../../../integration/xpath/static-dom/StaticText.ts';
-import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
-import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
+import type { StaticElementOptions } from '../../../../integration/xpath/static-dom/StaticElement.ts';
+import { defineSecondaryInstance } from '../defineSecondaryInstance.ts';
+import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { ExternalSecondaryInstanceSource } from './ExternalSecondaryInstanceSource.ts';
 
 type CSVColumn = string;
@@ -88,89 +85,39 @@ interface CSVExternalSecondaryInstanceItemColumn {
 
 type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceItemColumn[];
 
-class CSVExternalSecondaryInstanceColumnElement extends StaticElement {
-	constructor(parent: StaticElement, column: CSVExternalSecondaryInstanceItemColumn) {
-		const { columnName, cellValue } = column;
+const columnChildOption = (
+	column: CSVExternalSecondaryInstanceItemColumn
+): StaticElementOptions => {
+	const { columnName, cellValue } = column;
 
-		super(
-			parent,
-			() => [],
-			(self) => [new StaticText(self, cellValue)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: columnName,
-			}
-		);
-	}
-}
+	return {
+		name: columnName,
+		children: [cellValue],
+	};
+};
 
-class CSVExternalSecondaryInstanceItemElement extends StaticElement {
-	constructor(parent: StaticElement, item: CSVExternalSecondaryInstanceItem) {
-		super(
-			parent,
-			() => [],
-			(self) => {
-				return item.map((column) => {
-					return new CSVExternalSecondaryInstanceColumnElement(self, column);
-				});
-			},
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'item',
-			}
-		);
-	}
-}
+const itemChildOption = (item: CSVExternalSecondaryInstanceItem): StaticElementOptions => {
+	return {
+		name: 'item',
+		children: item.map(columnChildOption),
+	};
+};
 
-class CSVExternalSecondaryInstanceRootElement extends StaticElement {
-	constructor(parent: StaticElement, items: readonly CSVExternalSecondaryInstanceItem[]) {
-		super(
-			parent,
-			() => [],
-			(self) => {
-				return items.map((item) => {
-					return new CSVExternalSecondaryInstanceItemElement(self, item);
-				});
-			},
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'root',
-			}
-		);
-	}
-}
+const rootChildOption = (
+	items: readonly CSVExternalSecondaryInstanceItem[]
+): StaticElementOptions => {
+	return {
+		name: 'root',
+		children: items.map(itemChildOption),
+	};
+};
 
-class CSVExternalSecondaryInstanceDocumentElement extends SecondaryInstanceRootDefinition {
-	constructor(
-		instanceId: string,
-		parent: CSVExternalSecondaryInstanceDefinition,
-		items: readonly CSVExternalSecondaryInstanceItem[]
-	) {
-		super(
-			parent,
-			(self) => [
-				new StaticAttribute(self, {
-					namespaceURI: XFORMS_NAMESPACE_URI,
-					localName: 'id',
-					value: instanceId,
-				}),
-			],
-			(self) => [new CSVExternalSecondaryInstanceRootElement(self, items)],
-			{
-				namespaceURI: XFORMS_NAMESPACE_URI,
-				localName: 'instance',
-			}
-		);
-	}
-}
-
-class CSVExternalSecondaryInstanceDefinition extends SecondaryInstanceDefinition {
-	constructor(instanceId: string, items: readonly CSVExternalSecondaryInstanceItem[]) {
-		super((self) => {
-			return new CSVExternalSecondaryInstanceDocumentElement(instanceId, self, items);
-		});
-	}
-}
+const csvExternalSecondaryInstanceDefinition = (
+	instanceId: string,
+	items: readonly CSVExternalSecondaryInstanceItem[]
+): SecondaryInstanceDefinition => {
+	return defineSecondaryInstance(instanceId, rootChildOption(items));
+};
 
 export class CSVExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'csv'> {
 	/**
@@ -283,6 +230,6 @@ export class CSVExternalSecondaryInstanceSource extends ExternalSecondaryInstanc
 		});
 		const items = this.toItems(columns, rows);
 
-		return new CSVExternalSecondaryInstanceDefinition(this.instanceId, items);
+		return csvExternalSecondaryInstanceDefinition(this.instanceId, items);
 	}
 }

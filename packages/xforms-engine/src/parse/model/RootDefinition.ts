@@ -1,3 +1,4 @@
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
@@ -8,7 +9,7 @@ import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition
 import { NodeDefinition } from './NodeDefinition.ts';
 import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RangeNodeDefinition } from './RangeNodeDefinition.ts';
-import { RepeatRangeDefinition } from './RepeatRangeDefinition.ts';
+import { RepeatDefinition } from './RepeatDefinition.ts';
 import { RootAttributeMap } from './RootAttributeMap.ts';
 import type { SubmissionDefinition } from './SubmissionDefinition.ts';
 import { SubtreeDefinition } from './SubtreeDefinition.ts';
@@ -22,8 +23,6 @@ export class RootDefinition extends NodeDefinition<'root'> {
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly attributes: RootAttributeMap;
 	readonly children: readonly ChildNodeDefinition[];
-	readonly instances = null;
-	readonly node: Element;
 	readonly defaultValue = null;
 
 	readonly isTranslated = false;
@@ -34,8 +33,8 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		readonly submission: SubmissionDefinition,
 		readonly classes: BodyClassList
 	) {
-		const { primaryInstanceRoot } = form.xformDOM;
-		const qualifiedName = new QualifiedName(primaryInstanceRoot);
+		const node = model.instance.root;
+		const qualifiedName = node.qualifiedName;
 		const nodeName = qualifiedName.getPrefixedName();
 
 		// TODO: theoretically the pertinent step in the bind's `nodeset` *could* be
@@ -51,23 +50,22 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		super(bind);
 
 		this.qualifiedName = qualifiedName;
-		this.node = primaryInstanceRoot;
-		this.attributes = RootAttributeMap.from(this, primaryInstanceRoot);
+		this.attributes = RootAttributeMap.from(this, node);
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
-		this.children = this.buildSubtree(this);
+		this.children = this.buildSubtree(this, node);
 	}
 
-	buildSubtree(parent: ParentNodeDefinition): readonly ChildNodeDefinition[] {
+	buildSubtree(parent: ParentNodeDefinition, node: StaticElement): readonly ChildNodeDefinition[] {
 		const { form, model } = this;
 		const { body } = form;
 		const { binds } = model;
-		const { bind: parentBind, node } = parent;
+		const { bind: parentBind } = parent;
 		const { nodeset: parentNodeset } = parentBind;
 
-		const childrenByName = new Map<string, [Element, ...Element[]]>();
+		const childrenByName = new Map<string, [StaticElement, ...StaticElement[]]>();
 
-		for (const child of node.children) {
-			const { nodeName } = child;
+		for (const child of node.childElements) {
+			const nodeName = child.qualifiedName.getPrefixedName();
 
 			let elements = childrenByName.get(nodeName);
 
@@ -88,7 +86,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			const [firstChild, ...restChildren] = children;
 
 			if (bodyElement?.type === 'repeat') {
-				return RepeatRangeDefinition.from(parent, bind, bodyElement, children);
+				return RepeatDefinition.from(parent, bind, bodyElement, children);
 			}
 
 			if (restChildren.length) {
@@ -96,9 +94,8 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			}
 
 			const element = firstChild;
-			const isLeafNode = element.childElementCount === 0;
 
-			if (isLeafNode) {
+			if (element.isLeafElement()) {
 				if (bodyElement?.type === 'range') {
 					return RangeNodeDefinition.from(parent, bind, bodyElement, element);
 				}

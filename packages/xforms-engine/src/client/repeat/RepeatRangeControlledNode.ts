@@ -1,4 +1,4 @@
-import type { ControlledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
+import type { ControlledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { BaseRepeatRangeNode, BaseRepeatRangeNodeState } from './BaseRepeatRangeNode.ts';
 import type { RepeatRangeUncontrolledNode } from './RepeatRangeUncontrolledNode.ts';
 
@@ -16,5 +16,5 @@ export interface RepeatRangeControlledState extends BaseRepeatRangeNodeState {}
  */
 export interface RepeatRangeControlledNode extends BaseRepeatRangeNode {
 	readonly nodeType: 'repeat-range:controlled';
-	readonly definition: ControlledRepeatRangeDefinition;
+	readonly definition: ControlledRepeatDefinition;
 }

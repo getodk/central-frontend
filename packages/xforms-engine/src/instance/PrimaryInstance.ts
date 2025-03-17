@@ -3,6 +3,7 @@ import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
+import type { FormInstanceInitializationMode } from '../client/index.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
@@ -13,6 +14,7 @@ import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathDocument } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
+import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
 import { createPrimaryInstanceState } from '../lib/client-reactivity/instance-state/createPrimaryInstanceState.ts';
 import { prepareInstancePayload } from '../lib/client-reactivity/instance-state/prepareInstancePayload.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
@@ -90,11 +92,19 @@ export class PrimaryInstance
 		EvaluationContext,
 		ClientReactiveSerializableInstance
 {
+	/**
+	 * @todo this will be populated as we introduce other initialization modes!
+	 */
+	readonly initializationMode: FormInstanceInitializationMode = 'create';
+
+	readonly model: ModelDefinition;
+
 	// InstanceNode
 	protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
 	protected readonly engineState: EngineState<PrimaryInstanceStateSpec>;
-	readonly getChildren: Accessor<readonly Root[]>;
 
+	override readonly instanceNode: StaticDocument;
+	readonly getChildren: Accessor<readonly Root[]>;
 	readonly hasReadonlyAncestor = () => false;
 	readonly isReadonly = () => false;
 	readonly hasNonRelevantAncestor = () => false;
@@ -127,12 +137,16 @@ export class PrimaryInstance
 
 	constructor(options: PrimaryInstanceOptions) {
 		const { scope, model, secondaryInstances, config } = options;
-		const { root: definition } = model;
+		const { instance: modelInstance } = model;
+		const definition = model.getRootDefinition(modelInstance);
 
-		super(config, null, definition, {
+		super(config, null, modelInstance, definition, {
 			scope,
 			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
 		});
+
+		this.model = model;
+		this.instanceNode = modelInstance;
 
 		const [isAttached, setIsAttached] = createSignal(false);
 

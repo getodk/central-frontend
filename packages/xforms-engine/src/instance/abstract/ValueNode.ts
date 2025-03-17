@@ -6,6 +6,7 @@ import type { InstanceState } from '../../client/serialization/InstanceState.ts'
 import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createValueNodeInstanceState } from '../../lib/client-reactivity/instance-state/createValueNodeInstanceState.ts';
 import type {
 	RuntimeValueSetter,
@@ -84,17 +85,16 @@ export abstract class ValueNode<
 
 	constructor(
 		parent: GeneralParentNode,
+		override readonly instanceNode: StaticLeafElement,
 		definition: Definition,
 		codec: ValueCodec<V, RuntimeValue, RuntimeInputValue>
 	) {
-		super(parent, definition);
+		super(parent, instanceNode, definition);
 
 		this.valueType = definition.valueType;
 		this.decodeInstanceValue = codec.decodeInstanceValue;
 
-		const instanceValueState = createInstanceValueState(this, {
-			initialValueSource: 'FORM_DEFAULT',
-		});
+		const instanceValueState = createInstanceValueState(this);
 		const valueState = codec.createRuntimeValueState(instanceValueState);
 
 		const [getInstanceValue] = instanceValueState;

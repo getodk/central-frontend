@@ -2,12 +2,14 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { GroupDefinition } from '../client/GroupNode.ts';
 import type { InputDefinition } from '../client/InputNode.ts';
 import type { ModelValueDefinition } from '../client/ModelValueNode.ts';
+import type { RankDefinition } from '../client/RankNode.ts';
 import type { SelectDefinition } from '../client/SelectNode.ts';
 import type { SubtreeDefinition } from '../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../client/TriggerNode.ts';
-import type { RankDefinition } from '../client/RankNode.ts';
 import type { UploadNodeDefinition } from '../client/unsupported/UploadNode.ts';
 import { ErrorProductionDesignPendingError } from '../error/ErrorProductionDesignPendingError.ts';
+import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
+import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import type {
@@ -22,13 +24,34 @@ import { InputControl } from './InputControl.ts';
 import { ModelValue } from './ModelValue.ts';
 import { Note } from './Note.ts';
 import { RangeControl } from './RangeControl.ts';
+import { RankControl } from './RankControl.ts';
 import { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import { SelectControl } from './SelectControl.ts';
 import { Subtree } from './Subtree.ts';
 import { TriggerControl } from './TriggerControl.ts';
-import { RankControl } from './RankControl.ts';
 import { UploadControl } from './unsupported/UploadControl.ts';
+
+type InstanceNodesByNodeset = ReadonlyMap<string, readonly [StaticElement, ...StaticElement[]]>;
+
+const groupChildElementsByNodeset = (
+	parent: StaticDocument | StaticElement
+): InstanceNodesByNodeset => {
+	const result = new Map<string, [StaticElement, ...StaticElement[]]>();
+
+	for (const child of parent.childElements) {
+		const { nodeset } = child;
+		const group = result.get(nodeset);
+
+		if (group == null) {
+			result.set(nodeset, [child]);
+		} else {
+			group.push(child);
+		}
+	}
+
+	return result;
+};
 
 const isSubtreeDefinition = (
 	definition: ModelSubtreeDefinition
@@ -127,72 +150,83 @@ const isUploadNodeDefinition = (
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
-	const { children } = parent.definition;
+	const { model } = parent.rootDocument;
+	const grouped = groupChildElementsByNodeset(parent.instanceNode);
+	const groups = Array.from(grouped.values());
 
-	return children.map((child): GeneralChildNode => {
-		switch (child.type) {
+	return groups.map((instanceNodes): GeneralChildNode => {
+		const instanceNode: StaticElement = instanceNodes[0];
+		const definition = model.getNodeDefinition(instanceNode);
+
+		switch (definition.type) {
+			case 'root': {
+				throw new ErrorProductionDesignPendingError();
+			}
+
 			case 'subtree': {
-				if (isSubtreeDefinition(child)) {
-					return new Subtree(parent, child);
+				if (isSubtreeDefinition(definition)) {
+					return new Subtree(parent, instanceNode, definition);
 				}
 
 				// TODO: it'd be good to be able to do without this type assertion. The
 				// only distinction between the types is whether `bodyElement` is
 				// `null`, but for some reason that's insufficient to narrow the union.
-				return new Group(parent, child as GroupDefinition);
+				return new Group(parent, instanceNode, definition as GroupDefinition);
 			}
 
-			case 'repeat-range': {
-				if (child.isControlled()) {
-					return new RepeatRangeControlled(parent, child);
+			case 'repeat': {
+				if (definition.isControlled()) {
+					return new RepeatRangeControlled(parent, instanceNodes, definition);
 				}
 
-				return new RepeatRangeUncontrolled(parent, child);
+				return new RepeatRangeUncontrolled(parent, instanceNodes, definition);
 			}
 
 			case 'leaf-node': {
-				if (child instanceof NoteNodeDefinition) {
-					return new Note(parent, child);
+				instanceNode.assertLeafElement();
+
+				if (definition instanceof NoteNodeDefinition) {
+					return new Note(parent, instanceNode, definition);
 				}
 
 				// More specific type helps with narrowing below
-				const leafChild: AnyLeafNodeDefinition = child;
+				const leafChild: AnyLeafNodeDefinition = definition;
 
 				if (isModelValueDefinition(leafChild)) {
-					return ModelValue.from(parent, leafChild);
+					return ModelValue.from(parent, instanceNode, leafChild);
 				}
 
 				if (isInputDefinition(leafChild)) {
-					return InputControl.from(parent, leafChild);
+					return InputControl.from(parent, instanceNode, leafChild);
 				}
 
 				if (isSelectDefinition(leafChild)) {
-					return SelectControl.from(parent, leafChild);
+					return SelectControl.from(parent, instanceNode, leafChild);
 				}
 
 				if (isRankDefinition(leafChild)) {
-					return RankControl.from(parent, leafChild);
+					return RankControl.from(parent, instanceNode, leafChild);
 				}
 
 				if (isTriggerNodeDefinition(leafChild)) {
-					return TriggerControl.from(parent, leafChild);
+					return TriggerControl.from(parent, instanceNode, leafChild);
 				}
 
 				if (isRangeLeafNodeDefinition(leafChild)) {
 					assertRangeNodeDefinition(leafChild);
 
-					return RangeControl.from(parent, leafChild);
+					return RangeControl.from(parent, instanceNode, leafChild);
 				}
 
 				if (isUploadNodeDefinition(leafChild)) {
-					return new UploadControl(parent, leafChild);
+					return new UploadControl(parent, instanceNode, leafChild);
 				}
 
 				throw new UnreachableError(leafChild);
 			}
 
 			default: {
-				throw new UnreachableError(child);
+				throw new UnreachableError(definition);
 			}
 		}
 	});

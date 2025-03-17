@@ -1,7 +1,7 @@
 import { parseStaticDocumentFromDOMSubtree } from '../../../shared/parseStaticDocumentFromDOMSubtree.ts';
 import type { DOMSecondaryInstanceElement } from '../../../XFormDOM.ts';
-import { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
-import { SecondaryInstanceRootDefinition } from '../SecondaryInstanceRootDefinition.ts';
+import { assertSecondaryInstanceDefinition } from '../assertSecondaryInstanceDefinition.ts';
+import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 import { SecondaryInstanceSource } from './SecondaryInstanceSource.ts';
 
 export class InternalSecondaryInstanceSource extends SecondaryInstanceSource<'internal'> {
@@ -10,10 +10,12 @@ export class InternalSecondaryInstanceSource extends SecondaryInstanceSource<'in
 	}
 
 	parseDefinition(): SecondaryInstanceDefinition {
-		return parseStaticDocumentFromDOMSubtree(
-			SecondaryInstanceDefinition,
-			SecondaryInstanceRootDefinition,
-			this.domElement
-		);
+		const doc = parseStaticDocumentFromDOMSubtree(this.domElement, {
+			nodesetPrefix: `instance('${this.instanceId}')`,
+		});
+
+		assertSecondaryInstanceDefinition(doc);
+
+		return doc;
 	}
 }

@@ -3,16 +3,16 @@ import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatR
 import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeControlledNode.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
 import type { XFormsXPathNodeRange } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
-import type { ControlledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
+import type { ControlledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import { BaseRepeatRange } from './BaseRepeatRange.ts';
-import type { RepeatDefinition } from './RepeatInstance.ts';
 
 export class RepeatRangeControlled
-	extends BaseRepeatRange<ControlledRepeatRangeDefinition>
+	extends BaseRepeatRange<ControlledRepeatDefinition>
 	implements RepeatRangeControlledNode, XFormsXPathNodeRange, EvaluationContext
 {
 	// RepeatRangeControlledNode
@@ -20,17 +20,27 @@ export class RepeatRangeControlled
 	readonly appearances: RepeatRangeNodeAppearances;
 	readonly validationState: AncestorNodeValidationState;
 
-	constructor(parent: GeneralParentNode, definition: ControlledRepeatRangeDefinition) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNodes: readonly StaticElement[],
+		definition: ControlledRepeatDefinition
+	) {
 		super(parent, definition);
 
 		this.appearances = definition.bodyElement.appearances;
-		this.initializeControlledChildrenState(definition);
+
+		this.initializeControlledChildrenState(definition, instanceNodes);
+
 		this.validationState = createAggregatedViolations(this, this.instanceConfig);
 	}
 
-	private initializeControlledChildrenState(definition: ControlledRepeatRangeDefinition): void {
+	private initializeControlledChildrenState(
+		definition: ControlledRepeatDefinition,
+		instanceNodes: readonly StaticElement[]
+	): void {
 		this.scope.runTask(() => {
-			const { count, instances, template } = definition;
+			const { count, template } = definition;
+			const repeatInstanceNodes = definition.omitTemplate(instanceNodes);
 			const computeCount = createComputedExpression(this, count, {
 				defaultValue: 0,
 			});
@@ -56,15 +66,15 @@ export class RepeatRangeControlled
 
 				if (currentCount > previousCount) {
 					const delta = currentCount - previousCount;
-					const definitions = Array<RepeatDefinition>(delta)
-						.fill(template)
-						.map((baseDefinition, index) => {
+					const inputNodes = Array(delta)
+						.fill(null)
+						.map((_, index) => {
 							const instanceIndex = previousCount + index;
 
-							return instances[instanceIndex] ?? baseDefinition;
+							return repeatInstanceNodes[instanceIndex] ?? template;
 						});
 
-					this.addChildren(previousCount - 1, definitions);
+					this.addChildren(previousCount - 1, inputNodes);
 				} else {
 					const delta = previousCount - currentCount;
 

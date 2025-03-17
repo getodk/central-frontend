@@ -8,6 +8,7 @@ import type {
 } from '../client/RangeNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { RangeCodec } from '../lib/codecs/RangeCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -44,12 +45,17 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 		ValidationContext,
 		ClientReactiveSerializableValueNode
 {
-	static from(parent: GeneralParentNode, definition: AnyRangeNodeDefinition): AnyRangeControl;
+	static from(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: AnyRangeNodeDefinition
+	): AnyRangeControl;
 	static from<V extends RangeValueType>(
 		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
 		definition: RangeNodeDefinition<V>
 	): RangeControl<V> {
-		return new this<V>(parent, definition);
+		return new this<V>(parent, instanceNode, definition);
 	}
 
 	// XFormsXPathElement
@@ -65,11 +71,15 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 	readonly nodeOptions = null;
 	readonly currentState: CurrentState<RangeControlStateSpec<V>>;
 
-	constructor(parent: GeneralParentNode, definition: RangeNodeDefinition<V>) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: RangeNodeDefinition<V>
+	) {
 		const baseCodec = getSharedValueCodec(definition.valueType);
 		const codec = new RangeCodec(baseCodec, definition);
 
-		super(parent, definition, codec);
+		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
 

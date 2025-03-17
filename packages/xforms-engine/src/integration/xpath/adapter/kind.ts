@@ -1,17 +1,7 @@
 import type { XPathNodeKind } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
-import type {
-	AnyChildNode,
-	AnyNode,
-	AnyParentNode,
-	AnyValueNode,
-} from '../../../instance/hierarchy.ts';
-import type { ValueContext } from '../../../instance/internal-api/ValueContext.ts';
+import type { AnyChildNode, AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import type { PrimaryInstance } from '../../../instance/PrimaryInstance.ts';
-import type { ItextTranslationDefinition } from '../../../parse/model/ItextTranslation/ItextTranslationDefinition.ts';
-import type { ItextTranslationRootDefinition } from '../../../parse/model/ItextTranslation/ItextTranslationRootDefinition.ts';
-import type { SecondaryInstanceDefinition } from '../../../parse/model/SecondaryInstance/SecondaryInstanceDefinition.ts';
-import type { SecondaryInstanceRootDefinition } from '../../../parse/model/SecondaryInstance/SecondaryInstanceRootDefinition.ts';
 import type { StaticAttribute } from '../static-dom/StaticAttribute.ts';
 import type { StaticDocument } from '../static-dom/StaticDocument.ts';
 import type { StaticElement } from '../static-dom/StaticElement.ts';
@@ -36,25 +26,13 @@ export type PrimaryInstanceXPathChildNode =
 	| PrimaryInstanceXPathComment;
 
 // prettier-ignore
-export type PrimaryInstanceXPathValueElement<Value> =
-	& AnyValueNode
-	& ValueContext<Value>
-	& XFormsXPathElement;
-
-// prettier-ignore
 export type EngineXPathDocument =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| PrimaryInstance
-	| ItextTranslationDefinition
-	| SecondaryInstanceDefinition
 	| StaticDocument;
 
 // prettier-ignore
 export type EngineXPathElement =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| PrimaryInstanceXPathElement
-	| ItextTranslationRootDefinition
-	| SecondaryInstanceRootDefinition
 	| StaticElement;
 
 // prettier-ignore
@@ -83,12 +61,7 @@ type PrimaryInstanceXPathParentNode = Extract<AnyParentNode, XPathAdapterParentN
 
 // prettier-ignore
 export type EngineXPathParentNode =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| PrimaryInstanceXPathParentNode
-	| ItextTranslationDefinition
-	| SecondaryInstanceDefinition
-	| ItextTranslationRootDefinition
-	| SecondaryInstanceRootDefinition
 	| StaticDocument
 	| StaticElement;
 

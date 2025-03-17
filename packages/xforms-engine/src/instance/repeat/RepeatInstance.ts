@@ -3,15 +3,17 @@ import type { Accessor } from 'solid-js';
 import { createComputed, createSignal, on } from 'solid-js';
 import type { FormNodeID } from '../../client/identity.ts';
 import type {
-	RepeatDefinition,
+	AnyRepeatDefinition,
 	RepeatInstanceNode,
 	RepeatInstanceNodeAppearances,
 } from '../../client/repeat/RepeatInstanceNode.ts';
 import type { InstanceState } from '../../client/serialization/InstanceState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { TemplatedNodeAttributeSerializationError } from '../../error/TemplatedNodeAttributeSerializationError.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import { createParentNodeInstanceState } from '../../lib/client-reactivity/instance-state/createParentNodeInstanceState.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
+import { createTemplatedNodeInstanceState } from '../../lib/client-reactivity/instance-state/createTemplatedNodeInstanceState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -27,13 +29,15 @@ import { DescendantNode } from '../abstract/DescendantNode.ts';
 import { buildChildren } from '../children.ts';
 import type { GeneralChildNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
-import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
-
-export type { RepeatDefinition };
+import type { ClientReactiveSerializableTemplatedNode } from '../internal-api/serialization/ClientReactiveSerializableTemplatedNode.ts';
 
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: null;
+
+	/** @see {@link TemplatedNodeAttributeSerializationError} */
+	readonly attributes: null;
+
 	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly valueOptions: null;
 	readonly value: null;
@@ -44,12 +48,17 @@ interface RepeatInstanceOptions {
 }
 
 export class RepeatInstance
-	extends DescendantNode<RepeatDefinition, RepeatInstanceStateSpec, RepeatRange, GeneralChildNode>
+	extends DescendantNode<
+		AnyRepeatDefinition,
+		RepeatInstanceStateSpec,
+		RepeatRange,
+		GeneralChildNode
+	>
 	implements
 		RepeatInstanceNode,
 		XFormsXPathElement,
 		EvaluationContext,
-		ClientReactiveSerializableParentNode<GeneralChildNode>
+		ClientReactiveSerializableTemplatedNode
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
 	private readonly currentIndex: Accessor<number>;
@@ -103,15 +112,16 @@ export class RepeatInstance
 
 	constructor(
 		override readonly parent: RepeatRange,
-		definition: RepeatDefinition,
+		instanceNode: StaticElement,
 		options: RepeatInstanceOptions
 	) {
+		const { definition } = parent;
 		const { precedingInstance } = options;
 		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
 		const initialIndex = precedingIndex() + 1;
 		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
 
-		super(parent, definition, {
+		super(parent, instanceNode, definition, {
 			computeReference: (): string => {
 				const currentPosition = currentIndex() + 1;
 
@@ -137,6 +147,7 @@ export class RepeatInstance
 				// TODO: only-child <group><label>
 				label: createNodeLabel(this, definition),
 				hint: null,
+				attributes: null,
 				children: childrenState.childIds,
 				valueOptions: null,
 				value: null,
@@ -175,7 +186,7 @@ export class RepeatInstance
 
 		childrenState.setChildren(buildChildren(this));
 		this.validationState = createAggregatedViolations(this, this.instanceConfig);
-		this.instanceState = createParentNodeInstanceState(this);
+		this.instanceState = createTemplatedNodeInstanceState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {

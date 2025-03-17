@@ -1,6 +1,6 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { DOMSecondaryInstanceElement } from '../../../XFormDOM.ts';
-import type { SecondaryInstanceDefinition } from '../SecondaryInstanceDefinition.ts';
+import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinition.ts';
 
 // prettier-ignore
 export type ExternalSecondaryInstanceSourceFormat =

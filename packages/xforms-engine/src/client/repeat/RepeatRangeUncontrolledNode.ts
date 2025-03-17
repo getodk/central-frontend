@@ -1,4 +1,4 @@
-import type { UncontrolledRepeatRangeDefinition } from '../../parse/model/RepeatRangeDefinition.ts';
+import type { UncontrolledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { RootNode } from '../RootNode.ts';
 import type { BaseRepeatRangeNode, BaseRepeatRangeNodeState } from './BaseRepeatRangeNode.ts';
 
@@ -14,7 +14,7 @@ export interface RepeatRangeUncontrolledState extends BaseRepeatRangeNodeState {
  */
 export interface RepeatRangeUncontrolledNode extends BaseRepeatRangeNode {
 	readonly nodeType: 'repeat-range:uncontrolled';
-	readonly definition: UncontrolledRepeatRangeDefinition;
+	readonly definition: UncontrolledRepeatDefinition;
 
 	addInstances(afterIndex?: number, count?: number): RootNode;
 	removeInstances(startIndex: number, count?: number): RootNode;

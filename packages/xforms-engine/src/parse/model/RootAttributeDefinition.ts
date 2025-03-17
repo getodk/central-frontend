@@ -5,10 +5,7 @@ import { escapeXMLText } from '../../lib/xml-serialization.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
 interface RootAttributeSource {
-	readonly namespaceURI: string | null;
-	readonly nodeName: string;
-	readonly prefix: string | null;
-	readonly localName: string;
+	readonly qualifiedName: QualifiedName;
 	readonly value: string;
 }
 
@@ -25,16 +22,18 @@ export class RootAttributeDefinition implements NamedNodeDefinition {
 	readonly value: string;
 
 	constructor(root: RootDefinition, source: RootAttributeSource) {
-		const { namespaceURI, nodeName, value } = source;
+		const { qualifiedName, value } = source;
 
 		this.parent = root;
-		this.qualifiedName = new QualifiedName(source);
+		this.qualifiedName = qualifiedName;
 		this.value = value;
 
 		// We serialize namespace declarations separately
-		if (namespaceURI === XMLNS_NAMESPACE_URI) {
+		if (qualifiedName.namespaceURI?.href === XMLNS_NAMESPACE_URI) {
 			this.serializedXML = '';
 		} else {
+			const nodeName = qualifiedName.getPrefixedName();
+
 			this.serializedXML = ` ${nodeName}="${escapeXMLText(value, true)}"`;
 		}
 	}

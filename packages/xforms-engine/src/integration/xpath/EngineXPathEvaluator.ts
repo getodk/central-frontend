@@ -1,8 +1,8 @@
 import type { XFormsItextTranslationMap, XFormsSecondaryInstanceMap } from '@getodk/xpath';
 import { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { PrimaryInstance } from '../../instance/PrimaryInstance.ts';
-import type { ItextTranslationRootDefinition } from '../../parse/model/ItextTranslation/ItextTranslationRootDefinition.ts';
-import type { SecondaryInstanceRootDefinition } from '../../parse/model/SecondaryInstance/SecondaryInstanceRootDefinition.ts';
+import type { ItextTranslationRootDefinition } from '../../parse/model/ItextTranslationsDefinition.ts';
+import type { SecondaryInstanceRootDefinition } from '../../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { engineDOMAdapter } from './adapter/engineDOMAdapter.ts';
 import type { EngineXPathNode } from './adapter/kind.ts';
 

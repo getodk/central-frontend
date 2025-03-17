@@ -7,6 +7,7 @@ import type { ValueType } from '../client/ValueType.ts';
 import { RankMissingValueError } from '../error/RankMissingValueError.ts';
 import { RankValueTypeError } from '../error/RankValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { sharedValueCodecs } from '../lib/codecs/getSharedValueCodec.ts';
 import { MultipleValueItemCodec } from '../lib/codecs/items/MultipleValueItemCodec.ts';
 import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
@@ -68,10 +69,18 @@ export class RankControl
 		ValidationContext,
 		ClientReactiveSerializableValueNode
 {
-	static from(parent: GeneralParentNode, definition: RankDefinition): RankControl;
-	static from(parent: GeneralParentNode, definition: AnyRankDefinition): RankControl {
+	static from(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: RankDefinition
+	): RankControl;
+	static from(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: AnyRankDefinition
+	): RankControl {
 		assertRankNodeDefinition(definition);
-		return new this(parent, definition);
+		return new this(parent, instanceNode, definition);
 	}
 
 	private readonly mapOptionsByValue: Accessor<RankItemMap>;
@@ -91,9 +100,13 @@ export class RankControl
 	readonly nodeOptions = null;
 	readonly currentState: CurrentState<RankControlStateSpec>;
 
-	private constructor(parent: GeneralParentNode, definition: RankDefinition<'string'>) {
+	private constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: RankDefinition<'string'>
+	) {
 		const codec = new MultipleValueItemCodec(sharedValueCodecs.string);
-		super(parent, definition, codec);
+		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
 

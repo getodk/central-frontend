@@ -1,32 +1,33 @@
-import { XPathNodeKindKey } from '@getodk/xpath';
 import type { XFormsXPathDocument } from '../adapter/XFormsXPathNode.ts';
+import type { StaticElementOptions } from './StaticElement.ts';
 import { StaticElement } from './StaticElement.ts';
-import { StaticNode } from './StaticNode.ts';
+import { StaticParentNode } from './StaticParentNode.ts';
 
-export type StaticDocumentRootFactory<T extends StaticDocument, Root extends StaticElement> = (
-	staticDocument: T
-) => Root;
+interface StaticDocumentOptions {
+	readonly documentRoot: StaticElementOptions;
+	readonly nodesetPrefix?: string;
+}
 
-export abstract class StaticDocument<DocumentRoot extends StaticElement = StaticElement>
-	extends StaticNode<'document'>
-	implements XFormsXPathDocument
-{
-	readonly [XPathNodeKindKey] = 'document';
-	readonly nodeType = 'static-document';
+export class StaticDocument extends StaticParentNode<'document'> implements XFormsXPathDocument {
 	readonly rootDocument: StaticDocument;
-	readonly root: DocumentRoot;
+	readonly root: StaticElement;
 	readonly parent = null;
-	readonly children: readonly [root: DocumentRoot];
+	readonly nodeset: string;
+	readonly children: readonly [root: StaticElement];
+	readonly childElements: readonly [root: StaticElement];
 
-	constructor(rootFactory: StaticDocumentRootFactory<StaticDocument<DocumentRoot>, DocumentRoot>) {
-		super();
+	constructor(options: StaticDocumentOptions) {
+		super('document');
 
+		this.nodeset = options.nodesetPrefix ?? '/';
 		this.rootDocument = this;
 
-		const root = rootFactory(this);
+		const { documentRoot } = options;
+		const root = new StaticElement(this, documentRoot);
 
 		this.root = root;
 		this.children = [root];
+		this.childElements = this.children;
 	}
 
 	// XFormsXPathDocument

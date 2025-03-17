@@ -1,5 +1,4 @@
-import type { RepeatInstanceDefinition } from '../../parse/model/RepeatInstanceDefinition.ts';
-import type { RepeatTemplateDefinition } from '../../parse/model/RepeatTemplateDefinition.ts';
+import type { AnyRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { BaseNode, BaseNodeState } from '../BaseNode.ts';
 import type { GeneralChildNode, RepeatRangeNode } from '../hierarchy.ts';
 import type { NodeAppearances } from '../NodeAppearances.ts';
@@ -19,17 +18,14 @@ export interface RepeatInstanceNodeState extends BaseNodeState {
 	get value(): null;
 }
 
-// prettier-ignore
-export type RepeatDefinition =
-	| RepeatInstanceDefinition
-	| RepeatTemplateDefinition;
+export type { AnyRepeatDefinition };
 
-export type RepeatInstanceNodeAppearances = NodeAppearances<RepeatDefinition>;
+export type RepeatInstanceNodeAppearances = NodeAppearances<AnyRepeatDefinition>;
 
 export interface RepeatInstanceNode extends BaseNode {
 	readonly nodeType: 'repeat-instance';
 	readonly appearances: RepeatInstanceNodeAppearances;
-	readonly definition: RepeatDefinition;
+	readonly definition: AnyRepeatDefinition;
 	readonly root: RootNode;
 
 	/**

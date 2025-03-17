@@ -2,6 +2,7 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { ModelValueDefinition, ModelValueNode } from '../client/ModelValueNode.ts';
 import type { ValueType } from '../client/ValueType.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
+import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -29,12 +30,17 @@ export class ModelValue<V extends ValueType = ValueType>
 		ValidationContext,
 		ClientReactiveSerializableValueNode
 {
-	static from(parent: GeneralParentNode, definition: ModelValueDefinition): AnyModelValue;
+	static from(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: ModelValueDefinition
+	): AnyModelValue;
 	static from<V extends ValueType>(
 		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
 		definition: ModelValueDefinition<V>
 	): ModelValue<V> {
-		return new this(parent, definition);
+		return new this(parent, instanceNode, definition);
 	}
 
 	// XFormsXPathElement
@@ -50,10 +56,14 @@ export class ModelValue<V extends ValueType = ValueType>
 	readonly nodeOptions = null;
 	readonly currentState: CurrentState<ModelValueStateSpec<V>>;
 
-	constructor(parent: GeneralParentNode, definition: ModelValueDefinition<V>) {
+	constructor(
+		parent: GeneralParentNode,
+		instanceNode: StaticLeafElement,
+		definition: ModelValueDefinition<V>
+	) {
 		const codec = getSharedValueCodec(definition.valueType);
 
-		super(parent, definition, codec);
+		super(parent, instanceNode, definition, codec);
 
 		const state = createSharedNodeState(
 			this.scope,
