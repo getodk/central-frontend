@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Image Capture</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="fruit:label">
+            <value>Select a fruit for the bird</value>
+          </text>
+          <text id="fruit:mango">
+            <value>Mango</value>
+          </text>
+          <text id="fruit:apple">
+            <value>Apple</value>
+          </text>
+          <text id="fruit:orange">
+            <value>Orange</value>
+          </text>
+          <text id="/data/dog_image:label">
+            <value>Upload a picture of a dog</value>
+          </text>
+          <text id="/data/cat_image:label">
+            <value>Upload a picture of a cat</value>
+          </text>
+          <text id="/data/bird_image:label">
+            <value>Upload a picture of a bird</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="fruit:label">
+            <value>Choisissez un fruit pour l'oiseau</value>
+          </text>
+          <text id="fruit:mango">
+            <value>Mangue</value>
+          </text>
+          <text id="fruit:apple">
+            <value>Pomme</value>
+          </text>
+          <text id="fruit:orange">
+            <value>Orange</value>
+          </text>
+          <text id="/data/dog_image:label">
+            <value>Téléchargez une photo d'un chien</value>
+          </text>
+          <text id="/data/cat_image:label">
+            <value>Upload a picture of a cat</value>
+          </text>
+          <text id="/data/bird_image:label">
+            <value>Upload a picture of a bird</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="image_capture" version="2025020401">
+          <dog_image/>
+          <cat_image/>
+          <fruit/>
+          <bird_image/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+
+      <bind nodeset="/data/dog_image" type="binary" readonly="true()"/>
+      <bind nodeset="/data/cat_image" type="binary" required="true()"/>
+      <bind nodeset="/data/fruit" type="string" required="true()"/>
+      <bind nodeset="/data/bird_image" type="binary" relevant=" /data/fruit != &quot;&quot;"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <upload mediatype="image/*" ref="/data/dog_image">
+      <label ref="jr:itext('/data/dog_image:label')"/>
+      <hint>(It's readonly)</hint>
+    </upload>
+
+    <upload mediatype="image/*" ref="/data/cat_image">
+      <label ref="jr:itext('/data/cat_image:label')"/>
+    </upload>
+
+    <select1 ref="/data/fruit">
+      <label ref="jr:itext('fruit:label')"/>
+      <item>
+        <value>mango</value>
+        <label ref="jr:itext('fruit:mango')"/>
+      </item>
+      <item>
+        <value>apple</value>
+        <label ref="jr:itext('fruit:apple')"/>
+      </item>
+      <item>
+        <value>orange</value>
+        <label ref="jr:itext('fruit:orange')"/>
+      </item>
+    </select1>
+
+    <upload mediatype="image/*" ref="/data/bird_image">
+      <label ref="jr:itext('/data/bird_image:label')"/>
+    </upload>
+  </h:body>
+</h:html>
