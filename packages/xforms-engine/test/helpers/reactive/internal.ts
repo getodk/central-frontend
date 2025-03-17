@@ -27,9 +27,8 @@
  * dropping dependencies for such internal use.
  */
 
+import type { Thunk } from '@getodk/common/types/helpers.d.ts';
 import type { OpaqueReactiveObjectFactory } from '../../../src/client/OpaqueReactiveObjectFactory.ts';
-
-type Thunk<T> = () => T;
 
 /**
  * Defines a thunk producing a computed value, which may be produced from one or

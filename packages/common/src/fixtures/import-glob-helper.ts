@@ -1,10 +1,9 @@
+import type { Awaitable } from '../../types/helpers.d.ts';
 import { IS_NODE_RUNTIME } from '../env/detection.ts';
 
 interface GlobURLFetchResponse {
 	text(): Promise<string>;
 }
-
-type Awaitable<T> = Promise<T> | T;
 
 type FetchGlobURL = (globURL: string) => Awaitable<GlobURLFetchResponse>;
 
