@@ -1735,12 +1735,6 @@
         }
       }
     },
-    "DatasetSummary": {
-      "datasetUpdates": {
-        "string": "{count, plural, one {Entity List is updated by this Form:} other {Entity Lists are updated by this Form:}}",
-        "developer_comment": "Number of Entity List(s) is shown separately above this text"
-      }
-    },
     "DatasetSummaryRow": {
       "new": {
         "string": "new!",
