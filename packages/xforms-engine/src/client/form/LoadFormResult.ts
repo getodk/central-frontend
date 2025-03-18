@@ -2,6 +2,7 @@ import type { UnknownObject } from '@getodk/common/lib/type-assertions/assertUnk
 import type { AnyFunction } from '@getodk/common/types/helpers.js';
 import type { LoadFormFailureError } from '../../error/LoadFormFailureError.ts';
 import type { CreateFormInstance } from './CreateFormInstance.ts';
+import type { RestoreFormInstance } from './RestoreFormInstance.ts';
 
 // Re-export for client access
 export type { LoadFormFailureError };
@@ -42,6 +43,7 @@ interface BaseLoadFormResult {
 	readonly warnings: LoadFormWarnings | null;
 	readonly error: LoadFormFailureError | null;
 	readonly createInstance: FallibleLoadFormResultMethod<CreateFormInstance>;
+	readonly restoreInstance: FallibleLoadFormResultMethod<RestoreFormInstance>;
 }
 
 export interface LoadFormSuccessResult extends BaseLoadFormResult {
@@ -49,6 +51,7 @@ export interface LoadFormSuccessResult extends BaseLoadFormResult {
 	readonly warnings: null;
 	readonly error: null;
 	readonly createInstance: CreateFormInstance;
+	readonly restoreInstance: RestoreFormInstance;
 }
 
 export interface LoadFormWarningResult extends BaseLoadFormResult {
@@ -56,13 +59,31 @@ export interface LoadFormWarningResult extends BaseLoadFormResult {
 	readonly warnings: LoadFormWarnings;
 	readonly error: null;
 	readonly createInstance: CreateFormInstance;
+	readonly restoreInstance: RestoreFormInstance;
 }
 
 export interface LoadFormFailureResult extends BaseLoadFormResult {
 	readonly status: 'failure';
 	readonly warnings: LoadFormWarnings | null;
 	readonly error: LoadFormFailureError;
+
+	/**
+	 * @example A temporary demo integration was built during development of this
+	 * interface.
+	 *
+	 * @see
+	 * {@link https://github.com/getodk/web-forms/pull/345/commits/9ef36355d89dd1450d3a87c3a55506bb9b0fc414}
+	 */
 	readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
+
+	/**
+	 * @example A temporary demo integration was built during development of this
+	 * interface.
+	 *
+	 * @see
+	 * {@link https://github.com/getodk/web-forms/pull/345/commits/9ef36355d89dd1450d3a87c3a55506bb9b0fc414}
+	 */
+	readonly restoreInstance: FailedLoadFormResultMethod<RestoreFormInstance>;
 }
 
 // prettier-ignore

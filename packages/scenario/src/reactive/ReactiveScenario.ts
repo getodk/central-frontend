@@ -1,13 +1,14 @@
 import type { EffectFunction, Owner } from 'solid-js';
-import { createEffect, createRoot, getOwner, runWithOwner } from 'solid-js';
+import { createEffect, createRoot } from 'solid-js';
 import { createMutable } from 'solid-js/store';
-import { assert } from 'vitest';
-import type { InitializeTestFormOptions } from '../client/init.ts';
-import { Scenario, type ScenarioConstructorOptions } from '../jr/Scenario.ts';
+import type { TestFormOptions } from '../client/init.ts';
+import { getAssertedOwner, runInSolidScope } from '../client/solid-helpers.ts';
+import type { ScenarioConstructorOptions } from '../jr/Scenario.ts';
+import { Scenario } from '../jr/Scenario.ts';
 
 export class ReactiveScenario extends Scenario {
-	static override getInitializeTestFormOptions(): InitializeTestFormOptions {
-		return super.getInitializeTestFormOptions({
+	static override getTestFormOptions(): TestFormOptions {
+		return super.getTestFormOptions({
 			stateFactory: createMutable,
 		});
 	}
@@ -20,11 +21,7 @@ export class ReactiveScenario extends Scenario {
 		const testScopedOwner = createRoot((disposeFn) => {
 			dispose = disposeFn;
 
-			const owner = getOwner();
-
-			assert(owner);
-
-			return owner;
+			return getAssertedOwner();
 		});
 
 		super({
@@ -39,7 +36,7 @@ export class ReactiveScenario extends Scenario {
 	}
 
 	createEffect<Next>(fn: EffectFunction<NoInfer<Next> | undefined, Next>): void {
-		runWithOwner(this.testScopedOwner, () => {
+		runInSolidScope(this.testScopedOwner, () => {
 			createEffect(fn);
 		});
 	}

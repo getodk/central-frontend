@@ -55,7 +55,7 @@ export class Note<V extends ValueType = ValueType>
 
 	constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: NoteNodeDefinition<V>
 	) {
 		const codec = getNoteCodec(definition.valueType);

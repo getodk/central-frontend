@@ -83,12 +83,12 @@ export class InputControl<V extends ValueType = ValueType>
 {
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: InputDefinition
 	): AnyInputControl;
 	static from<V extends ValueType>(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: InputDefinition<V>
 	): InputControl<V> {
 		return new this(parent, instanceNode, definition);
@@ -109,7 +109,7 @@ export class InputControl<V extends ValueType = ValueType>
 
 	constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: InputDefinition<V>
 	) {
 		const codec = getSharedValueCodec(definition.valueType);

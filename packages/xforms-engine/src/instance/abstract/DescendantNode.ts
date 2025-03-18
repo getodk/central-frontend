@@ -129,7 +129,7 @@ export abstract class DescendantNode<
 
 	constructor(
 		override readonly parent: Parent,
-		override readonly instanceNode: StaticElement,
+		override readonly instanceNode: StaticElement | null,
 		override readonly definition: Definition,
 		options?: DescendantNodeOptions
 	) {

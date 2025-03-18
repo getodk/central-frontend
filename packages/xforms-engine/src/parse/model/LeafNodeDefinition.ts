@@ -20,13 +20,12 @@ export class LeafNodeDefinition<V extends ValueType = ValueType>
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;
 	readonly children = null;
-	readonly defaultValue: string;
 
 	constructor(
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: AnyBodyElementDefinition | null,
-		readonly node: StaticLeafElement
+		readonly template: StaticLeafElement
 	) {
 		if (bodyElement != null && bodyElement.category !== 'control') {
 			throw new Error(`Unexpected body element for nodeset ${bind.nodeset}`);
@@ -35,9 +34,8 @@ export class LeafNodeDefinition<V extends ValueType = ValueType>
 		super(parent, bind, bodyElement);
 
 		this.valueType = bind.type.resolved satisfies ValueType as V;
-		this.qualifiedName = node.qualifiedName;
+		this.qualifiedName = template.qualifiedName;
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
-		this.defaultValue = node.value;
 	}
 
 	toJSON() {

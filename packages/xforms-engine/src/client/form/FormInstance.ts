@@ -14,11 +14,29 @@ import type { InstantiableLoadFormResult, LoadFormResult } from './LoadFormResul
 export type FormInstanceCreateMode = 'create';
 
 /**
- * @todo Other modes incoming!
+ * Represents an instance restored from previously filled state, as represented
+ * in an {@link InstancePayload}. Clients may serialize and persist an instance
+ * payload as appropriate for their use cases, and can restore the instance with
+ * a partial instance payload structure, defined by the
+ * {@link RestoreFormInstanceInput} interface.
+ *
+ * A restored instance is populated by the engine with the answers as they had
+ * been filled at the time the {@link InstancePayload}
+ * ({@link RestoreFormInstanceInput}) was created.
+ *
+ * Computations are performed on initialization as specified by
+ * {@link https://getodk.github.io/xforms-spec/#event:odk-instance-load | ODK XForms},
+ * as a
+ * {@link https://getodk.github.io/xforms-spec/#event:odk-instance-load | subsequent load}
+ * (i.e. **NOT** "first load", as is the case with newly
+ * {@link FormInstanceCreateMode | created} instances}) of the instance.
  */
+export type FormInstanceRestoreMode = 'restore';
+
 // prettier-ignore
 export type FormInstanceInitializationMode =
-	| FormInstanceCreateMode;
+	| FormInstanceCreateMode
+	| FormInstanceRestoreMode;
 
 /**
  * @todo this could hypothetically convey warnings and/or errors, just as

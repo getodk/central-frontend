@@ -1,7 +1,7 @@
 import type { LoadFormWarningResult, LoadFormWarnings } from '../../client/form/LoadFormResult.ts';
+import type { BasePrimaryInstanceOptions } from '../../instance/PrimaryInstance.ts';
 import type { FormResource } from '../../instance/resource.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
-import type { FormInstanceBaseOptions } from '../FormInstance.ts';
 import { BaseInstantiableFormResult } from './BaseInstantiableFormResult.ts';
 
 export interface FormWarningResultOptions {
@@ -9,7 +9,7 @@ export interface FormWarningResultOptions {
 	readonly error: null;
 	readonly scope: ReactiveScope;
 	readonly formResource: FormResource;
-	readonly instanceOptions: FormInstanceBaseOptions;
+	readonly instanceOptions: BasePrimaryInstanceOptions;
 }
 
 export class FormWarningResult

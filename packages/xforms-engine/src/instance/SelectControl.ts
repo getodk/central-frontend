@@ -64,12 +64,12 @@ export class SelectControl
 {
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: SelectDefinition
 	): SelectControl;
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: AnySelectDefinition
 	): SelectControl {
 		assertSupportedSelectValueType(definition);
@@ -97,7 +97,7 @@ export class SelectControl
 
 	private constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: SelectDefinition<'string'>
 	) {
 		const codec = getSelectCodec(definition);

@@ -27,11 +27,61 @@ interface PredicateOptions {
 }
 
 /**
+ *
+ * [This has been updated to reflect current/recent reality, including some
+ * recent revisions to test logic throughout the suite. See git blame for
+ * PORTING NOTES written here previously, if they'd have any future value.]
+ *
  * **PORTING NOTES**
  *
- * Actions/events are currently unsupported. All tests are expected to fail, and
- * will be ported as a best effort, without much else to note unless there are
- * surprises in the porting process.
+ * Most of these tests still fail pending implementation of actions and events.
+ * Some tests were made to pass because they exercise other functionality (and
+ * the previous top-level comment lagged that fact in confusing ways).
+ *
+ * At time of writing, the following changes and observations are now
+ * applicable, either throughout the suite or where specified:
+ *
+ * - All calls to {@link Scenario.newInstance} have been updated to reference
+ *   the new instance **of {@link Scenario}** now returned by that method (more
+ *   detail on the method's JSDoc). This may be a bit noisy if we need to
+ *   reconcile unrelated updates from JavaRosa, but I believe it's worth the
+ *   friction to avoid the **much much greater friction** of making that method
+ *   stateful on a single {@link Scenario} class instance. (I spent about five
+ *   minutes thinking about how that would be achieved. While I'm sure it's
+ *   doable, I believe it'd be an incredibly poor use of time.)
+ *
+ * - A couple of calls to {@link Scenario.serializeAndDeserializeForm} have been
+ *   changed to call {@link Scenario.proposed_serializeAndRestoreInstanceState},
+ *   a proposed {@link Scenario} API addition described in more detail there. It
+ *   is my understanding from discussion with @lognaturel that this is closer to
+ *   the intended semantics for these calls.
+ *
+ * - Note that those affected tests are still failing, pending actions/events
+ *   functionality! The above changes are all speculative. They're also
+ *   intentionally limited. I took a light touch rewriting those calls.
+ *   Specifically, I only updated tests which **clearly** excercise:
+ *
+ *     1. Load a form/instance
+ *     2. Directly write to instance state
+ *     3. Serialize and restore "form" state
+ *     4. Assert something about restored instance state which could not pass by
+ *        serializing form state alone; such assertions would only pass with
+ *        serde of instance state, including the write peformed in (2).
+ *
+ * - There are several other calls to
+ *   {@link Scenario.serializeAndDeserializeForm} which are very likely intended
+ *   to use the same {@link Scenario.proposed_serializeAndRestoreInstanceState}
+ *   semantics. A common pattern for these is:
+ *
+ *     1. Load a form/instance
+ *     2. Assert that some load-specific action/event was performed
+ *     3. Serialize and restore instance state
+ *     4. Assert that the same load-specific action/event either **was** or
+ *        **was not** performed, based on its specified nth-load semantics.
+ *
+ *     These other tests can be updated when we've implemented the functionality
+ *     under test, at which point we can validate these presumed updates with
+ *     more than an educated hunch.
  */
 describe('Actions/Events', () => {
 	describe('InstanceLoadEventsTest.java', () => {
@@ -42,26 +92,12 @@ describe('Actions/Events', () => {
 		 *   where we have the full power of strings to reference particular aspects
 		 *   of spec; as such, same note applies for other applicable events).
 		 *
-		 * - TIL there's a `odk-instance-load` event! It's different from
-		 *   `odk-instance-first-load`! 🤯
+		 * - ~~TIL there's a `odk-instance-load` event! It's different from
+		 *   `odk-instance-first-load`! 🤯~~
 		 *
-		 * - Some brief archaeology reveals
-		 *   {@link https://forum.getodk.org/t/form-spec-proposal-add-background-audio-recording/31889/21 | this form post}
-		 *   which appears to introduce the concept. It also strongly suggests the
-		 *   event has/should have semantics similar (or identical?) to the W3C
-		 *   standard `xforms-read` event. The language of the
-		 *   {@link https://getodk.github.io/xforms-spec/#events | ODK spec} regards
-		 *   _that event_ as deprecated, and I see no mention of this
-		 *   apparently-equivalent event.
-		 *
-		 * - Do... we want to support this?
-		 *
-		 * - If we **don't expect to support it**, we should determine which of
-		 *   these tests should have a corresponding `odk-instance-first-load` test.
-		 *
-		 * - If we do, and if it's actually identical in semantics to
-		 *   `xforms-ready`, it's probably worth considering that as the canonical
-		 *   event name and `odk-instance-load` as an alias.
+		 * - Above point preserved for posterity/context. The `odk-isntance-load`
+		 *   event was added to the spec in
+		 *   {@link https://github.com/getodk/xforms-spec/pull/324}.
 		 */
 		describe('[odk-instance-load] instance load event', () => {
 			it.fails('fires event on first load', async () => {
@@ -83,6 +119,13 @@ describe('Actions/Events', () => {
 				expect(scenario.answerOf('/data/q1')).toEqualAnswer(intAnswer(16));
 			});
 
+			/**
+			 * **PORTING NOTES**
+			 *
+			 * See reasoning for
+			 * {@link Scenario.proposed_serializeAndRestoreInstanceState} in PORTING
+			 * NOTES on top-level suite.
+			 */
 			it.fails('fires on second load', async () => {
 				const scenario = await Scenario.init(
 					'Instance load form',
@@ -103,7 +146,7 @@ describe('Actions/Events', () => {
 
 				scenario.answer('/data/q1', 555);
 
-				const restored = await scenario.serializeAndDeserializeForm();
+				const restored = await scenario.proposed_serializeAndRestoreInstanceState();
 
 				expect(restored.answerOf('/data/q1')).toEqualAnswer(intAnswer(16));
 			});
@@ -190,12 +233,9 @@ describe('Actions/Events', () => {
 			/**
 			 * **PORTING NOTES**
 			 *
-			 * To the extent we will have a conceptual equivalent to "second load"
-			 * (per
-			 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612380765 | PR feedback},
-			 * this would include edits), this test does imply that we would probably
-			 * have reasons besides offline to consider form serialization (or
-			 * otherwise we'll want to rethink this test's "act" phase).
+			 * See reasoning for
+			 * {@link Scenario.proposed_serializeAndRestoreInstanceState} in PORTING
+			 * NOTES on top-level suite.
 			 */
 			it.fails('does not fire on second load', async () => {
 				const scenario = await Scenario.init(
@@ -217,7 +257,7 @@ describe('Actions/Events', () => {
 
 				scenario.answer('/data/q1', 555);
 
-				const restored = await scenario.serializeAndDeserializeForm();
+				const restored = await scenario.proposed_serializeAndRestoreInstanceState();
 
 				expect(restored.answerOf('/data/q1')).toEqualAnswer(intAnswer(555));
 			});
@@ -259,17 +299,18 @@ describe('Actions/Events', () => {
 			 * - Fails on all of serde, new instance, assertion of the expected value
 			 *   from the `setvalue` action/`odk-instance-first-load` event
 			 *
-			 * - In general, if we determine a test is pertinent with
+			 * - ~~In general, if we determine a test is pertinent with
 			 *   `serializeAndDeserializeForm` followed by `newInstance`, it probably
 			 *   makes sense for `newInstance` to actually return a new instance
 			 *   (presumably itself producing a new **instance of `Scenario`**). We
 			 *   should consider a followup introducing that `Scenario` API change,
 			 *   with tests updated to reference the instance it produces rather than
-			 *   mutating the deserialized `Scenario`.
+			 *   mutating the deserialized `Scenario`.~~ This is now addressed, as
+			 *   described in the top-level suite's PORTING NOTES.
 			 *
 			 * - We should also do a full pass to ensure that pattern holds. If there
 			 *   are other cases of `newInstance` which don't first
-			 *   `serializeAndDeserialize`, we'll want to ensure they similarly
+			 *   `serializeAndDeserializeForm`, we'll want to ensure they similarly
 			 *   reference a newly produced instance.
 			 *
 			 * - While we're at it, let's consider striking that `And` from the serde
@@ -282,10 +323,10 @@ describe('Actions/Events', () => {
 
 				const deserializedScenario = await scenario.serializeAndDeserializeForm();
 
-				await deserializedScenario.newInstance();
+				const newInstance = deserializedScenario.newInstance();
 
 				// assertThat(deserializedScenario.answerOf("/data/nested-first-load").getDisplayText(), is("cheese"));
-				expect(deserializedScenario.answerOf('/data/nested-first-load').getValue()).toBe('cheese');
+				expect(newInstance.answerOf('/data/nested-first-load').getValue()).toBe('cheese');
 			});
 
 			describe('in group', () => {
@@ -294,12 +335,12 @@ describe('Actions/Events', () => {
 
 					const deserializedScenario = await scenario.serializeAndDeserializeForm();
 
-					await deserializedScenario.newInstance();
+					const newInstance = deserializedScenario.newInstance();
 
 					// assertThat(deserializedScenario.answerOf("/data/my-group/nested-first-load-in-group").getDisplayText(), is("more cheese"));
-					expect(
-						deserializedScenario.answerOf('/data/my-group/nested-first-load-in-group').getValue()
-					).toBe('more cheese');
+					expect(newInstance.answerOf('/data/my-group/nested-first-load-in-group').getValue()).toBe(
+						'more cheese'
+					);
 				});
 			});
 		});
@@ -336,15 +377,15 @@ describe('Actions/Events', () => {
 
 				const deserializedScenario = await scenario.serializeAndDeserializeForm();
 
-				await deserializedScenario.newInstance();
+				const newInstance = deserializedScenario.newInstance();
 
 				// assertThat(deserializedScenario.answerOf("/data/my-calculated-value").getDisplayText(), is("10"));
-				expect(deserializedScenario.answerOf('/data/my-calculated-value').getValue()).toBe('10');
+				expect(newInstance.answerOf('/data/my-calculated-value').getValue()).toBe('10');
 
-				deserializedScenario.answer('/data/my-value', '15');
+				newInstance.answer('/data/my-value', '15');
 
 				// assertThat(deserializedScenario.answerOf("/data/my-calculated-value").getDisplayText(), is("30"));
-				expect(deserializedScenario.answerOf('/data/my-calculated-value').getValue()).toBe('30');
+				expect(newInstance.answerOf('/data/my-calculated-value').getValue()).toBe('30');
 			});
 		});
 
@@ -2095,10 +2136,10 @@ describe('Actions/Events', () => {
 
 				const cached = await scenario.serializeAndDeserializeForm();
 
-				await cached.newInstance();
+				const newInstance = cached.newInstance();
 
 				// assertThat(cached.answerOf("/data/element/@attr").getDisplayText(), is("7"));
-				expect(cached.answerOf('/data/element/@attr').getValue()).toBe('7');
+				expect(newInstance.answerOf('/data/element/@attr').getValue()).toBe('7');
 			});
 		});
 	});

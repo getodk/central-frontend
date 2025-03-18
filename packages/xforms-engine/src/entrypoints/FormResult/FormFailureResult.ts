@@ -5,6 +5,7 @@ import type {
 	LoadFormFailureResult,
 	LoadFormWarnings,
 } from '../../client/form/LoadFormResult.ts';
+import type { RestoreFormInstance } from '../../client/form/RestoreFormInstance.ts';
 import { LoadFormFailureError } from '../../error/LoadFormFailureError.ts';
 import { BaseFormResult } from './BaseFormResult.ts';
 
@@ -23,6 +24,7 @@ const failedFormResultMethodFactory = <T extends AnyFunction>(
 
 export class FormFailureResult extends BaseFormResult<'failure'> implements LoadFormFailureResult {
 	readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
+	readonly restoreInstance: FailedLoadFormResultMethod<RestoreFormInstance>;
 
 	constructor(options: FormFailureOptions) {
 		const { error, warnings } = options;
@@ -34,5 +36,6 @@ export class FormFailureResult extends BaseFormResult<'failure'> implements Load
 		});
 
 		this.createInstance = failedFormResultMethodFactory(error);
+		this.restoreInstance = failedFormResultMethodFactory(error);
 	}
 }

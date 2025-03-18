@@ -191,7 +191,7 @@ export abstract class InstanceNode<
 	constructor(
 		readonly instanceConfig: InstanceConfig,
 		readonly parent: Parent,
-		readonly instanceNode: StaticDocument | StaticElement,
+		readonly instanceNode: StaticDocument | StaticElement | null,
 		readonly definition: Definition,
 		options?: InstanceNodeOptions
 	) {

@@ -5,6 +5,7 @@ import { EmptyXFormsElement } from './EmptyXFormsElement.ts';
 import { HeadXFormsElement } from './HeadXFormsElement.ts';
 import type { NamespaceTuples } from './HtmlXFormsElement.ts';
 import { HtmlXFormsElement } from './HtmlXFormsElement.ts';
+import { PROPOSED_XMLLiteralXFormsElement } from './PROPOSED_XMLLiteralXFormsElement.ts';
 import { StringLiteralXFormsElement } from './StringLiteralXFormsElement.ts';
 import { TagXFormsElement } from './TagXFormsElement.ts';
 import type { XFormsElement } from './XFormsElement.ts';
@@ -303,3 +304,9 @@ export const setvalueLiteral = (event: string, ref: string, innerHtml: string): 
 };
 
 export { bind } from './BindBuilderXFormsElement.ts';
+
+export const proposed_xmlElement = (xmlLiteral: string): XFormsElement => {
+	return new PROPOSED_XMLLiteralXFormsElement(xmlLiteral);
+};
+
+export { proposed_xmlElement as xmlElement };

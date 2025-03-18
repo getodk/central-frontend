@@ -18,13 +18,12 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;
 	readonly children: readonly ChildNodeDefinition[];
-	readonly defaultValue = null;
 
 	constructor(
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: AnyBodyElementDefinition | null,
-		node: StaticElement
+		readonly template: StaticElement
 	) {
 		if (
 			bodyElement != null &&
@@ -37,9 +36,9 @@ export class SubtreeDefinition extends DescendentNodeDefinition<
 
 		const { root } = parent;
 
-		this.qualifiedName = node.qualifiedName;
+		this.qualifiedName = template.qualifiedName;
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
-		this.children = root.buildSubtree(this, node);
+		this.children = root.buildSubtree(this, template);
 	}
 
 	toJSON() {

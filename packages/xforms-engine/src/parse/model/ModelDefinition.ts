@@ -1,7 +1,5 @@
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
-import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
-import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocumentFromDOMSubtree.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
@@ -31,21 +29,18 @@ export class ModelDefinition {
 		this.itextTranslations = ItextTranslationsDefinition.from(form.xformDOM);
 	}
 
-	getNodeDefinition(
-		// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-		node: StaticDocument | StaticElement | StaticAttribute
-	): AnyNodeDefinition {
-		const definition = this.nodes.get(node.nodeset);
+	getNodeDefinition(nodeset: string): AnyNodeDefinition {
+		const definition = this.nodes.get(nodeset);
 
 		if (definition == null) {
-			throw new ErrorProductionDesignPendingError(`No definition for nodeset: ${node.nodeset}`);
+			throw new ErrorProductionDesignPendingError(`No definition for nodeset: ${nodeset}`);
 		}
 
 		return definition;
 	}
 
 	getRootDefinition(instance: StaticDocument): RootDefinition {
-		const definition = this.getNodeDefinition(instance.root);
+		const definition = this.getNodeDefinition(instance.root.nodeset);
 
 		if (definition !== this.root) {
 			throw new ErrorProductionDesignPendingError();

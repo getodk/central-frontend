@@ -65,8 +65,8 @@ export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNod
 		override readonly bind: NoteBindDefinition<V>,
 		override readonly bodyElement: InputControlDefinition,
 		readonly noteTextDefinition: NoteTextDefinition,
-		node: StaticLeafElement
+		template: StaticLeafElement
 	) {
-		super(parent, bind, bodyElement, node);
+		super(parent, bind, bodyElement, template);
 	}
 }

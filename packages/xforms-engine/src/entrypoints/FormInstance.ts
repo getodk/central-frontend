@@ -5,7 +5,11 @@ import type {
 } from '../client/form/FormInstance.ts';
 import type { FormInstanceConfig } from '../client/index.ts';
 import type { InstanceConfig } from '../instance/internal-api/InstanceConfig.ts';
-import type { PrimaryInstanceOptions } from '../instance/PrimaryInstance.ts';
+import type {
+	BasePrimaryInstanceOptions,
+	PrimaryInstanceInitialState,
+	PrimaryInstanceOptions,
+} from '../instance/PrimaryInstance.ts';
 import { PrimaryInstance } from '../instance/PrimaryInstance.ts';
 import type { Root } from '../instance/Root.ts';
 import type { FormSuccessResult } from './FormResult/FormSuccessResult.ts';
@@ -16,11 +20,10 @@ export type InstantiableFormResult =
 	| FormSuccessResult
 	| FormWarningResult;
 
-export interface FormInstanceBaseOptions extends Omit<PrimaryInstanceOptions, 'config'> {}
-
 interface FormInstanceOptions<Mode extends FormInstanceInitializationMode> {
 	readonly mode: Mode;
-	readonly instanceOptions: FormInstanceBaseOptions;
+	readonly initialState: PrimaryInstanceInitialState<Mode>;
+	readonly instanceOptions: BasePrimaryInstanceOptions;
 	readonly instanceConfig: FormInstanceConfig;
 }
 
@@ -34,16 +37,19 @@ export class FormInstance<Mode extends FormInstanceInitializationMode>
 		readonly formResult: InstantiableFormResult,
 		options: FormInstanceOptions<Mode>
 	) {
+		const { mode, initialState } = options;
 		const config: InstanceConfig = {
 			clientStateFactory: options.instanceConfig.stateFactory ?? identity,
 		};
-		const primaryInstanceOptions: PrimaryInstanceOptions = {
+		const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
 			...options.instanceOptions,
+			mode,
+			initialState,
 			config,
 		};
 		const { root } = new PrimaryInstance(primaryInstanceOptions);
 
-		this.mode = options.mode;
+		this.mode = mode;
 		this.root = root;
 	}
 }

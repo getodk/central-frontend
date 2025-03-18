@@ -85,7 +85,7 @@ export abstract class ValueNode<
 
 	constructor(
 		parent: GeneralParentNode,
-		override readonly instanceNode: StaticLeafElement,
+		override readonly instanceNode: StaticLeafElement | null,
 		definition: Definition,
 		codec: ValueCodec<V, RuntimeValue, RuntimeInputValue>
 	) {

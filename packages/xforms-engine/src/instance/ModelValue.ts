@@ -32,12 +32,12 @@ export class ModelValue<V extends ValueType = ValueType>
 {
 	static from(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: ModelValueDefinition
 	): AnyModelValue;
 	static from<V extends ValueType>(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: ModelValueDefinition<V>
 	): ModelValue<V> {
 		return new this(parent, instanceNode, definition);
@@ -58,7 +58,7 @@ export class ModelValue<V extends ValueType = ValueType>
 
 	constructor(
 		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement,
+		instanceNode: StaticLeafElement | null,
 		definition: ModelValueDefinition<V>
 	) {
 		const codec = getSharedValueCodec(definition.valueType);
