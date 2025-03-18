@@ -66,7 +66,23 @@ export interface LoadFormFailureResult extends BaseLoadFormResult {
 	readonly status: 'failure';
 	readonly warnings: LoadFormWarnings | null;
 	readonly error: LoadFormFailureError;
+
+	/**
+	 * @example A temporary demo integration was built during development of this
+	 * interface.
+	 *
+	 * @see
+	 * {@link https://github.com/getodk/web-forms/pull/345/commits/9ef36355d89dd1450d3a87c3a55506bb9b0fc414}
+	 */
 	readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
+
+	/**
+	 * @example A temporary demo integration was built during development of this
+	 * interface.
+	 *
+	 * @see
+	 * {@link https://github.com/getodk/web-forms/pull/345/commits/9ef36355d89dd1450d3a87c3a55506bb9b0fc414}
+	 */
 	readonly restoreInstance: FailedLoadFormResultMethod<RestoreFormInstance>;
 }
 
