@@ -1,6 +1,7 @@
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import { xmlElement } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type {
+	AnyFormInstance,
 	AnyNode,
 	FormResource,
 	MonolithicInstancePayload,
@@ -67,14 +68,15 @@ import { JRTreeReference } from './xpath/JRTreeReference.ts';
  */
 const nonReactiveIdentityStateFactory = <T extends object>(value: T): T => value;
 
-export interface ScenarioConstructorOptions {
-	readonly owner: Owner;
-	readonly dispose: VoidFunction;
+interface ScenarioFormMeta {
 	readonly formName: string;
 	readonly formElement: XFormsElement;
 	readonly formOptions: TestFormOptions;
-	readonly formResult: InitializableForm;
-	readonly instanceRoot: RootNode;
+}
+
+export interface ScenarioConfig extends ScenarioFormMeta {
+	readonly owner: Owner;
+	readonly dispose: VoidFunction;
 }
 
 type FormFileName = `${string}.xml`;
@@ -128,7 +130,7 @@ const isAnswerItemCollectionParams = (
 type ScenarioClass = typeof Scenario;
 
 export interface ScenarioConstructor<T extends Scenario = Scenario> extends ScenarioClass {
-	new (options: ScenarioConstructorOptions): T;
+	new (meta: ScenarioConfig, form: InitializableForm, instanceRoot: RootNode): T;
 }
 
 /**
@@ -171,55 +173,47 @@ export class Scenario {
 		this: This,
 		...args: ScenarioStaticInitParameters
 	): Promise<This['prototype']> {
-		let formElement: XFormsElement;
-		let formName: string;
-		let formOptions: TestFormOptions;
+		let formMeta: ScenarioFormMeta;
 
 		if (isFormFileName(args[0])) {
 			return this.init(r(args[0]));
 		} else if (args.length === 1) {
 			const [resource] = args;
 
-			formElement = xmlElement(resource.textContents);
-			formName = resource.formName;
-			formOptions = this.getTestFormOptions();
+			formMeta = {
+				formElement: xmlElement(resource.textContents),
+				formName: resource.formName,
+				formOptions: this.getTestFormOptions(),
+			};
 		} else {
-			const [name, form, overrideOptions] = args;
+			const [formName, formElement, overrideOptions] = args;
 
-			formName = name;
-			formElement = form;
-			formOptions = this.getTestFormOptions(overrideOptions);
+			formMeta = {
+				formName,
+				formElement,
+				formOptions: this.getTestFormOptions(overrideOptions),
+			};
 		}
 
-		const formResource = formElement.asXml() satisfies FormResource;
-		const { dispose, owner, formResult, instanceRoot } = await initializeTestForm(
-			formResource,
-			formOptions
+		const { dispose, owner, form, instanceRoot } = await initializeTestForm(
+			formMeta.formElement.asXml() satisfies FormResource,
+			formMeta.formOptions
 		);
 
 		return runInSolidScope(owner, () => {
-			return new this({
-				owner,
-				dispose,
-				formName,
-				formElement,
-				formOptions,
-				formResult,
-				instanceRoot,
-			});
+			return new this(
+				{
+					...formMeta,
+					owner,
+					dispose,
+				},
+				form,
+				instanceRoot
+			);
 		});
 	}
 
 	declare readonly ['constructor']: ScenarioConstructor<this>;
-
-	private readonly owner: Owner;
-	private readonly dispose: VoidFunction;
-	private readonly formElement: XFormsElement;
-	private readonly formOptions: TestFormOptions;
-	private readonly formResult: InitializableForm;
-
-	readonly formName: string;
-	readonly instanceRoot: RootNode;
 
 	protected readonly getPositionalEvents: Accessor<PositionalEvents>;
 
@@ -228,18 +222,11 @@ export class Scenario {
 
 	protected readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
 
-	protected constructor(options: ScenarioConstructorOptions) {
-		const { owner, dispose, formName, formElement, formOptions, formResult, instanceRoot } =
-			options;
-
-		this.owner = owner;
-		this.dispose = dispose;
-		this.formName = formName;
-		this.formElement = formElement;
-		this.formOptions = formOptions;
-		this.formResult = formResult;
-		this.instanceRoot = instanceRoot;
-
+	protected constructor(
+		private readonly config: ScenarioConfig,
+		private readonly form: InitializableForm,
+		readonly instanceRoot: RootNode
+	) {
 		const [getEventPosition, setEventPosition] = createSignal(0);
 
 		this.getPositionalEvents = () => getPositionalEvents(instanceRoot);
@@ -260,7 +247,7 @@ export class Scenario {
 
 		afterEach(() => {
 			PositionalEvent.cleanup();
-			dispose();
+			config.dispose();
 		});
 	}
 
@@ -768,21 +755,7 @@ export class Scenario {
 	 * will remain) unaffected by those calls.
 	 */
 	newInstance(): this {
-		return runInSolidScope(this.owner, () => {
-			const { dispose, owner, formName, formElement, formOptions, formResult } = this;
-			const instance = formResult.createInstance();
-			const instanceRoot = instance.root;
-
-			return new this.constructor({
-				owner,
-				dispose,
-				formName,
-				formElement,
-				formOptions,
-				formResult,
-				instanceRoot,
-			});
-		});
+		return this.fork(this.form.createInstance());
 	}
 
 	getValidationOutcome(): ValidateOutcome {
@@ -1086,28 +1059,18 @@ export class Scenario {
 	}
 
 	/**
-	 * @todo We may also want a conceptually equivalent static method, composing
-	 * `loadForm`/`restoreInstance` behavior.
+	 * @todo Naming? The name here was chosen to indicate this creates a "fork" of various aspects of a {@link Scenario} instance (most of which are internal/class-private) with a new {@link RootNode | form instance root} (derived from the current {@link Scenario} instance's {@link })
 	 */
+	private fork(instance: AnyFormInstance): this {
+		return runInSolidScope(this.config.owner, () => {
+			return new this.constructor(this.config, this.form, instance.root);
+		});
+	}
+
 	async restoreWebFormsInstanceState(payload: RestoreFormInstanceInput): Promise<this> {
-		const { dispose, owner, formName, formElement, formOptions, formResult } = this;
+		const instance = await this.form.restoreInstance(payload, this.config.formOptions);
 
-		const instance = await runInSolidScope(owner, () => {
-			return this.formResult.restoreInstance(payload, formOptions);
-		});
-		const instanceRoot = instance.root;
-
-		return runInSolidScope(owner, () => {
-			return new this.constructor({
-				owner,
-				dispose,
-				formName,
-				formElement,
-				formOptions,
-				formResult,
-				instanceRoot,
-			});
-		});
+		return this.fork(instance);
 	}
 
 	// TODO: consider adapting tests which use the following interfaces to use
@@ -1186,7 +1149,7 @@ export class Scenario {
 		expect(
 			form.asXml(),
 			'Attempted to serialize instance with unexpected form XML. Is instance from an unrelated form?'
-		).toBe(this.formElement.asXml());
+		).toBe(this.config.formElement.asXml());
 
 		return this.proposed_serializeAndRestoreInstanceState();
 	}

@@ -108,3 +108,7 @@ export interface FormInstance<Mode extends FormInstanceInitializationMode> {
 	readonly mode: Mode;
 	readonly root: RootNode;
 }
+
+export type AnyFormInstance = {
+	[Mode in FormInstanceInitializationMode]: FormInstance<Mode>;
+}[FormInstanceInitializationMode];
