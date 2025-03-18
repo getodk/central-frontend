@@ -20,6 +20,7 @@ import { RankValuesAnswer } from '../answer/RankValuesAnswer.ts';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { answerOf } from '../client/answerOf.ts';
+import { editInstance } from '../client/editInstance.ts';
 import type { InitializableForm, TestFormOptions } from '../client/init.ts';
 import { initializeTestForm } from '../client/init.ts';
 import { isRepeatRange } from '../client/predicates.ts';
@@ -1176,6 +1177,13 @@ export class Scenario {
 		const payload = await this.instanceRoot.prepareInstancePayload();
 
 		return this.restoreWebFormsInstanceState(payload);
+	}
+
+	/** @see {@link editInstance} */
+	async proposed_editCurrentInstanceState(): Promise<this> {
+		const instance = await editInstance(this.form, this.instanceRoot);
+
+		return this.fork(instance);
 	}
 }
 
