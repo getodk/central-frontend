@@ -5103,6 +5103,46 @@
             "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on Web Forms."
           }
         }
+      },
+      "previewModal": {
+        "title": {
+          "string": "Data is valid"
+        },
+        "body": {
+          "string": "The data you entered is valid, but it was not submitted because this is a Form preview."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Submission successful"
+        },
+        "body": {
+          "string": "Your data was submitted."
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Thank you for participating!"
+        },
+        "body": {
+          "string": "You can close this window now."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Submission successful"
+        },
+        "body": {
+          "string": "You will now be redirected."
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Submission error"
+        },
+        "body": {
+          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
+        }
       }
     }
   },

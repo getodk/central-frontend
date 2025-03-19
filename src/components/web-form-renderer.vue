@@ -13,63 +13,33 @@ except according to the terms contained in the LICENSE file.
 <template>
   <loading :state="initiallyLoading"/>
   <template v-if="!initiallyLoading">
-    <OdkWebForm :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
+    <!-- update primaryInstance.instanceId to rerender the component -->
+    <OdkWebForm :key="primaryInstance.instanceId" :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
   </template>
 
-  <modal v-bind="previewModal" hideable backdrop @hide="previewModal.hide()">
-    <template #title>{{ $t('WebformFill.previewModal.title') }}</template>
+  <modal v-bind="submissionModal" hideable backdrop @hide="hideSubmissionModal()">
+    <template #title>{{ $t(submissionModal.type + '.title') }}</template>
     <template #body>
-      {{ $t('WebformFill.previewModal.body') }}
+      <i18n-t v-if="submissionModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
+        <template #errorMessage>
+          <br><br>
+            {{ submissionModal.errorMessage }}
+          <br><br>
+        </template>
+        <template #supportEmail>
+          <a href="emailto:support@getodk.org">support@getodk.org</a>
+        </template>
+      </i18n-t>
+      <p v-else>
+        {{ $t(submissionModal.type + '.body') }}
+      </p>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="previewModal.hide()">
+        <button type="button" class="btn btn-primary" @click="hideSubmissionModal()">
           {{ $t('action.close') }}
         </button>
       </div>
     </template>
   </modal>
-
-    <modal v-bind="submissionModal" hideable backdrop @hide="submissionModal.hide()">
-      <template #title>{{ $t('WebformFill.submissionModal.title') }}</template>
-      <template #body>
-        {{ $t('WebformFill.submissionModal.body') }}
-
-        <div v-if="!primaryInstance.uploadSuccess === true">
-          <div v-if="primaryInstance.uploadSuccess === false">
-            <p>
-              Submitting primary instance failed.
-            </p>
-            <button type="button" @click="postSubmission()">Retry</button>
-          </div>
-          <div v-else>
-            <p>
-              Submitting primary instance...
-            </p>
-          </div>
-        </div>
-        <div v-else>
-          <p>
-            Primary instance submitted, the ID of your submission is:<br>
-            <pre>{{ primaryInstance.instanceId }}</pre>
-          </p>
-          <div v-if="Object.keys(attachmentUploads).length">
-            <h3>File upload progress</h3>
-            <div v-for="(uploadinfo, ix) in attachmentUploads" :key="ix">
-              <label><progress max="100" :value="uploadinfo.progress"></progress>&nbsp;{{ uploadinfo.file.name }}</label>
-              <template v-if="uploadinfo.uploadSuccess === false">
-                <span class="icon-warning"></span><button type="button" @click="uploadAttachment(ix)">Retry</button>
-              </template>
-              <span v-if="uploadinfo.uploadSuccess" class="icon-check"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-actions">
-          <button v-if="primaryInstance.uploadSuccess && attachmentUploads.every(({ uploadSuccess }) => uploadSuccess)" type="button" class="btn btn-primary" @click="submissionModal.hide()">
-            {{ $t('action.close') }}
-          </button>
-        </div>
-      </template>
-    </modal>
 </template>
 
 <script setup>
@@ -78,17 +48,17 @@ import { useRoute } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
 import useForm from '../request-data/form';
-import { apiPaths } from '../util/request';
+import { apiPaths, isProblem } from '../util/request';
 import Loading from './loading.vue';
 import Modal from './modal.vue';
 import { modalData } from '../util/reactivity';
 import useRequest from '../composables/request';
 import { useRequestData } from '../request-data';
+import { noop } from '../util/util';
 
 const { resourceStates } = useRequestData();
 const { form, formVersionXml } = useForm();
 const { request } = useRequest();
-const previewModal = modalData();
 const submissionModal = modalData();
 const attachmentUploads = reactive([]);
 const primaryInstance = reactive({ instanceId: null, uploadSuccess: null, file: null });
@@ -133,6 +103,16 @@ const fetchData = () => {
 };
 
 fetchData();
+
+const showModal = (type) => {
+  submissionModal.state = true;
+  submissionModal.type = `${type}Modal`;
+};
+
+const hideSubmissionModal = () => {
+  submissionModal.hide();
+  primaryInstance.instanceId = null;
+};
 
 /**
  * Web Form expects host application to provide a function that it can use to
@@ -192,12 +172,19 @@ const postPrimaryInstance = () => {
     headers: {
       'content-type': 'text/xml'
     },
+    fulfillProblem: () => true
   })
-    .catch((err) => { primaryInstance.uploadSuccess = false; throw err; })
     .then(({ data }) => {
+      if (isProblem(data)) {
+        primaryInstance.uploadSuccess = false;
+        submissionModal.errorMessage = data.message;
+        showModal('error');
+        return false;
+      }
       Object.assign(primaryInstance, { instanceId: data.instanceId, uploadSuccess: true });
       return true;
-    });
+    })
+    .catch(noop);
 };
 
 const uploadAttachment = async (attachmentIndex) => {
@@ -231,8 +218,13 @@ const postSubmission = async () => {
       // eslint-disable-next-line no-await-in-loop
       await uploadAttachment(ix);
     }
+
+    return true;
   }
+
+  return false;
 };
+
 
 /**
  * When WebForms's submit button is clicked, it dispatches an event which is handed to
@@ -243,10 +235,8 @@ const handleSubmit = async (payload) => {
   // TODO: waiting for web-forms v0.7, current version doesn't return any payload.
   // eslint-disable-next-line no-constant-condition
   if (props.actionType === 'preview') {
-    previewModal.show();
+    showModal('preview');
   } else {
-    console.log(payload);
-    submissionModal.show();
     // eslint-disable-next-line no-unused-vars
     const { data, definition, status, violations } = payload;
     if (status !== 'ready') {
@@ -258,14 +248,14 @@ const handleSubmit = async (payload) => {
     primaryInstance.file = data.instanceFile;
     data.attachments.forEach((file, ix) => { attachmentUploads[ix] = { file, progress: null, uploadSuccess: null }; });
 
-    // demo code: mock attachments (webforms doesn't do uploads yet)
-    // [
-    //   new File([new ArrayBuffer(5 * 1024 * 1024)], 'some-attachment', { type: 'application/octet-stream' }),
-    //   new File([new ArrayBuffer(5 * 1024 * 1024)], 'some-other-attachment', { type: 'application/octet-stream' }),
-    // ].forEach((file, ix) => { attachmentUploads[ix] = { file, progress: null, uploadSuccess: null }; });
-    // end demo mock
+    const result = await postSubmission();
 
-    await postSubmission();
+    if (result) {
+      showModal('submission');
+    }
+
+    // TODO: redirect or clear Form or say do nothing based on the workflow new/edit/public-link
+    // related issue getodk/central#928
   }
 };
 
@@ -299,6 +289,26 @@ html, body {
           // This text is the body of a dialog box / modal shown when the user presses submit button on Web Forms.
           "body": "You have completed filling out a form using ODK Web Forms."
         }
+      },
+      "previewModal": {
+        "title": "Data is valid",
+        "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
+      },
+      "submissionModal": {
+        "title": "Submission successful",
+        "body": "Your data was submitted."
+      },
+      "thankYouModal": {
+        "title": "Thank you for participating!",
+        "body": "You can close this window now."
+      },
+      "editSubmissionModal": {
+        "title": "Submission successful",
+        "body": "You will now be redirected."
+      },
+      "errorModal": {
+        "title": "Submission error",
+        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
       }
     }
   }
