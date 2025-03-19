@@ -19,25 +19,21 @@ except according to the terms contained in the LICENSE file.
       <template #infonav>
         <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $t('infoNav.connectedForms', { count: dataset.sourceForms.length }) }}
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
           </template>
           <template #dropdown>
             <li v-for="form in dataset.sourceForms" :key="form.xmlFormId">
-              <form-link :form="form"
-                :to="publishedFormPath(form.projectId, form.xmlFormId)"
-                v-tooltip.text/>
+              <form-link :form="form" :to="publishedFormPath(form.projectId, form.xmlFormId)"/>
             </li>
           </template>
         </infonav>
         <infonav v-if="dataset.dataExists && dataset.linkedForms.length > 0">
           <template #title>
-            <span class="icon-chain"></span>{{ $t('infoNav.linkedForms', { count: dataset.linkedForms.length }) }}
+            <span class="icon-chain"></span>{{ $tc('infoNav.linkedForms', dataset.linkedForms.length) }}
           </template>
           <template #dropdown>
             <li v-for="form in dataset.linkedForms" :key="form.xmlFormId">
-              <form-link :form="form"
-                :to="publishedFormPath(form.projectId, form.xmlFormId)"
-                v-tooltip.text/>
+              <form-link :form="form" :to="publishedFormPath(form.projectId, form.xmlFormId)"/>
             </li>
           </template>
         </infonav>
@@ -157,7 +153,9 @@ export default {
     // This is shown at the top of the page.
     "back": "Back to Project Entities",
     "infoNav": {
+      // This dropdown title refers to Entity Lists that are updated by a Form.
       "connectedForms": "Updated by {count} Form | Updated by {count} Forms",
+      // This dropdown title refers to Entity Lists that are linked to a Form.
       "linkedForms": "Used in {count} Form | Used in {count} Forms"
     }
   },

@@ -14,14 +14,16 @@ except according to the terms contained in the LICENSE file.
     <router-link v-if="link != null" class="btn btn-link" :to="link">
       <slot name="title"></slot>
     </router-link>
-    <button v-else :id="toggleId" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
-      aria-haspopup="menu" aria-expanded="false">
-        <slot name="title"></slot>
-        <span class="icon-angle-down"></span>
-    </button>
-    <ul v-if="$slots.dropdown" class="dropdown-menu" :aria-labelledby="toggleId">
-      <slot name="dropdown"></slot>
-    </ul>
+    <template v-else>
+      <button :id="toggleId" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
+        aria-haspopup="menu" aria-expanded="false">
+          <slot name="title"></slot>
+          <span class="icon-angle-down"></span>
+      </button>
+      <ul class="dropdown-menu" :aria-labelledby="toggleId">
+        <slot name="dropdown"></slot>
+      </ul>
+    </template>
   </div>
 </template>
 
@@ -31,7 +33,7 @@ let id = 1;
 </script>
 <script setup>
 defineOptions({
-  name: 'InfoNav'
+  name: 'Infonav'
 });
 defineProps({
   // If a link is provided, the button will navigate to that link when clicked instead of dropping down.
@@ -59,7 +61,6 @@ const toggleId = `${idPrefix}-toggle`;
 
   .infonav-button {
     margin-left: 10px;
-    white-space: nowrap;
     color: $color-action-foreground;
 
     .btn {
@@ -71,27 +72,31 @@ const toggleId = `${idPrefix}-toggle`;
         color: $color-action-foreground;
       }
 
-      &:focus {
+    }
+    button:focus {
         background-color: $color-action-background;
         color: #fff;
       }
-    }
 
     .icon-angle-down {
       margin-left: 5px;
     }
 
     .dropdown-menu {
+      font-size: 15px;
       border: none;
       border-radius: 2px;
       margin-top: 0px;
       min-width: 100%;
+
+      li a {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
-  .dropdown-menu {
-    font-size: 15px;
-  }
 
   .dropdown-divider {
     margin-top: 0px;

@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="page-head" class="row">
     <div class="col-xs-12">
       <div id="page-head-title-infonav">
-        <div id="page-head-title" class="h1"><slot name="title"></slot></div>
+        <div id="page-head-title" class="h1" v-tooltip.text><slot name="title"></slot></div>
         <slot name="infonav"></slot>
       </div>
       <div id="page-description"><slot name="description"></slot></div>
@@ -48,7 +48,12 @@ defineOptions({
   align-items: center;
 }
 
-#page-head-title { overflow-wrap: break-word; }
+//#page-head .infonav-button { flex-shrink: 0; border: 1px solid green; }
+
+#page-head-title {
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
 
 #page-head-body {
   color: #555;

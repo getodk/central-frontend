@@ -15,29 +15,29 @@ except according to the terms contained in the LICENSE file.
     <page-head>
       <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
       <template #infonav>
-        <infonav v-if="formDatasetDiff.dataExists && publishedAttachments.dataExists
-          && (updatedDatasets.length > 0 || attachedDatasets.length > 0)">
+        <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
+          && (formDatasetDiff.length > 0 || publishedAttachments.linkedDatasets.length > 0)">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $t('infoNav.entityLists', { count: updatedDatasets.length + attachedDatasets.length }) }}
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', formDatasetDiff.length + publishedAttachments.linkedDatasets.length) }}
           </template>
           <template #dropdown>
-            <li v-if="updatedDatasets.length > 0">
+            <li v-if="formDatasetDiff.length > 0">
               <span class="dropdown-header">{{ $t('infoNav.updatedDatasets') }}</span>
             </li>
-            <li v-for="dataset in updatedDatasets" :key="dataset.name">
+            <li v-for="dataset in formDatasetDiff" :key="dataset.name">
               <dataset-link :name="dataset.name" :project-id="project.id"/>
             </li>
-            <li v-if="updatedDatasets.length > 0 && attachedDatasets.length > 0"><hr class="dropdown-divider"></li>
-            <li v-if="attachedDatasets.length > 0">
+            <li v-if="formDatasetDiff.length > 0 && publishedAttachments.linkedDatasets.length > 0"><hr class="dropdown-divider"></li>
+            <li v-if="publishedAttachments.linkedDatasets.length > 0">
               <span class="dropdown-header">{{ $t('infoNav.attachedDatasets') }}</span>
             </li>
-            <li v-for="dataset in attachedDatasets" :key="dataset.name">
-              <dataset-link :name="dataset.name" :project-id="project.id"/>
+            <li v-for="dataset in publishedAttachments.linkedDatasets" :key="dataset">
+              <dataset-link :name="dataset" :project-id="project.id"/>
             </li>
           </template>
         </infonav>
         <infonav v-if="appUserCount.dataExists" :link="projectPath('form-access')">
-          <template #title><span class="icon-user"></span>{{ $t('infoNav.appUsers', { count: appUserCount.data }) }}</template>
+          <template #title><span class="icon-user"></span>{{ $tc('infoNav.appUsers', appUserCount.data) }}</template>
         </infonav>
       </template>
       <template #tabs>
@@ -133,14 +133,6 @@ export default {
         { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
       ];
-    },
-    attachedDatasets() {
-      return this.publishedAttachments.data
-        .filter(attachment => attachment.datasetExists)
-        .map(attachment => ({ name: attachment.name.replace(/.csv/, '') }));
-    },
-    updatedDatasets() {
-      return this.formDatasetDiff.data;
     }
   },
   methods: {
@@ -149,7 +141,7 @@ export default {
       if (this.form.dataExists && this.form.publishedAt == null)
         htmlClass.disabled = true;
       return htmlClass;
-    },
+    }
   }
 };
 </script>

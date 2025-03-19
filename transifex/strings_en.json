@@ -1726,10 +1726,12 @@
       },
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}"
+          "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}"
+          "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
     },

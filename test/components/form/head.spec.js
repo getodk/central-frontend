@@ -1,5 +1,5 @@
 import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
-import InfoNav from '../../../src/components/infonav.vue';
+import Infonav from '../../../src/components/infonav.vue';
 
 import testData from '../../data';
 import Property from '../../util/ds-property-enum';
@@ -61,25 +61,19 @@ describe('FormHead', () => {
 
     describe('app user count', () => {
       it('shows the number of app users in a button when there are 0 app users', async () => {
-        testData.extendedProjects.createPast(1, { forms: 1, appUsers: 0 });
+        testData.extendedForms.createPast(1);
         const app = await load('/projects/1/forms/f/settings');
-        const infonav = app.getComponent(InfoNav);
+        const infonav = app.getComponent(Infonav);
         infonav.text().should.equal('0 App Users assigned');
+        const { link } = infonav.props();
+        link.should.equal('/projects/1/form-access');
       });
 
       it('shows the number of app users in a button when there are multiple app users', async () => {
-        testData.extendedProjects.createPast(1, { forms: 1, appUsers: 2 });
         testData.extendedFieldKeys.createPast(2);
         const app = await load('/projects/1/forms/f/settings');
         const button = app.find('.infonav-button > a');
         button.text().should.equal('2 App Users assigned');
-      });
-
-      it('links to the form access page', async () => {
-        testData.extendedProjects.createPast(1, { forms: 1, appUsers: 0 });
-        const app = await load('/projects/1/forms/f/settings');
-        const { link } = app.getComponent(InfoNav).props();
-        link.should.equal('/projects/1/form-access');
       });
     });
 
@@ -87,26 +81,26 @@ describe('FormHead', () => {
       it('shows no related entity lists', async () => {
         testData.extendedProjects.createPast(1, { forms: 1 });
         const app = await load('/projects/1/forms/f/settings');
-        const buttons = app.findAllComponents(InfoNav);
+        const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(1);
         buttons[0].text().should.equal('0 App Users assigned');
       });
 
-      it('shows only entity lists used by the form', async () => {
+      it('shows only entity lists updated by the form', async () => {
         testData.extendedForms.createPast(1);
         testData.formDatasetDiffs.createPast(1, { name: 'trees', properties: [Property.DefaultProperty] });
         const app = await load('/projects/1/forms/f/settings');
-        const buttons = app.findAllComponents(InfoNav);
+        const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
         buttons[0].get('button').text().should.equal('1 Related Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees']);
       });
 
-      it('shows only entity lists updated by the form', async () => {
+      it('shows only entity lists used in the form', async () => {
         testData.extendedForms.createPast(1);
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
         const app = await load('/projects/1/forms/f/settings');
-        const buttons = app.findAllComponents(InfoNav);
+        const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
         buttons[0].get('button').text().should.equal('1 Related Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Uses', 'shovels']);
@@ -117,7 +111,7 @@ describe('FormHead', () => {
         testData.formDatasetDiffs.createPast(1, { name: 'trees', properties: [Property.DefaultProperty] });
         testData.standardFormAttachments.createPast(1, { type: 'file', name: 'shovels.csv', datasetExists: true });
         const app = await load('/projects/1/forms/f/settings');
-        const buttons = app.findAllComponents(InfoNav);
+        const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
         buttons[0].get('button').text().should.equal('2 Related Entity Lists');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'shovels']);

@@ -1,11 +1,11 @@
 import { RouterLinkStub } from '@vue/test-utils';
 
-import InfoNav from '../../src/components/infonav.vue';
+import Infonav from '../../src/components/infonav.vue';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
-  mount(InfoNav, mergeMountOptions(options, {
+  mount(Infonav, mergeMountOptions(options, {
     props: { link: '/some-link' },
     slots: {
       title: 'Test Title'
@@ -15,7 +15,7 @@ const mountComponent = (options = undefined) =>
     }
   }));
 
-describe('InfoNav', () => {
+describe('Infonav', () => {
   it('renders the link correctly when the link prop is provided', () => {
     const link = mountComponent().getComponent(RouterLinkStub);
     link.text().should.equal('Test Title');
