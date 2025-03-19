@@ -25,33 +25,37 @@ except according to the terms contained in the LICENSE file.
             </i18n-t>
           </div>
         </div>
-      </div>
-      <div class="col-xs-6">
         <div class="panel panel-simple">
           <div class="panel-heading">
-            <h1 class="panel-title">{{ $t('formSetting.formTech') }}</h1>
+            <h1 class="panel-title">{{ $t('formSetting.webForms') }}</h1>
           </div>
           <div class="panel-body">
-            <div class="checkbox">
-              <label>
-                <input
-                  v-model="form.webformsEnabled"
-                  type="checkbox"
-                  :aria-disabled="form.awaitingResponse"
-                  :disabled="form.awaitingResponse"
-                  @change="setWebformsEnabled">
-                  <spinner :state="form.awaitingResponse"/>
-                  {{ $t('formSetting.enableWebForms') }}
+            <form id="dataset-settings-form">
+              <div class="radio">
+                <label>
+                  <input v-model="webFormsTechnology" name="webFormsTechnology" type="radio" :value="false"
+                    aria-describedby="dataset-setting-on-receipt" :disabled="form.awaitingResponse" @change="showConfirmation()">
+                  <strong>{{ $t('onReceipt.label') }}</strong>
                 </label>
-            </div>
-              <p>
-                {{ $t('formSetting.enableWebFormsExplanation') }}
-              </p>
-              <p>
-                <a href="https://getodk.org/webforms#TODO-REPLACE-THIS_URL">{{ $t('formSetting.enableWebFormsExplanationLinktext') }}</a>
-              </p>
+                <p id="dataset-setting-on-receipt" class="help-block">
+                  {{ $t('onReceipt.description') }}
+                </p>
+              </div>
+              <div class="radio">
+                <label>
+                  <input v-model="webFormsTechnology" name="webFormsTechnology" type="radio" :value="true"
+                    aria-describedby="dataset-setting-on-approval" :disabled="form.awaitingResponse" @change="showConfirmation()">
+                  <strong>{{ $t('onApproval.label') }}</strong>
+                </label>
+                <p id="dataset-setting-on-approval" class="help-block">
+                  {{ $t('onApproval.description') }}
+                </p>
+              </div>
+            </form>
           </div>
         </div>
+      </div>
+      <div class="col-xs-6">
         <div class="panel panel-simple-danger">
           <div class="panel-heading">
             <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
@@ -69,10 +73,22 @@ except according to the terms contained in the LICENSE file.
     </div>
     <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
+    <!-- TODO: for ODK Web Forms, we need to show modal with an image. Reuse "what's new" modal,
+          once it is done in getodk/central#801 -->
+    <confirmation v-bind="confirm" @hide="hideConfirm" @success="updateWebFormsEnabled">
+      <template #body>
+        <p>
+          {{ $t('confirmation.body') }}
+        </p>
+      </template>
+    </confirmation>
   </div>
 </template>
 
-<script>
+<script setup>
+import { inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
 import Spinner from '../spinner.vue';
 
@@ -81,36 +97,39 @@ import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 
-export default {
-  name: 'FormSettings',
-  components: { FormDelete, Spinner },
-  inject: ['alert'],
-  setup() {
-    const { form } = useRequestData();
-    const { projectPath } = useRoutes();
-    return { form, deleteModal: modalData(), projectPath };
-  },
-  methods: {
-    afterDelete() {
-      const message = this.$t('alert.delete', { name: this.form.nameOrId });
-      this.$router.push(this.projectPath())
-        .then(() => { this.alert.success(message); });
-    },
-    setWebformsEnabled() {
-      this.form.request({
-        method: 'PATCH',
-        url: apiPaths.form(this.form.projectId, this.form.xmlFormId),
-        data: { webformsEnabled: this.form.webformsEnabled },
-        patch: ({ data }) => {
-          this.form.updatedAt = data.updatedAt;
-        }
-      })
-        .catch(err => {
-          this.form.webformsEnabled = !this.form.webformsEnabled;
-          throw err;
-        });
+defineOptions({
+  name: 'FormSettings'
+});
+
+const alert = inject('alert');
+
+const { t } = useI18n();
+const router = useRouter();
+const { form } = useRequestData();
+const { projectPath } = useRoutes();
+
+const deleteModal = modalData();
+
+const afterDelete = () => {
+  const message = t('alert.delete', { name: form.nameOrId });
+  router.push(projectPath())
+    .then(() => { alert.success(message); });
+};
+};
+
+const setWebformsEnabled = () => {
+  form.request({
+    method: 'PATCH',
+    url: apiPaths.form(form.projectId, form.xmlFormId),
+    data: { webformsEnabled: form.webformsEnabled },
+    patch: ({ data }) => {
+      form.updatedAt = data.updatedAt;
     }
-  }
+  })
+    .catch(err => {
+      form.webformsEnabled = !form.webformsEnabled;
+      throw err;
+    });
 };
 </script>
 
@@ -138,6 +157,26 @@ export default {
     },
     "alert": {
       "delete": "The Form “{name}” was deleted."
+    },
+    "webFormsSetting": {
+      "webForms": "Web Forms",
+      "description": "Fill out, preview and edit your {formName} Form using",
+      "enketoDefault": "Enketo (default)",
+      "odkWebForms": "ODK Web Forms",
+      "formTech": "Web based form technology",
+      "modalInstruction": "We’re building a new web-forms experience designed to be fast and user-friendly!",
+      "description": {
+        "full": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
+        "seeSupportedFeatures": "see supported features",
+        "previewYourForm": "preview your form"
+      },
+      "useOdkWebForms": "Use ODK Web Forms",
+      "enketo": "Enketo",
+      "enketoDescription": "Are you sure you want to switch from ODK Web Forms to Enketo?",
+      "useEnketo": "Use Enketo",
+      "enableWebForms": "Use WebForms instead of Enketo",
+      "enableWebFormsExplanation": "When users fill out forms via the web (not via ODK Collect), we use Enketo by default. Its successor is \"WebForms\", which is a work in progress that you can already test.",
+      "enableWebFormsExplanationLinktext": "Before enabling this, read up on WebForms and which form features it currently supports!"
     }
   }
 }
