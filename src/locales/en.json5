@@ -443,7 +443,8 @@
     // {version} is a version number.
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
-    "warning": "Warning"
+    "warning": "Warning",
+    "beta": "Beta"
   },
   "mixin": {
     "request": {
@@ -506,11 +507,5 @@
   },
   "router": {
     "unsavedChanges": "Are you sure you want to leave this page? Your changes might not be saved."
-  },
-  "formSetting": {
-    "formTech": "Web based form technology",
-    "enableWebForms": "Use WebForms instead of Enketo",
-    "enableWebFormsExplanation": "When users fill out forms via the web (not via ODK Collect), we use Enketo by default. Its successor is \"WebForms\", which is a work in progress that you can already test.",
-    "enableWebFormsExplanationLinktext": "Before enabling this, read up on WebForms and which form features it currently supports!"
   }
 }
