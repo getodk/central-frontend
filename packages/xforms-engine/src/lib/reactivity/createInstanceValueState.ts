@@ -9,6 +9,15 @@ const isInstanceFirstLoad = (context: InstanceValueContext) => {
 	return context.rootDocument.initializationMode === 'create';
 };
 
+/**
+ * Special case, does not correspond to any event.
+ *
+ * @see {@link shouldPreloadUID}
+ */
+const isEditInitialLoad = (context: InstanceValueContext) => {
+	return context.rootDocument.initializationMode === 'edit';
+};
+
 const getInitialValue = (context: InstanceValueContext): string => {
 	const sourceNode = context.instanceNode ?? context.definition.template;
 
@@ -80,6 +89,16 @@ const guardDownstreamReadonlyWrites = (
 const PRELOAD_UID_EXPRESSION = 'concat("uuid:", uuid())';
 
 /**
+ * @todo It feels increasingly awkward to keep piling up preload stuff here, but it won't stay that way for long. In the meantime, this seems like the best way to express the cases where `preload="uid"` should be effective, i.e.:
+ *
+ * - When an instance is first loaded ({@link isInstanceFirstLoad})
+ * - When an instance is initially loaded for editing ({@link isEditInitialLoad})
+ */
+const shouldPreloadUID = (context: InstanceValueContext) => {
+	return isInstanceFirstLoad(context) || isEditInitialLoad(context);
+};
+
+/**
  * @todo This is a temporary one-off, until we support the full range of
  * {@link https://getodk.github.io/xforms-spec/#preload-attributes | preloads}.
  *
@@ -94,7 +113,7 @@ const setPreloadUIDValue = (
 ): void => {
 	const { preload } = context.definition.bind;
 
-	if (preload?.type !== 'uid' || !isInstanceFirstLoad(context)) {
+	if (preload?.type !== 'uid' || !shouldPreloadUID(context)) {
 		return;
 	}
 
