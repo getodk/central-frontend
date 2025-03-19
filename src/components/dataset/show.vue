@@ -16,6 +16,28 @@ except according to the terms contained in the LICENSE file.
       <template #title>
         {{ datasetName }}
       </template>
+      <template #infonav>
+        <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0">
+          <template #title>
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
+          </template>
+          <template #dropdown>
+            <li v-for="form in dataset.sourceForms" :key="form.xmlFormId">
+              <form-link :form="form" :to="publishedFormPath(form.projectId, form.xmlFormId)"/>
+            </li>
+          </template>
+        </infonav>
+        <infonav v-if="dataset.dataExists && dataset.linkedForms.length > 0">
+          <template #title>
+            <span class="icon-chain"></span>{{ $tc('infoNav.linkedForms', dataset.linkedForms.length) }}
+          </template>
+          <template #dropdown>
+            <li v-for="form in dataset.linkedForms" :key="form.xmlFormId">
+              <form-link :form="form" :to="publishedFormPath(form.projectId, form.xmlFormId)"/>
+            </li>
+          </template>
+        </infonav>
+      </template>
       <template #tabs>
         <li :class="tabClass('entities')" role="presentation">
           <router-link :to="tabPath('entities')">
@@ -49,6 +71,9 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Breadcrumbs from '../breadcrumbs.vue';
+import FormLink from '../form/link.vue';
+
+import Infonav from '../infonav.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
@@ -63,6 +88,8 @@ export default {
   name: 'DatasetShow',
   components: {
     Breadcrumbs,
+    FormLink,
+    Infonav,
     Loading,
     PageBody,
     PageHead
@@ -82,11 +109,11 @@ export default {
     // component is created.
     const { project, dataset, resourceStates } = useRequestData();
 
-    const { projectPath, datasetPath, canRoute } = useRoutes();
+    const { projectPath, datasetPath, canRoute, publishedFormPath } = useRoutes();
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, tabPath, tabClass, canRoute
+      projectPath, tabPath, tabClass, canRoute, publishedFormPath
     };
   },
   computed: {
@@ -127,8 +154,14 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Entities"
-  }
+    "back": "Back to Project Entities",
+    "infoNav": {
+      // This dropdown title refers to Entity Lists that are updated by a Form.
+      "connectedForms": "Updated by {count} Form | Updated by {count} Forms",
+      // This dropdown title refers to Entity Lists that are linked to a Form.
+      "linkedForms": "Used in {count} Form | Used in {count} Forms"
+    }
+  },
 }
 </i18n>
 

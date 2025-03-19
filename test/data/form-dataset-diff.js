@@ -7,9 +7,10 @@ import Property from '../util/ds-property-enum';
 // eslint-disable-next-line import/prefer-default-export
 export const formDatasetDiffs = dataStore({
   factory: ({
-    properties
+    properties,
+    name = faker.random.alphaNumeric(10)
   }) => ({
-    name: faker.random.alphaNumeric(10),
+    name,
     properties: properties.map(p => {
       switch (p) {
         case Property.InFormProperty:

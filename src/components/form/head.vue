@@ -14,6 +14,32 @@ except according to the terms contained in the LICENSE file.
     <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <page-head>
       <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
+      <template #infonav>
+        <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
+          && uniqueDatasetCount > 0">
+          <template #title>
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
+          </template>
+          <template #dropdown>
+            <li v-if="formDatasetDiff.length > 0">
+              <span class="dropdown-header">{{ $t('infoNav.updatedDatasets') }}</span>
+            </li>
+            <li v-for="dataset in formDatasetDiff" :key="dataset.name">
+              <dataset-link :name="dataset.name" :project-id="project.id"/>
+            </li>
+            <li v-if="formDatasetDiff.length > 0 && publishedAttachments.linkedDatasets.length > 0"><hr class="dropdown-divider"></li>
+            <li v-if="publishedAttachments.linkedDatasets.length > 0">
+              <span class="dropdown-header">{{ $t('infoNav.attachedDatasets') }}</span>
+            </li>
+            <li v-for="dataset in publishedAttachments.linkedDatasets" :key="dataset">
+              <dataset-link :name="dataset" :project-id="project.id"/>
+            </li>
+          </template>
+        </infonav>
+        <infonav v-if="appUserCount.dataExists" :link="projectPath('form-access')">
+          <template #title><span class="icon-user"></span>{{ $tc('infoNav.appUsers', appUserCount.data) }}</template>
+        </infonav>
+      </template>
       <template #tabs>
         <!-- No v-if, because anyone who can navigate to the form should be able
         to navigate to .../submissions and .../versions. -->
@@ -69,6 +95,8 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Breadcrumbs from '../breadcrumbs.vue';
+import Infonav from '../infonav.vue';
+import DatasetLink from '../dataset/link.vue';
 import PageHead from '../page/head.vue';
 
 import useRoutes from '../../composables/routes';
@@ -77,16 +105,17 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
-  components: { Breadcrumbs, PageHead },
+  components: { Breadcrumbs, DatasetLink, Infonav, PageHead },
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, form } = useRequestData();
+    const { project, form, formDatasetDiff, publishedAttachments, appUserCount } = useRequestData();
 
     const { projectPath, formPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(formPath());
     return {
       project, form,
+      formDatasetDiff, publishedAttachments, appUserCount,
       projectPath, formPath, canRoute, tabPath, tabClass
     };
   },
@@ -104,6 +133,13 @@ export default {
         { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
       ];
+    },
+    uniqueDatasetCount() {
+      const uniqueDatasets = new Set([
+        ...this.formDatasetDiff.map(dataset => dataset.name),
+        ...this.publishedAttachments.linkedDatasets
+      ]);
+      return uniqueDatasets.size;
     }
   },
   methods: {
@@ -144,6 +180,14 @@ export default {
     "formNav": {
       // Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc.
       "tabTitle": "Publish this Draft Form to enable these functions"
+    },
+    "infoNav": {
+      "entityLists": "{count} Related Entity List | {count} Related Entity Lists",
+      // This text is shown as a header in a dropdown about related entity lists updated by this form.
+      "updatedDatasets": "Updates",
+      // This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form.
+      "attachedDatasets": "Uses",
+      "appUsers": "{count} App User assigned | {count} App Users assigned"
     }
   }
 }
