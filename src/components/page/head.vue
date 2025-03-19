@@ -48,8 +48,6 @@ defineOptions({
   align-items: center;
 }
 
-//#page-head .infonav-button { flex-shrink: 0; border: 1px solid green; }
-
 #page-head-title {
   overflow-wrap: break-word;
   overflow: hidden;
