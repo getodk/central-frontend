@@ -16,9 +16,9 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
       <template #infonav>
         <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
-          && (formDatasetDiff.length > 0 || publishedAttachments.linkedDatasets.length > 0)">
+          && uniqueDatasetCount > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', formDatasetDiff.length + publishedAttachments.linkedDatasets.length) }}
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
           </template>
           <template #dropdown>
             <li v-if="formDatasetDiff.length > 0">
@@ -133,6 +133,13 @@ export default {
         { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
         { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' }
       ];
+    },
+    uniqueDatasetCount() {
+      const uniqueDatasets = new Set([
+        ...this.formDatasetDiff.map(dataset => dataset.name),
+        ...this.publishedAttachments.linkedDatasets
+      ]);
+      return uniqueDatasets.size;
     }
   },
   methods: {

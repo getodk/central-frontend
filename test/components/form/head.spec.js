@@ -116,6 +116,17 @@ describe('FormHead', () => {
         buttons[0].get('button').text().should.equal('2 Related Entity Lists');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'shovels']);
       });
+
+      it('shows count of unique entity list names if the same is both used and updated by a form', async () => {
+        testData.extendedForms.createPast(1);
+        testData.formDatasetDiffs.createPast(1, { name: 'trees', properties: [Property.DefaultProperty] });
+        testData.standardFormAttachments.createPast(1, { type: 'file', name: 'trees.csv', datasetExists: true });
+        const app = await load('/projects/1/forms/f/settings');
+        const buttons = app.findAllComponents(Infonav);
+        buttons.length.should.equal(2);
+        buttons[0].get('button').text().should.equal('1 Related Entity List');
+        buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'trees']);
+      });
     });
   });
 
