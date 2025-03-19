@@ -66,6 +66,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
+
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
@@ -145,7 +146,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #form-attachment-list-table {
   > tbody > tr {
@@ -163,6 +164,8 @@ export default {
       }
     }
 
+    .form-attachment-list-name { @include text-overflow-ellipsis; }
+
     .label {
       margin-left: 5px;
     }
@@ -172,7 +175,7 @@ export default {
       margin-right: $margin-right-icon;
     }
 
-    .form-attachment-list-uploaded{
+    .form-attachment-list-uploaded {
       .icon-link {
         margin-right: $margin-right-icon;
         color: $color-action-foreground;
@@ -180,7 +183,6 @@ export default {
     }
 
     .form-attachment-list-action {
-
       div {
         text-align: right;
         width: 200px;
@@ -191,7 +193,6 @@ export default {
           margin-bottom: -4px;
         }
       }
-
     }
   }
 }
