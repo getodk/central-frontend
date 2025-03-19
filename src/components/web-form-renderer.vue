@@ -242,9 +242,10 @@ const postSubmission = async () => {
 const handleSubmit = async (payload) => {
   // TODO: waiting for web-forms v0.7, current version doesn't return any payload.
   // eslint-disable-next-line no-constant-condition
-  if (true || props.actionType === 'preview') {
+  if (props.actionType === 'preview') {
     previewModal.show();
   } else {
+    console.log(payload);
     submissionModal.show();
     // eslint-disable-next-line no-unused-vars
     const { data, definition, status, violations } = payload;
