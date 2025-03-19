@@ -44,7 +44,7 @@ describe('FormSubmission', () => {
       .respondWithData(() => simpleXml)
       .complete();
 
-    const webForm = app.findComponent('.odk-form');
+    const webForm = app.find('.odk-form');
 
     webForm.exists().should.be.true;
   });
