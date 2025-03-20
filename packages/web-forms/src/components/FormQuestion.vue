@@ -32,7 +32,7 @@ const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
  * ToDo: When the integration with xform-engine is ready, implement this function to assess
  * the image upload node properly.
  */
-const isImageUploadNode = (node: ControlNode): node => node.nodeType === 'upload';
+const isImageUploadNode = (node: ControlNode) => node.nodeType === 'upload';
 
 const submitPressed = inject('submitPressed');
 </script>

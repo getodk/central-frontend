@@ -56,8 +56,8 @@
       </itext>
       <instance>
         <data id="image_capture" version="2025020401">
-          <dog_image/>
           <cat_image/>
+          <dog_image/>
           <fruit/>
           <bird_image/>
           <meta>
@@ -66,21 +66,21 @@
         </data>
       </instance>
 
-      <bind nodeset="/data/dog_image" type="binary" readonly="true()"/>
       <bind nodeset="/data/cat_image" type="binary" required="true()"/>
+      <bind nodeset="/data/dog_image" type="binary" readonly=" /data/fruit != &quot;&quot;"/>
       <bind nodeset="/data/fruit" type="string" required="true()"/>
       <bind nodeset="/data/bird_image" type="binary" relevant=" /data/fruit != &quot;&quot;"/>
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
   <h:body>
-    <upload mediatype="image/*" ref="/data/dog_image">
-      <label ref="jr:itext('/data/dog_image:label')"/>
-      <hint>(It's readonly)</hint>
-    </upload>
-
     <upload mediatype="image/*" ref="/data/cat_image">
       <label ref="jr:itext('/data/cat_image:label')"/>
+    </upload>
+
+    <upload mediatype="image/*" ref="/data/dog_image">
+      <label ref="jr:itext('/data/dog_image:label')"/>
+      <hint>(It becomes read-only when a fruit is selected)</hint>
     </upload>
 
     <select1 ref="/data/fruit">
