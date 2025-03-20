@@ -4,7 +4,6 @@ import { computed, inject, ref } from 'vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
 import ControlText from '@/components/ControlText.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
-import { isMobileDevice } from '@/lib/isMobileDevice.ts';
 
 interface ImageUploadControlProps {
 	readonly question: QuestionNode; // ToDo: Integrate with xforms-engine and use correct node type here.
@@ -14,17 +13,26 @@ const props = defineProps<ImageUploadControlProps>();
 const touched = ref(false);
 const submitPressed = inject<boolean>('submitPressed');
 const isDisabled = computed(() => props.question.currentState.readonly === true);
-const isMobile = ref(isMobileDevice());
 const value = ref<string | null>(null);
 const selectImageInput = ref<HTMLInputElement | null>(null);
 const takePictureInput = ref<HTMLInputElement | null>(null);
 const previewImage = ref<HTMLImageElement | null>(null);
 const isSmallImage = ref(false);
 
+const checkCaptureSupport = () => {
+	const input = document.createElement('input');
+	input.setAttribute('type', 'file');
+	input.setAttribute('accept', 'image/*');
+	return 'capture' in input;
+};
+
+const isCaptureSupported = ref(checkCaptureSupport());
+
 const triggerInputField = (inputField: HTMLInputElement | null) => {
 	if (inputField == null) {
 		return;
 	}
+
 	inputField.click();
 };
 
@@ -36,11 +44,17 @@ const processImage = (event: Event) => {
 	}
 
 	const reader = new FileReader();
+
 	reader.onload = (loadEvent) => {
 		const result = loadEvent.target?.result;
-		const fileValue = result == null || typeof result !== 'string' ? null : result;
-		setValue(fileValue);
+		if (result == null || typeof result !== 'string') {
+			setValue(null);
+			return;
+		}
+
+		setValue(result);
 	};
+
 	reader.readAsDataURL(file);
 };
 
@@ -66,10 +80,11 @@ const checkImageSize = () => {
 	if (previewImage?.value == null) {
 		return;
 	}
+
 	const SMALL_IMAGE_SIZE = 300;
-	const imageWidth = previewImage.value.naturalWidth;
-	const imageHeight = previewImage.value.naturalHeight;
-	isSmallImage.value = imageWidth < SMALL_IMAGE_SIZE && imageHeight < SMALL_IMAGE_SIZE;
+	isSmallImage.value =
+		previewImage.value.naturalWidth < SMALL_IMAGE_SIZE &&
+		previewImage.value.naturalHeight < SMALL_IMAGE_SIZE;
 };
 </script>
 
@@ -77,37 +92,38 @@ const checkImageSize = () => {
 	<ControlText :question="question" />
 
 	<div class="capture-buttons">
-		<Button
-			v-if="isMobile"
-			rounded
-			class="take-picture-button"
-			:disabled="isDisabled"
-			@click="triggerInputField(takePictureInput)"
-		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="12"
-				height="11"
-				viewBox="0 0 12 11"
-				fill="none"
+		<template v-if="isCaptureSupported">
+			<Button
+				rounded
+				class="take-picture-button"
+				:disabled="isDisabled"
+				@click="triggerInputField(takePictureInput)"
 			>
-				<path
-					d="M8.94478 1.33333L7.87728 0.166664H4.37728L3.30978 1.33333H0.293945V10.6667H11.9606V1.33333H8.94478ZM6.12728 8.91666C4.51728 8.91666 3.21061 7.61 3.21061 6C3.21061 4.39 4.51728 3.08333 6.12728 3.08333C7.73728 3.08333 9.04395 4.39 9.04395 6C9.04395 7.61 7.73728 8.91666 6.12728 8.91666Z"
-					fill="white"
-				/>
-			</svg>
-			<!-- TODO: translations -->
-			<span>Take picture</span>
-		</Button>
-		<input
-			v-if="isMobile"
-			type="file"
-			ref="takePictureInput"
-			@change="processImage"
-			accept="image/*"
-			capture="environment"
-			style="display: none"
-		/>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="12"
+					height="11"
+					viewBox="0 0 12 11"
+					fill="none"
+				>
+					<path
+						d="M8.94478 1.33333L7.87728 0.166664H4.37728L3.30978 1.33333H0.293945V10.6667H11.9606V1.33333H8.94478ZM6.12728 8.91666C4.51728 8.91666 3.21061 7.61 3.21061 6C3.21061 4.39 4.51728 3.08333 6.12728 3.08333C7.73728 3.08333 9.04395 4.39 9.04395 6C9.04395 7.61 7.73728 8.91666 6.12728 8.91666Z"
+						fill="white"
+					/>
+				</svg>
+				<!-- TODO: translations -->
+				<span>Take picture</span>
+			</Button>
+
+			<input
+				ref="takePictureInput"
+				type="file"
+				accept="image/*"
+				capture="environment"
+				style="display: none"
+				@change="processImage"
+			>
+		</template>
 
 		<Button
 			rounded
@@ -131,12 +147,12 @@ const checkImageSize = () => {
 			<span>Choose image</span>
 		</Button>
 		<input
-			type="file"
 			ref="selectImageInput"
-			@change="processImage"
+			type="file"
 			accept="image/*"
 			style="display: none"
-		/>
+			@change="processImage"
+		>
 	</div>
 
 	<div v-if="value" class="preview-captured-image" :class="{ 'small-image': isSmallImage }">
@@ -154,7 +170,7 @@ const checkImageSize = () => {
 				/>
 			</svg>
 		</Button>
-		<img ref="previewImage" :src="value" alt="Captured image preview" @load="checkImageSize" />
+		<img ref="previewImage" :src="value" alt="Captured image preview" @load="checkImageSize">
 	</div>
 
 	<ValidationMessage
