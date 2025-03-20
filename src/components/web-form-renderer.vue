@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="initiallyLoading"/>
-  <template v-if="!initiallyLoading">
+  <template v-if="formVersionXml.dataExists">
     <!-- update primaryInstance.instanceId to rerender the component -->
     <OdkWebForm :key="primaryInstance.instanceId" :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
   </template>
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { createApp, getCurrentInstance, reactive } from 'vue';
+import { computed, createApp, getCurrentInstance, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
@@ -84,21 +84,20 @@ inst.appContext.config.globalProperties = {
   ...app._context.config.globalProperties
 };
 
-const authHeaders =
-  route.query.st ? { Authorization: `Bearer ${route.query.st}` } : {};
-
 const { initiallyLoading } = resourceStates([form, formVersionXml]);
+
+const isPublicLink = computed(() => !!route.query.st);
 
 const fetchData = () => {
   let url = apiPaths.formXml(form.projectId, form.xmlFormId, !!form.draftToken);
   if (form.draftToken) {
     url = url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
   }
+  if (route.query.st) {
+    url += `?st=${route.query.st}`;
+  }
   formVersionXml.request({
-    url,
-    headers: {
-      ...authHeaders
-    }
+    url
   });
 };
 
@@ -119,51 +118,62 @@ const hideSubmissionModal = () => {
  * fetch attachments. Signature of the function is (url) => Response; where
  * Response is subset of web standard  {@link Response}.
  */
-const getAttachment = (url) => request({
-  url: apiPaths.formAttachment(
+const getAttachment = (url) => {
+  let requestUrl = apiPaths.formAttachment(
     form.projectId,
     form.xmlFormId,
     form.draftToken !== null,
     url.pathname.substring(1)
-  ),
-  ...authHeaders,
-  alert: false
-}).then(axiosResponse => {
-  const { data, status, statusText, headers } = axiosResponse;
+  );
+  if (form.draftToken) {
+    requestUrl = requestUrl.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
+  }
+  if (route.query.st) {
+    requestUrl += `?st=${route.query.st}`;
+  }
+  return request({
+    url: requestUrl,
+    alert: false
+  }).then(axiosResponse => {
+    const { data, status, statusText, headers } = axiosResponse;
 
-  const fetchHeaders = new Headers();
-  for (const [key, value] of Object.entries(headers)) {
-    if (key === 'content-type') {
-      // because web-forms doens't want space between media type and charset
-      // https://github.com/getodk/web-forms/issues/269
-      fetchHeaders.append(key, value.replace('; charset', ';charset'));
-    } else {
-      fetchHeaders.append(key, value);
+    const fetchHeaders = new Headers();
+    for (const [key, value] of Object.entries(headers)) {
+      if (key === 'content-type') {
+        // because web-forms doens't want space between media type and charset
+        // https://github.com/getodk/web-forms/issues/269
+        fetchHeaders.append(key, value.replace('; charset', ';charset'));
+      } else {
+        fetchHeaders.append(key, value);
+      }
     }
-  }
 
-  let body;
-  if (typeof (data) === 'string') {
-    body = data;
-  } else if (headers['content-type'].includes('application/json') ||
-             headers['content-type'].includes('application/geo+json')) {
-    body = JSON.stringify(data);
-  } else {
-    // eslint-disable-next-line no-console
-    console.error('response data is not a known text format');
-  }
+    let body;
+    if (typeof (data) === 'string') {
+      body = data;
+    } else if (headers['content-type'].includes('application/json') ||
+              headers['content-type'].includes('application/geo+json')) {
+      body = JSON.stringify(data);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('response data is not a known text format');
+    }
 
-  return new Response(body, {
-    status,
-    statusText,
-    headers: fetchHeaders,
+    return new Response(body, {
+      status,
+      statusText,
+      headers: fetchHeaders,
+    });
   });
-});
+};
 
 const postPrimaryInstance = () => {
   let url = apiPaths.submissions(form.projectId, form.xmlFormId, form.draftToken, '');
   if (form.draftToken) {
     url = url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
+  }
+  if (route.query.st) {
+    url += `?st=${route.query.st}`;
   }
   return request({
     method: 'POST',
@@ -189,11 +199,17 @@ const postPrimaryInstance = () => {
 
 const uploadAttachment = async (attachmentIndex) => {
   const attachmentDescriptor = attachmentUploads[attachmentIndex];
+  let url = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, primaryInstance.instanceId, attachmentDescriptor.file.name);
+  if (form.draftToken) {
+    url = url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
+  }
+  if (route.query.st) {
+    url += `?st=${route.query.st}`;
+  }
   await request({
     method: 'POST',
-    url: apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, primaryInstance.instanceId, attachmentDescriptor.file.name),
+    url,
     data: attachmentDescriptor.file,
-    ...authHeaders,
     onUploadProgress: (progressEvent) => {
       attachmentDescriptor.progress = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
     },
@@ -251,7 +267,12 @@ const handleSubmit = async (payload) => {
     const result = await postSubmission();
 
     if (result) {
-      showModal('submission');
+      if (isPublicLink.value) {
+        showModal('thankYou');
+        formVersionXml.reset();
+      } else {
+        showModal('submission');
+      }
     }
 
     // TODO: redirect or clear Form or say do nothing based on the workflow new/edit/public-link

@@ -18,6 +18,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { defineProps, defineOptions, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import WebFormRenderer from '../web-form-renderer.vue';
 import EnketoIframe from '../enketo-iframe.vue';
 import Loading from '../loading.vue';
@@ -26,6 +27,7 @@ import { apiPaths } from '../../util/request';
 
 const route = useRoute();
 const { form } = useForm();
+const { t } = useI18n();
 
 defineOptions({
   name: 'FormSubmission'
@@ -63,9 +65,12 @@ const fetchForm = () => {
   }
 
   form.request({
-    url: formUrl
+    url: formUrl,
+    problemToAlert: (problem) =>
+      (problem.code === 404.1 ? t('formNotFound') : null)
   }).then(() => {
     if (form.data.webformsEnabled) {
+      // TODO: maybe change the route if it is /f/... and it is for "New / Edit Submission"
       component.value = WebFormRenderer;
     } else {
       component.value = EnketoIframe;
@@ -80,3 +85,11 @@ const fetchForm = () => {
 
 fetchForm();
 </script>
+
+<i18n lang="json5">
+  {
+    "en": {
+      "formNotFound": "No Form found with this URL, please double check."
+    }
+  }
+</i18n>
