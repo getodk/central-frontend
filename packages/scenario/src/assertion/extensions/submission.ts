@@ -1,6 +1,12 @@
+import { PRELOAD_UID_PATTERN } from '@getodk/common/constants/regex.ts';
+import {
+	OPENROSA_XFORMS_NAMESPACE_URI,
+	XFORMS_NAMESPACE_URI,
+} from '@getodk/common/constants/xmlns.ts';
 import { assertUnknownArray } from '@getodk/common/lib/type-assertions/assertUnknownArray.ts';
 import { assertUnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
+import type * as CommonAssertionHelpers from '@getodk/common/test/assertions/helpers.ts';
 import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
 import {
 	ArbitraryConditionExpectExtension,
@@ -11,6 +17,7 @@ import {
 } from '@getodk/common/test/assertions/helpers.ts';
 import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import type { AssertIs } from '@getodk/common/types/assertions/AssertIs.ts';
+import type { ExpandUnion } from '@getodk/common/types/helpers.js';
 import type { InstanceFile, InstancePayload, InstancePayloadType } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
@@ -87,6 +94,135 @@ const getInstanceFile = (payload: AnyInstancePayload): InstanceFile => {
 	return file;
 };
 
+const META_NAMESPACE_URIS = [OPENROSA_XFORMS_NAMESPACE_URI, XFORMS_NAMESPACE_URI] as const;
+
+type MetaNamespaceURI = (typeof META_NAMESPACE_URIS)[number];
+
+type AssertEnumeratedString<T extends string> = (actual: unknown) => asserts actual is T;
+
+/**
+ * @todo This is probably general enough to be exported from {@link CommonAssertionHelpers}
+ */
+const enumeratedStringAssertion = <T extends string>(
+	expected: readonly T[]
+): AssertEnumeratedString<T> => {
+	return (actual) => {
+		assertString(actual);
+
+		expect(expected).toContain(actual);
+	};
+};
+
+const assertMetaNamespaceURI: AssertEnumeratedString<MetaNamespaceURI> =
+	enumeratedStringAssertion(META_NAMESPACE_URIS);
+
+interface SerializedMetaChildValues {
+	readonly instanceID: string | null;
+	readonly deprecatedID: string | null;
+}
+
+type MetaChildLocalName = ExpandUnion<keyof SerializedMetaChildValues>;
+
+interface SerializedMeta extends SerializedMetaChildValues {
+	readonly meta: Element | null;
+}
+
+type MetaElementLocalName = ExpandUnion<keyof SerializedMeta>;
+
+const getMetaElement = (
+	parent: ParentNode | null,
+	namespaceURI: MetaNamespaceURI,
+	localName: MetaElementLocalName
+): Element | null => {
+	if (parent == null) {
+		return null;
+	}
+
+	for (const child of parent.children) {
+		if (child.namespaceURI === namespaceURI && child.localName === localName) {
+			return child;
+		}
+	}
+
+	return null;
+};
+
+const getMetaChildValue = (
+	metaElement: Element | null,
+	namespaceURI: MetaNamespaceURI,
+	localName: MetaChildLocalName
+): string | null => {
+	const element = getMetaElement(metaElement, namespaceURI, localName);
+
+	if (element == null) {
+		return null;
+	}
+
+	expect(element.childElementCount).toBe(0);
+
+	const { textContent } = element;
+
+	assert(typeof textContent === 'string');
+
+	return textContent;
+};
+
+interface MetaNamespaceOptions {
+	readonly [key: string]: unknown;
+	readonly metaNamespaceURI: MetaNamespaceURI;
+}
+
+type AssertMetaNamespaceOptions = (value: unknown) => asserts value is MetaNamespaceOptions;
+
+const assertMetaNamespaceOptions: AssertMetaNamespaceOptions = (value) => {
+	assertUnknownObject(value);
+	assertMetaNamespaceURI(value.metaNamespaceURI);
+};
+
+const getSerializedMeta = (scenario: Scenario, namespaceURI: MetaNamespaceURI): SerializedMeta => {
+	const serializedInstanceBody = scenario.proposed_serializeInstance();
+	/**
+	 * Important: we intentionally omit the default namespace when serializing instance XML. We need to restore it here to reliably traverse nodes when {@link metaNamespaceURI} is {@link XFORMS_NAMESPACE_URI}.
+	 */
+	const instanceXML = `<instance xmlns="${XFORMS_NAMESPACE_URI}">${serializedInstanceBody}</instance>`;
+
+	const parser = new DOMParser();
+	const instanceDocument = parser.parseFromString(instanceXML, 'text/xml');
+	const instanceElement = instanceDocument.documentElement;
+	const instanceRoot = instanceElement.firstElementChild;
+
+	assert(
+		instanceRoot != null,
+		`Failed to find instance root element.\n\nActual serialized XML: ${serializedInstanceBody}\n\nActual instance DOM state: ${instanceElement.outerHTML}`
+	);
+
+	const meta = getMetaElement(instanceRoot, namespaceURI, 'meta');
+	const instanceID = getMetaChildValue(meta, namespaceURI, 'instanceID');
+	const deprecatedID = getMetaChildValue(meta, namespaceURI, 'deprecatedID');
+
+	return {
+		meta,
+		instanceID,
+		deprecatedID,
+	};
+};
+
+const assertPreloadUIDValue = (actual: string | null) => {
+	assert(actual != null, 'Expected preload uid value to be serialized');
+	expect(actual, 'Expected preload uid value to match pattern').toMatch(PRELOAD_UID_PATTERN);
+};
+
+interface EditedMetaOptions extends MetaNamespaceOptions {
+	readonly sourceScenario: Scenario;
+}
+
+type AssertEditedMetaOptions = (value: unknown) => asserts value is EditedMetaOptions;
+
+const assertEditedMetaOptions: AssertEditedMetaOptions = (value) => {
+	assertMetaNamespaceOptions(value);
+	assertScenario(value.sourceScenario);
+};
+
 export const submissionExtensions = extendExpect(expect, {
 	toHaveSerializedSubmissionXML: new AsymmetricTypedExpectExtension(
 		assertScenario,
@@ -150,6 +286,88 @@ export const submissionExtensions = extendExpect(expect, {
 			const actualText = await getBlobText(instanceFile);
 
 			return compareSubmissionXML(actualText, expected);
+		}
+	),
+
+	toHaveComputedPreloadInstanceID: new AsymmetricTypedExpectExtension(
+		assertScenario,
+		assertMetaNamespaceOptions,
+		(scenario, options): SimpleAssertionResult => {
+			try {
+				const meta = getSerializedMeta(scenario, options.metaNamespaceURI);
+
+				assertPreloadUIDValue(meta.instanceID);
+
+				return true;
+			} catch (error) {
+				if (error instanceof Error) {
+					return error;
+				}
+
+				// eslint-disable-next-line no-console
+				console.error(error);
+				return new Error('Unknown error');
+			}
+		}
+	),
+
+	toHaveEditedPreloadInstanceID: new AsymmetricTypedExpectExtension(
+		assertScenario,
+		assertEditedMetaOptions,
+		(editedScenario, options): SimpleAssertionResult => {
+			try {
+				const { metaNamespaceURI, sourceScenario } = options;
+				const sourceMeta = getSerializedMeta(sourceScenario, metaNamespaceURI);
+				const editedMeta = getSerializedMeta(editedScenario, metaNamespaceURI);
+
+				assertPreloadUIDValue(sourceMeta.instanceID);
+				assertPreloadUIDValue(editedMeta.instanceID);
+
+				expect(
+					editedMeta.instanceID,
+					'Expected preloaded instanceID metadata to be recomputed on edit'
+				).not.toBe(sourceMeta.instanceID);
+
+				return true;
+			} catch (error) {
+				if (error instanceof Error) {
+					return error;
+				}
+
+				// eslint-disable-next-line no-console
+				console.error(error);
+				return new Error('Unknown error');
+			}
+		}
+	),
+
+	toHaveDeprecatedIDFromSource: new AsymmetricTypedExpectExtension(
+		assertScenario,
+		assertEditedMetaOptions,
+		(editedScenario, options): SimpleAssertionResult => {
+			try {
+				const { metaNamespaceURI, sourceScenario } = options;
+				const sourceMeta = getSerializedMeta(sourceScenario, metaNamespaceURI);
+				const editedMeta = getSerializedMeta(editedScenario, metaNamespaceURI);
+
+				assertPreloadUIDValue(sourceMeta.instanceID);
+				assertPreloadUIDValue(editedMeta.deprecatedID);
+
+				expect(
+					editedMeta.deprecatedID,
+					'Expected edited deprecatedID metadata to be assigned from source instanceID'
+				).toBe(sourceMeta.instanceID);
+
+				return true;
+			} catch (error) {
+				if (error instanceof Error) {
+					return error;
+				}
+
+				// eslint-disable-next-line no-console
+				console.error(error);
+				return new Error('Unknown error');
+			}
 		}
 	),
 });

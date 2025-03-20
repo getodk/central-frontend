@@ -1,5 +1,10 @@
 import { PRELOAD_UID_PATTERN } from '@getodk/common/constants/regex.ts';
-import { OPENROSA_XFORMS_PREFIX } from '@getodk/common/constants/xmlns.ts';
+import {
+	OPENROSA_XFORMS_NAMESPACE_URI,
+	OPENROSA_XFORMS_PREFIX,
+	XFORMS_NAMESPACE_URI,
+} from '@getodk/common/constants/xmlns.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import {
 	bind,
 	body,
@@ -26,7 +31,7 @@ import { Scenario } from '../src/jr/Scenario.ts';
  * of that suite.
  */
 describe('Instance edit semantics', () => {
-	type MetadataNamespacePrefix = OPENROSA_XFORMS_PREFIX | null;
+	type MetaNamespacePrefix = OPENROSA_XFORMS_PREFIX | null;
 
 	interface NodeReferenceOptions {
 		readonly prefix?: string | null;
@@ -59,8 +64,24 @@ describe('Instance edit semantics', () => {
 		};
 	};
 
+	type MetaNamespaceURI = OPENROSA_XFORMS_NAMESPACE_URI | XFORMS_NAMESPACE_URI;
+
+	const getMetaNamespaceURI = (metaPrefix: MetaNamespacePrefix): MetaNamespaceURI => {
+		switch (metaPrefix) {
+			case 'orx':
+				return OPENROSA_XFORMS_NAMESPACE_URI;
+
+			case null:
+				return XFORMS_NAMESPACE_URI;
+
+			default:
+				throw new UnreachableError(metaPrefix);
+		}
+	};
+
 	interface SimpleEditCase {
-		readonly metaPrefix: MetadataNamespacePrefix;
+		readonly metaPrefix: MetaNamespacePrefix;
+		readonly metaNamespaceURI: MetaNamespaceURI;
 		readonly root: NodeReference;
 		readonly meta: NodeReference;
 		readonly instanceID: NodeReference;
@@ -68,10 +89,11 @@ describe('Instance edit semantics', () => {
 	}
 
 	interface SimpleEditCaseOptions {
-		readonly metaPrefix: MetadataNamespacePrefix;
+		readonly metaPrefix: MetaNamespacePrefix;
 	}
 
 	const simpleEditCase = ({ metaPrefix }: SimpleEditCaseOptions): SimpleEditCase => {
+		const metaNamespaceURI = getMetaNamespaceURI(metaPrefix);
 		const root = nodeReference('data');
 		const meta = nodeReference('meta', {
 			prefix: metaPrefix,
@@ -85,6 +107,7 @@ describe('Instance edit semantics', () => {
 		});
 
 		return {
+			metaNamespaceURI,
 			metaPrefix,
 			root,
 			meta,
@@ -140,6 +163,33 @@ describe('Instance edit semantics', () => {
 				const editedDeprecatedID = getMetaValue(edited, deprecatedID);
 
 				expect(editedDeprecatedID).toBe(sourceInstanceID);
+			});
+
+			it(`serializes ${deprecatedID.path} with the input value of ${instanceID.path}`, async () => {
+				const sourceScenario = await simpleEditScenario(caseOptions);
+				const edited = await sourceScenario.proposed_editCurrentInstanceState();
+
+				expect(edited).toHaveDeprecatedIDFromSource({
+					sourceScenario,
+					metaNamespaceURI: caseOptions.metaNamespaceURI,
+				});
+			});
+		});
+	});
+
+	describe('instanceID metadata', () => {
+		describe.each<SimpleEditCase>([
+			simpleEditCase({ metaPrefix: OPENROSA_XFORMS_PREFIX }),
+			simpleEditCase({ metaPrefix: null }),
+		])('metadata namespace prefix: $metaPrefix', (caseOptions) => {
+			it('recomputes instanceID', async () => {
+				const sourceScenario = await simpleEditScenario(caseOptions);
+				const edited = await sourceScenario.proposed_editCurrentInstanceState();
+
+				expect(edited).toHaveEditedPreloadInstanceID({
+					sourceScenario,
+					metaNamespaceURI: caseOptions.metaNamespaceURI,
+				});
 			});
 		});
 	});
