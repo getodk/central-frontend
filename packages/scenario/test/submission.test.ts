@@ -1,3 +1,4 @@
+import { PRELOAD_UID_PATTERN } from '@getodk/common/constants/regex.ts';
 import {
 	OPENROSA_XFORMS_NAMESPACE_URI,
 	OPENROSA_XFORMS_PREFIX,
@@ -970,9 +971,6 @@ describe('Form submission', () => {
 
 			assertion(value);
 		};
-
-		const PRELOAD_UID_PATTERN =
-			/^uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
 
 		const assertPreloadUIDValue = (value: string | null) => {
 			assert(value != null, 'Expected preload uid value to be serialized');
