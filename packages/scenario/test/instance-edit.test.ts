@@ -18,6 +18,7 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type { FormInstanceEditMode, FormInstanceRestoreMode } from '@getodk/xforms-engine';
 import { assert, describe, expect, it } from 'vitest';
+import { getNodeForReference } from '../src/client/traversal.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
 /**
@@ -136,21 +137,40 @@ describe('Instance edit semantics', () => {
 				body(input('/data/a'))));
 	};
 
+	const getMetaValue = (scenario: Scenario, reference: NodeReference): string => {
+		const node = scenario.getInstanceNode(reference.path);
+
+		assert(node.nodeType === 'input' || node.nodeType === 'model-value');
+		assert(node.valueType === 'string');
+
+		return node.currentState.value;
+	};
+
+	const getOptionalMetaValue = (scenario: Scenario, reference: NodeReference): string | null => {
+		const node = getNodeForReference(scenario.instanceRoot, reference.path);
+
+		if (node == null) {
+			return null;
+		}
+
+		assert(node.nodeType === 'input' || node.nodeType === 'model-value');
+		assert(node.valueType === 'string');
+
+		const { value } = node.currentState;
+
+		if (value === '') {
+			return null;
+		}
+
+		return value;
+	};
+
 	describe('deprecatedID metadata', () => {
 		describe.each<SimpleEditCase>([
 			simpleEditCase({ metaPrefix: OPENROSA_XFORMS_PREFIX }),
 			simpleEditCase({ metaPrefix: null }),
 		])('metadata namespace prefix: $metaPrefix', (caseOptions) => {
 			const { instanceID, deprecatedID } = caseOptions;
-
-			const getMetaValue = (scenario: Scenario, reference: NodeReference): string => {
-				const node = scenario.getInstanceNode(reference.path);
-
-				assert(node.nodeType === 'input' || node.nodeType === 'model-value');
-				assert(node.valueType === 'string');
-
-				return node.currentState.value;
-			};
 
 			it(`populates ${deprecatedID.path} with the input value of ${instanceID.path}`, async () => {
 				const scenario = await simpleEditScenario(caseOptions);
@@ -187,6 +207,48 @@ describe('Instance edit semantics', () => {
 				const edited = await sourceScenario.proposed_editCurrentInstanceState();
 
 				expect(edited).toHaveEditedPreloadInstanceID({
+					sourceScenario,
+					metaNamespaceURI: caseOptions.metaNamespaceURI,
+				});
+			});
+		});
+	});
+
+	/**
+	 * However weird it might be to test "restore" behavior _in the edit-specific
+	 * suite_... the intent is to document that the behaviors under test are
+	 * **exclusive** to editing. Otherwise understanding of this semantic
+	 * distinction could more easily fade or become confused over time, leaving
+	 * future contributors (including our future selves) to intuit that their main
+	 * distinction is I/O (as their distinct interfaces might imply).
+	 */
+	describe('as distinct from instance restore semantics', () => {
+		describe.each<SimpleEditCase>([
+			simpleEditCase({ metaPrefix: OPENROSA_XFORMS_PREFIX }),
+			simpleEditCase({ metaPrefix: null }),
+		])('metadata namespace prefix: $metaPrefix', (caseOptions) => {
+			const { instanceID, deprecatedID } = caseOptions;
+
+			it('does not recompute instanceID on restore', async () => {
+				const sourceScenario = await simpleEditScenario(caseOptions);
+				const restored = await sourceScenario.proposed_serializeAndRestoreInstanceState();
+
+				expect(restored).not.toHaveEditedPreloadInstanceID({
+					sourceScenario,
+					metaNamespaceURI: caseOptions.metaNamespaceURI,
+				});
+			});
+
+			it('does not populate deprecatedID on restore', async () => {
+				const sourceScenario = await simpleEditScenario(caseOptions);
+				const sourceInstanceID = getMetaValue(sourceScenario, instanceID);
+				const restored = await sourceScenario.proposed_serializeAndRestoreInstanceState();
+				const restoredDeprecatedID = getOptionalMetaValue(restored, deprecatedID);
+
+				expect(restoredDeprecatedID).not.toBe(sourceInstanceID);
+				expect(restoredDeprecatedID).toBeNull();
+
+				expect(restored).not.toHaveDeprecatedIDFromSource({
 					sourceScenario,
 					metaNamespaceURI: caseOptions.metaNamespaceURI,
 				});
