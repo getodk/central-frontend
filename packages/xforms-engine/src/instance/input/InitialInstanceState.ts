@@ -1,5 +1,6 @@
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import { INSTANCE_FILE_NAME } from '../../client/constants.ts';
+import type { EditFormInstanceInput } from '../../client/form/EditFormInstance.ts';
 import type { InstanceData } from '../../client/serialization/InstanceData.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
@@ -55,6 +56,17 @@ export class InitialInstanceState {
 			instanceXML,
 			attachments,
 		});
+	}
+
+	static async resolve(
+		model: ModelDefinition,
+		input: EditFormInstanceInput
+	): Promise<InitialInstanceState> {
+		if (input.inputType === 'FORM_INSTANCE_INPUT_RESOLVED') {
+			return await this.from(model, input.data);
+		}
+
+		throw new Error(`TODO: complete I/O support for editing instance of ${model.form.title}`);
 	}
 
 	readonly document: StaticDocument;

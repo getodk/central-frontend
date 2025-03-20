@@ -1,4 +1,8 @@
 import type { CreateFormInstance } from '../../client/form/CreateFormInstance.ts';
+import type {
+	EditFormInstance,
+	EditFormInstanceInput,
+} from '../../client/form/EditFormInstance.ts';
 import type { FormInstanceConfig } from '../../client/form/FormInstanceConfig.ts';
 import type { FormResultStatus } from '../../client/form/LoadFormResult.ts';
 import type {
@@ -33,6 +37,7 @@ export abstract class BaseInstantiableFormResult<
 	Status extends InstantiableFormResultStatus,
 > extends BaseFormResult<Status> {
 	readonly createInstance: CreateFormInstance;
+	readonly editInstance: EditFormInstance;
 	readonly restoreInstance: RestoreFormInstance;
 
 	constructor(options: BaseInstantiableFormResultOptions<Status>) {
@@ -51,6 +56,22 @@ export abstract class BaseInstantiableFormResult<
 				mode: 'create',
 				instanceOptions,
 				initialState: null,
+				instanceConfig,
+			});
+		};
+
+		this.editInstance = async (
+			input: EditFormInstanceInput,
+			instanceConfig: FormInstanceConfig = {}
+		) => {
+			this.assertInstantiable();
+
+			const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
+
+			return new FormInstance(this, {
+				mode: 'edit',
+				instanceOptions,
+				initialState,
 				instanceConfig,
 			});
 		};

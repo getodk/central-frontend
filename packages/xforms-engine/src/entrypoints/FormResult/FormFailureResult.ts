@@ -1,5 +1,6 @@
 import type { AnyFunction } from '@getodk/common/types/helpers.js';
 import type { CreateFormInstance } from '../../client/form/CreateFormInstance.ts';
+import type { EditFormInstance } from '../../client/form/EditFormInstance.ts';
 import type {
 	FailedLoadFormResultMethod,
 	LoadFormFailureResult,
@@ -24,6 +25,7 @@ const failedFormResultMethodFactory = <T extends AnyFunction>(
 
 export class FormFailureResult extends BaseFormResult<'failure'> implements LoadFormFailureResult {
 	readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
+	readonly editInstance: FailedLoadFormResultMethod<EditFormInstance>;
 	readonly restoreInstance: FailedLoadFormResultMethod<RestoreFormInstance>;
 
 	constructor(options: FormFailureOptions) {
@@ -36,6 +38,7 @@ export class FormFailureResult extends BaseFormResult<'failure'> implements Load
 		});
 
 		this.createInstance = failedFormResultMethodFactory(error);
+		this.editInstance = failedFormResultMethodFactory(error);
 		this.restoreInstance = failedFormResultMethodFactory(error);
 	}
 }
