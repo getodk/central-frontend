@@ -321,8 +321,7 @@
     "session": "Session",
     "submission": "Submission",
     "submissions": "Submissions",
-    "projectRoles": "Project Roles",
-    "formPreview": "Form Preview"
+    "projectRoles": "Project Roles"
   },
   "alert": {
     "passwordTooShort": "Please input a password at least 10 characters long.",
@@ -444,7 +443,8 @@
     // {version} is a version number.
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
-    "warning": "Warning"
+    "warning": "Warning",
+    "beta": "Beta"
   },
   "mixin": {
     "request": {

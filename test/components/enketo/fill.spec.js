@@ -4,6 +4,11 @@ import TestUtilSpan from '../../util/components/span.vue';
 
 import testData from '../../data';
 import { mount } from '../../util/lifecycle';
+import { mockRouter } from '../../util/router';
+
+const container = {
+  router: mockRouter()
+};
 
 describe('EnketoFill', () => {
   it('renders correctly for an open form with an enketoId', () => {
@@ -12,7 +17,8 @@ describe('EnketoFill', () => {
       .last();
     const button = mount(EnketoFill, {
       props: { formVersion: form },
-      slots: { default: TestUtilSpan }
+      slots: { default: TestUtilSpan },
+      container
     });
     button.element.tagName.should.equal('A');
     button.attributes().href.should.equal('/-/xyz');
@@ -25,7 +31,8 @@ describe('EnketoFill', () => {
       .last();
     const button = mount(EnketoFill, {
       props: { formVersion: form },
-      slots: { default: TestUtilSpan }
+      slots: { default: TestUtilSpan },
+      container
     });
     button.element.tagName.should.equal('BUTTON');
     button.attributes('aria-disabled').should.equal('true');
@@ -41,7 +48,8 @@ describe('EnketoFill', () => {
         .last();
       const button = mount(EnketoFill, {
         props: { formVersion: form },
-        slots: { default: TestUtilSpan }
+        slots: { default: TestUtilSpan },
+        container
       });
       button.element.tagName.should.equal('BUTTON');
       button.should.have.ariaDescription('This Form is not accepting new Submissions right now.');
@@ -57,7 +65,8 @@ describe('EnketoFill', () => {
       const draft = testData.extendedFormDrafts.last();
       const button = mount(EnketoFill, {
         props: { formVersion: draft },
-        slots: { default: TestUtilSpan }
+        slots: { default: TestUtilSpan },
+        container
       });
       button.element.tagName.should.equal('A');
     });
