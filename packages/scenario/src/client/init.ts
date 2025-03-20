@@ -37,7 +37,7 @@ export type InitializableForm =
 	| LoadFormWarningResult;
 
 interface InitializedTestForm {
-	readonly formResult: InitializableForm;
+	readonly form: InitializableForm;
 	readonly instanceRoot: RootNode;
 	readonly owner: Owner;
 	readonly dispose: VoidFunction;
@@ -50,7 +50,7 @@ export const initializeTestForm = async (
 	return createRoot(async (dispose) => {
 		const owner = getAssertedOwner();
 
-		const { formResult, root: instanceRoot } = await runInSolidScope(owner, async () => {
+		const { formResult: form, root: instanceRoot } = await runInSolidScope(owner, async () => {
 			return createInstance(formResource, {
 				form: {
 					...defaultConfig,
@@ -64,7 +64,7 @@ export const initializeTestForm = async (
 		});
 
 		return {
-			formResult,
+			form,
 			instanceRoot,
 			owner,
 			dispose,

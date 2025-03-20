@@ -1,4 +1,5 @@
 import { OPENROSA_XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import {
 	bind,
@@ -28,7 +29,29 @@ import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
-describe('Instance input (deserialization)', () => {
+type InstanceRoundTripInitializationMode = 'edit' | 'restore';
+
+interface InstanceRoundTripCase {
+	readonly initializationMode: InstanceRoundTripInitializationMode;
+}
+
+describe.each<InstanceRoundTripCase>([
+	{ initializationMode: 'restore' },
+	{ initializationMode: 'edit' },
+])('Instance input (deserialization) - mode: $initializationMode', ({ initializationMode }) => {
+	const scenarioFromCurrentInstanceState = async (scenario: Scenario): Promise<Scenario> => {
+		switch (initializationMode) {
+			case 'edit':
+				return scenario.proposed_editCurrentInstanceState();
+
+			case 'restore':
+				return scenario.proposed_serializeAndRestoreInstanceState();
+
+			default:
+				throw new UnreachableError(initializationMode);
+		}
+	};
+
 	let cleanupCallbacks = Array<VoidFunction>();
 
 	class WarningTracker {
@@ -207,12 +230,12 @@ describe('Instance input (deserialization)', () => {
 			// Sanity check precondition: non-relevant leaf node is blank
 			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 
-			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
 			// Assertion of non-relevance and blank value will fail if the node,
 			// omitted as non-relevant from serialization, is not restored.
-			expect(restored.getInstanceNode('/data/grp/inp')).toBeNonRelevant();
-			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+			expect(result.getInstanceNode('/data/grp/inp')).toBeNonRelevant();
+			expect(result.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 		});
 
 		it('restores a non-relevant leaf node with its model default value when it becomes relevant', async () => {
@@ -224,17 +247,17 @@ describe('Instance input (deserialization)', () => {
 			// Sanity check precondition: non-relevant leaf node is blank
 			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 
-			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
 			// Sanity check precondition: node restored, continues to be
 			// non-relevant (and blank)
-			expect(restored.getInstanceNode('/data/grp/inp')).toBeNonRelevant();
-			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+			expect(result.getInstanceNode('/data/grp/inp')).toBeNonRelevant();
+			expect(result.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 
-			restored.answer('/data/inp-rel', 1);
+			result.answer('/data/inp-rel', 1);
 
-			expect(restored.getInstanceNode('/data/grp/inp')).toBeRelevant();
-			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+			expect(result.getInstanceNode('/data/grp/inp')).toBeRelevant();
+			expect(result.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
 		});
 
 		it('restores an omitted subtree node as non-relevant', async () => {
@@ -243,9 +266,9 @@ describe('Instance input (deserialization)', () => {
 			// Sanity check precondition: non-relevant leaf node is blank
 			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 
-			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
-			expect(restored.getInstanceNode('/data/grp')).toBeNonRelevant();
+			expect(result.getInstanceNode('/data/grp')).toBeNonRelevant();
 		});
 
 		it("restores a non-relevant subtree node's descendant leaf node with its model default value when the restored subtree becomes relevant", async () => {
@@ -259,19 +282,19 @@ describe('Instance input (deserialization)', () => {
 			expect(scenario.getInstanceNode('/data/grp')).toBeNonRelevant();
 			expect(scenario.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 
-			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
 			// Sanity check precondition: node restored, continues to be non-relevant,
 			// descendant leaf node is still blank
-			expect(restored.getInstanceNode('/data/grp')).toBeNonRelevant();
-			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
+			expect(result.getInstanceNode('/data/grp')).toBeNonRelevant();
+			expect(result.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer(''));
 
-			restored.answer('/data/grp-rel', 1);
+			result.answer('/data/grp-rel', 1);
 
 			// Once restored subtree node is relevant, descendant leaf node is
 			// restored with the model-defined default for that node
-			expect(restored.getInstanceNode('/data/grp')).toBeRelevant();
-			expect(restored.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
+			expect(result.getInstanceNode('/data/grp')).toBeRelevant();
+			expect(result.answerOf('/data/grp/inp')).toEqualAnswer(stringAnswer('inp default value'));
 		});
 	});
 
@@ -371,23 +394,22 @@ describe('Instance input (deserialization)', () => {
 		});
 
 		it('restores calculated values', async () => {
-			const restored1 = await scenario.proposed_serializeAndRestoreInstanceState();
+			// Sanity check precondition: default values/calculations from same
+			expect(scenario.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
+			expect(scenario.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
+			expect(scenario.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
 
-			expect(restored1.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
-			expect(restored1.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
-			expect(restored1.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
+			scenario.answer('/data/a', 3);
 
-			restored1.answer('/data/a', 3);
+			expect(scenario.answerOf('/data/a')).toEqualAnswer(intAnswer(3));
+			expect(scenario.answerOf('/data/b')).toEqualAnswer(intAnswer(9));
+			expect(scenario.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
 
-			expect(restored1.answerOf('/data/a')).toEqualAnswer(intAnswer(3));
-			expect(restored1.answerOf('/data/b')).toEqualAnswer(intAnswer(9));
-			expect(restored1.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
-			const restored2 = await restored1.proposed_serializeAndRestoreInstanceState();
-
-			expect(restored2.answerOf('/data/a')).toEqualAnswer(intAnswer(3));
-			expect(restored2.answerOf('/data/b')).toEqualAnswer(intAnswer(9));
-			expect(restored2.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
+			expect(result.answerOf('/data/a')).toEqualAnswer(intAnswer(3));
+			expect(result.answerOf('/data/b')).toEqualAnswer(intAnswer(9));
+			expect(result.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
 		});
 
 		/**
@@ -438,11 +460,11 @@ describe('Instance input (deserialization)', () => {
 			scenario.answer('/data/b', 2);
 			scenario.answer('/data/c', 2);
 
-			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
-			expect(restored.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
-			expect(restored.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
-			expect(restored.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
+			expect(result.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
+			expect(result.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
+			expect(result.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
 		});
 	});
 
@@ -493,20 +515,20 @@ describe('Instance input (deserialization)', () => {
 			expect(scenario.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(16));
 
 			// Exercise restoration of repeats
-			const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+			const result = await scenarioFromCurrentInstanceState(scenario);
 
 			// Assert that same number of serialized repeat instances is restored
-			expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
+			expect(result.countRepeatInstancesOf('/data/repeat')).toBe(2);
 
 			// Assert that written values are restored in each repeat instance
-			expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(3));
-			expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(4));
+			expect(result.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(3));
+			expect(result.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(4));
 
 			// Assert that calculated values are restored as well
-			expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(6));
-			expect(restored.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(12));
-			expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(8));
-			expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(16));
+			expect(result.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(6));
+			expect(result.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(12));
+			expect(result.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(8));
+			expect(result.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(16));
 		});
 
 		describe('jr:count', () => {
@@ -550,16 +572,16 @@ describe('Instance input (deserialization)', () => {
 				expect(scenario.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
 				expect(scenario.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
 
-				const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+				const result = await scenarioFromCurrentInstanceState(scenario);
 
-				expect(restored.answerOf('/data/rep-count')).toEqualAnswer(intAnswer(2));
-				expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
-				expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
-				expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
-				expect(restored.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(4));
-				expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
-				expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
-				expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
+				expect(result.answerOf('/data/rep-count')).toEqualAnswer(intAnswer(2));
+				expect(result.countRepeatInstancesOf('/data/repeat')).toBe(2);
+				expect(result.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
+				expect(result.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
+				expect(result.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(4));
+				expect(result.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
+				expect(result.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
+				expect(result.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
 			});
 
 			interface MissingRepeatInstanceRestoredStateExpectation {
@@ -735,15 +757,15 @@ describe('Instance input (deserialization)', () => {
 				expect(scenario.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(14));
 				expect(scenario.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(28));
 
-				const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+				const result = await scenarioFromCurrentInstanceState(scenario);
 
-				expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
-				expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(2));
-				expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(4));
-				expect(restored.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(8));
-				expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(7));
-				expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(14));
-				expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(28));
+				expect(result.countRepeatInstancesOf('/data/repeat')).toBe(2);
+				expect(result.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(2));
+				expect(result.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(4));
+				expect(result.answerOf('/data/repeat[1]/inner3')).toEqualAnswer(intAnswer(8));
+				expect(result.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(7));
+				expect(result.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(14));
+				expect(result.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(28));
 			});
 
 			interface MissingRepeatInstanceRestoredStateExpectation {
@@ -874,4 +896,6 @@ describe('Instance input (deserialization)', () => {
 			it.todo('restores relevant repeat instances in their relevant position');
 		});
 	});
+
+	describe.todo('instance attachments');
 });

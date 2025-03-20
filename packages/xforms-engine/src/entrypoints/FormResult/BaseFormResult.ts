@@ -29,6 +29,8 @@ export abstract class BaseFormResult<Status extends FormResultStatus> {
 	readonly error: BaseFormResultProperty<Status, 'error'>;
 
 	abstract readonly createInstance: BaseFormResultProperty<Status, 'createInstance'>;
+	abstract readonly editInstance: BaseFormResultProperty<Status, 'editInstance'>;
+	abstract readonly restoreInstance: BaseFormResultProperty<Status, 'restoreInstance'>;
 
 	constructor(options: BaseFormResultOptions<Status>) {
 		this.status = options.status;

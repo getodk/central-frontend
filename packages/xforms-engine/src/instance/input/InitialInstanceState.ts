@@ -1,5 +1,9 @@
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import { INSTANCE_FILE_NAME } from '../../client/constants.ts';
+import type {
+	EditFormInstanceInput,
+	ResolvableFormInstanceInput,
+} from '../../client/form/EditFormInstance.ts';
 import type { InstanceData } from '../../client/serialization/InstanceData.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
@@ -14,6 +18,20 @@ interface InitialInstanceStateOptions {
 	readonly instanceXML: string;
 	readonly attachments: InstanceAttachmentMap;
 }
+
+const resolveInstanceXML = async (input: ResolvableFormInstanceInput): Promise<string> => {
+	const instanceResult = await input.resolveInstance();
+
+	if (typeof instanceResult === 'string') {
+		return instanceResult;
+	}
+
+	if (instanceResult instanceof Blob) {
+		return getBlobText(instanceResult);
+	}
+
+	return instanceResult.text();
+};
 
 const parseInstanceDocument = (model: ModelDefinition, instanceXML: string): StaticDocument => {
 	const doc = parseStaticDocumentFromXML(instanceXML);
@@ -44,12 +62,35 @@ const parseInstanceDocument = (model: ModelDefinition, instanceXML: string): Sta
 export class InitialInstanceState {
 	static async from(
 		model: ModelDefinition,
-		sources: InitialInstanceStateSources
+		data: InitialInstanceStateSources
 	): Promise<InitialInstanceState> {
-		const [instanceData] = sources;
-		const instanceFile = instanceData.get(INSTANCE_FILE_NAME);
-		const instanceXML = await getBlobText(instanceFile);
-		const attachments = new InstanceAttachmentMap(sources);
+		return this.resolve(model, {
+			inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
+			data,
+		});
+	}
+
+	static async resolve(
+		model: ModelDefinition,
+		input: EditFormInstanceInput
+	): Promise<InitialInstanceState> {
+		if (input.inputType === 'FORM_INSTANCE_INPUT_RESOLVED') {
+			const { data } = input;
+			const [instanceData] = data;
+			const instanceFile = instanceData.get(INSTANCE_FILE_NAME);
+			const instanceXML = await getBlobText(instanceFile);
+			const attachments = InstanceAttachmentMap.from(data);
+
+			return new this(model, {
+				instanceXML,
+				attachments,
+			});
+		}
+
+		const [instanceXML, attachments] = await Promise.all([
+			resolveInstanceXML(input),
+			InstanceAttachmentMap.resolve(input.attachments),
+		]);
 
 		return new this(model, {
 			instanceXML,

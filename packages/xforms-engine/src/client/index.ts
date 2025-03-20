@@ -1,6 +1,7 @@
 export type * from './constants.ts';
 export * as constants from './constants.ts';
 export type * from './form/CreateFormInstance.ts';
+export type * from './form/EditFormInstance.ts';
 export type * from './form/FormInstance.ts';
 export type * from './form/FormInstanceConfig.ts';
 export type * from './form/FormResource.ts';
