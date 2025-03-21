@@ -6,10 +6,10 @@ import type {
 	ChildNodeDefinition,
 	NodeDefinition,
 } from '../../parse/model/NodeDefinition.ts';
-import type { DescendantNode } from '../abstract/DescendantNode.ts';
 import type { InstanceNode } from '../abstract/InstanceNode.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
-import { normalizeChildInputs } from './normalizeChildInputs.ts';
+import type { DescendantNodeInitOptions } from './DescendantNodeInitOptions.ts';
+import { normalizeChildInitOptions } from './normalizeChildInitOptions.ts';
 
 /**
  * Child nodesets are collected from the {@link parent}'s
@@ -23,9 +23,8 @@ import { normalizeChildInputs } from './normalizeChildInputs.ts';
  *
  * @todo Since we're building an instance node's children from the nodesets of
  * the model-defined node's children, we are _implicitly dropping_ any excess
- * nodes from instance input (i.e. any children which don't have a corresponding
- * model-defined nodeset). That's probably the right behavior, but we may want
- * to warn for such nodes if/when we do drop them.
+ * nodes from non-model instance data. That's probably the right behavior, but
+ * we may want to warn for such nodes if/when we do drop them.
  */
 const collectModelChildNodesets = (parentTemplate: StaticElement): readonly string[] => {
 	const nodesets = parentTemplate.childElements.map(({ nodeset }) => {
@@ -67,36 +66,14 @@ const assertChildNodeDefinition: AssertChildNodeDefinition = (definition, childN
 	}
 };
 
-/**
- * @todo We could pretty significantly simplify downstream child node
- * construction logic, if we break this down into a tagged union (essentially
- * moving the branchy type refinement aspects up the stack, probably trimming
- * the construction logic itself down to a switch statement). At which point,
- * it'd also probably be easier to reason about each of those constructors
- * accepting input exactly as it's represented as a member of this hypothetical
- * tagged union. Something like this:
- *
- * - Revise each concrete {@link DescendantNode} class to accept an options-like
- *   object suitable for its construction, each respectively defined by an
- *   interface whose name is consistent with that node
- * - Update this type to be a union of those interfaces
- * - Implement that in {@link collectChildInputs}
- * - Update downstream construction to switch over whatever narrows the union
- * - Bonus points: revise each concrete {@link DescendantNode} to use a common
- *   constructor API (i.e. a static `from` method, since several such classes
- *   already have private constructors). Then downstream isn't even a switch
- *   statement, it's just a lookup table.
- */
-export interface InstanceNodeChildInput {
-	readonly childNodeset: string;
-	readonly definition: ChildNodeDefinition;
-	readonly instanceNodes: readonly StaticElement[];
+export interface ChildrenInitOptions {
+	readonly parent: GeneralParentNode;
+	readonly model: ModelDefinition;
+	readonly children: readonly DescendantNodeInitOptions[];
 }
 
-export const collectChildInputs = (
-	model: ModelDefinition,
-	parent: GeneralParentNode
-): readonly InstanceNodeChildInput[] => {
+export const childrenInitOptions = (parent: GeneralParentNode): ChildrenInitOptions => {
+	const { model } = parent.rootDocument;
 	const childNodesets = collectModelChildNodesets(parent.definition.template);
 
 	let instanceChildren: InstanceNodesByNodeset | null;
@@ -107,7 +84,7 @@ export const collectChildInputs = (
 		instanceChildren = groupChildElementsByNodeset(parent.instanceNode);
 	}
 
-	const inputs = childNodesets.map((childNodeset) => {
+	const children = childNodesets.map((childNodeset) => {
 		const definition = model.getNodeDefinition(childNodeset);
 
 		assertChildNodeDefinition(definition, childNodeset);
@@ -130,6 +107,11 @@ export const collectChildInputs = (
 			instanceNodes,
 		};
 	});
+	const baseResult: ChildrenInitOptions = {
+		parent,
+		model,
+		children,
+	};
 
-	return normalizeChildInputs(model, parent, inputs);
+	return normalizeChildInitOptions(baseResult);
 };

@@ -29,7 +29,7 @@ import { SelectControl } from '../SelectControl.ts';
 import { Subtree } from '../Subtree.ts';
 import { TriggerControl } from '../TriggerControl.ts';
 import { UploadControl } from '../unsupported/UploadControl.ts';
-import { collectChildInputs } from './collectChildInputs.ts';
+import { childrenInitOptions } from './childrenInitOptions.ts';
 
 const isSubtreeDefinition = (
 	definition: ModelSubtreeDefinition
@@ -128,10 +128,9 @@ const isUploadNodeDefinition = (
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
-	const { model } = parent.rootDocument;
-	const inputs = collectChildInputs(model, parent);
+	const { children } = childrenInitOptions(parent);
 
-	return inputs.map(({ instanceNodes, definition }): GeneralChildNode => {
+	return children.map(({ instanceNodes, definition }): GeneralChildNode => {
 		const [instanceNode = null] = instanceNodes;
 
 		switch (definition.type) {

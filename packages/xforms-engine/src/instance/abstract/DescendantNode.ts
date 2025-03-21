@@ -15,6 +15,7 @@ import type { StaticElement } from '../../integration/xpath/static-dom/StaticEle
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
+import type { DescendantNodeInitOptions } from '../children/DescendantNodeInitOptions.ts';
 import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
@@ -51,6 +52,13 @@ interface DescendantNodeOptions {
 	readonly computeReference?: Accessor<string>;
 }
 
+/**
+ * @todo Unify constructor signatures of {@link DescendantNode} and its
+ * subclasses, which will simplify the branchy logic of child node construction
+ * and minimize internal churn as common themes evolve. A good starting point is
+ * beginning to form in {@link DescendantNodeInitOptions} (not to be confused
+ * with the current module-local {@link DescendantNodeOptions}).
+ */
 export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

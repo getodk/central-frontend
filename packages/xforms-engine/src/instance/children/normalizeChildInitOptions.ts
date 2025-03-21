@@ -10,7 +10,6 @@ import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.
 import type { NamespaceURL } from '../../lib/names/NamespaceURL.ts';
 import type { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
-import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
 import type { SubtreeDefinition as ModelSubtreeDefinition } from '../../parse/model/SubtreeDefinition.ts';
 import type { XFormDOM } from '../../parse/XFormDOM.ts';
 import type { Group } from '../Group.ts';
@@ -18,7 +17,8 @@ import type { GeneralParentNode } from '../hierarchy.ts';
 import type { PrimaryInstance } from '../PrimaryInstance.ts';
 import type { Root } from '../Root.ts';
 import type { Subtree } from '../Subtree.ts';
-import type { InstanceNodeChildInput } from './collectChildInputs.ts';
+import type { ChildrenInitOptions } from './childrenInitOptions.ts';
+import type { DescendantNodeInitOptions } from './DescendantNodeInitOptions.ts';
 
 const META_LOCAL_NAME = 'meta';
 const INSTANCE_ID_LOCAL_NAME = 'instanceID';
@@ -88,15 +88,19 @@ interface MetaGroup extends Group {
 	readonly definition: MetaGroupDefinition;
 }
 
-type MetaParent = MetaGroup | MetaSubtree;
+type MetaSubroot = MetaGroup | MetaSubtree;
 
-const isMetaParent = (parent: GeneralParentNode): parent is MetaParent => {
-	const { nodeType } = parent;
+interface MetaSubrootInitOptions extends ChildrenInitOptions {
+	readonly parent: MetaGroup | MetaSubtree;
+}
+
+const isMetaSubroot = (options: ChildrenInitOptions): options is MetaSubrootInitOptions => {
+	const { nodeType } = options.parent;
 
 	return (
 		(nodeType === 'subtree' || nodeType === 'group') &&
-		isDirectRootDescendant(parent) &&
-		isBaseMetaDefinition(parent.definition)
+		isDirectRootDescendant(options.parent) &&
+		isBaseMetaDefinition(options.parent.definition)
 	);
 };
 
@@ -114,57 +118,49 @@ interface EditModeInstanceDescendant {
 	readonly rootDocument: EditModeInstance;
 }
 
-type EditModeMetaParent = EditModeInstanceDescendant & MetaParent;
+type EditModeMetaSubroot = EditModeInstanceDescendant & MetaSubroot;
 
-const isEditModeMetaParent = (parent: MetaParent): parent is EditModeMetaParent => {
-	return isEditModeInstance(parent.rootDocument);
+interface EditModeMetaSubrootInitOptions extends MetaSubrootInitOptions {
+	readonly parent: EditModeMetaSubroot;
+}
+
+const isEditModeMetaSubroot = (
+	subroot: MetaSubrootInitOptions
+): subroot is EditModeMetaSubrootInitOptions => {
+	return isEditModeInstance(subroot.parent.rootDocument);
 };
 
-interface LeafNodeChildInput extends InstanceNodeChildInput {
+interface LeafNodeInitOptions extends DescendantNodeInitOptions {
 	readonly instanceNodes: readonly [StaticLeafElement];
 }
 
-const isLeafNodeChildInput = (input: InstanceNodeChildInput): input is LeafNodeChildInput => {
-	const { instanceNodes } = input;
+const isLeafNodeInitOptions = (
+	options: DescendantNodeInitOptions
+): options is LeafNodeInitOptions => {
+	const { instanceNodes } = options;
 	const [instanceNode, ...rest] = instanceNodes;
 
 	return instanceNode != null && rest.length === 0 && instanceNode.isLeafElement();
 };
 
-interface BaseMetaLeafChildLookupResult {
-	readonly currentIndex: number | null;
-	readonly childInput: LeafNodeChildInput | null;
-}
-
-type FoundLookupResult<T> = {
-	[K in keyof T]: NonNullable<T[K]>;
-};
-
-type NotFoundLookupResult<T> = {
-	[K in keyof T]: null;
-};
-
-type MetaLeafChildLookupResult =
-	| FoundLookupResult<BaseMetaLeafChildLookupResult>
-	| NotFoundLookupResult<BaseMetaLeafChildLookupResult>;
+type MetaLeafChildEntry = readonly [index: number, child: LeafNodeInitOptions];
 
 const findMetaLeafChild = (
-	parent: MetaParent,
-	inputs: readonly InstanceNodeChildInput[],
+	subroot: MetaSubrootInitOptions,
 	localName: string
-): MetaLeafChildLookupResult => {
-	const metaName = parent.definition.qualifiedName satisfies MetaName;
+): MetaLeafChildEntry | null => {
+	const metaName = subroot.parent.definition.qualifiedName satisfies MetaName;
 	const namespaceURI = metaName.namespaceURI.href satisfies MetaNamespaceURIValue;
 
-	const result = Array.from(inputs.entries()).find(
-		(entry): entry is [number, LeafNodeChildInput] => {
-			const [, childInput] = entry;
+	const result = Array.from(subroot.children.entries()).find(
+		(entry): entry is [number, LeafNodeInitOptions] => {
+			const [, child] = entry;
 
-			if (!isLeafNodeChildInput(childInput)) {
+			if (!isLeafNodeInitOptions(child)) {
 				return false;
 			}
 
-			const [instanceNode] = childInput.instanceNodes;
+			const [instanceNode] = child.instanceNodes;
 			const { qualifiedName } = instanceNode;
 
 			return (
@@ -173,32 +169,17 @@ const findMetaLeafChild = (
 		}
 	);
 
-	if (result == null) {
-		return {
-			currentIndex: null,
-			childInput: null,
-		};
-	}
-
-	const [currentIndex, childInput] = result;
-
-	return {
-		currentIndex,
-		childInput,
-	};
+	return result ?? null;
 };
 
-const getInstanceIDValue = (
-	parent: MetaParent,
-	inputs: readonly InstanceNodeChildInput[]
-): string | null => {
-	const { childInput } = findMetaLeafChild(parent, inputs, INSTANCE_ID_LOCAL_NAME);
+const getInstanceIDValue = (subroot: MetaSubrootInitOptions): string | null => {
+	const [, child = null] = findMetaLeafChild(subroot, INSTANCE_ID_LOCAL_NAME) ?? [];
 
-	if (childInput == null) {
+	if (child == null) {
 		return null;
 	}
 
-	const [instanceIDNode] = childInput.instanceNodes;
+	const [instanceIDNode] = child.instanceNodes;
 
 	return instanceIDNode.value satisfies string;
 };
@@ -216,11 +197,11 @@ const assertStaticLeafElement: AssertStaticLeafElement = (element) => {
  * on {@link populateDeprecatedID}.
  */
 const buildMetaValueElement = (
-	parent: MetaParent,
+	subroot: MetaSubrootInitOptions,
 	localName: string,
 	value: string
 ): StaticLeafElement => {
-	const { qualifiedName, nodeset } = parent.definition;
+	const { qualifiedName, nodeset } = subroot.parent.definition;
 	const { namespaceURI, prefix } = qualifiedName;
 	const { root } = new StaticDocument({
 		documentRoot: {
@@ -240,23 +221,21 @@ const buildMetaValueElement = (
 };
 
 const buildDeprecatedIDDefinition = (
-	model: ModelDefinition,
-	parent: EditModeMetaParent,
+	subroot: EditModeMetaSubrootInitOptions,
 	instanceNode: StaticLeafElement
 ): LeafNodeDefinition => {
 	const nodeset = instanceNode.nodeset;
-	const bind = model.binds.getOrCreateBindDefinition(nodeset);
+	const bind = subroot.model.binds.getOrCreateBindDefinition(nodeset);
 
-	return new LeafNodeDefinition(parent.definition, bind, null, instanceNode);
+	return new LeafNodeDefinition(subroot.parent.definition, bind, null, instanceNode);
 };
 
-const buildDeprecatedIDInput = (
-	model: ModelDefinition,
-	parent: EditModeMetaParent,
+const buildDeprecatedID = (
+	subroot: EditModeMetaSubrootInitOptions,
 	value: string
-): InstanceNodeChildInput => {
-	const instanceNode = buildMetaValueElement(parent, DEPRECATED_ID_LOCAL_NAME, value);
-	const definition = buildDeprecatedIDDefinition(model, parent, instanceNode);
+): LeafNodeInitOptions => {
+	const instanceNode = buildMetaValueElement(subroot, DEPRECATED_ID_LOCAL_NAME, value);
+	const definition = buildDeprecatedIDDefinition(subroot, instanceNode);
 
 	return {
 		childNodeset: instanceNode.nodeset,
@@ -265,16 +244,16 @@ const buildDeprecatedIDInput = (
 	};
 };
 
-const updateDeprecatedIDInput = (
-	parent: EditModeMetaParent,
-	input: LeafNodeChildInput,
+const updateDeprecatedID = (
+	subroot: EditModeMetaSubrootInitOptions,
+	child: LeafNodeInitOptions,
 	value: string
-): InstanceNodeChildInput => {
-	const instanceNode = buildMetaValueElement(parent, DEPRECATED_ID_LOCAL_NAME, value);
+): LeafNodeInitOptions => {
+	const instanceNode = buildMetaValueElement(subroot, DEPRECATED_ID_LOCAL_NAME, value);
 
 	return {
-		childNodeset: input.childNodeset,
-		definition: input.definition,
+		childNodeset: child.childNodeset,
+		definition: child.definition,
 		instanceNodes: [instanceNode],
 	};
 };
@@ -292,59 +271,59 @@ const replace = <T>(values: readonly T[], index: number, value: T): readonly T[]
 	return results;
 };
 
+const replaceOrConcat = <T>(values: readonly T[], index: number | null, value: T): readonly T[] => {
+	if (index == null) {
+		return values.concat(value);
+	}
+
+	return replace(values, index, value);
+};
+
 /**
  * @todo Whenever we have bandwidth to start migrating away from DOM usage in
  * {@link XFormDOM}, this is a good place to start for logic equivalent to the
  * hacky normalization for `instanceID`.
  */
 const populateDeprecatedID = (
-	model: ModelDefinition,
-	parent: EditModeMetaParent,
-	inputs: readonly InstanceNodeChildInput[]
-): readonly InstanceNodeChildInput[] => {
-	const value = getInstanceIDValue(parent, inputs);
+	subroot: EditModeMetaSubrootInitOptions
+): EditModeMetaSubrootInitOptions => {
+	const value = getInstanceIDValue(subroot);
 
 	if (value == null) {
-		return inputs;
+		return subroot;
 	}
 
-	const { currentIndex, childInput: currentDeprecatedIDInput } = findMetaLeafChild(
-		parent,
-		inputs,
-		DEPRECATED_ID_LOCAL_NAME
-	);
+	const [index, currentDeprecatedID] = findMetaLeafChild(subroot, DEPRECATED_ID_LOCAL_NAME) ?? [
+		null,
+	];
 
-	if (currentIndex == null) {
-		const deprecatedID = buildDeprecatedIDInput(model, parent, value);
+	let deprecatedID: LeafNodeInitOptions;
 
-		return inputs.concat(deprecatedID);
+	if (currentDeprecatedID == null) {
+		deprecatedID = buildDeprecatedID(subroot, value);
+	} else {
+		deprecatedID = updateDeprecatedID(subroot, currentDeprecatedID, value);
 	}
 
-	const deprecatedID = updateDeprecatedIDInput(parent, currentDeprecatedIDInput, value);
-
-	return replace(inputs, currentIndex, deprecatedID);
+	return {
+		model: subroot.model,
+		parent: subroot.parent,
+		children: replaceOrConcat(subroot.children, index, deprecatedID),
+	};
 };
 
-const normalizeMetaChildInputs = (
-	model: ModelDefinition,
-	parent: MetaParent,
-	inputs: readonly InstanceNodeChildInput[]
-): readonly InstanceNodeChildInput[] => {
-	if (isEditModeMetaParent(parent)) {
-		return populateDeprecatedID(model, parent, inputs);
+const normalizeMetaSubroot = (subroot: MetaSubrootInitOptions): MetaSubrootInitOptions => {
+	if (isEditModeMetaSubroot(subroot)) {
+		return populateDeprecatedID(subroot);
 	}
 
-	return inputs;
+	return subroot;
 };
 
-export const normalizeChildInputs = (
-	model: ModelDefinition,
-	parent: GeneralParentNode,
-	inputs: readonly InstanceNodeChildInput[]
-): readonly InstanceNodeChildInput[] => {
-	if (isMetaParent(parent)) {
-		return normalizeMetaChildInputs(model, parent, inputs);
+export const normalizeChildInitOptions = (options: ChildrenInitOptions): ChildrenInitOptions => {
+	if (isMetaSubroot(options)) {
+		return normalizeMetaSubroot(options);
 	}
 
-	return inputs;
+	return options;
 };
