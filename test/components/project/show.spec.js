@@ -1,4 +1,5 @@
 import ProjectOverviewDescription from '../../../src/components/project/overview/description.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import ProjectOverview from '../../../src/components/project/overview.vue';
@@ -99,6 +100,18 @@ describe('ProjectShow', () => {
       .afterResponses(app => {
         expect(app.getComponent(ProjectOverview).vm).to.not.equal(vm);
       });
+  });
+
+
+  it('renders breadcrumbs', async () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
+    testData.extendedDatasets.createPast(1);
+    const component = await load('/projects/1');
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links.length.should.equal(1);
+    links[0].text.should.equal('My Project');
+    links[0].path.should.equal('/projects/1');
   });
 
   describe('title', () => {

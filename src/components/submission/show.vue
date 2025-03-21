@@ -108,9 +108,9 @@ export default {
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
-        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' },
-        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath('submissions') }
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath(), icon: 'icon-archive' },
+        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath(), icon: 'icon-file' },
+        { text: this.submission.dataExists ? this.submission.instanceNameOrId : this.$t('resource.submission'), path: this.formPath('submissions') }
       ];
     }
   },

@@ -34,13 +34,13 @@ describe('FormHead', () => {
     });
 
     it("renders the project's name as a link in the breadcrumb", async () => {
-      testData.extendedForms.createPast(1);
+      testData.extendedForms.createPast(1, { name: 'My Form' });
       const component = await load('/projects/1/forms/f/settings');
       const { links } = component.getComponent(Breadcrumbs).props();
       links.length.should.equal(2);
       links[0].path.should.equal('/projects/1');
-      links[1].text.should.equal('Forms');
-      links[1].path.should.equal('/projects/1');
+      links[1].text.should.equal('My Form');
+      links[1].path.should.equal('/projects/1/forms/f');
     });
 
     it("shows the form's name", async () => {
