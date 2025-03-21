@@ -129,6 +129,32 @@ interface SerializedMeta extends SerializedMetaChildValues {
 
 type MetaElementLocalName = ExpandUnion<keyof SerializedMeta>;
 
+/**
+ * @todo this is general enough to go in `common` package, and would probably
+ * find reuse pretty quickly. Holding off for now because it has overlap with
+ * several even more general tuple-length narrowing cases:
+ *
+ * - Unbounded length -> 1-ary tuple
+ * - Unbounded length -> parameterized N-ary tuple
+ * - Unbounded length -> partially bounded (min-N, max-N) tuple
+ * - Type guards (predicate) and `asserts` equivalents of each
+ *
+ * Each of these cases comes up frequently! I've written them at least a few
+ * dozen times, and always back out to more specific logic for pragmatic
+ * reasons. But having these generalizations would allow pretty significant
+ * simplification of a lot of their use cases.
+ */
+const findExclusiveMatch = <T>(
+	values: readonly T[],
+	predicate: (value: T) => boolean
+): T | null => {
+	const results = values.filter(predicate);
+
+	expect(results.length).toBeLessThanOrEqual(1);
+
+	return results[0] ?? null;
+};
+
 const getMetaElement = (
 	parent: ParentNode | null,
 	namespaceURI: MetaNamespaceURI,
@@ -138,13 +164,11 @@ const getMetaElement = (
 		return null;
 	}
 
-	for (const child of parent.children) {
-		if (child.namespaceURI === namespaceURI && child.localName === localName) {
-			return child;
-		}
-	}
+	const children = Array.from(parent.children);
 
-	return null;
+	return findExclusiveMatch(children, (child) => {
+		return child.namespaceURI === namespaceURI && child.localName === localName;
+	});
 };
 
 const getMetaChildValue = (
