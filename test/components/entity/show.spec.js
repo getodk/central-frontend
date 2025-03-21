@@ -38,17 +38,20 @@ describe('EntityShow', () => {
       ]);
   });
 
-  it('renders a back link', async () => {
+  it('renders breadcrumbs', async () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
     testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
-    testData.extendedEntities.createPast(1, { uuid: 'e' });
+    testData.extendedEntities.createPast(1, { uuid: 'e', label: 'My Entity' });
     const component = await load('/projects/1/entity-lists/%C3%A1/entities/e', {
       root: false
     });
     const { links } = component.getComponent(Breadcrumbs).props();
-    links[0].path.should.equal('/projects/1');
-    links[1].text.should.equal('Entities');
-    links[1].path.should.equal('/projects/1/entity-lists');
-    links[2].text.should.equal('á');
+    links.length.should.equal(3);
+    links[0].text.should.equal('My Project');
+    links[0].path.should.equal('/projects/1/entity-lists');
+    links[1].text.should.equal('á');
+    links[1].path.should.equal('/projects/1/entity-lists/%C3%A1');
+    links[2].text.should.equal('My Entity');
     links[2].path.should.equal('/projects/1/entity-lists/%C3%A1/entities');
   });
 

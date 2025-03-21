@@ -47,13 +47,15 @@ describe('DatasetShow', () => {
   });
 
   it('renders breadcrumbs', async () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
     testData.extendedDatasets.createPast(1);
     const component = await load('/projects/1/entity-lists/trees/properties');
     const { links } = component.getComponent(Breadcrumbs).props();
     links.length.should.equal(2);
-    links[0].path.should.equal('/projects/1');
-    links[1].text.should.equal('Entities');
-    links[1].path.should.equal('/projects/1/entity-lists');
+    links[0].text.should.equal('My Project');
+    links[0].path.should.equal('/projects/1/entity-lists');
+    links[1].text.should.equal('trees');
+    links[1].path.should.equal('/projects/1/entity-lists/trees');
   });
 
   it('show correct project name', async () => {

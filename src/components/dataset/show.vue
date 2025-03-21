@@ -113,14 +113,14 @@ export default {
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, tabPath, tabClass, canRoute, publishedFormPath
+      datasetPath, projectPath, tabPath, tabClass, canRoute, publishedFormPath
     };
   },
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.nameWithArchived, path: this.projectPath() },
-        { text: this.$t('resource.entities'), path: this.projectPath('entity-lists'), icon: 'icon-database' }
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath('entity-lists'), icon: 'icon-archive' },
+        { text: this.datasetName, path: this.datasetPath(), icon: 'icon-database' }
       ];
     }
   },

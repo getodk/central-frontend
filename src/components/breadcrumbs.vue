@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <template v-for="(link, index) in links" :key="index">
       <div class="breadcrumb-item" v-tooltip.text>
         <router-link :to="link.path">
-          {{ link.text }}
           <span v-if="link.icon" :class="link.icon"></span>
+          {{ link.text }}
         </router-link>
       </div>
       <span class="separator">/</span>

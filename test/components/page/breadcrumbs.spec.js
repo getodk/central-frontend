@@ -19,7 +19,7 @@ describe('Breadcrumbs', () => {
       }
     });
     const breadcrumbs = component.get('.breadcrumbs');
-    breadcrumbs.text().should.equal('Projects /Forms /');
+    breadcrumbs.text().should.equal('Projects/ Forms/');
   });
 
   it('renders a link', () => {
