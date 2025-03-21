@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-attachments" icon="paperclip" dotted>
+  <form-edit-section id="form-edit-attachments" icon="paperclip" dotted
+    :warning="draftAttachments.dataExists && draftAttachments.missingCount !== 0">
     <template #title>{{ $t('resource.attachments') }}</template>
     <template v-if="draftAttachments.dataExists" #subtitle>
       <template v-if="draftAttachments.size === 0">

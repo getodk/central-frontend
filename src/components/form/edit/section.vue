@@ -10,10 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-edit-section">
+  <div class="form-edit-section" :class="{ warning }">
     <div>
       <div class="form-edit-section-icon-container">
         <span :class="`icon-${icon}`"></span>
+        <span v-if="warning" class="icon-warning"></span>
       </div>
       <div v-if="dotted" class="form-edit-section-dots"></div>
     </div>
@@ -34,11 +35,14 @@ defineProps({
     type: String,
     required: true
   },
-  dotted: Boolean
+  dotted: Boolean,
+  warning: Boolean
 });
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/variables';
+
 $dots-margin-block: 9px;
 
 .form-edit-section {
@@ -72,6 +76,7 @@ $dots-margin-block: 9px;
 
   flex-shrink: 0;
   font-size: 35px;
+  position: relative;
 }
 
 .form-edit-section-dots {
@@ -90,5 +95,17 @@ $dots-margin-block: 9px;
   margin-top: -10px;
 
   &:empty { display: none; }
+}
+
+.form-edit-section.warning {
+  .form-edit-section-icon-container { background-color: $color-warning; }
+  .form-edit-section-subtitle { color: $color-warning; }
+}
+.form-edit-section-icon-container .icon-warning:nth-child(2) {
+  position: absolute;
+  right: 2px;
+  bottom: 7px;
+
+  font-size: 18px;
 }
 </style>
