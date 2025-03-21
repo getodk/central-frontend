@@ -104,7 +104,7 @@ describe('DatasetSettings', () => {
       .complete()
       .request(async (component) => {
         const modal = component.getComponent(DatasetPendingSubmissions);
-        modal.text().should.match(/10 records/);
+        modal.text().should.match(/10 pending records/);
         await modal.get('input[value="true"]').setValue(true);
         return modal.get('.btn-danger').trigger('click');
       })
