@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         <li v-if="canRoute(tabPath('entity-lists'))" :class="tabClass('entity-lists')"
           role="presentation">
           <router-link :to="tabPath('entity-lists')">
-            {{ $t('resource.entities') }}
+            {{ $t('resource.entityLists') }}
             <span v-if="project.dataExists" class="badge">
               {{ $n(project.datasets, 'default') }}
             </span>
