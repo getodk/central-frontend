@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
               <strong>{{ $t('dontConvert.label') }}</strong>
             </label>
             <p id="dataset-auto-convert-false" class="help-block">
-              {{ $tcn('dontConvert.description', pendingSubmissions) }}
+              {{ $t('dontConvert.description', pendingSubmissions) }}
             </p>
           </div>
           <div class="radio">
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
               <strong>{{ $t('convert.label') }}</strong>
             </label>
             <p id="dataset-auto-convert-true" class="help-block">
-              {{ $tcn('convert.description', pendingSubmissions) }}
+              {{ $t('convert.description', pendingSubmissions) }}
             </p>
           </div>
         </form>
@@ -91,17 +91,17 @@ const convert = ref(null);
     "explanation": {
       "userAction": "You are setting Entity creation to occur when Submissions are first received by Central.",
       "implication": {
-        "full": "Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that has neither been marked Approved nor Rejected. | Once this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected.",
-        "records": "{count} record | {count} records"
+        "full": "You currently have {records} not marked Approved nor Rejected.",
+        "records": "{count} pending record | {count} pending records"
       }
     },
     "dontConvert": {
       "label": "I understand and this is not a problem for me.",
-      "description": "Change the setting and do nothing with the pending Submission. | Change the setting and do nothing with the pending Submissions."
+      "description": "Change the setting and do nothing with the pending Submission."
     },
     "convert": {
-      "label": "Convert all pending Submissions to Entities now.",
-      "description": "Change the setting and create Entity out of {count} Submission not yet Approved or Rejected. The Review States will not be affected. | Change the setting and create Entities out of all {count} Submissions not yet Approved or Rejected. The Review States will not be affected."
+      "label": "Convert all pending Submissions that create Entities.",
+      "description": "Change the setting and create Entities from any Submissions that indicate Entity creation and have not been Approved or Rejected."
     }
   }
 }
