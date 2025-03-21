@@ -17,7 +17,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type { FormInstanceEditMode, FormInstanceRestoreMode } from '@getodk/xforms-engine';
-import { assert, describe, expect, it } from 'vitest';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { getNodeForReference } from '../src/client/traversal.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
@@ -210,6 +210,131 @@ describe('Instance edit semantics', () => {
 					sourceScenario,
 					metaNamespaceURI: caseOptions.metaNamespaceURI,
 				});
+			});
+		});
+	});
+
+	describe('chained instance references', () => {
+		describe.each<SimpleEditCase>([
+			simpleEditCase({ metaPrefix: OPENROSA_XFORMS_PREFIX }),
+			simpleEditCase({ metaPrefix: null }),
+		])('metadata namespace prefix: $metaPrefix', (caseOptions) => {
+			const { metaNamespaceURI } = caseOptions;
+
+			interface ChainedEditScenarios {
+				readonly source: Scenario;
+				readonly edit1: Scenario;
+				readonly edit2: Scenario;
+			}
+
+			let scenarios: ChainedEditScenarios;
+
+			beforeEach(async () => {
+				const source = await simpleEditScenario(caseOptions);
+				const edit1 = await source.proposed_editCurrentInstanceState();
+				const edit2 = await edit1.proposed_editCurrentInstanceState();
+
+				scenarios = {
+					source,
+					edit1,
+					edit2,
+				};
+			});
+
+			type ChainingAssertion = (source: Scenario, edited: Scenario) => void;
+
+			/**
+			 * This condenses the basic assertions of both edit-specific semantics:
+			 *
+			 * - before `instanceID` -> after `deprecatedID`
+			 * - recomputed `preload="uid"`  -> after `instanceID`
+			 *
+			 * Note: assertion at depth 2 in a chain of edits effectively exercises
+			 * overwrite of the previous edit's `deprecatedID` value, rather than
+			 * naively appending multiple `deprecatedID` elements.
+			 */
+			const chainingConditions: readonly ChainingAssertion[] = [
+				(source, edited) => {
+					expect(edited).toHaveDeprecatedIDFromSource({
+						metaNamespaceURI,
+						sourceScenario: source,
+					});
+				},
+
+				(source, edited) => {
+					expect(edited).toHaveEditedPreloadInstanceID({
+						metaNamespaceURI,
+						sourceScenario: source,
+					});
+				},
+			];
+
+			const assertChained = (source: Scenario, edited: Scenario) => {
+				for (const assertCondition of chainingConditions) {
+					assertCondition(source, edited);
+				}
+			};
+
+			/**
+			 * Tests that the chaining exercised by {@link assertChained} does not
+			 * apply to instances {@link a} and {@link b}, in either ordering, by
+			 * asserting that at least one of the chaining conditions fails.
+			 */
+			const assertNotChained = (a: Scenario, b: Scenario) => {
+				const orderings = [
+					[a, b],
+					[b, a],
+				] as const;
+
+				let assertionFailure: unknown = null;
+
+				for (const ordering of orderings) {
+					const [source, edited] = ordering;
+
+					for (const assertCondition of chainingConditions) {
+						if (assertionFailure != null) {
+							break;
+						}
+
+						try {
+							assertCondition(source, edited);
+						} catch (error) {
+							assertionFailure = error;
+						}
+					}
+				}
+
+				expect(assertionFailure).toBeInstanceOf(Error);
+			};
+
+			// Typical pattern: chained sequential edits form a linked list
+			it('creates a chain of edited deprecatedID -> source instanceID references over subsequent edits', () => {
+				const { source, edit1, edit2 } = scenarios;
+
+				// Prerequisite
+				assertChained(source, edit1);
+
+				// Sanity/meaningfulness of test: edit2 is not chained from source
+				assertNotChained(source, edit2);
+
+				// Assert: edit2 is chained from edit1
+				assertChained(edit1, edit2);
+			});
+
+			// Spec design/intent: chained branched edits form a tree
+			it('creates a tree of edited deprecatedID -> source instanceID references over subsequent edits of a common ancestor instance', async () => {
+				const { source, edit1: branch1, edit2: leaf1 } = scenarios;
+
+				const branch2 = await source.proposed_editCurrentInstanceState();
+				const leaf2 = await branch2.proposed_editCurrentInstanceState();
+
+				assertChained(source, branch1);
+				assertChained(source, branch2);
+				assertChained(branch1, leaf1);
+				assertChained(branch2, leaf2);
+
+				assertNotChained(branch1, leaf2);
+				assertNotChained(branch2, leaf1);
 			});
 		});
 	});
