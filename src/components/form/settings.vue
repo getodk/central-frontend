@@ -40,18 +40,18 @@ except according to the terms contained in the LICENSE file.
                 <strong>{{ form.nameOrId }}</strong>
               </template>
             </i18n-t>
-            <form id="dataset-settings-form">
+            <form id="web-form-settings-form">
               <div class="radio">
                 <label>
                   <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
-                    aria-describedby="dataset-setting-on-receipt" :disabled="form.awaitingResponse" @change="showConfirmation()">
+                    @change="confirmationModal.show({ webFormsEnabled: false })">
                   {{ $t('webFormsSetting.enketoDefault') }}
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
-                    aria-describedby="dataset-setting-on-approval" :disabled="form.awaitingResponse" @change="showConfirmation()">
+                    @change="confirmationModal.show({ webFormsEnabled: true })">
                   ODK Web Forms
                 </label>
               </div>
@@ -77,44 +77,20 @@ except according to the terms contained in the LICENSE file.
     </div>
     <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
-    <!-- TODO: for ODK Web Forms, we need to show modal with an image. Reuse "what's new" modal,
-          once it is done in getodk/central#801 -->
-    <confirmation v-bind="confirm" @hide="hideAndReset" @success="setWebformsEnabled">
-      <template v-if="webformsEnabled" #body>
-        <p>
-          {{ $t('webFormsSetting.webformsConfirmation.intro') }}
-        </p>
-        <i18n-t tag="p" keypath="webFormsSetting.webformsConfirmation.description.full">
-          <template #seeSupportedFeatures>
-            <a href="https://github.com/getodk/web-forms?tab=readme-ov-file#feature-matrix" target="_blank">{{ $t('webFormsSetting.webformsConfirmation.description.seeSupportedFeatures') }}</a>
-          </template>
-          <template #previewYourForm>
-            <router-link :to="previewPath" target="_blank">
-              {{ $t('webFormsSetting.webformsConfirmation.description.previewYourForm') }}
-            </router-link>
-          </template>
-        </i18n-t>
-      </template>
-      <template v-else #body>
-        <p>
-          {{ $t('webFormsSetting.enketoConfirmation.description') }}
-        </p>
-      </template>
-    </confirmation>
+    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="confirmationModal.hide()"/>
   </div>
 </template>
 
 <script setup>
-import { inject, computed, ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
-import Confirmation from '../confirmation.vue';
+import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
-import { apiPaths } from '../../util/request';
 
 defineOptions({
   name: 'FormSettings'
@@ -125,9 +101,10 @@ const alert = inject('alert');
 const { t } = useI18n();
 const router = useRouter();
 const { form } = useRequestData();
-const { projectPath, formPath } = useRoutes();
+const { projectPath } = useRoutes();
 
 const deleteModal = modalData();
+const confirmationModal = modalData();
 
 const afterDelete = () => {
   const message = t('alert.delete', { name: form.nameOrId });
@@ -140,55 +117,9 @@ watch(() => form.dataExists, () => {
   webformsEnabled.value = form.webformsEnabled;
 });
 
-const previewPath = computed(() => formPath(
-  form.projectId,
-  form.xmlFormId,
-  'preview'
-));
-
-const confirmModalState = ref(false);
-
-const confirm = computed(() => {
-  const result = {
-    state: confirmModalState.value,
-    noText: t('action.cancel'),
-    awaitingResponse: form.awaitingResponse
-  };
-  if (webformsEnabled.value) {
-    result.title = 'ODK Web Forms';
-    result.yesText = t('webFormsSetting.webformsConfirmation.useOdkWebForms');
-  } else {
-    result.title = 'Enketo';
-    result.yesText = t('webFormsSetting.enketoConfirmation.useEnketo');
-  }
-  return result;
-});
-
-const showConfirmation = () => {
-  confirmModalState.value = true;
-};
-
 const hideAndReset = () => {
   webformsEnabled.value = form.webformsEnabled;
-  confirmModalState.value = false;
-};
-
-const setWebformsEnabled = () => {
-  form.request({
-    method: 'PATCH',
-    url: apiPaths.form(form.projectId, form.xmlFormId),
-    data: { webformsEnabled: webformsEnabled.value },
-    patch: ({ data }) => {
-      form.updatedAt = data.updatedAt;
-      form.webformsEnabled = data.webformsEnabled;
-    }
-  })
-    .catch(() => {
-      webformsEnabled.value = form.webformsEnabled;
-    })
-    .finally(() => {
-      confirmModalState.value = false;
-    });
+  confirmationModal.hide();
 };
 </script>
 
@@ -247,25 +178,9 @@ const setWebformsEnabled = () => {
       // Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms
       "webForms": "Web Forms",
       // Description of a section. {formName} is replaced with the name of the Form
-      "description": "Fill out, preview and edit your “{formName}“ Form using",
+      "description": "Fill out, preview and edit your “{formName}” Form using",
       // The word "Enketo" should not be translated
-      "enketoDefault": "Enketo (default)",
-      "webformsConfirmation": {
-        // The words "ODK Web Forms" should not be translated
-        "useOdkWebForms": "Use ODK Web Forms",
-        "intro": "We’re building a new web-forms experience designed to be fast and user-friendly!",
-        "description": {
-          "full": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
-          "seeSupportedFeatures": "see supported features",
-          "previewYourForm": "preview your form"
-        }
-      },
-      "enketoConfirmation": {
-        // The words "Enketo" and "ODK Web Forms" should not be translated
-        "description": "Are you sure you want to switch from ODK Web Forms to Enketo?",
-        // The word "Enketo" should not be translated
-        "useEnketo": "Use Enketo"
-      }
+      "enketoDefault": "Enketo (default)"
     }
   }
 }

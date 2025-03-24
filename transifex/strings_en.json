@@ -3317,45 +3317,12 @@
           "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
         },
         "description": {
-          "string": "Fill out, preview and edit your “{formName}“ Form using",
+          "string": "Fill out, preview and edit your “{formName}” Form using",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDefault": {
           "string": "Enketo (default)",
           "developer_comment": "The word \"Enketo\" should not be translated"
-        },
-        "webformsConfirmation": {
-          "useOdkWebForms": {
-            "string": "Use ODK Web Forms",
-            "developer_comment": "The words \"ODK Web Forms\" should not be translated"
-          },
-          "intro": {
-            "string": "We’re building a new web-forms experience designed to be fast and user-friendly!"
-          },
-          "description": {
-            "full": {
-              "string": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
-              "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
-            },
-            "seeSupportedFeatures": {
-              "string": "see supported features",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-            },
-            "previewYourForm": {
-              "string": "preview your form",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-            }
-          }
-        },
-        "enketoConfirmation": {
-          "description": {
-            "string": "Are you sure you want to switch from ODK Web Forms to Enketo?",
-            "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
-          },
-          "useEnketo": {
-            "string": "Use Enketo",
-            "developer_comment": "The word \"Enketo\" should not be translated"
-          }
         }
       }
     },
@@ -3495,6 +3462,41 @@
       "title": {
         "string": "View XML",
         "developer_comment": "This is the title at the top of a pop-up."
+      }
+    },
+    "FormWebFormsSettingsConfirmation": {
+      "webformsConfirmation": {
+        "useOdkWebForms": {
+          "string": "Use ODK Web Forms",
+          "developer_comment": "The words \"ODK Web Forms\" should not be translated"
+        },
+        "intro": {
+          "string": "We’re building a new web-forms experience designed to be fast and user-friendly!"
+        },
+        "description": {
+          "full": {
+            "string": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
+          },
+          "seeSupportedFeatures": {
+            "string": "see supported features",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          },
+          "previewYourForm": {
+            "string": "preview your form",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          }
+        }
+      },
+      "enketoConfirmation": {
+        "description": {
+          "string": "Are you sure you want to switch from ODK Web Forms to Enketo?",
+          "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
+        },
+        "useEnketo": {
+          "string": "Use Enketo",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
       }
     },
     "Home": {
