@@ -321,7 +321,8 @@
     "session": "Session",
     "submission": "Submission",
     "submissions": "Submissions",
-    "projectRoles": "Project Roles"
+    "projectRoles": "Project Roles",
+    "formPreview": "Form Preview"
   },
   "alert": {
     "passwordTooShort": "Please input a password at least 10 characters long.",

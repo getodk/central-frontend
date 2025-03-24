@@ -88,14 +88,15 @@ export default memoizeForContainer(({ router, requestData }) => {
     ? publishedFormPath(form.projectId, form.xmlFormId)
     : formPath(form.projectId, form.xmlFormId, 'draft'));
 
-  const submissionPath = (projectId, xmlFormId, instanceId) => {
+  const submissionPath = (projectId, xmlFormId, instanceId, suffix) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);
-    return `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    let result = `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    if (suffix) {
+      result += `/${suffix}`;
+    }
+    return result;
   };
-
-  const editSubmissionPath = (projectId, xmlFormId, instanceId) =>
-    submissionPath(projectId, xmlFormId, `${instanceId}/edit`);
 
   const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
     if (datasetName == null) {
@@ -116,7 +117,6 @@ export default memoizeForContainer(({ router, requestData }) => {
     projectPath,
     formPath, publishedFormPath, primaryFormPath,
     submissionPath,
-    editSubmissionPath,
     datasetPath,
     entityPath,
     userPath,

@@ -123,8 +123,8 @@ export default {
   },
   setup() {
     const { form } = useRequestData();
-    const { submissionPath, editSubmissionPath } = useRoutes();
-    return { form, submissionPath, editSubmissionPath };
+    const { submissionPath } = useRoutes();
+    return { form, submissionPath };
   },
   computed: {
     missingAttachment() {
@@ -133,8 +133,8 @@ export default {
         __system.attachmentsPresent !== __system.attachmentsExpected;
     },
     editPath() {
-      if (this.form.dataExits && this.form.webFormsEnabled) {
-        return this.editSubmissionPath(this.projectId, this.xmlFormId, this.submission.__id);
+      if (this.form.webformsEnabled) {
+        return this.submissionPath(this.projectId, this.xmlFormId, this.submission.__id, 'edit');
       }
       return apiPaths.editSubmission(
         this.projectId,

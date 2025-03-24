@@ -96,18 +96,12 @@ export default {
 
 $border-height: 3px;
 
-:root {
-  --navbar-natural-height: 30px;
-  --border-height: 3px;
-  --navbar-height: calc(var(--navbar-natural-height) + var(--border-height));  // the way bootstrap is set up, the border eats the body.
-}
-
 .navbar-default {
   background-color: $color-accent-primary;
   border: none;
   border-top: $border-height solid $color-accent-secondary;
   box-shadow: 0 $border-height 0 #dedede;
-  height: var(--navbar-height);
+  height: 30px + $border-height; // the way bootstrap is set up, the border eats the body.
   margin-bottom: 0;
   min-height: auto;
 
