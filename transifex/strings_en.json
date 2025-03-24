@@ -3255,20 +3255,6 @@
         }
       }
     },
-    "FormPreview": {
-      "webFormPreview": {
-        "submissionModal": {
-          "title": {
-            "string": "ODK Web Forms Preview",
-            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          },
-          "body": {
-            "string": "You have completed the Form using an early version of the new ODK Web Forms. The Submission was not sent: currently, you can only view your Forms in ODK Web Forms.",
-            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          }
-        }
-      }
-    },
     "FormRestore": {
       "title": {
         "string": "Undelete Form",
