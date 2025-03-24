@@ -43,6 +43,16 @@ describe('FormHead', () => {
       links[1].path.should.equal('/projects/1/forms/f');
     });
 
+    it('links to the draft form in the breadcrumb if unpublished', async () => {
+      testData.extendedForms.createPast(1, { name: 'My Form', draft: true });
+      const component = await load('/projects/1/forms/f/draft');
+      const { links } = component.getComponent(Breadcrumbs).props();
+      links.length.should.equal(2);
+      links[0].path.should.equal('/projects/1');
+      links[1].text.should.equal('My Form');
+      links[1].path.should.equal('');
+    });
+
     it("shows the form's name", async () => {
       testData.extendedForms.createPast(1, { name: 'My Form' });
       const app = await load('/projects/1/forms/f/settings');
