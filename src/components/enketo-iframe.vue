@@ -11,12 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <iframe id="enketo-iframe" ref="enketoIframe" title="Enketo" :src="enketoSrc" @load="redirect"></iframe>
+  <not-found v-if="invalidProps"/>
+  <iframe v-else id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, watch, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { setDocumentTitle } from '../util/reactivity';
+import NotFound from './not-found.vue';
+import useEventListener from '../composables/event-listener';
 
 defineOptions({
   name: 'EnketoIframe'
@@ -35,39 +40,34 @@ const props = defineProps({
 
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
+
+const invalidProps = computed(() => {
+  const validActionTypes = ['offline', 'edit', 'single', 'preview', ''];
+  if (!props.enketoId) return true;
+  if (!validActionTypes.includes(props.actionType)) return true;
+  return false;
+});
 
 const redirectUrl = computed(() => route.query.return_url);
 
 const enketoSrc = computed(() => {
-  const prefix = '/enketo-passthrough';
+  let prefix = '/enketo-passthrough';
   const { return_url: _, ...query } = route.query;
 
   const queryParams = new URLSearchParams({ ...query, parentWindowOrigin: window.location.origin });
-  let enketoPath;
-  switch (props.actionType) {
-    case 'preview':
-      enketoPath = `/preview/${props.enketoId}`;
-      break;
-    case 'edit': {
-      enketoPath = `/edit/${props.enketoId}`;
-      break;
-    }
-    case 'offline': {
-      enketoPath = `/x/${props.enketoId}`;
-      break;
-    }
-    case 'single': {
-      enketoPath = `/single/${props.enketoId}`;
-      break;
-    }
-    case '': {
-      enketoPath = `/${props.enketoId}`;
-      break;
-    }
-    default:
-      throw new Error(`Unrecognized Enketo action type: "${props.actionType}"`);
+  if (props.actionType === 'offline') {
+    prefix += '/x';
+  } else if (props.actionType) {
+    prefix += `/${props.actionType}`;
   }
-  return `${prefix}${enketoPath}?${queryParams.toString()}`;
+  return `${prefix}/${props.enketoId}?${queryParams.toString()}`;
+});
+
+watchEffect(() => {
+  if (invalidProps.value) {
+    setDocumentTitle(() => [t('title.pageNotFound')]);
+  }
 });
 
 function handleIframeMessage(event) {
@@ -80,7 +80,7 @@ function handleIframeMessage(event) {
     router.push((new URL(redirectUrl.value)).pathname);
   }
 }
-window.addEventListener('message', handleIframeMessage, false);
+useEventListener(window, 'message', handleIframeMessage, false);
 </script>
 
 <style lang="scss">
