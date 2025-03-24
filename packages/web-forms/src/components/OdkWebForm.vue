@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { initializeFormState } from '@/lib/init/initializeFormState.ts';
+import type { EditInstanceOptions } from '@/lib/init/loadFormState';
+import { loadFormState } from '@/lib/init/loadFormState';
 import type {
 	ChunkedInstancePayload,
 	FetchFormAttachment,
@@ -6,29 +9,33 @@ import type {
 	MonolithicInstancePayload,
 	RootNode,
 } from '@getodk/xforms-engine';
-import { loadForm } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import PrimeMessage from 'primevue/message';
 import type { ComponentPublicInstance } from 'vue';
-import { computed, getCurrentInstance, provide, reactive, ref, watchEffect } from 'vue';
-import { FormInitializationError } from '../lib/error/FormInitializationError.ts';
+import { computed, getCurrentInstance, provide, ref, watchEffect } from 'vue';
 import FormLoadFailureDialog from './Form/FormLoadFailureDialog.vue';
 import FormHeader from './FormHeader.vue';
 import QuestionList from './QuestionList.vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 
-interface OdkWebFormsProps {
-	formXml: string;
-	fetchFormAttachment: FetchFormAttachment;
-	missingResourceBehavior?: MissingResourceBehavior;
+export interface OdkWebFormsProps {
+	readonly formXml: string;
+	readonly fetchFormAttachment: FetchFormAttachment;
+	readonly missingResourceBehavior?: MissingResourceBehavior;
 
 	/**
 	 * Note: this parameter must be set when subscribing to the
 	 * {@link OdkWebFormEmits.submitChunked | submitChunked} event.
 	 */
-	submissionMaxSize?: number;
+	readonly submissionMaxSize?: number;
+
+	/**
+	 * If provided by a host application, referenced instance and attachment
+	 * resources will be resolved and loaded for editing.
+	 */
+	readonly editInstance?: EditInstanceOptions;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -50,7 +57,7 @@ type OdkWebFormEmits = {
  * {@link computed} function body (or any function body), but produces the
  * expected value assigned to a top level value as it is here.
  */
-const instance = getCurrentInstance();
+const componentInstance = getCurrentInstance();
 
 type OdkWebFormEmitsEventType = keyof OdkWebFormEmits;
 
@@ -69,11 +76,11 @@ type EventKey = `on${Capitalize<OdkWebFormEmitsEventType>}`;
 
 /**
  * @see {@link https://mokkapps.de/vue-tips/check-if-component-has-event-listener-attached}
- * @see {@link instance}
+ * @see {@link componentInstance}
  * @see {@link EventKey}
  */
 const isEmitSubscribed = (eventKey: EventKey): boolean => {
-	return eventKey in (instance?.vnode.props ?? {});
+	return eventKey in (componentInstance?.vnode.props ?? {});
 };
 
 const emitSubmit = async (root: RootNode) => {
@@ -105,39 +112,23 @@ const emitSubmitChunked = async (root: RootNode) => {
 
 const emit = defineEmits<OdkWebFormEmits>();
 
-const odkForm = ref<RootNode>();
+const state = initializeFormState();
 const submitPressed = ref(false);
-const initializeFormError = ref<FormInitializationError | null>();
 
 const init = async () => {
-	const { formXml, fetchFormAttachment, missingResourceBehavior } = props;
-
-	const formResult = await loadForm(formXml, {
-		fetchFormAttachment,
-		missingResourceBehavior,
+	state.value = await loadFormState(props.formXml, {
+		form: {
+			fetchFormAttachment: props.fetchFormAttachment,
+			missingResourceBehavior: props.missingResourceBehavior,
+		},
+		editInstance: props.editInstance ?? null,
 	});
-
-	if (formResult.status === 'failure') {
-		initializeFormError.value = FormInitializationError.fromError(formResult.error);
-
-		return;
-	}
-
-	try {
-		const { root } = formResult.createInstance({ stateFactory: reactive });
-
-		odkForm.value = root;
-	} catch (error) {
-		initializeFormError.value = FormInitializationError.from(error);
-	}
 };
 
 void init();
 
-const handleSubmit = () => {
-	const root = odkForm.value;
-
-	if (root?.validationState.violations?.length === 0) {
+const handleSubmit = (root: RootNode) => {
+	if (root.validationState.violations.length === 0) {
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmit(root);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -153,7 +144,7 @@ const validationErrorMessagePopover = ref<ComponentPublicInstance | null>(null);
 provide('submitPressed', submitPressed);
 
 const validationErrorMessage = computed(() => {
-	const violationLength = odkForm.value!.validationState.violations.length;
+	const violationLength = state.value.root?.validationState.violations.length ?? 0;
 
 	// TODO: translations
 	if (violationLength === 0) return '';
@@ -180,21 +171,21 @@ watchEffect(() => {
 	<div
 		:class="{
 			'form-initialization-status': true,
-			loading: odkForm == null && initializeFormError == null,
-			error: initializeFormError != null,
-			ready: odkForm != null,
+			loading: state.status === 'FORM_STATE_LOADING',
+			error: state.status === 'FORM_STATE_FAILURE',
+			ready: state.status === 'FORM_STATE_SUCCESS',
 		}"
 	/>
 
-	<template v-if="initializeFormError != null">
+	<template v-if="state.status === 'FORM_STATE_FAILURE'">
 		<FormLoadFailureDialog
 			severity="error"
-			:error="initializeFormError"
+			:error="state.error"
 		/>
 	</template>
 
 	<div
-		v-else-if="odkForm"
+		v-else-if="state.status === 'FORM_STATE_SUCCESS'"
 		class="odk-form"
 		:class="{ 'submit-pressed': submitPressed }"
 	>
@@ -204,21 +195,20 @@ watchEffect(() => {
 				{{ validationErrorMessage }}
 			</PrimeMessage>
 
-			<FormHeader :form="odkForm" />
+			<FormHeader :form="state.root" />
 
 			<Card class="questions-card">
 				<template #content>
 					<div class="form-questions">
 						<div class="flex flex-column gap-2">
-							<QuestionList :nodes="odkForm.currentState.children" />
+							<QuestionList :nodes="state.root.currentState.children" />
 						</div>
 					</div>
 				</template>
 			</Card>
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<!-- maybe current state is in odkForm.state.something -->
-				<Button label="Send" rounded @click="handleSubmit()" />
+				<Button label="Send" rounded @click="handleSubmit(state.root)" />
 			</div>
 		</div>
 

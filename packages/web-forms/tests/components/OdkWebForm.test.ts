@@ -1,4 +1,6 @@
+import type { OdkWebFormsProps } from '@/components/OdkWebForm.vue';
 import OdkWebForm from '@/components/OdkWebForm.vue';
+import type { ResolvableInstanceAttachmentsMap } from '@getodk/xforms-engine';
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -9,13 +11,18 @@ import {
 	type ElementMethodName,
 } from '../helpers';
 
-const mountComponent = (formXML: string) => {
+interface MountComponentOptions {
+	readonly overrideProps?: Partial<OdkWebFormsProps>;
+}
+
+const mountComponent = (formXML: string, options?: MountComponentOptions) => {
 	const component = mount(OdkWebForm, {
 		props: {
 			formXml: formXML,
 			fetchFormAttachment: () => {
 				throw new Error('Not exercised here');
 			},
+			...options?.overrideProps,
 		},
 		global: globalMountOptions,
 		attachTo: document.body,
@@ -149,6 +156,133 @@ describe('OdkWebForm', () => {
 			const message = formLoadFailureDialog.get('.message');
 
 			expect(message.text()).toMatch(/\bnope\b/);
+		});
+	});
+
+	describe('editing', () => {
+		/**
+		 * @todo It would be nice to use the same XForms fixture DSL we use in
+		 * other projects, but for reasons having to do with Vue/tooling, it
+		 * cannot presently be imported in this package's tests.
+		 *
+		 * It **can import at runtime**, and fixtures built with it do work! But
+		 * doing so causes a TypeScript error, because the module's directory path
+		 * is excluded in `tsconfig.vitest.json`. That exclusion prevents totally
+		 * unrelated errors in `@getodk/common`. Because Vue is special. This is
+		 * all solvable... just, not now.
+		 */
+		const editBasicForm = /* xml */ `<?xml version="1.0"?>
+		<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+			xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms"
+			xmlns:orx="http://openrosa.org/xforms">
+			<h:head>
+				<h:title>Edit (basic)</h:title>
+				<model>
+					<instance>
+						<data id="edit-basic">
+							<a />
+						</data>
+					</instance>
+					<bind nodeset="/data/a" type="string" />
+				</model>
+			</h:head>
+			<h:body>
+				<input ref="/data/a" />
+			</h:body>
+		</h:html>`;
+
+		it('loads edited instance state', async () => {
+			const previouslySubmittedValue = 'submitted previously';
+
+			/** @see {@link editBasicForm} */
+			const instanceXML = /* xml */ `<data id="edit-basic">
+				<a>${previouslySubmittedValue}</a>
+			</data>`;
+
+			const component = mountComponent(editBasicForm, {
+				overrideProps: {
+					editInstance: {
+						resolveInstance: () => instanceXML,
+						attachmentFileNames: [],
+						resolveAttachment: () => {
+							throw new Error("This form has no attachments, and we can't edit them yet anyway!");
+						},
+					},
+				},
+			});
+
+			await flushPromises();
+
+			const textInputElement = component.get<HTMLInputElement>('input.p-inputtext').element;
+
+			expect(textInputElement.value).toBe(previouslySubmittedValue);
+		});
+
+		it.fails('loads instance attachments for editing', async () => {
+			/** @see {@link editBasicForm} */
+			const editAttachmentsForm = /* xml */ `<?xml version="1.0"?>
+			<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+				xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms"
+				xmlns:orx="http://openrosa.org/xforms">
+				<h:head>
+					<h:title>Edit attachments</h:title>
+					<model>
+						<instance>
+							<data id="edit-attachments">
+								<a />
+							</data>
+						</instance>
+						<bind nodeset="/data/a" type="binary" />
+					</model>
+				</h:head>
+				<h:body>
+					<upload ref="/data/a" mediatype="image/" />
+				</h:body>
+			</h:html>`;
+
+			/** @see {@link https://stackoverflow.com/a/13139830} */
+			const imageURL =
+				'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+			const imageFileName = 'smol.gif';
+
+			const fetchImage = () => fetch(imageURL);
+			const fetchedImage = await fetchImage();
+
+			expect(fetchedImage.ok).toBe(true);
+
+			const attachments: ResolvableInstanceAttachmentsMap = new Map([[imageFileName, fetchImage]]);
+
+			/** @see {@link editBasicForm} */
+			const instanceXML = /* xml */ `<data id="edit-attachments">
+				<a>${imageFileName}</a>
+			</data>`;
+
+			const component = mountComponent(editAttachmentsForm, {
+				overrideProps: {
+					editInstance: {
+						resolveInstance: () => instanceXML,
+						attachmentFileNames: [imageFileName],
+						resolveAttachment: async (fileName: string) => {
+							const resolve = attachments.get(fileName);
+
+							if (resolve == null) {
+								return new Response(null, { status: 404 });
+							}
+
+							return resolve();
+						},
+					},
+				},
+			});
+
+			await flushPromises();
+
+			// Temporary assertion: we know that providing any instance attachments
+			// will produce an error until support for `<upload>` is implemented.
+			expect(component.get('.form-load-failure-dialog').isVisible()).toBe(false);
+
+			// TODO: actual test logic beyond this point will depend on implementation
+			// of `<upload>` controls.
 		});
 	});
 });
