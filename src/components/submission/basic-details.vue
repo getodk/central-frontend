@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-section id="submission-basic-details">
-    <template #heading><span>{{ $t('submissionDetails') }}</span></template>
+    <template #heading><span><span class="icon-file-o"></span>{{ $t('submissionDetails') }}</span></template>
     <template #body>
       <loading :state="initiallyLoading"/>
       <dl v-if="dataExists">
@@ -113,6 +113,14 @@ export default {
 @import '../../assets/scss/mixins';
 
 #submission-basic-details {
+  .icon-file-o {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-right: $margin-right-icon;
+    background-color: rgba($color-accent-primary, 0.1);
+  }
+
   margin-bottom: 35px;
 
   dd { @include text-overflow-ellipsis; }

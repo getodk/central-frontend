@@ -202,6 +202,12 @@ export default {
 };
 </script>
 
+<style lang="scss">
+  .page-section-heading {
+    font-size: 24px;
+  }
+</style>
+
 <i18n lang="json5">
 {
   "en": {
