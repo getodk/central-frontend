@@ -1654,12 +1654,12 @@
         },
         "implication": {
           "full": {
-            "string": "You currently have {records} not marked Approved nor Rejected.",
+            "string": "{count, plural, one {You currently have {records} not marked Approved nor Rejected.} other {You currently have {records} not marked Approved nor Rejected.}}",
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
             "string": "{count, plural, one {{count} pending record} other {{count} pending records}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text:\n\nYou currently have {records} not marked Approved nor Rejected."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
       },
@@ -1668,7 +1668,7 @@
           "string": "I understand and this is not a problem for me."
         },
         "description": {
-          "string": "Change the setting and do nothing with the pending Submission."
+          "string": "Change the setting and do nothing with pending Submissions."
         }
       },
       "convert": {

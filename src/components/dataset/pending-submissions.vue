@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
               <strong>{{ $t('dontConvert.label') }}</strong>
             </label>
             <p id="dataset-auto-convert-false" class="help-block">
-              {{ $t('dontConvert.description', pendingSubmissions) }}
+              {{ $t('dontConvert.description') }}
             </p>
           </div>
           <div class="radio">
@@ -40,7 +40,7 @@ except according to the terms contained in the LICENSE file.
               <strong>{{ $t('convert.label') }}</strong>
             </label>
             <p id="dataset-auto-convert-true" class="help-block">
-              {{ $t('convert.description', pendingSubmissions) }}
+              {{ $t('convert.description') }}
             </p>
           </div>
         </form>
@@ -91,13 +91,13 @@ const convert = ref(null);
     "explanation": {
       "userAction": "You are setting Entity creation to occur when Submissions are first received by Central.",
       "implication": {
-        "full": "You currently have {records} not marked Approved nor Rejected.",
+        "full": "You currently have {records} not marked Approved nor Rejected. | You currently have {records} not marked Approved nor Rejected.",
         "records": "{count} pending record | {count} pending records"
       }
     },
     "dontConvert": {
       "label": "I understand and this is not a problem for me.",
-      "description": "Change the setting and do nothing with the pending Submission."
+      "description": "Change the setting and do nothing with pending Submissions."
     },
     "convert": {
       "label": "Convert all pending Submissions that create Entities.",
