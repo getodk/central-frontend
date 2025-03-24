@@ -682,7 +682,7 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:path(.*)',
+    path: '/f/:path(.+)',
     component: 'FormSubmission',
     name: 'WebFormPublicLink',
     props: true,

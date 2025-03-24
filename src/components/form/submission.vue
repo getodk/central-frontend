@@ -23,7 +23,8 @@ import WebFormRenderer from '../web-form-renderer.vue';
 import EnketoIframe from '../enketo-iframe.vue';
 import Loading from '../loading.vue';
 import useForm from '../../request-data/form';
-import { apiPaths } from '../../util/request';
+import { apiPaths, queryString } from '../../util/request';
+import { noop } from '../../util/util';
 
 const route = useRoute();
 const { form } = useForm();
@@ -39,8 +40,7 @@ const props = defineProps({
   instanceId: String,
   // This will be not null when this component needs to render an Enketo form (redirected by nginx)
   // or to render web-forms for a public link. The value could be:
-  // ':enketoId', ':enketoId/new', ':enketoId/edit', ':enketoId/publiclink/single' or
-  // ':enketoId/publiclink/X'.
+  // ':enketoId', ':enketoId/new', ':enketoId/edit', ':enketoId/single' or ':enketoId/offline'.
   // see main.nginx.conf "Enketo URL redirection" section
   path: {
     type: String,
@@ -58,10 +58,7 @@ const fetchForm = () => {
   if (props.projectId && props.xmlFormId) {
     formUrl = apiPaths.form(props.projectId, props.xmlFormId);
   } else {
-    formUrl = `/v1/enketo-ids/${enketoId}/form`;
-    if (route.query.st) {
-      formUrl += `?st=${route.query.st}`;
-    }
+    formUrl = `/v1/enketo-ids/${enketoId}/form${queryString({ st: route.query.st })}`;
   }
 
   form.request({
@@ -79,7 +76,7 @@ const fetchForm = () => {
         actionType: actionType ?? ''
       };
     }
-  });
+  }).catch(noop);
 };
 
 fetchForm();
