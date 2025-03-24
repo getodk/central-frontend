@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-section id="submission-basic-details">
-    <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
+    <template #heading><span>{{ $t('submissionDetails') }}</span></template>
     <template #body>
       <loading :state="initiallyLoading"/>
       <dl v-if="dataExists">
@@ -129,6 +129,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "submissionDetails": "Submission Details",
     "formVersion": "Form version",
     "deviceId": "Device ID",
     "userAgent": "User agent",

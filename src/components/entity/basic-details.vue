@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-section id="entity-basic-details">
-    <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
+    <template #heading><span>{{ $t('entityDetails') }}</span></template>
     <template #body>
       <dl v-if="entity.dataExists">
         <div>
@@ -98,6 +98,7 @@ watchEffect(() => {
 <i18n lang="json5">
 {
   "en": {
+    "entityDetails": "Entity Details",
     // This is shown above the Submission that created the Entity.
     "creatingSubmission": "Creating Submission",
     // This is shown above the source (e.g. a CSV file) that created the entity
