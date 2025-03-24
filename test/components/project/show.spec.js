@@ -181,7 +181,7 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
         'Forms 1',
-        'Entities 1',
+        'Entity Lists 1',
         'Project Roles',
         'App Users',
         'Form Access',
@@ -206,7 +206,7 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Forms 1', 'Entities 1']);
+        text.should.eql(['Forms 1', 'Entity Lists 1']);
         li[0].should.be.visible(true);
       });
     });
@@ -234,7 +234,7 @@ describe('ProjectShow', () => {
       mockLogin();
       testData.extendedProjects.createPast(1, { datasets: 1000 });
       const app = await load('/projects/1');
-      findTab(app, 'Entities').get('.badge').text().should.equal('1,000');
+      findTab(app, 'Entity Lists').get('.badge').text().should.equal('1,000');
     });
   });
 

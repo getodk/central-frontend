@@ -110,7 +110,7 @@ describe('DatasetNew', () => {
         .complete()
         .load('/projects/1', { project: false })
         .afterResponses(app => {
-          findTab(app, 'Entities').get('.badge').text().should.equal('1');
+          findTab(app, 'Entity Lists').get('.badge').text().should.equal('1');
         }));
   });
 
