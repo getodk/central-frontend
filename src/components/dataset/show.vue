@@ -119,7 +119,7 @@ export default {
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath('entity-lists'), icon: 'icon-archive' },
+        { text: this.project.nameWithArchived, path: this.projectPath('entity-lists'), icon: 'icon-archive' },
         { text: this.datasetName, path: this.datasetPath(), icon: 'icon-database' }
       ];
     }
