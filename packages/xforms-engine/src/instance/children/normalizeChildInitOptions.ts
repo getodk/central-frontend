@@ -4,6 +4,7 @@ import {
 } from '@getodk/common/constants/xmlns.ts';
 import type { GroupDefinition } from '../../client/GroupNode.ts';
 import type { SubtreeDefinition } from '../../client/SubtreeNode.ts';
+import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -188,7 +189,9 @@ type AssertStaticLeafElement = (element: StaticElement) => asserts element is St
 
 const assertStaticLeafElement: AssertStaticLeafElement = (element) => {
 	if (!element.isLeafElement()) {
-		throw new Error();
+		throw new ErrorProductionDesignPendingError(
+			`Expected a leaf element, got a non-leaf element at nodeset: ${element.nodeset}`
+		);
 	}
 };
 
