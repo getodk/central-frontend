@@ -22,7 +22,7 @@ import {
 import { TagXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/TagXFormsElement.ts';
 import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
 import { createUniqueId } from 'solid-js';
-import { assert, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { ANSWER_OK, ANSWER_REQUIRED_BUT_EMPTY } from '../src/jr/validation/ValidateOutcome.ts';
 import { ReactiveScenario } from '../src/reactive/ReactiveScenario.ts';
@@ -912,72 +912,7 @@ describe('Form submission', () => {
 	});
 
 	describe('submission-specific metadata', () => {
-		type MetadataElementName = 'instanceID';
-
 		type MetaNamespaceURI = OPENROSA_XFORMS_NAMESPACE_URI | XFORMS_NAMESPACE_URI;
-
-		type MetadataValueAssertion = (value: string | null) => unknown;
-
-		const getMetaChildElement = (
-			parent: ParentNode | null,
-			namespaceURI: MetaNamespaceURI,
-			localName: string
-		): Element | null => {
-			if (parent == null) {
-				return null;
-			}
-
-			for (const child of parent.children) {
-				if (child.namespaceURI === namespaceURI && child.localName === localName) {
-					return child;
-				}
-			}
-
-			return null;
-		};
-
-		/**
-		 * Normally this might be implemented as a
-		 * {@link https://vitest.dev/guide/extending-matchers | custom "matcher" (assertion)}.
-		 * But it's so specific to this sub-suite that it would be silly to sprawl
-		 * it out into other parts of the codebase!
-		 */
-		const assertMetadata = (
-			scenario: Scenario,
-			metaNamespaceURI: MetaNamespaceURI,
-			name: MetadataElementName,
-			assertion: MetadataValueAssertion
-		): void => {
-			const serializedInstanceBody = scenario.proposed_serializeInstance();
-			/**
-			 * Important: we intentionally omit the default namespace when serializing instance XML. We need to restore it here to reliably traverse nodes when {@link metaNamespaceURI} is {@link XFORMS_NAMESPACE_URI}.
-			 */
-			const instanceXML = `<instance xmlns="${XFORMS_NAMESPACE_URI}">${serializedInstanceBody}</instance>`;
-
-			const parser = new DOMParser();
-			const instanceDocument = parser.parseFromString(instanceXML, 'text/xml');
-			const instanceElement = instanceDocument.documentElement;
-			const instanceRoot = instanceElement.firstElementChild;
-
-			assert(
-				instanceRoot != null,
-				`Failed to find instance root element.\n\nActual serialized XML: ${serializedInstanceBody}\n\nActual instance DOM state: ${instanceElement.outerHTML}`
-			);
-
-			const meta = getMetaChildElement(instanceRoot, metaNamespaceURI, 'meta');
-			const targetElement = getMetaChildElement(meta, metaNamespaceURI, name);
-			const value = targetElement?.textContent ?? null;
-
-			assertion(value);
-		};
-
-		const PRELOAD_UID_PATTERN =
-			/^uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
-
-		const assertPreloadUIDValue = (value: string | null) => {
-			assert(value != null, 'Expected preload uid value to be serialized');
-			expect(value, 'Expected preload uid value to match pattern').toMatch(PRELOAD_UID_PATTERN);
-		};
 
 		describe('instanceID', () => {
 			describe('preload="uid"', () => {
@@ -1010,25 +945,19 @@ describe('Form submission', () => {
 				 * @see {@link https://getodk.github.io/xforms-spec/#preload-attributes:~:text=concatenation%20of%20%E2%80%98uuid%3A%E2%80%99%20and%20uuid()}
 				 */
 				it('is populated with a concatenation of ‘uuid:’ and uuid()', () => {
-					assertMetadata(
-						scenario,
+					expect(scenario).toHaveComputedPreloadInstanceID({
 						/** @see note on `namespaces` sub-suite! */
-						XFORMS_NAMESPACE_URI,
-						'instanceID',
-						assertPreloadUIDValue
-					);
+						metaNamespaceURI: XFORMS_NAMESPACE_URI,
+					});
 				});
 
 				it('does not change after an input value is changed', () => {
 					scenario.answer('/data/inp', 'any non-default value!');
 
-					assertMetadata(
-						scenario,
+					expect(scenario).toHaveComputedPreloadInstanceID({
 						/** @see note on `namespaces` sub-suite! */
-						XFORMS_NAMESPACE_URI,
-						'instanceID',
-						assertPreloadUIDValue
-					);
+						metaNamespaceURI: XFORMS_NAMESPACE_URI,
+					});
 				});
 			});
 
@@ -1068,12 +997,9 @@ describe('Form submission', () => {
 									label('inp')))
 					));
 
-					assertMetadata(
-						scenario,
-						OPENROSA_XFORMS_NAMESPACE_URI,
-						'instanceID',
-						assertPreloadUIDValue
-					);
+					expect(scenario).toHaveComputedPreloadInstanceID({
+						metaNamespaceURI: OPENROSA_XFORMS_NAMESPACE_URI,
+					});
 				});
 
 				// This is redundant to other tests already exercising unprefixed names!
@@ -1116,7 +1042,9 @@ describe('Form submission', () => {
 										label('inp')))
 						));
 
-						assertMetadata(scenario, metaNamespaceURI, 'instanceID', assertPreloadUIDValue);
+						expect(scenario).toHaveComputedPreloadInstanceID({
+							metaNamespaceURI,
+						});
 					});
 				});
 
@@ -1141,12 +1069,9 @@ describe('Form submission', () => {
 									label('inp')))
 					));
 
-					assertMetadata(
-						scenario,
-						OPENROSA_XFORMS_NAMESPACE_URI,
-						'instanceID',
-						assertPreloadUIDValue
-					);
+					expect(scenario).toHaveComputedPreloadInstanceID({
+						metaNamespaceURI: OPENROSA_XFORMS_NAMESPACE_URI,
+					});
 				});
 			});
 		});

@@ -8,7 +8,7 @@ import type { InstanceData } from '../../client/serialization/InstanceData.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
-import { parseStaticDocumentFromXML } from '../../parse/shared/parseStaticDocumentFromXML.ts';
+import { parseInstanceXML } from '../../parse/shared/parseInstanceXML.ts';
 import type { XFormDOM } from '../../parse/XFormDOM.ts';
 import { InstanceAttachmentMap } from './InstanceAttachmentMap.ts';
 
@@ -34,7 +34,7 @@ const resolveInstanceXML = async (input: ResolvableFormInstanceInput): Promise<s
 };
 
 const parseInstanceDocument = (model: ModelDefinition, instanceXML: string): StaticDocument => {
-	const doc = parseStaticDocumentFromXML(instanceXML);
+	const doc = parseInstanceXML(model, instanceXML);
 
 	/**
 	 * Note: this is presently inferred as nullable. Its presence is _currently_
