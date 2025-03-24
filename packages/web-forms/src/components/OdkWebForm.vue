@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import type { FormStateSuccessResult } from '@/lib/init/FormState.ts';
 import { initializeFormState } from '@/lib/init/initializeFormState.ts';
 import type { EditInstanceOptions } from '@/lib/init/loadFormState';
 import { loadFormState } from '@/lib/init/loadFormState';
+import { updateSubmittedFormState } from '@/lib/init/updateSubmittedFormState.ts';
+import type {
+	HostSubmissionResultCallback,
+	OptionalAwaitableHostSubmissionResult,
+} from '@/lib/submission/HostSubmissionResultCallback.ts';
 import type {
 	ChunkedInstancePayload,
 	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
-	RootNode,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -40,10 +45,29 @@ export interface OdkWebFormsProps {
 
 const props = defineProps<OdkWebFormsProps>();
 
+const hostSubmissionResultCallbackFactory = (
+	currentState: FormStateSuccessResult
+): HostSubmissionResultCallback => {
+	const handleHostSubmissionResult = async (
+		hostResult: OptionalAwaitableHostSubmissionResult
+	): Promise<void> => {
+		const submissionResult = await hostResult;
+
+		state.value = updateSubmittedFormState(submissionResult, currentState);
+	};
+
+	return (hostResult) => {
+		void handleHostSubmissionResult(hostResult);
+	};
+};
+
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
-	submit: [submissionPayload: MonolithicInstancePayload];
-	submitChunked: [submissionPayload: ChunkedInstancePayload];
+	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
+	submitChunked: [
+		submissionPayload: ChunkedInstancePayload,
+		callback: HostSubmissionResultCallback,
+	];
 };
 
 /**
@@ -83,17 +107,18 @@ const isEmitSubscribed = (eventKey: EventKey): boolean => {
 	return eventKey in (componentInstance?.vnode.props ?? {});
 };
 
-const emitSubmit = async (root: RootNode) => {
+const emitSubmit = async (currentState: FormStateSuccessResult) => {
 	if (isEmitSubscribed('onSubmit')) {
-		const payload = await root.prepareInstancePayload({
+		const payload = await currentState.root.prepareInstancePayload({
 			payloadType: 'monolithic',
 		});
+		const callback = hostSubmissionResultCallbackFactory(currentState);
 
-		emit('submit', payload);
+		emit('submit', payload, callback);
 	}
 };
 
-const emitSubmitChunked = async (root: RootNode) => {
+const emitSubmitChunked = async (currentState: FormStateSuccessResult) => {
 	if (isEmitSubscribed('onSubmitChunked')) {
 		const maxSize = props.submissionMaxSize;
 
@@ -101,12 +126,13 @@ const emitSubmitChunked = async (root: RootNode) => {
 			throw new Error('The `submissionMaxSize` prop is required for chunked submissions');
 		}
 
-		const payload = await root.prepareInstancePayload({
+		const payload = await currentState.root.prepareInstancePayload({
 			payloadType: 'chunked',
 			maxSize,
 		});
+		const callback = hostSubmissionResultCallbackFactory(currentState);
 
-		emit('submitChunked', payload);
+		emit('submitChunked', payload, callback);
 	}
 };
 
@@ -127,12 +153,14 @@ const init = async () => {
 
 void init();
 
-const handleSubmit = (root: RootNode) => {
+const handleSubmit = (currentState: FormStateSuccessResult) => {
+	const { root } = currentState;
+
 	if (root.validationState.violations.length === 0) {
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		emitSubmit(root);
+		emitSubmit(currentState);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		emitSubmitChunked(root);
+		emitSubmitChunked(currentState);
 	} else {
 		submitPressed.value = true;
 		document.scrollingElement?.scrollTo(0, 0);
@@ -208,7 +236,7 @@ watchEffect(() => {
 			</Card>
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<Button label="Send" rounded @click="handleSubmit(state.root)" />
+				<Button label="Send" rounded @click="handleSubmit(state)" />
 			</div>
 		</div>
 

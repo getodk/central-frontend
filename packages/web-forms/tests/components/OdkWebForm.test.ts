@@ -1,6 +1,15 @@
 import type { OdkWebFormsProps } from '@/components/OdkWebForm.vue';
 import OdkWebForm from '@/components/OdkWebForm.vue';
-import type { ResolvableInstanceAttachmentsMap } from '@getodk/xforms-engine';
+import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
+import type {
+	HostSubmissionResult,
+	HostSubmissionResultCallback,
+	OptionalAwaitableHostSubmissionResult,
+} from '@/lib/submission/HostSubmissionResultCallback.ts';
+import type {
+	MonolithicInstancePayload,
+	ResolvableInstanceAttachmentsMap,
+} from '@getodk/xforms-engine';
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -13,6 +22,10 @@ import {
 
 interface MountComponentOptions {
 	readonly overrideProps?: Partial<OdkWebFormsProps>;
+	readonly onSubmit?: (
+		payload: MonolithicInstancePayload,
+		callback: HostSubmissionResultCallback
+	) => void;
 }
 
 const mountComponent = (formXML: string, options?: MountComponentOptions) => {
@@ -22,6 +35,8 @@ const mountComponent = (formXML: string, options?: MountComponentOptions) => {
 			fetchFormAttachment: () => {
 				throw new Error('Not exercised here');
 			},
+			onSubmit: options?.onSubmit,
+
 			...options?.overrideProps,
 		},
 		global: globalMountOptions,
@@ -283,6 +298,129 @@ describe('OdkWebForm', () => {
 
 			// TODO: actual test logic beyond this point will depend on implementation
 			// of `<upload>` controls.
+		});
+	});
+
+	describe('submission control flow', () => {
+		const initialInputValue = 'initial input value';
+		const firstSubmissionInputValue = 'first submission input value';
+
+		type AssignedInputValue = typeof firstSubmissionInputValue | typeof initialInputValue;
+
+		/**
+		 * @todo As noted in top-level fixture for editing
+		 */
+		const resetStateForm = /* xml */ `<?xml version="1.0"?>
+		<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+			xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms"
+			xmlns:orx="http://openrosa.org/xforms">
+			<h:head>
+				<h:title>Edit (basic)</h:title>
+				<model>
+					<instance>
+						<data id="edit-basic">
+							<a>${initialInputValue}</a>
+						</data>
+					</instance>
+					<bind nodeset="/data/a" type="string" />
+				</model>
+			</h:head>
+			<h:body>
+				<input ref="/data/a" />
+			</h:body>
+		</h:html>`;
+
+		let submittedPayload: MonolithicInstancePayload | null = null;
+		let syncResetResult: HostSubmissionResult;
+		let asyncResetResult: Promise<HostSubmissionResult>;
+
+		beforeEach(() => {
+			submittedPayload = null;
+			syncResetResult = { next: POST_SUBMIT__NEW_INSTANCE };
+			asyncResetResult = Promise.resolve(syncResetResult);
+		});
+
+		type HostSubmissionHandler = (
+			payload: MonolithicInstancePayload
+		) => OptionalAwaitableHostSubmissionResult;
+
+		const postSubmissionResetHandler = (
+			payload: MonolithicInstancePayload
+		): HostSubmissionResult => {
+			submittedPayload = payload;
+
+			return syncResetResult;
+		};
+
+		const asyncPostSubmissionResetHandler = (
+			payload: MonolithicInstancePayload
+		): Promise<HostSubmissionResult> => {
+			submittedPayload = payload;
+
+			return asyncResetResult;
+		};
+
+		const postSubmissionNoopHandler = (payload: MonolithicInstancePayload) => {
+			submittedPayload = payload;
+		};
+
+		const asyncPostSubmissionNoopHandler = (payload: MonolithicInstancePayload) => {
+			submittedPayload = payload;
+
+			return Promise.resolve(null);
+		};
+
+		interface SubmissionHandlerCase {
+			readonly description: string;
+			readonly hostSubmissonHandler: HostSubmissionHandler | null;
+			readonly expectedPostSubmissionValue: AssignedInputValue;
+		}
+
+		it.each<SubmissionHandlerCase>([
+			{
+				description: 'resets form state after submission (sync host result)',
+				hostSubmissonHandler: postSubmissionResetHandler,
+				expectedPostSubmissionValue: initialInputValue,
+			},
+			{
+				description: 'resets form state after submission (async host result)',
+				hostSubmissonHandler: asyncPostSubmissionResetHandler,
+				expectedPostSubmissionValue: initialInputValue,
+			},
+			{
+				description: 'does not reset form state by default (sync callback)',
+				hostSubmissonHandler: postSubmissionNoopHandler,
+				expectedPostSubmissionValue: firstSubmissionInputValue,
+			},
+			{
+				description: 'does not reset form state by default (async callback)',
+				hostSubmissonHandler: asyncPostSubmissionNoopHandler,
+				expectedPostSubmissionValue: firstSubmissionInputValue,
+			},
+		])('$description', async ({ hostSubmissonHandler, expectedPostSubmissionValue }) => {
+			const component = mountComponent(resetStateForm, {
+				onSubmit: (payload, callback) => {
+					callback(hostSubmissonHandler?.(payload));
+				},
+			});
+
+			await flushPromises();
+
+			let textInput = component.get<HTMLInputElement>('input.p-inputtext');
+
+			expect(textInput.element.value).toBe(initialInputValue);
+
+			await textInput.setValue(firstSubmissionInputValue);
+
+			// Click submit
+			await component.get('button[aria-label="Send"]').trigger('click');
+
+			// Check that submission callback was called
+			expect(submittedPayload).not.toBeNull();
+
+			textInput = component.get<HTMLInputElement>('input.p-inputtext');
+
+			expect(textInput.element.value).toBe(expectedPostSubmissionValue);
 		});
 	});
 });
