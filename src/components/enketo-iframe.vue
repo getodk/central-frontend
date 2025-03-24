@@ -30,10 +30,6 @@ const props = defineProps({
   actionType: {
     type: String,
     required: false
-  },
-  enketoPath: {
-    type: String,
-    required: false
   }
 });
 
@@ -52,15 +48,20 @@ const enketoSrc = computed(() => {
     case 'preview':
       enketoPath = `/preview/${props.enketoId}`;
       break;
-    case 'new':
-      enketoPath = `/${props.enketoId}`;
-      break;
-    case 'publiclink': {
-      enketoPath = `/${props.enketoPath}/${props.enketoId}`;
-      break;
-    }
     case 'edit': {
       enketoPath = `/edit/${props.enketoId}`;
+      break;
+    }
+    case 'offline': {
+      enketoPath = `/x/${props.enketoId}`;
+      break;
+    }
+    case 'single': {
+      enketoPath = `/single/${props.enketoId}`;
+      break;
+    }
+    case '': {
+      enketoPath = `/${props.enketoId}`;
       break;
     }
     default:

@@ -52,7 +52,7 @@ const component = shallowRef();
 const bindings = ref();
 
 const fetchForm = () => {
-  const [enketoId, actionType, enketoPath] = props.path.split('/');
+  const [enketoId, actionType] = props.path.split('/');
 
   let formUrl = '';
   if (props.projectId && props.xmlFormId) {
@@ -76,8 +76,7 @@ const fetchForm = () => {
       component.value = EnketoIframe;
       bindings.value = {
         enketoId,
-        actionType,
-        enketoPath
+        actionType: actionType ?? ''
       };
     }
   });
