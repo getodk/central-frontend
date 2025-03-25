@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineProps, defineOptions, ref, shallowRef, defineAsyncComponent } from 'vue';
+import { defineOptions, ref, shallowRef, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 

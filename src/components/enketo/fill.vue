@@ -53,7 +53,7 @@ export default {
       return `enketo-fill btn btn-${this.btn}`;
     },
     href() {
-      if (this.formVersion.webformsEnabled) {
+      if (this.formVersion.webformsEnabled && !this.formVersion.draftToken) {
         return this.submissionPath(this.formVersion.projectId, this.formVersion.xmlFormId, 'new');
       }
       const encodedId = encodeURIComponent(this.formVersion.enketoId);
