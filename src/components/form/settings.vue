@@ -44,14 +44,14 @@ except according to the terms contained in the LICENSE file.
               <div class="radio">
                 <label>
                   <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
-                    @change="confirmationModal.show({ webFormsEnabled: false })">
+                    @change="confirmationModal.show({ webformsEnabled: false })">
                   {{ $t('webFormsSetting.enketoDefault') }}
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
-                    @change="confirmationModal.show({ webFormsEnabled: true })">
+                    @change="confirmationModal.show({ webformsEnabled: true })">
                   ODK Web Forms
                 </label>
               </div>

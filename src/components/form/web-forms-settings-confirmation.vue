@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <confirmation v-bind="confirm" @hide="$emit('hide')" @success="setWebformsEnabled">
-    <template v-if="webFormsEnabled" #body>
+    <template v-if="webformsEnabled" #body>
       <!-- TODO: for ODK Web Forms, we need to show modal with an image. Reuse "what's new" modal,
               once it is done in getodk/central#801 -->
       <p>
@@ -58,7 +58,7 @@ defineOptions({
 
 const props = defineProps({
   state: Boolean,
-  webFormsEnabled: Boolean
+  webformsEnabled: Boolean
 });
 
 const emit = defineEmits(['hide', 'success']);
@@ -75,7 +75,7 @@ const confirm = computed(() => {
     noText: t('action.cancel'),
     awaitingResponse: form.awaitingResponse
   };
-  if (props.webFormsEnabled) {
+  if (props.webformsEnabled) {
     result.title = 'ODK Web Forms';
     result.yesText = t('webformsConfirmation.useOdkWebForms');
   } else {
@@ -89,10 +89,10 @@ const setWebformsEnabled = () => {
   form.request({
     method: 'PATCH',
     url: apiPaths.form(form.projectId, form.xmlFormId),
-    data: { webformsEnabled: props.webFormsEnabled },
+    data: { webformsEnabled: props.webformsEnabled },
     patch: ({ data }) => {
       form.updatedAt = data.updatedAt;
-      form.webformsEnabled = data.webFormsEnabled;
+      form.webformsEnabled = data.webformsEnabled;
     }
   })
     .then(() => {
