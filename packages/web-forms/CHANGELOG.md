@@ -1,5 +1,13 @@
 # @getodk/web-forms
 
+## 0.8.0
+
+### Minor Changes
+
+- eb050c7: Added an empty state with an overlay for rank questions, requiring user interaction and treating non-interaction as a missed question.
+- 3a096ab: Support resetting form state after submission
+- 3152fe7: Support for editing submissions
+
 ## 0.7.0
 
 ### Minor Changes

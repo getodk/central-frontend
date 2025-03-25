@@ -1,5 +1,24 @@
 # @getodk/xforms-engine
 
+## 0.7.0
+
+### Minor Changes
+
+- cc96814: Support for restoring serialized `InstancePayload` as instance state
+- dfccc78: **BREAKING CHANGE** Rename instance payload property `definition` to `SubmissionMeta`
+- 0005cc6: **BREAKING CHANGE** Instance payload data is always produced as a tuple. The shape for a "chunked" payload is unchanged. The shape for a "monolithic" payload is now more like a "chunked" payload, except that it is guaranteed to always have only one item.
+- 8491d8a: Decouple form definition and instance input in instance state initialization
+- bc23f85: Edited instance `instanceID` metadata is transfered to `deprecatedID`
+  - On forms defining `instanceID` to be computed by `preload="uid"`, edited instance `instanceID` metadata is recomputed after its previous value is transferred to `deprecatedID`
+- 58ebb58: Revised naming convention: "submission" to "instance" (except for concepts which truly are submission-specific)
+- 50e944d: **BREAKING CHANGE** The main engine entrypoint (formerly `initializeForm`) has been split into:
+  - `loadForm`, producing an intermediate result from which many instances of the same form can be created (with a `createInstance` method on that result)
+  - `createInstance`, a convenience wrapper composing the result from `loadForm` and its `createInstance` method to create a single instance; this entrypoint effectively restores the behavior of `initializeForm`
+    Some interfaces related to the former `initializeForm` have also been refined to reflect this change.
+- 87523b7: Partial support for editing submitted instances:
+  - Introduce `editInstance` entrypoints, intended for editing previously submitted instance state
+  - Implement resource resolution for `editInstance` entrypoints, intended for supporting I/O-bound submission edit workflows
+
 ## 0.6.0
 
 ### Minor Changes
