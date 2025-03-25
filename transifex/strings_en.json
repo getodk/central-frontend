@@ -5079,28 +5079,6 @@
       }
     },
     "WebFormRenderer": {
-      "WebformFill": {
-        "previewModal": {
-          "title": {
-            "string": "ODK Web Forms Preview",
-            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of Web Forms."
-          },
-          "body": {
-            "string": "You have completed the form preview using ODK Web Forms. The Submission was not sent.",
-            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of Web Forms."
-          }
-        },
-        "submissionModal": {
-          "title": {
-            "string": "ODK Web Forms Submission",
-            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on Web Forms."
-          },
-          "body": {
-            "string": "You have completed filling out a form using ODK Web Forms.",
-            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on Web Forms."
-          }
-        }
-      },
       "previewModal": {
         "title": {
           "string": "Data is valid"
@@ -5138,7 +5116,7 @@
           "string": "Submission error"
         },
         "body": {
-          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
+          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
         }
       }
     }

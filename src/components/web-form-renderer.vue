@@ -13,26 +13,27 @@ except according to the terms contained in the LICENSE file.
 <template>
   <loading :state="initiallyLoading"/>
   <template v-if="formVersionXml.dataExists">
-    <!-- update primaryInstance.instanceId to rerender the component -->
-    <OdkWebForm :key="primaryInstance.instanceId" :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
+    <!-- update instanceId to rerender the component -->
+    <OdkWebForm :key="instanceId" :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
   </template>
 
-  <modal v-bind="submissionModal" hideable backdrop @hide="hideSubmissionModal()">
+  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" hideable backdrop @hide="hideSubmissionModal()">
     <template #title>{{ $t(submissionModal.type + '.title') }}</template>
     <template #body>
-      <i18n-t v-if="submissionModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
-        <template #errorMessage>
-          <br><br>
-            {{ submissionModal.errorMessage }}
-          <br><br>
-        </template>
-        <template #supportEmail>
-          <a href="emailto:support@getodk.org">support@getodk.org</a>
-        </template>
-      </i18n-t>
-      <p v-else>
-        {{ $t(submissionModal.type + '.body') }}
-      </p>
+      <div class="modal-introduction">
+        <i18n-t v-if="submissionModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
+          <template #errorMessage>
+            <br><br>
+              <pre>{{ submissionModal.errorMessage }}</pre>
+          </template>
+          <template #supportEmail>
+            <a href="emailto:support@getodk.org">support@getodk.org</a>
+          </template>
+        </i18n-t>
+        <p v-else>
+          {{ $t(submissionModal.type + '.body') }}
+        </p>
+      </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="hideSubmissionModal()">
           {{ $t('action.close') }}
@@ -43,25 +44,23 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, reactive } from 'vue';
+import { computed, createApp, getCurrentInstance, ref } from 'vue';
 import { useRoute } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
-import useForm from '../request-data/form';
-import { apiPaths, isProblem } from '../util/request';
+import { apiPaths, isProblem, queryString } from '../util/request';
 import Loading from './loading.vue';
 import Modal from './modal.vue';
 import { modalData } from '../util/reactivity';
 import useRequest from '../composables/request';
 import { useRequestData } from '../request-data';
 import { noop } from '../util/util';
+import { runSequentially } from '../util/promise';
 
-const { resourceStates } = useRequestData();
-const { form, formVersionXml } = useForm();
+const { resourceStates, form, formVersionXml } = useRequestData();
 const { request } = useRequest();
 const submissionModal = modalData();
-const attachmentUploads = reactive([]);
-const primaryInstance = reactive({ instanceId: null, uploadSuccess: null, file: null });
+const instanceId = ref(null);
 const route = useRoute();
 
 defineOptions({
@@ -84,33 +83,31 @@ inst.appContext.config.globalProperties = {
   ...app._context.config.globalProperties
 };
 
-const { initiallyLoading } = resourceStates([form, formVersionXml]);
+const { initiallyLoading } = resourceStates([formVersionXml]);
 
 const isPublicLink = computed(() => !!route.query.st);
 
-const fetchData = () => {
-  let url = apiPaths.formXml(form.projectId, form.xmlFormId, !!form.draftToken);
+const withToken = (url) => {
   if (form.draftToken) {
-    url = url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
+    return url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
   }
-  if (route.query.st) {
-    url += `?st=${route.query.st}`;
-  }
+  return `${url}${queryString({ st: route.query.st })}`;
+};
+
+const fetchData = () => {
+  const url = withToken(apiPaths.formXml(form.projectId, form.xmlFormId, !!form.draftToken));
   formVersionXml.request({
     url
-  });
+  }).catch(noop);
 };
 
 fetchData();
 
-const showModal = (type) => {
-  submissionModal.state = true;
-  submissionModal.type = `${type}Modal`;
-};
-
 const hideSubmissionModal = () => {
+  if (submissionModal.type !== 'errorModal') {
+    instanceId.value = null;
+  }
   submissionModal.hide();
-  primaryInstance.instanceId = null;
 };
 
 /**
@@ -119,18 +116,12 @@ const hideSubmissionModal = () => {
  * Response is subset of web standard  {@link Response}.
  */
 const getAttachment = (url) => {
-  let requestUrl = apiPaths.formAttachment(
+  const requestUrl = withToken(apiPaths.formAttachment(
     form.projectId,
     form.xmlFormId,
     form.draftToken !== null,
-    url.pathname.substring(1)
-  );
-  if (form.draftToken) {
-    requestUrl = requestUrl.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
-  }
-  if (route.query.st) {
-    requestUrl += `?st=${route.query.st}`;
-  }
+    url.pathname.split('/').pop()
+  ));
   return request({
     url: requestUrl,
     alert: false
@@ -167,18 +158,12 @@ const getAttachment = (url) => {
   });
 };
 
-const postPrimaryInstance = () => {
-  let url = apiPaths.submissions(form.projectId, form.xmlFormId, form.draftToken, '');
-  if (form.draftToken) {
-    url = url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
-  }
-  if (route.query.st) {
-    url += `?st=${route.query.st}`;
-  }
+const postPrimaryInstance = (file) => {
+  const url = withToken(apiPaths.submissions(form.projectId, form.xmlFormId, !!form.draftToken, ''));
   return request({
     method: 'POST',
     url,
-    data: primaryInstance.file,
+    data: file,
     headers: {
       'content-type': 'text/xml'
     },
@@ -186,61 +171,26 @@ const postPrimaryInstance = () => {
   })
     .then(({ data }) => {
       if (isProblem(data)) {
-        primaryInstance.uploadSuccess = false;
-        submissionModal.errorMessage = data.message;
-        showModal('error');
+        submissionModal.show({ type: 'errorModal', errorMessage: data.message });
         return false;
       }
-      Object.assign(primaryInstance, { instanceId: data.instanceId, uploadSuccess: true });
+      instanceId.value = data.instanceId;
       return true;
     })
     .catch(noop);
 };
 
-const uploadAttachment = async (attachmentIndex) => {
-  const attachmentDescriptor = attachmentUploads[attachmentIndex];
-  let url = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, primaryInstance.instanceId, attachmentDescriptor.file.name);
-  if (form.draftToken) {
-    url = url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
-  }
-  if (route.query.st) {
-    url += `?st=${route.query.st}`;
-  }
-  await request({
+const uploadAttachment = async (attachment) => {
+  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !!form.draftToken, instanceId.value, attachment.file.name));
+  return request({
     method: 'POST',
     url,
-    data: attachmentDescriptor.file,
-    onUploadProgress: (progressEvent) => {
-      attachmentDescriptor.progress = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-    },
+    data: attachment.file,
+    fulfillProblem: () => true
   })
-    .then(() => {
-      attachmentDescriptor.uploadSuccess = true;
-    })
-    .catch(() => {
-      Object.assign(attachmentDescriptor, { uploadSuccess: false, progress: null });
-    });
+    .then(({ data }) => data)
+    .catch(noop);
 };
-
-const postSubmission = async () => {
-  // TODO: add logic for edit submission
-
-  if (await postPrimaryInstance()) {
-    // eslint-disable-next-line no-unused-vars
-    for (const [ix, _] of attachmentUploads.entries()) {
-      // Post each attachment in turn, and not in parallel. Parallel transfers means more time spent per transfer, which
-      // under adverse network conditions increases the probability that the transfer does not complete. And since uploads
-      // as of yet are not resumable, this would mean restarting the upload from 0 again.
-      // eslint-disable-next-line no-await-in-loop
-      await uploadAttachment(ix);
-    }
-
-    return true;
-  }
-
-  return false;
-};
-
 
 /**
  * When WebForms's submit button is clicked, it dispatches an event which is handed to
@@ -248,35 +198,32 @@ const postSubmission = async () => {
  * event payload.
  */
 const handleSubmit = async (payload) => {
-  // TODO: waiting for web-forms v0.7, current version doesn't return any payload.
-  // eslint-disable-next-line no-constant-condition
   if (props.actionType === 'preview') {
-    showModal('preview');
+    submissionModal.show({ type: 'previewModal' });
   } else {
-    // eslint-disable-next-line no-unused-vars
-    const { data, definition, status, violations } = payload;
+    const { data, status } = payload;
     if (status !== 'ready') {
       // Status is not ready when Form is not valid and in that case submit button will be disabled,
       // hence this branch should never execute.
       return;
     }
 
-    primaryInstance.file = data.instanceFile;
-    data.attachments.forEach((file, ix) => { attachmentUploads[ix] = { file, progress: null, uploadSuccess: null }; });
+    const submissionRequestResult = await postPrimaryInstance(data.instanceFile);
 
-    const result = await postSubmission();
+    if (submissionRequestResult) {
+      const attachmentRequests = data.attachments.map(a => () => uploadAttachment(a));
+      const attachmentResults = await runSequentially(attachmentRequests);
 
-    if (result) {
-      if (isPublicLink.value) {
-        showModal('thankYou');
-        formVersionXml.reset();
-      } else {
-        showModal('submission');
+      // TODO: what to do if attachments upload fail - blocked, need to define requirements / UX
+      if (attachmentResults.every(r => !isProblem(r))) {
+        if (isPublicLink.value) {
+          submissionModal.show({ type: 'thankYouModal' });
+          formVersionXml.reset(); // hides the Form
+        } else {
+          submissionModal.show({ type: 'submissionModal' });
+        }
       }
     }
-
-    // TODO: redirect or clear Form or say do nothing based on the workflow new/edit/public-link
-    // related issue getodk/central#928
   }
 };
 
@@ -289,28 +236,21 @@ const handleSubmit = async (payload) => {
   font-size: 16px;
 }
 html, body {
-  background-color: var(--gray-200);
-  box-shadow: none;
+  &:has(.odk-form) {
+    background-color: var(--gray-200);
+    box-shadow: none;
+  }
 }
+
+#web-form-renderer-submission-modal pre {
+  white-space: pre-wrap;
+}
+
 </style>
 
 <i18n lang="json5">
   {
     "en": {
-      "WebformFill": {
-        "previewModal": {
-          // This text is the title of a dialog box / modal shown when the user presses submit button on the preview of Web Forms.
-          "title": "ODK Web Forms Preview",
-          // This text is the body of a dialog box / modal shown when the user presses submit button on the preview of Web Forms.
-          "body": "You have completed the form preview using ODK Web Forms. The Submission was not sent."
-        },
-        "submissionModal": {
-          // This text is the title of a dialog box / modal shown when the user presses submit button on Web Forms.
-          "title": "ODK Web Forms Submission",
-          // This text is the body of a dialog box / modal shown when the user presses submit button on Web Forms.
-          "body": "You have completed filling out a form using ODK Web Forms."
-        }
-      },
       "previewModal": {
         "title": "Data is valid",
         "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
@@ -329,7 +269,7 @@ html, body {
       },
       "errorModal": {
         "title": "Submission error",
-        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
+        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
       }
     }
   }
