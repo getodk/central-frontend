@@ -1,3 +1,5 @@
+import FormEditSection from '../../../../src/components/form/edit/section.vue';
+
 import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
@@ -31,5 +33,13 @@ describe('FormDefAttachments', () => {
       const subtitle = app.get('#form-edit-attachments .form-edit-section-subtitle').text();
       subtitle.should.equal('2 attachments');
     });
+  });
+
+  it('shows a warning if there is a missing attachment', async () => {
+    testData.extendedForms.createPast(1, { draft: true });
+    testData.standardFormAttachments.createPast(1, { blobExists: false });
+    const app = await load('/projects/1/forms/f/draft');
+    const section = app.get('#form-edit-attachments').getComponent(FormEditSection);
+    section.props().warning.should.be.true;
   });
 });
