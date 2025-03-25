@@ -7,21 +7,49 @@ This package is a Vue component library that uses [`@getodk/xforms-engine`](../x
 To use this library in a Vue.js application:
 
 1. Import `@getodk/web-forms` as a dependency in the application
-2. Install the exported plugin by adding app.use(WebFormsPlugin) in entry component (usually App.vue)
+2. Install the exported plugin by adding `app.use(WebFormsPlugin)` in entry component (usually App.vue)
 3. Add the exported component anywhere in the application:
 
 ```html
-<OdkWebForm :form-xml="formVersionXml.data" @submit="handleSubmit" />
+<OdkWebForm
+    :form-xml="formXml"
+    :fetch-form-attachment="fetchAttachment"
+    :missing-resource-behavior="missingBehavior"
+    :submission-max-size="5242880"  <!-- 5MB -->
+    :edit-instance="editOptions"
+    @submit="handleSubmit"
+    @submit-chunked="handleChunkedSubmit"
+  />
 ```
 
-**Plugin:**
+### Plugin
 
 The plugin is there to initialize PrimeVue, currently it exposes no options. In the future, configuration options may be added to the plugin.
 
-**Props and Events:**
+```js
+import { WebFormsPlugin } from '@getodk/web-forms';
+app.use(WebFormsPlugin);
+```
 
-- `form-xml`: the XML of the ODK XForm to be rendered.
-- `submit`: it is raised when user pressed "Send" button on the Form.
+### Props (`OdkWebFormsProps`)
+
+The `<OdkWebForm>` component accepts the following props:
+
+- `formXml` (`string`, required): The XML of the ODK XForm to be rendered
+- `fetchFormAttachment` (`FetchFormAttachment`, required): Function to fetch form attachments
+- `missingResourceBehavior` (`MissingResourceBehavior`, optional): Defines behavior when resources are missing
+- `submissionMaxSize` (`number`, optional): Maximum size for chunked submissions. Required when subscribing to `submitChunked` event
+- `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing
+
+### Events (`OdkWebFormEmits`)
+
+The component emits the following events:
+
+- `submit`: Emitted when the user presses the "Send" button on a valid form
+  - Payload: ([submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback])
+- `submitChunked`: Emitted for chunked submissions when the form is valid
+  - Payload: ([submissionPayload: ChunkedInstancePayload, callback: HostSubmissionResultCallback])
+  - Note: Requires `submissionMaxSize` prop to be set
 
 ### What if I don't use Vue?
 
