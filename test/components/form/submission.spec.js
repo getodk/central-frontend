@@ -26,6 +26,16 @@ describe('FormSubmission', () => {
       ]);
   });
 
+  it.only('sends the correct initial requests for draft submission', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true, draft: true });
+    return load('/f/enketo-id')
+      .respondWithData(() => simpleXml)
+      .testRequests([
+        { url: '/v1/enketo-ids/enketo-id/form' },
+        { url: ({ pathname }) => pathname.should.match(/v1\/test\/[a-zA-Z0-9]{64}\/projects\/1\/forms\/a\/draft.xml/) }
+      ]);
+  });
+
   it('renders Enketo Iframe', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
