@@ -6,6 +6,7 @@ import simpleXml from '../../data/simple';
 describe('FormSubmission', () => {
   beforeEach(() => {
     mockLogin();
+    testData.extendedProjects.createPast(1);
   });
 
   it('sends the correct initial requests - Web Forms', () => {
@@ -13,6 +14,7 @@ describe('FormSubmission', () => {
     return load('/projects/1/forms/a/submissions/new')
       .respondWithData(() => simpleXml)
       .testRequests([
+        { url: '/v1/projects/1', extended: true },
         { url: '/v1/projects/1/forms/a' },
         { url: '/v1/projects/1/forms/a.xml' },
       ]);
@@ -20,15 +22,15 @@ describe('FormSubmission', () => {
 
   it('sends the correct initial requests - Enketo', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-    return load('/f/enketo-id/new?st=token')
+    return load('/f/enketo-id/new?st=token', {}, { project: false })
       .testRequests([
         { url: '/v1/enketo-ids/enketo-id/form?st=token' }
       ]);
   });
 
-  it.only('sends the correct initial requests for draft submission', () => {
+  it('sends the correct initial requests for draft submission', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true, draft: true });
-    return load('/f/enketo-id')
+    return load('/f/enketo-id', {}, { project: false })
       .respondWithData(() => simpleXml)
       .testRequests([
         { url: '/v1/enketo-ids/enketo-id/form' },
@@ -39,7 +41,7 @@ describe('FormSubmission', () => {
   it('renders Enketo Iframe', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-    const app = await load('/f/enketo-id/new')
+    const app = await load('/f/enketo-id', {}, { project: false })
       .complete();
 
     const iframe = app.find('iframe');

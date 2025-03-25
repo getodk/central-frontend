@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, inject, watch, watchEffect } from 'vue';
+import { computed, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { setDocumentTitle } from '../util/reactivity';
