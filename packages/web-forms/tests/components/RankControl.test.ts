@@ -12,6 +12,12 @@ describe('RankControl', () => {
 		return rankControl.findAll('.rank-label').map((element) => element.text());
 	};
 
+	const clickOnRankItemsButton = async (rankControl: VueWrapper) => {
+		const button = rankControl.find('.rank-overlay button');
+		expect(button.exists()).toBe(true);
+		await button.trigger('click');
+	};
+
 	const getRankControlWithRandomize = async () => {
 		const xform = await getReactiveForm('1-rank.xml');
 
@@ -80,6 +86,7 @@ describe('RankControl', () => {
 		const rankControl = await getRankControlWithRandomize();
 		expect(rankControl.exists()).toBe(true);
 
+		await clickOnRankItemsButton(rankControl);
 		const allOptions = getAllOptions(rankControl);
 		expect(allOptions.length).toEqual(10);
 		expect(allOptions).have.all.members(expectedOptions);
@@ -89,6 +96,7 @@ describe('RankControl', () => {
 		const rankControl = await getRankControlWithRandomize();
 		expect(rankControl.exists()).toBe(true);
 
+		await clickOnRankItemsButton(rankControl);
 		const expectedOptions = getAllOptions(rankControl);
 		swapItems(expectedOptions, 4, 3);
 		swapItems(expectedOptions, 6, 7);
@@ -104,6 +112,7 @@ describe('RankControl', () => {
 		const rankControl = await getRankControlWithRandomize();
 		expect(rankControl.exists()).toBe(true);
 
+		await clickOnRankItemsButton(rankControl);
 		const expectedOptions = getAllOptions(rankControl);
 		swapItems(expectedOptions, 3, 2);
 
@@ -133,6 +142,7 @@ describe('RankControl', () => {
 		const rankControl = refreshedFormQuestions[1].findComponent(RankControl) as VueWrapper;
 		expect(rankControl.exists()).toBe(true);
 
+		await clickOnRankItemsButton(rankControl);
 		const rankOptions = getAllOptions(rankControl);
 		expect(rankOptions).length(2);
 		expect(rankOptions).toEqual(['Environmental Sustainability', 'Creativity and Innovation']);
