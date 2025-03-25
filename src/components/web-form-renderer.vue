@@ -232,7 +232,7 @@ const handleSubmit = async (payload) => {
 <style lang="scss">
 @import '../assets/scss/_variables.scss';
 
-:root {
+:root:has(.odk-form) {
   font-size: 16px;
 }
 html, body {

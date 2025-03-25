@@ -667,14 +667,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
-      validateData: {
-        project: () => project.permits([
-          'form.read',
-          'submission.read',
-          'submission.create',
-          'submission.update'
-        ])
-      },
+      // validateData is done inside FormSubmission component
       title: () => [form.nameOrId],
     }
   }),
@@ -686,9 +679,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
-      validateData: {
-        project: () => project.permits(['form.read', 'submission.create'])
-      },
+      // validateData is done inside FormSubmission component
       title: () => [form.nameOrId],
     }
   }),

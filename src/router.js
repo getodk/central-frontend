@@ -194,7 +194,6 @@ reused after a route change, but that shouldn't happen given our use of the
           // used before the navigation is confirmed, for example, to update the
           // DOM. Given that, we clear the data immediately.
           resource.data = null;
-          router.currentRoute.value.meta.standalone = false;
           forceReplace(container, '/');
         }
       }));

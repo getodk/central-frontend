@@ -11,27 +11,27 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="form.initiallyLoading"/>
-  <component :is="component" v-if="component != null" v-bind="bindings"/>
+  <loading :state="initiallyLoading"/>
+  <component :is="component" v-if="dataExists && hasAccess && component != null" v-bind="bindings"/>
 </template>
 
 <script setup>
-import { defineOptions, ref, shallowRef, defineAsyncComponent } from 'vue';
+import { defineOptions, ref, shallowRef, defineAsyncComponent, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
 import Loading from '../loading.vue';
 import useForm from '../../request-data/form';
-import useProject from '../../request-data/project';
 import useRoutes from '../../composables/routes';
 
 import { noop } from '../../util/util';
 import { apiPaths, queryString } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
+import { useRequestData } from '../../request-data';
 
 const route = useRoute();
 const router = useRouter();
-const { project } = useProject();
+const { project, resourceStates } = useRequestData();
 const { form } = useForm();
 const { t } = useI18n();
 const { formPath, submissionPath } = useRoutes();
@@ -53,6 +53,8 @@ const props = defineProps({
     default: ''
   }
 });
+
+const { initiallyLoading, dataExists } = resourceStates(props.projectId ? [project, form] : [form]);
 
 const component = shallowRef();
 const bindings = ref();
@@ -97,16 +99,34 @@ const fetchForm = () => {
   }).catch(noop);
 };
 
-// To facilate validateData in route guard
-if (props.projectId) {
-  fetchProject().then(() => {
-    fetchForm();
-  });
-} else {
-  fetchForm();
-}
+const hasAccess = computed(() => {
+  if (!project.dataExists || !form.dataExists) return true;
 
+  if (route.name === 'WebFormNewSubmission' && !project.permits('submission.create'))
+    return false;
 
+  if (route.name === 'WebFormEditSubmission' && !project.permits(['submission.read', 'submission.update']))
+    return false;
+
+  if (!project.permits('form.read') && !project.permits('open_form.read'))
+    return false;
+
+  if (!project.permits('form.read') && project.permits('open_form.read') && form.state === 'closed')
+    return false;
+
+  return true;
+});
+
+watchEffect(() => {
+  if (dataExists.value) {
+    if (!hasAccess.value) router.push('/');
+  }
+});
+
+// Required to check permissions in hasAccess
+if (props.projectId) fetchProject();
+
+fetchForm();
 </script>
 
 <i18n lang="json5">
