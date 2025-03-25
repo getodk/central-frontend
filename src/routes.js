@@ -667,6 +667,14 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
+      validateData: {
+        project: () => project.permits([
+          'form.read',
+          'submission.read',
+          'submission.create',
+          'submission.update'
+        ])
+      },
       title: () => [form.nameOrId],
     }
   }),
@@ -678,13 +686,16 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
+      validateData: {
+        project: () => project.permits(['form.read', 'submission.create'])
+      },
       title: () => [form.nameOrId],
     }
   }),
   asyncRoute({
     path: '/f/:path(.+)',
     component: 'FormSubmission',
-    name: 'WebFormPublicLink',
+    name: 'WebFormDirectLink',
     props: true,
     loading: 'page',
     meta: {

@@ -16,17 +16,18 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineProps, defineOptions, ref, shallowRef } from 'vue';
+import { defineProps, defineOptions, ref, shallowRef, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import WebFormRenderer from '../web-form-renderer.vue';
-import EnketoIframe from '../enketo-iframe.vue';
 import Loading from '../loading.vue';
 import useForm from '../../request-data/form';
 import { apiPaths, queryString } from '../../util/request';
 import { noop } from '../../util/util';
+import useProject from '../../request-data/project';
+import { loadAsync } from '../../util/load-async';
 
 const route = useRoute();
+const { project } = useProject();
 const { form } = useForm();
 const { t } = useI18n();
 
@@ -51,6 +52,11 @@ const props = defineProps({
 const component = shallowRef();
 const bindings = ref();
 
+const fetchProject = () => project.request({
+  url: apiPaths.project(props.projectId),
+  extended: true,
+}).catch(noop);
+
 const fetchForm = () => {
   const [enketoId, actionType] = props.path.split('/');
 
@@ -68,9 +74,9 @@ const fetchForm = () => {
   }).then(() => {
     if (form.data.webformsEnabled) {
       // TODO: maybe change the route if it is /f/... and it is for "New / Edit Submission"
-      component.value = WebFormRenderer;
+      component.value = defineAsyncComponent(loadAsync('WebFormRenderer'));
     } else {
-      component.value = EnketoIframe;
+      component.value = defineAsyncComponent(loadAsync('EnketoIframe'));
       bindings.value = {
         enketoId,
         actionType: actionType ?? ''
@@ -79,7 +85,16 @@ const fetchForm = () => {
   }).catch(noop);
 };
 
-fetchForm();
+// To facilate validateData in route guard
+if (props.projectId) {
+  fetchProject().then(() => {
+    fetchForm();
+  });
+} else {
+  fetchForm();
+}
+
+
 </script>
 
 <i18n lang="json5">

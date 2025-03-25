@@ -123,6 +123,14 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-submission" */
     '../components/form/submission.vue'
   )))
+  .set('WebFormRenderer', loader(() => import(
+    /* webpackChunkName: "component-web-form-renderer" */
+    '../components/web-form-renderer.vue'
+  )))
+  .set('EnketoIframe', loader(() => import(
+    /* webpackChunkName: "component-enketo-iframe" */
+    '../components/enketo-iframe.vue'
+  )))
   .set('FormPreview', loader(() => import(
     /* webpackChunkName: "component-form-preview" */
     '../components/form/preview.vue'
