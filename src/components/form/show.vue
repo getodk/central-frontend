@@ -99,8 +99,8 @@ const stopAppUsersEffect = watchEffect(() => {
   nextTick(() => stopAppUsersEffect());
 });
 const stopDatasetsEffect = watchEffect(() => {
-  if (!(project.dataExists && form.dataExists)) return;
-  if (project.permits(['form.update', 'dataset.list']) && form.publishedAt != null)
+  if (!(form.dataExists)) return;
+  if (form.publishedAt != null)
     fetchLinkedDatasets();
   stopDatasetsEffect();
 });
