@@ -397,10 +397,21 @@ describe('OdkWebForm', () => {
 				hostSubmissonHandler: asyncPostSubmissionNoopHandler,
 				expectedPostSubmissionValue: firstSubmissionInputValue,
 			},
+
+			// EVERYTHING is optional. This case ensures that introducing the callback
+			// as a second parameter doesn't introduce regressions in a host
+			// integration which only uses the first parameter.
+			{
+				description: 'does not reset form state by default (no callback)',
+				hostSubmissonHandler: null,
+				expectedPostSubmissionValue: firstSubmissionInputValue,
+			},
 		])('$description', async ({ hostSubmissonHandler, expectedPostSubmissionValue }) => {
 			const component = mountComponent(resetStateForm, {
 				onSubmit: (payload, callback) => {
-					callback(hostSubmissonHandler?.(payload));
+					if (hostSubmissonHandler != null) {
+						callback(hostSubmissonHandler(payload));
+					}
 				},
 			});
 
@@ -415,11 +426,20 @@ describe('OdkWebForm', () => {
 			// Click submit
 			await component.get('button[aria-label="Send"]').trigger('click');
 
-			// Check that submission callback was called
-			expect(submittedPayload).not.toBeNull();
+			// Check either:
+			//
+			// - If "host" provides no submission handler, then no submission handler implementation could cause a side-effect (assignment of the payload it was passed to `submittedPayload`)
+			// - If "host" does provide a submission handler, we've called it in the submit event handler.
+			if (hostSubmissonHandler == null) {
+				expect(submittedPayload).toBeNull();
+			} else {
+				expect(submittedPayload).not.toBeNull();
+			}
 
 			textInput = component.get<HTMLInputElement>('input.p-inputtext');
 
+			// Check that Web Forms has performed the expected post-submit side effect
+			// (if one is expected)
 			expect(textInput.element.value).toBe(expectedPostSubmissionValue);
 		});
 	});
