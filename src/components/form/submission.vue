@@ -17,19 +17,24 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { defineProps, defineOptions, ref, shallowRef, defineAsyncComponent } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+
 import Loading from '../loading.vue';
 import useForm from '../../request-data/form';
-import { apiPaths, queryString } from '../../util/request';
-import { noop } from '../../util/util';
 import useProject from '../../request-data/project';
+import useRoutes from '../../composables/routes';
+
+import { noop } from '../../util/util';
+import { apiPaths, queryString } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 
 const route = useRoute();
+const router = useRouter();
 const { project } = useProject();
 const { form } = useForm();
 const { t } = useI18n();
+const { formPath, submissionPath } = useRoutes();
 
 defineOptions({
   name: 'FormSubmission'
@@ -73,7 +78,14 @@ const fetchForm = () => {
       (problem.code === 404.1 ? t('formNotFound') : null)
   }).then(() => {
     if (form.data.webformsEnabled) {
-      // TODO: maybe change the route if it is /f/... and it is for "New / Edit Submission"
+      // change the route if it is /f/... and it is for "New / Edit Submission"
+      if (route.path.startsWith('/f/')) {
+        if (!actionType && !form.data.draftToken) {
+          router.replace(formPath(form.data.projectId, form.data.xmlFormId, 'submissions/new'));
+        } else if (actionType === 'edit' && route.query.instance_id) {
+          router.replace(submissionPath(form.data.projectId, form.data.xmlFormId, route.query.instance_id, 'edit'));
+        }
+      }
       component.value = defineAsyncComponent(loadAsync('WebFormRenderer'));
     } else {
       component.value = defineAsyncComponent(loadAsync('EnketoIframe'));
