@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="entity-show">
     <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
@@ -167,7 +167,7 @@ const breadcrumbLinks = computed(() => [
 </script>
 
 <style lang="scss">
-  .page-section-heading {
+  #entity-show .page-section-heading {
     font-size: 24px;
   }
 </style>
