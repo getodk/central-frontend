@@ -14,8 +14,6 @@ describe('#now()', () => {
 	// > including timezone offset (i.e. not normalized to UTC) as described
 	// > under the dateTime datatype.
 	it('should return a timestamp for this instant', () => {
-		// this check might fail if run at precisely midnight ;-)
-
 		// given
 		const now = new Date();
 		const today = `${now.getFullYear()}-${(1 + now.getMonth()).toString().padStart(2, '0')}-${now

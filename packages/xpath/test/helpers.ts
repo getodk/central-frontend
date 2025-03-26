@@ -10,14 +10,33 @@ type AnyParentNode =
 	| XMLDocument;
 
 declare global {
+	/**
+	 * The timezone identifier used for all date and time operations in tests.
+	 * This string follows the IANA Time Zone Database format (e.g., 'America/Phoenix').
+	 * It determines the offset and DST behavior for `Date` objects and
+	 * related functions.
+	 *
+	 * @example 'America/Phoenix' // Fixed UTC-7, no DST
+	 * @example 'Europe/London' // UTC+0 (GMT) or UTC+1 (BST) with DST
+	 */
 	// eslint-disable-next-line no-var
 	var TZ: string | undefined;
+	/**
+	 * The locale string defining the language and regional formatting for tests.
+	 * This follows the BCP 47 language tag format (e.g., 'en-US'). It ensures consistent formatting
+	 * across tests.
+	 *
+	 * @example 'en-US' // American English
+	 */
+	// eslint-disable-next-line no-var
+	var LOCALE_ID: string | undefined;
 	// eslint-disable-next-line no-var
 	var IMPLEMENTATION: string | undefined;
 }
 
 globalThis.IMPLEMENTATION = typeof IMPLEMENTATION === 'string' ? IMPLEMENTATION : undefined;
 globalThis.TZ = typeof TZ === 'string' ? TZ : undefined;
+globalThis.LOCALE_ID = typeof LOCALE_ID === 'string' ? LOCALE_ID : undefined;
 
 const namespaces: Record<string, string> = {
 	xhtml: 'http://www.w3.org/1999/xhtml',
@@ -337,4 +356,8 @@ export const getNonNamespaceAttributes = (element: Element): readonly Attr[] => 
 	const attrs = Array.from(element.attributes);
 
 	return attrs.filter(({ name }) => name !== 'xmlns' && !name.startsWith('xmlns:'));
+};
+
+export const getDefaultDateTimeLocale = (): string => {
+	return new Date().toLocaleString(LOCALE_ID, { timeZone: TZ });
 };

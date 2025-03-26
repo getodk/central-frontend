@@ -44,13 +44,26 @@ const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
  */
 const TEST_TIME_ZONE = 'America/Phoenix';
 
+/**
+ * The locale used for formatting dates and times in all test cases.
+ * This ensures consistent language and regional settings across tests.
+ * Currently set to 'en-US' (American English), which affects date formats
+ * (e.g., MM/DD/YYYY) and time separators.
+ *
+ * @constant
+ * @default 'en-US'
+ */
+const TEST_LOCALE = 'en-US';
+
 export default defineConfig(({ mode }) => {
 	const isTest = mode === 'test';
 
 	let timeZoneId: string | null = process.env.TZ ?? null;
+	let localeId: string | null = process.env.LOCALE_ID ?? null;
 
 	if (isTest) {
 		timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
+		localeId = localeId ?? TEST_LOCALE;
 	}
 
 	// `expressionParser.ts` is built as a separate entry so it can be consumed
@@ -83,6 +96,7 @@ export default defineConfig(({ mode }) => {
 		},
 		define: {
 			TZ: JSON.stringify(timeZoneId),
+			LOCALE_ID: JSON.stringify(localeId),
 		},
 		esbuild: {
 			target: 'esnext',
@@ -122,7 +136,7 @@ export default defineConfig(({ mode }) => {
 				headless: true,
 				screenshotFailures: false,
 			},
-
+			setupFiles: ['test/setup.ts'],
 			environment: TEST_ENVIRONMENT,
 			globals: false,
 			include: ['test/**/*.test.ts'],
