@@ -1790,6 +1790,9 @@
       }
     },
     "EntityBasicDetails": {
+      "entityDetails": {
+        "string": "Entity Details"
+      },
       "creatingSubmission": {
         "string": "Creating Submission",
         "developer_comment": "This is shown above the Submission that created the Entity."
@@ -1880,12 +1883,6 @@
       "branch": {
         "string": "Offline update chain",
         "developer_comment": "A series of updates that were made offline"
-      }
-    },
-    "EntityData": {
-      "title": {
-        "string": "Entity Data",
-        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "EntityDelete": {
@@ -4400,6 +4397,9 @@
       }
     },
     "SubmissionBasicDetails": {
+      "submissionDetails": {
+        "string": "Submission Details"
+      },
       "formVersion": {
         "string": "Form version"
       },

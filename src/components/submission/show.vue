@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="submission-show">
     <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
@@ -201,6 +201,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+  #submission-show .page-section-heading {
+    font-size: 24px;
+  }
+</style>
 
 <i18n lang="json5">
 {
