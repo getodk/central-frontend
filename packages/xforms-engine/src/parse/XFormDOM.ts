@@ -104,9 +104,7 @@ const normalizeDefaultMetaBindings = (
 	let meta = getMetaElement(primaryInstanceRoot);
 	let instanceID = getMetaChildElement(meta, 'instanceID');
 
-	if (meta == null) {
-		meta = createNamespacedChildElement(primaryInstanceRoot, OPENROSA_XFORMS_NAMESPACE_URI, 'meta');
-	}
+	meta ??= createNamespacedChildElement(primaryInstanceRoot, OPENROSA_XFORMS_NAMESPACE_URI, 'meta');
 
 	if (instanceID == null) {
 		instanceID = createNamespacedChildElement(meta, meta.namespaceURI, 'instanceID');

@@ -56,11 +56,7 @@ export const getWHATAttributes = (node: WHATNode): readonly WHATAttribute[] => {
 
 export const getWHATParentNode = (node: WHATNode): WHATParentNode | null => {
 	let parentNode: ParentNode | null = getOwnerWHATElement(node);
-
-	if (parentNode == null) {
-		parentNode = node.parentNode;
-	}
-
+	parentNode ??= node.parentNode;
 	return parentNode as WHATParentNode | null;
 };
 

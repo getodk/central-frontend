@@ -54,11 +54,11 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "papaparse": "^5.4.1",
-    "solid-js": "^1.9.3"
+    "papaparse": "^5.5.2",
+    "solid-js": "^1.9.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
+    "@babel/core": "^7.26.10",
     "@getodk/tree-sitter-xpath": "0.1.2",
     "@getodk/xpath": "0.4.0",
     "@playwright/test": "^1.49.1",
@@ -69,12 +69,12 @@
     "jsdom": "^25.0.1",
     "typedoc": "^0.27.5",
     "vite": "^5.4.11",
-    "vite-plugin-dts": "^4.3.0",
+    "vite-plugin-dts": "^4.5.3",
     "vite-plugin-no-bundle": "^4.0.0",
     "vitest": "^2.1.8"
   },
   "peerDependencies": {
-    "solid-js": "^1.9.3"
+    "solid-js": "^1.9.5"
   },
   "peerDependenciesMeta": {
     "solid-js": {

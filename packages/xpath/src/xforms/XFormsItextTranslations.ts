@@ -108,9 +108,7 @@ export class XFormsItextTranslations<T extends XPathNode> implements XFormsItext
 			}
 		}
 
-		if (defaultLanguage == null) {
-			defaultLanguage = languages[0] ?? null;
-		}
+		defaultLanguage ??= languages[0] ?? null;
 
 		return {
 			defaultLanguage,

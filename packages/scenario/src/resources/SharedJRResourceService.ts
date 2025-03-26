@@ -5,10 +5,7 @@ let state: SharedJRResourceService | null = null;
 
 export class SharedJRResourceService extends JRResourceService {
 	static init(): SharedJRResourceService {
-		if (state == null) {
-			state = new this();
-		}
-
+		state ??= new this();
 		return state;
 	}
 

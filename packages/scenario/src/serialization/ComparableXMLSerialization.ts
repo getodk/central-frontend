@@ -182,10 +182,7 @@ export class ComparableXMLSerialization extends ComparableAssertableValue {
 	private _element: ComparableXMLElement | null = null;
 
 	get element(): ComparableXMLElement {
-		if (this._element == null) {
-			this._element = ComparableXMLElement.fromXML(this.xml);
-		}
-
+		this._element ??= ComparableXMLElement.fromXML(this.xml);
 		return this._element;
 	}
 

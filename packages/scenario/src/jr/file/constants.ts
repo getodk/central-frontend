@@ -20,10 +20,7 @@ export const FILE_SEPARATOR: FileSeparator = await (async () => {
 		}
 	}
 
-	if (result == null) {
-		result = '/';
-	}
-
+	result ??= '/';
 	return result;
 })();
 
