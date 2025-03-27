@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div :class="features">
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
-    <navbar v-if="!$route.meta.standalone" v-show="routerReady"/>
+    <navbar v-if="!standalone" v-show="routerReady"/>
     <outdated-version/>
     <alert id="app-alert"/>
     <feedback-button v-if="showsFeedbackButton"/>
@@ -22,10 +22,10 @@ except according to the terms contained in the LICENSE file.
     <!-- v-document-color: Using this directive to add background color to the html tag;
     this is done to avoid magenta splash on standalone routes such as FormPreview   -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div v-if="routerReady && !$route.meta.standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
     </div>
-    <template v-else-if="$route.meta.standalone">
+    <template v-else-if="standalone">
       <router-view/>
     </template>
 
@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
@@ -71,11 +71,12 @@ export default {
           document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
       });
 
+    const standalone = computed(() => route.meta.standalone);
     const { features } = useFeatureFlags();
 
     const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();
-    return { visiblyLoggedIn, centralVersion, callWait, features };
+    return { visiblyLoggedIn, centralVersion, callWait, features, standalone };
   },
   computed: {
     routerReady() {
