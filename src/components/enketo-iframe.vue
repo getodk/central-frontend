@@ -43,7 +43,7 @@ const router = useRouter();
 const { t } = useI18n();
 
 const invalidProps = computed(() => {
-  const validActionTypes = ['offline', 'edit', 'single', 'preview', ''];
+  const validActionTypes = ['offline', 'edit', 'new', 'preview', ''];
   if (!props.enketoId) return true;
   if (!validActionTypes.includes(props.actionType)) return true;
   return false;
@@ -58,7 +58,9 @@ const enketoSrc = computed(() => {
   const queryParams = new URLSearchParams({ ...query, parentWindowOrigin: window.location.origin });
   if (props.actionType === 'offline') {
     prefix += '/x';
-  } else if (props.actionType) {
+  } else if (!props.actionType) {
+    prefix += '/single';
+  } else if (props.actionType === 'edit' || props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
   return `${prefix}/${props.enketoId}?${queryParams.toString()}`;
