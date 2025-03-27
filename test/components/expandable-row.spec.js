@@ -27,7 +27,7 @@ describe('ExpandableRow', () => {
   });
 
   it('shows title', () => {
-    component.get('.title-cell').text().should.be.equal('Trees Registration');
+    component.get('.expandable-row-title').text().should.be.equal('Trees Registration');
   });
 
   it('shows caption', () => {

@@ -10,134 +10,117 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="dataset-summary-row">
-    <div class="row">
-      <div class="col-xs-6 dataset-name-wrap">
-        <div class="dataset-name text-overflow-ellipsis" v-tooltip.text>
+  <expandable-row class="dataset-summary-row">
+    <template #title>
+      <div class="dataset-name-wrap">
+        <div class="dataset-name">
           <dataset-link v-if="!dataset.isNew" :project-id="projectId"
-            :name="dataset.name"/>
-          <template v-else>
-            {{ dataset.name }}
-          </template>
+            :name="dataset.name" v-tooltip.text/>
+          <span v-else v-tooltip.text>{{ dataset.name }}</span>
         </div>
         <div v-if="dataset.isNew" class="dataset-new">
           <span class="icon-plus-circle"></span>
           {{ $t('new') }}
         </div>
       </div>
-      <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/interactive-supports-focus -->
-      <div class="col-xs-6 properties-count" role="button" @click.prevent="toggleExpanded">
-        {{ $tcn('common.propertiesCount', dataset.properties.length, { inform: $n(inFormProperties.length, 'default') }) }}
-        <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
-        <a href="javascript:void(0)" class="expand-button">
-          <span v-if="!expanded" class="icon-caret-left"></span>
-          <span v-else class="icon-caret-down"></span>
-        </a>
-      </div>
-    </div>
-    <div v-show="expanded" class="property-list">
-      <i18n-list v-slot="{ value: property }" :list="inFormProperties">
+    </template>
+    <template #caption>
+      <div class="properties-count">{{ propertiesCount }}</div>
+    </template>
+    <template #details>
+      <i18n-list v-slot="{ value: property }" :list="inFormProperties"
+        class="property-list">
         <span>{{ property.name }}</span>
         <span v-if="property.isNew">
           <span class="icon-plus-circle property-new" v-tooltip.sr-only></span>
           <span class="sr-only">&nbsp;{{ $t('addedByThisDraft') }}</span>
         </span>
       </i18n-list>
-      <span v-if="inFormProperties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
-    </div>
-  </div>
+      <span v-if="inFormProperties.length === 0" class="no-properties">
+        {{ $t('entity.noProperties') }}
+      </span>
+    </template>
+  </expandable-row>
 </template>
 
-<script>
+<script setup>
+import { computed, inject } from 'vue';
+
 import DatasetLink from '../link.vue';
+import ExpandableRow from '../../expandable-row.vue';
 import I18nList from '../../i18n/list.vue';
 
-export default {
-  name: 'DatasetSummaryRow',
-  components: { DatasetLink, I18nList },
-  inject: ['projectId'],
-  props: {
-    dataset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      expanded: false
-    };
-  },
-  computed: {
-    inFormProperties() {
-      return this.dataset.properties.filter(p => p.inForm);
-    }
-  },
-  methods: {
-    toggleExpanded() {
-      this.expanded = !this.expanded;
-    }
-  }
-};
+import { useI18nUtils } from '../../../util/i18n';
 
+defineOptions({
+  name: 'DatasetSummaryRow'
+});
+const props = defineProps({
+  dataset: {
+    type: Object,
+    required: true
+  }
+});
+const projectId = inject('projectId');
+
+const inFormProperties = computed(() =>
+  props.dataset.properties.filter(p => p.inForm));
+const { tn } = useI18nUtils();
+const propertiesCount = computed(() => tn(
+  'common.propertiesCount',
+  props.dataset.properties.length,
+  { inform: inFormProperties.value.length }
+));
 </script>
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
 .dataset-summary-row {
-    @include text-block;
+  @include text-block;
 
-    .text-overflow-ellipsis {
+  .expandable-row-title { max-width: calc(100% - 180px); }
+
+  .dataset-name-wrap {
+    display: flex;
+
+    .dataset-name {
       @include text-overflow-ellipsis;
+      font-weight: bold;
+      font-size: 18px;
     }
 
-    .dataset-name-wrap{
-      display: flex;
-
-      .dataset-name {
-        font-weight: bold;
-        font-size: 18px;
-      }
-      .dataset-new {
-          vertical-align: super;
-          color: $color-success;
-          margin-left: 2px;
-          min-width: 46px;
-      }
+    .dataset-new {
+      vertical-align: super;
+      color: $color-success;
+      margin-left: 2px;
+      min-width: 46px;
     }
+  }
 
-    .property-new {
-        margin-left: 2px;
-        color: $color-success;
-        vertical-align: super;
-    }
+  .property-new {
+    margin-left: 2px;
+    color: $color-success;
+    vertical-align: super;
+  }
 
-    .properties-count {
-        line-height: 28px;
-    }
+  .properties-count {
+    color: #888;
+    line-height: 28px;
+  }
 
-    a.expand-button {
-        color: #666;
-        font-size: 20px;
-        vertical-align: middle;
+  .expandable-row-toggle-button {
+    color: #666;
+    font-size: 20px;
+  }
 
-        &:focus {
-            background-color: inherit;
-        }
-    }
+  .property-list {
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
 
-    .expand-button {
-      margin-left: 5px;
-    }
-
-    .property-list {
-      hyphens: auto;
-      overflow-wrap: break-word;
-
-      .no-properties { @include italic; }
-    }
+  .no-properties { @include italic; }
 }
-
 </style>
 
 <i18n lang="json5">

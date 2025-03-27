@@ -79,7 +79,7 @@ describe('FormNew', () => {
     it('toggles the modal', () =>
       load('/projects/1/forms/f/draft', { root: false }).testModalToggles({
         modal: FormNew,
-        show: '#form-draft-status-upload-button',
+        show: '#form-edit-upload-button',
         hide: '.btn-link'
       }));
 
@@ -303,7 +303,7 @@ describe('FormNew', () => {
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
+          await app.get('#form-edit-upload-button').trigger('click');
           return upload(app);
         })
         .respondWithData(() => {
@@ -324,7 +324,7 @@ describe('FormNew', () => {
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
+          await app.get('#form-edit-upload-button').trigger('click');
           return upload(app);
         })
         .respondWithData(() => {
@@ -348,7 +348,7 @@ describe('FormNew', () => {
           version.should.equal('v1');
         })
         .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
+          await app.get('#form-edit-upload-button').trigger('click');
           return upload(app);
         })
         .respondWithData(() => {
@@ -373,7 +373,7 @@ describe('FormNew', () => {
           app.findAll('.form-attachment-row').length.should.equal(1);
         })
         .request(async (app) => {
-          await app.get('#form-draft-status-upload-button').trigger('click');
+          await app.get('#form-edit-upload-button').trigger('click');
           return upload(app);
         })
         .respondWithData(() => {

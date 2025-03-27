@@ -10,17 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-edit-section">
+  <div class="form-edit-section" :class="{ warning }">
     <div>
       <div class="form-edit-section-icon-container">
         <span :class="`icon-${icon}`"></span>
+        <span v-if="warning" class="icon-warning"></span>
       </div>
       <div v-if="dotted" class="form-edit-section-dots"></div>
     </div>
     <div>
       <p class="form-edit-section-title"><slot name="title"></slot></p>
       <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
-      <div><slot name="body"></slot></div>
+      <div class="form-edit-section-body"><slot name="body"></slot></div>
     </div>
   </div>
 </template>
@@ -34,14 +35,20 @@ defineProps({
     type: String,
     required: true
   },
-  dotted: Boolean
+  dotted: Boolean,
+  warning: Boolean
 });
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/variables';
+
+$dots-margin-block: 9px;
+
 .form-edit-section {
   column-gap: 15px;
   display: flex;
+  margin-bottom: $dots-margin-block;
 
   > :first-child {
     align-items: center;
@@ -51,7 +58,8 @@ defineProps({
   }
 
   > :nth-child(2) {
-    padding-block: 16px 35px;
+    flex-grow: 1;
+    padding-top: 16px;
   }
 }
 
@@ -68,18 +76,36 @@ defineProps({
 
   flex-shrink: 0;
   font-size: 35px;
+  position: relative;
 }
 
 .form-edit-section-dots {
   border-left: 2px dotted #999;
   height: 100%;
-  margin-top: 9px;
+  margin-top: $dots-margin-block;
 }
 
 .form-edit-section-title {
   font-size: 17px;
   font-weight: bold;
   line-height: 1.2;
-  margin-bottom: 0;
+}
+
+.form-edit-section-subtitle {
+  margin-top: -10px;
+
+  &:empty { display: none; }
+}
+
+.form-edit-section.warning {
+  .form-edit-section-icon-container { background-color: $color-warning-light; }
+  .form-edit-section-subtitle { color: $color-warning-light; }
+}
+.form-edit-section-icon-container .icon-warning:nth-child(2) {
+  position: absolute;
+  right: 2px;
+  bottom: 7px;
+
+  font-size: 18px;
 }
 </style>

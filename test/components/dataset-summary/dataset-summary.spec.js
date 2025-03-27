@@ -16,7 +16,7 @@ const getContainer = () => ({
   })
 });
 
-describe('Dataset summary', () => {
+describe('DatasetSummary', () => {
   const theories = [0, 1, 2];
 
   theories.forEach(count => {
@@ -25,14 +25,13 @@ describe('Dataset summary', () => {
       const component = mount(DatasetSummary, {
         props: { isDraft: true },
         global: {
-          provide: { projectId: 1, xmlFormId: 'simple' }
+          provide: { projectId: '1', xmlFormId: 'simple' }
         },
         container: getContainer()
       });
       if (count === 0) {
         component.text().should.be.empty;
       } else {
-        component.get('.summary-item-heading').text().should.be.equal(count.toString());
         component.findAll('.dataset-name').length.should.be.equal(count);
       }
     });
@@ -44,14 +43,13 @@ describe('Dataset summary', () => {
       const component = mount(DatasetSummary, {
         props: { isDraft: false },
         global: {
-          provide: { projectId: 1, xmlFormId: 'simple' }
+          provide: { projectId: '1', xmlFormId: 'simple' }
         },
         container: getContainer()
       });
       if (count === 0) {
         component.text().should.be.empty;
       } else {
-        component.get('.summary-item-heading').text().should.be.equal(count.toString());
         component.findAll('.dataset-name').length.should.be.equal(count);
       }
     });
