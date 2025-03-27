@@ -9,7 +9,7 @@ import Property from '../util/ds-property-enum';
 export const formDraftDatasetDiffs = dataStore({
   factory: ({
     isNew,
-    properties
+    properties = []
   }) => ({
     name: faker.random.alphaNumeric(10),
     isNew,
@@ -26,6 +26,3 @@ export const formDraftDatasetDiffs = dataStore({
   }),
   sort: comparator((diff1, diff2) => diff1.name < diff2.name)
 });
-
-
-

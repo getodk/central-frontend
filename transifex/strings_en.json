@@ -3060,6 +3060,10 @@
         "string": "Uploaded",
         "developer_comment": "This refers to a Form Definition."
       },
+      "changed": {
+        "string": "Changed from published version",
+        "developer_comment": "This refers to a Form Definition."
+      },
       "action": {
         "upload": {
           "string": "Upload new Form Definition",
@@ -3093,6 +3097,10 @@
       },
       "whatAreEntities": {
         "string": "What are Entities?"
+      },
+      "diffHasNew": {
+        "string": "New Entity Lists and/or properties will be created",
+        "developer_comment": "This text is shown if publishing a Form Definition will create one or more Entity Lists or one or more Entity properties."
       }
     },
     "FormEditPublishedVersion": {
