@@ -31,7 +31,7 @@ describe('FormPreview', () => {
 
     const app = await load('/projects/1/forms/a/preview').complete();
 
-    const webForm = app.findComponent('.odk-form');
+    const webForm = app.find('.odk-form');
 
     webForm.exists().should.be.true;
   });

@@ -945,6 +945,9 @@
       "string": "Warning",
       "developer_comment": "This text is shown on its own before details about a warning."
     },
+    "beta": {
+      "string": "Beta"
+    },
     "currentDraft": {
       "string": "Your Current Draft",
       "developer_comment": "This is a title shown above a section of the page."
@@ -3279,20 +3282,6 @@
         }
       }
     },
-    "FormPreview": {
-      "webFormPreview": {
-        "submissionModal": {
-          "title": {
-            "string": "ODK Web Forms Preview",
-            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          },
-          "body": {
-            "string": "You have completed the Form using an early version of the new ODK Web Forms. The Submission was not sent: currently, you can only view your Forms in ODK Web Forms.",
-            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          }
-        }
-      }
-    },
     "FormRestore": {
       "title": {
         "string": "Undelete Form",
@@ -3348,6 +3337,20 @@
         "delete": {
           "string": "The Form “{name}” was deleted."
         }
+      },
+      "webFormsSetting": {
+        "webForms": {
+          "string": "Web Forms",
+          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+        },
+        "description": {
+          "string": "Fill out, preview and edit your “{formName}” Form using",
+          "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
+        },
+        "enketoDefault": {
+          "string": "Enketo (default)",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
       }
     },
     "FormSort": {
@@ -3360,6 +3363,11 @@
           "string": "Newest",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
+      }
+    },
+    "FormSubmission": {
+      "formNotFound": {
+        "string": "No Form found with this URL, please double check."
       }
     },
     "FormSubmissions": {
@@ -3481,6 +3489,41 @@
       "title": {
         "string": "View XML",
         "developer_comment": "This is the title at the top of a pop-up."
+      }
+    },
+    "FormWebFormsSettingsConfirmation": {
+      "webformsConfirmation": {
+        "useOdkWebForms": {
+          "string": "Use ODK Web Forms",
+          "developer_comment": "The words \"ODK Web Forms\" should not be translated"
+        },
+        "intro": {
+          "string": "We’re building a new web-forms experience designed to be fast and user-friendly!"
+        },
+        "description": {
+          "full": {
+            "string": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
+          },
+          "seeSupportedFeatures": {
+            "string": "see supported features",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          },
+          "previewYourForm": {
+            "string": "preview your form",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          }
+        }
+      },
+      "enketoConfirmation": {
+        "description": {
+          "string": "Are you sure you want to switch from ODK Web Forms to Enketo?",
+          "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
+        },
+        "useEnketo": {
+          "string": "Use Enketo",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
       }
     },
     "Home": {
@@ -5058,6 +5101,48 @@
         "retire": {
           "string": "Retire user",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "previewModal": {
+        "title": {
+          "string": "Data is valid"
+        },
+        "body": {
+          "string": "The data you entered is valid, but it was not submitted because this is a Form preview."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Submission successful"
+        },
+        "body": {
+          "string": "Your data was submitted."
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Thank you for participating!"
+        },
+        "body": {
+          "string": "You can close this window now."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Submission successful"
+        },
+        "body": {
+          "string": "You will now be redirected."
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Submission error"
+        },
+        "body": {
+          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
         }
       }
     }

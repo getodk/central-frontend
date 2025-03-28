@@ -87,6 +87,10 @@ const responsesByComponent = {
     form: () => testData.extendedForms.last(),
     xml: () => mockResponse.of(simpleXml)
   }),
+  FormSubmission: componentResponses({
+    project: true,
+    form: () => testData.extendedForms.last()
+  }),
   FormSubmissions: componentResponses({
     keys: () => testData.standardKeys.sorted(),
     deletedSubmissionCount: () => testData.submissionDeletedOData(0),

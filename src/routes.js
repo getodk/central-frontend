@@ -13,7 +13,6 @@ import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-
 import { routeProps } from './util/router';
 
 export default (container) => {
@@ -657,6 +656,43 @@ const routes = [
     loading: 'page',
     meta: {
       title: () => [i18n.t('title.download')]
+    }
+  }),
+
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/edit',
+    component: 'FormSubmission',
+    name: 'WebFormEditSubmission',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new',
+    component: 'FormSubmission',
+    name: 'WebFormNewSubmission',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/f/:path(.+)',
+    component: 'FormSubmission',
+    name: 'WebFormDirectLink',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      requireLogin: false,
+      title: () => [form.nameOrId]
     }
   }),
 

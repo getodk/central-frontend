@@ -86,6 +86,7 @@ import DateTime from '../date-time.vue';
 import Spinner from '../spinner.vue';
 import SubmissionReviewState from './review-state.vue';
 
+import { useRequestData } from '../../request-data';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
 
@@ -121,8 +122,9 @@ export default {
     awaitingResponse: Boolean
   },
   setup() {
+    const { form } = useRequestData();
     const { submissionPath } = useRoutes();
-    return { submissionPath };
+    return { form, submissionPath };
   },
   computed: {
     missingAttachment() {
@@ -131,6 +133,9 @@ export default {
         __system.attachmentsPresent !== __system.attachmentsExpected;
     },
     editPath() {
+      if (this.form.webformsEnabled) {
+        return this.submissionPath(this.projectId, this.xmlFormId, this.submission.__id, 'edit');
+      }
       return apiPaths.editSubmission(
         this.projectId,
         this.xmlFormId,

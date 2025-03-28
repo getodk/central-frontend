@@ -88,10 +88,14 @@ export default memoizeForContainer(({ router, requestData }) => {
     ? publishedFormPath(form.projectId, form.xmlFormId)
     : formPath(form.projectId, form.xmlFormId, 'draft'));
 
-  const submissionPath = (projectId, xmlFormId, instanceId) => {
+  const submissionPath = (projectId, xmlFormId, instanceId, suffix) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);
-    return `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    let result = `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    if (suffix) {
+      result += `/${suffix}`;
+    }
+    return result;
   };
 
   const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {

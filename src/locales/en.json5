@@ -444,7 +444,8 @@
     // {version} is a version number.
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
-    "warning": "Warning"
+    "warning": "Warning",
+    "beta": "Beta"
   },
   "mixin": {
     "request": {
