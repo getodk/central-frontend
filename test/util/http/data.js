@@ -89,7 +89,10 @@ const responsesByComponent = {
   }),
   FormSubmission: componentResponses({
     project: true,
-    form: () => testData.extendedForms.last()
+    form: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+$/.test(url),
+      () => testData.extendedForms.last()
+    ]
   }),
   FormSubmissions: componentResponses({
     keys: () => testData.standardKeys.sorted(),
@@ -187,6 +190,9 @@ const responsesByComponent = {
       return config != null ? config : mockResponse.problem(404.1);
     },
     audits: true
+  }),
+  EnketoRedirector: componentResponses({
+    form: () => testData.extendedForms.last()
   }),
 
   Download: [],

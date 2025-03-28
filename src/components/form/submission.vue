@@ -16,13 +16,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineOptions, ref, shallowRef, defineAsyncComponent, watchEffect, computed } from 'vue';
+import { defineOptions, ref, shallowRef, defineAsyncComponent, watchEffect, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
 import Loading from '../loading.vue';
-import useForm from '../../request-data/form';
-import useRoutes from '../../composables/routes';
 
 import { noop } from '../../util/util';
 import { apiPaths, queryString } from '../../util/request';
@@ -31,10 +29,9 @@ import { useRequestData } from '../../request-data';
 
 const route = useRoute();
 const router = useRouter();
-const { project, resourceStates } = useRequestData();
-const { form } = useForm();
+const { project, resourceStates, form } = useRequestData();
+// const { form } = useForm();
 const { t } = useI18n();
-const { formPath, submissionPath } = useRoutes();
 
 defineOptions({
   name: 'FormSubmission'
@@ -44,13 +41,11 @@ const props = defineProps({
   projectId: String,
   xmlFormId: String,
   instanceId: String,
-  // This will be not null when this component needs to render an Enketo form (redirected by nginx)
-  // or to render web-forms for a public link. The value could be:
-  // ':enketoId', ':enketoId/new', ':enketoId/edit', ':enketoId/single' or ':enketoId/offline'.
-  // see main.nginx.conf "Enketo URL redirection" section
-  path: {
-    type: String,
-    default: ''
+  actionType: String,
+  enketoId: String,
+  offline: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -64,39 +59,21 @@ const fetchProject = () => project.request({
   extended: true,
 }).catch(noop);
 
-const fetchForm = () => {
-  const [enketoId, actionType] = props.path.split('/');
 
+const fetchForm = () => {
   let formUrl = '';
   if (props.projectId && props.xmlFormId) {
     formUrl = apiPaths.form(props.projectId, props.xmlFormId);
   } else {
-    formUrl = `/v1/enketo-ids/${enketoId}/form${queryString({ st: route.query.st })}`;
+    formUrl = `/v1/enketo-ids/${props.enketoId}/form${queryString({ st: route.query.st })}`;
   }
 
   form.request({
     url: formUrl,
     problemToAlert: (problem) =>
       (problem.code === 404.1 ? t('formNotFound') : null)
-  }).then(() => {
-    if (form.data.webformsEnabled) {
-      // change the route if it is /f/... and it is for "New / Edit Submission"
-      if (route.path.startsWith('/f/')) {
-        if (!actionType && !form.data.draftToken) {
-          router.replace(formPath(form.data.projectId, form.data.xmlFormId, 'submissions/new'));
-        } else if (actionType === 'edit' && route.query.instance_id) {
-          router.replace(submissionPath(form.data.projectId, form.data.xmlFormId, route.query.instance_id, 'edit'));
-        }
-      }
-      component.value = defineAsyncComponent(loadAsync('WebFormRenderer'));
-    } else {
-      component.value = defineAsyncComponent(loadAsync('EnketoIframe'));
-      bindings.value = {
-        enketoId,
-        actionType: actionType ?? ''
-      };
-    }
-  }).catch(noop);
+  })
+    .catch(noop);
 };
 
 const hasAccess = computed(() => {
@@ -123,10 +100,28 @@ watchEffect(() => {
   }
 });
 
+watch(() => form.dataExists, (v) => {
+  if (v) {
+    if (form.webformsEnabled) {
+      component.value = defineAsyncComponent(loadAsync('WebFormRenderer'));
+      bindings.value = {
+        actionType: props.actionType
+      };
+    } else {
+      component.value = defineAsyncComponent(loadAsync('EnketoIframe'));
+      bindings.value = {
+        enketoId: form.enketoId,
+        actionType: props.offline ? 'offline' : props.actionType,
+        instanceId: props.instanceId
+      };
+    }
+  }
+}, { immediate: true });
+
 // Required to check permissions in hasAccess
 if (props.projectId) fetchProject();
 
-fetchForm();
+if (!form.dataExists) fetchForm();
 </script>
 
 <i18n lang="json5">

@@ -12,15 +12,16 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="form.initiallyLoading"/>
-  <WebFormRenderer v-if="form.dataExists" action-type="preview"/>
+  <component :is="component" v-if="form.dataExists && component != null" v-bind="bindings"/>
 </template>
 
 <script setup>
-import useForm from '../../request-data/form';
+import { defineAsyncComponent, ref, shallowRef, watch } from 'vue';
+import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import Loading from '../loading.vue';
-import WebFormRenderer from '../web-form-renderer.vue';
+import { loadAsync } from '../../util/load-async';
 
 defineOptions({
   name: 'FormPreview'
@@ -41,7 +42,10 @@ const props = defineProps({
   }
 });
 
-const { form } = useForm();
+const { form } = useRequestData();
+
+const component = shallowRef();
+const bindings = ref();
 
 const fetchForm = () => {
   form.request({
@@ -50,7 +54,21 @@ const fetchForm = () => {
   }).catch(noop);
 };
 
-fetchForm();
+watch(() => form.dataExists, (v) => {
+  if (v) {
+    if (form.webformsEnabled) {
+      component.value = defineAsyncComponent(loadAsync('WebFormRenderer'));
+    } else {
+      component.value = defineAsyncComponent(loadAsync('EnketoIframe'));
+      bindings.value = {
+        enketoId: form.enketoId,
+        actionType: 'preview'
+      };
+    }
+  }
+}, { immediate: true });
+
+if (!form.dataExists) fetchForm();
 </script>
 
 <style lang="scss">

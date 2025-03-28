@@ -37,8 +37,8 @@ export default {
     }
   },
   setup() {
-    const { submissionPath } = useRoutes();
-    return { submissionPath };
+    const { newSubmissionPath } = useRoutes();
+    return { newSubmissionPath };
   },
   computed: {
     disabledDescription() {
@@ -53,11 +53,7 @@ export default {
       return `enketo-fill btn btn-${this.btn}`;
     },
     href() {
-      if (this.formVersion.webformsEnabled && !this.formVersion.draftToken) {
-        return this.submissionPath(this.formVersion.projectId, this.formVersion.xmlFormId, 'new');
-      }
-      const encodedId = encodeURIComponent(this.formVersion.enketoId);
-      return `${enketoBasePath}/${encodedId}`;
+      return this.newSubmissionPath(this.formVersion.projectId, this.formVersion.xmlFormId, !this.formVersion.publishedAt);
     }
   }
 };
