@@ -22,6 +22,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { enketoBasePath } from '../../util/util';
+import useRoutes from '../../composables/routes';
 
 export default {
   name: 'EnketoFill',
@@ -34,6 +35,10 @@ export default {
       type: String,
       default: 'primary'
     }
+  },
+  setup() {
+    const { newSubmissionPath } = useRoutes();
+    return { newSubmissionPath };
   },
   computed: {
     disabledDescription() {
@@ -48,8 +53,7 @@ export default {
       return `enketo-fill btn btn-${this.btn}`;
     },
     href() {
-      const encodedId = encodeURIComponent(this.formVersion.enketoId);
-      return `${enketoBasePath}/${encodedId}`;
+      return this.newSubmissionPath(this.formVersion.projectId, this.formVersion.xmlFormId, !this.formVersion.publishedAt);
     }
   }
 };

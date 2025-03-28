@@ -74,7 +74,9 @@ export default {
     },
     url() {
       const encodedId = encodeURIComponent(this.enketoId);
-      return `${window.location.origin}${enketoBasePath}/single/${encodedId}?st=${this.publicLink.token}`;
+      return this.form.webformsEnabled
+        ? `${window.location.origin}/f/${encodedId}?st=${this.publicLink.token}`
+        : `${window.location.origin}${enketoBasePath}/single/${encodedId}?st=${this.publicLink.token}`;
     }
   }
 };

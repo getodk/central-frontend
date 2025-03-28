@@ -13,7 +13,6 @@ import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-
 import { routeProps } from './util/router';
 
 export default (container) => {
@@ -661,6 +660,65 @@ const routes = [
   }),
 
   asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
+    component: 'FormSubmission',
+    name: 'WebFormEditSubmission',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
+    component: 'FormSubmission',
+    name: 'WebFormNewSubmission',
+    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
+    component: 'FormSubmission',
+    name: 'WebFormNewDraftSubmission',
+    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/f/:enketoId([a-zA-Z0-9]{31})/:actionType(new|edit|preview|offline)',
+    component: 'EnketoRedirector',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true
+    }
+  }),
+  asyncRoute({
+    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})',
+    component: 'FormSubmission',
+    name: 'WebFormDirectLink',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      restoreSession: false,
+      requireLogin: false,
+      title: () => [form.nameOrId]
+    }
+  }),
+
+  asyncRoute({
     path: '/:_(.*)',
     component: 'NotFound',
     loading: 'page',
@@ -769,7 +827,16 @@ const routesByName = new Map();
       : false)
   );
 
-
+  [
+    'WebFormNewSubmission',
+    'WebFormNewDraftSubmission',
+    'WebFormEditSubmission',
+    'FormPreview',
+    'DraftFormPreview'
+  ].forEach(redirectTo => {
+    const preserve = (to, from) => from.name === 'EnketoRedirector' && [form];
+    routesByName.get(redirectTo).meta.preserveData.push(preserve);
+  });
 
   //////////////////////////////////////////////////////////////////////////////
   // RETURN

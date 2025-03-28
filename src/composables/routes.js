@@ -88,10 +88,33 @@ export default memoizeForContainer(({ router, requestData }) => {
     ? publishedFormPath(form.projectId, form.xmlFormId)
     : formPath(form.projectId, form.xmlFormId, 'draft'));
 
-  const submissionPath = (projectId, xmlFormId, instanceId) => {
+  const newSubmissionPath = (projectIdOrDraft, xmlFormId, draft) => {
+    const suffix = draft ? 'draft/submissions/new' : 'submissions/new';
+    if (!xmlFormId) {
+      return formPath(suffix);
+    }
+    return formPath(projectIdOrDraft, xmlFormId, suffix);
+  };
+
+  const offlineSubmissionPath = (projectIdOrDraft, xmlFormId, draft) =>
+    `${newSubmissionPath(projectIdOrDraft, xmlFormId, draft)}/offline`;
+
+  const formPreviewPath = (projectIdOrDraft, xmlFormId, draft) => {
+    const suffix = draft ? 'draft/preview' : 'preview';
+    if (!xmlFormId) {
+      return formPath(suffix);
+    }
+    return formPath(projectIdOrDraft, xmlFormId, suffix);
+  };
+
+  const submissionPath = (projectId, xmlFormId, instanceId, suffix) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);
-    return `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    let result = `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    if (suffix) {
+      result += `/${suffix}`;
+    }
+    return result;
   };
 
   const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
@@ -111,8 +134,8 @@ export default memoizeForContainer(({ router, requestData }) => {
 
   return {
     projectPath,
-    formPath, publishedFormPath, primaryFormPath,
-    submissionPath,
+    formPath, publishedFormPath, primaryFormPath, formPreviewPath,
+    submissionPath, newSubmissionPath, offlineSubmissionPath,
     datasetPath,
     entityPath,
     userPath,
