@@ -1,19 +1,14 @@
 import { XSD_NAMESPACE_URI, XSD_PREFIX } from '@getodk/common/constants/xmlns.ts';
+import type { AnyBodyElementType } from '../body/BodyDefinition.ts';
+import type { XFormDefinition } from '../XFormDefinition.ts';
 import { parseQualifiedNameExpression } from '../xpath/semantic-analysis.ts';
 import type { BindElement } from './BindElement.ts';
-
-/**
- * As specified by {@link https://getodk.github.io/xforms-spec/#bind-attributes}
- */
-export const DEFAULT_BIND_TYPE = 'string';
-
-export type DefaultBindType = typeof DEFAULT_BIND_TYPE;
 
 /**
  * As specified by {@link https://getodk.github.io/xforms-spec/#data-types}
  */
 const BIND_TYPES = [
-	DEFAULT_BIND_TYPE,
+	'string',
 	'int',
 	'boolean',
 	'decimal',
@@ -32,6 +27,47 @@ type BindTypes = typeof BIND_TYPES;
 
 export type BindType = BindTypes[number];
 
+type BindTypeDefaultOverridesByBodyType = Partial<Readonly<Record<AnyBodyElementType, BindType>>>;
+
+/**
+ * As specified by {@link https://getodk.github.io/xforms-spec/#bind-attributes}
+ */
+const SPEC_BIND_TYPE_DEFAULT = 'string' satisfies BindType;
+
+/**
+ * If an `<upload>` is not explicitly associated with any `<bind type>`, we can do one of two things:
+ *
+ * - correct: default to {@link SPEC_BIND_TYPE_DEFAULT | the spec default regardless of control type}
+ * - more useful and robust: default to "binary", which is the only type the spec allows for an `<upload>` control
+ *
+ * Asked which would be preferable, @lognaturel responded:
+ *
+ * > I think we should assume in the spirit of doing the most useful thing!
+ */
+const UPLOAD_BIND_TYPE_DEFAULT = 'binary' satisfies BindType;
+
+const BODY_BIND_TYPE_DEFAULT_OVERRIDES = {
+	upload: UPLOAD_BIND_TYPE_DEFAULT,
+} as const satisfies BindTypeDefaultOverridesByBodyType;
+
+type BodyBindTypeDefaultOverrides = typeof BODY_BIND_TYPE_DEFAULT_OVERRIDES;
+
+type BodyBindTypeDefaultOverride = keyof BodyBindTypeDefaultOverrides;
+
+const isBodyBindTypeDefaultOverride = (
+	bodyElementType: AnyBodyElementType | null
+): bodyElementType is BodyBindTypeDefaultOverride => {
+	return bodyElementType != null && bodyElementType in BODY_BIND_TYPE_DEFAULT_OVERRIDES;
+};
+
+const resolveDefaultBindType = (bodyElementType: AnyBodyElementType | null): BindType => {
+	if (isBodyBindTypeDefaultOverride(bodyElementType)) {
+		return BODY_BIND_TYPE_DEFAULT_OVERRIDES[bodyElementType];
+	}
+
+	return SPEC_BIND_TYPE_DEFAULT;
+};
+
 const isBindType = (value: string): value is BindType => {
 	return BIND_TYPES.includes(value as BindType);
 };
@@ -42,14 +78,10 @@ const resolveSupportedBindType = (sourceType: string): BindType | null => {
 
 type BindTypeAliasMapping = Readonly<Record<string, BindType>>;
 
-/**
- * @todo should we make these aliases explicit (rather than relying on {@link resolveUnsupportedBindType})?
- *
- * - select1
- * - rank
- * - odk:rank
- */
 const BIND_TYPE_ALIASES: BindTypeAliasMapping = {
+	select1: SPEC_BIND_TYPE_DEFAULT,
+	rank: SPEC_BIND_TYPE_DEFAULT,
+	'odk:rank': SPEC_BIND_TYPE_DEFAULT,
 	integer: 'int',
 };
 
@@ -65,7 +97,7 @@ const resolveAliasedBindType = (sourceType: string): BindType | null => {
  * @todo Should we warn on this fallback?
  */
 const resolveUnsupportedBindType = (_unsupportedType: string): BindType => {
-	return DEFAULT_BIND_TYPE;
+	return SPEC_BIND_TYPE_DEFAULT;
 };
 
 interface BindDataTypeNamespaceResolver {
@@ -144,7 +176,15 @@ const resolveNamespacedBindType = (
 	return null;
 };
 
-const resolveBindType = (bindElement: BindElement, sourceType: string): BindType => {
+const resolveBindType = (
+	bodyElementType: AnyBodyElementType | null,
+	bindElement: BindElement,
+	sourceType: string | null
+): BindType => {
+	if (sourceType == null) {
+		return resolveDefaultBindType(bodyElementType);
+	}
+
 	return (
 		resolveSupportedBindType(sourceType) ??
 		resolveAliasedBindType(sourceType) ??
@@ -154,20 +194,22 @@ const resolveBindType = (bindElement: BindElement, sourceType: string): BindType
 };
 
 export class BindTypeDefinition<T extends BindType = BindType> {
-	static from<T extends BindType>(bindElement: BindElement): BindTypeDefinition<T> {
+	static from<T extends BindType>(
+		form: XFormDefinition,
+		nodeset: string,
+		bindElement: BindElement
+	): BindTypeDefinition<T> {
+		const bodyElementType = form.body.getBodyElementType(nodeset);
 		const sourceType = bindElement.getAttribute('type');
-
-		if (sourceType == null) {
-			return new this(sourceType, DEFAULT_BIND_TYPE);
-		}
-
-		const resolved = resolveBindType(bindElement, sourceType);
+		const resolved = resolveBindType(
+			bodyElementType,
+			bindElement,
+			sourceType
+		) satisfies BindType as T;
 
 		return new this(sourceType, resolved);
 	}
 
-	private constructor(source: null, resolved: DefaultBindType);
-	private constructor(source: string, resolved: BindType);
 	private constructor(
 		readonly source: string | null,
 		readonly resolved: T

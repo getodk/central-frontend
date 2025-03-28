@@ -207,6 +207,10 @@ export class BodyDefinition extends DependencyContext implements BodyElementPare
 		return this.elementsByReference.get(reference) ?? null;
 	}
 
+	getBodyElementType(reference: BodyElementReference): AnyBodyElementType | null {
+		return this.elementsByReference.getBodyElementType(reference);
+	}
+
 	getChildElementDefinitions(
 		form: XFormDefinition,
 		parent: BodyElementParentContext,

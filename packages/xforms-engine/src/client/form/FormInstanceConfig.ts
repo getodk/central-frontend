@@ -1,3 +1,4 @@
+import type { InstanceAttachmentsConfig } from '../attachments/InstanceAttachmentsConfig.ts';
 import type { OpaqueReactiveObjectFactory } from '../OpaqueReactiveObjectFactory.ts';
 
 export interface FormInstanceConfig {
@@ -15,4 +16,6 @@ export interface FormInstanceConfig {
 	 * mechanism to handle state updates conveyed by the engine.
 	 */
 	readonly stateFactory?: OpaqueReactiveObjectFactory;
+
+	readonly instanceAttachments?: InstanceAttachmentsConfig;
 }

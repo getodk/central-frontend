@@ -16,7 +16,6 @@ export type {
 	AnyLeafNode,
 	AnyNode,
 	AnyParentNode,
-	AnyUnsupportedControlNode,
 	GeneralChildNode,
 	GeneralParentNode,
 	RepeatRangeNode,
@@ -42,6 +41,6 @@ export type * from './submission/SubmissionMeta.ts';
 export type * from './SubtreeNode.ts';
 export type * from './TextRange.ts';
 export type * from './TriggerNode.ts';
-export type * from './unsupported/UploadNode.ts';
+export type * from './UploadNode.ts';
 export type * from './validation.ts';
 export type * from './ValueType.ts';

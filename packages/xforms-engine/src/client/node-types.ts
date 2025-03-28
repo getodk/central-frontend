@@ -1,5 +1,3 @@
-export type UnsupportedControlNodeType = 'upload';
-
 // prettier-ignore
 export type RepeatRangeNodeType =
 	| 'repeat-range:controlled'
@@ -15,7 +13,7 @@ export type LeafNodeType =
 	| 'trigger'
 	| 'range'
 	| 'rank'
-	| UnsupportedControlNodeType;
+	| 'upload';
 
 // prettier-ignore
 export type InstanceNodeType =
@@ -25,5 +23,4 @@ export type InstanceNodeType =
 	| 'repeat-instance'
 	| 'group'
 	| 'subtree'
-	| LeafNodeType
-	| UnsupportedControlNodeType;
+	| LeafNodeType;

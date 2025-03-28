@@ -4,6 +4,7 @@ import type { AnyInputNode } from './InputNode.ts';
 import type { AnyModelValueNode } from './ModelValueNode.ts';
 import type { AnyNoteNode } from './NoteNode.ts';
 import type { AnyRangeNode } from './RangeNode.ts';
+import type { RankNode } from './RankNode.ts';
 import type { RepeatInstanceNode } from './repeat/RepeatInstanceNode.ts';
 import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNode.ts';
 import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
@@ -11,11 +12,7 @@ import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
 import type { SubtreeNode } from './SubtreeNode.ts';
 import type { TriggerNode } from './TriggerNode.ts';
-import type { RankNode } from './RankNode.ts';
-import type { UploadNode } from './unsupported/UploadNode.ts';
-
-// prettier-ignore
-export type AnyUnsupportedControlNode = UploadNode;
+import type { UploadNode } from './UploadNode.ts';
 
 // prettier-ignore
 export type AnyControlNode =
@@ -24,13 +21,13 @@ export type AnyControlNode =
 	| AnyRangeNode
 	| RankNode
 	| SelectNode
-	| TriggerNode;
+	| TriggerNode
+	| UploadNode;
 
 // prettier-ignore
 export type AnyLeafNode =
 	| AnyControlNode
-	| AnyModelValueNode
-	| AnyUnsupportedControlNode;
+	| AnyModelValueNode;
 
 // prettier-ignore
 export type RepeatRangeNode =

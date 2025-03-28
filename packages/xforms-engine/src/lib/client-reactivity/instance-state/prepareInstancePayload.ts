@@ -10,7 +10,20 @@ import type {
 import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
 import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
+import type { InstanceAttachmentsState } from '../../../instance/attachments/InstanceAttachmentsState.ts';
 import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
+
+const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
+	const files = Array.from(attachments.entries()).map(([context, attachment]) => {
+		if (!context.isAttached()) {
+			return null;
+		}
+
+		return attachment.getValue();
+	});
+
+	return files.filter((file) => file != null);
+};
 
 class InstanceFile extends File implements ClientInstanceFile {
 	override readonly name = INSTANCE_FILE_NAME;
@@ -147,7 +160,7 @@ export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
 	const validation = validateInstance(instanceRoot);
 	const submissionMeta = instanceRoot.definition.submission;
 	const instanceFile = new InstanceFile(instanceRoot);
-	const attachments: readonly File[] = [];
+	const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
 
 	switch (options.payloadType) {
 		case 'chunked':

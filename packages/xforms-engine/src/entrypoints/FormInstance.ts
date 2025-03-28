@@ -40,6 +40,7 @@ export class FormInstance<Mode extends FormInstanceInitializationMode>
 		const { mode, initialState } = options;
 		const config: InstanceConfig = {
 			clientStateFactory: options.instanceConfig.stateFactory ?? identity,
+			computeAttachmentName: () => null,
 		};
 		const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
 			...options.instanceOptions,

@@ -1,7 +1,6 @@
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { BindDefinition } from './BindDefinition.ts';
 import type { BindElement, BindNodeset } from './BindElement.ts';
-import { DEFAULT_BIND_TYPE } from './BindTypeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
 class ArtificialBindElement implements BindElement {
@@ -14,10 +13,6 @@ class ArtificialBindElement implements BindElement {
 	getAttribute(name: string) {
 		if (name === 'nodeset') {
 			return this.ancestorNodeset;
-		}
-
-		if (name === 'type') {
-			return DEFAULT_BIND_TYPE;
 		}
 
 		return null;
