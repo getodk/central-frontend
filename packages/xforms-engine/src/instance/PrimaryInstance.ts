@@ -113,11 +113,7 @@ export class PrimaryInstance<
 		EvaluationContext,
 		ClientReactiveSerializableInstance
 {
-	/**
-	 * @todo this will be populated as we introduce other initialization modes!
-	 */
-	readonly initializationMode: FormInstanceInitializationMode = 'create';
-
+	readonly initializationMode: FormInstanceInitializationMode;
 	readonly model: ModelDefinition;
 
 	// InstanceNode
