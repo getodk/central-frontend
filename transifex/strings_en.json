@@ -3050,6 +3050,10 @@
         "string": "Changed from published version",
         "developer_comment": "This refers to the draft version of a Form."
       },
+      "versionName": {
+        "string": "Version name: {name}",
+        "developer_comment": "This is shown for a Form version."
+      },
       "action": {
         "upload": {
           "string": "Upload new Form Definition",

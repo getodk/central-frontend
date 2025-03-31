@@ -20,9 +20,12 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </template>
     <template #body>
-      <div id="form-edit-published-version-string">
-        <form-version-string :version="form.version"/>
-      </div>
+      <i18n-t id="form-edit-published-version-string" tag="div"
+        keypath="versionName">
+        <template #name>
+          <form-version-string :version="form.version"/>
+        </template>
+      </i18n-t>
     </template>
   </form-edit-section>
 </template>
@@ -65,7 +68,9 @@ const { form } = useRequestData();
       // may show a formatted date like "2020/01/01", or it may use a word like
       // "today", "yesterday", or "Sunday".
       "published": "Published {dateTime}"
-    }
+    },
+    // @transifexKey component.FormEditDef.versionName
+    "versionName": "Version name: {name}"
   }
 }
 </i18n>

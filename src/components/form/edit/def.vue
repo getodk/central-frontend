@@ -17,7 +17,11 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <div id="form-edit-def-container">
         <div>
-          <form-version-string :version="formDraft.version"/>
+          <i18n-t keypath="versionName">
+            <template #name>
+              <form-version-string :version="formDraft.version"/>
+            </template>
+          </i18n-t>
         </div>
         <div>
           <form-version-standard-buttons :version="formDraft"
@@ -127,6 +131,8 @@ const viewXml = modalData('FormVersionViewXml');
     "subtitle": "Uploaded",
     // This refers to the draft version of a Form.
     "changed": "Changed from published version",
+    // This is shown for a Form version.
+    "versionName": "Version name: {name}",
     "action": {
       "upload": "Upload new Form Definition"
     },
