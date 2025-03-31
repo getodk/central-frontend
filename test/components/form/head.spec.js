@@ -150,8 +150,8 @@ describe('FormHead', () => {
         tabs.map(tab => textWithout(tab, '.badge')).should.eql([
           'Submissions',
           'Public Access',
-          'Versions',
           'Edit Form',
+          'Versions',
           'Settings'
         ]);
       });
