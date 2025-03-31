@@ -321,13 +321,6 @@ export default {
 </script>
 
 <style lang="scss">
-#form-attachment-list {
-  .panel-dialog {
-    margin-top: -5px;
-    margin-bottom: 25px;
-  }
-}
-
 #form-attachment-list-upload-button {
   margin-right: 5px;
 
