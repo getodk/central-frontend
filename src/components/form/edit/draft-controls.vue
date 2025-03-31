@@ -14,13 +14,13 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template #body>
-      <button id="form-edit-abandon-button" type="button" class="btn btn-danger"
-        @click="$emit('abandon')">
-        <span class="icon-trash"></span>{{ abandonText }}
-      </button>
       <button id="form-edit-publish-button" type="button"
         class="btn btn-primary" @click="$emit('publish')">
         <span class="icon-star"></span>{{ $t('action.publish') }}
+      </button>
+      <button id="form-edit-abandon-button" type="button" class="btn btn-danger"
+        @click="$emit('abandon')">
+        <span class="icon-trash"></span>{{ abandonText }}
       </button>
     </template>
   </form-edit-section>
@@ -52,7 +52,7 @@ const abandonText = computed(() => (!form.dataExists
   .form-edit-section-body { margin-bottom: 30px; }
 }
 
-#form-edit-publish-button { margin-left: 10px; }
+#form-edit-abandon-button { margin-left: 10px; }
 </style>
 
 <i18n lang="json5">
