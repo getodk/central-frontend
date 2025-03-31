@@ -10,32 +10,35 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table id="form-attachment-table" class="table">
-    <thead>
-      <tr>
-        <th>{{ $t('header.type') }}</th>
-        <th>{{ $t('header.name') }}</th>
-        <th>{{ $t('header.uploaded') }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody v-if="form.dataExists && draftAttachments.dataExists">
-      <form-attachment-row v-for="attachment of draftAttachments.values()"
-        :key="attachment.name" :attachment="attachment"
-        :file-is-over-drop-zone="fileIsOverDropZone"
-        :dragover-attachment="dragoverAttachment"
-        :planned-uploads="plannedUploads"
-        :updated-attachments="updatedAttachments"
-        :linkable="attachment.type === 'file' && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
-        @link="$emit('link', $event)"/>
-    </tbody>
-  </table>
+  <table-scroll id="form-attachment-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ $t('header.type') }}</th>
+          <th>{{ $t('header.name') }}</th>
+          <th>{{ $t('header.uploaded') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody v-if="form.dataExists && draftAttachments.dataExists">
+        <form-attachment-row v-for="attachment of draftAttachments.values()"
+          :key="attachment.name" :attachment="attachment"
+          :file-is-over-drop-zone="fileIsOverDropZone"
+          :dragover-attachment="dragoverAttachment"
+          :planned-uploads="plannedUploads"
+          :updated-attachments="updatedAttachments"
+          :linkable="attachment.type === 'file' && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
+          @link="$emit('link', $event)"/>
+      </tbody>
+    </table>
+  </table-scroll>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 
 import FormAttachmentRow from './row.vue';
+import TableScroll from '../table/scroll.vue';
 
 import { useRequestData } from '../../request-data';
 
@@ -67,8 +70,10 @@ const dsHashset = computed(() =>
 
 #form-attachment-table {
   margin-bottom: 10px;
+  max-height: 70vh;
 
-  table-layout: fixed;
+  table { table-layout: fixed; }
+
   th:first-child { width: 125px; }
   th:nth-child(2) { width: 250px; }
   th:last-child { width: #{200px + $padding-left-table-data + $padding-right-table-data}; }

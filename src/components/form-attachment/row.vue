@@ -153,10 +153,12 @@ export default {
     box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
 
     &:first-child {
+      border-left: none;
       box-shadow: inset 1px 1px $color-info, inset 0 -1px $color-info;
     }
 
     &:last-child {
+      border-right: none;
       box-shadow: inset 0 1px $color-info, inset -1px -1px $color-info;
     }
   }
