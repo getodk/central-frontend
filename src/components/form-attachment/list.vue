@@ -12,25 +12,6 @@ except according to the terms contained in the LICENSE file.
 <template>
   <file-drop-zone id="form-attachment-list" :disabled="uploading"
     :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
-    <div v-if="datasetLinkable" class="panel-dialog">
-      <div class="panel-heading">
-        <span class="panel-title">
-          <span class="icon-database"></span>
-          {{ $t('entitiesTesting.title') }}
-        </span>
-      </div>
-      <div class="panel-body">
-        <p>
-          <span>{{ $t('entitiesTesting.body[0]') }}</span>
-          <sentence-separator/>
-          <i18n-t keypath="moreInfo.clickHere.full">
-            <template #clickHere>
-              <doc-link to="central-datasets/">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-            </template>
-          </i18n-t>
-        </p>
-      </div>
-    </div>
     <table id="form-attachment-list-table" class="table">
       <thead>
         <tr>
@@ -76,16 +57,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { any } from 'ramda';
-
-import DocLink from '../doc-link.vue';
 import FileDropZone from '../file-drop-zone.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
 import FormAttachmentRow from './row.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
-import SentenceSeparator from '../sentence-separator.vue';
 
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
@@ -96,14 +73,12 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormAttachmentList',
   components: {
-    DocLink,
     FileDropZone,
     FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentRow,
-    FormAttachmentUploadFiles,
-    SentenceSeparator
+    FormAttachmentUploadFiles
   },
   inject: ['alert', 'projectId'],
   setup() {
@@ -167,11 +142,6 @@ export default {
     },
     dsHashset() {
       return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}`)) : null;
-    },
-    datasetLinkable() {
-      return this.draftAttachments.dataExists &&
-        this.dsHashset &&
-        any(a => a.type === 'file' && this.dsHashset.has(a.name.replace(/\.[^.]+$/i, '')), Array.from(this.draftAttachments.values()));
     }
   },
   watch: {
@@ -436,13 +406,6 @@ export default {
     "alert": {
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
       "link": "Entity List linked successfully."
-    },
-    // @transifexKey component.FormAttachmentList.datasetsPreview
-    "entitiesTesting": {
-      "title": "Testing Entities",
-      "body": [
-        "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
-      ]
     }
   }
 }

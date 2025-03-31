@@ -2652,16 +2652,6 @@
         "link": {
           "string": "Entity List linked successfully."
         }
-      },
-      "datasetsPreview": {
-        "title": {
-          "string": "Testing Entities"
-        },
-        "body": {
-          "0": {
-            "string": "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
-          }
-        }
       }
     },
     "FormAttachmentNameMismatch": {
