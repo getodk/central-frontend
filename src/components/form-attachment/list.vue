@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <file-drop-zone id="form-attachment-list" :disabled="uploading"
-    :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
+  <div id="form-attachment-list">
     <form-attachment-table
       :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
       :dragover-attachment="dragoverAttachment"
@@ -39,11 +38,10 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
     <form-attachment-link-dataset v-bind="linkDatasetModal"
       @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
-  </file-drop-zone>
+  </div>
 </template>
 
 <script>
-import FileDropZone from '../file-drop-zone.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
@@ -59,14 +57,13 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormAttachmentList',
   components: {
-    FileDropZone,
     FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentTable,
     FormAttachmentUploadFiles
   },
-  inject: ['alert', 'projectId'],
+  inject: ['alert', 'projectId', 'handleDrag', 'disableDrag'],
   setup() {
     const { project, form, draftAttachments, datasets } = useRequestData();
     const { request } = useRequest();
@@ -133,7 +130,15 @@ export default {
         if (dataExists && this.project.datasets > 0) this.fetchDatasets();
       },
       immediate: true
+    },
+    uploading(uploading) {
+      this.disableDrag(uploading);
     }
+  },
+  created() {
+    this.handleDrag((event, ...args) => {
+      this[event.type]?.(event, ...args);
+    });
   },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
@@ -156,6 +161,8 @@ export default {
         if (items[i].kind === 'file') count += 1;
       return count;
     },
+    // this.dragenter(), this.dragleave(), and this.drop() are called via
+    // this.handleDrag().
     dragenter(event) {
       const { items } = event.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);

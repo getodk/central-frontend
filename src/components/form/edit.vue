@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-edit">
+  <file-drop-zone id="form-edit" :disabled="dragDisabled" :styled="false"
+    @dragenter="handleDrag" @dragleave="handleDrag" @drop="handleDrag">
     <div class="row">
       <div class="col-xs-6">
         <form-edit-loading-draft v-if="!formDraft.dataExists"/>
@@ -38,13 +39,14 @@ except according to the terms contained in the LICENSE file.
       @success="afterPublish"/>
     <form-draft-abandon v-bind="abandonModal" @hide="abandonModal.hide()"
       @success="afterAbandon"/>
-  </div>
+  </file-drop-zone>
 </template>
 
 <script setup>
-import { inject, provide, watchEffect } from 'vue';
+import { inject, provide, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import FileDropZone from '../file-drop-zone.vue';
 import FormDraftAbandon from '../form-draft/abandon.vue';
 import FormDraftPublish from '../form-draft/publish.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
@@ -112,6 +114,12 @@ watchEffect(() => {
     }).catch(noop);
   }
 });
+
+// Dragging and dropping form attachments
+const handleDrag = ref(noop);
+provide('handleDrag', (f) => { handleDrag.value = f; });
+const dragDisabled = ref(false);
+provide('disableDrag', (disabled) => { dragDisabled.value = disabled; });
 
 const uploadModal = modalData();
 const { router, alert } = inject('container');
