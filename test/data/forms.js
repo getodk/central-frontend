@@ -141,6 +141,7 @@ formVersions = dataStore({
     version = 'v1',
     draft = false,
     key = null,
+    hash = 'a'.repeat(32),
     sha256 = 'a'.repeat(64),
     enketoId,
     publishedAt = undefined,
@@ -156,6 +157,7 @@ formVersions = dataStore({
       formId: form.id,
       version,
       keyId: key != null ? key.id : null,
+      hash,
       sha256,
       excelContentType
     };
@@ -206,7 +208,14 @@ const basicFormProps = [
 ];
 // Properties from formVersions above that will be added to all forms and form
 // versions in the views below
-const basicVersionProps = ['version', 'keyId', 'publishedAt', 'draftToken'];
+const basicVersionProps = [
+  'version',
+  'keyId',
+  'hash',
+  'sha256',
+  'publishedAt',
+  'draftToken'
+];
 
 const findVersionForForm = (form) => {
   let draft;

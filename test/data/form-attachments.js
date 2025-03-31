@@ -24,34 +24,31 @@ export const standardFormAttachments = dataStore({
       : extendedForms.createPast(1).last(),
     type = 'image',
     name = fakeName(type),
-    blobExists = undefined,
-    datasetExists = undefined,
-    hasUpdatedAt = undefined
+    datasetExists = false,
+    hasUpdatedAt = undefined,
+    blobExists = inPast && !datasetExists && hasUpdatedAt == null
   }) => {
     if (!inPast) {
-      if (blobExists === true)
-        throw new Error('inPast and blobExists are inconsistent');
+      if (blobExists)
+        throw new Error('blobExists cannot be true for a new form attachment');
+      if (datasetExists)
+        throw new Error('datasetExists cannot be true for a new form attachment');
       if (hasUpdatedAt === true)
-        throw new Error('inPast and hasUpdatedAt are inconsistent');
-    } else if (blobExists === true && hasUpdatedAt === false) {
+        throw new Error('hasUpdatedAt cannot be true for a new form attachment');
+    } else if (blobExists && hasUpdatedAt === false) {
       throw new Error('blobExists and hasUpdatedAt are inconsistent');
     } else if (blobExists && datasetExists) {
-      throw new Error('blobExists and datasetExists are inconsistent');
+      throw new Error('blobExists and datasetExists cannot both be true');
     }
 
-    const result = {
+    return {
       type,
       name,
-      blobExists: blobExists != null
-        ? blobExists
-        : (hasUpdatedAt != null ? false : inPast),
+      blobExists,
       datasetExists,
-      updatedAt: hasUpdatedAt === true || (hasUpdatedAt == null && inPast)
-        ? fakePastDate([form.createdAt])
-        : null
+      exists: blobExists || datasetExists,
+      updatedAt: hasUpdatedAt ?? inPast ? fakePastDate([form.createdAt]) : null
     };
-    result.exists = result.blobExists || result.datasetExists;
-    return result;
   },
   sort: (attachment1, attachment2) =>
     attachment1.name.localeCompare(attachment2.name)

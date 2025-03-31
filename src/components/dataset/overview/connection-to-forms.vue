@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <p>{{ $tcn('formsUpdateEntities', propertiesByForm.length) }}</p>
       <div class="div">
-        <expandable-row v-for="(form) in propertiesByForm" :key="form.xmlFormId">
+        <expandable-row v-for="form in propertiesByForm" :key="form.xmlFormId">
           <template #title>
             <div class="form-name">
               <form-link :form="form"
@@ -96,7 +96,7 @@ export default {
     border-bottom: none;
   }
 
-  .title-cell{
+  .expandable-row-title {
     max-width: calc(100% - 180px);
 
     .form-name {
@@ -104,7 +104,7 @@ export default {
     }
   }
 
-  a, .expandable-row button {
+  a, .expandable-row-toggle-button {
     font-size: 16px;
   }
 

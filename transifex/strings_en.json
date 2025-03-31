@@ -602,6 +602,10 @@
       "string": "{count, plural, one {{count} App User} other {{count} App Users}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
+    "attachments": {
+      "string": "{count, plural, one {{count} attachment} other {{count} attachments}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
     "form": {
       "string": "{count, plural, one {{count} Form} other {{count} Forms}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
@@ -654,6 +658,10 @@
     },
     "forms": {
       "string": "Forms",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "formDef": {
+      "string": "Form Definition",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formAttachments": {
@@ -947,10 +955,6 @@
     },
     "beta": {
       "string": "Beta"
-    },
-    "currentDraft": {
-      "string": "Your Current Draft",
-      "developer_comment": "This is a title shown above a section of the page."
     }
   },
   "mixin": {
@@ -1736,12 +1740,6 @@
           "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
-      }
-    },
-    "DatasetSummary": {
-      "datasetUpdates": {
-        "string": "{count, plural, one {Entity List is updated by this Form:} other {Entity Lists are updated by this Form:}}",
-        "developer_comment": "Number of Entity List(s) is shown separately above this text"
       }
     },
     "DatasetSummaryRow": {
@@ -2654,16 +2652,6 @@
         "link": {
           "string": "Entity List linked successfully."
         }
-      },
-      "datasetsPreview": {
-        "title": {
-          "string": "Testing Entities"
-        },
-        "body": {
-          "0": {
-            "string": "One or more Form Attachments have filenames that match Entity List names. By default, those are linked to Entity Lists. For testing, you may want to upload temporary data as .csv files, then link to the Entity Lists once you have verified your form logic."
-          }
-        }
       }
     },
     "FormAttachmentNameMismatch": {
@@ -2982,20 +2970,14 @@
       }
     },
     "FormDraftStatus": {
-      "currentDraft": {
-        "versionCaption": {
-          "full": {
-            "string": "{draftVersion} of this Form.",
-            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-          },
-          "draftVersion": {
-            "string": "Draft version",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-          }
-        },
+      "actions": {
         "action": {
-          "upload": {
-            "string": "Upload new definition",
+          "abandon": {
+            "string": "Abandon Draft",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "publish": {
+            "string": "Publish Draft",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -3012,18 +2994,6 @@
         },
         "delete": {
           "string": "The Form “{name}” was deleted."
-        }
-      },
-      "actions": {
-        "action": {
-          "abandon": {
-            "string": "Abandon Draft",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "publish": {
-            "string": "Publish Draft",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
         }
       }
     },
@@ -3050,6 +3020,15 @@
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
+    "FormEditAttachments": {
+      "noAttachments": {
+        "string": "This definition requires no attachments, so there is nothing to upload.",
+        "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
+      },
+      "missingCount": {
+        "string": "{count, plural, one {{count} missing attachment} other {{count} missing attachments}}"
+      }
+    },
     "FormEditCreateDraft": {
       "title": {
         "string": "Draft version",
@@ -3066,6 +3045,26 @@
         "string": "The published version will not be affected until you publish your Draft."
       }
     },
+    "FormEditDef": {
+      "subtitle": {
+        "string": "Uploaded",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "changed": {
+        "string": "Changed from published version",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "action": {
+        "upload": {
+          "string": "Upload new Form Definition",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "withinDef": {
+        "string": "Within this Form Definition:",
+        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
+      }
+    },
     "FormEditDraftControls": {
       "subtitle": {
         "string": "Ready to publish",
@@ -3076,6 +3075,22 @@
           "string": "Delete Form",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "FormEditEntities": {
+      "datasetCount": {
+        "string": "{count, plural, one {Publishing this draft will update {count} Entity List} other {Publishing this draft will update {count} Entity Lists}}"
+      },
+      "diffHasNew": {
+        "string": "New Entity Lists and/or properties will be created",
+        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      },
+      "notEntityRelated": {
+        "string": "This definition does not update any Entities.",
+        "developer_comment": "\"Definition\" refers to a Form Definition."
+      },
+      "whatAreEntities": {
+        "string": "What are Entities?"
       }
     },
     "FormEditPublishedVersion": {
