@@ -26,7 +26,7 @@ export const standardFormAttachments = dataStore({
     name = fakeName(type),
     datasetExists = false,
     hasUpdatedAt = undefined,
-    blobExists = datasetExists || hasUpdatedAt != null ? false : inPast
+    blobExists = inPast && !datasetExists && hasUpdatedAt == null
   }) => {
     if (!inPast) {
       if (blobExists)
@@ -37,8 +37,6 @@ export const standardFormAttachments = dataStore({
         throw new Error('hasUpdatedAt cannot be true for a new form attachment');
     } else if (blobExists && hasUpdatedAt === false) {
       throw new Error('blobExists and hasUpdatedAt are inconsistent');
-    } else if (datasetExists && hasUpdatedAt === false) {
-      throw new Error('datasetExists and hasUpdatedAt are inconsistent');
     } else if (blobExists && datasetExists) {
       throw new Error('blobExists and datasetExists cannot both be true');
     }

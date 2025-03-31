@@ -4,7 +4,7 @@ import testData from '../../../data';
 import { load } from '../../../util/http';
 import { mockLogin } from '../../../util/session';
 
-describe('FormDefAttachments', () => {
+describe('FormEditAttachments', () => {
   beforeEach(mockLogin);
 
   describe('subtitle', () => {

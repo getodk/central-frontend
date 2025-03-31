@@ -67,11 +67,13 @@ $dots-margin-block: 9px;
 
   > :nth-child(2) {
     flex-grow: 1;
+    overflow-x: hidden;
     padding-top: 16px;
   }
 }
 
 .form-edit-section-icon-container {
+  // Use flexbox to center the icon.
   display: flex;
   align-items: center;
   justify-content: center;

@@ -16,11 +16,11 @@ except according to the terms contained in the LICENSE file.
       <template v-if="datasetDiff.dataExists">
         {{ $tcn('datasetCount', datasetDiff.length) }}
       </template>
-      <p v-else-if="!formDraft.entityRelated">
+      <template v-else-if="!formDraft.entityRelated">
         <span>{{ $t('notEntityRelated') }}</span>
         <sentence-separator/>
         <doc-link to="central-entities/">{{ $t('whatAreEntities') }}</doc-link>
-      </p>
+      </template>
     </template>
     <template v-if="diffHasNew" #tag>{{ $t('diffHasNew') }}</template>
     <template #body>
