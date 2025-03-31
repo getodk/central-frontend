@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="entity-show">
     <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
@@ -159,12 +159,18 @@ const EntityBranchData = defineAsyncComponent(loadAsync('EntityBranchData'));
 const branchData = modalData('EntityBranchData');
 
 const breadcrumbLinks = computed(() => [
-  { text: project.nameWithArchived, path: projectPath() },
-  { text: t('resource.entities'), path: projectPath('entity-lists'), icon: 'icon-database' },
-  { text: props.datasetName, path: datasetPath('entities') },
+  { text: project.dataExists ? project.nameWithArchived : t('resource.project'), path: projectPath('entity-lists'), icon: 'icon-archive' },
+  { text: props.datasetName, path: datasetPath(), icon: 'icon-database' },
+  { text: entity.dataExists ? entity.currentVersion.label : t('resource.entity'), path: datasetPath('entities') }
 ]);
 
 </script>
+
+<style lang="scss">
+  #entity-show .page-section-heading {
+    font-size: 24px;
+  }
+</style>
 
 <i18n lang="json5">
 {

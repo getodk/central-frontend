@@ -67,6 +67,7 @@ const forms = dataStore({
     fields = [testDataFields.string('/s')],
     entityRelated = false,
     publicLinks = 0,
+    webformsEnabled = false,
 
     ...extraVersionOptions
   }) => {
@@ -80,6 +81,7 @@ const forms = dataStore({
       state,
       entityRelated,
       publicLinks,
+      webformsEnabled,
       // If publishedAt was specified, set createdAt to publishedAt in order to
       // ensure that createdAt is not after publishedAt.
       createdAt: !draft && publishedAt != null
@@ -201,6 +203,7 @@ const basicFormProps = [
   'state',
   'createdAt',
   'updatedAt',
+  'webformsEnabled',
   '_fields'
 ];
 // Properties from formVersions above that will be added to all forms and form

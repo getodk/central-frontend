@@ -1,4 +1,5 @@
 import ProjectOverviewDescription from '../../../src/components/project/overview/description.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import ProjectOverview from '../../../src/components/project/overview.vue';
@@ -101,6 +102,18 @@ describe('ProjectShow', () => {
       });
   });
 
+
+  it('renders breadcrumbs', async () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
+    testData.extendedDatasets.createPast(1);
+    const component = await load('/projects/1');
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links.length.should.equal(1);
+    links[0].text.should.equal('My Project');
+    links[0].path.should.equal('/projects/1');
+  });
+
   describe('title', () => {
     it("shows the project's name", async () => {
       mockLogin();
@@ -181,7 +194,7 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
         'Forms 1',
-        'Entities 1',
+        'Entity Lists 1',
         'Project Roles',
         'App Users',
         'Form Access',
@@ -206,7 +219,7 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Forms 1', 'Entities 1']);
+        text.should.eql(['Forms 1', 'Entity Lists 1']);
         li[0].should.be.visible(true);
       });
     });
@@ -234,7 +247,7 @@ describe('ProjectShow', () => {
       mockLogin();
       testData.extendedProjects.createPast(1, { datasets: 1000 });
       const app = await load('/projects/1');
-      findTab(app, 'Entities').get('.badge').text().should.equal('1,000');
+      findTab(app, 'Entity Lists').get('.badge').text().should.equal('1,000');
     });
   });
 

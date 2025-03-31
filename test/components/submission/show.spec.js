@@ -17,30 +17,34 @@ describe('SubmissionShow', () => {
   });
 
   it('renders breadcrumbs with links', async () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
     testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 's' });
     const component = await load('/projects/1/forms/a%20b/submissions/s', {
       root: false
     });
     const { links } = component.getComponent(Breadcrumbs).props();
+    links[0].text.should.equal('My Project');
     links[0].path.should.equal('/projects/1');
-    links[1].text.should.equal('Forms');
-    links[1].path.should.equal('/projects/1');
-    links[2].text.should.equal('My Form');
+    links[1].text.should.equal('My Form');
+    links[1].path.should.equal('/projects/1/forms/a%20b');
+    links[2].text.should.equal('s');
     links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
   });
 
   it('renders the xmlformid of the form in the breadcrumb if it has no name', async () => {
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
     testData.extendedForms.createPast(1, { name: null, xmlFormId: 'a b', submissions: 1 });
     testData.extendedSubmissions.createPast(1, { instanceId: 's' });
     const component = await load('/projects/1/forms/a%20b/submissions/s', {
       root: false
     });
     const { links } = component.getComponent(Breadcrumbs).props();
+    links[0].text.should.equal('My Project');
     links[0].path.should.equal('/projects/1');
-    links[1].text.should.equal('Forms');
-    links[1].path.should.equal('/projects/1');
-    links[2].text.should.equal('a b');
+    links[1].text.should.equal('a b');
+    links[1].path.should.equal('/projects/1/forms/a%20b');
+    links[2].text.should.equal('s');
     links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
   });
 

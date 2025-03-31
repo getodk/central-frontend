@@ -25,6 +25,39 @@ except according to the terms contained in the LICENSE file.
             </i18n-t>
           </div>
         </div>
+        <div class="panel panel-simple panel-web-forms">
+          <div class="panel-heading">
+            <h1 class="panel-title">
+              <span class="badge beta">
+                {{ $t('common.beta') }}
+              </span>
+              {{ $t('webFormsSetting.webForms') }}
+            </h1>
+          </div>
+          <div class="panel-body">
+            <i18n-t tag="p" keypath="webFormsSetting.description">
+              <template #formName>
+                <strong>{{ form.nameOrId }}</strong>
+              </template>
+            </i18n-t>
+            <form id="web-form-settings-form">
+              <div class="radio">
+                <label>
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
+                    @change="confirmationModal.show({ webformsEnabled: false })">
+                  {{ $t('webFormsSetting.enketoDefault') }}
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
+                    @change="confirmationModal.show({ webformsEnabled: true })">
+                  ODK Web Forms
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
       <div class="col-xs-6">
         <div class="panel panel-simple-danger">
@@ -44,40 +77,83 @@ except according to the terms contained in the LICENSE file.
     </div>
     <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
+    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="confirmationModal.hide()"/>
   </div>
 </template>
 
-<script>
+<script setup>
+import { inject, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
+import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'FormSettings',
-  components: { FormDelete },
-  inject: ['alert'],
-  setup() {
-    const { form } = useRequestData();
-    const { projectPath } = useRoutes();
-    return { form, deleteModal: modalData(), projectPath };
-  },
-  methods: {
-    afterDelete() {
-      const message = this.$t('alert.delete', { name: this.form.nameOrId });
-      this.$router.push(this.projectPath())
-        .then(() => { this.alert.success(message); });
-    }
-  }
+defineOptions({
+  name: 'FormSettings'
+});
+
+const alert = inject('alert');
+
+const { t } = useI18n();
+const router = useRouter();
+const { form } = useRequestData();
+const { projectPath } = useRoutes();
+
+const deleteModal = modalData();
+const confirmationModal = modalData();
+
+const afterDelete = () => {
+  const message = t('alert.delete', { name: form.nameOrId });
+  router.push(projectPath())
+    .then(() => { alert.success(message); });
+};
+
+const webformsEnabled = ref(form.webformsEnabled);
+watch(() => form.dataExists, () => {
+  webformsEnabled.value = form.webformsEnabled;
+});
+
+const hideAndReset = () => {
+  webformsEnabled.value = form.webformsEnabled;
+  confirmationModal.hide();
 };
 </script>
 
 <style lang="scss">
-#form-settings .panel-simple-danger .panel-body p {
-  margin-bottom: 15px;
-  margin-top: 10px;
-  text-align: center;
+@import '../../assets/scss/_variables.scss';
+
+#form-settings {
+  .panel-simple-danger .panel-body p {
+    margin-bottom: 15px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  .panel-web-forms {
+    .panel-body > p {
+      margin-bottom: 20px;
+    }
+    .beta {
+      text-transform: uppercase;
+      background: #F1DEE7;
+      padding: 5px 10px;
+      color: $color-accent-primary;
+      font-family: Helvetica;
+      font-weight: 400;
+      vertical-align: baseline;
+    }
+    .radio {
+      min-height: 48px;
+      margin-bottom: 0;
+      label {
+        cursor: pointer;
+        padding-left: 30px;
+      }
+    }
+  }
 }
 </style>
 
@@ -97,6 +173,14 @@ export default {
     },
     "alert": {
       "delete": "The Form “{name}” was deleted."
+    },
+    "webFormsSetting": {
+      // Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms
+      "webForms": "Web Forms",
+      // Description of a section. {formName} is replaced with the name of the Form
+      "description": "Fill out, preview and edit your “{formName}” Form using",
+      // The word "Enketo" should not be translated
+      "enketoDefault": "Enketo (default)"
     }
   }
 }

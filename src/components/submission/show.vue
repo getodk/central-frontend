@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="submission-show">
     <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>{{ submission.dataExists ? submission.instanceNameOrId : '' }}</template>
@@ -108,9 +108,9 @@ export default {
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() },
-        { text: this.$t('resource.forms'), path: this.projectPath(), icon: 'icon-file' },
-        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath('submissions') }
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath(), icon: 'icon-archive' },
+        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.formPath(), icon: 'icon-file' },
+        { text: this.submission.dataExists ? this.submission.instanceNameOrId : this.$t('resource.submission'), path: this.formPath('submissions') }
       ];
     }
   },
@@ -201,6 +201,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+  #submission-show .page-section-heading {
+    font-size: 24px;
+  }
+</style>
 
 <i18n lang="json5">
 {
