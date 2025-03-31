@@ -148,49 +148,45 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#form-attachment-table {
-  > tbody > tr {
-    &.targeted {
-      > td {
-        box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
+.form-attachment-row {
+  &.targeted td {
+    box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
 
-        &:first-child {
-          box-shadow: inset 1px 1px $color-info, inset 0 -1px $color-info;
-        }
-
-        &:last-child {
-          box-shadow: inset 0 1px $color-info, inset -1px -1px $color-info;
-        }
-      }
+    &:first-child {
+      box-shadow: inset 1px 1px $color-info, inset 0 -1px $color-info;
     }
 
-    .form-attachment-list-name { @include text-overflow-ellipsis; }
-
-    .label {
-      margin-left: 5px;
+    &:last-child {
+      box-shadow: inset 0 1px $color-info, inset -1px -1px $color-info;
     }
+  }
 
-    .icon-exclamation-triangle {
-      color: #e1bf50;
+  .form-attachment-list-name { @include text-overflow-ellipsis; }
+
+  .label {
+    margin-left: 5px;
+  }
+
+  .icon-exclamation-triangle {
+    color: #e1bf50;
+    margin-right: $margin-right-icon;
+  }
+
+  .form-attachment-list-uploaded {
+    .icon-link {
       margin-right: $margin-right-icon;
+      color: $color-action-foreground;
     }
+  }
 
-    .form-attachment-list-uploaded {
-      .icon-link {
-        margin-right: $margin-right-icon;
-        color: $color-action-foreground;
-      }
-    }
+  .form-attachment-list-action {
+    div {
+      text-align: right;
 
-    .form-attachment-list-action {
-      div {
-        text-align: right;
-
-        button {
-          // adjusting for td padding
-          margin-top: -8px;
-          margin-bottom: -4px;
-        }
+      button {
+        // adjusting for td padding
+        margin-top: -8px;
+        margin-bottom: -4px;
       }
     }
   }
