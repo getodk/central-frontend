@@ -46,7 +46,7 @@ import { computed, ref } from 'vue';
 
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
-import TableFreeze from '../table-freeze.vue';
+import TableFreeze from '../table/freeze.vue';
 
 import useChunkyArray from '../../composables/chunky-array';
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';

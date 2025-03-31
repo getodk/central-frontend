@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import ProjectFormAccessRow from './row.vue';
-import TableFreeze from '../../table-freeze.vue';
+import TableFreeze from '../../table/freeze.vue';
 
 import { useRequestData } from '../../../request-data';
 

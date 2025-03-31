@@ -47,7 +47,7 @@ import { ref } from 'vue';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
-import TableFreeze from '../table-freeze.vue';
+import TableFreeze from '../table/freeze.vue';
 
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';

@@ -1,6 +1,6 @@
-import TableFreeze from '../../src/components/table-freeze.vue';
+import TableFreeze from '../../../src/components/table/freeze.vue';
 
-import { mergeMountOptions, mount } from '../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(TableFreeze, mergeMountOptions(options, {
