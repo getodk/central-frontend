@@ -65,17 +65,17 @@ except according to the terms contained in the LICENSE file.
             </span>
           </router-link>
         </li>
-        <li :class="formTabClass('versions')" role="presentation">
-          <router-link :to="tabPath('versions')"
-            v-tooltip.aria-describedby="formTabDescription">
-            {{ $t('formHead.tab.versions') }}
-          </router-link>
-        </li>
         <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
           role="presentation">
           <router-link :to="tabPath('draft')">
             {{ $t('formHead.tab.editForm') }}
             <span class="icon-pencil-square"></span>
+          </router-link>
+        </li>
+        <li :class="formTabClass('versions')" role="presentation">
+          <router-link :to="tabPath('versions')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('formHead.tab.versions') }}
           </router-link>
         </li>
         <li v-if="rendersFormTabs" :class="formTabClass('settings')"
