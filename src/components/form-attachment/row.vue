@@ -185,7 +185,6 @@ export default {
     .form-attachment-list-action {
       div {
         text-align: right;
-        width: 200px;
 
         button {
           // adjusting for td padding

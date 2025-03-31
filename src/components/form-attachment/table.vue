@@ -13,10 +13,10 @@ except according to the terms contained in the LICENSE file.
   <table id="form-attachment-table" class="table">
     <thead>
       <tr>
-        <th class="form-attachment-list-type">{{ $t('header.type') }}</th>
-        <th class="form-attachment-list-name">{{ $t('header.name') }}</th>
-        <th class="form-attachment-list-uploaded">{{ $t('header.uploaded') }}</th>
-        <th class="form-attachment-list-action"></th>
+        <th>{{ $t('header.type') }}</th>
+        <th>{{ $t('header.name') }}</th>
+        <th>{{ $t('header.uploaded') }}</th>
+        <th></th>
       </tr>
     </thead>
     <tbody v-if="form.dataExists && draftAttachments.dataExists">
@@ -63,32 +63,15 @@ const dsHashset = computed(() =>
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #form-attachment-table {
   margin-bottom: 10px;
 
-  .form-attachment-list-type {
-    // Fix the widths of the Type and Name columns so that the width of the
-    // Uploaded column is also fixed. We do not want the width of the Uploaded
-    // column to change when a Replace label is added to a row.
-    max-width: 125px;
-    min-width: 125px;
-    width: 125px;
-  }
-
-  .form-attachment-list-name {
-    max-width: 250px;
-    min-width: 250px;
-    width: 250px;
-  }
-
-  .form-attachment-list-uploaded {
-    // Set the column to a minimum width such that when a Replace label is
-    // added to a row, it does not cause additional wrapping.
-    min-width: 300px;
-
-    // So that column doesn't grow infinitely
-    width: 1px;
-  }
+  table-layout: fixed;
+  th:first-child { width: 125px; }
+  th:nth-child(2) { width: 250px; }
+  th:last-child { width: #{200px + $padding-left-table-data + $padding-right-table-data}; }
 }
 </style>
 
