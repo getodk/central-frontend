@@ -33,7 +33,9 @@ describe('FormShow', () => {
       return load('/projects/1/forms/a%20b/versions').testRequests([
         { url: '/v1/projects/1', extended: true },
         { url: '/v1/projects/1/forms/a%20b', extended: true },
-        { url: '/v1/projects/1/forms/a%20b/versions', extended: true }
+        { url: '/v1/projects/1/forms/a%20b/versions', extended: true },
+        { url: '/v1/projects/1/forms/a%20b/attachments' },
+        { url: '/v1/projects/1/forms/a%20b/dataset-diff' }
       ]);
     });
 
