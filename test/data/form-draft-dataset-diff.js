@@ -1,15 +1,14 @@
 import faker from 'faker';
 import { comparator } from 'ramda';
 
-import { dataStore } from './data-store';
 import Property from '../util/ds-property-enum';
-
+import { dataStore } from './data-store';
 
 // eslint-disable-next-line import/prefer-default-export
 export const formDraftDatasetDiffs = dataStore({
   factory: ({
     isNew,
-    properties
+    properties = []
   }) => ({
     name: faker.random.alphaNumeric(10),
     isNew,
@@ -26,6 +25,3 @@ export const formDraftDatasetDiffs = dataStore({
   }),
   sort: comparator((diff1, diff2) => diff1.name < diff2.name)
 });
-
-
-

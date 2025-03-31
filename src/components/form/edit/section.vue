@@ -19,8 +19,16 @@ except according to the terms contained in the LICENSE file.
       <div v-if="dotted" class="form-edit-section-dots"></div>
     </div>
     <div>
-      <p class="form-edit-section-title"><slot name="title"></slot></p>
-      <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
+      <div class="form-edit-section-heading">
+        <div>
+          <p class="form-edit-section-title"><slot name="title"></slot></p>
+          <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
+        </div>
+        <div class="form-edit-section-tag">
+          <span class="icon-circle"></span>
+          <span><slot name="tag"></slot></span>
+        </div>
+      </div>
       <div class="form-edit-section-body"><slot name="body"></slot></div>
     </div>
   </div>
@@ -85,16 +93,41 @@ $dots-margin-block: 9px;
   margin-top: $dots-margin-block;
 }
 
+.form-edit-section-heading {
+  align-items: center;
+  column-gap: 15px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
 .form-edit-section-title {
   font-size: 17px;
   font-weight: bold;
   line-height: 1.2;
+  margin-bottom: 0;
 }
 
 .form-edit-section-subtitle {
-  margin-top: -10px;
+  margin-bottom: 0;
 
   &:empty { display: none; }
+}
+
+.form-edit-section-tag {
+  display: flex;
+  align-items: center;
+  column-gap: $margin-right-icon;
+
+  background-color: rgba($color-accent-primary, 0.04);
+  border-radius: 6px;
+  color: $color-accent-primary;
+  padding: 5px 9px;
+
+  // Hide the entire element if no tag slot is provided. We don't want the icon
+  // to be shown in that case.
+  &:has(> :nth-child(2):empty) { display: none; }
+
+  .icon-circle { font-size: 12px; }
 }
 
 .form-edit-section.warning {

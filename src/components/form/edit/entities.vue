@@ -13,8 +13,8 @@ except according to the terms contained in the LICENSE file.
   <form-edit-section id="form-edit-entities" icon="database">
     <template #title>{{ $t('resource.entities') }}</template>
     <template #subtitle>
-      <template v-if="formDraftDatasetDiff.dataExists">
-        {{ $tcn('datasetCount', formDraftDatasetDiff.length) }}
+      <template v-if="datasetDiff.dataExists">
+        {{ $tcn('datasetCount', datasetDiff.length) }}
       </template>
       <p v-else-if="!formDraft.entityRelated">
         <span>{{ $t('notEntityRelated') }}</span>
@@ -22,9 +22,10 @@ except according to the terms contained in the LICENSE file.
         <doc-link to="central-entities/">{{ $t('whatAreEntities') }}</doc-link>
       </p>
     </template>
+    <template v-if="diffHasNew" #tag>{{ $t('diffHasNew') }}</template>
     <template #body>
       <template v-if="formDraft.entityRelated">
-        <loading :state="formDraftDatasetDiff.initiallyLoading"/>
+        <loading :state="datasetDiff.initiallyLoading"/>
         <dataset-summary is-draft/>
       </template>
     </template>
@@ -32,6 +33,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 import DatasetSummary from '../../dataset/summary.vue';
 import DocLink from '../../doc-link.vue';
 import FormEditSection from './section.vue';
@@ -44,8 +47,12 @@ defineOptions({
   name: 'FormEditEntities'
 });
 
-const { formDraftDatasetDiff, resourceView } = useRequestData();
+const { formDraftDatasetDiff: datasetDiff, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
+
+const diffHasNew = computed(() =>
+  datasetDiff.dataExists && datasetDiff.some(dataset => dataset.isNew ||
+    dataset.properties.some(property => property.isNew)));
 </script>
 
 <style lang="scss">
@@ -60,6 +67,9 @@ const formDraft = resourceView('formDraft', (data) => data.get());
 {
   "en": {
     "datasetCount": "Publishing this draft will update {count} Entity List | Publishing this draft will update {count} Entity Lists",
+    // This text is shown if publishing a Draft Form will create one or more
+    // Entity Lists or one or more Entity properties.
+    "diffHasNew": "New Entity Lists and/or properties will be created",
     // "Definition" refers to a Form Definition.
     "notEntityRelated": "This definition does not update any Entities.",
     "whatAreEntities": "What are Entities?"

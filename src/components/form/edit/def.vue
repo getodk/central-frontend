@@ -13,6 +13,7 @@ except according to the terms contained in the LICENSE file.
   <form-edit-section id="form-edit-def" icon="code">
     <template #title>{{ $t('resource.formDef') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
+    <template v-if="changed" #tag>{{ $t('changed') }}</template>
     <template #body>
       <div id="form-edit-def-container">
         <div>
@@ -39,7 +40,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import FormEditAttachments from './attachments.vue';
 import FormEditEntities from './entities.vue';
@@ -56,8 +57,11 @@ defineOptions({
 });
 defineEmits(['upload']);
 
-const { resourceView } = useRequestData();
+const { form, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
+
+const changed = computed(() =>
+  form.dataExists && form.publishedAt != null && formDraft.hash !== form.hash);
 
 const FormVersionViewXml = defineAsyncComponent(loadAsync('FormVersionViewXml'));
 const viewXml = modalData('FormVersionViewXml');
@@ -117,8 +121,10 @@ const viewXml = modalData('FormVersionViewXml');
 <i18n lang="json5">
 {
   "en": {
-    // This refers to a Form Definition.
+    // This refers to the draft version of a Form.
     "subtitle": "Uploaded",
+    // This refers to the draft version of a Form.
+    "changed": "Changed from published version",
     "action": {
       "upload": "Upload new Form Definition"
     },
