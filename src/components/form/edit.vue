@@ -19,8 +19,8 @@ except according to the terms contained in the LICENSE file.
         <form-edit-draft-controls v-else @publish="publishModal.show()"
           @abandon="abandonModal.show()"/>
       </div>
-      <div class="col-xs-6">
-        <form-edit-published-version v-if="form.dataExists"/>
+      <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
+        <form-edit-published-version/>
       </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
