@@ -12,7 +12,6 @@ except according to the terms contained in the LICENSE file.
 <template>
   <form-edit-section id="form-edit-draft-controls" icon="pencil" dotted>
     <template #title>{{ $t('title') }}</template>
-    <template #subtitle>{{ $t('subtitle') }}</template>
     <template #body>
       <button id="form-edit-publish-button" type="button"
         class="btn btn-primary" @click="$emit('publish')">
@@ -58,10 +57,9 @@ const abandonText = computed(() => (!form.dataExists
 <i18n lang="json5">
 {
   "en": {
-    // @transifexKey component.FormEditCreateDraft.title
-    "title": "Draft version",
+    // @transifexKey component.FormEditDraftControls.subtitle
     // This refers to the draft version of a Form.
-    "subtitle": "Ready to publish",
+    "title": "Ready to publish",
     "action": {
       "delete": "Delete Form",
       // @transifexKey component.FormDraftStatus.actions.action.abandon

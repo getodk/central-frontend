@@ -63,8 +63,8 @@ const { form } = useRequestData();
 <i18n lang="json5">
 {
   "en": {
-    // This refers to the published version of a Form.
-    "title": "Published version",
+    // This refers to the current version of a Form.
+    "title": "Current version",
     "subtitle": {
       // This refers to the Form.
       "draft": "Not yet published",
