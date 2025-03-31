@@ -64,7 +64,7 @@ const dsHashset = computed(() =>
 
 <style lang="scss">
 #form-attachment-table {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 
   .form-attachment-list-type {
     // Fix the widths of the Type and Name columns so that the width of the
