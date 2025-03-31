@@ -3058,11 +3058,11 @@
     "FormEditDef": {
       "subtitle": {
         "string": "Uploaded",
-        "developer_comment": "This refers to a Form Definition."
+        "developer_comment": "This refers to the draft version of a Form."
       },
       "changed": {
         "string": "Changed from published version",
-        "developer_comment": "This refers to a Form Definition."
+        "developer_comment": "This refers to the draft version of a Form."
       },
       "action": {
         "upload": {
@@ -3091,16 +3091,16 @@
       "datasetCount": {
         "string": "{count, plural, one {Publishing this draft will update {count} Entity List} other {Publishing this draft will update {count} Entity Lists}}"
       },
+      "diffHasNew": {
+        "string": "New Entity Lists and/or properties will be created",
+        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      },
       "notEntityRelated": {
         "string": "This definition does not update any Entities.",
         "developer_comment": "\"Definition\" refers to a Form Definition."
       },
       "whatAreEntities": {
         "string": "What are Entities?"
-      },
-      "diffHasNew": {
-        "string": "New Entity Lists and/or properties will be created",
-        "developer_comment": "This text is shown if publishing a Form Definition will create one or more Entity Lists or one or more Entity properties."
       }
     },
     "FormEditPublishedVersion": {

@@ -121,7 +121,7 @@ $dots-margin-block: 9px;
   background-color: rgba($color-accent-primary, 0.04);
   border-radius: 6px;
   color: $color-accent-primary;
-  padding: 5px 10px;
+  padding: 5px 9px;
 
   // Hide the entire element if no tag slot is provided. We don't want the icon
   // to be shown in that case.

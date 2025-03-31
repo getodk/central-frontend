@@ -67,12 +67,12 @@ const diffHasNew = computed(() =>
 {
   "en": {
     "datasetCount": "Publishing this draft will update {count} Entity List | Publishing this draft will update {count} Entity Lists",
+    // This text is shown if publishing a Draft Form will create one or more
+    // Entity Lists or one or more Entity properties.
+    "diffHasNew": "New Entity Lists and/or properties will be created",
     // "Definition" refers to a Form Definition.
     "notEntityRelated": "This definition does not update any Entities.",
-    "whatAreEntities": "What are Entities?",
-    // This text is shown if publishing a Form Definition will create one or
-    // more Entity Lists or one or more Entity properties.
-    "diffHasNew": "New Entity Lists and/or properties will be created"
+    "whatAreEntities": "What are Entities?"
   }
 }
 </i18n>

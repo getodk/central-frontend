@@ -1,9 +1,8 @@
 import faker from 'faker';
 import { comparator } from 'ramda';
 
-import { dataStore } from './data-store';
 import Property from '../util/ds-property-enum';
-
+import { dataStore } from './data-store';
 
 // eslint-disable-next-line import/prefer-default-export
 export const formDraftDatasetDiffs = dataStore({

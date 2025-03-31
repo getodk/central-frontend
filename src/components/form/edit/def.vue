@@ -121,9 +121,9 @@ const viewXml = modalData('FormVersionViewXml');
 <i18n lang="json5">
 {
   "en": {
-    // This refers to a Form Definition.
+    // This refers to the draft version of a Form.
     "subtitle": "Uploaded",
-    // This refers to a Form Definition.
+    // This refers to the draft version of a Form.
     "changed": "Changed from published version",
     "action": {
       "upload": "Upload new Form Definition"
