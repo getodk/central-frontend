@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="htmlClass">
+  <tr :class="htmlClass" :data-name="attachment.name">
     <td class="form-attachment-list-type">{{ type }}</td>
     <td class="form-attachment-list-name">
       <a v-if="attachment.blobExists" :href="href" target="_blank"
@@ -82,7 +82,7 @@ export default {
       type: Boolean,
       default: false
     },
-    dragoverAttachment: Object, // eslint-disable-line vue/require-default-prop
+    dragoverAttachment: Object,
     plannedUploads: {
       type: Array,
       required: true
@@ -148,7 +148,7 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#form-attachment-list-table {
+#form-attachment-table {
   > tbody > tr {
     &.targeted {
       > td {
