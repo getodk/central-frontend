@@ -142,6 +142,9 @@ export default {
       this[event.type]?.(event, ...args);
     };
   },
+  beforeUnmount() {
+    this.dragHandler = noop;
+  },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
     // FILE INPUT
