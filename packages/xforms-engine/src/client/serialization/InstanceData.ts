@@ -2,14 +2,22 @@ import type { INSTANCE_FILE_NAME, InstanceFile } from './InstanceFile.ts';
 
 export type InstanceAttachmentFileName = string;
 
-export interface InstanceData extends FormData {
-	get(name: INSTANCE_FILE_NAME): InstanceFile;
+export type InstanceDataEntryValue = File;
 
-	/**
-	 * @todo Can we guarantee (both in static types and at runtime) that
-	 * {@link InstanceData} only contains files?
-	 */
-	get(name: InstanceAttachmentFileName): FormDataEntryValue | null;
+export interface InstanceData extends FormData {
+	[Symbol.iterator](): FormDataIterator<[string, InstanceDataEntryValue]>;
+	entries(): FormDataIterator<[string, InstanceDataEntryValue]>;
+	values(): FormDataIterator<InstanceDataEntryValue>;
+
+	forEach(
+		callbackfn: (value: InstanceDataEntryValue, key: string, parent: InstanceData) => void,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		thisArg?: any
+	): void;
+
+	get(name: INSTANCE_FILE_NAME): InstanceFile;
+	get(name: InstanceAttachmentFileName): InstanceDataEntryValue | null;
+	getAll(name: string): InstanceDataEntryValue[];
 
 	has(name: INSTANCE_FILE_NAME): true;
 	has(name: InstanceAttachmentFileName): boolean;

@@ -10,6 +10,7 @@ import type {
 import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
 import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
+import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import type { InstanceAttachmentsState } from '../../../instance/attachments/InstanceAttachmentsState.ts';
 import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
 
@@ -38,10 +39,26 @@ class InstanceFile extends File implements ClientInstanceFile {
 	}
 }
 
+type AssertFile = (value: FormDataEntryValue) => asserts value is File;
+
+const assertFile: AssertFile = (value) => {
+	if (!(value instanceof File)) {
+		throw new ErrorProductionDesignPendingError('Expected an instance of File');
+	}
+};
+
 type AssertInstanceData = (data: FormData) => asserts data is ClientInstanceData;
 
 const assertInstanceData: AssertInstanceData = (data) => {
-	const instanceFile = data.get(INSTANCE_FILE_NAME);
+	let instanceFile: File | null = null;
+
+	for (const [key, value] of data.entries()) {
+		assertFile(value);
+
+		if (key === INSTANCE_FILE_NAME) {
+			instanceFile = value;
+		}
+	}
 
 	if (!(instanceFile instanceof InstanceFile)) {
 		throw new Error(`Invalid InstanceData`);
