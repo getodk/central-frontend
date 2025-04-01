@@ -8,7 +8,10 @@ import type {
 	InstancePayload,
 	MonolithicInstancePayload,
 } from './serialization/InstancePayload.ts';
-import type { InstancePayloadOptions } from './serialization/InstancePayloadOptions.ts';
+import type {
+	InstancePayloadOptions,
+	InstancePayloadType,
+} from './serialization/InstancePayloadOptions.ts';
 import type { AncestorNodeValidationState } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
@@ -94,11 +97,13 @@ export interface RootNode extends BaseNode {
 	 * case a {@link ChunkedInstancePayload} will be produced, with form
 	 * attachments
 	 */
-	prepareInstancePayload(): Promise<MonolithicInstancePayload>;
 	prepareInstancePayload(
-		options: InstancePayloadOptions<'monolithic'>
+		options?: InstancePayloadOptions<'monolithic'>
 	): Promise<MonolithicInstancePayload>;
 	prepareInstancePayload(
 		options: InstancePayloadOptions<'chunked'>
 	): Promise<ChunkedInstancePayload>;
+	prepareInstancePayload<PayloadType extends InstancePayloadType>(
+		options: InstancePayloadOptions<PayloadType>
+	): Promise<InstancePayload<PayloadType>>;
 }

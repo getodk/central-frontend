@@ -1,7 +1,7 @@
 export type InstancePayloadType = 'chunked' | 'monolithic';
 
 interface BaseInstancePayloadOptions<PayloadType extends InstancePayloadType> {
-	readonly payloadType?: PayloadType | undefined;
+	readonly payloadType: PayloadType;
 
 	/**
 	 * As described in the
@@ -13,11 +13,12 @@ interface BaseInstancePayloadOptions<PayloadType extends InstancePayloadType> {
 }
 
 interface ChunkedInstancePayloadOptions extends BaseInstancePayloadOptions<'chunked'> {
+	readonly payloadType: 'chunked';
 	readonly maxSize: number;
 }
 
 interface MonolithicInstancePayloadOptions extends BaseInstancePayloadOptions<'monolithic'> {
-	readonly payloadType?: 'monolithic' | undefined;
+	readonly payloadType: 'monolithic';
 	readonly maxSize?: never;
 }
 
