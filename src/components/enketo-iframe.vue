@@ -22,6 +22,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { setDocumentTitle } from '../util/reactivity';
 import NotFound from './not-found.vue';
 import useEventListener from '../composables/event-listener';
+import { queryString } from '../util/request';
 
 defineOptions({
   name: 'EnketoIframe'
@@ -34,8 +35,9 @@ const props = defineProps({
   },
   actionType: {
     type: String,
-    required: false
-  }
+    default: ''
+  },
+  instanceId: String
 });
 
 const route = useRoute();
@@ -43,9 +45,11 @@ const router = useRouter();
 const { t } = useI18n();
 
 const invalidProps = computed(() => {
+  // actionType is '' for public-link
   const validActionTypes = ['offline', 'edit', 'new', 'preview', ''];
   if (!props.enketoId) return true;
   if (!validActionTypes.includes(props.actionType)) return true;
+  if (props.actionType === 'edit' && !props.instanceId) return true;
   return false;
 });
 
@@ -53,17 +57,27 @@ const redirectUrl = computed(() => route.query.return_url);
 
 const enketoSrc = computed(() => {
   let prefix = '/enketo-passthrough';
-  const { return_url: _, ...query } = route.query;
 
-  const queryParams = new URLSearchParams({ ...query, parentWindowOrigin: window.location.origin });
+  // this is to avoid 404 warning
+  if (process.env.NODE_ENV === 'test') {
+    prefix = `/#${prefix}`;
+  }
+
+  const queryParam = {};
+
   if (props.actionType === 'offline') {
     prefix += '/x';
   } else if (!props.actionType) {
     prefix += '/single';
-  } else if (props.actionType === 'edit' || props.actionType === 'preview') {
+    queryParam.st = route.query.st;
+  } else if (props.actionType === 'edit') {
+    prefix += `/${props.actionType}`;
+    queryParam.instance_id = props.instanceId;
+  } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
-  return `${prefix}/${props.enketoId}?${queryParams.toString()}`;
+
+  return `${prefix}/${props.enketoId}${queryString(queryParam)}`;
 });
 
 watchEffect(() => {

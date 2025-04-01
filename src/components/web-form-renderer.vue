@@ -57,7 +57,8 @@ import { useRequestData } from '../request-data';
 import { noop } from '../util/util';
 import { runSequentially } from '../util/promise';
 
-const { resourceStates, form, formVersionXml } = useRequestData();
+const { resourceStates, form, createResource } = useRequestData();
+const formVersionXml = createResource('formVersionXml');
 const { request } = useRequest();
 const submissionModal = modalData();
 const instanceId = ref(null);
@@ -119,7 +120,7 @@ const getAttachment = (url) => {
   const requestUrl = withToken(apiPaths.formAttachment(
     form.projectId,
     form.xmlFormId,
-    form.draftToken !== null,
+    !form.publishedAt,
     url.pathname.split('/').pop()
   ));
   return request({

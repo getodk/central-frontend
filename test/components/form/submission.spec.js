@@ -1,9 +1,20 @@
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import simpleXml from '../../data/simple';
+import { setLoader } from '../../../src/util/load-async';
+
+const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
 describe('FormSubmission', () => {
+  beforeAll(() => {
+    // Mock WebFormRenderer - loading the real component creates dependency between tests because
+    // it is loaded asynchronously
+    setLoader('WebFormRenderer', async () => ({
+      default: { foo: 'bar' },
+      template: '<div class="odk-form">dummy renderer</div>'
+    }));
+  });
+
   describe('initial requests', () => {
     beforeEach(() => {
       mockLogin();
@@ -13,29 +24,26 @@ describe('FormSubmission', () => {
     it('sends the correct initial requests - Web Forms', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
       return load('/projects/1/forms/a/submissions/new')
-        .respondWithData(() => simpleXml)
         .testRequests([
           { url: '/v1/projects/1', extended: true },
           { url: '/v1/projects/1/forms/a' },
-          { url: '/v1/projects/1/forms/a.xml' },
         ]);
     });
 
     it('sends the correct initial requests - Enketo', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-      return load('/f/enketo-id/new?st=token', {}, { project: false })
+      return load(`/f/${enketoId}?st=token`)
         .testRequests([
-          { url: '/v1/enketo-ids/enketo-id/form?st=token' }
+          { url: `/v1/enketo-ids/${enketoId}/form?st=token` }
         ]);
     });
 
     it('sends the correct initial requests for draft submission', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true, draft: true });
-      return load('/f/enketo-id', {}, { project: false })
-        .respondWithData(() => simpleXml)
+      return load('/projects/1/forms/a/draft/submissions/new')
         .testRequests([
-          { url: '/v1/enketo-ids/enketo-id/form' },
-          { url: ({ pathname }) => pathname.should.match(/v1\/test\/[a-zA-Z0-9]{64}\/projects\/1\/forms\/a\/draft.xml/) }
+          { url: '/v1/projects/1', extended: true },
+          { url: '/v1/projects/1/forms/a/draft' },
         ]);
     });
   });
@@ -49,7 +57,7 @@ describe('FormSubmission', () => {
     it('renders Enketo Iframe', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-      const app = await load('/f/enketo-id', {}, { project: false })
+      const app = await load('/projects/1/forms/a/submissions/new')
         .complete();
 
       const iframe = app.find('iframe');
@@ -61,7 +69,6 @@ describe('FormSubmission', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
 
       const app = await load('/projects/1/forms/a/submissions/new')
-        .respondWithData(() => simpleXml)
         .complete();
 
       const webForm = app.find('.odk-form');
@@ -77,20 +84,20 @@ describe('FormSubmission', () => {
         testData.extendedProjects.createPast(1, { role: 'formfill' });
         testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
       });
-
-      it('can access new submission page', () =>
-        load('/projects/1/forms/a/submissions/new')
-          .respondWithData(() => simpleXml)
+      it('can access new submission page', async () => {
+        await load('/projects/1/forms/a/submissions/new', { attachTo: document.body })
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
-          }));
+          });
+      });
 
       it('cannot access edit submission page', () =>
         load('/projects/1/forms/a/submissions/1/edit')
           .respondFor('/', { users: false })
-          .afterResponses(app => {
+          .afterResponses(async app => {
             app.vm.$route.path.should.equal('/');
-          }));
+          })
+          .complete());
     });
 
     describe('project viewer', () => {
@@ -124,14 +131,12 @@ describe('FormSubmission', () => {
 
       it('can access new submission page', () =>
         load('/projects/1/forms/a/submissions/new')
-          .respondWithData(() => simpleXml)
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
 
       it('can access edit submission page', () =>
         load('/projects/1/forms/a/submissions/1/edit')
-          .respondWithData(() => simpleXml)
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
