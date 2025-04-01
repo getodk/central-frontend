@@ -77,16 +77,16 @@ const restore = () => {
   "en": {
     // This is the title at the top of a pop-up. {label} is the label of an
     // Entity.
-    "title": "Undelete {label}",
+    "title": "Restore {label}",
     "introduction": [
       // {label} is the label of an Entity.
-      "Are you sure you want to undelete “{label}”?",
+      "Are you sure you want to restore “{label}”?",
       "The Entity will be restored to its previous state.",
       "If the Entity is deleted again, it will be another 30 days before it is removed."
     ],
     "field": {
       // @transifexKey component.SubmissionRestore.field.noConfirm
-      "noConfirm": "Undelete immediately without confirmation until I leave the page"
+      "noConfirm": "Restore immediately without confirmation until I leave the page"
     }
   }
 }

@@ -174,7 +174,7 @@ describe('AuditTable', () => {
       ['form.attachment.update', ['Form', 'Update Attachments']],
       ['form.submission.export', ['Form', 'Download Submissions']],
       ['form.delete', ['Form', 'Delete']],
-      ['form.restore', ['Form', 'Undelete']],
+      ['form.restore', ['Form', 'Restore']],
       ['form.purge', ['Form', 'Purge']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
       ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']],

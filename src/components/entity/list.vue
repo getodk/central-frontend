@@ -491,8 +491,8 @@ export default {
     "downloadDisabled": "Download is unavailable for deleted Entities",
     "deletedEntity": {
       "emptyTable": "There are no deleted Entities.",
-      "allRestored": "All deleted Entities are undeleted.",
-      "allRestoredOnPage": "All Entities on the page have been undeleted."
+      "allRestored": "All deleted Entities are restored.",
+      "allRestoredOnPage": "All Entities on the page have been restored."
     }
   }
 }

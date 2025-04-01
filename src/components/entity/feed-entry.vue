@@ -305,7 +305,7 @@ const showBranchData = () => {
         "delete": "Entity {label} deleted by {name}",
         // This text is shown in a list of events. {name} is the name of a Web
         // User.
-        "restore": "Entity {label} undeleted by {name}"
+        "restore": "Entity {label} restored by {name}"
       }
     },
     // This is shown for an update to an Entity when the update was made offline

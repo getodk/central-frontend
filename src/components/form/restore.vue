@@ -76,9 +76,9 @@ export default {
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Undelete Form",
+    "title": "Restore Form",
     "introduction": [
-      "Are you sure you want to undelete the Form {name}?",
+      "Are you sure you want to restore the Form {name}?",
       "The Form will be restored to its previous state, including all data, settings, and permissions.",
       "If the Form is deleted again, it will be another 30 days before it is removed."
     ]

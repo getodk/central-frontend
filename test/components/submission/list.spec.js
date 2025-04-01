@@ -624,7 +624,7 @@ describe('SubmissionList', () => {
 
       it('shows a success alert', async () => {
         const component = await restore();
-        component.should.alert('success', 'The Submission has been undeleted.');
+        component.should.alert('success', 'The Submission has been restored.');
       });
 
       it('hides the row', async () => {
@@ -683,7 +683,7 @@ describe('SubmissionList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.get('.empty-table-message').should.be.visible();
-            component.get('.empty-table-message').text().should.be.equal('All deleted Submissions are undeleted.');
+            component.get('.empty-table-message').text().should.be.equal('All deleted Submissions are restored.');
           }));
     });
 
@@ -765,7 +765,7 @@ describe('SubmissionList', () => {
             component.get('.submission-metadata-row .restore-button').trigger('click'))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.should.alert('success', 'The Submission has been undeleted.');
+            component.should.alert('success', 'The Submission has been restored.');
           }));
 
       it('does not hide table after restoreing last submission if submissions are concurrently replaced', () =>

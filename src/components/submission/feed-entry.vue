@@ -359,18 +359,18 @@ export default {
       "delete": "Deleted by {name}",
       /*
       This text is shown in the list of actions performed on a Submission.
-      There is an icon before the text that corresponds to the word "Undeleted",
-      so it is essential for "Undeleted" to also come first in the translation. If
+      There is an icon before the text that corresponds to the word "Restored",
+      so it is essential for "Restored" to also come first in the translation. If
       that is unnatural in your language, you can also split the text into two
       parts. For example, instead of:
 
-      Undeleted by {name}
+      Restored by {name}
 
       you could split it into:
 
-      Undeleted • {name}
+      Restored • {name}
       */
-      "undelete": "Undeleted by {name}",
+      "undelete": "Restored by {name}",
       /*
       This text is shown in the list of actions performed on a Submission.
       */

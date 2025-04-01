@@ -262,7 +262,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "Undelete",
+          "string": "Restore",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -738,10 +738,10 @@
       "string": "The Submission has been deleted."
     },
     "submissionRestored": {
-      "string": "The Submission has been undeleted."
+      "string": "The Submission has been restored."
     },
     "entityRestored": {
-      "string": "Entity “{label}” has been undeleted."
+      "string": "Entity “{label}” has been restored."
     }
   },
   "moreInfo": {
@@ -2027,7 +2027,7 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           },
           "restore": {
-            "string": "Entity {label} undeleted by {name}",
+            "string": "Entity {label} restored by {name}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
@@ -2101,10 +2101,10 @@
           "string": "There are no deleted Entities."
         },
         "allRestored": {
-          "string": "All deleted Entities are undeleted."
+          "string": "All deleted Entities are restored."
         },
         "allRestoredOnPage": {
-          "string": "All Entities on the page have been undeleted."
+          "string": "All Entities on the page have been restored."
         }
       },
       "action": {
@@ -2180,12 +2180,12 @@
     },
     "EntityRestore": {
       "title": {
-        "string": "Undelete {label}",
+        "string": "Restore {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "introduction": {
         "0": {
-          "string": "Are you sure you want to undelete “{label}”?",
+          "string": "Are you sure you want to restore “{label}”?",
           "developer_comment": "{label} is the label of an Entity."
         },
         "1": {
@@ -2826,7 +2826,7 @@
           "string": "Are you sure you want to delete the Form {name} and all of its Submissions?"
         },
         "1": {
-          "string": "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
+          "string": "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be restored before then."
         }
       },
       "noDeleteEntities": {
@@ -3258,7 +3258,7 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to undelete the other one with the matching ID."
+            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to restore the other one with the matching ID."
           },
           "structureChanged": {
             "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
@@ -3295,12 +3295,12 @@
     },
     "FormRestore": {
       "title": {
-        "string": "Undelete Form",
+        "string": "Restore Form",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Are you sure you want to undelete the Form {name}?"
+          "string": "Are you sure you want to restore the Form {name}?"
         },
         "1": {
           "string": "The Form will be restored to its previous state, including all data, settings, and permissions."
@@ -3428,7 +3428,7 @@
       },
       "alert": {
         "restore": {
-          "string": "The Form “{name}” has been undeleted."
+          "string": "The Form “{name}” has been restored."
         }
       },
       "message": {
@@ -3442,12 +3442,12 @@
       },
       "disabled": {
         "conflict": {
-          "string": "This Form cannot be undeleted because an active Form with the same ID exists."
+          "string": "This Form cannot be restored because an active Form with the same ID exists."
         }
       },
       "action": {
         "restore": {
-          "string": "Undelete",
+          "string": "Restore",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4570,7 +4570,7 @@
           "string": "Are you sure you want to delete this Submission?"
         },
         "1": {
-          "string": "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
+          "string": "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be restored before then."
         }
       }
     },
@@ -4688,8 +4688,8 @@
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
         },
         "undelete": {
-          "string": "Undeleted by {name}",
-          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+          "string": "Restored by {name}",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Restored\", so it is essential for \"Restored\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nRestored by {name}\n\nyou could split it into:\n\nRestored • {name}"
         },
         "submissionBacklog": {
           "hold": {
@@ -4826,10 +4826,10 @@
           "string": "There are no deleted Submissions."
         },
         "allRestored": {
-          "string": "All deleted Submissions are undeleted."
+          "string": "All deleted Submissions are restored."
         },
         "allRestoredOnPage": {
-          "string": "All Submissions on the page have been undeleted."
+          "string": "All Submissions on the page have been restored."
         }
       },
       "loading": {
@@ -4878,12 +4878,12 @@
     },
     "SubmissionRestore": {
       "title": {
-        "string": "Undelete Submission",
-        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+        "string": "Restore Submission",
+        "developer_comment": "This is the title at the top of Submission restore pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Are you sure you want to undelete this Submission?"
+          "string": "Are you sure you want to restore this Submission?"
         },
         "1": {
           "string": "The Submission will be restored to its previous state, including associated data like comments."
@@ -4894,7 +4894,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "Undelete immediately without confirmation until I leave the page",
+          "string": "Restore immediately without confirmation until I leave the page",
           "developer_comment": "This is the text of a form field."
         }
       }

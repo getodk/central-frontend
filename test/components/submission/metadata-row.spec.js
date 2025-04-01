@@ -123,7 +123,7 @@ describe('SubmissionMetadataRow', () => {
 
   it('shows the restore button', async () => {
     testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
-    mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Undelete');
+    mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Restore');
   });
 
   it('does not show the restore button if user does not have submission restore permission', async () => {
@@ -252,7 +252,7 @@ describe('SubmissionMetadataRow', () => {
 
     it('shows restore button', () => {
       testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Undelete');
+      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Restore');
     });
   });
 });
