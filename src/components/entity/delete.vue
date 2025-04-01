@@ -16,8 +16,6 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <p class="modal-introduction">
         <span>{{ $t('introduction[0]', { label: entity?.label }) }}</span>
-        <sentence-separator/>
-        <span>{{ $t('common.noUndo') }}</span>
       </p>
       <form v-if="checkbox">
         <div class="checkbox">
@@ -45,7 +43,6 @@ except according to the terms contained in the LICENSE file.
 import { ref, watch } from 'vue';
 
 import Modal from '../modal.vue';
-import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 defineOptions({
