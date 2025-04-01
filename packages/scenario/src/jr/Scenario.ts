@@ -4,7 +4,9 @@ import type {
 	AnyFormInstance,
 	AnyNode,
 	FormResource,
-	MonolithicInstancePayload,
+	InstancePayload,
+	InstancePayloadOptions,
+	InstancePayloadType,
 	RepeatRangeControlledNode,
 	RepeatRangeNode,
 	RepeatRangeUncontrolledNode,
@@ -1055,8 +1057,12 @@ export class Scenario {
 	 * more about Collect's responsibility for submission (beyond serialization,
 	 * already handled by {@link proposed_serializeInstance}).
 	 */
-	prepareWebFormsInstancePayload(): Promise<MonolithicInstancePayload> {
-		return this.instanceRoot.prepareInstancePayload();
+	prepareWebFormsInstancePayload<PayloadType extends InstancePayloadType>(
+		options: InstancePayloadOptions<PayloadType> = {
+			payloadType: 'monolithic',
+		} as InstancePayloadOptions<PayloadType>
+	): Promise<InstancePayload<PayloadType>> {
+		return this.instanceRoot.prepareInstancePayload(options);
 	}
 
 	/**

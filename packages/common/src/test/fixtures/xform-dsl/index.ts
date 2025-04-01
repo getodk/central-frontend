@@ -235,6 +235,12 @@ export const proposed_rankDynamic = (ref: string, nodesetRef: string): XFormsEle
 
 export { proposed_rankDynamic as rankDynamic };
 
+export const proposed_upload = (ref: string, ...children: XFormsElement[]): XFormsElement => {
+	return t(`upload ref="${ref}"`, ...children);
+};
+
+export { proposed_upload as upload };
+
 export const group = (ref: string, ...children: XFormsElement[]): XFormsElement => {
 	return t(`group ref="${ref}"`, ...children);
 };
