@@ -1,7 +1,9 @@
+import sinon from 'sinon';
 import EnketoIframe from '../../src/components/enketo-iframe.vue';
 import NotFound from '../../src/components/not-found.vue';
 import { mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
+import { wait } from '../util/util';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -44,14 +46,14 @@ describe('EnketoIframe', () => {
 
     wrapper.vm.$route.query = { return_url: 'http://localhost/projects/1' };
 
-    wrapper.vm.$router.push = (url) => {
-      url.should.eql('/projects/1');
-    };
+    wrapper.vm.$router.push = sinon.fake();
 
     iframe.element.contentWindow.eval(`
       window.parent.postMessage(JSON.stringify({ enketoEvent: 'submissionsuccess' }), "*");
     `);
 
-    await new Promise(resolve => { setTimeout(resolve, 0); }); // Allow the event to propagate.
+    await wait();
+
+    wrapper.vm.$router.push.calledWith('/projects/1').should.be.true;
   });
 });
