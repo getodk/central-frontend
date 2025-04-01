@@ -131,7 +131,7 @@ defineExpose({ getRowPair });
 </script>
 
 <style lang="scss">
-@import '../assets/scss/mixins';
+@import '../../assets/scss/mixins';
 
 .table-freeze { @include clearfix; }
 

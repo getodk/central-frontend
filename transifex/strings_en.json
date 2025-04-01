@@ -2629,12 +2629,6 @@
         "string": "or drag files onto this page to upload",
         "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
-      "header": {
-        "uploaded": {
-          "string": "Uploaded",
-          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
-        }
-      },
       "problem": {
         "noneUploaded": {
           "string": "{message} No files were successfully uploaded.",
@@ -2651,6 +2645,12 @@
         },
         "link": {
           "string": "Entity List linked successfully."
+        }
+      },
+      "header": {
+        "uploaded": {
+          "string": "Uploaded",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
         }
       }
     },

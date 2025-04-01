@@ -12,26 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <file-drop-zone id="form-attachment-list" :disabled="uploading"
     :styled="false" @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
-    <table id="form-attachment-list-table" class="table">
-      <thead>
-        <tr>
-          <th class="form-attachment-list-type">{{ $t('header.type') }}</th>
-          <th class="form-attachment-list-name">{{ $t('header.name') }}</th>
-          <th class="form-attachment-list-uploaded">{{ $t('header.uploaded') }}</th>
-          <th class="form-attachment-list-action"></th>
-        </tr>
-      </thead>
-      <tbody v-if="form.dataExists && draftAttachments.dataExists">
-        <form-attachment-row v-for="attachment of draftAttachments.values()"
-          :key="attachment.name" :attachment="attachment"
-          :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
-          :dragover-attachment="dragoverAttachment"
-          :planned-uploads="plannedUploads"
-          :updated-attachments="updatedAttachments" :data-name="attachment.name"
-          :linkable="attachment.type === 'file' && !!dsHashset && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
-          @link="linkDatasetModal.show({ attachment: $event })"/>
-      </tbody>
-    </table>
+    <form-attachment-table
+      :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
+      :dragover-attachment="dragoverAttachment"
+      :planned-uploads="plannedUploads"
+      :updated-attachments="updatedAttachments"
+      @link="linkDatasetModal.show({ attachment: $event })"/>
     <p>
       <button id="form-attachment-list-upload-button" type="button"
         class="btn btn-primary" @click="uploadFilesModal.show()">
@@ -61,7 +47,7 @@ import FileDropZone from '../file-drop-zone.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
-import FormAttachmentRow from './row.vue';
+import FormAttachmentTable from './table.vue';
 import FormAttachmentUploadFiles from './upload-files.vue';
 
 import useRequest from '../../composables/request';
@@ -77,7 +63,7 @@ export default {
     FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
-    FormAttachmentRow,
+    FormAttachmentTable,
     FormAttachmentUploadFiles
   },
   inject: ['alert', 'projectId'],
@@ -139,9 +125,6 @@ export default {
   computed: {
     uploading() {
       return this.uploadStatus.total !== 0;
-    },
-    dsHashset() {
-      return this.datasets.dataExists ? new Set(this.datasets.map(d => `${d.name}`)) : null;
     }
   },
   watch: {
@@ -338,41 +321,6 @@ export default {
 </script>
 
 <style lang="scss">
-#form-attachment-list {
-  .panel-dialog {
-    margin-top: -5px;
-    margin-bottom: 25px;
-  }
-}
-
-#form-attachment-list-table {
-  margin-bottom: 5px;
-
-  .form-attachment-list-type {
-    // Fix the widths of the Type and Name columns so that the width of the
-    // Uploaded column is also fixed. We do not want the width of the Uploaded
-    // column to change when a Replace label is added to a row.
-    max-width: 125px;
-    min-width: 125px;
-    width: 125px;
-  }
-
-  .form-attachment-list-name {
-    max-width: 250px;
-    min-width: 250px;
-    width: 250px;
-  }
-
-  .form-attachment-list-uploaded {
-    // Set the column to a minimum width such that when a Replace label is
-    // added to a row, it does not cause additional wrapping.
-    min-width: 300px;
-
-    // So that column doesn't grow infinitely
-    width: 1px;
-  }
-}
-
 #form-attachment-list-upload-button {
   margin-right: 5px;
 
@@ -388,11 +336,6 @@ export default {
     },
     // This text is shown next to a button with the text "Choose files".
     "orDrag": "or drag files onto this page to upload",
-    "header": {
-      // This is the text of a table column header. The column shows when each
-      // Media File was uploaded.
-      "uploaded": "Uploaded"
-    },
     "problem": {
       // {message} is an error message from the server.
       "noneUploaded": "{message} No files were successfully uploaded.",
