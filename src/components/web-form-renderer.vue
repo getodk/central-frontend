@@ -88,15 +88,10 @@ const { initiallyLoading } = resourceStates([formVersionXml]);
 
 const isPublicLink = computed(() => !!route.query.st);
 
-const withToken = (url) => {
-  if (form.draftToken) {
-    return url.replace(/^\/v1\//, `/v1/test/${form.draftToken}/`);
-  }
-  return `${url}${queryString({ st: route.query.st })}`;
-};
+const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
 
 const fetchData = () => {
-  const url = withToken(apiPaths.formXml(form.projectId, form.xmlFormId, !!form.draftToken));
+  const url = withToken(apiPaths.formXml(form.projectId, form.xmlFormId, !form.publishedAt));
   formVersionXml.request({
     url
   }).catch(noop);
@@ -160,7 +155,7 @@ const getAttachment = (url) => {
 };
 
 const postPrimaryInstance = (file) => {
-  const url = withToken(apiPaths.submissions(form.projectId, form.xmlFormId, !!form.draftToken, ''));
+  const url = withToken(apiPaths.submissions(form.projectId, form.xmlFormId, !form.publishedAt, ''));
   return request({
     method: 'POST',
     url,
@@ -182,7 +177,7 @@ const postPrimaryInstance = (file) => {
 };
 
 const uploadAttachment = async (attachment) => {
-  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !!form.draftToken, instanceId.value, attachment.file.name));
+  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId.value, attachment.file.name));
   return request({
     method: 'POST',
     url,
