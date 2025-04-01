@@ -63,7 +63,7 @@ export default {
     FormAttachmentTable,
     FormAttachmentUploadFiles
   },
-  inject: ['alert', 'projectId', 'handleDrag', 'disableDrag'],
+  inject: ['alert', 'projectId', 'dragDisabled', 'dragHandler'],
   setup() {
     const { project, form, draftAttachments, datasets } = useRequestData();
     const { request } = useRequest();
@@ -132,13 +132,15 @@ export default {
       immediate: true
     },
     uploading(uploading) {
-      this.disableDrag(uploading);
+      this.dragDisabled = uploading;
     }
   },
   created() {
-    this.handleDrag((event, ...args) => {
+    this.dragHandler = (event, ...args) => {
+      // Delegate to one of the drag and drop methods below (e.g.,
+      // this.dragenter()).
       this[event.type]?.(event, ...args);
-    });
+    };
   },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
@@ -162,7 +164,7 @@ export default {
       return count;
     },
     // this.dragenter(), this.dragleave(), and this.drop() are called via
-    // this.handleDrag().
+    // this.dragHandler.
     dragenter(event) {
       const { items } = event.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);

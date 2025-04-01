@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <file-drop-zone id="form-edit" :disabled="dragDisabled" :styled="false"
-    @dragenter="handleDrag" @dragleave="handleDrag" @drop="handleDrag">
+    @dragenter="dragHandler" @dragleave="dragHandler" @drop="dragHandler">
     <div class="row">
       <div class="col-xs-6">
         <form-edit-loading-draft v-if="!formDraft.dataExists"/>
@@ -115,11 +115,17 @@ watchEffect(() => {
   }
 });
 
-// Dragging and dropping form attachments
-const handleDrag = ref(noop);
-provide('handleDrag', (f) => { handleDrag.value = f; });
+/* We allow form attachments to be dragged and dropped anywhere in FormEdit.
+That's why FileDropZone is in this component. But it's FormAttachmentList that
+actually knows how to handle drag events. FormAttachmentList is a few layers
+away from FormEdit, so the two communicate using refs. FormEdit provides the
+refs, then FormAttachmentList sets their values. That approach allows the two
+components to interact directly without getting intermediate components
+involved. */
 const dragDisabled = ref(false);
-provide('disableDrag', (disabled) => { dragDisabled.value = disabled; });
+provide('dragDisabled', dragDisabled);
+const dragHandler = ref(noop);
+provide('dragHandler', dragHandler);
 
 const uploadModal = modalData();
 const { router, alert } = inject('container');
