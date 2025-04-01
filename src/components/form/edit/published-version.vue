@@ -10,21 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-published-version" icon="star"
-    :class="{ draft: form.publishedAt == null }">
+  <form-edit-section id="form-edit-published-version" icon="star">
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>
-      <template v-if="form.publishedAt == null">{{ $t('subtitle.draft') }}</template>
-      <i18n-t v-else keypath="subtitle.published">
+      <i18n-t keypath="subtitle.published">
         <template #dateTime>
           <date-time :iso="form.publishedAt"/>
         </template>
       </i18n-t>
     </template>
     <template #body>
-      <div v-if="form.publishedAt != null" id="form-edit-published-version-string">
-        <form-version-string :version="form.version"/>
-      </div>
+      <i18n-t id="form-edit-published-version-string" tag="div"
+        keypath="versionName">
+        <template #name>
+          <form-version-string :version="form.version"/>
+        </template>
+      </i18n-t>
     </template>
   </form-edit-section>
 </template>
@@ -48,10 +49,6 @@ const { form } = useRequestData();
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
-#form-edit-published-version {
-  &.draft { opacity: 0.2; }
-}
-
 #form-edit-published-version-string {
   @include text-overflow-ellipsis;
   font-size: 17px;
@@ -63,17 +60,17 @@ const { form } = useRequestData();
 <i18n lang="json5">
 {
   "en": {
-    // This refers to the published version of a Form.
-    "title": "Published version",
+    // This refers to the current version of a Form.
+    "title": "Current version",
     "subtitle": {
-      // This refers to the Form.
-      "draft": "Not yet published",
       // This shows the date and time at which the current version of the Form
       // was published, for example: "Published 2020/01/01 01:23". {dateTime}
       // may show a formatted date like "2020/01/01", or it may use a word like
       // "today", "yesterday", or "Sunday".
       "published": "Published {dateTime}"
-    }
+    },
+    // @transifexKey component.FormEditDef.versionName
+    "versionName": "Version name: {name}"
   }
 }
 </i18n>

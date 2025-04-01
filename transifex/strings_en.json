@@ -660,10 +660,6 @@
       "string": "Forms",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "formDef": {
-      "string": "Form Definition",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
     "formAttachments": {
       "string": "Form Attachments",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -3054,6 +3050,10 @@
         "string": "Changed from published version",
         "developer_comment": "This refers to the draft version of a Form."
       },
+      "versionName": {
+        "string": "Version name: {name}",
+        "developer_comment": "This is shown for a Form version."
+      },
       "action": {
         "upload": {
           "string": "Upload new Form Definition",
@@ -3066,15 +3066,15 @@
       }
     },
     "FormEditDraftControls": {
-      "subtitle": {
-        "string": "Ready to publish",
-        "developer_comment": "This refers to the draft version of a Form."
-      },
       "action": {
         "delete": {
           "string": "Delete Form",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "subtitle": {
+        "string": "Ready to publish",
+        "developer_comment": "This refers to the draft version of a Form."
       }
     },
     "FormEditEntities": {
@@ -3095,14 +3095,10 @@
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "Published version",
-        "developer_comment": "This refers to the published version of a Form."
+        "string": "Current version",
+        "developer_comment": "This refers to the current version of a Form."
       },
       "subtitle": {
-        "draft": {
-          "string": "Not yet published",
-          "developer_comment": "This refers to the Form."
-        },
         "published": {
           "string": "Published {dateTime}",
           "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."

@@ -11,13 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <form-edit-section id="form-edit-def" icon="code">
-    <template #title>{{ $t('resource.formDef') }}</template>
+    <template #title>{{ $t('title') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>
     <template #body>
       <div id="form-edit-def-container">
         <div>
-          <form-version-string :version="formDraft.version"/>
+          <i18n-t keypath="versionName">
+            <template #name>
+              <form-version-string :version="formDraft.version"/>
+            </template>
+          </i18n-t>
         </div>
         <div>
           <form-version-standard-buttons :version="formDraft"
@@ -121,10 +125,14 @@ const viewXml = modalData('FormVersionViewXml');
 <i18n lang="json5">
 {
   "en": {
+    // @transifexKey component.FormEditCreateDraft.title
+    "title": "Draft version",
     // This refers to the draft version of a Form.
     "subtitle": "Uploaded",
     // This refers to the draft version of a Form.
     "changed": "Changed from published version",
+    // This is shown for a Form version.
+    "versionName": "Version name: {name}",
     "action": {
       "upload": "Upload new Form Definition"
     },
