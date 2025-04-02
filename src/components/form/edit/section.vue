@@ -134,7 +134,6 @@ $dots-margin-block: 9px;
 
 .form-edit-section.warning {
   .form-edit-section-icon-container { background-color: $color-warning-light; }
-  .form-edit-section-subtitle { color: $color-warning-light; }
 }
 .form-edit-section-icon-container .icon-warning:nth-child(2) {
   position: absolute;
