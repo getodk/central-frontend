@@ -25,11 +25,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </div>
     <template v-if="formDraft.dataExists && formDraft.isDefined()">
-      <div class="row">
-        <div class="col-xs-12 col-lg-10">
-          <form-edit-def @upload="uploadModal.show()"/>
-        </div>
-      </div>
+      <form-edit-def @upload="uploadModal.show()"/>
       <form-draft-testing/>
     </template>
 
