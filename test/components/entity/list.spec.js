@@ -735,7 +735,7 @@ describe('EntityList', () => {
 
       it('shows a success alert', async () => {
         const component = await restore();
-        component.should.alert('success', 'Entity “My Entity” has been undeleted.');
+        component.should.alert('success', 'Entity “My Entity” has been restored.');
       });
 
       it('hides the row', async () => {
@@ -848,7 +848,7 @@ describe('EntityList', () => {
             component.get('.entity-metadata-row .restore-button').trigger('click'))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.should.alert('success', 'Entity “My Entity” has been undeleted.');
+            component.should.alert('success', 'Entity “My Entity” has been restored.');
           }));
 
       // see the comment above in the similar test for delete Entity

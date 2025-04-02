@@ -75,15 +75,15 @@ const restore = () => {
 <i18n lang="json5">
 {
   "en": {
-    // This is the title at the top of Submission undelete pop-up.
-    "title": "Undelete Submission",
+    // This is the title at the top of Submission restore pop-up.
+    "title": "Restore Submission",
     "introduction": [
-      "Are you sure you want to undelete this Submission?",
+      "Are you sure you want to restore this Submission?",
       "The Submission will be restored to its previous state, including associated data like comments.",
       "If the Submission is deleted again, it will be another 30 days before it is removed."
     ],
     "field": {
-      "noConfirm": "Undelete immediately without confirmation until I leave the page"
+      "noConfirm": "Restore immediately without confirmation until I leave the page"
     }
   }
 }

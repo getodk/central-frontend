@@ -82,7 +82,7 @@ describe('SubmissionFeedEntry', () => {
       testData.extendedAudits.createPast(1, { action: 'submission.restore' });
       const title = mountComponent().get('.feed-entry-title');
       title.find('.icon-recycle').exists().should.be.true;
-      title.text().should.equal('Undeleted by Alice');
+      title.text().should.equal('Restored by Alice');
     });
 
     describe('submission.update audit', () => {

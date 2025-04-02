@@ -134,7 +134,7 @@
         "attachment_update": "Update Attachments",
         "submission_export": "Download Submissions",
         "delete": "@:audit.action.default.delete",
-        "restore": "Undelete",
+        "restore": "Restore",
         "purge": "Purge"
       },
       // This is shown in the log of actions performed on the server. It is a
@@ -223,7 +223,7 @@
     "expand": "Expand",
     "collapse": "Collapse",
     // @transifexKey component.FormTrashRow.action.restore
-    "restore": "Undelete"
+    "restore": "Restore"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -331,10 +331,10 @@
     "updateReviewState": "Review State saved!",
     "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
     "submissionDeleted": "The Submission has been deleted.",
-    "submissionRestored": "The Submission has been undeleted.",
+    "submissionRestored": "The Submission has been restored.",
     // @transifexKey component.EntityList.alert.delete
     "entityDeleted": "Entity “{label}” has been deleted.",
-    "entityRestored": "Entity “{label}” has been undeleted."
+    "entityRestored": "Entity “{label}” has been restored."
   },
   "moreInfo": {
     "clickHere": {

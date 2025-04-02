@@ -584,8 +584,8 @@ export default {
     "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
     "deletedSubmission": {
       "emptyTable": "There are no deleted Submissions.",
-      "allRestored": "All deleted Submissions are undeleted.",
-      "allRestoredOnPage": "All Submissions on the page have been undeleted."
+      "allRestored": "All deleted Submissions are restored.",
+      "allRestoredOnPage": "All Submissions on the page have been restored."
     }
   }
 }

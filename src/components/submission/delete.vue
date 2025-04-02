@@ -78,7 +78,7 @@ const del = () => {
     "title": "Delete Submission",
     "introduction": [
       "Are you sure you want to delete this Submission?",
-      "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
+      "This action will move the Submission to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be restored before then."
     ],
     "field": {
       // @transifexKey component.EntityDelete.field.noConfirm

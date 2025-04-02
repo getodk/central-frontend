@@ -153,7 +153,7 @@ describe('EntityMetadataRow', () => {
     it('shows restore button', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Undelete');
+      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Restore');
     });
 
     it('does not show the restore button if user does not have entity restore permission', async () => {

@@ -174,7 +174,7 @@ export default {
     // "yesterday", or "Sunday".
     "deletedDate": "Deleted {dateTime}",
     "disabled": {
-      "conflict": "This Form cannot be undeleted because an active Form with the same ID exists."
+      "conflict": "This Form cannot be restored because an active Form with the same ID exists."
     }
   }
 }
