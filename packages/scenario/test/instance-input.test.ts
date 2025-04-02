@@ -896,6 +896,4 @@ describe.each<InstanceRoundTripCase>([
 			it.todo('restores relevant repeat instances in their relevant position');
 		});
 	});
-
-	describe.todo('instance attachments');
 });
