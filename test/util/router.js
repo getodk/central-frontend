@@ -2,6 +2,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 import { START_LOCATION, createMemoryHistory, routeLocationKey, routerKey } from 'vue-router';
 import { shallowRef } from 'vue';
 
+import sinon from 'sinon';
 import RouterViewStub from './components/router-view-stub.vue';
 
 import createCentralRouter from '../../src/router';
@@ -72,9 +73,10 @@ export const mockRouter = (location = undefined) => (container) => {
 
       app.component('RouterLink', RouterLinkStub);
       app.component('RouterView', RouterViewStub);
-    }
+    },
+    push: sinon.fake()
   };
-  for (const prop of ['getRoutes', 'hasRoute', 'resolve', 'push'])
+  for (const prop of ['getRoutes', 'hasRoute', 'resolve'])
     mock[prop] = router[prop].bind(router);
   for (const prop in router) {
     if (!(prop in mock)) {

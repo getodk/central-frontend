@@ -1,18 +1,20 @@
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { setLoader } from '../../../src/util/load-async';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
 describe('FormSubmission', () => {
-  beforeAll(() => {
-    // Mock WebFormRenderer - loading the real component creates dependency between tests because
-    // it is loaded asynchronously
-    setLoader('WebFormRenderer', async () => ({
-      default: { foo: 'bar' },
-      template: '<div class="odk-form">dummy renderer</div>'
-    }));
+  // Stub WebFormRenderer - loading the real component creates dependency between tests because
+  // it is loaded asynchronously
+  const mountOptions = () => ({
+    global: {
+      stubs: {
+        WebFormRenderer: {
+          template: '<div class="odk-form">dummy renderer</div>'
+        }
+      }
+    }
   });
 
   describe('initial requests', () => {
@@ -23,7 +25,7 @@ describe('FormSubmission', () => {
 
     it('sends the correct initial requests - Web Forms', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
-      return load('/projects/1/forms/a/submissions/new')
+      return load('/projects/1/forms/a/submissions/new', mountOptions())
         .testRequests([
           { url: '/v1/projects/1', extended: true },
           { url: '/v1/projects/1/forms/a' },
@@ -40,7 +42,7 @@ describe('FormSubmission', () => {
 
     it('sends the correct initial requests for draft submission', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true, draft: true });
-      return load('/projects/1/forms/a/draft/submissions/new')
+      return load('/projects/1/forms/a/draft/submissions/new', mountOptions())
         .testRequests([
           { url: '/v1/projects/1', extended: true },
           { url: '/v1/projects/1/forms/a/draft' },
@@ -57,7 +59,7 @@ describe('FormSubmission', () => {
     it('renders Enketo Iframe', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-      const app = await load('/projects/1/forms/a/submissions/new')
+      const app = await load('/projects/1/forms/a/submissions/new', mountOptions())
         .complete();
 
       const iframe = app.find('iframe');
@@ -68,7 +70,7 @@ describe('FormSubmission', () => {
     it('renders new Web Form', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
 
-      const app = await load('/projects/1/forms/a/submissions/new')
+      const app = await load('/projects/1/forms/a/submissions/new', mountOptions())
         .complete();
 
       const webForm = app.find('.odk-form');
@@ -85,14 +87,14 @@ describe('FormSubmission', () => {
         testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
       });
       it('can access new submission page', async () => {
-        await load('/projects/1/forms/a/submissions/new', { attachTo: document.body })
+        await load('/projects/1/forms/a/submissions/new', mountOptions())
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           });
       });
 
       it('cannot access edit submission page', () =>
-        load('/projects/1/forms/a/submissions/1/edit')
+        load('/projects/1/forms/a/submissions/1/edit', mountOptions())
           .respondFor('/', { users: false })
           .afterResponses(async app => {
             app.vm.$route.path.should.equal('/');
@@ -108,14 +110,14 @@ describe('FormSubmission', () => {
       });
 
       it('cannot access new submission page', () =>
-        load('/projects/1/forms/a/submissions/new')
+        load('/projects/1/forms/a/submissions/new', mountOptions())
           .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           }));
 
       it('cannot access edit submission page', () =>
-        load('/projects/1/forms/a/submissions/1/edit')
+        load('/projects/1/forms/a/submissions/1/edit', mountOptions())
           .respondFor('/', { users: false })
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
@@ -130,13 +132,13 @@ describe('FormSubmission', () => {
       });
 
       it('can access new submission page', () =>
-        load('/projects/1/forms/a/submissions/new')
+        load('/projects/1/forms/a/submissions/new', mountOptions())
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
 
       it('can access edit submission page', () =>
-        load('/projects/1/forms/a/submissions/1/edit')
+        load('/projects/1/forms/a/submissions/1/edit', mountOptions())
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
