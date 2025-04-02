@@ -3,8 +3,8 @@ import createTestContainer from '../util/container';
 import { mockRouter } from '../util/router';
 import { testRequestData } from '../util/request-data';
 import testData from '../data';
-import simpleXml from '../data/simple';
-import formWithAttachmentXml from '../data/form-with-attachment';
+import simpleXml from '../data/xml/simple/form.xml';
+import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import Modal from '../../src/components/modal.vue';
 
 describe('WebFormRenderer', () => {
