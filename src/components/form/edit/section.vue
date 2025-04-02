@@ -43,6 +43,8 @@ defineProps({
     type: String,
     required: true
   },
+  // `true` to show dots down the lefthand side of the section. To adjust the
+  // number of dots, adjust the bottom margin of .form-edit-section-body.
   dotted: Boolean,
   warning: Boolean
 });
@@ -51,13 +53,15 @@ defineProps({
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-$dots-margin-block: 9px;
+// We add $margin-bottom to both .form-edit-section-icon-container and
+// .form-edit-section-body because it's not clear which one will be taller. We
+// want a consistent amount of margin after the section.
+$margin-bottom: 35px;
 $heading-margin-bottom: 10px;
 
 .form-edit-section {
   column-gap: 15px;
   display: flex;
-  margin-bottom: $dots-margin-block;
 
   > :first-child {
     align-items: center;
@@ -88,12 +92,14 @@ $heading-margin-bottom: 10px;
   flex-shrink: 0;
   font-size: 35px;
   position: relative;
+
+  &:last-child { margin-bottom: $margin-bottom; }
 }
 
 .form-edit-section-dots {
   border-left: 2px dotted #999;
   height: 100%;
-  margin-top: $dots-margin-block;
+  margin-block: 9px;
 }
 
 .form-edit-section-heading {
@@ -132,6 +138,11 @@ $heading-margin-bottom: 10px;
   &:has(> :nth-child(2):empty) { display: none; }
 
   .icon-circle { font-size: 12px; }
+}
+
+.form-edit-section-body {
+  margin-bottom: $margin-bottom;
+  &:has(.form-edit-section) { margin-bottom: 0; }
 }
 
 .form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {

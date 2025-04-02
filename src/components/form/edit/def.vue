@@ -74,10 +74,6 @@ const viewXml = modalData('FormVersionViewXml');
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
-#form-edit-def {
-  margin-bottom: 0;
-}
-
 #form-edit-def-container {
   display: flex;
   align-items: center;

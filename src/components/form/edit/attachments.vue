@@ -50,8 +50,8 @@ const hasMissing = computed(() =>
 
 <style lang="scss">
 #form-edit-attachments {
-  .form-edit-section-body { margin-bottom: 42px; }
-  :has(#form-attachment-list) .form-edit-section-body { margin-bottom: 12px; }
+  .form-edit-section-body { margin-bottom: 51px; }
+  &:has(#form-attachment-list) .form-edit-section-body { margin-bottom: 21px; }
 }
 </style>
 
