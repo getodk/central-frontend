@@ -15,11 +15,8 @@ except according to the terms contained in the LICENSE file.
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
       <div class="row">
-        <div class="col-xs-6">
-          <form-edit-create-draft v-if="formDraft.isEmpty()"
-            @success="fetchDraft(true)"/>
-          <form-edit-draft-controls v-else @publish="publishModal.show()"
-            @abandon="abandonModal.show()"/>
+        <div v-if="formDraft.isEmpty()" class="col-xs-6">
+          <form-edit-create-draft @success="fetchDraft(true)"/>
         </div>
         <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
           <form-edit-published-version/>
@@ -28,6 +25,8 @@ except according to the terms contained in the LICENSE file.
       <template v-if="formDraft.isDefined()">
         <form-edit-def @upload="uploadModal.show()"/>
         <form-draft-testing/>
+        <form-edit-draft-controls @publish="publishModal.show()"
+          @abandon="abandonModal.show()"/>
       </template>
     </template>
 
