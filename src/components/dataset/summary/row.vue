@@ -87,7 +87,7 @@ const propertiesCount = computed(() => tn(
     .dataset-name {
       @include text-overflow-ellipsis;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .dataset-new {
@@ -111,7 +111,7 @@ const propertiesCount = computed(() => tn(
 
   .expandable-row-toggle-button {
     color: #666;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .property-list {

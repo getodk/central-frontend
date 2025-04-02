@@ -52,6 +52,7 @@ defineProps({
 @import '../../../assets/scss/variables';
 
 $dots-margin-block: 9px;
+$heading-margin-bottom: 10px;
 
 .form-edit-section {
   column-gap: 15px;
@@ -99,17 +100,18 @@ $dots-margin-block: 9px;
   align-items: center;
   column-gap: 15px;
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: $heading-margin-bottom;
 }
 
 .form-edit-section-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   line-height: 1.2;
   margin-bottom: 0;
 }
 
 .form-edit-section-subtitle {
+  font-size: 12px;
   margin-bottom: 0;
 
   &:empty { display: none; }
@@ -130,6 +132,10 @@ $dots-margin-block: 9px;
   &:has(> :nth-child(2):empty) { display: none; }
 
   .icon-circle { font-size: 12px; }
+}
+
+.form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {
+  margin-top: -$heading-margin-bottom;
 }
 
 .form-edit-section.warning {

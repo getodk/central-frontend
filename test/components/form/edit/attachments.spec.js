@@ -8,13 +8,6 @@ describe('FormEditAttachments', () => {
   beforeEach(mockLogin);
 
   describe('subtitle', () => {
-    it('shows the correct text if there are no attachments', async () => {
-      testData.extendedForms.createPast(1, { draft: true });
-      const app = await load('/projects/1/forms/f/draft');
-      const subtitle = app.get('#form-edit-attachments .form-edit-section-subtitle').text();
-      subtitle.should.startWith('This definition requires no attachments,');
-    });
-
     it('shows the correct text if there is a missing attachment', async () => {
       testData.extendedForms.createPast(1, { draft: true });
       testData.standardFormAttachments
@@ -33,6 +26,13 @@ describe('FormEditAttachments', () => {
       const subtitle = app.get('#form-edit-attachments .form-edit-section-subtitle').text();
       subtitle.should.equal('2 attachments');
     });
+  });
+
+  it('shows the correct text if there are no attachments', async () => {
+    testData.extendedForms.createPast(1, { draft: true });
+    const app = await load('/projects/1/forms/f/draft');
+    const p = app.get('#form-edit-attachments .form-edit-section-body p');
+    p.text().should.startWith('This definition requires no attachments,');
   });
 
   it('shows a warning if there is a missing attachment', async () => {

@@ -52,7 +52,7 @@ const { form, formDraft } = useRequestData();
 
 #form-edit-published-version-string {
   @include text-overflow-ellipsis;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   line-height: 1.2;
 }

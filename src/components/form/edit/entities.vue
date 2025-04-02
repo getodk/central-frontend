@@ -12,15 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <form-edit-section id="form-edit-entities" icon="database">
     <template #title>{{ $t('resource.entities') }}</template>
-    <template #subtitle>
-      <template v-if="datasetDiff.dataExists">
-        {{ $tcn('datasetCount', datasetDiff.length) }}
-      </template>
-      <template v-else-if="!formDraft.entityRelated">
-        <span>{{ $t('notEntityRelated') }}</span>
-        <sentence-separator/>
-        <doc-link to="central-entities/">{{ $t('whatAreEntities') }}</doc-link>
-      </template>
+    <template v-if="datasetDiff.dataExists" #subtitle>
+      {{ $tcn('datasetCount', datasetDiff.length) }}
     </template>
     <template v-if="diffHasNew" #tag>{{ $t('diffHasNew') }}</template>
     <template #body>
@@ -28,6 +21,11 @@ except according to the terms contained in the LICENSE file.
         <loading :state="datasetDiff.initiallyLoading"/>
         <dataset-summary is-draft/>
       </template>
+      <p v-else>
+        <span>{{ $t('notEntityRelated') }}</span>
+        <sentence-separator/>
+        <doc-link to="central-entities/">{{ $t('whatAreEntities') }}</doc-link>
+      </p>
     </template>
   </form-edit-section>
 </template>

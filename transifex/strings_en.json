@@ -2998,6 +2998,9 @@
         "string": "Test this Draft",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "entitiesTesting": {
+        "string": "This Form Definition creates or updates Entities. For now, Entities are not created or updated by Draft Forms, so you will need to publish the Form to verify Entity functionality."
+      },
       "subtitle": {
         "full": {
           "string": "Submissions made here {willBeDeleted} when you publish this Draft!",
@@ -3007,9 +3010,6 @@
           "string": "will be deleted",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
-      },
-      "entitiesTesting": {
-        "string": "This Form Definition creates or updates Entities. For now, Entities are not created or updated by Draft Forms, so you will need to publish the Form to verify Entity functionality."
       },
       "collectProjectName": {
         "string": "[Draft] {name}",

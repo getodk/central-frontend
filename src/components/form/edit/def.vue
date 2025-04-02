@@ -90,7 +90,7 @@ const viewXml = modalData('FormVersionViewXml');
 
   > :first-child {
     @include text-overflow-ellipsis;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
   }
 
@@ -104,11 +104,12 @@ const viewXml = modalData('FormVersionViewXml');
 
 #form-edit-def-within {
   color: #888;
+  font-size: 12px;
   margin-block: 5px 6px;
 
   .icon-file-code-o {
     color: #777;
-    margin-inline: 31px 5px;
+    margin-inline: 32px 5px;
   }
 
   &::after {
