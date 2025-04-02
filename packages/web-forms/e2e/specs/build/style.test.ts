@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { PreviewPage } from '../../page-objects/pages/PreviewPage.js';
 
 test('Build includes component-defined styles', async ({ page }) => {
-	await page.goto('http://localhost:5174/');
+	const previewPage = new PreviewPage(page);
+	await previewPage.goToBuildPage();
 
 	// This ensures that the application is loaded before proceeding forward.
 	await expect(page.getByText('ODK Web Forms Preview').first()).toBeVisible();
