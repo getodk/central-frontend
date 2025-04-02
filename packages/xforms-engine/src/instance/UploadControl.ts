@@ -1,7 +1,7 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { TextRange } from '../client/TextRange.ts';
-import type { UploadDefinition, UploadNode } from '../client/UploadNode.ts';
+import type { UploadDefinition, UploadNode, UploadNodeOptions } from '../client/UploadNode.ts';
 import type { ValueType } from '../client/ValueType.ts';
 import type { InstanceAttachmentFileName, InstanceState } from '../client/index.ts';
 import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
@@ -109,7 +109,7 @@ export class UploadControl
 	readonly nodeType = 'upload';
 	readonly valueType = 'binary';
 	readonly appearances: UnknownAppearanceDefinition;
-	readonly nodeOptions = null;
+	readonly nodeOptions: UploadNodeOptions;
 	readonly currentState: CurrentState<UploadControlStateSpec>;
 
 	get validationState(): LeafNodeValidationState {
@@ -126,6 +126,7 @@ export class UploadControl
 		super(parent, instanceNode, definition);
 
 		this.appearances = definition.bodyElement.appearances;
+		this.nodeOptions = definition.bodyElement.options;
 
 		const instanceAttachment = createInstanceAttachment(this);
 

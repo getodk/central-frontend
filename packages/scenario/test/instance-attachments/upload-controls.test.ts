@@ -9,14 +9,15 @@ import {
 	title,
 	upload,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
+import type { UploadMediaOptions, UploadNode } from '@getodk/xforms-engine';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { binaryAnswer } from '../../src/answer/ExpectedBinaryAnswer.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
 
 describe('Instance attachments: upload controls', () => {
-	describe('basic upload state', () => {
-		const FAKE_INSTANCE_ID = 'not important to this suite';
+	const FAKE_INSTANCE_ID = 'not important to this suite';
 
+	describe('basic upload state', () => {
 		let scenario: Scenario;
 
 		beforeEach(async () => {
@@ -131,6 +132,116 @@ describe('Instance attachments: upload controls', () => {
 					t('meta',
 						t('instanceID', FAKE_INSTANCE_ID))).asXml()
 			);
+		});
+	});
+
+	describe('form-defined media types', () => {
+		const getUploadNode = (scneario: Scenario, reference: string): UploadNode => {
+			const node = scneario.getInstanceNode(reference);
+
+			assert(node.nodeType === 'upload');
+
+			return node;
+		};
+
+		interface UploadMediaCase {
+			readonly description: string;
+			readonly mediaType: string | null;
+			readonly expected: UploadMediaOptions;
+		}
+
+		it.each<UploadMediaCase>([
+			{
+				description: 'parses absence of `mediatype` as accepting all uploads by default',
+				mediaType: null,
+				expected: {
+					accept: '*',
+					type: null,
+					subtype: null,
+				},
+			},
+
+			{
+				description: 'parses a known `mediatype` MIME type value',
+				mediaType: 'image/*',
+				expected: {
+					accept: 'image/*',
+					type: 'image',
+					subtype: '*',
+				},
+			},
+
+			{
+				description: 'parses an unknown `mediatype` MIME type value',
+				mediaType: 'application/*',
+				expected: {
+					accept: 'application/*',
+					type: 'application',
+					subtype: '*',
+				},
+			},
+
+			{
+				description: 'parses a blank `mediatype` value as default',
+				mediaType: '',
+				expected: {
+					accept: '*',
+					type: null,
+					subtype: null,
+				},
+			},
+		])('$description', async ({ mediaType, expected }) => {
+			const uploadAttributes = new Map<string, string>();
+
+			if (mediaType != null) {
+				uploadAttributes.set('mediatype', mediaType);
+			}
+
+			const scenario = await Scenario.init(
+				'Typed upload control',
+				// prettier-ignore
+				html(
+					head(
+						title('Typed upload control'),
+						model(
+							mainInstance(
+								t('data id="typed-upload-control"',
+									t('file-upload'),
+									t('meta',
+										t('instanceID', FAKE_INSTANCE_ID)))),
+							bind('/data/file-upload').type('binary'))),
+					body(
+						upload('/data/file-upload', uploadAttributes)))
+			);
+
+			const node = getUploadNode(scenario, '/data/file-upload');
+
+			expect(node.nodeOptions.media).toEqual(expected);
+		});
+
+		it('fails to parse a `mediatype` attribute specifying a file extension', async () => {
+			const uploadAttributes = new Map([['mediatype', '.jpg']]);
+
+			const init = async () => {
+				await Scenario.init(
+					'Invalid upload control',
+					// prettier-ignore
+					html(
+						head(
+							title('Invalid upload control'),
+							model(
+								mainInstance(
+									t('data id="invalid-upload-control"',
+										t('file-upload'),
+										t('meta',
+											t('instanceID', FAKE_INSTANCE_ID)))),
+								bind('/data/file-upload').type('binary'))),
+						body(
+							upload('/data/file-upload', uploadAttributes)))
+				);
+			};
+
+			await expect(init).rejects.toThrow();
 		});
 	});
 });

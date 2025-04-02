@@ -235,8 +235,56 @@ export const proposed_rankDynamic = (ref: string, nodesetRef: string): XFormsEle
 
 export { proposed_rankDynamic as rankDynamic };
 
-export const proposed_upload = (ref: string, ...children: XFormsElement[]): XFormsElement => {
-	return t(`upload ref="${ref}"`, ...children);
+type UploadAttributes = ReadonlyMap<string, string>;
+
+type UploadAttributeParameters = readonly [
+	attributes: UploadAttributes,
+	...children: XFormsElement[],
+];
+
+type UploadRestParameters = UploadAttributeParameters | readonly XFormsElement[];
+
+const isUploadAttributeParameters = (
+	rest: UploadRestParameters
+): rest is UploadAttributeParameters => {
+	return rest[0] instanceof Map;
+};
+
+interface NormalizedUploadParameters {
+	readonly ref: string;
+	readonly attributes: UploadAttributes;
+	readonly children: readonly XFormsElement[];
+}
+
+const normalizeUploadParameters = (
+	ref: string,
+	...rest: UploadRestParameters
+): NormalizedUploadParameters => {
+	if (isUploadAttributeParameters(rest)) {
+		const [attributes, ...children] = rest;
+
+		return {
+			ref,
+			attributes,
+			children,
+		};
+	}
+
+	return {
+		ref,
+		attributes: new Map(),
+		children: rest,
+	};
+};
+
+export const proposed_upload = (ref: string, ...rest: UploadRestParameters): XFormsElement => {
+	const { attributes: uploadAttributes, children } = normalizeUploadParameters(ref, ...rest);
+
+	const attributes = new Map([...uploadAttributes, ['ref', ref]]);
+
+	const childrenXML = children.map((child) => child.asXml()).join('');
+
+	return new StringLiteralXFormsElement('upload', attributes, childrenXML);
 };
 
 export { proposed_upload as upload };
