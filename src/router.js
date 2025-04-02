@@ -83,7 +83,9 @@ router.afterEach(unlessFailure(to => {
   // navigation. To support, bookmarked links, we are redirecting old URL to the new one.
   // Using to.fullPath instead of to.hash because to.hash has URL decoded value whereas to.fullPath
   // gives percentage encoded value - central#919.
-  router.beforeEach(to => (to.path === '/' && to.fullPath.startsWith('/#/') ? to.fullPath.substring(2) : true));
+  // Note: to.path is '/#/some/path' when the route has query parameter after '#'
+  // e.g. /#/some/path?next=/ - central#939
+  router.beforeEach(to => (to.fullPath.startsWith('/#/') ? to.fullPath.substring(2) : true));
 
 
   //////////////////////////////////////////////////////////////////////////////
