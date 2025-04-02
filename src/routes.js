@@ -486,7 +486,7 @@ const routes = [
   }),
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/preview',
-    name: 'DraftFormPreview',
+    name: 'FormDraftPreview',
     component: 'FormPreview',
     props: (route) => ({
       ...route.params,
@@ -662,7 +662,7 @@ const routes = [
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
     component: 'FormSubmission',
-    name: 'EditSubmission',
+    name: 'SubmissionEdit',
     props: true,
     loading: 'page',
     meta: {
@@ -674,7 +674,7 @@ const routes = [
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
-    name: 'NewSubmission',
+    name: 'SubmissionNew',
     props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
     loading: 'page',
     meta: {
@@ -686,7 +686,7 @@ const routes = [
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
-    name: 'NewDraftSubmission',
+    name: 'DraftSubmissionNew',
     props: (route) => ({ ...route.params, offline: route.params.offline === 'offline', draft: true }),
     loading: 'page',
     meta: {
@@ -828,11 +828,11 @@ const routesByName = new Map();
   );
 
   [
-    'NewSubmission',
-    'NewDraftSubmission',
-    'EditSubmission',
+    'SubmissionNew',
+    'DraftSubmissionNew',
+    'SubmissionEdit',
     'FormPreview',
-    'DraftFormPreview'
+    'FormDraftPreview'
   ].forEach(redirectTo => {
     const preserve = (_, from) => from.name === 'EnketoRedirector' && [form];
     routesByName.get(redirectTo).meta.preserveData.push(preserve);

@@ -57,27 +57,27 @@ const redirectUrl = computed(() => route.query.return_url);
 
 const enketoSrc = computed(() => {
   let prefix = '/enketo-passthrough';
+  const { return_url: _, ...query } = route.query;
+
+  query.parentWindowOrigin = window.location.origin;
 
   // this is to avoid 404 warning
   if (process.env.NODE_ENV === 'test') {
     prefix = `/#${prefix}`;
   }
 
-  const queryParam = {};
-
   if (props.actionType === 'offline') {
     prefix += '/x';
   } else if (!props.actionType) {
     prefix += '/single';
-    queryParam.st = route.query.st;
   } else if (props.actionType === 'edit') {
     prefix += `/${props.actionType}`;
-    queryParam.instance_id = props.instanceId;
+    query.instance_id = props.instanceId;
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
 
-  return `${prefix}/${props.enketoId}${queryString(queryParam)}`;
+  return `${prefix}/${props.enketoId}${queryString(query)}`;
 });
 
 watchEffect(() => {

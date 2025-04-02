@@ -38,7 +38,22 @@ describe('EnketoIframe', () => {
     });
     const iframe = wrapper.find('iframe');
     iframe.exists().should.be.true;
-    iframe.attributes('src').should.contain(`/enketo-passthrough/edit/${enketoId}?instance_id=test-instance`);
+    iframe.attributes('src').should.contain(`/enketo-passthrough/edit/${enketoId}`);
+    iframe.attributes('src').should.contain('instance_id=test-instance');
+  });
+
+  it('passes all query parameters except return_url to the iframe', () => {
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'edit', instanceId: 'test-instance' },
+      container: {
+        router: mockRouter('/?return_url=http%3A%2F%2Flocalhost%2Fprojects%2F1&d[/data/first_name]=john')
+      }
+    });
+    const iframe = wrapper.find('iframe');
+    iframe.exists().should.be.true;
+
+    iframe.attributes('src').should.contain('instance_id=test-instance');
+    iframe.attributes('src').should.contain(`${encodeURIComponent('d[/data/first_name]')}=john`);
   });
 
   it('redirects on submissionsuccess message with return_url', async () => {

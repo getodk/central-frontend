@@ -85,4 +85,17 @@ describe('EnketoRedirector', () => {
         formRequestCount.should.equal(1);
       });
   });
+
+  it('should pass query parameter to the target', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    return load(`/f/${enketoId}/new?return_url=http%3A%2F%2Fexample.com&d[/data/first_name]=john`)
+      .respondFor('/projects/1/forms/a/submissions/new')
+      .afterResponses(app => {
+        app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new');
+        app.vm.$route.query.should.deep.equal({
+          return_url: 'http://example.com',
+          'd[/data/first_name]': 'john'
+        });
+      });
+  });
 });

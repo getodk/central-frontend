@@ -21,6 +21,7 @@ import Loading from './loading.vue';
 import { noop } from '../util/util';
 import useRoutes from '../composables/routes';
 import { useRequestData } from '../request-data';
+import { queryString } from '../util/request';
 
 defineOptions({
   name: 'EnketoRedirector'
@@ -50,7 +51,7 @@ form.request({
 
     // Edit
     // note: we don't support editing of draft submissions
-    if (props.actionType === 'edit' && route.query.instance_id) {
+    if (props.actionType === 'edit') {
       // if route.query.instance_id is not there then it will not match any path and page not found
       // will be displayed.
       target = submissionPath(form.projectId, form.xmlFormId, route.query.instance_id, 'edit');
@@ -70,7 +71,7 @@ form.request({
       target = offlineSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
     }
 
-    router.replace(target);
+    router.replace(`${target}${queryString(route.query)}`);
   })
   .catch(noop);
 

@@ -83,10 +83,10 @@ const fetchForm = () => {
 const hasAccess = computed(() => {
   if (!project.dataExists || !form.dataExists) return true;
 
-  if (route.name === 'NewSubmission' && !project.permits('submission.create'))
+  if (route.name === 'SubmissionNew' && !project.permits('submission.create'))
     return false;
 
-  if (route.name === 'EditSubmission' && !project.permits(['submission.read', 'submission.update']))
+  if (route.name === 'SubmissionEdit' && !project.permits(['submission.read', 'submission.update']))
     return false;
 
   if (!project.permits('form.read') && !project.permits('open_form.read'))
