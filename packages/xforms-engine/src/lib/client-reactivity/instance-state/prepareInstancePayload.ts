@@ -1,4 +1,5 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import { bestFitDecreasing } from 'bin-packer';
 import { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } from '../../../client/constants.ts';
 import type { InstanceData as ClientInstanceData } from '../../../client/serialization/InstanceData.ts';
 import type { InstanceFile as ClientInstanceFile } from '../../../client/serialization/InstanceFile.ts';
@@ -144,6 +145,43 @@ interface ChunkedInstancePayloadOptions {
 	readonly maxSize: number;
 }
 
+type PartitionedInstanceData = readonly [ClientInstanceData, ...ClientInstanceData[]];
+
+const partitionInstanceData = (
+	instanceFile: InstanceFile,
+	attachments: readonly File[],
+	options: ChunkedInstancePayloadOptions
+): PartitionedInstanceData => {
+	const { maxSize } = options;
+	const maxAttachmentSize = maxSize - instanceFile.size;
+	const { bins, oversized } = bestFitDecreasing(
+		attachments,
+		(attachment) => {
+			return attachment.size;
+		},
+		maxAttachmentSize
+	);
+
+	const errors = oversized.map((attachment) => {
+		return new Error(
+			`Combined size of instance XML (${instanceFile.size}) and attachment (${attachment.size}) exceeds maxSize (${maxSize}).`
+		);
+	});
+
+	if (errors.length > 0) {
+		throw new AggregateError(errors, 'Failed to produce chunked instance payload');
+	}
+
+	const [
+		// Ensure at least one `InstanceData` is produced, in case there are no
+		// attachments present at all
+		head = InstanceData.from(instanceFile, []),
+		...tail
+	] = bins.map((bin) => InstanceData.from(instanceFile, bin));
+
+	return [head, ...tail];
+};
+
 const chunkedInstancePayload = (
 	validation: InstanceStateValidation,
 	submissionMeta: SubmissionMeta,
@@ -151,17 +189,13 @@ const chunkedInstancePayload = (
 	attachments: readonly File[],
 	options: ChunkedInstancePayloadOptions
 ): ChunkedInstancePayload => {
-	if (attachments.length > 0 || options.maxSize !== Infinity) {
-		throw new Error('InstancePayload chunking pending implementation');
-	}
-
-	const data = InstanceData.from(instanceFile, attachments);
+	const data = partitionInstanceData(instanceFile, attachments, options);
 
 	return {
 		payloadType: 'chunked',
 		...validation,
 		submissionMeta,
-		data: [data],
+		data,
 	};
 };
 
