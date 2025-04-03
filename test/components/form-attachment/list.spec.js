@@ -83,7 +83,7 @@ describe('FormAttachmentList', () => {
 
       it('correctly renders an attachment that has never been uploaded', async () => {
         testData.standardFormAttachments.createPast(1, {
-          exists: false,
+          blobExists: false,
           hasUpdatedAt: false
         });
         const component = await load('/projects/1/forms/f/draft', {
@@ -98,7 +98,7 @@ describe('FormAttachmentList', () => {
 
       it('correctly renders a deleted attachment', async () => {
         testData.standardFormAttachments.createPast(1, {
-          exists: false,
+          blobExists: false,
           hasUpdatedAt: true
         });
         const component = await load('/projects/1/forms/f/draft', {
@@ -447,11 +447,11 @@ describe('FormAttachmentList', () => {
         .beforeAnyResponse(component => {
           component.get('#form-attachment-popups-backdrop').should.be.visible();
         })
-        .respondWithSuccess());
+        .respondWithData(() => testData.standardFormAttachments.update(0)));
 
     it('shows the popup with the correct text', () =>
       upload('a')
-        .respondWithSuccess()
+        .respondWithData(() => testData.standardFormAttachments.update(0))
         .beforeEachResponse((component, { data }) => {
           const popup = component.get('#form-attachment-popups-main');
           component.should.be.visible();
@@ -462,52 +462,63 @@ describe('FormAttachmentList', () => {
 
     describe('the upload succeeds', () => {
       describe('updatedAt', () => {
-        it('updates the table for an existing attachment', () =>
-          upload('a')
-            .respondWithSuccess()
+        it('updates the table for an existing attachment', () => {
+          const oldUpdatedAt = testData.standardFormAttachments.sorted()
+            .map(attachment => attachment.updatedAt);
+          return upload('a')
+            .respondWithData(() => testData.standardFormAttachments.update(0))
             .afterResponse(component => {
-              const oldUpdatedAt = testData.standardFormAttachments.sorted()
-                .map(attachment => attachment.updatedAt);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               isBefore(oldUpdatedAt[0], newUpdatedAt[0]).should.be.true;
               should.not.exist(newUpdatedAt[1]);
               newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
-            }));
+            });
+        });
 
-        it('updates table for an attachment that has never been uploaded', () =>
-          upload('b')
-            .respondWithSuccess()
+        it('updates table for an attachment that has never been uploaded', () => {
+          const oldUpdatedAt = testData.standardFormAttachments.sorted()
+            .map(attachment => attachment.updatedAt);
+          return upload('b')
+            .respondWithData(() => testData.standardFormAttachments.update(1, {
+              blobExists: true,
+              exists: true,
+              hash: 'foo'
+            }))
             .afterResponse(component => {
-              const oldUpdatedAt = testData.standardFormAttachments.sorted()
-                .map(attachment => attachment.updatedAt);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.exist(newUpdatedAt[1]);
               newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
-            }));
+            });
+        });
 
-        it('updates the table for a deleted attachment', () =>
-          upload('c')
-            .respondWithSuccess()
+        it('updates the table for a deleted attachment', () => {
+          const oldUpdatedAt = testData.standardFormAttachments.sorted()
+            .map(attachment => attachment.updatedAt);
+          return upload('c')
+            .respondWithData(() => testData.standardFormAttachments.update(2, {
+              blobExists: true,
+              exists: true,
+              hash: 'foo'
+            }))
             .afterResponse(component => {
-              const oldUpdatedAt = testData.standardFormAttachments.sorted()
-                .map(attachment => attachment.updatedAt);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
               newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
               should.not.exist(newUpdatedAt[1]);
               isBefore(oldUpdatedAt[2], newUpdatedAt[2]).should.be.true;
-            }));
+            });
+        });
       });
 
       it('shows a success alert', () =>
         upload('a')
-          .respondWithSuccess()
+          .respondWithData(() => testData.standardFormAttachments.update(0))
           .afterResponse(component => {
             component.should.alert('success', '1 file has been successfully uploaded.');
           }));
@@ -515,7 +526,7 @@ describe('FormAttachmentList', () => {
       describe('highlight', () => {
         it('highlights the updated attachment', () =>
           upload('a')
-            .respondWithSuccess()
+            .respondWithData(() => testData.standardFormAttachments.update(0))
             .afterResponse(component => {
               const rows = component.findAllComponents(FormAttachmentRow);
               const success = rows.map(row => row.classes('success'));
@@ -524,7 +535,7 @@ describe('FormAttachmentList', () => {
 
         it('unhighlights the attachment once a new drag starts', () =>
           upload('a')
-            .respondWithSuccess()
+            .respondWithData(() => testData.standardFormAttachments.update(0))
             .afterResponse(async (component) => {
               await component.get('#form-attachment-list').trigger('dragenter', {
                 dataTransfer: fileDataTransfer(blankFiles(['d']))
@@ -534,7 +545,7 @@ describe('FormAttachmentList', () => {
 
         it('unhighlights the attachment after a file input selection', () =>
           upload('a')
-            .respondWithSuccess()
+            .respondWithData(() => testData.standardFormAttachments.update(0))
             .afterResponse(async (component) => {
               const input = component.get('#form-attachment-upload-files input');
               await setFiles(input, blankFiles(['d']));
@@ -544,19 +555,20 @@ describe('FormAttachmentList', () => {
     });
 
     describe('the upload does not succeed', () => {
-      it('does not update the table', () =>
-        upload('a')
+      it('does not update the table', () => {
+        const oldUpdatedAt = testData.standardFormAttachments.sorted()
+          .map(attachment => attachment.updatedAt);
+        return upload('a')
           .respondWithProblem()
           .afterResponse(component => {
-            const oldUpdatedAt = testData.standardFormAttachments.sorted()
-              .map(attachment => attachment.updatedAt);
             const { draftAttachments } = component.vm.$container.requestData.localResources;
             const newUpdatedAt = [...draftAttachments.values()]
               .map(attachment => attachment.updatedAt);
             newUpdatedAt[0].should.equal(oldUpdatedAt[0]);
             should.not.exist(newUpdatedAt[1]);
             newUpdatedAt[2].should.equal(oldUpdatedAt[2]);
-          }));
+          });
+      });
 
       it('shows a danger alert', () =>
         upload('a')
@@ -640,8 +652,14 @@ describe('FormAttachmentList', () => {
               })
               .modify(series => {
                 let withResponses = series;
-                for (let i = 0; i < successCount; i += 1)
-                  withResponses = withResponses.respondWithSuccess();
+                for (let i = 0; i < successCount; i += 1) {
+                  withResponses = withResponses.respondWithData(() =>
+                    testData.standardFormAttachments.update(i, {
+                      blobExists: true,
+                      exists: true,
+                      hash: 'foo'
+                    }));
+                }
                 if (successCount < 3) {
                   withResponses = withResponses
                     .respondWithProblem({ code: 500.1, message: 'Failed.' });
@@ -669,9 +687,9 @@ describe('FormAttachmentList', () => {
 
           describe('all uploads succeed', () => {
             it('updates the table', async () => {
-              const component = await confirmUploads(3);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
+              const component = await confirmUploads(3);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
@@ -712,9 +730,9 @@ describe('FormAttachmentList', () => {
 
           describe('only 2 uploads succeed', () => {
             it('updates the table', async () => {
-              const component = await confirmUploads(2);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
+              const component = await confirmUploads(2);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
@@ -741,9 +759,9 @@ describe('FormAttachmentList', () => {
 
           describe('only 1 upload succeeds', () => {
             it('updates the table', async () => {
-              const component = await confirmUploads(1);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
+              const component = await confirmUploads(1);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
@@ -770,9 +788,9 @@ describe('FormAttachmentList', () => {
 
           describe('no uploads succeed', () => {
             it('does not update the table', async () => {
-              const component = await confirmUploads(0);
               const oldUpdatedAt = testData.standardFormAttachments.sorted()
                 .map(attachment => attachment.updatedAt);
+              const component = await confirmUploads(0);
               const { draftAttachments } = component.vm.$container.requestData.localResources;
               const newUpdatedAt = [...draftAttachments.values()]
                 .map(attachment => attachment.updatedAt);
@@ -1085,7 +1103,11 @@ describe('FormAttachmentList', () => {
             await component.get('td.form-attachment-list-action .btn-link-dataset').trigger('click');
             return component.get('#form-attachment-link-dataset .btn-link-dataset').trigger('click');
           })
-          .respondWithSuccess()
+          .respondWithData(() => testData.standardFormAttachments.update(0, {
+            blobExists: false,
+            datasetExists: true,
+            hash: null
+          }))
           .afterResponse(component => {
             component.get('td.form-attachment-list-uploaded .dataset-label').text().should.equal('Linked to Entity List shovels');
             component.get('td.form-attachment-list-action').text().should.equal('Upload a file to override.');

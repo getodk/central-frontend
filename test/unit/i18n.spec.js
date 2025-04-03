@@ -164,6 +164,11 @@ describe('util/i18n', () => {
         formatList(['x', 'y']).should.equal('x、y');
         formatList(['x', 'y', 'z']).should.equal('x、y、z');
       });
+
+      it('uses the specified format', () => {
+        const { formatList } = withSetup(useI18nUtils);
+        formatList(['x', 'y'], 'long').should.equal('x and y');
+      });
     });
 
     describe('formatListToParts()', () => {
@@ -183,6 +188,15 @@ describe('util/i18n', () => {
         formatListToParts(['x', 'y']).should.eql([
           { type: 'element', value: 'x' },
           { type: 'literal', value: '、' },
+          { type: 'element', value: 'y' }
+        ]);
+      });
+
+      it('uses the specified format', () => {
+        const { formatListToParts } = withSetup(useI18nUtils);
+        formatListToParts(['x', 'y'], 'long').should.eql([
+          { type: 'element', value: 'x' },
+          { type: 'literal', value: ' and ' },
           { type: 'element', value: 'y' }
         ]);
       });
