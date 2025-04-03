@@ -696,7 +696,7 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]{31})/:actionType(new|edit|preview|offline)',
+    path: '/f/:enketoId([a-zA-Z0-9]{31})/:actionType(new|edit|preview)',
     component: 'EnketoRedirector',
     props: true,
     loading: 'page',
@@ -705,16 +705,26 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})',
+    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})/:offline(offline)?',
     component: 'FormSubmission',
     name: 'WebFormDirectLink',
-    props: true,
+    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
     loading: 'page',
     meta: {
       standalone: true,
-      restoreSession: false,
+      restoreSession: true,
       requireLogin: false,
       title: () => [form.nameOrId]
+    },
+    // onceEnketoId doesn't support offline
+    beforeEnter: (to) => {
+      const { enketoId } = to.params;
+      const isOffline = to.path.endsWith('/offline');
+
+      if (isOffline && enketoId.length !== 31) {
+        return '/not-found';
+      }
+      return true;
     }
   }),
 
@@ -827,6 +837,7 @@ const routesByName = new Map();
       : false)
   );
 
+  // Preserve Form data when redirected to canoncial path
   [
     'SubmissionNew',
     'DraftSubmissionNew',
@@ -834,9 +845,12 @@ const routesByName = new Map();
     'FormPreview',
     'FormDraftPreview'
   ].forEach(redirectTo => {
-    const preserve = (_, from) => from.name === 'EnketoRedirector' && [form];
+    const preserve = (_, from) =>
+      (from.name === 'EnketoRedirector' || from.name === 'WebFormDirectLink') && [form];
     routesByName.get(redirectTo).meta.preserveData.push(preserve);
   });
+
+
   //////////////////////////////////////////////////////////////////////////////
   // RETURN
 

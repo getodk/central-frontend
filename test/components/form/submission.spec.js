@@ -146,6 +146,15 @@ describe('FormSubmission', () => {
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/');
           }));
+
+      it('cannot access new submission - offline', () => {
+        testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+        return load(`/f/${enketoId}/offline`)
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
     });
 
     describe('project manager', () => {
@@ -173,6 +182,41 @@ describe('FormSubmission', () => {
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
+    });
+  });
+
+  describe('redirects to canocial path', () => {
+    beforeEach(() => {
+      mockLogin();
+    });
+
+    it('should redirect to new submission page - offline', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      return load(`/f/${enketoId}/offline`)
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new/offline');
+        });
+    });
+
+    it('should redirect to new draft submission page - offline', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
+      return load(`/f/${enketoId}/offline`)
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/a/draft/submissions/new/offline');
+        });
+    });
+
+    it('should preserve form data while redirecting', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      let formRequestCount = 0;
+      return load(`/f/${enketoId}/offline`)
+        .beforeEachResponse((app, { url }) => {
+          if (url.match(/form/)) formRequestCount += 1;
+        })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new/offline');
+          formRequestCount.should.equal(1);
+        });
     });
   });
 });

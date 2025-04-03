@@ -41,7 +41,7 @@ const props = defineProps({
 const { form } = useRequestData();
 const router = useRouter();
 const route = useRoute();
-const { submissionPath, newSubmissionPath, formPreviewPath, offlineSubmissionPath } = useRoutes();
+const { submissionPath, newSubmissionPath, formPreviewPath } = useRoutes();
 
 form.request({
   url: apiPaths.formByEnketoId(props.enketoId),
@@ -64,11 +64,6 @@ form.request({
     // Preview
     if (props.actionType === 'preview') {
       target = formPreviewPath(form.projectId, form.xmlFormId, !form.publishedAt);
-    }
-
-    // Offline
-    if (props.actionType === 'offline') {
-      target = offlineSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
     }
 
     router.replace(`${target}${queryString(route.query)}`);

@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="initiallyLoading"/>
-  <web-form-renderer v-if="form.dataExists && form.webformsEnabled" :action-type="actionType"/>
-  <enketo-iframe v-if="form.dataExists && !form.webformsEnabled"
+  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType"/>
+  <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
     :enketo-id="form.enketoId"
     :action-type="offline ? 'offline' : actionType"
     :instance-id="instanceId"/>
@@ -30,6 +30,7 @@ import { noop } from '../../util/util';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { useRequestData } from '../../request-data';
+import useRoutes from '../../composables/routes';
 
 defineOptions({
   name: 'FormSubmission'
@@ -52,8 +53,17 @@ const route = useRoute();
 const router = useRouter();
 const { project, resourceStates, form } = useRequestData();
 const { t } = useI18n();
+const { newSubmissionPath, offlineSubmissionPath } = useRoutes();
 
-const { initiallyLoading, dataExists } = resourceStates(props.projectId ? [project, form] : [form]);
+const resources = computed(() => (props.projectId ? [project, form] : [form]));
+
+const { initiallyLoading, dataExists } = computed(() => {
+  const state = resourceStates(resources.value);
+  return {
+    initiallyLoading: state.initiallyLoading,
+    dataExists: state.dataExists
+  };
+}).value;
 
 const WebFormRenderer = defineAsyncComponent(loadAsync('WebFormRenderer'));
 const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
@@ -77,7 +87,17 @@ const fetchForm = () => {
     resend: false,
     problemToAlert: (problem) =>
       (problem.code === 404.1 ? t('formNotFound') : null)
-  }).catch(noop);
+  })
+    .then(() => {
+      // if it is public link without st and we got the data then it means user is logged in,
+      // let's send user to the canonical path
+      // Note: it can be true for WebFormDirectLink route
+      if (!props.projectId && !route.query.st && form.dataExists) {
+        const targetPath = props.offline ? offlineSubmissionPath : newSubmissionPath;
+        router.replace(targetPath(form.projectId, form.xmlFormId, !form.publishedAt));
+      }
+    })
+    .catch(noop);
 };
 
 const hasAccess = computed(() => {
