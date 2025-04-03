@@ -266,12 +266,7 @@ export default {
           });
         }
       })
-        .then(() => {
-          // This may differ a little from updatedAt on the server, but that
-          // should be OK.
-          const updatedAt = new Date().toISOString();
-          updates.push([attachment.name, updatedAt]);
-        });
+        .then(({ data }) => { updates.push(data); });
     },
     uploadFiles() {
       this.alert.blank();
@@ -296,14 +291,9 @@ export default {
           if (updates.length === this.uploadStatus.total)
             this.alert.success(this.$tcn('alert.success', updates.length));
 
-          for (const [name, updatedAt] of updates) {
-            const attachment = this.draftAttachments.get(name);
-            attachment.blobExists = true;
-            attachment.datasetExists = false;
-            attachment.exists = true;
-            attachment.updatedAt = updatedAt;
-
-            this.updatedAttachments.add(name);
+          for (const update of updates) {
+            Object.assign(this.draftAttachments.get(update.name), update);
+            this.updatedAttachments.add(update.name);
           }
 
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: 0 };
@@ -323,10 +313,6 @@ export default {
       this.alert.success(this.$t('alert.link', {
         attachmentName: attachment.name
       }));
-
-      attachment.datasetExists = true;
-      attachment.blobExists = false;
-      attachment.exists = true;
     }
   }
 };

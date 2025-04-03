@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 import { useI18n } from 'vue-i18n';
-import { computed, watchSyncEffect } from 'vue';
+import { computed } from 'vue';
 
 import { localStore } from './storage';
 import { locales } from '../i18n';
@@ -89,34 +89,42 @@ const tn = (t, n) => (path, count, values) => {
 ////////////////////////////////////////////////////////////////////////////////
 // useI18nUtils()
 
+const listFormatOptions = {
+  default: { style: 'narrow' },
+  long: { style: 'long' }
+};
+
 const useGlobalUtils = memoizeForContainer(({ i18n }) => {
-  const formats = {};
-  watchSyncEffect(() => {
-    const { locale } = i18n;
-    if (formats[locale] != null) return;
-    formats[locale] = {
-      numberFormats: {},
-      listFormat: new Intl.ListFormat(locale, { style: 'narrow' })
-    };
-  });
+  const numberFormats = {};
   const getNumberFormat = (key) => {
     const { locale } = i18n;
-    const { numberFormats } = formats[locale];
-    const existingFormat = numberFormats[key];
+    if (numberFormats[locale] == null) numberFormats[locale] = {};
+    const existingFormat = numberFormats[locale][key];
     if (existingFormat != null) return existingFormat;
     const options = i18n.getNumberFormat(locale)[key];
     const numberFormat = new Intl.NumberFormat(locale, options);
-    numberFormats[key] = numberFormat;
+    numberFormats[locale][key] = numberFormat;
     return numberFormat;
+  };
+
+  const listFormats = {};
+  const getListFormat = (key) => {
+    const { locale } = i18n;
+    if (listFormats[locale] == null) listFormats[locale] = {};
+    const existingFormat = listFormats[locale][key];
+    if (existingFormat != null) return existingFormat;
+    const listFormat = new Intl.ListFormat(locale, listFormatOptions[key]);
+    listFormats[locale][key] = listFormat;
+    return listFormat;
   };
 
   return {
     formatRange: (start, end, key = 'default') => (start === end
       ? i18n.n(start, key)
       : getNumberFormat(key).formatRange(start, end)),
-    formatList: (list) => formats[i18n.locale].listFormat.format(list),
-    formatListToParts: (list) =>
-      formats[i18n.locale].listFormat.formatToParts(list),
+    formatList: (list, key = 'default') => getListFormat(key).format(list),
+    formatListToParts: (list, key = 'default') =>
+      getListFormat(key).formatToParts(list),
 
     sentenceSeparator: computed(() =>
       locales.get(i18n.locale).sentenceSeparator)

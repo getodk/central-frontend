@@ -24,15 +24,14 @@ export const standardFormAttachments = dataStore({
       : extendedForms.createPast(1).last(),
     type = 'image',
     name = fakeName(type),
+    hash = undefined,
     datasetExists = false,
-    hasUpdatedAt = undefined,
-    blobExists = inPast && !datasetExists && hasUpdatedAt == null
+    blobExists = hash != null || (inPast && !datasetExists),
+    hasUpdatedAt = blobExists
   }) => {
     if (!inPast) {
       if (blobExists)
         throw new Error('blobExists cannot be true for a new form attachment');
-      if (datasetExists)
-        throw new Error('datasetExists cannot be true for a new form attachment');
       if (hasUpdatedAt === true)
         throw new Error('hasUpdatedAt cannot be true for a new form attachment');
     } else if (blobExists && hasUpdatedAt === false) {
@@ -47,6 +46,7 @@ export const standardFormAttachments = dataStore({
       blobExists,
       datasetExists,
       exists: blobExists || datasetExists,
+      hash: hash ?? (blobExists ? 'a'.repeat(32) : null),
       updatedAt: hasUpdatedAt ?? inPast ? fakePastDate([form.createdAt]) : null
     };
   },

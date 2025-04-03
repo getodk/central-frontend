@@ -70,7 +70,8 @@ export default {
         url: apiPaths.formAttachment(this.form.projectId, this.form.xmlFormId, true, this.attachment.name),
         data: { dataset: true }
       })
-        .then(() => {
+        .then(({ data }) => {
+          Object.assign(this.attachment, data);
           this.$emit('success', this.form);
         })
         .catch(noop);

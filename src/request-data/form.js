@@ -24,12 +24,14 @@ export default () => {
 
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
+
+  const transformAttachments = ({ data }) => data.reduce(
+    (map, attachment) => map.set(attachment.name, reactive(attachment)),
+    new Map()
+  );
   // Form draft attachments
   const draftAttachments = createResource('draftAttachments', () => ({
-    transformResponse: ({ data }) => data.reduce(
-      (map, attachment) => map.set(attachment.name, reactive(attachment)),
-      new Map()
-    ),
+    transformResponse: transformAttachments,
     missingCount: computeIfExists(() => {
       let count = 0;
       for (const attachment of draftAttachments.values()) {
@@ -38,12 +40,17 @@ export default () => {
       return count;
     })
   }));
-
   // Published form attachments
   const publishedAttachments = createResource('publishedAttachments', () => ({
-    linkedDatasets: computeIfExists(() => publishedAttachments
-      .filter(a => a.datasetExists)
-      .map(a => a.name.replace(/\.csv$/i, '')))
+    transformResponse: transformAttachments,
+    linkedDatasets: computeIfExists(() => {
+      const datasets = [];
+      for (const attachment of publishedAttachments.values()) {
+        if (attachment.datasetExists)
+          datasets.push(attachment.name.replace(/\.csv$/i, ''));
+      }
+      return datasets;
+    })
   }));
 
   const publicLinks = createResource('publicLinks', () => ({
