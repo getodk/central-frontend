@@ -3,6 +3,7 @@ import ControlText from '@/components/ControlText.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
+import type { HTMLInputElementEvent } from 'vue';
 import { computed, inject, ref } from 'vue';
 
 interface UploadImageControlProps {
@@ -10,13 +11,15 @@ interface UploadImageControlProps {
 }
 
 const props = defineProps<UploadImageControlProps>();
-const touched = ref(false);
+
+const touched = ref(props.question.currentState.value != null);
 const submitPressed = inject<boolean>('submitPressed');
 const isDisabled = computed(() => props.question.currentState.readonly === true);
-const value = ref<string | null>(null);
+
 const selectImageInput = ref<HTMLInputElement | null>(null);
 const takePictureInput = ref<HTMLInputElement | null>(null);
 const previewImage = ref<HTMLImageElement | null>(null);
+
 const isSmallImage = ref(false);
 
 const checkCaptureSupport = () => {
@@ -36,36 +39,17 @@ const triggerInputField = (inputField: HTMLInputElement | null) => {
 	inputField.click();
 };
 
-const processImage = (event: Event) => {
-	const target = event.target as HTMLInputElement;
-	const file = target.files?.[0];
-	if (file == null) {
-		return;
-	}
-
-	const reader = new FileReader();
-
-	reader.onload = (loadEvent) => {
-		const result = loadEvent.target?.result;
-		if (result == null || typeof result !== 'string') {
-			setValue(null);
-			return;
-		}
-
-		setValue(result);
-	};
-
-	reader.readAsDataURL(file);
+const updateValue = (file: File | null) => {
+	touched.value = true;
+	props.question.setValue(file);
 };
 
-const setValue = (file: string | null) => {
-	touched.value = true;
-	// ToDo: When integrated with xforms-engine, call the node's setValues function here.
-	value.value = file;
+const onChange = (event: HTMLInputElementEvent) => {
+	updateValue(event.target.files?.[0] ?? null);
 };
 
 const clear = () => {
-	setValue(null);
+	updateValue(null);
 
 	if (selectImageInput.value != null) {
 		selectImageInput.value.value = '';
@@ -86,6 +70,20 @@ const checkImageSize = () => {
 		previewImage.value.naturalWidth < SMALL_IMAGE_SIZE &&
 		previewImage.value.naturalHeight < SMALL_IMAGE_SIZE;
 };
+
+const imageURL = computed<string | null>((previous: string | null) => {
+	if (previous != null) {
+		URL.revokeObjectURL(previous);
+	}
+
+	const file = props.question.currentState.value;
+
+	if (file == null) {
+		return null;
+	}
+
+	return URL.createObjectURL(file);
+});
 </script>
 
 <template>
@@ -118,10 +116,10 @@ const checkImageSize = () => {
 			<input
 				ref="takePictureInput"
 				type="file"
-				accept="image/*"
+				:accept="question.nodeOptions.media.accept"
 				capture="environment"
 				style="display: none"
-				@change="processImage"
+				@change="onChange"
 			>
 		</template>
 
@@ -149,13 +147,13 @@ const checkImageSize = () => {
 		<input
 			ref="selectImageInput"
 			type="file"
-			accept="image/*"
+			:accept="question.nodeOptions.media.accept"
 			style="display: none"
-			@change="processImage"
+			@change="onChange"
 		>
 	</div>
 
-	<div v-if="value" class="preview-captured-image" :class="{ 'small-image': isSmallImage }">
+	<div v-if="imageURL" class="preview-captured-image" :class="{ 'small-image': isSmallImage }">
 		<Button v-if="!isDisabled" severity="secondary" class="clear-button" @click="clear">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -170,7 +168,7 @@ const checkImageSize = () => {
 				/>
 			</svg>
 		</Button>
-		<img ref="previewImage" :src="value" alt="Captured image preview" @load="checkImageSize">
+		<img ref="previewImage" :src="imageURL" alt="Captured image preview" @load="checkImageSize">
 	</div>
 
 	<ValidationMessage
