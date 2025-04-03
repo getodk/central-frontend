@@ -73,7 +73,7 @@ describe('ProjectFormRow', () => {
         const row = mountComponent();
         const link = row.get('.form-name a');
         link.text().should.equal('My Form');
-        link.attributes().href.should.equal('/-/xyz');
+        link.attributes().href.should.equal('/projects/1/forms/f/submissions/new');
       });
 
       it('does not render a link to enketo if closed', () => {

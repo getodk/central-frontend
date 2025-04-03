@@ -98,7 +98,6 @@ import FormLink from '../form/link.vue';
 
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
-import { enketoBasePath } from '../../util/util';
 import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
 
@@ -124,11 +123,12 @@ export default {
   setup() {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
-    const { formPath } = useRoutes();
+    const { formPath, newSubmissionPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       duplicateFormNamesPerProject,
       formPath,
+      newSubmissionPath,
       reviewStateIcon
     };
   },
@@ -157,8 +157,7 @@ export default {
       };
     },
     enketoPath() {
-      const encodedId = encodeURIComponent(this.form.enketoId);
-      return `${enketoBasePath}/${encodedId}`;
+      return this.newSubmissionPath(this.form.projectId, this.form.xmlFormId, !this.form.publishedAt);
     },
     showIdForDuplicateName() {
       const formNames = this.duplicateFormNamesPerProject[this.project.id];

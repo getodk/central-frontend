@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import useRoutes from '../../composables/routes';
-import { enketoBasePath } from '../../util/util';
+import { queryString } from '../../util/request';
 
 export default {
   name: 'EnketoPreview',
@@ -38,8 +38,8 @@ export default {
     }
   },
   setup() {
-    const { formPath } = useRoutes();
-    return { formPath };
+    const { formPath, formPreviewPath } = useRoutes();
+    return { formPath, formPreviewPath };
   },
   computed: {
     disabledDescription() {
@@ -51,17 +51,18 @@ export default {
       return null;
     },
     enketoPath() {
-      // enketoId probably doesn't need to be encoded, but there is also little
-      // harm.
-      const encodedId = encodeURIComponent(this.formVersion.enketoId);
-      return `${enketoBasePath}/preview/${encodedId}`;
-    },
-    webFormsPath() {
-      return this.formPath(
+      return this.formPreviewPath(
         this.formVersion.projectId,
         this.formVersion.xmlFormId,
-        this.formVersion.publishedAt != null ? 'preview' : 'draft/preview'
+        !this.formVersion.publishedAt
       );
+    },
+    webFormsPath() {
+      return `${this.formPreviewPath(
+        this.formVersion.projectId,
+        this.formVersion.xmlFormId,
+        !this.formVersion.publishedAt
+      )}${queryString({ webforms: true })}`;
     }
   }
 };

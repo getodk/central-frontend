@@ -12,8 +12,10 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="form.initiallyLoading"/>
-  <web-form-renderer v-if="form.dataExists && form.webformsEnabled"/>
-  <enketo-iframe v-if="form.dataExists && !form.webformsEnabled" :enketo-id="form.enketoId" action-type="preview"/>
+  <template v-if="form.dataExists">
+    <web-form-renderer v-if="form.webformsEnabled || $route.query.webforms === 'true'" action-type="preview"/>
+    <enketo-iframe v-else :enketo-id="form.enketoId" action-type="preview"/>
+  </template>
 </template>
 
 <script setup>
