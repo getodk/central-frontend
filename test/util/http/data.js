@@ -6,6 +6,7 @@ import useDatasets from '../../../src/request-data/datasets';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
+import { apiPaths } from '../../../src/util/request';
 
 // The names of the following properties correspond to requestData resources.
 const responseDefaults = {
@@ -28,6 +29,30 @@ const responseDefaults = {
   user: () => testData.standardUsers.last(),
   odataEntities: testData.entityOData,
   audits: () => testData.extendedAudits.sorted()
+};
+
+/**
+ * Checks if a given URL matches the expected API path pattern.
+ *
+ * This function converts an API path function into a regex pattern and tests
+ * whether the provided URL conforms to that pattern.
+ *
+ * @param {Function} apiPathFn
+ * A function that generates the expected API path. Optional arguments are ignored
+ * @param {string} url
+ * The URL to be tested against the API path pattern.
+ * @returns {boolean}
+ * `true` if the URL matches the expected API path pattern, otherwise `false`.
+ */
+const matchesApiPath = (apiPathFn, url) => {
+  const ALPHA_NUMERIC = 'ALPHA_NUMERIC';
+  const ALPH_NUMERIC_REGEX = '[^/]+';
+
+  // call apiPathFn with placeholders, fn.length returns lenght of required args only
+  const regex = new RegExp(`^${apiPathFn(...Array(apiPathFn.length).fill(ALPHA_NUMERIC))
+    .replaceAll(ALPHA_NUMERIC, ALPH_NUMERIC_REGEX)}(\\?.+)?$`);
+
+  return regex.test(url);
 };
 
 const componentResponses = (map) => Object.entries(map)
@@ -70,28 +95,34 @@ const responsesByComponent = {
 
     // Conditional responses (mockHttp().respondIf())
     publishedAttachments: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/attachments$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.publishedAttachments, url),
       () => testData.standardFormAttachments.sorted()
     ],
     formDatasetDiff: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/dataset-diff$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.formDatasetDiff, url),
       () => testData.formDatasetDiffs.sorted()
     ],
     appUserCount: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/assignments\/app-user$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.formActors, url),
       () => testData.extendedFieldKeys.sorted()
     ]
   }),
   FormPreview: componentResponses({
     form: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.form, url) ||
+                   matchesApiPath(apiPaths.formDraft, url),
       () => testData.extendedForms.last()
     ]
   }),
   FormSubmission: componentResponses({
-    project: true,
+    project: [
+      ({ url }) => matchesApiPath(apiPaths.project, url),
+      () => testData.extendedProjects.last()
+    ],
     form: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+(\/draft)?$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.form, url) ||
+                   matchesApiPath(apiPaths.formDraft, url) ||
+                   matchesApiPath(apiPaths.formByEnketoId, url),
       () => testData.extendedForms.last()
     ]
   }),
@@ -116,28 +147,28 @@ const responsesByComponent = {
       : mockResponse.problem(404.1)),
 
     draftAttachments: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/attachments$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.formDraftAttachments, url),
       () => testData.standardFormAttachments.sorted()
     ],
     formVersions: true,
     formDraftDatasetDiff: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/dataset-diff$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.formDraftDatasetDiff, url),
       () => testData.formDraftDatasetDiffs.sorted()
     ],
     datasets: [
-      ({ url }) => /^\/v1\/projects\/\d+\/datasets$/.test(url),
+      ({ url }) => matchesApiPath(apiPaths.datasets, url),
       () => testData.extendedDatasets.sorted()
     ],
     keys: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/submissions\/keys$/.test(url),
+      ({ url }) => matchesApiPath((projectId, xmlFormId, draft) => apiPaths.submissionKeys(projectId, xmlFormId, draft), url),
       () => testData.standardKeys.sorted()
     ],
     fields: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\/fields\?/.test(url),
+      ({ url }) => matchesApiPath((projectId, xmlFormId, draft) => apiPaths.fields(projectId, xmlFormId, draft), url),
       () => testData.extendedForms.last()._fields
     ],
     odata: [
-      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/draft\.svc\/Submissions\?/.test(url),
+      ({ url }) => matchesApiPath((projectId, xmlFormId, draft) => apiPaths.odataSubmissions(projectId, xmlFormId, draft), url),
       testData.submissionOData
     ]
   }),
