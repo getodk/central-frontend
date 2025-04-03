@@ -29,9 +29,11 @@ const isDisabled = computed(() => props.question.currentState.readonly === true)
 
 const selectImageInput = ref<HTMLInputElement | null>(null);
 const takePictureInput = ref<HTMLInputElement | null>(null);
-const previewImage = ref<HTMLImageElement | null>(null);
 
-const isSmallImage = ref(false);
+interface NaturalDimensions {
+	readonly naturalWidth: number;
+	readonly naturalHeight: number;
+}
 
 const triggerInputField = (inputField: HTMLInputElement | null) => {
 	if (inputField == null) {
@@ -50,15 +52,24 @@ const onChange = (event: HTMLInputElementEvent) => {
 	updateValue(event.target.files?.[0] ?? null);
 };
 
-const checkImageSize = () => {
-	if (previewImage?.value == null) {
-		return;
-	}
-
-	isSmallImage.value =
-		previewImage.value.naturalWidth < SMALL_IMAGE_SIZE &&
-		previewImage.value.naturalHeight < SMALL_IMAGE_SIZE;
+const DEFAULT_DIMENSIONS: NaturalDimensions = {
+	naturalWidth: 0,
+	naturalHeight: 0,
 };
+
+const loadedDimensions = ref<NaturalDimensions>(DEFAULT_DIMENSIONS);
+
+const onPreviewLoad = (event: Event) => {
+	const previewImage = event.target as HTMLImageElement;
+
+	loadedDimensions.value = previewImage;
+};
+
+const isSmallImage = computed(() => {
+	const { naturalWidth, naturalHeight } = loadedDimensions.value;
+
+	return naturalWidth < SMALL_IMAGE_SIZE && naturalHeight < SMALL_IMAGE_SIZE;
+});
 
 const imageURL = computed<string | null>((previous: string | null) => {
 	if (previous != null) {
@@ -84,6 +95,7 @@ watchEffect(() => {
 	if (props.question.currentState.value == null) {
 		clearInputRefValue(selectImageInput);
 		clearInputRefValue(takePictureInput);
+		loadedDimensions.value = DEFAULT_DIMENSIONS;
 	}
 });
 </script>
@@ -170,7 +182,7 @@ watchEffect(() => {
 				/>
 			</svg>
 		</Button>
-		<img ref="previewImage" :src="imageURL" alt="Captured image preview" @load="checkImageSize">
+		<img :src="imageURL" alt="Captured image preview" @load="onPreviewLoad">
 	</div>
 
 	<ValidationMessage
