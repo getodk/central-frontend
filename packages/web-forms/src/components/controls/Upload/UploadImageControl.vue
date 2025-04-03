@@ -3,8 +3,8 @@ import ControlText from '@/components/ControlText.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
-import type { HTMLInputElementEvent } from 'vue';
-import { computed, inject, ref } from 'vue';
+import type { HTMLInputElementEvent, Ref } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
 
 interface UploadImageControlProps {
 	readonly question: UploadNode;
@@ -48,18 +48,6 @@ const onChange = (event: HTMLInputElementEvent) => {
 	updateValue(event.target.files?.[0] ?? null);
 };
 
-const clear = () => {
-	updateValue(null);
-
-	if (selectImageInput.value != null) {
-		selectImageInput.value.value = '';
-	}
-
-	if (takePictureInput.value != null) {
-		takePictureInput.value.value = '';
-	}
-};
-
 const checkImageSize = () => {
 	if (previewImage?.value == null) {
 		return;
@@ -83,6 +71,19 @@ const imageURL = computed<string | null>((previous: string | null) => {
 	}
 
 	return URL.createObjectURL(file);
+});
+
+const clearInputRefValue = (inputRef: Ref<HTMLInputElement | null>) => {
+	if (inputRef.value != null) {
+		inputRef.value.value = '';
+	}
+};
+
+watchEffect(() => {
+	if (props.question.currentState.value == null) {
+		clearInputRefValue(selectImageInput);
+		clearInputRefValue(takePictureInput);
+	}
 });
 </script>
 
@@ -154,7 +155,7 @@ const imageURL = computed<string | null>((previous: string | null) => {
 	</div>
 
 	<div v-if="imageURL" class="preview-captured-image" :class="{ 'small-image': isSmallImage }">
-		<Button v-if="!isDisabled" severity="secondary" class="clear-button" @click="clear">
+		<Button v-if="!isDisabled" severity="secondary" class="clear-button" @click="updateValue(null)">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="12"
