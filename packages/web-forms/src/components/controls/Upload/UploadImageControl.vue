@@ -35,6 +35,10 @@ interface NaturalDimensions {
 	readonly naturalHeight: number;
 }
 
+/**
+ * @todo <button> to trigger sibling <input type="file" style="display: none">
+ * is probably a common enough pattern we'll want to make it a component.
+ */
 const triggerInputField = (inputField: HTMLInputElement | null) => {
 	if (inputField == null) {
 		return;
