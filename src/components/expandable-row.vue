@@ -48,6 +48,7 @@ const toggleExpanded = () => { expanded.value = !expanded.value; };
 @import '../assets/scss/mixins';
 
 .expandable-row {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
 

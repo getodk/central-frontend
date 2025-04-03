@@ -44,7 +44,8 @@ defineProps({
     required: true
   },
   // `true` to show dots down the lefthand side of the section. To adjust the
-  // number of dots, adjust the bottom margin of .form-edit-section-body.
+  // number of dots, adjust the bottom margin of .form-edit-section-body from
+  // the parent component.
   dotted: Boolean,
   warning: Boolean
 });
@@ -53,9 +54,16 @@ defineProps({
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-// We add $margin-bottom to both .form-edit-section-icon-container and
-// .form-edit-section-body because it's not clear which one will be taller. We
-// want a consistent amount of margin after the section.
+/*
+We add $margin-bottom to both .form-edit-section-icon-container and
+.form-edit-section-body because it's not clear which one will be taller. We want
+a consistent amount of margin after the section.
+
+We don't just add $margin-bottom to the section as a whole because that would
+stack on the bottom margin of whatever is passed to the `body` slot. Adding
+$margin-bottom to .form-edit-section-body allows us to benefit from margin
+collapse.
+*/
 $margin-bottom: 35px;
 $heading-margin-bottom: 10px;
 
