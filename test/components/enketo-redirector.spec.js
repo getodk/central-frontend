@@ -36,6 +36,15 @@ describe('EnketoRedirector', () => {
       });
   });
 
+  it('should redirect to edit submission page', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    return load(`/f/${enketoId}/edit`)
+      .afterResponses(app => {
+        app.vm.$route.path.should.equal('/projects/1/forms/a/submissions//edit');
+        app.find('.panel-title').text().should.equal('Page Not Found');
+      });
+  });
+
   it('should redirect to Form preview page', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     return load(`/f/${enketoId}/preview`)

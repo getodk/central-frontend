@@ -54,7 +54,7 @@ form.request({
     if (props.actionType === 'edit') {
       // if route.query.instance_id is not there then it will not match any path and page not found
       // will be displayed.
-      target = submissionPath(form.projectId, form.xmlFormId, route.query.instance_id, 'edit');
+      target = submissionPath(form.projectId, form.xmlFormId, route.query.instance_id ?? '', 'edit');
     }
     // New
     if (props.actionType === 'new') {
