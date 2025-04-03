@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import ControlText from '@/components/ControlText.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
+import type { ObjectURL } from '@getodk/common/lib/web-compat/url.ts';
+import { createObjectURL, revokeObjectURL } from '@getodk/common/lib/web-compat/url.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
@@ -75,9 +77,9 @@ const isSmallImage = computed(() => {
 	return naturalWidth < SMALL_IMAGE_SIZE && naturalHeight < SMALL_IMAGE_SIZE;
 });
 
-const imageURL = computed<string | null>((previous: string | null) => {
+const imageURL = computed<ObjectURL | null>((previous: ObjectURL | null) => {
 	if (previous != null) {
-		URL.revokeObjectURL(previous);
+		revokeObjectURL(previous);
 	}
 
 	const file = props.question.currentState.value;
@@ -86,7 +88,7 @@ const imageURL = computed<string | null>((previous: string | null) => {
 		return null;
 	}
 
-	return URL.createObjectURL(file);
+	return createObjectURL(file);
 });
 
 const clearInputRefValue = (inputRef: Ref<HTMLInputElement | null>) => {
