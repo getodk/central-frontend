@@ -21,13 +21,16 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <div v-if="formDraft.entityRelated" id="form-draft-testing-entities">
-        <span>{{ $t('entitiesTesting') }}</span>
-        <sentence-separator/>
-        <i18n-t keypath="moreInfo.helpArticle.full">
-          <template #helpArticle>
-            <doc-link to="central-entities/#testing-forms-with-entities">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
-          </template>
-        </i18n-t>
+        <span class="icon-info-circle"></span>
+        <div>
+          <span>{{ $t('entitiesTesting') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.helpArticle.full">
+            <template #helpArticle>
+              <doc-link to="central-entities/#testing-forms-with-entities">{{ $t('moreInfo.helpArticle.helpArticle') }}</doc-link>
+            </template>
+          </i18n-t>
+        </div>
       </div>
 
       <loading :state="keys.initiallyLoading"/>
@@ -85,7 +88,21 @@ const hidePopover = () => { popoverData.target = null; };
 </script>
 
 <style lang="scss">
-#form-draft-testing-entities { margin-bottom: 25px; }
+@import '../../assets/scss/variables';
+
+#form-draft-testing-entities {
+  background-color: $color-page-background;
+  color: #666;
+  column-gap: $margin-right-icon;
+  display: flex;
+  margin-bottom: 15px;
+  padding: 12px;
+
+  .icon-info-circle {
+    color: #999;
+    font-size: 20px;
+  }
+}
 </style>
 
 <i18n lang="json5">
