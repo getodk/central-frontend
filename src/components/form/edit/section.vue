@@ -43,6 +43,9 @@ defineProps({
     type: String,
     required: true
   },
+  // `true` to show dots down the lefthand side of the section. To adjust the
+  // number of dots, adjust the bottom margin of .form-edit-section-body from
+  // the parent component.
   dotted: Boolean,
   warning: Boolean
 });
@@ -51,12 +54,22 @@ defineProps({
 <style lang="scss">
 @import '../../../assets/scss/variables';
 
-$dots-margin-block: 9px;
+/*
+We add $margin-bottom to both .form-edit-section-icon-container and
+.form-edit-section-body because it's not clear which one will be taller. We want
+a consistent amount of margin after the section.
+
+We don't just add $margin-bottom to the section as a whole because that would
+stack on the bottom margin of whatever is passed to the `body` slot. Adding
+$margin-bottom to .form-edit-section-body allows us to benefit from margin
+collapse.
+*/
+$margin-bottom: 35px;
+$heading-margin-bottom: 10px;
 
 .form-edit-section {
   column-gap: 15px;
   display: flex;
-  margin-bottom: $dots-margin-block;
 
   > :first-child {
     align-items: center;
@@ -87,29 +100,32 @@ $dots-margin-block: 9px;
   flex-shrink: 0;
   font-size: 35px;
   position: relative;
+
+  &:last-child { margin-bottom: $margin-bottom; }
 }
 
 .form-edit-section-dots {
   border-left: 2px dotted #999;
   height: 100%;
-  margin-top: $dots-margin-block;
+  margin-block: 9px;
 }
 
 .form-edit-section-heading {
   align-items: center;
   column-gap: 15px;
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: $heading-margin-bottom;
 }
 
 .form-edit-section-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   line-height: 1.2;
   margin-bottom: 0;
 }
 
 .form-edit-section-subtitle {
+  font-size: 12px;
   margin-bottom: 0;
 
   &:empty { display: none; }
@@ -132,9 +148,17 @@ $dots-margin-block: 9px;
   .icon-circle { font-size: 12px; }
 }
 
+.form-edit-section-body {
+  margin-bottom: $margin-bottom;
+  &:has(.form-edit-section) { margin-bottom: 0; }
+}
+
+.form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {
+  margin-top: -$heading-margin-bottom;
+}
+
 .form-edit-section.warning {
   .form-edit-section-icon-container { background-color: $color-warning-light; }
-  .form-edit-section-subtitle { color: $color-warning-light; }
 }
 .form-edit-section-icon-container .icon-warning:nth-child(2) {
   position: absolute;

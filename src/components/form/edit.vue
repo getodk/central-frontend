@@ -12,25 +12,22 @@ except according to the terms contained in the LICENSE file.
 <template>
   <file-drop-zone id="form-edit" :disabled="dragDisabled" :styled="false"
     @dragenter="dragHandler" @dragleave="dragHandler" @drop="dragHandler">
-    <div class="row">
-      <div class="col-xs-6">
-        <form-edit-loading-draft v-if="!formDraft.dataExists"/>
-        <form-edit-create-draft v-else-if="formDraft.isEmpty()"
-          @success="fetchDraft(true)"/>
-        <form-edit-draft-controls v-else @publish="publishModal.show()"
-          @abandon="abandonModal.show()"/>
-      </div>
-      <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
-        <form-edit-published-version/>
-      </div>
-    </div>
-    <template v-if="formDraft.dataExists && formDraft.isDefined()">
+    <loading :state="formDraft.initiallyLoading"/>
+    <template v-if="formDraft.dataExists">
       <div class="row">
-        <div class="col-xs-12 col-lg-10">
-          <form-edit-def @upload="uploadModal.show()"/>
+        <div v-if="formDraft.isEmpty()" class="col-xs-6">
+          <form-edit-create-draft @success="fetchDraft(true)"/>
+        </div>
+        <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
+          <form-edit-published-version/>
         </div>
       </div>
-      <form-draft-testing/>
+      <template v-if="formDraft.isDefined()">
+        <form-edit-def @upload="uploadModal.show()"/>
+        <form-draft-testing/>
+        <form-edit-draft-controls @publish="publishModal.show()"
+          @abandon="abandonModal.show()"/>
+      </template>
     </template>
 
     <form-new v-bind="uploadModal" @hide="uploadModal.hide()" @success="afterUpload"/>
@@ -53,9 +50,9 @@ import FormDraftTesting from '../form-draft/testing.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 import FormEditDef from './edit/def.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';
-import FormEditLoadingDraft from './edit/loading-draft.vue';
 import FormEditPublishedVersion from './edit/published-version.vue';
 import FormNew from './new.vue';
+import Loading from '../loading.vue';
 
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';

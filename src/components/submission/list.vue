@@ -513,7 +513,7 @@ export default {
 #submission-list {
   // Make sure that there is enough space for the DateRangePicker when it is
   // open.
-  min-height: 375px;
+  &:has(.date-range-picker) { min-height: 375px; }
 }
 
 #submission-list-actions {

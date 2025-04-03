@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-draft-controls" icon="pencil" dotted>
+  <form-edit-section id="form-edit-draft-controls" icon="pencil">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <button id="form-edit-publish-button" type="button"
@@ -47,10 +47,6 @@ const abandonText = computed(() => (!form.dataExists
 </script>
 
 <style lang="scss">
-#form-edit-draft-controls {
-  .form-edit-section-body { margin-bottom: 30px; }
-}
-
 #form-edit-abandon-button { margin-left: 10px; }
 </style>
 

@@ -1,13 +1,19 @@
 import FormEditPublishedVersion from '../../../../src/components/form/edit/published-version.vue';
 import FormVersionString from '../../../../src/components/form-version/string.vue';
 
+import useForm from '../../../../src/request-data/form';
+
 import testData from '../../../data';
 import { mount } from '../../../util/lifecycle';
 import { setLuxon } from '../../../util/date-time';
+import { testRequestData } from '../../../util/request-data';
 
 const mountComponent = () => mount(FormEditPublishedVersion, {
   container: {
-    requestData: { form: testData.extendedForms.last() }
+    requestData: testRequestData([useForm], {
+      form: testData.extendedForms.last(),
+      formDraft: testData.extendedFormVersions.last()
+    })
   }
 });
 
@@ -18,6 +24,7 @@ describe('FormEditPublishedVersion', () => {
       version: 'foobar',
       publishedAt: '2025-01-02T12:34:56.789Z'
     });
+    testData.extendedFormVersions.createPast(1, { draft: true });
     const component = mountComponent();
     const subtitle = component.get('.form-edit-section-subtitle').text();
     subtitle.should.equal('Published 2025/01/02 12:34');

@@ -12,14 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <form-edit-section icon="eye">
     <template #title>{{ $t('title') }}</template>
-    <template #subtitle>
-      <i18n-t keypath="subtitle.full">
+    <template #body>
+      <i18n-t tag="p" keypath="deletionWarning.full">
         <template #willBeDeleted>
-          <strong>{{ $t('subtitle.willBeDeleted') }}</strong>
+          <strong>{{ $t('deletionWarning.willBeDeleted') }}</strong>
         </template>
       </i18n-t>
-    </template>
-    <template #body>
       <div v-if="formDraft.entityRelated" id="form-draft-testing-entities">
         <span class="icon-info-circle"></span>
         <div>
@@ -110,7 +108,8 @@ const hidePopover = () => { popoverData.target = null; };
   "en": {
     // This is a title shown above a section of the page.
     "title": "Test this Draft",
-    "subtitle": {
+    // @transifexKey component.FormDraftTesting.subtitle
+    "deletionWarning": {
       "full": "Submissions made here {willBeDeleted} when you publish this Draft!",
       "willBeDeleted": "will be deleted"
     },
