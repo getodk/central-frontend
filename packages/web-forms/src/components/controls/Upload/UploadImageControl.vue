@@ -6,6 +6,17 @@ import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
 import { computed, inject, ref, watchEffect } from 'vue';
 
+const IS_CAPTURE_SUPPORTED = (() => {
+	const input = document.createElement('input');
+
+	input.setAttribute('type', 'file');
+	input.setAttribute('accept', 'image/*');
+
+	return 'capture' in input;
+})();
+
+const SMALL_IMAGE_SIZE = 300;
+
 interface UploadImageControlProps {
 	readonly question: UploadNode;
 }
@@ -21,15 +32,6 @@ const takePictureInput = ref<HTMLInputElement | null>(null);
 const previewImage = ref<HTMLImageElement | null>(null);
 
 const isSmallImage = ref(false);
-
-const checkCaptureSupport = () => {
-	const input = document.createElement('input');
-	input.setAttribute('type', 'file');
-	input.setAttribute('accept', 'image/*');
-	return 'capture' in input;
-};
-
-const isCaptureSupported = ref(checkCaptureSupport());
 
 const triggerInputField = (inputField: HTMLInputElement | null) => {
 	if (inputField == null) {
@@ -53,7 +55,6 @@ const checkImageSize = () => {
 		return;
 	}
 
-	const SMALL_IMAGE_SIZE = 300;
 	isSmallImage.value =
 		previewImage.value.naturalWidth < SMALL_IMAGE_SIZE &&
 		previewImage.value.naturalHeight < SMALL_IMAGE_SIZE;
@@ -91,7 +92,7 @@ watchEffect(() => {
 	<ControlText :question="question" />
 
 	<div class="capture-buttons">
-		<template v-if="isCaptureSupported">
+		<template v-if="IS_CAPTURE_SUPPORTED">
 			<Button
 				rounded
 				class="take-picture-button"
