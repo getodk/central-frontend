@@ -11,7 +11,14 @@ import {
 	title,
 	upload,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import type { InstanceData } from '@getodk/xforms-engine';
+import type {
+	AnyNode,
+	InstanceData,
+	InstancePayload,
+	LeafNodeValidationState,
+	RootNode,
+	UploadNode,
+} from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../../src/jr/Scenario.ts';
@@ -241,6 +248,75 @@ describe('Instance attachments: binary output', () => {
 			const instanceFileText = await getBlobText(instanceFile);
 
 			expect(instanceFileText).toEqual(instanceXML);
+		});
+
+		/**
+		 * @todo
+		 *
+		 * **Engine API notes**
+		 *
+		 * This test exercises failure to satisfy a `maxSize` because the combined
+		 * total of bytes for the instance XML and attachment (forming a minimal
+		 * {@link InstanceData} including the attachment) exceeds that `maxSize`.
+		 *
+		 * As exercised by the test, this error is **NOT** produced when the
+		 * excessively large attachment is assigned to an `<upload>` control!
+		 * Instead, it's produced when attempting to serialize the
+		 * {@link InstancePayload}. This is an inherent limitation of the current
+		 * engine/client interface, where `maxSize` is not specified until
+		 * serialization.
+		 *
+		 * It would probably be more user friendly to produce an error at the time
+		 * the excessively large attachment _is assigned_. Such user-friendlier
+		 * behavior is currently blocked by the following:
+		 *
+		 * 1. Order of operations: an equivalent to the `maxSize` option would need
+		 *    to be specified at instance creation time.
+		 * 2. Broad/conceptual: {@link UploadNode.setValue} would need to provide
+		 *    some feedback to clients when the `maxSize` condition cannot be
+		 *    satisfied.
+		 *
+		 * Given other error production priorities, the latter also strongly
+		 * suggests at one (or perhaps both!) of the following:
+		 *
+		 * 1. Expression of fallibility in write APIs:
+		 *     - {@link UploadNode.setValue} should no longer return
+		 *       {@link RootNode}. Instead, it should return whatever variant of
+		 *       `Result` type we end up adopting for error production generally.
+		 *     - {@link AnyNode | All nodes'} write methods should follow suit.
+		 *     - We should have a clear understanding of what sorts of error
+		 *       conditions may occur from **each respective write method**, for
+		 *       those return type revisions to be meaningful.
+		 *
+		 * 2. Expression of exceeding max size as a validation concern:
+		 *     - {@link UploadNode.validationState} should report this as a
+		 *       {@link LeafNodeValidationState.violation | violation}...
+		 *     - ... which may co-occur with a
+		 *       {@link LeafNodeValidationState.constraint | constraint}
+		 *       violation...
+		 *     - ... which implies an {@link UploadNode} may actually have more than
+		 *       one effective "violation" at a time (and so it can't be reported as
+		 *       a singular, nullable value)
+		 */
+		it('produces an error when a single instance attachment exceeds the specified max size', async () => {
+			const baseMaxChunkSize = 400;
+
+			const uploads = [sizedFile('upload-0', baseMaxChunkSize + 1)] as const;
+
+			scenario.answer('/data/files/upload-0', uploads[0]);
+
+			const instanceXML = scenario.proposed_serializeInstance();
+			const instanceXMLBytes = instanceXML.length;
+			const maxChunkSize = baseMaxChunkSize + instanceXMLBytes;
+
+			const preparePayload = async () => {
+				await scenario.prepareWebFormsInstancePayload({
+					payloadType: 'chunked',
+					maxSize: maxChunkSize,
+				});
+			};
+
+			await expect(preparePayload).rejects.toThrowError(AggregateError);
 		});
 	});
 });
