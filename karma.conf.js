@@ -18,6 +18,10 @@ webpackConfigForKarma.stats = {
   children: true,
   errorDetails: true
 };
+webpackConfigForKarma.module.rules.push({
+  test: /\.xml$/,
+  use: 'raw-loader'
+});
 
 module.exports = (config) => {
   config.set({

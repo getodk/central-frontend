@@ -1,55 +1,48 @@
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import Modal from '../../../src/components/modal.vue';
 
 describe('FormPreview', () => {
-  // eslint-disable-next-line no-console
-  const originalConsoleLog = console.log;
+  // Stub WebFormRenderer - loading the real component creates dependency between tests because
+  // it is loaded asynchronously
+  const mountOptions = () => ({
+    global: {
+      stubs: {
+        WebFormRenderer: {
+          template: '<div class="odk-form">dummy renderer</div>'
+        }
+      }
+    }
+  });
 
   beforeEach(() => {
     mockLogin();
-    // eslint-disable-next-line no-console
-    console.log = () => {};
-  });
-
-  afterEach(() => {
-    // eslint-disable-next-line no-console
-    console.log = originalConsoleLog;
   });
 
   it('sends the correct initial requests', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-    return load('/projects/1/forms/a/preview').testRequests([
-      { url: '/v1/projects/1/forms/a', extended: true },
-      { url: '/v1/projects/1/forms/a.xml' }
-    ]);
+    return load('/projects/1/forms/a/preview', mountOptions())
+      .testRequests([
+        { url: '/v1/projects/1/forms/a', extended: true },
+      ]);
   });
 
   it('renders new Web Form', async () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
 
-    const app = await load('/projects/1/forms/a/preview').complete();
+    const app = await load('/projects/1/forms/a/preview', mountOptions())
+      .complete();
 
     const webForm = app.find('.odk-form');
 
     webForm.exists().should.be.true;
   });
 
-  it('shows preview modal', async () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-    return load('/projects/1/forms/a/preview').testModalToggles({
-      modal: Modal,
-      show: '.footer button',
-      hide: '.btn-primary'
-    });
-  });
-
   it('does not show navbar', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-    const app = await load('/projects/1/forms/a/preview').complete();
+    const app = await load('/projects/1/forms/a/preview', mountOptions())
+      .complete();
 
     app.findComponent({ name: 'Navbar' }).exists().should.be.false;
   });

@@ -131,6 +131,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-enketo-iframe" */
     '../components/enketo-iframe.vue'
   )))
+  .set('EnketoRedirector', loader(() => import(
+    /* webpackChunkName: "component-enketo-redirector" */
+    '../components/enketo-redirector.vue'
+  )))
   .set('FormPreview', loader(() => import(
     /* webpackChunkName: "component-form-preview" */
     '../components/form/preview.vue'

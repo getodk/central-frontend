@@ -10,7 +10,7 @@ const mountComponent = (options) =>
   }));
 
 describe('EnketoPreview', () => {
-  it('renders correctly for an open form with an enketoId', () => {
+  it('renders correctly for an open form with canonical link', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: 'xyz', state: 'open' })
       .last();
@@ -19,7 +19,7 @@ describe('EnketoPreview', () => {
     });
     const button = component.get('.enketo-preview');
     button.element.tagName.should.equal('A');
-    button.attributes().href.should.equal('/-/preview/xyz');
+    button.attributes().href.should.equal('/projects/1/forms/f/preview');
   });
 
   it('renders correctly for a form without an enketoId', async () => {

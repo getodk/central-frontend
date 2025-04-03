@@ -21,7 +21,7 @@ describe('EnketoFill', () => {
       container
     });
     button.element.tagName.should.equal('A');
-    button.attributes().href.should.equal('/-/xyz');
+    button.attributes().href.should.equal('/projects/1/forms/f/submissions/new');
     button.get('span').text().should.equal('Some span text');
   });
 
