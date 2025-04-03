@@ -21,7 +21,7 @@ import Loading from './loading.vue';
 import { noop } from '../util/util';
 import useRoutes from '../composables/routes';
 import { useRequestData } from '../request-data';
-import { queryString } from '../util/request';
+import { apiPaths, queryString } from '../util/request';
 
 defineOptions({
   name: 'EnketoRedirector'
@@ -44,7 +44,7 @@ const route = useRoute();
 const { submissionPath, newSubmissionPath, formPreviewPath, offlineSubmissionPath } = useRoutes();
 
 form.request({
-  url: `/v1/enketo-ids/${props.enketoId}/form`,
+  url: apiPaths.formByEnketoId(props.enketoId),
 })
   .then(() => {
     let target = '/';

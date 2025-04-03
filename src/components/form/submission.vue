@@ -27,7 +27,7 @@ import { useI18n } from 'vue-i18n';
 import Loading from '../loading.vue';
 
 import { noop } from '../../util/util';
-import { apiPaths, queryString } from '../../util/request';
+import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { useRequestData } from '../../request-data';
 
@@ -69,7 +69,7 @@ const fetchForm = () => {
   if (props.projectId && props.xmlFormId) {
     formUrl = props.draft ? apiPaths.formDraft(props.projectId, props.xmlFormId) : apiPaths.form(props.projectId, props.xmlFormId);
   } else {
-    formUrl = `/v1/enketo-ids/${props.enketoId}/form${queryString({ st: route.query.st })}`;
+    formUrl = apiPaths.formByEnketoId(props.enketoId, { st: route.query.st });
   }
 
   form.request({
