@@ -907,8 +907,6 @@ describe('Form submission', () => {
 				});
 			});
 		});
-
-		describe.todo('for multiple requests, chunked by maximum size');
 	});
 
 	describe('submission-specific metadata', () => {
