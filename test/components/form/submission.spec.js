@@ -86,10 +86,27 @@ describe('FormSubmission', () => {
         testData.extendedProjects.createPast(1, { role: 'formfill' });
         testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
       });
+
       it('can access new submission page', async () => {
         await load('/projects/1/forms/a/submissions/new', mountOptions())
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
+          });
+      });
+
+      it('can access new draft submission page', async () => {
+        await load('/projects/1/forms/a/draft/submissions/new', mountOptions())
+          .afterResponses(app => {
+            app.find('.odk-form').exists().should.be.true;
+          });
+      });
+
+      it('cannot access new submission page if form is closed', async () => {
+        testData.extendedForms.createPast(1, { xmlFormId: 'b', webformsEnabled: true, state: 'closed' });
+        await load('/projects/1/forms/b/submissions/new', mountOptions())
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
           });
       });
 
@@ -116,6 +133,13 @@ describe('FormSubmission', () => {
             app.vm.$route.path.should.equal('/');
           }));
 
+      it('cannot access new draft submission page', () =>
+        load('/projects/1/forms/a/draft/submissions/new', mountOptions())
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+
       it('cannot access edit submission page', () =>
         load('/projects/1/forms/a/submissions/1/edit', mountOptions())
           .respondFor('/', { users: false })
@@ -136,6 +160,13 @@ describe('FormSubmission', () => {
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
+
+      it('can access new draft submission page', async () => {
+        await load('/projects/1/forms/a/draft/submissions/new', mountOptions())
+          .afterResponses(app => {
+            app.find('.odk-form').exists().should.be.true;
+          });
+      });
 
       it('can access edit submission page', () =>
         load('/projects/1/forms/a/submissions/1/edit', mountOptions())

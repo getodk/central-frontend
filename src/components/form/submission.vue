@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="initiallyLoading"/>
-  <web-form-renderer v-if="form.dataExists && form.webformsEnabled" action-type="actionType"/>
+  <web-form-renderer v-if="form.dataExists && form.webformsEnabled" :action-type="actionType"/>
   <enketo-iframe v-if="form.dataExists && !form.webformsEnabled"
     :enketo-id="form.enketoId"
     :action-type="offline ? 'offline' : actionType"
@@ -83,19 +83,22 @@ const fetchForm = () => {
 const hasAccess = computed(() => {
   if (!project.dataExists || !form.dataExists) return true;
 
-  if (route.name === 'SubmissionNew' && !project.permits('submission.create'))
-    return false;
+  let result = true;
+
+  if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') &&
+      !project.permits('submission.create'))
+    result = false;
 
   if (route.name === 'SubmissionEdit' && !project.permits(['submission.read', 'submission.update']))
-    return false;
+    result = false;
 
   if (!project.permits('form.read') && !project.permits('open_form.read'))
-    return false;
+    result = false;
 
   if (!project.permits('form.read') && project.permits('open_form.read') && form.state === 'closed')
-    return false;
+    result = false;
 
-  return true;
+  return result;
 });
 
 watchEffect(() => {
