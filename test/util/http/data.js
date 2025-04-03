@@ -160,15 +160,15 @@ const responsesByComponent = {
       () => testData.extendedDatasets.sorted()
     ],
     keys: [
-      ({ url }) => matchesApiPath((projectId, xmlFormId, draft) => apiPaths.submissionKeys(projectId, xmlFormId, draft), url),
+      ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.submissionKeys(projectId, xmlFormId, true), url),
       () => testData.standardKeys.sorted()
     ],
     fields: [
-      ({ url }) => matchesApiPath((projectId, xmlFormId, draft) => apiPaths.fields(projectId, xmlFormId, draft), url),
+      ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.fields(projectId, xmlFormId, true), url),
       () => testData.extendedForms.last()._fields
     ],
     odata: [
-      ({ url }) => matchesApiPath((projectId, xmlFormId, draft) => apiPaths.odataSubmissions(projectId, xmlFormId, draft), url),
+      ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.odataSubmissions(projectId, xmlFormId, true), url),
       testData.submissionOData
     ]
   }),
