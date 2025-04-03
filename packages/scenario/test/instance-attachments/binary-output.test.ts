@@ -13,6 +13,8 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import type {
 	AnyNode,
+	FormNodeID,
+	InstanceAttachmentsConfig,
 	InstanceData,
 	InstancePayload,
 	LeafNodeValidationState,
@@ -20,7 +22,8 @@ import type {
 	UploadNode,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
-import { assert, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, assert, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { TestFormOptions } from '../../src/client/init.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
 
 describe('Instance attachments: binary output', () => {
@@ -317,6 +320,255 @@ describe('Instance attachments: binary output', () => {
 			};
 
 			await expect(preparePayload).rejects.toThrowError(AggregateError);
+		});
+	});
+
+	describe('support for distinct file names', () => {
+		const INDISTINGUISHABLE_BASE_NAME = 'indistinguishable';
+		const INDISTINGUISHABLE_FILE_NAME = `${INDISTINGUISHABLE_BASE_NAME}.txt`;
+
+		class IndistinguishablyNamedFile extends File {
+			override readonly name = INDISTINGUISHABLE_FILE_NAME;
+			override readonly type = 'text/plain';
+
+			constructor(data: string) {
+				super([data], INDISTINGUISHABLE_FILE_NAME, { type: 'text/plain' });
+			}
+		}
+
+		type QuadTuple<T> = readonly [T, T, T, T];
+
+		interface UploadMeta {
+			readonly node: UploadNode;
+			readonly file: IndistinguishablyNamedFile;
+			readonly uploadedAt: Date;
+		}
+
+		interface DistinctFileNamesScenarioResult {
+			readonly scenario: Scenario;
+			readonly uploads: QuadTuple<UploadMeta>;
+		}
+
+		const initDistinctFileNamesScenario = async (
+			instanceAttachments: InstanceAttachmentsConfig
+		): Promise<DistinctFileNamesScenarioResult> => {
+			class DistinctFileNamesScenario extends Scenario {
+				static override getTestFormOptions(): TestFormOptions {
+					return super.getTestFormOptions({ instanceAttachments });
+				}
+			}
+
+			const scenario = await DistinctFileNamesScenario.init(
+				'Distinct file names',
+				// prettier-ignore
+				html(
+					head(
+						title('Distinct file names'),
+						model(
+							mainInstance(
+								t('data id="distinct-file-names"',
+									t('files',
+										t('upload-0'),
+										t('upload-1'),
+										t('upload-2'),
+										t('upload-3')),
+									t('meta',
+										t('instanceID', FAKE_INSTANCE_ID)))),
+							bind('/data/files/upload-0').type('binary'),
+							bind('/data/files/upload-1').type('binary'),
+							bind('/data/files/upload-2').type('binary'),
+							bind('/data/files/upload-3').type('binary'))),
+					body(
+						group('/data/files',
+							upload('/data/files/upload-0'),
+							upload('/data/files/upload-1'),
+							upload('/data/files/upload-2'),
+							upload('/data/files/upload-3'))))
+			);
+
+			const getUploadNode = (reference: string): UploadNode => {
+				const node = scenario.getInstanceNode(reference);
+
+				assert(node.nodeType === 'upload');
+
+				return node;
+			};
+
+			const now = Date.now();
+
+			vi.useFakeTimers({ now });
+
+			const uploads = [
+				{
+					node: getUploadNode('/data/files/upload-0'),
+					file: new IndistinguishablyNamedFile('0'),
+					uploadedAt: new Date(now + 100),
+				},
+				{
+					node: getUploadNode('/data/files/upload-1'),
+					file: new IndistinguishablyNamedFile('1'),
+					uploadedAt: new Date(now + 1000),
+				},
+				{
+					node: getUploadNode('/data/files/upload-2'),
+					file: new IndistinguishablyNamedFile('2'),
+					uploadedAt: new Date(now + 10000),
+				},
+				{
+					node: getUploadNode('/data/files/upload-3'),
+					file: new IndistinguishablyNamedFile('3'),
+					uploadedAt: new Date(now + 100000),
+				},
+			] as const;
+
+			const uploadIndex = (index: 0 | 1 | 2 | 3): void => {
+				const { node, file, uploadedAt } = uploads[index];
+
+				vi.setSystemTime(uploadedAt);
+				node.setValue(file);
+			};
+
+			uploadIndex(0);
+			uploadIndex(1);
+			uploadIndex(2);
+			uploadIndex(3);
+
+			return {
+				scenario,
+				uploads,
+			};
+		};
+
+		beforeEach(() => {
+			vi.useFakeTimers();
+		});
+
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it('populates metadata about the node', async () => {
+			const stripNodeIDPrefix = (nodeId: FormNodeID): string => {
+				return nodeId.replace('node:', '');
+			};
+
+			const { scenario, uploads } = await initDistinctFileNamesScenario({
+				fileNameFactory: ({ nodeId, basename, extension }) => {
+					return `${basename}-${stripNodeIDPrefix(nodeId)}${extension}`;
+				},
+			});
+
+			const expectedFileName = (index: 0 | 1 | 2 | 3): string => {
+				const { nodeId } = uploads[index].node;
+
+				return `${INDISTINGUISHABLE_BASE_NAME}-${stripNodeIDPrefix(nodeId)}.txt`;
+			};
+
+			const expectedFileNames = [
+				expectedFileName(0),
+				expectedFileName(1),
+				expectedFileName(2),
+				expectedFileName(3),
+			] as const;
+
+			const { data } = await scenario.prepareWebFormsInstancePayload();
+
+			assert(data.length === 1);
+
+			const [payloadFiles] = data;
+			const instanceFile = payloadFiles.get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+
+			vi.useRealTimers();
+
+			const instanceXML = await getBlobText(instanceFile);
+
+			expect(instanceXML).toBe(
+				// prettier-ignore
+				t('data id="distinct-file-names"',
+					t('files',
+						t('upload-0', expectedFileNames[0]),
+						t('upload-1', expectedFileNames[1]),
+						t('upload-2', expectedFileNames[2]),
+						t('upload-3', expectedFileNames[3])
+					),
+					t('meta',
+						t('instanceID', FAKE_INSTANCE_ID))).asXml()
+			);
+
+			const attachments = new Map(
+				Array.from(payloadFiles).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+			);
+
+			for (const [index, expected] of expectedFileNames.entries()) {
+				const attachment = attachments.get(expected);
+
+				assert(attachment);
+
+				const attachmentData = await getBlobText(attachment);
+
+				expect(attachmentData).toBe(`${index}`);
+			}
+		});
+
+		it('populates metadata about when the file was written', async () => {
+			const unixTime = (date: Date): number => date.getSeconds();
+
+			const { scenario, uploads } = await initDistinctFileNamesScenario({
+				fileNameFactory: ({ writtenAt, basename, extension }) => {
+					return `${basename}-${unixTime(writtenAt)}${extension}`;
+				},
+			});
+
+			const expectedFileName = (index: 0 | 1 | 2 | 3): string => {
+				const { uploadedAt } = uploads[index];
+
+				return `${INDISTINGUISHABLE_BASE_NAME}-${unixTime(uploadedAt)}.txt`;
+			};
+
+			const expectedFileNames = [
+				expectedFileName(0),
+				expectedFileName(1),
+				expectedFileName(2),
+				expectedFileName(3),
+			] as const;
+
+			const { data } = await scenario.prepareWebFormsInstancePayload();
+
+			assert(data.length === 1);
+
+			const [payloadFiles] = data;
+			const instanceFile = payloadFiles.get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+
+			vi.useRealTimers();
+
+			const instanceXML = await getBlobText(instanceFile);
+
+			expect(instanceXML).toBe(
+				// prettier-ignore
+				t('data id="distinct-file-names"',
+					t('files',
+						t('upload-0', expectedFileNames[0]),
+						t('upload-1', expectedFileNames[1]),
+						t('upload-2', expectedFileNames[2]),
+						t('upload-3', expectedFileNames[3])
+					),
+					t('meta',
+						t('instanceID', FAKE_INSTANCE_ID))).asXml()
+			);
+
+			const attachments = new Map(
+				Array.from(payloadFiles).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+			);
+
+			for (const [index, expected] of expectedFileNames.entries()) {
+				const attachment = attachments.get(expected);
+
+				assert(attachment);
+
+				const attachmentData = await getBlobText(attachment);
+
+				expect(attachmentData).toBe(`${index}`);
+			}
 		});
 	});
 });

@@ -169,6 +169,10 @@ export class Scenario {
 				overrideOptions?.missingResourceBehavior ??
 				ENGINE_CONSTANTS.MISSING_RESOURCE_BEHAVIOR.DEFAULT,
 			stateFactory: overrideOptions?.stateFactory ?? nonReactiveIdentityStateFactory,
+			instanceAttachments: {
+				fileNameFactory: ({ basename, extension }) => `${basename}${extension ?? ''}`,
+				...overrideOptions?.instanceAttachments,
+			},
 		};
 	}
 

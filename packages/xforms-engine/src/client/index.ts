@@ -1,3 +1,5 @@
+export type * from './attachments/InstanceAttachmentMeta.ts';
+export type * from './attachments/InstanceAttachmentsConfig.ts';
 export type * from './constants.ts';
 export * as constants from './constants.ts';
 export type * from './form/CreateFormInstance.ts';
@@ -20,6 +22,7 @@ export type {
 	GeneralParentNode,
 	RepeatRangeNode,
 } from './hierarchy.ts';
+export type * from './identity.ts';
 export type * from './InputNode.ts';
 export type * from './ModelValueNode.ts';
 export type * from './NoteNode.ts';
