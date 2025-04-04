@@ -16,3 +16,7 @@ export const noop = () => {};
 export const noargs = (f) => () => f();
 
 export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);
+
+export const getCsrf = () => decodeURIComponent(document.cookie.split(';')
+  .find(cookie => cookie.startsWith('__csrf'))
+  ?.split('=')[1] || '');

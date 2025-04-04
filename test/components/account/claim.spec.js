@@ -30,10 +30,9 @@ describe('AccountClaim', () => {
         await component.get('input').setValue('testPassword');
         return component.get('form').trigger('submit');
       })
-      .beforeEachResponse((_, { method, url, headers, data }) => {
+      .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('POST');
         url.should.equal('/v1/users/reset/verify');
-        headers.Authorization.should.equal('Bearer foo');
         data.should.eql({ new: 'testPassword' });
       })
       .respondWithProblem());

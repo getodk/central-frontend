@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 */
 import { computed, isRef, readonly, shallowReactive, toRef } from 'vue';
 
-import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withHttpMethods } from '../util/request';
 import { noop } from '../util/util';
 import { setCurrentResource } from './util';
 import { unlessFailure } from '../util/router';
@@ -221,7 +221,7 @@ class Resource extends BaseResource {
     const abortController = new AbortController();
     this[_abortController] = abortController;
     axiosConfig.signal = abortController.signal;
-    const { router, i18n, requestData, alert, http, logger } = this[_container];
+    const { router, i18n, alert, http, logger } = this[_container];
     // `router` may be `null` in testing.
     const removeHook = router == null || method === 'GET'
       ? noop
@@ -247,7 +247,7 @@ class Resource extends BaseResource {
       removeHook();
     };
 
-    return http.request(withAuth(axiosConfig, requestData.session.token))
+    return http.request(axiosConfig)
       .catch(error => {
         if (abortController.signal.aborted) {
           cleanup();
