@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { clone } from 'ramda';
 
+import faker from 'faker';
 import testData from '../data';
 
 let loggedIn = false;
@@ -18,6 +19,10 @@ export const mockLogin = (options = undefined) => {
   );
 
   loggedIn = true;
+
+  const token = faker.random.alphaNumeric(64);
+  const csrf = faker.random.alphaNumeric(64);
+  document.cookie = `__csrf=${csrf};session=${token}`;
 };
 
 mockLogin.setRequestData = (requestData) => {
