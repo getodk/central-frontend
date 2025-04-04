@@ -87,7 +87,6 @@ describe('util/session', () => {
           .beforeEachResponse((_, { method, url, headers }) => {
             method.should.equal('GET');
             url.should.equal('/v1/users/current');
-            headers.Authorization.should.equal('Bearer foo');
             headers['X-Extended-Metadata'].should.equal('true');
           })
           .respondWithData(() => testData.extendedUsers.first());
@@ -166,7 +165,6 @@ describe('util/session', () => {
             null,
             {
               url: '/v1/config/analytics',
-              headers: { Authorization: 'Bearer foo' }
             }
           ]);
       });
@@ -184,7 +182,6 @@ describe('util/session', () => {
           .testRequests([
             {
               url: '/v1/users/current',
-              headers: { Authorization: 'Bearer foo' },
               extended: true
             }
           ]);
@@ -204,10 +201,9 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
         .request(() => logOut(container, false))
-        .beforeEachResponse((_, { method, url, headers }) => {
+        .beforeEachResponse((_, { method, url }) => {
           method.should.equal('DELETE');
-          url.should.equal('/v1/sessions/foo');
-          headers.Authorization.should.equal('Bearer foo');
+          url.should.equal('/v1/sessions/current');
         })
         .respondWithSuccess();
     });
