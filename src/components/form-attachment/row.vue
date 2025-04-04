@@ -42,7 +42,10 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-exclamation-triangle"></span>
           <span>{{ $t('notUploaded.text') }}</span>
         </span>
-        <span class="sr-only">&nbsp;{{ $t('notUploaded.title') }}</span>
+        <span class="sr-only">&nbsp;{{ $t('notUploaded.title') }}&nbsp;</span>
+        <span v-show="targeted" class="label label-primary">
+          {{ $t('action.upload') }}
+        </span>
       </template>
     </td>
     <td class="form-attachment-list-action">
