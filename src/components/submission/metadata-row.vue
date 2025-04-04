@@ -136,6 +136,8 @@ export default {
       if (this.form.webformsEnabled) {
         return this.submissionPath(this.projectId, this.xmlFormId, this.submission.__id, 'edit');
       }
+      // Although we now have canonical path to edit submission, we still need to go through backend
+      // if Enketo is enable to provide Enketo with submission data
       return apiPaths.editSubmission(
         this.projectId,
         this.xmlFormId,

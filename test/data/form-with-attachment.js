@@ -8,23 +8,25 @@ export default `<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://ww
                         <instanceID/>
                     </meta>
                     <first_name/>
+                    <city/>
                 </data>
             </instance>
+            <instance id="cities" src="jr://file-csv/cities.csv"/>
             <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
             <bind nodeset="/data/first_name" type="string"/>
+            <bind nodeset="/data/city" type="string"/>
         </model>
     </h:head>
     <h:body>
         <input ref="/data/first_name">
             <label>First Name</label>
         </input>
+        <select1 ref="/data/city">
+            <label>City</label>
+            <itemset nodeset="instance('cities')/root/item">
+                <value ref="name"/>
+                <label ref="label"/>
+            </itemset>
+        </select1>
     </h:body>
 </h:html>`;
-
-export const submission = `
-<data id="simple">
-    <first_name>John Doe</first_name>
-    <meta>
-        <instanceID>uuid:01f165e1-8814-43b8-83ec-741222b00f25</instanceID>
-    </meta>
-</data>`;

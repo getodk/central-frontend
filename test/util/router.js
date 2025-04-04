@@ -74,7 +74,7 @@ export const mockRouter = (location = undefined) => (container) => {
       app.component('RouterView', RouterViewStub);
     }
   };
-  for (const prop of ['getRoutes', 'hasRoute', 'resolve'])
+  for (const prop of ['getRoutes', 'hasRoute', 'resolve', 'push'])
     mock[prop] = router[prop].bind(router);
   for (const prop in router) {
     if (!(prop in mock)) {

@@ -6,7 +6,6 @@ import useDatasets from '../../../src/request-data/datasets';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
-import simpleXml from '../../data/simple';
 
 // The names of the following properties correspond to requestData resources.
 const responseDefaults = {
@@ -84,12 +83,17 @@ const responsesByComponent = {
     ]
   }),
   FormPreview: componentResponses({
-    form: () => testData.extendedForms.last(),
-    xml: () => mockResponse.of(simpleXml)
+    form: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+$/.test(url),
+      () => testData.extendedForms.last()
+    ]
   }),
   FormSubmission: componentResponses({
     project: true,
-    form: () => testData.extendedForms.last()
+    form: [
+      ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+(\/draft)?$/.test(url),
+      () => testData.extendedForms.last()
+    ]
   }),
   FormSubmissions: componentResponses({
     keys: () => testData.standardKeys.sorted(),
@@ -187,6 +191,9 @@ const responsesByComponent = {
       return config != null ? config : mockResponse.problem(404.1);
     },
     audits: true
+  }),
+  EnketoRedirector: componentResponses({
+    form: () => testData.extendedForms.last()
   }),
 
   Download: [],
