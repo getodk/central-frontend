@@ -46,7 +46,7 @@ export function testRequests(expectedConfigs) {
       // expectedConfigs[i] == null, the request is intentionally not checked
       // (presumably because it is checked elsewhere).
       if (i < expectedConfigs.length && expectedConfigs[i] != null)
-        assertRequestsMatch(config, expectedConfigs[i], component);
+        assertRequestsMatch(config, expectedConfigs[i]);
     })
     .afterResponses(() => {
       if (count !== expectedConfigs.length) {
@@ -68,7 +68,7 @@ export function testRequestsInclude(expectedConfigs) {
       for (const [i, expected] of expectedConfigs.entries()) {
         if (matched.includes(i)) continue; // eslint-disable-line no-continue
         try {
-          assertRequestsMatch(config, expected, component);
+          assertRequestsMatch(config, expected);
           matched.push(i);
           return;
         } catch (_) {}

@@ -20,9 +20,8 @@ export const mockLogin = (options = undefined) => {
 
   loggedIn = true;
 
-  const token = faker.random.alphaNumeric(64);
   const csrf = faker.random.alphaNumeric(64);
-  document.cookie = `__csrf=${csrf};session=${token}`;
+  document.cookie = `__csrf=${csrf}`;
 };
 
 mockLogin.setRequestData = (requestData) => {
