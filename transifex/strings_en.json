@@ -3553,22 +3553,22 @@
     "HomeSummary": {
       "projects": {
         "body": {
-          "string": "Central is organized into Projects, which each contain their own Forms and related data."
+          "string": "Central is organized into Projects, each containing its own Forms and related data."
         }
       },
       "users": {
         "body": {
-          "string": "Users can be assigned to Projects to manage them, or to collect or review submitted data."
+          "string": "Users can be assigned to Projects to manage them, collect data, or review submissions."
         }
       },
       "docs": {
         "body": {
-          "string": "There is a getting started guide and user documentation available on the ODK Docs website."
+          "string": "A Getting Started Guide and user documentation are available on the ODK Docs website."
         }
       },
       "forum": {
         "body": {
-          "string": "You can always get help from others on the forum, where you can also search previous questions."
+          "string": "Need help? Visit the forum to ask questions or browse past discussions."
         }
       }
     },
