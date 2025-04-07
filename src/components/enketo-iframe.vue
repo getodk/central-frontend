@@ -18,9 +18,12 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import useEventListener from '../composables/event-listener';
 import { queryString } from '../util/request';
+import { useRequestData } from '../request-data';
+
 import Loading from './loading.vue';
+import useEventListener from '../composables/event-listener';
+import useRoutes from '../composables/routes';
 
 defineOptions({
   name: 'EnketoIframe'
@@ -40,10 +43,12 @@ const props = defineProps({
 
 const { location } = inject('container');
 
+const { form } = useRequestData();
 const route = useRoute();
 const router = useRouter();
+const { submissionPath } = useRoutes();
 
-const redirectUrl = computed(() => route.query.return_url);
+const redirectUrl = computed(() => route.query.return_url || route.query.returnUrl);
 
 const lastSubmitted = (enketoOnceId) => {
   const iframe = document.createElement('iframe');
@@ -72,7 +77,7 @@ const setEnketoSrc = () => {
     basePath = `/#${basePath}`;
   }
   let prefix = basePath;
-  const { return_url: _, ...query } = route.query;
+  const { return_url: _, returnUrl: __, ...query } = route.query;
 
   query.parentWindowOrigin = location.origin;
 
@@ -104,7 +109,7 @@ const setEnketoSrc = () => {
 
 setEnketoSrc();
 
-function handleIframeMessage(event) {
+const handleIframeMessage = (event) => {
   if (event.origin === location.origin) {
     const { parentWindowOrigin } = route.query;
     // For the cases where this page is embedded in external iframe, pass the event data to the
@@ -118,11 +123,26 @@ function handleIframeMessage(event) {
     let eventData;
     try { eventData = JSON.parse(event.data); } catch {}
 
-    if (eventData?.enketoEvent === 'submissionsuccess' && redirectUrl.value) {
-      router.push((new URL(redirectUrl.value)).pathname);
+    if (eventData?.enketoEvent === 'submissionsuccess') {
+      if (props.actionType === 'edit') {
+        // for edit we always redirect to Submission details page
+        router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
+      } else if (props.actionType === 'public-link' && redirectUrl.value) {
+        // for public link, we read return value from query parameter. The value could be 3rd party
+        // site as well, typically a thank you page
+        try {
+          const normalizedUrl = new URL(redirectUrl.value);
+          if (normalizedUrl.origin === location.origin) {
+            router.push(normalizedUrl.pathname);
+          } else {
+            location.assign(normalizedUrl);
+          }
+        } catch (e) {}
+      }
     }
   }
-}
+};
+
 useEventListener(window, 'message', handleIframeMessage, false);
 </script>
 
