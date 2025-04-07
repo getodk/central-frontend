@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
           {{ link.text }}
         </router-link>
       </div>
-      <span class="separator">/</span>
+      <span v-if="index < links.length - 1" class="separator">/</span>
     </template>
   </div>
 </template>
