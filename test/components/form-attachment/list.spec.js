@@ -149,17 +149,18 @@ describe('FormAttachmentList', () => {
         targeted.should.eql([true, true, false]);
       });
 
-      it('shows a Replace label for the correct row', async () => {
+      it('shows the correct labels', async () => {
         const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
         await select(component, blankFiles(['a', 'b', 'd']));
-        const rows = component.findAllComponents(FormAttachmentRow);
-        rows[0].get('.label').should.be.visible();
-        rows[1].find('.label').exists().should.be.false;
-        // The label of the third row should either not exist or be hidden.
-        const label = rows[2].find('.label');
-        if (label.exists()) label.should.be.hidden();
+        const labels = component.findAllComponents(FormAttachmentRow)
+          .map(row => row.get('.label'));
+        labels[0].should.be.visible();
+        labels[0].text().should.equal('Replace');
+        labels[1].should.be.visible();
+        labels[1].text().should.equal('Upload');
+        labels[2].should.be.hidden();
       });
     });
 
@@ -314,29 +315,33 @@ describe('FormAttachmentList', () => {
         targeted.should.eql([true, false, false, false]);
       });
 
-      describe('Replace label', () => {
-        it('shows label when file matches an existing attachment', async () => {
+      describe('label', () => {
+        it('shows the correct text for an existing attachment', async () => {
           const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           await select(component, blankFiles(['a']));
-          const rows = component.findAllComponents(FormAttachmentRow);
-          rows[0].get('.label').should.be.visible();
-          rows[1].find('.label').exists().should.be.false;
-          rows[2].get('.label').should.be.hidden();
-          rows[3].find('.label').exists().should.be.false;
+          const labels = component.findAllComponents(FormAttachmentRow)
+            .map(row => row.get('.label'));
+          labels[0].should.be.visible();
+          labels[0].text().should.equal('Replace');
+          labels[1].should.be.hidden();
+          labels[2].should.be.hidden();
+          labels[3].should.be.hidden();
         });
 
-        it('does not show label when file matches a missing attachment', async () => {
+        it('shows the correct text for a missing attachment', async () => {
           const component = await load('/projects/1/forms/f/draft', {
             root: false
           });
           await select(component, blankFiles(['b']));
-          const rows = component.findAllComponents(FormAttachmentRow);
-          rows[0].get('.label').should.be.hidden();
-          rows[1].find('.label').exists().should.be.false;
-          rows[2].get('.label').should.be.hidden();
-          rows[3].find('.label').exists().should.be.false;
+          const labels = component.findAllComponents(FormAttachmentRow)
+            .map(row => row.get('.label'));
+          labels[0].should.be.hidden();
+          labels[1].should.be.visible();
+          labels[1].text().should.equal('Upload');
+          labels[2].should.be.hidden();
+          labels[3].should.be.hidden();
         });
       });
 
@@ -922,11 +927,13 @@ describe('FormAttachmentList', () => {
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
-        rows[0].get('.label').should.be.visible();
-        rows[1].get('.label').should.be.hidden();
+        const labels = rows.map(row => row.get('.label'));
+        labels[0].should.be.visible();
+        labels[0].text().should.equal('Replace');
+        labels[1].should.be.hidden();
       });
 
-      it('shows a Override label if the dataset exists', async () => {
+      it('shows an Override label if the dataset exists', async () => {
         testData.standardFormAttachments.createPast(2, { datasetExists: true });
         const component = await load('/projects/1/forms/f/draft', {
           root: false
@@ -935,20 +942,25 @@ describe('FormAttachmentList', () => {
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
-        rows[0].get('.label').text().should.be.eql('Override');
-        rows[0].get('.label').should.be.visible();
-        rows[1].get('.label').should.be.hidden();
+        const labels = rows.map(row => row.get('.label'));
+        labels[0].should.be.visible();
+        labels[0].text().should.equal('Override');
+        labels[1].should.be.hidden();
       });
 
-      it('does not show a Replace label if attachment does not exist', async () => {
+      it('shows an Upload label if the attachment does not exist', async () => {
         testData.standardFormAttachments.createPast(2, { blobExists: false });
         const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
-        await component.get('.form-attachment-row').trigger('dragenter', {
+        const rows = component.findAll('.form-attachment-row');
+        await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
-        component.find('.form-attachment-row .label').exists().should.be.false;
+        const labels = rows.map(row => row.get('.label'));
+        labels[0].should.be.visible();
+        labels[0].text().should.equal('Upload');
+        labels[1].should.be.hidden();
       });
 
       it('shows the popup with the correct text', async () => {
