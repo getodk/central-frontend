@@ -13,9 +13,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <loading :state="initiallyLoading"/>
   <template v-if="dataExists">
-    <!-- update newInstanceId to rerender the component -->
     <OdkWebForm
-      :key="newInstanceId"
       :form-xml="formVersionXml.data"
       :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
@@ -39,7 +37,15 @@ except according to the terms contained in the LICENSE file.
           {{ $t(submissionModal.type + '.body') }}
         </p>
       </div>
-      <div class="modal-actions">
+      <div v-if="submissionModal.type === 'submissionModal'" class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="hideSubmissionModal()">
+          {{ $t('submissionModal.fillOutAgain') }}
+        </button>
+        <button type="button" class="btn btn-link" @click="closeWindow()">
+          {{ $t('action.close') }}
+        </button>
+      </div>
+      <div v-else>
         <button type="button" class="btn btn-primary" @click="hideSubmissionModal()">
           {{ $t('action.close') }}
         </button>
@@ -52,8 +58,7 @@ except according to the terms contained in the LICENSE file.
 import { computed, createApp, getCurrentInstance, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
-import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
-
+import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import Loading from './loading.vue';
 import Modal from './modal.vue';
 
@@ -70,7 +75,6 @@ const formVersionXml = createResource('formVersionXml');
 const { request } = useRequest();
 const submissionAttachments = createResource('submissionAttachments');
 const submissionModal = modalData();
-const newInstanceId = ref(null);
 // const editInstanceOptions = ref(null);
 const route = useRoute();
 const router = useRouter();
@@ -197,11 +201,17 @@ const fetchData = () => {
 
 fetchData();
 
+let clearForm;
+
 const hideSubmissionModal = () => {
-  if (submissionModal.type !== 'errorModal') {
-    newInstanceId.value = null;
+  if (submissionModal.type === 'submissionModal') {
+    clearForm();
   }
   submissionModal.hide();
+};
+
+const closeWindow = () => {
+  window.close();
 };
 
 /**
@@ -243,7 +253,6 @@ const postPrimaryInstance = (file) => {
         submissionModal.show({ type: 'errorModal', errorMessage: data.message });
         return false;
       }
-      newInstanceId.value = data.instanceId;
       return true;
     })
     .catch(noop);
@@ -266,7 +275,7 @@ const uploadAttachment = async (attachment) => {
  * this handler, which can then upload the form and its attachments as present in the
  * event payload.
  */
-const handleSubmit = async (payload) => {
+const handleSubmit = async (payload, callback) => {
   if (props.actionType === 'preview') {
     submissionModal.show({ type: 'previewModal' });
   } else {
@@ -278,6 +287,8 @@ const handleSubmit = async (payload) => {
     }
 
     const submissionRequestResult = await postPrimaryInstance(data.instanceFile);
+
+    clearForm = () => callback({ next: POST_SUBMIT__NEW_INSTANCE });
 
     if (submissionRequestResult) {
       const attachmentRequests = data.attachments.map(a => () => uploadAttachment(a));
@@ -335,8 +346,9 @@ html, body {
         "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
       },
       "submissionModal": {
-        "title": "Submission successful",
-        "body": "Your data was submitted."
+        "title": "Form successful sent!",
+        "body": "You can fill this Form out again or close if you’re done.",
+        "fillOutAgain": "Fill out again"
       },
       "thankYouModal": {
         "title": "Thank you for participating!",
