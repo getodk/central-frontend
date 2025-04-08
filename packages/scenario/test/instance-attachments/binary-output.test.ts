@@ -7,6 +7,7 @@ import {
 	html,
 	mainInstance,
 	model,
+	repeat,
 	t,
 	title,
 	upload,
@@ -568,6 +569,146 @@ describe('Instance attachments: binary output', () => {
 				const attachmentData = await getBlobText(attachment);
 
 				expect(attachmentData).toBe(`${index}`);
+			}
+		});
+	});
+
+	describe('repeats', () => {
+		let scenario: Scenario;
+
+		beforeEach(async () => {
+			scenario = await Scenario.init(
+				'Repeat uploads',
+				// prettier-ignore
+				html(
+					head(
+						title('Repeat uploads'),
+						model(
+							mainInstance(
+								t('data id="repeat-uploads"',
+									t('files jr:template=""',
+										t('upload')),
+									t('meta',
+										t('instanceID', FAKE_INSTANCE_ID)))),
+							bind('/data/files/upload').type('binary'))),
+					body(
+						repeat('/data/files',
+							upload('/data/files/upload'))))
+			);
+		});
+
+		it('adds uploads in added repeat instances', async () => {
+			const uploads = [
+				new File(['upload-0'], 'upload-0.txt', { type: 'text/plain' }),
+				new File(['upload-1'], 'upload-1.txt', { type: 'text/plain' }),
+				new File(['upload-2'], 'upload-2.txt', { type: 'text/plain' }),
+				new File(['upload-3'], 'upload-3.txt', { type: 'text/plain' }),
+			] as const;
+
+			for (const [index, file] of uploads.entries()) {
+				scenario.createNewRepeat('/data/files');
+
+				const reference = `/data/files[${index + 1}]/upload`;
+
+				scenario.answer(reference, file);
+			}
+
+			const { data } = await scenario.prepareWebFormsInstancePayload();
+
+			assert(data.length === 1);
+
+			const [payloadFiles] = data;
+			const instanceFile = payloadFiles.get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+
+			vi.useRealTimers();
+
+			const instanceXML = await getBlobText(instanceFile);
+
+			expect(instanceXML).toBe(
+				// prettier-ignore
+				t('data id="repeat-uploads"',
+					t('files',
+						t('upload', uploads[0].name)),
+					t('files',
+						t('upload', uploads[1].name)),
+					t('files',
+						t('upload', uploads[2].name)),
+					t('files',
+						t('upload', uploads[3].name)),
+					t('meta',
+						t('instanceID', FAKE_INSTANCE_ID))).asXml()
+			);
+
+			const attachments = new Map(
+				Array.from(payloadFiles).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+			);
+
+			for (const [index, expected] of uploads.entries()) {
+				const attachment = attachments.get(expected.name);
+
+				assert(attachment);
+
+				const attachmentData = await getBlobText(attachment);
+
+				expect(attachmentData).toBe(`upload-${index}`);
+			}
+		});
+
+		it('removes uploads in removed repeat instances', async () => {
+			const uploads = [
+				new File(['upload-0'], 'upload-0.txt', { type: 'text/plain' }),
+				new File(['upload-1'], 'upload-1.txt', { type: 'text/plain' }),
+				new File(['upload-2'], 'upload-2.txt', { type: 'text/plain' }),
+				new File(['upload-3'], 'upload-3.txt', { type: 'text/plain' }),
+			] as const;
+
+			for (const [index, file] of uploads.entries()) {
+				scenario.createNewRepeat('/data/files');
+
+				const reference = `/data/files[${index + 1}]/upload`;
+
+				scenario.answer(reference, file);
+			}
+
+			scenario.removeRepeat('/data/files[1]');
+
+			const { data } = await scenario.prepareWebFormsInstancePayload();
+
+			assert(data.length === 1);
+
+			const [payloadFiles] = data;
+			const instanceFile = payloadFiles.get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+
+			vi.useRealTimers();
+
+			const instanceXML = await getBlobText(instanceFile);
+
+			expect(instanceXML).toBe(
+				// prettier-ignore
+				t('data id="repeat-uploads"',
+					t('files',
+						t('upload', uploads[1].name)),
+					t('files',
+						t('upload', uploads[2].name)),
+					t('files',
+						t('upload', uploads[3].name)),
+					t('meta',
+						t('instanceID', FAKE_INSTANCE_ID))).asXml()
+			);
+
+			const attachments = new Map(
+				Array.from(payloadFiles).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+			);
+
+			for (const expected of uploads.slice(1)) {
+				const attachment = attachments.get(expected.name);
+
+				assert(attachment);
+
+				const expectedData = await getBlobText(expected);
+				const attachmentData = await getBlobText(attachment);
+
+				expect(attachmentData).toBe(expectedData);
 			}
 		});
 	});
