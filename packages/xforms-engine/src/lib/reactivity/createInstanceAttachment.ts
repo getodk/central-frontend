@@ -171,7 +171,15 @@ export const createInstanceAttachment = (
 		};
 
 		const getValue = createMemo(() => {
-			return getState().file;
+			const { computedName, file: currentFile } = getState();
+
+			if (computedName == null) {
+				return currentFile;
+			}
+
+			return new File([currentFile], computedName, {
+				type: currentFile.type,
+			});
 		});
 		const setValue: SimpleAtomicStateSetter<InstanceAttachmentRuntimeValue> = (value) => {
 			const updatedState = instanceAttachmentState(context, {

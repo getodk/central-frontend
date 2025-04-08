@@ -37,10 +37,10 @@ export class FormInstance<Mode extends FormInstanceInitializationMode>
 		readonly formResult: InstantiableFormResult,
 		options: FormInstanceOptions<Mode>
 	) {
-		const { mode, initialState } = options;
+		const { mode, initialState, instanceConfig } = options;
 		const config: InstanceConfig = {
-			clientStateFactory: options.instanceConfig.stateFactory ?? identity,
-			computeAttachmentName: () => null,
+			clientStateFactory: instanceConfig.stateFactory ?? identity,
+			computeAttachmentName: instanceConfig.instanceAttachments?.fileNameFactory ?? (() => null),
 		};
 		const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
 			...options.instanceOptions,
