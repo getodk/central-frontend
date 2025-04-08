@@ -43,8 +43,7 @@ import Loading from '../../loading.vue';
 import { useI18nUtils } from '../../../util/i18n';
 import { useRequestData } from '../../../request-data';
 
-const { form, publishedAttachments, draftAttachments, resourceStates } = useRequestData();
-const { dataExists } = resourceStates([form, publishedAttachments, draftAttachments]);
+const { publishedAttachments, draftAttachments } = useRequestData();
 
 const hasAttachments = computed(() =>
   draftAttachments.dataExists && draftAttachments.size !== 0);
@@ -54,8 +53,7 @@ const hasMissing = computed(() =>
 const { t } = useI18n();
 const { tn, formatList } = useI18nUtils();
 const tag = computed(() => {
-  if (!(dataExists.value && hasAttachments.value && form.publishedAt != null))
-    return '';
+  if (!(hasAttachments.value && publishedAttachments.dataExists)) return '';
 
   let newCount = 0;
   let changedCount = 0;
@@ -94,8 +92,8 @@ const tag = computed(() => {
     "diff": {
       "newCount": "{count} new attachment | {count} new attachments",
       "changedCount": "{count} changed attachment | {count} changed attachments",
-      // {changes} describes the changes that have been made to Form
-      // attachments. For example: "1 new attachment and 2 changed attachments"
+      // {changes} describes changes that have been made to Form attachments.
+      // For example: "1 new attachment and 2 changed attachments"
       "summary": "{changes} since the published version"
     }
   }

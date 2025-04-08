@@ -71,8 +71,7 @@ export default {
         data: { dataset: true }
       })
         .then(({ data }) => {
-          Object.assign(this.attachment, data);
-          this.$emit('success', this.form);
+          this.$emit('success', data);
         })
         .catch(noop);
     }

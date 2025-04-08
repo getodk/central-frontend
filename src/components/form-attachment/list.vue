@@ -291,9 +291,10 @@ export default {
           if (updates.length === this.uploadStatus.total)
             this.alert.success(this.$tcn('alert.success', updates.length));
 
-          for (const update of updates) {
-            Object.assign(this.draftAttachments.get(update.name), update);
-            this.updatedAttachments.add(update.name);
+          for (const updatedAttachment of updates) {
+            const { name } = updatedAttachment;
+            this.draftAttachments.set(name, updatedAttachment);
+            this.updatedAttachments.add(name);
           }
 
           this.uploadStatus = { total: 0, remaining: 0, current: null, progress: 0 };
@@ -307,12 +308,12 @@ export default {
         resend: false
       }).catch(noop);
     },
-    afterLinkDataset() {
-      const { attachment } = this.linkDatasetModal;
+    afterLinkDataset(updatedAttachment) {
       this.linkDatasetModal.hide();
       this.alert.success(this.$t('alert.link', {
-        attachmentName: attachment.name
+        attachmentName: updatedAttachment.name
       }));
+      this.draftAttachments.set(updatedAttachment.name, updatedAttachment);
     }
   }
 };

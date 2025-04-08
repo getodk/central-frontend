@@ -3033,7 +3033,7 @@
         },
         "summary": {
           "string": "{changes} since the published version",
-          "developer_comment": "{changes} describes the changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
+          "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
         }
       }
     },

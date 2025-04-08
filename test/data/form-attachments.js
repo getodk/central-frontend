@@ -26,30 +26,17 @@ export const standardFormAttachments = dataStore({
     name = fakeName(type),
     hash = undefined,
     datasetExists = false,
-    blobExists = hash != null || (inPast && !datasetExists),
-    hasUpdatedAt = blobExists
-  }) => {
-    if (!inPast) {
-      if (blobExists)
-        throw new Error('blobExists cannot be true for a new form attachment');
-      if (hasUpdatedAt === true)
-        throw new Error('hasUpdatedAt cannot be true for a new form attachment');
-    } else if (blobExists && hasUpdatedAt === false) {
-      throw new Error('blobExists and hasUpdatedAt are inconsistent');
-    } else if (blobExists && datasetExists) {
-      throw new Error('blobExists and datasetExists cannot both be true');
-    }
-
-    return {
-      type,
-      name,
-      blobExists,
-      datasetExists,
-      exists: blobExists || datasetExists,
-      hash: hash ?? (blobExists ? 'a'.repeat(32) : null),
-      updatedAt: hasUpdatedAt ?? inPast ? fakePastDate([form.createdAt]) : null
-    };
-  },
+    blobExists = hash != null || (inPast && hash !== null && !datasetExists),
+    hasUpdatedAt = inPast
+  }) => ({
+    type,
+    name,
+    blobExists,
+    datasetExists,
+    exists: blobExists || datasetExists,
+    hash: hash ?? (blobExists ? 'a'.repeat(32) : null),
+    updatedAt: hasUpdatedAt ? fakePastDate([form.createdAt]) : null
+  }),
   sort: (attachment1, attachment2) =>
     attachment1.name.localeCompare(attachment2.name)
 });

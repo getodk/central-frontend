@@ -102,6 +102,7 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
     const existingFormat = numberFormats[locale][key];
     if (existingFormat != null) return existingFormat;
     const options = i18n.getNumberFormat(locale)[key];
+    if (options == null) throw new Error('unknown key');
     const numberFormat = new Intl.NumberFormat(locale, options);
     numberFormats[locale][key] = numberFormat;
     return numberFormat;
@@ -113,7 +114,9 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
     if (listFormats[locale] == null) listFormats[locale] = {};
     const existingFormat = listFormats[locale][key];
     if (existingFormat != null) return existingFormat;
-    const listFormat = new Intl.ListFormat(locale, listFormatOptions[key]);
+    const options = listFormatOptions[key];
+    if (options == null) throw new Error('unknown key');
+    const listFormat = new Intl.ListFormat(locale, options);
     listFormats[locale][key] = listFormat;
     return listFormat;
   };

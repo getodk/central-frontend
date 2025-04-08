@@ -82,6 +82,11 @@ describe('FormEditAttachments', () => {
         draft: [{ name: 'foo', blobExists: false, datasetExists: false }]
       },
       {
+        text: '1 changed attachment',
+        published: [{ name: 'foo', blobExists: true }],
+        draft: [{ name: 'foo', datasetExists: true }]
+      },
+      {
         text: '2 changed attachments',
         published: [
           { name: 'foo', hash: '1' },
