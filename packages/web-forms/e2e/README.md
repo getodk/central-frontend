@@ -44,7 +44,7 @@ e2e/
    Or run specific tests:
 
    ```bash
-   yarn workspace @getodk/web-forms test:e2e <filepath, e.g. e2e/specs/geopoint.test.ts>
+   yarn workspace @getodk/web-forms test:e2e <filepath, e.g. e2e/test-cases/geopoint.test.ts>
    ```
 
 ## Contributing
