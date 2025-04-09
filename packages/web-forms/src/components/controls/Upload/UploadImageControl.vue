@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import ControlText from '@/components/ControlText.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
-import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
+import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject, ref } from 'vue';
 
 interface UploadImageControlProps {
-	readonly question: QuestionNode; // ToDo: Integrate with xforms-engine and use correct node type here.
+	readonly question: UploadNode;
 }
 
 const props = defineProps<UploadImageControlProps>();
