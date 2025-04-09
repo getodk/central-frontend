@@ -49,6 +49,7 @@ afterEach(() => {
   localStorage.clear();
   testData.reset();
   mockLogin.reset();
+  document.cookie = '';
 });
 setupLanguages(afterEach);
 
