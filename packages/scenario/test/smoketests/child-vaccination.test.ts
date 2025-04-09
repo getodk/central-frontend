@@ -697,7 +697,7 @@ describe('ChildVaccinationTest.java', () => {
 			fixtureName: 'child_vaccination_VOL_tool_v12-alt.xml',
 			failureMode: null,
 		},
-	])('fixture: $fixtureName', ({ fixtureName, failureMode }) => {
+	])('fixture: $fixtureName', { timeout: 40 * 1000 }, ({ fixtureName, failureMode }) => {
 		let testFn: KnownFailureTestAPI;
 
 		if (failureMode != null) {

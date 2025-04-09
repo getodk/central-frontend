@@ -24,7 +24,7 @@ const hasFieldListRelatedAppearance = !![...props.question.appearances].find((a)
 );
 
 const touched = ref(false);
-const submitPressed = inject<boolean>('submitPressed');
+const submitPressed = inject<boolean>('submitPressed', false);
 </script>
 
 <template>

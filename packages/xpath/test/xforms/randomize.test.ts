@@ -56,22 +56,18 @@ describe('randomize()', () => {
 			);
 		});
 
-		it(
-			'without a seed',
-			() => {
-				const expression = `randomize(${SELECTOR})`;
+		it('without a seed', { retry: 5 }, () => {
+			const expression = `randomize(${SELECTOR})`;
 
-				testContext.assertBooleanValue(expression, true);
+			testContext.assertBooleanValue(expression, true);
 
-				const nodes = testContext.evaluateUnorderedNodeSet(expression);
-				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+			const nodes = testContext.evaluateUnorderedNodeSet(expression);
+			const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-				expect(nodes.length).toEqual(6);
-				expect(text.length).toEqual(6);
-				expect(text).not.toEqual('ABCDEF');
-			},
-			{ retry: 5 }
-		);
+			expect(nodes.length).toEqual(6);
+			expect(text.length).toEqual(6);
+			expect(text).not.toEqual('ABCDEF');
+		});
 
 		[
 			{ seed: 42, expected: 'AFCBDE' },

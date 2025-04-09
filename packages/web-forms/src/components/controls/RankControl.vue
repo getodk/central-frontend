@@ -18,7 +18,7 @@ interface HighlightOption {
 
 const props = defineProps<RankControlProps>();
 const touched = ref(false);
-const submitPressed = inject<boolean>('submitPressed');
+const submitPressed = inject<boolean>('submitPressed', false);
 const disabled = computed(() => props.question.currentState.readonly === true);
 const highlight: HighlightOption = {
 	index: ref(null),

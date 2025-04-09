@@ -133,7 +133,7 @@ describe('OdkWebForm', () => {
 		// the future, we will probably want to remove this timeout option!
 		it(
 			'presents an error message when failing to load a form with a cyclic computation',
-			{ timeout: 5000 },
+			{ timeout: 8 * 1000 },
 			async () => {
 				const dagCycleFormXML = await getWebFormsTestFixture('simple-dag-cycle.xml');
 				const component = mountComponent(dagCycleFormXML);

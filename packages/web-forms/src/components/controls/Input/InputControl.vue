@@ -16,7 +16,7 @@ interface InputControlProps {
 const props = defineProps<InputControlProps>();
 
 const doneAnswering = ref(false);
-const submitPressed = inject<boolean>('submitPressed');
+const submitPressed = inject<boolean>('submitPressed', false);
 const isInvalid = computed(() => props.node.validationState.violation?.valid === false);
 
 provide('doneAnswering', doneAnswering);

@@ -115,7 +115,7 @@ export default defineConfig(({ mode }) => {
 		test: {
 			browser: {
 				enabled: BROWSER_ENABLED,
-				name: BROWSER_NAME!,
+				instances: [{ browser: BROWSER_NAME }],
 				provider: 'playwright',
 				headless: true,
 				screenshotFailures: false,
@@ -126,6 +126,22 @@ export default defineConfig(({ mode }) => {
 			include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
 			exclude: ['src/**/*.tsx', 'test/**/*.tsx'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
+
+			server: {
+				deps: {
+					/**
+					 * Inlines all dependencies into the test bundle instead of pre-bundling them.
+					 *
+					 * Added to resolve a `TypeError: Cannot read properties of undefined (reading 'registerGraph')`
+					 * error in `solid-js/store` during tests, which occurred because SolidJS dev tools (`DEV$1`) were not
+					 * properly initialized in the `jsdom` environment when dependencies were pre-bundled.
+					 *
+					 * It maintains test behavior closer to a real browser runtime, avoiding pre-bundling quirks. It might
+					 * increase test startup time slightly due to skipping pre-bundling optimizations.
+					 */
+					inline: TEST_ENVIRONMENT === 'jsdom' ? ['solid-js'] : [],
+				},
+			},
 		},
 	};
 });

@@ -37,7 +37,7 @@ import { r } from '../../src/jr/resource/ResourcePathHelper.ts';
 describe('WHO VA fixture(s): smoketests', () => {
 	describe('WhoVATest.java', () => {
 		describe('regression after [JavaRosa] 2.17.0', () => {
-			it('[updates `relevant` state] relevance updates', async () => {
+			it('[updates `relevant` state] relevance updates', { timeout: 40 * 1000 }, async () => {
 				const scenario = await Scenario.init(r('whova_form.xml'));
 
 				// region Give consent to unblock the rest of the form
