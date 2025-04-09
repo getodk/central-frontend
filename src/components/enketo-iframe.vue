@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useEventListener from '../composables/event-listener';
 import { queryString } from '../util/request';
@@ -43,16 +43,36 @@ const router = useRouter();
 
 const redirectUrl = computed(() => route.query.return_url);
 
-const enketoSrc = computed(() => {
-  let prefix = '/enketo-passthrough';
+const lastSubmitted = (enketoOnceId) => {
+  const iframe = document.createElement('iframe');
+  iframe.src = '/-/single/check-submitted';
+  iframe.style.display = 'none';
+
+  return new Promise((resolve) => {
+    iframe.onload = () => {
+      const value = iframe.contentDocument.cookie.split(';')
+        .map(c => c.trim())
+        .find(c => c.startsWith(enketoOnceId))
+        ?.split('=')[1];
+      document.body.removeChild(iframe);
+      resolve(value);
+    };
+    document.body.appendChild(iframe);
+  });
+};
+
+const enketoSrc = ref();
+
+const setEnketoSrc = () => {
+  let basePath = '/enketo-passthrough';
+  // this is to avoid 404 warning
+  if (process.env.NODE_ENV === 'test') {
+    basePath = `/#${basePath}`;
+  }
+  let prefix = basePath;
   const { return_url: _, ...query } = route.query;
 
   query.parentWindowOrigin = location.origin;
-
-  // this is to avoid 404 warning
-  if (process.env.NODE_ENV === 'test') {
-    prefix = `/#${prefix}`;
-  }
 
   if (props.actionType === 'offline') {
     prefix += '/x';
@@ -66,8 +86,21 @@ const enketoSrc = computed(() => {
   }
   // for actionType 'new', we don't need to add anything to the prefix.
 
-  return `${prefix}/${props.enketoId}${queryString(query)}`;
-});
+  if (props.enketoId.length === 64) {
+    lastSubmitted(props.enketoId)
+      .then(result => {
+        if (result) {
+          enketoSrc.value = `${basePath}/thanks?taken=${result}`;
+        } else {
+          enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
+        }
+      });
+  } else {
+    enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
+  }
+};
+
+setEnketoSrc();
 
 function handleIframeMessage(event) {
   if (event.origin === location.origin) {
