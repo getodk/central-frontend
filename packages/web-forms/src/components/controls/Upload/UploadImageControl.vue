@@ -68,6 +68,7 @@ watchEffect(() => {
 	<ControlText :question="question" />
 
 	<div class="capture-buttons">
+		<!-- TODO: Good candidate for <slot> in a general component -->
 		<template v-if="IS_CAPTURE_SUPPORTED">
 			<Button
 				rounded
@@ -119,6 +120,8 @@ watchEffect(() => {
 					fill="white"
 				/>
 			</svg>
+
+			<!-- TODO: Good candidate for <slot> in a general component -->
 			<!-- TODO: translations -->
 			<span>Choose image</span>
 		</Button>
@@ -131,6 +134,7 @@ watchEffect(() => {
 		>
 	</div>
 
+	<!-- TODO: good candidate for <slot> in a general component -->
 	<UploadImagePreview
 		:question="question"
 		:is-disabled="isDisabled"
