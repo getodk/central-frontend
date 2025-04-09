@@ -115,7 +115,7 @@ export default defineConfig(({ mode }) => {
 		test: {
 			browser: {
 				enabled: BROWSER_ENABLED,
-				instances: [{ browser: BROWSER_NAME }],
+				instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
 				provider: 'playwright',
 				headless: true,
 				screenshotFailures: false,
