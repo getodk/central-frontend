@@ -13,7 +13,6 @@ import RangeControl from './controls/Range/RangeControl.vue';
 import RankControl from './controls/RankControl.vue';
 import SelectControl from './controls/SelectControl.vue';
 import TriggerControl from './controls/TriggerControl.vue';
-import UnsupportedControl from './controls/UnsupportedControl.vue';
 import UploadControl from './controls/Upload/UploadControl.vue';
 
 defineProps<{ question: ControlNode }>();
@@ -50,8 +49,6 @@ const submitPressed = inject('submitPressed');
 		<RangeControl v-else-if="isRangeNode(question)" :node="question" />
 
 		<TriggerControl v-else-if="isTriggerNode(question)" :question="question" />
-
-		<UnsupportedControl v-else :question="question" />
 	</div>
 </template>
 
