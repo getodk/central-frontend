@@ -23,7 +23,7 @@ interface UploadImageControlProps {
 const props = defineProps<UploadImageControlProps>();
 
 const touched = ref(props.question.currentState.value != null);
-const submitPressed = inject<boolean>('submitPressed');
+const submitPressed = inject<boolean>('submitPressed', false);
 const isDisabled = computed(() => props.question.currentState.readonly === true);
 
 const selectImageInput = ref<HTMLInputElement | null>(null);

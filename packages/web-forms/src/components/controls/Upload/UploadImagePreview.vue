@@ -38,7 +38,7 @@ const isSmallImage = computed(() => {
 	return naturalWidth < SMALL_IMAGE_SIZE && naturalHeight < SMALL_IMAGE_SIZE;
 });
 
-const imageURL = computed<ObjectURL | null>((previous: ObjectURL | null) => {
+const imageURL = computed((previous: ObjectURL | null = null) => {
 	if (previous != null) {
 		revokeObjectURL(previous);
 	}
