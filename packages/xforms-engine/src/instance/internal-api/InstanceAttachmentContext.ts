@@ -15,5 +15,6 @@ export interface InstanceAttachmentContext {
 	readonly rootDocument: InstanceAttachmentRootDocument;
 	readonly nodeId: FormNodeID;
 	readonly instanceNode: StaticLeafElement | null;
+	readonly isRelevant: Accessor<boolean>;
 	readonly isAttached: Accessor<boolean>;
 }

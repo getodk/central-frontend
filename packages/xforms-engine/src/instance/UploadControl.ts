@@ -29,6 +29,7 @@ import type {
 } from './attachments/InstanceAttachment.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
+import type { InstanceAttachmentContext } from './internal-api/InstanceAttachmentContext.ts';
 import type {
 	DecodeInstanceValue,
 	InstanceValueContext,
@@ -72,6 +73,7 @@ export class UploadControl
 		UploadNode,
 		XFormsXPathElement,
 		EvaluationContext,
+		InstanceAttachmentContext,
 		InstanceValueContext,
 		ValidationContext,
 		ClientReactiveSerializableValueNode

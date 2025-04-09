@@ -17,7 +17,7 @@ import type { ClientReactiveSerializableInstance } from '../../../instance/inter
 
 const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
 	const files = Array.from(attachments.entries()).map(([context, attachment]) => {
-		if (!context.isAttached()) {
+		if (!context.isAttached() || !context.isRelevant()) {
 			return null;
 		}
 
