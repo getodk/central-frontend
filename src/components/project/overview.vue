@@ -25,6 +25,10 @@ import FormTrashList from '../form/trash-list.vue';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
+  // Today, this component only renders forms, so ProjectForms would be an
+  // appropriate name for it. It's named ProjectOverview for historical reasons:
+  // it used to be the project overview page, rendering additional things beyond
+  // forms.
   name: 'ProjectOverview'
 });
 defineProps({

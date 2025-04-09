@@ -31,6 +31,9 @@ import useRoutes from '../../../composables/routes';
 import { styleBox } from '../../../util/dom';
 
 defineOptions({
+  // This component is now rendered in ProjectShow: it is shown on every project
+  // page. However, it used to only be shown in ProjectOverview. That's why its
+  // name is ProjectOverviewDescription, not ProjectDescription.
   name: 'ProjectOverviewDescription'
 });
 
