@@ -3023,6 +3023,18 @@
       },
       "missingCount": {
         "string": "{count, plural, one {{count} missing attachment} other {{count} missing attachments}}"
+      },
+      "diff": {
+        "newCount": {
+          "string": "{count, plural, one {{count} new attachment} other {{count} new attachments}}"
+        },
+        "changedCount": {
+          "string": "{count, plural, one {{count} changed attachment} other {{count} changed attachments}}"
+        },
+        "summary": {
+          "string": "{changes} since the published version",
+          "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
+        }
       }
     },
     "FormEditCreateDraft": {

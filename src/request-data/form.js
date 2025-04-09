@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { reactive, shallowReactive, watchSyncEffect } from 'vue';
+import { shallowReactive, watchSyncEffect } from 'vue';
 
 import { computeIfExists, setupOption, transformForm, transformForms } from './util';
 import { useRequestData } from './index';
@@ -24,12 +24,14 @@ export default () => {
 
   const formDraft = createResource('formDraft', () =>
     setupOption(data => shallowReactive(transformForm(data))));
+
+  const mapAttachments = (attachments) => attachments.reduce(
+    (map, attachment) => map.set(attachment.name, attachment),
+    new Map()
+  );
   // Form draft attachments
   const draftAttachments = createResource('draftAttachments', () => ({
-    transformResponse: ({ data }) => data.reduce(
-      (map, attachment) => map.set(attachment.name, reactive(attachment)),
-      new Map()
-    ),
+    transformResponse: ({ data }) => shallowReactive(mapAttachments(data)),
     missingCount: computeIfExists(() => {
       let count = 0;
       for (const attachment of draftAttachments.values()) {
@@ -38,12 +40,17 @@ export default () => {
       return count;
     })
   }));
-
   // Published form attachments
   const publishedAttachments = createResource('publishedAttachments', () => ({
-    linkedDatasets: computeIfExists(() => publishedAttachments
-      .filter(a => a.datasetExists)
-      .map(a => a.name.replace(/\.csv$/i, '')))
+    transformResponse: ({ data }) => mapAttachments(data),
+    linkedDatasets: computeIfExists(() => {
+      const datasets = [];
+      for (const attachment of publishedAttachments.values()) {
+        if (attachment.datasetExists)
+          datasets.push(attachment.name.replace(/\.csv$/i, ''));
+      }
+      return datasets;
+    })
   }));
 
   const publicLinks = createResource('publicLinks', () => ({
