@@ -5,6 +5,7 @@ import {
 	group,
 	head,
 	html,
+	input,
 	mainInstance,
 	model,
 	repeat,
@@ -710,6 +711,71 @@ describe('Instance attachments: binary output', () => {
 
 				expect(attachmentData).toBe(expectedData);
 			}
+		});
+	});
+
+	describe('relevance', () => {
+		it('omits a non-relevant upload', async () => {
+			const scenario = await Scenario.init(
+				'Upload relevance',
+				// prettier-ignore
+				html(
+					head(
+						title('Upload-relevance'),
+						model(
+							mainInstance(
+								t('data id="upload-relevance"',
+									t('upload-relevant', '1'),
+									t('upload-file'),
+									t('meta',
+										t('instanceID', FAKE_INSTANCE_ID)))),
+							bind('/data/upload-relevant'),
+							bind('/data/upload-file')
+								.type('binary')
+								.relevant('/data/upload-relevant &gt; 0'))),
+					body(
+						input('/data/upload-relevant'),
+						upload('/data/upload-file')))
+			);
+
+			const uploadFile = new File(['uploaded if relevant'], 'upload-if-relevant.txt', {
+				type: 'text/plain',
+			});
+
+			scenario.answer('/data/upload-file', uploadFile);
+
+			// Set upload-file non-relevant
+			scenario.answer('/data/upload-relevant', 0);
+
+			// Prerequisite
+			const uploadNode = scenario.getInstanceNode('/data/upload-file');
+
+			assert(uploadNode.nodeType === 'upload');
+
+			expect(uploadNode).toBeNonRelevant();
+
+			const { data } = await scenario.prepareWebFormsInstancePayload();
+
+			assert(data.length === 1);
+
+			const [payloadFiles] = data;
+			const instanceFile = payloadFiles.get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+
+			const instanceXML = await getBlobText(instanceFile);
+
+			expect(instanceXML).toBe(
+				// prettier-ignore
+				t('data id="upload-relevance"',
+					t('upload-relevant', '0'),
+					t('meta',
+						t('instanceID', FAKE_INSTANCE_ID))).asXml()
+			);
+
+			const attachments = new Map(
+				Array.from(payloadFiles).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+			);
+
+			expect(attachments.size).toBe(0);
 		});
 	});
 });
