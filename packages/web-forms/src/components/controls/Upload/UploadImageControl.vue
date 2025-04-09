@@ -1,15 +1,15 @@
 <script setup lang="ts">
+import ControlText from '@/components/ControlText.vue';
+import ValidationMessage from '@/components/ValidationMessage.vue';
+import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject, ref } from 'vue';
-import ValidationMessage from '@/components/ValidationMessage.vue';
-import ControlText from '@/components/ControlText.vue';
-import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 
-interface ImageUploadControlProps {
+interface UploadImageControlProps {
 	readonly question: QuestionNode; // ToDo: Integrate with xforms-engine and use correct node type here.
 }
 
-const props = defineProps<ImageUploadControlProps>();
+const props = defineProps<UploadImageControlProps>();
 const touched = ref(false);
 const submitPressed = inject<boolean>('submitPressed');
 const isDisabled = computed(() => props.question.currentState.readonly === true);
