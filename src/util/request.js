@@ -106,6 +106,7 @@ export const apiPaths = {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/draft${extension}`;
   },
+  formByEnketoId: (enketoId, query = undefined) => `/v1/enketo-ids/${enketoId}/form${queryString(query)}`,
   serverUrlForFormDraft: (token, projectId, xmlFormId) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     return `/v1/test/${token}/projects/${projectId}/forms/${encodedFormId}/draft`;

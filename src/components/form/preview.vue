@@ -12,15 +12,19 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="form.initiallyLoading"/>
-  <WebFormRenderer v-if="form.dataExists" action-type="preview"/>
+  <template v-if="form.dataExists">
+    <web-form-renderer v-if="form.webformsEnabled || $route.query.webforms === 'true'" action-type="preview"/>
+    <enketo-iframe v-else :enketo-id="form.enketoId" action-type="preview"/>
+  </template>
 </template>
 
 <script setup>
-import useForm from '../../request-data/form';
+import { defineAsyncComponent } from 'vue';
+import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import Loading from '../loading.vue';
-import WebFormRenderer from '../web-form-renderer.vue';
+import { loadAsync } from '../../util/load-async';
 
 defineOptions({
   name: 'FormPreview'
@@ -41,7 +45,11 @@ const props = defineProps({
   }
 });
 
-const { form } = useForm();
+const { form } = useRequestData();
+
+
+const WebFormRenderer = defineAsyncComponent(loadAsync('WebFormRenderer'));
+const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
 
 const fetchForm = () => {
   form.request({
@@ -50,7 +58,7 @@ const fetchForm = () => {
   }).catch(noop);
 };
 
-fetchForm();
+if (!form.dataExists) fetchForm();
 </script>
 
 <style lang="scss">

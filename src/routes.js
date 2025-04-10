@@ -486,7 +486,7 @@ const routes = [
   }),
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/preview',
-    name: 'DraftFormPreview',
+    name: 'FormDraftPreview',
     component: 'FormPreview',
     props: (route) => ({
       ...route.params,
@@ -660,9 +660,9 @@ const routes = [
   }),
 
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/edit',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
     component: 'FormSubmission',
-    name: 'WebFormEditSubmission',
+    name: 'SubmissionEdit',
     props: true,
     loading: 'page',
     meta: {
@@ -672,10 +672,10 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
-    name: 'WebFormNewSubmission',
-    props: true,
+    name: 'SubmissionNew',
+    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
     loading: 'page',
     meta: {
       standalone: true,
@@ -684,15 +684,47 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:path(.+)',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
+    component: 'FormSubmission',
+    name: 'DraftSubmissionNew',
+    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline', draft: true }),
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/f/:enketoId([a-zA-Z0-9]{31})/:actionType(new|edit|preview)',
+    component: 'EnketoRedirector',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true
+    }
+  }),
+  asyncRoute({
+    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})/:offline(offline)?',
     component: 'FormSubmission',
     name: 'WebFormDirectLink',
-    props: true,
+    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
     loading: 'page',
     meta: {
       standalone: true,
+      restoreSession: true,
       requireLogin: false,
       title: () => [form.nameOrId]
+    },
+    // onceEnketoId doesn't support offline
+    beforeEnter: (to) => {
+      const { enketoId } = to.params;
+      const isOffline = to.path.endsWith('/offline');
+
+      if (isOffline && enketoId.length !== 31) {
+        return '/not-found';
+      }
+      return true;
     }
   }),
 
@@ -805,6 +837,18 @@ const routesByName = new Map();
       : false)
   );
 
+  // Preserve Form data when redirected to canoncial path
+  [
+    'SubmissionNew',
+    'DraftSubmissionNew',
+    'SubmissionEdit',
+    'FormPreview',
+    'FormDraftPreview'
+  ].forEach(redirectTo => {
+    const preserve = (_, from) =>
+      (from.name === 'EnketoRedirector' || from.name === 'WebFormDirectLink') && [form];
+    routesByName.get(redirectTo).meta.preserveData.push(preserve);
+  });
 
 
   //////////////////////////////////////////////////////////////////////////////

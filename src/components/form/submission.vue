@@ -12,27 +12,25 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="initiallyLoading"/>
-  <component :is="component" v-if="dataExists && hasAccess && component != null" v-bind="bindings"/>
+  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType"/>
+  <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
+    :enketo-id="form.enketoId"
+    :action-type="offline ? 'offline' : actionType"
+    :instance-id="instanceId"/>
 </template>
 
 <script setup>
-import { defineOptions, ref, shallowRef, defineAsyncComponent, watchEffect, computed } from 'vue';
+import { defineOptions, defineAsyncComponent, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
 import Loading from '../loading.vue';
-import useForm from '../../request-data/form';
 
 import { noop } from '../../util/util';
-import { apiPaths, queryString } from '../../util/request';
+import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { useRequestData } from '../../request-data';
-
-const route = useRoute();
-const router = useRouter();
-const { project, resourceStates } = useRequestData();
-const { form } = useForm();
-const { t } = useI18n();
+import useRoutes from '../../composables/routes';
 
 defineOptions({
   name: 'FormSubmission'
@@ -42,81 +40,99 @@ const props = defineProps({
   projectId: String,
   xmlFormId: String,
   instanceId: String,
-  // This will be not null when this component needs to render an Enketo form (redirected by nginx)
-  // or to render web-forms for a public link. The value could be:
-  // ':enketoId', ':enketoId/new', ':enketoId/edit', ':enketoId/single' or ':enketoId/offline'.
-  // see main.nginx.conf "Enketo URL redirection" section
-  path: {
-    type: String,
-    default: ''
+  actionType: String,
+  enketoId: String,
+  draft: Boolean,
+  offline: {
+    type: Boolean,
+    default: false
   }
 });
 
-const { initiallyLoading, dataExists } = resourceStates(props.projectId ? [project, form] : [form]);
+const route = useRoute();
+const router = useRouter();
+const { project, resourceStates, form } = useRequestData();
+const { t } = useI18n();
+const { newSubmissionPath, offlineSubmissionPath } = useRoutes();
 
-const component = shallowRef();
-const bindings = ref();
+const resources = computed(() => (props.projectId ? [project, form] : [form]));
+
+const { initiallyLoading, dataExists } = computed(() => {
+  const state = resourceStates(resources.value);
+  return {
+    initiallyLoading: state.initiallyLoading,
+    dataExists: state.dataExists
+  };
+}).value;
+
+const WebFormRenderer = defineAsyncComponent(loadAsync('WebFormRenderer'));
+const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
 
 const fetchProject = () => project.request({
   url: apiPaths.project(props.projectId),
   extended: true,
 }).catch(noop);
 
-const fetchForm = () => {
-  const [enketoId, actionType] = props.path.split('/');
 
+const fetchForm = () => {
   let formUrl = '';
   if (props.projectId && props.xmlFormId) {
-    formUrl = apiPaths.form(props.projectId, props.xmlFormId);
+    formUrl = props.draft ? apiPaths.formDraft(props.projectId, props.xmlFormId) : apiPaths.form(props.projectId, props.xmlFormId);
   } else {
-    formUrl = `/v1/enketo-ids/${enketoId}/form${queryString({ st: route.query.st })}`;
+    formUrl = apiPaths.formByEnketoId(props.enketoId, { st: route.query.st });
   }
 
   form.request({
     url: formUrl,
+    resend: false,
     problemToAlert: (problem) =>
       (problem.code === 404.1 ? t('formNotFound') : null)
-  }).then(() => {
-    if (form.data.webformsEnabled) {
-      component.value = defineAsyncComponent(loadAsync('WebFormRenderer'));
-    } else {
-      component.value = defineAsyncComponent(loadAsync('EnketoIframe'));
-      bindings.value = {
-        enketoId,
-        actionType: actionType ?? ''
-      };
-    }
-  }).catch(noop);
+  })
+    .then(() => {
+      // if it is public link without st and we got the data then it means user is logged in,
+      // let's send user to the canonical path
+      // Note: it can be true for WebFormDirectLink route
+      if (!props.projectId && !route.query.st && form.dataExists) {
+        const targetPath = props.offline ? offlineSubmissionPath : newSubmissionPath;
+        router.replace(targetPath(form.projectId, form.xmlFormId, !form.publishedAt));
+      }
+    })
+    .catch(noop);
 };
 
 const hasAccess = computed(() => {
   if (!project.dataExists || !form.dataExists) return true;
 
-  if (route.name === 'WebFormNewSubmission' && !project.permits('submission.create'))
-    return false;
+  let result = true;
 
-  if (route.name === 'WebFormEditSubmission' && !project.permits(['submission.read', 'submission.update']))
-    return false;
+  if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') &&
+      !project.permits('submission.create'))
+    result = false;
+
+  if (route.name === 'SubmissionEdit' && !project.permits(['submission.read', 'submission.update']))
+    result = false;
 
   if (!project.permits('form.read') && !project.permits('open_form.read'))
-    return false;
+    result = false;
 
   if (!project.permits('form.read') && project.permits('open_form.read') && form.state === 'closed')
-    return false;
+    result = false;
 
-  return true;
+  return result;
 });
 
 watchEffect(() => {
   if (dataExists.value) {
-    if (!hasAccess.value) router.push('/');
+    if (!hasAccess.value) {
+      router.push('/');
+    }
   }
 });
 
 // Required to check permissions in hasAccess
 if (props.projectId) fetchProject();
 
-fetchForm();
+if (!form.dataExists) fetchForm();
 </script>
 
 <i18n lang="json5">

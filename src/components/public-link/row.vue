@@ -42,7 +42,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import Selectable from '../selectable.vue';
 
-import { enketoBasePath } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -74,9 +73,7 @@ export default {
     },
     url() {
       const encodedId = encodeURIComponent(this.enketoId);
-      return this.form.webformsEnabled
-        ? `${window.location.origin}/f/${encodedId}?st=${this.publicLink.token}`
-        : `${window.location.origin}${enketoBasePath}/single/${encodedId}?st=${this.publicLink.token}`;
+      return `${window.location.origin}/f/${encodedId}?st=${this.publicLink.token}`;
     }
   }
 };
