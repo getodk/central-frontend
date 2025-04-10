@@ -456,7 +456,7 @@ describe('Instance attachments: binary output', () => {
 
 			const { scenario, uploads } = await initDistinctFileNamesScenario({
 				fileNameFactory: ({ nodeId, basename, extension }) => {
-					return `${basename}-${stripNodeIDPrefix(nodeId)}${extension}`;
+					return `${basename}-${stripNodeIDPrefix(nodeId)}${extension ?? ''}`;
 				},
 			});
 
@@ -513,18 +513,24 @@ describe('Instance attachments: binary output', () => {
 		});
 
 		it('populates metadata about when the file was written', async () => {
-			const unixTime = (date: Date): number => date.getSeconds();
+			const timestampedFileName = (
+				basename: string,
+				extension: string | null,
+				writtenAt: Date
+			): string => {
+				return `${basename}-${writtenAt.getTime()}${extension ?? ''}`;
+			};
 
 			const { scenario, uploads } = await initDistinctFileNamesScenario({
 				fileNameFactory: ({ writtenAt, basename, extension }) => {
-					return `${basename}-${unixTime(writtenAt)}${extension}`;
+					return timestampedFileName(basename, extension, writtenAt);
 				},
 			});
 
 			const expectedFileName = (index: 0 | 1 | 2 | 3): string => {
 				const { uploadedAt } = uploads[index];
 
-				return `${INDISTINGUISHABLE_BASE_NAME}-${unixTime(uploadedAt)}.txt`;
+				return timestampedFileName(INDISTINGUISHABLE_BASE_NAME, '.txt', uploadedAt);
 			};
 
 			const expectedFileNames = [
