@@ -87,13 +87,19 @@ watchEffect(() => {
 });
 
 function handleIframeMessage(event) {
-  let eventData;
-  try { eventData = JSON.parse(event.data); } catch {}
+  if (event.origin === window.location.origin) {
+    // For the cases where this page is embedded in external iframe, pass the event data to the
+    // parent.
+    if (window.location !== window.parent.location) {
+      window.parent.postMessage(event.data, route.query.parentWindowOrigin);
+    }
 
-  if (event.origin === window.location.origin &&
-    eventData?.enketoEvent === 'submissionsuccess' &&
-    redirectUrl.value) {
-    router.push((new URL(redirectUrl.value)).pathname);
+    let eventData;
+    try { eventData = JSON.parse(event.data); } catch {}
+
+    if (eventData?.enketoEvent === 'submissionsuccess' && redirectUrl.value) {
+      router.push((new URL(redirectUrl.value)).pathname);
+    }
   }
 }
 useEventListener(window, 'message', handleIframeMessage, false);
