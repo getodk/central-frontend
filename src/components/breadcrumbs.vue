@@ -13,10 +13,14 @@ except according to the terms contained in the LICENSE file.
   <div class="breadcrumbs">
     <template v-for="(link, index) in links" :key="index">
       <div class="breadcrumb-item" v-tooltip.text>
-        <router-link :to="link.path">
+        <router-link v-if="link.path != null" :to="link.path">
           <span v-if="link.icon" :class="link.icon"></span>
           {{ link.text }}
         </router-link>
+        <template v-else>
+          <span v-if="link.icon" :class="link.icon"></span>
+          {{ link.text }}
+        </template>
       </div>
       <span v-if="index < links.length - 1" class="separator">/</span>
     </template>
@@ -29,7 +33,7 @@ defineProps({
     type: Array,
     required: true,
     validator(value) {
-      return value.every(link => 'text' in link && 'path' in link);
+      return value.every(link => 'text' in link);
     }
   }
 });
