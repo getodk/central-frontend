@@ -1,3 +1,4 @@
+import sinon from 'sinon';
 import EnketoIframe from '../../src/components/enketo-iframe.vue';
 import NotFound from '../../src/components/not-found.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
@@ -74,5 +75,28 @@ describe('EnketoIframe', () => {
     await wait();
 
     wrapper.vm.$router.push.calledWith('/projects/1').should.be.true;
+  });
+
+  it('bubbles up the message event', async () => {
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
+      container: {
+        router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`)
+      }
+    });
+
+    const postMessage = sinon.fake();
+    sinon.replace(window.parent, 'postMessage', postMessage);
+
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    const script = document.createElement('script');
+    script.textContent = `window.parent.postMessage('${data}', "*");`;
+    iframe.element.contentDocument.body.appendChild(script);
+
+    await wait();
+
+    postMessage.calledWith(data, window.location.origin).should.be.true;
   });
 });
