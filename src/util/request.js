@@ -138,6 +138,7 @@ export const apiPaths = {
     return `/v1/projects/${projectId}/forms/${encodedFormId}.svc/Submissions(${encodedInstanceId})${qs}`;
   },
   editSubmission: submissionPath('/edit'),
+  submissionAttachments: submissionPath('/attachments'),
   submissionAttachment: (projectId, xmlFormId, draft, instanceId, attachmentName) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const draftPath = draft ? '/draft' : '';
@@ -161,6 +162,7 @@ export const apiPaths = {
     const encodedInstanceId = encodeURIComponent(instanceId);
     return `/v1/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedRootId}/versions/${encodedInstanceId}`;
   },
+  submissionXml: submissionPath('.xml'),
   publicLinks: formPath('/public-links'),
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
