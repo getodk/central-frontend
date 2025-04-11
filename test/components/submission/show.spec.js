@@ -29,7 +29,7 @@ describe('SubmissionShow', () => {
     links[1].text.should.equal('My Form');
     links[1].path.should.equal('/projects/1/forms/a%20b');
     links[2].text.should.equal('s');
-    links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
+    links[2].path.should.equal('');
   });
 
   it('renders the xmlformid of the form in the breadcrumb if it has no name', async () => {
@@ -45,7 +45,7 @@ describe('SubmissionShow', () => {
     links[1].text.should.equal('a b');
     links[1].path.should.equal('/projects/1/forms/a%20b');
     links[2].text.should.equal('s');
-    links[2].path.should.equal('/projects/1/forms/a%20b/submissions');
+    links[2].path.should.equal('');
   });
 
   it('shows the instance name if the submission has one', async () => {
