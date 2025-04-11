@@ -14,13 +14,11 @@ except according to the terms contained in the LICENSE file.
     <div class="heading">
       <span :class="`icon-${icon}`"></span>
       <div>
-        <div v-if="count != null" class="count">{{ $n(count, 'default') }}</div>
-        <div class="title">
-          <span><slot name="title"></slot></span>
-          <!-- If the Linkable is not a link, we hide the icon by making it
-          transparent. We always render the icon in order to keep the height of
-          .title consistent. -->
-          <span class="icon-angle-right"></span>
+        <div class="header">
+          <slot name="header"></slot>
+        </div>
+        <div class="subheader">
+          <slot name="subheader"></slot>
         </div>
       </div>
     </div>
@@ -39,8 +37,7 @@ export default {
     icon: {
       type: String,
       required: true
-    },
-    count: Number
+    }
   }
 };
 </script>
@@ -49,43 +46,41 @@ export default {
 @import '../../../assets/scss/mixins';
 
 .home-summary-item {
+  padding: 16px;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #E3E4E4;
+
   .heading {
-    align-items: flex-end;
+    align-items: center;
     display: flex;
-    margin-bottom: 4px;
+    gap: 16px;
+    margin-bottom: 16px;
 
     > [class^="icon-"] {
-      color: #555;
-      font-size: 62px;
-      margin-bottom: 2px;
-      margin-right: 9px;
+      font-size: 24px;
+      padding: 10px;
+      border-radius: 6px;
+      color: $color-accent-primary;
+      background-color: rgba($color-accent-primary, 0.1);
     }
   }
 
-  .count {
-    font-size: 35px;
+  .header {
+    font-size: 16px;
+    margin-bottom: 0;
     line-height: 1;
-    margin-bottom: -4px;
-  }
-
-  .title {
-    align-items: center;
-    display: flex;
-    font-size: 12px;
     font-weight: 600;
   }
 
-  .icon-angle-right {
-    color: $color-accent-primary;
-    font-size: 21px;
-    margin-left: 7px;
+  .subheader {
+    font-size: 14px;
   }
 
   .body {
-    font-size: 13px;
-    line-height: 1.2;
+    font-size: 12px;
+    line-height: 16px;
     margin-bottom: 0;
   }
 }
-div.home-summary-item .icon-angle-right { color: transparent; }
 </style>
