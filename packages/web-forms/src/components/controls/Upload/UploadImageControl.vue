@@ -161,7 +161,7 @@ watchEffect(() => {
 	}
 
 	svg {
-		margin-right: var(--geo-spacing-s);
+		margin-right: 5px;
 	}
 
 	&:disabled svg path {
