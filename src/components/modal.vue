@@ -20,11 +20,13 @@ may add the `in` class to the element, and the checkScroll() method may add the
     @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
     <div class="modal-dialog" :class="sizeClass" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-top-actions">
           <button type="button" class="close" :aria-disabled="!hideable"
             :aria-label="$t('action.close')" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
+        </div>
+        <div class="modal-header">
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
         </div>
         <div ref="body" class="modal-body">
@@ -241,27 +243,32 @@ const titleId = `modal-title${id}`;
 
 .modal-dialog {
   margin-top: 20vh;
+  border-radius: 6px;
 
   .modal-content {
     border: none;
-    border-radius: 0;
     box-shadow: $box-shadow-panel-main;
 
-    .modal-header {
-      background-color: $color-accent-primary;
-      color: #fff;
-      padding: 10px $padding-right-modal-header 9px $padding-left-modal-header;
+    .modal-top-actions {
+      text-align: right;
+      padding-right: 16px;
+      padding-top: 16px;
 
       .close {
-        color: #fff;
-        font-weight: normal;
-        margin-top: 0;
-        opacity: 1;
+          float: none;
+          color: $color-input;
+          font-weight: normal;
+          opacity: 1;
 
-        &[aria-disabled="true"] {
-          cursor: not-allowed;
+          &[aria-disabled="true"] {
+            cursor: not-allowed;
+          }
         }
       }
+
+    .modal-header {
+      color: $color-text;
+      padding: 0px $padding-right-modal-header 20px $padding-left-modal-header;
 
       h4 {
         @include text-overflow-ellipsis;
@@ -273,25 +280,26 @@ const titleId = `modal-title${id}`;
   }
 }
 
-.modal-body { padding: $padding-modal-body; }
+.modal-body { padding: 0px $padding-right-modal-header 0px $padding-left-modal-header }
 
 .modal-actions {
   background: $color-subpanel-background;
-  border-top: 1px solid $color-subpanel-border;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   margin: -$padding-modal-body;
-  margin-top: 20px;
-  padding: 10px $padding-modal-body;
+  margin-top: $padding-modal-body;
+  padding: 15px
 }
 
 .modal-full {
-  $margin: 15px;
+  $margin: 40px;
   // Because we set margin-left and width, we don't need to set margin-right.
   margin: $margin 0 $margin $margin;
   // Subtract 10px so that there is space between the modal and the scrollbar.
   width: calc(100vw - #{2 * $margin + 10px});
 
-  // 50px is the approximate height of .modal-header.
-  .modal-body { min-height: calc(100vh - #{2 * $margin + 50px}); }
+  // 100px is the approximate height of .modal-header.
+  .modal-body { min-height: calc(100vh - #{2 * $margin + 100px}); }
 
   // If .modal-body has so much content that it causes the modal to scroll, then
   // .modal-actions will naturally appear at the bottom of the modal as it
