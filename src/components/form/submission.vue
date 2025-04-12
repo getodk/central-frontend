@@ -30,7 +30,7 @@ import { noop } from '../../util/util';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { useRequestData } from '../../request-data';
-import useRoutes from '../../composables/routes';
+import useEnketoRedirector from '../../composables/enketo-redirector';
 
 defineOptions({
   name: 'FormSubmission'
@@ -53,7 +53,7 @@ const route = useRoute();
 const router = useRouter();
 const { project, resourceStates, form } = useRequestData();
 const { t } = useI18n();
-const { newSubmissionPath, offlineSubmissionPath } = useRoutes();
+const { ensureCanonicalPath } = useEnketoRedirector();
 
 const resources = computed(() => (props.projectId ? [project, form] : [form]));
 
@@ -89,13 +89,7 @@ const fetchForm = () => {
       (problem.code === 404.1 ? t('formNotFound') : null)
   })
     .then(() => {
-      // if it is public link without st and we got the data then it means user is logged in,
-      // let's send user to the canonical path
-      // Note: it can be true for WebFormDirectLink route
-      if (!props.projectId && !route.query.st && form.dataExists) {
-        const targetPath = props.offline ? offlineSubmissionPath : newSubmissionPath;
-        router.replace(targetPath(form.projectId, form.xmlFormId, !form.publishedAt));
-      }
+      ensureCanonicalPath(props.actionType);
     })
     .catch(noop);
 };

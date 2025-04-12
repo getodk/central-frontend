@@ -223,9 +223,6 @@ const responsesByComponent = {
     },
     audits: true
   }),
-  EnketoRedirector: componentResponses({
-    form: () => testData.extendedForms.last()
-  }),
 
   Download: [],
 

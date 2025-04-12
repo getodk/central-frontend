@@ -12,7 +12,6 @@ describe('EnketoRedirector', () => {
   it('should redirect to new submission page', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     return load(`/f/${enketoId}/new`)
-      .respondWithData(() => testData.extendedProjects.last())
       .afterResponses(app => {
         app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new');
       });
@@ -21,7 +20,6 @@ describe('EnketoRedirector', () => {
   it('should redirect to new draft submission page', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
     return load(`/f/${enketoId}/new`)
-      .respondWithData(() => testData.extendedProjects.last())
       .afterResponses(app => {
         app.vm.$route.path.should.equal('/projects/1/forms/a/draft/submissions/new');
       });
@@ -30,7 +28,6 @@ describe('EnketoRedirector', () => {
   it('should redirect to edit submission page', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     return load(`/f/${enketoId}/edit?instance_id=123`)
-      .respondWithData(() => testData.extendedProjects.last())
       .afterResponses(app => {
         app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/123/edit');
       });
@@ -65,7 +62,6 @@ describe('EnketoRedirector', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     let formRequestCount = 0;
     return load(`/f/${enketoId}/new`)
-      .respondWithData(() => testData.extendedProjects.last())
       .beforeEachResponse((app, { url }) => {
         if (url.match(/form/)) formRequestCount += 1;
       })
@@ -78,7 +74,6 @@ describe('EnketoRedirector', () => {
   it('should pass query parameter to the target', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     return load(`/f/${enketoId}/new?return_url=http%3A%2F%2Fexample.com&d[/data/first_name]=john`)
-      .respondWithData(() => testData.extendedProjects.last())
       .afterResponses(app => {
         app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new');
         app.vm.$route.query.should.deep.equal({
