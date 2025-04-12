@@ -169,9 +169,7 @@ const currentVersion = computed(() =>
     overflow-y: auto;
   }
 
-  .modal-body { padding: 0; }
   table { margin-bottom: 0; }
-  .modal-actions { margin: 0; }
 
   table { table-layout: fixed; }
   thead {
