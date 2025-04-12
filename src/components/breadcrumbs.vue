@@ -13,23 +13,25 @@ except according to the terms contained in the LICENSE file.
   <div class="breadcrumbs">
     <template v-for="(link, index) in links" :key="index">
       <div class="breadcrumb-item" v-tooltip.text>
-        <router-link :to="link.path">
+        <linkable :to="link.path">
           <span v-if="link.icon" :class="link.icon"></span>
           {{ link.text }}
-        </router-link>
+        </linkable>
       </div>
-      <span class="separator">/</span>
+      <span v-if="index < links.length - 1" class="separator">/</span>
     </template>
   </div>
 </template>
 
 <script setup>
+import Linkable from './linkable.vue';
+
 defineProps({
   links: {
     type: Array,
     required: true,
     validator(value) {
-      return value.every(link => 'text' in link && 'path' in link);
+      return value.every(link => 'text' in link);
     }
   }
 });

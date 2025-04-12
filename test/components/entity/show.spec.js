@@ -52,7 +52,7 @@ describe('EntityShow', () => {
     links[1].text.should.equal('á');
     links[1].path.should.equal('/projects/1/entity-lists/%C3%A1');
     links[2].text.should.equal('My Entity');
-    links[2].path.should.equal('/projects/1/entity-lists/%C3%A1/entities');
+    should.not.exist(links[2].path);
   });
 
   it('shows the entity label', async () => {

@@ -161,7 +161,7 @@ const branchData = modalData('EntityBranchData');
 const breadcrumbLinks = computed(() => [
   { text: project.dataExists ? project.nameWithArchived : t('resource.project'), path: projectPath('entity-lists'), icon: 'icon-archive' },
   { text: props.datasetName, path: datasetPath(), icon: 'icon-database' },
-  { text: entity.dataExists ? entity.currentVersion.label : t('resource.entity'), path: datasetPath('entities') }
+  { text: entity.currentVersion.label }
 ]);
 
 </script>
