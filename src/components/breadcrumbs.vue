@@ -13,14 +13,10 @@ except according to the terms contained in the LICENSE file.
   <div class="breadcrumbs">
     <template v-for="(link, index) in links" :key="index">
       <div class="breadcrumb-item" v-tooltip.text>
-        <router-link v-if="link.path != null" :to="link.path">
+        <linkable :to="link.path">
           <span v-if="link.icon" :class="link.icon"></span>
           {{ link.text }}
-        </router-link>
-        <template v-else>
-          <span v-if="link.icon" :class="link.icon"></span>
-          {{ link.text }}
-        </template>
+        </linkable>
       </div>
       <span v-if="index < links.length - 1" class="separator">/</span>
     </template>
@@ -28,6 +24,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import Linkable from './linkable.vue';
+
 defineProps({
   links: {
     type: Array,
