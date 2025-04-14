@@ -23,6 +23,7 @@ import { setDocumentTitle } from '../util/reactivity';
 import NotFound from './not-found.vue';
 import useEventListener from '../composables/event-listener';
 import { queryString } from '../util/request';
+import { $location } from '../util/util';
 
 defineOptions({
   name: 'EnketoIframe'
@@ -87,7 +88,7 @@ watchEffect(() => {
 });
 
 function handleIframeMessage(event) {
-  if (event.origin === window.location.origin) {
+  if (event.origin === $location.origin) {
     // For the cases where this page is embedded in external iframe, pass the event data to the
     // parent.
     if (window.location !== window.parent.location) {

@@ -4,6 +4,7 @@ import NotFound from '../../src/components/not-found.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
+import { $location } from '../../src/util/util';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -98,5 +99,30 @@ describe('EnketoIframe', () => {
     await wait();
 
     postMessage.calledWith(data, window.location.origin).should.be.true;
+  });
+
+  it('should not bubble up the message event if origin is different', async () => {
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
+      container: {
+        router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`)
+      }
+    });
+
+    sinon.stub($location, 'origin').value('https://example.com');
+
+    const postMessage = sinon.fake();
+    sinon.replace(window.parent, 'postMessage', postMessage);
+
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    const script = document.createElement('script');
+    script.textContent = `window.parent.postMessage('${data}', "*");`;
+    iframe.element.contentDocument.body.appendChild(script);
+
+    await wait();
+
+    postMessage.called.should.be.false;
   });
 });
