@@ -5181,6 +5181,17 @@
         "body": {
           "string": "Your data is being submitted. Please don’t close this window until it’s finished."
         }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Session expired"
+        },
+        "body": {
+          "string": "Please log in {here} in a different browser tab and try again."
+        },
+        "here": {
+          "string": "here"
+        }
       }
     }
   },

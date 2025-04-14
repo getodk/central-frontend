@@ -161,6 +161,10 @@ The following meta fields are supported for bottom-level routes:
 
   - standalone (default: false): If standalone is `true` then application layout
     elements like navigation bar, background color, etc are not rendered.
+
+  - skipAutoLogout (default: false): If `true`, no alert will be displayed when
+    session is about to expire. Also user will be not be redirected to login
+    page when session has expired.
 */
 
 /*
@@ -667,6 +671,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
+      skipAutoLogout: true,
       // validateData is done inside FormSubmission component
       title: () => [form.nameOrId],
     }
@@ -685,6 +690,7 @@ const routes = [
     loading: 'page',
     meta: {
       standalone: true,
+      skipAutoLogout: true,
       // validateData is done inside FormSubmission component
       title: () => [form.nameOrId],
     }
@@ -734,6 +740,7 @@ const routes = [
       standalone: true,
       restoreSession: true,
       requireLogin: false,
+      skipAutoLogout: true,
       title: () => [form.nameOrId]
     }
   }),

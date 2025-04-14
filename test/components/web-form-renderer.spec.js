@@ -133,6 +133,20 @@ describe('WebFormRenderer', () => {
     modal.find('.modal-introduction').text().should.match(/Your data was not submitted.*duplication instance ID/);
   });
 
+  it('should show error modal in case of submission failure', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent()
+      .complete()
+      .request((c) => c.find('.odk-form .footer button').trigger('click'))
+      .respondWithProblem(403.1);
+
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
+
+    modal.find('.modal-title').text().should.equal('Session expired');
+    modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
+  });
+
   it('shows preview modal', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
