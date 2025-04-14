@@ -22,7 +22,14 @@ except according to the terms contained in the LICENSE file.
       @submit="handleSubmit"/>
   </template>
 
-  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" hideable backdrop @hide="hideSubmissionModal()">
+  <modal id="sending-data" v-bind="sendingDataModal" backdrop>
+    <template #title>{{ $t('sendingDataModal.title') }}</template>
+    <template #body>
+      {{ $t('sendingDataModal.body') }}
+    </template>
+  </modal>
+
+  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" hideable backdrop @hide="hideModals()">
     <template #title>{{ $t(submissionModal.type + '.title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -40,7 +47,7 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="hideSubmissionModal()">
+        <button type="button" class="btn btn-primary" @click="hideModals()">
           {{ $t('action.close') }}
         </button>
       </div>
@@ -71,6 +78,7 @@ const { request } = useRequest();
 const submissionAttachments = createResource('submissionAttachments');
 const submissionModal = modalData();
 const newInstanceId = ref(null);
+const sendingDataModal = modalData();
 const route = useRoute();
 const router = useRouter();
 const { submissionPath } = useRoutes();
@@ -196,11 +204,27 @@ const fetchData = () => {
 
 fetchData();
 
-const hideSubmissionModal = () => {
+/**
+ * Hide all modals
+ */
+const hideModals = () => {
   if (submissionModal.type !== 'errorModal') {
     newInstanceId.value = null;
   }
   submissionModal.hide();
+  sendingDataModal.hide();
+};
+
+/**
+ * Displays the specified modal while hiding all others.
+ * Ensures that only one modal is visible at a time.
+ *
+ * @param {Object} modal - The modal instance to display.
+ * @param {Object} [options] - Optional parameters to pass to modal.show().
+ */
+const showModal = (modal, options) => {
+  hideModals();
+  modal.show(options);
 };
 
 /**
@@ -239,7 +263,7 @@ const postPrimaryInstance = (file) => {
   })
     .then(({ data }) => {
       if (isProblem(data)) {
-        submissionModal.show({ type: 'errorModal', errorMessage: data.message });
+        showModal(submissionModal, { type: 'errorModal', errorMessage: data.message });
         return false;
       }
       newInstanceId.value = data.instanceId;
@@ -267,9 +291,10 @@ const uploadAttachment = async (attachment) => {
  */
 const handleSubmit = async (payload) => {
   if (props.actionType === 'preview') {
-    submissionModal.show({ type: 'previewModal' });
+    showModal(submissionModal, { type: 'previewModal' });
   } else {
     const { data: [data], status } = payload;
+    showModal(sendingDataModal);
     if (status !== 'ready') {
       // Status is not ready when Form is not valid and in that case submit button will be disabled,
       // hence this branch should never execute.
@@ -285,12 +310,12 @@ const handleSubmit = async (payload) => {
       // TODO: what to do if attachments upload fail - blocked, need to define requirements / UX
       if (attachmentResults.every(r => !isProblem(r))) {
         if (isPublicLink.value) {
-          submissionModal.show({ type: 'thankYouModal' });
+          showModal(submissionModal, { type: 'thankYouModal' });
           formVersionXml.reset(); // hides the Form
         } else if (isEdit.value) {
           router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
         } else {
-          submissionModal.show({ type: 'submissionModal' });
+          showModal(submissionModal, { type: 'submissionModal' });
         }
       }
     }
@@ -348,6 +373,10 @@ html, body {
       "errorModal": {
         "title": "Submission error",
         "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+      },
+      "sendingDataModal": {
+        "title": "Sending Submission",
+        "body": "Your data is being submitted. Please don’t close this window until it’s finished."
       }
     }
   }
