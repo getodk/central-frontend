@@ -105,7 +105,7 @@ const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
 const isEdit = computed(() => props.actionType === 'edit');
 
 /**
- * Converst AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
+ * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
  * requirements
  */
 const transformAttachmentResponse = (axiosResponse) => {
@@ -114,7 +114,7 @@ const transformAttachmentResponse = (axiosResponse) => {
   const fetchHeaders = new Headers();
   for (const [key, value] of Object.entries(headers)) {
     if (key === 'content-type') {
-      // because web-forms doens't want space between media type and charset
+      // because web-forms doesn't want space between media type and charset
       // https://github.com/getodk/web-forms/issues/269
       fetchHeaders.append(key, value.replace('; charset', ';charset'));
     } else {
@@ -174,7 +174,7 @@ const fetchSubmissionAttachment = (name) => {
     url: requestUrl,
     alert: false
   })
-    .then(({ data }) => data) // TODO: prob same things as getFormAttachemnt fn
+    .then(({ data }) => data) // TODO: prob same things as getFormAttachment fn
     .catch(noop);
 };
 
