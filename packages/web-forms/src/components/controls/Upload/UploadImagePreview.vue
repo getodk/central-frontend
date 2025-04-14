@@ -3,7 +3,7 @@ import type { ObjectURL } from '@getodk/common/lib/web-compat/url.ts';
 import { createObjectURL, revokeObjectURL } from '@getodk/common/lib/web-compat/url.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref, triggerRef, watchEffect } from 'vue';
 
 export interface UploadImagePreviewProps {
 	readonly question: UploadNode;
@@ -28,6 +28,18 @@ const onPreviewLoad = (event: Event) => {
 	const previewImage = event.target as HTMLImageElement;
 
 	loadedDimensions.value = previewImage;
+
+	/**
+	 * Ensures `isSmallImage` will be recomputed if `previewImage` has already
+	 * been assigned to `loadedDimensions.value` by a prior upload.
+	 *
+	 * TODO: it would be nice to find (or build?) something equivalent to Solid's
+	 * {@link https://docs.solidjs.com/reference/basic-reactivity/create-signal#equals | `equals` option},
+	 * which would allow specifying this behavior directly on `loadedDimensions`
+	 * (and would allow customizing it e.g. to recompute specifically if an
+	 * `HTMLImageElement` is assigned).
+	 */
+	triggerRef(loadedDimensions);
 };
 
 const SMALL_IMAGE_SIZE = 300;
