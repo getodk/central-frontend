@@ -1,3 +1,5 @@
+export type * from './attachments/InstanceAttachmentMeta.ts';
+export type * from './attachments/InstanceAttachmentsConfig.ts';
 export type * from './constants.ts';
 export * as constants from './constants.ts';
 export type * from './form/CreateFormInstance.ts';
@@ -16,11 +18,11 @@ export type {
 	AnyLeafNode,
 	AnyNode,
 	AnyParentNode,
-	AnyUnsupportedControlNode,
 	GeneralChildNode,
 	GeneralParentNode,
 	RepeatRangeNode,
 } from './hierarchy.ts';
+export type * from './identity.ts';
 export type * from './InputNode.ts';
 export type * from './ModelValueNode.ts';
 export type * from './NoteNode.ts';
@@ -42,6 +44,6 @@ export type * from './submission/SubmissionMeta.ts';
 export type * from './SubtreeNode.ts';
 export type * from './TextRange.ts';
 export type * from './TriggerNode.ts';
-export type * from './unsupported/UploadNode.ts';
+export type * from './UploadNode.ts';
 export type * from './validation.ts';
 export type * from './ValueType.ts';

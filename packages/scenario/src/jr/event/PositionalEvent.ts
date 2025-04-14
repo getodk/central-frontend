@@ -3,7 +3,6 @@ import type {
 	AnyInputNode,
 	AnyNoteNode,
 	AnyRangeNode,
-	AnyUnsupportedControlNode,
 	GroupNode,
 	RankNode,
 	RepeatInstanceNode,
@@ -11,6 +10,7 @@ import type {
 	RootNode,
 	SelectNode,
 	TriggerNode,
+	UploadNode,
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
 
@@ -23,7 +23,7 @@ export type QuestionPositionalEventNode =
 	| AnyInputNode
 	| AnyRangeNode
 	| TriggerNode
-	| AnyUnsupportedControlNode;
+	| UploadNode;
 
 export interface PositionalEventTypeMapping {
 	readonly BEGINNING_OF_FORM: RootNode;

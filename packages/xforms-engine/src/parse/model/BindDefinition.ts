@@ -80,7 +80,7 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 	) {
 		super();
 
-		this.type = BindTypeDefinition.from(bindElement);
+		this.type = BindTypeDefinition.from(form, nodeset, bindElement);
 
 		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 

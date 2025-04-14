@@ -27,13 +27,19 @@ type AnyNodeType = AnyNode['nodeType'];
 type NonRootNodeType = Exclude<AnyNodeType, 'root'>;
 
 const nonRootNodeTypes = new Set<NonRootNodeType>([
-	'input',
-	'select',
-	'subtree',
 	'group',
+	'input',
+	'model-value',
+	'note',
+	'range',
+	'rank',
+	'repeat-instance',
 	'repeat-range:controlled',
 	'repeat-range:uncontrolled',
-	'repeat-instance',
+	'select',
+	'subtree',
+	'trigger',
+	'upload',
 ]);
 
 export const assertEngineNode: AssertEngineNode = (node) => {

@@ -8,11 +8,11 @@ import { InputQuestionEvent } from './InputQuestionEvent.ts';
 import { NoteQuestionEvent } from './NoteQuestionEvent.ts';
 import { PromptNewRepeatEvent } from './PromptNewRepeatEvent.ts';
 import { RangeQuestionEvent } from './RangeQuestionEvent.ts';
+import { RankQuestionEvent } from './RankQuestionEvent.ts';
 import { RepeatInstanceEvent } from './RepeatInstanceEvent.ts';
 import { SelectQuestionEvent } from './SelectQuestionEvent.ts';
 import { TriggerQuestionEvent } from './TriggerQuestionEvent.ts';
-import { UnsupportedControlQuestionEvent } from './UnsupportedControlQuestionEvent.ts';
-import { RankQuestionEvent } from './RankQuestionEvent.ts';
+import { UploadQuestionEvent } from './UploadQuestionEvent.ts';
 
 // prettier-ignore
 export type AnyQuestionEvent =
@@ -22,7 +22,7 @@ export type AnyQuestionEvent =
 	| RankQuestionEvent
 	| SelectQuestionEvent
 	| TriggerQuestionEvent
-	| UnsupportedControlQuestionEvent;
+	| UploadQuestionEvent;
 
 // prettier-ignore
 export type NonTerminalPositionalEvent =
@@ -97,7 +97,7 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 					return RankQuestionEvent.from(node);
 
 				case 'upload':
-					return UnsupportedControlQuestionEvent.from(node);
+					return UploadQuestionEvent.from(node);
 
 				default:
 					throw new UnreachableError(node);

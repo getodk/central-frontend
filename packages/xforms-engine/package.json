@@ -54,6 +54,7 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
+    "bin-packer": "1.7.0",
     "papaparse": "^5.5.2",
     "solid-js": "^1.9.5"
   },

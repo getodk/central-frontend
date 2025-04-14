@@ -1,12 +1,11 @@
 import InputControl from '@/components/controls/Input/InputControl.vue';
-import SelectControl from '@/components/controls/SelectControl.vue';
 import RankControl from '@/components/controls/RankControl.vue';
-import UnsupportedControl from '@/components/controls/UnsupportedControl.vue';
+import SelectControl from '@/components/controls/SelectControl.vue';
+import FormQuestion from '@/components/FormQuestion.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import FormQuestion from '@/components/FormQuestion.vue';
-import { fakeUnsupportedControlNode, getReactiveForm, globalMountOptions } from '../helpers';
+import { getReactiveForm, globalMountOptions } from '../helpers';
 
 const mountComponent = async (formPath: string, questionNumber: number) => {
 	const xform = await getReactiveForm(formPath);
@@ -52,20 +51,5 @@ describe('FormQuestion', () => {
 			'Creativity and Innovation'
 		);
 		expect(component.find('#family_and_friends .rank-label').text()).toEqual('Family and Friends');
-	});
-
-	it('shows UnsupportedControl for unsupported / unimplemented question type', () => {
-		const component = mount(FormQuestion, {
-			props: {
-				question: fakeUnsupportedControlNode(),
-			},
-			global: globalMountOptions,
-		});
-
-		const unsupported = component.findComponent(UnsupportedControl);
-
-		expect(unsupported.exists()).toBe(true);
-
-		expect(component.text()).toEqual('Unsupported field {dummy} in the form definition.');
 	});
 });

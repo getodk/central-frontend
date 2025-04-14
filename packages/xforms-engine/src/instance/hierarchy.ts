@@ -4,6 +4,7 @@ import type { AnyModelValue } from './ModelValue.ts';
 import type { AnyNote } from './Note.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
 import type { AnyRangeControl } from './RangeControl.ts';
+import type { RankControl } from './RankControl.ts';
 import type { RepeatInstance } from './repeat/RepeatInstance.ts';
 import type { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import type { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
@@ -11,13 +12,9 @@ import type { Root } from './Root.ts';
 import type { SelectControl } from './SelectControl.ts';
 import type { Subtree } from './Subtree.ts';
 import type { TriggerControl } from './TriggerControl.ts';
-import type { RankControl } from './RankControl.ts';
-import type { UploadControl } from './unsupported/UploadControl.ts';
+import type { UploadControl } from './UploadControl.ts';
 
 export type RepeatRange = RepeatRangeControlled | RepeatRangeUncontrolled;
-
-// prettier-ignore
-export type AnyUnsupportedControl = UploadControl;
 
 // prettier-ignore
 export type AnyNode =
@@ -35,7 +32,7 @@ export type AnyNode =
 	| RankControl
 	| SelectControl
 	| TriggerControl
-	| AnyUnsupportedControl;
+	| UploadControl;
 
 // prettier-ignore
 export type AnyParentNode =
@@ -70,7 +67,7 @@ export type AnyChildNode =
 	| RankControl
 	| SelectControl
 	| TriggerControl
-	| AnyUnsupportedControl;
+	| UploadControl;
 
 // prettier-ignore
 export type GeneralChildNode =
@@ -85,7 +82,7 @@ export type GeneralChildNode =
 	| RankControl
 	| SelectControl
 	| TriggerControl
-	| AnyUnsupportedControl;
+	| UploadControl;
 
 // prettier-ignore
 export type AnyValueNode =
@@ -97,4 +94,4 @@ export type AnyValueNode =
 	| RankControl
 	| SelectControl
 	| TriggerControl
-	| AnyUnsupportedControl;
+	| UploadControl;

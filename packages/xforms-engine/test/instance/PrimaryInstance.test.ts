@@ -85,6 +85,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 				secondaryInstances,
 				config: {
 					clientStateFactory,
+					computeAttachmentName: () => null,
 				},
 			});
 		});

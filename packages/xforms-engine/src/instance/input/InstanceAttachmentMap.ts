@@ -1,6 +1,9 @@
+import { getBlobData } from '@getodk/common/lib/web-compat/blob.ts';
 import { INSTANCE_FILE_NAME } from '../../client/constants.ts';
 import type { ResolvableInstanceAttachmentsMap } from '../../client/form/EditFormInstance.ts';
 import { MalformedInstanceDataError } from '../../error/MalformedInstanceDataError.ts';
+import { getResponseContentType } from '../../lib/resource-helpers.ts';
+import type { FetchResourceResponse } from '../resource.ts';
 
 type InstanceAttachmentMapSourceEntry = readonly [key: string, value: FormDataEntryValue];
 
@@ -13,14 +16,35 @@ type InstanceAttachmentMapSources = readonly [
 	...InstanceAttachmentMapSource[],
 ];
 
+const DEFAULT_ATTACHMENT_TYPE = 'application/octet-stream';
+
+const resolveContentType = (response: FetchResourceResponse, blob: Blob): string => {
+	let result = blob.type;
+
+	if (result === '') {
+		result = getResponseContentType(response) ?? result;
+	}
+
+	if (result === '') {
+		return DEFAULT_ATTACHMENT_TYPE;
+	}
+
+	return result;
+};
+
+const resolveInstanceAttachmentFile = async (
+	response: FetchResourceResponse,
+	fileName: string
+): Promise<File> => {
+	const blob = await response.blob();
+	const blobData = await getBlobData(blob);
+
+	return new File([blobData], fileName, {
+		type: resolveContentType(response, blob),
+	});
+};
+
 /**
- * @todo This currently short-circuits if there are actually any instance
- * attachments to resolve. As described below, much of the approach is pretty
- * naive now anyway, and none of it is really "ready" until we have something to
- * actually _use the instance attachments_ once they're resolved! When we are
- * ready, the functionality can be unblocked as in
- * {@link https://github.com/getodk/web-forms/commit/88ee1b91c1f68d53ce9ba551bab334852e1e60cd | this commit}.
- *
  * @todo Everything about this is incredibly naive! We should almost certainly
  * do _at least_ the following:
  *
@@ -37,22 +61,10 @@ type InstanceAttachmentMapSources = readonly [
 const resolveInstanceAttachmentMapSource = async (
 	input: ResolvableInstanceAttachmentsMap
 ): Promise<InstanceAttachmentMapSource> => {
-	const inputEntries = Array.from(input.entries());
-
-	if (inputEntries.length > 0) {
-		const fileNames = Array.from(input.keys());
-		const errors = fileNames.map((fileName) => {
-			return new Error(`Failed to resolve instance attachment with file name "${fileName}"`);
-		});
-
-		throw new AggregateError(errors, 'Not implemented: instance attachment resource resolution');
-	}
-
 	const entries = await Promise.all<InstanceAttachmentMapSourceEntry>(
-		inputEntries.map(async ([fileName, resolveAttachment]) => {
+		Array.from(input.entries()).map(async ([fileName, resolveAttachment]) => {
 			const response = await resolveAttachment();
-			const blob = await response.blob();
-			const value = new File([blob], fileName);
+			const value = await resolveInstanceAttachmentFile(response, fileName);
 
 			return [fileName, value] as const;
 		})

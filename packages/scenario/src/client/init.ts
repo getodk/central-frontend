@@ -1,6 +1,7 @@
 import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import type {
 	FormResource,
+	InstanceAttachmentsConfig,
 	LoadFormOptions,
 	LoadFormSuccessResult,
 	LoadFormWarningResult,
@@ -25,6 +26,7 @@ export interface TestFormOptions {
 	readonly resourceService: JRResourceService;
 	readonly missingResourceBehavior: MissingResourceBehavior;
 	readonly stateFactory: OpaqueReactiveObjectFactory;
+	readonly instanceAttachments: InstanceAttachmentsConfig;
 }
 
 const defaultConfig = {
@@ -59,6 +61,7 @@ export const initializeTestForm = async (
 				},
 				instance: {
 					stateFactory: options.stateFactory,
+					instanceAttachments: options.instanceAttachments,
 				},
 			});
 		});

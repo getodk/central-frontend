@@ -1,7 +1,9 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
 import {
 	AsymmetricTypedExpectExtension,
+	AsyncAsymmetricTypedExpectExtension,
 	InspectableComparisonError,
 	StaticConditionExpectExtension,
 	SymmetricTypedExpectExtension,
@@ -10,9 +12,11 @@ import {
 } from '@getodk/common/test/assertions/helpers.ts';
 import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import { constants, type ValidationCondition } from '@getodk/xforms-engine';
-import { expect } from 'vitest';
+import { assert, expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
+import { ExpectedBinaryAnswer } from '../../answer/ExpectedBinaryAnswer.ts';
+import { UploadNodeAnswer } from '../../answer/UploadNodeAnswer.ts';
 import type { ValueNode } from '../../answer/ValueNodeAnswer.ts';
 import { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
@@ -60,6 +64,9 @@ const matchDefaultMessage = (condition: ValidationCondition) => {
 		},
 	};
 };
+
+const assertUploadNodeAnswer = instanceAssertion(UploadNodeAnswer);
+const assertBinaryAnswer = instanceAssertion(ExpectedBinaryAnswer);
 
 export const answerExtensions = extendExpect(expect, {
 	toEqualAnswer: new SymmetricTypedExpectExtension(assertComparableAnswer, (actual, expected) => {
@@ -201,6 +208,46 @@ export const answerExtensions = extendExpect(expect, {
 			const pass = actual.toString().startsWith(expected);
 
 			return pass || new InspectableComparisonError(actual, expected, 'start with');
+		}
+	),
+
+	toEqualUploadedAnswer: new AsyncAsymmetricTypedExpectExtension(
+		assertUploadNodeAnswer,
+		assertBinaryAnswer,
+		async (actualAnswer, expectedAnswer): Promise<SimpleAssertionResult> => {
+			const actual = actualAnswer.value;
+			const expected = expectedAnswer.value;
+
+			try {
+				if (expected == null) {
+					expect(actual).toBe(expected);
+					assert(actual == null, 'Expected a blank upload value');
+
+					return true;
+				}
+
+				assert(actual != null, 'Expected a non-blank upload value');
+
+				expect(actual.name).toEqual(expected.name);
+				expect(actual.type).toEqual(expected.type);
+
+				const [actualData, expectedData] = await Promise.all([
+					getBlobText(actual),
+					getBlobText(expected),
+				]);
+
+				expect(actualData).toEqual(expectedData);
+
+				return true;
+			} catch (error) {
+				if (error instanceof Error) {
+					return error;
+				}
+
+				// eslint-disable-next-line no-console
+				console.error(error);
+				return new Error('Unknown error');
+			}
 		}
 	),
 });

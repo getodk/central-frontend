@@ -1,4 +1,5 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
+import { bestFitDecreasing } from 'bin-packer';
 import { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } from '../../../client/constants.ts';
 import type { InstanceData as ClientInstanceData } from '../../../client/serialization/InstanceData.ts';
 import type { InstanceFile as ClientInstanceFile } from '../../../client/serialization/InstanceFile.ts';
@@ -10,7 +11,21 @@ import type {
 import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
 import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
+import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
+import type { InstanceAttachmentsState } from '../../../instance/attachments/InstanceAttachmentsState.ts';
 import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
+
+const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
+	const files = Array.from(attachments.entries()).map(([context, attachment]) => {
+		if (!context.isAttached() || !context.isRelevant()) {
+			return null;
+		}
+
+		return attachment.getValue();
+	});
+
+	return files.filter((file) => file != null);
+};
 
 class InstanceFile extends File implements ClientInstanceFile {
 	override readonly name = INSTANCE_FILE_NAME;
@@ -25,10 +40,26 @@ class InstanceFile extends File implements ClientInstanceFile {
 	}
 }
 
+type AssertFile = (value: FormDataEntryValue) => asserts value is File;
+
+const assertFile: AssertFile = (value) => {
+	if (!(value instanceof File)) {
+		throw new ErrorProductionDesignPendingError('Expected an instance of File');
+	}
+};
+
 type AssertInstanceData = (data: FormData) => asserts data is ClientInstanceData;
 
 const assertInstanceData: AssertInstanceData = (data) => {
-	const instanceFile = data.get(INSTANCE_FILE_NAME);
+	let instanceFile: File | null = null;
+
+	for (const [key, value] of data.entries()) {
+		assertFile(value);
+
+		if (key === INSTANCE_FILE_NAME) {
+			instanceFile = value;
+		}
+	}
 
 	if (!(instanceFile instanceof InstanceFile)) {
 		throw new Error(`Invalid InstanceData`);
@@ -114,6 +145,43 @@ interface ChunkedInstancePayloadOptions {
 	readonly maxSize: number;
 }
 
+type PartitionedInstanceData = readonly [ClientInstanceData, ...ClientInstanceData[]];
+
+const partitionInstanceData = (
+	instanceFile: InstanceFile,
+	attachments: readonly File[],
+	options: ChunkedInstancePayloadOptions
+): PartitionedInstanceData => {
+	const { maxSize } = options;
+	const maxAttachmentSize = maxSize - instanceFile.size;
+	const { bins, oversized } = bestFitDecreasing(
+		attachments,
+		(attachment) => {
+			return attachment.size;
+		},
+		maxAttachmentSize
+	);
+
+	const errors = oversized.map((attachment) => {
+		return new Error(
+			`Combined size of instance XML (${instanceFile.size}) and attachment (${attachment.size}) exceeds maxSize (${maxSize}).`
+		);
+	});
+
+	if (errors.length > 0) {
+		throw new AggregateError(errors, 'Failed to produce chunked instance payload');
+	}
+
+	const [
+		// Ensure at least one `InstanceData` is produced, in case there are no
+		// attachments present at all
+		head = InstanceData.from(instanceFile, []),
+		...tail
+	] = bins.map((bin) => InstanceData.from(instanceFile, bin));
+
+	return [head, ...tail];
+};
+
 const chunkedInstancePayload = (
 	validation: InstanceStateValidation,
 	submissionMeta: SubmissionMeta,
@@ -121,17 +189,13 @@ const chunkedInstancePayload = (
 	attachments: readonly File[],
 	options: ChunkedInstancePayloadOptions
 ): ChunkedInstancePayload => {
-	if (attachments.length > 0 || options.maxSize !== Infinity) {
-		throw new Error('InstancePayload chunking pending implementation');
-	}
-
-	const data = InstanceData.from(instanceFile, attachments);
+	const data = partitionInstanceData(instanceFile, attachments, options);
 
 	return {
 		payloadType: 'chunked',
 		...validation,
 		submissionMeta,
-		data: [data],
+		data,
 	};
 };
 
@@ -147,7 +211,7 @@ export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
 	const validation = validateInstance(instanceRoot);
 	const submissionMeta = instanceRoot.definition.submission;
 	const instanceFile = new InstanceFile(instanceRoot);
-	const attachments: readonly File[] = [];
+	const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
 
 	switch (options.payloadType) {
 		case 'chunked':

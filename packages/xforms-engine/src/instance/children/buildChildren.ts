@@ -6,7 +6,7 @@ import type { RankDefinition } from '../../client/RankNode.ts';
 import type { SelectDefinition } from '../../client/SelectNode.ts';
 import type { SubtreeDefinition } from '../../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../../client/TriggerNode.ts';
-import type { UploadNodeDefinition } from '../../client/unsupported/UploadNode.ts';
+import type { UploadDefinition } from '../../client/UploadNode.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import { NoteNodeDefinition } from '../../parse/model/NoteNodeDefinition.ts';
@@ -28,7 +28,7 @@ import { RepeatRangeUncontrolled } from '../repeat/RepeatRangeUncontrolled.ts';
 import { SelectControl } from '../SelectControl.ts';
 import { Subtree } from '../Subtree.ts';
 import { TriggerControl } from '../TriggerControl.ts';
-import { UploadControl } from '../unsupported/UploadControl.ts';
+import { UploadControl } from '../UploadControl.ts';
 import { childrenInitOptions } from './childrenInitOptions.ts';
 
 const isSubtreeDefinition = (
@@ -38,9 +38,6 @@ const isSubtreeDefinition = (
 };
 
 // prettier-ignore
-type AnyUnsupportedControlDefinition = UploadNodeDefinition;
-
-// prettier-ignore
 type ControlNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| InputDefinition
@@ -48,7 +45,7 @@ type ControlNodeDefinition =
 	| SelectDefinition
 	| RankDefinition
 	| TriggerNodeDefinition
-	| AnyUnsupportedControlDefinition;
+	| UploadDefinition;
 
 type AnyLeafNodeDefinition = ControlNodeDefinition | ModelValueDefinition;
 
@@ -123,7 +120,7 @@ const isTriggerNodeDefinition = (
 
 const isUploadNodeDefinition = (
 	definition: ControlNodeDefinition
-): definition is UploadNodeDefinition => {
+): definition is UploadDefinition => {
 	return definition.bodyElement.type === 'upload';
 };
 
@@ -192,7 +189,7 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 				}
 
 				if (isUploadNodeDefinition(leafChild)) {
-					return new UploadControl(parent, instanceNode, leafChild);
+					return UploadControl.from(parent, instanceNode, leafChild);
 				}
 
 				throw new UnreachableError(leafChild);

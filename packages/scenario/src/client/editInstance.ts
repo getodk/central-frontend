@@ -1,4 +1,5 @@
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
+import { buildFileResponse } from '@getodk/common/lib/web-compat/response.ts';
 import type {
 	EditedFormInstance,
 	InstancePayload,
@@ -51,8 +52,8 @@ const mockSubmissionIO = (payload: SubmittableInstancePayload): ResolvableFormIn
 		.filter((value): value is File => value !== instanceFile && value instanceof File);
 	const attachments: ResolvableInstanceAttachmentsMap = new Map(
 		attachmentFiles.map((file) => {
-			const resolveAttachment: ResolveFormInstanceResource = () => {
-				return Promise.resolve(new Response(file));
+			const resolveAttachment: ResolveFormInstanceResource = async () => {
+				return buildFileResponse(file);
 			};
 
 			return [file.name, resolveAttachment];

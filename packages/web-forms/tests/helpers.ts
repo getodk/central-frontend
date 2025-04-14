@@ -1,6 +1,6 @@
 import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
-import type { AnyControlNode, RootNode } from '@getodk/xforms-engine';
+import type { RootNode } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
@@ -65,9 +65,6 @@ export const globalMountOptions: GlobalMountOptions = {
 		teleport: true,
 	},
 };
-
-export const fakeUnsupportedControlNode = () =>
-	Object.assign({ nodeType: 'dummy', validationState: {} }, {} as AnyControlNode);
 
 // TODO: how the heck is `undefined` a key of anything?!
 type StringKeyOf<T> = Extract<keyof T, string>;

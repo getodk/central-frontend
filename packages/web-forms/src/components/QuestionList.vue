@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {
-	AnyControlNode,
-	AnyUnsupportedControlNode,
+	AnyControlNode as ControlNode,
 	GeneralChildNode,
 	GroupNode,
 	RepeatRangeNode,
@@ -26,8 +25,6 @@ const isRepeatRangeNode = (node: NonGroupNode): node is RepeatRangeNode => {
 };
 
 type NonStructuralNode = Exclude<NonGroupNode, RepeatRangeNode>;
-
-type ControlNode = AnyControlNode | AnyUnsupportedControlNode;
 
 const isControlNode = (node: NonStructuralNode): node is ControlNode => {
 	const { nodeType } = node;

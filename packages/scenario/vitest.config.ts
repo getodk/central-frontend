@@ -55,7 +55,6 @@ export default defineConfig(({ mode }) => {
 			esbuildOptions: {
 				target: 'esnext',
 			},
-			exclude: ['@getodk/xforms-engine'],
 			force: true,
 			include: ['papaparse'],
 		},
@@ -68,7 +67,7 @@ export default defineConfig(({ mode }) => {
 		test: {
 			browser: {
 				enabled: BROWSER_ENABLED,
-				instances: [{ browser: BROWSER_NAME }],
+				instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
 				provider: 'playwright',
 				headless: true,
 				screenshotFailures: false,
@@ -78,6 +77,14 @@ export default defineConfig(({ mode }) => {
 			exclude,
 
 			deps: {
+				optimizer: {
+					web: {
+						// Prevent loading multiple instances of Solid.
+						//
+						// (Copypasta from `@getodk/common`)
+						exclude: ['solid-js'],
+					},
+				},
 				moduleDirectories: ['node_modules', '../../node_modules'],
 			},
 			environment: TEST_ENVIRONMENT,

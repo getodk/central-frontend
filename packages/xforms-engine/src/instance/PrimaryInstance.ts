@@ -32,6 +32,7 @@ import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
+import { InstanceAttachmentsState } from './attachments/InstanceAttachmentsState.ts';
 import type { InitialInstanceState } from './input/InitialInstanceState.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
@@ -113,12 +114,9 @@ export class PrimaryInstance<
 		EvaluationContext,
 		ClientReactiveSerializableInstance
 {
-	/**
-	 * @todo this will be populated as we introduce other initialization modes!
-	 */
-	readonly initializationMode: FormInstanceInitializationMode = 'create';
-
+	readonly initializationMode: FormInstanceInitializationMode;
 	readonly model: ModelDefinition;
+	readonly attachments: InstanceAttachmentsState;
 
 	// InstanceNode
 	protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -169,6 +167,7 @@ export class PrimaryInstance<
 
 		this.initializationMode = mode;
 		this.model = model;
+		this.attachments = new InstanceAttachmentsState(initialState?.attachments);
 		this.instanceNode = activeInstance;
 
 		const [isAttached, setIsAttached] = createSignal(false);

@@ -2,11 +2,12 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 import { InputNodeAnswer } from '../answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../answer/ModelValueNodeAnswer.ts.ts';
+import { RankNodeAnswer } from '../answer/RankNodeAnswer.ts';
 import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
 import { TriggerNodeAnswer } from '../answer/TriggerNodeAnswer.ts';
+import { UploadNodeAnswer } from '../answer/UploadNodeAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
 import { getNodeForReference } from './traversal.ts';
-import { RankNodeAnswer } from '../answer/RankNodeAnswer.ts';
 
 const isValueNode = (node: AnyNode) => {
 	return (
@@ -14,7 +15,8 @@ const isValueNode = (node: AnyNode) => {
 		node.nodeType === 'rank' ||
 		node.nodeType === 'select' ||
 		node.nodeType === 'input' ||
-		node.nodeType === 'trigger'
+		node.nodeType === 'trigger' ||
+		node.nodeType === 'upload'
 	);
 };
 
@@ -40,6 +42,9 @@ export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAn
 
 		case 'trigger':
 			return new TriggerNodeAnswer(node);
+
+		case 'upload':
+			return new UploadNodeAnswer(node);
 
 		default:
 			throw new UnreachableError(node);

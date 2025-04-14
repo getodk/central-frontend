@@ -2,6 +2,7 @@ import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts
 import type { MissingResourceBehavior } from '../../../../client/constants.ts';
 import type { FetchResource, FetchResourceResponse } from '../../../../client/resources.ts';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
+import { getResponseContentType } from '../../../../lib/resource-helpers.ts';
 import { FormAttachmentResource } from '../../../attachments/FormAttachmentResource.ts';
 import type { ExternalSecondaryInstanceSourceFormat } from './SecondaryInstanceSource.ts';
 
@@ -11,36 +12,6 @@ const assertResponseSuccess = (resourceURL: JRResourceURL, response: FetchResour
 	if (!ok || status !== 200) {
 		throw new ErrorProductionDesignPendingError(`Failed to load ${resourceURL.href}`);
 	}
-};
-
-const stripContentTypeCharset = (contentType: string): string => {
-	return contentType.replace(/;charset=.*$/, '');
-};
-
-const getResponseContentType = (response: FetchResourceResponse): string | null => {
-	const { headers } = response;
-
-	if (headers == null) {
-		return null;
-	}
-
-	const contentType = headers.get('content-type');
-
-	if (contentType != null) {
-		return stripContentTypeCharset(contentType);
-	}
-
-	if (headers instanceof Headers) {
-		return contentType;
-	}
-
-	for (const [header, value] of headers) {
-		if (header.toLowerCase() === 'content-type') {
-			return stripContentTypeCharset(value);
-		}
-	}
-
-	return null;
 };
 
 interface ExternalSecondaryInstanceResourceMetadata<
