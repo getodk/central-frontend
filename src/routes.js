@@ -717,11 +717,11 @@ const routes = [
       requireLogin: false,
       title: () => [form.nameOrId]
     },
-    // onceEnketoId can be used by only public-links
+    // onceEnketoId can be used by only public-links as it doesn't support offline mode
     beforeEnter: (to) => {
       const { enketoId, actionType } = to.params;
 
-      if (enketoId.length === 64 && actionType !== 'public-link') {
+      if (enketoId.length === 64 && actionType === 'offline') {
         return '/not-found';
       }
       return true;

@@ -1,3 +1,15 @@
+/*
+Copyright 2025 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+*/
+
 import { useRoute } from 'vue-router';
 import { memoizeForContainer } from '../util/composable';
 import { queryString } from '../util/request';
@@ -14,7 +26,7 @@ export default memoizeForContainer(({ router, requestData }) => {
     let target;
 
     // We can redirect to canonical path only if Form data exists and session token `st` is not
-    // provided in the URL
+    // provided in the URL. If `st` is provided in the URL then it means that it is a public link
     if (route.path.startsWith('/f/') && !route.query.st && form.dataExists) {
       if (actionType === 'new') {
         target = newSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
