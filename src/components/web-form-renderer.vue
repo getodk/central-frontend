@@ -42,6 +42,14 @@ except according to the terms contained in the LICENSE file.
             <a href="emailto:support@getodk.org">support@getodk.org</a>
           </template>
         </i18n-t>
+        <i18n-t v-else-if="submissionModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body">
+          <template #here>
+              <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.here') }}</a>
+          </template>
+          <template #supportEmail>
+            <a href="emailto:support@getodk.org">support@getodk.org</a>
+          </template>
+        </i18n-t>
         <p v-else>
           {{ $t(submissionModal.type + '.body') }}
         </p>
@@ -261,7 +269,11 @@ const postPrimaryInstance = (file) => {
   })
     .then(({ data }) => {
       if (isProblem(data)) {
-        showModal(submissionModal, { type: 'errorModal', errorMessage: data.message });
+        if (data.code === 403.1) {
+          showModal(submissionModal, { type: 'sessionTimeoutModal' });
+        } else {
+          showModal(submissionModal, { type: 'errorModal', errorMessage: data.message });
+        }
         return false;
       }
       newInstanceId.value = data.instanceId;
@@ -375,6 +387,11 @@ html, body {
       "sendingDataModal": {
         "title": "Sending Submission",
         "body": "Your data is being submitted. Please don’t close this window until it’s finished."
+      },
+      "sessionTimeoutModal": {
+        "title": "Session expired",
+        "body": "Please log in {here} in a different browser tab and try again.",
+        "here": "here"
       }
     }
   }
