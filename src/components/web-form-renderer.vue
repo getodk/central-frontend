@@ -12,9 +12,14 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="initiallyLoading"/>
-  <template v-if="formVersionXml.dataExists">
-    <!-- update instanceId to rerender the component -->
-    <OdkWebForm :key="instanceId" :form-xml="formVersionXml.data" :fetch-form-attachment="getAttachment" @submit="handleSubmit"/>
+  <template v-if="dataExists">
+    <!-- update newInstanceId to rerender the component -->
+    <OdkWebForm
+      :key="newInstanceId"
+      :form-xml="formVersionXml.data"
+      :edit-instance="editInstanceOptions"
+      :fetch-form-attachment="getAttachment"
+      @submit="handleSubmit"/>
   </template>
 
   <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" hideable backdrop @hide="hideSubmissionModal()">
@@ -44,32 +49,39 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, createApp, getCurrentInstance, onUnmounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
-import { apiPaths, isProblem, queryString } from '../util/request';
+
 import Loading from './loading.vue';
 import Modal from './modal.vue';
+
+import { apiPaths, isProblem, queryString } from '../util/request';
 import { modalData } from '../util/reactivity';
-import useRequest from '../composables/request';
-import { useRequestData } from '../request-data';
 import { noop } from '../util/util';
 import { runSequentially } from '../util/promise';
+import { useRequestData } from '../request-data';
+import useRequest from '../composables/request';
+import useRoutes from '../composables/routes';
 
 const { resourceStates, form, createResource } = useRequestData();
 const formVersionXml = createResource('formVersionXml');
 const { request } = useRequest();
+const submissionAttachments = createResource('submissionAttachments');
 const submissionModal = modalData();
-const instanceId = ref(null);
+const newInstanceId = ref(null);
 const route = useRoute();
+const router = useRouter();
+const { submissionPath } = useRoutes();
 
 defineOptions({
   name: 'WebFormRenderer'
 });
 
 const props = defineProps({
-  actionType: String
+  actionType: String,
+  instanceId: String
 });
 
 // Install WebFormsPlugin in the component instead of installing it at the
@@ -84,24 +96,109 @@ inst.appContext.config.globalProperties = {
   ...app._context.config.globalProperties
 };
 
-const { initiallyLoading } = resourceStates([formVersionXml]);
+const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
 
 const isPublicLink = computed(() => !!route.query.st);
 
 const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
 
-const fetchData = () => {
-  const url = withToken(apiPaths.formXml(form.projectId, form.xmlFormId, !form.publishedAt));
-  formVersionXml.request({
+const isEdit = computed(() => props.actionType === 'edit');
+
+/**
+ * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
+ * requirements
+ */
+const transformAttachmentResponse = (axiosResponse) => {
+  const { data, status, statusText, headers } = axiosResponse;
+
+  const fetchHeaders = new Headers();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key === 'content-type') {
+      // because web-forms doesn't want space between media type and charset
+      // https://github.com/getodk/web-forms/issues/269
+      fetchHeaders.append(key, value.replace('; charset', ';charset'));
+    } else {
+      fetchHeaders.append(key, value);
+    }
+  }
+
+  let body;
+  if (typeof (data) === 'string') {
+    body = data;
+  } else if (headers['content-type'].includes('application/json') ||
+            headers['content-type'].includes('application/geo+json')) {
+    body = JSON.stringify(data);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error('response data is not a known text format');
+  }
+
+  return new Response(body, {
+    status,
+    statusText,
+    headers: fetchHeaders,
+  });
+};
+
+const fetchFormXml = () => {
+  const url = withToken(apiPaths.formXml(form.projectId, form.xmlFormId, !!form.draftToken));
+  return formVersionXml.request({
     url
   }).catch(noop);
+};
+
+const fetchSubmissionXml = () => {
+  const requestUrl = apiPaths.submissionXml(form.projectId, form.xmlFormId, props.instanceId);
+  return request({
+    url: requestUrl,
+    alert: false
+  })
+    .then(({ data }) => data)
+    .catch(noop);
+};
+
+const fetchSubmissionAttachments = () => {
+  const requestUrl = apiPaths.submissionAttachments(form.projectId, form.xmlFormId, props.instanceId);
+  return submissionAttachments.request({
+    url: requestUrl,
+    alert: false
+  })
+    .then(transformAttachmentResponse)
+    .catch(noop);
+};
+
+const fetchSubmissionAttachment = (name) => {
+  // Draft is always false because we don't support editing of draft submissions
+  const requestUrl = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, props.instanceId, name);
+  return request({
+    url: requestUrl,
+    alert: false
+  })
+    .then(({ data }) => data) // TODO: prob same things as getFormAttachment fn
+    .catch(noop);
+};
+
+const editInstanceOptions = computed(() => {
+  if (isEdit.value && submissionAttachments.dataExists) {
+    return {
+      resolveInstance: fetchSubmissionXml,
+      attachmentFileNames: submissionAttachments.data,
+      resolveAttachment: fetchSubmissionAttachment
+    };
+  }
+  return null;
+});
+
+const fetchData = () => {
+  fetchFormXml();
+  if (isEdit.value) fetchSubmissionAttachments();
 };
 
 fetchData();
 
 const hideSubmissionModal = () => {
   if (submissionModal.type !== 'errorModal') {
-    instanceId.value = null;
+    newInstanceId.value = null;
   }
   submissionModal.hide();
 };
@@ -121,43 +218,18 @@ const getAttachment = (url) => {
   return request({
     url: requestUrl,
     alert: false
-  }).then(axiosResponse => {
-    const { data, status, statusText, headers } = axiosResponse;
-
-    const fetchHeaders = new Headers();
-    for (const [key, value] of Object.entries(headers)) {
-      if (key === 'content-type') {
-        // because web-forms doens't want space between media type and charset
-        // https://github.com/getodk/web-forms/issues/269
-        fetchHeaders.append(key, value.replace('; charset', ';charset'));
-      } else {
-        fetchHeaders.append(key, value);
-      }
-    }
-
-    let body;
-    if (typeof (data) === 'string') {
-      body = data;
-    } else if (headers['content-type'].includes('application/json') ||
-              headers['content-type'].includes('application/geo+json')) {
-      body = JSON.stringify(data);
-    } else {
-      // eslint-disable-next-line no-console
-      console.error('response data is not a known text format');
-    }
-
-    return new Response(body, {
-      status,
-      statusText,
-      headers: fetchHeaders,
-    });
-  });
+  }).then(transformAttachmentResponse);
 };
 
 const postPrimaryInstance = (file) => {
-  const url = withToken(apiPaths.submissions(form.projectId, form.xmlFormId, !form.publishedAt, ''));
+  let url = apiPaths.submissions(form.projectId, form.xmlFormId, !form.publishedAt, '');
+
+  if (isEdit.value) {
+    url = apiPaths.submission(form.projectId, form.xmlFormId, props.instanceId);
+  }
+  url = withToken(url);
   return request({
-    method: 'POST',
+    method: isEdit.value ? 'PUT' : 'POST',
     url,
     data: file,
     headers: {
@@ -170,14 +242,14 @@ const postPrimaryInstance = (file) => {
         submissionModal.show({ type: 'errorModal', errorMessage: data.message });
         return false;
       }
-      instanceId.value = data.instanceId;
+      newInstanceId.value = data.instanceId;
       return true;
     })
     .catch(noop);
 };
 
 const uploadAttachment = async (attachment) => {
-  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId.value, attachment.file.name));
+  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, newInstanceId.value, attachment.file.name));
   return request({
     method: 'POST',
     url,
@@ -197,7 +269,7 @@ const handleSubmit = async (payload) => {
   if (props.actionType === 'preview') {
     submissionModal.show({ type: 'previewModal' });
   } else {
-    const { data, status } = payload;
+    const { data: [data], status } = payload;
     if (status !== 'ready') {
       // Status is not ready when Form is not valid and in that case submit button will be disabled,
       // hence this branch should never execute.
@@ -215,6 +287,8 @@ const handleSubmit = async (payload) => {
         if (isPublicLink.value) {
           submissionModal.show({ type: 'thankYouModal' });
           formVersionXml.reset(); // hides the Form
+        } else if (isEdit.value) {
+          router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
         } else {
           submissionModal.show({ type: 'submissionModal' });
         }
@@ -223,6 +297,14 @@ const handleSubmit = async (payload) => {
   }
 };
 
+// hack to remove ODK Web Form css styles
+onUnmounted(() => {
+  document.querySelectorAll('style').forEach(styleTag => {
+    if (styleTag.textContent.includes('form-initialization-status')) {
+      styleTag.remove();
+    }
+  });
+});
 </script>
 
 <style lang="scss">

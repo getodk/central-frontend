@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <loading :state="initiallyLoading"/>
-  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType"/>
+  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType" :instance-id="instanceId"/>
   <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
     :enketo-id="form.enketoId"
     :action-type="offline ? 'offline' : actionType"
