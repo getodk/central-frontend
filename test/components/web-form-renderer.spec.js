@@ -6,7 +6,6 @@ import testData from '../data';
 import simpleXml from '../data/xml/simple/form.xml';
 import simpleSubmission from '../data/xml/simple/submission.xml';
 import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
-import Modal from '../../src/components/modal.vue';
 import { mockLogin } from '../util/session';
 
 describe('WebFormRenderer', () => {
@@ -93,7 +92,7 @@ describe('WebFormRenderer', () => {
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithData(() => ({ instanceId: '123' }));
 
-    const modal = component.getComponent(Modal);
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Submission successful');
     modal.find('.modal-introduction').text().should.equal('Your data was submitted.');
@@ -107,7 +106,7 @@ describe('WebFormRenderer', () => {
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithProblem({ code: 409.1, message: 'duplication instance ID' });
 
-    const modal = component.getComponent(Modal);
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Submission error');
     modal.find('.modal-introduction').text().should.match(/Your data was not submitted.*duplication instance ID/);
@@ -118,17 +117,31 @@ describe('WebFormRenderer', () => {
 
     const component = await mountComponent({ actionType: 'preview' })
       .testModalToggles({
-        modal: Modal,
+        modal: '#web-form-renderer-submission-modal',
         show: '.odk-form .footer button',
         hide: '.btn-primary'
       });
 
     await component.find('.odk-form .footer button').trigger('click');
 
-    const modal = component.getComponent(Modal);
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
 
     modal.find('.modal-introduction').text().should.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
     modal.find('.modal-title').text().should.equal('Data is valid');
+  });
+
+  it('should show loading modal', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent()
+      .complete()
+      .request((c) => c.find('.odk-form .footer button').trigger('click'))
+      .beforeEachResponse(c => {
+        c.findComponent('#sending-data').props().state.should.be.true;
+      })
+      .respondWithData(() => ({ instanceId: '123' }));
+
+    component.findComponent('#sending-data').props().state.should.be.false;
   });
 
   describe('edit', () => {

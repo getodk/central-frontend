@@ -5167,6 +5167,14 @@
         "body": {
           "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
         }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "Sending Submission"
+        },
+        "body": {
+          "string": "Your data is being submitted. Please don’t close this window until it’s finished."
+        }
       }
     }
   },
