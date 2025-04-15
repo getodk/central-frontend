@@ -4,7 +4,6 @@ import NotFound from '../../src/components/not-found.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
-import { $location } from '../../src/util/util';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -105,11 +104,13 @@ describe('EnketoIframe', () => {
     const wrapper = mountComponent({
       props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
       container: {
-        router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`)
+        router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`),
+        location: {
+          origin: 'https://example.com'
+        }
       }
     });
 
-    sinon.stub($location, 'origin').value('https://example.com');
 
     const postMessage = sinon.fake();
     sinon.replace(window.parent, 'postMessage', postMessage);

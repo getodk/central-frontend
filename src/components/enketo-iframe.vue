@@ -16,14 +16,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, watchEffect } from 'vue';
+import { computed, inject, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { setDocumentTitle } from '../util/reactivity';
 import NotFound from './not-found.vue';
 import useEventListener from '../composables/event-listener';
 import { queryString } from '../util/request';
-import { $location } from '../util/util';
 
 defineOptions({
   name: 'EnketoIframe'
@@ -40,6 +39,8 @@ const props = defineProps({
   },
   instanceId: String
 });
+
+const { location } = inject('container');
 
 const route = useRoute();
 const router = useRouter();
@@ -60,7 +61,7 @@ const enketoSrc = computed(() => {
   let prefix = '/enketo-passthrough';
   const { return_url: _, ...query } = route.query;
 
-  query.parentWindowOrigin = window.location.origin;
+  query.parentWindowOrigin = location.origin;
 
   // this is to avoid 404 warning
   if (process.env.NODE_ENV === 'test') {
@@ -88,10 +89,10 @@ watchEffect(() => {
 });
 
 function handleIframeMessage(event) {
-  if (event.origin === $location.origin) {
+  if (event.origin === location.origin) {
     // For the cases where this page is embedded in external iframe, pass the event data to the
     // parent.
-    if (window.location !== window.parent.location) {
+    if (location !== window.parent.location) {
       window.parent.postMessage(event.data, route.query.parentWindowOrigin);
     }
 

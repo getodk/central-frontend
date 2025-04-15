@@ -42,6 +42,7 @@ export default ({
   hoverCard = createHoverCard(),
   unsavedChanges = createUnsavedChanges(i18n.global),
   http = axios,
+  location = window.location,
   // Adding `logger` in part in order to silence certain logging during testing.
   logger = console
 } = {}) => {
@@ -51,6 +52,7 @@ export default ({
     hoverCard,
     unsavedChanges,
     http,
+    location,
     logger
   };
   container.requestData = requestData(container);

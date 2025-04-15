@@ -16,10 +16,3 @@ export const noop = () => {};
 export const noargs = (f) => () => f();
 
 export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);
-
-// To be able to mock it
-export const $location = {
-  get origin() {
-    return window.location.origin;
-  }
-};
