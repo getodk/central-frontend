@@ -99,10 +99,8 @@ const app = createApp({});
 app.use(webFormsPlugin);
 const inst = getCurrentInstance();
 // webFormsPlugin just adds globalProperty ($primevue)
-inst.appContext.config.globalProperties = {
-  ...inst.appContext.config.globalProperties,
-  ...app._context.config.globalProperties
-};
+Object.assign(inst.appContext.config.globalProperties, app._context.config.globalProperties);
+
 
 const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
 
