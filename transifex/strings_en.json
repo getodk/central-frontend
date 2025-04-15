@@ -3558,7 +3558,7 @@
       },
       "users": {
         "body": {
-          "string": "Users can be assigned to Projects to manage them, collect data, or review submissions."
+          "string": "Users can be assigned to Projects to manage them, collect data, or review Submissions."
         }
       },
       "docs": {

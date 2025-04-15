@@ -50,6 +50,7 @@ export default {
   background-color: white;
   border-radius: 12px;
   border: 1px solid #E3E4E4;
+  flex: 1 1 0px;
 
   .heading {
     align-items: center;
@@ -67,14 +68,9 @@ export default {
   }
 
   .header {
-    font-size: 16px;
     margin-bottom: 0;
     line-height: 1;
     font-weight: 600;
-  }
-
-  .subheader {
-    font-size: 14px;
   }
 
   .body {

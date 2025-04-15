@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
             <spinner inline/>
           </template>
         </template>
-        <template #subheader>{{ $tc('plural.project', projects.length) }}</template>
+        <template #subheader>{{ $tc('plural.project', projects.length ?? 0) }}</template>
         <template #body>{{ $t('projects.body') }}</template>
       </home-summary-item>
       <home-summary-item v-if="currentUser.can('user.list')" to="/users" icon="user-circle">
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
             <spinner inline/>
           </template>
         </template>
-        <template #subheader>{{ $tc('plural.user', users.length) }}</template>
+        <template #subheader>{{ $tc('plural.user', users.length ?? 0) }}</template>
         <template #body>{{ $t('users.body') }}</template>
       </home-summary-item>
       <home-summary-item to="https://docs.getodk.org/central-intro/"
@@ -93,7 +93,7 @@ if (currentUser.can('user.list'))
       "body": "Central is organized into Projects, each containing its own Forms and related data."
     },
     "users": {
-      "body": "Users can be assigned to Projects to manage them, collect data, or review submissions."
+      "body": "Users can be assigned to Projects to manage them, collect data, or review Submissions."
     },
     "docs": {
       "body": "A Getting Started Guide and user documentation are available on the ODK Docs website."
