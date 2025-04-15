@@ -10,33 +10,39 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="home-summary">
-    <div>
-      <loading :state="projects.initiallyLoading"/>
-      <home-summary-item v-if="projects.dataExists" icon="archive"
-        :count="projects.length">
-        <template #title>{{ $tc('plural.project', projects.length) }}</template>
+  <div id="home-summary-container">
+    <div id="home-summary">
+      <home-summary-item icon="archive">
+        <template #header>
+          <template v-if="!projects.initiallyLoading">
+            {{ $n(projects.length, 'default') }}
+          </template>
+          <template v-else>
+            <spinner inline/>
+          </template>
+        </template>
+        <template #subheader>{{ $tc('plural.project', projects.length ?? 0) }}</template>
         <template #body>{{ $t('projects.body') }}</template>
       </home-summary-item>
-    </div>
-    <div v-if="currentUser.can('user.list')">
-      <loading :state="users.initiallyLoading"/>
-      <home-summary-item v-if="users.dataExists" to="/users" icon="user-circle"
-        :count="users.length">
-        <template #title>{{ $tc('plural.user', users.length) }}</template>
+      <home-summary-item v-if="currentUser.can('user.list')" to="/users" icon="user-circle">
+        <template #header>
+          <template v-if="!users.initiallyLoading">
+            {{ $n(users.length, 'default') }}
+          </template>
+          <template v-else>
+            <spinner inline/>
+          </template>
+        </template>
+        <template #subheader>{{ $tc('plural.user', users.length ?? 0) }}</template>
         <template #body>{{ $t('users.body') }}</template>
       </home-summary-item>
-    </div>
-    <div>
       <home-summary-item to="https://docs.getodk.org/central-intro/"
         icon="book">
-        <template #title>{{ $t('common.docs') }}</template>
+        <template #header>{{ $t('common.docs') }}</template>
         <template #body>{{ $t('docs.body') }}</template>
       </home-summary-item>
-    </div>
-    <div>
       <home-summary-item to="https://forum.getodk.org/" icon="comments-o">
-        <template #title>{{ $t('common.forum') }}</template>
+        <template #header>{{ $t('common.forum') }}</template>
         <template #body>{{ $t('forum.body') }}</template>
       </home-summary-item>
     </div>
@@ -45,7 +51,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import HomeSummaryItem from './summary/item.vue';
-import Loading from '../loading.vue';
+import Spinner from '../spinner.vue';
 
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -64,33 +70,19 @@ if (currentUser.can('user.list'))
 @use 'sass:math';
 @import '../../assets/scss/variables';
 
+#home-summary-container {
+  background-color: $color-subpanel-background;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding: 20px;
+}
+
 #home-summary {
-  background: $color-subpanel-background;
-  border-bottom: 2px solid $color-subpanel-border;
   display: flex;
-  margin: 0 -15px 35px;
-  padding-bottom: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
-
-  > div {
-    $border-width: 1px;
-    $padding-left: 20px;
-    $padding-right: 12px;
-    border-left: $border-width solid $color-subpanel-border;
-    box-sizing: content-box;
-    padding-bottom: 3px;
-    padding-left: $padding-left;
-    padding-right: $padding-right;
-    // width(#home-summary) = 4 * width(#home-summary > div) + 3 * $padding-right + 3 * $border-width + 3 * $padding-left
-    width: calc(25% - #{math.ceil(math.div(3 * $padding-right + 3 * $border-width + 3 * $padding-left, 4))});
-
-    &:first-child {
-      border-left: none;
-      padding-left: 0;
-    }
-    &:last-child { padding-right: 0; }
-  }
+  gap: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $max-width-page-body;
 }
 </style>
 
@@ -98,16 +90,16 @@ if (currentUser.can('user.list'))
 {
   "en": {
     "projects": {
-      "body": "Central is organized into Projects, which each contain their own Forms and related data."
+      "body": "Central is organized into Projects, each containing its own Forms and related data."
     },
     "users": {
-      "body": "Users can be assigned to Projects to manage them, or to collect or review submitted data."
+      "body": "Users can be assigned to Projects to manage them, collect data, or review Submissions."
     },
     "docs": {
-      "body": "There is a getting started guide and user documentation available on the ODK Docs website."
+      "body": "A Getting Started Guide and user documentation are available on the ODK Docs website."
     },
     "forum": {
-      "body": "You can always get help from others on the forum, where you can also search previous questions."
+      "body": "Need help? Visit the forum to ask questions or browse past discussions."
     }
   }
 }

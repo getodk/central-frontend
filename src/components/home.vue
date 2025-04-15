@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div id="home-heading">{{ $t('heading[0]') }}</div>
     <home-summary/>
     <page-body>
       <div id="home-news-container">
@@ -50,17 +49,6 @@ const config = inject('config');
 
 <style lang="scss">
 @import '../assets/scss/variables';
-
-#home-heading {
-  background: $color-subpanel-background;
-  color: $color-accent-primary;
-  font-size: 35px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin-left: -15px;
-  margin-right: -15px;
-  padding: 20px 15px 15px 15px;
-}
 
 #home-news-container {
   display: flex;

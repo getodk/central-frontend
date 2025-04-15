@@ -36,7 +36,9 @@ describe('HomeSummary', () => {
       .mount(HomeSummary, mountOptions())
       .respondWithData(() => testData.standardUsers.sorted())
       .afterResponse(component => {
-        component.getComponent(HomeSummaryItem).props().count.should.equal(2);
+        const item = component.findAllComponents(HomeSummaryItem)[0];
+        item.get('.header').text().should.equal('2');
+        item.get('.subheader').text().should.equal('Projects');
       });
   });
 
@@ -47,9 +49,9 @@ describe('HomeSummary', () => {
       .respondWithData(() => testData.standardUsers.sorted())
       .afterResponse(component => {
         const item = component.findAllComponents(HomeSummaryItem)[1];
-        const { to, count } = item.props();
-        to.should.equal('/users');
-        count.should.equal(1);
+        item.props().to.should.equal('/users');
+        item.get('.header').text().should.equal('1');
+        item.get('.subheader').text().should.equal('User');
       });
   });
 
