@@ -36,7 +36,7 @@ describe('FormSubmission', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
       return load(`/f/${enketoId}?st=token`)
         .testRequests([
-          { url: `/v1/enketo-ids/${enketoId}/form?st=token` }
+          { url: `/v1/form-links/${enketoId}/form?st=token` }
         ]);
     });
 
