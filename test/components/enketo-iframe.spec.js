@@ -99,4 +99,31 @@ describe('EnketoIframe', () => {
 
     postMessage.calledWith(data, window.location.origin).should.be.true;
   });
+
+  it('should not bubble up the message event if origin is different', async () => {
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
+      container: {
+        router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`),
+        location: {
+          origin: 'https://example.com'
+        }
+      }
+    });
+
+
+    const postMessage = sinon.fake();
+    sinon.replace(window.parent, 'postMessage', postMessage);
+
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    const script = document.createElement('script');
+    script.textContent = `window.parent.postMessage('${data}', "*");`;
+    iframe.element.contentDocument.body.appendChild(script);
+
+    await wait();
+
+    postMessage.called.should.be.false;
+  });
 });
