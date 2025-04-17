@@ -13,9 +13,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <loading :state="initiallyLoading"/>
   <template v-if="dataExists">
-    <!-- update newInstanceId to rerender the component -->
     <OdkWebForm
-      :key="newInstanceId"
       :form-xml="formVersionXml.data"
       :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
@@ -46,7 +44,15 @@ except according to the terms contained in the LICENSE file.
           {{ $t(submissionModal.type + '.body') }}
         </p>
       </div>
-      <div class="modal-actions">
+      <div v-if="submissionModal.type === 'submissionModal'" class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="hideModals()">
+          {{ $t('submissionModal.fillOutAgain') }}
+        </button>
+        <button type="button" class="btn btn-link" @click="closeWindow()">
+          {{ $t('action.close') }}
+        </button>
+      </div>
+      <div v-else class="modal-actions">
         <button type="button" class="btn btn-primary" @click="hideModals()">
           {{ $t('action.close') }}
         </button>
@@ -56,11 +62,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, onUnmounted, ref } from 'vue';
+import { computed, createApp, getCurrentInstance, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
-import { OdkWebForm, webFormsPlugin } from '@getodk/web-forms';
-
+import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import Loading from './loading.vue';
 import Modal from './modal.vue';
 
@@ -77,7 +82,6 @@ const formVersionXml = createResource('formVersionXml');
 const { request } = useRequest();
 const submissionAttachments = createResource('submissionAttachments');
 const submissionModal = modalData();
-const newInstanceId = ref(null);
 const sendingDataModal = modalData();
 const route = useRoute();
 const router = useRouter();
@@ -206,9 +210,6 @@ fetchData();
  * Hide all modals
  */
 const hideModals = () => {
-  if (submissionModal.type !== 'errorModal') {
-    newInstanceId.value = null;
-  }
   submissionModal.hide();
   sendingDataModal.hide();
 };
@@ -223,6 +224,10 @@ const hideModals = () => {
 const showModal = (modal, options) => {
   hideModals();
   modal.show(options);
+};
+
+const closeWindow = () => {
+  window.close();
 };
 
 /**
@@ -264,14 +269,13 @@ const postPrimaryInstance = (file) => {
         showModal(submissionModal, { type: 'errorModal', errorMessage: data.message });
         return false;
       }
-      newInstanceId.value = data.instanceId;
-      return true;
+      return data.currentVersion.instanceId;
     })
     .catch(noop);
 };
 
-const uploadAttachment = async (attachment) => {
-  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, newInstanceId.value, attachment.file.name));
+const uploadAttachment = async (attachment, instanceId) => {
+  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.file.name));
   return request({
     method: 'POST',
     url,
@@ -287,7 +291,7 @@ const uploadAttachment = async (attachment) => {
  * this handler, which can then upload the form and its attachments as present in the
  * event payload.
  */
-const handleSubmit = async (payload) => {
+const handleSubmit = async (payload, callback) => {
   if (props.actionType === 'preview') {
     showModal(submissionModal, { type: 'previewModal' });
   } else {
@@ -299,14 +303,15 @@ const handleSubmit = async (payload) => {
       return;
     }
 
-    const submissionRequestResult = await postPrimaryInstance(data.instanceFile);
+    const instanceId = await postPrimaryInstance(data.instanceFile);
 
-    if (submissionRequestResult) {
+    if (instanceId) {
       const attachmentRequests = data.attachments.map(a => () => uploadAttachment(a));
       const attachmentResults = await runSequentially(attachmentRequests);
 
       // TODO: what to do if attachments upload fail - blocked, need to define requirements / UX
       if (attachmentResults.every(r => !isProblem(r))) {
+        callback({ next: POST_SUBMIT__NEW_INSTANCE }); // tell OWF to clear out the Form
         if (isPublicLink.value) {
           showModal(submissionModal, { type: 'thankYouModal' });
           formVersionXml.reset(); // hides the Form
@@ -357,8 +362,11 @@ html, body {
         "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
       },
       "submissionModal": {
-        "title": "Submission successful",
-        "body": "Your data was submitted."
+        "title": "Form successfully sent!",
+        "body": "You can fill this Form out again or close if you’re done.",
+        "action": {
+          "fillOutAgain": "Fill out again"
+        }
       },
       "thankYouModal": {
         "title": "Thank you for participating!",

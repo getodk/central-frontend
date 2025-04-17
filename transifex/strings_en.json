@@ -5138,10 +5138,16 @@
       },
       "submissionModal": {
         "title": {
-          "string": "Submission successful"
+          "string": "Form successfully sent!"
         },
         "body": {
-          "string": "Your data was submitted."
+          "string": "You can fill this Form out again or close if you’re done."
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "Fill out again",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       },
       "thankYouModal": {

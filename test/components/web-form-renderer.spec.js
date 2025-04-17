@@ -73,7 +73,7 @@ describe('WebFormRenderer', () => {
     await mountComponent()
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-      .respondWithData(() => ({ instanceId: '123' }))
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
       .testRequests([
         {
           url: '/v1/projects/1/forms/a/submissions',
@@ -90,12 +90,32 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent()
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-      .respondWithData(() => ({ instanceId: '123' }));
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
 
     const modal = component.getComponent('#web-form-renderer-submission-modal');
 
-    modal.find('.modal-title').text().should.equal('Submission successful');
-    modal.find('.modal-introduction').text().should.equal('Your data was submitted.');
+    modal.find('.modal-title').text().should.equal('Form successfully sent!');
+    modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
+  });
+
+  it('clears the form on Fill out again button', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent()
+      .complete()
+      .request((c) => {
+        const textbox = c.find('input');
+        textbox.element.value = 'test';
+        return c.find('.odk-form .footer button').trigger('click');
+      })
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
+
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
+
+    modal.find('.modal-title').text().should.equal('Form successfully sent!');
+    modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
+    await modal.find('.btn-primary').trigger('click');
+    component.find('input').element.value.should.be.empty;
   });
 
   it('should show error modal in case of submission failure', async () => {
@@ -139,7 +159,7 @@ describe('WebFormRenderer', () => {
       .beforeEachResponse(c => {
         c.findComponent('#sending-data').props().state.should.be.true;
       })
-      .respondWithData(() => ({ instanceId: '123' }));
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
 
     component.findComponent('#sending-data').props().state.should.be.false;
   });
@@ -169,19 +189,14 @@ describe('WebFormRenderer', () => {
         .respondWithData(() => simpleSubmission)
         .complete()
         .request((c) => c.find('.odk-form .footer button').trigger('click'))
-        .respondWithData(() => ({ instanceId: '123' }))
-        .respondWithData(() => simpleSubmission) // OWF refetches submission XML
+        .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
         .testRequests([
           {
             url: '/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25',
             method: 'PUT',
             headers: { 'content-type': 'text/xml' },
             data: { name: 'xml_submission_file', type: 'text/xml' }
-          },
-          {
-            url: '/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25.xml',
-            method: 'GET'
-          },
+          }
         ])
         .afterResponses(c => {
           c.vm.$container.router.currentRoute.value.path.should
