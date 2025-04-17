@@ -1,5 +1,17 @@
 # @getodk/web-forms
 
+## 0.9.0
+
+### Minor Changes
+
+- 8261eee: Support for uploading images
+
+### Patch Changes
+
+- fd88153: Updates versions of dependencies
+- e91e403: Updates versions of major dependencies
+- 329f292: Adds E2E tests for Geopoint and Notes question types
+
 ## 0.8.0
 
 ### Minor Changes

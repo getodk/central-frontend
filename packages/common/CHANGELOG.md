@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.5.2
+
+### Patch Changes
+
+- e91e403: Updates versions of major dependencies
+
 ## 0.5.1
 
 ### Patch Changes

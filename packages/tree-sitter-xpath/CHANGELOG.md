@@ -1,5 +1,11 @@
 # @getodk/tree-sitter-xpath
 
+## 0.1.3
+
+### Patch Changes
+
+- e91e403: Updates versions of major dependencies
+
 ## 0.1.2
 
 ### Patch Changes

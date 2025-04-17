@@ -1,5 +1,14 @@
 # @getodk/xpath
 
+## 0.4.1
+
+### Patch Changes
+
+- fd88153: Updates versions of dependencies
+- e91e403: Updates versions of major dependencies
+- Updated dependencies [e91e403]
+  - @getodk/common@0.5.2
+
 ## 0.4.0
 
 ### Minor Changes

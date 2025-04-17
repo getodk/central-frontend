@@ -1,5 +1,16 @@
 # @getodk/xforms-engine
 
+## 0.8.0
+
+### Minor Changes
+
+- 8261eee: Support for instance attachments
+
+### Patch Changes
+
+- fd88153: Updates versions of dependencies
+- e91e403: Updates versions of major dependencies
+
 ## 0.7.0
 
 ### Minor Changes

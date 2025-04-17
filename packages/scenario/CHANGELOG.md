@@ -1,5 +1,12 @@
 # @getodk/scenario
 
+## 0.6.1
+
+### Patch Changes
+
+- fd88153: Updates versions of dependencies
+- e91e403: Updates versions of major dependencies
+
 ## 0.6.0
 
 ### Minor Changes
