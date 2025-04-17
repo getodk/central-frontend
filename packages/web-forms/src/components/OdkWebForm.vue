@@ -16,7 +16,7 @@ import type {
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
-import PrimeMessage from 'primevue/message';
+import Message from 'primevue/message';
 import type { ComponentPublicInstance } from 'vue';
 import { computed, getCurrentInstance, provide, ref, watchEffect } from 'vue';
 import FormLoadFailureDialog from './Form/FormLoadFailureDialog.vue';
@@ -219,9 +219,9 @@ watchEffect(() => {
 	>
 		<div class="form-wrapper">
 			<div v-show="submitPressed && validationErrorMessage" class="error-banner-placeholder" />
-			<PrimeMessage ref="validationErrorMessagePopover" popover="manual" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
+			<Message ref="validationErrorMessagePopover" popover="manual" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
 				{{ validationErrorMessage }}
-			</PrimeMessage>
+			</Message>
 
 			<FormHeader :form="state.root" />
 
@@ -236,7 +236,7 @@ watchEffect(() => {
 			</Card>
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<Button label="Send" rounded @click="handleSubmit(state)" />
+				<Button label="Send" @click="handleSubmit(state)" />
 			</div>
 		</div>
 
@@ -260,7 +260,7 @@ watchEffect(() => {
 </template>
 
 <style scoped lang="scss">
-@import 'primeflex/core/_variables.scss';
+@use 'primeflex/core/_variables.scss' as pf;
 
 .form-initialization-status {
 	display: none;
@@ -268,7 +268,7 @@ watchEffect(() => {
 
 .odk-form {
 	width: 100%;
-	color: var(--text-color);
+	color: var(--odk-text-color);
 	--wf-error-banner-gap: 4rem;
 	--wf-max-form-width: 900px;
 
@@ -277,29 +277,29 @@ watchEffect(() => {
 		flex-direction: column;
 		max-width: var(--wf-max-form-width);
 		min-height: calc(100vh - 5.5rem);
-		min-height: calc(100dvh - 5.5rem);
 		margin: auto;
 		padding-top: 10px;
 
 		.questions-card {
-			border-radius: 10px;
+			border-radius: var(--odk-radius);
 			box-shadow: none;
 			border-top: none;
 			margin-top: 20px;
+		}
 
-			:deep(.p-card-content) {
-				padding: 0;
-			}
+		.questions-card > :deep(.p-card-body) {
+			padding: 2rem;
 		}
 
 		.error-banner-placeholder {
-			height: calc(var(--wf-error-banner-gap) + 1rem);
+			height: var(--wf-error-banner-gap);
 		}
 
 		.form-error-message.p-message.p-message-error {
-			border-radius: 10px;
-			background-color: var(--error-bg-color);
-			border: 1px solid var(--error-text-color);
+			border-radius: var(--odk-radius);
+			background-color: var(--odk-error-background-color);
+			border: 1px solid var(--p-message-error-border-color);
+			outline: none;
 			max-width: var(--wf-max-form-width);
 			width: 100%;
 			margin: 0rem auto 1rem auto;
@@ -336,8 +336,8 @@ watchEffect(() => {
 		margin-left: 0.5rem;
 
 		.anchor {
-			color: var(--gray-500);
-			font-size: 0.85rem;
+			color: var(--odk-muted-text-color);
+			font-size: var(--odk-hint-font-size);
 			font-weight: 300;
 			text-decoration: none;
 			margin-left: 1rem;
@@ -357,12 +357,12 @@ watchEffect(() => {
 		.version {
 			font-size: 0.7rem;
 			margin: 0.5rem 0 0 0.85rem;
-			color: var(--gray-500);
+			color: var(--odk-muted-text-color);
 		}
 	}
 }
 
-@media screen and (max-width: #{$lg - 1}) {
+@media screen and (max-width: #{pf.$lg - 1}) {
 	.odk-form {
 		.form-wrapper {
 			max-width: unset;
@@ -402,20 +402,29 @@ watchEffect(() => {
 		}
 	}
 }
+
+@media screen and (max-width: #{pf.$sm}) {
+	.odk-form .form-wrapper .questions-card > :deep(.p-card-body) {
+		padding: 2rem 0.5rem;
+	}
+}
 </style>
 
 <style lang="scss">
-@import 'primeflex/core/_variables.scss';
+@use 'primeflex/core/_variables.scss' as pf;
 :root {
-	--breakpoint-lg: #{$lg};
+	// This variable is used to assert the breakpoint from PrimeFlex are loaded
+	// {@link https://github.com/getodk/web-forms/blob/main/packages/web-forms/e2e/test-cases/build/style.test.ts}
+	--odk-test-breakpoint-lg: #{pf.$lg};
 }
 
 body {
-	background: var(--gray-200);
+	background: var(--odk-muted-background-color);
 }
-@media screen and (max-width: #{$lg - 1}) {
+
+@media screen and (max-width: #{pf.$lg - 1}) {
 	body {
-		background: white;
+		background: var(--odk-base-background-color);
 	}
 }
 </style>

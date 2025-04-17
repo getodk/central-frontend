@@ -6,7 +6,7 @@ const isDev = () => {
 };
 </script>
 <template>
-	<div v-if="isDev()">
+	<div v-if="isDev()" style="margin-bottom: 20px">
 		Unsupported appearance {<strong>{{ appearance }}</strong>} for the {<strong>{{ nodeType }}</strong>}.
 	</div>
 </template>

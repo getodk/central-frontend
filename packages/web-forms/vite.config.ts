@@ -106,10 +106,8 @@ export default defineConfig(({ mode }) => {
 				'@': fileURLToPath(new URL('./src', import.meta.url)),
 				'primevue/menuitem': 'primevue/menu',
 				// With following lines, fonts byte array are copied into css file
-				// Roboto fonts - don't want to copy those in our repository
-				'./fonts': resolve(
-					'../../node_modules/primevue-sass-theme/themes/material/material-light/standard/indigo/fonts'
-				),
+				// Roboto fonts
+				'./fonts': resolve('../../node_modules/@fontsource/roboto'),
 				// Icomoon fonts
 				'/fonts': resolve('./src/assets/fonts'),
 			},

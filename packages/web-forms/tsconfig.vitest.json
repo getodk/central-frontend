@@ -9,8 +9,8 @@
     "tests-examples",
     "src/components/**/*.vue",
     "src/components/**/*.ts",
-    "src/directives/**/*.ts",
-    "src/lib/**/*.ts"
+    "src/lib/**/*.ts",
+    "src/odkThemePreset.ts"
   ],
   "exclude": ["../common/src/test/**/*.ts"],
   "compilerOptions": {

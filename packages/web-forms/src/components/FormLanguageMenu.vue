@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ActiveLanguage, FormLanguage } from '@getodk/xforms-engine';
-import Dropdown from 'primevue/dropdown';
+import Select from 'primevue/select';
 
 defineProps<{ languages: FormLanguage[]; activeLanguage: ActiveLanguage }>();
 
@@ -8,12 +8,12 @@ defineEmits(['update:activeLanguage']);
 </script>
 
 <template>
-	<Dropdown
+	<Select
 		v-if="languages.length > 0"
 		:model-value="activeLanguage"
 		:options="languages"
 		option-label="language"
-		class="align-items-center rounded with-icon language-changer"
+		class="align-items-center with-icon language-changer"
 		aria-label="change language"
 		@update:model-value="$emit('update:activeLanguage', $event)"
 	>
@@ -26,7 +26,7 @@ defineEmits(['update:activeLanguage']);
 		<template #option="slotProps">
 			<span class="language-dd-label">{{ slotProps.option.language }}</span>
 		</template>
-	</Dropdown>
+	</Select>
 </template>
 
 <style scoped lang="scss">
@@ -34,18 +34,17 @@ defineEmits(['update:activeLanguage']);
 	display: flex;
 }
 
-.p-dropdown.rounded {
-	border-radius: 30px;
+.p-select.language-changer {
 	border: none;
 	width: max-content;
 	max-width: 220px;
-	color: #424242;
+	color: var(--odk-text-color);
 
 	&.p-focus {
-		box-shadow: inset 0 0 0 1px var(--primary-500);
+		box-shadow: inset 0 0 0 1px var(--p-primary-500);
 	}
 
-	:deep(.p-dropdown-label) {
+	:deep(.p-select-label) {
 		padding: 5px 16px;
 		span {
 			vertical-align: middle;
@@ -54,7 +53,7 @@ defineEmits(['update:activeLanguage']);
 
 	.icon-language {
 		margin-right: 10px;
-		font-size: 1.5rem;
+		font-size: var(--odk-icon-size);
 	}
 }
 </style>

@@ -1,8 +1,19 @@
 import SelectControl from '@/components/controls/SelectControl.vue';
 import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
-import { assert, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, assert, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../helpers.ts';
+
+// TODO: these are tied to PrimeVue's classes, we should control this!
+const MULTISELECT_CLASS = 'p-multiselect';
+const MULTISELECT_OPTION_LIST_SELECTOR = '.p-multiselect-list';
+const MULTISELECT_OPTION_SELECTOR = '.p-multiselect-option';
+const SELECT_CLASS = 'p-select';
+const SELECT_OPTION_LIST_SELECTOR = '.p-select-list';
+const SELECT_OPTION_SELECTOR = '.p-select-option';
+const SELECT_SELECTED_CLASS = 'p-select-option-selected';
+const CHECKBOX_SELECTOR = '.p-checkbox';
+const CHECKBOX_CHECKED_CLASS = 'p-checkbox-checked';
 
 const findSelectNodeByReference = (node: AnyNode, reference: string): SelectNode | null => {
 	const nodeReference = node.currentState.reference;
@@ -74,7 +85,9 @@ const expectSelectedValueState = (selectNode: SelectNode, value: string | null) 
 };
 
 const findMenu = (component: MountedComponent): DOMWrapper<HTMLElement> | null => {
-	const [menu = null] = component.findAll<HTMLElement>('.p-dropdown-items, .p-multiselect-items');
+	const [menu = null] = component.findAll<HTMLElement>(
+		`${SELECT_OPTION_LIST_SELECTOR}, ${MULTISELECT_OPTION_LIST_SELECTOR}`
+	);
 
 	return menu;
 };
@@ -102,7 +115,7 @@ const getMenuItems = async (
 ): Promise<ReadonlyArray<DOMWrapper<HTMLElement>>> => {
 	const menu = await openMenu(component, controlElement);
 
-	return menu.findAll('.p-dropdown-item, .p-multiselect-item');
+	return menu.findAll(`${SELECT_OPTION_SELECTOR}, ${MULTISELECT_OPTION_SELECTOR}`);
 };
 
 const getMenuItem = async (
@@ -117,6 +130,34 @@ const getMenuItem = async (
 
 describe('SelectControl', () => {
 	describe('select1', () => {
+		let isMatchMediaMocked = false;
+
+		beforeAll(() => {
+			// PrimeVue's Select needs matchMedia, which isn't available
+			// when running in test-node:jsdom mode
+			if (window.matchMedia == null) {
+				isMatchMediaMocked = true;
+
+				Object.defineProperty(window, 'matchMedia', {
+					writable: true,
+					value: () => ({
+						matches: false,
+						media: null,
+						onchange: null,
+						addEventListener: () => false,
+						removeEventListener: () => false,
+						dispatchEvent: () => false,
+					}),
+				});
+			}
+		});
+
+		afterAll(() => {
+			if (isMatchMediaMocked) {
+				Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined });
+			}
+		});
+
 		describe('no appearance (radio controls)', () => {
 			let root: RootNode;
 			let selectNode: SelectNode;
@@ -179,8 +220,7 @@ describe('SelectControl', () => {
 			});
 
 			it('renders as a dropdown', () => {
-				// TODO: this is tied to PrimeVue's classes, we should control this!
-				expect(controlElement.classes()).toContain('p-dropdown');
+				expect(controlElement.classes()).toContain(SELECT_CLASS);
 			});
 
 			const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
@@ -204,15 +244,15 @@ describe('SelectControl', () => {
 
 				assert(menuItem != null);
 				expectSelectedValueState(selectNode, null);
-				expect(menuItem.classes()).not.toContain('p-highlight');
+				expect(menuItem.classes()).not.toContain(SELECT_SELECTED_CLASS);
 
-				await menuItem.trigger('click');
+				await menuItem.trigger('mousedown');
 
 				menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
 				assert(menuItem != null);
 
 				expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
-				expect(menuItem.classes()).toContain('p-highlight');
+				expect(menuItem.classes()).toContain(SELECT_SELECTED_CLASS);
 			});
 		});
 	});
@@ -286,8 +326,7 @@ describe('SelectControl', () => {
 			});
 
 			it('renders as a dropdown', () => {
-				// TODO: this is tied to PrimeVue's classes, we should control this!
-				expect(controlElement.classes()).toContain('p-multiselect');
+				expect(controlElement.classes()).toContain(MULTISELECT_CLASS);
 			});
 
 			const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
@@ -311,11 +350,11 @@ describe('SelectControl', () => {
 
 				assert(menuItem != null);
 
-				let menuItemSelection = menuItem.find('.p-checkbox');
+				let menuItemSelection = menuItem.find(CHECKBOX_SELECTOR);
 
 				expectSelectedValueState(selectNode, null);
 
-				expect(menuItemSelection.classes()).not.toContain('p-highlight');
+				expect(menuItemSelection.classes()).not.toContain(CHECKBOX_CHECKED_CLASS);
 
 				await menuItem.trigger('click');
 
@@ -325,9 +364,9 @@ describe('SelectControl', () => {
 
 				assert(menuItem != null);
 
-				menuItemSelection = menuItem.find('.p-checkbox');
+				menuItemSelection = menuItem.find(CHECKBOX_SELECTOR);
 
-				expect(menuItemSelection.classes()).toContain('p-highlight');
+				expect(menuItemSelection.classes()).toContain(CHECKBOX_CHECKED_CLASS);
 			});
 		});
 	});

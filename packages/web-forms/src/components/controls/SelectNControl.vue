@@ -62,14 +62,14 @@ const submitPressed = inject<boolean>('submitPressed', false);
 </template>
 
 <style lang="scss" scoped>
-@import 'primeflex/core/_variables.scss';
+@use 'primeflex/core/_variables.scss' as pf;
 .default-appearance {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 0.8rem;
 
-	@media screen and (min-width: #{$md}) {
+	@media screen and (min-width: #{pf.$md}) {
 		min-width: 50%;
 		width: max-content;
 		max-width: 100%;

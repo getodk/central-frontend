@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InputNumberInputEvent } from 'primevue/inputnumber';
-import PrimeInputNumber from 'primevue/inputnumber';
+import InputNumber from 'primevue/inputnumber';
 import type { Ref } from 'vue';
 import { computed, customRef, inject, ref } from 'vue';
 
@@ -150,7 +150,7 @@ const onInput = (event: InputNumberInputEvent) => {
 </script>
 
 <template>
-	<PrimeInputNumber
+	<InputNumber
 		:id="node.nodeId"
 		v-model="modelValue"
 		:required="node.currentState.required"
@@ -181,7 +181,7 @@ const onInput = (event: InputNumberInputEvent) => {
 	position: relative;
 
 	:deep(.p-inputtext) {
-		border-radius: 4px;
+		border-radius: var(--odk-radius);
 	}
 }
 

@@ -11,7 +11,8 @@ test('Build includes component-defined styles', async ({ page }) => {
 	// Get the (Sass-defined) large breakpoint size
 	// [In theory, if we can get this and it's not a number, we've already validated styles. Below expands on that to leave some breadcrumbs]
 	const breakpointLg = await page.locator('html').evaluate((pageRoot) => {
-		return getComputedStyle(pageRoot).getPropertyValue('--breakpoint-lg');
+		// This CSS variable is defined in {@link https://github.com/getodk/web-forms/blob/main/packages/web-forms/src/components/OdkWebForm.vue}
+		return getComputedStyle(pageRoot).getPropertyValue('--odk-test-breakpoint-lg');
 	});
 	const largeViewportSize = parseInt(breakpointLg, 10);
 
@@ -23,14 +24,14 @@ test('Build includes component-defined styles', async ({ page }) => {
 	// against regressions in specific presentation aspects.
 	expect(Number.isNaN(largeViewportSize)).toBe(false);
 
-	// Setting viewport to `$lg` breakpoint ensures the `--gray-200` background
+	// Setting viewport to `$lg` breakpoint ensures the `--odk-muted-background-color` background
 	// color is effective for `body`.
 	await page.setViewportSize({
 		width: largeViewportSize,
 		height: largeViewportSize,
 	});
 
-	// Assign several colors to `--gray-200`, checking that the color is
+	// Assign several colors to `--odk-muted-background-color`, checking that the color is
 	// (initially) **not** the body's effective background color, and then that it
 	// is once assigned to that custom property.
 	//
@@ -41,8 +42,8 @@ test('Build includes component-defined styles', async ({ page }) => {
 	for (const color of colors) {
 		await expect(page.locator('body')).not.toHaveCSS('background-color', color);
 
-		await page.locator('html').evaluate((pageRoot, gray200) => {
-			pageRoot.style.setProperty('--gray-200', gray200);
+		await page.locator('html').evaluate((pageRoot, backgroundColor) => {
+			pageRoot.style.setProperty('--odk-muted-background-color', backgroundColor);
 		}, color);
 
 		await expect(page.locator('body')).toHaveCSS('background-color', color);

@@ -4,16 +4,16 @@ import {
 	type RootNode,
 	type SyntheticDefaultLanguage,
 } from '@getodk/xforms-engine';
-import PrimeButton from 'primevue/button';
-import PrimeCard from 'primevue/card';
-import PrimeMenu from 'primevue/menu';
+import Button from 'primevue/button';
+import Card from 'primevue/card';
+import Menu from 'primevue/menu';
 import { ref } from 'vue';
 import FormLanguageDialog from './FormLanguageDialog.vue';
 import FormLanguageMenu from './FormLanguageMenu.vue';
 
 const props = defineProps<{ form: RootNode }>();
 const languageDialogState = ref(false);
-const menu = ref<PrimeMenu>();
+const menu = ref<InstanceType<typeof Menu>>();
 
 const isFormLanguage = (lang: FormLanguage | SyntheticDefaultLanguage): lang is FormLanguage => {
 	return !lang.isSyntheticDefault;
@@ -50,37 +50,37 @@ const handleLanguageChange = (event: FormLanguage) => {
 	<!-- for desktop -->
 	<div class="hidden lg:inline larger-screens">
 		<div class="flex justify-content-end flex-wrap gap-3">
-			<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+			<Button class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 			<FormLanguageMenu
 				:active-language="form.currentState.activeLanguage"
 				:languages="languages"
 				@update:active-language="handleLanguageChange"
 			/>
 		</div>
-		<PrimeCard class="form-title">
+		<Card class="form-title">
 			<template #content>
 				<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
 				<h1>{{ form.definition.bind.form.title }}</h1>
 			<!-- last saved timestamp -->
 			</template>
-		</PrimeCard>
+		</Card>
 	</div>
 
 
 	<!-- for mobile and tablet -->
-	<div class="flex lg:hidden align-items-start smaller-screens">
+	<div class="flex lg:hidden align-items-start justify-content-between smaller-screens">
 		<h1>
 			{{ form.definition.bind.form.title }}
 		</h1>
 
 		<div class="form-options">
 			<!-- if Form is not multilingual then we always show print button -->
-			<PrimeButton v-if="languages.length === 0" class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+			<Button v-if="languages.length === 0" class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 
 			<!-- show either hamburger or (print button and language changer) based on container size -->
 			<div v-else class="multilingual">
-				<PrimeButton icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
-				<PrimeMenu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+				<Button icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
+				<Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
 				<FormLanguageDialog
 					v-model:state="languageDialogState"
 					:active-language="form.currentState.activeLanguage"
@@ -88,7 +88,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 					@update:active-language="handleLanguageChange"
 				/>
 
-				<PrimeButton class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+				<Button class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
 				<FormLanguageMenu
 					:active-language="form.currentState.activeLanguage"
 					:languages="languages"
@@ -101,31 +101,30 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 <style scoped lang="scss">
 .p-button.p-button-icon-only.p-button-rounded {
-	height: 2.5rem;
-	width: 2.5rem;
-	min-width: 2.5rem;
-	font-size: 1.5rem;
+	font-size: var(--odk-icon-size);
 
 	&:hover {
-		background: var(--primary-100);
+		background: var(--odk-primary-light-background-color);
 	}
+
 	&:active,
 	&:focus {
-		background: var(--primary-50);
+		background: var(--odk-primary-lighter-background-color);
 	}
 }
 
 .form-title {
-	border-radius: 10px;
+	border-radius: var(--odk-radius);
 	box-shadow: none;
 	border-top: none;
 	margin-top: 20px;
 
-	:deep(.p-card-content) {
-		padding: 0 1rem;
+	:deep(.p-card-body) {
+		padding-left: 3rem;
+		padding-right: 3rem;
 
 		h1 {
-			font-size: 1.5rem;
+			font-size: var(--odk-title-font-size);
 			font-weight: 500;
 			margin: 10px 0;
 		}
@@ -133,23 +132,22 @@ const handleLanguageChange = (event: FormLanguage) => {
 }
 
 .smaller-screens {
-	background-color: var(--surface-0);
-	filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.15)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+	background-color: var(--odk-base-background-color);
+	border-bottom: 1px solid var(--odk-border-color);
 
 	h1 {
-		padding-left: 10px;
-		font-size: 1.25rem;
+		padding-left: 1.5rem;
+		font-size: var(--odk-title-font-size);
 		font-weight: 400;
 	}
 
 	.form-options {
 		padding-right: 10px;
-		flex-grow: 1;
 		min-width: 50px;
 		container-type: size;
 		container-name: formOptionsContainer;
 		height: 40px;
-		margin-top: 6px;
+		margin-top: 11px;
 
 		.multilingual {
 			display: flex;
@@ -157,11 +155,13 @@ const handleLanguageChange = (event: FormLanguage) => {
 			gap: 0.5rem;
 
 			.btn-menu {
-				color: var(--surface-900);
+				color: var(--odk-text-color);
 			}
+
 			.print-button {
 				display: none;
 			}
+
 			.language-changer {
 				display: none;
 			}
@@ -172,9 +172,11 @@ const handleLanguageChange = (event: FormLanguage) => {
 				.btn-menu {
 					display: none;
 				}
+
 				.print-button {
 					display: flex;
 				}
+
 				.language-changer {
 					display: flex;
 					max-width: 220px;
@@ -184,7 +186,13 @@ const handleLanguageChange = (event: FormLanguage) => {
 	}
 
 	.btn-menu {
-		color: var(--surface-900);
+		color: var(--odk-text-color);
 	}
+}
+</style>
+
+<style>
+.p-menu .p-menu-item-content .p-menu-item-icon {
+	font-size: var(--odk-icon-size);
 }
 </style>

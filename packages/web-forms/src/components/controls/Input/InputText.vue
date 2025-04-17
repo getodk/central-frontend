@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StringInputNode, TemporaryStringValueInputNode } from '@getodk/xforms-engine';
-import PrimeInputText from 'primevue/inputtext';
+import InputText from 'primevue/inputtext';
 import { computed, inject } from 'vue';
 
 // prettier-ignore
@@ -24,12 +24,11 @@ const invalid = computed(() => props.node.validationState.violation?.valid === f
 </script>
 
 <template>
-	<PrimeInputText
+	<InputText
 		:id="node.nodeId"
 		:required="node.currentState.required"
 		:disabled="node.currentState.readonly"
 		:class="{'inside-highlighted': invalid && submitPressed}"
-		variant="filled"
 		:model-value="node.currentState.value"
 		@update:model-value="setValue"
 		@input="doneAnswering = false"

@@ -71,7 +71,6 @@ watchEffect(() => {
 		<!-- TODO: Good candidate for <slot> in a general component -->
 		<template v-if="IS_CAPTURE_SUPPORTED">
 			<Button
-				rounded
 				class="take-picture-button"
 				:disabled="isDisabled"
 				@click="triggerInputField(takePictureInput)"
@@ -103,7 +102,6 @@ watchEffect(() => {
 		</template>
 
 		<Button
-			rounded
 			class="choose-image-button"
 			:disabled="isDisabled"
 			@click="triggerInputField(selectImageInput)"
@@ -153,7 +151,7 @@ watchEffect(() => {
 	align-items: center;
 	justify-content: center;
 	min-width: 145px;
-	gap: 9px;
+	gap: 0px;
 
 	&:not(:last-child) {
 		margin-right: 20px;
@@ -162,10 +160,8 @@ watchEffect(() => {
 
 	svg {
 		margin-right: 5px;
-	}
-
-	&:disabled svg path {
-		fill: var(--surface-500);
+		width: 16px;
+		height: 24px;
 	}
 }
 </style>

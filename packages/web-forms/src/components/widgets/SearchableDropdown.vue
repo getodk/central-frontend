@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SelectNode } from '@getodk/xforms-engine';
-import PrimeDropdown from 'primevue/dropdown';
+import Select from 'primevue/select';
 import { computed } from 'vue';
 
 interface SearchableDropdownProps {
@@ -32,7 +32,7 @@ const getOptionLabel = (value: string) => {
 </script>
 
 <template>
-	<PrimeDropdown
+	<Select
 		:id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
@@ -46,18 +46,18 @@ const getOptionLabel = (value: string) => {
 </template>
 
 <style scoped lang="scss">
-@import 'primeflex/core/_variables.scss';
+@use 'primeflex/core/_variables.scss' as pf;
 
 .dropdown {
 	width: 100%;
-	border-radius: 10px;
-	border-color: var(--surface-300);
+	border-radius: var(--odk-radius);
+	border-color: var(--odk-border-color);
 
 	&:not(.p-disabled):hover {
-		border-color: var(--primary-500);
+		border-color: var(--odk-primary-border-color);
 	}
 
-	@media screen and (min-width: #{$md}) {
+	@media screen and (min-width: #{pf.$md}) {
 		width: 50%;
 	}
 }

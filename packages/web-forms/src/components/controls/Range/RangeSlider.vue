@@ -1,11 +1,16 @@
 <script lang="ts">
 import type {
-	SliderEmits as PrimeSliderEmits,
 	SliderProps as PrimeSliderProps,
 	SliderSlots as PrimeSliderSlots,
 } from 'primevue/slider';
 import PrimeSlider from 'primevue/slider';
-import type { ClassComponent } from 'primevue/ts-helpers';
+import type {
+	ComputedOptions,
+	DefineComponent,
+	ObjectEmitsOptions,
+	ComponentOptionsMixin,
+	MethodOptions,
+} from 'vue';
 
 interface SliderSingleValueProps extends PrimeSliderProps {
 	modelValue?: number | undefined;
@@ -17,27 +22,37 @@ interface SliderDualValueProps extends PrimeSliderProps {
 	range: true;
 }
 
-interface SliderSingleValueEmits extends PrimeSliderEmits {
+interface SliderSingleValueEmits extends ObjectEmitsOptions {
 	'update:modelValue'(value: number): void;
 }
 
-interface SliderDualValueEmits extends PrimeSliderEmits {
+interface SliderDualValueEmits extends ObjectEmitsOptions {
 	'update:modelValue'(value: number[]): void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-declare class SingleValueSlider extends ClassComponent<
+declare const SingleValueSlider: DefineComponent<
 	SliderSingleValueProps,
+	Record<string, never>,
+	Record<string, never>,
+	ComputedOptions,
+	MethodOptions,
+	ComponentOptionsMixin,
 	PrimeSliderSlots,
 	SliderSingleValueEmits
-> {}
+>;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-declare class DualValueSlider extends ClassComponent<
+declare const DualValueSlider: DefineComponent<
 	SliderDualValueProps,
+	Record<string, never>,
+	Record<string, never>,
+	ComputedOptions,
+	MethodOptions,
+	ComponentOptionsMixin,
 	PrimeSliderSlots,
 	SliderDualValueEmits
-> {}
+>;
 
 /**
  * This type addresses confusion in PrimeVue's base type which is polymorphic

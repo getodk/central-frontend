@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { selectOptionId } from '@/lib/format/selectOptionId.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
-import PrimeRadioButton from 'primevue/radiobutton';
+import RadioButton from 'primevue/radiobutton';
 interface RadioButtonProps {
 	readonly question: SelectNode;
 }
@@ -27,7 +27,7 @@ const selectValue = (value: string) => {
 			'no-buttons': question.appearances['no-buttons']
 		}"
 	>
-		<PrimeRadioButton
+		<RadioButton
 			:input-id="selectOptionId(question, option)"
 			:value="option.value"
 			:name="question.nodeId"
@@ -46,11 +46,11 @@ const selectValue = (value: string) => {
 .value-option {
 	display: flex;
 	align-items: center;
-	outline: 1px solid var(--surface-300);
-	border-radius: 10px;
-	padding: 15px;
+	outline: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	padding: 12px;
 	cursor: pointer;
-	background: var(--surface-0);
+	background: var(--odk-base-background-color);
 
 	.label-text {
 		margin-left: 10px;
@@ -58,8 +58,8 @@ const selectValue = (value: string) => {
 
 	&:has(.p-radiobutton-input:hover),
 	&:has(.p-radiobutton-input:focus-visible) {
-		outline-color: var(--primary-500);
-		background-color: var(--primary-100);
+		outline-color: var(--odk-primary-border-color);
+		background-color: var(--odk-primary-light-background-color);
 	}
 
 	:deep(.p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:focus-visible)),
@@ -69,13 +69,13 @@ const selectValue = (value: string) => {
 
 	&:deep(:has(.p-radiobutton-input:focus-visible)),
 	&:hover {
-		outline-color: var(--primary-500);
-		background-color: var(--primary-50);
+		outline-color: var(--odk-primary-border-color);
+		background-color: var(--odk-primary-lighter-background-color);
 	}
 
 	&.active {
-		outline: 2px solid var(--primary-500);
-		background-color: var(--primary-50);
+		outline: 2px solid var(--odk-primary-border-color);
+		background-color: var(--odk-primary-lighter-background-color);
 	}
 
 	&.disabled,
@@ -87,7 +87,7 @@ const selectValue = (value: string) => {
 .no-buttons {
 	:deep(.p-radiobutton) {
 		opacity: 0;
-		margin-left: -15px;
+		width: 0; /* Radio button isn't visible */
 	}
 
 	.label-text {

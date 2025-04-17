@@ -67,15 +67,27 @@ Individual test environments, and their corresponding watch modes, also have sep
 
 Upload XLSForm and XForm functionality in [`demo`](./src/demo/) app and in dev mode depends on [XLSForm-online](https://github.com/getodk/xlsform-online). Run the xlsform-online locally. By default it runs on port 8000, if you are running it on another port then you should update the [`config`](./src/demo/config.json) file.
 
-### Material Design
+### Styling Overview
+
+This project uses a combination of [PrimeFlex](https://primeflex.org/) and [PrimeVue](https://primevue.org/) for consistent styling, alongside specific font rules for the ODK Website's Web Forms Preview.
+
+- **PrimeFlex**: A CSS utility library used for layout-related properties such as positioning (e.g., flexbox, grid), responsive breakpoints, font-size and font-weight adjustments.
+- **PrimeVue**: A UI component library that defines the visual design of components, including shapes (e.g., borders, rounded corners) and color schemes.
+
+#### Theming with CSS Variables
+
+We use CSS variables for theming with two prefixes:
+
+- `--p-` Prefix: Variables prefixed with `--p-` (e.g., `--p-primary-50`) come from PrimeVue and control its component styles (e.g., colors, borders). These are part of PrimeVue’s [theming system](https://primevue.org/theming/styled/).
+- `--odk-` Prefix: Variables prefixed with `--odk-` (e.g., `--odk-font-family`) are custom to this project and manage styles outside PrimeVue or PrimeFlex, such as application-specific typography.
+
+#### Fonts
+
+Form elements use `font-family: Roboto, sans-serif;` for accessibility and a clean, readable appearance.
+
+#### Material Design
 
 This package uses the Material Design system for the UI, though not strictly. The idea is to closely match the design to that of [ODK Collect](https://docs.getodk.org/collect-intro/).
-
-It uses the [PrimeVue component library](https://primevue.org/).
-
-### Theme and Styles
-
-We are using a customized version of the Material Light Indigo theme provided by PrimeVue.
 
 ### Icons
 

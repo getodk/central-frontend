@@ -75,7 +75,7 @@ watchEffect(() => {
 
 <template>
 	<div v-if="imageURL" class="preview-captured-image" :class="{ 'small-image': isSmallImage }">
-		<Button v-if="!isDisabled" severity="secondary" class="clear-button" @click="emit('clear')">
+		<Button v-if="!isDisabled" severity="secondary" outlined class="clear-button" @click="emit('clear')">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="12"
@@ -96,7 +96,6 @@ watchEffect(() => {
 <style scoped lang="scss">
 .preview-captured-image {
 	--uploadPreviewSize: 300px;
-	--uploadBorderRadius: 10px;
 }
 
 .preview-captured-image {
@@ -107,8 +106,8 @@ watchEffect(() => {
 	width: fit-content;
 	height: var(--uploadPreviewSize);
 	margin-top: 30px;
-	background: var(--gray-200);
-	border-radius: var(--uploadBorderRadius);
+	background: var(--odk-muted-background-color);
+	border-radius: var(--odk-radius);
 	overflow: hidden;
 
 	img {
@@ -124,7 +123,8 @@ watchEffect(() => {
 		position: absolute;
 		top: 10px;
 		right: 10px;
-		border: 1px solid var(--surface-300);
+		background: var(--odk-base-background-color);
+		border: 1px solid var(--odk-border-color);
 		width: 38px;
 		height: 38px;
 	}
@@ -141,11 +141,11 @@ watchEffect(() => {
 .p-button.clear-button {
 	min-width: 0;
 	padding: 12px;
-	border-radius: var(--uploadBorderRadius);
+	border-radius: var(--odk-radius);
 
 	&:not(:disabled):active,
 	&:not(:disabled):hover {
-		border-color: var(--surface-300);
+		border-color: var(--odk-inactive-background-color);
 	}
 }
 </style>

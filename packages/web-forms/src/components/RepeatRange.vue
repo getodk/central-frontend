@@ -17,7 +17,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 			v-if="node.nodeType === 'repeat-range:uncontrolled'"
 			class="flex justify-content-start flex-wrap"
 		>
-			<Button rounded outlined class="btn-add" @click="node.addInstances()">
+			<Button outlined class="btn-add" @click="node.addInstances()">
 				<span class="flex justify-content-center p-button-label" data-pc-section="label">
 					<span class="icon-add" />
 					<span class="btn-add-label">
@@ -40,7 +40,7 @@ const label = computed(() => props.node.currentState.label?.asString);
 	margin-bottom: 1rem;
 
 	&:hover {
-		background: var(--primary-100);
+		background: var(--odk-primary-light-background-color);
 	}
 
 	.btn-add-label {

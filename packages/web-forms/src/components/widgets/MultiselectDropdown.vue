@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { SelectNode } from '@getodk/xforms-engine';
-import PrimeMultiSelect from 'primevue/multiselect';
+import MultiSelect from 'primevue/multiselect';
 import { computed } from 'vue';
 
 interface MultiselectDropdownProps {
@@ -37,12 +37,16 @@ if (props.question.appearances['no-buttons']) {
 </script>
 
 <template>
-	<PrimeMultiSelect
+	<!--
+		Setting 'auto-filter-focus' true when 'filter' is true, to fix autofocus exception.
+		Ref: https://github.com/primefaces/primevue/issues/6793
+	-->
+	<MultiSelect
 		:id="`${question.nodeId}-control`"
 		class="multi-select-dropdown"
 		:input-id="question.nodeId"
 		:filter="question.appearances.autocomplete"
-		:auto-filter-focus="true"
+		:auto-filter-focus="question.appearances.autocomplete"
 		:show-toggle-all="false"
 		:options="options"
 		:option-label="getOptionLabel"
@@ -54,19 +58,18 @@ if (props.question.appearances['no-buttons']) {
 </template>
 
 <style scoped lang="scss">
-@import 'primeflex/core/_variables.scss';
+@use 'primeflex/core/_variables.scss' as pf;
 
 .multi-select-dropdown {
 	width: 100%;
-	border-radius: 10px;
-	border-color: var(--surface-300);
-	border-radius: 10px;
+	border-radius: var(--odk-radius);
+	border-color: var(--odk-border-color);
 
 	&:not(.p-disabled):hover {
-		border-color: var(--primary-500);
+		border-color: var(--odk-primary-border-color);
 	}
 
-	@media screen and (min-width: #{$md}) {
+	@media screen and (min-width: #{pf.$md}) {
 		width: 50%;
 	}
 }
@@ -79,14 +82,14 @@ if (props.question.appearances['no-buttons']) {
 	}
 
 	.p-checkbox {
-		margin-left: -20px;
+		width: 0; /* Checkbox isn't visible */
 	}
 
-	.p-multiselect-item {
+	.p-multiselect-option {
 		&[aria-selected='true']::after {
 			content: '\e916';
 			font-family: 'owf-icomoon';
-			color: var(--primary-500);
+			color: var(--odk-primary-text-color);
 		}
 
 		span {

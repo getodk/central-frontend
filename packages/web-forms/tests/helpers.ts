@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config';
 import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
 import { reactive } from 'vue';
+import { odkThemePreset } from '../src/odkThemePreset';
 
 /**
  * @todo this does roughly the same thing as {@link getFormXml}, except it
@@ -57,7 +58,7 @@ export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
 type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];
 
 export const globalMountOptions: GlobalMountOptions = {
-	plugins: [[PrimeVue, { ripple: false }]],
+	plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
 	provide: {
 		submitPressed: false,
 	},

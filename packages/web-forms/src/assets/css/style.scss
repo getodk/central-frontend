@@ -1,3 +1,51 @@
+/**
+ * Global Styles
+ * Defines styles applied to the Web Forms' Preview (demo) page and Web Forms' components.
+ */
+
+@use 'primeflex/primeflex.scss' as pf;
+
+/**
+ * ODK CSS Variables
+ * Establishes root-level variables for consistent styling and easy theming customization.
+ */
+:root {
+	--odk-font-family: Roboto, sans-serif;
+
+	--odk-base-font-size: #{map-get(pf.$font-size-props, 'text-base')};
+	--odk-heading-font-size: #{map-get(pf.$font-size-props, 'text-4xl')};
+	--odk-title-font-size: #{map-get(pf.$font-size-props, 'text-2xl')};
+	--odk-group-font-size: #{map-get(pf.$font-size-props, 'text-xl')};
+	--odk-question-font-size: #{map-get(pf.$font-size-props, 'text-lg')};
+	--odk-answer-font-size: #{map-get(pf.$font-size-props, 'text-base')};
+	--odk-hint-font-size: #{map-get(pf.$font-size-props, 'text-sm')};
+
+	--odk-primary-text-color: var(--p-primary-500);
+	--odk-primary-light-background-color: var(--p-primary-100);
+	--odk-primary-lighter-background-color: var(--p-primary-50);
+	--odk-primary-border-color: var(--p-primary-500);
+
+	--odk-error-text-color: var(--p-message-error-color);
+	--odk-error-background-color: var(--p-message-error-background);
+
+	--odk-text-color: var(--p-surface-900);
+	--odk-inverted-text-color: var(--p-surface-0);
+	--odk-muted-text-color: var(--p-surface-500);
+
+	--odk-base-background-color: var(--p-surface-0);
+	--odk-muted-background-color: var(--p-surface-100);
+	--odk-inactive-background-color: var(--p-surface-300);
+
+	--odk-border-color: var(--p-surface-300);
+
+	--odk-icon-size: 1.5rem;
+
+	--odk-radius: 6px;
+}
+
 body {
 	margin: 0;
+	font-family: var(--odk-font-family);
+	font-weight: 400;
+	font-size: var(--odk-base-font-size);
 }

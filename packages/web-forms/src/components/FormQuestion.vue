@@ -58,10 +58,10 @@ const submitPressed = inject('submitPressed');
 	flex-direction: column;
 	padding: 0.5rem 1rem;
 	scroll-margin-top: 4rem;
-	border-radius: 10px;
+	border-radius: var(--odk-radius);
 
 	&.highlight {
-		background-color: var(--error-bg-color);
+		background-color: var(--odk-error-background-color);
 	}
 }
 

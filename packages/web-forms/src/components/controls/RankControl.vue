@@ -107,7 +107,7 @@ const swapItems = (index: number, newPosition: number) => {
 <template>
 	<ControlText :question="question" />
 
-	<div class="range-control-container">
+	<div class="rank-control-container">
 		<div v-if="!touched" class="rank-overlay">
 			<button :disabled="disabled" @click="selectDefaultOrder">
 				<svg xmlns="http://www.w3.org/2000/svg" width="8" height="15" viewBox="0 0 8 15" fill="none">
@@ -179,27 +179,20 @@ const swapItems = (index: number, newPosition: number) => {
 </template>
 
 <style scoped lang="scss">
-@import 'primeflex/core/_variables.scss';
+@use 'primeflex/core/_variables.scss' as pf;
 
 // Variable definition to root element
-.range-control-container {
+.rank-control-container {
 	--rankSpacing: 7px;
-	--rankBorder: 1px solid var(--surface-300);
-	--rankBorderRadius: 10px;
-	--rankHighlightBackground: var(--primary-50);
-	--rankHighlightBorder: var(--primary-500);
-	--rankBaseBackground: var(--surface-0);
-	--rankDisabledBackground: var(--surface-300);
-	--rankDisabledText: var(--surface-500);
 }
 
 // Overriding VueDraggable's sortable-chosen class
 .sortable-chosen {
 	opacity: 0.9;
-	background-color: var(--rankBaseBackground);
+	background-color: var(--odk-base-background-color);
 }
 
-.range-control-container {
+.rank-control-container {
 	position: relative;
 }
 
@@ -217,13 +210,13 @@ const swapItems = (index: number, newPosition: number) => {
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	padding: 8px;
-	background: var(--rankBaseBackground);
-	border: var(--rankBorder);
-	border-radius: var(--rankBorderRadius);
-	font-size: 1rem;
+	padding: 6px;
+	background: var(--odk-base-background-color);
+	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	font-size: var(--odk-answer-font-size);
 	line-height: 17px;
-	color: var(--surface-900);
+	color: var(--odk-text-color);
 	cursor: move;
 
 	.rank-label {
@@ -239,8 +232,8 @@ const swapItems = (index: number, newPosition: number) => {
 
 .moving,
 .fade-moving {
-	background: var(--rankHighlightBackground);
-	border: 2px solid var(--rankHighlightBorder);
+	background: var(--odk-primary-lighter-background-color);
+	border: 2px solid var(--odk-primary-border-color);
 }
 
 .fade-moving {
@@ -252,24 +245,19 @@ const swapItems = (index: number, newPosition: number) => {
 	display: flex;
 	align-items: center;
 	gap: var(--rankSpacing);
-	border: var(--rankBorder);
-	border-radius: var(--rankBorderRadius);
-	background: var(--rankBaseBackground);
+	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	background: var(--odk-base-background-color);
 	padding: var(--rankSpacing);
 	line-height: 0;
 
-	&:hover:not(:disabled) {
-		background: var(--rankHighlightBackground);
-		border: 1px solid var(--rankHighlightBorder);
-	}
-
 	&:disabled {
-		background: var(--rankDisabledBackground);
-		color: var(--rankDisabledText);
+		background: var(--odk-inactive-background-color);
+		color: var(--odk-muted-text-color);
 		border: none;
 
 		svg path {
-			fill: var(--rankDisabledText);
+			fill: var(--odk-muted-text-color);
 		}
 	}
 }
@@ -282,6 +270,11 @@ const swapItems = (index: number, newPosition: number) => {
 .rank-buttons {
 	display: flex;
 	gap: var(--rankSpacing);
+
+	button:hover:not(:disabled) {
+		background: var(--odk-muted-background-color);
+		border: 1px solid var(--odk-border-color);
+	}
 }
 
 .rank-overlay {
@@ -291,19 +284,25 @@ const swapItems = (index: number, newPosition: number) => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: rgba(244, 243, 242, 0.9);
-	border-radius: var(--rankBorderRadius);
+	background-color: rgba(from var(--odk-muted-background-color) r g b / 0.9);
+	border-radius: var(--odk-radius);
 
 	button {
-		padding: var(--rankSpacing) 20px;
+		padding: 10px 20px;
+		font-size: var(--odk-base-font-size);
+
+		&:hover:not(:disabled) {
+			background: var(--odk-inactive-background-color);
+			border: 1px solid var(--odk-border-color);
+		}
 	}
 }
 
 .highlight .rank-overlay {
-	background-color: rgba(157, 157, 157, 0.9);
+	background-color: rgba(from var(--odk-muted-background-color) r g b / 0.9);
 }
 
-@media screen and (max-width: #{$sm}) {
+@media screen and (max-width: #{pf.$sm}) {
 	.rank-buttons {
 		display: none;
 	}

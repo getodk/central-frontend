@@ -85,4 +85,9 @@ const value = computed<NoteRenderableValue>(() => {
 :deep(.control-text) {
 	margin-bottom: 0;
 }
+
+.note-value {
+	font-weight: 300;
+	font-size: var(--odk-answer-font-size);
+}
 </style>
