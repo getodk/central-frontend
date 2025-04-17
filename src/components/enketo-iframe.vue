@@ -90,10 +90,13 @@ watchEffect(() => {
 
 function handleIframeMessage(event) {
   if (event.origin === location.origin) {
+    const { parentWindowOrigin } = route.query;
     // For the cases where this page is embedded in external iframe, pass the event data to the
     // parent.
-    if (location !== window.parent.location) {
-      window.parent.postMessage(event.data, route.query.parentWindowOrigin);
+    if (location !== window.parent.location &&
+        parentWindowOrigin &&
+        typeof parentWindowOrigin === 'string') {
+      window.parent.postMessage(event.data, parentWindowOrigin);
     }
 
     let eventData;
