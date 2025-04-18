@@ -87,7 +87,6 @@ describe('util/session', () => {
           .beforeEachResponse((_, { method, url, headers }) => {
             method.should.equal('GET');
             url.should.equal('/v1/users/current');
-            headers.Authorization.should.equal('Bearer foo');
             headers['X-Extended-Metadata'].should.equal('true');
           })
           .respondWithData(() => testData.extendedUsers.first());
@@ -166,7 +165,6 @@ describe('util/session', () => {
             null,
             {
               url: '/v1/config/analytics',
-              headers: { Authorization: 'Bearer foo' }
             }
           ]);
       });
@@ -184,7 +182,6 @@ describe('util/session', () => {
           .testRequests([
             {
               url: '/v1/users/current',
-              headers: { Authorization: 'Bearer foo' },
               extended: true
             }
           ]);
@@ -204,10 +201,9 @@ describe('util/session', () => {
         .respondWithData(() => testData.extendedUsers.first())
         .complete()
         .request(() => logOut(container, false))
-        .beforeEachResponse((_, { method, url, headers }) => {
+        .beforeEachResponse((_, { method, url }) => {
           method.should.equal('DELETE');
-          url.should.equal('/v1/sessions/foo');
-          headers.Authorization.should.equal('Bearer foo');
+          url.should.equal('/v1/sessions/current');
         })
         .respondWithSuccess();
     });
@@ -649,6 +645,27 @@ describe('util/session', () => {
           clock.tick(240000);
         });
     });
+
+    it('does not logout when skipAutoLogout is true', () => {
+      const clock = sinon.useFakeTimers();
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      const container = createTestContainer({ router: mockRouter('/') });
+      container.router.currentRoute.value.meta.skipAutoLogout = true;
+      withSetup(useSessions, { container });
+      const { session } = setRequestData(container.requestData, {
+        session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
+      });
+      return mockHttp(container)
+        .request(() => logIn(container, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .complete()
+        .testNoRequest(() => {
+          clock.tick(240000);
+        })
+        .afterResponse(() => {
+          session.dataExists.should.be.true;
+        });
+    });
   });
 
   describe('logout after session expiration', () => {
@@ -765,6 +782,25 @@ describe('util/session', () => {
         .respondWithSuccess()
         .afterResponse(() => {
           alert.blank();
+          clock.tick(120000);
+          alert.state.should.be.false;
+        });
+    });
+
+    it('does not show alert if skipAutoLogout is true', () => {
+      const clock = sinon.useFakeTimers();
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      const container = createTestContainer({ router: mockRouter('/') });
+      container.router.currentRoute.value.meta.skipAutoLogout = true;
+      withSetup(useSessions, { container });
+      const { requestData, alert } = container;
+      setRequestData(requestData, {
+        session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
+      });
+      return mockHttp(container)
+        .request(() => logIn(container, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .afterResponse(() => {
           clock.tick(120000);
           alert.state.should.be.false;
         });

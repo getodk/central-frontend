@@ -5,7 +5,7 @@ import SubmissionDownload from '../../../src/components/submission/download.vue'
 
 import useFields from '../../../src/request-data/fields';
 import useForm from '../../../src/request-data/form';
-import { noop } from '../../../src/util/util';
+import { getCsrf, noop } from '../../../src/util/util';
 import { useRequestData } from '../../../src/request-data';
 
 import createTestContainer from '../../util/container';
@@ -402,7 +402,7 @@ describe('SubmissionDownload', () => {
         const key = testData.standardKeys.last();
         inputs[0].getAttribute('name').should.equal(key.id.toString());
         inputs[0].value.should.equal('supersecret');
-        inputs[1].value.should.equal(modal.vm.session.csrf);
+        inputs[1].value.should.equal(getCsrf());
         success = true;
       });
       modal.get('a').trigger('click');

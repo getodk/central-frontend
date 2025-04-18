@@ -16,10 +16,8 @@ object, as well as an associated cookie that is Secure and HttpOnly. If the user
 then opens Frontend in a new tab, Frontend will use the cookie to restore the
 session.
 
-The cookie is used in only limited ways: mostly Frontend specifies the session
-token as a bearer token. The cookie is used to restore the session. It is also
-used for non-AJAX requests, including download links and iframe forms. When the
-user logs out, the cookie is removed.
+Frontend relies on session cookie for the authentication for all types of
+requests. When the user logs out, the cookie is removed.
 
 Across tabs, Frontend allows only one user to be logged in at a time. (Otherwise
 one user would use another user's cookie.) Further, Frontend allows only one
@@ -88,27 +86,22 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ i18n, requestData, alert, http }) => {
-  const { token } = requestData.session;
-  return http.delete(apiPaths.session(token), {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .catch(error => {
-      // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
-      // log out a session that has already been logged out. That will result in
-      // a 401.2 or a 403.1, which we ignore.
-      const { response } = error;
-      if (response != null && isProblem(response.data) &&
-        (response.data.code === 401.2 || response.data.code === 403.1)) {
-        return;
-      }
+const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSession())
+  .catch(error => {
+    // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
+    // log out a session that has already been logged out. That will result in
+    // a 401.2 or a 403.1, which we ignore.
+    const { response } = error;
+    if (response != null && isProblem(response.data) &&
+      (response.data.code === 401.2 || response.data.code === 403.1)) {
+      return;
+    }
 
-      alert.danger(i18n.t('util.session.alert.logoutError', {
-        message: requestAlertMessage(i18n, error)
-      }));
-      throw error;
-    });
-};
+    alert.danger(i18n.t('util.session.alert.logoutError', {
+      message: requestAlertMessage(i18n, error)
+    }));
+    throw error;
+  });
 
 // Resets requestData, clearing data and canceling requests. Some general/system
 // resources are not reset.
@@ -161,10 +154,11 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { i18n, requestData, alert } = container;
+  const { i18n, requestData, alert, router } = container;
   const { session } = requestData;
   let alerted;
   return () => {
+    if (router.currentRoute.value.meta.skipAutoLogout) return;
     if (!session.dataExists) return;
     const millisUntilExpires = Date.parse(session.expiresAt) - Date.now();
     const millisUntilLogout = millisUntilExpires - 60000;
@@ -172,14 +166,14 @@ const logOutBeforeSessionExpires = (container) => {
       logOut(container, true)
         .then(() => { alert.info(i18n.t('util.session.alert.expired')); })
         .catch(noop);
-    } else if (alerted !== session.token) {
+    } else if (alerted !== session.expiresAt) {
       // The alert also mentions this number. The alert will be a little
       // misleading if millisUntilAlert is markedly less than zero, but that
       // case is unlikely.
       const millisUntilAlert = millisUntilLogout - 120000;
       if (millisUntilAlert <= 0) {
         alert.info(i18n.t('util.session.alert.expiresSoon'));
-        alerted = session.token;
+        alerted = session.expiresAt;
       }
     }
   };
@@ -188,7 +182,7 @@ const logOutBeforeSessionExpires = (container) => {
 const logOutAfterStorageChange = (container) => (event) => {
   // event.key == null if the user clears local storage in Chrome.
   if ((event.key == null || event.key === 'sessionExpires') &&
-    container.requestData.session.dataExists) {
+    container.requestData.session.dataExists && !container.router.currentRoute.value.meta.skipAutoLogout) {
     logOut(container, true).catch(noop);
   }
 };
