@@ -46,7 +46,12 @@ const route = useRoute();
 const router = useRouter();
 const { submissionPath } = useRoutes();
 
-const redirectUrl = computed(() => route.query.return_url || route.query.returnUrl);
+const redirectUrl = computed(() => {
+  const { return_url: returnUrlPascalCase, returnUrl } = route.query;
+  if (returnUrlPascalCase && typeof returnUrlPascalCase === 'string') return returnUrlPascalCase;
+  if (returnUrl && typeof returnUrl === 'string') return returnUrl;
+  return null;
+});
 
 const enketoSrc = computed(() => {
   let prefix = '/enketo-passthrough';
@@ -92,15 +97,17 @@ const handleIframeMessage = (event) => {
       if (props.actionType === 'edit') {
         // for edit we always redirect to Submission details page
         router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
-      } else if (!props.actionType && redirectUrl.value) {
+      } else if (props.actionType === 'public-link' && redirectUrl.value) {
         // for public link, we read return value from query parameter. The value could be 3rd party
         // site as well, typically a thank you page
         try {
           const normalizedUrl = new URL(redirectUrl.value);
-          if (normalizedUrl.origin === location.origin) {
-            router.push(normalizedUrl.pathname);
-          } else {
-            location.assign(normalizedUrl);
+          if (['http:', 'https:'].includes(normalizedUrl.protocol)) {
+            if (normalizedUrl.origin === location.origin) {
+              router.push(normalizedUrl.pathname);
+            } else {
+              location.assign(normalizedUrl);
+            }
           }
         } catch (e) {}
       }
