@@ -11,6 +11,9 @@ const mountComponent = (options) =>
     container: {
       router: mockRouter()
     },
+    props: {
+      enketoId
+    },
     attachTo: document.body
   }));
 
@@ -33,7 +36,7 @@ describe('EnketoIframe', () => {
 
   it('renders iframe with correct src when actionType is edit', () => {
     const wrapper = mountComponent({
-      props: { enketoId, actionType: 'edit', instanceId: 'test-instance' }
+      props: { actionType: 'edit', instanceId: 'test-instance' }
     });
     const iframe = wrapper.find('iframe');
     iframe.exists().should.be.true;
@@ -43,7 +46,7 @@ describe('EnketoIframe', () => {
 
   it('passes all query parameters except return_url to the iframe', () => {
     const wrapper = mountComponent({
-      props: { enketoId, actionType: 'edit', instanceId: 'test-instance' },
+      props: { actionType: 'edit', instanceId: 'test-instance' },
       container: {
         router: mockRouter('/?return_url=http%3A%2F%2Flocalhost%2Fprojects%2F1&d[/data/first_name]=john')
       }
@@ -58,7 +61,7 @@ describe('EnketoIframe', () => {
 
   it('redirects on submissionsuccess message with return_url', async () => {
     const wrapper = mountComponent({
-      props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
+      props: { actionType: 'new', instanceId: 'test-instance' },
       container: {
         router: mockRouter('/?return_url=http%3A%2F%2Flocalhost%2Fprojects%2F1')
       }
