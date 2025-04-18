@@ -3,6 +3,8 @@ import EnketoIframe from '../../src/components/enketo-iframe.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
+import { testRequestData } from '../util/request-data';
+import testData from '../data';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -16,6 +18,13 @@ const mountComponent = (options) =>
     },
     attachTo: document.body
   }));
+
+const postMessageToParent = async (iframe, data) => {
+  const script = document.createElement('script');
+  script.textContent = `window.parent.postMessage('${data}', "*");`;
+  iframe.element.contentDocument.body.appendChild(script);
+  await wait();
+};
 
 describe('EnketoIframe', () => {
   [
@@ -59,22 +68,36 @@ describe('EnketoIframe', () => {
     iframe.attributes('src').should.contain(`${encodeURIComponent('d[/data/first_name]')}=john`);
   });
 
+  it('redirects to Submission details page after edit', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
+
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'edit', instanceId: 'test-instance' },
+      container: {
+        router: mockRouter('/'),
+        requestData: testRequestData([], {
+          form: testData.extendedForms.last()
+        }),
+      }
+    });
+    const iframe = wrapper.find('iframe');
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    wrapper.vm.$router.push.calledWith('/projects/1/forms/a/submissions/test-instance').should.be.true;
+  });
+
   it('redirects on submissionsuccess message with return_url - internal', async () => {
     const wrapper = mountComponent({
-      props: { enketoId, actionType: 'public-link', instanceId: 'test-instance' },
+      props: { enketoId, actionType: 'public-link' },
       container: {
         router: mockRouter(`/?return_url=${window.location.origin}/projects/1`)
       }
     });
     const iframe = wrapper.find('iframe');
 
-    const script = document.createElement('script');
-    script.textContent = `
-      window.parent.postMessage(JSON.stringify({ enketoEvent: 'submissionsuccess' }), "*");
-    `;
-    iframe.element.contentDocument.body.appendChild(script);
-
-    await wait();
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
 
     wrapper.vm.$router.push.calledWith('/projects/1').should.be.true;
   });
@@ -82,7 +105,7 @@ describe('EnketoIframe', () => {
   it('redirects on submissionsuccess message with return_url - external', async () => {
     const fakeAssign = sinon.fake();
     const wrapper = mountComponent({
-      props: { enketoId, actionType: 'public-link', instanceId: 'test-instance' },
+      props: { enketoId, actionType: 'public-link' },
       container: {
         router: mockRouter('/?return_url=http://example.com/projects/1'),
         location: {
@@ -95,15 +118,32 @@ describe('EnketoIframe', () => {
     });
     const iframe = wrapper.find('iframe');
 
-    const script = document.createElement('script');
-    script.textContent = `
-      window.parent.postMessage(JSON.stringify({ enketoEvent: 'submissionsuccess' }), "*");
-    `;
-    iframe.element.contentDocument.body.appendChild(script);
-
-    await wait();
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
 
     fakeAssign.calledWith(new URL('http://example.com/projects/1')).should.be.true;
+  });
+
+  it('does not redirect on invalid return URL', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'public-link' },
+      container: {
+        router: mockRouter('/?return_url=example.com'), //protocol is missing
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.false;
   });
 
   it('bubbles up the message event', async () => {
@@ -120,11 +160,8 @@ describe('EnketoIframe', () => {
     const iframe = wrapper.find('iframe');
 
     const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-    const script = document.createElement('script');
-    script.textContent = `window.parent.postMessage('${data}', "*");`;
-    iframe.element.contentDocument.body.appendChild(script);
 
-    await wait();
+    await postMessageToParent(iframe, data);
 
     postMessage.calledWith(data, window.location.origin).should.be.true;
   });
@@ -140,19 +177,16 @@ describe('EnketoIframe', () => {
       }
     });
 
-
     const postMessage = sinon.fake();
     sinon.replace(window.parent, 'postMessage', postMessage);
 
     const iframe = wrapper.find('iframe');
 
     const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-    const script = document.createElement('script');
-    script.textContent = `window.parent.postMessage('${data}', "*");`;
-    iframe.element.contentDocument.body.appendChild(script);
-
-    await wait();
+    await postMessageToParent(iframe, data);
 
     postMessage.called.should.be.false;
   });
 });
+
+

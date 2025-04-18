@@ -48,7 +48,12 @@ const route = useRoute();
 const router = useRouter();
 const { submissionPath } = useRoutes();
 
-const redirectUrl = computed(() => route.query.return_url || route.query.returnUrl);
+const redirectUrl = computed(() => {
+  const { return_url: returnUrlPascalCase, returnUrl } = route.query;
+  if (returnUrlPascalCase && typeof returnUrlPascalCase === 'string') return returnUrlPascalCase;
+  if (returnUrl && typeof returnUrl === 'string') return returnUrl;
+  return null;
+});
 
 const lastSubmitted = (enketoOnceId) => {
   const iframe = document.createElement('iframe');
@@ -132,10 +137,12 @@ const handleIframeMessage = (event) => {
         // site as well, typically a thank you page
         try {
           const normalizedUrl = new URL(redirectUrl.value);
-          if (normalizedUrl.origin === location.origin) {
-            router.push(normalizedUrl.pathname);
-          } else {
-            location.assign(normalizedUrl);
+          if (['http:', 'https:'].includes(normalizedUrl.protocol)) {
+            if (normalizedUrl.origin === location.origin) {
+              router.push(normalizedUrl.pathname);
+            } else {
+              location.assign(normalizedUrl);
+            }
           }
         } catch (e) {}
       }
