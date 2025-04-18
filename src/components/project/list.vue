@@ -58,6 +58,7 @@ except according to the terms contained in the LICENSE file.
     </page-section>
     <project-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
+    <whats-new/>
   </div>
 </template>
 
@@ -72,6 +73,7 @@ import ProjectNew from './new.vue';
 import ProjectHomeBlock from './home-block.vue';
 import ProjectSort from './sort.vue';
 import SentenceSeparator from '../sentence-separator.vue';
+import WhatsNew from '../whats-new.vue';
 
 import sortFunctions from '../../util/sort';
 import useChunkyArray from '../../composables/chunky-array';
@@ -89,7 +91,8 @@ export default {
     ProjectNew,
     ProjectHomeBlock,
     ProjectSort,
-    SentenceSeparator
+    SentenceSeparator,
+    WhatsNew
   },
   inject: ['alert'],
   setup() {

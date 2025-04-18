@@ -5197,6 +5197,21 @@
           }
         }
       }
+    },
+    "WhatsNew": {
+      "title": {
+        "string": "Form drafts have moved",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "body": {
+        "string": "Create a new form and edit it on the new Edit Form tab"
+      },
+      "action": {
+        "gotIt": {
+          "string": "Got it!",
+          "developer_comment": "This is the text of a button that is used to close the modal."
+        }
+      }
     }
   },
   "presenter": {

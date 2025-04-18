@@ -1,0 +1,70 @@
+<!--
+Copyright 2025 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <div class="modal-introduction">
+        {{ $t('body') }}
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary"
+          @click="hideModal">
+          {{ $t('action.gotIt') }}
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script setup>
+import { ref, watch } from 'vue';
+
+import Modal from './modal.vue';
+
+import { useRequestData } from '../request-data';
+
+const { currentUser, projects } = useRequestData();
+const isVisible = ref(false);
+
+defineOptions({
+  name: 'WhatsNew'
+});
+
+watch(() => projects.dataExists, () => {
+  const canUpdateForm = currentUser.can('form.update') ||
+    projects.data.some(project => project.verbs.has('form.update'));
+  if (canUpdateForm && !currentUser.preferences.site.whatsNewDismissed2025_1) {
+    isVisible.value = true;
+  }
+});
+
+function hideModal() {
+  currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+  isVisible.value = false;
+}
+
+</script>
+
+<i18n lang="json5">
+  {
+    "en": {
+      // This is the title at the top of a pop-up.
+      "title": "Form drafts have moved",
+      "body": "Create a new form and edit it on the new Edit Form tab",
+      "action": {
+        // This is the text of a button that is used to close the modal.
+        "gotIt": "Got it!"
+      }
+    }
+  }
+</i18n>
