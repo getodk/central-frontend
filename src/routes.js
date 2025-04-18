@@ -675,7 +675,13 @@ const routes = [
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
     name: 'SubmissionNew',
-    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline' }),
+    props: (route) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'new',
+      };
+    },
     loading: 'page',
     meta: {
       standalone: true,
@@ -687,7 +693,14 @@ const routes = [
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
     name: 'DraftSubmissionNew',
-    props: (route) => ({ ...route.params, offline: route.params.offline === 'offline', draft: true }),
+    props: (route) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'new',
+        draft: true
+      };
+    },
     loading: 'page',
     meta: {
       standalone: true,
@@ -706,10 +719,16 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})/:actionType(offline)?',
+    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})/:offline(offline)?',
     component: 'FormSubmission',
     name: 'WebFormDirectLink',
-    props: (route) => ({ ...route.params, actionType: route.params.actionType || 'public-link' }),
+    props: (route) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'public-link',
+      };
+    },
     loading: 'page',
     meta: {
       standalone: true,

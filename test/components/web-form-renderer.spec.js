@@ -7,6 +7,7 @@ import simpleXml from '../data/xml/simple/form.xml';
 import simpleSubmission from '../data/xml/simple/submission.xml';
 import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import { mockLogin } from '../util/session';
+import { mergeMountOptions } from '../util/lifecycle';
 
 describe('WebFormRenderer', () => {
   let WebFormRenderer;
@@ -21,7 +22,7 @@ describe('WebFormRenderer', () => {
     mockLogin();
   });
 
-  const mountComponent = (props, formXml = simpleXml) => {
+  const mountComponent = (options, formXml = simpleXml) => {
     const container = createTestContainer({
       requestData: testRequestData([], {
         form: testData.extendedForms.last()
@@ -29,10 +30,10 @@ describe('WebFormRenderer', () => {
       router: testRouter()
     });
     return mockHttp()
-      .mount(WebFormRenderer, {
+      .mount(WebFormRenderer, mergeMountOptions(options, {
         container,
-        props
-      })
+        props: { actionType: 'new' }
+      }))
       .respondWithData(() => formXml);
   };
 
@@ -135,7 +136,7 @@ describe('WebFormRenderer', () => {
   it('shows preview modal', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-    const component = await mountComponent({ actionType: 'preview' })
+    const component = await mountComponent({ props: { actionType: 'preview' } })
       .testModalToggles({
         modal: '#web-form-renderer-submission-modal',
         show: '.odk-form .footer button',
@@ -169,8 +170,10 @@ describe('WebFormRenderer', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
       const component = await mountComponent({
-        actionType: 'edit',
-        instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
+        props: {
+          actionType: 'edit',
+          instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
+        }
       })
         .respondWithData(() => [])
         .respondWithData(() => simpleSubmission);
@@ -182,8 +185,10 @@ describe('WebFormRenderer', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
       await mountComponent({
-        actionType: 'edit',
-        instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
+        props: {
+          actionType: 'edit',
+          instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
+        }
       })
         .respondWithData(() => [])
         .respondWithData(() => simpleSubmission)

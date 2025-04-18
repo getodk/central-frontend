@@ -123,7 +123,9 @@ const responsesByComponent = {
       ({ url }) => matchesApiPath(apiPaths.form, url) ||
                    matchesApiPath(apiPaths.formDraft, url) ||
                    matchesApiPath(apiPaths.formByEnketoId, url),
-      () => testData.extendedForms.last()
+      () => (testData.extendedFormVersions.last().publishedAt
+        ? testData.extendedForms.last()
+        : testData.extendedFormDrafts.last())
     ]
   }),
   FormSubmissions: componentResponses({

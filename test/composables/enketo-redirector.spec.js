@@ -4,7 +4,7 @@ import { mockLogin } from '../util/session';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
-describe('EnketoRedirector', () => {
+describe('useEnketoRedirector', () => {
   beforeEach(() => {
     mockLogin();
   });
@@ -55,6 +55,22 @@ describe('EnketoRedirector', () => {
     return load(`/f/${enketoId}/preview`)
       .afterResponses(app => {
         app.vm.$route.path.should.equal('/projects/1/forms/a/draft/preview');
+      });
+  });
+
+  it('should redirect to new submission page - offline', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    return load(`/f/${enketoId}/offline`)
+      .afterResponses(app => {
+        app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new/offline');
+      });
+  });
+
+  it('should redirect to new draft submission page - offline', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
+    return load(`/f/${enketoId}/offline`)
+      .afterResponses(app => {
+        app.vm.$route.path.should.equal('/projects/1/forms/a/draft/submissions/new/offline');
       });
   });
 

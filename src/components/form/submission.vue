@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
   <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType" :instance-id="instanceId"/>
   <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
     :enketo-id="form.enketoId"
-    :action-type="offline ? 'offline' : actionType"
+    :action-type="actionType"
     :instance-id="instanceId"/>
 </template>
 
@@ -40,13 +40,36 @@ const props = defineProps({
   projectId: String,
   xmlFormId: String,
   instanceId: String,
-  actionType: String,
+  /**
+ * Specifies the action to be performed. The possible values and their purposes are:
+ *
+ * **preview**:     Displays the Form in preview mode. Submissions cannot be created.
+ *
+ * **edit**:        Displays the Form pre-filled with data from an existing Submission (instance),
+ *                  which can be modified.
+ *
+ * **public-link**: Displays the Form for creating a new Submission. After a successful Submission,
+ *                  a thank-you message/page is shown. This route is intended for anonymous users;
+ *                  a session token (`st`) is included in the query parameters for backend
+ *                  authentication.
+ *
+ * **new**:         Displays the Form to create a new Submission, with the option to create multiple
+ *                  Submissions. This action is intended for authenticated (logged-in) users as
+ *                  oppose to `public-link`.
+ *
+ * **offline**:     An extension of the `new` action type where submissions can be created while
+ *                  offline and synced once the device is back online. Currently, only Enketo
+ *                  supports this action.
+ */
+  actionType: {
+    type: String,
+    required: true,
+    validator(value) {
+      return ['new', 'edit', 'public-link', 'offline', 'preview'].includes(value);
+    }
+  },
   enketoId: String,
-  draft: Boolean,
-  offline: {
-    type: Boolean,
-    default: false
-  }
+  draft: Boolean
 });
 
 const route = useRoute();
