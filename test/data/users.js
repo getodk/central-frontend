@@ -25,10 +25,7 @@ export const extendedUsers = dataStore({
     verbs = verbsByRole(role),
     createdAt = undefined,
     deletedAt = undefined,
-    preferences = {
-      site: {},
-      projects: {},
-    },
+    preferences = undefined
   }) => ({
     id,
     type: 'user',
@@ -40,7 +37,10 @@ export const extendedUsers = dataStore({
       : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
     updatedAt: null,
     deletedAt,
-    preferences,
+    preferences: {
+      site: preferences?.site ?? {},
+      projects: preferences?.projects ?? {}
+    }
   }),
   sort: (administrator1, administrator2) =>
     administrator1.email.localeCompare(administrator2.email)
