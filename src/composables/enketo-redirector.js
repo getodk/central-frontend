@@ -44,6 +44,7 @@ export default memoizeForContainer(({ router, requestData }) => {
         target = newSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
       }
 
+      // `target` can't be falsey here because all possible actionType is checked above.
       if (target) {
         router.replace(`${target}${queryString(route.query)}`);
       }
