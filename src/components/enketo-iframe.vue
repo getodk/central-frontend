@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
+  <loading :state="!enketoSrc"/>
   <iframe v-if="enketoSrc" id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
@@ -19,6 +20,7 @@ import { computed, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useEventListener from '../composables/event-listener';
 import { queryString } from '../util/request';
+import Loading from './loading.vue';
 
 defineOptions({
   name: 'EnketoIframe'
