@@ -92,7 +92,10 @@ defineOptions({
 });
 
 const props = defineProps({
-  actionType: String,
+  actionType: {
+    type: String,
+    required: true
+  },
   instanceId: String
 });
 

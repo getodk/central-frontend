@@ -123,7 +123,9 @@ const responsesByComponent = {
       ({ url }) => matchesApiPath(apiPaths.form, url) ||
                    matchesApiPath(apiPaths.formDraft, url) ||
                    matchesApiPath(apiPaths.formByEnketoId, url),
-      () => testData.extendedForms.last()
+      () => (testData.extendedFormVersions.last().publishedAt
+        ? testData.extendedForms.last()
+        : testData.extendedFormDrafts.last())
     ]
   }),
   FormSubmissions: componentResponses({
@@ -222,9 +224,6 @@ const responsesByComponent = {
       return config != null ? config : mockResponse.problem(404.1);
     },
     audits: true
-  }),
-  EnketoRedirector: componentResponses({
-    form: () => testData.extendedForms.last()
   }),
 
   Download: [],

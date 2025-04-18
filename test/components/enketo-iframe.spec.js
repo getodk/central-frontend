@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import EnketoIframe from '../../src/components/enketo-iframe.vue';
-import NotFound from '../../src/components/not-found.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
@@ -17,23 +16,22 @@ const mountComponent = (options) =>
 
 describe('EnketoIframe', () => {
   [
-    { desc: 'all null', enketoId: null, actionType: null, instanceId: null },
-    { desc: 'invalid actionType', enketoId, actionType: 'delete', instanceId: null },
-    { desc: 'null instanceId with edit', enketoId, actionType: 'edit', instanceId: null },
-  ].forEach(t => {
-    it(`renders NotFound component when props are invalid - ${t.desc}`, () => {
-      const { desc, ...props } = t;
-      const wrapper = mountComponent({ props });
-      wrapper.findComponent(NotFound).exists().should.be.true;
+    { actionType: 'new', expected: `/enketo-passthrough/${enketoId}` },
+    { actionType: 'public-link', expected: `/enketo-passthrough/single/${enketoId}` },
+    { actionType: 'preview', expected: `/enketo-passthrough/preview/${enketoId}` },
+    { actionType: 'offline', expected: `/enketo-passthrough/x/${enketoId}` },
+  ].forEach(({ actionType, expected }) => {
+    it(`renders iframe with correct src when actionType is ${actionType}`, () => {
+      const wrapper = mountComponent({
+        props: { enketoId, actionType }
+      });
+      const iframe = wrapper.find('iframe');
+      iframe.exists().should.be.true;
+      iframe.attributes('src').should.contain(expected);
     });
   });
 
-  it('should update title to Page Not Found when props are invalid', () => {
-    mountComponent();
-    document.title.should.match(/Page Not Found/);
-  });
-
-  it('renders iframe with correct src when props are valid', () => {
+  it('renders iframe with correct src when actionType is edit', () => {
     const wrapper = mountComponent({
       props: { enketoId, actionType: 'edit', instanceId: 'test-instance' }
     });
@@ -53,6 +51,7 @@ describe('EnketoIframe', () => {
     const iframe = wrapper.find('iframe');
     iframe.exists().should.be.true;
 
+    iframe.attributes('src').should.not.contain('return_url');
     iframe.attributes('src').should.contain('instance_id=test-instance');
     iframe.attributes('src').should.contain(`${encodeURIComponent('d[/data/first_name]')}=john`);
   });

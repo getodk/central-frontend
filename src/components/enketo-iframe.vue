@@ -11,16 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <not-found v-if="invalidProps"/>
-  <iframe v-else id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
+  <iframe v-if="enketoSrc" id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
 <script setup>
-import { computed, inject, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { setDocumentTitle } from '../util/reactivity';
-import NotFound from './not-found.vue';
 import useEventListener from '../composables/event-listener';
 import { queryString } from '../util/request';
 
@@ -31,11 +27,11 @@ defineOptions({
 const props = defineProps({
   enketoId: {
     type: String,
-    required: false
+    required: true
   },
   actionType: {
     type: String,
-    default: ''
+    required: true
   },
   instanceId: String
 });
@@ -44,16 +40,6 @@ const { location } = inject('container');
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
-
-const invalidProps = computed(() => {
-  // actionType is '' for public-link
-  const validActionTypes = ['offline', 'edit', 'new', 'preview', ''];
-  if (!props.enketoId) return true;
-  if (!validActionTypes.includes(props.actionType)) return true;
-  if (props.actionType === 'edit' && !props.instanceId) return true;
-  return false;
-});
 
 const redirectUrl = computed(() => route.query.return_url);
 
@@ -70,7 +56,7 @@ const enketoSrc = computed(() => {
 
   if (props.actionType === 'offline') {
     prefix += '/x';
-  } else if (!props.actionType) {
+  } else if (props.actionType === 'public-link') {
     prefix += '/single';
   } else if (props.actionType === 'edit') {
     prefix += `/${props.actionType}`;
@@ -78,14 +64,9 @@ const enketoSrc = computed(() => {
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
+  // for actionType 'new', we don't need to add anything to the prefix.
 
   return `${prefix}/${props.enketoId}${queryString(query)}`;
-});
-
-watchEffect(() => {
-  if (invalidProps.value) {
-    setDocumentTitle(() => [t('title.pageNotFound')]);
-  }
 });
 
 function handleIframeMessage(event) {
