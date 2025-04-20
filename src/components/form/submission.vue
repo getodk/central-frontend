@@ -13,8 +13,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <loading :state="initiallyLoading"/>
   <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType" :instance-id="instanceId"/>
+  <!-- enketoId can be enketoOnceId so first try to read it from the prop (route.params)-->
   <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
-    :enketo-id="form.enketoId"
+    :enketo-id="enketoId ?? form.enketoId"
     :action-type="actionType"
     :instance-id="instanceId"/>
 </template>
