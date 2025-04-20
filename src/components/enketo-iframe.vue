@@ -24,6 +24,7 @@ import { useRequestData } from '../request-data';
 import Loading from './loading.vue';
 import useEventListener from '../composables/event-listener';
 import useRoutes from '../composables/routes';
+import { getCookieValue } from '../util/util';
 
 defineOptions({
   name: 'EnketoIframe'
@@ -62,10 +63,7 @@ const lastSubmitted = (enketoOnceId) => {
 
   return new Promise((resolve) => {
     iframe.onload = () => {
-      const value = iframe.contentDocument.cookie.split(';')
-        .map(c => c.trim())
-        .find(c => c.startsWith(enketoOnceId))
-        ?.split('=')[1];
+      const value = getCookieValue(enketoOnceId);
       document.body.removeChild(iframe);
       resolve(value);
     };

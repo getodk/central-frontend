@@ -17,7 +17,7 @@ export const noargs = (f) => () => f();
 
 export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);
 
-export const getCsrf = () => decodeURIComponent(document.cookie.split(/;[ \t]*/)
+export const getCookieValue = (key) => decodeURIComponent(document.cookie.split(/;[ \t]*/)
   .map(cookie => cookie.trim())
-  .find(cookie => cookie.startsWith('__csrf'))
+  .find(cookie => cookie.startsWith(`${key}=`))
   ?.split('=')[1] || '');
