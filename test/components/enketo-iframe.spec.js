@@ -144,6 +144,7 @@ describe('EnketoIframe', () => {
     await postMessageToParent(iframe, data);
 
     fakeAssign.called.should.be.false;
+    wrapper.vm.$router.push.called.should.be.false;
   });
 
   it('bubbles up the message event', async () => {
