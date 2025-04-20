@@ -98,7 +98,7 @@ const setEnketoSrc = () => {
   }
   // for actionType 'new', we don't need to add anything to the prefix.
 
-  if (props.enketoId.length === 64) {
+  if (props.enketoId === form.enketoOnceId) {
     lastSubmitted(props.enketoId)
       .then(result => {
         if (result) {
