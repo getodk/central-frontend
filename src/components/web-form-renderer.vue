@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div v-if="submissionModal.type === 'submissionModal'" class="modal-actions">
         <button type="button" class="btn btn-primary" @click="hideModals()">
-          {{ $t('submissionModal.fillOutAgain') }}
+          {{ $t('submissionModal.action.fillOutAgain') }}
         </button>
         <button type="button" class="btn btn-link" @click="closeWindow()">
           {{ $t('action.close') }}
