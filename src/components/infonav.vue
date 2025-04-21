@@ -66,14 +66,19 @@ const toggleId = `${idPrefix}-toggle`;
     .btn {
       font-size: 15px;
       box-shadow: none;
-
-      &:hover {
-        background-color: #fff;
-        color: $color-action-foreground;
-      }
-
     }
-    button:focus {
+
+    &:not(.open) > .btn:focus {
+      // overrides bootstrap .btn focus
+      color: $color-action-foreground;
+    }
+
+    &:not(.open):hover > .btn {
+      background-color: white;
+      color: $color-action-foreground;
+    }
+
+    &.open > .btn {
         background-color: $color-action-background;
         color: #fff;
       }
