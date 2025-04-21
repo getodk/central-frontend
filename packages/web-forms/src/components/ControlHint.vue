@@ -16,5 +16,7 @@ defineProps<{ question: QuestionNode }>();
 	color: var(--odk-muted-text-color);
 	margin: 4px 0 10px 0;
 	line-height: calc(var(--odk-hint-font-size) * 1.45);
+	word-wrap: break-word;
+	white-space: pre-wrap;
 }
 </style>

@@ -17,8 +17,8 @@ const label = computed(() => props.node.currentState.label?.asString);
 			v-if="node.nodeType === 'repeat-range:uncontrolled'"
 			class="flex justify-content-start flex-wrap"
 		>
-			<Button outlined class="btn-add" @click="node.addInstances()">
-				<span class="flex justify-content-center p-button-label" data-pc-section="label">
+			<Button outlined severity="contrast" class="btn-add" @click="node.addInstances()">
+				<span class="flex justify-content-center align-items-center p-button-label" data-pc-section="label">
 					<span class="icon-add" />
 					<span class="btn-add-label">
 						<!-- TODO: translations -->
@@ -31,36 +31,21 @@ const label = computed(() => props.node.currentState.label?.asString);
 </template>
 
 <style scoped lang="scss">
-.p-button.p-button-outlined.btn-add {
-	box-shadow: inset 0 0 0 1px #cbcacc;
-	margin-left: 36px;
-	min-width: 144px;
-	max-width: 260px;
-	font-weight: 400;
+.repeat {
 	margin-bottom: 1rem;
+}
 
-	&:hover {
-		background: var(--odk-primary-light-background-color);
-	}
+.btn-add {
+	max-width: 260px;
 
 	.btn-add-label {
 		vertical-align: middle;
-		margin-right: 0.5rem;
 	}
 
 	.icon-add {
-		margin-right: 0.5rem;
-		font-size: 18px;
+		margin: 0 5px 0 0;
+		font-size: var(--odk-icon-size);
 		vertical-align: middle;
-	}
-}
-
-.repeat {
-	margin-bottom: 1rem;
-
-	.p-button.p-button-outlined.btn-add {
-		margin-left: 25px;
-		margin-bottom: 0rem;
 	}
 }
 </style>

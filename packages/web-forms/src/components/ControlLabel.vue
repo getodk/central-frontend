@@ -16,6 +16,7 @@ label {
 	font-size: var(--odk-question-font-size);
 	line-height: 1.5rem;
 	word-wrap: break-word;
+	white-space: pre-wrap;
 
 	.required {
 		color: var(--odk-error-text-color);

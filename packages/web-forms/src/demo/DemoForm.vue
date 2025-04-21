@@ -59,7 +59,6 @@ const formXls = computed(() => {
 .demo-form {
 	border-radius: var(--odk-radius);
 	overflow: hidden;
-	border: 1px solid var(--odk-border-color);
 	background: var(--odk-base-background-color);
 
 	.form-image-wrap {
