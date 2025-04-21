@@ -255,16 +255,16 @@ const titleId = `modal-title${id}`;
       padding-top: 16px;
 
       .close {
-          float: none;
-          color: $color-input;
-          font-weight: normal;
-          opacity: 1;
+        float: none;
+        color: $color-input;
+        font-weight: normal;
+        opacity: 1;
 
-          &[aria-disabled="true"] {
-            cursor: not-allowed;
-          }
+        &[aria-disabled="true"] {
+          cursor: not-allowed;
         }
       }
+    }
 
     .modal-header {
       color: $color-text;
@@ -280,7 +280,10 @@ const titleId = `modal-title${id}`;
   }
 }
 
-.modal-body { padding: 0px $padding-right-modal-header 0px $padding-left-modal-header }
+.modal-body {
+  padding: $padding-modal-body;
+  padding-block: 0px;
+}
 
 .modal-actions {
   background: $color-subpanel-background;
@@ -288,7 +291,7 @@ const titleId = `modal-title${id}`;
   border-bottom-right-radius: 6px;
   margin: -$padding-modal-body;
   margin-top: $padding-modal-body;
-  padding: 15px
+  padding: $padding-modal-actions;
 }
 
 .modal-full {
