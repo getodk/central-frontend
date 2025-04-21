@@ -435,6 +435,19 @@ describe('util/session', () => {
           .request(() => logOut(container, false).should.be.fulfilled)
           .respondWithProblem(403.1);
       });
+
+      it('returns a fulfilled promise for a 404.1 Problem', () => {
+        const container = createTestContainer({
+          router: mockRouter(),
+          requestData: { session: testData.sessions.createNew() }
+        });
+        return mockHttp(container)
+          .request(() => logIn(container, true))
+          .respondWithData(() => testData.extendedUsers.first())
+          .complete()
+          .request(() => logOut(container, false).should.be.fulfilled)
+          .respondWithProblem(404.1);
+      });
     });
 
     describe('logout during the request for the current user', () => {

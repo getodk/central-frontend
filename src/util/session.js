@@ -90,10 +90,10 @@ const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSes
   .catch(error => {
     // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
     // log out a session that has already been logged out. That will result in
-    // a 401.2 or a 403.1, which we ignore.
+    // a 401.2 or a 403.1 or a 404.1, which we ignore.
     const { response } = error;
     if (response != null && isProblem(response.data) &&
-      (response.data.code === 401.2 || response.data.code === 403.1)) {
+      (response.data.code === 401.2 || response.data.code === 403.1 || response.data.code === 404.1)) {
       return;
     }
 
