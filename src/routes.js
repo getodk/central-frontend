@@ -709,7 +709,7 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]{31})/:actionType(new|edit|preview)',
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|edit|preview)',
     component: 'FormSubmission',
     name: 'EnketoRedirector',
     props: true,
@@ -719,7 +719,7 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]{31}|[a-zA-Z0-9]{64})/:offline(offline)?',
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
     component: 'FormSubmission',
     name: 'WebFormDirectLink',
     props: (route) => {
@@ -735,15 +735,6 @@ const routes = [
       restoreSession: true,
       requireLogin: false,
       title: () => [form.nameOrId]
-    },
-    // onceEnketoId can be used by only public-links as it doesn't support offline mode
-    beforeEnter: (to) => {
-      const { enketoId, actionType } = to.params;
-
-      if (enketoId.length === 64 && actionType === 'offline') {
-        return '/not-found';
-      }
-      return true;
     }
   }),
 
