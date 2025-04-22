@@ -29,6 +29,8 @@ const provide = [
   'logger'
 ];
 
+axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
+
 export default ({
   // `router` must be a function that returns an object. The function will be
   // passed a partial container. It is also possible to create a container

@@ -4,9 +4,8 @@ import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
 import { relativeUrl } from '../request';
-import { withAuth } from '../../../src/util/request';
 
-const assertRequestsMatch = (actual, expected, component) => {
+const assertRequestsMatch = (actual, expected) => {
   const { extended = false, ...expectedNormalized } = expected;
   if (expectedNormalized.headers == null) expectedNormalized.headers = {};
   if (extended) {
@@ -18,9 +17,6 @@ const assertRequestsMatch = (actual, expected, component) => {
 
   if (typeof expectedNormalized.url === 'function') {
     expectedNormalized.url.call(null, relativeUrl(actual.url));
-    // Replace expectedNormalized.url now that actual.url has passed validation.
-    // This is needed because withAuth() expects the URL.
-    expectedNormalized.url = actual.url;
   } else {
     actual.url.should.equal(expectedNormalized.url);
   }
@@ -35,10 +31,7 @@ const assertRequestsMatch = (actual, expected, component) => {
     }
   }
 
-  const token = component != null
-    ? component.vm.$container.requestData.session.token
-    : null;
-  const { headers: expectedHeaders = {} } = withAuth(expectedNormalized, token);
+  const { headers: expectedHeaders = {} } = expectedNormalized;
   (actual.headers ?? {}).should.eql(expectedHeaders);
 };
 
@@ -53,7 +46,7 @@ export function testRequests(expectedConfigs) {
       // expectedConfigs[i] == null, the request is intentionally not checked
       // (presumably because it is checked elsewhere).
       if (i < expectedConfigs.length && expectedConfigs[i] != null)
-        assertRequestsMatch(config, expectedConfigs[i], component);
+        assertRequestsMatch(config, expectedConfigs[i]);
     })
     .afterResponses(() => {
       if (count !== expectedConfigs.length) {
@@ -75,7 +68,7 @@ export function testRequestsInclude(expectedConfigs) {
       for (const [i, expected] of expectedConfigs.entries()) {
         if (matched.includes(i)) continue; // eslint-disable-line no-continue
         try {
-          assertRequestsMatch(config, expected, component);
+          assertRequestsMatch(config, expected);
           matched.push(i);
           return;
         } catch (_) {}

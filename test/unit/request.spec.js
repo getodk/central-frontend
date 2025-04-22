@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 
 import createCentralI18n from '../../src/i18n';
-import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth, withHttpMethods } from '../../src/util/request';
+import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withHttpMethods } from '../../src/util/request';
 
 import { mockAxiosError } from '../util/axios';
 import { mockLogger } from '../util/util';
@@ -499,46 +499,6 @@ describe('util/request', () => {
 
     it('returns undefined for a property that is not on the function', () => {
       expect(withHttpMethods(() => {}).foo).to.be.undefined;
-    });
-  });
-
-  describe('withAuth()', () => {
-    it('specifies the session token in the Authorization header', () => {
-      withAuth({ url: '/v1/users' }, 'xyz').should.eql({
-        url: '/v1/users',
-        headers: { Authorization: 'Bearer xyz' }
-      });
-    });
-
-    it('does not add an Authorization header if URL does not start with /v1', () => {
-      const config = { url: '/version.txt' };
-      withAuth(config, 'xyz').should.equal(config);
-    });
-
-    it('does not add an Authorization header if there is not a token', () => {
-      const config = { url: '/v1/users' };
-      withAuth(config, null).should.equal(config);
-    });
-
-    it('does not overwrite an existing Authorization header', () => {
-      const config = {
-        url: '/v1/users',
-        headers: { Authorization: 'auth' }
-      };
-      withAuth(config, 'xyz').should.equal(config);
-    });
-
-    it('preserves other headers and options', () => {
-      const config = {
-        method: 'GET',
-        url: '/v1/users',
-        headers: { 'X-Extended-Metadata': 'true' }
-      };
-      withAuth(config, 'xyz').should.eql({
-        method: 'GET',
-        url: '/v1/users',
-        headers: { 'X-Extended-Metadata': 'true', Authorization: 'Bearer xyz' }
-      });
     });
   });
 

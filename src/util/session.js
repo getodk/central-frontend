@@ -16,10 +16,8 @@ object, as well as an associated cookie that is Secure and HttpOnly. If the user
 then opens Frontend in a new tab, Frontend will use the cookie to restore the
 session.
 
-The cookie is used in only limited ways: mostly Frontend specifies the session
-token as a bearer token. The cookie is used to restore the session. It is also
-used for non-AJAX requests, including download links and iframe forms. When the
-user logs out, the cookie is removed.
+Frontend relies on session cookie for the authentication for all types of
+requests. When the user logs out, the cookie is removed.
 
 Across tabs, Frontend allows only one user to be logged in at a time. (Otherwise
 one user would use another user's cookie.) Further, Frontend allows only one
@@ -27,11 +25,9 @@ session to be in use at a time. We use local storage to enforce this,
 coordinating login and logout across tabs:
 
   - If the user has the login page open in two tabs, logs in in one tab, then
-    tries to log in in the other, the second login will fail, because the cookie
-    will be sent without a CSRF token and without other auth. Because the cookie
-    is HttpOnly, Frontend cannot check for the cookie directly. Instead, when
-    the user logs in, Frontend stores the session expiration date in local
-    storage, then checks it before another login attempt.
+    tries to log in in the other, user will see message that they are already
+    logged in. When the user logs in, Frontend stores the session expiration
+    date in local storage, then checks it before another login attempt.
   - If the user logs out in one tab, Frontend removes the session expiration
     date from local storage, triggering other tabs to log out.
 
@@ -47,21 +43,19 @@ expiration date is also stored in local storage. This approach is designed to:
 
   - Support cookie auth
   - Ensure the user knows when they are logged out; prevent the user from seeing
-    401 messages after their session has been deleted
+    40x messages after their session has been deleted
   - Prevent one user from using another user's cookie
   - Ensure that the cookie is removed when the user logs out
 
-If the user clears the cookie, then functionality that relies on it will stop
-working. Chrome allows the user to clear cookies and local storage separately.
+If the user clears the cookie, all requests will result in failure.
 If the user clears local storage, it will trigger Frontend to log out in Chrome.
 However, it will not in Firefox or Safari. Yet Frontend will still be able to
 coordinate logout across tabs, enforcing a single session.
 
-Similarly, if cookies are blocked, then functionality that relies on the cookie
-will not work. If local storage is blocked, the user will be able to create
-multiple sessions, and logout will not be coordinated across tabs. In Chrome,
-Firefox, and Safari, blocking cookies and blocking local storage seem to go
-hand-in-hand.
+Similarly, if cookies are blocked, then Frontend will not work. If local
+storage is blocked, the user will be able to create multiple sessions, and
+logout will not be coordinated across tabs. In Chrome, Firefox, and Safari,
+blocking cookies and blocking local storage seem to go hand-in-hand.
 */
 
 import { START_LOCATION } from 'vue-router';
@@ -88,27 +82,22 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ i18n, requestData, alert, http }) => {
-  const { token } = requestData.session;
-  return http.delete(apiPaths.session(token), {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .catch(error => {
-      // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
-      // log out a session that has already been logged out. That will result in
-      // a 401.2 or a 403.1, which we ignore.
-      const { response } = error;
-      if (response != null && isProblem(response.data) &&
-        (response.data.code === 401.2 || response.data.code === 403.1)) {
-        return;
-      }
+const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSession())
+  .catch(error => {
+    // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
+    // log out a session that has already been logged out. That will result in
+    // a 401.2 or a 403.1 or a 404.1, which we ignore.
+    const { response } = error;
+    if (response != null && isProblem(response.data) &&
+      (response.data.code === 401.2 || response.data.code === 403.1 || response.data.code === 404.1)) {
+      return;
+    }
 
-      alert.danger(i18n.t('util.session.alert.logoutError', {
-        message: requestAlertMessage(i18n, error)
-      }));
-      throw error;
-    });
-};
+    alert.danger(i18n.t('util.session.alert.logoutError', {
+      message: requestAlertMessage(i18n, error)
+    }));
+    throw error;
+  });
 
 // Resets requestData, clearing data and canceling requests. Some general/system
 // resources are not reset.
@@ -172,14 +161,14 @@ const logOutBeforeSessionExpires = (container) => {
       logOut(container, true)
         .then(() => { alert.info(i18n.t('util.session.alert.expired')); })
         .catch(noop);
-    } else if (alerted !== session.token) {
+    } else if (alerted !== session.expiresAt) {
       // The alert also mentions this number. The alert will be a little
       // misleading if millisUntilAlert is markedly less than zero, but that
       // case is unlikely.
       const millisUntilAlert = millisUntilLogout - 120000;
       if (millisUntilAlert <= 0) {
         alert.info(i18n.t('util.session.alert.expiresSoon'));
-        alerted = session.token;
+        alerted = session.expiresAt;
       }
     }
   };

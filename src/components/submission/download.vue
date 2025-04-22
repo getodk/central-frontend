@@ -128,6 +128,7 @@ import Modal from '../modal.vue';
 import useCallWait from '../../composables/call-wait';
 import { apiPaths, isProblem } from '../../util/request';
 import { useRequestData } from '../../request-data';
+import { getCookieValue } from '../../util/util';
 
 export default {
   name: 'SubmissionDownload',
@@ -253,7 +254,7 @@ export default {
       form.appendChild(csrf);
 
       passphraseInput.value = this.passphrase;
-      csrf.value = this.session.csrf;
+      csrf.value = getCookieValue('__csrf');
       form.submit();
       // Ensure that the inputs' values are no longer in the DOM.
       form.reset();

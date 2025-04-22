@@ -68,6 +68,7 @@ const entityPath = (suffix) =>
 export const apiPaths = {
   // Backend generates session tokens that are URL-safe.
   session: (token) => `/v1/sessions/${token}`,
+  currentSession: () => '/v1/sessions/current',
   users: (query = undefined) => `/v1/users${queryString(query)}`,
   user: (id) => `/v1/users/${id}`,
   password: (id) => `/v1/users/${id}/password`,
@@ -212,17 +213,6 @@ for (const prop of ['post', 'put', 'patch']) {
 // function references `this`, you must bind `this` for it first.
 export const withHttpMethods = (f) => Object.assign(f, httpMethods);
 
-export const withAuth = (config, token) => {
-  const { headers } = config;
-  if ((headers == null || headers.Authorization == null) &&
-    config.url.startsWith('/v1/') && token != null) {
-    return {
-      ...config,
-      headers: { ...headers, Authorization: `Bearer ${token}` }
-    };
-  }
-  return config;
-};
 
 export const logAxiosError = (logger, error) => {
   if (error.response == null)

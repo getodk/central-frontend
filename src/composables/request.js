@@ -76,10 +76,10 @@ user simply navigated away from the route.
 
 import { inject, readonly, ref, watch } from 'vue';
 
-import { isProblem, logAxiosError, requestAlertMessage, withAuth, withHttpMethods } from '../util/request';
+import { isProblem, logAxiosError, requestAlertMessage, withHttpMethods } from '../util/request';
 
 const _request = (container, awaitingResponse) => (config) => {
-  const { router, i18n, requestData, alert, http, logger } = container;
+  const { router, i18n, alert, http, logger } = container;
   const {
     fulfillProblem = undefined,
     problemToAlert = undefined,
@@ -99,7 +99,7 @@ const _request = (container, awaitingResponse) => (config) => {
 
   // `router` may be `null` in testing.
   const initialRoute = router != null ? router.currentRoute.value : null;
-  return http.request(withAuth(axiosConfig, requestData.session.token))
+  return http.request(axiosConfig)
     .catch(error => {
       if (router != null && router.currentRoute.value !== initialRoute)
         throw new Error('route change');
