@@ -63,7 +63,7 @@ defineProps({
 }
 
 .separator {
-  padding: 0px 12px;
+  padding: 0px 10px;
   color: #bbb;
 }
 </style>
