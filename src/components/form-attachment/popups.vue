@@ -17,11 +17,11 @@ some point. -->
 <template>
   <div id="form-attachment-popups" ref="popups" class="modal-dialog">
     <div v-show="state" id="form-attachment-popups-main" class="modal-content">
-      <div class="modal-header">
+      <div class="dialog-header">
         <span class="icon-cloud-upload"></span>
         <h4 class="modal-title">{{ $t('title') }}</h4>
       </div>
-      <div class="modal-body">
+      <div class="dialog-body">
         <template v-if="shownDuringDragover">
           <i18n-t v-if="dragoverAttachment != null" tag="p"
             keypath="duringDragover.dropToUpload">
@@ -177,7 +177,12 @@ $popup-width: 300px;
   width: $popup-width;
   z-index: $z-index-main;
 
-  .modal-header {
+  &.modal-content {
+    border-radius: 0px;
+  }
+
+  .dialog-header {
+    padding: 15px;
     background-color: $color-action-background;
 
     .icon-cloud-upload {
@@ -217,8 +222,10 @@ $popup-width: 300px;
     }
   }
 
-  .modal-body {
+  .dialog-body {
+    padding: 15px;
     padding-bottom: 10px;
+    border-radius: 0px;
 
     #form-attachment-popups-unmatched {
       $padding: 10px;
