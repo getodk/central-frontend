@@ -53,8 +53,8 @@ defineProps({
   max-width: 275px;
 
   a [class^="icon-"] {
-    margin-left: 5px;
-    margin-right: 0;
+    margin-left: 0;
+    margin-right: 3px;
   }
 }
 
@@ -63,7 +63,7 @@ defineProps({
 }
 
 .separator {
-  padding: 0px 9px;
+  padding: 0px 12px;
   color: #bbb;
 }
 </style>

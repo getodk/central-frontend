@@ -43,7 +43,8 @@ defineOptions({
 }
 
 #page-head-title-infonav {
-  padding: 10px 0px;
+  padding-top: 5px;
+  padding-bottom: 20px;
   display: flex;
   align-items: center;
 }

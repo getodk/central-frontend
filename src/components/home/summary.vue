@@ -79,10 +79,21 @@ if (currentUser.can('user.list'))
 
 #home-summary {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    > * {
+      flex: 1 1 calc(50% - 20px);
+    }
+  }
   margin-left: auto;
   margin-right: auto;
   max-width: $max-width-page-body;
+
+  .header {
+    font-size: 16px;
+  }
 }
 </style>
 
