@@ -25,11 +25,9 @@ session to be in use at a time. We use local storage to enforce this,
 coordinating login and logout across tabs:
 
   - If the user has the login page open in two tabs, logs in in one tab, then
-    tries to log in in the other, the second login will fail, because the cookie
-    will be sent without a CSRF token and without other auth. Because the cookie
-    is HttpOnly, Frontend cannot check for the cookie directly. Instead, when
-    the user logs in, Frontend stores the session expiration date in local
-    storage, then checks it before another login attempt.
+    tries to log in in the other, user will see message that they are already
+    logged in. When the user logs in, Frontend stores the session expiration
+    date in local storage, then checks it before another login attempt.
   - If the user logs out in one tab, Frontend removes the session expiration
     date from local storage, triggering other tabs to log out.
 
@@ -45,21 +43,19 @@ expiration date is also stored in local storage. This approach is designed to:
 
   - Support cookie auth
   - Ensure the user knows when they are logged out; prevent the user from seeing
-    401 messages after their session has been deleted
+    40x messages after their session has been deleted
   - Prevent one user from using another user's cookie
   - Ensure that the cookie is removed when the user logs out
 
-If the user clears the cookie, then functionality that relies on it will stop
-working. Chrome allows the user to clear cookies and local storage separately.
+If the user clears the cookie, all requests will result in failure.
 If the user clears local storage, it will trigger Frontend to log out in Chrome.
 However, it will not in Firefox or Safari. Yet Frontend will still be able to
 coordinate logout across tabs, enforcing a single session.
 
-Similarly, if cookies are blocked, then functionality that relies on the cookie
-will not work. If local storage is blocked, the user will be able to create
-multiple sessions, and logout will not be coordinated across tabs. In Chrome,
-Firefox, and Safari, blocking cookies and blocking local storage seem to go
-hand-in-hand.
+Similarly, if cookies are blocked, then Frontend will not work. If local
+storage is blocked, the user will be able to create multiple sessions, and
+logout will not be coordinated across tabs. In Chrome, Firefox, and Safari,
+blocking cookies and blocking local storage seem to go hand-in-hand.
 */
 
 import { START_LOCATION } from 'vue-router';
