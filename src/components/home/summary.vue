@@ -79,7 +79,14 @@ if (currentUser.can('user.list'))
 
 #home-summary {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
+
+  @media (max-width: $screen-sm-min) {
+    > * {
+      flex: 1 1 calc(50% - 20px);
+    }
+  }
   margin-left: auto;
   margin-right: auto;
   max-width: $max-width-page-body;

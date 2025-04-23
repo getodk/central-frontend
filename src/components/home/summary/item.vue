@@ -68,6 +68,7 @@ export default {
   }
 
   .header {
+    font-size: 16px;
     margin-bottom: 0;
     line-height: 1;
     font-weight: 600;
