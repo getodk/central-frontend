@@ -267,8 +267,9 @@ const titleId = `modal-title${id}`;
     }
 
     .modal-header {
+      border-bottom: 0px;
       color: $color-text;
-      padding: 0px $padding-right-modal-header 20px $padding-left-modal-header;
+      padding: 0px $padding-modal-header 20px $padding-modal-header;
 
       h4 {
         @include text-overflow-ellipsis;

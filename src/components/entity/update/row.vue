@@ -96,7 +96,6 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
   $vpadding: 4px;
   .label-cell, .old-value, .new-value { padding-bottom: $vpadding; }
   .label-cell {
-    padding-left: $padding-left-modal-header;
     padding-right: 15px;
     padding-top: #{$vpadding + $padding-top-form-control};
   }
@@ -111,8 +110,8 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
     }
   }
   .new-value {
-    padding-right: $padding-left-modal-header;
     padding-top: $vpadding;
+    padding-right: 0px;
   }
 
   .label-cell { @include text-overflow-ellipsis; }
