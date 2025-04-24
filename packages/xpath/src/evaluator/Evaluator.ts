@@ -1,4 +1,4 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill';
 import type { UnwrapAdapterNode } from '../adapter/interface/XPathCustomUnwrappableNode.ts';
 import type { XPathDOMAdapter } from '../adapter/interface/XPathDOMAdapter.ts';
 import type { XPathNode } from '../adapter/interface/XPathNode.ts';
@@ -67,7 +67,7 @@ export class Evaluator<T extends XPathNode> {
 	readonly functions: FunctionLibraryCollection;
 	readonly parseOptions: ParseOptions;
 	readonly rootNode: AdapterParentNode<T> | null;
-	readonly timeZone: Temporal.TimeZone;
+	readonly timeZone: Temporal.TimeZoneLike;
 
 	constructor(options: EvaluatorOptions<T>) {
 		// prettier-ignore
@@ -92,7 +92,7 @@ export class Evaluator<T extends XPathNode> {
 		this.functions = options.functions ?? functions;
 		this.parseOptions = parseOptions;
 		this.parser = expressionParser;
-		this.timeZone = new Temporal.TimeZone(timeZoneId ?? Temporal.Now.timeZoneId());
+		this.timeZone = timeZoneId ?? Temporal.Now.timeZoneId();
 	}
 
 	/**

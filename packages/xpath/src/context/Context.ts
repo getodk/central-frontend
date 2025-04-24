@@ -1,4 +1,4 @@
-import type { Temporal } from '@js-temporal/polyfill';
+import type { Temporal } from 'temporal-polyfill';
 import type { XPathNode } from '../adapter/interface/XPathDOMAdapter.ts';
 import type {
 	AdapterDocument,
@@ -37,5 +37,5 @@ export interface Context<T extends XPathNode> {
 
 	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: NamespaceResolver<T>;
-	readonly timeZone: Temporal.TimeZone;
+	readonly timeZone: Temporal.TimeZoneLike;
 }

@@ -1,6 +1,6 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill';
 
-export const currentLocalDateTimeString = (timeZone: Temporal.TimeZone): string => {
+export const currentLocalDateTimeString = (timeZone: Temporal.TimeZoneLike): string => {
 	return localDateTimeString(now(timeZone));
 };
 
@@ -20,5 +20,5 @@ export const localDateTimeOrDateString = (dateTime: Temporal.ZonedDateTime): str
 	return dateTimeString.replace(/T00:00:00(\.0+)?(Z|[-+]\d{2}:\d{2})?/, '');
 };
 
-export const now = (timeZone: Temporal.TimeZone): Temporal.ZonedDateTime =>
+export const now = (timeZone: Temporal.TimeZoneLike): Temporal.ZonedDateTime =>
 	Temporal.Now.zonedDateTimeISO(timeZone);

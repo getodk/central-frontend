@@ -77,7 +77,7 @@ describe('OdkWebForm', () => {
 		await flushPromises();
 
 		// Assert no validation banner and no highlighted question
-		expect(component.get('.form-error-message').isVisible()).toBe(false);
+		expect(component.find('.form-error-message').exists()).toBe(false);
 		expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
 		// Click submit
@@ -91,7 +91,7 @@ describe('OdkWebForm', () => {
 		await component.get('input.p-inputtext').setValue('ok');
 
 		// Assert no validation banner and no highlighted question
-		expect(component.find('.form-error-message').isVisible()).toBe(false);
+		expect(component.find('.form-error-message').exists()).toBe(false);
 		expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 	});
 
@@ -100,7 +100,7 @@ describe('OdkWebForm', () => {
 		await flushPromises();
 
 		// Assert no validation banner and no highlighted question
-		expect(component.get('.form-error-message').isVisible()).toBe(false);
+		expect(component.find('.form-error-message').exists()).toBe(false);
 		expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
 		// Click submit
@@ -114,7 +114,7 @@ describe('OdkWebForm', () => {
 		await component.get('input.p-inputtext').setValue('ok');
 
 		// Assert no validation banner and no highlighted question
-		expect(component.find('.form-error-message').isVisible()).toBe(false);
+		expect(component.find('.form-error-message').exists()).toBe(false);
 		expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
 		// Empty the textbox to make it invalid again

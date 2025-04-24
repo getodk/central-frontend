@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Date</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="/data/dates/survey_date:label">
+            <value>When are you filling out this survey?</value>
+          </text>
+          <text id="/data/dates/date_of_birth:label">
+            <value>When were you born?</value>
+          </text>
+          <text id="/data/dates/fruits_date:label">
+            <value>When was the last time you ate fruits?</value>
+          </text>
+          <text id="/data/dates/vegetables_date:label">
+            <value>When was the last time you ate vegetables?</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="/data/dates/survey_date:label">
+            <value>Quand allez-vous remplir ce questionnaire?</value>
+          </text>
+          <text id="/data/dates/date_of_birth:label">
+            <value>Quand êtes-vous né(e) ?</value>
+          </text>
+          <text id="/data/dates/fruits_date:label">
+            <value>Quand est-ce que vous avez mangé des fruits pour la dernière fois ?</value>
+          </text>
+          <text id="/data/dates/vegetables_date:label">
+            <value>Quand est-ce que vous avez mangé des légumes pour la dernière fois ?</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="date" version="2025020401">
+          <dates>
+            <survey_date/>
+            <date_of_birth/>
+            <fruits_date/>
+            <vegetables_date/>
+          </dates>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/dates/survey_date" type="date" required="true()"/>
+      <bind nodeset="/data/dates/date_of_birth" type="date" required="false()"/>
+      <bind nodeset="/data/dates/fruits_date" type="date" required="false()"
+            relevant=" /data/dates/date_of_birth  != &quot;&quot;"/>
+      <bind nodeset="/data/dates/vegetables_date" type="date" required="false()"
+            relevant=" /data/dates/date_of_birth  != &quot;&quot;" readonly="/data/dates/date_of_birth &lt;= today()"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group appearance="field-list" ref="/data/dates">
+      <input ref="/data/dates/survey_date">
+        <label ref="jr:itext('/data/dates/survey_date:label')"/>
+      </input>
+      <input ref="/data/dates/date_of_birth">
+        <label ref="jr:itext('/data/dates/date_of_birth:label')"/>
+      </input>
+      <input ref="/data/dates/fruits_date">
+        <label ref="jr:itext('/data/dates/fruits_date:label')"/>
+      </input>
+      <input ref="/data/dates/vegetables_date">
+        <label ref="jr:itext('/data/dates/vegetables_date:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>

@@ -41,6 +41,34 @@
 	--odk-icon-size: 1.5rem;
 
 	--odk-radius: 6px;
+
+	/*
+	 * This project uses a centralized z-index layering system to manage the stacking order of UI
+	 * elements, preventing overlap issues and ensuring maintainability.
+	 *
+	 * Purpose:
+	 * - Avoid z-index conflicts by assigning predefined layers to UI components.
+	 * - Provide clarity on stacking priorities for developers and maintainers.
+	 * - Allow flexibility for future additions without restructuring existing values.
+	 */
+
+	/* Base layer for static content (e.g., page content, form background) */
+	--odk-z-index-base: 0;
+
+	/* Standard form controls (e.g., inputs, labels, buttons) */
+	--odk-z-index-form-content: 10;
+
+	/* Floating form elements (e.g., validation highlights, tooltips) */
+	--odk-z-index-form-floating: 20;
+
+	/* Floating error messages or banners above the form */
+	--odk-z-index-error-banner: 30;
+
+	/* Overlays like modals, popups, or dialogs above form content */
+	--odk-z-index-overlay: 100;
+
+	/* Critical UI elements (e.g., loading spinners, toast notifications) */
+	--odk-z-index-topmost: 1000;
 }
 
 body {

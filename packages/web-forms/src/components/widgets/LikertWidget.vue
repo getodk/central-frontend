@@ -69,7 +69,7 @@ defineEmits(['change']);
 
 		.p-radiobutton {
 			position: relative;
-			z-index: 10;
+			z-index: var(--odk-z-index-form-content);
 		}
 
 		.label-text {

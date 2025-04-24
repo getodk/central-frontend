@@ -84,11 +84,13 @@ export interface InputNode<V extends ValueType = ValueType>
 export type StringInputValue = InputValue<'string'>;
 export type IntInputValue = InputValue<'int'>;
 export type DecimalInputValue = InputValue<'decimal'>;
+export type DateInputValue = InputValue<'date'>;
 export type GeopointInputValue = InputValue<'geopoint'>;
 
 export type StringInputNode = InputNode<'string'>;
 export type IntInputNode = InputNode<'int'>;
 export type DecimalInputNode = InputNode<'decimal'>;
+export type DateInputNode = InputNode<'date'>;
 export type GeopointInputNode = InputNode<'geopoint'>;
 
 // prettier-ignore
@@ -97,6 +99,7 @@ type SupportedInputValueType =
 	| 'string'
 	| 'int'
 	| 'decimal'
+	| 'date'
 	| 'geopoint';
 
 type TemporaryStringValueType = Exclude<ValueType, SupportedInputValueType>;
@@ -109,5 +112,6 @@ export type AnyInputNode =
 	| StringInputNode
 	| IntInputNode
 	| DecimalInputNode
+	| DateInputNode
 	| GeopointInputNode
 	| TemporaryStringValueInputNode;

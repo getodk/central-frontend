@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import InputDate from '@/components/controls/Input/InputDate.vue';
 import type { AnyInputNode } from '@getodk/xforms-engine';
 import { computed, inject, provide, ref } from 'vue';
 import ControlText from '../../ControlText.vue';
@@ -38,6 +39,9 @@ provide('isInvalid', isInvalid);
 		</template>
 		<template v-else-if="node.valueType === 'geopoint'">
 			<InputGeopoint :question="node" />
+		</template>
+		<template v-else-if="node.valueType === 'date'">
+			<InputDate :question="node" />
 		</template>
 		<template v-else>
 			<InputText :node="node" />

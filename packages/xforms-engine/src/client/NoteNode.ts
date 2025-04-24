@@ -81,11 +81,13 @@ export interface NoteNode<V extends ValueType = ValueType> extends BaseValueNode
 export type StringNoteValue = NoteValue<'string'>;
 export type IntNoteValue = NoteValue<'int'>;
 export type DecimalNoteValue = NoteValue<'decimal'>;
+export type DateNoteValue = NoteValue<'date'>;
 export type GeopointNoteValue = NoteValue<'geopoint'>;
 
 export type StringNoteNode = NoteNode<'string'>;
 export type IntNoteNode = NoteNode<'int'>;
 export type DecimalNoteNode = NoteNode<'decimal'>;
+export type DateNoteNode = NoteNode<'date'>;
 export type GeopointNoteNode = NoteNode<'geopoint'>;
 
 // prettier-ignore
@@ -94,6 +96,7 @@ type SupportedNoteValueType =
 	| 'string'
 	| 'int'
 	| 'decimal'
+	| 'date'
 	| 'geopoint';
 
 type TemporaryStringValueType = Exclude<ValueType, SupportedNoteValueType>;
@@ -106,5 +109,6 @@ export type AnyNoteNode =
 	| StringNoteNode
 	| IntNoteNode
 	| DecimalNoteNode
+	| DateNoteNode
 	| GeopointNoteNode
 	| TemporaryStringValueNoteNode;

@@ -17,7 +17,6 @@ import type {
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
-import type { ComponentPublicInstance } from 'vue';
 import { computed, getCurrentInstance, provide, ref, watchEffect } from 'vue';
 import FormLoadFailureDialog from './Form/FormLoadFailureDialog.vue';
 import FormHeader from './FormHeader.vue';
@@ -140,6 +139,8 @@ const emit = defineEmits<OdkWebFormEmits>();
 
 const state = initializeFormState();
 const submitPressed = ref(false);
+const floatingErrorActive = ref(false);
+const showValidationError = ref(false);
 
 const init = async () => {
 	state.value = await loadFormState(props.formXml, {
@@ -157,17 +158,17 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	const { root } = currentState;
 
 	if (root.validationState.violations.length === 0) {
+		floatingErrorActive.value = false;
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmit(currentState);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmitChunked(currentState);
 	} else {
+		floatingErrorActive.value = true;
 		submitPressed.value = true;
 		document.scrollingElement?.scrollTo(0, 0);
 	}
 };
-
-const validationErrorMessagePopover = ref<ComponentPublicInstance | null>(null);
 
 provide('submitPressed', submitPressed);
 
@@ -181,10 +182,10 @@ const validationErrorMessage = computed(() => {
 });
 
 watchEffect(() => {
-	if (submitPressed.value && validationErrorMessage.value) {
-		(validationErrorMessagePopover.value?.$el as HTMLElement)?.showPopover?.();
+	if (floatingErrorActive.value && validationErrorMessage.value?.length) {
+		showValidationError.value = true;
 	} else {
-		(validationErrorMessagePopover.value?.$el as HTMLElement)?.hidePopover?.();
+		showValidationError.value = false;
 	}
 });
 </script>
@@ -218,8 +219,9 @@ watchEffect(() => {
 		:class="{ 'submit-pressed': submitPressed }"
 	>
 		<div class="form-wrapper">
-			<div v-show="submitPressed && validationErrorMessage" class="error-banner-placeholder" />
-			<Message ref="validationErrorMessagePopover" popover="manual" severity="error" icon="icon-error_outline" class="form-error-message" :closable="false">
+			<div v-if="showValidationError" class="error-banner-placeholder"></div>
+			<!-- Closable error message to clear the view and avoid overlap with other elements -->
+			<Message v-if="showValidationError" severity="error" icon="icon-error_outline" class="form-error-message" :closable="true" @close="floatingErrorActive = false">
 				{{ validationErrorMessage }}
 			</Message>
 
@@ -296,6 +298,8 @@ watchEffect(() => {
 		}
 
 		.form-error-message.p-message.p-message-error {
+			position: fixed;
+			z-index: var(--odk-z-index-error-banner);
 			border-radius: var(--odk-radius);
 			background-color: var(--odk-error-background-color);
 			border: 1px solid var(--p-message-error-border-color);
@@ -306,7 +310,7 @@ watchEffect(() => {
 			top: 1rem;
 
 			:deep(.p-message-wrapper) {
-				padding: 0.75rem 0.75rem;
+				padding: 8px 15px;
 				flex-grow: 1;
 			}
 
@@ -380,6 +384,7 @@ watchEffect(() => {
 				margin: var(--wf-error-banner-gap) 1rem 0 1rem;
 				max-width: unset;
 				width: calc(100% - 2rem);
+				top: 22px;
 			}
 
 			.questions-card {

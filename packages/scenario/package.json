@@ -54,5 +54,8 @@
     "solid-js": "^1.9.5",
     "vite": "^6.2.3",
     "vitest": "^3.0.9"
+  },
+  "dependencies": {
+    "temporal-polyfill": "^0.3.0"
   }
 }

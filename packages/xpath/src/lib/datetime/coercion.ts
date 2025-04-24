@@ -1,5 +1,9 @@
-import { Temporal } from '@js-temporal/polyfill';
-import { MILLISECOND_NANOSECONDS } from './constants.ts';
+import { Temporal } from 'temporal-polyfill';
+import {
+	MILLISECOND_NANOSECONDS,
+	VALID_OFFSET_VALUE,
+	TIMEZONE_OFFSET_PATTERN,
+} from '@getodk/common/constants/datetime.ts';
 import { isISODateOrDateTimeLike } from './predicates.ts';
 
 export const tryParseDateString = (value: string): Date | null => {
@@ -19,7 +23,7 @@ export const tryParseDateString = (value: string): Date | null => {
 };
 
 export const dateTimeFromString = (
-	timeZone: Temporal.TimeZone,
+	timeZone: Temporal.TimeZoneLike,
 	value: string
 ): Temporal.ZonedDateTime | null => {
 	if (!isISODateOrDateTimeLike(value)) {
@@ -30,7 +34,12 @@ export const dateTimeFromString = (
 		return Temporal.ZonedDateTime.from(value.replace(/Z$/, '[UTC]')).withTimeZone(timeZone);
 	}
 
-	if (/[-+]\d{2}:\d{2}$/.test(value) || !/^\d{4}/.test(value)) {
+	const offsetMatch = TIMEZONE_OFFSET_PATTERN.exec(value);
+	if (offsetMatch != null && !VALID_OFFSET_VALUE.test(offsetMatch[0])) {
+		return null;
+	}
+
+	if (TIMEZONE_OFFSET_PATTERN.test(value) || !/^\d{4}/.test(value)) {
 		const date = tryParseDateString(value);
 
 		if (date == null) {
@@ -49,12 +58,12 @@ const toNanoseconds = (milliseconds: bigint | number): bigint =>
 	BigInt(milliseconds) * MILLISECOND_NANOSECONDS;
 
 export const dateTimeFromNumber = (
-	timeZone: Temporal.TimeZone,
+	timeZone: Temporal.TimeZoneLike,
 	milliseconds: number
 ): Temporal.ZonedDateTime | null => {
 	if (Number.isNaN(milliseconds)) {
 		return null;
 	}
 
-	return new Temporal.ZonedDateTime(toNanoseconds(milliseconds), timeZone);
+	return new Temporal.ZonedDateTime(toNanoseconds(milliseconds), timeZone.toString());
 };

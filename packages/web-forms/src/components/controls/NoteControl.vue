@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GeopointFormattedValue from '@/components/controls/GeopointFormattedValue.vue';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { AnyNoteNode, GeopointNoteValue } from '@getodk/xforms-engine';
+import type { AnyNoteNode, DateNoteValue, GeopointNoteValue } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 import ControlText from '../ControlText.vue';
 
@@ -35,7 +35,7 @@ const assertTextRenderableValue: AssertTextRenderableValue = (value) => {
 	}
 };
 
-type NoteRenderableValue = GeopointNoteValue | TextRenderableValue;
+type NoteRenderableValue = DateNoteValue | GeopointNoteValue | TextRenderableValue;
 
 const value = computed<NoteRenderableValue>(() => {
 	const { question } = props;
@@ -47,8 +47,10 @@ const value = computed<NoteRenderableValue>(() => {
 		case 'geopoint':
 			return question.currentState.value;
 
-		case 'boolean':
 		case 'date':
+			return question.currentState.value?.toString();
+
+		case 'boolean':
 		case 'time':
 		case 'dateTime':
 		case 'geotrace':

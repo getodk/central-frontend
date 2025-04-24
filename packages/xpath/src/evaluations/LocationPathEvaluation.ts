@@ -1,6 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { identity } from '@getodk/common/lib/identity.ts';
-import type { Temporal } from '@js-temporal/polyfill';
+import type { Temporal } from 'temporal-polyfill';
 import type { XPathDOMAdapter } from '../adapter/interface/XPathDOMAdapter.ts';
 import type {
 	UnspecifiedNonXPathNodeKind,
@@ -589,7 +589,7 @@ export class LocationPathEvaluation<T extends XPathNode>
 	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: NamespaceResolver<T>;
 
-	readonly timeZone: Temporal.TimeZone;
+	readonly timeZone: Temporal.TimeZoneLike;
 
 	/**
 	 * TODO: this is a temporary accommodation for these cases which are presently

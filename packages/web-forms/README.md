@@ -81,6 +81,21 @@ We use CSS variables for theming with two prefixes:
 - `--p-` Prefix: Variables prefixed with `--p-` (e.g., `--p-primary-50`) come from PrimeVue and control its component styles (e.g., colors, borders). These are part of PrimeVue’s [theming system](https://primevue.org/theming/styled/).
 - `--odk-` Prefix: Variables prefixed with `--odk-` (e.g., `--odk-font-family`) are custom to this project and manage styles outside PrimeVue or PrimeFlex, such as application-specific typography.
 
+#### Z-Index Layering System
+
+This package uses a centralized `z-index` layering system to manage UI stacking order, defined in `src/assets/css/style.scss`. The ODK variables (e.g., `--odk-z-index-error-banner`) ensure elements like floating error messages, form controls, and overlays stack correctly without overlap.
+
+- **Key layers**:
+
+  - `--odk-z-index-base` (background)
+  - `--odk-z-index-form-content` (inputs, buttons)
+  - `--odk-z-index-form-floating` (highlights, tooltips)
+  - `--odk-z-index-error-banner` (floating errors)
+  - `--odk-z-index-overlay` (modals)
+  - `--odk-z-index-topmost` (loaders, notifications)
+
+- **Usage**: Apply with `z-index: var(--odk-z-index-error-banner);` on positioned elements (e.g., `position: absolute`).
+
 #### Fonts
 
 Form elements use `font-family: Roboto, sans-serif;` for accessibility and a clean, readable appearance.

@@ -1,6 +1,6 @@
-import { Temporal } from '@js-temporal/polyfill';
+import { Temporal } from 'temporal-polyfill';
 import type { XPathNode } from '../adapter/interface/XPathNode.ts';
-import { DAY_MILLISECONDS } from '../lib/datetime/constants.ts';
+import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
 import { localDateTimeOrDateString } from '../lib/datetime/functions.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
