@@ -27,6 +27,14 @@ describe('FormPreview', () => {
       ]);
   });
 
+  it('sends the correct initial requests - draft', () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
+    return load('/projects/1/forms/a/draft/preview', mountOptions())
+      .testRequests([
+        { url: '/v1/projects/1/forms/a/draft', extended: true },
+      ]);
+  });
+
   it('renders new Web Form', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
 

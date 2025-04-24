@@ -53,7 +53,7 @@ const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
 
 const fetchForm = () => {
   form.request({
-    url: apiPaths.form(props.projectId, props.xmlFormId),
+    url: props.draft ? apiPaths.formDraft(props.projectId, props.xmlFormId) : apiPaths.form(props.projectId, props.xmlFormId),
     extended: true
   }).catch(noop);
 };
