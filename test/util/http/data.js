@@ -111,7 +111,9 @@ const responsesByComponent = {
     form: [
       ({ url }) => matchesApiPath(apiPaths.form, url) ||
                    matchesApiPath(apiPaths.formDraft, url),
-      () => testData.extendedForms.last()
+      () => (testData.extendedFormVersions.last().publishedAt
+        ? testData.extendedForms.last()
+        : testData.extendedFormDrafts.last())
     ]
   }),
   FormSubmission: componentResponses({
