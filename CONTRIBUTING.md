@@ -336,3 +336,11 @@ We generate and store test data specific to ODK Central using the [`testData`](/
 Most Backend resources have a `createdAt` property. To generate an object whose `createdAt` property is in the past, use the `createPast()` method of the store or view. To generate an object whose `createdAt` property is set to the current time, use `createNew()`. Most of the time, you will use `createPast()`. For a test that mounts a component, use `createPast()` to set up data that exists before the component is mounted. Use `createNew()` for data created after the component is mounted, for example, after the component sends a POST request. You can pass options to `createPast()` and `createNew()`; each store accepts a different set of options.
 
 To learn more about stores and views, see [`/test/data/data-store.js`](/test/data/data-store.js).
+
+
+#### E2E Tests
+
+E2E tests can be run using `npm run test:e2e`. These tests assume the full Central stack is running — including central-backend, enketo, pyxform, and postgresql.
+By default, tests run against `http://central-dev.localhost:8989`, but you can override it with `--protocol`, `--domain`, and `--port` CLI options.
+You can also set a custom `--user` and `--password` from the CLI.
+Finally, add the `--ui` flag to run tests in UI mode, which is useful for debugging.
