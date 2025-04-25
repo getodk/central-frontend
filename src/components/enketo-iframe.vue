@@ -63,7 +63,7 @@ const lastSubmitted = (enketoOnceId) => {
 
   return new Promise((resolve) => {
     iframe.onload = () => {
-      const value = getCookieValue(enketoOnceId);
+      const value = getCookieValue(enketoOnceId, iframe.contentDocument);
       document.body.removeChild(iframe);
       resolve(value);
     };
