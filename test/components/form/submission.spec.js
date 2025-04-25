@@ -2,7 +2,6 @@ import sinon from 'sinon';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
-import { testRequestData } from '../../util/request-data';
 import { mergeMountOptions } from '../../util/lifecycle';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
@@ -189,23 +188,12 @@ describe('FormSubmission', () => {
   });
 
   describe('session timeout', () => {
-    beforeEach(() => {
-      mockLogin();
-    });
-
     it('does not auto log out', async () => {
+      const clock = sinon.useFakeTimers(Date.parse('2025-01-01T00:00:00Z'));
+      mockLogin();
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
-      const session = testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' });
 
-      const clock = sinon.useFakeTimers();
-
-      await load('/projects/1/forms/a/submissions/new', mountOptions({
-        container: {
-          requestData: testRequestData([], {
-            session
-          }),
-        }
-      }))
+      await load('/projects/1/forms/a/submissions/new', mountOptions())
         .complete()
         .request(() => {
           clock.tick('24:00:00');
@@ -216,6 +204,7 @@ describe('FormSubmission', () => {
         ])
         .afterResponses((app) => {
           app.vm.$container.requestData.session.dataExists.should.be.true;
+          app.vm.$route.path.should.be.equal('/projects/1/forms/a/submissions/new');
         });
     });
   });

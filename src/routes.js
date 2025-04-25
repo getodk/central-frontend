@@ -53,8 +53,8 @@ Route Meta Fields
 
 The following meta fields are supported for bottom-level routes:
 
-  Login
-  -----
+  Login/Logout
+  ------------
 
   - restoreSession (default: true). The router looks to restoreSession right
     after the user has navigated to Frontend, when the router is navigating to
@@ -77,6 +77,10 @@ The following meta fields are supported for bottom-level routes:
     In almost all cases, a route either requires login or requires anonymity.
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
+
+  - skipAutoLogout (default: false): If `true`, no alert will be displayed when
+    session is about to expire. Also user will be not be redirected to login
+    page when session has expired.
 
   requestData
   -----------
@@ -162,9 +166,6 @@ The following meta fields are supported for bottom-level routes:
   - standalone (default: false): If standalone is `true` then application layout
     elements like navigation bar, background color, etc are not rendered.
 
-  - skipAutoLogout (default: false): If `true`, no alert will be displayed when
-    session is about to expire. Also user will be not be redirected to login
-    page when session has expired.
 */
 
 /*
@@ -772,6 +773,7 @@ const routesByName = new Map();
     preserveData: [],
     fullWidth: false,
     standalone: false,
+    skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []

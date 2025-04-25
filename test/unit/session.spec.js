@@ -867,6 +867,29 @@ describe('util/session', () => {
         });
     });
 
+    it('does not logs out if skipAutoLogout is true', () => {
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      const container = createTestContainer({ router: mockRouter('/') });
+      container.router.currentRoute.value.meta.skipAutoLogout = true;
+      withSetup(useSessions, { container });
+      const { session } = setRequestData(container.requestData, {
+        session: testData.sessions.createNew()
+      });
+      return mockHttp(container)
+        .request(() => logIn(container, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .complete()
+        .testNoRequest(() => {
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: null,
+            url: window.location.href
+          }));
+        })
+        .afterResponse(() => {
+          session.dataExists.should.be.true;
+        });
+    });
+
     it('sets the ?next query parameter', () => {
       mockLogin();
       return load('/users')

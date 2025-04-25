@@ -5187,10 +5187,14 @@
           "string": "Session expired"
         },
         "body": {
-          "string": "Please log in {here} in a different browser tab and try again."
-        },
-        "here": {
-          "string": "here"
+          "full": {
+            "string": "Please log in {here} in a different browser tab and try again.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "here",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
         }
       }
     }

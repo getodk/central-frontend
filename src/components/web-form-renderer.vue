@@ -40,12 +40,9 @@ except according to the terms contained in the LICENSE file.
             <a href="emailto:support@getodk.org">support@getodk.org</a>
           </template>
         </i18n-t>
-        <i18n-t v-else-if="submissionModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body">
+        <i18n-t v-else-if="submissionModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
           <template #here>
-              <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.here') }}</a>
-          </template>
-          <template #supportEmail>
-            <a href="emailto:support@getodk.org">support@getodk.org</a>
+              <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
           </template>
         </i18n-t>
         <p v-else>
@@ -401,8 +398,10 @@ html, body {
       },
       "sessionTimeoutModal": {
         "title": "Session expired",
-        "body": "Please log in {here} in a different browser tab and try again.",
-        "here": "here"
+        "body": {
+          "full": "Please log in {here} in a different browser tab and try again.",
+          "here": "here"
+        }
       }
     }
   }
