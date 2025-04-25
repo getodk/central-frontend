@@ -658,6 +658,27 @@ describe('util/session', () => {
           clock.tick(240000);
         });
     });
+
+    it('does not logout when skipAutoLogout is true', () => {
+      const clock = sinon.useFakeTimers();
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      const container = createTestContainer({ router: mockRouter('/') });
+      container.router.currentRoute.value.meta.skipAutoLogout = true;
+      withSetup(useSessions, { container });
+      const { session } = setRequestData(container.requestData, {
+        session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
+      });
+      return mockHttp(container)
+        .request(() => logIn(container, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .complete()
+        .testNoRequest(() => {
+          clock.tick(240000);
+        })
+        .afterResponse(() => {
+          session.dataExists.should.be.true;
+        });
+    });
   });
 
   describe('logout after session expiration', () => {
@@ -778,6 +799,25 @@ describe('util/session', () => {
           alert.state.should.be.false;
         });
     });
+
+    it('does not show alert if skipAutoLogout is true', () => {
+      const clock = sinon.useFakeTimers();
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      const container = createTestContainer({ router: mockRouter('/') });
+      container.router.currentRoute.value.meta.skipAutoLogout = true;
+      withSetup(useSessions, { container });
+      const { requestData, alert } = container;
+      setRequestData(requestData, {
+        session: testData.sessions.createNew({ expiresAt: '1970-01-01T00:05:00Z' })
+      });
+      return mockHttp(container)
+        .request(() => logIn(container, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .afterResponse(() => {
+          clock.tick(120000);
+          alert.state.should.be.false;
+        });
+    });
   });
 
   describe('local storage changes', () => {
@@ -824,6 +864,29 @@ describe('util/session', () => {
         .respondWithSuccess()
         .afterResponse(() => {
           session.dataExists.should.be.false;
+        });
+    });
+
+    it('does not logs out if skipAutoLogout is true', () => {
+      testData.extendedUsers.createPast(1, { role: 'none' });
+      const container = createTestContainer({ router: mockRouter('/') });
+      container.router.currentRoute.value.meta.skipAutoLogout = true;
+      withSetup(useSessions, { container });
+      const { session } = setRequestData(container.requestData, {
+        session: testData.sessions.createNew()
+      });
+      return mockHttp(container)
+        .request(() => logIn(container, true))
+        .respondWithData(() => testData.extendedUsers.first())
+        .complete()
+        .testNoRequest(() => {
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: null,
+            url: window.location.href
+          }));
+        })
+        .afterResponse(() => {
+          session.dataExists.should.be.true;
         });
     });
 

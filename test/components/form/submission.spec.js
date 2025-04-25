@@ -1,13 +1,15 @@
+import sinon from 'sinon';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mergeMountOptions } from '../../util/lifecycle';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
 describe('FormSubmission', () => {
   // Stub WebFormRenderer - loading the real component creates dependency between tests because
   // it is loaded asynchronously
-  const mountOptions = () => ({
+  const mountOptions = (options) => mergeMountOptions(options, {
     global: {
       stubs: {
         WebFormRenderer: {
@@ -182,6 +184,28 @@ describe('FormSubmission', () => {
           .afterResponses(app => {
             app.find('.odk-form').exists().should.be.true;
           }));
+    });
+  });
+
+  describe('session timeout', () => {
+    it('does not auto log out', async () => {
+      const clock = sinon.useFakeTimers(Date.parse('2025-01-01T00:00:00Z'));
+      mockLogin();
+      testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
+
+      await load('/projects/1/forms/a/submissions/new', mountOptions())
+        .complete()
+        .request(() => {
+          clock.tick('24:00:00');
+        })
+        .respondWithData(() => '(v2024.1.2-sha)')
+        .testRequests([
+          { url: '/version.txt' }
+        ])
+        .afterResponses((app) => {
+          app.vm.$container.requestData.session.dataExists.should.be.true;
+          app.vm.$route.path.should.be.equal('/projects/1/forms/a/submissions/new');
+        });
     });
   });
 });

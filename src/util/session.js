@@ -150,10 +150,11 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { i18n, requestData, alert } = container;
+  const { i18n, requestData, alert, router } = container;
   const { session } = requestData;
   let alerted;
   return () => {
+    if (router.currentRoute.value.meta.skipAutoLogout) return;
     if (!session.dataExists) return;
     const millisUntilExpires = Date.parse(session.expiresAt) - Date.now();
     const millisUntilLogout = millisUntilExpires - 60000;
@@ -177,7 +178,7 @@ const logOutBeforeSessionExpires = (container) => {
 const logOutAfterStorageChange = (container) => (event) => {
   // event.key == null if the user clears local storage in Chrome.
   if ((event.key == null || event.key === 'sessionExpires') &&
-    container.requestData.session.dataExists) {
+    container.requestData.session.dataExists && !container.router.currentRoute.value.meta.skipAutoLogout) {
     logOut(container, true).catch(noop);
   }
 };

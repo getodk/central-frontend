@@ -5181,6 +5181,21 @@
         "body": {
           "string": "Your data is being submitted. Please don’t close this window until it’s finished."
         }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Session expired"
+        },
+        "body": {
+          "full": {
+            "string": "Please log in {here} in a different browser tab and try again.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "here",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
       }
     }
   },
