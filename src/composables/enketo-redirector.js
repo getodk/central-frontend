@@ -46,7 +46,8 @@ export default memoizeForContainer(({ router, requestData }) => {
 
       // `target` can't be falsey here because all possible actionType is checked above.
       if (target) {
-        router.replace(`${target}${queryString(route.query)}`);
+        const { instance_id: _, ...query } = route.query;
+        router.replace(`${target}${queryString(query)}`);
       }
     }
   };

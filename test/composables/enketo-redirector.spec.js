@@ -30,10 +30,11 @@ describe('useEnketoRedirector', () => {
     return load(`/f/${enketoId}/edit?instance_id=123`)
       .afterResponses(app => {
         app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/123/edit');
+        app.vm.$route.query.should.be.deep.equal({});
       });
   });
 
-  it('should redirect to edit submission page', () => {
+  it('should show Page Not Found when instance ID is missing for edit', () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
     return load(`/f/${enketoId}/edit`)
       .afterResponses(app => {
