@@ -13,9 +13,9 @@ except according to the terms contained in the LICENSE file.
   <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <div class="modal-introduction">
+      <p class="modal-introduction">
         {{ $t('body') }}
-      </div>
+      </p>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary"
           @click="hideModal">
@@ -43,7 +43,10 @@ defineOptions({
 watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
     projects.data.some(project => project.verbs.has('form.update'));
-  if (canUpdateForm && !currentUser.preferences.site.whatsNewDismissed2025_1) {
+  if (canUpdateForm && // Check that user is able to edit forms in at least one project
+    new Date(currentUser.data.createdAt) < new Date('2025-05-09') && // Check that user was created prior to 2025.1 release (approx)
+    !document.body.classList.contains('modal-open') && // Check that no other modal (e.g. new project) is open
+    !currentUser.preferences.site.whatsNewDismissed2025_1) {
     isVisible.value = true;
   }
 });
@@ -60,7 +63,7 @@ function hideModal() {
     "en": {
       // This is the title at the top of a pop-up.
       "title": "Form drafts have moved",
-      "body": "Create a new form and edit it on the new Edit Form tab",
+      "body": "Create a new Form and edit it on the new Edit Form tab",
       "action": {
         // This is the text of a button that is used to close the modal.
         "gotIt": "Got it!"
