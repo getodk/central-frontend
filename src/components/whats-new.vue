@@ -43,7 +43,7 @@ defineOptions({
 watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
     projects.data.some(project => project.verbs.has('form.update'));
-  if (canUpdateForm && // Check that user is able to edit forms in at least one project
+  if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
     new Date(currentUser.data.createdAt) < new Date('2025-05-09') && // Check that user was created prior to 2025.1 release (approx)
     !document.body.classList.contains('modal-open') && // Check that no other modal (e.g. new project) is open
     !currentUser.preferences.site.whatsNewDismissed2025_1) {
