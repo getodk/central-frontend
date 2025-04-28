@@ -45,7 +45,7 @@ export const toXPathEvaluationResult = <T extends XPathNode>(
 					return new NodeSetIteratorResult(
 						domProvider,
 						UNORDERED_NODE_ITERATOR_TYPE,
-						evaluation.nodes ?? []
+						evaluation.nodes ?? new Set()
 					);
 				}
 

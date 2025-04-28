@@ -9,7 +9,7 @@ export type NodeSetFunctionCallable = <
 >(
 	context: LocationPathEvaluation<T>,
 	args: Arguments
-) => Iterable<T>;
+) => readonly T[];
 
 export class NodeSetFunction extends FunctionImplementation {
 	constructor(localName: string, signature: FunctionSignature, call: NodeSetFunctionCallable) {

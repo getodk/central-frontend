@@ -30,7 +30,7 @@ export interface Context<T extends XPathNode> {
 
 	readonly contextDocument: AdapterDocument<T>;
 	readonly rootNode: AdapterParentNode<T>;
-	readonly contextNodes: Iterable<T>;
+	readonly contextNodes: ReadonlySet<T>;
 
 	contextPosition(): number;
 	contextSize(): number;

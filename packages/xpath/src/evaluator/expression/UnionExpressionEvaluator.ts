@@ -1,8 +1,6 @@
-import { chain } from 'itertools-ts/lib/multi';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-import { distinct } from '../../lib/iterators/common.ts';
 import type { UnionExprNode } from '../../static/grammar/SyntaxNode.ts';
 import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { LocationPathExpressionEvaluator } from './LocationPathExpressionEvaluator.ts';
@@ -21,7 +19,7 @@ export class UnionExpressionEvaluator extends LocationPathExpressionEvaluator {
 		this.rhs = createExpression(rhsNode);
 	}
 
-	evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): Iterable<T> {
+	evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): ReadonlySet<T> {
 		const lhs = this.lhs.evaluate(context);
 
 		if (!(lhs instanceof LocationPathEvaluation)) {
@@ -34,8 +32,8 @@ export class UnionExpressionEvaluator extends LocationPathExpressionEvaluator {
 			throw 'todo rhs not node-set result';
 		}
 
-		// TODO: sort in result
-		// TODO: iter stuff cleanup (TODO doesn't belong here, just noting as I fix the import)
-		return context.domProvider.sortInDocumentOrder(distinct(chain(lhs.nodes, rhs.nodes)));
+		const nodes = Array.from(new Set([...lhs.nodes, ...rhs.nodes]));
+
+		return new Set(nodes.slice().sort(context.domProvider.compareDocumentOrder));
 	}
 }

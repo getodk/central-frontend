@@ -22,11 +22,11 @@ export interface XPathTraversalAdapter<T extends XPathNode> {
 	 */
 	readonly getContainingDocument: (node: T) => AdapterDocument<T>;
 
-	readonly getNamespaceDeclarations: (node: T) => Iterable<AdapterNamespaceDeclaration<T>>;
-	readonly getAttributes: (node: T) => Iterable<AdapterAttribute<T>>;
+	readonly getNamespaceDeclarations: (node: T) => ReadonlyArray<AdapterNamespaceDeclaration<T>>;
+	readonly getAttributes: (node: T) => ReadonlyArray<AdapterAttribute<T>>;
 	readonly getParentNode: (node: T) => AdapterParentNode<T> | null;
-	readonly getChildNodes: (node: T) => Iterable<AdapterChildNode<T>>;
-	readonly getChildElements: (node: T) => Iterable<AdapterElement<T>>;
+	readonly getChildNodes: (node: T) => ReadonlyArray<AdapterChildNode<T>>;
+	readonly getChildElements: (node: T) => ReadonlyArray<AdapterElement<T>>;
 	readonly getPreviousSiblingNode: (node: T) => AdapterChildNode<T> | null;
 	readonly getPreviousSiblingElement: (node: T) => AdapterElement<T> | null;
 	readonly getNextSiblingNode: (node: T) => AdapterChildNode<T> | null;

@@ -25,7 +25,7 @@ export interface XPathDOMOptimizableOperations<T extends XPathNode> {
 	readonly getChildrenByLocalName: (
 		node: AdapterParentNode<T>,
 		localName: string
-	) => Iterable<AdapterElement<T>>;
+	) => ReadonlyArray<AdapterElement<T>>;
 
 	readonly getFirstChildNode: (node: T) => AdapterChildNode<T> | null;
 	readonly getFirstChildElement: (node: T) => AdapterElement<T> | null;

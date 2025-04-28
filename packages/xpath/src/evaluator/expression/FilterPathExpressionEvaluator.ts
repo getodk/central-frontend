@@ -31,7 +31,7 @@ export class FilterPathExpressionEvaluator
 		this.filterExpression = createExpression(exprNode) as LocationPathExpressionEvaluator;
 	}
 
-	override evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): Iterable<T> {
+	override evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): ReadonlySet<T> {
 		// TODO: this check may not be necessary
 		if (this.hasSteps) {
 			const filterContextResults = this.filterExpression.evaluate(context);

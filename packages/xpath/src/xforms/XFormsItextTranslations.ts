@@ -131,11 +131,10 @@ export class XFormsItextTranslations<T extends XPathNode> implements XFormsItext
 		}
 
 		const textMap = translationsCache.upsert(translationElement, () => {
-			const textElements = Array.from(
-				domProvider.getChildrenByLocalName(translationElement, 'text') as Iterable<
-					XFormsItextTranslationTextElement<T>
-				>
-			);
+			const textElements = domProvider.getChildrenByLocalName(
+				translationElement,
+				'text'
+			) as ReadonlyArray<XFormsItextTranslationTextElement<T>>;
 
 			return new Map(
 				textElements.flatMap((element) => {

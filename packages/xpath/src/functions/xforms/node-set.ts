@@ -40,19 +40,7 @@ const assertArgument: AssertArgument = (index, arg) => {
 	}
 };
 
-/**
- * Note: this function is not intended to be general outside of usage by
- * {@link indexedRepeat}.
- *
- * Evaluation of the provided argument is eager—i.e. materializing the complete
- * array of results, rather than the typical `Iterable<T>` produced in most
- * cases—because it is expected that in most cases the eagerness will not be
- * terribly expensive, and all results will usually be consumed, either to be
- * indexed or filtered in other ways applicable at call sites.
- *
- * Function is named to reflect that expectation.
- */
-const evaluateArgumentToFilterableNodes = <T extends XPathNode>(
+const evaluateArgumentNodes = <T extends XPathNode>(
 	context: LocationPathEvaluation<T>,
 	arg: EvaluableArgument
 ): readonly T[] => {
@@ -171,7 +159,7 @@ export const indexedRepeat = new NodeSetFunction(
 			// Reiterating the point made describing this loop for future clarity:
 			// this collects **all** of the nodes matching the `repeatN` expression.
 			// We filter them in a later step.
-			const repeats = evaluateArgumentToFilterableNodes(context, repeatsArg);
+			const repeats = evaluateArgumentNodes(context, repeatsArg);
 
 			// No repeats = nothing to "index" = short circuit
 			if (repeats.length === 0) {
@@ -231,7 +219,7 @@ export const indexedRepeat = new NodeSetFunction(
 		}
 
 		// Resolve **all** target nodes.
-		const targetNodes = evaluateArgumentToFilterableNodes(context, target);
+		const targetNodes = evaluateArgumentNodes(context, target);
 
 		// Filter only the target nodes contained by the deepest repeat context node.
 		return targetNodes.filter((targetNode) => {
@@ -384,7 +372,7 @@ export const randomize = new NodeSetFunction(
 
 		LocationPathEvaluation.assertInstance(context, results);
 
-		const nodeResults = Array.from(results.values());
+		const nodeResults = results.values();
 		const nodes = nodeResults.map(({ value }) => value);
 
 		if (seedExpression === undefined) return seededRandomize(nodes);

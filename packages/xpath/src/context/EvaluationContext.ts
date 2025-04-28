@@ -33,7 +33,7 @@ export class EvaluationContext<T extends XPathNode> implements Context<T> {
 	readonly contextDocument: AdapterDocument<T>;
 	readonly rootNode: AdapterParentNode<T>;
 
-	readonly contextNodes: Iterable<T>;
+	readonly contextNodes: ReadonlySet<T>;
 
 	readonly functions: FunctionLibraryCollection;
 	readonly namespaceResolver: NamespaceResolver<T>;
@@ -56,7 +56,7 @@ export class EvaluationContext<T extends XPathNode> implements Context<T> {
 
 		this.contextDocument = contextDocument;
 		this.evaluationContextNode = contextNode;
-		this.contextNodes = [contextNode];
+		this.contextNodes = new Set([contextNode]);
 		this.rootNode = rootNode;
 		this.functions = options.functions ?? evaluator.functions;
 		this.namespaceResolver = NamespaceResolver.from(

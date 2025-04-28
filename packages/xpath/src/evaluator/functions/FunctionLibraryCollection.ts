@@ -62,7 +62,7 @@ export class FunctionLibraryCollection {
 	protected readonly namespacedFunctionLibraries: ReadonlyMap<string, FunctionLibrary>;
 
 	constructor(
-		functionLibraries: Iterable<FunctionLibrary>,
+		functionLibraries: readonly FunctionLibrary[],
 		options: FunctionLibraryCollectionOptions = {}
 	) {
 		const namespacedFunctionLibraries = new Map<string, FunctionLibrary>();

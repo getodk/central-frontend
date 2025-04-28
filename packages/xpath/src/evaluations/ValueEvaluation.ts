@@ -7,26 +7,28 @@ import { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 export abstract class ValueEvaluation<T extends XPathNode, Type extends EvaluationType>
 	implements Evaluation<T, Type>
 {
+	protected readonly _values: readonly [this] = [this];
+
 	abstract readonly context: LocationPathEvaluation<T>;
 
 	abstract readonly type: Type;
 	abstract readonly value: EvaluationTypes<T>[Type];
-	abstract readonly nodes: Type extends 'NODE' ? Iterable<T> : null;
+	abstract readonly nodes: Type extends 'NODE' ? ReadonlySet<T> : null;
 
 	protected abstract readonly booleanValue: boolean;
 	protected abstract readonly numberValue: number;
 	protected abstract readonly stringValue: string;
 
 	[Symbol.iterator]() {
-		return this.values();
+		return this.values().values();
 	}
 
 	first(): this {
 		return this;
 	}
 
-	values(): IterableIterator<this> {
-		return [this].values();
+	values(): readonly this[] {
+		return this._values;
 	}
 
 	toBoolean(): boolean {

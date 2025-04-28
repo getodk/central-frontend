@@ -18,7 +18,9 @@ export const getContainingEngineXPathDocument = (node: EngineXPathNode): EngineX
 	return node.rootDocument;
 };
 
-export const getEngineXPathAttributes = (node: EngineXPathNode): Iterable<EngineXPathAttribute> => {
+export const getEngineXPathAttributes = (
+	node: EngineXPathNode
+): readonly EngineXPathAttribute[] => {
 	if (node.nodeType === 'static-element') {
 		return node.attributes;
 	}
@@ -39,7 +41,7 @@ export const getEngineXPathAttributes = (node: EngineXPathNode): Iterable<Engine
  * it throw? It might be nice to be alerted if the assumptions in point 2 above
  * are somehow wrong (or become wrong).
  */
-export const getNamespaceDeclarations = (): Iterable<never> => [];
+export const getNamespaceDeclarations = (): readonly [] => [];
 
 export const getParentNode = (node: EngineXPathNode): EngineXPathParentNode | null => {
 	if (node.nodeType === 'repeat-instance') {

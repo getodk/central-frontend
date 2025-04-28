@@ -56,7 +56,6 @@
   "dependencies": {
     "@getodk/common": "0.5.2",
     "crypto-js": "^4.2.0",
-    "itertools-ts": "^2.2.0",
     "temporal-polyfill": "^0.3.0"
   },
   "devDependencies": {

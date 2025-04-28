@@ -48,7 +48,7 @@ export class LocationPathEvaluator
 		this.steps = pathExprSteps(syntaxNode);
 	}
 
-	evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): Iterable<T> {
+	evaluateNodes<T extends XPathNode>(context: EvaluationContext<T>): ReadonlySet<T> {
 		if (this.isRoot) {
 			return context.rootContext().nodes;
 		}
@@ -118,7 +118,7 @@ export class LocationPathEvaluator
 
 				currentContext = LocationPathEvaluation.fromArbitraryNodes(
 					currentContext,
-					filteredNodes.values(),
+					filteredNodes,
 					this
 				);
 			}

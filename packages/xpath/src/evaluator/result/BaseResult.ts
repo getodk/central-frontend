@@ -65,7 +65,7 @@ export abstract class BaseResult<T extends XPathNode> implements XPathEvaluation
 	readonly ANY_UNORDERED_NODE_TYPE = ANY_UNORDERED_NODE_TYPE;
 	readonly FIRST_ORDERED_NODE_TYPE = FIRST_ORDERED_NODE_TYPE;
 
-	protected abstract readonly nodes: Iterable<T> | null;
+	protected abstract readonly nodes: ReadonlySet<T> | null;
 
 	abstract readonly resultType: XPathEvaluationResultType;
 	abstract readonly invalidIteratorState: boolean;

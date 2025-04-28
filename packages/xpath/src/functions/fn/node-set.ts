@@ -1,11 +1,8 @@
 import { normalizeXMLXPathWhitespace } from '@getodk/common/lib/string/whitespace.ts';
-import { reduce } from 'itertools-ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import { NodeSetFunction } from '../../evaluator/functions/NodeSetFunction.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-
-const { toCount } = reduce;
 
 export const count = new NumberFunction(
 	'count',
@@ -17,7 +14,7 @@ export const count = new NumberFunction(
 			throw 'todo not a node-set';
 		}
 
-		return toCount(results.nodes);
+		return new Set(results.nodes).size;
 	}
 );
 
@@ -54,7 +51,7 @@ export const id = new NodeSetFunction(
 			return element;
 		});
 
-		return context.domProvider.sortInDocumentOrder(elements);
+		return elements.slice().sort(context.domProvider.compareDocumentOrder);
 	}
 );
 

@@ -1,5 +1,3 @@
-import { zipLongest } from 'itertools-ts/lib/multi';
-import { chunkwise } from 'itertools-ts/lib/single';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 
@@ -75,16 +73,33 @@ export const weightedChecklist = new BooleanFunction(
 
 		let satisfied = 0;
 
-		for (const [expression, weightExpression] of chunkwise(expressions, 2)) {
-			const results = expression!.evaluate(context).values();
-			const weights = weightExpression!.evaluate(context).values();
+		for (let i = 0; i < expressions.length; i += 2) {
+			const expression = expressions[i]!;
+			const weightExpression = expressions[i + 1];
 
-			for (const [result, weight] of zipLongest(results, weights)) {
+			if (weightExpression == null) {
+				throw 'todo';
+			}
+
+			const results = expression.evaluate(context).values();
+			const weights = weightExpression.evaluate(context).values();
+
+			const length = Math.max(results.length, weights.length);
+
+			for (let j = 0; j < length; j += 1) {
+				const weight = weights[j];
+
 				if (weight == null) {
 					break;
 				}
 
-				if (result?.toBoolean() ?? false) {
+				const result = results[j];
+
+				if (result == null) {
+					return false;
+				}
+
+				if (result.toBoolean()) {
 					satisfied += weight.toNumber();
 
 					if (satisfied > max) {

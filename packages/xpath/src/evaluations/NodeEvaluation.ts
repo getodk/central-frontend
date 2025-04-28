@@ -13,7 +13,7 @@ interface NodeEvaluationComputedValues {
 
 export class NodeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NODE'> {
 	readonly type = 'NODE';
-	readonly nodes: Iterable<T>;
+	readonly nodes: ReadonlySet<T>;
 
 	protected computedValues: NodeEvaluationComputedValues | null = null;
 
@@ -38,7 +38,7 @@ export class NodeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NOD
 		readonly value: T
 	) {
 		super();
-		this.nodes = [value];
+		this.nodes = new Set([value]);
 	}
 
 	protected computeValues(): NodeEvaluationComputedValues {
