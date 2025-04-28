@@ -36,7 +36,7 @@ describe('WhatsNew modal', () => {
 
   describe('does not show modal', () => {
     it('does not show modal to newly created admin', async () => {
-      mockLogin({ createdAt: '2025-05-10' });
+      mockLogin({ createdAt: '2025-05-07' });
       testData.extendedProjects.createPast(1);
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
