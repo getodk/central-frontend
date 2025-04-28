@@ -102,7 +102,7 @@ class Scenario extends BaseScenario {
 		const currentPosition = this.getSelectedPositionalEvent();
 
 		if (currentPosition.eventType === 'END_OF_FORM') {
-			throw 'todo';
+			throw new Error('Cannot proceed. Reached the end of the form.');
 		}
 
 		const events = this.getPositionalEvents();
@@ -138,7 +138,7 @@ class Scenario extends BaseScenario {
 		const next = this.getNextEventPosition();
 
 		if (next.eventType === 'END_OF_FORM') {
-			throw 'todo';
+			throw new Error('Cannot proceed. Reached the end of the form.');
 		}
 
 		return new JRTreeReference(next.node.currentState.reference);

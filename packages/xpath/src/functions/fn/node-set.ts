@@ -11,7 +11,7 @@ export const count = new NumberFunction(
 		const results = expression!.evaluate(context);
 
 		if (results.nodes == null) {
-			throw 'todo not a node-set';
+			throw new Error('Expected a node-set for count function, but received null.');
 		}
 
 		return new Set(results.nodes).size;
@@ -64,7 +64,7 @@ export const localName = new StringFunction(
 		const evaluated = expression?.evaluate(context) ?? context;
 
 		if (!(evaluated instanceof LocationPathEvaluation)) {
-			throw 'todo not a node-set';
+			throw new Error('Expected a node-set for local-name function, but received an invalid type.');
 		}
 
 		const node = evaluated.first()?.value;
@@ -95,7 +95,7 @@ export const name = new StringFunction(
 		const evaluated = expression?.evaluate(context) ?? context;
 
 		if (!(evaluated instanceof LocationPathEvaluation)) {
-			throw 'todo not a node-set';
+			throw new Error('Expected a node-set for name function, but received an invalid type.');
 		}
 
 		const node = evaluated.first()?.value;
@@ -125,7 +125,9 @@ export const namespaceURI = new StringFunction(
 		const evaluated = expression?.evaluate(context) ?? context;
 
 		if (!(evaluated instanceof LocationPathEvaluation)) {
-			throw 'todo not a node-set';
+			throw new Error(
+				'Expected a node-set for namespace-uri function, but received an invalid type.'
+			);
 		}
 
 		const node = evaluated.first()?.value;

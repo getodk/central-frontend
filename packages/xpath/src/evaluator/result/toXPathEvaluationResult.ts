@@ -67,7 +67,7 @@ export const toXPathEvaluationResult = <T extends XPathNode>(
 		case ANY_UNORDERED_NODE_TYPE:
 		case FIRST_ORDERED_NODE_TYPE:
 			if (nodes == null) {
-				throw 'todo not a node-set';
+				throw new Error('Expected a node-set for node iterator result, but received null.');
 			}
 
 			return new NodeSetIteratorResult(domProvider, resultType, nodes);
@@ -75,7 +75,7 @@ export const toXPathEvaluationResult = <T extends XPathNode>(
 		case UNORDERED_NODE_SNAPSHOT_TYPE:
 		case ORDERED_NODE_SNAPSHOT_TYPE:
 			if (nodes == null) {
-				throw 'todo not a node-set';
+				throw new Error('Expected a node-set for node snapshot result, but received null.');
 			}
 
 			return new NodeSetSnapshotResult(domProvider, resultType, nodes);

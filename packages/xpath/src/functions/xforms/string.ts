@@ -85,13 +85,13 @@ export const digest = new StringFunction(
 		const algorithm = algorithmExpression!.evaluate(context).toString();
 
 		if (!isDigestAlgorithm(algorithm)) {
-			throw `todo unknown digest algorithm ${algorithm}`;
+			throw new Error(`Unsupported digest algorithm: '${algorithm}'`);
 		}
 
 		const encoding = encodingExpression?.evaluate(context).toString() ?? 'base64';
 
 		if (!isDigestEncoding(encoding)) {
-			throw `todo unknown digest encoding ${encoding}`;
+			throw new Error(`Unsupported digest encoding: '${encoding}'`);
 		}
 
 		const fn = digestHashFunctions[algorithm];
@@ -248,7 +248,7 @@ export const uuid = new StringFunction(
 		const outputLength = lengthExpression.evaluate(context).toNumber();
 
 		if (Number.isNaN(outputLength)) {
-			throw 'todo';
+			throw new Error('Expected a valid number for the UUID length, but received NaN.');
 		}
 
 		while (result.length < outputLength) {

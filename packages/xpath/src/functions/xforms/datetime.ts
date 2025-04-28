@@ -239,7 +239,9 @@ const evaluateDateTime = <T extends XPathNode>(
 		}
 
 		default:
-			throw 'todo';
+			throw new Error(
+				'Expected a NUMBER or STRING evaluation type for date-time conversion, but received an invalid type.'
+			);
 	}
 };
 
@@ -290,7 +292,7 @@ export const date = new FunctionImplementation(
 				break;
 
 			default:
-				throw '';
+				throw new Error('Invalid input type for date function: expected STRING or NUMBER.');
 		}
 
 		const dateTime = evaluateDateTime(context, results);

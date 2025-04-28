@@ -58,7 +58,7 @@ export class FunctionCallExpressionEvaluator implements ExpressionEvaluator {
 			const { prefix, localName } = name;
 			const errorName = prefix == null ? localName : `${prefix}:${localName}`;
 
-			throw `todo function not defined: ${errorName}`;
+			throw new Error(`Function '${errorName}' is not defined.`);
 		}
 
 		return functionImplementation.call(context.currentContext(), argumentExpressions);

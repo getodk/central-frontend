@@ -78,7 +78,9 @@ export const weightedChecklist = new BooleanFunction(
 			const weightExpression = expressions[i + 1];
 
 			if (weightExpression == null) {
-				throw 'todo';
+				throw new Error(
+					'The weighted-checklist function must be given an even number of arguments.'
+				);
 			}
 
 			const results = expression.evaluate(context).values();

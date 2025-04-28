@@ -55,7 +55,7 @@ class JavaRosaPRNG extends ParkMillerPRNG {
 	// so that we produce the same randomization as JR.
 
 	constructor(seed: Int | bigint) {
-		let finalSeed: number | bigint;
+		let finalSeed: bigint | number;
 		// In Java, a NaN double's .longValue is 0
 		if (Number.isNaN(seed)) finalSeed = 0;
 		// In Java, an Infinity double's .longValue() is 2**63 -1, which is larger than Number.MAX_SAFE_INTEGER, thus we'll need a BigInt.
@@ -69,7 +69,7 @@ class JavaRosaPRNG extends ParkMillerPRNG {
 	}
 }
 
-export const seededRandomize = <T>(values: readonly T[], seed?: number | bigint): T[] => {
+export const seededRandomize = <T>(values: readonly T[], seed?: bigint | number): T[] => {
 	let generator: PseudoRandomNumberGenerator;
 
 	if (seed == null) {

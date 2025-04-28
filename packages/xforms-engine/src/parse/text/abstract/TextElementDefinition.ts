@@ -21,8 +21,8 @@ export type RefAttributeChunk =
 
 // prettier-ignore
 type TextElementChildChunk =
-	| TextOutputExpression
-	| TextLiteralExpression;
+	| TextLiteralExpression
+	| TextOutputExpression;
 
 // prettier-ignore
 type TextElementChunks =

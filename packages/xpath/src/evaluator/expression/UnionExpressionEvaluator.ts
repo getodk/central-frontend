@@ -23,13 +23,13 @@ export class UnionExpressionEvaluator extends LocationPathExpressionEvaluator {
 		const lhs = this.lhs.evaluate(context);
 
 		if (!(lhs instanceof LocationPathEvaluation)) {
-			throw 'todo lhs not node-set result';
+			throw new Error('Left-hand side expression did not evaluate to a node-set.');
 		}
 
 		const rhs = this.rhs.evaluate(context);
 
 		if (!(rhs instanceof LocationPathEvaluation)) {
-			throw 'todo rhs not node-set result';
+			throw new Error('Right-hand side expression did not evaluate to a node-set.');
 		}
 
 		const nodes = Array.from(new Set([...lhs.nodes, ...rhs.nodes]));

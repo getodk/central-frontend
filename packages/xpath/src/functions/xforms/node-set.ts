@@ -17,7 +17,9 @@ export const countNonEmpty = new NumberFunction(
 		const results = expression!.evaluate(context);
 
 		if (results.type !== 'NODE') {
-			throw 'todo';
+			throw new Error(
+				'Expected a node-set for count-non-empty function, but received an invalid type.'
+			);
 		}
 
 		let result = 0;
@@ -252,7 +254,7 @@ export const once = new StringFunction(
 		const [contextNode] = context.contextNodes;
 
 		if (contextNode == null) {
-			throw 'todo once no context';
+			throw new Error('No context node available for the once function.');
 		}
 
 		const string = context.domProvider.getNodeValue(contextNode);
@@ -324,7 +326,9 @@ export const position = new NumberFunction(
 		}
 
 		if (next != null) {
-			throw 'todo enforce single node(?)';
+			throw new Error(
+				'Expected a single node for position function, but multiple nodes were provided.'
+			);
 		}
 
 		const { domProvider } = context;
@@ -379,7 +383,7 @@ export const randomize = new NodeSetFunction(
 
 		const seed = seedExpression.evaluate(context);
 		const asNumber = seed.toNumber(); // TODO: There are some peculiarities to address: https://github.com/getodk/web-forms/issues/240
-		let finalSeed: number | bigint | undefined;
+		let finalSeed: bigint | number | undefined;
 		if (Number.isNaN(asNumber)) {
 			// Specific behaviors for when a seed value is not interpretable as numeric.
 			// We still want to derive a seed in those cases, see https://github.com/getodk/javarosa/issues/800
