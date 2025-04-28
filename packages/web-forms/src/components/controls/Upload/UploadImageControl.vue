@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ControlText from '@/components/ControlText.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
+import IconSVG from '@/components/widgets/IconSVG.vue';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
@@ -75,18 +76,7 @@ watchEffect(() => {
 				:disabled="isDisabled"
 				@click="triggerInputField(takePictureInput)"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="12"
-					height="11"
-					viewBox="0 0 12 11"
-					fill="none"
-				>
-					<path
-						d="M8.94478 1.33333L7.87728 0.166664H4.37728L3.30978 1.33333H0.293945V10.6667H11.9606V1.33333H8.94478ZM6.12728 8.91666C4.51728 8.91666 3.21061 7.61 3.21061 6C3.21061 4.39 4.51728 3.08333 6.12728 3.08333C7.73728 3.08333 9.04395 4.39 9.04395 6C9.04395 7.61 7.73728 8.91666 6.12728 8.91666Z"
-						fill="white"
-					/>
-				</svg>
+				<IconSVG name="mdiCamera" variant="inverted" />
 				<!-- TODO: translations -->
 				<span>Take picture</span>
 			</Button>
@@ -106,19 +96,7 @@ watchEffect(() => {
 			:disabled="isDisabled"
 			@click="triggerInputField(selectImageInput)"
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="11"
-				height="12"
-				viewBox="0 0 11 12"
-				fill="none"
-			>
-				<path
-					d="M10.6355 11.25V0.75H0.135498V11.25H10.6355ZM3.34383 6.875L4.80216 8.63083L6.84383 6L9.46883 9.5H1.30216L3.34383 6.875Z"
-					fill="white"
-				/>
-			</svg>
-
+			<IconSVG name="mdiImage" variant="inverted" />
 			<!-- TODO: Good candidate for <slot> in a general component -->
 			<!-- TODO: translations -->
 			<span>Choose image</span>
@@ -146,22 +124,8 @@ watchEffect(() => {
 </template>
 
 <style scoped lang="scss">
-.capture-buttons button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 145px;
-	gap: 0px;
-
-	&:not(:last-child) {
-		margin-right: 20px;
-		margin-bottom: 10px;
-	}
-
-	svg {
-		margin-right: 5px;
-		width: 16px;
-		height: 24px;
-	}
+.capture-buttons button:not(:last-child) {
+	margin-right: 20px;
+	margin-bottom: 10px;
 }
 </style>

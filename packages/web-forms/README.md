@@ -106,18 +106,16 @@ This package uses the Material Design system for the UI, though not strictly. Th
 
 ### Icons
 
-We use **Material Icons** using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`./src/assets/fonts/`](./src/assets/fonts/), and the CSS is [`./src/assets/css/icomoon.css`](/src/assets/css/icomoon.css). Our IcoMoon definition is in the root directory of this package at [`./icomoon.json`](./icomoon.json).
+The `IconSVG` component renders Material Design Icons (MDI) with customizable size and style variants. It uses the `@mdi/js` library for icon data and supports a predefined set of icons.
 
-To update the icons using the [IcoMoon website](https://icomoon.io/app/):
+```js
+<IconSVG name="mdiCamera" size="md" variant="primary" />
+```
 
-1. Click the "Import Icons" button in IcoMoon. Select [`icomoon.json`](/icomoon.json). When prompted, load the settings stored in the file.
-2. Scroll down to the "Add Icons From Library" link and add **Material Icons**.
-3. Move the imported set above Material Icons, using the 3-bar icon to the right of the imported set's title. (This should help preserve the icon order and minimize the diff.)
-4. Update the icons by selecting (highlighting) the new icons to add. They don't need to be moved or altered.
-5. Download the new font, then copy the files (`icomoon.css`, `fonts/*`, `icomoon.json`) into their locations in the repository.
-   - You will need to rename the files and update the paths in the CSS (`fonts/icomoon.ttf?...` becomes `/fonts/icomoon.ttf?...` with a beginning slash).
-   - You will also need to prettify the JSON file to use two space indentation.
+To add a new icon:
 
-By following the steps above, you should minimize the diff. However, in the JSON file, you may still see changes for properties like `id`, `iconIdx`, `setId`, and `setIdx`.
+- Import the icon from `@mdi/js` in the `IconSVG` component.
+- Add the icon to the `iconMap` object with its corresponding name.
+- Use the icon by passing its name to the `name` prop.
 
 Material Icons are available under the Apache License Version 2.0. Copy of the license can be found at [`./src/assets/fonts/LICENSE-2.0.txt`](./src/assets/fonts/LICENSE-2.0.txt)

@@ -108,8 +108,6 @@ export default defineConfig(({ mode }) => {
 				// With following lines, fonts byte array are copied into css file
 				// Roboto fonts
 				'./fonts': resolve('../../node_modules/@fontsource/roboto'),
-				// Icomoon fonts
-				'/fonts': resolve('./src/assets/fonts'),
 			},
 		},
 		build: {

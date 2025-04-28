@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconSVG from '@/components/widgets/IconSVG.vue';
 import type { ActiveLanguage, FormLanguage } from '@getodk/xforms-engine';
 import Select from 'primevue/select';
 
@@ -18,7 +19,7 @@ defineEmits(['update:activeLanguage']);
 		@update:model-value="$emit('update:activeLanguage', $event)"
 	>
 		<template #value="slotProps">
-			<span class="icon-language" />
+			<IconSVG name="mdiWeb" />
 			<span>
 				{{ slotProps.value.language }}
 			</span>
@@ -45,15 +46,14 @@ defineEmits(['update:activeLanguage']);
 	}
 
 	:deep(.p-select-label) {
-		padding: 5px 16px;
+		padding: 5px 12px;
 		span {
 			vertical-align: middle;
 		}
 	}
 
-	.icon-language {
-		margin-right: 10px;
-		font-size: var(--odk-icon-size);
+	.odk-icon {
+		margin-right: 0.5rem;
 	}
 }
 </style>

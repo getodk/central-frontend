@@ -46,4 +46,13 @@ const isDisabled = computed(() => props.question.currentState.readonly === true)
 .p-datepicker-input:disabled + .p-datepicker-input-icon-container {
 	cursor: not-allowed;
 }
+
+.p-datepicker .p-datepicker-input-icon-container {
+	top: 19px;
+
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+}
 </style>

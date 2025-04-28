@@ -25,8 +25,11 @@
 	--odk-primary-lighter-background-color: var(--p-primary-50);
 	--odk-primary-border-color: var(--p-primary-500);
 
-	--odk-error-text-color: var(--p-message-error-color);
-	--odk-error-background-color: var(--p-message-error-background);
+	--odk-error-text-color: var(--p-red-600);
+	--odk-error-background-color: var(--p-red-50);
+
+	--odk-warning-text-color: var(--p-yellow-600);
+	--odk-warning-background-color: var(--p-yellow-50);
 
 	--odk-text-color: var(--p-surface-900);
 	--odk-inverted-text-color: var(--p-surface-0);
@@ -37,8 +40,6 @@
 	--odk-inactive-background-color: var(--p-surface-300);
 
 	--odk-border-color: var(--p-surface-300);
-
-	--odk-icon-size: 1.5rem;
 
 	--odk-radius: 6px;
 
@@ -76,4 +77,8 @@ body {
 	font-family: var(--odk-font-family);
 	font-weight: 400;
 	font-size: var(--odk-base-font-size);
+}
+
+button.p-button {
+	min-height: 40px;
 }

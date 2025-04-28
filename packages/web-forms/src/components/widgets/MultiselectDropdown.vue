@@ -87,8 +87,8 @@ if (props.question.appearances['no-buttons']) {
 
 	.p-multiselect-option {
 		&[aria-selected='true']::after {
-			content: '\e916';
-			font-family: 'owf-icomoon';
+			content: '\2713';
+			font-family: system-ui;
 			color: var(--odk-primary-text-color);
 		}
 

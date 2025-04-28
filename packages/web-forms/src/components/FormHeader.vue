@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconSVG from '@/components/widgets/IconSVG.vue';
 import {
 	type FormLanguage,
 	type RootNode,
@@ -27,7 +28,7 @@ const items = ref([
 	{
 		// TODO: translations
 		label: 'Print',
-		icon: 'icon-local_printshop',
+		icon: 'mdiPrinter',
 		command: print,
 	},
 ]);
@@ -36,7 +37,7 @@ if (languages.length > 0) {
 	items.value.unshift({
 		// TODO: translations
 		label: 'Change language',
-		icon: 'icon-language',
+		icon: 'mdiWeb',
 		command: () => (languageDialogState.value = true),
 	});
 }
@@ -50,7 +51,9 @@ const handleLanguageChange = (event: FormLanguage) => {
 	<!-- for desktop -->
 	<div class="hidden lg:inline larger-screens">
 		<div class="flex justify-content-end flex-wrap gap-3">
-			<Button class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+			<Button class="print-button" severity="secondary" rounded @click="print">
+				<IconSVG name="mdiPrinter" />
+			</Button>
 			<FormLanguageMenu
 				:active-language="form.currentState.activeLanguage"
 				:languages="languages"
@@ -75,12 +78,23 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 		<div class="form-options">
 			<!-- if Form is not multilingual then we always show print button -->
-			<Button v-if="languages.length === 0" class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+			<Button v-if="languages.length === 0" class="print-button" severity="secondary" rounded @click="print">
+				<IconSVG name="mdiPrinter" />
+			</Button>
 
 			<!-- show either hamburger or (print button and language changer) based on container size -->
 			<div v-else class="multilingual">
-				<Button icon="icon-menu" class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle" />
-				<Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+				<Button class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle">
+					<IconSVG name="mdiMenu" />
+				</Button>
+				<Menu id="overlay_menu" ref="menu" :model="items" :popup="true">
+					<template #item="{ item }">
+						<a v-if="item.command != null" class="p-menu-item-link" @click="(event) => item.command && item.command({ originalEvent: event, item })">
+							<IconSVG v-if="item.icon != null" :name="item.icon" />
+							<span>{{ item.label }}</span>
+						</a>
+					</template>
+				</Menu>
 				<FormLanguageDialog
 					v-model:state="languageDialogState"
 					:active-language="form.currentState.activeLanguage"
@@ -88,7 +102,9 @@ const handleLanguageChange = (event: FormLanguage) => {
 					@update:active-language="handleLanguageChange"
 				/>
 
-				<Button class="print-button" severity="secondary" rounded icon="icon-local_printshop" @click="print" />
+				<Button class="print-button" severity="secondary" rounded @click="print">
+					<IconSVG name="mdiPrinter" />
+				</Button>
 				<FormLanguageMenu
 					:active-language="form.currentState.activeLanguage"
 					:languages="languages"
@@ -100,16 +116,18 @@ const handleLanguageChange = (event: FormLanguage) => {
 </template>
 
 <style scoped lang="scss">
-.p-button.p-button-icon-only.p-button-rounded {
-	font-size: var(--odk-icon-size);
-
+.p-button.p-button-rounded {
 	&:hover {
 		background: var(--odk-primary-light-background-color);
+		border-color: var(--odk-primary-border-color);
+		outline: none;
 	}
 
 	&:active,
 	&:focus {
 		background: var(--odk-primary-lighter-background-color);
+		border-color: var(--odk-primary-border-color);
+		outline: none;
 	}
 }
 
@@ -154,8 +172,8 @@ const handleLanguageChange = (event: FormLanguage) => {
 			justify-content: end;
 			gap: 0.5rem;
 
-			.btn-menu {
-				color: var(--odk-text-color);
+			.btn-menu :deep(.odk-icon) path {
+				transform: scale(1.1) translate(-3px, -3px);
 			}
 
 			.print-button {
@@ -184,15 +202,5 @@ const handleLanguageChange = (event: FormLanguage) => {
 			}
 		}
 	}
-
-	.btn-menu {
-		color: var(--odk-text-color);
-	}
-}
-</style>
-
-<style>
-.p-menu .p-menu-item-content .p-menu-item-icon {
-	font-size: var(--odk-icon-size);
 }
 </style>

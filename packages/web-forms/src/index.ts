@@ -6,7 +6,6 @@ import { POST_SUBMIT__NEW_INSTANCE } from './lib/constants/control-flow.ts';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
-import './assets/css/icomoon.css';
 // TODO/sk: Purge it - postcss-purgecss
 import 'primeflex/primeflex.css';
 import './assets/css/style.scss';

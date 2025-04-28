@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconSVG from '@/components/widgets/IconSVG.vue';
 import Button from 'primevue/button';
 import Menu, { type MenuState } from 'primevue/menu';
 import { type MenuItem } from 'primevue/menuitem';
@@ -45,7 +46,8 @@ const toggleMenu = (event: Event) => {
 		<template #header>
 			<div class="panel-title" role="button" @click="toggle">
 				<h2>
-					<span class="chevron" :class="panelState ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'" />
+					<IconSVG v-if="panelState" name="mdiChevronDown" />
+					<IconSVG v-if="!panelState" name="mdiChevronUp" />
 					<span v-if="labelNumber" class="label-number">{{ labelNumber }}</span>
 					<span>{{ title }}</span>
 					<span v-if="labelIcon" class="ml-2" :class="labelIcon" />

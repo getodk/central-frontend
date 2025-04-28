@@ -9,14 +9,12 @@ import hankenGrotesk400 from '@fontsource/hanken-grotesk/400.css?inline';
 import roboto300 from '@fontsource/roboto/300.css?inline';
 import roboto400 from '@fontsource/roboto/400.css?inline';
 import roboto500 from '@fontsource/roboto/500.css?inline';
-import icomoon from '../assets/css/icomoon.css?inline';
 // TODO/sk: Purge it - postcss-purgecss
 import primeflex from 'primeflex/primeflex.css?inline';
 import appStyles from '../assets/css/style.scss?inline';
 import router from './router';
 
 const styles = [
-	icomoon,
 	roboto300,
 	roboto400,
 	roboto500,
