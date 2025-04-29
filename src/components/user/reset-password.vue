@@ -23,13 +23,13 @@ except according to the terms contained in the LICENSE file.
         <template #email>{{ user.email }}</template>
       </i18n-t>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary"
-          :aria-disabled="awaitingResponse" @click="resetPassword">
-          {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.close') }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="awaitingResponse" @click="resetPassword">
+          {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>

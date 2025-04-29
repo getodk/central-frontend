@@ -22,13 +22,13 @@ except according to the terms contained in the LICENSE file.
           :placeholder="$t('newPropertyName')" required autocomplete="off"/>
         <p>{{ $t('introduction[1]') }}</p>
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
-          </button>
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
+          </button>
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>

@@ -34,13 +34,13 @@ except according to the terms contained in the LICENSE file.
           </div>
         </div>
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.update') }} <spinner :state="awaitingResponse"/>
-          </button>
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.neverMind') }}
+          </button>
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
+            {{ $t('action.update') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>

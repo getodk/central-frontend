@@ -18,13 +18,13 @@ except according to the terms contained in the LICENSE file.
         <slot name="body"></slot>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary"
-          :aria-disabled="awaitingResponse" @click="$emit('success')">
-          {{ yesTextC }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ noTextC }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="awaitingResponse" @click="$emit('success')">
+          {{ yesTextC }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>

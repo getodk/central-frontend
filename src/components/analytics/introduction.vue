@@ -32,15 +32,15 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
+        <button type="button" class="btn btn-link" @click="$emit('hide')">
+          {{ $t('action.close') }}
+        </button>
         <router-link v-slot="{ href, navigate }" to="/system/analytics" custom>
           <a class="btn btn-primary" :href="href"
             @click="hideAndNavigate(navigate, $event)">
             {{ $t('action.improveCentral') }}
           </a>
         </router-link>
-        <button type="button" class="btn btn-link" @click="$emit('hide')">
-          {{ $t('action.close') }}
-        </button>
       </div>
     </template>
   </modal>

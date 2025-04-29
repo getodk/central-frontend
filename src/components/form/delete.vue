@@ -26,13 +26,13 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse" @click="del">
-          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.noCancel') }}
+        </button>
+        <button type="button" class="btn btn-danger"
+          :aria-disabled="awaitingResponse" @click="del">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>

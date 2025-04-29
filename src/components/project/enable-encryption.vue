@@ -76,11 +76,11 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-primary" @click="moveToForm">
-            {{ $t('action.next') }}
-          </button>
           <button type="button" class="btn btn-link" @click="$emit('hide')">
             {{ $t('action.neverMind') }}
+          </button>
+          <button type="button" class="btn btn-primary" @click="moveToForm">
+            {{ $t('action.next') }}
           </button>
         </div>
       </template>
@@ -100,13 +100,13 @@ except according to the terms contained in the LICENSE file.
           <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-danger"
-              :aria-disabled="awaitingResponse">
-              {{ $t('action.finish') }} <spinner :state="awaitingResponse"/>
-            </button>
             <button type="button" class="btn btn-link"
               :aria-disabled="awaitingResponse" @click="$emit('hide')">
               {{ $t('action.neverMind') }}
+            </button>
+            <button type="submit" class="btn btn-danger"
+              :aria-disabled="awaitingResponse">
+              {{ $t('action.finish') }} <spinner :state="awaitingResponse"/>
             </button>
           </div>
         </form>

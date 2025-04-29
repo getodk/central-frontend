@@ -293,6 +293,7 @@ const titleId = `modal-title${id}`;
   margin: -$padding-modal-body;
   margin-top: $padding-modal-body;
   padding: $padding-modal-actions;
+  text-align: right;
 }
 
 .modal-full {
