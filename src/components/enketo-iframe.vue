@@ -85,8 +85,9 @@ const setEnketoSrc = () => {
   query.parentWindowOrigin = location.origin;
 
   if (props.actionType === 'offline') {
-    prefix += '/x';
-  } else if (props.actionType === 'public-link') {
+    return; // we don't render offline Enketo through central-frontend
+  }
+  if (props.actionType === 'public-link') {
     prefix += '/single';
   } else if (props.actionType === 'edit') {
     prefix += `/${props.actionType}`;

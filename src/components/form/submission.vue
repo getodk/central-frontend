@@ -77,7 +77,7 @@ const route = useRoute();
 const router = useRouter();
 const { project, resourceStates, form } = useRequestData();
 const { t } = useI18n();
-const { ensureCanonicalPath } = useEnketoRedirector();
+const { ensureEnketoOfflinePath, ensureCanonicalPath } = useEnketoRedirector();
 
 const resources = computed(() => (props.projectId ? [project, form] : [form]));
 
@@ -94,9 +94,8 @@ const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
 
 const fetchProject = () => project.request({
   url: apiPaths.project(props.projectId),
-  extended: true,
+  extended: true
 }).catch(noop);
-
 
 const fetchForm = () => {
   let formUrl = '';
@@ -113,7 +112,12 @@ const fetchForm = () => {
       (problem.code === 404.1 ? t('formNotFound') : null)
   })
     .then(() => {
-      ensureCanonicalPath(props.actionType);
+      const redirected = ensureEnketoOfflinePath(props.actionType);
+      if (redirected) {
+        project.cancelRequest();
+      } else {
+        ensureCanonicalPath(props.actionType);
+      }
     })
     .catch(noop);
 };
