@@ -1,5 +1,18 @@
 # @getodk/xpath
 
+## 0.5.0
+
+### Minor Changes
+
+- ab3be86: Support for date questions with no appearance and support for date notes
+
+### Patch Changes
+
+- f620cf4: Improves XPath processing performance.
+- c44bc24: Adds error message descriptions
+- Updated dependencies [ab3be86]
+  - @getodk/common@0.6.0
+
 ## 0.4.1
 
 ### Patch Changes

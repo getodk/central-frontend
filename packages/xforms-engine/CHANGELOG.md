@@ -1,5 +1,15 @@
 # @getodk/xforms-engine
 
+## 0.9.0
+
+### Minor Changes
+
+- ab3be86: Support for date questions with no appearance and support for date notes.
+
+### Patch Changes
+
+- f620cf4: Improves XPath processing performance.
+
 ## 0.8.0
 
 ### Minor Changes

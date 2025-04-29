@@ -1,5 +1,17 @@
 # @getodk/web-forms
 
+## 0.10.0
+
+### Minor Changes
+
+- b672955: Upgrades to PrimeVue v4. PrimeVue's components and style system (variables, colors, shapes, etc) have changed significantly.
+- ab3be86: Support for date questions with no appearance and support for date notes.
+
+### Patch Changes
+
+- ea9674c: Adds icon component with Material Design icons to replace Icomoon
+- 3e76d3a: Improve label/hint line breaks and repeat's add button styling
+
 ## 0.9.0
 
 ### Minor Changes
