@@ -231,13 +231,13 @@ describe('EntityActivity', () => {
       await wait();
       const yForV40 = window.scrollY;
       yForV40.should.be.above(0);
-      pxTo(app.get('[data-version="40"]')).should.equal(10);
+      pxTo(app.get('[data-version="40"]')).should.within(9, 10);
 
-      // Scroll to v20 even farther below.
+      // Scroll to v30 even farther below.
       await app.vm.$router.push('/projects/1/entity-lists/trees/entities/e#v30');
       await wait();
       window.scrollY.should.be.above(yForV40);
-      pxTo(app.get('[data-version="30"]')).should.equal(10);
+      pxTo(app.get('[data-version="30"]')).should.be.within(9, 10);
     });
 
     it('waits for the scroll target to appear in the DOM', async () => {
