@@ -31,7 +31,6 @@ describe('EnketoIframe', () => {
     { actionType: 'new', expected: `/enketo-passthrough/${enketoId}` },
     { actionType: 'public-link', expected: `/enketo-passthrough/single/${enketoId}` },
     { actionType: 'preview', expected: `/enketo-passthrough/preview/${enketoId}` },
-    { actionType: 'offline', expected: `/enketo-passthrough/x/${enketoId}` },
   ].forEach(({ actionType, expected }) => {
     it(`renders iframe with correct src when actionType is ${actionType}`, () => {
       const wrapper = mountComponent({

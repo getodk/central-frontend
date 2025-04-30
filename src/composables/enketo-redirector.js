@@ -10,6 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+import { inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { memoizeForContainer } from '../util/composable';
 import { queryString } from '../util/request';
@@ -21,6 +22,7 @@ export default memoizeForContainer(({ router, requestData }) => {
   const route = useRoute();
   const { form } = requestData;
   const { submissionPath, newSubmissionPath, formPreviewPath, offlineSubmissionPath } = useRoutes();
+  const { location } = inject('container');
 
   const ensureCanonicalPath = (actionType) => {
     let target;
@@ -52,7 +54,17 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
   };
 
+  const ensureEnketoOfflinePath = (actionType) => {
+    if (actionType === 'offline' && form.dataExists && !form.webformsEnabled) {
+      const enketoId = route.params.enketoId ?? form.enketoId;
+      location.replace(`/-/x/${enketoId}${queryString(route.query)}`);
+      return true;
+    }
+
+    return false;
+  };
+
   return {
-    ensureCanonicalPath
+    ensureCanonicalPath, ensureEnketoOfflinePath
   };
 });

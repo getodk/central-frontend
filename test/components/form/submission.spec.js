@@ -150,7 +150,7 @@ describe('FormSubmission', () => {
           }));
 
       it('cannot access new submission - offline', () => {
-        testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+        testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
         return load(`/f/${enketoId}/offline`)
           .respondFor('/', { users: false })
           .afterResponses(app => {
