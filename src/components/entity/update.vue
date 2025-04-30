@@ -165,13 +165,11 @@ const currentVersion = computed(() =>
   .modal-dialog { margin-top: 15vh; }
   .table-scroll {
     max-height: calc(70vh -
-      #{/* .modal-header */ 46px + /* .modal-actions */ 50px});
+      #{/* .modal-header */ 46px + /* .modal-actions */ 100px});
     overflow-y: auto;
   }
 
-  .modal-body { padding: 0; }
   table { margin-bottom: 0; }
-  .modal-actions { margin: 0; }
 
   table { table-layout: fixed; }
   thead {
