@@ -20,14 +20,7 @@ except according to the terms contained in the LICENSE file.
       @submit="handleSubmit"/>
   </template>
 
-  <modal id="sending-data" v-bind="sendingDataModal" backdrop>
-    <template #title>{{ $t('sendingDataModal.title') }}</template>
-    <template #body>
-      {{ $t('sendingDataModal.body') }}
-    </template>
-  </modal>
-
-  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" hideable backdrop @hide="hideModals()">
+  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" :hideable="submissionModal.hideable" backdrop @hide="hideModal()">
     <template #title>{{ $t(submissionModal.type + '.title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -36,6 +29,11 @@ except according to the terms contained in the LICENSE file.
             <br><br>
               <pre>{{ submissionModal.errorMessage }}</pre>
           </template>
+          <template #supportEmail>
+            <a href="emailto:support@getodk.org">support@getodk.org</a>
+          </template>
+        </i18n-t>
+        <i18n-t v-else-if="submissionModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
           <template #supportEmail>
             <a href="emailto:support@getodk.org">support@getodk.org</a>
           </template>
@@ -50,15 +48,27 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div v-if="submissionModal.type === 'submissionModal'" class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="hideModal()">
+          {{ $t('submissionModal.action.fillOutAgain') }}
+        </button>
         <button type="button" class="btn btn-link" @click="closeWindow()">
           {{ $t('action.close') }}
         </button>
-        <button type="button" class="btn btn-primary" @click="hideModals()">
-          {{ $t('submissionModal.action.fillOutAgain') }}
+      </div>
+      <!-- Any type of error while sending attachments -->
+      <div v-else-if="submissionModal.type === 'retryModal'
+        || (submissionModal.type === 'sessionTimeoutModal' && !submissionModal.hideable)"
+        class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="submitData()">
+          {{ $t('retryModal.action.tryAgain') }}
         </button>
       </div>
-      <div v-else class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="hideModals()">
+      <!-- Preview modal or any type of error while submitting primary instance -->
+      <div v-else-if="submissionModal.type === 'previewModal'
+        || submissionModal.type === 'errorModal'
+        || submissionModal.type === 'sessionTimeoutModal' && submissionModal.hideable"
+        class="modal-actions">
+        <button type="button" class="btn btn-primary" @click="hideModal()">
           {{ $t('action.close') }}
         </button>
       </div>
@@ -67,14 +77,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, onUnmounted } from 'vue';
+import { computed, createApp, getCurrentInstance, inject, onUnmounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import Loading from './loading.vue';
 import Modal from './modal.vue';
 
-import { apiPaths, isProblem, queryString } from '../util/request';
+import { apiPaths, isProblem, queryString, requestAlertMessage } from '../util/request';
 import { modalData } from '../util/reactivity';
 import { noop } from '../util/util';
 import { runSequentially } from '../util/promise';
@@ -87,7 +97,6 @@ const formVersionXml = createResource('formVersionXml');
 const { request } = useRequest();
 const submissionAttachments = createResource('submissionAttachments');
 const submissionModal = modalData();
-const sendingDataModal = modalData();
 const route = useRoute();
 const router = useRouter();
 const { submissionPath } = useRoutes();
@@ -113,6 +122,7 @@ const inst = getCurrentInstance();
 // webFormsPlugin just adds globalProperty ($primevue)
 Object.assign(inst.appContext.config.globalProperties, app._context.config.globalProperties);
 
+const { i18n } = inject('container');
 
 const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
 
@@ -126,7 +136,7 @@ const isEdit = computed(() => props.actionType === 'edit');
  * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
  * requirements
  */
-const transformAttachmentResponse = (axiosResponse) => {
+const transformAttachmentResponse = async (axiosResponse) => {
   const { data, status, statusText, headers } = axiosResponse;
 
   const fetchHeaders = new Headers();
@@ -185,14 +195,14 @@ const fetchSubmissionAttachments = () => {
     .catch(noop);
 };
 
-const fetchSubmissionAttachment = (name) => {
+const fetchSubmissionAttachment = (attachmentName) => {
   // Draft is always false because we don't support editing of draft submissions
-  const requestUrl = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, props.instanceId, name);
+  const requestUrl = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, props.instanceId, attachmentName);
   return request({
     url: requestUrl,
     alert: false
   })
-    .then(({ data }) => data) // TODO: prob same things as getFormAttachment fn
+    .then(transformAttachmentResponse) // TODO: prob same things as getFormAttachment fn
     .catch(noop);
 };
 
@@ -200,7 +210,9 @@ const editInstanceOptions = computed(() => {
   if (isEdit.value && submissionAttachments.dataExists) {
     return {
       resolveInstance: fetchSubmissionXml,
-      attachmentFileNames: submissionAttachments.data,
+      attachmentFileNames: submissionAttachments.data
+        .filter(a => a.exists)
+        .map(a => a.name),
       resolveAttachment: fetchSubmissionAttachment
     };
   }
@@ -215,23 +227,19 @@ const fetchData = () => {
 fetchData();
 
 /**
- * Hide all modals
+ * Hide the modal
  */
-const hideModals = () => {
+const hideModal = () => {
   submissionModal.hide();
-  sendingDataModal.hide();
 };
 
 /**
- * Displays the specified modal while hiding all others.
- * Ensures that only one modal is visible at a time.
+ * Displays the modal
  *
- * @param {Object} modal - The modal instance to display.
  * @param {Object} [options] - Optional parameters to pass to modal.show().
  */
-const showModal = (modal, options) => {
-  hideModals();
-  modal.show(options);
+const showModal = (options) => {
+  submissionModal.show({ hideable: true, ...options });
 };
 
 const closeWindow = () => {
@@ -256,46 +264,138 @@ const getAttachment = (url) => {
   }).then(transformAttachmentResponse);
 };
 
-const postPrimaryInstance = (file) => {
+const postPrimaryInstance = async (file) => {
   let url = apiPaths.submissions(form.projectId, form.xmlFormId, !form.publishedAt, '');
 
   if (isEdit.value) {
     url = apiPaths.submission(form.projectId, form.xmlFormId, props.instanceId);
   }
   url = withToken(url);
-  return request({
-    method: isEdit.value ? 'PUT' : 'POST',
-    url,
-    data: file,
-    headers: {
-      'content-type': 'text/xml'
-    },
-    fulfillProblem: () => true
-  })
-    .then(({ data }) => {
-      if (isProblem(data)) {
-        if (data.code === 403.1) {
-          showModal(submissionModal, { type: 'sessionTimeoutModal' });
-        } else {
-          showModal(submissionModal, { type: 'errorModal', errorMessage: data.message });
-        }
-        return false;
-      }
-      return data.currentVersion.instanceId;
-    })
-    .catch(noop);
+  try {
+    const requestOptions = {
+      method: isEdit.value ? 'PUT' : 'POST',
+      url,
+      data: file,
+      headers: {
+        'content-type': 'text/xml'
+      },
+      alert: false,
+    };
+    const { data } = await request(requestOptions);
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, data: error };
+  }
 };
 
 const uploadAttachment = async (attachment, instanceId) => {
-  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.file.name));
-  return request({
-    method: 'POST',
-    url,
-    data: attachment.file,
-    fulfillProblem: () => true
-  })
-    .then(({ data }) => data)
-    .catch(noop);
+  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.name));
+  const result = {};
+  try {
+    const requestOptions = {
+      method: 'POST',
+      url,
+      data: attachment,
+      alert: false,
+      headers: {
+        'content-type': attachment.type
+      }
+    };
+    const { data } = await request(requestOptions);
+    result.success = true;
+    result.data = data;
+  } catch (error) {
+    result.success = false;
+    result.data = error;
+  }
+
+  return { name: attachment.name, result };
+};
+
+const submissionResult = reactive({});
+const submissionData = ref();
+let clearForm;
+
+const initializeSubmissionState = (data, clearFormCallback) => {
+  submissionData.value = data;
+
+  submissionResult.inProgress = false;
+  submissionResult.primaryInstanceResult = {
+    success: false
+  };
+
+  submissionResult.attachmentResult = new Map();
+  data.attachments.forEach(attachment => {
+    submissionResult.attachmentResult.set(attachment.name, {
+      success: false
+    });
+  });
+
+  clearForm = () => {
+    clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
+  };
+};
+
+const handleResult = () => {
+  const attachmentResultArr = [...submissionResult.attachmentResult.values()];
+  // Success handler
+  if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
+    clearForm();
+    if (isPublicLink.value) {
+      showModal({ type: 'thankYouModal', hideable: false });
+    } else if (isEdit.value) {
+      showModal({ type: 'editSubmissionModal', hideable: false });
+      setTimeout(() => {
+        router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
+      }, 2000);
+    } else {
+      showModal({ type: 'submissionModal', hideable: false });
+    }
+  }
+
+  // Error handler - Primary Instance
+  if (!submissionResult.primaryInstanceResult.success) {
+    const error = submissionResult.primaryInstanceResult.data;
+    if (error.response && isProblem(error.response.data) && error.response.data.code === 403.1) {
+      showModal({ type: 'sessionTimeoutModal' });
+    } else {
+      showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error, false) });
+    }
+  }
+
+  // Error handler - Attachments
+  if (attachmentResultArr.some(r => !r.success)) {
+    const isSessionTimeout = attachmentResultArr.some(r => {
+      const error = r.data;
+      return error.response && isProblem(error.response.data) && error.response.data.code === 403.1;
+    });
+    if (isSessionTimeout) {
+      showModal({ type: 'sessionTimeoutModal', hideable: false });
+    } else {
+      showModal({ type: 'retryModal', hideable: false });
+    }
+  }
+};
+
+const submitData = async () => {
+  showModal({ type: 'sendingDataModal', hideable: false });
+
+  const data = submissionData.value;
+  if (!submissionResult.primaryInstanceResult.success) {
+    submissionResult.primaryInstanceResult = await postPrimaryInstance(data.instanceFile);
+  }
+
+  if (submissionResult.primaryInstanceResult.success) {
+    const attachmentRequests = data.attachments
+      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
+      .map(a => () => uploadAttachment(a, submissionResult.primaryInstanceResult.data.instanceId));
+    const attachmentResult = await runSequentially(attachmentRequests);
+    attachmentResult.forEach(r => {
+      submissionResult.attachmentResult.set(r.name, r.result);
+    });
+  }
+
+  handleResult();
 };
 
 /**
@@ -305,36 +405,18 @@ const uploadAttachment = async (attachment, instanceId) => {
  */
 const handleSubmit = async (payload, callback) => {
   if (props.actionType === 'preview') {
-    showModal(submissionModal, { type: 'previewModal' });
-  } else {
-    const { data: [data], status } = payload;
-    showModal(sendingDataModal);
-    if (status !== 'ready') {
-      // Status is not ready when Form is not valid and in that case submit button will be disabled,
-      // hence this branch should never execute.
-      return;
-    }
-
-    const instanceId = await postPrimaryInstance(data.instanceFile);
-
-    if (instanceId) {
-      const attachmentRequests = data.attachments.map(a => () => uploadAttachment(a));
-      const attachmentResults = await runSequentially(attachmentRequests);
-
-      // TODO: what to do if attachments upload fail - blocked, need to define requirements / UX
-      if (attachmentResults.every(r => !isProblem(r))) {
-        callback({ next: POST_SUBMIT__NEW_INSTANCE }); // tell OWF to clear out the Form
-        if (isPublicLink.value) {
-          showModal(submissionModal, { type: 'thankYouModal' });
-          formVersionXml.reset(); // hides the Form
-        } else if (isEdit.value) {
-          router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
-        } else {
-          showModal(submissionModal, { type: 'submissionModal' });
-        }
-      }
-    }
+    showModal({ type: 'previewModal' });
+    return;
   }
+  const { data: [data], status } = payload;
+  if (status !== 'ready') {
+    // Status is not ready when Form is not valid and in that case submit button will be disabled,
+    // hence this branch should never execute.
+    return;
+  }
+
+  initializeSubmissionState(data, callback);
+  await submitData();
 };
 
 // hack to remove ODK Web Form css styles
@@ -355,11 +437,9 @@ onUnmounted(() => {
 }
 html, body {
   &:has(.odk-form) {
-    background-color: var(--gray-200);
     box-shadow: none;
   }
 }
-
 #web-form-renderer-submission-modal pre {
   white-space: pre-wrap;
 }
@@ -402,7 +482,14 @@ html, body {
           "full": "Please log in {here} in a different browser tab and try again.",
           "here": "here"
         }
-      }
+      },
+      "retryModal": {
+        "title": "Submission error",
+        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}.",
+        "action": {
+          "tryAgain": "Try again"
+        }
+      },
     }
   }
 </i18n>

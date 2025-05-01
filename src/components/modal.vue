@@ -299,6 +299,10 @@ const titleId = `modal-title${id}`;
   padding-block: 0px;
 }
 
+.modal-body:not(:has(.modal-actions)) {
+  padding-block-end: calc($padding-modal-body / 2);
+}
+
 .modal-actions {
   background: $color-subpanel-background;
   border-bottom-left-radius: 6px;
