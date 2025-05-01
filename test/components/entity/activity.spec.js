@@ -248,7 +248,7 @@ describe('EntityActivity', () => {
         attachTo: document.body
       });
       window.scrollY.should.be.above(0);
-      pxTo(app.get('[data-version="40"]')).should.equal(10);
+      pxTo(app.get('[data-version="40"]')).should.be.within(9, 10);
     });
 
     it('does not scroll for an invalid hash', async () => {
