@@ -15,7 +15,7 @@ describe('WhatsNew modal', () => {
       baseModal.props().state.should.be.true;
     });
 
-    it('shows modal to admin with more than 1 project', async () => {
+    it('shows modal to admin with populated projects', async () => {
       mockLogin({ createdAt: '2025-01-01' });
       testData.extendedProjects.createPast(1);
       const app = await load('/', { root: false });
@@ -25,7 +25,7 @@ describe('WhatsNew modal', () => {
     });
 
     it('shows modal to project manager with 1 project', async () => {
-      mockLogin({ role: 'manager' });
+      mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'manager' });
       const app = await load('/', { root: false }, { users: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
@@ -45,7 +45,7 @@ describe('WhatsNew modal', () => {
     });
 
     it('does not show modal to project viewer with no management role', async () => {
-      mockLogin({ role: 'viewer' });
+      mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer' });
       const app = await load('/', { root: false }, { users: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
@@ -70,7 +70,7 @@ describe('WhatsNew modal', () => {
         .request(app => app.findComponent(WhatsNew).find('.btn').trigger('click'))
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('PUT');
-          url.includes('/v1/user-preferences/site/whatsNewDismissed2025_1').should.be.true;
+          url.should.equal('/v1/user-preferences/site/whatsNewDismissed2025_1');
           data.propertyValue.should.be.equal(true);
         })
         .respondWithSuccess();
