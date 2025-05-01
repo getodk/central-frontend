@@ -15,5 +15,6 @@ jobs:
           node bin/transifex/restructure.js
           git diff --exit-code -- transifex/strings_en.json
       - run: npm run lint
-      - browser-tools/install-chrome
+      - browser-tools/install-chrome:
+          chrome-version: "135.0.7049.114"
       - run: npm run test
