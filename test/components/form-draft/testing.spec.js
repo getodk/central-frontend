@@ -43,7 +43,7 @@ describe('FormDraftTesting', () => {
       const component = await load('/projects/1/forms/f/draft', {
         root: false
       });
-      const text = component.getComponent(SubmissionDownloadButton).text();
+      const text = component.getComponent(SubmissionDownloadButton).find('.btn-primary').text();
       text.should.equal('Download');
     });
   });
