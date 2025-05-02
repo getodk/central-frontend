@@ -46,12 +46,12 @@ except according to the terms contained in the LICENSE file.
         </form>
       </div>
       <div class="modal-actions">
+        <button type="button" class="btn btn-link" @click="$emit('hide')">
+          {{ $t('action.cancel') }}
+        </button>
         <button type="button" class="btn btn-danger" :aria-disabled="convert === null"
           @click="$emit('success', convert)">
           {{ $t('action.changeSetting') }}
-        </button>
-        <button type="button" class="btn btn-link" @click="$emit('hide')">
-          {{ $t('action.cancel') }}
         </button>
       </div>
     </template>

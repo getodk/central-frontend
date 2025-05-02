@@ -24,13 +24,13 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary btn-link-dataset"
-          :aria-disabled="awaitingResponse" @click="link">
-          {{ $t('action.link') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary btn-link-dataset"
+          :aria-disabled="awaitingResponse" @click="link">
+          {{ $t('action.link') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>

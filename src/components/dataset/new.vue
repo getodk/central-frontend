@@ -30,13 +30,13 @@ except according to the terms contained in the LICENSE file.
           <form-group ref="nameGroup" v-model.trim="name"
             :placeholder="$t('entityListName')" required autocomplete="off"/>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-primary"
-              :aria-disabled="awaitingResponse">
-              {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
-            </button>
             <button type="button" class="btn btn-link"
               :aria-disabled="awaitingResponse" @click="hideOrComplete">
               {{ $t('action.cancel') }}
+            </button>
+            <button type="submit" class="btn btn-primary"
+              :aria-disabled="awaitingResponse">
+              {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
             </button>
           </div>
         </form>

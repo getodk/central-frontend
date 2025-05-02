@@ -74,24 +74,24 @@ except according to the terms contained in the LICENSE file.
         want the Proceed button to be a submit button (which means that browsers
         will do some basic form validation when it is clicked). -->
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
-          </button>
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
           </button>
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
+            {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
+          </button>
         </div>
       </form>
       <div v-else class="modal-actions">
-        <button type="button" class="btn btn-primary"
-          :aria-disabled="awaitingResponse" @click="publish">
-          {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="awaitingResponse" @click="publish">
+          {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>

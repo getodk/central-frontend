@@ -27,11 +27,11 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-primary" type="button" @click="confirm">
-          {{ $t('action.yesProceed') }}
-        </button>
         <button class="btn btn-link" type="button" @click="cancel">
           {{ $t('action.noCancel') }}
+        </button>
+        <button class="btn btn-primary" type="button" @click="confirm">
+          {{ $t('action.yesProceed') }}
         </button>
       </div>
     </template>

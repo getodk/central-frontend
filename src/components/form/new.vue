@@ -105,14 +105,14 @@ definition for an existing form -->
         </div>
       </file-drop-zone>
       <div class="modal-actions">
+        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
+          @click="$emit('hide')">
+          {{ $t('action.cancel') }}
+        </button>
         <button id="form-new-upload-button" type="button"
           class="btn btn-primary" :aria-disabled="awaitingResponse"
           @click="upload(false)">
           {{ $t('action.upload') }} <spinner :state="awaitingResponse"/>
-        </button>
-        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
-          @click="$emit('hide')">
-          {{ $t('action.cancel') }}
         </button>
       </div>
     </template>

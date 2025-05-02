@@ -66,13 +66,13 @@ except according to the terms contained in the LICENSE file.
         @animationstart="animatePopup(true)"
         @animationend="animatePopup(false)"/>
       <div ref="actions" class="modal-actions">
-        <button type="button" class="btn btn-primary"
-          :aria-disabled="csvEntities == null || uploading" @click="upload">
-          {{ $t('action.append') }}
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="uploading"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="csvEntities == null || uploading" @click="upload">
+          {{ $t('action.append') }}
         </button>
       </div>
     </template>
