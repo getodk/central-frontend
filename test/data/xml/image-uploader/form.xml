@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:odk="http://www.opendatakit.org/xforms">
+    <h:head>
+        <h:title>Display Picture</h:title>
+        <model odk:xforms-version="1.0.0">
+            <instance>
+                <data id="image-uploader" version="20250501121649">
+                    <dp/>
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                </data>
+            </instance>
+            <bind nodeset="/data/dp" type="binary"/>
+            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+        </model>
+    </h:head>
+    <h:body>
+        <upload mediatype="image/*" ref="/data/dp">
+            <label>Display Picture</label>
+        </upload>
+    </h:body>
+</h:html>

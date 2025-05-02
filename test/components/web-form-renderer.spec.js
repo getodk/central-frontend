@@ -1,10 +1,12 @@
+import sinon from 'sinon';
 import { mockHttp } from '../util/http';
 import createTestContainer from '../util/container';
-import { testRouter } from '../util/router';
+import { mockRouter } from '../util/router';
 import { testRequestData } from '../util/request-data';
 import testData from '../data';
 import simpleXml from '../data/xml/simple/form.xml';
 import simpleSubmission from '../data/xml/simple/submission.xml';
+import imageUploaderXml from '../data/xml/image-uploader/form.xml';
 import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import { mockLogin } from '../util/session';
 import { mergeMountOptions } from '../util/lifecycle';
@@ -27,7 +29,7 @@ describe('WebFormRenderer', () => {
       requestData: testRequestData([], {
         form: testData.extendedForms.last()
       }),
-      router: testRouter()
+      router: mockRouter('/')
     });
     return mockHttp()
       .mount(WebFormRenderer, mergeMountOptions(options, {
@@ -168,15 +170,94 @@ describe('WebFormRenderer', () => {
   it('should show loading modal', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-    const component = await mountComponent()
+    await mountComponent()
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .beforeEachResponse(c => {
-        c.findComponent('#sending-data').props().state.should.be.true;
+        const modal = c.findComponent('#web-form-renderer-submission-modal');
+        modal.props().state.should.be.true;
+        modal.find('.modal-title').text().should.equal('Sending Submission');
       })
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
+  });
 
-    component.findComponent('#sending-data').props().state.should.be.false;
+  const fileToUpload = new File(['dummy content'], '1746140510984.jpg', { type: 'image/jpeg' });
+
+  const uploadFile = async (component) => {
+    const fileInput = component.find('.odk-form input[type="file"]');
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(fileToUpload);
+    fileInput.element.files = dataTransfer.files;
+    await fileInput.trigger('change');
+  };
+
+  it('should send submission attachment request - relies on OWF', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent({}, imageUploaderXml)
+      .complete()
+      .request(async (c) => {
+        await uploadFile(c);
+        return c.find('.odk-form .footer button').trigger('click');
+      })
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
+      .respondWithSuccess(); // upload attachment successful
+
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
+
+    modal.find('.modal-title').text().should.equal('Form successfully sent!');
+    modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
+  });
+
+  it('should show retry modal if attachment upload fails - relies on OWF', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent({}, imageUploaderXml)
+      .complete()
+      .request(async (c) => {
+        await uploadFile(c);
+        return c.find('.odk-form .footer button').trigger('click');
+      })
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
+      .respondWithProblem(); // upload attachment error
+
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
+
+    modal.find('.modal-title').text().should.equal('Submission error');
+    modal.find('.modal-introduction').text().should.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
+  });
+
+  it('should send only submission attachment request on retry', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent({}, imageUploaderXml)
+      .complete()
+      .request(async (c) => {
+        await uploadFile(c);
+        return c.find('.odk-form .footer button').trigger('click');
+      })
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
+      .respondWithProblem() // upload attachment error
+      .complete()
+      .request(async (c) => {
+        const modal = c.getComponent('#web-form-renderer-submission-modal');
+        modal.find('.modal-title').text().should.equal('Submission error');
+        return modal.find('.btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .testRequests([
+        {
+          method: 'POST',
+          url: ({ pathname }) => pathname.should.match(/attachments.*jpg/),
+          data: fileToUpload,
+          headers: { 'content-type': 'image/jpeg' }
+        }
+      ]);
+
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
+
+    modal.find('.modal-title').text().should.equal('Form successfully sent!');
+    modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
   });
 
   describe('edit', () => {
@@ -197,6 +278,7 @@ describe('WebFormRenderer', () => {
 
     it('should send PUT submission request on send button and redirect', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      const clock = sinon.useFakeTimers();
 
       await mountComponent({
         props: {
@@ -217,9 +299,9 @@ describe('WebFormRenderer', () => {
             data: { name: 'xml_submission_file', type: 'text/xml' }
           }
         ])
-        .afterResponses(c => {
-          c.vm.$container.router.currentRoute.value.path.should
-            .equal('/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25');
+        .afterResponses(async c => {
+          await clock.tick(2000);
+          c.vm.$router.push.calledWith('/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25').should.be.true;
         });
     });
   });

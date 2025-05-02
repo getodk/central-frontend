@@ -359,7 +359,7 @@ const handleResult = () => {
     if (error.response && isProblem(error.response.data) && error.response.data.code === 403.1) {
       showModal({ type: 'sessionTimeoutModal' });
     } else {
-      showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error, false) });
+      showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error) });
     }
   }
 
