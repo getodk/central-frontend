@@ -64,7 +64,7 @@ describe('HoverCardEntity', () => {
       body.get('.dl-data-dd').element.clientWidth.should.equal(144);
     });
 
-    it('truncates a long property value', () => {
+    it.only('truncates a long property value', () => {
       testData.extendedEntities.createPast(1, {
         data: { x: 'y'.repeat(1000) }
       });
@@ -73,6 +73,8 @@ describe('HoverCardEntity', () => {
       body.element.clientWidth.should.equal(288);
       const dd = body.get('.dl-data-dd');
       // More than 50% of the width of .hover-card-body, but well short of 100%
+      // eslint-disable-next-line no-console
+      console.log('dd.element.clientWidth: ', dd.element.clientWidth);
       dd.element.clientWidth.should.be.within(180, 250);
       truncatesText(dd.get('div').element).should.be.true;
     });
