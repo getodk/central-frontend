@@ -48,6 +48,10 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
 
     return null;
   }
+
+  static whatsNewDismissed2025_1(val) {
+    return val === true;
+  }
 }
 
 export class ProjectPreferenceNormalizer extends PreferenceNormalizer {
