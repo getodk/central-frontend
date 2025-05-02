@@ -260,15 +260,15 @@ const titleId = `modal-title${id}`;
 
         // Force child of banner (e.g. image) to have rounded corners
         &>* {
-          border-top-left-radius: 6px;
-          border-top-right-radius: 6px;
+          border-top-left-radius: $border-radius-modal;
+          border-top-right-radius: $border-radius-modal;
         }
       }
 
       .close {
         position: absolute;
-        top: 16px;
-        right: 16px;
+        top: $padding-modal-top-actions-close;
+        right: $padding-modal-top-actions-close;
         color: $color-input;
         font-weight: normal;
         opacity: 1;
