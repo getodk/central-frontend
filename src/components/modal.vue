@@ -25,6 +25,9 @@ may add the `in` class to the element, and the checkScroll() method may add the
             :aria-label="$t('action.close')" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
+          <div class="modal-banner">
+            <slot name="banner"></slot>
+          </div>
         </div>
         <div class="modal-header">
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
@@ -250,15 +253,23 @@ const titleId = `modal-title${id}`;
     box-shadow: $box-shadow-panel-main;
 
     .modal-top-actions {
-      text-align: right;
-      padding-right: 16px;
-      padding-top: 16px;
+
+      .modal-banner {
+        display: contents;
+        width: 100%;
+        z-index: 1; // Behind the close button.
+        padding: 0px;
+        margin: 0px;
+      }
 
       .close {
-        float: none;
+        position: absolute;
+        top: 16px;
+        right: 16px;
         color: $color-input;
         font-weight: normal;
         opacity: 1;
+        z-index: 2; // Close button is on top of the banner.
 
         &[aria-disabled="true"] {
           cursor: not-allowed;
@@ -269,7 +280,7 @@ const titleId = `modal-title${id}`;
     .modal-header {
       border-bottom: 0px;
       color: $color-text;
-      padding: 0px $padding-modal-header 20px $padding-modal-header;
+      padding: $padding-modal-header $padding-modal-header 20px $padding-modal-header;
 
       h4 {
         @include text-overflow-ellipsis;
