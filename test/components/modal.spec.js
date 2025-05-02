@@ -34,6 +34,15 @@ describe('Modal', () => {
     modal.get('.modal-body pre').text().should.equal('foo');
   });
 
+  it('uses the banner slot', () => {
+    const modal = mountComponent({
+      slots: {
+        banner: { template: '<div class="test-banner">foo</div>' }
+      }
+    });
+    modal.get('.modal-banner .test-banner').text().should.equal('foo');
+  });
+
   it('shows any alert', () => {
     mountComponent().findComponent(Alert).exists().should.be.true;
   });
