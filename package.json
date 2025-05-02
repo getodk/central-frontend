@@ -6,9 +6,10 @@
     "dev": "nf start",
     "dev:oidc": "VUE_APP_OIDC_ENABLED=true npm run dev",
     "build": "vue-cli-service build",
-    "lint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ *.js",
+    "lint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ e2e-tests/ *.js",
     "lint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ bin/ test/ *.js",
-    "test": "./test/run.sh"
+    "test": "./test/run.sh",
+    "test:e2e": "e2e-tests/run-tests.sh"
   },
   "volta": {
     "node": "22.12.0"
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@intlify/vue-i18n-loader": "~4",
+    "@playwright/test": "^1.51.1",
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
