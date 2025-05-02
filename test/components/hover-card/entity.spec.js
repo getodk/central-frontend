@@ -64,7 +64,7 @@ describe('HoverCardEntity', () => {
       body.get('.dl-data-dd').element.clientWidth.should.equal(144);
     });
 
-    it.only('truncates a long property value', () => {
+    it('truncates a long property value', () => {
       testData.extendedEntities.createPast(1, {
         data: { x: 'y'.repeat(1000) }
       });
