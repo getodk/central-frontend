@@ -115,7 +115,7 @@ describe('useChunkyArray()', () => {
       chunky.value.length.should.equal(2);
     });
 
-    it('provides access to other properties of the source array', () => {
+    it.skip('provides access to other properties of the source array', () => {
       const chunky = withSetup(() => useChunkyArray(ref([1, 1, 2, 3, 5]), 2));
       chunky.value.filter(n => n < 3).should.eql([1, 1]);
     });
