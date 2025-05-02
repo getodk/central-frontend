@@ -4,7 +4,7 @@ import type { TextChunkSource, TextRole } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange } from '../../../instance/text/TextRange.ts';
-import type { AnyTextChunkExpression } from '../../../parse/expression/abstract/TextChunkExpression.ts';
+import type { TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
 import { createComputedExpression } from '../createComputedExpression.ts';
 
@@ -15,7 +15,7 @@ interface TextChunkComputation {
 
 const createComputedTextChunk = (
 	context: EvaluationContext,
-	textSource: AnyTextChunkExpression
+	textSource: TextChunkExpression
 ): TextChunkComputation => {
 	const { source } = textSource;
 
@@ -42,7 +42,7 @@ const createComputedTextChunk = (
 
 const createTextChunks = (
 	context: EvaluationContext,
-	textSources: readonly AnyTextChunkExpression[]
+	textSources: readonly TextChunkExpression[]
 ): Accessor<readonly TextChunk[]> => {
 	return context.scope.runTask(() => {
 		const chunkComputations = textSources.map((textSource) => {

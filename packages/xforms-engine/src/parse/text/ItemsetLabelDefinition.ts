@@ -3,9 +3,7 @@ import { getLabelElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
 import type { ItemDefinition } from '../body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../body/control/ItemsetDefinition.ts';
-import { TextReferenceExpression } from '../expression/TextReferenceExpression.ts';
-import { TextTranslationExpression } from '../expression/TextTranslationExpression.ts';
-import type { RefAttributeChunk } from './abstract/TextElementDefinition.ts';
+import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';
 
 export type ItemLabelOwner = ItemDefinition | ItemsetDefinition;
@@ -24,7 +22,7 @@ export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 	}
 
 	readonly role = 'item-label';
-	readonly chunks: readonly [RefAttributeChunk];
+	readonly chunks: readonly [TextChunkExpression];
 
 	private constructor(form: XFormDefinition, owner: ItemsetDefinition, element: LabelElement) {
 		super(form, owner, element);
@@ -36,8 +34,8 @@ export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 		}
 
 		const refChunk =
-			TextTranslationExpression.from(this, refExpression) ??
-			TextReferenceExpression.from(this, refExpression);
+			TextChunkExpression.fromTranslation(this, refExpression) ??
+			TextChunkExpression.fromReference(this, refExpression);
 
 		this.chunks = [refChunk];
 	}

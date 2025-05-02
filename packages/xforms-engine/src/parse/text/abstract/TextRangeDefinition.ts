@@ -2,7 +2,7 @@ import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { TextRole } from '../../../client/TextRange.ts';
 import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
 import { DependencyContext } from '../../expression/abstract/DependencyContext.ts';
-import type { AnyTextChunkExpression } from '../../expression/abstract/TextChunkExpression.ts';
+import type { TextChunkExpression } from '../../expression/TextChunkExpression.ts';
 import type { AnyMessageDefinition } from '../MessageDefinition.ts';
 import type { AnyTextElementDefinition } from './TextElementDefinition.ts';
 
@@ -24,7 +24,7 @@ export abstract class TextRangeDefinition<Role extends TextRole> extends Depende
 	readonly parentReference: string | null;
 	readonly reference: string | null;
 
-	abstract readonly chunks: readonly AnyTextChunkExpression[];
+	abstract readonly chunks: readonly TextChunkExpression[];
 
 	override get isTranslated(): boolean {
 		return (
