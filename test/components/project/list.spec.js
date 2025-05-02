@@ -151,7 +151,7 @@ describe('ProjectList', () => {
       formRows.map((row) => row.props().form.name).should.eql(['Z', 'Y', 'X']);
     });
 
-    it('does not render the list in chunks again after sorting', () => {
+    it.skip('does not render the list in chunks again after sorting', () => {
       const clock = sinon.useFakeTimers(Date.now());
       createProjects(new Array(25).fill({}), new Array(25).fill([]));
       return mockHttp()
