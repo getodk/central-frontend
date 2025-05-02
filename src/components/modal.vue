@@ -25,9 +25,7 @@ may add the `in` class to the element, and the checkScroll() method may add the
             :aria-label="$t('action.close')" @click="hideIfCan">
             <span aria-hidden="true">&times;</span>
           </button>
-          <div class="modal-banner">
-            <slot name="banner"></slot>
-          </div>
+          <div class="modal-banner"><slot name="banner"></slot></div>
         </div>
         <div class="modal-header">
           <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
@@ -257,9 +255,14 @@ const titleId = `modal-title${id}`;
       .modal-banner {
         display: contents;
         width: 100%;
-        z-index: 1; // Behind the close button.
         padding: 0px;
         margin: 0px;
+
+        // Force child of banner (e.g. image) to have rounded corners
+        &>* {
+          border-top-left-radius: 6px;
+          border-top-right-radius: 6px;
+        }
       }
 
       .close {
@@ -269,7 +272,6 @@ const titleId = `modal-title${id}`;
         color: $color-input;
         font-weight: normal;
         opacity: 1;
-        z-index: 2; // Close button is on top of the banner.
 
         &[aria-disabled="true"] {
           cursor: not-allowed;
