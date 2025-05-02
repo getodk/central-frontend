@@ -116,8 +116,6 @@ test.describe('Enketo', () => {
   test('restrict multiple submission for single submission public link', async ({ page }) => {
     const singleSubPublicLink = await backendClient.createPublicLink(publishedForm.xmlFormId, true);
 
-    await login(page);
-
     await page.goto(`${appUrl}/-/single/${publishedForm.enketoOnceId}?st=${singleSubPublicLink.token}`);
 
     let frame = await page.frameLocator('iframe');
