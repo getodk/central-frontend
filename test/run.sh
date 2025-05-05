@@ -5,10 +5,7 @@ set -o pipefail
 # here we move it to public/, where Vue CLI expects it.
 cp index.html public/
 output=$(mktemp)
-# -f ensures that $output is removed even if public/index.html has already been
-# removed by another process. Even if removing public/index.html fails, we want
-# to ensure that $output is removed.
-trap 'rm -f -- public/index.html "$output"' EXIT
+trap 'rm -- public/index.html "$output"' EXIT
 
 # We've been running into issues trying to run all tests at once in CircleCI.
 # Instead, we'll run tests in batches.

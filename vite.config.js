@@ -17,8 +17,6 @@ import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
 
-// import.meta.env isn't available in this file.
-const buildMode = process.env.NODE_ENV;
 // The default is es2020, but we need es2022 or later because Web Forms uses
 // top-level await.
 const buildTarget = 'es2022';
@@ -40,7 +38,7 @@ const devServer = {
   cors: false
 };
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     VueI18nPlugin({
@@ -55,12 +53,12 @@ export default defineConfig({
   build: {
     target: buildTarget,
     // `false` during dev for performance reasons
-    reportCompressedSize: buildMode === 'production'
+    reportCompressedSize: mode === 'production'
   },
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.
-  optimizeDeps: buildMode === 'development'
+  optimizeDeps: mode === 'development'
     ? { esbuildOptions: { target: buildTarget } }
     : {},
   server: devServer
-});
+}));
