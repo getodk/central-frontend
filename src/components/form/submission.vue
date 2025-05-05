@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineOptions, defineAsyncComponent, watchEffect, computed } from 'vue';
+import { defineAsyncComponent, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 

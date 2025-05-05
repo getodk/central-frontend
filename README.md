@@ -44,9 +44,7 @@ Follow these instructions to run ODK Central Frontend in development. For deploy
 
 First, run ODK Central Backend.
 
-Next, build ODK Central Frontend files for development by running `npm run dev`.  The files will be outputted to `dist/`.  As you update the source code, the files will be automatically rebuilt.  `npm run dev` will also start NGINX, which will serve the files. NGINX effectively places ODK Central Frontend and ODK Central Backend at the same origin, avoiding cross-origin requests.
-
-ODK Central Frontend will be available on port 8989.
+Next, run ODK Central Frontend in development by running `npm run dev`. This will start a Vite dev server. ODK Central Frontend will be available on port 8989. `npm run dev` will also start NGINX, which will forward requests to ODK Central Backend.
 
 ODK Central Frontend communicates with ODK Central Backend in part using a session cookie. The cookie is `Secure`, but will be sent over HTTP on localhost. ODK Central Frontend also interacts with data collection clients and with services:
 
@@ -54,9 +52,13 @@ ODK Central Frontend communicates with ODK Central Backend in part using a sessi
 - You can use ODK Collect to scan an app user QR code, download a form, and submit data. One option to do so is to use [`ngrok`](https://ngrok.com/download). ODK Central Frontend is available on port 8989, so you can run `ngrok http 8989` to expose a temporary HTTPS URL that you can use. Within ODK Central Backend, you will also need to set the `default.env.domain` property in [`config/default.json`](https://github.com/getodk/central-backend/blob/master/config/default.json) to the HTTPS URL, then restart ODK Central Backend if it is already running.
 - Enketo is a web form engine used to show form previews and allow for web-based data entry. Please see our [instructions](/docs/enketo.md) for optionally setting up an Enketo server for use in _development_ (it is already included in the production ODK Central stack).
 
+### Running without HMR
+
+If you run `npm run dev`, open ODK Central Frontend in a browser, then update the source code, the page will refresh automatically to reflect the new code. This is called hot module replacement (HMR). To develop without HMR, run `npm run dev:build`. Instead of running a Vite dev server, this builds ODK Central Frontend for development. It outputs files to `dist/`, which NGINX will serve on port 8686. (There will be nothing on port 8989.) If you update the source, the files will be rebuilt automatically, but the page will not be refreshed: you can choose when to refresh the page. Note that `npm run dev:build` is much slower than `npm run dev`.
+
 ## Deploying to production
 
-To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`. For more details on this command, see the [documentation](https://cli.vuejs.org/) for Vue CLI.
+To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`.
 
 Note that this repository's `main.nginx.conf` is for development only.
 
