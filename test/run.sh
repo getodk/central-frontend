@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -eu
 set -o pipefail
 
 # Normally, index.html is housed at the root of the repository for Vite, but
@@ -9,7 +9,7 @@ trap 'rm -- public/index.html "$output"' EXIT
 
 # We've been running into issues trying to run all tests at once in CircleCI.
 # Instead, we'll run tests in batches.
-if [[ "$CIRCLECI" = 'true' ]]; then
+if [[ "${CIRCLECI-}" = 'true' ]]; then
 	# There are many tests of components whose name starts with "Form" (F) or
 	# "Submission" (S). There are also many tests of functions whose name starts
 	# with "create" (c) or "use" (u).
@@ -39,5 +39,5 @@ for pattern in "$@"; do
 	fi
 
 	# Give the machine a little time to reclaim resources.
-	[[ "$CIRCLECI" = 'true' ]] && sleep 3
+	[[ "${CIRCLECI-}" = 'true' ]] && sleep 3
 done
