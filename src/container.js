@@ -63,9 +63,10 @@ export default ({
   container.config = container.requestData.config;
   if (router != null) container.router = router(container);
   container.install = (app) => {
-    // Register <i18n-t>, since we specify `false` for the fullInstall option of
-    // vue-cli-plugin-i18n.
-    app.use(i18n).component(Translation.name, Translation);
+    app.use(i18n);
+    // Register <i18n-t>, since we specify VueI18nPlugin({ fullInstall: false })
+    // in vite.config.js. Testing works a little differently: see karma.conf.js.
+    if (buildMode !== 'test') app.component(Translation.name, Translation);
     // eslint-disable-next-line no-param-reassign
     app.config.globalProperties.$tcn = $tcn;
 

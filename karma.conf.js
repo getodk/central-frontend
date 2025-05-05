@@ -7,10 +7,22 @@ This config is based on:
   - https://github.com/Nikku/karma-browserify
 */
 
+// eslint-disable-next-line import/no-unresolved
+const VueI18nPlugin = require('@intlify/unplugin-vue-i18n/webpack');
+const { resolve } = require('node:path');
 // eslint-disable-next-line import/extensions
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
+webpackConfigForKarma.plugins.push(VueI18nPlugin({
+  include: resolve(__dirname, './src/locales/**'),
+  compositionOnly: false,
+  defaultSFCLang: 'json5',
+  // `false` doesn't work for some reason. When `false` is specified, Vue I18n
+  // warns that it's been installed already.
+  fullInstall: true,
+  dropMessageCompiler: true
+}));
 webpackConfigForKarma.devtool = 'inline-source-map';
 // See additional warning information.
 webpackConfigForKarma.stats = {

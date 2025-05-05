@@ -14,14 +14,6 @@ module.exports = {
     // We don't want to prefetch all locale files.
     config.plugins.delete('prefetch');
 
-    // Set VUE_APP_RESOLVE_SYMLINKS to `false` if you use symlinks in
-    // development: vue-cli-plugin-i18n doesn't seem to play well with symlinks.
-    // You can set VUE_APP_RESOLVE_SYMLINKS in a file named .env.local. See
-    // also:
-    // https://cli.vuejs.org/guide/troubleshooting.html#symbolic-links-in-node-modules
-    if (process.env.VUE_APP_RESOLVE_SYMLINKS === 'false')
-      config.resolve.symlinks(false);
-
     if (process.env.NODE_ENV === 'test') {
       config.resolve.alias.set('vue$', 'vue/dist/vue.esm-bundler.js');
     }
@@ -29,16 +21,6 @@ module.exports = {
   css: {
     loaderOptions: {
       css: { url: false }
-    }
-  },
-  pluginOptions: {
-    i18n: {
-      locale: 'en',
-      fallbackLocale: 'en',
-      localeDir: 'locales',
-      enableLegacy: true,
-      runtimeOnly: process.env.NODE_ENV !== 'test',
-      fullInstall: false
     }
   }
 };
