@@ -25,6 +25,7 @@ export default ({ requestData, config = {}, ...options } = {}) => {
       : testRequestData([], requestData),
     http: mockAxios(),
     logger: mockLogger(),
+    buildMode: 'test',
     ...options
   });
   if (config !== false)

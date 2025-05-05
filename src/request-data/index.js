@@ -70,7 +70,7 @@ export const createRequestData = (container) => {
   // in testing, we sometimes need access outside components to local resources.
   // For example, tests sometimes need to access local resources in order to
   // make assertions about them.
-  if (process.env.NODE_ENV === 'test')
+  if (container.buildMode === 'test')
     requestData.localResources = localResources;
 
   // Getters allow you to create a computed ref in one component, then access it

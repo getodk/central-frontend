@@ -166,6 +166,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['update:modelValue']);
 
+const { i18n, buildMode } = inject('container');
+
 const idPrefix = `multiselect${id}`;
 id += 1;
 const toggleId = `${idPrefix}-toggle`;
@@ -281,7 +283,7 @@ watch(
   { deep: true }
 );
 
-if (process.env.NODE_ENV === 'development') {
+if (buildMode === 'development') {
   const optionValues = computed(() =>
     props.options.reduce((set, { value }) => set.add(value), new Set()));
   const notFound = computed(() =>
@@ -305,7 +307,6 @@ if (process.env.NODE_ENV === 'development') {
 
 const searchValue = ref('');
 const searchMatches = shallowReactive(new Set());
-const { i18n } = inject('container');
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
   const result = [text.toLocaleLowerCase(i18n.locale)];
@@ -366,7 +367,7 @@ const toggleAfterEnter = ({ key }) => {
   if (key === 'Enter') $toggle.value.dropdown('toggle');
 };
 
-const verifyAttached = process.env.NODE_ENV === 'test'
+const verifyAttached = buildMode === 'test'
   ? ({ target }) => {
     if (target.closest('body') == null)
       // eslint-disable-next-line no-console

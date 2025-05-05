@@ -46,7 +46,8 @@ export default ({
   http = axios,
   location = window.location,
   // Adding `logger` in part in order to silence certain logging during testing.
-  logger = console
+  logger = console,
+  buildMode = import.meta.env?.MODE ?? 'production'
 } = {}) => {
   const container = {
     i18n: i18n.global,
@@ -55,7 +56,8 @@ export default ({
     unsavedChanges,
     http,
     location,
-    logger
+    logger,
+    buildMode
   };
   container.requestData = requestData(container);
   container.config = container.requestData.config;
