@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import useEventListener from './event-listener';
 
 export default function useFeatureFlags() {
@@ -53,8 +53,9 @@ export default function useFeatureFlags() {
   useEventListener(document, 'keyup', keyupEventHandler);
   useEventListener(document, 'focusout', reset);
 
+  const { buildMode } = inject('container');
   onMounted(() => {
-    if (process.env.NODE_ENV !== 'test') {
+    if (buildMode !== 'test') {
       // eslint-disable-next-line no-console
       console.log(
         '%c ODK Central Alpha Features: \n\n%c- Press and hold the %cW and F %ckeyboard keys on a screen with a form preview button to access the new %cWeb Forms%c preview.\n\n',

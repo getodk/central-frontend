@@ -42,7 +42,7 @@ const props = defineProps({
   instanceId: String
 });
 
-const { location } = inject('container');
+const { location, buildMode } = inject('container');
 
 const { form } = useRequestData();
 const route = useRoute();
@@ -76,7 +76,7 @@ const enketoSrc = ref();
 const setEnketoSrc = () => {
   let basePath = '/enketo-passthrough';
   // this is to avoid 404 warning
-  if (process.env.NODE_ENV === 'test') {
+  if (buildMode === 'test') {
     basePath = `/#${basePath}`;
   }
   let prefix = basePath;

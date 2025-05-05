@@ -27,5 +27,6 @@ npm-debug.log*
 !/.nginx/.gitkeep
 
 /.eslintcache
+public/index.html
 test-results
 playwright-report
