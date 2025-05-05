@@ -1,14 +1,18 @@
 <template>
   <table v-if="render" v-show="visible" id="column-grow" class="table">
     <thead>
-      <th ref="th"></th>
-      <th></th>
-      <th></th>
+      <tr>
+        <th ref="th"></th>
+        <th></th>
+        <th></th>
+      </tr>
     </thead>
     <tbody>
-      <td><div :style="{ width: px(contentWidth) }"></div></td>
-      <td></td>
-      <td></td>
+      <tr>
+        <td><div :style="{ width: px(contentWidth) }"></div></td>
+        <td></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </template>
