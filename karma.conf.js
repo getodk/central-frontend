@@ -57,6 +57,9 @@ module.exports = (config) => {
     browsers: ['ChromeHeadless'],
     reporters: ['spec'],
     singleRun: true,
+    client: {
+      mocha: { grep: process.env.TEST_PATTERN || '.' }
+    },
     customLaunchers: {
       ChromeDebugging: {
         base: 'Chrome',
