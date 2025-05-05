@@ -1,8 +1,9 @@
 #!/bin/bash -eu
 set -o pipefail
 
+cp index.html public/
 output=$(mktemp)
-trap 'rm -- "$output"' EXIT
+trap 'rm -f -- public/index.html "$output"' EXIT
 NODE_ENV=test karma start | tee "$output"
 # Search for: warnings from console.warn(), including Vue warnings; Sass
 # warnings; and warnings from Karma.
