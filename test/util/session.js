@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { clone } from 'ramda';
 
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import testData from '../data';
 
 let loggedIn = false;
@@ -20,7 +20,7 @@ export const mockLogin = (options = undefined) => {
 
   loggedIn = true;
 
-  const csrf = faker.random.alphaNumeric(64);
+  const csrf = faker.string.alphanumeric(64);
   document.cookie = `__csrf=${csrf}`;
 };
 

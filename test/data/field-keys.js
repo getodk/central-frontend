@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { comparator, omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -16,8 +16,8 @@ export const extendedFieldKeys = dataStore({
     project = extendedProjects.size !== 0
       ? extendedProjects.first()
       : extendedProjects.createPast(1, { appUsers: 1 }).last(),
-    displayName = faker.name.findName(),
-    token = faker.random.alphaNumeric(64),
+    displayName = faker.word.noun(),
+    token = faker.string.alphanumeric(64),
     lastUsed = undefined
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
@@ -33,7 +33,7 @@ export const extendedFieldKeys = dataStore({
       token,
       lastUsed: lastUsed !== undefined
         ? lastUsed
-        : (inPast && faker.random.boolean() ? fakePastDate([createdAt]) : null),
+        : (inPast && faker.datatype.boolean() ? fakePastDate([createdAt]) : null),
       createdBy: toActor(createdBy),
       createdAt,
       updatedAt: null

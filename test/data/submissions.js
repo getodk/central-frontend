@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { DateTime } from 'luxon';
 import { clone, comparator, hasPath, lensPath, set } from 'ramda';
 
@@ -10,7 +10,7 @@ import { fields } from './fields';
 import { toActor } from './actors';
 
 const fakeDateTime = () => {
-  const date = faker.random.boolean() ? faker.date.past() : faker.date.future();
+  const date = faker.datatype.boolean() ? faker.date.past() : faker.date.future();
   return DateTime.fromJSDate(date);
 };
 
@@ -18,32 +18,32 @@ const fakeDateTime = () => {
 const randomODataValue = (field, instanceId) => {
   switch (field.type) {
     case 'int':
-      return faker.random.number();
+      return faker.number.int(100);
     case 'decimal':
-      return faker.random.number({ precision: 0.00001 });
+      return faker.number.float({ precision: 0.00001 });
     case 'string': {
       const { path } = field;
       if (path === '/meta/instanceID' || path === '/instanceID')
         return instanceId;
-      const paragraphs = faker.random.number({ min: 1, max: 3 });
+      const paragraphs = faker.number.int({ min: 1, max: 3 });
       return faker.lorem.paragraphs(paragraphs);
     }
     case 'date':
       return fakeDateTime().toFormat('yyyy-MM-dd');
     case 'time': {
       const formatted = fakeDateTime().toFormat('HH:mm:ss');
-      return faker.random.boolean() ? formatted : `${formatted}+01:00`;
+      return faker.datatype.boolean() ? formatted : `${formatted}+01:00`;
     }
     case 'dateTime': {
       const formatted = fakeDateTime().toISO({ includeOffset: false });
-      return faker.random.boolean() ? formatted : `${formatted}+01:00`;
+      return faker.datatype.boolean() ? formatted : `${formatted}+01:00`;
     }
     case 'geopoint':
       return 'POINT (0 90)';
     case 'binary':
       return faker.system.commonFileName('jpg');
     case null:
-      return faker.random.boolean() ? 'y' : 'n';
+      return faker.datatype.boolean() ? 'y' : 'n';
     default:
       throw new Error('invalid field type');
   }
@@ -78,7 +78,7 @@ export const extendedSubmissions = dataStore({
     // `form` is deprecated. Use formVersion instead.
     form = undefined,
     formVersion: formVersionOption = form,
-    instanceId = faker.random.uuid(),
+    instanceId = faker.string.uuid(),
 
     submitter: submitterOption = undefined,
     attachmentsPresent = attachmentsExpected,

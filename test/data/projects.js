@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -47,7 +47,7 @@ export const extendedProjects = dataStore({
     id,
     lastCreatedAt,
 
-    name = faker.name.findName(),
+    name = faker.word.noun(),
     description = '',
     archived = false,
     key = null,

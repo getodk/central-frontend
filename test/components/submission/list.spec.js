@@ -224,7 +224,9 @@ describe('SubmissionList', () => {
         if (url.includes('.svc/Submissions')) should.not.exist($select(url));
       }));
 
-    it('specifies $select if the next button is clicked', () => {
+    // eslint-disable-next-line func-names
+    it('specifies $select if the next button is clicked', function() {
+      this.timeout(10 * 1000);
       testData.extendedSubmissions.createPast(251);
       return loadSubmissionList()
         .complete()

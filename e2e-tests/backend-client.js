@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { randomUUID } from 'crypto';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import fs from 'fs';
 import path from 'path';
 
@@ -41,7 +41,7 @@ export default class BackendClient {
         'content-type': 'application/xml',
       },
       data: formTemplate
-        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.random.word()}`)
+        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}`)
     });
     expect(response.ok()).toBeTruthy();
     return response.json();
@@ -56,7 +56,7 @@ export default class BackendClient {
       },
       data: submissionTemplate
         .replace('{{ uuid }}', randomUUID())
-        .replace('{{ firstName }}', faker.name.findName())
+        .replace('{{ firstName }}', faker.person.firstName())
         .replace('{{ formId }}', xmlFormId)
     });
     expect(response.ok()).toBeTruthy();
@@ -92,7 +92,7 @@ export default class BackendClient {
     const request = await this.#getRequest();
     const response = await request.post(`/v1/projects/${projectId}/forms/${xmlFormId}/public-links`, {
       data: {
-        displayName: faker.random.word(),
+        displayName: faker.word.noun(),
         once
       }
     });

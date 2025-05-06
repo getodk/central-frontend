@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { comparator } from 'ramda';
 
 import { dataStore } from './data-store';
@@ -11,8 +11,8 @@ export const standardKeys = dataStore({
     id,
     lastCreatedAt,
 
-    managed = faker.random.boolean(),
-    hint = managed && faker.random.boolean() ? 'helpful hint' : null
+    managed = faker.datatype.boolean(),
+    hint = managed && faker.datatype.boolean() ? 'helpful hint' : null
   }) => ({
     id,
     public: 'mybase64key',

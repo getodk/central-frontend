@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 import { dataStore } from './data-store';
 import { extendedForms } from './forms';
@@ -10,7 +10,7 @@ const fileExtensions = {
   video: 'mp4'
 };
 const fakeName = (type) => {
-  const uuid = faker.random.uuid();
+  const uuid = faker.string.uuid();
   const extension = fileExtensions[type];
   return extension != null ? `${uuid}.${extension}` : uuid;
 };

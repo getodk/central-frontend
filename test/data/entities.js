@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { comparator, omit, pick } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -165,7 +165,7 @@ export const extendedEntityVersions = view(entityVersions, omit(['uuid']));
 
 const randomData = (properties) => {
   const data = {};
-  for (const { name } of properties) data[name] = faker.random.word();
+  for (const { name } of properties) data[name] = faker.word.adjective();
   return data;
 };
 
@@ -175,9 +175,9 @@ entities = dataStore({
     lastCreatedAt,
 
     dataset: datasetOption = undefined,
-    uuid = faker.random.uuid(),
+    uuid = faker.string.uuid(),
     version = 1,
-    label = faker.random.word(),
+    label = faker.word.noun(),
     data = undefined,
     branchId = undefined,
     trunkVersion = undefined,
