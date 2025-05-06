@@ -48,11 +48,11 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div v-if="submissionModal.type === 'submissionModal'" class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="hideModal()">
-          {{ $t('submissionModal.action.fillOutAgain') }}
-        </button>
         <button type="button" class="btn btn-link" @click="closeWindow()">
           {{ $t('action.close') }}
+        </button>
+        <button type="button" class="btn btn-primary" @click="hideModal()">
+          {{ $t('submissionModal.action.fillOutAgain') }}
         </button>
       </div>
       <!-- Any type of error while sending attachments -->
