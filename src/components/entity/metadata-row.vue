@@ -167,5 +167,7 @@ const { entityPath } = useRoutes();
   }
 
   .delete-button .icon-trash { color: $color-danger; }
+
+  .col-deleted-at { color: $color-danger; }
 }
 </style>

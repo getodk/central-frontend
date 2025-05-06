@@ -247,6 +247,18 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
   }
 }
 
+.btn-outlined {
+  background-color: #fff;
+  color: $color-action-background;
+  border: 1px solid $color-action-background;
+
+  &:hover, &:focus, &:active:focus {
+    color: #fff;
+    background-color: $color-action-background;
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & { background-color: #ddd; }
+  }
+}
+
 a, .btn-link {
   &:hover, &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
     text-decoration: none;
@@ -335,8 +347,6 @@ a {
 
   > .btn-default + .btn-default { border-left: 1px solid #ccc; }
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // DROPDOWN MENUS
@@ -535,6 +545,7 @@ select {
   .icon-filter {
     color: #999;
     margin-right: $margin-right-icon;
+    font-size: 20px;
   }
 }
 
@@ -927,4 +938,29 @@ becomes more complicated.
 
 .odk-form :not(svg|*) {
   all: revert;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// The action bar shown above the data table 
+
+.table-actions-bar {
+  background-color: $color-subpanel-background;
+  padding: 10px 20px;
+
+  .form-inline {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .form-label {
+    height: auto;
+  }
+
+  .form-group .form-control {
+    border-bottom: none;
+  }
+
+  .form-group + .form-group {
+    margin-left: 30px;
+  }
 }

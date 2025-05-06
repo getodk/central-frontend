@@ -14,26 +14,27 @@ except according to the terms contained in the LICENSE file.
     <loading :state="keys.initiallyLoading"/>
     <page-section v-show="keys.dataExists">
       <template #heading>
-        <span>{{ $t('resource.submissions') }}</span>
-        <enketo-fill v-if="rendersEnketoFill" :form-version="form">
-          <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
-        </enketo-fill>
-        <template v-if="deletedSubmissionCount.dataExists">
-          <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
-            class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-            @click="toggleDeleted">
-            <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
-            <span v-show="deleted" class="icon-close"></span>
-          </button>
+        <div class="form-submissions-heading-row">
+          <enketo-fill v-if="rendersEnketoFill" :form-version="form">
+            <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+          </enketo-fill>
+          <template v-if="deletedSubmissionCount.dataExists">
+            <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
+              class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
+              @click="toggleDeleted">
+              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
+              <span v-show="deleted" class="icon-close"></span>
+            </button>
+          </template>
+          <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
+          <odata-data-access :analyze-disabled="analyzeDisabled"
+            :analyze-disabled-message="analyzeDisabledMessage"
+            @analyze="analyzeModal.show()"/>
+        </div>
         </template>
-        <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-        <odata-data-access :analyze-disabled="analyzeDisabled"
-          :analyze-disabled-message="analyzeDisabledMessage"
-          @analyze="analyzeModal.show()"/>
-      </template>
       <template #body>
-        <submission-list :project-id="projectId" :xml-form-id="xmlFormId"
-          :deleted="deleted" @fetch-keys="fetchKeys"
+        <submission-list ref="submissionList" :project-id="projectId"
+          :xml-form-id="xmlFormId" :deleted="deleted" @fetch-keys="fetchKeys"
           @fetch-deleted-count="fetchDeletedCount"/>
       </template>
     </page-section>
@@ -65,10 +66,10 @@ export default {
   components: {
     EnketoFill,
     Loading,
-    PageSection,
     OdataAnalyze,
     OdataDataAccess,
-    SubmissionList
+    PageSection,
+    SubmissionList,
   },
   props: {
     projectId: {
@@ -176,8 +177,6 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#odata-data-access { float: right; }
-
 #form-submissions {
   .toggle-deleted-submissions {
     margin-left: 8px;
@@ -192,9 +191,20 @@ export default {
   .purge-description {
     display: inline;
     position: relative;
-    top: -5px;
+    top: 5px;
     left: 12px;
     font-size: 14px;
+  }
+
+  .form-submissions-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #odata-data-access {
+    margin-left: auto;
+    font-size: initial;
   }
 }
 </style>

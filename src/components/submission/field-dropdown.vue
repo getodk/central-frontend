@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <multiselect id="submission-field-dropdown" :model-value="modelValue"
     :options="options" :label="$t('field.columns')" :placeholder="placeholder"
     :all="$t('action.select.all')" :none="$t('action.select.none')"
-    :search="$t('field.search')"
+    :search="$t('field.search')" :hide-label="true"
     @update:model-value="$emit('update:modelValue', $event)">
     <template #after-list="{ selected }">
       <template v-if="selected.size > 100">
@@ -61,6 +61,12 @@ const placeholder = (counts) => t('placeholder', counts);
   select {
     background-color: #777;
     color: #fff;
+    padding-right: 20px;
+  }
+
+  .icon-angle-down {
+    color: #fff;
+    right: 5px;
   }
 
   .dropdown-menu { width: 275px; }
@@ -79,7 +85,7 @@ const placeholder = (counts) => t('placeholder', counts);
     // This is the text of a dropdown that allows the user to select which
     // columns to display in a table. {selected} is the number of columns
     // selected; {total} is the total number of columns.
-    "placeholder": "{selected} of {total}",
+    "placeholder": "{selected} of {total} column shown | {selected} of {total} columns shown",
     "field": {
       // This is shown beneath text that indicates the number of columns that
       // the user has selected to display in a table. For example, that text may

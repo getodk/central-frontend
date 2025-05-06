@@ -16,6 +16,7 @@ import { mockLogin } from '../../util/session';
 import { relativeUrl } from '../../util/request';
 import { testRequestData } from '../../util/request-data';
 import { waitUntil } from '../../util/util';
+import { load } from '../../util/http';
 
 const mountComponent = (options = undefined) => {
   // First, merge mount options in order to get the test data associated with
@@ -56,11 +57,56 @@ describe('SubmissionDownload', () => {
 
   it('toggles the modal', () => {
     testData.extendedForms.createPast(1);
+    return load('/projects/1/forms/f/submissions')
+      .complete()
+      .testModalToggles({
+        modal: SubmissionDownload,
+        show: '#submission-download-button .btn-primary',
+        hide: '.modal-actions .btn'
+      });
+  });
+
+  it('toggles the modal - draft', () => {
+    testData.extendedForms.createPast(1, { draft: true });
     return loadSubmissionList().testModalToggles({
       modal: SubmissionDownload,
-      show: '#submission-download-button',
+      show: '#submission-download-button .btn-primary',
       hide: '.modal-actions .btn'
     });
+  });
+
+  it('passes all filters to the download links when download filtered submission button is click', () => {
+    testData.extendedForms.createPast(1);
+    return load('/projects/1/forms/f/submissions?reviewState=null')
+      .complete()
+      .afterResponses(async component => {
+        await component.find('#submission-download-button .btn-primary').trigger('click');
+        // click first button of the dropdown menu which is download filtered submissions
+        await component.find('#submission-download-button li:nth-of-type(1) button').trigger('click');
+        const modal = component.getComponent(SubmissionDownload);
+        const urls = modal.findAll('a').map(aUrl);
+        // Assert that it includes snapshot filters
+        urls[0].searchParams.get('$filter').should.match(/submissionDate/);
+        // Assert that it includes odata filters
+        urls[0].searchParams.get('$filter').should.match(/reviewState/);
+      });
+  });
+
+  it('passes only snapshot filters to the download links when download filtered submission button is click', () => {
+    testData.extendedForms.createPast(1);
+    return load('/projects/1/forms/f/submissions?reviewState=null')
+      .complete()
+      .afterResponses(async component => {
+        await component.find('#submission-download-button .btn-primary').trigger('click');
+        // click second button of the dropdown menu which is download all submissions
+        await component.find('#submission-download-button li:nth-of-type(2) button').trigger('click');
+        const modal = component.getComponent(SubmissionDownload);
+        const urls = modal.findAll('a').map(aUrl);
+        // Assert that it includes snapshot filters
+        urls[0].searchParams.get('$filter').should.match(/submissionDate/);
+        // Assert that it doesn't include odata filters
+        urls[0].searchParams.get('$filter').should.not.match(/reviewState/);
+      });
   });
 
   describe('modal size', () => {

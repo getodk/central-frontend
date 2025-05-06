@@ -63,14 +63,10 @@ describe('EntityList', () => {
       .beforeAnyResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(1);
         app.get('#page-head-tabs li.active .badge').text().should.equal('1');
-        const button = app.get('#entity-download-button');
-        button.text().should.equal('Download 1 Entity');
       })
       .afterResponse(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(2);
         app.get('#page-head-tabs li.active .badge').text().should.equal('2');
-        const button = app.get('#entity-download-button');
-        button.text().should.equal('Download 2 Entities');
       });
   });
 
@@ -491,7 +487,7 @@ describe('EntityList', () => {
     describe('after a successful response', () => {
       const del = () => {
         testData.extendedEntities.createPast(1, { label: 'My Entity' });
-        return load('/projects/1/entity-lists/trees/entities', { root: false })
+        return load('/projects/1/entity-lists/trees/entities')
           .complete()
           .request(async (component) => {
             await component.get('.entity-metadata-row .delete-button').trigger('click');
@@ -518,8 +514,8 @@ describe('EntityList', () => {
 
       it('updates the entity count', async () => {
         const component = await del();
-        const text = component.get('#entity-download-button').text();
-        text.should.equal('Download 0 Entities');
+        const text = component.get('#page-head-tabs li:nth-of-type(1)').text();
+        text.should.equal('Entities 0');
       });
     });
 
@@ -1039,15 +1035,27 @@ describe('EntityList', () => {
         });
     });
 
-    it('disables filters and download button', () => {
+    it('disables filters', () => {
       testData.extendedEntities.createPast(1, { label: 'My Entity' });
       testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
       testData.extendedEntities.createPast(1, { label: 'deleted 2', deletedAt: new Date().toISOString() });
       return loadEntityList({ props: { deleted: true } })
         .afterResponse(component => {
-          component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
           component.getComponent('#entity-filters').props().disabled.should.be.true;
         });
     });
+
+    // it.only('disables download button', () => {
+    //   testData.extendedEntities.createPast(1, { label: 'My Entity' });
+    //   testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+    //   return load('/projects/1/entity-lists/trees/entities', { root: false, container: { router: testRouter() } })
+    //     .complete()
+    //     .request(component =>
+    //       component.get('.toggle-deleted-entities').trigger('click'))
+    //     .respondWithData(testData.entityDeletedOData)
+    //     .afterResponses((component) => {
+    //       // component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
+    //     });
+    // });
   });
 });

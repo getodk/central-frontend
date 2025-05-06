@@ -10,14 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label class="date-range-picker form-group"><!-- eslint-disable-line vuejs-accessibility/label-has-for -->
+  <label id="date-range-picker-container" class="date-range-picker form-group" :class="{ disabled }">
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
-    <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
-      class="form-control" :class="{ required }"
+    <flatpickr id="datepicker" ref="flatpickr" v-model="flatpickrValue" :config="config"
+      class="form-control"
+      :class="{ required, 'flatpickr-input': true, 'has-value': modelValue.length === 2, none: modelValue.length === 0 }"
       :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
-      :placeholder="requiredLabel(placeholder, required)" autocomplete="off"
+      :placeholder="placeholder" autocomplete="off"
       @keydown="stopPropagationIfDisabled"
       @on-close="close"/>
     <template v-if="!required">
@@ -26,7 +27,9 @@ except according to the terms contained in the LICENSE file.
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
+    <span v-show="!disabled && (required || modelValue.length < 2)" aria-hidden="true" class="icon-angle-down">
+    </span>
+    <span class="form-label">{{ requiredLabel(label, required) }}</span>
   </label>
 </template>
 
@@ -70,6 +73,11 @@ export default {
       type: Boolean,
       default: false
     },
+    label: {
+      type: String,
+      required: true
+    },
+    // Displayed when no date is selected
     placeholder: {
       type: String,
       required: true
@@ -187,13 +195,38 @@ export default {
 }
 
 .form-inline .flatpickr-input {
-  // Leave space for the .close button.
-  width: 205px;
-  &.required { width: 193px };
+  width: 87px;
 
-  &:lang(ja) {
+  &.has-value {
+    // Leave space for the .close button.
+    width: 207px;
+    &.required { width: 193px };
+  }
+
+  &.has-value:lang(ja) {
     width: 252px;
     &.required { width: 240px; }
+  }
+
+  &.none {
+    font-style: italic;
+  }
+}
+
+#date-range-picker-container {
+  cursor: pointer;
+  &.disabled {
+    cursor: not-allowed;
+  }
+  .icon-angle-down {
+    font-size: 16px;
+    color: #555555;
+    font-weight: bold;
+    vertical-align: -4px;
+  }
+
+  .form-label {
+    transform: translateY(2px);
   }
 }
 </style>

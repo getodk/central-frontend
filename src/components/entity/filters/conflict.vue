@@ -37,8 +37,18 @@ defineEmits(['update:modelValue']);
 const { t } = useI18n();
 const options = computed(() => [true, false].map(value =>
   ({ value, text: t(`conflict.${value}`) })));
-const placeholder = (counts) => t('placeholder', counts);
+const placeholder = (counts) => {
+  if (counts.total === counts.selected) return t('noSelectedConflictSelected');
+
+  return t('placeholder', counts);
+};
 </script>
+
+<style lang="scss">
+#entity-filters-conflict .none {
+  font-style: italic;
+}
+</style>
 
 <i18n lang="json5">
 {
@@ -75,7 +85,9 @@ const placeholder = (counts) => t('placeholder', counts);
         */
         "none": "None"
       }
-    }
+    },
+    // Text shown when no conflict is selected in the filter dropdown
+    "noSelectedConflictSelected": "(none)"
   }
 }
 </i18n>

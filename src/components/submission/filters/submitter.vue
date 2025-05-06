@@ -89,8 +89,18 @@ const update = (value) => {
   }
 };
 
-const placeholder = (counts) => t('placeholder', counts);
+const placeholder = (counts) => {
+  if (counts.total === counts.selected) return t('noSubmitterSelected');
+
+  return t('placeholder', counts);
+};
 </script>
+
+<style lang="scss">
+#submission-filters-submitter .none {
+  font-style: italic;
+}
+</style>
 
 <i18n lang="json5">
 {
@@ -126,7 +136,9 @@ const placeholder = (counts) => t('placeholder', counts);
         "none": "None"
       }
     },
-    "unknown": "Unknown submitter"
+    "unknown": "Unknown submitter",
+    // Text shown when no Submitter is selected in the filter
+    "noSubmitterSelected": "(none)"
   }
 }
 </i18n>

@@ -10,9 +10,25 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a id="entity-download-button" class="btn btn-primary" :href="href">
-    <span class="icon-arrow-circle-down"></span>{{ text }}
-  </a>
+  <div id="entity-download-button" class="dropdown">
+    <a class="btn btn-primary" :class="{ disabled }" :href="href"
+      :data-toggle="odataFilter ? 'dropdown' : null">
+      <span class="icon-arrow-circle-down"></span>
+      <span>{{ $t('action.download') }}</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li>
+        <a class="btn btn-link dropdown-item" :href="filteredHref">
+          <span>{{ downloadFiltered }}</span>
+        </a>
+      </li>
+      <li v-if="dataset.dataExists">
+        <a class="btn btn-link dropdown-item" :href="href">
+          <span>{{ $tcn('action.download.unfiltered', dataset.entities) }}</span>
+        </a>
+      </li>
+    </ul>
+</div>
 </template>
 
 <script setup>
@@ -24,26 +40,49 @@ import { useI18nUtils } from '../../util/i18n';
 import { useRequestData } from '../../request-data';
 
 const props = defineProps({
-  odataFilter: String
+  odataFilter: String,
+  snapshotFilter: String,
+  disabled: Boolean
 });
 
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 
 const href = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter }));
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.snapshotFilter }));
+
+const filteredHref = computed(() =>
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: `${props.snapshotFilter} and ${props.odataFilter}` }));
 
 const { dataset, odataEntities } = useRequestData();
 const { t } = useI18n();
 const { tn } = useI18nUtils();
-const text = computed(() => (props.odataFilter == null
-  ? (dataset.dataExists
-    ? tn('action.download.unfiltered', dataset.entities)
-    : '') // The button is not visible in this case.
-  : (odataEntities.dataExists
-    ? tn('action.download.filtered.withCount', odataEntities.count)
-    : t('action.download.filtered.withoutCount'))));
+const downloadFiltered = computed(() => (odataEntities.dataExists
+  ? tn('action.download.filtered.withCount', odataEntities.count)
+  : t('action.download.filtered.withoutCount')));
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#entity-download-button{
+  .btn-primary {
+    display: block;
+  }
+
+  .dropdown-item {
+    width: 100%;
+    text-align: left;
+    color: $color-text;
+
+    &:hover {
+      color: #262626;
+      text-decoration: none;
+      background-color: #f5f5f5;
+    }
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
@@ -51,12 +90,12 @@ const text = computed(() => (props.odataFilter == null
     "action": {
       // @transifexKey component.EntityList.action.download
       "download": {
-        "unfiltered": "Download {count} Entity | Download {count} Entities",
+        "unfiltered": "Download {count} Entity | Download all {count} Entities",
         "filtered": {
-          "withCount": "Download {count} matching Entity | Download {count} matching Entities",
+          "withCount": "Download {count} Entity matching the filter | Download {count} Entities matching the filter",
           // This is the text of a button. This text is shown when the number of
           // matching Entities is unknown.
-          "withoutCount": "Download matching Entities"
+          "withoutCount": "Download all Entities matching the filter"
         }
       }
     }

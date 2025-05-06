@@ -13,23 +13,25 @@ except according to the terms contained in the LICENSE file.
   <div id="dataset-entities">
     <page-section>
       <template #heading>
-        <span>{{ $t('resource.entities') }}</span>
-        <button v-if="project.dataExists && project.permits('entity.create')"
-          id="dataset-entities-upload-button" type="button"
-          class="btn btn-primary" @click="upload.show()">
-          <span class="icon-upload"></span>{{ $t('action.upload') }}
-        </button>
-        <template v-if="deletedEntityCount.dataExists">
-          <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
-            class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-            @click="toggleDeleted">
-            <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedEntities', deletedEntityCount.value) }}
-            <span v-show="deleted" class="icon-close"></span>
+        <div class="dataset-entities-heading-row">
+          <button v-if="project.dataExists && project.permits('entity.create')"
+            id="dataset-entities-upload-button" type="button"
+            class="btn btn-primary" @click="upload.show()">
+            <span class="icon-upload"></span>{{ $t('upload') }}
           </button>
-        </template>
-        <odata-data-access :analyze-disabled="deleted"
-          :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
-          @analyze="analyze.show()"/>
+          <template v-if="deletedEntityCount.dataExists">
+            <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
+              class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
+              @click="toggleDeleted">
+              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedEntities', deletedEntityCount.value) }}
+              <span v-show="deleted" class="icon-close"></span>
+            </button>
+          </template>
+          <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
+          <odata-data-access :analyze-disabled="deleted"
+            :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
+            @analyze="analyze.show()"/>
+        </div>
       </template>
       <template #body>
         <entity-list ref="list" :project-id="projectId"
@@ -71,6 +73,9 @@ export default {
     PageSection
   },
   inject: ['alert'],
+  provide() {
+    return { projectId: this.projectId, datasetName: this.datasetName };
+  },
   props: {
     projectId: {
       type: String,
@@ -155,8 +160,6 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#odata-data-access { float: right; }
-
 #dataset-entities {
   .toggle-deleted-entities {
     margin-left: 8px;
@@ -171,9 +174,20 @@ export default {
   .purge-description {
     display: inline;
     position: relative;
-    top: -5px;
     left: 12px;
     font-size: 14px;
+    margin-bottom: 0;
+  }
+
+  .dataset-entities-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #odata-data-access {
+    margin-left: auto;
+    font-size: initial;
   }
 }
 </style>
@@ -181,6 +195,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "upload": "Upload Entities",
     "alert": {
       "upload": "Success! Your Entities have been uploaded."
     },

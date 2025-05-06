@@ -184,8 +184,7 @@
     "continue": "Continue",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
-    // It is shown next to a heading whose text is "Submissions".
-    "createSubmission": "New",
+    "createSubmission": "New Submission",
     "delete": "Delete",
     "done": "Done",
     "download": "Download",
@@ -446,7 +445,8 @@
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
-    "beta": "Beta"
+    "beta": "Beta",
+    "none": "(none)"
   },
   "mixin": {
     "request": {

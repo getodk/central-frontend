@@ -324,14 +324,25 @@ describe('SubmissionList', () => {
         });
     });
 
-    it('disables filters and download button', () => {
+    it('disables filters', () => {
       testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'live' } });
       testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'deleted 1' }, deletedAt: new Date().toISOString() });
       testData.extendedSubmissions.createPast(1, { meta: { instanceName: 'deleted 2' }, deletedAt: new Date().toISOString() });
       return loadSubmissionList({ props: { deleted: true } })
         .afterResponse(component => {
-          component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
           component.getComponent('#submission-filters').props().disabled.should.be.true;
+        });
+    });
+
+    it('disables download button', () => {
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(testData.submissionDeletedOData)
+        .afterResponses((component) => {
+          component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
         });
     });
   });
@@ -378,7 +389,7 @@ describe('SubmissionList', () => {
     describe('after a successful response', () => {
       const del = () => {
         testData.extendedSubmissions.createPast(1);
-        return load('/projects/1/forms/f/submissions', { root: false })
+        return load('/projects/1/forms/f/submissions')
           .complete()
           .request(async (component) => {
             await component.get('.submission-metadata-row .delete-button').trigger('click');
@@ -405,8 +416,8 @@ describe('SubmissionList', () => {
 
       it('updates the submission count', async () => {
         const component = await del();
-        const text = component.get('#submission-download-button').text();
-        text.should.equal('Download 0 Submissions…');
+        const text = component.get('#page-head-tabs li:nth-of-type(1)').text();
+        text.should.equal('Submissions 0');
       });
 
       it('shows deleted submission button', async () => {
