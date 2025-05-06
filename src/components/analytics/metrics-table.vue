@@ -92,6 +92,7 @@ export default {
       "num_forms_with_geospatial": "Number of Forms with geodata",
       "num_forms_with_encryption": "Number of Forms with encryption",
       "num_forms_with_audits": "Number of Forms with audits",
+      "num_forms_webforms_enabled": "Number of Forms with Web Forms enabled",
       "num_reused_form_ids": "Number of reused Form IDs",
       "num_open_forms": "Number of open Forms",
       "num_closing_forms": "Number of closing Forms",
