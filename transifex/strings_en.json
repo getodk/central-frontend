@@ -2131,7 +2131,7 @@
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {Download {count} Entity matching the filter} other {Download all {count} Entities matching the filter}}",
+              "string": "{count, plural, one {Download {count} Entity matching the filter} other {Download {count} Entities matching the filter}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {

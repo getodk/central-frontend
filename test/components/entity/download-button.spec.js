@@ -52,7 +52,7 @@ describe('EntityDownloadButton', () => {
             }
           }
         });
-        component.find('li:nth-of-type(1)').text().should.equal('Download all 1,000 Entities matching the filter');
+        component.find('li:nth-of-type(1)').text().should.equal('Download 1,000 Entities matching the filter');
       });
 
       it('shows correct text for the second button', () => {

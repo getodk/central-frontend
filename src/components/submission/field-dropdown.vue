@@ -61,6 +61,12 @@ const placeholder = (counts) => t('placeholder', counts);
   select {
     background-color: #777;
     color: #fff;
+    padding-right: 20px;
+  }
+
+  .icon-angle-down {
+    color: #fff;
+    right: 5px;
   }
 
   .dropdown-menu { width: 275px; }

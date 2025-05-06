@@ -1044,5 +1044,18 @@ describe('EntityList', () => {
           component.getComponent('#entity-filters').props().disabled.should.be.true;
         });
     });
+
+    // it.only('disables download button', () => {
+    //   testData.extendedEntities.createPast(1, { label: 'My Entity' });
+    //   testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+    //   return load('/projects/1/entity-lists/trees/entities', { root: false, container: { router: testRouter() } })
+    //     .complete()
+    //     .request(component =>
+    //       component.get('.toggle-deleted-entities').trigger('click'))
+    //     .respondWithData(testData.entityDeletedOData)
+    //     .afterResponses((component) => {
+    //       // component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
+    //     });
+    // });
   });
 });

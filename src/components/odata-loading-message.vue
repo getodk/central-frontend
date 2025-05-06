@@ -88,6 +88,7 @@ const message = computed(() => {
 
 #odata-loading-message {
   margin-left: 28px;
+  margin-top: 20px;
   padding-bottom: 38px;
   position: relative;
 

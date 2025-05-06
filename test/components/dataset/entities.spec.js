@@ -107,5 +107,19 @@ describe('DatasetEntities', () => {
           component.getComponent('#odata-data-access').props().analyzeDisabled.should.be.true;
         });
     });
+
+    it('disables the download button when deleted entities are shown', async () => {
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request((component) =>
+          component.find('.toggle-deleted-entities').trigger('click'))
+        .respondWithData(() => testData.entityDeletedOData())
+        .afterResponses((component) => {
+          component.find('#entity-download-button .btn-primary').classes().should.contain('disabled');
+        });
+    });
   });
 });

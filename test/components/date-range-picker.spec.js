@@ -249,6 +249,32 @@ describe('DateRangePicker', () => {
     });
   });
 
+  describe('placeholder prop', () => {
+    it('uses the placeholder prop', () => {
+      const component = mountComponent({
+        props: { placeholder: 'My date range', required: false }
+      });
+      const { placeholder } = component.get('input').attributes();
+      placeholder.should.equal('My date range');
+    });
+  });
+
+  describe('label prop', () => {
+    it('uses the label prop', () => {
+      const component = mountComponent({
+        props: { label: 'My date range', required: false }
+      });
+      component.get('.form-label').text().should.equal('My date range');
+    });
+
+    it('appends * to the label if the required prop is true', () => {
+      const component = mountComponent({
+        props: { label: 'My date range', required: true }
+      });
+      component.get('.form-label').text().should.equal('My date range *');
+    });
+  });
+
   it('adds the required class if the required prop is true', () => {
     const component = mountComponent({
       props: { required: true }

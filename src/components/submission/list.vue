@@ -24,19 +24,20 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-desktop"></span>{{ $t('action.testInBrowser') }}
           </enketo-fill>
         </template>
-        <form class="form-inline" @submit.prevent>
-          <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
+        <form v-if="!draft" class="form-inline" @submit.prevent>
+          <submission-filters v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
             v-model:reviewState="reviewStates"
             :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
+        <!-- TODO: merge these two forms -->
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
           <submission-field-dropdown
           v-if="selectedFields != null && fields.selectable.length > 11"
           v-model="selectedFields"/>
         </form>
         <button id="submission-list-refresh-button" type="button"
-          class="btn btn-outlined" :aria-disabled="refreshing"
+          class="btn btn-outlined" :class="{ 'move-right': draft }" :aria-disabled="refreshing"
           @click="fetchChunk(false, true)">
           {{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
@@ -585,6 +586,10 @@ export default {
   }
 
   ~ #submission-download-button { margin-left: 0; }
+}
+
+#submission-list-refresh-button.move-right {
+  margin-left: auto;
 }
 
 #submission-list table:has(tbody:empty) {

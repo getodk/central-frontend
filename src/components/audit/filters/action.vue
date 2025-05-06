@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="audit-filters-action" class="form-group">
-    <select ref="auditActions" class="form-control" :value="modelValue"
+    <select class="form-control" :value="modelValue"
       @change="$emit('update:modelValue', $event.target.value)">
       <option v-for="option of options" :key="option.value"
         :class="option.htmlClass" :value="option.value">

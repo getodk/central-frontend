@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           <span>{{ downloadFiltered }}</span>
         </button>
       </li>
-      <li>
+      <li v-if="formVersion.dataExists">
         <button type="button" class="btn btn-link dropdown-item"
           @click="$emit('download')">
           <span>{{ $tcn('action.download.unfiltered', formVersion.submissions) }}</span>

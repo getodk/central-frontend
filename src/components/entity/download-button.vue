@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <span>{{ downloadFiltered }}</span>
         </a>
       </li>
-      <li>
+      <li v-if="dataset.dataExists">
         <a class="btn btn-link dropdown-item" :href="href">
           <span>{{ $tcn('action.download.unfiltered', dataset.entities) }}</span>
         </a>
@@ -92,7 +92,7 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Download {count} Entity | Download all {count} Entities",
         "filtered": {
-          "withCount": "Download {count} Entity matching the filter | Download all {count} Entities matching the filter",
+          "withCount": "Download {count} Entity matching the filter | Download {count} Entities matching the filter",
           // This is the text of a button. This text is shown when the number of
           // matching Entities is unknown.
           "withoutCount": "Download all Entities matching the filter"
