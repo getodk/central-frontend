@@ -22,7 +22,7 @@
     "@getodk/web-forms": "^0.10.0",
     "axios": "^1.6.2",
     "bootstrap": "~3",
-    "dompurify": "~2",
+    "dompurify": "^3.2.5",
     "flatpickr": "~4.6",
     "jquery": "~3",
     "luxon": "~1",
