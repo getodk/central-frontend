@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { nextTick } from 'vue';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
@@ -661,7 +661,7 @@ describe('EntityList', () => {
   });
 
   describe('restore', () => {
-    const uuid = faker.random.uuid();
+    const uuid = faker.string.uuid();
     const loadDeletedEntities = () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, {

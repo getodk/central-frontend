@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { comparator } from 'ramda';
 
 import { dataStore } from './data-store';
@@ -8,17 +8,17 @@ import Property from '../util/ds-property-enum';
 export const formDatasetDiffs = dataStore({
   factory: ({
     properties,
-    name = faker.random.alphaNumeric(10)
+    name = faker.string.alphanumeric(10)
   }) => ({
     name,
     properties: properties.map(p => {
       switch (p) {
         case Property.InFormProperty:
-          return { name: faker.random.alphaNumeric(10), inForm: true };
+          return { name: faker.string.alphanumeric(10), inForm: true };
         case Property.NewProperty:
-          return { name: faker.random.alphaNumeric(10), inForm: true };
+          return { name: faker.string.alphanumeric(10), inForm: true };
         default:
-          return { name: faker.random.alphaNumeric(10), inForm: false };
+          return { name: faker.string.alphanumeric(10), inForm: false };
       }
     })
   }),

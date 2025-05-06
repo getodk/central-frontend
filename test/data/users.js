@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -18,8 +18,8 @@ export const extendedUsers = dataStore({
     id,
     lastCreatedAt,
 
-    displayName = faker.name.findName(),
-    email = `${faker.random.uuid()}@getodk.org`,
+    displayName = faker.person.fullName(),
+    email = `${faker.string.uuid()}@getodk.org`,
     // Sitewide role
     role = 'admin',
     verbs = verbsByRole(role),

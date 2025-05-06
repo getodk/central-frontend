@@ -38,6 +38,7 @@
     "xml-formatter": "~2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.7.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@playwright/test": "^1.51.1",
     "@vitejs/plugin-vue": "^5.2.3",
@@ -51,7 +52,6 @@
     "eslint": "^8.28.0",
     "eslint-plugin-import": "~2",
     "eslint-plugin-vue": "~9",
-    "faker": "~4.1",
     "foreman": "^3.0.1",
     "jsqr": "~1.0",
     "karma": "~6",

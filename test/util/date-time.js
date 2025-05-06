@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { DateTime, Settings } from 'luxon';
 
 export const isBefore = (isoString1, isoString2) =>
@@ -47,5 +47,5 @@ export const fakePastDate = (dateStrings) => {
   const from = DateTime.max(...dateTimes);
   const now = DateTime.local();
   if (from > now) throw new Error('future date');
-  return faker.date.between(from.toISO(), now.toISO()).toISOString();
+  return faker.date.between({ from: from.toISO(), to: now.toISO() }).toISOString();
 };

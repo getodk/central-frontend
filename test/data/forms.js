@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { pick, sum } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -150,7 +150,7 @@ formVersions = dataStore({
     lastSubmission = undefined,
     reviewStates = undefined,
     publishedBy = undefined,
-    draftToken = draft ? faker.random.alphaNumeric(64) : null
+    draftToken = draft ? faker.string.alphanumeric(64) : null
   }) => {
     if (form === undefined) throw new Error('form not found');
     const result = {
