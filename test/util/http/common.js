@@ -99,6 +99,11 @@ export function testModalToggles({
   // shown
   respond = (series) => series
 }) {
+  if (typeof modal === 'string')
+    throw new Error('modal must be a component, not a string');
+  const getModal = (component) => (modal === Modal
+    ? component.getComponent(Modal)
+    : component.getComponent(modal).getComponent(Modal));
   return this
     // First, test that the show button actually shows the modal.
     .afterResponses(component => {
@@ -107,7 +112,7 @@ export function testModalToggles({
     .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
-      const m = component.getComponent(modal);
+      const m = getModal(component);
       m.props().state.should.be.true;
 
       // Next, test that `modal` listens for `hide` events from Modal.
@@ -118,7 +123,7 @@ export function testModalToggles({
     .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
-      const m = component.getComponent(modal);
+      const m = getModal(component);
       m.props().state.should.be.true;
       await m.get(hide).trigger('click');
       m.props().state.should.be.false;

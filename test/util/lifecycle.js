@@ -48,7 +48,10 @@ export const mount = (component, options = {}) => {
   g.mocks = { $container: container, ...g.mocks };
   if (g.mixins != null) throw new Error('unexpected mixin');
   g.mixins = [shadowRouterProps];
-  g.stubs = { ...g.stubs, 'transition-group': { inheritAttrs: false, template: '<slot />' }, teleport: true };
+  g.stubs = {
+    ...g.stubs,
+    'transition-group': { inheritAttrs: false, template: '<slot />' },
+  };
   return vtuMount(component, { ...mountOptions, global: g });
 };
 

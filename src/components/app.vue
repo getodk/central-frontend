@@ -29,6 +29,7 @@ except according to the terms contained in the LICENSE file.
       <router-view/>
     </template>
 
+    <div id="modals"></div>
     <div id="tooltips"></div>
     <hover-cards/>
   </div>

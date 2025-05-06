@@ -42,17 +42,15 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
-        <!-- Have to add v-if and conditional :to, otherwise Teleport tries to locate
-          .form-submission-heading-row, can't find it and throws error -->
-        <Teleport v-if="formVersion.dataExists && odata.dataExists" :disabled="draft"
-          :to="!draft ? '.form-submissions-heading-row' : null">
+        <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
+          :to="'.form-submissions-heading-row'">
           <submission-download-button :form-version="formVersion"
             :aria-disabled="deleted"
             :filtered="odataFilter != null && !deleted"
             v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
             @download="showDownloadModal"
             @download-filtered="showDownloadModal(true)"/>
-        </Teleport>
+        </teleport-if-exists>
       </div>
       <submission-table v-show="odata.dataExists"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
@@ -95,7 +93,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watch, reactive, Teleport } from 'vue';
+import { shallowRef, watch, reactive } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -110,6 +108,7 @@ import SubmissionUpdateReviewState from './update-review-state.vue';
 import SubmissionDelete from './delete.vue';
 import SubmissionRestore from './restore.vue';
 import Pagination from '../pagination.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
@@ -138,7 +137,7 @@ export default {
     SubmissionRestore,
     SubmissionTable,
     SubmissionUpdateReviewState,
-    Teleport
+    TeleportIfExists
   },
   inject: ['alert'],
   props: {

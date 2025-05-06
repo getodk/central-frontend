@@ -1,4 +1,7 @@
 import sinon from 'sinon';
+
+import Modal from '../../src/components/modal.vue';
+
 import { mockHttp } from '../util/http';
 import createTestContainer from '../util/container';
 import { mockRouter } from '../util/router';
@@ -98,7 +101,7 @@ describe('WebFormRenderer', () => {
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Form successfully sent!');
     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
@@ -116,7 +119,7 @@ describe('WebFormRenderer', () => {
       })
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Form successfully sent!');
     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
@@ -132,7 +135,7 @@ describe('WebFormRenderer', () => {
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithProblem({ code: 409.1, message: 'duplication instance ID' });
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Submission error');
     modal.find('.modal-introduction').text().should.match(/Your data was not submitted.*duplication instance ID/);
@@ -149,7 +152,7 @@ describe('WebFormRenderer', () => {
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithProblem(403.1);
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.getComponent(Modal);
 
     modal.find('.modal-title').text().should.equal('Session expired');
     modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
@@ -161,14 +164,14 @@ describe('WebFormRenderer', () => {
 
     const component = await mountComponent({ props: { actionType: 'preview' } })
       .testModalToggles({
-        modal: '#web-form-renderer-submission-modal',
+        modal: Modal,
         show: '.odk-form .footer button',
         hide: '.btn-primary'
       });
 
     await component.find('.odk-form .footer button').trigger('click');
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-introduction').text().should.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
     modal.find('.modal-title').text().should.equal('Data is valid');
@@ -181,7 +184,7 @@ describe('WebFormRenderer', () => {
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .beforeEachResponse(c => {
-        const modal = c.findComponent('#web-form-renderer-submission-modal');
+        const modal = c.findComponent(Modal);
         modal.props().state.should.be.true;
         modal.find('.modal-title').text().should.equal('Sending Submission');
       })
@@ -206,7 +209,7 @@ describe('WebFormRenderer', () => {
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
       .respondWithSuccess(); // upload attachment successful
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Form successfully sent!');
     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
@@ -224,7 +227,7 @@ describe('WebFormRenderer', () => {
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
       .respondWithProblem(); // upload attachment error
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Submission error');
     modal.find('.modal-introduction').text().should.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
@@ -243,7 +246,7 @@ describe('WebFormRenderer', () => {
       .respondWithProblem() // upload attachment error
       .complete()
       .request(async (c) => {
-        const modal = c.getComponent('#web-form-renderer-submission-modal');
+        const modal = c.get('#web-form-renderer-submission-modal');
         modal.find('.modal-title').text().should.equal('Submission error');
         return modal.find('.btn-primary').trigger('click');
       })
@@ -257,7 +260,7 @@ describe('WebFormRenderer', () => {
         }
       ]);
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-title').text().should.equal('Form successfully sent!');
     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
@@ -275,7 +278,7 @@ describe('WebFormRenderer', () => {
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
       .respondWithProblem(403.1);
 
-    const modal = component.getComponent('#web-form-renderer-submission-modal');
+    const modal = component.getComponent(Modal);
 
     modal.find('.modal-title').text().should.equal('Session expired');
     modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
