@@ -14,29 +14,31 @@ except according to the terms contained in the LICENSE file.
 may add the `in` class to the element, and the checkScroll() method may add the
 `has-scroll` class. -->
 <template>
-  <div ref="el" class="modal" tabindex="-1"
-    :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
-    role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
-    @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
-    <div class="modal-dialog" :class="sizeClass" role="document">
-      <div class="modal-content">
-        <div class="modal-top-actions">
-          <button type="button" class="close" :aria-disabled="!hideable"
-            :aria-label="$t('action.close')" @click="hideIfCan">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <div class="modal-banner"><slot name="banner"></slot></div>
-        </div>
-        <div class="modal-header">
-          <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
-        </div>
-        <div ref="body" class="modal-body">
-          <Alert/>
-          <slot name="body"></slot>
+  <teleport-if-exists to="#modals">
+    <div ref="el" v-bind="$attrs" class="modal" tabindex="-1"
+      :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
+      role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
+      @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
+      <div class="modal-dialog" :class="sizeClass" role="document">
+        <div class="modal-content">
+          <div class="modal-top-actions">
+            <button type="button" class="close" :aria-disabled="!hideable"
+              :aria-label="$t('action.close')" @click="hideIfCan">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-banner"><slot name="banner"></slot></div>
+          </div>
+          <div class="modal-header">
+            <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
+          </div>
+          <div ref="body" class="modal-body">
+            <Alert/>
+            <slot name="body"></slot>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </teleport-if-exists>
 </template>
 
 <script>
@@ -47,6 +49,7 @@ import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch, wat
 import 'bootstrap/js/modal';
 
 import Alert from './alert.vue';
+import TeleportIfExists from './teleport-if-exists.vue';
 
 import { noop } from '../util/util';
 
@@ -64,6 +67,9 @@ We do this for two reasons:
   - It is needed to implement the `hideable` prop.
 */
 
+defineOptions({
+  inheritAttrs: false
+});
 const props = defineProps({
   state: Boolean,
   // Indicates whether the user is able to hide the modal by clicking ×,

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     :hideable="!awaitingResponse" backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <form @submit.prevent="submit">
+      <form ref="form" @submit.prevent="submit">
         <div class="row">
           <div class="col-xs-4">
             <div v-for="reviewState of selectableStates" :key="reviewState"
@@ -99,7 +99,7 @@ export default {
           ? currentState
           : 'approved';
         this.$nextTick(() => {
-          this.$el.querySelector('input:checked').focus();
+          this.$refs.form.querySelector('input:checked').focus();
         });
       } else {
         this.notes = '';

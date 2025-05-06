@@ -22,11 +22,11 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-refresh"></span>{{ $t('action.refresh') }}
         <spinner :state="refreshing"/>
       </button>
-      <Teleport v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
+      <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
         <entity-download-button :odata-filter="deleted ? null : odataFilter"
         :snapshot-filter="snapshotFilter" :disabled="deleted"
         v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
-      </Teleport>
+      </teleport-if-exists>
     </div>
     <entity-table v-show="odataEntities.dataExists" ref="table"
       :properties="dataset.properties"
@@ -75,6 +75,7 @@ import EntityResolve from './resolve.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
 import Pagination from '../pagination.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
@@ -97,6 +98,7 @@ export default {
     OdataLoadingMessage,
     Pagination,
     Spinner,
+    TeleportIfExists
   },
   inject: ['alert'],
   props: {

@@ -212,7 +212,7 @@ describe('Modal', () => {
             attachTo: document.body
           });
           await nextTick();
-          modal.classes('has-scroll').should.be.true;
+          modal.get('.modal').classes('has-scroll').should.be.true;
         });
 
         it('does not add class if modal does not overflow', async () => {
@@ -221,7 +221,7 @@ describe('Modal', () => {
             attachTo: document.body
           });
           await nextTick();
-          modal.classes('has-scroll').should.be.false;
+          modal.get('.modal').classes('has-scroll').should.be.false;
         });
 
         it('adds class if .modal-body changes, causing overflow', async () => {
@@ -233,10 +233,10 @@ describe('Modal', () => {
             attachTo: document.body
           });
           await nextTick();
-          modal.classes('has-scroll').should.be.false;
+          modal.get('.modal').classes('has-scroll').should.be.false;
           modal.get('#div').element.setAttribute('style', 'height: 10000px;');
           await wait();
-          modal.classes('has-scroll').should.be.true;
+          modal.get('.modal').classes('has-scroll').should.be.true;
         });
       });
     });
