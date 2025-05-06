@@ -7,9 +7,12 @@ import testData from '../data';
 import simpleXml from '../data/xml/simple/form.xml';
 import simpleSubmission from '../data/xml/simple/submission.xml';
 import imageUploaderXml from '../data/xml/image-uploader/form.xml';
+import imageUploaderSubmission from '../data/xml/image-uploader/submission.xml';
 import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import { mockLogin } from '../util/session';
 import { mergeMountOptions } from '../util/lifecycle';
+import { setFiles } from '../util/trigger';
+import { wait } from '../util/util';
 
 describe('WebFormRenderer', () => {
   let WebFormRenderer;
@@ -133,9 +136,12 @@ describe('WebFormRenderer', () => {
 
     modal.find('.modal-title').text().should.equal('Submission error');
     modal.find('.modal-introduction').text().should.match(/Your data was not submitted.*duplication instance ID/);
+    const primaryButtons = modal.findAll('.btn-primary');
+    primaryButtons.length.should.be.equal(1);
+    primaryButtons[0].text().should.be.equal('Close');
   });
 
-  it('should show error modal in case of submission failure', async () => {
+  it('should show sessionTimeout modal in case of session expiry', async () => {
     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
     const component = await mountComponent()
@@ -147,6 +153,7 @@ describe('WebFormRenderer', () => {
 
     modal.find('.modal-title').text().should.equal('Session expired');
     modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
+    modal.props().hideable.should.be.true;
   });
 
   it('shows preview modal', async () => {
@@ -184,11 +191,7 @@ describe('WebFormRenderer', () => {
   const fileToUpload = new File(['dummy content'], '1746140510984.jpg', { type: 'image/jpeg' });
 
   const uploadFile = async (component) => {
-    const fileInput = component.find('.odk-form input[type="file"]');
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(fileToUpload);
-    fileInput.element.files = dataTransfer.files;
-    await fileInput.trigger('change');
+    await setFiles(component.find('.odk-form input[type="file"]'), [fileToUpload]);
   };
 
   it('should send submission attachment request - relies on OWF', async () => {
@@ -260,6 +263,25 @@ describe('WebFormRenderer', () => {
     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
   });
 
+  it('should show non-hideable sessionTimeout modal if attachment upload fails during session expiry - relies on OWF', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const component = await mountComponent({}, imageUploaderXml)
+      .complete()
+      .request(async (c) => {
+        await uploadFile(c);
+        return c.find('.odk-form .footer button').trigger('click');
+      })
+      .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
+      .respondWithProblem(403.1);
+
+    const modal = component.getComponent('#web-form-renderer-submission-modal');
+
+    modal.find('.modal-title').text().should.equal('Session expired');
+    modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
+    modal.props().hideable.should.be.false;
+  });
+
   describe('edit', () => {
     it('should load submission instance for edits', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
@@ -303,6 +325,44 @@ describe('WebFormRenderer', () => {
           await clock.tick(2000);
           c.vm.$router.push.calledWith('/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25').should.be.true;
         });
+    });
+
+    it('should make requests for attachment data - relies on OWF', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+      const component = await mountComponent({
+        props: {
+          actionType: 'edit',
+          instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
+        }
+      }, imageUploaderXml)
+        .beforeEachResponse((_, { url }, i) => {
+          if (i === 3) {
+            url.endsWith('1746140510984.jpg').should.be.true;
+          }
+        })
+        .respondWithData(() => [{ name: '1746140510984.jpg', exists: true }])
+        .respondWithData(() => imageUploaderSubmission)
+        .respondWithData(() => 'dummy content');
+
+      await wait(1); // Not 100% sure, but OWF is probably using setTimeout before loading the Form
+      component.find('.odk-form').exists().should.be.true;
+    });
+
+    it('should make not requests for attachment data when attachment doesnt exist - relies on OWF', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+      const component = await mountComponent({
+        props: {
+          actionType: 'edit',
+          instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
+        }
+      }, imageUploaderXml)
+        .respondWithData(() => [{ name: '1746140510984.jpg', exists: false }])
+        .respondWithData(() => imageUploaderSubmission);
+
+      await wait(1); // Not 100% sure, but OWF is probably using setTimeout before loading the Form
+      component.find('.odk-form').exists().should.be.true;
     });
   });
 });

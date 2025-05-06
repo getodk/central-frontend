@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       @submit="handleSubmit"/>
   </template>
 
-  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" :hideable="submissionModal.hideable" backdrop @hide="hideModal()">
+  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" backdrop @hide="hideModal()">
     <template #title>{{ $t(submissionModal.type + '.title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -77,7 +77,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, inject, onUnmounted, reactive, ref } from 'vue';
+import { computed, createApp, getCurrentInstance, inject, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
@@ -136,7 +136,7 @@ const isEdit = computed(() => props.actionType === 'edit');
  * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
  * requirements
  */
-const transformAttachmentResponse = async (axiosResponse) => {
+const transformAttachmentResponse = (axiosResponse) => {
   const { data, status, statusText, headers } = axiosResponse;
 
   const fetchHeaders = new Headers();
@@ -202,7 +202,7 @@ const fetchSubmissionAttachment = (attachmentName) => {
     url: requestUrl,
     alert: false
   })
-    .then(transformAttachmentResponse) // TODO: prob same things as getFormAttachment fn
+    .then(transformAttachmentResponse)
     .catch(noop);
 };
 
@@ -312,14 +312,18 @@ const uploadAttachment = async (attachment, instanceId) => {
   return { name: attachment.name, result };
 };
 
-const submissionResult = reactive({});
-const submissionData = ref();
+const submissionResult = {};
+/**
+ * Holds the data received from ODK Web Forms and sent to the server when the Send or Retry
+ * buttons are pressed. This supports retry functionality, since ODK Web Forms does not provide
+ * a way to access submission data at an arbitrary point in time.
+ */
+let submissionData = {};
 let clearForm;
 
 const initializeSubmissionState = (data, clearFormCallback) => {
-  submissionData.value = data;
+  submissionData = data;
 
-  submissionResult.inProgress = false;
   submissionResult.primaryInstanceResult = {
     success: false
   };
@@ -380,13 +384,12 @@ const handleResult = () => {
 const submitData = async () => {
   showModal({ type: 'sendingDataModal', hideable: false });
 
-  const data = submissionData.value;
   if (!submissionResult.primaryInstanceResult.success) {
-    submissionResult.primaryInstanceResult = await postPrimaryInstance(data.instanceFile);
+    submissionResult.primaryInstanceResult = await postPrimaryInstance(submissionData.instanceFile);
   }
 
   if (submissionResult.primaryInstanceResult.success) {
-    const attachmentRequests = data.attachments
+    const attachmentRequests = submissionData.attachments
       .filter(a => !submissionResult.attachmentResult.get(a.name).success)
       .map(a => () => uploadAttachment(a, submissionResult.primaryInstanceResult.data.instanceId));
     const attachmentResult = await runSequentially(attachmentRequests);
