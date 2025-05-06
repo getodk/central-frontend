@@ -5196,6 +5196,20 @@
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
           }
         }
+      },
+      "retryModal": {
+        "title": {
+          "string": "Submission error"
+        },
+        "body": {
+          "string": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        },
+        "action": {
+          "tryAgain": {
+            "string": "Try again",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
       }
     },
     "WhatsNew": {
