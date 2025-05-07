@@ -41,7 +41,6 @@ import { useRequestData } from '../../request-data';
 
 const props = defineProps({
   odataFilter: String,
-  snapshotFilter: String,
   disabled: Boolean
 });
 
@@ -49,10 +48,10 @@ const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 
 const href = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.snapshotFilter }));
+  apiPaths.entities(projectId, datasetName, '.csv'));
 
 const filteredHref = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.csv', { $filter: `${props.snapshotFilter} and ${props.odataFilter}` }));
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter }));
 
 const { dataset, odataEntities } = useRequestData();
 const { t } = useI18n();

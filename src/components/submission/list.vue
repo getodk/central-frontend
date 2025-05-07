@@ -526,9 +526,8 @@ export default {
       this.fetchChunk(false);
     },
     showDownloadModal(filtered = false) {
-      this.downloadModal.odataFilter = this.snapshotFilter;
       if (filtered) {
-        this.downloadModal.odataFilter += ` and ${this.odataFilter}`;
+        this.downloadModal.odataFilter = this.odataFilter;
       }
       this.downloadModal.show();
     }
