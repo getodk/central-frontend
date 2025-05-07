@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <span v-show="!disabled && (required || modelValue.length < 2)" aria-hidden="true" class="icon-angle-down">
+    <span v-show="required || modelValue.length < 2" aria-hidden="true" class="icon-angle-down">
     </span>
     <span class="form-label">{{ requiredLabel(label, required) }}</span>
   </label>

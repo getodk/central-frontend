@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
         <button id="submission-list-refresh-button" type="button"
           class="btn btn-outlined" :class="{ 'move-right': draft }" :aria-disabled="refreshing"
           @click="fetchChunk(false, true)">
-          {{ $t('action.refresh') }}
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
