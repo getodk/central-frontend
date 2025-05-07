@@ -184,27 +184,18 @@ export default {
 <i18n>
 {
   "cs": {
-    "deletedDate": "Smazáno {dateTime}",
-    "disabled": {
-      "conflict": "Tento formulář nelze smazat, protože existuje aktivní formulář se stejným ID."
-    }
+    "deletedDate": "Smazáno {dateTime}"
   },
   "de": {
-    "deletedDate": "Gelöscht {dateTime}",
-    "disabled": {
-      "conflict": "Dieses Formular kann nicht wiederhergestellt werden, weil ein aktives Formular mit derselben ID existiert."
-    }
+    "deletedDate": "Gelöscht {dateTime}"
   },
   "es": {
-    "deletedDate": "Borrado {dateTime}",
-    "disabled": {
-      "conflict": "Este formulario no se puede recuperar porque existe un formulario activo con el mismo ID."
-    }
+    "deletedDate": "Borrado {dateTime}"
   },
   "fr": {
     "deletedDate": "Supprimé le {dateTime}",
     "disabled": {
-      "conflict": "Le formulaire ne peut être supprimé car il existe un formulaire actif avec le même ID."
+      "conflict": "Ce formulaire ne peut être restauré car un Formulaire actif avec le même ID existe."
     }
   },
   "id": {
@@ -217,28 +208,16 @@ export default {
     }
   },
   "ja": {
-    "deletedDate": "削除 {dateTime}",
-    "disabled": {
-      "conflict": "このフォームは、同一IDのフォームが有効化されているため、復元できません。"
-    }
+    "deletedDate": "削除 {dateTime}"
   },
   "pt": {
-    "deletedDate": "Excluído {dateTime}",
-    "disabled": {
-      "conflict": "A exclusão deste Formulário não pode ser desfeita porque existe um formulário ativo com a mesma ID."
-    }
+    "deletedDate": "Excluído {dateTime}"
   },
   "sw": {
-    "deletedDate": "Imefutwa {dateTime}",
-    "disabled": {
-      "conflict": "Fomu hii haiwezi kufutwa kwa sababu kuna Fomu inayotumika yenye kitambulisho sawa."
-    }
+    "deletedDate": "Imefutwa {dateTime}"
   },
   "zh-Hant": {
-    "deletedDate": "已刪除{dateTime}",
-    "disabled": {
-      "conflict": "該表單無法取消刪除，因為存在具有相同 ID 的活動表單。"
-    }
+    "deletedDate": "已刪除{dateTime}"
   }
 }
 </i18n>

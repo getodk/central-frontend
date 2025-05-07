@@ -107,7 +107,8 @@ const afterCreateDataset = async (dataset) => {
     "heading": [
       "Entity umožňují sdílet informace mezi formuláři, takže můžete shromažďovat longitudinální data, spravovat případy v čase a reprezentovat další pracovní postupy s více kroky.",
       "Entity se vytvářejí prostřednictvím návrhu formuláře a lze je připojit k libovolnému formuláři."
-    ]
+    ],
+    "new": "Nový"
   },
   "de": {
     "heading": [

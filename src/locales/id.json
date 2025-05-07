@@ -14,13 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Versi",
-      "publicAccess": "Akses Publik"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Uji Coba"
-      }
+      "publicAccess": "Akses Publik",
+      "versions": "Versi"
     }
   },
   "systemHome": {
@@ -91,7 +86,6 @@
         "update_draft_delete": "Buang Draf",
         "attachment_update": "Perbarui Lampiran",
         "submission_export": "Unduh kiriman",
-        "restore": "Pulihkan",
         "purge": "Hapus",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -129,7 +123,6 @@
     "close": "Tutup",
     "comment": "Komentar",
     "create": "Buat",
-    "createSubmission": "Baru",
     "done": "Selesai",
     "download": "Unduh",
     "edit": "Ubah",
@@ -267,7 +260,6 @@
     "anybody": "(Semua orang)",
     "areYouSure": "Apakah Anda yakin ingin melanjutkan?",
     "basicInfo": "Informasi dasar",
-    "currentDraft": "Draf Anda Saat Ini",
     "dangerZone": "Zona Bahaya",
     "data": "Data",
     "docs": "Dokumentasi",
@@ -278,13 +270,11 @@
     "loading": "Memuat...",
     "no": "Tidak",
     "noResults": "Tidak ada hasil",
-    "rightNow": "Sekarang Juga",
     "success": "Sukses!",
     "system": "Sistem",
     "yes": "Iya",
     "tab": {
-      "settings": "Pengaturan",
-      "overview": "Gambaran"
+      "settings": "Pengaturan"
     },
     "total": "Total",
     "totalSubmissions": "Total Kiriman",
@@ -315,6 +305,11 @@
   },
   "router": {
     "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+  },
+  "formStateDescription": {
+    "open": "Formulir ini bisa diunduh dan sedang menerima kiriman data.",
+    "closing": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data.",
+    "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
   },
   "requestData": {
     "project": {

@@ -207,8 +207,7 @@ export default {
   "cs": {
     "title": "Pomocí OData",
     "tab": {
-      "microsoft": "Power BI nebo Excel",
-      "other": "Jiné"
+      "microsoft": "Power BI nebo Excel"
     },
     "help": {
       "microsoft": {
@@ -230,8 +229,7 @@ export default {
       "Um eine Verbindung zu diesem OData-Feed herzustellen, wählen Sie Ihr Tool und kopieren Sie den Link."
     ],
     "tab": {
-      "microsoft": "Power BI oder Excel",
-      "other": "Anderes"
+      "microsoft": "Power BI oder Excel"
     },
     "help": {
       "microsoft": {
@@ -254,8 +252,7 @@ export default {
       "Para conectarse a esta fuente de OData, seleccione su herramienta y copie el enlace en ella."
     ],
     "tab": {
-      "microsoft": "Power BI o Excel",
-      "other": "Otro"
+      "microsoft": "Power BI o Excel"
     },
     "help": {
       "microsoft": {
@@ -279,7 +276,7 @@ export default {
     ],
     "tab": {
       "microsoft": "Power BI ou Excel",
-      "other": "Autre"
+      "other": "Autre (API)"
     },
     "help": {
       "microsoft": {
@@ -298,8 +295,7 @@ export default {
   "id": {
     "title": "Menggunakan OData",
     "tab": {
-      "microsoft": "Power BI atau Excel",
-      "other": "Lainnya"
+      "microsoft": "Power BI atau Excel"
     },
     "help": {
       "other": {
@@ -315,8 +311,7 @@ export default {
       "Per connettersi a questo feed OData, seleziona il tuo strumento e copia il link al suo interno."
     ],
     "tab": {
-      "microsoft": "Power BI o Excel",
-      "other": "Altro"
+      "microsoft": "Power BI o Excel"
     },
     "help": {
       "microsoft": {
@@ -334,9 +329,6 @@ export default {
   },
   "ja": {
     "title": "ODataの利用",
-    "tab": {
-      "other": "その他"
-    },
     "help": {
       "other": {
         "full": "ODataに関するサポートの詳細は、{article}を参照して下さい。",
@@ -351,8 +343,7 @@ export default {
       "Para conectar-se a este feed OData, selecione sua ferramenta e copie o link para ela."
     ],
     "tab": {
-      "microsoft": "Power BI ou Excel",
-      "other": "Outra ferramenta"
+      "microsoft": "Power BI ou Excel"
     },
     "help": {
       "microsoft": {
@@ -375,8 +366,7 @@ export default {
       "Ili kuunganisha kwenye mpasho huu wa OData, chagua zana yako na unakili kiungo humo."
     ],
     "tab": {
-      "microsoft": "Power BI au Excel",
-      "other": "Nyingine"
+      "microsoft": "Power BI au Excel"
     },
     "help": {
       "microsoft": {
@@ -399,8 +389,7 @@ export default {
       "若要連接到此 OData 來源，請選擇您的工具並將連結複製到其中。"
     ],
     "tab": {
-      "microsoft": "Power BI 或 Excel",
-      "other": "其他"
+      "microsoft": "Power BI 或 Excel"
     },
     "help": {
       "microsoft": {

@@ -120,30 +120,21 @@ export default {
     "action": {
       "create": "Nový"
     },
-    "emptyTable": "Nejsou k dispozici žádné formuláře.",
-    "alert": {
-      "create": "Váš nový formulář „{name}“ byl vytvořen jako koncept. Podívejte se na odškrtávací seznam níže a až budete mít pocit, že je připraven, můžete formulář publikovat k použití."
-    }
+    "emptyTable": "Nejsou k dispozici žádné formuláře."
   },
   "de": {
     "title": "Formulare",
     "action": {
       "create": "Neu"
     },
-    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
-    "alert": {
-      "create": "Ihr neues Formular \"{name}\" wurde als Entwurf erstellt. Überprüfen Sie die Checkliste unten: Wenn Sie finden, das sie abgearbeitet ist, können sie das Formular veröffentlichen."
-    }
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden."
   },
   "es": {
     "title": "Formularios",
     "action": {
       "create": "Nuevo"
     },
-    "emptyTable": "No hay formularios para mostrar.",
-    "alert": {
-      "create": "Su nuevo formulario \"{name}\" se ha creado como un borrador. De un vistazo a la lista de verificación a continuación, y cuando sienta que está lista, puede publicar el formulario para su uso."
-    }
+    "emptyTable": "No hay formularios para mostrar."
   },
   "fr": {
     "title": "Formulaires",
@@ -152,7 +143,7 @@ export default {
     },
     "emptyTable": "Il n'y a pas de formulaire à montrer.",
     "alert": {
-      "create": "Votre nouveau formulaire \"{name}\" a été créé en tant qu'ébauche. Jetez un œil à la liste de contrôle ci-dessous, et quand vous pensez que c'est prêt, vous pouvez publier le formulaire pour utilisation."
+      "create": "Votre nouveau Formulaire \"{name}\" a été créé comme Ébauche. Téléversez les fichiers et testez votre formulaire ci-dessous, et quand vous penserez être prêt, vous pourrez publiez le Formulaire pour l'utiliser."
     }
   },
   "id": {
@@ -160,10 +151,7 @@ export default {
     "action": {
       "create": "Formulir Baru"
     },
-    "emptyTable": "Tidak ada formulir untuk ditampilkan.",
-    "alert": {
-      "create": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
-    }
+    "emptyTable": "Tidak ada formulir untuk ditampilkan."
   },
   "it": {
     "title": "Formulari",
@@ -172,7 +160,7 @@ export default {
     },
     "emptyTable": "Non ci sono formulari da mostrare.",
     "alert": {
-      "create": "Il tuo nuovo formulario\"{name}\" è stato creato come bozza. Dai un'occhiata alla lista di controllo qui sotto e quando ritieni che sia pronto, puoi pubblicare il formulario per l'uso."
+      "create": "Il tuo nuovo formulario\"{name}\" è stato creato come bozza. Caricate i file e testate il vostro Formulario qui sotto e, quando lo riterrete pronto, potrete pubblicarlo per l'uso."
     }
   },
   "ja": {
@@ -180,40 +168,28 @@ export default {
     "action": {
       "create": "新規作成"
     },
-    "emptyTable": "表示できるフォームはありません。",
-    "alert": {
-      "create": "新規フォーム\"{name}\"が下書きとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用できます。"
-    }
+    "emptyTable": "表示できるフォームはありません。"
   },
   "pt": {
     "title": "Formulários",
     "action": {
       "create": "Novo"
     },
-    "emptyTable": "Não há formulários para exibir.",
-    "alert": {
-      "create": "O seu novo formulário \"{name}\" foi criado como rascunho. Dê uma olhada na lista de verificação abaixo e, quando você sentir que está pronto, publique o formulário para utilização."
-    }
+    "emptyTable": "Não há formulários para exibir."
   },
   "sw": {
     "title": "Fomu",
     "action": {
       "create": "Mpya"
     },
-    "emptyTable": "hakuna Fomu za kuonyesha",
-    "alert": {
-      "create": "Fomu yako mpya \"{name}\" imeundwa kama Rasimu. Angalia orodha hapa chini, na unapohisi iko tayari, unaweza kuchapisha Fomu kwa matumizi."
-    }
+    "emptyTable": "hakuna Fomu za kuonyesha"
   },
   "zh-Hant": {
     "title": "表單",
     "action": {
       "create": "新增"
     },
-    "emptyTable": "沒有可顯示的表單。",
-    "alert": {
-      "create": "您的新表單「{name}」已建立為草稿。查看下面的清單，當您認為準備就緒時，您可以發發布單以供使用。"
-    }
+    "emptyTable": "沒有可顯示的表單。"
   }
 }
 </i18n>

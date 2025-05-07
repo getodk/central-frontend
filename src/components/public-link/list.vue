@@ -308,7 +308,7 @@ export default {
         "state": "status"
       },
       {
-        "full": "Links públicos destinam-se a preenchimento autônomo. Se você está trabalhando com coletores de dados que precisam responder o mesmo formulário várias vezes, {clickHere}para outras opções.",
+        "full": "Links públicos destinam-se a preenchimento autônomo. Se você está trabalhando com coletores de dados que precisam responder o mesmo formulário várias vezes, {clickHere} para outras opções.",
         "clickHere": "clique aqui"
       }
     ],

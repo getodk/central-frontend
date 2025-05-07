@@ -120,9 +120,6 @@ const convert = ref(null);
     },
     "dontConvert": {
       "label": "Rozumím tomu a nepředstavuje to pro mě problém."
-    },
-    "convert": {
-      "label": "Převeďte nyní všechna čekající podání na entity."
     }
   },
   "de": {
@@ -131,19 +128,10 @@ const convert = ref(null);
       "changeSetting": "Einstellung ändern"
     },
     "explanation": {
-      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
-      "implication": {
-        "full": "Sobald dies in Kraft tritt, werden Entitäten nicht mehr generiert, wenn Übermittlungen als genehmigt markiert werden, einschließlich der {records}, die weder als genehmigt noch als abgelehnt markiert wurden, die wir gefunden haben. | Sobald dies in Kraft tritt, werden Entitäten nicht mehr generiert, wenn Übermittlungen als genehmigt markiert werden, einschließlich der {records}, die weder als genehmigt noch als abgelehnt markiert wurden, die wir gefunden haben.",
-        "records": "{count} Datensatz | {count} Datensätze"
-      }
+      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden."
     },
     "dontConvert": {
-      "label": "Ich verstehe und das ist für mich kein Problem.",
-      "description": "\"Ändern Sie die Einstellung und tun Sie nichts mit der ausstehenden Übermittlung.\" | Ändern Sie die Einstellung und tun Sie nichts mit den ausstehenden Übermittlungen."
-    },
-    "convert": {
-      "label": "Konvertieren Sie jetzt alle ausstehenden Einsendungen in Entitäten.",
-      "description": "Ändern Sie die Einstellung und erstellen Sie eine Entität aus allen {count} noch nicht genehmigten oder abgelehnten Übermittlungen. Die Überprüfungszustände werden nicht beeinflusst. | Ändern Sie die Einstellung und erstellen Sie Entitäten aus allen {count} noch nicht genehmigten oder abgelehnten Übermittlungen. Die Überprüfungszustände werden nicht beeinflusst."
+      "label": "Ich verstehe und das ist für mich kein Problem."
     }
   },
   "es": {
@@ -152,19 +140,15 @@ const convert = ref(null);
       "changeSetting": "Cambiar ajustes"
     },
     "explanation": {
-      "userAction": "Está configurando la creación de la Entidad para que ocurra cuando Central recibe los Envíos por primera vez.",
-      "implication": {
-        "full": "Una vez que esto surta efecto, ya no se generarán Entidades cuando las Presentaciones se marquen como Aprobadas, incluyendo el {records} que encontramos que no se ha marcado ni como Aprobado ni como Rechazado. | Una vez que esto entre en vigor, ya no se generarán Entidades cuando los Envíos sean marcados como Aprobados, incluyendo {records} que encontremos que no hayan sido marcados ni como Aprobados ni como Rechazados. | Una vez que esto entre en vigor, ya no se generarán Entidades cuando los Envíos sean marcados como Aprobados, incluyendo {records} que encontremos que no hayan sido marcados ni como Aprobados ni como Rechazados.",
-        "records": "{count} registro | {count} registros | {count} registros"
-      }
+      "userAction": "Está configurando la creación de la Entidad para que ocurra cuando Central recibe los Envíos por primera vez."
     },
     "dontConvert": {
       "label": "Lo entiendo y esto no es un problema para mí.",
-      "description": "Cambie la configuración y no haga nada con el envío pendiente. | Cambie la configuración y no haga nada con los envíos pendientes. | Cambie la configuración y no haga nada con los envíos pendientes."
+      "description": "Cambie la configuración y no haga nada con los envíos pendientes."
     },
     "convert": {
-      "label": "Convierta todos los Envíos pendientes a Entidades ahora.",
-      "description": "Cambie la configuración y cree la Entidad a partir del {count} Envío aún no Aprobado o Rechazado. Los Estados de Revisión no se verán afectados. | Cambie la configuración y cree Entidades a partir de todos los {count} Envíos que aún no hayan sido Aprobados o Rechazados. Los Estados de Revisión no se verán afectados. | Cambie la configuración y cree Entidades a partir de todos los {count} Envíos que aún no hayan sido Aprobados o Rechazados. Los Estados de Revisión no se verán afectados."
+      "label": "Convierta todos los Envíos pendientes que crean Entidades.",
+      "description": "Cambie la configuración y cree Entidades a partir de cualquier Envío que indique la creación de una Entidad y que no haya sido Aprobado o Rechazado."
     }
   },
   "fr": {
@@ -175,17 +159,17 @@ const convert = ref(null);
     "explanation": {
       "userAction": "Vous paramétrez la Création d'Entités pour qu'elle survienne dés la réception des Soumissions par Central",
       "implication": {
-        "full": "Dés que cela prendra effet, les Entités ne seront plus générées lors de l'approbation des Soumissions, incluant {records} que nous avons trouvée qui n'est marquée ni Approuvée ni Rejetée. | Dés que cela prendra effet, les Entités ne seront plus générées lors de l'approbation des Soumissions, incluant {records} que nous avons trouvées qui ne sont marquées ni Approuvées ni Rejetées. | Dés que cela prendra effet, les Entités ne seront plus générées lors de l'approbation des Soumissions, incluant {records} que nous avons trouvées qui ne sont ni marquées comme Approuvées ou Rejetées.",
-        "records": "{count} enegistrement | {count} enegistrements | {count} enegistrements"
+        "full": "Vous avez actuellement {records} marqué ni Approuvé ni Rejeté | Vous avez actuellement {records} marqué(s) ni Approuvé ni Rejeté | Vous avez actuellement {records} marqué ni Approuvé ni Rejeté",
+        "records": "{count} enregistrement en attente | {count} enregistrements en attente | {count} enregistrement(s) en attente"
       }
     },
     "dontConvert": {
       "label": "Je comprends et ce n'est pas un problème pour moi.",
-      "description": "Modifier le paramètre et ne rien faire avec la Soumission en attente. | Modifier le paramètre et ne rien faire avec les Soumissions en attente. | Modifier le paramètre et ne rien faire avec les Soumissions en attente."
+      "description": "Modifier le paramètre et ne rien faire avec les Soumissions en attente."
     },
     "convert": {
-      "label": "Convertir toutes les Soumissions en attente en Entités maintenant.",
-      "description": "Modifier le réglage et créer les Entités de la {count} Soumission non encore Approuvée ou Rejetée. Les États de Révision ne seront pas affectés. | Modifier le réglage et créer les Entités de toutes les {count} Soumissions non encore Approuvées ou Rejetées. Les États de Révision ne seront pas affectés. | Modifier le réglage et créer les Entités de toutes les {count} Soumissions non encore Approuvées ou Rejetées. Les États de Révision ne seront pas affectés."
+      "label": "Convertir toutes les Soumissions en attente qui créent des Entités.",
+      "description": "Modifier le réglage et créer les Entités depuis toutes les Soumissions non encore approuvées ou rejetées qui indiquent créer des Entités."
     }
   },
   "it": {
@@ -196,17 +180,17 @@ const convert = ref(null);
     "explanation": {
       "userAction": "Stai impostando la creazione dell'Entità in modo che avvenga quando gli invii vengono ricevuti per la prima volta da Central.",
       "implication": {
-        "full": "Una volta entrato in vigore, le Entità non verranno più generate quando gli Invii sono contrassegnati come Approvati, incluso il {records} che abbiamo riscontrato che non è stato né contrassegnato come Approvato né Rifiutato. | Una volta entrato in vigore, le Entità non verranno più generate quando gli Invii sono contrassegnati come Approvati, inclusi i {records} che abbiamo riscontrato che non sono stati né contrassegnati come Approvati né Rifiutati. | Una volta entrato in vigore, le Entità non verranno più generate quando gli Invii sono contrassegnati come Approvati, inclusi i {records} che abbiamo riscontrato che non sono stati né contrassegnati come Approvati né Rifiutati.",
-        "records": "{count} record | {count} records | {count} records"
+        "full": "Al momento non avete segnato {records} né Approvato né Rifiutato. | Al momento non avete segnato {records} né Approvati né Rifiutati. | Al momento non avete segnato {records}né Approvati né Rifiutati.",
+        "records": "{count} registrazione in sospeso | {count} registrazioni in sospeso | {count} registrazioni in sospeso"
       }
     },
     "dontConvert": {
       "label": "Capisco e questo non è un problema per me.",
-      "description": "Modificare l'impostazione e non fare nulla con l'invio in sospeso. | Modificare l'impostazione e non fare nulla con gli invii in sospeso. | Modificare l'impostazione e non fare nulla con gli invii in sospeso."
+      "description": "Modificare l'impostazione e non fare nulla con gli invii in sospeso."
     },
     "convert": {
-      "label": "Converti ora tutti gli invii in sospeso in Entità.",
-      "description": "Modifica l'impostazione e crea entità per il {count} invio non ancora approvato o rifiutato. Gli Stati di revisione non saranno interessati. | Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati. | Modifica l'impostazione e crea entità tra tutti gli {count} invii non ancora approvati o rifiutati. Gli Stati di revisione non saranno interessati."
+      "label": "Converti ora tutti gli invii in sospeso che creano Entità.",
+      "description": "Modificare l'impostazione e creare entità da qualsiasi invio che indichi la creazione di un'entità e che non sia stato approvato o rifiutato."
     }
   },
   "pt": {
@@ -215,19 +199,10 @@ const convert = ref(null);
       "changeSetting": "Alterar configuração"
     },
     "explanation": {
-      "userAction": "Você está definindo a criação da Entidade para ocorrer quando as Respostas forem recebidas pelo Central.",
-      "implication": {
-        "full": "Quando isso entrar em vigor, as Entidades não serão mais geradas quando as Respostas forem marcadas como Aprovadas, incluindo {records} que encontramos que não foi marcado como Aprovado nem Rejeitado. | Quando isso entrar em vigor, as Entidades não serão mais geradas quando as Respostas forem marcadas como Aprovadas, incluindo {records} que encontramos que não foram marcados como Aprovados nem Rejeitados. | Quando isso entrar em vigor, as Entidades não serão mais geradas quando as Respostas forem marcadas como Aprovadas, incluindo {records} que encontramos que não foram marcados como Aprovados nem Rejeitados.",
-        "records": "{count} registro | {count} registros | {count} registros"
-      }
+      "userAction": "Você está definindo a criação da Entidade para ocorrer quando as Respostas forem recebidas pelo Central."
     },
     "dontConvert": {
-      "label": "Eu entendo e isso não é um problema para mim.",
-      "description": "Alterar a configuração e não fazer nada com a Resposta pendente. | Alterar a configuração e não fazer nada com as Respostas pendentes. | Alterar a configuração e não fazer nada com as Respostas pendentes."
-    },
-    "convert": {
-      "label": "Converter todas as Respostas pendentes em Entidades agora.",
-      "description": "Alterar a configuração e criar Entidade da {count} Resposta ainda não Aprovada ou Rejeitada. Os Status de Revisão não serão afetados. | Alterar a configuração e criar Entidades de todas as {count} Respostas ainda não Aprovadas ou Rejeitadas. Os Status de Revisão não serão afetados. | Alterar a configuração e criar Entidades de todas as {count} Respostas ainda não Aprovadas ou Rejeitadas. Os Status de Revisão não serão afetados."
+      "label": "Eu entendo e isso não é um problema para mim."
     }
   },
   "sw": {
@@ -236,19 +211,10 @@ const convert = ref(null);
       "changeSetting": "Badilisha mpangilio"
     },
     "explanation": {
-      "userAction": "Unaweka uundaji wa Huluki ufanyike wakati Mawasilisho yanapokewa kwa mara ya kwanza na Central.",
-      "implication": {
-        "full": "Hili likianza kutekelezwa, Huluki hazitazalishwa tena Mawasilisho yanapowekwa alama kuwa Yameidhinishwa, ikijumuisha {records} tumegundua kuwa hayajaalamishwa kama Yameidhinishwa wala Yamekataliwa. | Hili likianza kutumika, Huluki hazitatolewa tena Mawasilisho yanapowekwa alama kuwa Yameidhinishwa, ikijumuisha {records} tumegundua kuwa hayajaalamishwa kama Yameidhinishwa wala Yamekataliwa.",
-        "records": "{count} Kumbukumbu | {count} kumbukumbu"
-      }
+      "userAction": "Unaweka uundaji wa Huluki ufanyike wakati Mawasilisho yanapokewa kwa mara ya kwanza na Central."
     },
     "dontConvert": {
-      "label": "Ninaelewa na hii sio shida kwangu.",
-      "description": "Badilisha mpangilio na usifanye chochote na Wasilisho linalosubiri. | Badilisha mpangilio na usifanye chochote na Mawasilisho yanayosubiri."
-    },
-    "convert": {
-      "label": "Badilisha Mawasilisho yote yanayosubiri kuwa Huluki sasa.",
-      "description": "Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika. | Badilisha mpangilio na uunde Huluki kati ya Mawasilisho yote {count} ambayo bado Hayajaidhinishwa au Yamekataliwa. Majimbo ya Uhakiki hayataathirika."
+      "label": "Ninaelewa na hii sio shida kwangu."
     }
   },
   "zh-Hant": {
@@ -257,19 +223,10 @@ const convert = ref(null);
       "changeSetting": "修改設定"
     },
     "explanation": {
-      "userAction": "您將設定實體建立在 Central 首次收到提交時進行。",
-      "implication": {
-        "full": "一旦生效，當提交被標記為「已批准」時，將不再產生實體，包括我們發現既沒有被標記為「已批准」也沒有被標記為「拒絕」的 {records}。",
-        "records": "{count} 筆記錄"
-      }
+      "userAction": "您將設定實體建立在 Central 首次收到提交時進行。"
     },
     "dontConvert": {
-      "label": "我理解，這對我來說不是問題。",
-      "description": "改設定並對待處理的提交不執行任何操作。"
-    },
-    "convert": {
-      "label": "立即將所有待處理的提交內容轉換為實體。",
-      "description": "變更設定並從所有尚未批准或拒絕的 {count}份提交中建立實體。審核狀態不會受到影響。"
+      "label": "我理解，這對我來說不是問題。"
     }
   }
 }

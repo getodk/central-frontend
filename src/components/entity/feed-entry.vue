@@ -382,7 +382,8 @@ const showBranchData = () => {
           },
           "api": "Daten aktualisiert von {name}"
         },
-        "update_resolve": "Konfliktwarnung gelöst von {name}"
+        "update_resolve": "Konfliktwarnung gelöst von {name}",
+        "delete": "Entität {label} gelöscht von {name}"
       }
     },
     "offlineUpdate": "Offline-Aktualisierung"
@@ -418,7 +419,8 @@ const showBranchData = () => {
           },
           "api": "Datos actualizados por {name}"
         },
-        "update_resolve": "Advertencia de conflicto resuelto por {name}"
+        "update_resolve": "Advertencia de conflicto resuelto por {name}",
+        "delete": "Entidad {label} eliminada por {name}"
       }
     },
     "offlineUpdate": "Actualización offline"
@@ -454,7 +456,9 @@ const showBranchData = () => {
           },
           "api": "Donnée mise à jour par {name}"
         },
-        "update_resolve": "Avertissement de conflit résolu par {name}"
+        "update_resolve": "Avertissement de conflit résolu par {name}",
+        "delete": "Entité {label} supprimée par {name}",
+        "restore": "l'Entité {label} a été restaurée par {name}"
       }
     },
     "offlineUpdate": "Mise à jour Hors Ligne"
@@ -508,7 +512,9 @@ const showBranchData = () => {
           },
           "api": "Dati aggiornati da {name}"
         },
-        "update_resolve": "Avviso di conflitto risolto da {name}"
+        "update_resolve": "Avviso di conflitto risolto da {name}",
+        "delete": "Entità {label} eliminata da {name}",
+        "restore": "Entità {label} ripristinata da {name}"
       }
     },
     "offlineUpdate": "Aggiornamento offline"
@@ -554,7 +560,8 @@ const showBranchData = () => {
           },
           "api": "Dados atualizados por {name}"
         },
-        "update_resolve": "Aviso de conflito resolvido por {name}"
+        "update_resolve": "Aviso de conflito resolvido por {name}",
+        "delete": "Entidade {label} excluída por {name}"
       }
     },
     "offlineUpdate": "Atualização offline"

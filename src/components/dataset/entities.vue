@@ -214,27 +214,53 @@ export default {
   "de": {
     "alert": {
       "upload": "Erfolgreich! Ihre Entitäten wurden hochgeladen."
-    }
+    },
+    "purgeDescription": "Entitäten werden nach 30 Tagen im Papierkorb gelöscht",
+    "action": {
+      "toggleDeletedEntities": "{count} gelöscht Entität | {count} gelöschte Entitäten"
+    },
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Entitäten nicht verfügbar"
   },
   "es": {
     "alert": {
       "upload": "¡Éxito! Tus entidades han sido cargadas."
-    }
+    },
+    "purgeDescription": "Las Entidades se eliminan después de 30 días en la Papelera",
+    "action": {
+      "toggleDeletedEntities": "{count} Entidad eliminada | {count} Entidades eliminadas | {count} Entidades eliminadas"
+    },
+    "analyzeDisabledDeletedData": "El acceso OData no está disponible para Entidades eliminadas"
   },
   "fr": {
+    "upload": "Téléverser des entités",
     "alert": {
       "upload": "Succès : Vos Entités ont été téléversées.."
-    }
+    },
+    "purgeDescription": "Les entités sont supprimées après 30 jours passés dans la corbeille.",
+    "action": {
+      "toggleDeletedEntities": "{count} entité supprimée. | {count} Entités supprimées. | {count} Entités supprimées."
+    },
+    "analyzeDisabledDeletedData": "L'accès OData n'est pas disponible pour les entités supprimées"
   },
   "it": {
     "alert": {
       "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
-    }
+    },
+    "purgeDescription": "Le Entità vengono eliminate dopo 30 giorni nel Cestino",
+    "action": {
+      "toggleDeletedEntities": "{count} Entità cancellata | {count} Entità cancellate | {count} Entità cancellate"
+    },
+    "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Entità cancellate"
   },
   "pt": {
     "alert": {
       "upload": "Sucesso! Suas entidades foram carregadas."
-    }
+    },
+    "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
+    "action": {
+      "toggleDeletedEntities": "{count} Entidade excluída | {count} Entidades excluídas | {count} Entidades excluídas"
+    },
+    "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
   },
   "zh-Hant": {
     "alert": {

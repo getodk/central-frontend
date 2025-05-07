@@ -196,13 +196,17 @@ export default {
       "num_entities": "Počet subjektů v seznamu subjektů",
       "num_failed_entities": "Počet chyb při vytváření subjektu",
       "num_entity_updates": "Počet aktualizací entity",
+      "num_entity_updates_sub": "Počet aktualizací entity prostřednictvím podání",
       "sso_enabled": "SSO povoleno na serveru",
       "num_client_audit_attachments": "Počet příloh auditu klienta",
       "num_client_audit_attachments_failures": "Počet selhání zpracování auditu klienta",
       "num_client_audit_rows": "Počet řádků auditu klienta",
       "num_audits_failed": "Počet událostí protokolu auditů, které selhaly alespoň jednou",
       "num_audits_failed5": "Počet událostí protokolu auditů, které zcela selhaly",
-      "num_audits_unprocessed": "Počet událostí protokolu auditů, jejichž zpracování bylo odloženo"
+      "num_audits_unprocessed": "Počet událostí protokolu auditů, jejichž zpracování bylo odloženo",
+      "num_blob_files": "Počet binárních souborů",
+      "num_blob_files_on_s3": "Počet binárních souborů aktuálně uložených v úložišti kompatibilním s S3",
+      "num_reset_failed_to_pending_count": "Počet případů, kdy uživatel resetoval neúspěšné odeslání do úložiště kompatibilního s S3"
     }
   },
   "de": {
@@ -269,7 +273,10 @@ export default {
       "num_offline_entity_submissions_reprocessed": "Anzahl umsortierter Offline-Objekt-Übermittlungen",
       "max_entity_submission_delay": "Maximum Objektübermittlung-Verarbeitungsverzögerung",
       "avg_entity_submission_delay": "Durchschnitt Objektübermittlung-Verarbeitungsverzögerung",
-      "num_blob_files": "Anzahl der Binärdateien"
+      "uses_external_blob_store": "Der Server verwendet externen S3-kompatiblen Speicher",
+      "num_offline_entity_submissions_force_processed": "Anzahl der zwangsverarbeiteten Offline-Entity-Einsendungen",
+      "num_blob_files": "Anzahl der Binärdateien",
+      "num_entity_creates_sub": "Anzahl der erstellten Entitäten über Übermittlungen"
     }
   },
   "es": {

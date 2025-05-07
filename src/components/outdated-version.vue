@@ -118,7 +118,9 @@ const dismiss = () => {
   "de": {
     "title": "Veraltete Version",
     "instructionsToUpgrade": "Anweisungen zum Upgrade",
-    "instructionsToUpgradeTooltip": "Klicken Sie hier für eine Anleitung zum Upgrade von Central"
+    "instructionsToUpgradeTooltip": "Klicken Sie hier für eine Anleitung zum Upgrade von Central",
+    "dismiss": "Entlassung für 30 Tage",
+    "dismissTooltip": "Klicken Sie hier, um diese Warnung für 30 Tage aufzuheben."
   },
   "es": {
     "title": "Versión obsoleta",

@@ -130,27 +130,32 @@ th.col-deleted-at { color: $color-danger; }
   },
   "de": {
     "header": {
-      "updatedAtAndActions": "Letzte Aktualisierung / Aktionen"
+      "updatedAtAndActions": "Letzte Aktualisierung / Aktionen",
+      "deletedAt": "Gelöscht am"
     }
   },
   "es": {
     "header": {
-      "updatedAtAndActions": "Última actualización / Acciones"
+      "updatedAtAndActions": "Última actualización / Acciones",
+      "deletedAt": "Suprimida el"
     }
   },
   "fr": {
     "header": {
-      "updatedAtAndActions": "Dernières mises à jour / Actions"
+      "updatedAtAndActions": "Dernières mises à jour / Actions",
+      "deletedAt": "Supprimée le"
     }
   },
   "it": {
     "header": {
-      "updatedAtAndActions": "Ultimo aggiornamento/ azioni"
+      "updatedAtAndActions": "Ultimo aggiornamento/ azioni",
+      "deletedAt": "Eliminato il"
     }
   },
   "pt": {
     "header": {
-      "updatedAtAndActions": "Última Atualização / Ações"
+      "updatedAtAndActions": "Última Atualização / Ações",
+      "deletedAt": "Excluída em"
     }
   },
   "sw": {

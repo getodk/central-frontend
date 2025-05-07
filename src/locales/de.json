@@ -14,13 +14,9 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": "Öffentlicher Zugriff",
       "versions": "Versionen",
-      "publicAccess": "Öffentlicher Zugriff"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Testen"
-      }
+      "editForm": "Formular bearbeiten"
     }
   },
   "systemHome": {
@@ -98,7 +94,7 @@
         "update_draft_delete": "Entwurf löschen",
         "attachment_update": "Anhänge aktualisieren",
         "submission_export": "Übermittlungen downloaden",
-        "restore": "Löschen rückgängig machen",
+        "restore": "Wiederherstellen",
         "purge": "Säubern",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -141,7 +137,6 @@
     "comment": "Kommentieren",
     "continue": "Weitermachen",
     "create": "Anlegen",
-    "createSubmission": "Neu",
     "delete": "Löschen",
     "done": "Fertig",
     "download": "Herunterladen",
@@ -216,6 +211,7 @@
   },
   "count": {
     "appUser": "{count} App-Benutzer | {count} App-Benutzer",
+    "attachments": "{count}Anhang | {count}Anhänge",
     "form": "{count} Formular | {count} Formulare",
     "submission": "{count} Übermittlung | {count} Übermittlungen",
     "warning": "{count} Warnung | {count} Warnungen"
@@ -223,6 +219,7 @@
   "resource": {
     "appUser": "App-Benutzer",
     "appUsers": "App-Benutzer",
+    "attachments": "Anhänge",
     "config": "Server-Konfiguration",
     "entity": "Entität",
     "entities": "Entitäten",
@@ -253,7 +250,8 @@
     "updateReviewState": "Überprüfungsstatus gespeichert!",
     "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden.",
     "submissionDeleted": "Die Übermittlung wurde gelöscht.",
-    "submissionRestored": "Die Übermittlung wurde wiederhergestellt."
+    "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
+    "entityDeleted": "Die Entität \"{label}“ wurde gelöscht."
   },
   "moreInfo": {
     "clickHere": {
@@ -300,7 +298,6 @@
     "basicInfo": "Basis-Informationen",
     "conflict": "Konflikt",
     "conflicts": "Konflikte",
-    "currentDraft": "Ihr aktueller Entwurf",
     "dangerZone": "Gefahrenbereich",
     "data": "Daten",
     "docs": "Dokumentation",
@@ -313,14 +310,12 @@
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
-    "rightNow": "Aktuell",
     "rowNumber": "Reihe",
     "success": "Das hat geklappt!",
     "system": "System",
     "yes": "Ja",
     "tab": {
-      "settings": "Einstellungen",
-      "overview": "Übersicht"
+      "settings": "Einstellungen"
     },
     "total": "Total",
     "totalSubmissions": "Gesamtzahl der Übermittlungen",
@@ -329,6 +324,7 @@
     "totalEntities": "Entitäten insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
+    "beta": "Beta",
     "reviewState": "Überprüfungsstatus",
     "status": "Status",
     "version": "Version"
@@ -355,7 +351,11 @@
       "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
       "errorNotProblem": "Etwas ging schief: Fehlercode {status}.",
       "problem": {
-        "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+        "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht.",
+        "409_17": {
+          "message": "Mit diesem Formular wird versucht, eine neue Entitätseigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Entitätseigenschaften zu erstellen, die mit Ausnahme der Gross- und Kleinschreibung mit den vorhandenen übereinstimmen:",
+          "duplicateProperty": "{provided} (bestehende: {current})"
+        }
       }
     },
     "session": {
@@ -368,6 +368,11 @@
   },
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
+  },
+  "formStateDescription": {
+    "open": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert.",
+    "closing": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
+    "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
   },
   "requestData": {
     "project": {

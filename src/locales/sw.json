@@ -14,13 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Matoleo",
-      "publicAccess": "Ufikiaji wa Umma"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Upimaji"
-      }
+      "publicAccess": "Ufikiaji wa Umma",
+      "versions": "Matoleo"
     }
   },
   "systemHome": {
@@ -92,7 +87,6 @@
         "update_draft_delete": "Acha rasimu",
         "attachment_update": "Sasisha Viambatisho",
         "submission_export": "Pakua mawasilisho",
-        "restore": "futa kufuta",
         "purge": "Safisha",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -131,7 +125,6 @@
     "comment": "Maoni",
     "continue": "Endelea",
     "create": "Unda",
-    "createSubmission": "Mpya",
     "done": "Imekamilika",
     "download": "Pakua",
     "edit": "Hariri",
@@ -158,8 +151,7 @@
     "expand": "Panua",
     "collapse": "Punguza",
     "reviewParallelUpdates": "Kagua masasisho sambamba",
-    "upload": "pakia",
-    "restore": "Ondoa kufuta"
+    "upload": "pakia"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -278,7 +270,6 @@
     "areYouSure": "Je, una uhakika ungependa kuendelea?",
     "basicInfo": "Taarifa za Msingi",
     "conflicts": "migogoro",
-    "currentDraft": "Rasimu Yako ya Sasa",
     "dangerZone": "Eneo la Hatari",
     "data": "Data",
     "docs": "Hati",
@@ -289,13 +280,11 @@
     "loading": "Inapakia...",
     "no": "Hapana",
     "noResults": "Hakuna majibu",
-    "rightNow": "Sasaivi",
     "success": "Mafanikio!",
     "system": "mfumo",
     "yes": "Ndiyo",
     "tab": {
-      "settings": "mipangilio",
-      "overview": "muhtasari"
+      "settings": "mipangilio"
     },
     "total": "jumla",
     "totalSubmissions": "Jumla ya Mawasilisho",
@@ -329,6 +318,11 @@
   },
   "router": {
     "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
+  },
+  "formStateDescription": {
+    "open": "Fomu hii inaweza kupakuliwa na inakubali Mawasilisho.",
+    "closing": "Fomu hii haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
+    "closed": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
   },
   "requestData": {
     "project": {

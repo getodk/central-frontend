@@ -14,13 +14,9 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": "Acceso público",
       "versions": "Versiones",
-      "publicAccess": "Acceso público"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Probando"
-      }
+      "editForm": "Editar formulario"
     }
   },
   "systemHome": {
@@ -98,7 +94,7 @@
         "update_draft_delete": "Descartar borrador",
         "attachment_update": "Actualizar adjuntos",
         "submission_export": "Descargar datos enviados",
-        "restore": "Restaurar",
+        "restore": "Restablecer",
         "purge": "Vaciar",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -141,7 +137,6 @@
     "comment": "Comentario",
     "continue": "Continuar",
     "create": "Crear",
-    "createSubmission": "Nuevo",
     "delete": "Borrar",
     "done": "Listo",
     "download": "Descargar",
@@ -171,7 +166,7 @@
     "collapse": "Contraer",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
     "upload": "Subir",
-    "restore": "Restaurar"
+    "restore": "Restablecer"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -216,6 +211,7 @@
   },
   "count": {
     "appUser": "{count} usuario móvil | {count} usuarios móviles | {count} usuarios móviles",
+    "attachments": "{count} Adjunto | {count} Adjuntos | {count} Adjuntos",
     "form": "{count} formulario | {count} formularios | {count} formularios",
     "submission": "{count} Envío | {count} envíos | {count} envíos",
     "warning": "{count} advertencia | {count} advertencias | {count} advertencias"
@@ -223,6 +219,7 @@
   "resource": {
     "appUser": "Usuario móvil",
     "appUsers": "Usuarios móviles",
+    "attachments": "Adjuntos",
     "config": "Configuración del servidor",
     "entity": "Entidad",
     "entities": "Entidades",
@@ -253,7 +250,9 @@
     "updateReviewState": "Estado de revisión guardado!",
     "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles.",
     "submissionDeleted": "El envío ha sido eliminado.",
-    "submissionRestored": "El envío ha sido recuperado."
+    "submissionRestored": "La Sumisión ha sido restablecida.",
+    "entityRestored": "Entidad “{label}” fue recuperada.",
+    "entityDeleted": "Entidad “{label}” se ha eliminado."
   },
   "moreInfo": {
     "clickHere": {
@@ -300,7 +299,6 @@
     "basicInfo": "Información básica",
     "conflict": "Conflicto",
     "conflicts": "Conflictos",
-    "currentDraft": "Su borrador actual",
     "dangerZone": "Zona de peligro",
     "data": "Datos",
     "docs": "Documentos",
@@ -313,14 +311,12 @@
     "no": "No",
     "noResults": "Sin resultados",
     "noUndo": "Esta acción no se puede deshacer.",
-    "rightNow": "Ahora mismo",
     "rowNumber": "Fila",
     "success": "¡Éxito!",
     "system": "Sistema",
     "yes": "Sí",
     "tab": {
-      "settings": "Ajustes",
-      "overview": "Descripción general"
+      "settings": "Ajustes"
     },
     "total": "Total",
     "totalSubmissions": "Envíos totales",
@@ -329,6 +325,7 @@
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
     "warning": "Advertencia",
+    "beta": "Beta",
     "reviewState": "Estado de revisión",
     "status": "Estado",
     "version": "Versión"
@@ -372,6 +369,11 @@
   },
   "router": {
     "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
+  },
+  "formStateDescription": {
+    "open": "Este formulario se puede descargar y acepta envíos.",
+    "closing": "Este formulario no se puede descargar perro acepta envíos.",
+    "closed": "Este formulario no se puede descargar y no acepta envíos."
   },
   "requestData": {
     "project": {

@@ -14,13 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Verze",
-      "publicAccess": "Veřejný přístup"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Testování"
-      }
+      "publicAccess": "Veřejný přístup",
+      "versions": "Verze"
     }
   },
   "systemHome": {
@@ -97,7 +92,6 @@
         "update_draft_delete": "Opustit koncept",
         "attachment_update": "Aktualizovat přílohy",
         "submission_export": "Stáhnout příspěvky",
-        "restore": "Zrušit smazání",
         "purge": "Vyčistit",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -136,7 +130,6 @@
     "comment": "Komentář",
     "continue": "Pokračovat",
     "create": "Vytvořit",
-    "createSubmission": "Nový",
     "delete": "Smazat",
     "done": "Hotovo",
     "download": "Stáhnout",
@@ -164,8 +157,7 @@
     "newPreview": "Nový náhled",
     "expand": "Rozbalit",
     "collapse": "Sbalit",
-    "upload": "Nahrát",
-    "restore": "Zrušit smazání"
+    "upload": "Nahrát"
   },
   "field": {
     "comment": "Zanechat komentář…",
@@ -217,6 +209,7 @@
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
     "config": "Konfigurace serveru",
+    "entity": "Entita",
     "entities": "Subjekty",
     "entityList": "Seznam entit",
     "entityLists": "Seznamy entit",
@@ -226,12 +219,14 @@
     "project": "Projekt",
     "projects": "Projekty",
     "property": "Vlastnost",
+    "properties": "Vlastnosti",
     "publicLink": "Veřejný odkaz",
     "user": "Uživatel",
     "users": "Uživatelé",
     "webUser": "Webový uživatel",
     "webUsers": "Uživatelé webu",
     "session": "Relace",
+    "submission": "Podání",
     "submissions": "Příspěvky",
     "projectRoles": "Role projektu",
     "formPreview": "Náhled formuláře",
@@ -241,7 +236,8 @@
     "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",
     "updateEntity": "Entita byla aktualizována!",
     "updateReviewState": "Stav kontroly uložen!",
-    "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
+    "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování.",
+    "submissionDeleted": "Podání bylo smazáno."
   },
   "moreInfo": {
     "clickHere": {
@@ -287,7 +283,6 @@
     "basicInfo": "Základní informace",
     "conflict": "Konflikt",
     "conflicts": "Konflikty",
-    "currentDraft": "Váš aktuální koncept",
     "dangerZone": "Nebezpečná zóna",
     "data": "Data",
     "docs": "Dokumentace",
@@ -295,22 +290,24 @@
     "error": "Chyba",
     "filter": "Filtr",
     "forum": "Fórum",
+    "lastUpdate": "Poslední aktualizace",
     "loading": "Načítání...",
     "no": "Ne",
     "noResults": "Žádné výsledky",
-    "rightNow": "Právě teď",
+    "noUndo": "Tuto akci nelze vrátit zpět.",
+    "rowNumber": "Řádek",
     "success": "Úspěch!",
     "system": "System",
     "yes": "Ano",
     "tab": {
-      "settings": "Nastavení",
-      "overview": "Přehled"
+      "settings": "Nastavení"
     },
     "total": "Celkem",
     "totalSubmissions": "Celkem odeslání",
     "new": "Novinka!",
     "totalEntities": "Celkem entit",
     "versionShort": "v{version}",
+    "warning": "Upozornění",
     "reviewState": "Přezkoumání stavu",
     "status": "Stav",
     "version": "Verze"
@@ -325,6 +322,10 @@
   },
   "util": {
     "csv": {
+      "readError": "Při čtení vašeho souboru došlo k problému: {message}",
+      "invalidCSV": "Soubor \"{name}\" není platný soubor .csv. Nelze jej přečíst.",
+      "rowError": "Na {row} řádku souboru je problém: {message}",
+      "invalidQuotes": "Pole s uvozovkami je neplatné. Zkontrolujte řádek, zda v něm nejsou neobvyklé hodnoty.",
       "emptyRow": "Řádek je prázdný."
     },
     "request": {
@@ -332,7 +333,10 @@
       "noResponse": "Něco se pokazilo: nebyla žádná odezva na váš požadavek.",
       "errorNotProblem": "Něco se pokazilo: chybový kód {status}.",
       "problem": {
-        "404_1": "Hledaný zdroj nelze nalézt. Zdroj mohl být smazán."
+        "404_1": "Hledaný zdroj nelze nalézt. Zdroj mohl být smazán.",
+        "409_17": {
+          "duplicateProperty": "{provided} (stávající: {current})"
+        }
       }
     },
     "session": {
@@ -345,6 +349,11 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
+  },
+  "formStateDescription": {
+    "open": "Tento formulář je ke stažení a přijímá příspěvky.",
+    "closing": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky.",
+    "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
   },
   "requestData": {
     "project": {

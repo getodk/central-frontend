@@ -94,8 +94,7 @@ const del = () => {
   "de": {
     "title": "Übermittlung löschen",
     "introduction": [
-      "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?",
-      "Diese Aktion verschiebt die Übermittlung in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
+      "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?"
     ],
     "field": {
       "noConfirm": "Sofortiges Löschen ohne Bestätigung, bis ich die Seite verlasse"
@@ -115,7 +114,7 @@ const del = () => {
     "title": "Supprimer la Soumission",
     "introduction": [
       "Etes vous sûr de vouloir supprimer cette Soumission ?",
-      "Cette action va mettre la Soumission à la corbeille. Aprés 30 jours elle sera définitivement supprimée, mais elle peut être restaurée avant ce délai."
+      "Cette action va déplacer les Soumissions dans la Corbeille. Après 30 jours dans la Corbeille, elles seront purgées de manière permanente, mais elles peuvent être restaurées avant ce délai."
     ],
     "field": {
       "noConfirm": "Supprimer immédiatement sans confirmation jusqu'à ce que je quitte la page"
@@ -125,7 +124,7 @@ const del = () => {
     "title": "Elimina invio",
     "introduction": [
       "Sei sicuro di voler cancellare questo invio?",
-      "Questa azione sposterà l'invio nel Cestino. Dopo 30 giorni di permanenza nel Cestino, l'invio verrà eliminato definitivamente, ma è possibile cancellarlo prima di allora."
+      "Questa azione sposterà il formulario nel Cestino. Dopo 30 giorni nel Cestino, verrà eliminato definitivamente, ma prima di allora può essere ripristinato."
     ],
     "field": {
       "noConfirm": "Elimina immediatamente senza conferma finché non lascio la pagina"
@@ -134,8 +133,7 @@ const del = () => {
   "pt": {
     "title": "Deletar Resposta",
     "introduction": [
-      "Você tem certeza que quer deletar esta Resposta?",
-      "Esta ação vai mover a Resposta para a Lixeira. Depois de 30 dias na Lixeira, ela vai ser permanentemente eliminada, mas a exclusão pode ser desfeita antes deste prazo."
+      "Você tem certeza que quer deletar esta Resposta?"
     ],
     "field": {
       "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
@@ -144,8 +142,7 @@ const del = () => {
   "zh-Hant": {
     "title": "刪除提交內容",
     "introduction": [
-      "您確定要刪除此提交嗎？",
-      "此操作會將提交內容移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+      "您確定要刪除此提交嗎？"
     ],
     "field": {
       "noConfirm": "立即刪除，無需確認，直到我離開頁面"

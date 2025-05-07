@@ -101,7 +101,8 @@ export default {
   "fr": {
     "field": {
       "submissionDate": "Soumis à"
-    }
+    },
+    "noSubmissionDateSelected": "(aucune)"
   },
   "id": {
     "field": {

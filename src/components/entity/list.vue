@@ -511,27 +511,56 @@ export default {
     "noMatching": "Es gibt keine passenden Entitäten.",
     "alert": {
       "delete": "Die Entität \"{label}“ wurde gelöscht."
-    }
+    },
+    "filterDisabledMessage": "Filterung ist für gelöschte Entitäten nicht verfügbar",
+    "downloadDisabled": "Der Download ist für gelöschte Entitäten nicht verfügbar"
   },
   "es": {
     "noEntities": "No hay Entidades para mostrar.",
     "noMatching": "No hay entidades coincidentes.",
+    "allDeleted": "Se eliminan todas las Entidades.",
+    "allDeletedOnPage": "Se han eliminado todas las Entidades de la página.",
     "alert": {
       "delete": "Entidad “{label}” se ha eliminado."
+    },
+    "filterDisabledMessage": "El Filtro no está disponible para Entidades eliminadas",
+    "downloadDisabled": "La descarga no está disponible para Entidades eliminadas",
+    "deletedEntity": {
+      "emptyTable": "No hay entidades eliminadas.",
+      "allRestored": "Todas las Entidades eliminadas se restauran.",
+      "allRestoredOnPage": "Se han restaurado todas las Entidades de la página."
     }
   },
   "fr": {
     "noEntities": "Pas d'entités à montrer.",
     "noMatching": "Il n'y a pas d'Entités correspondantes",
+    "allDeleted": "Toutes les Entités sont supprimées.",
+    "allDeletedOnPage": "Toutes les Entités de la page ont été supprimées.",
     "alert": {
       "delete": "L'Entité \"{label}\" a été supprimée."
+    },
+    "filterDisabledMessage": "Le filtrage n'est pas disponible pour les entités supprimées.",
+    "downloadDisabled": "Le téléchargement n'est pas disponible pour les entités supprimées.",
+    "deletedEntity": {
+      "emptyTable": "Il n'y a pas d'Entité supprimée.",
+      "allRestored": "Toutes les Entités supprimées ont été restaurées.",
+      "allRestoredOnPage": "Toutes les Entités de la page ont été restaurées."
     }
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
     "noMatching": "Non sono presenti Entità corrispondenti.",
+    "allDeleted": "Tutte le entità vengono eliminate.",
+    "allDeletedOnPage": "Tutte le entità della pagina sono state eliminate.",
     "alert": {
       "delete": "La Entità “{label}” è stata cancellata."
+    },
+    "filterDisabledMessage": "Il filtro non è disponibile per le Entità eliminate.",
+    "downloadDisabled": "Il download non è disponibile per le Entità eliminate",
+    "deletedEntity": {
+      "emptyTable": "Non ci sono Entità cancellate.",
+      "allRestored": "Tutte le entità eliminate vengono ripristinate.",
+      "allRestoredOnPage": "Tutte le entità della pagina sono state ripristinate."
     }
   },
   "pt": {
@@ -539,7 +568,9 @@ export default {
     "noMatching": "Não há Entidades correspondentes.",
     "alert": {
       "delete": "A Entidade \"{label}\" foi excluída."
-    }
+    },
+    "filterDisabledMessage": "Não é possível filtrar Entidades excluídas",
+    "downloadDisabled": "Não é possível fazer download de Entidades excluídas"
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",

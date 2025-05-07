@@ -35,21 +35,21 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": {
+        "string": "Akses Publik",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "versions": {
         "string": "Versi",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
-      "publicAccess": {
-        "string": "Akses Publik",
+      "editForm": {
+        "string": "",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
     "draftNav": {
       "tab": {
-        "testing": {
-          "string": "Uji Coba",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "status": {
           "string": "Status"
         }
@@ -262,7 +262,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "Pulihkan",
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -342,8 +342,8 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "Baru",
-      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+      "string": "",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
       "string": "",
@@ -602,6 +602,10 @@
       "string": "{count, plural, other {{count} Pengguna Aplikasi}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
+    "attachments": {
+      "string": "{count, plural, other {}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
     "form": {
       "string": "{count, plural, other {{count} Formulir}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
@@ -622,6 +626,10 @@
     },
     "appUsers": {
       "string": "Pengguna Aplikasi",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "attachments": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -730,6 +738,9 @@
       "string": ""
     },
     "submissionRestored": {
+      "string": ""
+    },
+    "entityRestored": {
       "string": ""
     }
   },
@@ -851,10 +862,6 @@
     "conflicts": {
       "string": ""
     },
-    "currentDraft": {
-      "string": "Draf Anda Saat Ini",
-      "developer_comment": "This is a title shown above a section of the page."
-    },
     "dangerZone": {
       "string": "Zona Bahaya",
       "developer_comment": "This is a title shown above a section of the page."
@@ -898,10 +905,6 @@
     "noUndo": {
       "string": ""
     },
-    "rightNow": {
-      "string": "Sekarang Juga",
-      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
-    },
     "rowNumber": {
       "string": "",
       "developer_comment": "This is shown for the row number."
@@ -919,10 +922,6 @@
     "tab": {
       "settings": {
         "string": "Pengaturan",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "overview": {
-        "string": "Gambaran",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -949,6 +948,12 @@
     "warning": {
       "string": "",
       "developer_comment": "This text is shown on its own before details about a warning."
+    },
+    "beta": {
+      "string": ""
+    },
+    "none": {
+      "string": ""
     }
   },
   "mixin": {
@@ -1470,6 +1475,12 @@
         }
       }
     },
+    "AuditFilters": {
+      "noLogDateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Audit log date is selected in the filter"
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {
@@ -1522,10 +1533,25 @@
       }
     },
     "DatasetEntities": {
+      "upload": {
+        "string": ""
+      },
       "alert": {
         "upload": {
           "string": ""
         }
+      },
+      "purgeDescription": {
+        "string": ""
+      },
+      "action": {
+        "toggleDeletedEntities": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabledDeletedData": {
+        "string": ""
       }
     },
     "DatasetList": {
@@ -1644,11 +1670,11 @@
         "implication": {
           "full": {
             "string": "{count, plural, other {}}",
-            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
             "string": "{count, plural, other {}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
       },
@@ -1657,7 +1683,7 @@
           "string": ""
         },
         "description": {
-          "string": "{count, plural, other {}}"
+          "string": ""
         }
       },
       "convert": {
@@ -1665,7 +1691,7 @@
           "string": ""
         },
         "description": {
-          "string": "{count, plural, other {}}"
+          "string": ""
         }
       }
     },
@@ -1712,12 +1738,16 @@
       "back": {
         "string": "",
         "developer_comment": "This is shown at the top of the page."
-      }
-    },
-    "DatasetSummary": {
-      "datasetUpdates": {
-        "string": "{count, plural, other {}}",
-        "developer_comment": "Number of Entity List(s) is shown separately above this text"
+      },
+      "infoNav": {
+        "connectedForms": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
+        },
+        "linkedForms": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
+        }
       }
     },
     "DatasetSummaryRow": {
@@ -1769,6 +1799,9 @@
       }
     },
     "EntityBasicDetails": {
+      "entityDetails": {
+        "string": ""
+      },
       "creatingSubmission": {
         "string": "Membuat Kiriman Data",
         "developer_comment": "This is shown above the Submission that created the Entity."
@@ -1859,12 +1892,6 @@
       "branch": {
         "string": "",
         "developer_comment": "A series of updates that were made offline"
-      }
-    },
-    "EntityData": {
-      "title": {
-        "string": "Data Entitas",
-        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "EntityDelete": {
@@ -2006,6 +2033,14 @@
           "update_resolve": {
             "string": "",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "delete": {
+            "string": "",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "restore": {
+            "string": "",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
       },
@@ -2046,6 +2081,10 @@
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
+      },
+      "noSelectedConflictSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2056,15 +2095,38 @@
       "noMatching": {
         "string": ""
       },
+      "allDeleted": {
+        "string": ""
+      },
+      "allDeletedOnPage": {
+        "string": ""
+      },
       "alert": {
         "delete": {
+          "string": ""
+        }
+      },
+      "filterDisabledMessage": {
+        "string": ""
+      },
+      "downloadDisabled": {
+        "string": ""
+      },
+      "deletedEntity": {
+        "emptyTable": {
+          "string": ""
+        },
+        "allRestored": {
+          "string": ""
+        },
+        "allRestoredOnPage": {
           "string": ""
         }
       },
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {Unduh {count} Entitas}}",
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
@@ -2132,6 +2194,24 @@
         }
       }
     },
+    "EntityRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "",
+          "developer_comment": "{label} is the label of an Entity."
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      }
+    },
     "EntityShow": {
       "back": {
         "title": {
@@ -2149,6 +2229,10 @@
         "updatedAtAndActions": {
           "string": "",
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
+        },
+        "deletedAt": {
+          "string": "",
+          "developer_comment": "Heading of the column that shows Entity deletion timestamp"
         }
       }
     },
@@ -2549,23 +2633,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Unggah dokumen",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
-      "heading": {
-        "0": {
-          "string": ""
-        },
-        "1": {
-          "string": "Untuk mengunggah dokumen, seret dan lepas satu atau lebih dokumen ke laman. "
-        }
-      },
-      "header": {
-        "uploaded": {
-          "string": "Diunggah",
-          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
-        }
+      "orDrag": {
+        "string": "",
+        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "problem": {
         "noneUploaded": {
@@ -2585,14 +2659,10 @@
           "string": ""
         }
       },
-      "datasetsPreview": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "0": {
-            "string": ""
-          }
+      "header": {
+        "uploaded": {
+          "string": "Diunggah",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
         }
       }
     },
@@ -2812,110 +2882,6 @@
         }
       }
     },
-    "FormDraftChecklist": {
-      "clickForInfo": {
-        "string": "Klik di sini untuk mencari tahu lebih."
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "Unggah definisi formulir awal",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "Kerja bagus!"
-            },
-            "1": {
-              "string": "Desain formulir Anda telah berhasil dimuat."
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "Unggah definisi formulir yang sudah direvisi (opsional)",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya mengunggah XML baru atau XLSForm menggunakan tombol yang ada di sebelah kanan.",
-                "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated."
-              },
-              "link": {
-                "full": {
-                  "string": "Apabila Anda sudah membuat perubahan terhadap formulir, termasuk teks pertanyaan atau peraturan logis, sekarang adalah waktunya {upload} XML baru atau XLSForm.",
-                  "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
-                },
-                "upload": {
-                  "string": "Unggah",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
-                }
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "",
-                "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
-              },
-              "formAttachments": {
-                "string": "",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Anda bisa {test}  formulir untuk memastikan kesesuaiannya dengan yang Anda ekspektasikan. Kiriman data dari hasil tes tidak akan dimasukkan ke dalam data akhir Anda.",
-                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
-              },
-              "test": {
-                "string": "mengetes",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
-              }
-            }
-          }
-        },
-        "4": {
-          "title": {
-            "string": "Terbitkan Draf",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "Ketika Anda yakin Draf sudah siap, Anda bisa menerbitkannya menggunakan tombol yang ada di sebelah kanan."
-              },
-              "link": {
-                "full": {
-                  "string": "Ketika Anda yakin Draf sudah siap, Anda bisa {publish} menggunakan tombol yang ada di sebelah kanan.",
-                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
-                },
-                "publish": {
-                  "string": "menerbitkannya",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "FormDraftPublish": {
       "title": {
         "string": "Terbitkan Draf",
@@ -3016,42 +2982,14 @@
       }
     },
     "FormDraftStatus": {
-      "draftChecklist": {
-        "title": {
-          "string": "Daftar Periksa Draf",
-          "developer_comment": "This is a title shown above a section of the page."
-        }
-      },
-      "currentDraft": {
-        "versionCaption": {
-          "full": {
-            "string": "{draftVersion} Formulir ini.",
-            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-          },
-          "draftVersion": {
-            "string": "Versi draf",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-          }
-        },
-        "action": {
-          "upload": {
-            "string": "Unggah definisi baru",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      },
       "actions": {
-        "title": {
-          "string": "Tindakan",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
         "action": {
-          "publish": {
-            "string": "Terbitkan Draf",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
           "abandon": {
             "string": "Buang Draf",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "publish": {
+            "string": "Terbitkan Draf",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -3073,30 +3011,126 @@
     },
     "FormDraftTesting": {
       "title": {
-        "string": "Pengujian Draf",
+        "string": "",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "body": {
-        "1": {
-          "string": "Draf kiriman data akan mucnul pada tabel tes di bawah, di mana Anda juga bisa melihat pratinjau dan mengunduhnya. Ketika formulir draf diterbitkan, tes kiriman data akan dihapus secara permanen."
-        }
+      "entitiesTesting": {
+        "string": ""
       },
-      "datasetsPreview": {
-        "title": {
-          "string": ""
+      "subtitle": {
+        "full": {
+          "string": "",
+          "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
         },
-        "body": {
-          "0": {
-            "string": ""
-          },
-          "1": {
-            "string": ""
-          }
+        "willBeDeleted": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
       },
       "collectProjectName": {
         "string": "[Draf]{name}",
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
+      }
+    },
+    "FormEditAttachments": {
+      "noAttachments": {
+        "string": "",
+        "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
+      },
+      "missingCount": {
+        "string": "{count, plural, other {}}"
+      },
+      "diff": {
+        "newCount": {
+          "string": "{count, plural, other {}}"
+        },
+        "changedCount": {
+          "string": "{count, plural, other {}}"
+        },
+        "summary": {
+          "string": "",
+          "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
+        }
+      }
+    },
+    "FormEditCreateDraft": {
+      "title": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "subtitle": {
+        "string": ""
+      },
+      "toMakeChanges": {
+        "string": "",
+        "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
+      },
+      "noEffectUntilPublish": {
+        "string": ""
+      }
+    },
+    "FormEditDef": {
+      "subtitle": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "changed": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "versionName": {
+        "string": "",
+        "developer_comment": "This is shown for a Form version."
+      },
+      "action": {
+        "upload": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "withinDef": {
+        "string": "",
+        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
+      }
+    },
+    "FormEditDraftControls": {
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "subtitle": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      }
+    },
+    "FormEditEntities": {
+      "datasetCount": {
+        "string": "{count, plural, other {}}"
+      },
+      "diffHasNew": {
+        "string": "",
+        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      },
+      "notEntityRelated": {
+        "string": "",
+        "developer_comment": "\"Definition\" refers to a Form Definition."
+      },
+      "whatAreEntities": {
+        "string": ""
+      }
+    },
+    "FormEditPublishedVersion": {
+      "title": {
+        "string": "",
+        "developer_comment": "This refers to the current version of a Form."
+      },
+      "subtitle": {
+        "published": {
+          "string": "",
+          "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+        }
       }
     },
     "FormHead": {
@@ -3110,8 +3144,24 @@
       },
       "formNav": {
         "tabTitle": {
-          "string": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda",
-          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+          "string": "",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc."
+        }
+      },
+      "infoNav": {
+        "entityLists": {
+          "string": "{count, plural, other {}}"
+        },
+        "updatedDatasets": {
+          "string": "",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists updated by this form."
+        },
+        "attachedDatasets": {
+          "string": "",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
+        },
+        "appUsers": {
+          "string": "{count, plural, other {}}"
         }
       },
       "draftNav": {
@@ -3143,7 +3193,7 @@
       },
       "alert": {
         "create": {
-          "string": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
+          "string": ""
         }
       }
     },
@@ -3258,42 +3308,7 @@
         }
       }
     },
-    "FormOverview": {
-      "draft": {
-        "none": {
-          "title": {
-            "string": "Belum ada draf",
-            "developer_comment": "This is a title shown above a section of the page."
-          },
-          "body": {
-            "string": ""
-          }
-        },
-        "any": {
-          "versionCaption": {
-            "full": {
-              "string": "{draftVersion} dari formulir ini.",
-              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-            },
-            "draftVersion": {
-              "string": "Versi draf",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-            }
-          }
-        }
-      }
-    },
     "FormOverviewRightNow": {
-      "version": {
-        "full": {
-          "string": "{publishedVersion} dari formulir ini.",
-          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
-        },
-        "publishedVersion": {
-          "string": "Versi terbit",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
-        }
-      },
       "stateCaption": {
         "open": {
           "string": "Formulir ini bisa diunduh dan sedang menerima kiriman data."
@@ -3303,34 +3318,6 @@
         },
         "closed": {
           "string": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
-        }
-      },
-      "submissions": {
-        "full": {
-          "string": "{count, plural, other {{submissions} untuk formulir ini sudah disimpan.}}",
-          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
-        },
-        "submissions": {
-          "string": "{count, plural, other {Kiriman data}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
-        }
-      },
-      "datasetsLinked": {
-        "string": "{count, plural, other {}}",
-        "developer_comment": "The count of Entity List(s) is shown separately above this text."
-      }
-    },
-    "FormPreview": {
-      "webFormPreview": {
-        "submissionModal": {
-          "title": {
-            "string": "",
-            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          },
-          "body": {
-            "string": "",
-            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          }
         }
       }
     },
@@ -3356,10 +3343,6 @@
         "fill": {
           "string": "Isi Formulir",
           "developer_comment": "This appears on a button linking to a fillable Form"
-        },
-        "test": {
-          "string": "",
-          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
@@ -3393,6 +3376,20 @@
         "delete": {
           "string": "Formulir {name} telah dihapus."
         }
+      },
+      "webFormsSetting": {
+        "webForms": {
+          "string": "",
+          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+        },
+        "description": {
+          "string": "",
+          "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
+        },
+        "enketoDefault": {
+          "string": "",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
       }
     },
     "FormSort": {
@@ -3405,6 +3402,11 @@
           "string": "Terbaru",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
+      }
+    },
+    "FormSubmission": {
+      "formNotFound": {
+        "string": ""
       }
     },
     "FormSubmissions": {
@@ -3498,6 +3500,12 @@
         }
       }
     },
+    "FormVersionRow": {
+      "current": {
+        "string": "",
+        "developer_comment": "This is a label shown for the current version of a Form."
+      }
+    },
     "FormVersionString": {
       "blank": {
         "string": "(kosong)",
@@ -3520,6 +3528,41 @@
       "title": {
         "string": "Lihat XML",
         "developer_comment": "This is the title at the top of a pop-up."
+      }
+    },
+    "FormWebFormsSettingsConfirmation": {
+      "webformsConfirmation": {
+        "useOdkWebForms": {
+          "string": "",
+          "developer_comment": "The words \"ODK Web Forms\" should not be translated"
+        },
+        "intro": {
+          "string": ""
+        },
+        "description": {
+          "full": {
+            "string": "",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
+          },
+          "seeSupportedFeatures": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          },
+          "previewYourForm": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          }
+        }
+      },
+      "enketoConfirmation": {
+        "description": {
+          "string": "",
+          "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
+        },
+        "useEnketo": {
+          "string": "",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
       }
     },
     "Home": {
@@ -3632,12 +3675,8 @@
     },
     "OdataDataAccess": {
       "action": {
-        "apiAccess": {
-          "string": "Akses API",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "Analisis melalui OData",
+        "connectData": {
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4396,7 +4435,7 @@
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
-          "string": "Lainnya",
+          "string": "",
           "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
         }
       },
@@ -4436,6 +4475,9 @@
       }
     },
     "SubmissionBasicDetails": {
+      "submissionDetails": {
+        "string": ""
+      },
       "formVersion": {
         "string": "Versi formulir"
       },
@@ -4576,16 +4618,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {Unduh {count} Kiriman}}",
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "Unduh Kiriman yang cocok",
+              "string": "",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, other {Unduh {count} Kiriman yang cocok}}",
+              "string": "{count, plural, other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
@@ -4671,7 +4713,7 @@
         },
         "undelete": {
           "string": "",
-          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Restored\", so it is essential for \"Restored\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nRestored by {name}\n\nyou could split it into:\n\nRestored • {name}"
         },
         "submissionBacklog": {
           "hold": {
@@ -4691,7 +4733,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{selected} dari {total}",
+        "string": "{count, plural, other {}}",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
@@ -4726,6 +4768,10 @@
           "string": "Terkirim pada",
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
+      },
+      "noSubmissionDateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Submission date is selected in the filter"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4744,6 +4790,10 @@
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
+      },
+      "noReviewStateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Review State is selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4775,6 +4825,10 @@
       },
       "unknown": {
         "string": ""
+      },
+      "noSubmitterSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Submitter is selected in the filter"
       }
     },
     "SubmissionList": {
@@ -4791,6 +4845,12 @@
       "noMatching": {
         "string": "Tidak ada Pengiriman yang cocok."
       },
+      "allDeleted": {
+        "string": ""
+      },
+      "allDeletedOnPage": {
+        "string": ""
+      },
       "downloadDisabled": {
         "string": ""
       },
@@ -4799,6 +4859,12 @@
       },
       "deletedSubmission": {
         "emptyTable": {
+          "string": ""
+        },
+        "allRestored": {
+          "string": ""
+        },
+        "allRestoredOnPage": {
           "string": ""
         }
       },
@@ -4849,7 +4915,7 @@
     "SubmissionRestore": {
       "title": {
         "string": "",
-        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+        "developer_comment": "This is the title at the top of Submission restore pop-up."
       },
       "introduction": {
         "0": {
@@ -5082,6 +5148,106 @@
         "retire": {
           "string": "Pengguna Berhenti",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "previewModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "full": {
+            "string": "",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "tryAgain": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      }
+    },
+    "WhatsNew": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "body": {
+        "string": ""
+      },
+      "action": {
+        "gotIt": {
+          "string": "",
+          "developer_comment": "This is the text of a button that is used to close the modal."
         }
       }
     }

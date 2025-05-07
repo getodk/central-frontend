@@ -342,9 +342,9 @@ export default {
     "encrypted": "Chiffré",
     "encryptionTip": "Ce projet utilise un chiffrement des données.",
     "showMore": "Afficher tous les {count} Formulaires | Afficher tous les {count} Formulaires | Afficher les {count} Formulaires",
-    "showMoreDatasets": "Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités",
+    "showMoreDatasets": "Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} Listes d'Entités | Afficher toutes les {count} listes d'entités",
     "showFewer": "Voir moins que ce {count} formulaire | Voir moins que ces {count} formulaires | Voir moins que ces {count} formulaires",
-    "showFewerDatasets": "Voir moins que cette {count} Liste d'Entités | Voir moins que ces {count} Listes d'Entités | Voir moins que ces {count} Listes d'Entités",
+    "showFewerDatasets": "Voir moins que cette {count} Liste d'Entités | Voir moins que ces {count} Listes d'Entités | Voir moins que ces {count} listes d'entités",
     "hidden": "caché"
   },
   "id": {

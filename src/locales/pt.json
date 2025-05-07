@@ -14,13 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Versões",
-      "publicAccess": "Acesso Público"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Em teste"
-      }
+      "publicAccess": "Acesso Público",
+      "versions": "Versões"
     }
   },
   "systemHome": {
@@ -98,7 +93,6 @@
         "update_draft_delete": "Abandonar rascunho",
         "attachment_update": "Atualizar anexos",
         "submission_export": "Baixar respostas",
-        "restore": "Desfazer Exclusão",
         "purge": "Limpar",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -141,7 +135,6 @@
     "comment": "Comentário",
     "continue": "Continuar",
     "create": "Criar",
-    "createSubmission": "Novo",
     "delete": "Excluir",
     "done": "Concluído",
     "download": "Baixar",
@@ -170,8 +163,7 @@
     "expand": "Expandir",
     "collapse": "Condensar",
     "reviewParallelUpdates": "Revisar atualizações paralelas",
-    "upload": "Carregar",
-    "restore": "Desfazer Exclusão"
+    "upload": "Carregar"
   },
   "field": {
     "comment": "Deixe um comentário",
@@ -253,7 +245,7 @@
     "updateReviewState": "Status de revisão salvo!",
     "versionChange": "O servidor foi atualizado. Por favor atualize a página para evitar comportamentos indesejáveis.",
     "submissionDeleted": "A Resposta foi deletada.",
-    "submissionRestored": "A exclusão da Resposta foi desfeita."
+    "entityDeleted": "A Entidade \"{label}\" foi excluída."
   },
   "moreInfo": {
     "clickHere": {
@@ -300,7 +292,6 @@
     "basicInfo": "Informações básicas",
     "conflict": "Conflito",
     "conflicts": "Conflitos",
-    "currentDraft": "Sua versão de rascunho atual",
     "dangerZone": "Zona de perigo",
     "data": "Dados",
     "docs": "Documentação",
@@ -313,14 +304,12 @@
     "no": "Não",
     "noResults": "Não há resultados",
     "noUndo": "Esta ação não pode se desfeita.",
-    "rightNow": "Nesse instante",
     "rowNumber": "Linha",
     "success": "Sucesso!",
     "system": "Sistema",
     "yes": "Sim",
     "tab": {
-      "settings": "Configurações",
-      "overview": "Visão geral"
+      "settings": "Configurações"
     },
     "total": "Total",
     "totalSubmissions": "Total de Respostas",
@@ -372,6 +361,11 @@
   },
   "router": {
     "unsavedChanges": "Você tem certeza que deseja sair da dessa página? Suas alterações podem não ter sido salvas."
+  },
+  "formStateDescription": {
+    "open": "Esse formulário pode ser baixado e está aceitando respostas.",
+    "closing": "Esse formulário não pode ser baixado, mas ainda aceita respostas.",
+    "closed": "Esse formulário não pode ser baixado, e não aceita mais respostas."
   },
   "requestData": {
     "project": {
