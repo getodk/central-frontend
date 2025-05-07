@@ -76,15 +76,7 @@ test.describe('Enketo', () => {
         description: 'Single Submission Public Link',
         url: ({ enketoOnceId, st }) => `/-/single/${enketoOnceId}?st=${st}`, requireLogin: false,
         newUrl: ({ enketoOnceId, st }) => `/f/${enketoOnceId}?st=${st}`
-      }, {
-        description: 'Offline Submissions',
-        url: ({ enketoId }) => `/-/x/${enketoId}`, requireLogin: true,
-        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/new/offline`
-      }, {
-        description: 'Offline Submissions Public Link',
-        url: ({ enketoId, st }) => `/-/x/${enketoId}?st=${st}`, requireLogin: false,
-        newUrl: ({ enketoId, st }) => `/f/${enketoId}/offline?st=${st}`
-      },
+      }
     ];
 
     oldUrls.forEach(t => {
@@ -110,6 +102,85 @@ test.describe('Enketo', () => {
           await expect(frame.getByRole('heading', { name: publishedForm.name })).toBeVisible();
         }
       });
+    });
+  });
+
+  test.describe('offline form', () => {
+    const offlineUrls = [{
+      description: 'Offline Submissions',
+      url: ({ enketoId }) => `/-/x/${enketoId}`, requireLogin: true,
+      newUrl: ({ enketoId }) => `/-/x/${enketoId}`
+    }, {
+      description: 'Offline Submissions Public Link',
+      url: ({ enketoId, st }) => `/-/x/${enketoId}?st=${st}`, requireLogin: false,
+      newUrl: ({ enketoId, st }) => `/-/x/${enketoId}?st=${st}`
+    }];
+
+    offlineUrls.forEach(t => {
+      test(`renders offline Form - ${t.url}`, async ({ page }) => {
+        const { enketoId, enketoOnceId, xmlFormId } = publishedForm;
+        const { enketoId: draftEnketoId } = draftForm;
+        const { instanceId } = firstSubmission;
+        const { token: st } = publicLink;
+
+        if (t.requireLogin) {
+          await login(page);
+        }
+
+        await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
+
+        await page.waitForURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
+
+        await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+        await expect(page.getByText('A new version of this application has been downloaded. Refresh this page to load the updated version.')).toBeVisible();
+      });
+    });
+
+    const rejectAllRequests = route => { route.abort('failed'); };
+
+    const goOffline = async (page) => {
+      await page.context().setOffline(true);
+      await page.route('**', rejectAllRequests);
+    };
+
+    const goOnline = async (page) => {
+      await page.context().setOffline(false);
+      await page.unroute('**', rejectAllRequests);
+    };
+
+    test('make offline submission', async ({ page }) => {
+      const { enketoId } = publishedForm;
+
+      await login(page);
+
+      await page.goto(`${appUrl}/-/x/${enketoId}`);
+
+      await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+      await expect(page.getByText('A new version of this application has been downloaded. Refresh this page to load the updated version.')).toBeVisible();
+
+      await page.reload();
+
+      await goOffline(page);
+
+      await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+      await page.getByLabel('First Name').fill('John Doe');
+
+      await page.getByRole('button', { name: 'submit' }).click();
+
+      await expect(page.getByRole('heading', { name: 'Record queued for submission' })).toBeVisible();
+
+      await page.getByRole('button', { name: 'ok' }).click();
+
+      await expect(page.getByTitle('Records Queued')).toHaveText('1');
+
+      await goOnline(page);
+
+      await expect(page.getByText('successfully submitted')).toBeVisible();
+
+      await expect(page.getByTitle('Records Queued')).toHaveText('0');
     });
   });
 
