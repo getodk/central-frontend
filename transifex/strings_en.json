@@ -1273,6 +1273,9 @@
         "num_forms_with_audits": {
           "string": "Number of Forms with audits"
         },
+        "num_forms_webforms_enabled": {
+          "string": "Number of Forms with Web Forms enabled"
+        },
         "num_reused_form_ids": {
           "string": "Number of reused Form IDs"
         },
