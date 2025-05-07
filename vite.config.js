@@ -53,7 +53,8 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: buildTarget,
     // `false` during dev for performance reasons
-    reportCompressedSize: mode === 'production'
+    reportCompressedSize: mode === 'production',
+    cssCodeSplit: false
   },
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.
