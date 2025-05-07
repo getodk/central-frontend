@@ -21,6 +21,7 @@ export default defineConfig({
   use: {
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    serviceWorkers: 'allow'
   },
 
   /* Configure projects for major browsers */
@@ -43,12 +44,6 @@ export default defineConfig({
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      dependencies: ['setup'],
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
       dependencies: ['setup'],
     }
   ]

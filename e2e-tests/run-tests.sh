@@ -51,6 +51,7 @@ else
   export ODK_URL="${ODK_PROTOCOL}${ODK_DOMAIN}:$ODK_PORT"
 fi
 
+export PW_EXPERIMENTAL_SERVICE_WORKER_NETWORK_EVENTS=1
 if [[ ${CI-} = true ]]; then
   log "Installing apt dependencies..."
   sudo apt-get install -y wait-for-it
