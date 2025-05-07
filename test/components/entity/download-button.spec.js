@@ -5,12 +5,9 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { relativeUrl } from '../../util/request';
 import { testRequestData } from '../../util/request-data';
 
-const snapshotFilter = '__system/createdAt le 2025-01-01';
-
 const mountComponent = (options = undefined) => {
   const dataset = testData.extendedDatasets.last();
   return mount(EntityDownloadButton, mergeMountOptions(options, {
-    props: { snapshotFilter },
     global: {
       provide: { projectId: '1', datasetName: dataset.name }
     },
@@ -71,7 +68,7 @@ describe('EntityDownloadButton', () => {
       const { href } = mountComponent().find('.btn-primary').attributes();
       const url = relativeUrl(href);
       url.pathname.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
-      url.searchParams.get('$filter').should.eql(snapshotFilter);
+      expect(url.searchParams.get('$filter')).to.be.null;
     });
 
     describe('entities are filtered', () => {
@@ -84,7 +81,7 @@ describe('EntityDownloadButton', () => {
         const { href } = component.find('li:nth-of-type(1) a').attributes();
         const url = relativeUrl(href);
         url.pathname.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
-        url.searchParams.get('$filter').should.equal(`${snapshotFilter} and __system/conflict ne null`);
+        url.searchParams.get('$filter').should.equal('__system/conflict ne null');
       });
 
       it('sets the correct attribute for downloading all entities', () => {
@@ -95,7 +92,7 @@ describe('EntityDownloadButton', () => {
         const { href } = component.find('li:nth-of-type(2) a').attributes();
         const url = relativeUrl(href);
         url.pathname.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
-        url.searchParams.get('$filter').should.equal(snapshotFilter);
+        expect(url.searchParams.get('$filter')).to.be.null;
       });
     });
   });

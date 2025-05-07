@@ -75,7 +75,7 @@ describe('SubmissionDownload', () => {
     });
   });
 
-  it('passes all filters to the download links when download filtered submission button is click', () => {
+  it('passes selected filters to the download links when download filtered submission button is click', () => {
     testData.extendedForms.createPast(1);
     return load('/projects/1/forms/f/submissions?reviewState=null')
       .complete()
@@ -85,14 +85,12 @@ describe('SubmissionDownload', () => {
         await component.find('#submission-download-button li:nth-of-type(1) button').trigger('click');
         const modal = component.getComponent(SubmissionDownload);
         const urls = modal.findAll('a').map(aUrl);
-        // Assert that it includes snapshot filters
-        urls[0].searchParams.get('$filter').should.match(/submissionDate/);
         // Assert that it includes odata filters
         urls[0].searchParams.get('$filter').should.match(/reviewState/);
       });
   });
 
-  it('passes only snapshot filters to the download links when download filtered submission button is click', () => {
+  it('passes no filters to the download links when download all submission button is click', () => {
     testData.extendedForms.createPast(1);
     return load('/projects/1/forms/f/submissions?reviewState=null')
       .complete()
@@ -102,10 +100,7 @@ describe('SubmissionDownload', () => {
         await component.find('#submission-download-button li:nth-of-type(2) button').trigger('click');
         const modal = component.getComponent(SubmissionDownload);
         const urls = modal.findAll('a').map(aUrl);
-        // Assert that it includes snapshot filters
-        urls[0].searchParams.get('$filter').should.match(/submissionDate/);
-        // Assert that it doesn't include odata filters
-        urls[0].searchParams.get('$filter').should.not.match(/reviewState/);
+        expect(urls[0].searchParams.get('$filter')).to.be.null;
       });
   });
 
