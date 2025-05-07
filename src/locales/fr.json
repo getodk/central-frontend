@@ -14,13 +14,9 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": "Accès public",
       "versions": "Versions",
-      "publicAccess": "Accès public"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "Test"
-      }
+      "editForm": "Editer un formulaire"
     }
   },
   "systemHome": {
@@ -93,7 +89,7 @@
       },
       "form": {
         "update_draft_set": "Créer ou mettre à jour l'ébauche",
-        "update_draft_replace": "Remplacer ébauche",
+        "update_draft_replace": "Remplacer l'ébauche",
         "update_publish": "Publier l'ébauche",
         "update_draft_delete": "Abandonner l'ébauche",
         "attachment_update": "Mettre à jour les fichiers joints",
@@ -141,7 +137,7 @@
     "comment": "Ajouter commentaire",
     "continue": "Continuer",
     "create": "Créer",
-    "createSubmission": "Nouveau",
+    "createSubmission": "Nouvelle soumission",
     "delete": "Supprimer",
     "done": "Fait",
     "download": "Télécharger",
@@ -216,6 +212,7 @@
   },
   "count": {
     "appUser": "{count} utilisateur mobile | {count} utilisateurs mobiles | {count} utilisateurs mobiles",
+    "attachments": "{count} fichier joint | {count} fichiers joints | {count} fichier(s) joint(s)",
     "form": "{count} Formulaire | {count} Formulaires | {count} Formulaires",
     "submission": "{count} Soumission | {count} Soumissions | {count} Soumissions",
     "warning": "{count} message d'avertissement | {count} messages d'avertissement | {count} messages d'avertissement"
@@ -223,11 +220,12 @@
   "resource": {
     "appUser": "Utilisateur mobile",
     "appUsers": "Utilisateurs mobiles",
+    "attachments": "Fichiers joints",
     "config": "Configuration du serveur",
     "entity": "Entité",
     "entities": "Entités",
     "entityList": "Liste d'entités",
-    "entityLists": "Listes d'Entités",
+    "entityLists": "Listes d'entités",
     "form": "Formulaire",
     "forms": "Formulaires",
     "formAttachments": "Fichiers joints du formulaire",
@@ -253,7 +251,9 @@
     "updateReviewState": "État sauvegardé !",
     "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu.",
     "submissionDeleted": "La soumission a été supprimée",
-    "submissionRestored": "La soumission a été restaurée."
+    "submissionRestored": "La Soumission a été restaurée",
+    "entityRestored": "L'Entité \"{label}\" a été restaurée.",
+    "entityDeleted": "L'Entité \"{label}\" a été supprimée."
   },
   "moreInfo": {
     "clickHere": {
@@ -300,7 +300,6 @@
     "basicInfo": "Information de base",
     "conflict": "Conflit",
     "conflicts": "Conflits",
-    "currentDraft": "Votre ébauche actuelle",
     "dangerZone": "Zone Dangereuse",
     "data": "Données",
     "docs": "Documents",
@@ -313,14 +312,12 @@
     "no": "Non",
     "noResults": "Aucun résultat",
     "noUndo": "Cette action ne pourra pas être annulée",
-    "rightNow": "Présentement",
     "rowNumber": "Ligne",
     "success": "Succès !",
     "system": "Système",
     "yes": "Oui",
     "tab": {
-      "settings": "Paramètres",
-      "overview": "Aperçu"
+      "settings": "Paramètres"
     },
     "total": "Total",
     "totalSubmissions": "Nombre total de soumissions",
@@ -329,6 +326,8 @@
     "totalEntities": "Nombre d'entités",
     "versionShort": "v {version}",
     "warning": "Avertissement",
+    "beta": "Beta",
+    "none": "(aucun)",
     "reviewState": "État",
     "status": "Statut",
     "version": "Version"
@@ -372,6 +371,11 @@
   },
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
+  },
+  "formStateDescription": {
+    "open": "Ce formulaire est téléchargeable et accepte les soumissions.",
+    "closing": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions.",
+    "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
   },
   "requestData": {
     "project": {

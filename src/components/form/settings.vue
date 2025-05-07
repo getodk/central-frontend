@@ -217,6 +217,10 @@ const hideAndReset = () => {
     },
     "alert": {
       "delete": "Das Formular \"{name}\" wurde gelöscht."
+    },
+    "webFormsSetting": {
+      "webForms": "Web-Formulare",
+      "enketoDefault": "Enketo (default)"
     }
   },
   "es": {
@@ -232,6 +236,10 @@ const hideAndReset = () => {
     },
     "alert": {
       "delete": "El formulario \"{name}\" fue borrado."
+    },
+    "webFormsSetting": {
+      "webForms": "Formularios web",
+      "enketoDefault": "Enketo (default)"
     }
   },
   "fr": {
@@ -247,6 +255,11 @@ const hideAndReset = () => {
     },
     "alert": {
       "delete": "Le formulaire {name} a été supprimé."
+    },
+    "webFormsSetting": {
+      "webForms": "Web Forms",
+      "description": "Remplissez, prévisualisez et éditez votre Formulaire \"{formName}\" en utilisant",
+      "enketoDefault": "Enketo (par défaut)"
     }
   },
   "id": {
@@ -277,6 +290,11 @@ const hideAndReset = () => {
     },
     "alert": {
       "delete": "Il Formulario “{name}” è stato cancellato."
+    },
+    "webFormsSetting": {
+      "webForms": "Formulari Web",
+      "description": "Compilate, visualizzate in anteprima e modificate il vostro “{formName}” Formulario usando",
+      "enketoDefault": "Enketo (default)"
     }
   },
   "ja": {
@@ -298,7 +316,7 @@ const hideAndReset = () => {
     "state": {
       "title": "Status do formulário",
       "body": {
-        "full": "Para definir o estado desse formulário, por favor visite a {formAccessSettings}do projeto.",
+        "full": "Para definir o status desse formulário, visite as {formAccessSettings} aos formulários do projeto.",
         "formAccessSettings": "Configurações de acesso ao formulário"
       }
     },

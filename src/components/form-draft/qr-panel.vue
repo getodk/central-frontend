@@ -118,6 +118,7 @@ const { projectPath } = useRoutes();
       "temporaryCode": "Vorläufiger Testcode"
     },
     "stopsWorking": "Wenn Sie diesen Entwurf veröffentlichen, funktioniert er nicht mehr.",
+    "instructions": "Scannen Sie diesen QR-Code, um Collect auf einem Gerät für Tests zu konfigurieren und Daten an diese Testtabelle zu übermitteln.",
     "collectProjectName": "[Entwurf] {name}"
   },
   "es": {

@@ -294,8 +294,8 @@ const message = computed(() => {
         "withoutCount": "Chargement des Entités correspondantes...",
         "middle": "Chargement de {top} Entités correspondantes supplémentaires sur {count} restantes | Chargement de {top} Entités correspondantes supplémentaires sur {count} restantes | Chargement de {top} Entités correspondantes supplémentaires sur {count} restantes",
         "last": {
-          "multiple": "Chargement de la dernière ({count}) entité correspondante | Chargement des dernières {count} entités correspondantes | Chargement des dernières {count} entités correspondantes",
-          "one": "Chargement d la dernière Entité correspondante..."
+          "multiple": "Chargement de la dernière ({count}) entité correspondante | Chargement des dernières {count} entités correspondantes | Chargement des dernières {count} entités correspondantes...",
+          "one": "Chargement de la dernière entité correspondante..."
         }
       }
     },

@@ -321,7 +321,7 @@ export default {
   },
   "pt": {
     "heading": [
-      "Usuários de aplicativo apenas pode ver e preencher formulários a que lhes for dada autorização explicita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
+      "Usuários de aplicativo somente podem ver e preencher os formulários para os quais receberem autorização explícita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
     ],
     "emptyTable": "Não há formulários para exibir.",
     "alert": {

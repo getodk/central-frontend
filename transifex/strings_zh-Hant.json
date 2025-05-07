@@ -35,21 +35,21 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": {
+        "string": "公共存取",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "versions": {
         "string": "版本",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
-      "publicAccess": {
-        "string": "公共存取",
+      "editForm": {
+        "string": "",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
     "draftNav": {
       "tab": {
-        "testing": {
-          "string": "進行測試",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
         "status": {
           "string": "狀態"
         }
@@ -262,7 +262,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "復原刪除",
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -342,8 +342,8 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "新增",
-      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+      "string": "",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
       "string": "刪除",
@@ -602,6 +602,10 @@
       "string": "{count, plural, other {{count} App 使用者}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
+    "attachments": {
+      "string": "{count, plural, other {}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
     "form": {
       "string": "{count, plural, other {{count} 表單}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
@@ -622,6 +626,10 @@
     },
     "appUsers": {
       "string": "App 使用者",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "attachments": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -730,7 +738,10 @@
       "string": "提交內容已刪除。"
     },
     "submissionRestored": {
-      "string": "提交的內容已取消刪除。"
+      "string": ""
+    },
+    "entityRestored": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -851,10 +862,6 @@
     "conflicts": {
       "string": "衝突"
     },
-    "currentDraft": {
-      "string": "您目前的草稿",
-      "developer_comment": "This is a title shown above a section of the page."
-    },
     "dangerZone": {
       "string": "危險區域",
       "developer_comment": "This is a title shown above a section of the page."
@@ -898,10 +905,6 @@
     "noUndo": {
       "string": "此操作無法撤銷。"
     },
-    "rightNow": {
-      "string": "現在",
-      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
-    },
     "rowNumber": {
       "string": "排",
       "developer_comment": "This is shown for the row number."
@@ -919,10 +922,6 @@
     "tab": {
       "settings": {
         "string": "設定",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "overview": {
-        "string": "概述",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -949,6 +948,12 @@
     "warning": {
       "string": "警告",
       "developer_comment": "This text is shown on its own before details about a warning."
+    },
+    "beta": {
+      "string": ""
+    },
+    "none": {
+      "string": ""
     }
   },
   "mixin": {
@@ -1470,6 +1475,12 @@
         }
       }
     },
+    "AuditFilters": {
+      "noLogDateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Audit log date is selected in the filter"
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {
@@ -1522,10 +1533,25 @@
       }
     },
     "DatasetEntities": {
+      "upload": {
+        "string": ""
+      },
       "alert": {
         "upload": {
           "string": "成功！您的實體已上傳。"
         }
+      },
+      "purgeDescription": {
+        "string": ""
+      },
+      "action": {
+        "toggleDeletedEntities": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabledDeletedData": {
+        "string": ""
       }
     },
     "DatasetList": {
@@ -1643,12 +1669,12 @@
         },
         "implication": {
           "full": {
-            "string": "{count, plural, other {一旦生效，當提交被標記為「已批准」時，將不再產生實體，包括我們發現既沒有被標記為「已批准」也沒有被標記為「拒絕」的 {records}。}}",
-            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+            "string": "{count, plural, other {}}",
+            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
-            "string": "{count, plural, other {{count} 筆記錄}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
+            "string": "{count, plural, other {}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
       },
@@ -1657,15 +1683,15 @@
           "string": "我理解，這對我來說不是問題。"
         },
         "description": {
-          "string": "{count, plural, other {改設定並對待處理的提交不執行任何操作。}}"
+          "string": ""
         }
       },
       "convert": {
         "label": {
-          "string": "立即將所有待處理的提交內容轉換為實體。"
+          "string": ""
         },
         "description": {
-          "string": "{count, plural, other {變更設定並從所有尚未批准或拒絕的 {count}份提交中建立實體。審核狀態不會受到影響。}}"
+          "string": ""
         }
       }
     },
@@ -1712,12 +1738,16 @@
       "back": {
         "string": "返回專案實體",
         "developer_comment": "This is shown at the top of the page."
-      }
-    },
-    "DatasetSummary": {
-      "datasetUpdates": {
-        "string": "{count, plural, other {實體清單已透過此表格更新：}}",
-        "developer_comment": "Number of Entity List(s) is shown separately above this text"
+      },
+      "infoNav": {
+        "connectedForms": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
+        },
+        "linkedForms": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
+        }
       }
     },
     "DatasetSummaryRow": {
@@ -1769,6 +1799,9 @@
       }
     },
     "EntityBasicDetails": {
+      "entityDetails": {
+        "string": ""
+      },
       "creatingSubmission": {
         "string": "建立提交",
         "developer_comment": "This is shown above the Submission that created the Entity."
@@ -1859,12 +1892,6 @@
       "branch": {
         "string": "離線更新鏈",
         "developer_comment": "A series of updates that were made offline"
-      }
-    },
-    "EntityData": {
-      "title": {
-        "string": "實體資料",
-        "developer_comment": "This is a title shown above a section of the page."
       }
     },
     "EntityDelete": {
@@ -2006,6 +2033,14 @@
           "update_resolve": {
             "string": "衝突警告已由{name}解決 ",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "delete": {
+            "string": "",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "restore": {
+            "string": "",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
       },
@@ -2046,6 +2081,10 @@
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
+      },
+      "noSelectedConflictSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2056,24 +2095,47 @@
       "noMatching": {
         "string": "無相符的實體。"
       },
+      "allDeleted": {
+        "string": ""
+      },
+      "allDeletedOnPage": {
+        "string": ""
+      },
       "alert": {
         "delete": {
           "string": "實體「1{label}」已被刪除。"
         }
       },
+      "filterDisabledMessage": {
+        "string": ""
+      },
+      "downloadDisabled": {
+        "string": ""
+      },
+      "deletedEntity": {
+        "emptyTable": {
+          "string": ""
+        },
+        "allRestored": {
+          "string": ""
+        },
+        "allRestoredOnPage": {
+          "string": ""
+        }
+      },
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {下載{count} 組實體}}",
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, other {下載{count}個相符的實體}}",
+              "string": "{count, plural, other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "下載相符的實體",
+              "string": "",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -2132,6 +2194,24 @@
         }
       }
     },
+    "EntityRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "",
+          "developer_comment": "{label} is the label of an Entity."
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      }
+    },
     "EntityShow": {
       "back": {
         "title": {
@@ -2149,6 +2229,10 @@
         "updatedAtAndActions": {
           "string": "最後更新/操作",
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
+        },
+        "deletedAt": {
+          "string": "",
+          "developer_comment": "Heading of the column that shows Entity deletion timestamp"
         }
       }
     },
@@ -2549,23 +2633,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "上傳檔案",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
-      "heading": {
-        "0": {
-          "string": "根據您上傳的表格，需要以下表格附件。您可以查看哪些已提供或仍然缺少。"
-        },
-        "1": {
-          "string": "若要上傳文件，請將一個或多個文件拖曳到頁面上。"
-        }
-      },
-      "header": {
-        "uploaded": {
-          "string": "已上傳",
-          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
-        }
+      "orDrag": {
+        "string": "",
+        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "problem": {
         "noneUploaded": {
@@ -2585,14 +2659,10 @@
           "string": "實體列表連結成功。"
         }
       },
-      "datasetsPreview": {
-        "title": {
-          "string": "測試實體"
-        },
-        "body": {
-          "0": {
-            "string": "一個或多個表單附件的檔案名稱與實體清單名稱相符。預設情況下，這些連結到實體列表。為了進行測試，您可能需要將臨時資料上傳為 .csv 文件，然後在驗證表單邏輯後連結到實體清單。"
-          }
+      "header": {
+        "uploaded": {
+          "string": "已上傳",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
         }
       }
     },
@@ -2772,7 +2842,7 @@
           "string": "您確定要刪除表單{name}及其所有提交內容嗎？\n"
         },
         "1": {
-          "string": "此操作會將表單移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+          "string": ""
         }
       },
       "noDeleteEntities": {
@@ -2809,110 +2879,6 @@
         "abandon": {
           "string": "放棄",
           "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
-    "FormDraftChecklist": {
-      "clickForInfo": {
-        "string": "請點擊這裡了解更多。"
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "上傳初始表單定義",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "做的好！"
-            },
-            "1": {
-              "string": "您的表單設計已成功載入。"
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "上傳修改後的表單定義（可選）",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "如果您對表單本身進行了更改，包括問題文字或邏輯規則，現在是時候使用右側的按鈕上傳新的 XML 或 XLSForm 了。",
-                "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated."
-              },
-              "link": {
-                "full": {
-                  "string": "如果您對表單本身進行了更改，包括問題文字或邏輯規則，現在是時候{upload}新的 XML 或 XLSForm 了。",
-                  "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
-                },
-                "upload": {
-                  "string": "上傳",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
-                }
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "上傳表格附件",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "您的表單設計引用了展示表單所需的文件。您可以在 {formAttachments} 標籤內，上傳這些檔案的新副本或更新副本以進行部署。",
-                "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
-              },
-              "formAttachments": {
-                "string": "表格附件",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "透過建立提交來測試表單",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "您可以{test}表單以確保它按您期望的方式運作。測試提交不包含在您的最終資料中。",
-                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
-              },
-              "test": {
-                "string": "測試",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
-              }
-            }
-          }
-        },
-        "4": {
-          "title": {
-            "string": "發布草稿",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "當您確定草稿已準備好並且希望將其發布到現場設備時，您可以使用右側的按鈕發布它。"
-              },
-              "link": {
-                "full": {
-                  "string": "當您確定草稿已準備好並且希望將其部署到現場設備上時，您可以{publish}它。",
-                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
-                },
-                "publish": {
-                  "string": "發布",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -3016,42 +2982,14 @@
       }
     },
     "FormDraftStatus": {
-      "draftChecklist": {
-        "title": {
-          "string": "草案清單",
-          "developer_comment": "This is a title shown above a section of the page."
-        }
-      },
-      "currentDraft": {
-        "versionCaption": {
-          "full": {
-            "string": "此表格的{draftVersion}。",
-            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-          },
-          "draftVersion": {
-            "string": "草稿版本",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-          }
-        },
-        "action": {
-          "upload": {
-            "string": "上傳新定義",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      },
       "actions": {
-        "title": {
-          "string": "行動",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
         "action": {
-          "publish": {
-            "string": "發布草稿",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
           "abandon": {
             "string": "放棄草案",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "publish": {
+            "string": "發布草稿",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -3073,30 +3011,126 @@
     },
     "FormDraftTesting": {
       "title": {
-        "string": "草稿測試",
+        "string": "",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "body": {
-        "1": {
-          "string": "草稿提交進入下面的測試表，您可以在其中預覽和下載它們。當您發布此表單草稿時，其測試提交內容將會永久刪除。"
-        }
+      "entitiesTesting": {
+        "string": ""
       },
-      "datasetsPreview": {
-        "title": {
-          "string": "該表單可以更新實體"
+      "subtitle": {
+        "full": {
+          "string": "",
+          "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
         },
-        "body": {
-          "0": {
-            "string": "實體僅針對已發布的表單進行更新。在 Central 的未來版本中，您將能夠在草稿狀態下測試實體功能。"
-          },
-          "1": {
-            "string": "目前，我們建議在草稿狀態下嘗試表單定義以驗證其邏輯。在發布之前，您可以驗證它是否更新了所有所需的屬性。"
-          }
+        "willBeDeleted": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
       },
       "collectProjectName": {
         "string": "[草稿] {name}",
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
+      }
+    },
+    "FormEditAttachments": {
+      "noAttachments": {
+        "string": "",
+        "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
+      },
+      "missingCount": {
+        "string": "{count, plural, other {}}"
+      },
+      "diff": {
+        "newCount": {
+          "string": "{count, plural, other {}}"
+        },
+        "changedCount": {
+          "string": "{count, plural, other {}}"
+        },
+        "summary": {
+          "string": "",
+          "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
+        }
+      }
+    },
+    "FormEditCreateDraft": {
+      "title": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "subtitle": {
+        "string": ""
+      },
+      "toMakeChanges": {
+        "string": "",
+        "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
+      },
+      "noEffectUntilPublish": {
+        "string": ""
+      }
+    },
+    "FormEditDef": {
+      "subtitle": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "changed": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "versionName": {
+        "string": "",
+        "developer_comment": "This is shown for a Form version."
+      },
+      "action": {
+        "upload": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "withinDef": {
+        "string": "",
+        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
+      }
+    },
+    "FormEditDraftControls": {
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "subtitle": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      }
+    },
+    "FormEditEntities": {
+      "datasetCount": {
+        "string": "{count, plural, other {}}"
+      },
+      "diffHasNew": {
+        "string": "",
+        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      },
+      "notEntityRelated": {
+        "string": "",
+        "developer_comment": "\"Definition\" refers to a Form Definition."
+      },
+      "whatAreEntities": {
+        "string": ""
+      }
+    },
+    "FormEditPublishedVersion": {
+      "title": {
+        "string": "",
+        "developer_comment": "This refers to the current version of a Form."
+      },
+      "subtitle": {
+        "published": {
+          "string": "",
+          "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+        }
       }
     },
     "FormHead": {
@@ -3110,8 +3144,24 @@
       },
       "formNav": {
         "tabTitle": {
-          "string": "一旦您發布草稿表單，這些功能將可用",
-          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+          "string": "",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc."
+        }
+      },
+      "infoNav": {
+        "entityLists": {
+          "string": "{count, plural, other {}}"
+        },
+        "updatedDatasets": {
+          "string": "",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists updated by this form."
+        },
+        "attachedDatasets": {
+          "string": "",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
+        },
+        "appUsers": {
+          "string": "{count, plural, other {}}"
         }
       },
       "draftNav": {
@@ -3143,7 +3193,7 @@
       },
       "alert": {
         "create": {
-          "string": "您的新表單「{name}」已建立為草稿。查看下面的清單，當您認為準備就緒時，您可以發發布單以供使用。"
+          "string": ""
         }
       }
     },
@@ -3236,7 +3286,7 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法取消刪除具有符合 ID 的另一張表單。"
+            "string": ""
           },
           "structureChanged": {
             "string": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。"
@@ -3258,42 +3308,7 @@
         }
       }
     },
-    "FormOverview": {
-      "draft": {
-        "none": {
-          "title": {
-            "string": "目前無草稿",
-            "developer_comment": "This is a title shown above a section of the page."
-          },
-          "body": {
-            "string": "目前該表格還沒有草稿版本。如果您想要更改表單或其附件，請先使用上面的按鈕建立草稿。"
-          }
-        },
-        "any": {
-          "versionCaption": {
-            "full": {
-              "string": "表格的{draftVersion}",
-              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-            },
-            "draftVersion": {
-              "string": "草稿版本",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-            }
-          }
-        }
-      }
-    },
     "FormOverviewRightNow": {
-      "version": {
-        "full": {
-          "string": "表格的{publishedVersion}",
-          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
-        },
-        "publishedVersion": {
-          "string": "已發布版本",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
-        }
-      },
       "stateCaption": {
         "open": {
           "string": "該表格可供下載並接受提交。"
@@ -3304,44 +3319,16 @@
         "closed": {
           "string": "該表格不可下載，也不接受提交。"
         }
-      },
-      "submissions": {
-        "full": {
-          "string": "{count, plural, other {{submissions} 已為此表格儲存。}}",
-          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
-        },
-        "submissions": {
-          "string": "{count, plural, other {提交}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
-        }
-      },
-      "datasetsLinked": {
-        "string": "{count, plural, other {本表所附實體名單：}}",
-        "developer_comment": "The count of Entity List(s) is shown separately above this text."
-      }
-    },
-    "FormPreview": {
-      "webFormPreview": {
-        "submissionModal": {
-          "title": {
-            "string": "ODK Web 表單預覽",
-            "developer_comment": "This text is the title of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          },
-          "body": {
-            "string": "您已使用新 ODK Web 表單的早期版本填寫了該表單。提交內容未傳送：目前，您只能在 ODK Web 表單中檢視表單。",
-            "developer_comment": "This text is the body of a dialog box / modal shown when the user presses submit button on the preview of new Web Forms."
-          }
-        }
       }
     },
     "FormRestore": {
       "title": {
-        "string": "取消刪除表單",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "您確定要取消刪除表單{name}嗎？"
+          "string": ""
         },
         "1": {
           "string": "表單將恢復到先前的狀態，包括所有資料、設定和權限。"
@@ -3356,10 +3343,6 @@
         "fill": {
           "string": "填寫表格",
           "developer_comment": "This appears on a button linking to a fillable Form"
-        },
-        "test": {
-          "string": "測試",
-          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
@@ -3393,6 +3376,20 @@
         "delete": {
           "string": "表單「{name}」已刪除。"
         }
+      },
+      "webFormsSetting": {
+        "webForms": {
+          "string": "",
+          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+        },
+        "description": {
+          "string": "",
+          "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
+        },
+        "enketoDefault": {
+          "string": "",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
       }
     },
     "FormSort": {
@@ -3405,6 +3402,11 @@
           "string": "新表單優先",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
+      }
+    },
+    "FormSubmission": {
+      "formNotFound": {
+        "string": ""
       }
     },
     "FormSubmissions": {
@@ -3454,7 +3456,7 @@
       },
       "alert": {
         "restore": {
-          "string": "表單「{name}」已取消刪除。"
+          "string": ""
         }
       },
       "message": {
@@ -3468,12 +3470,12 @@
       },
       "disabled": {
         "conflict": {
-          "string": "該表單無法取消刪除，因為存在具有相同 ID 的活動表單。"
+          "string": ""
         }
       },
       "action": {
         "restore": {
-          "string": "復原刪除",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3496,6 +3498,12 @@
           "string": "下載為 XLSForm ({extension})",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionRow": {
+      "current": {
+        "string": "",
+        "developer_comment": "This is a label shown for the current version of a Form."
       }
     },
     "FormVersionString": {
@@ -3522,6 +3530,41 @@
         "developer_comment": "This is the title at the top of a pop-up."
       }
     },
+    "FormWebFormsSettingsConfirmation": {
+      "webformsConfirmation": {
+        "useOdkWebForms": {
+          "string": "",
+          "developer_comment": "The words \"ODK Web Forms\" should not be translated"
+        },
+        "intro": {
+          "string": ""
+        },
+        "description": {
+          "full": {
+            "string": "",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
+          },
+          "seeSupportedFeatures": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          },
+          "previewYourForm": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          }
+        }
+      },
+      "enketoConfirmation": {
+        "description": {
+          "string": "",
+          "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
+        },
+        "useEnketo": {
+          "string": "",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3538,22 +3581,22 @@
     "HomeSummary": {
       "projects": {
         "body": {
-          "string": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
+          "string": ""
         }
       },
       "users": {
         "body": {
-          "string": "可以將使用者指派到專案來管理它們，或收集或審查提交的資料。"
+          "string": ""
         }
       },
       "docs": {
         "body": {
-          "string": "ODK 文件網站上提供了入門指南和使用者文件。"
+          "string": ""
         }
       },
       "forum": {
         "body": {
-          "string": "您始終可在論壇上獲得其他人的幫助，您也可以在其中搜尋先前的問題。"
+          "string": ""
         }
       }
     },
@@ -3632,12 +3675,8 @@
     },
     "OdataDataAccess": {
       "action": {
-        "apiAccess": {
-          "string": "API 存取",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "analyze": {
-          "string": "透過 OData 分析",
+        "connectData": {
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4396,7 +4435,7 @@
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
-          "string": "其他",
+          "string": "",
           "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
         }
       },
@@ -4436,6 +4475,9 @@
       }
     },
     "SubmissionBasicDetails": {
+      "submissionDetails": {
+        "string": ""
+      },
       "formVersion": {
         "string": "表單版本"
       },
@@ -4552,7 +4594,7 @@
           "string": "您確定要刪除此提交嗎？"
         },
         "1": {
-          "string": "此操作會將提交內容移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+          "string": ""
         }
       }
     },
@@ -4576,16 +4618,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {下載{count} 個提交資料}}",
+            "string": "{count, plural, other {}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "下載符合的提交資料",
+              "string": "",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, other {下載{count}個相符提交}}",
+              "string": "{count, plural, other {}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
@@ -4670,8 +4712,8 @@
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
         },
         "undelete": {
-          "string": "已由 {name}復原",
-          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Undeleted\", so it is essential for \"Undeleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nUndeleted by {name}\n\nyou could split it into:\n\nUndeleted • {name}"
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Restored\", so it is essential for \"Restored\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nRestored by {name}\n\nyou could split it into:\n\nRestored • {name}"
         },
         "submissionBacklog": {
           "hold": {
@@ -4691,7 +4733,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{selected}/{total}",
+        "string": "{count, plural, other {}}",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
@@ -4726,6 +4768,10 @@
           "string": "提交於",
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
+      },
+      "noSubmissionDateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Submission date is selected in the filter"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4744,6 +4790,10 @@
             "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
           }
         }
+      },
+      "noReviewStateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Review State is selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4775,6 +4825,10 @@
       },
       "unknown": {
         "string": "未知提交者"
+      },
+      "noSubmitterSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Submitter is selected in the filter"
       }
     },
     "SubmissionList": {
@@ -4791,6 +4845,12 @@
       "noMatching": {
         "string": "沒有符合的提交內容。"
       },
+      "allDeleted": {
+        "string": ""
+      },
+      "allDeletedOnPage": {
+        "string": ""
+      },
       "downloadDisabled": {
         "string": "已刪除的提交內容無法下載"
       },
@@ -4800,6 +4860,12 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "沒有已刪除的提交內容。"
+        },
+        "allRestored": {
+          "string": ""
+        },
+        "allRestoredOnPage": {
+          "string": ""
         }
       },
       "loading": {
@@ -4848,12 +4914,12 @@
     },
     "SubmissionRestore": {
       "title": {
-        "string": "取消刪除提交",
-        "developer_comment": "This is the title at the top of Submission undelete pop-up."
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission restore pop-up."
       },
       "introduction": {
         "0": {
-          "string": "您確定要取消刪除此提交內容嗎？"
+          "string": ""
         },
         "1": {
           "string": "提交內容將恢復到先前的狀態，包括評論等相關資料。"
@@ -4864,7 +4930,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "立即取消刪除，無需確認，直到我離開頁面",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -5082,6 +5148,106 @@
         "retire": {
           "string": "停用使用者",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "previewModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "full": {
+            "string": "",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "tryAgain": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      }
+    },
+    "WhatsNew": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "body": {
+        "string": ""
+      },
+      "action": {
+        "gotIt": {
+          "string": "",
+          "developer_comment": "This is the text of a button that is used to close the modal."
         }
       }
     }

@@ -171,6 +171,7 @@ watch(() => props.settings, () => {
 <i18n>
 {
   "cs": {
+    "draft": "Dočasný testovací kód",
     "altText": "Konfigurační kód klienta"
   },
   "de": {

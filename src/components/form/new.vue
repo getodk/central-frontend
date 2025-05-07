@@ -379,7 +379,6 @@ export default {
       "Upozornění k návrhu formuláře:",
       "Upozornění na pracovní postup:",
       {
-        "deletedFormExists": "V koši je formulář s ID \"{value}\". Pokud tento formulář nahrajete, nebude možné smazat jiný formulář se stejným ID.",
         "structureChanged": "Následující pole byla odstraněna, přejmenována nebo jsou nyní v jiných skupinách či opakováních. Tato pole nebudou ve výchozím nastavení viditelná v tabulce Podání ani zahrnuta do exportů."
       },
       "Problémy opravte a zkuste to znovu.",
@@ -426,7 +425,6 @@ export default {
       "Warnungen zum Formulardesign:",
       "Workflow-Warnungen:",
       {
-        "deletedFormExists": "Im Papierkorb befindet sich ein Formular mit der ID \"{value}\". Wenn Sie dieses Formular hochladen, können Sie das andere mit der übereinstimmenden ID nicht wiederherstellen.",
         "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
       },
       "Bitte beheben Sie die Probleme und versuchen es erneut.",
@@ -473,7 +471,6 @@ export default {
       "Advertencias sobre el diseño del formulario:",
       "Advertencias sobre el flujo de trabajo:",
       {
-        "deletedFormExists": "Hay un formulario con ID \"{value}\" en la Papelera. Si carga este formulario, no podrá recuperar el otro con la identificación coincidente.",
         "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada.",
         "oldEntityVersion": "La versión \"{version}\" de la especificación de entidades no es compatible con las entidades sin conexión. Se recomienda utilizar la versión 2024.1.0 o posterior."
       },
@@ -521,7 +518,7 @@ export default {
       "Avertissements sur la conception du formulaire :",
       "Avertissements sur le déroulement des opérations :",
       {
-        "deletedFormExists": "Il y a un formualire avec l'identifiant \"{value}\" dans la corbeille. Si vous envoyez ce Formulaire, vous ne serez pas en mesure restaurer l'autre ayant le même ID.",
+        "deletedFormExists": "Il y a un formulaire avec l'ID \"{value}\" dans la Corbeille. Si vous téléversez ce Formulaire, vous ne serez plus en capacité de restaurer celui qui est dans la corbeille avec le même ID.",
         "structureChanged": "Les champs suivants ont été supprimés, renommés ou déplacés dans différents groupes (group) ou répétitions (repeat). Ces champs ne seront pas visibles dans le table des Soumissions ou inclus dans les exports par défaut.",
         "oldEntityVersion": "La version \"{version}\" de la spécification des entités n'est pas compatible avec les entités hors-ligne. Nous recommandons d'utiliser la version 2024.1.0 ou supérieure."
       },
@@ -600,7 +597,7 @@ export default {
       "Avvertenze sulla progettazione del formulario:",
       "Avvertenze sul flusso di lavoro:",
       {
-        "deletedFormExists": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di annullare l'eliminazione dell'altro con l'ID corrispondente.",
+        "deletedFormExists": "C'è un formulario con ID \"{value}\" nel Cestino. Se carichi questo formulario, non sarai in grado di ripristinare l'altro con l'ID corrispondente.",
         "structureChanged": "I seguenti campi sono stati cancellati, rinominati o sono ora in diversi gruppi o ripetizioni. Questi campi non saranno visibili nella tabella d'invio o inclusi negli export predefiniti.",
         "oldEntityVersion": "Versione delle specifiche delle entità “{version}” non è compatibile con le Entità offline. Si consiglia di utilizzare la versione 2024.1.0 o successiva."
       },
@@ -679,7 +676,6 @@ export default {
       "Avisos de design do formulário:",
       "Avisos de fluxo de trabalho:",
       {
-        "deletedFormExists": "Há um formulário com ID \"{value}\" na Lixeira. Se você fizer upload deste Formulário, não poderá desfazer a exclusão do outro com a ID correspondente.",
         "structureChanged": "Os seguintes campos foram excluídos, renomeados ou agora estão em grupos diferentes ou repetições. Esses campos não estarão visíveis na tabela de Resposta ou incluídos nas exportações por padrão.",
         "oldEntityVersion": "A versão “{version}” da especificação de Entidades não é compatível com Entidades Offline. Recomendamos utilizar a versão 2024.1.0 ou alguma mais recente."
       },
@@ -727,7 +723,6 @@ export default {
       "Maonyo ya muundo wa fomu:",
       "Maonyo ya mtiririko wa kazi:",
       {
-        "deletedFormExists": "Kuna fomu yenye kitambulisho \"{value}\" kwenye Tupio. Ukipakia Fomu hii, hutaweza kutendua nyingine kwa kutumia kitambulisho kinacholingana",
         "structureChanged": "Sehemu zifuatazo zimefutwa, zimepewa jina jipya au sasa ziko katika vikundi tofauti au marudio. Sehemu hizi hazitaonekana katika jedwali la Wasilisho au kujumuishwa katika uhamishaji kwa chaguo msingi"
       },
       "Tafadhali sahihisha matatizo na ujaribu tena.",
@@ -774,7 +769,6 @@ export default {
       "表單設計警告：",
       "工作流程警告：",
       {
-        "deletedFormExists": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法取消刪除具有符合 ID 的另一張表單。",
         "structureChanged": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。",
         "oldEntityVersion": "實體規範版本 “{version}” 與離線實體不相容。我們建議使用2024.1.0或更高版本。"
       },

@@ -201,14 +201,6 @@ export default {
       "action": {
         "back": "Zpět na přehled projektu"
       }
-    },
-    "formNav": {
-      "tabTitle": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře"
-    },
-    "draftNav": {
-      "action": {
-        "create": "Vytvořit nový koncept"
-      }
     }
   },
   "de": {
@@ -217,13 +209,9 @@ export default {
         "back": "Zurück zur Projektübersicht"
       }
     },
-    "formNav": {
-      "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
-    },
-    "draftNav": {
-      "action": {
-        "create": "Neuen Entwurf erstellen"
-      }
+    "infoNav": {
+      "updatedDatasets": "Aktualisierungen",
+      "attachedDatasets": "Verwendet"
     }
   },
   "es": {
@@ -233,12 +221,12 @@ export default {
       }
     },
     "formNav": {
-      "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
+      "tabTitle": "Publique este borrador de formulario para habilitar estas funciones"
     },
-    "draftNav": {
-      "action": {
-        "create": "Crear un nuevo borrador"
-      }
+    "infoNav": {
+      "updatedDatasets": "Actualizaciones",
+      "attachedDatasets": "Usos",
+      "appUsers": "{count} Usuario de la aplicación asignados | {count} Usuarios de la aplicación asignados | {count} Usuarios de la aplicación asignados"
     }
   },
   "fr": {
@@ -248,26 +236,19 @@ export default {
       }
     },
     "formNav": {
-      "tabTitle": "Ces fonctions seront disponibles quand vous publierez votre ébauche"
+      "tabTitle": "Publier cette Ébauche de Formulaire pour activer ces fonctions"
     },
-    "draftNav": {
-      "action": {
-        "create": "Créer une nouvelle ébauche"
-      }
+    "infoNav": {
+      "entityLists": "{count} Liste d'Entité liée | {count} Listes d'Entité liées | {count} Liste(s) d'Entité liée(s)",
+      "updatedDatasets": "Mises à jour",
+      "attachedDatasets": "Utilise",
+      "appUsers": "{count} Utilisateur mobile assigné | {count} Utilisateurs mobile assignés | {count} Utilisateur(s) mobile assigné(s)"
     }
   },
   "id": {
     "projectNav": {
       "action": {
         "back": "Kembali ke Gambaran Proyek"
-      }
-    },
-    "formNav": {
-      "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
-    },
-    "draftNav": {
-      "action": {
-        "create": "Buat draf baru"
       }
     }
   },
@@ -278,26 +259,19 @@ export default {
       }
     },
     "formNav": {
-      "tabTitle": "Queste funzioni diventeranno disponibili una volta che avrai pubblicato la tua bozza del formulario"
+      "tabTitle": "Pubblicare questa bozza di formulario per abilitare queste funzioni"
     },
-    "draftNav": {
-      "action": {
-        "create": "Crea una nuova bozza"
-      }
+    "infoNav": {
+      "entityLists": "{count} Elenco di entità correlate | {count} Elenchi di entità correlate | {count} Elenchi di entità correlate",
+      "updatedDatasets": "Aggiornamenti",
+      "attachedDatasets": "Utilizzi",
+      "appUsers": "{count} Utente App assegnato | {count} Utenti App assegnati | {count} Utenti App assegnati"
     }
   },
   "ja": {
     "projectNav": {
       "action": {
         "back": "プロジェクトの概要に戻る"
-      }
-    },
-    "formNav": {
-      "tabTitle": "これらの機能は下書きフォームが公開された際に有効になります。"
-    },
-    "draftNav": {
-      "action": {
-        "create": "新規下書きの作成"
       }
     }
   },
@@ -306,14 +280,6 @@ export default {
       "action": {
         "back": "Voltar à visão geral do projeto"
       }
-    },
-    "formNav": {
-      "tabTitle": "Essas funções estarão disponíveis quando você publicar o seu formulário de rascunho"
-    },
-    "draftNav": {
-      "action": {
-        "create": "Criar um novo rascunho"
-      }
     }
   },
   "sw": {
@@ -321,28 +287,12 @@ export default {
       "action": {
         "back": "Rudi kwa Muhtasari wa Mradi"
       }
-    },
-    "formNav": {
-      "tabTitle": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako"
-    },
-    "draftNav": {
-      "action": {
-        "create": "Unda Rasimu mpya"
-      }
     }
   },
   "zh-Hant": {
     "projectNav": {
       "action": {
         "back": "返回專案概覽"
-      }
-    },
-    "formNav": {
-      "tabTitle": "一旦您發布草稿表單，這些功能將可用"
-    },
-    "draftNav": {
-      "action": {
-        "create": "建立新草稿"
       }
     }
   }

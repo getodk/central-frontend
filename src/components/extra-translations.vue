@@ -35,6 +35,7 @@ using existing transifex process.
   "de": {
     "outdatedVersionHtml": {
       "heading": "Sie verwenden eine deutlich veraltete Version von ODK Central",
+      "sentence1": "Aktualisieren Sie jetzt, um Ihre Daten zu schützen und von den neuesten Funktionen zu profitieren.",
       "sentence2": "Wenn Sie Central nicht pflegen wollen, versuchen Sie {OdkCloudLink}."
     }
   },

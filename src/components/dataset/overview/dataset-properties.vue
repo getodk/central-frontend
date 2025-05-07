@@ -110,7 +110,8 @@ const { publishedFormPath } = useRoutes();
 <i18n>
 {
   "cs": {
-    "emptyTable": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
+    "emptyTable": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti.",
+    "none": "(žádný)"
   },
   "de": {
     "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften.",

@@ -447,7 +447,9 @@ export default {
       },
       "comment": "Kommentiert von {name}",
       "delete": "Gelöscht von {name}",
-      "undelete": "Wiederhergestellt von {name}"
+      "submissionBacklog": {
+        "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
+      }
     }
   },
   "es": {
@@ -522,7 +524,7 @@ export default {
       },
       "comment": "Commentaire de {name}",
       "delete": "Supprimée par {name}",
-      "undelete": "Restaurée par {name}",
+      "undelete": "Restauré par {name}",
       "submissionBacklog": {
         "hold": "En attente d'une soumission précédente dans une série de mises à jour effectuées hors ligne avant de mettre l'Entité à jour",
         "force": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne",
@@ -658,7 +660,6 @@ export default {
       },
       "comment": "Comentado por {name}",
       "delete": "Deletado por {name}",
-      "undelete": "Exclusão desfeita por {name}",
       "submissionBacklog": {
         "hold": "Aguardando Resposta anterior na cadeia de atualização offline antes de atualizar a Entidade",
         "force": "Resposta processada do backlog sem Resposta anterior na cadeia de atualização offline",
@@ -731,7 +732,6 @@ export default {
       },
       "comment": "由{name}評論",
       "delete": "已由 {name} 刪除",
-      "undelete": "已由 {name}復原",
       "submissionBacklog": {
         "hold": "在更新實體之前等待離線更新鏈中的先前提交",
         "force": "已處理來自積壓的提交，而離線更新鏈中沒有先前的提交",

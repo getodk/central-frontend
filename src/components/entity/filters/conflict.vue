@@ -157,7 +157,8 @@ const placeholder = (counts) => {
         "all": "Tous",
         "none": "Aucun"
       }
-    }
+    },
+    "noSelectedConflictSelected": "(aucun)"
   },
   "it": {
     "conflict": {
@@ -181,7 +182,7 @@ const placeholder = (counts) => {
       "false": "Nenhum conflito"
     },
     "field": {
-      "conflict": "Status do conflito"
+      "conflict": "Status de conflitos"
     },
     "placeholder": "{selected} de {total}",
     "action": {

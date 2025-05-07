@@ -172,32 +172,23 @@ export default {
   "cs": {
     "title": "Koš",
     "trashCount": "({count})",
-    "alert": {
-      "restore": "Formuláři \"{name}\" bylo zrušeno smazání."
-    },
     "message": "Formuláře a data související s formuláři jsou po 30 dnech odstraněny do koše."
   },
   "de": {
     "title": "Papierkorb",
     "trashCount": "{count}",
-    "alert": {
-      "restore": "Das Formular {name} wurde wiederhergestellt."
-    },
     "message": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
   },
   "es": {
     "title": "Papelera",
     "trashCount": "({count})",
-    "alert": {
-      "restore": "El formulario {name} fue recuperado."
-    },
     "message": "Los formularios y los datos relacionados con los formularios se eliminan después de 30 días en la Papelera"
   },
   "fr": {
     "title": "Corbeille",
     "trashCount": "({count})",
     "alert": {
-      "restore": "Le formulaire “{name}” a été restauré."
+      "restore": "Le Formulaire \"{name}\" a été restauré."
     },
     "message": "Le formulaire et les données associées sont supprimés après 30 jours passés dans la corbeille"
   },
@@ -215,33 +206,21 @@ export default {
   "ja": {
     "title": "ゴミ箱",
     "trashCount": "({count})",
-    "alert": {
-      "restore": "フォーム”{name}”は復元されました。"
-    },
     "message": "フォームとフォームに関連したデータは30日後に削除されます。"
   },
   "pt": {
     "title": "Lixeira",
     "trashCount": "({count})",
-    "alert": {
-      "restore": "A exclusão do Formulário \"{name}\" foi desfeita."
-    },
     "message": "Formulários e dados relacionados a Formulários são excluídos após 30 dias na Lixeira"
   },
   "sw": {
     "title": "Takataka",
     "trashCount": "({count})",
-    "alert": {
-      "restore": "Fomu \"{name}\" imetenguliwa"
-    },
     "message": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
   },
   "zh-Hant": {
     "title": "垃圾桶",
     "trashCount": "({count})",
-    "alert": {
-      "restore": "表單「{name}」已取消刪除。"
-    },
     "message": "表單和表單相關資料將在 30 天後從垃圾箱中刪除"
   }
 }

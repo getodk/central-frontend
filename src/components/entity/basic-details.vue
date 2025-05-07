@@ -127,18 +127,21 @@ watchEffect(() => {
     "submissionDeleted": "Toto podání bylo smazáno."
   },
   "de": {
+    "entityDetails": "Entitätsdetails",
     "creatingSubmission": "Übermittlung erstellen",
     "creatingSource": "Quelle erstellen",
     "upload": "Hochladen",
     "submissionDeleted": "Diese Übermittlungen wurde gelöscht."
   },
   "es": {
+    "entityDetails": "Detalles de la entidad",
     "creatingSubmission": "Creando envío",
     "creatingSource": "Creando fuente",
     "upload": "Subir",
     "submissionDeleted": "Este envío ha sido borrado."
   },
   "fr": {
+    "entityDetails": "Détail de l'entité",
     "creatingSubmission": "Soumission à l'origine de l'entité",
     "creatingSource": "Création de la source",
     "upload": "Envoi",
@@ -148,6 +151,7 @@ watchEffect(() => {
     "creatingSubmission": "Membuat Kiriman Data"
   },
   "it": {
+    "entityDetails": "Dettaglio Entità",
     "creatingSubmission": "Creando invio",
     "creatingSource": "Creazione della fonte",
     "upload": "Carica",

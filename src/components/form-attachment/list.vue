@@ -357,16 +357,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "action": {
-      "upload": "Nahrát soubory"
-    },
-    "heading": [
-      "Na základě nahraného formuláře se očekávají následující přílohy formuláře. Můžete se podívat, které z nich byly poskytnuty nebo které ještě chybí.",
-      "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na stránku."
-    ],
-    "header": {
-      "uploaded": "Nahráno"
-    },
     "problem": {
       "noneUploaded": "{message} Nebyly nahrány žádné soubory.",
       "someUploaded": "{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}."
@@ -374,24 +364,11 @@ export default {
     "alert": {
       "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
       "link": "Seznam entit byl úspěšně propojen."
-    },
-    "entitiesTesting": {
-      "title": "Testování entit",
-      "body": [
-        "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy seznamu entit. Ty jsou ve výchozím nastavení propojeny se seznamy entit. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit se seznamy entit, jakmile ověříte logiku formuláře."
-      ]
     }
   },
   "de": {
     "action": {
-      "upload": "Dateien hochladen"
-    },
-    "heading": [
-      "Bei der Analyse des Formulars ergab sich, dass die folgenden Formularanhänge erwartet. Es wird angezeigt, welche Formularanhänge schon hochgeladen wurden und welche noch fehlen.",
-      "Um Dateien hochzuladen, verwenden Sie Drag-and-Drop auf die Seite."
-    ],
-    "header": {
-      "uploaded": "Hochgeladen"
+      "upload": "Dateien auswählen"
     },
     "problem": {
       "noneUploaded": "{message} Es wurden keine Dateien erfolgreich hochgeladen.",
@@ -400,25 +377,13 @@ export default {
     "alert": {
       "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
       "link": "Entitätsliste erfolgreich verknüpft."
-    },
-    "entitiesTesting": {
-      "title": "Entitäten testen",
-      "body": [
-        "Mindestens ein Formularanhang hat Dateinamen, die mit Datensatznamen übereinstimmen. Standardmässig sind diese mit Datensätzen verknüpft. Zu Testzwecken können Sie temporäre Daten als CSV-Dateien hochladen und dann eine Verknüpfung zu den Datensätzen herstellen, sobald Sie Ihre Formularlogik überprüft haben."
-      ]
     }
   },
   "es": {
     "action": {
-      "upload": "Subir archivos"
+      "upload": "Elegir archivos"
     },
-    "heading": [
-      "Según el formulario que cargó, se esperan los siguientes archivos adjuntos del formulario. Puede ver cuáles se han proporcionado o cuáles aún faltan.",
-      "Para cargar archivos, arrastre y suelte uno o más archivos en la página."
-    ],
-    "header": {
-      "uploaded": "Subido"
-    },
+    "orDrag": "o arrastre archivos a esta página para cargarlos",
     "problem": {
       "noneUploaded": "{message} No se cargaron archivos correctamente",
       "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
@@ -426,25 +391,13 @@ export default {
     "alert": {
       "success": "{count} archivo se ha cargado correctamente. | {count} archivos se han cargado correctamente. | {count} archivos se han cargado correctamente.",
       "link": "Lista de entidades enlazada correctamente."
-    },
-    "entitiesTesting": {
-      "title": "Comprobación de las entidades",
-      "body": [
-        "Uno o más archivos adjuntos de formulario tienen nombres de archivo que coinciden con los nombres de la lista de entidades. De forma predeterminada, están vinculados a listas de entidades. Para realizar pruebas, es posible que desee cargar datos temporales como archivos .csv y luego vincularlos a las Listas de entidades una vez que haya verificado la lógica de su formulario."
-      ]
     }
   },
   "fr": {
     "action": {
-      "upload": "Téléverser des fichiers"
+      "upload": "Choisir les fichiers"
     },
-    "heading": [
-      "Selon le formulaire que vous avez envoyé, les fichiers joints suivantes sont attendues. Vous pouvez voir ceux qui ont été fournis ou qui sont encore manquants.",
-      "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur cette page."
-    ],
-    "header": {
-      "uploaded": "Téléversés"
-    },
+    "orDrag": "ou glisser les fichiers dans cette page pour les téléverser",
     "problem": {
       "noneUploaded": "{message} Aucun fichier n'a été correctement téléversé.",
       "someUploaded": "{message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès. | {message} Seulement {uploaded} fichier(s) sur {total} ont été téléversés avec succès."
@@ -452,21 +405,9 @@ export default {
     "alert": {
       "success": "{count} fichier a été correctement téléversé. | {count} fichiers ont été correctement téléversés. | {count} fichiers ont été correctement téléversés.",
       "link": "Liste d'entités liée avec succès."
-    },
-    "entitiesTesting": {
-      "title": "Tester les entités",
-      "body": [
-        "Un ou plusieurs fichiers joints ont des noms de fichiers qui correspondent à des noms de listes d'entités. Par défaut, ils sont liés aux listes d'entités. Pour tester, vous pouvez joindre des fichiers .csv de données temporaires. Vous pourrez ensuite rétablir les liens aux listes d'entités une fois que vous aurez vérifié la logique de votre formulaire."
-      ]
     }
   },
   "id": {
-    "action": {
-      "upload": "Unggah dokumen"
-    },
-    "header": {
-      "uploaded": "Diunggah"
-    },
     "problem": {
       "noneUploaded": "{message} Pengunggahan gagal.",
       "someUploaded": "{message} Hanya {uploaded} dari {total} dokumen berhasil diunggah."
@@ -477,15 +418,9 @@ export default {
   },
   "it": {
     "action": {
-      "upload": "Caricare files"
+      "upload": "Scegli files"
     },
-    "heading": [
-      "In base al formulario che hai caricato, sono previsti i seguenti allegati al formulario. Puoi vedere quali sono stati forniti o mancano ancora.",
-      "Per caricare file, trascina e rilascia uno o più file sulla pagina."
-    ],
-    "header": {
-      "uploaded": "Caricati"
-    },
+    "orDrag": "o trascinare i file su questa pagina per caricarli",
     "problem": {
       "noneUploaded": "{message} Nessun file è stato caricato correttamente.",
       "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
@@ -493,21 +428,9 @@ export default {
     "alert": {
       "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
       "link": "Lista Entità collegata correttamente."
-    },
-    "entitiesTesting": {
-      "title": "Testando le Entità",
-      "body": [
-        "Uno o più allegati del formulario hanno nomi di file che corrispondono ai nomi della Lista Entità. Per impostazione predefinita, questi sono collegati alle Liste Entità. Per il test, potresti voler caricare dati temporanei come file .csv, quindi collegarti alle Liste Entità dopo aver verificato la logica del formulario."
-      ]
     }
   },
   "ja": {
-    "action": {
-      "upload": "ファイルのアップロード"
-    },
-    "header": {
-      "uploaded": "アップロード済"
-    },
     "problem": {
       "noneUploaded": "{message} アップロードに成功したファイルはありません。",
       "someUploaded": "{message} {total}件のファイルの内、{uploaded}件のみがアップロードに成功しました。"
@@ -517,16 +440,6 @@ export default {
     }
   },
   "pt": {
-    "action": {
-      "upload": "Subir arquivos"
-    },
-    "heading": [
-      "Com base no formulário que você carregou, os seguintes anexos de formulário são esperados. Você pode ver quais foram fornecidos ou ainda estão faltando.",
-      "Para carregar arquivos, arraste e solte um ou mais arquivos nessa página"
-    ],
-    "header": {
-      "uploaded": "Carregado"
-    },
     "problem": {
       "noneUploaded": "{message}Nenhum arquivo foi carregado.",
       "someUploaded": "{message} Apenas {uploaded} de{total} arquivo foi carregado com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso."
@@ -534,25 +447,9 @@ export default {
     "alert": {
       "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso.",
       "link": "Lista de Entidades vinculada com sucesso."
-    },
-    "entitiesTesting": {
-      "title": "Testando Entidades",
-      "body": [
-        "Um ou mais Anexos do Formulário têm nomes de arquivo que correspondem aos nomes da Lista de Entidades. Por padrão, eles são vinculados às listas de entidades. Para testar, você pode querer carregar dados temporários como arquivos .csv e, em seguida, vincular às listas de entidades depois de verificar a lógica do seu formulário."
-      ]
     }
   },
   "sw": {
-    "action": {
-      "upload": "Pakia faili"
-    },
-    "heading": [
-      "Kulingana na Fomu uliyopakia, Viambatisho vya Fomu vifuatavyo vinatarajiwa. Unaweza kuona ni zipi zimetolewa au bado hazipo.",
-      "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa"
-    ],
-    "header": {
-      "uploaded": "Imepakiwa"
-    },
     "problem": {
       "noneUploaded": "{message} Hakuna faili zilizopakiwa.",
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
@@ -560,25 +457,9 @@ export default {
     "alert": {
       "success": "faili {count} imepakiwa. | faili {count} zimepakiwa.",
       "link": "Orodha ya Huluki imeunganishwa."
-    },
-    "entitiesTesting": {
-      "title": "Vyombo vya Kujaribu",
-      "body": [
-        "Kiambatisho cha Fomu kimoja au zaidi kina majina ya faili yanayolingana na majina ya Orodha ya Huluki. Kwa chaguomsingi, hizo zimeunganishwa kwenye Orodha za Huluki. Kwa majaribio, unaweza kutaka kupakia data ya muda kama faili za .csv, kisha uunganishe kwenye Orodha za Huluki mara tu utakapothibitisha mantiki ya fomu yako."
-      ]
     }
   },
   "zh-Hant": {
-    "action": {
-      "upload": "上傳檔案"
-    },
-    "heading": [
-      "根據您上傳的表格，需要以下表格附件。您可以查看哪些已提供或仍然缺少。",
-      "若要上傳文件，請將一個或多個文件拖曳到頁面上。"
-    ],
-    "header": {
-      "uploaded": "已上傳"
-    },
     "problem": {
       "noneUploaded": "{message} 沒有文件上傳成功。",
       "someUploaded": "{message} 僅 {uploaded} 個檔案成功上傳，共 {total} 個檔案。"
@@ -586,12 +467,6 @@ export default {
     "alert": {
       "success": "{count} 個文件已成功上傳。",
       "link": "實體列表連結成功。"
-    },
-    "entitiesTesting": {
-      "title": "測試實體",
-      "body": [
-        "一個或多個表單附件的檔案名稱與實體清單名稱相符。預設情況下，這些連結到實體列表。為了進行測試，您可能需要將臨時資料上傳為 .csv 文件，然後在驗證表單邏輯後連結到實體清單。"
-      ]
     }
   }
 }

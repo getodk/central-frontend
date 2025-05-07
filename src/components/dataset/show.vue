@@ -175,13 +175,25 @@ export default {
     "back": "Zurück zu den Projekteinheiten"
   },
   "es": {
-    "back": "Back to Project Entities"
+    "back": "Back to Project Entities",
+    "infoNav": {
+      "connectedForms": "Actualizar por {count}formulario | Actualizar por {count}formularios | Actualizar por {count}formularios",
+      "linkedForms": "Utilizado en {count}formulario | Utilizado en {count}formularios | Utilizado en{count}formularios"
+    }
   },
   "fr": {
-    "back": "Retour aux entités du projet"
+    "back": "Retour aux entités du projet",
+    "infoNav": {
+      "connectedForms": "Mise à jour par {count} Formulaire | Mise à jour par {count} Formulaires | Mise à jour par {count} Formulaire(s)",
+      "linkedForms": "Utilisée dans {count} Formulaire | Utilisée dans {count} Formulaires | Utilisée dans {count} Formulaire(s)"
+    }
   },
   "it": {
-    "back": "Torna alle Entità del progetto"
+    "back": "Torna alle Entità del progetto",
+    "infoNav": {
+      "connectedForms": "Aggiornato da{count} Formulario | Aggiornato da {count}Formulari | Aggiornato da {count}Formulari",
+      "linkedForms": "Usato da{count} Formulario | Usato da {count}Formulari | Usato da {count}Formulari"
+    }
   },
   "pt": {
     "back": "Voltar para Entidades do Projeto"

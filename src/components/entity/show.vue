@@ -198,45 +198,30 @@ const breadcrumbLinks = computed(() => [
     "back": {
       "title": "Entitätsdetail",
       "back": "Zurück zu {datasetName} Tabelle"
-    },
-    "alert": {
-      "delete": "Die Entität \"{label}“ wurde gelöscht."
     }
   },
   "es": {
     "back": {
       "title": "Detalles de la entidad",
       "back": "Volver a la tabla {datasetName}"
-    },
-    "alert": {
-      "delete": "Entidad “{label}” se ha eliminado."
     }
   },
   "fr": {
     "back": {
       "title": "Détail de l'entité",
       "back": "Retour à la table {datasetName}"
-    },
-    "alert": {
-      "delete": "L'Entité \"{label}\" a été supprimée."
     }
   },
   "it": {
     "back": {
       "title": "Dettaglio Entità",
       "back": "Indietro alla Tabella {datasetName}"
-    },
-    "alert": {
-      "delete": "La Entità “{label}” è stata cancellata."
     }
   },
   "pt": {
     "back": {
       "title": "Detalhes da Entidade",
       "back": "Voltar para a Tabela {datasetName}"
-    },
-    "alert": {
-      "delete": "A Entidade \"{label}\" foi excluída."
     }
   },
   "sw": {
@@ -249,9 +234,6 @@ const breadcrumbLinks = computed(() => [
     "back": {
       "title": "實體詳細資訊",
       "back": "回到 {datasetName} 表"
-    },
-    "alert": {
-      "delete": "實體「1{label}」已被刪除。"
     }
   }
 }

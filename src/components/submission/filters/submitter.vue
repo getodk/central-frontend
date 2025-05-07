@@ -200,7 +200,8 @@ const placeholder = (counts) => {
         "none": "Aucun"
       }
     },
-    "unknown": "Expéditeur inconnu"
+    "unknown": "Expéditeur inconnu",
+    "noSubmitterSelected": "(aucun)"
   },
   "id": {
     "field": {

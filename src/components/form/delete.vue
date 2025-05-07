@@ -104,16 +104,14 @@ export default {
   "cs": {
     "title": "Odstranit formulář",
     "introduction": [
-      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?",
-      "Tato akce přesune formulář do koše. Po 30 dnech v koši bude trvale vymazán, ale předtím jej lze zrušit."
+      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
     ],
     "noDeleteEntities": "Subjekty vytvořené na základě podání tohoto formuláře nebudou vymazány. V některé z budoucích verzí Centralu bude možné Entity odstranit."
   },
   "de": {
     "title": "Formulare löschen",
     "introduction": [
-      "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?",
-      "Diese Aktion verschiebt das Formular in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
+      "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?"
     ],
     "noDeleteEntities": "Alle durch die Einreichungen dieses Formulars erstellten Entitäten werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Entitäten zu löschen."
   },
@@ -121,7 +119,7 @@ export default {
     "title": "Borrar formulario",
     "introduction": [
       "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?",
-      "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede recuperar antes de esa fecha."
+      "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede restablecer antes de esa fecha."
     ],
     "noDeleteEntities": "No se eliminará ninguna entidad creada por los envíos de este formulario. En una versión futura de Central, será posible eliminar Entidades."
   },
@@ -129,7 +127,7 @@ export default {
     "title": "Supprimer le formulaire",
     "introduction": [
       "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?",
-      "Cette action va envoyer le formulaire à la corbeille. Après 30 jours dans la corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
+      "Cette action va envoyer le formulaire à la corbeille. Après 30 jours dans la Corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
     ],
     "noDeleteEntities": "Chaque entité crée par cette Soumission de formulaire ne sera pas supprimée. Dans une version future, il sera possible de supprimer des Entités."
   },
@@ -150,31 +148,27 @@ export default {
   "ja": {
     "title": "フォームの削除",
     "introduction": [
-      "フォーム{name}および、その提出済フォームが削除されます。 本当に削除してもよろしいですか？",
-      "この操作はフォームをゴミ箱に移動します。ゴミ箱に入れた30日後、完全に削除されますが、それ以前であれば削除を取り消せます。"
+      "フォーム{name}および、その提出済フォームが削除されます。 本当に削除してもよろしいですか？"
     ]
   },
   "pt": {
     "title": "Excluir formulário",
     "introduction": [
-      "Você tem certeza que deseja excluir o formulário {name} e todas as suas respostas?",
-      "Esta ação moverá o Formulário para a Lixeira. Após 30 dias na Lixeira, ele será permanentemente eliminado, mas pode ser recuperado antes desse prazo."
+      "Você tem certeza que deseja excluir o formulário {name} e todas as suas respostas?"
     ],
     "noDeleteEntities": "Nenhuma Entidade criada pelas Respostas deste Formulário será excluída. Em uma versão futura do Central, será possível excluir Entidades."
   },
   "sw": {
     "title": "Futa Fomu",
     "introduction": [
-      "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?",
-      "kitendo hiki kitahamisha Fomu hadi kwenye Tupio. Baada ya siku 30 kwenye Tupio, itasafishwa kabisa, lakini inaweza kufutwa kabla ya wakati huo."
+      "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?"
     ],
     "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
   },
   "zh-Hant": {
     "title": "刪除表單",
     "introduction": [
-      "您確定要刪除表單{name}及其所有提交內容嗎？",
-      "此操作會將表單移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以取消刪除。"
+      "您確定要刪除表單{name}及其所有提交內容嗎？"
     ],
     "noDeleteEntities": "透過此表單提交建立的任何實體都不會被刪除。在 Central 的未來版本中，將可以刪除實體。"
   }

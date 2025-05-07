@@ -176,6 +176,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "es": {
+    "submissionDetails": "Detalles de envío",
     "formVersion": "Versión formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente de usuario",
@@ -185,6 +186,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "fr": {
+    "submissionDetails": "Détail de la soumission",
     "formVersion": "Version de formulaire",
     "deviceId": "ID d'appareil",
     "userAgent": "\"User agent\"",
@@ -202,6 +204,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "it": {
+    "submissionDetails": "Dettagli invio",
     "formVersion": "Versione formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente utente",

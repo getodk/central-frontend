@@ -127,7 +127,8 @@ const placeholder = (counts) => {
         "all": "Tous",
         "none": "Aucun"
       }
-    }
+    },
+    "noReviewStateSelected": "(aucun)"
   },
   "id": {
     "placeholder": "{selected} dari {total}",

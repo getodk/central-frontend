@@ -14,13 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "版本",
-      "publicAccess": "公共存取"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "進行測試"
-      }
+      "publicAccess": "公共存取",
+      "versions": "版本"
     }
   },
   "systemHome": {
@@ -98,7 +93,6 @@
         "update_draft_delete": "放棄草稿",
         "attachment_update": "更新附件",
         "submission_export": "下載提交內容",
-        "restore": "復原刪除",
         "purge": "清除",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -141,7 +135,6 @@
     "comment": "評論",
     "continue": "繼續",
     "create": "建立",
-    "createSubmission": "新增",
     "delete": "刪除",
     "done": "完成",
     "download": "下載",
@@ -170,8 +163,7 @@
     "expand": "開啟",
     "collapse": "閉合",
     "reviewParallelUpdates": "查看並行更新",
-    "upload": "上傳",
-    "restore": "復原刪除"
+    "upload": "上傳"
   },
   "field": {
     "comment": "發表評論...",
@@ -253,7 +245,7 @@
     "updateReviewState": "審核狀態已儲存！",
     "versionChange": "服器已更新。請更新頁面以避免出現不可預測的問題。",
     "submissionDeleted": "提交內容已刪除。",
-    "submissionRestored": "提交的內容已取消刪除。"
+    "entityDeleted": "實體「1{label}」已被刪除。"
   },
   "moreInfo": {
     "clickHere": {
@@ -300,7 +292,6 @@
     "basicInfo": "基本資訊",
     "conflict": "衝突",
     "conflicts": "衝突",
-    "currentDraft": "您目前的草稿",
     "dangerZone": "危險區域",
     "data": "資料",
     "docs": "文件",
@@ -313,14 +304,12 @@
     "no": "無",
     "noResults": "沒有結果",
     "noUndo": "此操作無法撤銷。",
-    "rightNow": "現在",
     "rowNumber": "排",
     "success": "成功！",
     "system": "系統",
     "yes": "是",
     "tab": {
-      "settings": "設定",
-      "overview": "概述"
+      "settings": "設定"
     },
     "total": "總計",
     "totalSubmissions": "提交總數",
@@ -372,6 +361,11 @@
   },
   "router": {
     "unsavedChanges": "您確定要離開此頁面嗎？您的變更可能不會儲存。"
+  },
+  "formStateDescription": {
+    "open": "該表格可供下載並接受提交。",
+    "closing": "表格不可下載，但仍接受提交。",
+    "closed": "該表格不可下載，也不接受提交。"
   },
   "requestData": {
     "project": {

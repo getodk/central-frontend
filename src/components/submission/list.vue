@@ -657,10 +657,14 @@ export default {
       "testInBrowser": "Tester dans le naviguateur"
     },
     "noMatching": "Il n'y a pas de soumission correspondante.",
+    "allDeleted": "Toutes les soumissions sont supprimées.",
+    "allDeletedOnPage": "Toutes les soumissions de la page ont été supprimées.",
     "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
     "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
     "deletedSubmission": {
-      "emptyTable": "Il n'y a pas de Soumissions supprimées"
+      "emptyTable": "Il n'y a pas de Soumissions supprimées",
+      "allRestored": "Toutes les Soumissions supprimées ont été restaurées.",
+      "allRestoredOnPage": "Toutes les Soumissions de la page ont été restaurées."
     }
   },
   "id": {
@@ -672,10 +676,14 @@ export default {
       "testInBrowser": "Testa nel browser"
     },
     "noMatching": "Non sono presenti invii corrispondenti.",
+    "allDeleted": "Tutti gli invii vengono cancellati.",
+    "allDeletedOnPage": "Tutti gli invii presenti nella pagina sono stati cancellati.",
     "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
     "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
     "deletedSubmission": {
-      "emptyTable": "Non ci sono invii cancellati."
+      "emptyTable": "Non ci sono invii cancellati.",
+      "allRestored": "Tutti gli invii cancellati vengono ripristinati.",
+      "allRestoredOnPage": "Tutti i contributi presenti nella pagina sono stati ripristinati."
     }
   },
   "ja": {

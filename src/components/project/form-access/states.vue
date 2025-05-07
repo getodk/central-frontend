@@ -176,12 +176,12 @@ export default {
         "open": "Ouvert"
       },
       {
-        "full": "{closing} formulaires acceptent des soumissions, mais ne sont {not} disponibles au téléchargement.",
+        "full": "{closing} Les formulaires acceptent des soumissions, mais ne sont {not} disponibles au téléchargement.",
         "closing": "Fermeture",
         "not": "pas"
       },
       {
-        "full": "{closed} formulaires sont {not1} disponibles au téléchargement et acceptent {not2} de nouvelles soumissions.",
+        "full": "{closed} Les formulaires ne sont {not1} disponibles au téléchargement et n'acceptent {not2} de nouvelles soumissions.",
         "closed": "Fermé",
         "not1": "pas",
         "not2": "pas"

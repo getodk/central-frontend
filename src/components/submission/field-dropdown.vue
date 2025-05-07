@@ -123,7 +123,6 @@ const placeholder = (counts) => t('placeholder', counts);
 <i18n>
 {
   "cs": {
-    "placeholder": "{selected} z {total}",
     "field": {
       "columns": "Zobrazené sloupce",
       "search": "Hledat sloupce…"
@@ -137,7 +136,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Výběr příliš mnoha sloupců může zpomalit počítač."
   },
   "de": {
-    "placeholder": "{selected} von {total}",
     "field": {
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
@@ -151,7 +149,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
-    "placeholder": "{selected} de {total}",
     "field": {
       "columns": "Se muestran las columnas",
       "search": "Buscar columnas…"
@@ -165,7 +162,7 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
-    "placeholder": "{selected} sur {total}",
+    "placeholder": "{selected} sur {total} colonne visible | {selected} sur {total} colonnes visibles | {selected} sur {total} colonnes visibles",
     "field": {
       "columns": "Colonnes affichées",
       "search": "Chercher des colonnes"
@@ -179,7 +176,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Sélectionner trop de colonnes peut ralentir votre ordinateur."
   },
   "id": {
-    "placeholder": "{selected} dari {total}",
     "field": {
       "columns": "Kolom terlihat",
       "search": "Mencari kolom..."
@@ -192,7 +188,6 @@ const placeholder = (counts) => t('placeholder', counts);
     }
   },
   "it": {
-    "placeholder": "{selected} di {total}",
     "field": {
       "columns": "Colonne mostrate",
       "search": "Cerca colonne..."
@@ -206,7 +201,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "La selezione di troppe colonne potrebbe rallentare il computer."
   },
   "ja": {
-    "placeholder": "{total}列の内{selected}列",
     "field": {
       "columns": "表示された列",
       "search": "列を検索"
@@ -219,7 +213,6 @@ const placeholder = (counts) => t('placeholder', counts);
     }
   },
   "pt": {
-    "placeholder": "{selected} de {total}",
     "field": {
       "columns": "Colunas exibidas",
       "search": "Colunas de busca..."
@@ -233,7 +226,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
   },
   "sw": {
-    "placeholder": "{selected} kati ya {total}",
     "field": {
       "columns": "Safu wima zimeonyeshwa",
       "search": "Tafuta safu wima..."
@@ -247,7 +239,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
   },
   "zh-Hant": {
-    "placeholder": "{selected}/{total}",
     "field": {
       "columns": "顯示欄位",
       "search": "搜尋欄位..."

@@ -14,13 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "バージョン",
-      "publicAccess": "一般公開"
-    },
-    "draftNav": {
-      "tab": {
-        "testing": "テスト"
-      }
+      "publicAccess": "一般公開",
+      "versions": "バージョン"
     }
   },
   "systemHome": {
@@ -88,7 +83,6 @@
         "update_draft_delete": "下書きの削除",
         "attachment_update": "メディアファイルの更新",
         "submission_export": "提出済フォームのダウンロード",
-        "restore": "復元",
         "purge": "完全に削除",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -126,7 +120,6 @@
     "close": "閉じる",
     "comment": "コメント",
     "create": "作成",
-    "createSubmission": "新規作成",
     "done": "完了",
     "download": "ダウンロード",
     "edit": "編集",
@@ -148,8 +141,7 @@
     "yesProceed": "はい、続けます。",
     "showPreview": "プレビュー",
     "hidePreview": "プレビューを隠す",
-    "upload": "アップロード",
-    "restore": "復元"
+    "upload": "アップロード"
   },
   "field": {
     "comment": "コメントを残す...",
@@ -243,18 +235,15 @@
     "anybody": "（全員）",
     "areYouSure": "本当に続けて問題ないですか？",
     "basicInfo": "基本情報",
-    "currentDraft": "現在の下書き",
     "dangerZone": "危険エリア",
     "filter": "フィルター",
     "no": "いいえ",
     "noResults": "該当なし",
-    "rightNow": "現在の状況",
     "success": "成功です！",
     "system": "システム",
     "yes": "はい",
     "tab": {
-      "settings": "設定",
-      "overview": "概要"
+      "settings": "設定"
     },
     "total": "全期間",
     "reviewState": "レビュー・ステータス",
@@ -284,6 +273,11 @@
   },
   "router": {
     "unsavedChanges": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
+  },
+  "formStateDescription": {
+    "open": "このフォームはダウンロードでき、フォームの提出も受け付けています。",
+    "closing": "このフォームはダウンロードできませんが、フォームの提出は受け付けています。",
+    "closed": "このフォームはダウンロードできませんし、フォームの提出も受け付けていません。"
   },
   "requestData": {
     "project": {
