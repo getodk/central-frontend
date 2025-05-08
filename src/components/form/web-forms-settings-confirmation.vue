@@ -12,8 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal :state="state" :hideable="!form.awaitingResponse" backdrop
   @hide="$emit('hide')">
-    <!-- TODO: for ODK Web Forms, we need to show modal with an image. Reuse "what's new" modal,
-        once it is done in getodk/central#801 -->
+    <template v-if="webformsEnabled" #banner>
+      <img
+        srcset="../../assets/images/form/web-forms-settings-confirmation/banner@1x.png, ../../assets/images/form/web-forms-settings-confirmation/banner@2x.png 2x"
+        src="../../assets/images/form/web-forms-settings-confirmation/banner@1x.png"
+        alt="Modal banner image showing sample Web Form UI.">
+    </template>
     <template v-if="webformsEnabled" #title>ODK Web Forms</template>
     <template v-else #title>Enketo</template>
 
