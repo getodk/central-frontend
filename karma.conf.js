@@ -41,14 +41,15 @@ module.exports = (config) => {
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
-      { pattern: 'public/images/*', served: true, included: false },
       { pattern: 'public/blank.html', served: true, included: false },
-      { pattern: 'test/files/*', served: true, included: false }
+      { pattern: 'test/files/*', served: true, included: false },
+      { pattern: 'src/assets/images/*', served: true, included: false }
     ],
     proxies: {
       '/fonts/': '/base/public/fonts/',
       '/blank.html': '/base/public/blank.html',
-      '/test/files/': '/base/test/files/'
+      '/test/files/': '/base/test/files/',
+      '/img/newdraft.5001bbc6.png': '/base/src/assets/images/newdraft.png' // Image in what's new modal with hash
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
