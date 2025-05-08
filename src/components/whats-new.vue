@@ -10,9 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
+  <modal :state="isVisible" backdrop size="large" :hideable="true" @hide="hideModal">
     <template #banner>
-      <img id="modalBanner" :src="imgUrl" alt="Image showing where to look for edit draft functionality">
+      <img
+        id="modalBanner"
+        :src="imgUrl[0]"
+        :srcset="`${imgUrl[0]} 400w, ${imgUrl[1]} 800w`"
+        alt="Image showing where to look for edit draft functionality">
     </template>
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -36,7 +40,8 @@ import Modal from './modal.vue';
 
 import { useRequestData } from '../request-data';
 
-import imgUrl from '../assets/images/newdraft.png';
+// eslint-disable-next-line import/no-unresolved
+import imgUrl from '../assets/images/newdraft.png?w=500;1200';
 
 const { currentUser, projects } = useRequestData();
 const isVisible = ref(false);
