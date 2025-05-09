@@ -68,6 +68,12 @@ const surveyLink = computed(() => {
 #feedback-button:focus-within span {
   right: 10px;
 }
+
+@media print {
+  #feedback-button {
+    display: none;
+  }
+}
 </style>
 
   <i18n lang="json5">
