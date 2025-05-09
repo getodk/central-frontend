@@ -274,7 +274,7 @@ const titleId = `modal-title${id}`;
       .close {
         position: absolute;
         // x symbol has some top spacing
-        top: calc($padding-modal-top-actions-close - 4px);
+        top: calc($padding-modal-top-actions-close - 2px);
         right: $padding-modal-top-actions-close;
         color: $color-input;
         font-weight: normal;
