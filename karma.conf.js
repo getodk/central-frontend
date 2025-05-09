@@ -48,7 +48,8 @@ module.exports = (config) => {
     proxies: {
       '/fonts/': '/base/public/fonts/',
       '/blank.html': '/base/public/blank.html',
-      '/test/files/': '/base/test/files/'
+      '/test/files/': '/base/test/files/',
+      '/images/': '/base/public/images/'
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
