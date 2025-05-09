@@ -273,7 +273,8 @@ const titleId = `modal-title${id}`;
 
       .close {
         position: absolute;
-        top: $padding-modal-top-actions-close;
+        // x symbol has some top spacing
+        top: calc($padding-modal-top-actions-close - 2px);
         right: $padding-modal-top-actions-close;
         color: $color-input;
         font-weight: normal;
@@ -288,38 +289,71 @@ const titleId = `modal-title${id}`;
     .modal-header {
       border-bottom: 0px;
       color: $color-text;
-      padding: $padding-modal-header $padding-modal-header 20px $padding-modal-header;
+      padding: $padding-modal-header;
+      padding-bottom: $padding-modal-content-spacing;
 
       h4 {
         @include text-overflow-ellipsis;
         font-size: 18px;
         font-weight: bold;
-        letter-spacing: -0.02em;
+      }
+    }
+
+    .modal-body {
+      padding: $padding-modal-body;
+      padding-block: 0px;
+
+      // Only add padding below modal-introduction if not right
+      // above modal-action buttons
+      .modal-introduction:not(:has(+ .modal-actions)) {
+        margin-bottom: $padding-modal-content-spacing;
+      }
+
+      p {
+        max-width: 100%;
+        margin: 0 0 $padding-modal-content-spacing;
+
+        // If p is the last element or right before modal-actions, remove bottom spacing
+        &:last-child,
+        &:has(+ .modal-actions) {
+          margin-bottom: 0;
+        }
+      }
+
+      // When form-group (e.g. text input) is last thing in modal
+      // before buttons, remove extra spacing on bottom.
+      // (It will keep a bit of padding.)
+      .form-group {
+        &:has(+ .modal-actions) {
+        margin-bottom: 0px;
+        }
+      }
+
+      // Modal-actions are nested within the modal-body because they are
+      // defined by the specific modal in the body slot.
+      .modal-actions {
+        // Undo padding from body because modal-actions
+        // are nested within modal-body
+        margin-left: -$padding-modal-body;
+        margin-right: -$padding-modal-body;
+
+        background: white;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        padding: $padding-modal-actions;
+        text-align: right;
       }
     }
   }
 }
 
-.modal-body {
-  padding: $padding-modal-body;
-  padding-block: 0px;
-}
-
+// Not sure which modal does not have actions
 .modal-body:not(:has(.modal-actions)) {
   padding-block-end: calc($padding-modal-body / 2);
 }
 
-.modal-actions {
-  background: $color-subpanel-background;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  margin: -$padding-modal-body;
-  margin-top: $padding-modal-body;
-  padding: $padding-modal-actions;
-  text-align: right;
-}
-
 .modal-full {
+  // This is the space around the margin and the edge of the browser window
   $margin: 40px;
   // Because we set margin-left and width, we don't need to set margin-right.
   margin: $margin 0 $margin $margin;
@@ -343,10 +377,6 @@ const titleId = `modal-title${id}`;
   }
 }
 
-.modal-warnings, .modal-introduction, .modal-body .help-block {
-  line-height: 1.2;
-}
-
 .modal-warnings, .modal-introduction {
   ul {
     @include text-list;
@@ -364,6 +394,4 @@ const titleId = `modal-title${id}`;
     margin-bottom: 0;
   }
 }
-
-.modal-introduction { margin-bottom: 18px; }
 </style>

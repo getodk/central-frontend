@@ -71,7 +71,7 @@ describe('Modal', () => {
         },
         attachTo: document.body
       });
-      modal.emitted().resize.should.eql([[30]]);
+      modal.emitted().resize.should.eql([[10]]);
     });
   });
 
@@ -132,7 +132,7 @@ describe('Modal', () => {
         attachTo: document.body
       });
       await modal.setProps({ state: false });
-      modal.emitted().resize.should.eql([[30], [0]]);
+      modal.emitted().resize.should.eql([[10], [0]]);
     });
   });
 
@@ -145,7 +145,7 @@ describe('Modal', () => {
     });
     modal.get('#div').element.setAttribute('style', 'height: 20px;');
     await nextTick();
-    modal.emitted().resize.should.eql([[30], [40]]);
+    modal.emitted().resize.should.eql([[10], [20]]);
   });
 
   describe('mutation', () => {
