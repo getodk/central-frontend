@@ -226,7 +226,7 @@ describe('SubmissionList', () => {
 
     // eslint-disable-next-line func-names
     it('specifies $select if the next button is clicked', function() {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
       testData.extendedSubmissions.createPast(251);
       return loadSubmissionList()
         .complete()

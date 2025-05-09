@@ -2085,9 +2085,9 @@
           }
         }
       },
-      "noSelectedConflictSelected": {
-        "string": "(none)",
-        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
+      "allSelectedConflictSelected": {
+        "string": "(All)",
+        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
