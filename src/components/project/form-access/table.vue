@@ -132,6 +132,8 @@ export default {
   }
 
   .table-freeze-scrolling {
+    width: auto;
+
     thead {
       background-color: transparent;
     }
