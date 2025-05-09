@@ -12,15 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
     <template #banner>
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="150px">
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#8d0050;stop-opacity:1"/>
-            <stop offset="100%" style="stop-color:#f7f7f7;stop-opacity:1"/>
-          </linearGradient>
-        </defs>
-        <rect width="100%" height="150" fill="url(#gradient)"/>
-      </svg>
+      <img id="modalBanner" :src="imgUrl" alt="Image showing where to look for edit draft functionality">
     </template>
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -43,6 +35,8 @@ import { ref, watch } from 'vue';
 import Modal from './modal.vue';
 
 import { useRequestData } from '../request-data';
+
+import imgUrl from '../assets/images/newdraft.png';
 
 const { currentUser, projects } = useRequestData();
 const isVisible = ref(false);
@@ -68,6 +62,12 @@ function hideModal() {
 }
 
 </script>
+
+<style lang="scss">
+  #modalBanner {
+    width: 100%;
+  }
+</style>
 
 <i18n lang="json5">
   {
