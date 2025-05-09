@@ -18,6 +18,14 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <template v-if="formDraft.entityRelated">
         <loading :state="datasetDiff.initiallyLoading"/>
+        <p v-if="datasetDiff.dataExists && datasetDiff.counts.updatedDatasets !== 0"
+          id="form-edit-entities-diff-counts">
+          <span>{{ diffCounts }}</span>
+          <template v-if="datasetDiff.counts.newProperties !== 0">
+            <sentence-separator/>
+            <span>{{ $t('cannotDeleteProperties') }}</span>
+          </template>
+        </p>
         <dataset-summary is-draft/>
       </template>
       <p v-else>
@@ -30,12 +38,16 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import DatasetSummary from '../../dataset/summary.vue';
 import DocLink from '../../doc-link.vue';
 import FormEditSection from './section.vue';
 import Loading from '../../loading.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
+import { useI18nUtils } from '../../../util/i18n';
 import { useRequestData } from '../../../request-data';
 
 defineOptions({
@@ -44,6 +56,18 @@ defineOptions({
 
 const { formDraftDatasetDiff: datasetDiff, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
+
+const { t } = useI18n();
+const { tn } = useI18nUtils();
+const diffCounts = computed(() => {
+  const { updatedDatasets, newProperties } = datasetDiff.counts;
+  return newProperties === 0
+    ? tn('diffCounts.datasetsOnly', updatedDatasets)
+    : t('diffCounts.newProperties.full', {
+      entityLists: tn('diffCounts.newProperties.entityLists', updatedDatasets),
+      properties: tn('diffCounts.newProperties.properties', newProperties)
+    });
+});
 </script>
 
 <style lang="scss">
@@ -52,12 +76,24 @@ const formDraft = resourceView('formDraft', (data) => data.get());
 #form-edit-entities {
   .dataset-summary { margin-top: -$padding-top-expandable-row; }
 }
+
+#form-edit-entities-diff-counts { margin-top: 10px; }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "datasetCount": "Submissions to this Form definition will update {count} Entity List | Submissions to this Form definition will update {count} Entity Lists",
+    "datasetCount": "Submissions to this Form definition will update {count} Entity List. | Submissions to this Form definition will update {count} Entity Lists.",
+    "diffCounts": {
+      "datasetsOnly": "Publishing this draft will update {count} Entity List. | Publishing this draft will update {count} Entity Lists.",
+      "newProperties": {
+        "full": "Publishing this draft will update {entityLists} and create {properties}.",
+        "entityLists": "{count} Entity List | {count} Entity Lists",
+        "properties": "{count} property | {count} properties"
+      }
+    },
+    // "Properties" refers to Entity properties.
+    "cannotDeleteProperties": "Properties cannot be deleted.",
     // "Definition" refers to a Form Definition.
     "notEntityRelated": "This definition does not update any Entities.",
     "whatAreEntities": "What are Entities?"

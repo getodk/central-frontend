@@ -446,25 +446,13 @@ describe('FormDraftPublish', () => {
         }));
   });
 
-  it('shows dataset delta', async () => {
+  it('shows the number of new entity properties', async () => {
     testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
     testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
     testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [Property.NewProperty, Property.InFormProperty, Property.DefaultProperty] });
     const modal = mount(FormDraftPublish, mountOptions());
     await modal.setProps({ state: true });
-
-    const delta = modal.findAll('.dataset-list li');
-
-    let liCounter = -1;
-    testData.formDraftDatasetDiffs.sorted().forEach(ds => {
-      if (ds.isNew) {
-        delta[liCounter += 1].text().should.match(/A new Entity List \w+ will be created./);
-      }
-      ds.properties.forEach(p => {
-        if (p.isNew) {
-          delta[liCounter += 1].text().should.match(/In Entity List \w+, a new property \w+ will be created./);
-        }
-      });
-    });
+    const text = modal.get('hr + p').text();
+    text.should.startWith('Publishing this draft will create 2 properties.');
   });
 });
