@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       @submit="handleSubmit"/>
   </template>
 
-  <modal id="web-form-renderer-submission-modal" v-bind="submissionModal" backdrop @hide="hideModal()">
+  <modal id="web-form-renderer-submission-modal" :state="submissionModal.state" :hideable="submissionModal.hideable" backdrop @hide="hideModal()">
     <template #title>{{ $t(submissionModal.type + '.title') }}</template>
     <template #body>
       <div class="modal-introduction">
