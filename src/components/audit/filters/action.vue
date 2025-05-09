@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="audit-filters-action" class="form-group">
+    <span class="form-label">{{ $t('field.type') }}</span>
     <select class="form-control" :value="modelValue"
       @change="$emit('update:modelValue', $event.target.value)">
       <option v-for="option of options" :key="option.value"
@@ -18,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         {{ option.text }}
       </option>
     </select>
-    <span class="form-label">{{ $t('field.type') }}</span>
+    <span class="icon-angle-down"></span>
   </label>
 </template>
 
@@ -105,8 +106,34 @@ export default {
 </script>
 
 <style lang="scss">
-.audit-filters-action-category {
-  // Not all browsers support styling an <option> element this way.
-  font-weight: bold;
+#audit-filters-action {
+  select {
+    appearance: none;
+    cursor: pointer;
+    padding-top: 23px;
+    padding-right: 25px;
+    height: 48px;
+  }
+  .form-label {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+  }
+  .icon-angle-down {
+    font-size: 16px;
+    color: #555555;
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    top: 25px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .audit-filters-action-category {
+    // Not all browsers support styling an <option> element this way.
+      font-weight: bold;
+    }
 }
 </style>

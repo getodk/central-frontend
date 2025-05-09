@@ -15,6 +15,9 @@ except according to the terms contained in the LICENSE file.
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
     <div :data-toggle="(options == null || disabled) ? null : 'dropdown'">
+      <span v-show="!hideLabel" class="form-label">
+        {{ label }}
+      </span>
       <select :id="toggleId" ref="toggle" class="form-control"
         :class="{ none: modelValue?.length === options?.length || modelValue?.length === 0 }"
         :aria-disabled="options == null || disabled"
@@ -24,9 +27,6 @@ except according to the terms contained in the LICENSE file.
         @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
         <option value="">{{ selectOption }}</option>
       </select>
-      <span v-show="!hideLabel" class="form-label">
-        {{ label }}
-      </span>
       <span class="icon-angle-down"></span>
     </div>
     <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
@@ -446,7 +446,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
     font-weight: bold;
     position: absolute;
     right: 0;
-    top: 10px;
+    top: 26px;
     pointer-events: none;
     z-index: 1;
   }
