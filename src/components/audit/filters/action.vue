@@ -112,7 +112,7 @@ export default {
     cursor: pointer;
     padding-top: 23px;
     padding-right: 25px;
-    height: 48px;
+    min-height: 48px;
   }
   .form-label {
     position: absolute;
