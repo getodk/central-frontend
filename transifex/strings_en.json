@@ -2857,10 +2857,6 @@
         "abandon": {
           "string": "Abandon Draft",
           "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "deleteForm": {
-          "string": "Abandon Draft and Delete Form",
-          "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
