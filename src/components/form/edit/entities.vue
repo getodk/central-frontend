@@ -15,7 +15,6 @@ except according to the terms contained in the LICENSE file.
     <template v-if="datasetDiff.dataExists" #subtitle>
       {{ $tcn('datasetCount', datasetDiff.length) }}
     </template>
-    <template v-if="diffHasNew" #tag>{{ $t('diffHasNew') }}</template>
     <template #body>
       <template v-if="formDraft.entityRelated">
         <loading :state="datasetDiff.initiallyLoading"/>
@@ -31,8 +30,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
 import DatasetSummary from '../../dataset/summary.vue';
 import DocLink from '../../doc-link.vue';
 import FormEditSection from './section.vue';
@@ -47,10 +44,6 @@ defineOptions({
 
 const { formDraftDatasetDiff: datasetDiff, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
-
-const diffHasNew = computed(() =>
-  datasetDiff.dataExists && datasetDiff.some(dataset => dataset.isNew ||
-    dataset.properties.some(property => property.isNew)));
 </script>
 
 <style lang="scss">
@@ -64,10 +57,7 @@ const diffHasNew = computed(() =>
 <i18n lang="json5">
 {
   "en": {
-    "datasetCount": "Publishing this draft will update {count} Entity List | Publishing this draft will update {count} Entity Lists",
-    // This text is shown if publishing a Draft Form will create one or more
-    // Entity Lists or one or more Entity properties.
-    "diffHasNew": "New Entity Lists and/or properties will be created",
+    "datasetCount": "Submissions to this Form definition will update {count} Entity List | Submissions to this Form definition will update {count} Entity Lists",
     // "Definition" refers to a Form Definition.
     "notEntityRelated": "This definition does not update any Entities.",
     "whatAreEntities": "What are Entities?"

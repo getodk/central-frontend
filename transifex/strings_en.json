@@ -3106,11 +3106,7 @@
     },
     "FormEditEntities": {
       "datasetCount": {
-        "string": "{count, plural, one {Publishing this draft will update {count} Entity List} other {Publishing this draft will update {count} Entity Lists}}"
-      },
-      "diffHasNew": {
-        "string": "New Entity Lists and/or properties will be created",
-        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+        "string": "{count, plural, one {Submissions to this Form definition will update {count} Entity List} other {Submissions to this Form definition will update {count} Entity Lists}}"
       },
       "notEntityRelated": {
         "string": "This definition does not update any Entities.",
