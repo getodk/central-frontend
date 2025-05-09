@@ -10,10 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <confirmation v-bind="confirm" @hide="$emit('hide')" @success="setWebformsEnabled">
+  <modal :state="state" :hideable="!form.awaitingResponse" backdrop
+  @hide="$emit('hide')">
+    <!-- TODO: for ODK Web Forms, we need to show modal with an image. Reuse "what's new" modal,
+        once it is done in getodk/central#801 -->
+    <template v-if="webformsEnabled" #title>ODK Web Forms</template>
+    <template v-else #title>Enketo</template>
+
     <template v-if="webformsEnabled" #body>
-      <!-- TODO: for ODK Web Forms, we need to show modal with an image. Reuse "what's new" modal,
-              once it is done in getodk/central#801 -->
       <p>
         {{ $t('webformsConfirmation.intro') }}
       </p>
@@ -30,19 +34,37 @@ except according to the terms contained in the LICENSE file.
           </router-link>
         </template>
       </i18n-t>
+      <div class="modal-actions">
+        <button class="btn btn-link" type="button" @click="$emit('hide')">
+          {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="form.awaitingResponse" @click="setWebformsEnabled">
+          {{ $t('webformsConfirmation.useOdkWebForms') }} <spinner :state="form.awaitingResponse"/>
+        </button>
+      </div>
     </template>
     <template v-else #body>
       <p>
         {{ $t('enketoConfirmation.description') }}
       </p>
+      <div class="modal-actions">
+        <button class="btn btn-link" type="button" @click="$emit('hide')">
+          {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="form.awaitingResponse" @click="setWebformsEnabled">
+          {{ $t('enketoConfirmation.useEnketo') }} <spinner :state="form.awaitingResponse"/>
+        </button>
+      </div>
     </template>
-  </confirmation>
+  </modal>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import Confirmation from '../confirmation.vue';
+import Modal from '../modal.vue';
+import Spinner from '../spinner.vue';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
@@ -50,7 +72,6 @@ import { noop } from '../../util/util';
 
 const { form } = useRequestData();
 const { formPath } = useRoutes();
-const { t } = useI18n();
 
 defineOptions({
   name: 'FormWebFormsSettingsConfirmation'
@@ -68,22 +89,6 @@ const previewPath = computed(() => formPath(
   form.xmlFormId,
   'preview'
 ));
-
-const confirm = computed(() => {
-  const result = {
-    state: props.state,
-    noText: t('action.cancel'),
-    awaitingResponse: form.awaitingResponse
-  };
-  if (props.webformsEnabled) {
-    result.title = 'ODK Web Forms';
-    result.yesText = t('webformsConfirmation.useOdkWebForms');
-  } else {
-    result.title = 'Enketo';
-    result.yesText = t('enketoConfirmation.useEnketo');
-  }
-  return result;
-});
 
 const setWebformsEnabled = () => {
   form.request({
