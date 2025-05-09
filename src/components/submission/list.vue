@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
           v-model="selectedFields"/>
         </form>
         <button id="submission-list-refresh-button" type="button"
-          class="btn btn-outlined" :class="{ 'move-right': draft }" :aria-disabled="refreshing"
+          class="btn btn-outlined move-right" :aria-disabled="refreshing"
           @click="fetchChunk(false, true)">
           <span class="icon-refresh"></span>{{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
@@ -553,10 +553,6 @@ export default {
   // the download button can wrap above the other actions if the viewport is not
   // wide enough.
   gap: 10px;
-
-  .field-dropdown-form {
-    margin-left: auto;
-  }
 }
 #submission-field-dropdown {
   // This is the entire spacing between the dropdown and the filters to its

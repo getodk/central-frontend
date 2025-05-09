@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     <date-range-picker :model-value="submissionDate"
       :label="$t('field.submissionDate')"
       :disabled="disabled" :disabled-message="disabledMessage"
-      :placeholder="$t('noSubmissionDateSelected')"
+      :placeholder="$t('allSubmissionDateSelected')"
       @update:model-value="$emit('update:submissionDate', $event)"/>
     <submission-filters-review-state :model-value="reviewState"
       :disabled="disabled" :disabled-message="disabledMessage"
@@ -74,8 +74,8 @@ export default {
       // Submissions by a date range.
       "submissionDate": "Submitted at"
     },
-    // Text shown when no Submission date is selected in the filter
-    "noSubmissionDateSelected": "(none)"
+    // Text shown when in Submission date filter when Submissions for all dates are shown
+    "allSubmissionDateSelected": "(All)"
   }
 }
 </i18n>

@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
+    <span class="form-label">{{ requiredLabel(label, required) }}</span>
     <flatpickr id="datepicker" ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control"
       :class="{ required, 'flatpickr-input': true, 'has-value': modelValue.length === 2, none: modelValue.length === 0 }"
@@ -29,7 +30,6 @@ except according to the terms contained in the LICENSE file.
     </template>
     <span v-show="required || modelValue.length < 2" aria-hidden="true" class="icon-angle-down">
     </span>
-    <span class="form-label">{{ requiredLabel(label, required) }}</span>
   </label>
 </template>
 
@@ -227,6 +227,10 @@ export default {
 
   .form-label {
     transform: translateY(2px);
+  }
+
+  .close {
+    top: 20px;
   }
 }
 </style>
