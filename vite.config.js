@@ -16,6 +16,8 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
+// eslint-disable-next-line import/no-unresolved
+import { imagetools } from 'vite-imagetools';
 
 // The default is es2020, but we need es2022 or later because Web Forms uses
 // top-level await.
@@ -41,6 +43,7 @@ const devServer = {
 export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
+    imagetools(),
     VueI18nPlugin({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
       compositionOnly: false,
@@ -48,7 +51,7 @@ export default defineConfig(({ mode }) => ({
       // We install what we need in src/container.js.
       fullInstall: false,
       dropMessageCompiler: true
-    })
+    }),
   ],
   build: {
     target: buildTarget,

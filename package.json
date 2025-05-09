@@ -67,6 +67,7 @@
     "sinon": "~9",
     "util": "^0.12.5",
     "vite": "^6.3.5",
+    "vite-imagetools": "^7.1.0",
     "yorkie": "^2.0.0"
   },
   "engines": {

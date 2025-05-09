@@ -41,7 +41,6 @@ module.exports = (config) => {
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
-      { pattern: 'public/images/*', served: true, included: false },
       { pattern: 'public/blank.html', served: true, included: false },
       { pattern: 'test/files/*', served: true, included: false }
     ],
