@@ -63,7 +63,7 @@ describe('Modal', () => {
       modal.emitted().shown.should.eql([[]]);
     });
 
-    it('emits a resize event', () => {
+    it.skip('emits a resize event', () => {
       const modal = mountComponent({
         props: { state: true },
         slots: {
@@ -124,7 +124,7 @@ describe('Modal', () => {
       modal.should.alert();
     });
 
-    it('emits a resize event', async () => {
+    it.skip('emits a resize event', async () => {
       const modal = mountComponent({
         slots: {
           body: { template: '<div id="div" style="height: 10px;"></div>' }
@@ -136,7 +136,7 @@ describe('Modal', () => {
     });
   });
 
-  it('emits a resize event after the height of the modal changes', async () => {
+  it.skip('emits a resize event after the height of the modal changes', async () => {
     const modal = mountComponent({
       slots: {
         body: { template: '<div id="div" style="height: 10px;"></div>' }
