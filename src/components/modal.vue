@@ -330,7 +330,7 @@ const titleId = `modal-title${id}`;
       }
 
       // Modal-actions are nested within the modal-body because they are
-      // defined by the defined by the specific modal in the body slot.
+      // defined by the specific modal in the body slot.
       .modal-actions {
         // Undo padding from body because modal-actions
         // are nested within modal-body

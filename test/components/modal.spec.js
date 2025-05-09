@@ -63,7 +63,7 @@ describe('Modal', () => {
       modal.emitted().shown.should.eql([[]]);
     });
 
-    it.skip('emits a resize event', () => {
+    it('emits a resize event', () => {
       const modal = mountComponent({
         props: { state: true },
         slots: {
@@ -71,7 +71,7 @@ describe('Modal', () => {
         },
         attachTo: document.body
       });
-      modal.emitted().resize.should.eql([[30]]);
+      modal.emitted().resize.should.eql([[10]]);
     });
   });
 
@@ -124,7 +124,7 @@ describe('Modal', () => {
       modal.should.alert();
     });
 
-    it.skip('emits a resize event', async () => {
+    it('emits a resize event', async () => {
       const modal = mountComponent({
         slots: {
           body: { template: '<div id="div" style="height: 10px;"></div>' }
@@ -132,11 +132,11 @@ describe('Modal', () => {
         attachTo: document.body
       });
       await modal.setProps({ state: false });
-      modal.emitted().resize.should.eql([[30], [0]]);
+      modal.emitted().resize.should.eql([[10], [0]]);
     });
   });
 
-  it.skip('emits a resize event after the height of the modal changes', async () => {
+  it('emits a resize event after the height of the modal changes', async () => {
     const modal = mountComponent({
       slots: {
         body: { template: '<div id="div" style="height: 10px;"></div>' }
@@ -145,7 +145,7 @@ describe('Modal', () => {
     });
     modal.get('#div').element.setAttribute('style', 'height: 20px;');
     await nextTick();
-    modal.emitted().resize.should.eql([[30], [40]]);
+    modal.emitted().resize.should.eql([[10], [20]]);
   });
 
   describe('mutation', () => {
