@@ -24,56 +24,25 @@ describe('FormDraftAbandon', () => {
     });
   });
 
-  describe('modal title', () => {
-    it('shows the correct title for a form with a published version', () => {
-      testData.extendedForms.createPast(1);
-      testData.extendedFormVersions.createPast(1, { draft: true });
-      const modal = mount(FormDraftAbandon, mountOptions());
-      modal.get('.modal-title').text().should.equal('Abandon Draft');
-    });
-
-    it('shows the correct title for a form without a published version', () => {
-      testData.extendedForms.createPast(1, { draft: true });
-      const modal = mount(FormDraftAbandon, mountOptions());
-      modal.get('.modal-title').text().should.equal('Abandon Draft and Delete Form');
-    });
+  it('shows the correct text for a form with a published version', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { draft: true });
+    const modal = mount(FormDraftAbandon, mountOptions());
+    modal.get('.modal-title').text().should.equal('Abandon Draft');
+    const p = modal.findAll('.modal-introduction p');
+    p.length.should.equal(3);
+    p[0].text().should.endWith('all test Submissions will be removed.');
+    modal.get('.btn-danger').text().should.equal('Abandon');
   });
 
-  describe('explanatory text', () => {
-    describe('form with a published version', () => {
-      beforeEach(() => {
-        testData.extendedForms.createPast(1);
-        testData.extendedFormVersions.createPast(1, { draft: true });
-      });
-
-      it('shows the correct text for the first paragraph', () => {
-        const modal = mount(FormDraftAbandon, mountOptions());
-        const text = modal.get('.modal-introduction p').text();
-        text.should.endWith('all test Submissions will be removed.');
-      });
-
-      it('renders an additional paragraph', () => {
-        const modal = mount(FormDraftAbandon, mountOptions());
-        modal.findAll('.modal-introduction p').length.should.equal(3);
-      });
-    });
-
-    describe('form without a published version', () => {
-      beforeEach(() => {
-        testData.extendedForms.createPast(1, { draft: true });
-      });
-
-      it('shows the correct text for the first paragraph', () => {
-        const modal = mount(FormDraftAbandon, mountOptions());
-        const text = modal.get('.modal-introduction p').text();
-        text.should.endWith('this entire Form will be deleted and moved to the Trash.');
-      });
-
-      it('does not render an additional paragraph', () => {
-        const modal = mount(FormDraftAbandon, mountOptions());
-        modal.findAll('.modal-introduction p').length.should.equal(2);
-      });
-    });
+  it('shows the correct text for a form without a published version', () => {
+    testData.extendedForms.createPast(1, { draft: true });
+    const modal = mount(FormDraftAbandon, mountOptions());
+    modal.get('.modal-title').text().should.equal('Delete Form');
+    const p = modal.findAll('.modal-introduction p');
+    p.length.should.equal(2);
+    p[0].text().should.endWith('this entire Form will be deleted and moved to the Trash.');
+    modal.get('.btn-danger').text().should.equal('Delete');
   });
 
   describe('request', () => {

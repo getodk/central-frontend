@@ -12,10 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="form-draft-abandon" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template #title>{{ title }}</template>
+    <template #title>
+      {{ published ? $t('title.abandon') : $t('title.deleteForm') }}
+    </template>
     <template #body>
       <div class="modal-introduction">
-        <template v-if="form.dataExists && form.publishedAt != null">
+        <template v-if="published">
           <p>{{ $t('introduction.abandon[0]') }}</p>
           <p>{{ $t('introduction.abandon[1]') }}</p>
         </template>
@@ -31,7 +33,8 @@ except according to the terms contained in the LICENSE file.
         </button>
         <button type="button" class="btn btn-danger"
           :aria-disabled="awaitingResponse" @click="abandon">
-          {{ $t('action.abandon') }} <spinner :state="awaitingResponse"/>
+          {{ published ? $t('action.abandon') : $t('action.delete') }}
+          <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
@@ -63,10 +66,8 @@ export default {
     return { project, form, request, awaitingResponse };
   },
   computed: {
-    title() {
-      return this.form.dataExists && this.form.publishedAt != null
-        ? this.$t('title.abandon')
-        : this.$t('title.deleteForm');
+    published() {
+      return this.form.dataExists && this.form.publishedAt != null;
     }
   },
   methods: {
@@ -93,7 +94,8 @@ export default {
     // This is the title at the top of a pop-up.
     "title": {
       "abandon": "Abandon Draft",
-      "deleteForm": "Abandon Draft and Delete Form"
+      // @transifexKey component.FormDelete.title
+      "deleteForm": "Delete Form"
     },
     "introduction": {
       "abandon": [
