@@ -12,21 +12,21 @@ except according to the terms contained in the LICENSE file.
 <template>
   <form-edit-section id="form-edit-entities" icon="database">
     <template #title>{{ $t('resource.entities') }}</template>
-    <template v-if="datasetDiff.dataExists" #subtitle>
-      {{ $tcn('datasetCount', datasetDiff.length) }}
-    </template>
     <template #body>
       <template v-if="formDraft.entityRelated">
         <loading :state="datasetDiff.initiallyLoading"/>
-        <p v-if="datasetDiff.dataExists && datasetDiff.counts.updatedDatasets !== 0"
-          id="form-edit-entities-diff-counts">
-          <span>{{ diffCounts }}</span>
-          <template v-if="datasetDiff.counts.newProperties !== 0">
-            <sentence-separator/>
-            <span>{{ $t('cannotDeleteProperties') }}</span>
-          </template>
-        </p>
-        <dataset-summary is-draft/>
+        <template v-if="datasetDiff.dataExists">
+          <p>{{ $tcn('datasetCount', datasetDiff.length) }}</p>
+          <p v-if="datasetDiff.counts.updatedDatasets !== 0"
+            id="form-edit-entities-diff-counts">
+            <span>{{ diffCounts }}</span>
+            <template v-if="datasetDiff.counts.newProperties !== 0">
+              <sentence-separator/>
+              <span>{{ $t('cannotDeleteProperties') }}</span>
+            </template>
+          </p>
+          <dataset-summary is-draft/>
+        </template>
       </template>
       <p v-else>
         <span>{{ $t('notEntityRelated') }}</span>
@@ -76,8 +76,6 @@ const diffCounts = computed(() => {
 #form-edit-entities {
   .dataset-summary { margin-top: -$padding-top-expandable-row; }
 }
-
-#form-edit-entities-diff-counts { margin-top: 10px; }
 </style>
 
 <i18n lang="json5">

@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
 
         <template v-if="datasetDiff.dataExists && newProperties !== 0">
           <hr>
-          <p>{{ $tcn('dataset.newProperties', newProperties) }}</p>
+          <p>{{ $tcn('newProperties', newProperties) }}</p>
         </template>
 
         <hr v-if="draftVersionStringIsDuplicate">
@@ -81,7 +81,6 @@ import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
-import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -104,10 +103,9 @@ export default {
     const formDraft = resourceView('formDraft', (data) => data.get());
 
     const { request, awaitingResponse } = useRequest();
-    const { formPath } = useRoutes();
     return {
       formVersions, formDraft, draftAttachments, datasetDiff,
-      request, awaitingResponse, formPath
+      request, awaitingResponse
     };
   },
   data() {
@@ -197,11 +195,9 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
+    "newProperties": "Publishing this draft will create {count} property. It cannot be deleted. | Publishing this draft will create {count} properties. These cannot be deleted.",
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
-    },
-    "dataset": {
-      "newProperties": "Publishing this draft will create {count} property. It cannot be deleted. | Publishing this draft will create {count} properties. These cannot be deleted."
     }
   }
 }

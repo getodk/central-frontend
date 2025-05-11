@@ -2922,14 +2922,12 @@
           "string": "Would you like to proceed?"
         }
       },
+      "newProperties": {
+        "string": "{count, plural, one {Publishing this draft will create {count} property. It cannot be deleted.} other {Publishing this draft will create {count} properties. These cannot be deleted.}}"
+      },
       "problem": {
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
-        }
-      },
-      "dataset": {
-        "newProperties": {
-          "string": "{count, plural, one {Publishing this draft will create {count} property. It cannot be deleted.} other {Publishing this draft will create {count} properties. These cannot be deleted.}}"
         }
       }
     },
