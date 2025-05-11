@@ -33,32 +33,9 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[0]') }}</p>
         <p>{{ $t('introduction[1]') }}</p>
 
-        <template v-if="formDraft.entityRelated && hasDatasetDiff">
+        <template v-if="datasetDiff.dataExists && newProperties !== 0">
           <hr>
-          <i18n-t tag="p" keypath="dataset.introduction.full">
-            <template #inAddition>
-              <strong>{{ $t('dataset.introduction.inAddition') }}</strong>
-            </template>
-          </i18n-t>
-          <ul class="dataset-list">
-            <template v-for="dataset of formDraftDatasetDiff" :key="dataset.name">
-              <i18n-t v-if="dataset.isNew" tag="li" keypath="dataset.newDataset">
-                <template #datasetName>
-                  <strong>{{ dataset.name }}</strong>
-                </template>
-              </i18n-t>
-              <template v-for="property of dataset.properties" :key="property.name">
-                <i18n-t v-if="property.isNew && property.inForm" tag="li" keypath="dataset.newProperty">
-                  <template #datasetName>
-                    <strong>{{ dataset.name }}</strong>
-                  </template>
-                  <template #propertyName>
-                    <strong>{{ property.name }}</strong>
-                  </template>
-                </i18n-t>
-              </template>
-            </template>
-          </ul>
+          <p>{{ $tcn('newProperties', newProperties) }}</p>
         </template>
 
         <hr v-if="draftVersionStringIsDuplicate">
@@ -99,14 +76,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { any } from 'ramda';
-
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
-import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -125,14 +99,13 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { formVersions, draftAttachments, formDraftDatasetDiff, resourceView } = useRequestData();
+    const { formVersions, draftAttachments, formDraftDatasetDiff: datasetDiff, resourceView } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
 
     const { request, awaitingResponse } = useRequest();
-    const { formPath } = useRoutes();
     return {
-      formVersions, formDraft, draftAttachments, formDraftDatasetDiff,
-      request, awaitingResponse, formPath
+      formVersions, formDraft, draftAttachments, datasetDiff,
+      request, awaitingResponse
     };
   },
   data() {
@@ -160,9 +133,8 @@ export default {
     rendersTestingWarning() {
       return this.formDraft.dataExists && this.formDraft.submissions === 0;
     },
-    hasDatasetDiff() {
-      return this.formDraftDatasetDiff.dataExists &&
-        any(d => d.isNew || any(p => p.isNew && p.inForm, d.properties), this.formDraftDatasetDiff.data);
+    newProperties() {
+      return this.datasetDiff.counts.newProperties;
     }
   },
   watch: {
@@ -200,38 +172,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../assets/scss/variables';
-@import '../../assets/css/icomoon';
-
-.dataset-list {
-  list-style: none;
-  padding-left: 5px;
-
-  li {
-    hyphens: auto;
-    overflow-wrap: break-word;
-  }
-
-  li::before {
-    @extend [class^="icon-"];
-    content: '\f055';
-    margin-right:5px;
-    color: green;
-  }
-}
-
-.field-list{
-  list-style: none;
-
-  li::before {
-    @extend [class^="icon-"];
-    content: '\f055';
-  }
-}
-
-</style>
-
 <i18n lang="json5">
 {
   "en": {
@@ -255,16 +195,9 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
+    "newProperties": "Publishing this draft will create {count} property. It cannot be deleted. | Publishing this draft will create {count} properties. These cannot be deleted.",
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publishing this Form definition will make the following changes to this Project:",
-        "inAddition": "In addition,"
-      },
-      "newDataset": "A new Entity List {datasetName} will be created.",
-      "newProperty": "In Entity List {datasetName}, a new property {propertyName} will be created."
     }
   }
 }

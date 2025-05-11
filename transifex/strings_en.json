@@ -2857,10 +2857,6 @@
         "abandon": {
           "string": "Abandon Draft",
           "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "deleteForm": {
-          "string": "Abandon Draft and Delete Form",
-          "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
@@ -2926,27 +2922,12 @@
           "string": "Would you like to proceed?"
         }
       },
+      "newProperties": {
+        "string": "{count, plural, one {Publishing this draft will create {count} property. It cannot be deleted.} other {Publishing this draft will create {count} properties. These cannot be deleted.}}"
+      },
       "problem": {
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
-        }
-      },
-      "dataset": {
-        "introduction": {
-          "full": {
-            "string": "{inAddition} publishing this Form definition will make the following changes to this Project:",
-            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
-          },
-          "inAddition": {
-            "string": "In addition,",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
-          }
-        },
-        "newDataset": {
-          "string": "A new Entity List {datasetName} will be created."
-        },
-        "newProperty": {
-          "string": "In Entity List {datasetName}, a new property {propertyName} will be created."
         }
       }
     },
@@ -3110,11 +3091,30 @@
     },
     "FormEditEntities": {
       "datasetCount": {
-        "string": "{count, plural, one {Publishing this draft will update {count} Entity List} other {Publishing this draft will update {count} Entity Lists}}"
+        "string": "{count, plural, one {Submissions to this Form definition will update {count} Entity List.} other {Submissions to this Form definition will update {count} Entity Lists.}}"
       },
-      "diffHasNew": {
-        "string": "New Entity Lists and/or properties will be created",
-        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      "diffCounts": {
+        "datasetsOnly": {
+          "string": "{count, plural, one {Publishing this draft will update {count} Entity List.} other {Publishing this draft will update {count} Entity Lists.}}"
+        },
+        "newProperties": {
+          "full": {
+            "string": "Publishing this draft will update {entityLists} and create {properties}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
+          },
+          "entityLists": {
+            "string": "{count, plural, one {{count} Entity List} other {{count} Entity Lists}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          },
+          "properties": {
+            "string": "{count, plural, one {{count} property} other {{count} properties}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          }
+        }
+      },
+      "cannotDeleteProperties": {
+        "string": "Properties cannot be deleted.",
+        "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
         "string": "This definition does not update any Entities.",

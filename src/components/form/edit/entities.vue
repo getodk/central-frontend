@@ -12,14 +12,21 @@ except according to the terms contained in the LICENSE file.
 <template>
   <form-edit-section id="form-edit-entities" icon="database">
     <template #title>{{ $t('resource.entities') }}</template>
-    <template v-if="datasetDiff.dataExists" #subtitle>
-      {{ $tcn('datasetCount', datasetDiff.length) }}
-    </template>
-    <template v-if="diffHasNew" #tag>{{ $t('diffHasNew') }}</template>
     <template #body>
       <template v-if="formDraft.entityRelated">
         <loading :state="datasetDiff.initiallyLoading"/>
-        <dataset-summary is-draft/>
+        <template v-if="datasetDiff.dataExists">
+          <p>{{ $tcn('datasetCount', datasetDiff.length) }}</p>
+          <p v-if="datasetDiff.counts.updatedDatasets !== 0"
+            id="form-edit-entities-diff-counts">
+            <span>{{ diffCounts }}</span>
+            <template v-if="datasetDiff.counts.newProperties !== 0">
+              <sentence-separator/>
+              <span>{{ $t('cannotDeleteProperties') }}</span>
+            </template>
+          </p>
+          <dataset-summary is-draft/>
+        </template>
       </template>
       <p v-else>
         <span>{{ $t('notEntityRelated') }}</span>
@@ -32,6 +39,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import DatasetSummary from '../../dataset/summary.vue';
 import DocLink from '../../doc-link.vue';
@@ -39,6 +47,7 @@ import FormEditSection from './section.vue';
 import Loading from '../../loading.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
+import { useI18nUtils } from '../../../util/i18n';
 import { useRequestData } from '../../../request-data';
 
 defineOptions({
@@ -48,9 +57,17 @@ defineOptions({
 const { formDraftDatasetDiff: datasetDiff, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
 
-const diffHasNew = computed(() =>
-  datasetDiff.dataExists && datasetDiff.some(dataset => dataset.isNew ||
-    dataset.properties.some(property => property.isNew)));
+const { t } = useI18n();
+const { tn } = useI18nUtils();
+const diffCounts = computed(() => {
+  const { updatedDatasets, newProperties } = datasetDiff.counts;
+  return newProperties === 0
+    ? tn('diffCounts.datasetsOnly', updatedDatasets)
+    : t('diffCounts.newProperties.full', {
+      entityLists: tn('diffCounts.newProperties.entityLists', updatedDatasets),
+      properties: tn('diffCounts.newProperties.properties', newProperties)
+    });
+});
 </script>
 
 <style lang="scss">
@@ -64,10 +81,17 @@ const diffHasNew = computed(() =>
 <i18n lang="json5">
 {
   "en": {
-    "datasetCount": "Publishing this draft will update {count} Entity List | Publishing this draft will update {count} Entity Lists",
-    // This text is shown if publishing a Draft Form will create one or more
-    // Entity Lists or one or more Entity properties.
-    "diffHasNew": "New Entity Lists and/or properties will be created",
+    "datasetCount": "Submissions to this Form definition will update {count} Entity List. | Submissions to this Form definition will update {count} Entity Lists.",
+    "diffCounts": {
+      "datasetsOnly": "Publishing this draft will update {count} Entity List. | Publishing this draft will update {count} Entity Lists.",
+      "newProperties": {
+        "full": "Publishing this draft will update {entityLists} and create {properties}.",
+        "entityLists": "{count} Entity List | {count} Entity Lists",
+        "properties": "{count} property | {count} properties"
+      }
+    },
+    // "Properties" refers to Entity properties.
+    "cannotDeleteProperties": "Properties cannot be deleted.",
     // "Definition" refers to a Form Definition.
     "notEntityRelated": "This definition does not update any Entities.",
     "whatAreEntities": "What are Entities?"

@@ -66,7 +66,28 @@ export default () => {
   });
 
   const formDatasetDiff = createResource('formDatasetDiff');
-  const formDraftDatasetDiff = createResource('formDraftDatasetDiff');
+  const formDraftDatasetDiff = createResource('formDraftDatasetDiff', () => ({
+    counts: computeIfExists(() => {
+      let updatedDatasets = 0;
+      let newProperties = 0;
+      for (const dataset of formDraftDatasetDiff) {
+        if (dataset.isNew) {
+          updatedDatasets += 1;
+          newProperties += dataset.properties.length;
+        } else {
+          const propertySubcount = dataset.properties.reduce(
+            (count, property) => (property.isNew ? count + 1 : count),
+            0
+          );
+          if (propertySubcount !== 0) {
+            updatedDatasets += 1;
+            newProperties += propertySubcount;
+          }
+        }
+      }
+      return { updatedDatasets, newProperties };
+    })
+  }));
 
   const appUserCount = createResource('appUserCount', () => ({
     transformResponse: ({ data }) => data.length

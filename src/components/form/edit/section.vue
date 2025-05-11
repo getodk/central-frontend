@@ -125,7 +125,6 @@ $heading-margin-bottom: 10px;
 }
 
 .form-edit-section-subtitle {
-  font-size: 12px;
   margin-bottom: 0;
 
   &:empty { display: none; }
