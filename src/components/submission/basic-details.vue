@@ -116,6 +116,7 @@ export default {
   .icon-file {
     @include icon-box;
     font-size: 20px;
+    margin-right: $margin-right-icon;
   }
 
   margin-bottom: 35px;

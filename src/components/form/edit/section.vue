@@ -99,9 +99,9 @@ $heading-margin-bottom: 10px;
   // Use flexbox to center the icon.
   display: flex;
   align-items: center;
-  flex-shrink: 0;
   justify-content: center;
 
+  flex-shrink: 0;
   position: relative;
 
   &:last-child { margin-bottom: $margin-bottom; }
