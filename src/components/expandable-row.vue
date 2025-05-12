@@ -40,7 +40,14 @@ defineOptions({
   name: 'ExpandableRow'
 });
 
-const expanded = ref(true);
+const props = defineProps({
+  initiallyExpanded: {
+    type: Boolean,
+    default: false
+  },
+});
+
+const expanded = ref(props.initiallyExpanded);
 const toggleExpanded = () => { expanded.value = !expanded.value; };
 </script>
 
