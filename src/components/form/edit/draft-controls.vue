@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <form-edit-section id="form-edit-draft-controls" icon="pencil">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <button id="form-edit-abandon-button" type="button" class="btn btn-danger"
+      <button id="form-edit-abandon-button" type="button" class="btn btn-danger-outlined"
         @click="$emit('abandon')">
         <span class="icon-trash"></span>{{ abandonText }}
       </button>
