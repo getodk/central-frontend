@@ -40,7 +40,7 @@ defineOptions({
   name: 'ExpandableRow'
 });
 
-const expanded = ref(false);
+const expanded = ref(true);
 const toggleExpanded = () => { expanded.value = !expanded.value; };
 </script>
 

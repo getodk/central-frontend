@@ -34,24 +34,24 @@ describe('ExpandableRow', () => {
     component.get('.caption-cell').text().should.be.equal('2 of 10 properties');
   });
 
-  it('is not expanded initially', () => {
-    component.get('.expanded-row').should.be.hidden();
-  });
-
-  it('expands details', async () => {
-    await component.get('.button-cell button').trigger('click');
+  it('is expanded initially', () => {
     component.get('.expanded-row').should.be.visible();
-    component.get('.expanded-row').text().should.be.eql('height, type');
   });
 
   it('collapses details', async () => {
-    // expand
     await component.get('.button-cell button').trigger('click');
-    component.get('.expanded-row').should.be.visible();
+    component.get('.expanded-row').should.be.hidden();
     component.get('.expanded-row').text().should.be.eql('height, type');
+  });
 
+  it('expands details', async () => {
     // collapse
     await component.get('.button-cell button').trigger('click');
     component.get('.expanded-row').should.be.hidden();
+    component.get('.expanded-row').text().should.be.eql('height, type');
+
+    // expand
+    await component.get('.button-cell button').trigger('click');
+    component.get('.expanded-row').should.be.visible();
   });
 });
