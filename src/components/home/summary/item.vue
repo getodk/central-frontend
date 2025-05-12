@@ -59,11 +59,8 @@ export default {
     margin-bottom: 16px;
 
     > [class^="icon-"] {
+      @include icon-box;
       font-size: 24px;
-      padding: 10px;
-      border-radius: 6px;
-      color: $color-accent-primary;
-      background-color: rgba($color-accent-primary, 0.1);
     }
   }
 

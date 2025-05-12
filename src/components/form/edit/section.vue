@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-edit-section" :class="{ warning }">
+  <div class="form-edit-section">
     <div>
       <div class="form-edit-section-icon-container">
         <span :class="`icon-${icon}`"></span>
@@ -52,7 +52,7 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/variables';
+@import '../../../assets/scss/mixins';
 
 /*
 We add $margin-bottom to both .form-edit-section-icon-container and
@@ -81,24 +81,27 @@ $heading-margin-bottom: 10px;
   > :nth-child(2) {
     flex-grow: 1;
     overflow-x: hidden;
-    padding-top: 16px;
+    padding-top: 6px;
   }
 }
 
 .form-edit-section-icon-container {
+  @include icon-box;
+  font-size: 24px;
+  padding-inline: 0;
+  // 44px = 10px of padding on the left and right + 24px for the icon. The width
+  // of the icon varies significantly, but the height of the icon is a
+  // consistent 24px. If the icon is wider than 24px, that will just eat into
+  // the padding.
+  width: 44px;
+  height: 44px;
+
   // Use flexbox to center the icon.
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   justify-content: center;
 
-  $radius: 36px;
-  width: #{2 * $radius};
-  height: #{2 * $radius};
-  border-radius: $radius;
-  background-color: #eee;
-
-  flex-shrink: 0;
-  font-size: 35px;
   position: relative;
 
   &:last-child { margin-bottom: $margin-bottom; }
@@ -156,14 +159,12 @@ $heading-margin-bottom: 10px;
   margin-top: -$heading-margin-bottom;
 }
 
-.form-edit-section.warning {
-  .form-edit-section-icon-container { background-color: $color-warning-light; }
-}
 .form-edit-section-icon-container .icon-warning:nth-child(2) {
   position: absolute;
-  right: 2px;
-  bottom: 7px;
+  right: -9px;
+  bottom: -3px;
 
-  font-size: 18px;
+  color: $color-danger;
+  font-size: 16px;
 }
 </style>

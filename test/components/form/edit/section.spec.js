@@ -9,11 +9,10 @@ const mountComponent = (options = undefined) =>
   }));
 
 describe('FormEditSection', () => {
-  it('renders correctly if the warning prop is true', () => {
+  it('shows a warning icon if the warning prop is true', () => {
     const component = mountComponent({
       props: { warning: true }
     });
-    component.classes('warning').should.be.true;
     component.find('.icon-warning').exists().should.be.true;
   });
 });

@@ -86,15 +86,12 @@ watchEffect(() => {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
-@import '../../assets/scss/variables';
 
 #entity-basic-details {
   .icon-database {
+    @include icon-box;
     font-size: 20px;
-    padding: 10px;
-    border-radius: 6px;
     margin-right: $margin-right-icon;
-    background-color: rgba($color-accent-primary, 0.1);
   }
 
   margin-bottom: 35px;
