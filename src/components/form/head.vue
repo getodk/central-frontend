@@ -65,11 +65,11 @@ except according to the terms contained in the LICENSE file.
             </span>
           </router-link>
         </li>
-        <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
-          role="presentation">
+        <li v-if="canRoute(tabPath('draft'))" id="form-head-draft-tab"
+          :class="tabClass('draft')" role="presentation">
           <router-link :to="tabPath('draft')">
-            {{ $t('formHead.tab.editForm') }}
-            <span class="icon-pencil-square"></span>
+            <span>{{ $t('formHead.tab.editForm') }}</span>
+            <span class="icon-pencil"></span>
           </router-link>
         </li>
         <li :class="formTabClass('versions')" role="presentation">
@@ -154,17 +154,16 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+#form-head-draft-tab {
+  a {
+    align-items: center;
+    column-gap: 5px;
+    display: flex;
+  }
 
-#form-head {
-  .icon-pencil-square {
-    color: $color-accent-primary;
-    font-size: 18px;
-    margin-left: 3px;
-
-    vertical-align: bottom;
-    position: relative;
-    bottom: 1px;
+  .icon-pencil {
+    color: #555;
+    font-size: 16px;
   }
 }
 </style>
