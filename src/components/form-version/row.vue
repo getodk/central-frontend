@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
     <td>
       <form-version-standard-buttons v-if="current" :version="version"
         @view-xml="$emit('view-xml')"/>
-      <form-version-def-dropdown v-if="!current" :version="version"
+      <form-version-def-dropdown v-else :version="version"
         @view-xml="$emit('view-xml')"/>
     </td>
   </tr>
