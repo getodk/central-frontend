@@ -269,6 +269,11 @@ const titleId = `modal-title${id}`;
           border-top-left-radius: $border-radius-modal;
           border-top-right-radius: $border-radius-modal;
         }
+
+        img {
+          width: 100%;
+          border-bottom: 1px solid #e3e4e4;
+        }
       }
 
       .close {

@@ -32,6 +32,14 @@ describe('WhatsNew modal', () => {
       baseModal.exists().should.be.true;
       baseModal.props().state.should.be.true;
     });
+
+    it('shows image in modal', async () => {
+      mockLogin({ createdAt: '2025-01-01' });
+      const app = await load('/', { root: false });
+      const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
+      const img = baseModal.find('img');
+      img.attributes('src').should.contain('banner');
+    });
   });
 
   describe('does not show modal', () => {
