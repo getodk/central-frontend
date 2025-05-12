@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <expandable-row class="dataset-summary-row">
+  <expandable-row class="dataset-summary-row" initially-expanded>
     <template #title>
       <div class="dataset-name-wrap">
         <div class="dataset-name">
