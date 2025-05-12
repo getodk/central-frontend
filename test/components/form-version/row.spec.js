@@ -70,7 +70,7 @@ describe('FormVersionRow', () => {
   });
 
   describe('actions column', () => {
-    it('shows def down and preview for current version of form and def only for past versions', async () => {
+    it('shows def dropdown and preview for current version of form and def only for past versions', async () => {
       testData.extendedForms.createPast(1, { version: '1' });
       testData.extendedFormVersions.createPast(1, { version: '2' });
       const component = await load('/projects/1/forms/f/versions', { root: false });
