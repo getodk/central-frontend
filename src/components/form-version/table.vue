@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <tr>
         <th>{{ $t('header.name') }}</th>
         <th>{{ $t('header.published') }}</th>
-        <th>{{ $t('header.definition') }}</th>
+        <th>{{ $t('header.actions') }}</th>
       </tr>
     </thead>
     <tbody v-if="formVersions.dataExists">
