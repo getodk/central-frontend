@@ -157,7 +157,6 @@ export default {
 </script>
 
 <style lang="scss">
-@use 'sass:math';
 @import '../../assets/scss/variables';
 
 $z-index-backdrop: 1;
@@ -173,7 +172,7 @@ $popup-width: 300px;
 #form-attachment-popups-main {
   bottom: $edge-offset;
   position: fixed;
-  right: calc($edge-offset + max(50% - #{math.div($max-width-page-body, 2)}, 0px));
+  right: $edge-offset;
   width: $popup-width;
   z-index: $z-index-main;
 
