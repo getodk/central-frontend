@@ -159,9 +159,6 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-$z-index-backdrop: 1;
-$z-index-main: $z-index-backdrop + 1;
-
 $edge-offset: 25px;
 $popup-width: 300px;
 
@@ -174,7 +171,7 @@ $popup-width: 300px;
   position: fixed;
   right: $edge-offset;
   width: $popup-width;
-  z-index: $z-index-main;
+  z-index: $z-index-modal;
 
   &.modal-content {
     border-radius: 0px;
@@ -254,7 +251,7 @@ $popup-width: 300px;
   position: fixed;
   right: 0;
   top: 0;
-  z-index: $z-index-backdrop;
+  z-index: $z-index-modal-backdrop;
 }
 
 @keyframes bob {

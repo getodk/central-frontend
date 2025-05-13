@@ -21,6 +21,9 @@ $screen-sm-min: 768px;
 $screen-md-min: 992px;
 $screen-lg-min: 1200px;
 
+$z-index-modal: 1050;
+$z-index-modal-backdrop: 1040;
+
 // Text
 $color-text: #333;
 $font-family-monospace: Monaco, Menlo, Consolas, "Courier New", monospace;
