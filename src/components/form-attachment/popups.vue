@@ -56,14 +56,14 @@ some point. -->
                 </template>
               </i18n-t>
             </p>
-            <p>
-              <button type="button" class="btn btn-primary"
-                @click="$emit('confirm')">
-                {{ $t('action.looksGood') }}
-              </button>
+            <p class="modal-actions">
               <button type="button" class="btn btn-link"
                 @click="$emit('cancel')">
                 {{ $t('action.cancel') }}
+              </button>
+              <button type="button" class="btn btn-primary"
+                @click="$emit('confirm')">
+                {{ $t('action.looksGood') }}
               </button>
             </p>
           </template>
@@ -71,7 +71,7 @@ some point. -->
             <p>
               {{ $tc('afterSelection.noneMatched', unmatchedFiles.length) }}
             </p>
-            <p>
+            <p class="modal-actions">
               <button type="button" class="btn btn-primary"
                 @click="$emit('cancel')">
                 {{ $t('action.ok') }}
@@ -240,6 +240,10 @@ $popup-width: 300px;
         margin-top: 1px;
         position: absolute;
       }
+    }
+
+    .modal-actions {
+      text-align: right;
     }
   }
 }
