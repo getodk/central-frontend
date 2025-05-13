@@ -180,6 +180,7 @@ $popup-width: 300px;
   .dialog-header {
     padding: 15px;
     background-color: $color-action-background;
+    color: #fff;
 
     .icon-cloud-upload {
       animation-direction: alternate;
