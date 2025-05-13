@@ -157,7 +157,6 @@ export default {
 </script>
 
 <style lang="scss">
-@use 'sass:math';
 @import '../../assets/scss/variables';
 
 $z-index-backdrop: 1;
