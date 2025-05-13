@@ -24,7 +24,8 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </div>
         <div>
-          <form-version-standard-buttons :version="formDraft"
+          <enketo-preview :form-version="formDraft" outlined/>
+          <form-version-def-dropdown :version="formDraft" outlined
             @view-xml="viewXml.show()"/>
           <button id="form-edit-upload-button" type="button"
             class="btn btn-primary" @click="$emit('upload')">
@@ -46,10 +47,11 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, defineAsyncComponent } from 'vue';
 
+import EnketoPreview from '../../enketo/preview.vue';
 import FormEditAttachments from './attachments.vue';
 import FormEditEntities from './entities.vue';
 import FormEditSection from './section.vue';
-import FormVersionStandardButtons from '../../form-version/standard-buttons.vue';
+import FormVersionDefDropdown from '../../form-version/def-dropdown.vue';
 import FormVersionString from '../../form-version/string.vue';
 
 import { loadAsync } from '../../../util/load-async';
@@ -94,9 +96,9 @@ const viewXml = modalData('FormVersionViewXml');
     flex-shrink: 0;
     margin-left: auto;
   }
-}
 
-#form-edit-upload-button { margin-left: 5px; }
+  .form-version-def-dropdown, #form-edit-upload-button { margin-left: 5px; }
+}
 
 #form-edit-def-within {
   color: #888;

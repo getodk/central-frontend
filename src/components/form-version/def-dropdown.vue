@@ -11,7 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="form-version-def-dropdown btn-group">
-    <button :id="toggleId" type="button" class="btn btn-default dropdown-toggle"
+    <button :id="toggleId" type="button" class="btn dropdown-toggle"
+      :class="outlined ? 'btn-outlined' : 'btn-default'"
       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="icon-code"></span>
       <span>{{ $t('action.def') }}</span>
@@ -48,7 +49,8 @@ export default {
     version: {
       type: Object,
       required: true
-    }
+    },
+    outlined: Boolean
   },
   emits: ['view-xml'],
   setup() {

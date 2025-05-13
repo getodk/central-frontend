@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a v-if="disabledDescription == null" class="enketo-preview btn btn-default"
-    :href="enketoPath" target="_blank">
+  <a v-if="disabledDescription == null" :class="enketoClass" :href="enketoPath"
+    target="_blank">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </a>
-  <button v-else type="button" class="enketo-preview btn btn-default" aria-disabled="true"
+  <button v-else type="button" :class="enketoClass" aria-disabled="true"
     v-tooltip.aria-describedby="disabledDescription">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>
@@ -35,7 +35,8 @@ export default {
     formVersion: {
       type: Object,
       required: true
-    }
+    },
+    outlined: Boolean
   },
   setup() {
     const { formPath, formPreviewPath } = useRoutes();
@@ -49,6 +50,11 @@ export default {
       if (this.formVersion.enketoId == null)
         return this.$t('disabled.processing');
       return null;
+    },
+    enketoClass() {
+      const result = ['enketo-preview', 'btn'];
+      result.push(this.outlined ? 'btn-outlined' : 'btn-default');
+      return result;
     },
     enketoPath() {
       return this.formPreviewPath(

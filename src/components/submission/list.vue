@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <div id="submission-list-actions" class="table-actions-bar">
         <template v-if="draft">
           <button id="submission-list-test-on-device" type="button"
-            class="btn btn-default" @click="$emit('toggle-qr', $event.target)">
+            class="btn btn-outlined" @click="$emit('toggle-qr', $event.target)">
             <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
           </button>
           <enketo-fill v-if="formVersion.dataExists"

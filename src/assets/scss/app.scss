@@ -241,7 +241,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
   &:hover, &:focus, &:active:focus {
     background-color: $color-danger-dark;
 
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] {
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: $color-danger;
     }
   }
@@ -255,7 +255,27 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
   &:hover, &:focus, &:active:focus {
     color: #fff;
     background-color: $color-action-background;
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] & { background-color: #ddd; }
+
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      background-color: #fff;
+      color: $color-action-background;
+    }
+  }
+}
+
+.btn-danger-outlined {
+  background-color: #fff;
+  color: $color-danger;
+  border: 1px solid $color-danger;
+
+  &:hover, &:focus, &:active:focus {
+    background-color: $color-danger;
+    color: #fff;
+
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      background-color: #fff;
+      color: $color-danger;
+    }
   }
 }
 
