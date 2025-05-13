@@ -173,7 +173,7 @@ $popup-width: 300px;
 #form-attachment-popups-main {
   bottom: $edge-offset;
   position: fixed;
-  right: calc($edge-offset + max(50% - #{math.div($max-width-page-body, 2)}, 0px));
+  right: $edge-offset;
   width: $popup-width;
   z-index: $z-index-main;
 
