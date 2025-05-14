@@ -342,7 +342,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "",
+      "string": "Nuovo invio",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
@@ -953,7 +953,7 @@
       "string": "Beta"
     },
     "none": {
-      "string": ""
+      "string": "(nessuno)"
     }
   },
   "mixin": {
@@ -1273,6 +1273,9 @@
         "num_forms_with_audits": {
           "string": "Numero di formulari con audit"
         },
+        "num_forms_webforms_enabled": {
+          "string": "Numero di formulari con i Formulari Web abilitati"
+        },
         "num_reused_form_ids": {
           "string": "Numero di ID formulario riutilizzati"
         },
@@ -1477,7 +1480,7 @@
     },
     "AuditFilters": {
       "noLogDateSelected": {
-        "string": "",
+        "string": "(nessuno)",
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
@@ -1534,7 +1537,7 @@
     },
     "DatasetEntities": {
       "upload": {
-        "string": ""
+        "string": "Caricare Entità"
       },
       "alert": {
         "upload": {
@@ -1669,7 +1672,7 @@
         },
         "implication": {
           "full": {
-            "string": "{count, plural, one {Al momento non avete segnato  {records} né Approvato né Rifiutato.} many {Al momento non avete segnato {records} né Approvati né Rifiutati.} other {Al momento non avete segnato {records}né Approvati né Rifiutati.}}",
+            "string": "{count, plural, one {Al momento non avete segnato {records} né Approvato né Rifiutato.} many {Al momento non avete segnato {records} né Approvati né Rifiutati.} other {Al momento non avete segnato {records} né Approvati né Rifiutati.}}",
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
@@ -1741,11 +1744,11 @@
       },
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, one {Aggiornato da{count} Formulario} many {Aggiornato da {count}Formulari} other {Aggiornato da {count}Formulari}}",
+          "string": "{count, plural, one {Aggiornato da {count} Formulario} many {Aggiornato da {count} Formulari} other {Aggiornato da {count} Formulari}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {Usato da{count} Formulario} many {Usato da {count}Formulari} other {Usato da {count}Formulari}}",
+          "string": "{count, plural, one {Usato da {count} Formulario} many {Usato da {count} Formulari} other {Usato da {count} Formulari}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -2082,9 +2085,9 @@
           }
         }
       },
-      "noSelectedConflictSelected": {
-        "string": "",
-        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
+      "allSelectedConflictSelected": {
+        "string": "(Tutto)",
+        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2126,16 +2129,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Scarica {count} entità} many {Scarica tutte le {count} entità} other {Scarica tutte le {count} entità}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {} many {} other {}}",
+              "string": "{count, plural, one {Scaricare la {count} Entità che corrisponde al filtro} many {Scaricare le {count} Entità che corrispondono al filtro} other {Scaricare le {count} Entità che corrispondono al filtro}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "",
+              "string": "Scaricare tutte le Entità che corrispondono al filtro",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -2854,10 +2857,6 @@
         "abandon": {
           "string": "Abbandona bozza",
           "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "deleteForm": {
-          "string": "Abbandona ed elimina la bozza",
-          "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
@@ -2923,27 +2922,12 @@
           "string": "Vuoi procedere?"
         }
       },
+      "newProperties": {
+        "string": "{count, plural, one {La pubblicazione di questa bozza creerà {count} proprietà. Questa non può essere eliminata.} many {La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.} other {La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.}}"
+      },
       "problem": {
         "409_6": {
           "string": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
-        }
-      },
-      "dataset": {
-        "introduction": {
-          "full": {
-            "string": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
-            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
-          },
-          "inAddition": {
-            "string": "Inoltre,",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
-          }
-        },
-        "newDataset": {
-          "string": "Una nuova Lista Entità {datasetName} sarà creata."
-        },
-        "newProperty": {
-          "string": "Nella Lista Entità {datasetName}, una nuova proprietà {propertyName} sarà creata."
         }
       }
     },
@@ -3042,7 +3026,7 @@
       },
       "diff": {
         "newCount": {
-          "string": "{count, plural, one {{count}nuovo allegato} many {{count} nuovi allegati} other {{count} nuovi allegati}}"
+          "string": "{count, plural, one {{count} nuovo allegato} many {{count} nuovi allegati} other {{count} nuovi allegati}}"
         },
         "changedCount": {
           "string": "{count, plural, one {{count} allegato modificato} many {{count} allegati modificati} other {{count} allegati modificati}}"
@@ -3107,11 +3091,30 @@
     },
     "FormEditEntities": {
       "datasetCount": {
-        "string": "{count, plural, one {La pubblicazione di questa bozza aggiornerà {count}Elenco delle entità} many {La pubblicazione di questa bozza aggiornerà {count}Elenco delle entità} other {La pubblicazione di questa bozza aggiornerà {count}Elenco delle entità}}"
+        "string": "{count, plural, one {Gli invii a questa definizione di formulario aggiornerà {count} Elenco di entità} many {Gli invii a questa definizione di formulario aggiorneranno {count} Elenco delle entità} other {Gli invii a questa definizione di formulario aggiorneranno {count} Elenco delle entità}}"
       },
-      "diffHasNew": {
-        "string": "Nuove Liste Entità  e/o proprietà saranno create.",
-        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      "diffCounts": {
+        "datasetsOnly": {
+          "string": "{count, plural, one {La pubblicazione di questa bozza aggiornerà {count} Elenco delle entità} many {La pubblicazione di questa bozza aggiornerà {count} Elenco delle entità} other {La pubblicazione di questa bozza aggiornerà {count} Elenco delle entità}}"
+        },
+        "newProperties": {
+          "full": {
+            "string": "La pubblicazione di questa bozza aggiornerà {entityLists} e creerà {properties}",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
+          },
+          "entityLists": {
+            "string": "{count, plural, one {{count} Elenco di entità} many {{count} Elenchi di entità} other {{count} Elenchi di entità}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          },
+          "properties": {
+            "string": "{count, plural, one {{count} proprietà} many {{count} proprietà} other {{count} proprietà}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          }
+        }
+      },
+      "cannotDeleteProperties": {
+        "string": "Le proprietà non possono essere eliminate.",
+        "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
         "string": "Questa definizione non aggiorna alcuna entità.",
@@ -3676,7 +3679,7 @@
     "OdataDataAccess": {
       "action": {
         "connectData": {
-          "string": "",
+          "string": "Collegare Dati",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4435,7 +4438,7 @@
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
-          "string": "",
+          "string": "Altro (API)",
           "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
         }
       },
@@ -4618,16 +4621,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Scarica {count} Invio} many {Scarica tutti i {count} Invii} other {Scarica tutti i {count} Invii}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "",
+              "string": "Scaricare tutti gli invii che corrispondono al filtro",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, one {} many {} other {}}",
+              "string": "{count, plural, one {Scaricare il {count} invio che corrisponde al filtro} many {Scaricare gli {count} invii che corrispondono al filtro} other {Scaricare gli {count} invii che corrispondono al filtro}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
@@ -4733,7 +4736,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{count, plural, one {} many {} other {}}",
+        "string": "{selected} di {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
@@ -4769,9 +4772,9 @@
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       },
-      "noSubmissionDateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when no Submission date is selected in the filter"
+      "allSubmissionDateSelected": {
+        "string": "(Tutto)",
+        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4791,9 +4794,9 @@
           }
         }
       },
-      "noReviewStateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when no Review State is selected in the filter"
+      "allReviewStateSelected": {
+        "string": "(Tutto)",
+        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4826,9 +4829,9 @@
       "unknown": {
         "string": "Utente invio sconosciuto"
       },
-      "noSubmitterSelected": {
-        "string": "",
-        "developer_comment": "Text shown when no Submitter is selected in the filter"
+      "allSubmitterSelected": {
+        "string": "(Tutto)",
+        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {
@@ -5208,29 +5211,29 @@
       },
       "sessionTimeoutModal": {
         "title": {
-          "string": ""
+          "string": "Sessione scaduta"
         },
         "body": {
           "full": {
-            "string": "",
+            "string": "Si prega di accedere {here} in un'altra scheda del browser e riprovare.",
             "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
           },
           "here": {
-            "string": "",
+            "string": "qui",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
           }
         }
       },
       "retryModal": {
         "title": {
-          "string": ""
+          "string": "Errore invio"
         },
         "body": {
-          "string": ""
+          "string": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
         },
         "action": {
           "tryAgain": {
-            "string": "",
+            "string": "Ritenta ancora",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -5238,15 +5241,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "",
+        "string": "Le bozze dei formulari sono state spostate",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "Creare un nuovo formulario e modificarlo nella nuova scheda Modifica del formulario."
       },
       "action": {
         "gotIt": {
-          "string": "",
+          "string": "Capito!",
           "developer_comment": "This is the text of a button that is used to close the modal."
         }
       }

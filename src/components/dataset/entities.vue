@@ -212,6 +212,7 @@ export default {
 <i18n>
 {
   "de": {
+    "upload": "Entitäten hochladen",
     "alert": {
       "upload": "Erfolgreich! Ihre Entitäten wurden hochgeladen."
     },
@@ -222,6 +223,7 @@ export default {
     "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Entitäten nicht verfügbar"
   },
   "es": {
+    "upload": "Subir entidades",
     "alert": {
       "upload": "¡Éxito! Tus entidades han sido cargadas."
     },
@@ -243,6 +245,7 @@ export default {
     "analyzeDisabledDeletedData": "L'accès OData n'est pas disponible pour les entités supprimées"
   },
   "it": {
+    "upload": "Caricare Entità",
     "alert": {
       "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
     },

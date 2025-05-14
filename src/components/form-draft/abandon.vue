@@ -119,7 +119,7 @@ export default {
   "cs": {
     "title": {
       "abandon": "Opustit koncept",
-      "deleteForm": "Opustit koncept a smazat formulář"
+      "deleteForm": "Odstranit formulář"
     },
     "introduction": {
       "abandon": [
@@ -137,7 +137,7 @@ export default {
   "de": {
     "title": {
       "abandon": "Entwurf verwerfen",
-      "deleteForm": "Entwurf verwerfen und Formular löschen"
+      "deleteForm": "Formulare löschen"
     },
     "introduction": {
       "abandon": [
@@ -155,7 +155,7 @@ export default {
   "es": {
     "title": {
       "abandon": "Abandonar borrador",
-      "deleteForm": "Abandonar borrador y borrar formulario"
+      "deleteForm": "Borrar formulario"
     },
     "introduction": {
       "abandon": [
@@ -173,7 +173,7 @@ export default {
   "fr": {
     "title": {
       "abandon": "Abandonner l'ébauche",
-      "deleteForm": "Abandonner l'ébauche et supprimer le formulaire"
+      "deleteForm": "Supprimer le formulaire"
     },
     "introduction": {
       "abandon": [
@@ -191,7 +191,7 @@ export default {
   "id": {
     "title": {
       "abandon": "Buang Draf",
-      "deleteForm": "Buang Draf dan Hapus Formulir"
+      "deleteForm": "Hapus Formulir"
     },
     "action": {
       "abandon": "Buang"
@@ -200,7 +200,7 @@ export default {
   "it": {
     "title": {
       "abandon": "Abbandona bozza",
-      "deleteForm": "Abbandona ed elimina la bozza"
+      "deleteForm": "Cancellare il formulario"
     },
     "introduction": {
       "abandon": [
@@ -218,7 +218,7 @@ export default {
   "ja": {
     "title": {
       "abandon": "下書きの削除",
-      "deleteForm": "下書きとフォームの削除"
+      "deleteForm": "フォームの削除"
     },
     "action": {
       "abandon": "削除"
@@ -227,7 +227,7 @@ export default {
   "pt": {
     "title": {
       "abandon": "Abandonar rascunho",
-      "deleteForm": "Abandonar rascunho e apagar formulário"
+      "deleteForm": "Excluir formulário"
     },
     "introduction": {
       "abandon": [
@@ -245,7 +245,7 @@ export default {
   "sw": {
     "title": {
       "abandon": "acha rasimu",
-      "deleteForm": "Achana na Rasimu na ufute Fomu"
+      "deleteForm": "Futa Fomu"
     },
     "introduction": {
       "abandon": [
@@ -263,7 +263,7 @@ export default {
   "zh-Hant": {
     "title": {
       "abandon": "放棄草稿",
-      "deleteForm": "放棄草稿並刪除表單"
+      "deleteForm": "刪除表單"
     },
     "introduction": {
       "abandon": [

@@ -165,6 +165,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "de": {
+    "submissionDetails": "Übermittlungsdetails",
     "formVersion": "Formular Version",
     "deviceId": "Geräte-ID",
     "userAgent": "User-Agent",
@@ -224,8 +225,8 @@ export default {
     "deviceId": "ID do dispositivo",
     "userAgent": "Agente de usuário",
     "attachments": "Anexos",
-    "present": "{count}arquivo | {count}arquivos | {count}arquivos",
-    "expected": "{count}esperado | {count} esperados | {count} esperados",
+    "present": "{count} arquivo | {count} arquivos | {count} arquivos",
+    "expected": "{count} esperado | {count} esperados | {count} esperados",
     "attachmentSummary": "{present} / {expected}"
   },
   "sw": {

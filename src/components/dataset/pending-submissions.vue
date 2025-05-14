@@ -131,7 +131,12 @@ const convert = ref(null);
       "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden."
     },
     "dontConvert": {
-      "label": "Ich verstehe und das ist für mich kein Problem."
+      "label": "Ich verstehe und das ist für mich kein Problem.",
+      "description": "Ändern Sie die Einstellung und tun Sie nichts mit den ausstehenden Übermittlungen."
+    },
+    "convert": {
+      "label": "Konvertieren Sie alle ausstehenden Übermittlungen, die Entitäten erstellen.",
+      "description": "Ändern Sie die Einstellung und erstellen Sie Entitäten aus allen Übermittlungen, die eine Entitätserstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
     }
   },
   "es": {
@@ -140,7 +145,11 @@ const convert = ref(null);
       "changeSetting": "Cambiar ajustes"
     },
     "explanation": {
-      "userAction": "Está configurando la creación de la Entidad para que ocurra cuando Central recibe los Envíos por primera vez."
+      "userAction": "Está configurando la creación de la Entidad para que ocurra cuando Central recibe los Envíos por primera vez.",
+      "implication": {
+        "full": "Actualmente tiene {records} ni Aprobado ni Rechazado. | Actualmente tiene {records} ni Aprobados ni Rechazados. | Actualmente tiene {records} ni Aprobados ni Rechazados.",
+        "records": "{count} registro pendiente | {count} registros pendientes | {count} registros pendientes"
+      }
     },
     "dontConvert": {
       "label": "Lo entiendo y esto no es un problema para mí.",
@@ -180,7 +189,7 @@ const convert = ref(null);
     "explanation": {
       "userAction": "Stai impostando la creazione dell'Entità in modo che avvenga quando gli invii vengono ricevuti per la prima volta da Central.",
       "implication": {
-        "full": "Al momento non avete segnato {records} né Approvato né Rifiutato. | Al momento non avete segnato {records} né Approvati né Rifiutati. | Al momento non avete segnato {records}né Approvati né Rifiutati.",
+        "full": "Al momento non avete segnato {records} né Approvato né Rifiutato. | Al momento non avete segnato {records} né Approvati né Rifiutati. | Al momento non avete segnato {records} né Approvati né Rifiutati.",
         "records": "{count} registrazione in sospeso | {count} registrazioni in sospeso | {count} registrazioni in sospeso"
       }
     },

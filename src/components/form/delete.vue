@@ -111,7 +111,8 @@ export default {
   "de": {
     "title": "Formulare löschen",
     "introduction": [
-      "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?"
+      "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?",
+      "Diese Aktion verschiebt das Formular in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
     ],
     "noDeleteEntities": "Alle durch die Einreichungen dieses Formulars erstellten Entitäten werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Entitäten zu löschen."
   },

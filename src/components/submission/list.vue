@@ -628,10 +628,14 @@ export default {
       "testInBrowser": "Test im Browser"
     },
     "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "allDeleted": "Alle Übermittlungen werden gelöscht.",
+    "allDeletedOnPage": "Alle Übermittlungen auf dieser Seite wurden gelöscht.",
     "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
     "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
     "deletedSubmission": {
-      "emptyTable": "Es gibt keine gelöschten Übermittlungen."
+      "emptyTable": "Es gibt keine gelöschten Übermittlungen.",
+      "allRestored": "Alle gelöschten Übermittlungen werden wiederhergestellt.",
+      "allRestoredOnPage": "Alle Übermittlungen auf dieser Seite wurden wiederhergestellt."
     }
   },
   "es": {
@@ -640,10 +644,14 @@ export default {
       "testInBrowser": "Prueba en el navegador"
     },
     "noMatching": "No hay envíos coincidentes.",
+    "allDeleted": "Todos los envíos se han eliminado.",
+    "allDeletedOnPage": "Se han eliminado todos los envíos de la página.",
     "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
     "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
     "deletedSubmission": {
-      "emptyTable": "No hay envíos eliminados."
+      "emptyTable": "No hay envíos eliminados.",
+      "allRestored": "Se restablecen todos los envíos eliminados.",
+      "allRestoredOnPage": "Se han restablecido todas las Envíos de la página."
     }
   },
   "fr": {

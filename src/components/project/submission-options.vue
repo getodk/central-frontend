@@ -257,15 +257,15 @@ const { projectPath, formPath } = useRoutes();
     "introduction": [
       "Existem várias maneiras de enviar respostas para o ODK Central:",
       {
-        "full": "Crie {appUsers}e utilize o aplicativo {collect}para Android. Isso é o mais apropriado quando os coletores de dados precisam de acesso a múltiplos formulários, ficam sem internet, ou quando você tem um formulário complexo.",
+        "full": "Crie {appUsers} e utilize o aplicativo {collect} para Android. Isso é o mais apropriado quando os coletores de dados precisam de acesso a múltiplos formulários, ficam sem internet, ou quando você tem um formulário complexo.",
         "appUsers": "Usuários de aplicativo"
       },
       {
-        "full": "Crie um ou mais {publicLinks}para compartilhar com entrevistados que preencherão o formulário de forma autônoma.",
+        "full": "Crie um ou mais {publicLinks} para compartilhar com entrevistados que preencherão o formulário de forma autônoma.",
         "publicLinks": "Links de acesso público"
       },
       {
-        "full": "Crie um {webUser}com a função de {dataCollector}para cada indivíduo que fará a coleta de dados. Esses usuários poderão fazer login no Central para preencher o formulário em um navegador de internet. Gerentes de projeto também podem preencher formulários a partir do navegador de internet.",
+        "full": "Crie um {webUser} com a função de {dataCollector} para cada indivíduo que fará a coleta de dados. Esses usuários poderão fazer login no Central para preencher o formulário em um navegador de internet. Gerentes de projeto também podem preencher formulários a partir do navegador de internet.",
         "webUser": "Usuário da web",
         "dataCollector": "Coletor de dados"
       }

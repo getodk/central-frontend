@@ -239,6 +239,7 @@ const hideAndReset = () => {
     },
     "webFormsSetting": {
       "webForms": "Formularios web",
+      "description": "Rellene, previsualice y edite su Formulario “{formName}” utilizando",
       "enketoDefault": "Enketo (default)"
     }
   },

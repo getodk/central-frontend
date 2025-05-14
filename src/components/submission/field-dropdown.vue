@@ -126,6 +126,7 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Výběr příliš mnoha sloupců může zpomalit počítač."
   },
   "de": {
+    "placeholder": "{selected} von {total}",
     "field": {
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
@@ -139,6 +140,7 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
+    "placeholder": "{selected} de {total}",
     "field": {
       "columns": "Se muestran las columnas",
       "search": "Buscar columnas…"
@@ -152,7 +154,7 @@ const placeholder = (counts) => t('placeholder', counts);
     "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
-    "placeholder": "{selected} sur {total} colonne visible | {selected} sur {total} colonnes visibles | {selected} sur {total} colonnes visibles",
+    "placeholder": "{selected} sur {total}",
     "field": {
       "columns": "Colonnes affichées",
       "search": "Chercher des colonnes"
@@ -178,6 +180,7 @@ const placeholder = (counts) => t('placeholder', counts);
     }
   },
   "it": {
+    "placeholder": "{selected} di {total}",
     "field": {
       "columns": "Colonne mostrate",
       "search": "Cerca colonne..."

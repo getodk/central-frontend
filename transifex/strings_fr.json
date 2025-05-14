@@ -44,7 +44,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "editForm": {
-        "string": "Editer un formulaire",
+        "string": "Éditer Formulaire",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -1273,6 +1273,9 @@
         "num_forms_with_audits": {
           "string": "Nombre de formulaires avec audits"
         },
+        "num_forms_webforms_enabled": {
+          "string": "Nombre de Formulaires ayant Web Forms activé"
+        },
         "num_reused_form_ids": {
           "string": "Nombre d'ID de formulaires réutilisés"
         },
@@ -2082,9 +2085,9 @@
           }
         }
       },
-      "noSelectedConflictSelected": {
-        "string": "(aucun)",
-        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
+      "allSelectedConflictSelected": {
+        "string": "(Tous)",
+        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2854,10 +2857,6 @@
         "abandon": {
           "string": "Abandonner l'ébauche",
           "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "deleteForm": {
-          "string": "Abandonner l'ébauche et supprimer le formulaire",
-          "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
@@ -2923,27 +2922,12 @@
           "string": "Voulez vous continuer ?"
         }
       },
+      "newProperties": {
+        "string": "{count, plural, one {Publier cette ébauche créera {count} propriété. Cela ne peut être annulé.} many {Publier cette ébauche créera {count} propriétés. Cela ne peut être annulé.} other {Publier cette ébauche créera {count} propriété(s). Cela ne peut être annulé.}}"
+      },
       "problem": {
         "409_6": {
           "string": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé.\nMerci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
-        }
-      },
-      "dataset": {
-        "introduction": {
-          "full": {
-            "string": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
-            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
-          },
-          "inAddition": {
-            "string": "De plus,",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
-          }
-        },
-        "newDataset": {
-          "string": "Une nouvelle liste d'entités {datasetName} va être créée."
-        },
-        "newProperty": {
-          "string": "Dans la liste d'entités {datasetName}, une nouvelle propriété {propertyName} sera créée."
         }
       }
     },
@@ -3107,11 +3091,30 @@
     },
     "FormEditEntities": {
       "datasetCount": {
-        "string": "{count, plural, one {Publier cette ébauche mettra à jour {count} liste d'entités} many {Publier cette ébauche mettra à jour {count} listes d'entités} other {Publier cette ébauche mettra à jour {count} liste(s) d'entités}}"
+        "string": "{count, plural, one {Les soumissions à cette définition de Formulaire mettront à jour {count} liste d'entités.} many {Les soumissions à cette définition de Formulaire mettront à jour {count} listes d'entités.} other {Les soumissions à cette définition de Formulaire mettront à jour {count} liste(s) d'entités.}}"
       },
-      "diffHasNew": {
-        "string": "De nouvelles Listes d'Entités et/ou propriétés seront créées",
-        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+      "diffCounts": {
+        "datasetsOnly": {
+          "string": "{count, plural, one {Publier cette ébauche mettra à jour {count} liste d'entités.} many {Publier cette ébauche mettra à jour {count} listes d'entités.} other {Publier cette ébauche mettra à jour {count} liste(s) d'entités.}}"
+        },
+        "newProperties": {
+          "full": {
+            "string": "Publier cette ébauche mettra à jour {entityLists} liste(s) d'entités et créera {properties}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
+          },
+          "entityLists": {
+            "string": "{count, plural, one {{count} Liste d'Entités} many {{count} Listes d'Entités} other {{count} Liste(s) d'Entités}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          },
+          "properties": {
+            "string": "{count, plural, one {{count} propriété} many {{count} propriétés} other {{count} propriété(s)}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          }
+        }
+      },
+      "cannotDeleteProperties": {
+        "string": "Les propriétés ne peuvent être supprimées.",
+        "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
         "string": "Cette définition ne met pas à jour d'Entités.",
@@ -4733,7 +4736,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{count, plural, one {{selected} sur {total} colonne visible} many {{selected} sur {total} colonnes visibles} other {{selected} sur {total} colonnes visibles}}",
+        "string": "{selected} sur {total}",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
@@ -4769,9 +4772,9 @@
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       },
-      "noSubmissionDateSelected": {
-        "string": "(aucune)",
-        "developer_comment": "Text shown when no Submission date is selected in the filter"
+      "allSubmissionDateSelected": {
+        "string": "(Toutes)",
+        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4791,9 +4794,9 @@
           }
         }
       },
-      "noReviewStateSelected": {
-        "string": "(aucun)",
-        "developer_comment": "Text shown when no Review State is selected in the filter"
+      "allReviewStateSelected": {
+        "string": "(Tous)",
+        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4826,9 +4829,9 @@
       "unknown": {
         "string": "Expéditeur inconnu"
       },
-      "noSubmitterSelected": {
-        "string": "(aucun)",
-        "developer_comment": "Text shown when no Submitter is selected in the filter"
+      "allSubmitterSelected": {
+        "string": "(Toutes)",
+        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {
@@ -5242,7 +5245,7 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Créer un nouveau Formulaire et éditez le dans le nouvel onglet d’Édition de Formulaire"
+        "string": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer Formulaire»"
       },
       "action": {
         "gotIt": {

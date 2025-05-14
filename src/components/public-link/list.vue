@@ -304,7 +304,7 @@ export default {
     },
     "heading": [
       {
-        "full": "Qualquer pessoa com um link de acesso público pode preencher este formulário em um navegador de internet. Você pode criar vários links para rastrear distribuições diferentes do formulário, para limitar por quanto tempo um grupo específico de pessoas tem acesso ao formulário e muito mais. Esses links só funcionarão se o formulário estiver com {state}Aberto.",
+        "full": "Qualquer pessoa com um link de acesso público pode preencher este formulário em um navegador de internet. Você pode criar vários links para rastrear distribuições diferentes do formulário, para limitar por quanto tempo um grupo específico de pessoas tem acesso ao formulário e muito mais. Esses links só funcionarão se o formulário estiver com {state} Aberto.",
         "state": "status"
       },
       {

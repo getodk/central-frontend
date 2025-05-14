@@ -137,6 +137,7 @@
     "comment": "Aggiungere un commento",
     "continue": "Continua",
     "create": "Crea",
+    "createSubmission": "Nuovo invio",
     "delete": "Cancellare",
     "done": "Fatto",
     "download": "Scaricare",
@@ -326,6 +327,7 @@
     "versionShort": "v{version}",
     "warning": "Avvertimento",
     "beta": "Beta",
+    "none": "(nessuno)",
     "reviewState": "Stato Revisione",
     "status": "Stato",
     "version": "Versione"

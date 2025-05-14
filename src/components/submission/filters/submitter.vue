@@ -172,7 +172,8 @@ const placeholder = (counts) => {
         "none": "Keine"
       }
     },
-    "unknown": "Unbekannter Einsender"
+    "unknown": "Unbekannter Einsender",
+    "allSubmitterSelected": "(Alle)"
   },
   "es": {
     "field": {
@@ -186,7 +187,8 @@ const placeholder = (counts) => {
         "none": "Ninguno"
       }
     },
-    "unknown": "Remitente desconocido"
+    "unknown": "Remitente desconocido",
+    "allSubmitterSelected": "(Todos)"
   },
   "fr": {
     "field": {
@@ -201,7 +203,7 @@ const placeholder = (counts) => {
       }
     },
     "unknown": "Expéditeur inconnu",
-    "noSubmitterSelected": "(aucun)"
+    "allSubmitterSelected": "(Toutes)"
   },
   "id": {
     "field": {
@@ -227,7 +229,8 @@ const placeholder = (counts) => {
         "none": "Nessuno/a"
       }
     },
-    "unknown": "Utente invio sconosciuto"
+    "unknown": "Utente invio sconosciuto",
+    "allSubmitterSelected": "(Tutto)"
   },
   "ja": {
     "field": {

@@ -122,11 +122,20 @@ const hidePopover = () => { popoverData.target = null; };
 <i18n>
 {
   "de": {
-    "title": "Diesen Entwurf prüfen"
+    "title": "Diesen Entwurf prüfen",
+    "entitiesTesting": "Diese Formulardefinition erstellt oder aktualisiert Entitäten. Im Moment werden Entitäten nicht durch Formularentwürfe erstellt oder aktualisiert, daher müssen Sie das Formular veröffentlichen, um die Funktionalität von Entitäten zu überprüfen.",
+    "deletionWarning": {
+      "full": "Hier eingereichte Übermittlungen {willBeDeleted} wenn Sie den Entwurf veröffentlichen!",
+      "willBeDeleted": "wird gelöscht"
+    }
   },
   "es": {
     "title": "Probar este borrador",
-    "entitiesTesting": "Esta definición de formulario crea o actualiza entidades. Por ahora, las Entidades no son creadas o actualizadas por Borradores de Formularios, por lo que necesitará publicar el Formulario para verificar la funcionalidad de la Entidad."
+    "entitiesTesting": "Esta definición de formulario crea o actualiza entidades. Por ahora, las Entidades no son creadas o actualizadas por Borradores de Formularios, por lo que necesitará publicar el Formulario para verificar la funcionalidad de la Entidad.",
+    "deletionWarning": {
+      "full": "Envíos realizados aquí {willBeDeleted} cuando publique este borrador.",
+      "willBeDeleted": "se eliminará"
+    }
   },
   "fr": {
     "title": "Tester cette ébauche",

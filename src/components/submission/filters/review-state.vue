@@ -109,7 +109,8 @@ const placeholder = (counts) => {
         "all": "Alle",
         "none": "Keine"
       }
-    }
+    },
+    "allReviewStateSelected": "(Alle)"
   },
   "es": {
     "placeholder": "{selected} de {total}",
@@ -118,7 +119,8 @@ const placeholder = (counts) => {
         "all": "Todos",
         "none": "Ninguno"
       }
-    }
+    },
+    "allReviewStateSelected": "(Todos)"
   },
   "fr": {
     "placeholder": "{selected} sur {total}",
@@ -128,7 +130,7 @@ const placeholder = (counts) => {
         "none": "Aucun"
       }
     },
-    "noReviewStateSelected": "(aucun)"
+    "allReviewStateSelected": "(Tous)"
   },
   "id": {
     "placeholder": "{selected} dari {total}",
@@ -146,7 +148,8 @@ const placeholder = (counts) => {
         "all": "Tutto",
         "none": "Nessuno/a"
       }
-    }
+    },
+    "allReviewStateSelected": "(Tutto)"
   },
   "pt": {
     "placeholder": "{selected} de {total}",
