@@ -1,5 +1,11 @@
 # @getodk/web-forms
 
+## 0.11.0
+
+### Minor Changes
+
+- 3aedccb: Add support for a multiline text question type.
+
 ## 0.10.0
 
 ### Minor Changes

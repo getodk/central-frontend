@@ -82,8 +82,9 @@
   "Parameters": {
     "randomize": "✅",
     "seed": "✅",
-    "value": "",
-    "label": "",
+    "value": "✅",
+    "label": "✅",
+    "rows": "✅",
     "geopoint capture-accuracy, warning-accuracy, allow-mock-accuracy": "✅",
     "range start, end, step": "✅",
     "image max-pixels": "",
