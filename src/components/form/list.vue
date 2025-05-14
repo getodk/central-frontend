@@ -134,7 +134,10 @@ export default {
     "action": {
       "create": "Nuevo"
     },
-    "emptyTable": "No hay formularios para mostrar."
+    "emptyTable": "No hay formularios para mostrar.",
+    "alert": {
+      "create": "Su nuevo formulario \"{name}\" se ha creado como un borrador. Cargue archivos y pruebe su formulario a continuación, y cuando considere que está listo, puede publicar el formulario para su uso."
+    }
   },
   "fr": {
     "title": "Formulaires",

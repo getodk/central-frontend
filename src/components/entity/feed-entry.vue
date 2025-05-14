@@ -420,7 +420,8 @@ const showBranchData = () => {
           "api": "Datos actualizados por {name}"
         },
         "update_resolve": "Advertencia de conflicto resuelto por {name}",
-        "delete": "Entidad {label} eliminada por {name}"
+        "delete": "Entidad {label} eliminada por {name}",
+        "restore": "Entidad {label} restablecida por {name}"
       }
     },
     "offlineUpdate": "Actualización offline"

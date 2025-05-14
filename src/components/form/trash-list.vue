@@ -177,11 +177,17 @@ export default {
   "de": {
     "title": "Papierkorb",
     "trashCount": "{count}",
+    "alert": {
+      "restore": "Das Formular {name} wurde wiederhergestellt."
+    },
     "message": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
   },
   "es": {
     "title": "Papelera",
     "trashCount": "({count})",
+    "alert": {
+      "restore": "El formulario {name} fue restablecido."
+    },
     "message": "Los formularios y los datos relacionados con los formularios se eliminan después de 30 días en la Papelera"
   },
   "fr": {

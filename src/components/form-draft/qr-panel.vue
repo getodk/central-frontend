@@ -119,6 +119,10 @@ const { projectPath } = useRoutes();
     },
     "stopsWorking": "Wenn Sie diesen Entwurf veröffentlichen, funktioniert er nicht mehr.",
     "instructions": "Scannen Sie diesen QR-Code, um Collect auf einem Gerät für Tests zu konfigurieren und Daten an diese Testtabelle zu übermitteln.",
+    "codesForUsers": {
+      "full": "Um Codes zur Verteilung an Benutzer zu erstellen, besuchen Sie bitte die {appUsers} Seite",
+      "appUsers": "App-Benutzer"
+    },
     "collectProjectName": "[Entwurf] {name}"
   },
   "es": {

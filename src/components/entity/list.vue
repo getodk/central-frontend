@@ -509,11 +509,18 @@ export default {
   "de": {
     "noEntities": "Es gibt keine Entitäten zum Anzeigen.",
     "noMatching": "Es gibt keine passenden Entitäten.",
+    "allDeleted": "Alle Entitäten werden gelöscht.",
+    "allDeletedOnPage": "Alle Entitäten auf der Seite wurden gelöscht.",
     "alert": {
       "delete": "Die Entität \"{label}“ wurde gelöscht."
     },
     "filterDisabledMessage": "Filterung ist für gelöschte Entitäten nicht verfügbar",
-    "downloadDisabled": "Der Download ist für gelöschte Entitäten nicht verfügbar"
+    "downloadDisabled": "Der Download ist für gelöschte Entitäten nicht verfügbar",
+    "deletedEntity": {
+      "emptyTable": "Es gibt keine gelöschten Entitäten.",
+      "allRestored": "Alle gelöschten Entitäten werden wiederhergestellt.",
+      "allRestoredOnPage": "Alle Entitäten auf der Seite wurden wiederhergestellt."
+    }
   },
   "es": {
     "noEntities": "No hay Entidades para mostrar.",

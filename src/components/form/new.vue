@@ -471,6 +471,7 @@ export default {
       "Advertencias sobre el diseño del formulario:",
       "Advertencias sobre el flujo de trabajo:",
       {
+        "deletedFormExists": "Hay un formulario con ID \"{value}\" en la Papelera. Si carga este formulario, no podrá restablecer el otro con la identificación coincidente.",
         "structureChanged": "Los siguientes campos han sido eliminados, renombrados o ahora están en diferentes grupos o repeticiones. Estos campos no estarán visibles en la tabla de envío ni se incluirán en las exportaciones de forma predeterminada.",
         "oldEntityVersion": "La versión \"{version}\" de la especificación de entidades no es compatible con las entidades sin conexión. Se recomienda utilizar la versión 2024.1.0 o posterior."
       },
@@ -656,7 +657,7 @@ export default {
       "Se você tiver Anexos do Formulário, poderá fornecê-los na próxima página, após o Formulário ter sido criado."
     ],
     "dropZone": {
-      "full": "Solte o arquivo aqui, ou {chooseOne}para carregar.",
+      "full": "Solte o arquivo aqui, ou {chooseOne} para carregar.",
       "chooseOne": "escolha um"
     },
     "action": {

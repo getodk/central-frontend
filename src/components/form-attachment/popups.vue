@@ -525,22 +525,22 @@ $popup-width: 300px;
       "dragover": "Arraste o Anexo do Formulário que deseja substituir pelo arquivo e solte para carregar.",
       "dropToPrepare": {
         "full": "Solte agora para preparar {countOfFiles} para carregar nesse formulário.",
-        "countOfFiles": "{count}arquivo | {count}arquivos | {count}arquivos"
+        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
       }
     },
     "afterSelection": {
       "matched": {
-        "full": "{countOfFiles}pronto para carregar. | {countOfFiles}prontos para carregar. | {countOfFiles}prontos para carregar.",
-        "countOfFiles": "{count}arquivo | {count}arquivos | {count}arquivos"
+        "full": "{countOfFiles} pronto para carregar. | {countOfFiles} prontos para carregar. | {countOfFiles} prontos para carregar.",
+        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
       },
       "someUnmatched": {
-        "full": "{countOfFiles}tem nome que não foi reconhecido e será ignorado. Para carregá-lo, troque o nomes dele ou arraste individualmente sobre o destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.",
-        "countOfFiles": "{count} arquivo | {count}arquivos | {count}arquivos"
+        "full": "{countOfFiles} tem nome que não foi reconhecido e será ignorado. Para carregá-lo, troque o nomes dele ou arraste individualmente sobre o destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.",
+        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
       },
       "noneMatched": "Nós não reconhecemos o nome do arquivo que você está tentando carregar. Por favor, troque o nome dele para corresponder ao nome da lista acima, ou solte-o individualmente sobre o destino correto. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino."
     },
     "duringUpload": {
-      "total": "Por favor aguarde, carregando{count} arquivo: | Por favor aguarde, carregando {count}arquivos: | Por favor aguarde, carregando {count}arquivos:",
+      "total": "Por favor aguarde, carregando {count} arquivo: | Por favor aguarde, carregando {count} arquivos: | Por favor aguarde, carregando {count} arquivos:",
       "current": "Enviando {filename}({percentUploaded})",
       "remaining": {
         "beforeLast": "{count} arquivo permanece. | {count} arquivos permanecem. | {count} arquivos permanecem.",

@@ -125,7 +125,8 @@ const placeholder = (counts) => {
         "all": "Alle",
         "none": "Keine"
       }
-    }
+    },
+    "allSelectedConflictSelected": "(Alle)"
   },
   "es": {
     "conflict": {
@@ -141,7 +142,8 @@ const placeholder = (counts) => {
         "all": "Todos",
         "none": "Ninguno"
       }
-    }
+    },
+    "allSelectedConflictSelected": "(Todos)"
   },
   "fr": {
     "conflict": {
@@ -158,7 +160,7 @@ const placeholder = (counts) => {
         "none": "Aucun"
       }
     },
-    "noSelectedConflictSelected": "(aucun)"
+    "allSelectedConflictSelected": "(Tous)"
   },
   "it": {
     "conflict": {
@@ -174,7 +176,8 @@ const placeholder = (counts) => {
         "all": "Tutto",
         "none": "Nessuno/a"
       }
-    }
+    },
+    "allSelectedConflictSelected": "(Tutto)"
   },
   "pt": {
     "conflict": {

@@ -137,6 +137,7 @@
     "comment": "Kommentieren",
     "continue": "Weitermachen",
     "create": "Anlegen",
+    "createSubmission": "Neue Übermittlung",
     "delete": "Löschen",
     "done": "Fertig",
     "download": "Herunterladen",
@@ -211,7 +212,7 @@
   },
   "count": {
     "appUser": "{count} App-Benutzer | {count} App-Benutzer",
-    "attachments": "{count}Anhang | {count}Anhänge",
+    "attachments": "{count} Anhang | {count} Anhänge",
     "form": "{count} Formular | {count} Formulare",
     "submission": "{count} Übermittlung | {count} Übermittlungen",
     "warning": "{count} Warnung | {count} Warnungen"
@@ -251,6 +252,7 @@
     "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden.",
     "submissionDeleted": "Die Übermittlung wurde gelöscht.",
     "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
+    "entityRestored": "Die Entität \"{label}“ wurde wiederhergestellt.",
     "entityDeleted": "Die Entität \"{label}“ wurde gelöscht."
   },
   "moreInfo": {
@@ -325,6 +327,7 @@
     "versionShort": "v{version}",
     "warning": "Warnung",
     "beta": "Beta",
+    "none": "(keine)",
     "reviewState": "Überprüfungsstatus",
     "status": "Status",
     "version": "Version"

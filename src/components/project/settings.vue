@@ -403,7 +403,7 @@ export default {
         ],
         "encrypted": [
           {
-            "full": "A encriptação de dados de respostas está {enabled}para esse projeto.",
+            "full": "A encriptação de dados de respostas está {enabled} para esse projeto.",
             "enabled": "habilitado"
           },
           "Nessa versão do ODK Central você não poderá desabilitar a encriptação uma vez que ela estive ligada."

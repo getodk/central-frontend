@@ -447,6 +447,7 @@ export default {
       },
       "comment": "Kommentiert von {name}",
       "delete": "Gelöscht von {name}",
+      "undelete": "Wiederhergestellt von {name}",
       "submissionBacklog": {
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
@@ -638,7 +639,7 @@ export default {
       },
       "updateReviewState": {
         "null": {
-          "full": "{reviewState}por {name}",
+          "full": "{reviewState} por {name}",
           "reviewState": "Recebido"
         },
         "hasIssues": {

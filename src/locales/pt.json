@@ -209,7 +209,7 @@
   "count": {
     "appUser": "{count} usuário de aplicativo | {count} usuários de aplicativo | {count} usuários de aplicativo",
     "form": "{count} formulário | {count} formulários | {count} formulários",
-    "submission": "{count}resposta | {count} respostas | {count} respostas",
+    "submission": "{count} resposta | {count} respostas | {count} respostas",
     "warning": "{count} aviso | {count} avisos | {count} avisos"
   },
   "resource": {
@@ -334,10 +334,10 @@
     "csv": {
       "readError": "Ocorreu um problema ao ler seu arquivo: {message}",
       "invalidCSV": "O arquivo “{name}” não é um arquivo .csv válido. Ele não pode ser lido.",
-      "rowError": "Há um problema na linha{row} do arquivo: {message}",
+      "rowError": "Há um problema na linha {row} do arquivo: {message}",
       "invalidQuotes": "Um campo entre aspas é inválido. Verifique a linha para ver se há algum valor incomum.",
       "emptyRow": "A linha está vazia.",
-      "dataWithoutHeader": "Era esperada {expected} coluna, mas foi encontrada {actual}. | Eram esperadas {expected} colunas, mas foram encontradas{actual}. | Eram esperadas {expected} colunas, mas foram encontradas {actual}."
+      "dataWithoutHeader": "Era esperada {expected} coluna, mas foi encontrada {actual}. | Eram esperadas {expected} colunas, mas foram encontradas {actual}. | Eram esperadas {expected} colunas, mas foram encontradas {actual}."
     },
     "request": {
       "noRequest": "Algo deu errado: não houve requisição.",

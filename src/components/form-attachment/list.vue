@@ -370,6 +370,7 @@ export default {
     "action": {
       "upload": "Dateien auswählen"
     },
+    "orDrag": "oder ziehen Sie Dateien zum Hochladen auf diese Seite",
     "problem": {
       "noneUploaded": "{message} Es wurden keine Dateien erfolgreich hochgeladen.",
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
@@ -441,8 +442,8 @@ export default {
   },
   "pt": {
     "problem": {
-      "noneUploaded": "{message}Nenhum arquivo foi carregado.",
-      "someUploaded": "{message} Apenas {uploaded} de{total} arquivo foi carregado com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso. | {message}Apenas {uploaded}de {total}arquivos foram carregados com sucesso."
+      "noneUploaded": "{message} Nenhum arquivo foi carregado.",
+      "someUploaded": "{message} Apenas {uploaded} de {total} arquivo foi carregado com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso."
     },
     "alert": {
       "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso.",

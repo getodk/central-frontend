@@ -1273,6 +1273,9 @@
         "num_forms_with_audits": {
           "string": "監査を受けたフォーム数"
         },
+        "num_forms_webforms_enabled": {
+          "string": ""
+        },
         "num_reused_form_ids": {
           "string": "再利用されたフォームID数"
         },
@@ -2082,9 +2085,9 @@
           }
         }
       },
-      "noSelectedConflictSelected": {
+      "allSelectedConflictSelected": {
         "string": "",
-        "developer_comment": "Text shown when no conflict is selected in the filter dropdown"
+        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2854,10 +2857,6 @@
         "abandon": {
           "string": "下書きの削除",
           "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "deleteForm": {
-          "string": "下書きとフォームの削除",
-          "developer_comment": "This is the title at the top of a pop-up."
         }
       },
       "introduction": {
@@ -2923,27 +2922,12 @@
           "string": ""
         }
       },
+      "newProperties": {
+        "string": "{count, plural, other {}}"
+      },
       "problem": {
         "409_6": {
           "string": "バージョン名が以前の下書き、または削除されたフォームと競合しています。以下の入力項目から新しいものに変更するか、もしくは新しい定義フォームをアップロードしてください。"
-        }
-      },
-      "dataset": {
-        "introduction": {
-          "full": {
-            "string": "",
-            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
-          },
-          "inAddition": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
-          }
-        },
-        "newDataset": {
-          "string": ""
-        },
-        "newProperty": {
-          "string": ""
         }
       }
     },
@@ -3109,9 +3093,28 @@
       "datasetCount": {
         "string": "{count, plural, other {}}"
       },
-      "diffHasNew": {
+      "diffCounts": {
+        "datasetsOnly": {
+          "string": "{count, plural, other {}}"
+        },
+        "newProperties": {
+          "full": {
+            "string": "",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
+          },
+          "entityLists": {
+            "string": "{count, plural, other {}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          },
+          "properties": {
+            "string": "{count, plural, other {}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          }
+        }
+      },
+      "cannotDeleteProperties": {
         "string": "",
-        "developer_comment": "This text is shown if publishing a Draft Form will create one or more Entity Lists or one or more Entity properties."
+        "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
         "string": "",
@@ -4733,7 +4736,7 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{count, plural, other {}}",
+        "string": "",
         "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
       },
       "field": {
@@ -4769,9 +4772,9 @@
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
       },
-      "noSubmissionDateSelected": {
+      "allSubmissionDateSelected": {
         "string": "",
-        "developer_comment": "Text shown when no Submission date is selected in the filter"
+        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4791,9 +4794,9 @@
           }
         }
       },
-      "noReviewStateSelected": {
+      "allReviewStateSelected": {
         "string": "",
-        "developer_comment": "Text shown when no Review State is selected in the filter"
+        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4826,9 +4829,9 @@
       "unknown": {
         "string": ""
       },
-      "noSubmitterSelected": {
+      "allSubmitterSelected": {
         "string": "",
-        "developer_comment": "Text shown when no Submitter is selected in the filter"
+        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {

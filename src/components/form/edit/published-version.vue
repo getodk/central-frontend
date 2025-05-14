@@ -83,12 +83,13 @@ const { form, formDraft } = useRequestData();
     "title": "Aktuelle Version",
     "subtitle": {
       "published": "Veröffentlicht {dateTime}"
-    }
+    },
+    "versionName": "Versionsname:{name}"
   },
   "es": {
     "title": "Versión actual",
     "subtitle": {
-      "published": "Publicado en{dateTime}"
+      "published": "Publicado en {dateTime}"
     },
     "versionName": "Nombre de la versión: {name}"
   },

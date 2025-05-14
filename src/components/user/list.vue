@@ -321,7 +321,7 @@ export default {
     "alert": {
       "create": "Um usuário foi criado com sucesso para \"{displayName}\".",
       "assignRole": "Sucesso! \"{displayName}\" recebeu a função do site de \"{roleName}\".",
-      "resetPassword": "A senha para \"{displayName}\" foi invalidada. Um email foi enviado para {email}com as instruções de como prosseguir.",
+      "resetPassword": "A senha para \"{displayName}\" foi invalidada. Um email foi enviado para {email} com as instruções de como prosseguir.",
       "retire": "O usuário \"{displayName}\" foi desativado."
     }
   },

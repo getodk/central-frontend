@@ -208,6 +208,9 @@ export default {
         "back": "Zurück zur Projektübersicht"
       }
     },
+    "formNav": {
+      "tabTitle": "Veröffentlichen Sie diesen Formularentwurf, um diese Funktionen zu aktivieren"
+    },
     "infoNav": {
       "updatedDatasets": "Aktualisierungen",
       "attachedDatasets": "Verwendet"
@@ -223,6 +226,7 @@ export default {
       "tabTitle": "Publique este borrador de formulario para habilitar estas funciones"
     },
     "infoNav": {
+      "entityLists": "{count} Lista de entidades relacionadas | {count} Listas de entidades relacionadas | {count} Listas de entidades relacionadas",
       "updatedDatasets": "Actualizaciones",
       "attachedDatasets": "Usos",
       "appUsers": "{count} Usuario de la aplicación asignados | {count} Usuarios de la aplicación asignados | {count} Usuarios de la aplicación asignados"

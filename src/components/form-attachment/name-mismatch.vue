@@ -178,7 +178,7 @@ export default {
       "replace": "Substituir arquivo"
     },
     "introduction": [
-      "Você tem certeza que deseja carregar o arquivo {filename}como {attachmentName}?",
+      "Você tem certeza que deseja carregar o arquivo {filename} como {attachmentName}?",
       "Nós estamos verificando novamente porque os nomes dos arquivos não coincidem."
     ]
   },

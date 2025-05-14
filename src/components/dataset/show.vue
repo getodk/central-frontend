@@ -177,8 +177,8 @@ export default {
   "es": {
     "back": "Back to Project Entities",
     "infoNav": {
-      "connectedForms": "Actualizar por {count}formulario | Actualizar por {count}formularios | Actualizar por {count}formularios",
-      "linkedForms": "Utilizado en {count}formulario | Utilizado en {count}formularios | Utilizado en{count}formularios"
+      "connectedForms": "Actualizar por {count} formulario | Actualizar por {count} formularios | Actualizar por {count} formularios",
+      "linkedForms": "Utilizado en {count} formulario | Utilizado en {count} formularios | Utilizado en {count} formularios"
     }
   },
   "fr": {
@@ -191,8 +191,8 @@ export default {
   "it": {
     "back": "Torna alle Entità del progetto",
     "infoNav": {
-      "connectedForms": "Aggiornato da{count} Formulario | Aggiornato da {count}Formulari | Aggiornato da {count}Formulari",
-      "linkedForms": "Usato da{count} Formulario | Usato da {count}Formulari | Usato da {count}Formulari"
+      "connectedForms": "Aggiornato da {count} Formulario | Aggiornato da {count} Formulari | Aggiornato da {count} Formulari",
+      "linkedForms": "Usato da {count} Formulario | Usato da {count} Formulari | Usato da {count} Formulari"
     }
   },
   "pt": {

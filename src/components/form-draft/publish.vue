@@ -226,12 +226,6 @@ export default {
     ],
     "problem": {
       "409_6": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
-        "inAddition": "Navíc,"
-      }
     }
   },
   "de": {
@@ -254,14 +248,6 @@ export default {
     ],
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} durch die Veröffentlichung dieser Formulardefinition werden die folgenden Änderungen an diesem Projekt vorgenommen:",
-        "inAddition": "Zusätzlich,"
-      },
-      "newDataset": "Eine neue Entitätsliste {datasetName} wird erstellt.",
-      "newProperty": "In der Entitätsliste {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
     }
   },
   "es": {
@@ -282,16 +268,9 @@ export default {
       "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted.",
       "¿Le gustaría continuar?"
     ],
+    "newProperties": "La publicación de este borrador actualizará {count} propiedad. Esta no se puede eliminar. | La publicación de este borrador actualizará {count} propiedades. Estas no se pueden eliminar. | La publicación de este borrador actualizará {count} propiedades. Estas no se pueden eliminar.",
     "problem": {
       "409_6": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publicar esta definición de Formulario hará los siguientes cambios a este Proyecto:",
-        "inAddition": "Además,"
-      },
-      "newDataset": "Se creará una nueva lista de entidades {datasetName}.",
-      "newProperty": "En la lista de entidades {datasetName}, se creará una nueva propiedad {propertyName}."
     }
   },
   "fr": {
@@ -312,16 +291,9 @@ export default {
       "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous.",
       "Voulez vous continuer ?"
     ],
+    "newProperties": "Publier cette ébauche créera {count} propriété. Cela ne peut être annulé. | Publier cette ébauche créera {count} propriétés. Cela ne peut être annulé. | Publier cette ébauche créera {count} propriété(s). Cela ne peut être annulé.",
     "problem": {
       "409_6": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé. Merci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
-        "inAddition": "De plus,"
-      },
-      "newDataset": "Une nouvelle liste d'entités {datasetName} va être créée.",
-      "newProperty": "Dans la liste d'entités {datasetName}, une nouvelle propriété {propertyName} sera créée."
     }
   },
   "id": {
@@ -345,16 +317,9 @@ export default {
       "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te.",
       "Vuoi procedere?"
     ],
+    "newProperties": "La pubblicazione di questa bozza creerà {count} proprietà. Questa non può essere eliminata. | La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate. | La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.",
     "problem": {
       "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
-        "inAddition": "Inoltre,"
-      },
-      "newDataset": "Una nuova Lista Entità {datasetName} sarà creata.",
-      "newProperty": "Nella Lista Entità {datasetName}, una nuova proprietà {propertyName} sarà creata."
     }
   },
   "ja": {
@@ -389,14 +354,6 @@ export default {
     ],
     "problem": {
       "409_6": "O nome da versão deste Rascunho está em conflito com uma versão anterior deste Formulário ou de um Formulário excluído. Use o campo abaixo para alterá-lo para algo novo ou carregar uma nova definição do Formulário."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publicar esta definição do Formulário fará as seguintes alterações neste Projeto:",
-        "inAddition": "Além disso,"
-      },
-      "newDataset": "Uma nova Lista de Entidades {datasetName} será criada.",
-      "newProperty": "Na Lista de Entidades {datasetName}, uma nova propriedade {propertyName} será criada."
     }
   },
   "sw": {
@@ -419,14 +376,6 @@ export default {
     ],
     "problem": {
       "409_6": "Jina la toleo la Rasimu hii linakinzana na toleo la awali la Fomu hii au Fomu iliyofutwa. Tafadhali tumia sehemu iliyo hapa chini ili kuibadilisha hadi kitu kipya au kupakia ufafanuzi mpya wa Fomu"
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} kuchapisha ufafanuzi huu wa Fomu kutafanya mabadiliko yafuatayo kwenye Mradi huu:",
-        "inAddition": "Zaidi ya hayo,"
-      },
-      "newDataset": "Orodha mpya ya Huluki {datasetName} itaundwa.",
-      "newProperty": "Katika Orodha ya Huluki {datasetName}, sifa mpya ya {propertyName} itaundwa."
     }
   },
   "zh-Hant": {
@@ -449,14 +398,6 @@ export default {
     ],
     "problem": {
       "409_6": "此草案的版本名稱與此表單的過去版本或已刪除的表單衝突。請使用下面的欄位將其變更為新內容或上傳新的表單定義。"
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition}發布此表單定義將對此專案進行以下變更：",
-        "inAddition": "此外"
-      },
-      "newDataset": "將會建立一個新的實體清單 {datasetName}。",
-      "newProperty": "在實體清單 {datasetName} 中，將會建立一個新屬性 {propertyName}。"
     }
   }
 }

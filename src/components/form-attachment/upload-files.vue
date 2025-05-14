@@ -181,7 +181,7 @@ export default {
     "title": "Carregar arquivos",
     "introduction": [
       {
-        "full": "Para carregar arquivos, você pode {dragAndDrop}um ou mais arquivos sobre a tabela nessa página.",
+        "full": "Para carregar arquivos, você pode {dragAndDrop} um ou mais arquivos sobre a tabela nessa página.",
         "dragAndDrop": "arrastar e soltar"
       },
       {

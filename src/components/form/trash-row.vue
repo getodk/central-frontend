@@ -187,10 +187,16 @@ export default {
     "deletedDate": "Smazáno {dateTime}"
   },
   "de": {
-    "deletedDate": "Gelöscht {dateTime}"
+    "deletedDate": "Gelöscht {dateTime}",
+    "disabled": {
+      "conflict": "Dieses Formular kann nicht wiederhergestellt werden, weil ein aktives Formular mit derselben ID existiert."
+    }
   },
   "es": {
-    "deletedDate": "Borrado {dateTime}"
+    "deletedDate": "Borrado {dateTime}",
+    "disabled": {
+      "conflict": "Este formulario no se puede restablecer porque existe un formulario activo con el mismo ID."
+    }
   },
   "fr": {
     "deletedDate": "Supprimé le {dateTime}",

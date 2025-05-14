@@ -347,7 +347,7 @@ export default {
       "O usuário de aplicativo \"{displayName}\" foi criado.",
       "Você pode configurar um dispositivo móvel para \"{displayName}\" agora, ou você pode fazer isso mais tarde clicando na opção \"Exibir código\" da tabela de usuários de aplicativo.",
       {
-        "full": "Você pode querer visitar a página de {formAccessSettings}desse projeto para dar acesso a formulários para esse usuário.",
+        "full": "Você pode querer visitar a página de {formAccessSettings} desse projeto para dar acesso a formulários para esse usuário.",
         "formAccessSettings": "Configurações de acesso ao formulário"
       }
     ],

@@ -91,18 +91,20 @@ export default {
   "de": {
     "field": {
       "submissionDate": "Übermittelt um"
-    }
+    },
+    "allSubmissionDateSelected": "(Alle)"
   },
   "es": {
     "field": {
       "submissionDate": "Enviado a"
-    }
+    },
+    "allSubmissionDateSelected": "(Todos)"
   },
   "fr": {
     "field": {
       "submissionDate": "Soumis à"
     },
-    "noSubmissionDateSelected": "(aucune)"
+    "allSubmissionDateSelected": "(Toutes)"
   },
   "id": {
     "field": {
@@ -112,7 +114,8 @@ export default {
   "it": {
     "field": {
       "submissionDate": "Inviato alle"
-    }
+    },
+    "allSubmissionDateSelected": "(Tutto)"
   },
   "ja": {
     "field": {

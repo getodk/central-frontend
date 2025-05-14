@@ -233,6 +233,7 @@ export default {
       "num_forms_with_geospatial": "Anzahl Formulare mit Geodata",
       "num_forms_with_encryption": "Anzahl Formulare mit Verschlüsselung",
       "num_forms_with_audits": "Anzahl Formulare mit Audits",
+      "num_forms_webforms_enabled": "Anzahl der Formulare mit aktivierten Web-Formularen",
       "num_reused_form_ids": "Anzahl wiederverwendeter Formular-IDs",
       "num_open_forms": "Anzahl offener Formulare",
       "num_closing_forms": "Anzahl schliessender Formulare",
@@ -275,8 +276,14 @@ export default {
       "avg_entity_submission_delay": "Durchschnitt Objektübermittlung-Verarbeitungsverzögerung",
       "uses_external_blob_store": "Der Server verwendet externen S3-kompatiblen Speicher",
       "num_offline_entity_submissions_force_processed": "Anzahl der zwangsverarbeiteten Offline-Entity-Einsendungen",
+      "max_entity_branch_delay": "Maximale Zeit für die Verarbeitung der Offline-Aktualisierungskette für Entitäten",
+      "num_xml_only_form_defs": "Anzahl der Formulardefinitionen ohne zugehöriges XLSFormular",
       "num_blob_files": "Anzahl der Binärdateien",
-      "num_entity_creates_sub": "Anzahl der erstellten Entitäten über Übermittlungen"
+      "num_blob_files_on_s3": "Anzahl der derzeit in einem S3-kompatiblen Speicher gespeicherten Binärdateien",
+      "num_reset_failed_to_pending_count": "Anzahl der Fälle, in denen der Benutzer einen fehlgeschlagenen Upload auf einen S3-kompatiblen Speicher zurückgesetzt hat",
+      "num_entity_creates_sub": "Anzahl der erstellten Entitäten über Übermittlungen",
+      "num_entity_creates_api": "Anzahl der über API erstellten Entitäten",
+      "num_entity_creates_bulk": "Anzahl der Entitäten, die über Massen-Upload erstellt wurden"
     }
   },
   "es": {
@@ -303,6 +310,7 @@ export default {
       "num_forms_with_geospatial": "Número de formularios con geodatos",
       "num_forms_with_encryption": "Número de formularios con cifrado",
       "num_forms_with_audits": "Número de formularios con auditorías",
+      "num_forms_webforms_enabled": "Número de formularios con formularios web activados",
       "num_reused_form_ids": "Número de ID de formulario reutilizados",
       "num_open_forms": "Número de formularios abiertos",
       "num_closing_forms": "Número de formularios de cierre",
@@ -379,6 +387,7 @@ export default {
       "num_forms_with_geospatial": "Nombre de formulaires avec données géographiques",
       "num_forms_with_encryption": "Nombre de formulaires avec chiffrement",
       "num_forms_with_audits": "Nombre de formulaires avec audits",
+      "num_forms_webforms_enabled": "Nombre de Formulaires ayant Web Forms activé",
       "num_reused_form_ids": "Nombre d'ID de formulaires réutilisés",
       "num_open_forms": "Nombre de formulaires ouverts",
       "num_closing_forms": "Nombre de formulaires en cours de fermeture",
@@ -479,6 +488,7 @@ export default {
       "num_forms_with_geospatial": "Numero di formulari con geodati",
       "num_forms_with_encryption": "Numero di formulari con crittografia abilitata",
       "num_forms_with_audits": "Numero di formulari con audit",
+      "num_forms_webforms_enabled": "Numero di formulari con i Formulari Web abilitati",
       "num_reused_form_ids": "Numero di ID formulario riutilizzati",
       "num_open_forms": "Numero di formulari aperti",
       "num_closing_forms": "Numero di formulari in fase di chiusura",

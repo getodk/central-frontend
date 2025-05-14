@@ -96,15 +96,23 @@ const restore = () => {
 <i18n>
 {
   "de": {
-    "title": "Wiederherstellen {label}"
+    "title": "Wiederherstellen {label}",
+    "introduction": [
+      "Sind Sie sicher, dass Sie “{label}” wiederherstellen wollen?",
+      "Die Entität wird in ihrem vorherigen Zustand wiederhergestellt.",
+      "Wenn die Entität erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
+    ]
   },
   "es": {
-    "title": "Restablecer{label}",
+    "title": "Restablecer {label}",
     "introduction": [
       "¿Está seguro que desea restablecer “{label}”?",
       "La Entidad volverá a su estado anterior.",
       "Si la Entidad se elimina nuevamente, pasarán otros 30 días antes de que se elimine."
-    ]
+    ],
+    "field": {
+      "noConfirm": "Restablecer inmediatamente sin confirmación hasta que salga de la página"
+    }
   },
   "fr": {
     "title": "Restaurer {label}",

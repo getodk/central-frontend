@@ -229,7 +229,8 @@ export default {
       "Um eine Verbindung zu diesem OData-Feed herzustellen, wählen Sie Ihr Tool und kopieren Sie den Link."
     ],
     "tab": {
-      "microsoft": "Power BI oder Excel"
+      "microsoft": "Power BI oder Excel",
+      "other": "Sonstiges (API)"
     },
     "help": {
       "microsoft": {
@@ -252,7 +253,8 @@ export default {
       "Para conectarse a esta fuente de OData, seleccione su herramienta y copie el enlace en ella."
     ],
     "tab": {
-      "microsoft": "Power BI o Excel"
+      "microsoft": "Power BI o Excel",
+      "other": "Otro (API)"
     },
     "help": {
       "microsoft": {
@@ -311,7 +313,8 @@ export default {
       "Per connettersi a questo feed OData, seleziona il tuo strumento e copia il link al suo interno."
     ],
     "tab": {
-      "microsoft": "Power BI o Excel"
+      "microsoft": "Power BI o Excel",
+      "other": "Altro (API)"
     },
     "help": {
       "microsoft": {

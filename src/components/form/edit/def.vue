@@ -147,14 +147,22 @@ const viewXml = modalData('FormVersionViewXml');
 {
   "de": {
     "subtitle": "Hochgeladen",
+    "changed": "Geändert gegenüber der veröffentlichten Version",
+    "versionName": "Versionsname:{name}",
+    "action": {
+      "upload": "Neue Formulardefinition hochladen"
+    },
+    "withinDef": "Innerhalb dieser Formulardefinition:",
     "title": "Entwurfsversion"
   },
   "es": {
     "subtitle": "Subido",
+    "changed": "Cambiado respecto a la versión publicada",
     "versionName": "Nombre de la versión: {name}",
     "action": {
       "upload": "Cargar nueva definición de formulario"
     },
+    "withinDef": "Dentro de esta definición de formulario:",
     "title": "Versión borrador"
   },
   "fr": {

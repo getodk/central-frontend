@@ -90,6 +90,9 @@ const create = () => {
   },
   "de": {
     "title": "Entwurfsversion",
+    "subtitle": "Kein aktiver Entwurf für dieses Formular",
+    "toMakeChanges": "um Änderungen an diesem Formular oder seinen Anlagen vorzunehmen.",
+    "noEffectUntilPublish": "Die veröffentlichte Version wird nicht beeinflusst, bis Sie Ihren Entwurf veröffentlichen.",
     "action": {
       "create": "Neuen Entwurf erstellen"
     }
