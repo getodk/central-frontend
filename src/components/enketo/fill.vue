@@ -41,6 +41,7 @@ export default {
   },
   computed: {
     disabledDescription() {
+      if (this.formVersion.webformsEnabled) return null;
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');

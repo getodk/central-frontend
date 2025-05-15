@@ -63,4 +63,16 @@ describe('EnketoPreview', () => {
       component.get('.enketo-preview').element.tagName.should.equal('A');
     });
   });
+
+  it('does not disable the button if Web Forms is enabled', () => {
+    // The form is not open and also does not have an enketoId. Yet since Web
+    // Forms is enabled, it should not be disabled.
+    const form = testData.extendedForms
+      .createPast(1, { enketoId: null, state: 'closing', webformsEnabled: true })
+      .last();
+    const component = mountComponent({
+      props: { formVersion: form }
+    });
+    component.get('.enketo-preview').element.tagName.should.equal('A');
+  });
 });

@@ -3,22 +3,22 @@ import EnketoFill from '../../../src/components/enketo/fill.vue';
 import TestUtilSpan from '../../util/components/span.vue';
 
 import testData from '../../data';
-import { mount } from '../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
 
-const container = {
-  router: mockRouter()
-};
+const mountComponent = (options) =>
+  mount(EnketoFill, mergeMountOptions(options, {
+    slots: { default: TestUtilSpan },
+    container: { router: mockRouter() }
+  }));
 
 describe('EnketoFill', () => {
   it('renders correctly for an open form with an enketoId', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: 'xyz', state: 'open' })
       .last();
-    const button = mount(EnketoFill, {
+    const button = mountComponent({
       props: { formVersion: form },
-      slots: { default: TestUtilSpan },
-      container
     });
     button.element.tagName.should.equal('A');
     button.attributes().href.should.equal('/projects/1/forms/f/submissions/new');
@@ -29,10 +29,8 @@ describe('EnketoFill', () => {
     const form = testData.extendedForms
       .createPast(1, { enketoId: null, state: 'open' })
       .last();
-    const button = mount(EnketoFill, {
+    const button = mountComponent({
       props: { formVersion: form },
-      slots: { default: TestUtilSpan },
-      container
     });
     button.element.tagName.should.equal('BUTTON');
     button.attributes('aria-disabled').should.equal('true');
@@ -46,10 +44,8 @@ describe('EnketoFill', () => {
       const form = testData.extendedForms
         .createPast(1, { enketoId: 'xyz', state: 'closing' })
         .last();
-      const button = mount(EnketoFill, {
+      const button = mountComponent({
         props: { formVersion: form },
-        slots: { default: TestUtilSpan },
-        container
       });
       button.element.tagName.should.equal('BUTTON');
       button.should.have.ariaDescription('This Form is not accepting new Submissions right now.');
@@ -63,12 +59,22 @@ describe('EnketoFill', () => {
         state: 'closing'
       });
       const draft = testData.extendedFormDrafts.last();
-      const button = mount(EnketoFill, {
+      const button = mountComponent({
         props: { formVersion: draft },
-        slots: { default: TestUtilSpan },
-        container
       });
       button.element.tagName.should.equal('A');
     });
+  });
+
+  it('does not disable the button if Web Forms is enabled', () => {
+    // The form is not open and also does not have an enketoId. Yet since Web
+    // Forms is enabled, it should not be disabled.
+    const form = testData.extendedForms
+      .createPast(1, { enketoId: null, state: 'closing', webformsEnabled: true })
+      .last();
+    const button = mountComponent({
+      props: { formVersion: form }
+    });
+    button.element.tagName.should.equal('A');
   });
 });
