@@ -66,7 +66,7 @@ describe('EnketoPreview', () => {
 
   it('does not disable the button if Web Forms is enabled', () => {
     // The form is not open and also does not have an enketoId. Yet since Web
-    // Forms is enabled, it should not be disabled.
+    // Forms is enabled, the button should not be disabled.
     const form = testData.extendedForms
       .createPast(1, { enketoId: null, state: 'closing', webformsEnabled: true })
       .last();
