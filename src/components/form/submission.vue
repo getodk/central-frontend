@@ -137,7 +137,7 @@ const hasAccess = computed(() => {
   if (!project.permits('form.read') && !project.permits('open_form.read'))
     result = false;
 
-  if (!project.permits('form.read') && project.permits('open_form.read') && form.state === 'closed')
+  if (!project.permits('form.read') && project.permits('open_form.read') && form.state !== 'open')
     result = false;
 
   return result;

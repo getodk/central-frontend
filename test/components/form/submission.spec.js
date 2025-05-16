@@ -112,6 +112,15 @@ describe('FormSubmission', () => {
           });
       });
 
+      it('cannot access new submission page if form is closing', async () => {
+        testData.extendedForms.createPast(1, { xmlFormId: 'b', webformsEnabled: true, state: 'closing' });
+        await load('/projects/1/forms/b/submissions/new', mountOptions())
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          });
+      });
+
       it('cannot access edit submission page', () =>
         load('/projects/1/forms/a/submissions/1/edit', mountOptions())
           .respondFor('/', { users: false })
