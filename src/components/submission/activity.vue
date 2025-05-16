@@ -58,7 +58,7 @@ import PageSection from '../page/section.vue';
 import SubmissionComment from './comment.vue';
 import SubmissionFeedEntry from './feed-entry.vue';
 
-import { apiPaths } from '../../util/request';
+import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -82,18 +82,22 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, submission, audits, comments, diffs, fields, resourceStates } = useRequestData();
+    const { project, form, submission, audits, comments, diffs, fields, resourceStates } = useRequestData();
+    const { editSubmissionPath } = useRoutes();
     return {
-      project, submission, audits, comments, diffs, fields,
-      ...resourceStates([audits, comments, diffs, fields])
+      project, form, submission, audits, comments, diffs, fields,
+      ...resourceStates([audits, comments, diffs, fields]),
+      editSubmissionPath
     };
   },
   computed: {
     editPath() {
-      return apiPaths.editSubmission(
+      if (!this.form.dataExists) return null;
+      return this.editSubmissionPath(
         this.projectId,
         this.xmlFormId,
-        this.instanceId
+        this.instanceId,
+        this.form.webformsEnabled
       );
     },
     feed() {

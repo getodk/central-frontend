@@ -88,7 +88,6 @@ import SubmissionReviewState from './review-state.vue';
 
 import { useRequestData } from '../../request-data';
 import useRoutes from '../../composables/routes';
-import { apiPaths } from '../../util/request';
 
 export default {
   name: 'SubmissionMetadataRow',
@@ -123,8 +122,8 @@ export default {
   },
   setup() {
     const { form } = useRequestData();
-    const { submissionPath } = useRoutes();
-    return { form, submissionPath };
+    const { submissionPath, editSubmissionPath } = useRoutes();
+    return { form, submissionPath, editSubmissionPath };
   },
   computed: {
     missingAttachment() {
@@ -133,15 +132,11 @@ export default {
         __system.attachmentsPresent !== __system.attachmentsExpected;
     },
     editPath() {
-      if (this.form.webformsEnabled) {
-        return this.submissionPath(this.projectId, this.xmlFormId, this.submission.__id, 'edit');
-      }
-      // Although we now have canonical path to edit submission, we still need to go through backend
-      // if Enketo is enable to provide Enketo with submission data
-      return apiPaths.editSubmission(
+      return this.editSubmissionPath(
         this.projectId,
         this.xmlFormId,
-        this.submission.__id
+        this.submission.__id,
+        this.form.webformsEnabled
       );
     },
     editLabel() {

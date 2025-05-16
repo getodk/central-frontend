@@ -31,7 +31,7 @@ const mountComponent = () => {
       router: mockRouter('/projects/1/submissions/s'),
       requestData: testRequestData(
         [useSubmission, useFields],
-        { project, submission, audits, comments, diffs, fields }
+        { project, form, submission, audits, comments, diffs, fields }
       )
     }
   });

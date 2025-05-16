@@ -107,6 +107,22 @@ describe('useRoutes()', () => {
     });
   });
 
+  describe('editSubmissionPath()', () => {
+    it('returns the correct path if webformsEnabled is true', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { editSubmissionPath } = withSetup(useRoutes, { container });
+      const path = editSubmissionPath(1, 'a b', 'c d', true);
+      path.should.equal('/projects/1/forms/a%20b/submissions/c%20d/edit');
+    });
+
+    it('returns the correct path if webformsEnabled is false', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { editSubmissionPath } = withSetup(useRoutes, { container });
+      const path = editSubmissionPath(1, 'a b', 'c d', false);
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
+    });
+  });
+
   describe('datasetPath()', () => {
     it('returns a path if given three arguments', () => {
       const container = createTestContainer({ router: mockRouter('/') });
