@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
 
 import { useRoute } from 'vue-router';
 
+import { apiPaths } from '../util/request';
 import { canRoute } from '../util/router';
 import { memoizeForContainer } from '../util/composable';
 
@@ -116,6 +117,14 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
     return result;
   };
+  const editSubmissionPath = (projectId, xmlFormId, instanceId, webformsEnabled) => {
+    if (webformsEnabled) {
+      return submissionPath(projectId, xmlFormId, instanceId, 'edit');
+    }
+    // Although we now have canonical path to edit submission, we still need to go through backend
+    // if Enketo is enable to provide Enketo with submission data
+    return apiPaths.editSubmission(projectId, xmlFormId, instanceId);
+  };
 
   const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
     if (datasetName == null) {
@@ -135,7 +144,7 @@ export default memoizeForContainer(({ router, requestData }) => {
   return {
     projectPath,
     formPath, publishedFormPath, primaryFormPath, formPreviewPath,
-    submissionPath, newSubmissionPath, offlineSubmissionPath,
+    submissionPath, newSubmissionPath, offlineSubmissionPath, editSubmissionPath,
     datasetPath,
     entityPath,
     userPath,
