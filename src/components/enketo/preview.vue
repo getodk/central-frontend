@@ -10,16 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a v-if="disabledDescription == null" :class="enketoClass" :href="enketoPath"
+  <a v-if="disabledDescription == null" class="enketo-preview btn" :class="btnClass" :href="previewPath"
     target="_blank">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </a>
-  <button v-else type="button" :class="enketoClass" aria-disabled="true"
+  <button v-else type="button" class="enketo-preview btn" :class="btnClass" aria-disabled="true"
     v-tooltip.aria-describedby="disabledDescription">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>
 
-  <router-link class="btn btn-default btn-web-form" :to="webFormsPath"
+  <router-link class="btn btn-web-form" :class="btnClass" :to="webFormsPath"
     target="_blank">
     <span class="icon-eye"></span>{{ $t('action.newPreview') }}
   </router-link>
@@ -44,6 +44,7 @@ export default {
   },
   computed: {
     disabledDescription() {
+      if (this.formVersion.webformsEnabled) return null;
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');
@@ -51,12 +52,10 @@ export default {
         return this.$t('disabled.processing');
       return null;
     },
-    enketoClass() {
-      const result = ['enketo-preview', 'btn'];
-      result.push(this.outlined ? 'btn-outlined' : 'btn-default');
-      return result;
+    btnClass() {
+      return this.outlined ? 'btn-outlined' : 'btn-default';
     },
-    enketoPath() {
+    previewPath() {
       return this.formPreviewPath(
         this.formVersion.projectId,
         this.formVersion.xmlFormId,
