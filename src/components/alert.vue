@@ -17,6 +17,10 @@ except according to the terms contained in the LICENSE file.
       <span aria-hidden="true">&times;</span>
     </button>
     <span class="alert-message">{{ alert.message }}</span>
+    <button v-if="alert.ctaText != null" type="button"
+      class="alert-cta btn btn-default" @click="alert.ctaHandler">
+      {{ alert.ctaText }}
+    </button>
   </div>
 </template>
 

@@ -59,7 +59,7 @@ export default {
     FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
     OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))
   },
-  inject: ['alert', 'config'],
+  inject: ['alert', 'config', 'location'],
   setup() {
     const { visiblyLoggedIn } = useSessions();
     useDisabled();
@@ -113,7 +113,10 @@ export default {
           // even if there is another alert (say, about session expiration).
           this.callWait(
             'alertVersionChange',
-            () => { this.alert.info(this.$t('alert.versionChange')); },
+            () => {
+              this.alert.info(this.$t('alert.versionChange'))
+                .cta(this.$t('action.refreshPage'), () => { this.location.reload(); });
+            },
             (count) => (count === 0 ? 0 : 60000)
           );
           return true;

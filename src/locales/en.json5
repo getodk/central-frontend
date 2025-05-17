@@ -201,6 +201,7 @@
     "proceed": "Proceed",
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
+    "refreshPage": "Refresh page",
     "resetPassword": "Reset password",
     "review": "Review",
     // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
