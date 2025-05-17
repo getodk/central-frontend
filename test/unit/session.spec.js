@@ -388,9 +388,11 @@ describe('util/session', () => {
       });
 
       it('shows a danger alert', () => {
+        const reload = sinon.fake();
         const container = createTestContainer({
           router: mockRouter(),
-          requestData: { session: testData.sessions.createNew() }
+          requestData: { session: testData.sessions.createNew() },
+          location: { reload }
         });
         const { alert } = container;
         return mockHttp(container)
@@ -407,6 +409,8 @@ describe('util/session', () => {
             alert.type.should.equal('danger');
             alert.message.should.startWith('There was a problem, and you were not fully logged out.');
             alert.message.should.endWith('logOut() problem.');
+            alert.ctaHandler();
+            reload.called.should.be.true;
           });
       });
 
