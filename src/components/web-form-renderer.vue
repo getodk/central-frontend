@@ -435,14 +435,6 @@ onUnmounted(() => {
 <style lang="scss">
 @import '../assets/scss/_variables.scss';
 
-:root:has(.odk-form) {
-  font-size: 16px;
-}
-html, body {
-  &:has(.odk-form) {
-    box-shadow: none;
-  }
-}
 #web-form-renderer-submission-modal pre {
   white-space: pre-wrap;
 }
