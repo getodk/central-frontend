@@ -222,5 +222,19 @@ describe('util/i18n', () => {
         sentenceSeparator.value.should.equal('');
       });
     });
+
+    describe('joinSentences()', () => {
+      it('uses a space for en', () => {
+        const { joinSentences } = withSetup(useI18nUtils);
+        joinSentences(['foo.', 'bar.']).should.equal('foo. bar.');
+      });
+
+      it('does not use a space for ja', () => {
+        const container = createTestContainer();
+        const { joinSentences } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        joinSentences(['ほげ。', 'ふが。']).should.equal('ほげ。ふが。');
+      });
+    });
   });
 });
