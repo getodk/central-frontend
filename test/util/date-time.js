@@ -40,12 +40,16 @@ afterEach(() => {
 // Returns an ISO string for a date in the past that is no earlier than the
 // specified dates.
 export const fakePastDate = (dateStrings) => {
-  const dateTimes = dateStrings
+  const parsed = dateStrings
     .filter(s => s != null)
-    .map(s => DateTime.fromISO(s));
-  if (dateTimes.length === 0) return faker.date.past().toISOString();
-  const from = DateTime.max(...dateTimes);
-  const now = DateTime.local();
-  if (from > now) throw new Error('future date');
-  return faker.date.between({ from: from.toISO(), to: now.toISO() }).toISOString();
+    .map(s => Date.parse(s));
+  if (parsed.length === 0) return faker.date.past().toISOString();
+  const from = Math.max(...parsed);
+  const to = Date.now() - 1000;
+  if (from > to) {
+    const json = JSON.stringify(dateStrings);
+    const toAsString = new Date(to).toISOString();
+    throw new Error(`one of the specified timestamps is later than the maximum allowed timestamp of ${toAsString}: ${json}`);
+  }
+  return faker.date.between({ from, to }).toISOString();
 };
