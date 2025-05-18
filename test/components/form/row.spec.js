@@ -221,7 +221,7 @@ describe('FormRow', () => {
       it('does not render a link for last submission', () => {
         const nonLink = mountComponent().get('.last-submission');
         nonLink.find('a').exists().should.be.false;
-        nonLink.text().should.match(/ago$/);
+        nonLink.findComponent(DateTime).exists().should.be.true;
       });
 
       it('does not render a link for submission count', () => {
