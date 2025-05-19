@@ -57,12 +57,12 @@ describe('util/session', () => {
         });
     });
 
-    it('removes sessionExpires from local storage after a 404', () => {
+    it('removes sessionExpires from local storage after a 401', () => {
       const container = createTestContainer();
       const { session } = container.requestData;
       return mockHttp(container)
         .request(() => restoreSession(session).catch(noop))
-        .respondWithProblem(404.1)
+        .respondWithProblem(401.2)
         .afterResponse(() => {
           should.not.exist(localStorage.getItem('sessionExpires'));
         });
