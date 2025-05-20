@@ -952,16 +952,8 @@ becomes more complicated.
 }
 [data-mark-rows-deleted="false"] { display: none; }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-// Don't let styles defined in Central bleed into new Web Forms Component
-
-.odk-form :not(svg|*) {
-  all: revert;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// The action bar shown above the data table 
+// The action bar shown above the data table
 
 .table-actions-bar {
   background-color: $color-subpanel-background;
