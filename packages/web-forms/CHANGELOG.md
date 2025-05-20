@@ -1,5 +1,11 @@
 # @getodk/web-forms
 
+## 0.11.1
+
+### Patch Changes
+
+- 59d5257: Normalize Web Forms styles
+
 ## 0.11.0
 
 ### Minor Changes
