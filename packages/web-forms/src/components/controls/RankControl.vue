@@ -208,7 +208,6 @@ const swapItems = (index: number, newPosition: number) => {
 	border: 1px solid var(--odk-border-color);
 	border-radius: var(--odk-radius);
 	font-size: var(--odk-answer-font-size);
-	line-height: 17px;
 	color: var(--odk-text-color);
 	cursor: move;
 
@@ -216,13 +215,14 @@ const swapItems = (index: number, newPosition: number) => {
 		display: flex;
 		align-items: center;
 		gap: var(--rankSpacing);
+		line-height: 1.5rem;
 	}
 }
 
 .moving,
 .fade-moving {
 	background: var(--odk-primary-lighter-background-color);
-	border: 2px solid var(--odk-primary-border-color);
+	border: 1px solid var(--odk-primary-border-color);
 }
 
 .fade-moving {
@@ -241,7 +241,7 @@ const swapItems = (index: number, newPosition: number) => {
 	line-height: 0;
 
 	&:disabled {
-		background: var(--odk-inactive-background-color);
+		background: var(--odk-muted-background-color);
 		color: var(--odk-muted-text-color);
 		border: none;
 	}

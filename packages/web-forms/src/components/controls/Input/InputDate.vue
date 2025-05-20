@@ -37,7 +37,6 @@ const isDisabled = computed(() => props.question.currentState.readonly === true)
 </template>
 
 <style lang="scss">
-@import 'primeflex/core/_variables.scss';
 .p-datepicker-title button {
 	font-size: var(--odk-hint-font-size);
 }

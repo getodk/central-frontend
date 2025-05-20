@@ -116,6 +116,11 @@ const handleLanguageChange = (event: FormLanguage) => {
 </template>
 
 <style scoped lang="scss">
+.p-menu-item-link,
+.p-menu-item-link:hover {
+	color: var(--odk-text-color);
+}
+
 .p-button.p-button-rounded {
 	&:hover {
 		background: var(--odk-primary-light-background-color);
@@ -157,6 +162,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 		padding-left: 1.5rem;
 		font-size: var(--odk-title-font-size);
 		font-weight: 400;
+		margin: 16px 0;
 	}
 
 	.form-options {

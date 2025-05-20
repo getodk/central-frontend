@@ -144,33 +144,8 @@ export default defineConfig(({ mode }) => {
 			preprocessorOptions: {
 				scss: {
 					api: 'modern',
+					quietDeps: true, // Suppress warnings from node_modules
 				},
-			},
-			postcss: {
-				plugins: [
-					/**
-					 * primevue-sass-theme defines styles within a `@layer primevue { ...
-					 * }`. With that approach, host applications rules have higher
-					 * precedence, which could potentially override Web Forms styles in
-					 * unpredictable ways. This plugin unwraps that `@layer`, replacing it
-					 * with the style rules it contains.
-					 */
-					{
-						postcssPlugin: 'unwrap-at-layer-rules',
-						Once(root) {
-							root.walkAtRules((rule) => {
-								if (rule.name === 'layer') {
-									if (rule.parent == null) {
-										throw new Error('Failed to unwrap @layer: rule has no parent');
-									}
-
-									rule.parent.append(rule.nodes);
-									rule.remove();
-								}
-							});
-						},
-					},
-				],
 			},
 		},
 		optimizeDeps: {

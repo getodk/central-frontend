@@ -160,7 +160,7 @@ document.addEventListener(
 					</template>
 				</template>
 				<template v-else>
-					<ProgressSpinner class="spinner" />
+					<ProgressSpinner class="upload-spinner" />
 					<span>Uploading form</span>
 				</template>
 			</div>
@@ -203,7 +203,7 @@ document.addEventListener(
 </template>
 
 <style scoped lang="scss">
-.spinner {
+.upload-spinner {
 	width: 40px;
 	height: 40px;
 }
@@ -226,6 +226,12 @@ document.addEventListener(
 		padding: 2rem;
 		font-size: var(--odk-question-font-size);
 		font-weight: 300;
+
+		p,
+		span,
+		label {
+			font-weight: 300;
+		}
 
 		.odk-icon {
 			margin-top: -4px;

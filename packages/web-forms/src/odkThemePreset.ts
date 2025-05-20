@@ -130,6 +130,15 @@ export const odkThemePreset = definePreset(Aura, {
 				},
 			},
 		},
+		textarea: {
+			colorScheme: {
+				light: {
+					root: {
+						color: '{surface.950}',
+					},
+				},
+			},
+		},
 		button: {
 			colorScheme: {
 				light: {

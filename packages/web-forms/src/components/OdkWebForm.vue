@@ -247,14 +247,7 @@ watchEffect(() => {
 		<div class="powered-by-wrapper">
 			<a class="anchor" href="https://getodk.org" target="_blank">
 				<span class="caption">Powered by</span>
-				<img
-					class="logo"
-					srcset="../assets/images/odk-logo-small@1x.png, ../assets/images/odk-logo-small@2x.png 2x"
-					src="../assets/images/odk-logo-small@2x.png"
-					alt="ODK"
-					height="15"
-					width="28"
-				>
+				<img class="logo" src="../assets/images/odk-logo.svg" alt="ODK">
 			</a>
 			<div class="version">
 				{{ webFormsVersion }}
@@ -271,16 +264,18 @@ watchEffect(() => {
 }
 
 .odk-form {
-	width: 100%;
+	font-family: var(--odk-font-family);
+	font-weight: 400;
+	font-size: var(--odk-base-font-size);
+	background: var(--odk-muted-background-color);
 	color: var(--odk-text-color);
-	--wf-error-banner-gap: 4rem;
-	--wf-max-form-width: 900px;
+	width: 100%;
+	min-height: 100vh;
 
 	.form-wrapper {
 		display: flex;
 		flex-direction: column;
-		max-width: var(--wf-max-form-width);
-		min-height: calc(100vh - 5.5rem);
+		max-width: var(--odk-max-form-width);
 		margin: auto;
 		padding-top: 10px;
 
@@ -296,7 +291,7 @@ watchEffect(() => {
 		}
 
 		.error-banner-placeholder {
-			height: var(--wf-error-banner-gap);
+			height: 4rem;
 		}
 
 		.form-error-message.p-message.p-message-error {
@@ -306,7 +301,7 @@ watchEffect(() => {
 			background-color: var(--odk-error-background-color);
 			border: 1px solid var(--p-message-error-border-color);
 			outline: none;
-			max-width: var(--wf-max-form-width);
+			max-width: var(--odk-max-form-width);
 			width: 100%;
 			margin: 0rem auto 1rem auto;
 			top: 1rem;
@@ -328,6 +323,10 @@ watchEffect(() => {
 		}
 	}
 
+	:deep(.p-button) {
+		min-height: 40px;
+	}
+
 	:deep(.print-button.p-button) {
 		display: flex;
 		height: var(--p-button-icon-only-width);
@@ -347,39 +346,43 @@ watchEffect(() => {
 	}
 
 	.powered-by-wrapper {
-		margin-top: 2rem;
-		margin-bottom: 1rem;
-		margin-left: 0.5rem;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		padding: 140px 0 40px 0;
+		background: var(--odk-muted-background-color);
 
 		.anchor {
 			color: var(--odk-muted-text-color);
-			font-size: var(--odk-hint-font-size);
-			font-weight: 300;
+			font-size: 24px;
+			font-weight: 400;
 			text-decoration: none;
-			margin-left: 1rem;
 
 			span.caption {
-				transform: scale(1.1, 1);
 				display: inline-block;
-				margin-right: 3px;
 			}
 
 			img.logo {
 				vertical-align: middle;
-				margin-left: 0.2rem;
+				width: 49px;
+				margin-left: 7px;
+				margin-top: -4px;
 			}
 		}
 
 		.version {
-			font-size: 0.7rem;
-			margin: 0.5rem 0 0 0.85rem;
+			font-size: 18px;
+			font-weight: 300;
 			color: var(--odk-muted-text-color);
+			margin-top: 10px;
 		}
 	}
 }
 
 @media screen and (max-width: #{pf.$lg - 1}) {
 	.odk-form {
+		background: var(--odk-base-background-color);
+
 		.form-wrapper {
 			max-width: unset;
 			padding-top: unset;
@@ -393,7 +396,7 @@ watchEffect(() => {
 			}
 
 			.form-error-message.p-message.p-message-error {
-				margin: var(--wf-error-banner-gap) 1rem 0 1rem;
+				margin: 4rem 1rem 0 1rem;
 				max-width: unset;
 				width: calc(100% - 2rem);
 				top: 22px;
@@ -413,9 +416,9 @@ watchEffect(() => {
 				}
 			}
 		}
+
 		.powered-by-wrapper {
-			padding-bottom: 10px;
-			margin-bottom: 0;
+			background: var(--odk-base-background-color);
 		}
 	}
 }
@@ -424,24 +427,19 @@ watchEffect(() => {
 	.odk-form .form-wrapper .questions-card > :deep(.p-card-body) {
 		padding: 2rem 0.5rem;
 	}
+
+	.odk-form .powered-by-wrapper {
+		padding-top: 100px;
+	}
 }
 </style>
 
 <style lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
+
 :root {
 	// This variable is used to assert the breakpoint from PrimeFlex are loaded
 	// {@link https://github.com/getodk/web-forms/blob/main/packages/web-forms/e2e/test-cases/build/style.test.ts}
 	--odk-test-breakpoint-lg: #{pf.$lg};
-}
-
-body {
-	background: var(--odk-muted-background-color);
-}
-
-@media screen and (max-width: #{pf.$lg - 1}) {
-	body {
-		background: var(--odk-base-background-color);
-	}
 }
 </style>

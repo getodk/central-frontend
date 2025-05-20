@@ -30,6 +30,9 @@ const surveyLink = computed(() => {
 
 <style lang="scss">
 .feedback-button span {
+	font-family: var(--odk-font-family);
+	font-weight: 400;
+	font-size: var(--odk-base-font-size);
 	display: block;
 	position: fixed;
 	background-color: white;
@@ -44,7 +47,6 @@ const surveyLink = computed(() => {
 	text-align: center;
 	line-height: 2rem;
 	cursor: pointer;
-	font-size: var(--odk-base-font-size);
 	padding: 0 1.25rem;
 	transform: translateX(50%) rotate(-90deg);
 	transition: right 0.25s;

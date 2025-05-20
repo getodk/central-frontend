@@ -123,7 +123,7 @@ onBeforeUnmount(cleanup);
 		<template #header>
 			<div class="geo-dialog-header">
 				<div class="geo-dialog-header-title">
-					<ProgressSpinner class="spinner" stroke-width="4" />
+					<ProgressSpinner class="geo-spinner" stroke-width="4" />
 					<!-- TODO: translations -->
 					<strong>Finding your location</strong>
 				</div>
@@ -196,7 +196,7 @@ onBeforeUnmount(cleanup);
 	display: flex;
 	font-size: var(--odk-group-font-size);
 
-	.spinner {
+	.geo-spinner {
 		width: 22px;
 		height: 22px;
 		margin-right: var(--geo-spacing-l);

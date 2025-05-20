@@ -50,13 +50,14 @@ const handleCancel = () => {
 </template>
 
 <style scoped lang="scss">
-.lang-options {
+label.lang-options {
 	width: 100%;
 	display: block;
 	border: 1px solid var(--odk-border-color);
 	padding: 10px 0 10px 8px;
 	border-radius: var(--odk-radius);
-	margin-bottom: 10px;
+	margin-bottom: 10px !important;
+	font-weight: normal;
 	cursor: pointer;
 
 	&:hover {

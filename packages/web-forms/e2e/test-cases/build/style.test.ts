@@ -40,12 +40,12 @@ test('Build includes component-defined styles', async ({ page }) => {
 	const colors = ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'];
 
 	for (const color of colors) {
-		await expect(page.locator('body')).not.toHaveCSS('background-color', color);
+		await expect(page.locator('.demo-forms')).not.toHaveCSS('background-color', color);
 
 		await page.locator('html').evaluate((pageRoot, backgroundColor) => {
 			pageRoot.style.setProperty('--odk-muted-background-color', backgroundColor);
 		}, color);
 
-		await expect(page.locator('body')).toHaveCSS('background-color', color);
+		await expect(page.locator('.demo-forms')).toHaveCSS('background-color', color);
 	}
 });
