@@ -1,38 +1,24 @@
 <script setup lang="ts">
-import IconSVG from '@/components/widgets/IconSVG.vue';
 import {
 	type FormLanguage,
 	type RootNode,
 	type SyntheticDefaultLanguage,
 } from '@getodk/xforms-engine';
-import Button from 'primevue/button';
 import Card from 'primevue/card';
-import Menu from 'primevue/menu';
 import { ref } from 'vue';
-import FormLanguageDialog from './FormLanguageDialog.vue';
 import FormLanguageMenu from './FormLanguageMenu.vue';
 
 const props = defineProps<{ form: RootNode }>();
 const languageDialogState = ref(false);
-const menu = ref<InstanceType<typeof Menu>>();
 
 const isFormLanguage = (lang: FormLanguage | SyntheticDefaultLanguage): lang is FormLanguage => {
 	return !lang.isSyntheticDefault;
 };
 
+type DropdownItem = Array<{ label: string; icon: string; command: () => void }>;
+const items = ref<DropdownItem>([]);
+
 const languages = props.form.languages.filter(isFormLanguage);
-
-const print = () => window.print();
-
-const items = ref([
-	{
-		// TODO: translations
-		label: 'Print',
-		icon: 'mdiPrinter',
-		command: print,
-	},
-]);
-
 if (languages.length > 0) {
 	items.value.unshift({
 		// TODO: translations
@@ -51,9 +37,6 @@ const handleLanguageChange = (event: FormLanguage) => {
 	<!-- for desktop -->
 	<div class="hidden lg:inline larger-screens">
 		<div class="flex justify-content-end flex-wrap gap-3">
-			<Button class="print-button" severity="secondary" rounded @click="print">
-				<IconSVG name="mdiPrinter" />
-			</Button>
 			<FormLanguageMenu
 				:active-language="form.currentState.activeLanguage"
 				:languages="languages"
@@ -77,40 +60,12 @@ const handleLanguageChange = (event: FormLanguage) => {
 		</h1>
 
 		<div class="form-options">
-			<!-- if Form is not multilingual then we always show print button -->
-			<Button v-if="languages.length === 0" class="print-button" severity="secondary" rounded @click="print">
-				<IconSVG name="mdiPrinter" />
-			</Button>
-
-			<!-- show either hamburger or (print button and language changer) based on container size -->
-			<div v-else class="multilingual">
-				<Button class="btn-menu" text rounded aria-label="Menu" @click="menu?.toggle">
-					<IconSVG name="mdiMenu" />
-				</Button>
-				<Menu id="overlay_menu" ref="menu" :model="items" :popup="true">
-					<template #item="{ item }">
-						<a v-if="item.command != null" class="p-menu-item-link" @click="(event) => item.command && item.command({ originalEvent: event, item })">
-							<IconSVG v-if="item.icon != null" :name="item.icon" />
-							<span>{{ item.label }}</span>
-						</a>
-					</template>
-				</Menu>
-				<FormLanguageDialog
-					v-model:state="languageDialogState"
-					:active-language="form.currentState.activeLanguage"
-					:languages="languages"
-					@update:active-language="handleLanguageChange"
-				/>
-
-				<Button class="print-button" severity="secondary" rounded @click="print">
-					<IconSVG name="mdiPrinter" />
-				</Button>
-				<FormLanguageMenu
-					:active-language="form.currentState.activeLanguage"
-					:languages="languages"
-					@update:active-language="handleLanguageChange"
-				/>
-			</div>
+			<FormLanguageMenu
+				v-if="languages.length > 0"
+				:active-language="form.currentState.activeLanguage"
+				:languages="languages"
+				@update:active-language="handleLanguageChange"
+			/>
 		</div>
 	</div>
 </template>
@@ -171,40 +126,31 @@ const handleLanguageChange = (event: FormLanguage) => {
 		container-type: size;
 		container-name: formOptionsContainer;
 		height: 40px;
-		margin-top: 11px;
+		margin-top: 10px;
 
-		.multilingual {
+		.language-changer {
 			display: flex;
 			justify-content: end;
+			width: 45px;
 			gap: 0.5rem;
 
-			.btn-menu :deep(.odk-icon) path {
-				transform: scale(1.1) translate(-3px, -3px);
+			:deep(.p-select-label) {
+				text-overflow: unset;
 			}
 
-			.print-button {
+			:deep(.p-select-label) span,
+			:deep(.p-select-dropdown) {
 				display: none;
 			}
 
-			.language-changer {
-				display: none;
+			:deep(.odk-icon) {
+				margin-right: 0;
 			}
 		}
 
 		@container formOptionsContainer (min-width: 260px) {
-			.multilingual {
-				.btn-menu {
-					display: none;
-				}
-
-				.print-button {
-					display: flex;
-				}
-
-				.language-changer {
-					display: flex;
-					max-width: 220px;
-				}
+			.language-changer {
+				max-width: 220px;
 			}
 		}
 	}

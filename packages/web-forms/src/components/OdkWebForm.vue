@@ -327,16 +327,6 @@ watchEffect(() => {
 		min-height: 40px;
 	}
 
-	:deep(.print-button.p-button) {
-		display: flex;
-		height: var(--p-button-icon-only-width);
-		width: var(--p-button-icon-only-width);
-		padding-inline-start: 0;
-		padding-inline-end: 0;
-		gap: 0;
-		border-radius: 50%;
-	}
-
 	.footer {
 		margin: 1.5rem 0 0rem 0;
 
@@ -354,7 +344,7 @@ watchEffect(() => {
 
 		.anchor {
 			color: var(--odk-muted-text-color);
-			font-size: 24px;
+			font-size: 18px;
 			font-weight: 400;
 			text-decoration: none;
 
@@ -364,17 +354,17 @@ watchEffect(() => {
 
 			img.logo {
 				vertical-align: middle;
-				width: 49px;
-				margin-left: 7px;
+				width: 40px;
+				margin-left: 4px;
 				margin-top: -4px;
 			}
 		}
 
 		.version {
-			font-size: 18px;
+			font-size: 14px;
 			font-weight: 300;
 			color: var(--odk-muted-text-color);
-			margin-top: 10px;
+			margin-top: 5px;
 		}
 	}
 }
@@ -430,6 +420,19 @@ watchEffect(() => {
 
 	.odk-form .powered-by-wrapper {
 		padding-top: 100px;
+
+		.anchor {
+			font-size: 14px;
+
+			img.logo {
+				width: 30px;
+			}
+		}
+
+		.version {
+			font-size: 11px;
+			margin-top: 2px;
+		}
 	}
 }
 </style>

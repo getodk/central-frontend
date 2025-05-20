@@ -31,12 +31,10 @@ defineEmits(['update:activeLanguage']);
 </template>
 
 <style scoped lang="scss">
-.language-changer {
-	display: flex;
-}
-
 .p-select.language-changer {
+	display: flex;
 	border: none;
+	box-shadow: none;
 	width: max-content;
 	max-width: 220px;
 	color: var(--odk-text-color);
@@ -46,7 +44,8 @@ defineEmits(['update:activeLanguage']);
 	}
 
 	:deep(.p-select-label) {
-		padding: 5px 12px;
+		padding: 10px 12px;
+
 		span {
 			vertical-align: middle;
 		}
@@ -54,14 +53,6 @@ defineEmits(['update:activeLanguage']);
 
 	.odk-icon {
 		margin-right: 0.5rem;
-	}
-}
-</style>
-
-<style>
-@media print {
-	.p-menu {
-		display: none;
 	}
 }
 </style>
