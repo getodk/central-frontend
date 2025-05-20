@@ -349,13 +349,15 @@ const titleId = `modal-title${id}`;
         text-align: right;
       }
     }
+
+    // WebFormRenderer has few modals without actions
+    .modal-body:not(:has(.modal-actions)) {
+      padding-block-end: calc($padding-modal-body / 2);
+    }
   }
 }
 
-// Not sure which modal does not have actions
-.modal-body:not(:has(.modal-actions)) {
-  padding-block-end: calc($padding-modal-body / 2);
-}
+
 
 .modal-full {
   // This is the space around the margin and the edge of the browser window
