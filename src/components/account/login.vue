@@ -64,7 +64,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
-  inject: ['container', 'alert', 'config'],
+  inject: ['container', 'alert', 'config', 'location'],
   beforeRouteLeave() {
     return !this.disabled;
   },
@@ -105,7 +105,10 @@ export default {
       const sessionExpires = localStore.getItem('sessionExpires');
       const newSession = sessionExpires == null ||
         Number.parseInt(sessionExpires, 10) < Date.now();
-      if (!newSession) this.alert.info(this.$t('alert.alreadyLoggedIn'));
+      if (!newSession) {
+        this.alert.info(this.$t('alert.alreadyLoggedIn'))
+          .cta(this.$t('action.refresh'), () => { this.location.reload(); });
+      }
       return newSession;
     },
     loginByOIDC(event) {

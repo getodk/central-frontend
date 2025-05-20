@@ -26,6 +26,7 @@ const provide = [
   'unsavedChanges',
   'config',
   'http',
+  'location',
   'logger'
 ];
 

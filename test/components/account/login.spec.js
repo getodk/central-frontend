@@ -354,9 +354,11 @@ describe('AccountLogin', () => {
   });
 
   describe('existing session', () => {
+    const in5Min = () => (Date.now() + 300000).toString();
+
     it('shows an info alert if OIDC is not enabled', async () => {
       const component = await load('/login', { root: false });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      localStorage.setItem('sessionExpires', in5Min());
       await submit(component);
       component.should.alert('info', (message) => {
         message.should.startWith('A user is already logged in.');
@@ -368,7 +370,7 @@ describe('AccountLogin', () => {
         container: oidcContainer,
         root: false
       });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      localStorage.setItem('sessionExpires', in5Min());
       await component.get('a[href^="/v1/oidc/login"]').trigger('click');
       component.should.alert('info', (message) => {
         message.should.startWith('A user is already logged in.');
@@ -380,13 +382,28 @@ describe('AccountLogin', () => {
         container: oidcContainer,
         root: false
       });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      localStorage.setItem('sessionExpires', in5Min());
       const a = component.get('a[href^="/v1/oidc/login"]');
       const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true
       });
       a.element.dispatchEvent(event).should.be.false;
+    });
+
+    it('shows a CTA to refresh', () => {
+      const reload = sinon.fake();
+      return load('/login', {
+        container: { location: { reload } }
+      })
+        .restoreSession(false)
+        .afterResponses(async (app) => {
+          localStorage.setItem('sessionExpires', in5Min());
+          await submit(app);
+          app.should.alert();
+          await app.get('.alert-cta').trigger('click');
+          reload.called.should.be.true;
+        });
     });
   });
 });
