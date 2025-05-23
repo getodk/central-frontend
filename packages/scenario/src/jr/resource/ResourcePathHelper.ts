@@ -15,11 +15,17 @@ const testFixtures = await Promise.all(
 			return [];
 		}
 
-		return fixture.loadXML().then((fixtureXML) => ({
-			identifier,
-			localPath,
-			fixtureXML,
-		}));
+		return fixture.loadXML().then((fixtureXML) => {
+			if (typeof fixtureXML !== 'string') {
+				throw new Error('Wrong XML Form type. Expected a string');
+			}
+
+			return {
+				identifier,
+				localPath,
+				fixtureXML,
+			};
+		});
 	})
 );
 

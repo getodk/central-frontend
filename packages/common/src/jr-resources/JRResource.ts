@@ -1,7 +1,7 @@
 import type { XFormAttachmentFixture } from '../fixtures/xform-attachments.ts';
 import { JRResourceURL } from './JRResourceURL.ts';
 
-type JRResourceLoader = (this: void) => Promise<string>;
+type JRResourceLoader = (this: void) => Promise<Blob | string>;
 
 export interface JRResourceSource {
 	readonly url: JRResourceURL;

@@ -1,5 +1,5 @@
+import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { ActiveLanguage } from './FormLanguage.ts';
-import type { RootNodeState } from './RootNode.ts';
 
 /**
  * **COMMENTARY**
@@ -156,4 +156,8 @@ export interface TextRange<Role extends TextRole, Origin extends TextOrigin = Te
 
 	get asString(): string;
 	get formatted(): unknown;
+
+	get imageSource(): JRResourceURL | undefined;
+	get audioSource(): JRResourceURL | undefined;
+	get videoSource(): JRResourceURL | undefined;
 }

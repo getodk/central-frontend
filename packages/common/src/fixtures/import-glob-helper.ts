@@ -3,6 +3,7 @@ import { IS_NODE_RUNTIME } from '../env/detection.ts';
 
 interface GlobURLFetchResponse {
 	text(): Promise<string>;
+	blob(): Promise<Blob>;
 }
 
 type FetchGlobURL = (globURL: string) => Awaitable<GlobURLFetchResponse>;
@@ -22,6 +23,11 @@ if (IS_NODE_RUNTIME) {
 		text(): Promise<string> {
 			return readFile(this.fsPath, 'utf-8');
 		}
+
+		async blob(): Promise<Blob> {
+			const buffer = await readFile(this.fsPath);
+			return new Blob([buffer]);
+		}
 	}
 
 	fetchGlobURL = (globURL) => {
@@ -33,7 +39,7 @@ if (IS_NODE_RUNTIME) {
 
 type ImportMetaGlobURLRecord = Readonly<Record<string, string>>;
 
-export type GlobFixtureLoader = (this: void) => Promise<string>;
+export type GlobFixtureLoader = (this: void) => Promise<Blob | string>;
 
 export interface GlobFixture {
 	readonly url: URL;
@@ -46,7 +52,11 @@ const globFixtureLoader = (globURL: string): GlobFixtureLoader => {
 	return async () => {
 		const response = await fetchGlobURL(globURL);
 
-		return response.text();
+		const textExtensions = ['.xml', '.csv', '.geojson'];
+		if (textExtensions.some((ext) => globURL.endsWith(ext))) {
+			return response.text();
+		}
+		return response.blob();
 	};
 };
 

@@ -31,7 +31,12 @@ export const getWebFormsTestFixture = (identifier: string): Promise<string> => {
 		throw new Error(`Could not find web-forms test fixture with identifier: ${identifier}`);
 	}
 
-	return fixture.loadXML();
+	return fixture.loadXML().then((xml) => {
+		if (typeof xml !== 'string') {
+			throw new Error('Wrong XML Form type. Expected a string');
+		}
+		return xml;
+	});
 };
 
 export const getFormXml = (fileName: string): Promise<string> => {
@@ -41,7 +46,12 @@ export const getFormXml = (fileName: string): Promise<string> => {
 		throw new Error(`Could not find fixture with file name: ${fileName}`);
 	}
 
-	return fixture.loadXML();
+	return fixture.loadXML().then((xml) => {
+		if (typeof xml !== 'string') {
+			throw new Error('Wrong XML Form type. Expected a string');
+		}
+		return xml;
+	});
 };
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {

@@ -24,7 +24,7 @@ export abstract class TextRangeDefinition<Role extends TextRole> extends Depende
 	readonly parentReference: string | null;
 	readonly reference: string | null;
 
-	abstract readonly chunks: readonly TextChunkExpression[];
+	abstract readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
 	override get isTranslated(): boolean {
 		return (

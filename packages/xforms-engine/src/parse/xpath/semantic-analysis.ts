@@ -117,9 +117,14 @@ export type TranslationExpression = LocalNamedFunctionCallLiteral<'itext'>;
 export const isTranslationExpression = (
 	expression: string
 ): expression is TranslationExpression => {
-	const { rootNode } = expressionParser.parse(expression);
-	const functionCallNode = findTypedPrincipalExpressionNode(['function_call'], rootNode);
+	let result;
+	try {
+		result = expressionParser.parse(expression);
+	} catch {
+		return false;
+	}
 
+	const functionCallNode = findTypedPrincipalExpressionNode(['function_call'], result.rootNode);
 	if (functionCallNode == null) {
 		return false;
 	}

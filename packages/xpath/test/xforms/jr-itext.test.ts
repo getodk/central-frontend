@@ -240,15 +240,53 @@ describe('jr:itext(id)', () => {
 			{ expression: 'jr:itext("three")', language: 'en', expected: 'Three' },
 			{ expression: 'jr:itext("one")', language: 'fr', expected: 'Un' },
 			{ expression: 'jr:itext("two")', language: 'fr', expected: 'Deux' },
-			{ expression: 'jr:itext("three")', language: 'fr', expected: 'Trois' },
 			{ expression: 'jr:itext("one")', language: null, expected: 'Un' },
 			{ expression: 'jr:itext("two")', language: null, expected: 'Deux' },
-			{ expression: 'jr:itext("three")', language: null, expected: 'Trois' },
 		] as const)(
-			'gets itext translation $expected, for expression $expression, in language $language',
+			'gets itext translation string $expected, for expression $expression, in language $language',
 			({ expression, language, expected }) => {
 				testContext.setLanguage(language);
 				testContext.assertStringValue(expression, expected);
+			}
+		);
+
+		/**
+		 * For itext blocks with additional translation "form"s, should return the default `value` node
+		 * (without a `form` attribute), but currently returns the first `value` node, regardless of
+		 * `form` attributes.
+		 * Note: The jr:itext usage in this test case is rare in form design, making this an edge case.
+		 * TODO: Fix to prioritize the default `value` node without a `form` attribute.
+		 *   ref: https://github.com/getodk/web-forms/issues/400
+		 */
+		it.fails.each([
+			{ expression: 'jr:itext("three")', language: 'fr', expected: 'Trois' },
+			{ expression: 'jr:itext("three")', language: null, expected: 'Trois' },
+		] as const)(
+			'gets itext translation string $expected, for expression $expression, in language $language',
+			({ expression, language, expected }) => {
+				testContext.setLanguage(language);
+				testContext.assertStringValue(expression, expected);
+			}
+		);
+
+		it.each([
+			{ expression: 'jr:itext("one")', language: 'en', expectedTextId: 'one' },
+			{ expression: 'jr:itext("two")', language: 'en', expectedTextId: 'two' },
+			{ expression: 'jr:itext("three")', language: 'en', expectedTextId: 'three' },
+			{ expression: 'jr:itext("one")', language: 'fr', expectedTextId: 'one' },
+			{ expression: 'jr:itext("two")', language: 'fr', expectedTextId: 'two' },
+			{ expression: 'jr:itext("three")', language: 'fr', expectedTextId: 'three' },
+			{ expression: 'jr:itext("one")', language: null, expectedTextId: 'one' },
+			{ expression: 'jr:itext("two")', language: null, expectedTextId: 'two' },
+			{ expression: 'jr:itext("three")', language: null, expectedTextId: 'three' },
+		] as const)(
+			'gets a list of itext translation nodes, for expression $expression, in language $language',
+			({ expression, language, expectedTextId }) => {
+				testContext.setLanguage(language);
+				const expectedNodes = testContext.document.querySelectorAll(
+					`translation[lang="${language ?? 'fr'}"] text[id="${expectedTextId}"] > value`
+				);
+				testContext.assertNodeSet(expression, Array.from(expectedNodes));
 			}
 		);
 	});

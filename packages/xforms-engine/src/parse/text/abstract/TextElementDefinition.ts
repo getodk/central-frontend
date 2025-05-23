@@ -11,14 +11,12 @@ import type { LabelDefinition, LabelOwner } from '../LabelDefinition.ts';
 import type { TextSourceNode } from './TextRangeDefinition.ts';
 import { TextRangeDefinition } from './TextRangeDefinition.ts';
 
-type TextElementChunks = readonly TextChunkExpression[];
-
 type TextElementOwner = ItemDefinition | LabelOwner;
 
 export abstract class TextElementDefinition<
 	Role extends ElementTextRole,
 > extends TextRangeDefinition<Role> {
-	readonly chunks: TextElementChunks;
+	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
 	constructor(form: XFormDefinition, owner: TextElementOwner, sourceNode: TextSourceNode<Role>) {
 		super(form, owner, sourceNode);
@@ -39,10 +37,12 @@ export abstract class TextElementDefinition<
 				return [];
 			});
 		} else {
-			const refChunk =
-				TextChunkExpression.fromTranslation(context, refExpression) ??
-				TextChunkExpression.fromReference(context, refExpression);
-			this.chunks = [refChunk];
+			const expression = TextChunkExpression.fromTranslation(context, refExpression);
+			if (expression != null) {
+				this.chunks = [expression];
+			} else {
+				this.chunks = [TextChunkExpression.fromReference(context, refExpression)];
+			}
 		}
 	}
 }

@@ -78,7 +78,7 @@ const extractURLIdentifier = (remoteUrl: URL): string => {
 	return match?.[1] ?? '';
 };
 
-type LoadXFormXML = () => Promise<string>;
+type LoadXFormXML = () => Promise<Blob | string>;
 
 const xformURLLoader = (url: URL): LoadXFormXML => {
 	return async () => {
@@ -102,7 +102,7 @@ export class XFormResource<Type extends XFormResourceType> {
 				const service = new JRResourceService();
 				const parentPath = localPath.replace(/\/[^/]+$/, '');
 
-				service.activateFixtures(parentPath, ['file', 'file-csv']);
+				service.activateFixtures(parentPath, ['file', 'file-csv', 'images']);
 
 				return service;
 			},

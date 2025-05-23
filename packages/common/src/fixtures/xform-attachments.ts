@@ -23,6 +23,11 @@ const xformAttachmentFileExtensions = [
 	'.xml',
 	'.xml.example',
 	'.xlsx',
+	'.png',
+	'.jpg',
+	'.jpeg',
+	'.gif',
+	'.svg',
 ] as const;
 
 type XFormAttachmentFileExtensions = typeof xformAttachmentFileExtensions;
@@ -84,6 +89,23 @@ export class XFormAttachmentFixture {
 
 			case '.xlsx':
 				this.mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+				break;
+
+			case '.png':
+				this.mimeType = 'image/png';
+				break;
+
+			case '.jpg':
+			case '.jpeg':
+				this.mimeType = 'image/jpeg';
+				break;
+
+			case '.gif':
+				this.mimeType = 'image/gif';
+				break;
+
+			case '.svg':
+				this.mimeType = 'image/svg+xml';
 				break;
 
 			default:

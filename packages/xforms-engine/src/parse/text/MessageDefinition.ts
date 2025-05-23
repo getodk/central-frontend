@@ -1,10 +1,8 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import type { BindDefinition } from '../model/BindDefinition.ts';
-import type { TextBindAttributeLocalName, TextSourceNode } from './abstract/TextRangeDefinition.ts';
+import type { TextBindAttributeLocalName } from './abstract/TextRangeDefinition.ts';
 import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';
-
-export type MessageSourceNode = TextSourceNode<TextBindAttributeLocalName>;
 
 export class MessageDefinition<
 	Type extends TextBindAttributeLocalName,
@@ -22,7 +20,7 @@ export class MessageDefinition<
 		return new this(bind, type, message);
 	}
 
-	readonly chunks: readonly [TextChunkExpression];
+	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
 	private constructor(
 		bind: BindDefinition,
@@ -31,11 +29,12 @@ export class MessageDefinition<
 	) {
 		super(bind.form, bind, null);
 
-		const chunk: TextChunkExpression =
-			TextChunkExpression.fromTranslation(this, message) ??
-			TextChunkExpression.fromLiteral(this, message);
-
-		this.chunks = [chunk];
+		const expression = TextChunkExpression.fromTranslation(this, message);
+		if (expression != null) {
+			this.chunks = [expression];
+		} else {
+			this.chunks = [TextChunkExpression.fromLiteral(this, message)];
+		}
 	}
 }
 

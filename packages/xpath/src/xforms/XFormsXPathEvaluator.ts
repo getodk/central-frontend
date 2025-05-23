@@ -16,6 +16,7 @@ import type {
 	XFormsItextTranslationLanguage,
 	XFormsItextTranslationMap,
 	XFormsItextTranslationsState,
+	XFormsItextTranslationValueElement,
 } from './XFormsItextTranslations.ts';
 import { XFormsItextTranslations } from './XFormsItextTranslations.ts';
 import type {
@@ -103,13 +104,13 @@ export class XFormsXPathEvaluator<T extends XPathNode>
 		return context.evaluator.secondaryInstancesById.get(id) ?? null;
 	}
 
-	static getDefaultTranslationText<T extends XPathNode>(
+	static getTranslationValues<T extends XPathNode>(
 		context: EvaluationContext<T>,
 		itextID: string
-	): string {
+	): Array<XFormsItextTranslationValueElement<T>> {
 		assertInternalXFormsXPathEvaluatorContext(context);
 
-		return context.evaluator.itextTranslations.getDefaultTranslationText(itextID);
+		return context.evaluator.itextTranslations.getTranslationValues(itextID);
 	}
 
 	override readonly rootNode: AdapterParentNode<T>;

@@ -42,6 +42,10 @@ if (route.query.url) {
 xformResource
 	?.loadXML()
 	.then((formXML) => {
+		if (typeof formXML !== 'string') {
+			throw new Error('Wrong XML Form type. Expected a string');
+		}
+
 		formPreviewState.value = {
 			formXML,
 			fetchFormAttachment: xformResource.fetchFormAttachment,
