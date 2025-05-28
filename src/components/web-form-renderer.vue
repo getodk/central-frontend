@@ -151,7 +151,7 @@ const transformAttachmentResponse = (axiosResponse) => {
   }
 
   let body;
-  if (typeof (data) === 'string') {
+  if (typeof (data) === 'string' || data instanceof Blob) {
     body = data;
   } else if (headers['content-type'].includes('application/json') ||
             headers['content-type'].includes('application/geo+json')) {
@@ -260,7 +260,8 @@ const getAttachment = (url) => {
   ));
   return request({
     url: requestUrl,
-    alert: false
+    alert: false,
+    responseType: 'blob', // Handle all file types for attachments.
   }).then(transformAttachmentResponse);
 };
 
