@@ -33,9 +33,9 @@ except according to the terms contained in the LICENSE file.
           </a>
         </template>
         <template #previewYourForm>
-          <router-link :to="previewPath" target="_blank">
+          <a href="https://getodk.org/web-forms-preview/" target="_blank">
             {{ $t('webformsConfirmation.description.previewYourForm') }}
-          </router-link>
+          </a>
         </template>
       </i18n-t>
       <div class="modal-actions">
@@ -66,16 +66,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import useRoutes from '../../composables/routes';
+
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 const { form } = useRequestData();
-const { formPath } = useRoutes();
 
 defineOptions({
   name: 'FormWebFormsSettingsConfirmation'
@@ -87,12 +85,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['hide', 'success']);
-
-const previewPath = computed(() => formPath(
-  form.projectId,
-  form.xmlFormId,
-  'preview'
-));
 
 const setWebformsEnabled = () => {
   form.request({
