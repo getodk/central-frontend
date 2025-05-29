@@ -1,0 +1,99 @@
+.value-option {
+	--text-content-margin: 15px;
+}
+
+.value-option {
+	display: flex;
+	align-items: center;
+	outline: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	padding: 12px;
+	cursor: pointer;
+	background: var(--odk-base-background-color);
+	overflow: hidden;
+
+	&:has(.p-checkbox-input:hover),
+	&:has(.p-checkbox-input:focus-visible),
+	&:has(.p-radiobutton-input:hover),
+	&:has(.p-radiobutton-input:focus-visible) {
+		outline-color: var(--odk-primary-border-color);
+		background-color: var(--odk-primary-light-background-color);
+	}
+
+	:deep(.p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:focus-visible)),
+	:deep(.p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:hover)) {
+		box-shadow: none;
+	}
+
+	&:deep(:has(.p-radiobutton-input:focus-visible)),
+	&:hover {
+		outline-color: var(--odk-primary-border-color);
+		background-color: var(--odk-primary-lighter-background-color);
+	}
+
+	&.active {
+		outline: 2px solid var(--odk-primary-border-color);
+		background-color: var(--odk-primary-lighter-background-color);
+	}
+
+	&.disabled,
+	&.disabled label {
+		cursor: not-allowed;
+
+		&:hover {
+			outline-color: var(--odk-border-color);
+			background-color: unset;
+		}
+	}
+
+	:deep(.text-content) {
+		max-width: calc(100% - 40px);
+		word-break: break-word;
+	}
+
+	:deep(.media-content) {
+		background: var(--odk-base-background-color);
+		height: calc(100% - (var(--odk-base-font-size) + (var(--text-content-margin) * 2)));
+		width: 100%;
+		justify-items: center;
+	}
+
+	&:has(.media-content) {
+		padding: 0;
+
+		:deep(.p-checkbox),
+		:deep(.p-radiobutton) {
+			margin: auto 0 auto 20px;
+			align-self: flex-start;
+		}
+
+		:deep(.text-content) {
+			max-width: calc(100% - 70px);
+			margin: var(--text-content-margin) 20px;
+		}
+	}
+}
+
+.value-option.no-buttons {
+	:deep(.p-checkbox),
+	:deep(.p-radiobutton) {
+		opacity: 0;
+		width: 0; /* Radio or checkbox button isn't visible */
+		margin: 0;
+	}
+}
+
+.value-option:not(.no-buttons) :deep(.text-content) {
+	margin-left: 10px;
+}
+
+.select-with-images .value-option {
+	background: var(--p-surface-50);
+	align-content: flex-start;
+	flex-wrap: wrap;
+
+	&.disabled,
+	&.disabled label {
+		opacity: 0.5;
+	}
+}

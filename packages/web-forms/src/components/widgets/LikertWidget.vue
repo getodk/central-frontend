@@ -28,11 +28,13 @@ defineEmits(['change']);
 		flex-direction: column;
 		flex: 1;
 		align-items: center;
+		flex-wrap: nowrap;
 		cursor: pointer;
 		outline: none;
 		padding: 10px 0;
 		margin-left: 10px;
 		margin-right: 10px;
+		background: transparent;
 
 		&:last-of-type::before {
 			width: calc(50% + 20px);
@@ -54,33 +56,36 @@ defineEmits(['change']);
 			top: 11px;
 		}
 
-		&:hover {
-			background-color: var(--odk-primary-light-background-color);
-		}
-
-		&.active {
-			background-color: unset;
+		&:hover,
+		&.active,
+		&.active:hover {
+			background-color: transparent;
 			outline: none;
-
-			&:hover {
-				background-color: var(--odk-primary-light-background-color);
-			}
 		}
 
 		.p-radiobutton {
 			position: relative;
 			z-index: var(--odk-z-index-form-content);
+			margin: 0;
+			align-self: unset;
 		}
 
-		.label-text {
+		.text-content {
 			text-align: center;
-			margin-top: -11.5px;
-			margin-left: 0;
+			margin: -11.5px 0 10px 0;
 			width: 100%;
 			position: relative;
 			padding-top: 20px;
-			display: block;
 			word-break: break-word;
+			max-width: unset;
+		}
+
+		.image-block {
+			height: auto;
+		}
+
+		.media-content {
+			flex-basis: unset;
 		}
 	}
 }

@@ -17,7 +17,7 @@ import type {
 } from './FormState.ts';
 import { ENGINE_FORM_INSTANCE_CONFIG } from './engine-config.ts';
 
-interface FormOptions {
+export interface FormOptions {
 	readonly fetchFormAttachment: FetchFormAttachment;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 }

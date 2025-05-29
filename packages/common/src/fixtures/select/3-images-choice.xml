@@ -20,6 +20,15 @@
             <value form="image">jr://images/camel.jpg</value>
           </text>
         </translation>
+        <translation lang="fr">
+          <text id="animals-0">
+            <value>Not found image</value>
+            <value form="image">jr://images/not-found.svg</value>
+          </text>
+          <text id="animals-1">
+            <value>No image defined</value>
+          </text>
+        </translation>
       </itext>
       <instance>
         <data id="images-choice" version="20240611120218">

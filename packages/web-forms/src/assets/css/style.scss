@@ -45,6 +45,9 @@
 
 	--odk-max-form-width: 900px;
 
+	--odk-max-image-height: 300px;
+	--odk-image-container-size: 300px;
+
 	/*
 	 * This project uses a centralized z-index layering system to manage the stacking order of UI
 	 * elements, preventing overlap issues and ensuring maintainability.
@@ -72,4 +75,28 @@
 
 	/* Critical UI elements (e.g., loading spinners, toast notifications) */
 	--odk-z-index-topmost: 1000;
+}
+
+.odk-form {
+	@keyframes shimmer {
+		0% {
+			background-position: 200% 0;
+		}
+		100% {
+			background-position: -200% 0;
+		}
+	}
+
+	.skeleton-loading {
+		height: 100%;
+		width: 100%;
+		background: linear-gradient(
+			90deg,
+			var(--p-surface-100) 25%,
+			var(--p-surface-200) 50%,
+			var(--p-surface-100) 75%
+		);
+		background-size: 200% 100%;
+		animation: shimmer 1.5s infinite;
+	}
 }

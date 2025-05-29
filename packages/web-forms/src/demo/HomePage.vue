@@ -113,7 +113,7 @@ const isDev = import.meta.env.DEV;
 					<div class="col">
 						<DemoForm
 							form-title="All question types"
-							form-identifier="all-question-types-v2024091201"
+							form-identifier="all-question-types-v2024091201-2"
 							image-name="all-questions"
 						>
 							<template #description>

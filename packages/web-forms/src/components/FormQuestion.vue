@@ -11,7 +11,7 @@ import InputControl from './controls/Input/InputControl.vue';
 import NoteControl from './controls/NoteControl.vue';
 import RangeControl from './controls/Range/RangeControl.vue';
 import RankControl from './controls/RankControl.vue';
-import SelectControl from './controls/SelectControl.vue';
+import SelectControl from './controls/Select/SelectControl.vue';
 import TriggerControl from './controls/TriggerControl.vue';
 import UploadControl from './controls/Upload/UploadControl.vue';
 

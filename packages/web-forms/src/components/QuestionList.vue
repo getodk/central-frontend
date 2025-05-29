@@ -50,7 +50,6 @@ const isControlNode = (node: NonStructuralNode): node is ControlNode => {
 			<!-- Render repeat nodes -->
 			<RepeatRange v-else-if="isRepeatRangeNode(node)" :node="node" />
 
-
 			<!-- Render leaf nodes like string, select, etc -->
 			<FormQuestion v-else-if="isControlNode(node)" :question="node" />
 
