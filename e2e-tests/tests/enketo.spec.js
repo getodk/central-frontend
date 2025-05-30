@@ -45,10 +45,6 @@ test.describe('Enketo', () => {
         url: ({ enketoId }) => `/-/${enketoId}`, requireLogin: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/new`
       }, {
-        description: 'Edit Submission',
-        url: ({ enketoId, instanceId }) => `/-/edit/${enketoId}?instance_id=${instanceId}`, requireLogin: true,
-        newUrl: ({ xmlFormId, instanceId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/${instanceId}/edit`
-      }, {
         description: 'Preview Form',
         url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
@@ -103,6 +99,15 @@ test.describe('Enketo', () => {
         }
       });
     });
+  });
+
+  test('Edit submission link should be working', async ({ page }) => {
+    const { enketoId } = publishedForm;
+    const { instanceId } = firstSubmission;
+
+    await login(page);
+    await page.goto(`${appUrl}/-/edit/${enketoId}?instance_id=${instanceId}`);
+    await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
   });
 
   test.describe('offline form', () => {
