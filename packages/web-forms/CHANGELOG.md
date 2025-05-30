@@ -1,5 +1,12 @@
 # @getodk/web-forms
 
+## 0.12.0
+
+### Minor Changes
+
+- e0ff340: Removes print button
+- acaa7c6: Adds support for select with images
+
 ## 0.11.1
 
 ### Patch Changes

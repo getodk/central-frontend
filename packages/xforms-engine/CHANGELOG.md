@@ -1,5 +1,11 @@
 # @getodk/xforms-engine
 
+## 0.10.0
+
+### Minor Changes
+
+- f0e2745: Adds support for downloading image attachments referenced in a form's IText
+
 ## 0.9.0
 
 ### Minor Changes

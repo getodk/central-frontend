@@ -1,5 +1,11 @@
 # @getodk/scenario
 
+## 0.6.3
+
+### Patch Changes
+
+- f0e2745: Adds support for downloading image attachments referenced in a form's IText
+
 ## 0.6.2
 
 ### Patch Changes

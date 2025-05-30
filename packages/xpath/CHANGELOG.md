@@ -1,5 +1,16 @@
 # @getodk/xpath
 
+## 0.6.0
+
+### Minor Changes
+
+- f0e2745: Adds support for downloading image attachments referenced in a form's IText
+
+### Patch Changes
+
+- Updated dependencies [f0e2745]
+  - @getodk/common@0.6.1
+
 ## 0.5.0
 
 ### Minor Changes

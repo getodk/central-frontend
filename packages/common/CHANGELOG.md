@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.6.1
+
+### Patch Changes
+
+- f0e2745: Adds support for downloading image attachments referenced in a form's IText
+
 ## 0.6.0
 
 ### Minor Changes
