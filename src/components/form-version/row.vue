@@ -21,16 +21,15 @@ except according to the terms contained in the LICENSE file.
       <time-and-user :iso="version.publishedAt" :user="version.publishedBy"/>
     </td>
     <td>
-      <form-version-standard-buttons v-if="current" :version="version"
-        @view-xml="$emit('view-xml')"/>
-      <form-version-def-dropdown v-else :version="version"
+      <enketo-preview v-if="current" :form-version="version"/>
+      <form-version-def-dropdown :version="version"
         @view-xml="$emit('view-xml')"/>
     </td>
   </tr>
 </template>
 
 <script setup>
-import FormVersionStandardButtons from './standard-buttons.vue';
+import EnketoPreview from '../enketo/preview.vue';
 import FormVersionDefDropdown from './def-dropdown.vue';
 import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
@@ -66,6 +65,8 @@ defineEmits(['view-xml']);
 
     > :last-child { flex-shrink: 0; }
   }
+
+  * + .form-version-def-dropdown { margin-left: 5px; }
 }
 </style>
 
