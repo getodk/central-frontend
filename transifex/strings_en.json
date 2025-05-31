@@ -405,6 +405,10 @@
       "string": "Refresh",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "Refresh page",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "Reset password",
       "developer_comment": "This is the text for an action, for example, the text of a button."

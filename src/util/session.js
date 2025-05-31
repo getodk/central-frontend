@@ -82,7 +82,7 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSession())
+const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.currentSession())
   .catch(error => {
     // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
     // log out a session that has already been logged out. That will result in
@@ -96,6 +96,7 @@ const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSes
     alert.danger(i18n.t('util.session.alert.logoutError', {
       message: requestAlertMessage(i18n, error)
     }));
+    alert.cta(i18n.t('action.refresh'), () => { location.reload(); });
     throw error;
   });
 

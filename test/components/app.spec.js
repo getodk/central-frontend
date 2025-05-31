@@ -44,7 +44,10 @@ describe('App', () => {
     describe('after a version change', () => {
       it('shows an alert', () => {
         const clock = sinon.useFakeTimers(Date.now());
-        return load('/')
+        const reload = sinon.fake();
+        return load('/', {
+          container: { location: { reload } }
+        })
           .complete()
           .request(() => {
             clock.tick(15000);
@@ -64,11 +67,13 @@ describe('App', () => {
             clock.tick(60000);
           })
           .respondWithData(() => '(v2024.1.3-sha)')
-          .afterResponse(app => {
-            clock.tick(0);
+          .afterResponse(async (app) => {
+            await clock.tickAsync(0);
             app.should.alert('info', (message) => {
               message.should.startWith('The server has been updated.');
             });
+            await app.get('.alert-cta').trigger('click');
+            reload.called.should.be.true;
           });
       });
 

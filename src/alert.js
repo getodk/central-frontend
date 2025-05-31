@@ -12,43 +12,63 @@ except according to the terms contained in the LICENSE file.
 import { shallowReactive } from 'vue';
 
 class AlertData {
+  #data;
+
   constructor() {
-    this._data = shallowReactive({
+    this.#data = shallowReactive({
       // The alert's "contextual" type: 'success', 'info', 'warning', or
       // 'danger'.
       type: 'danger',
       message: null,
       // `true` if the alert should be visible and `false` if not.
       state: false,
-      // The time at which the alert was last set
-      at: new Date()
+      // The time at which the alert was last shown
+      at: new Date(),
+      // Information about the Call to Action (CTA) button that's shown in the
+      // alert
+      cta: null
     });
   }
 
-  get type() { return this._data.type; }
-  get message() { return this._data.message; }
-  get state() { return this._data.state; }
-  get at() { return this._data.at; }
+  get type() { return this.#data.type; }
+  get message() { return this.#data.message; }
+  get state() { return this.#data.state; }
+  get at() { return this.#data.at; }
+  get ctaText() { return this.#data.cta?.text; }
+  get ctaHandler() { return this.#data.cta?.handler; }
 
-  _set(type, message) {
-    this._data.type = type;
-    this._data.message = message;
-    this._data.state = true;
-    this._data.at = new Date();
+  #show(type, message) {
+    Object.assign(this.#data, {
+      type,
+      message,
+      state: true,
+      at: new Date(),
+      cta: null
+    });
+    // Return the alert object for chaining.
+    return this;
   }
 
-  success(message) { this._set('success', message); }
-  info(message) { this._set('info', message); }
-  warning(message) { this._set('warning', message); }
-  danger(message) { this._set('danger', message); }
+  success(message) { return this.#show('success', message); }
+  info(message) { return this.#show('info', message); }
+  warning(message) { return this.#show('warning', message); }
+  danger(message) { return this.#show('danger', message); }
+
+  // `text` is the text of the CTA. `handler` is a function to call when the
+  // user clicks the CTA.
+  cta(text, handler) { this.#data.cta = { text, handler }; }
 
   blank() {
-    this._data.state = false;
-    this._data.message = null;
+    this.#data.state = false;
+    this.#data.message = null;
+    this.#data.cta = null;
   }
 }
 
-// Only a single alert is shown at a time. This function returns an object that
-// manages the data for the alert. Regardless of where an alert is rendered, its
-// data will be stored in this object.
-export default () => new AlertData();
+// Returns an object to manage the reactive data for the toast, which is called
+// the "alert" in the codebase. Only a single alert is shown at a time. It may
+// be shown at the top of the page or in a modal. Regardless of where the alert
+// is shown, its data will be stored in this object.
+const createAlert = () => new AlertData();
+
+export default createAlert;
