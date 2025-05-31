@@ -94,6 +94,9 @@ const listFormatOptions = {
   long: { style: 'long' }
 };
 
+export const joinSentences = (i18n, sentences) =>
+  sentences.join(locales.get(i18n.locale).sentenceSeparator);
+
 const useGlobalUtils = memoizeForContainer(({ i18n }) => {
   const numberFormats = {};
   const getNumberFormat = (key) => {
@@ -130,7 +133,8 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
       getListFormat(key).formatToParts(list),
 
     sentenceSeparator: computed(() =>
-      locales.get(i18n.locale).sentenceSeparator)
+      locales.get(i18n.locale).sentenceSeparator),
+    joinSentences: joinSentences.bind(null, i18n)
   };
 });
 
