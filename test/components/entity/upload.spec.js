@@ -425,5 +425,19 @@ describe('EntityUpload', () => {
         const filters = app.getComponent(EntityFilters).props();
         filters.conflict.should.eql([true, false]);
       }));
+
+    it('resets the search', () =>
+      upload('?search=john').beforeEachResponse((app, { url }, i) => {
+        if (i === 0) return;
+        // There should be only snapshot $filter query parameter.
+        const { pathname, searchParams } = relativeUrl(url);
+        pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
+        searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+        searchParams.get('$top').should.be.eql('250');
+        searchParams.get('$count').should.be.eql('true');
+        expect(searchParams.get('$search')).to.be.null;
+
+        app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
+      }));
   });
 });

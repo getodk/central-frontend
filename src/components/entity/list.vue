@@ -13,6 +13,17 @@ except according to the terms contained in the LICENSE file.
   <div id="entity-list">
     <div id="entity-list-actions" class="table-actions-bar">
       <form class="form-inline" @submit.prevent>
+        <div class="form-group">
+          <span class="icon-filter"></span>
+        </div>
+         <label class="form-group">
+            <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="$t('common.search')"
+              :aria-disabled="deleted" autocomplete="off" @keydown.enter="setSearchTerm">
+            <button v-show="searchTextbox" type="button" class="close"
+              :aria-label="$t('action.clearSearch')" @click="clearSearch">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </label>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
@@ -40,7 +51,7 @@ except according to the terms contained in the LICENSE file.
     <odata-loading-message type="entity"
       :top="pagination.size"
       :odata="odataEntities"
-      :filter="odataFilter != null"
+      :filter="odataFilter != null || !!searchTerm"
       :refreshing="refreshing"
       :total-count="dataset.dataExists ? dataset.entities : 0"/>
 
@@ -132,11 +143,19 @@ export default {
       })
     });
 
+    // works in conjunction with searchTextbox
+    const searchTerm = useQueryRef({
+      fromQuery: (query) => query.search,
+      toQuery: (value) => ({
+        search: !value ? null : value
+      })
+    });
+
     const { request } = useRequest();
 
     const pageSizeOptions = [250, 500, 1000];
 
-    return { dataset, odataEntities, conflict, request, deletedEntityCount, pageSizeOptions };
+    return { dataset, odataEntities, conflict, request, deletedEntityCount, pageSizeOptions, searchTerm };
   },
   data() {
     return {
@@ -162,7 +181,9 @@ export default {
 
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
       now: new Date().toISOString(),
-      snapshotFilter: ''
+      snapshotFilter: '',
+
+      searchTextbox: this.searchTerm
     };
   },
   computed: {
@@ -186,21 +207,21 @@ export default {
     }
   },
   watch: {
-    odataFilter() {
-      this.fetchChunk(true);
+    searchTerm() {
+      this.searchTextbox = this.searchTerm;
     },
     deleted() {
       this.fetchChunk(true);
     },
     'odataEntities.count': {
       handler() {
-        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted)
+        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted && !this.searchTerm)
           this.dataset.entities = this.odataEntities.count;
       }
     },
     'odataEntities.removedEntities.size': {
       handler(size) {
-        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted) {
+        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted && !this.searchTerm) {
           this.dataset.entities = this.odataEntities.count - size;
         }
       }
@@ -208,6 +229,7 @@ export default {
   },
   created() {
     this.fetchChunk(true);
+    this.$watch(() => [this.odataFilter, this.searchTerm], () => this.fetchChunk(true));
   },
   methods: {
     // `clear` indicates whether this.odataEntities should be cleared before
@@ -229,6 +251,11 @@ export default {
         $filter += ` and ${this.odataFilter}`;
       }
 
+      let $search;
+      if (this.searchTerm) {
+        $search = this.searchTerm;
+      }
+
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
@@ -237,6 +264,7 @@ export default {
             $top: this.pagination.size,
             $skip: this.pagination.page * this.pagination.size,
             $count: true,
+            $search,
             $filter,
             $orderby: '__system/createdAt desc'
           }
@@ -276,12 +304,14 @@ export default {
     },
     // This method is called directly by DatasetEntities.
     reset() {
-      if (this.odataFilter == null)
+      if (this.odataFilter == null && !this.searchTerm)
         this.fetchChunk(true);
-      else
-        // This change will cause the watcher on this.odataFilter to fetch
+      else {
+        // This change will cause the watcher in created() to fetch
         // entities.
         this.conflict = [true, false];
+        this.searchTerm = '';
+      }
     },
     showUpdate(index) {
       if (this.refreshing) return;
@@ -445,6 +475,13 @@ export default {
       // less than the lowest size option, hence we don't need to make a request.
       if (this.odataEntities.count < this.pageSizeOptions[0]) return;
       this.fetchChunk(false);
+    },
+    clearSearch() {
+      this.searchTextbox = '';
+      this.searchTerm = '';
+    },
+    setSearchTerm() {
+      this.searchTerm = this.searchTextbox;
     }
   }
 };

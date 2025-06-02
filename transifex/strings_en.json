@@ -958,6 +958,9 @@
     },
     "none": {
       "string": "(none)"
+    },
+    "search": {
+      "string": "Search"
     }
   },
   "mixin": {

@@ -14,6 +14,7 @@ import { loadEntityList } from '../../util/entity';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { testRouter } from '../../util/router';
+import { relativeUrl } from '../../util/request';
 
 // Create entities along with the associated project and dataset.
 const createEntities = (count, factoryOptions = {}) => {
@@ -1057,5 +1058,96 @@ describe('EntityList', () => {
     //       // component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
     //     });
     // });
+  });
+
+  describe('search', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, { entities: 2 });
+      testData.extendedEntities.createPast(2);
+    });
+
+    it('does not include search query parameter in the request by default', () =>
+      load('/projects/1/entity-lists/trees/entities', { root: false })
+        .beforeEachResponse((_, { url }, index) => {
+          if (index !== 1) return;
+          const search = relativeUrl(url).searchParams.get('$search');
+          expect(search).to.be.null;
+        }));
+
+    it('should set the query parameter in the URL', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request((c) => {
+          c.find('.search-textbox').setValue('some text');
+          return c.find('.search-textbox').trigger('keydown', { key: 'enter' });
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponse(app => {
+          app.vm.$route.query.search.should.equal('some text');
+        }));
+
+    it('should read searched text from the URL', () =>
+      load('/projects/1/entity-lists/trees/entities?search=john', { root: false })
+        .beforeEachResponse((_, { url }, index) => {
+          if (index !== 1) return;
+          const search = relativeUrl(url).searchParams.get('$search');
+          search.should.be.equal('john');
+        }));
+
+    it('should re-renders the table after enter is pressed', () => {
+      testData.extendedEntities.createPast(1);
+      return load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .afterResponses(app => {
+          app.findComponent(EntityMetadataRow).exists().should.be.true;
+        })
+        .request((c) => {
+          c.find('.search-textbox').setValue('some text');
+          return c.find('.search-textbox').trigger('keydown', { key: 'enter' });
+        })
+        .beforeEachResponse((app, { url }) => {
+          app.findComponent(EntityMetadataRow).exists().should.be.false;
+          relativeUrl(url).searchParams.has('$search').should.be.true;
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponse(app => {
+          app.findComponent(EntityMetadataRow).exists().should.be.true;
+        });
+    });
+
+    it('should not update entities count in the dataset resource', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .afterResponses(app => {
+          app.vm.$container.requestData.dataset.entities.should.equal(2);
+        })
+        .request((c) => {
+          c.find('.search-textbox').setValue('some text');
+          return c.find('.search-textbox').trigger('keydown', { key: 'enter' });
+        })
+        .respondWithData(() => ({
+          ...testData.entityOData(1),
+          '@odata.count': 1,
+          '@odata.nextLink': undefined
+        }))
+        .afterResponse(app => {
+          app.vm.$container.requestData.dataset.entities.should.equal(2);
+        }));
+
+    it('should re-renders the table after search term is changed via URL', () =>
+      load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .route('/projects/1/entity-lists/trees/entities?search=john')
+        .beforeEachResponse((_, { url }) => {
+          relativeUrl(url).searchParams.get('$search').should.be.equal('john');
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponse(app => {
+          app.get('.search-textbox').element.value.should.be.equal('john');
+        }));
   });
 });
