@@ -16,14 +16,14 @@ except according to the terms contained in the LICENSE file.
         <div class="form-group">
           <span class="icon-filter"></span>
         </div>
-         <label class="form-group">
-            <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="$t('common.search')"
-              :aria-disabled="deleted" autocomplete="off" @keydown.enter="setSearchTerm">
-            <button v-show="searchTextbox" type="button" class="close"
-              :aria-label="$t('action.clearSearch')" @click="clearSearch">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </label>
+        <div class="form-group">
+          <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="$t('common.search')"
+            :aria-label="$t('common.search')" :aria-disabled="deleted" autocomplete="off" @keydown.enter="setSearchTerm">
+          <button v-show="searchTextbox" type="button" class="close"
+            :aria-label="$t('action.clearSearch')" @click="clearSearch">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
@@ -145,7 +145,7 @@ export default {
 
     // works in conjunction with searchTextbox
     const searchTerm = useQueryRef({
-      fromQuery: (query) => query.search,
+      fromQuery: (query) => (typeof query.search === 'string' ? query.search : null),
       toQuery: (value) => ({
         search: !value ? null : value
       })
@@ -183,7 +183,7 @@ export default {
       now: new Date().toISOString(),
       snapshotFilter: '',
 
-      searchTextbox: this.searchTerm
+      searchTextbox: this.searchTerm ?? ''
     };
   },
   computed: {
@@ -251,10 +251,7 @@ export default {
         $filter += ` and ${this.odataFilter}`;
       }
 
-      let $search;
-      if (this.searchTerm) {
-        $search = this.searchTerm;
-      }
+      const $search = this.searchTerm ? this.searchTerm : undefined;
 
       this.odataEntities.request({
         url: apiPaths.odataEntities(
@@ -477,7 +474,6 @@ export default {
       this.fetchChunk(false);
     },
     clearSearch() {
-      this.searchTextbox = '';
       this.searchTerm = '';
     },
     setSearchTerm() {

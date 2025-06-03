@@ -1118,6 +1118,27 @@ describe('EntityList', () => {
         });
     });
 
+    it('should clear search textbox and reset table when clear(x) button is pressed', () => {
+      testData.extendedEntities.createPast(1);
+      return load('/projects/1/entity-lists/trees/entities?search=john', {
+        attachTo: document.body
+      })
+        .afterResponses(app => {
+          app.findComponent(EntityMetadataRow).exists().should.be.true;
+          app.get('.search-textbox').element.value.should.be.eql('john');
+        })
+        .request((c) => c.find('.search-textbox ~ .close').trigger('click'))
+        .beforeEachResponse((app, { url }) => {
+          app.findComponent(EntityMetadataRow).exists().should.be.false;
+          relativeUrl(url).searchParams.has('$search').should.be.false;
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponse(app => {
+          app.findComponent(EntityMetadataRow).exists().should.be.true;
+          app.get('.search-textbox').element.value.should.be.eql('');
+        });
+    });
+
     it('should not update entities count in the dataset resource', () =>
       load('/projects/1/entity-lists/trees/entities', {
         attachTo: document.body
