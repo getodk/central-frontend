@@ -447,7 +447,8 @@
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
     "beta": "Beta",
-    "none": "(none)"
+    "none": "(none)",
+    "search": "Search"
   },
   "mixin": {
     "request": {
