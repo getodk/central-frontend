@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 
-const { readdirSync, readFileSync } = require('node:fs');
+const { readdirSync, readFileSync, writeFileSync } = require('node:fs');
 
 const translationDir = './src/locales';
 const log = (...args) => console.log(`[translations-test]`, ...args);
 const DEFAULT = 'en';
+
+// Convert json5 source file to standard json
+writeFileSync(
+  `${translationDir}/${DEFAULT}.json`,
+  readFileSync(`${translationDir}/${DEFAULT}.json5`, { encoding:'utf8' })
+      .split('\n')
+      .filter(line => !line.trim().startsWith('//'))
+      .join('\n'),
+);
 
 const base = load(DEFAULT);
 const baseKeys = keysFrom(base);
