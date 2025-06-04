@@ -25,7 +25,7 @@ describe('WhatsNew modal', () => {
     });
 
     it('shows modal to project manager with 1 project', async () => {
-      mockLogin({ role: 'none' });
+      mockLogin({ role: 'none', createdAt: '2025-01-01' });
       testData.extendedProjects.createPast(1, { role: 'manager' });
       const app = await load('/', { root: false }, { users: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
