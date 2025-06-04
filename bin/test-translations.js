@@ -9,10 +9,7 @@ const DEFAULT = 'en';
 // Convert json5 source file to standard json
 writeFileSync(
   `${translationDir}/${DEFAULT}.json`,
-  readFileSync(`${translationDir}/${DEFAULT}.json5`, { encoding:'utf8' })
-      .split('\n')
-      .filter(line => !line.trim().startsWith('//'))
-      .join('\n'),
+  JSON.stringify(eval('_=' + readFileSync(`${translationDir}/${DEFAULT}.json5`, { encoding:'utf8' }))),
 );
 
 const base = load(DEFAULT);
