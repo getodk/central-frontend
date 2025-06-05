@@ -29,8 +29,8 @@ const createData = (roles) => {
 };
 const changeQ = (component, q) => {
   const input = component.get('#project-user-list-search-form input');
-  input.element.value = q;
-  return input.trigger('change');
+  input.setValue(q);
+  return input.trigger('keydown', { key: 'enter' });
 };
 // Changes the role select element of the first row of the table.
 const changeRole = (component, systemOrNone) => {

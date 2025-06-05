@@ -16,14 +16,7 @@ except according to the terms contained in the LICENSE file.
         <div class="form-group">
           <span class="icon-filter"></span>
         </div>
-        <div class="form-group">
-          <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="$t('common.search')"
-            :aria-label="$t('common.search')" :aria-disabled="deleted" autocomplete="off" @keydown.enter="setSearchTerm">
-          <button v-show="searchTextbox" type="button" class="close"
-            :aria-label="$t('action.clearSearch')" @click="clearSearch">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        <search-textbox v-model="searchTerm" :label="$t('common.search')" :no-label="true" :disabled="deleted"/>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
@@ -87,6 +80,7 @@ import OdataLoadingMessage from '../odata-loading-message.vue';
 import Spinner from '../spinner.vue';
 import Pagination from '../pagination.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
+import SearchTextbox from '../search-textbox.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
@@ -108,6 +102,7 @@ export default {
     EntityUpdate,
     OdataLoadingMessage,
     Pagination,
+    SearchTextbox,
     Spinner,
     TeleportIfExists
   },
@@ -207,9 +202,6 @@ export default {
     }
   },
   watch: {
-    searchTerm() {
-      this.searchTextbox = this.searchTerm;
-    },
     deleted() {
       this.fetchChunk(true);
     },
@@ -472,12 +464,6 @@ export default {
       // less than the lowest size option, hence we don't need to make a request.
       if (this.odataEntities.count < this.pageSizeOptions[0]) return;
       this.fetchChunk(false);
-    },
-    clearSearch() {
-      this.searchTerm = '';
-    },
-    setSearchTerm() {
-      this.searchTerm = this.searchTextbox;
     }
   }
 };
