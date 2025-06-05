@@ -89,7 +89,7 @@ export default {
   methods: {
     categoryOption(category) {
       return {
-        text: this.categoryMessage(category),
+        text: `» ${this.categoryMessage(category)}`,
         value: category,
         htmlClass: 'audit-filters-action-category'
       };
@@ -97,7 +97,7 @@ export default {
     actionOption(action) {
       return {
         // Adding non-breaking spaces: see #323 on GitHub.
-        text: `\u00a0\u00a0\u00a0${this.actionMessage(action)}`,
+        text: `\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0${this.actionMessage(action)}`,
         value: action
       };
     }
