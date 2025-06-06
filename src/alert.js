@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { inject, shallowReactive } from 'vue';
+import { inject, onBeforeUnmount, shallowReactive, watch, watchEffect } from 'vue';
 
 import useEventListener from './composables/event-listener';
 
@@ -76,6 +76,20 @@ export const createAlert = () => new AlertData();
 export const useAlert = (elementRef) => {
   const alert = inject('alert');
 
+  // Hide a success alert after 7 seconds.
+  let timeoutId;
+  const clearExistingTimeout = () => {
+    if (timeoutId != null) clearTimeout(timeoutId);
+  };
+  watch(() => alert.at, () => {
+    clearExistingTimeout();
+    if (alert.state && alert.type === 'success')
+      timeoutId = setTimeout(() => { alert.blank(); }, 7000);
+  });
+  watchEffect(() => { if (!alert.state) clearExistingTimeout(); });
+  onBeforeUnmount(clearExistingTimeout);
+
+  // Hide an alert after a link is opened in a new tab.
   const hideAfterClick = (event) => {
     if (alert.state && event.target.closest('a[target="_blank"]') != null &&
       !event.defaultPrevented) {
@@ -85,4 +99,6 @@ export const useAlert = (elementRef) => {
   // Specifying `true` for event capturing so that an alert is not hidden
   // immediately if it was shown after the click.
   useEventListener(elementRef, 'click', hideAfterClick, true);
+
+  return alert;
 };

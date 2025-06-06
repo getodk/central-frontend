@@ -1,10 +1,14 @@
+import sinon from 'sinon';
+import { ref } from 'vue';
+
 import Home from '../src/components/home.vue';
 
-import { createAlert } from '../src/alert';
+import { createAlert, useAlert } from '../src/alert';
 import { noop } from '../src/util/util';
 
 import { load } from './util/http';
 import { mockLogin } from './util/session';
+import { withSetup } from './util/lifecycle';
 
 describe('createAlert()', () => {
   for (const type of ['success', 'info', 'warning', 'danger']) {
@@ -49,6 +53,50 @@ describe('createAlert()', () => {
 });
 
 describe('useAlert()', () => {
+  describe('hiding alert after 7 seconds', () => {
+    it('hides a success alert after 7 seconds', async () => {
+      const clock = sinon.useFakeTimers();
+      const alert = withSetup(() => useAlert(ref(null)));
+      alert.success('Something good!');
+      await clock.tickAsync(6999);
+      alert.state.should.be.true;
+      await clock.tickAsync(1);
+      alert.state.should.be.false;
+    });
+
+    it('does not hide a non-success alert', async () => {
+      const clock = sinon.useFakeTimers();
+      const alert = withSetup(() => useAlert(ref(null)));
+      alert.danger('Something bad!');
+      await clock.tickAsync(7000);
+      alert.state.should.be.true;
+    });
+
+    it('restarts the clock for each new alert', async () => {
+      const clock = sinon.useFakeTimers();
+      const alert = withSetup(() => useAlert(ref(null)));
+
+      alert.success('Something good!');
+      await clock.tickAsync(6999);
+      alert.state.should.be.true;
+      alert.success('Something else good!');
+      await clock.tickAsync(1);
+      alert.state.should.be.true;
+      await clock.tickAsync(6998);
+      alert.state.should.be.true;
+      await clock.tickAsync(1);
+      alert.state.should.be.false;
+
+      alert.success('Something good again!');
+      await clock.tickAsync(6999);
+      alert.danger('Something bad!');
+      await clock.tickAsync(1);
+      alert.state.should.be.true;
+      await clock.tickAsync(6999);
+      alert.state.should.be.true;
+    });
+  });
+
   describe('hiding alert after user clicks an a[target="_blank"]', () => {
     beforeEach(mockLogin);
 
