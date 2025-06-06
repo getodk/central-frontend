@@ -11,20 +11,25 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="form.initiallyLoading"/>
+  <page-body v-if="loadingState">
+    <loading :state="true"/>
+  </page-body>
   <template v-if="form.dataExists">
-    <web-form-renderer v-if="form.webformsEnabled || $route.query.webforms === 'true'" action-type="preview"/>
-    <enketo-iframe v-else :enketo-id="form.enketoId" action-type="preview"/>
+    <web-form-renderer v-if="form.webformsEnabled || $route.query.webforms === 'true'"
+      action-type="preview" @loaded="hideLoading"/>
+    <enketo-iframe v-else :enketo-id="form.enketoId" action-type="preview" @loaded="hideLoading"/>
   </template>
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import Loading from '../loading.vue';
 import { loadAsync } from '../../util/load-async';
+
+import PageBody from '../page/body.vue';
 
 defineOptions({
   name: 'FormPreview'
@@ -44,6 +49,11 @@ const props = defineProps({
     required: true
   }
 });
+
+const loadingState = ref(true);
+const hideLoading = () => {
+  loadingState.value = false;
+};
 
 const { form } = useRequestData();
 
