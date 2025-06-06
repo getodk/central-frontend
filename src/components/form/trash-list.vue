@@ -159,7 +159,7 @@ export default {
     // {count} is the number of Forms in the trash.
     "trashCount": "({count})",
     "alert": {
-      "restore": "The Form “{name}” has been restored."
+      "restore": "The Form “{name}” has been successfully restored."
     },
     "message": "Forms and Form-related data are deleted after 30 days in the Trash"
   }

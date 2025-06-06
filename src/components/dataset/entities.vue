@@ -197,7 +197,7 @@ export default {
   "en": {
     "upload": "Upload Entities",
     "alert": {
-      "upload": "Success! Your Entities have been uploaded."
+      "upload": "Your Entities have been successfully uploaded."
     },
     "purgeDescription": "Entities are deleted after 30 days in the Trash",
     "action": {

@@ -140,7 +140,7 @@ describe('SubmissionShow', () => {
 
       it('shows a success alert', async () => {
         const app = await del();
-        app.should.alert('success', 'The Submission has been deleted.');
+        app.should.alert('success', 'Submission has been successfully deleted.');
       });
     });
   });

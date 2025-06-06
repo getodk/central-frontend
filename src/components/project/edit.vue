@@ -99,7 +99,7 @@ const submit = () => {
       "note": "Add notes, links, instructions and other resources here."
     },
     "alert": {
-      "success": "Project settings saved!"
+      "success": "Project settings saved."
     }
   }
 }

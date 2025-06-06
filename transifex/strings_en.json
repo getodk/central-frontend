@@ -727,19 +727,19 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "Please input a password at least 10 characters long."
+      "string": "Password must be at least 10 characters long."
     },
     "updateEntity": {
-      "string": "The Entity has been updated!"
+      "string": "Entity has been successfully updated."
     },
     "updateReviewState": {
-      "string": "Review State saved!"
+      "string": "Review successfully saved."
     },
     "versionChange": {
-      "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+      "string": "The server has been successfully updated."
     },
     "submissionDeleted": {
-      "string": "The Submission has been deleted."
+      "string": "Submission has been successfully deleted."
     },
     "submissionRestored": {
       "string": "The Submission has been restored."
@@ -1030,14 +1030,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "Your session will expire in 2 minutes, and you be automatically logged out."
+          "string": "Your session is expiring! You will be logged out in 2 minutes."
         },
         "expired": {
-          "string": "Your session has expired. To continue working, please log in again."
+          "string": "Your session has expired. Log in again to continue."
         },
         "logoutError": {
-          "string": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": "There was a problem logging out."
+          },
+          "pleaseRefresh": {
+            "string": "Please refresh the page and try again."
+          }
         }
       }
     }
@@ -1063,7 +1067,7 @@
       },
       "alert": {
         "success": {
-          "string": "The password was reset successfully."
+          "string": "Password successfully reset."
         }
       }
     },
@@ -1073,7 +1077,7 @@
           "string": "A user is already logged in. Please refresh the page to continue."
         },
         "changePassword": {
-          "string": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
+          "string": "To protect your account, make sure your password is longer than 10 characters."
         }
       },
       "oidc": {
@@ -1170,7 +1174,7 @@
       },
       "alert": {
         "success": {
-          "string": "Settings saved!"
+          "string": "Settings successfully saved."
         }
       }
     },
@@ -1548,7 +1552,7 @@
       },
       "alert": {
         "upload": {
-          "string": "Success! Your Entities have been uploaded."
+          "string": "Your Entities have been successfully uploaded."
         }
       },
       "purgeDescription": {
@@ -2289,7 +2293,7 @@
       },
       "alert": {
         "blankLabel": {
-          "string": "The label is missing."
+          "string": "Missing label."
         },
         "noData": {
           "string": "Your file does not contain any data."
@@ -2470,7 +2474,7 @@
           "string": "The App User “{displayName}” was created successfully."
         },
         "revoke": {
-          "string": "Access was revoked for the App User “{displayName}”."
+          "string": "App User {displayName}’s access successfully revoked."
         }
       }
     },
@@ -2987,16 +2991,13 @@
       },
       "alert": {
         "upload": {
-          "string": "Success! The new Form definition has been saved as your Draft."
+          "string": "The new Form definition has been saved as your Draft."
         },
         "publish": {
-          "string": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments."
+          "string": "Your Draft has been published. Any devices using this Form will now get the new Form definition and attachments."
         },
         "abandon": {
           "string": "The Draft version of this Form has been successfully deleted."
-        },
-        "delete": {
-          "string": "The Form “{name}” was deleted."
         }
       }
     },
@@ -3203,7 +3204,7 @@
       },
       "alert": {
         "create": {
-          "string": "Your new Form “{name}” has been created as a Draft. Upload files and test your Form below, and when you feel it’s ready, you can publish the Form for use."
+          "string": "“{name}” has been created as a Form Draft. Upload files to test your Form."
         }
       }
     },
@@ -3384,7 +3385,7 @@
       },
       "alert": {
         "delete": {
-          "string": "The Form “{name}” was deleted."
+          "string": "The Form “{name}” has been successfully deleted."
         }
       },
       "webFormsSetting": {
@@ -3466,7 +3467,7 @@
       },
       "alert": {
         "restore": {
-          "string": "The Form “{name}” has been restored."
+          "string": "The Form “{name}” has been successfully restored."
         }
       },
       "message": {
@@ -3826,7 +3827,7 @@
       },
       "alert": {
         "success": {
-          "string": "Project settings saved!"
+          "string": "Project settings saved."
         }
       }
     },
@@ -3948,7 +3949,7 @@
       },
       "alert": {
         "success": {
-          "string": "Your changes have been saved!"
+          "string": "Your changes have been successfully saved."
         }
       }
     },
@@ -4166,7 +4167,7 @@
       },
       "alert": {
         "archive": {
-          "string": "The Project “{name}” was archived."
+          "string": "The Project “{name}” has been archived."
         }
       }
     },
@@ -4298,7 +4299,7 @@
           "string": "Success! “{displayName}” has been given a Role of “{roleName}” on this Project."
         },
         "unassignRole": {
-          "string": "Success! “{displayName}” has been removed from this Project."
+          "string": "“{displayName}” has been removed from this Project."
         }
       },
       "action": {
@@ -4374,7 +4375,7 @@
       },
       "alert": {
         "create": {
-          "string": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it."
+          "string": "Your Public Access Link has been created and is now live. Copy it below to distribute it."
         },
         "revoke": {
           "string": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."

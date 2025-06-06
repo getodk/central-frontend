@@ -161,7 +161,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "The Project “{name}” was archived."
+      "archive": "The Project “{name}” has been archived."
     }
   }
 }

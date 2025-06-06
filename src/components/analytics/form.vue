@@ -188,7 +188,7 @@ export default {
       "organization": "Organization name"
     },
     "alert": {
-      "success": "Settings saved!"
+      "success": "Settings successfully saved."
     }
   }
 }

@@ -69,9 +69,7 @@ describe('App', () => {
           .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(async (app) => {
             await clock.tickAsync(0);
-            app.should.alert('info', (message) => {
-              message.should.startWith('The server has been updated.');
-            });
+            app.should.alert('info', 'The server has been successfully updated.');
             await app.get('.alert-cta').trigger('click');
             reload.called.should.be.true;
           });
@@ -113,9 +111,7 @@ describe('App', () => {
             clock.tick(0);
             app.vm.$container.alert.blank();
             await clock.tickAsync(60000);
-            app.should.alert('info', (message) => {
-              message.should.startWith('The server has been updated.');
-            });
+            app.should.alert('info', 'The server has been successfully updated.');
           });
       });
     });
@@ -191,9 +187,7 @@ describe('App', () => {
           .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(app => {
             clock.tick(0);
-            app.should.alert('info', (message) => {
-              message.should.startWith('The server has been updated.');
-            });
+            app.should.alert('info', 'The server has been successfully updated.');
           });
       });
     });

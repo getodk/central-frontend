@@ -109,7 +109,7 @@ describe('AccountLogin', () => {
       .respondFor('/', { users: false })
       .afterResponses(app => {
         app.should.alert('info', (message) => {
-          message.should.startWith('Your password is shorter than 10 characters.');
+          message.should.endWith('make sure your password is longer than 10 characters.');
         });
       });
   });

@@ -183,13 +183,13 @@ body:has(#form-edit) { background-color: #fff; }
   "en": {
     "alert": {
       // @transifexKey component.FormDraftStatus.alert.upload
-      "upload": "Success! The new Form definition has been saved as your Draft.",
+      "upload": "The new Form definition has been saved as your Draft.",
       // @transifexKey component.FormDraftStatus.alert.publish
-      "publish": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments.",
+      "publish": "Your Draft has been published. Any devices using this Form will now get the new Form definition and attachments.",
       // @transifexKey component.FormDraftStatus.alert.abandon
       "abandon": "The Draft version of this Form has been successfully deleted.",
-      // @transifexKey component.FormDraftStatus.alert.delete
-      "delete": "The Form “{name}” was deleted."
+      // @transifexKey component.FormSettings.alert.delete
+      "delete": "The Form “{name}” has been successfully deleted."
     }
   }
 }

@@ -385,7 +385,7 @@ describe('EntityUpload', () => {
 
     it('shows a success alert', async () => {
       const component = await upload();
-      component.should.alert('success', 'Success! Your Entities have been uploaded.');
+      component.should.alert('success', 'Your Entities have been successfully uploaded.');
     });
 
     it('sends a new request for OData', () =>

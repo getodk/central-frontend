@@ -100,7 +100,7 @@ export default {
       "401_2": "{message} The link in your email may have expired, and a new email may have to be sent."
     },
     "alert": {
-      "success": "The password was reset successfully."
+      "success": "Password successfully reset."
     }
   }
 }
