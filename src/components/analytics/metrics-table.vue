@@ -136,6 +136,7 @@ export default {
       "uses_external_blob_store": "Server uses external S3-compatible storage",
       "num_offline_entity_submissions_force_processed": "Number of force-processed Offline Entity Submissions",
       "max_entity_branch_delay": "Maximum time to process offline Entity update chain",
+      "num_owner_only_datasets": "Number of Entity Lists restricted to Owner Only",
       "num_xml_only_form_defs": "Number of Form Definitions with no associated XLSForm",
       "num_blob_files": "Number of binary files",
       "num_blob_files_on_s3": "Number of binary files currently stored in S3-compatible storage",
