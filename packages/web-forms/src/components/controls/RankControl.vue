@@ -29,7 +29,7 @@ const highlight: HighlightOption = {
 /**
  * Delay in ms to show the highlight styles on rank's UI.
  */
-const HIGHLIGHT_DELAY = 500;
+const HIGHLIGHT_DELAY = 1200;
 
 /**
  * Delay in ms to hold an item before dragging, avoids accidental reordering on swipe.
@@ -103,6 +103,12 @@ const swapItems = (index: number, newPosition: number) => {
 
 	setHighlight(newPosition);
 };
+
+const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) => {
+	if (newIndex != null && newIndex !== oldIndex) {
+		setHighlight(newIndex);
+	}
+};
 </script>
 
 <template>
@@ -126,6 +132,7 @@ const swapItems = (index: number, newPosition: number) => {
 			ghost-class="fade-moving"
 			class="rank-control"
 			:class="{ disabled: disabled }"
+			:on-end="(event) => onDragEnd(event.oldIndex, event.newIndex)"
 		>
 			<div
 				v-for="(value, index) in values"
