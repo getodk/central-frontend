@@ -43,9 +43,9 @@ const children = computed(() => {
 		isGroup(props.instance.currentState.children[0])
 	) {
 		return (props.instance.currentState.children[0] as GroupNode).currentState.children;
-	} else {
-		return props.instance.currentState.children;
 	}
+
+	return props.instance.currentState.children;
 });
 
 const menuItems = computed((): MenuItem[] | undefined => {
@@ -68,7 +68,7 @@ const menuItems = computed((): MenuItem[] | undefined => {
 });
 </script>
 <template>
-	<FormPanel :title="label" :menu-items="menuItems" class="repeat-instance" :label-number="instanceIndex + 1">
+	<FormPanel :title="label" :menu-items="menuItems" :label-number="instanceIndex + 1" :is-repeat="true">
 		<QuestionList :nodes="children" />
 	</FormPanel>
 </template>

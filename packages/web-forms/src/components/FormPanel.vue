@@ -4,58 +4,53 @@ import Button from 'primevue/button';
 import Menu, { type MenuState } from 'primevue/menu';
 import { type MenuItem } from 'primevue/menuitem';
 import Panel from 'primevue/panel';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 export interface PanelProps {
 	title?: string;
+	labelNumber?: number;
 	menuItems?: MenuItem[];
 	noUi?: boolean;
-	class?: string[] | string;
-	labelIcon?: string;
-	labelNumber?: number;
+	isRepeat?: boolean;
 }
 
 const props = withDefaults(defineProps<PanelProps>(), {
 	title: undefined,
+	labelNumber: undefined,
 	menuItems: undefined,
 	noUi: false,
-	class: undefined,
-	labelIcon: undefined,
-	labelNumber: undefined,
+	isRepeat: false,
 });
 
-const panelClass = computed(() => [
-	props.menuItems && props.menuItems.length > 0 ? 'with-context-menu' : 'no-context-menu',
-	props.class,
-]);
-
 const panelState = ref(false);
-
-const toggle = () => {
-	panelState.value = !panelState.value;
-};
-
 const menu = ref<InstanceType<typeof Menu> & MenuState>();
-
-const toggleMenu = (event: Event) => {
-	menu.value?.toggle(event);
-};
 </script>
 <template>
-	<Panel v-if="!noUi" :class="panelClass" :toggleable="true" :collapsed="panelState">
+	<Panel
+		v-if="!noUi"
+		:class="{
+			'is-repeat': props.isRepeat,
+			'with-context-menu': !!props.menuItems?.length,
+			'no-context-menu': !props.menuItems?.length,
+			'panel-content-hidden': panelState,
+		}"
+		:toggleable="true"
+		:collapsed="panelState"
+	>
 		<template #header>
-			<div class="panel-title" role="button" @click="toggle">
+			<div class="panel-title" role="button" @click="() => panelState = !panelState">
 				<h2>
 					<IconSVG v-if="panelState" name="mdiChevronDown" />
 					<IconSVG v-if="!panelState" name="mdiChevronUp" />
-					<span v-if="labelNumber" class="label-number">{{ labelNumber }}</span>
 					<span>{{ title }}</span>
-					<span v-if="labelIcon" class="ml-2" :class="labelIcon" />
 				</h2>
+				<span v-if="labelNumber" class="label-number">{{ labelNumber }}</span>
 			</div>
 		</template>
-		<template v-if="menuItems && menuItems.length > 0" #icons>
-			<Button severity="secondary" rounded class="btn-context" :class="{ 'p-focus': menu?.overlayVisible }" icon="icon-more_vert" aria-label="More" @click="toggleMenu" />
+		<template v-if="menuItems?.length" #icons>
+			<Button variant="text" class="button-menu" @click="(event) => menu?.toggle(event)">
+				<IconSVG name="mdiDotsVertical" />
+			</Button>
 			<Menu ref="menu" :model="menuItems" :popup="true" />
 		</template>
 		<template #default>
@@ -70,78 +65,109 @@ const toggleMenu = (event: Event) => {
 </template>
 
 <style scoped lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+
 h2 {
-	font-size: var(--odk-group-font-size);
+	font-size: var(--odk-top-group-font-size);
 	font-weight: 400;
 	margin: 0;
 	display: flex;
 	align-items: center;
-}
-
-.label-number {
-	display: inline-block;
-	margin: 0 5px 0 17px;
-	width: 20px;
-	height: 20px;
-	font-weight: 500;
-	border-radius: var(--odk-radius);
-	background-color: var(--odk-muted-background-color);
-	font-size: var(--odk-base-font-size);
-	text-align: center;
-}
-
-.panel-title {
 	cursor: pointer;
 }
 
-.btn-context {
-	margin-top: -10px;
-
-	&.p-button.p-button-secondary:not(:disabled) {
-		&:active,
-		&:focus,
-		&.p-focus {
-			background: var(--odk-primary-lighter-background-color);
-		}
-
-		&:hover {
-			background: var(--odk-primary-light-background-color);
-		}
-	}
-
-	:deep(.p-button-icon) {
-		font-size: 1.5rem;
-	}
+.label-number {
+	margin-right: 15px;
+	padding: 5px 10px;
+	border-radius: var(--odk-radius);
+	background-color: var(--odk-muted-background-color);
+	font-size: var(--odk-hint-font-size);
+	font-weight: 400;
+	text-align: center;
+	height: fit-content;
 }
 
 .p-panel.p-panel-toggleable {
 	background: var(--odk-base-background-color);
-	border: none;
 	box-shadow: none;
+	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
 
-	.p-panel {
-		margin-left: -10px;
+	&:not(:last-child) {
+		margin-bottom: 20px;
 	}
 
 	:deep(.p-panel-header) {
 		display: flex;
-		padding: 15px 0;
-		align-items: start;
+		align-items: center;
+		background: var(--odk-light-background-color);
+		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
+		width: 100%;
+		padding: 12px 20px;
 
-		.p-panel-header-actions {
+		.p-panel-toggle-button {
 			display: none;
+		}
+
+		.panel-title {
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: nowrap;
+			flex-basis: 100%;
+			align-items: center;
+		}
+
+		.panel-title .odk-icon {
+			margin-right: 15px;
 		}
 	}
 
 	:deep(.p-panel-content) {
-		border-left: 1px solid var(--odk-border-color);
-		margin-left: 10px;
-		border-radius: 0;
-		padding: 0 0 0 1.5rem;
+		border-top: 1px solid var(--odk-border-color);
+		padding: 15px 0;
 	}
 
 	:deep(.p-panel-toggler) {
 		display: none;
+	}
+
+	.p-panel.p-panel-toggleable {
+		// Nested groups
+		border: none;
+		margin-bottom: 0;
+
+		:deep(.p-panel-header) {
+			background: none;
+
+			h2 {
+				font-size: var(--odk-sub-group-font-size);
+			}
+		}
+
+		:deep(.p-panel-content) {
+			border: none;
+		}
+	}
+
+	&.panel-content-hidden :deep(.p-panel-header) {
+		border-radius: var(--odk-radius);
+	}
+}
+
+.p-panel :deep(.p-panel-header-actions) {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+
+	.p-button {
+		padding: 0;
+		min-height: auto;
+
+		&:hover {
+			border-color: transparent;
+			background: none;
+			outline: none;
+		}
 	}
 }
 
@@ -149,5 +175,41 @@ h2 {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+}
+
+.p-panel.is-repeat {
+	.p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
+		// Nested repeats
+		border-radius: var(--odk-radius);
+		width: calc(100% - 30px);
+		margin: 0 auto;
+	}
+
+	:deep(.p-panel-header),
+	.p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
+		background: var(--p-surface-200);
+	}
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	.p-panel.p-panel-toggleable {
+		border: none;
+
+		:deep(.p-panel-content) {
+			border: none;
+		}
+
+		&.is-repeat :deep(.p-panel-header) {
+			border-radius: var(--odk-radius);
+		}
+	}
+}
+</style>
+
+<style lang="scss">
+// Overrides Central's styles
+.p-menu-list .p-menu-item-link,
+.p-menu-list .p-menu-item-link:hover {
+	color: var(--odk-text-color);
 }
 </style>

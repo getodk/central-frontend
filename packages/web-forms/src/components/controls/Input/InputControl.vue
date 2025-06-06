@@ -56,7 +56,7 @@ provide('isInvalid', isInvalid);
 <style scoped lang="scss">
 .input-control-container {
 	--input-bgcolor: var(--odk-muted-background-color);
-	--input-bgcolor-emphasized: var(--p-surface-50);
+	--input-bgcolor-emphasized: var(--odk-light-background-color);
 
 	// Using `:has` allows sharing the same state of these custom properties for the
 	// state of the `input` itself and associated elements (e.g. number

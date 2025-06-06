@@ -84,7 +84,7 @@ const formXls = computed(() => {
 
 	h2 {
 		margin: 0.5rem 0;
-		font-size: var(--odk-group-font-size);
+		font-size: var(--odk-sub-group-font-size);
 		font-weight: 400;
 	}
 

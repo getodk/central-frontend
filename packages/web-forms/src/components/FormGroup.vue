@@ -6,8 +6,6 @@ import QuestionList from './QuestionList.vue';
 
 const props = defineProps<{ node: GroupNode }>();
 
-const classes = ['group'];
-
 const tableLayout = computed(() => {
 	return !!props.node.currentState.children.find(
 		(c) =>
@@ -18,7 +16,7 @@ const tableLayout = computed(() => {
 </script>
 
 <template>
-	<FormPanel :title="node.currentState.label?.asString" :no-ui="!node.currentState.label" :class="classes">
+	<FormPanel :title="node.currentState.label?.asString" :no-ui="!node.currentState.label">
 		<div :class="{ 'table-layout': tableLayout, 'gap-2': !tableLayout, 'flex': true, 'flex-column': true }">
 			<QuestionList :nodes="node.currentState.children" />
 		</div>

@@ -1,14 +1,17 @@
 import { expect, Page } from '@playwright/test';
 import { GeopointControl } from '../controls/GeopointControl.js';
+import { RepeatControl } from '../controls/RepeatControl.js';
 
 export class FillFormPage {
 	private readonly page: Page;
 
 	public readonly geopoint: GeopointControl;
+	public readonly repeat: RepeatControl;
 
 	constructor(page: Page) {
 		this.page = page;
 		this.geopoint = new GeopointControl(page);
+		this.repeat = new RepeatControl(page);
 	}
 
 	private async expectTextAtIndex(

@@ -40,7 +40,7 @@ h1 {
 		list-style: none;
 		cursor: pointer;
 		margin: 10px;
-		font-size: var(--odk-group-font-size);
+		font-size: var(--odk-sub-group-font-size);
 
 		summary {
 			padding: 0.5rem;

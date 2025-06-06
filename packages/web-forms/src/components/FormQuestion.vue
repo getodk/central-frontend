@@ -64,9 +64,4 @@ const submitPressed = inject('submitPressed');
 		background-color: var(--odk-error-background-color);
 	}
 }
-
-:global(.p-panel-content .question-container) {
-	// Accommodates the spacing for validation background of questions inside groups/repeat
-	margin-left: -1rem;
-}
 </style>

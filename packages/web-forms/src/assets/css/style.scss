@@ -14,8 +14,10 @@
 
 	--odk-base-font-size: #{map-get(pf.$font-size-props, 'text-base')};
 	--odk-heading-font-size: #{map-get(pf.$font-size-props, 'text-4xl')};
-	--odk-title-font-size: #{map-get(pf.$font-size-props, 'text-2xl')};
-	--odk-group-font-size: #{map-get(pf.$font-size-props, 'text-xl')};
+	--odk-title-font-size: #{map-get(pf.$font-size-props, 'text-3xl')};
+	--odk-top-group-font-size: #{map-get(pf.$font-size-props, 'text-2xl')};
+	--odk-sub-group-font-size: #{map-get(pf.$font-size-props, 'text-xl')};
+	--odk-dialog-title-font-size: #{map-get(pf.$font-size-props, 'text-xl')};
 	--odk-question-font-size: #{map-get(pf.$font-size-props, 'text-lg')};
 	--odk-answer-font-size: #{map-get(pf.$font-size-props, 'text-base')};
 	--odk-hint-font-size: #{map-get(pf.$font-size-props, 'text-sm')};
@@ -36,6 +38,7 @@
 	--odk-muted-text-color: var(--p-surface-500);
 
 	--odk-base-background-color: var(--p-surface-0);
+	--odk-light-background-color: var(--p-surface-50);
 	--odk-muted-background-color: var(--p-surface-100);
 	--odk-inactive-background-color: var(--p-surface-300);
 

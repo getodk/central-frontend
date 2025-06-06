@@ -194,7 +194,7 @@ onBeforeUnmount(cleanup);
 
 .geo-dialog-header-title {
 	display: flex;
-	font-size: var(--odk-group-font-size);
+	font-size: var(--odk-dialog-title-font-size);
 
 	.geo-spinner {
 		width: 22px;

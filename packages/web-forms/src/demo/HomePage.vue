@@ -18,7 +18,7 @@ const isDev = import.meta.env.DEV;
 								<Chip class="beta-chip" label="PREVIEW" />
 							</div>
 
-							<h1 class="pape-title">
+							<h1 class="page-title">
 								ODK Web Forms Preview
 							</h1>
 
@@ -197,7 +197,7 @@ const isDev = import.meta.env.DEV;
 				}
 			}
 
-			h1.pape-title {
+			h1.page-title {
 				margin: 0;
 				font-size: var(--odk-heading-font-size);
 				font-weight: 400;

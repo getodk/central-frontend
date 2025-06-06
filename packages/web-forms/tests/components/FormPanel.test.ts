@@ -24,7 +24,7 @@ describe('FormPanel', () => {
 			title: 'Test Panel',
 		});
 
-		expect(component.find('.btn-context').exists()).toBe(false);
+		expect(component.find('.button-menu').exists()).toBe(false);
 	});
 
 	it('shows title', () => {
@@ -41,7 +41,7 @@ describe('FormPanel', () => {
 			menuItems: [{ label: 'Remove', icon: 'icon-delete' }],
 		});
 
-		await component.find('.btn-context').trigger('click');
+		await component.find('.button-menu').trigger('click');
 
 		expect(component.findAll('.p-menu.p-component li').length).toBe(1);
 		expect(component.find('.p-menu.p-component').text()).toBe('Remove');

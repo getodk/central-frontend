@@ -25,18 +25,12 @@ const mountComponent = async (fileName: string) => {
 };
 
 describe('RepeatRange', () => {
-	it('shows label of RepeatRange', async () => {
-		const component = await mountComponent('09-repeat-with-dynamic-label.xml');
-
-		expect(component.find('h2:first-of-type').text()).toBe('Repeat label');
-	});
-
 	it('adds a new instance', async () => {
 		const component = await mountComponent('09-repeat-with-dynamic-label.xml');
 
 		expect(component.findAllComponents(RepeatInstance).length).toBe(1);
 
-		await component.find('button.btn-add').trigger('click');
+		await component.find('.button-add-instance').trigger('click');
 
 		expect(component.findAllComponents(RepeatInstance).length).toBe(2);
 	});
@@ -46,7 +40,7 @@ describe('RepeatRange', () => {
 
 		expect(component.findAllComponents(RepeatInstance).length).toBe(1);
 
-		await component.find('button[aria-label="More"]').trigger('click');
+		await component.find('.button-menu').trigger('click');
 
 		await component.find('li[aria-label="Remove"] a').trigger('click');
 
