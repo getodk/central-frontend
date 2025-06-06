@@ -4,6 +4,8 @@ import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import { computed, inject } from 'vue';
 
+const MULTILINE_APPEARANCE_ROW_SIZE = 4;
+
 // prettier-ignore
 type TextInputNode =
 	| StringInputNode
@@ -24,9 +26,14 @@ const submitPressed = inject<boolean>('submitPressed');
 const invalid = computed(() => props.node.validationState.violation?.valid === false);
 const rows = computed(() => {
 	const options = props.node.nodeOptions;
-	if (options && 'rows' in options) {
-		return options.rows ?? 0;
+	if (options && 'rows' in options && options.rows != null) {
+		return options.rows;
 	}
+
+	if (props.node.appearances.multiline) {
+		return MULTILINE_APPEARANCE_ROW_SIZE;
+	}
+
 	return 0;
 });
 </script>
@@ -65,7 +72,7 @@ const rows = computed(() => {
 }
 
 .p-textarea {
-	width: 100%;
-	resize: none;
+	width: 100% !important; /* Overrides forced width when resize is set to vertical */
+	resize: vertical;
 }
 </style>
