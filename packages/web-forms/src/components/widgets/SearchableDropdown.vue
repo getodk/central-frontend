@@ -13,21 +13,21 @@ const props = defineProps<SearchableDropdownProps>();
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
-	return props.question.currentState.valueOptions.map((option) => option.value);
+	return props.question.currentState.valueOptions.map((option) => {
+		const label = props.question.getValueOption(option.value);
+		if (label == null) {
+			throw new Error(`Failed to find option for value: ${option.value}`);
+		}
+
+		return {
+			value: option.value,
+			label: option.label.asString,
+		};
+	});
 });
 
 const selectValue = (value: string) => {
 	props.question.selectValue(value);
-};
-
-const getOptionLabel = (value: string) => {
-	const option = props.question.getValueOption(value);
-
-	if (option == null) {
-		throw new Error(`Failed to find option for value: ${value}`);
-	}
-
-	return option.label.asString;
 };
 </script>
 
@@ -36,10 +36,12 @@ const getOptionLabel = (value: string) => {
 		:id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
+		filter-match-mode="contains"
 		:auto-filter-focus="true"
 		:model-value="question.currentState.value[0]"
 		:options="options"
-		:option-label="getOptionLabel"
+		option-label="label"
+		option-value="value"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
 	/>

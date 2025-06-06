@@ -13,21 +13,21 @@ const props = defineProps<MultiselectDropdownProps>();
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
-	return props.question.currentState.valueOptions.map((option) => option.value);
+	return props.question.currentState.valueOptions.map((option) => {
+		const label = props.question.getValueOption(option.value);
+		if (label == null) {
+			throw new Error(`Failed to find option for value: ${option.value}`);
+		}
+
+		return {
+			value: option.value,
+			label: option.label.asString,
+		};
+	});
 });
 
 const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
-};
-
-const getOptionLabel = (value: string) => {
-	const option = props.question.getValueOption(value);
-
-	if (option == null) {
-		throw new Error(`Failed to find option for value: ${value}`);
-	}
-
-	return option.label.asString;
 };
 
 let panelClass = 'multi-select-dropdown-panel';
@@ -46,10 +46,12 @@ if (props.question.appearances['no-buttons']) {
 		class="multi-select-dropdown"
 		:input-id="question.nodeId"
 		:filter="question.appearances.autocomplete"
+		filter-match-mode="contains"
 		:auto-filter-focus="question.appearances.autocomplete"
 		:show-toggle-all="false"
 		:options="options"
-		:option-label="getOptionLabel"
+		option-label="label"
+		option-value="value"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
 		@update:model-value="selectValues"
