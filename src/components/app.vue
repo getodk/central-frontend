@@ -17,10 +17,7 @@ except according to the terms contained in the LICENSE file.
     <outdated-version/>
     <alert id="app-alert"/>
     <feedback-button v-if="showsFeedbackButton"/>
-    <!-- Specifying .capture so that an alert is not hidden immediately if it
-    was shown after the click. -->
-    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div v-if="routerReady && !standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !standalone" ref="containerEl" class="container-fluid">
       <router-view/>
     </div>
     <template v-else-if="standalone">
@@ -34,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
 
 import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
@@ -44,6 +41,7 @@ import Navbar from './navbar.vue';
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
 import useFeatureFlags from '../composables/feature-flags';
+import { useAlert } from '../alert';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 import { loadAsync } from '../util/load-async';
@@ -61,6 +59,9 @@ export default {
   setup() {
     const { visiblyLoggedIn } = useSessions();
     useDisabled();
+
+    const containerEl = useTemplateRef('containerEl');
+    useAlert(containerEl);
 
     const router = useRouter();
     const route = useRoute();
@@ -125,12 +126,6 @@ export default {
         // requests.
         .catch(error =>
           (error.response != null && error.response.status === 404));
-    },
-    hideAlertAfterClick(event) {
-      if (this.alert.state && event.target.closest('a[target="_blank"]') != null &&
-        !event.defaultPrevented) {
-        this.alert.blank();
-      }
     }
   }
 };

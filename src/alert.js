@@ -9,7 +9,9 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { shallowReactive } from 'vue';
+import { inject, shallowReactive } from 'vue';
+
+import useEventListener from './composables/event-listener';
 
 class AlertData {
   #data;
@@ -69,6 +71,18 @@ class AlertData {
 // the "alert" in the codebase. Only a single alert is shown at a time. It may
 // be shown at the top of the page or in a modal. Regardless of where the alert
 // is shown, its data will be stored in this object.
-const createAlert = () => new AlertData();
+export const createAlert = () => new AlertData();
 
-export default createAlert;
+export const useAlert = (elementRef) => {
+  const alert = inject('alert');
+
+  const hideAfterClick = (event) => {
+    if (alert.state && event.target.closest('a[target="_blank"]') != null &&
+      !event.defaultPrevented) {
+      alert.blank();
+    }
+  };
+  // Specifying `true` for event capturing so that an alert is not hidden
+  // immediately if it was shown after the click.
+  useEventListener(elementRef, 'click', hideAfterClick, true);
+};

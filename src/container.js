@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 import { Translation } from 'vue-i18n';
 
-import createAlert from './alert';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createHoverCard from './container/hover-card';
 import createUnsavedChanges from './unsaved-changes';
 import { $tcn } from './util/i18n';
+import { createAlert } from './alert';
 import { createRequestData } from './request-data';
 
 const provide = [
