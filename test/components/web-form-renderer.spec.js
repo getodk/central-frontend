@@ -15,7 +15,7 @@ import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import { mockLogin } from '../util/session';
 import { mergeMountOptions } from '../util/lifecycle';
 import { setFiles } from '../util/trigger';
-import { wait } from '../util/util';
+import { waitUntil } from '../util/util';
 
 describe('WebFormRenderer', () => {
   let WebFormRenderer;
@@ -348,8 +348,8 @@ describe('WebFormRenderer', () => {
         .respondWithData(() => imageUploaderSubmission)
         .respondWithData(() => 'dummy content');
 
-      await wait(1); // Not 100% sure, but OWF is probably using setTimeout before loading the Form
-      component.find('.odk-form').exists().should.be.true;
+      await waitUntil(() => component.find('.odk-form').exists());
+      component.find('.odk-form h1').text().should.be.equal('Display Picture');
     });
 
     it('should make not requests for attachment data when attachment doesnt exist - relies on OWF', async () => {
@@ -364,8 +364,8 @@ describe('WebFormRenderer', () => {
         .respondWithData(() => [{ name: '1746140510984.jpg', exists: false }])
         .respondWithData(() => imageUploaderSubmission);
 
-      await wait(1); // Not 100% sure, but OWF is probably using setTimeout before loading the Form
-      component.find('.odk-form').exists().should.be.true;
+      await waitUntil(() => component.find('.odk-form').exists());
+      component.find('.odk-form h1').text().should.be.equal('Display Picture');
     });
   });
 });
