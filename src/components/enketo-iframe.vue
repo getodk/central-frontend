@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="!enketoSrc"/>
   <iframe v-if="enketoSrc" id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
@@ -21,7 +20,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { queryString } from '../util/request';
 import { useRequestData } from '../request-data';
 
-import Loading from './loading.vue';
 import useEventListener from '../composables/event-listener';
 import useRoutes from '../composables/routes';
 import { getCookieValue } from '../util/util';
@@ -41,6 +39,8 @@ const props = defineProps({
   },
   instanceId: String
 });
+
+const emit = defineEmits(['loaded']);
 
 const { location, buildMode } = inject('container');
 
@@ -109,6 +109,8 @@ const setEnketoSrc = () => {
   } else {
     enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
   }
+
+  emit('loaded');
 };
 
 setEnketoSrc();
