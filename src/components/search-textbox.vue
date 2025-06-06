@@ -1,0 +1,81 @@
+<!--
+Copyright 2025 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+
+<template>
+  <label id="search-textbox" class="form-group">
+    <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="label"
+      :aria-label="label" :aria-disabled="disabled" autocomplete="off" @keydown.enter="setSearchTerm" @focusout="revert">
+    <button v-show="searchTextbox" type="button" class="close"
+      :aria-label="$t('action.clearSearch')" @click="clearSearch">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span v-if="!hideLabel" class="form-label">{{ label }}</span>
+  </label>
+</template>
+
+<script setup>
+import { ref, watch } from 'vue';
+
+
+const props = defineProps({
+  modelValue: String,
+  disabled: Boolean,
+  /**
+   * Text for label and placeholder
+   */
+  label: {
+    type: String,
+    required: true
+  },
+  hideLabel: Boolean
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+const searchTextbox = ref(props.modelValue);
+
+const setSearchTerm = () => {
+  emit('update:modelValue', searchTextbox.value);
+};
+
+const clearSearch = () => {
+  emit('update:modelValue', '');
+};
+
+const revert = () => {
+  searchTextbox.value = props.modelValue;
+};
+
+watch(() => props.modelValue, (value) => {
+  searchTextbox.value = value;
+});
+</script>
+
+<style lang="scss">
+#search-textbox {
+  .form-control {
+    // Add padding so that the .close button does not overlay long input text.
+    padding-right: 21px;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      // @transifexKey component.ProjectUserList.action.clearSearch
+      "clearSearch": "Clear search"
+    }
+  }
+}
+</i18n>

@@ -42,18 +42,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
     </div>
     <form id="project-user-list-search-form" class="form-inline"
       @submit.prevent>
-      <label class="form-group">
-        <input class="form-control" :value="q" :placeholder="searchLabel"
-          :aria-disabled="searchDisabled" autocomplete="off"
-          @change="changeQ($event.target.value)">
-        <!-- When search is disabled, we hide rather than disable this button,
-        because Bootstrap does not have CSS for .close[disabled]. -->
-        <button v-show="q !== '' && !searchDisabled" type="button" class="close"
-          :aria-label="$t('action.clearSearch')" @click="clearSearch">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <span class="form-label">{{ searchLabel }}</span>
-      </label>
+      <search-textbox v-model="searchTerm" :label="searchLabel" :disabled="searchDisabled"/>
     </form>
 
     <table class="table">
@@ -81,6 +70,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
 import DocLink from '../../doc-link.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
+import SearchTextbox from '../../search-textbox.vue';
 
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
@@ -88,7 +78,7 @@ import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, Loading, ProjectUserRow },
+  components: { DocLink, Loading, ProjectUserRow, SearchTextbox },
   inject: ['alert'],
   props: {
     projectId: {
@@ -117,7 +107,7 @@ export default {
   data() {
     return {
       // Search term
-      q: '',
+      searchTerm: '',
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
     };
@@ -142,7 +132,7 @@ export default {
     },
     // The assignments to show in the table
     tableAssignments() {
-      return this.q !== '' ? this.searchAssignments : this.projectAssignments;
+      return this.searchTerm !== '' ? this.searchAssignments : this.projectAssignments;
     },
     emptyMessage() {
       if (!(this.tableAssignments.dataExists && this.tableAssignments.length === 0))
@@ -150,6 +140,15 @@ export default {
       return this.tableAssignments === this.projectAssignments
         ? this.$t('emptyTable')
         : this.$t('common.noResults');
+    }
+  },
+  watch: {
+    searchTerm(searchTerm) {
+      if (!searchTerm) {
+        this.clearSearch();
+      } else {
+        this.search();
+      }
     }
   },
   created() {
@@ -168,19 +167,11 @@ export default {
     },
     clearSearch() {
       this.fetchData(true);
-      this.q = '';
       this.searchAssignments.data = null;
     },
     search() {
-      this.searchAssignments.request({ url: apiPaths.users({ q: this.q }) })
+      this.searchAssignments.request({ url: apiPaths.users({ q: this.searchTerm }) })
         .catch(noop);
-    },
-    changeQ(q) {
-      this.q = q;
-      if (this.q === '')
-        this.clearSearch();
-      else
-        this.search();
     },
     incrementCount() {
       this.assignRequestCount += 1;
@@ -229,8 +220,6 @@ export default {
 @import '../../../assets/scss/variables';
 
 #project-user-list-search-form .form-control {
-  // Add padding so that the .close button does not overlay long input text.
-  padding-right: 21px;
   width: 250px;
 }
 
@@ -261,9 +250,6 @@ export default {
         "dataCollectors": "Data Collectors"
       }
     ],
-    "action": {
-      "clearSearch": "Clear search"
-    },
     "field": {
       "q": {
         "canList": "Search for a user…",
