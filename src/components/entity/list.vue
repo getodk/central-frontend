@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <div class="form-group">
           <span class="icon-filter"></span>
         </div>
-        <search-textbox v-model="searchTerm" :label="$t('common.search')" :no-label="true" :disabled="deleted"/>
+        <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted"/>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
@@ -138,7 +138,6 @@ export default {
       })
     });
 
-    // works in conjunction with searchTextbox
     const searchTerm = useQueryRef({
       fromQuery: (query) => (typeof query.search === 'string' ? query.search : null),
       toQuery: (value) => ({
@@ -177,8 +176,6 @@ export default {
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
       now: new Date().toISOString(),
       snapshotFilter: '',
-
-      searchTextbox: this.searchTerm ?? ''
     };
   },
   computed: {

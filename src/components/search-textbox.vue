@@ -11,14 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <label class="form-group">
+  <label id="search-textbox" class="form-group">
     <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="label"
       :aria-label="label" :aria-disabled="disabled" autocomplete="off" @keydown.enter="setSearchTerm" @focusout="revert">
     <button v-show="searchTextbox" type="button" class="close"
       :aria-label="$t('action.clearSearch')" @click="clearSearch">
       <span aria-hidden="true">&times;</span>
     </button>
-    <span v-if="!noLabel" class="form-label">{{ label }}</span>
+    <span v-if="!hideLabel" class="form-label">{{ label }}</span>
   </label>
 </template>
 
@@ -32,8 +32,11 @@ const props = defineProps({
   /**
    * Text for label and placeholder
    */
-  label: String,
-  noLabel: Boolean
+  label: {
+    type: String,
+    required: true
+  },
+  hideLabel: Boolean
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -56,3 +59,23 @@ watch(() => props.modelValue, (value) => {
   searchTextbox.value = value;
 });
 </script>
+
+<style lang="scss">
+#search-textbox {
+  .form-control {
+    // Add padding so that the .close button does not overlay long input text.
+    padding-right: 21px;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      // @transifexKey component.ProjectUserList.action.clearSearch
+      "clearSearch": "Clear search"
+    }
+  }
+}
+</i18n>

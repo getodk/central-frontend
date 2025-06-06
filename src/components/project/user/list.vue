@@ -147,7 +147,7 @@ export default {
       if (!searchTerm) {
         this.clearSearch();
       } else {
-        this.search(true);
+        this.search();
       }
     }
   },
@@ -220,8 +220,6 @@ export default {
 @import '../../../assets/scss/variables';
 
 #project-user-list-search-form .form-control {
-  // Add padding so that the .close button does not overlay long input text.
-  padding-right: 21px;
   width: 250px;
 }
 
@@ -252,9 +250,6 @@ export default {
         "dataCollectors": "Data Collectors"
       }
     ],
-    "action": {
-      "clearSearch": "Clear search"
-    },
     "field": {
       "q": {
         "canList": "Search for a user…",

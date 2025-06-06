@@ -21,6 +21,7 @@ describe('SearchTextbox', () => {
     const component = mount(SearchTextbox, {
       props: {
         modelValue: '',
+        label: 'Search',
       },
     });
 
@@ -38,6 +39,7 @@ describe('SearchTextbox', () => {
         'onUpdate:modelValue': (val) => {
           component.setProps({ modelValue: val });
         },
+        label: 'Search',
       },
     });
 
@@ -53,6 +55,7 @@ describe('SearchTextbox', () => {
     const component = mount(SearchTextbox, {
       props: {
         modelValue: 'original',
+        label: 'Search',
       },
     });
 
@@ -68,6 +71,7 @@ describe('SearchTextbox', () => {
     const component = mount(SearchTextbox, {
       props: {
         modelValue: 'initial',
+        label: 'Search',
       },
     });
 
@@ -82,7 +86,7 @@ describe('SearchTextbox', () => {
       props: {
         modelValue: '',
         label: 'Test Label',
-        noLabel: true,
+        hideLabel: true,
       },
     });
 
@@ -93,6 +97,7 @@ describe('SearchTextbox', () => {
     const component = mount(SearchTextbox, {
       props: {
         modelValue: '',
+        label: 'Search',
         disabled: true,
       },
     });

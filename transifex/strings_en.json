@@ -4265,12 +4265,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "Clear search",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4305,6 +4299,12 @@
         },
         "unassignRole": {
           "string": "Success! “{displayName}” has been removed from this Project."
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Clear search",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
