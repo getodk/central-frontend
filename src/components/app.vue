@@ -19,8 +19,6 @@ except according to the terms contained in the LICENSE file.
     <feedback-button v-if="showsFeedbackButton"/>
     <!-- Specifying .capture so that an alert is not hidden immediately if it
     was shown after the click. -->
-    <!-- v-document-color: Using this directive to add background color to the html tag;
-    this is done to avoid magenta splash on standalone routes such as FormPreview   -->
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div v-if="routerReady && !standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
       <router-view/>
@@ -68,6 +66,8 @@ export default {
     const route = useRoute();
     router.isReady()
       .then(() => {
+        // Add background color to the html tag; this is done to avoid magenta
+        // splash on standalone routes such as FormPreview.
         if (!route.meta.standalone)
           document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
       });
