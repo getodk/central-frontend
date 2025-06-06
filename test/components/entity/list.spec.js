@@ -1046,18 +1046,21 @@ describe('EntityList', () => {
         });
     });
 
-    // it.only('disables download button', () => {
-    //   testData.extendedEntities.createPast(1, { label: 'My Entity' });
-    //   testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
-    //   return load('/projects/1/entity-lists/trees/entities', { root: false, container: { router: testRouter() } })
-    //     .complete()
-    //     .request(component =>
-    //       component.get('.toggle-deleted-entities').trigger('click'))
-    //     .respondWithData(testData.entityDeletedOData)
-    //     .afterResponses((component) => {
-    //       // component.find('#entity-download-button').attributes('aria-disabled').should.equal('true');
-    //     });
-    // });
+    it('disables download button', async () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
+      const app = await load(
+        '/projects/1/entity-lists/trees/entities?deleted=true',
+        { root: false, attachTo: document.body },
+        {
+          deletedEntityCount: false,
+          odataEntities: testData.entityDeletedOData
+        }
+      );
+      const button = app.getComponent('#entity-download-button');
+      button.get('.btn-primary').classes().should.include('disabled');
+      await button.should.have.tooltip('Download is unavailable for deleted Entities');
+    });
   });
 
   describe('search', () => {
