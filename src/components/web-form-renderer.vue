@@ -77,7 +77,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, inject, onUnmounted } from 'vue';
+import { computed, createApp, getCurrentInstance, inject, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
@@ -423,13 +423,22 @@ const handleSubmit = async (payload, callback) => {
   await submitData();
 };
 
-// hack to remove ODK Web Form css styles
-onUnmounted(() => {
+// hack: enable/disable ODK Web Form css styles
+const setWfStylesDisabled = (disabled) => {
   document.querySelectorAll('style').forEach(styleTag => {
-    if (styleTag.textContent.includes('form-initialization-status')) {
-      styleTag.remove();
+    if (styleTag.textContent.includes('form-initialization-status') ||
+        // WF's reset.css
+        styleTag.textContent.replace(/\s+/g, '').includes('body{all:revert;')) {
+      // eslint-disable-next-line no-param-reassign
+      styleTag.disabled = disabled;
     }
   });
+};
+onMounted(() => {
+  setWfStylesDisabled(false);
+});
+onUnmounted(() => {
+  setWfStylesDisabled(true);
 });
 </script>
 
