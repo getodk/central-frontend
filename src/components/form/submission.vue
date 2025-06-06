@@ -11,21 +11,28 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="initiallyLoading"/>
-  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType" :instance-id="instanceId"/>
+  <page-body v-if="loadingState">
+    <loading :state="true"/>
+  </page-body>
+  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess"
+    :action-type="actionType"
+    :instance-id="instanceId"
+    @loaded="hideLoading"/>
   <!-- enketoId can be enketoOnceId so first try to read it from the prop (route.params)-->
   <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
     :enketo-id="enketoId ?? form.enketoId"
     :action-type="actionType"
-    :instance-id="instanceId"/>
+    :instance-id="instanceId"
+    @loaded="hideLoading"/>
 </template>
 
 <script setup>
-import { defineAsyncComponent, watchEffect, computed } from 'vue';
+import { defineAsyncComponent, watchEffect, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
 import Loading from '../loading.vue';
+import PageBody from '../page/body.vue';
 
 import { noop } from '../../util/util';
 import { apiPaths } from '../../util/request';
@@ -81,10 +88,14 @@ const { ensureEnketoOfflinePath, ensureCanonicalPath } = useEnketoRedirector();
 
 const resources = computed(() => (props.projectId ? [project, form] : [form]));
 
-const { initiallyLoading, dataExists } = computed(() => {
+const loadingState = ref(true);
+const hideLoading = () => {
+  loadingState.value = false;
+};
+
+const { dataExists } = computed(() => {
   const state = resourceStates(resources.value);
   return {
-    initiallyLoading: state.initiallyLoading,
     dataExists: state.dataExists
   };
 }).value;
