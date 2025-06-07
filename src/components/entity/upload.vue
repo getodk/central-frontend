@@ -447,7 +447,7 @@ watch(() => props.state, (state) => {
       "append": "Append data"
     },
     "alert": {
-      "blankLabel": "The label is missing.",
+      "blankLabel": "Missing label.",
       "noData": "Your file does not contain any data."
     }
   }

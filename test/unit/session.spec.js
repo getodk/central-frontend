@@ -407,8 +407,7 @@ describe('util/session', () => {
           .afterResponse(() => {
             alert.state.should.be.true;
             alert.type.should.equal('danger');
-            alert.message.should.startWith('There was a problem, and you were not fully logged out.');
-            alert.message.should.endWith('logOut() problem.');
+            alert.message.should.equal('There was a problem logging out. logOut() problem. Please refresh the page and try again.');
             alert.ctaHandler();
             reload.called.should.be.true;
           });
@@ -743,7 +742,7 @@ describe('util/session', () => {
           clock.tick(1000);
           alert.state.should.be.true;
           alert.type.should.equal('info');
-          alert.message.should.startWith('Your session will expire in 2 minutes,');
+          alert.message.should.endWith('You will be logged out in 2 minutes.');
         });
     });
 

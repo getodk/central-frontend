@@ -63,6 +63,7 @@ import { computed, inject, onBeforeUnmount, provide } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
+import { joinSentences } from './i18n';
 import { localStore } from './storage';
 import { noop } from './util';
 
@@ -93,9 +94,11 @@ const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.
       return;
     }
 
-    alert.danger(i18n.t('util.session.alert.logoutError', {
-      message: requestAlertMessage(i18n, error)
-    }));
+    alert.danger(joinSentences(i18n, [
+      i18n.t('util.session.alert.logoutError.thereWasProblem'),
+      requestAlertMessage(i18n, error),
+      i18n.t('util.session.alert.logoutError.pleaseRefresh')
+    ]));
     alert.cta(i18n.t('action.refresh'), () => { location.reload(); });
     throw error;
   });

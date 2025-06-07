@@ -172,7 +172,7 @@ const hideAndReset = () => {
       "delete": "Delete this Form"
     },
     "alert": {
-      "delete": "The Form “{name}” was deleted."
+      "delete": "The Form “{name}” has been successfully deleted."
     },
     "webFormsSetting": {
       // Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms

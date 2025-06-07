@@ -407,7 +407,7 @@ describe('SubmissionList', () => {
 
       it('shows a success alert', async () => {
         const component = await del();
-        component.should.alert('success', 'The Submission has been deleted.');
+        component.should.alert('success', 'Submission has been successfully deleted.');
       });
 
       it('removes the row', async () => {
@@ -540,7 +540,7 @@ describe('SubmissionList', () => {
             component.get('.submission-metadata-row .delete-button').trigger('click'))
           .respondWithSuccess()
           .afterResponse(component => {
-            component.should.alert('success', 'The Submission has been deleted.');
+            component.should.alert('success', 'Submission has been successfully deleted.');
           }));
 
       it('does not hide table after deleting last submission if submissions are concurrently replaced', () =>

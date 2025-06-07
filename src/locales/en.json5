@@ -326,11 +326,11 @@
     "formPreview": "Form Preview"
   },
   "alert": {
-    "passwordTooShort": "Please input a password at least 10 characters long.",
-    "updateEntity": "The Entity has been updated!",
-    "updateReviewState": "Review State saved!",
-    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
-    "submissionDeleted": "The Submission has been deleted.",
+    "passwordTooShort": "Password must be at least 10 characters long.",
+    "updateEntity": "Entity has been successfully updated.",
+    "updateReviewState": "Review successfully saved.",
+    "versionChange": "The server has been successfully updated.",
+    "submissionDeleted": "Submission has been successfully deleted.",
     "submissionRestored": "The Submission has been restored.",
     // @transifexKey component.EntityList.alert.delete
     "entityDeleted": "Entity “{label}” has been deleted.",
@@ -502,10 +502,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "Your session will expire in 2 minutes, and you be automatically logged out.",
-        "expired": "Your session has expired. To continue working, please log in again.",
-        // {message} is a more detailed error message.
-        "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
+        "expiresSoon": "Your session is expiring! You will be logged out in 2 minutes.",
+        "expired": "Your session has expired. Log in again to continue.",
+        "logoutError": {
+          "thereWasProblem": "There was a problem logging out.",
+          "pleaseRefresh": "Please refresh the page and try again."
+        }
       }
     }
   },

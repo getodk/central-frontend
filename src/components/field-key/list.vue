@@ -211,7 +211,7 @@ export default {
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
-      "revoke": "Access was revoked for the App User “{displayName}”."
+      "revoke": "App User {displayName}’s access successfully revoked."
     }
   }
 }

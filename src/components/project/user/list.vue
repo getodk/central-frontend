@@ -264,7 +264,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Something went wrong. “{displayName}” has been removed from the Project.",
       "assignRole": "Success! “{displayName}” has been given a Role of “{roleName}” on this Project.",
-      "unassignRole": "Success! “{displayName}” has been removed from this Project."
+      "unassignRole": "“{displayName}” has been removed from this Project."
     }
   }
 }

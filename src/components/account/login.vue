@@ -211,7 +211,7 @@ export default {
   "en": {
     "alert": {
       "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue.",
-      "changePassword": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
+      "changePassword": "To protect your account, make sure your password is 10 characters or longer."
     },
     "oidc": {
       "body": "Click Continue to proceed to the login page.",

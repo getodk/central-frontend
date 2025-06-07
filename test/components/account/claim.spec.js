@@ -18,7 +18,7 @@ describe('AccountClaim', () => {
     const component = mount(AccountClaim);
     await component.get('input').setValue('x');
     await component.get('form').trigger('submit');
-    component.should.alert('danger', 'Please input a password at least 10 characters long.');
+    component.should.alert('danger', 'Password must be at least 10 characters long.');
   });
 
   it('sends the correct request', () =>

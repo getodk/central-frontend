@@ -247,7 +247,7 @@ export default {
     ],
     "emptyTable": "There are no Forms to show.",
     "alert": {
-      "success": "Your changes have been saved!"
+      "success": "Your changes have been successfully saved."
     }
   }
 }
