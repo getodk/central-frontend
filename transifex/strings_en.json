@@ -3204,7 +3204,7 @@
       },
       "alert": {
         "create": {
-          "string": "“{name}” has been created as a Form Draft. Upload files to test your Form."
+          "string": "“{name}” has been created as a Form Draft."
         }
       }
     },

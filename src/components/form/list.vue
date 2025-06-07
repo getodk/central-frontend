@@ -106,7 +106,7 @@ export default {
     },
     "emptyTable": "There are no Forms to show.",
     "alert": {
-      "create": "“{name}” has been created as a Form Draft. Upload files to test your Form."
+      "create": "“{name}” has been created as a Form Draft."
     }
   }
 }
