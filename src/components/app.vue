@@ -41,10 +41,10 @@ import Navbar from './navbar.vue';
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
 import useFeatureFlags from '../composables/feature-flags';
+import { loadAsync } from '../util/load-async';
 import { useAlert } from '../alert';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
-import { loadAsync } from '../util/load-async';
 
 export default {
   name: 'App',

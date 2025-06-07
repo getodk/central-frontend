@@ -1,10 +1,11 @@
 import sinon from 'sinon';
 
+import FeedbackButton from '../../src/components/feedback-button.vue';
+
 import { logOut } from '../../src/util/session';
 
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
-import FeedbackButton from '../../src/components/feedback-button.vue';
 
 describe('App', () => {
   describe('change in Central version', () => {
