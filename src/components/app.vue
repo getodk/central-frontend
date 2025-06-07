@@ -17,12 +17,7 @@ except according to the terms contained in the LICENSE file.
     <outdated-version/>
     <alert id="app-alert"/>
     <feedback-button v-if="showsFeedbackButton"/>
-    <!-- Specifying .capture so that an alert is not hidden immediately if it
-    was shown after the click. -->
-    <!-- v-document-color: Using this directive to add background color to the html tag;
-    this is done to avoid magenta splash on standalone routes such as FormPreview   -->
-    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div v-if="routerReady && !standalone" class="container-fluid" @click.capture="hideAlertAfterClick">
+    <div v-if="routerReady && !standalone" ref="containerEl" class="container-fluid">
       <router-view/>
     </div>
     <template v-else-if="standalone">
@@ -36,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
 
 import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
@@ -46,9 +41,10 @@ import Navbar from './navbar.vue';
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
 import useFeatureFlags from '../composables/feature-flags';
+import { loadAsync } from '../util/load-async';
+import { useAlert } from '../alert';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
-import { loadAsync } from '../util/load-async';
 
 export default {
   name: 'App',
@@ -64,6 +60,11 @@ export default {
     const { visiblyLoggedIn } = useSessions();
     useDisabled();
 
+    const containerEl = useTemplateRef('containerEl');
+    useAlert(containerEl);
+
+    // Add background color to the html tag; this is done to avoid magenta
+    // splash on standalone routes such as FormPreview.
     const router = useRouter();
     const route = useRoute();
     router.isReady()
@@ -125,12 +126,6 @@ export default {
         // requests.
         .catch(error =>
           (error.response != null && error.response.status === 404));
-    },
-    hideAlertAfterClick(event) {
-      if (this.alert.state && event.target.closest('a[target="_blank"]') != null &&
-        !event.defaultPrevented) {
-        this.alert.blank();
-      }
     }
   }
 };

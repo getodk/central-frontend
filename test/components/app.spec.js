@@ -1,12 +1,11 @@
 import sinon from 'sinon';
 
-import Home from '../../src/components/home.vue';
+import FeedbackButton from '../../src/components/feedback-button.vue';
 
 import { logOut } from '../../src/util/session';
 
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
-import FeedbackButton from '../../src/components/feedback-button.vue';
 
 describe('App', () => {
   describe('change in Central version', () => {
@@ -196,35 +195,6 @@ describe('App', () => {
             });
           });
       });
-    });
-  });
-
-  describe('hiding alert after user clicks an a[target="_blank"]', () => {
-    beforeEach(mockLogin);
-
-    const preventDefault = (event) => { event.preventDefault(); };
-    beforeAll(() => {
-      document.addEventListener('click', preventDefault);
-    });
-    afterAll(() => {
-      document.removeEventListener('click', preventDefault);
-    });
-
-    it('hides the alert', async () => {
-      const app = await load('/', { attachTo: document.body });
-      app.vm.$container.alert.info('Something happened!');
-      await app.getComponent(Home).get('a[target="_blank"]').trigger('click');
-      app.should.not.alert();
-    });
-
-    it('does not hide the alert if it was shown after the click', async () => {
-      const app = await load('/', { attachTo: document.body });
-      const a = app.getComponent(Home).get('a[target="_blank"]');
-      a.element.addEventListener('click', () => {
-        app.vm.$container.alert.info('Something happened!');
-      });
-      a.trigger('click');
-      app.should.alert();
     });
   });
 

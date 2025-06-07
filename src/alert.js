@@ -9,7 +9,25 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { shallowReactive } from 'vue';
+
+/*
+createAlert() returns an object to manage the reactive data for the toast, which
+is called the "alert" in the codebase. Only a single alert is shown at a time.
+An alert may be shown at the top of the page or in a modal. Regardless of where
+the alert is shown, its data will be stored in the object returned by
+createAlert(). The object will be installed as a plugin, allowing it to be
+injected in components. The object will also be accessible from the container
+object.
+
+The Alert component renders the alert using the alert object.
+
+The root component should call useAlert() to set up additional functionality for
+the alert. For example, useAlert() will hide a success alert automatically.
+*/
+
+import { inject, onBeforeUnmount, shallowReactive, watch } from 'vue';
+
+import useEventListener from './composables/event-listener';
 
 class AlertData {
   #data;
@@ -63,12 +81,44 @@ class AlertData {
     this.#data.message = null;
     this.#data.cta = null;
   }
+
+  install(app) { app.provide('alert', this); }
 }
 
-// Returns an object to manage the reactive data for the toast, which is called
-// the "alert" in the codebase. Only a single alert is shown at a time. It may
-// be shown at the top of the page or in a modal. Regardless of where the alert
-// is shown, its data will be stored in this object.
-const createAlert = () => new AlertData();
+export const createAlert = () => new AlertData();
 
-export default createAlert;
+export const useAlert = (elementRef) => {
+  const alert = inject('alert');
+
+  // Hide a success alert after 7 seconds.
+  let timeoutId;
+  const hideAfterTimeout = () => {
+    alert.blank();
+    timeoutId = null;
+  };
+  const clearExistingTimeout = () => {
+    if (timeoutId != null) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+  };
+  watch([() => alert.state, () => alert.at], () => {
+    clearExistingTimeout();
+    if (alert.state && alert.type === 'success')
+      timeoutId = setTimeout(hideAfterTimeout, 7000);
+  });
+  onBeforeUnmount(clearExistingTimeout);
+
+  // Hide an alert after a link is opened in a new tab.
+  const hideAfterClick = (event) => {
+    if (alert.state && event.target.closest('a[target="_blank"]') != null &&
+      !event.defaultPrevented) {
+      alert.blank();
+    }
+  };
+  // Specifying `true` for event capturing so that an alert is not hidden
+  // immediately if it was shown after the click.
+  useEventListener(elementRef, 'click', hideAfterClick, true);
+
+  return alert;
+};
