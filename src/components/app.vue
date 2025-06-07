@@ -63,12 +63,12 @@ export default {
     const containerEl = useTemplateRef('containerEl');
     useAlert(containerEl);
 
+    // Add background color to the html tag; this is done to avoid magenta
+    // splash on standalone routes such as FormPreview.
     const router = useRouter();
     const route = useRoute();
     router.isReady()
       .then(() => {
-        // Add background color to the html tag; this is done to avoid magenta
-        // splash on standalone routes such as FormPreview.
         if (!route.meta.standalone)
           document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
       });
