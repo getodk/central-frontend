@@ -21,7 +21,6 @@ import { createAlert } from './alert';
 import { createRequestData } from './request-data';
 
 const provide = [
-  'alert',
   'hoverCard',
   'unsavedChanges',
   'config',
@@ -73,6 +72,7 @@ export default ({
 
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
+    app.use(alert);
 
     app.provide('container', container);
     for (const key of provide)

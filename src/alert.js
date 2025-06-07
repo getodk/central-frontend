@@ -81,6 +81,8 @@ class AlertData {
     this.#data.message = null;
     this.#data.cta = null;
   }
+
+  install(app) { app.provide('alert', this); }
 }
 
 export const createAlert = () => new AlertData();
