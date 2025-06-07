@@ -279,9 +279,7 @@ describe('FormNew', () => {
 
     it('shows a success alert', () =>
       createForm().then(app => {
-        app.should.alert('success', (message) => {
-          message.should.startWith('“Form 2” has been created as a Form Draft.');
-        });
+        app.should.alert('success', '“Form 2” has been created as a Form Draft.');
       }));
 
     it('increments the form count', () =>

@@ -1077,7 +1077,7 @@
           "string": "A user is already logged in. Please refresh the page to continue."
         },
         "changePassword": {
-          "string": "To protect your account, make sure your password is longer than 10 characters."
+          "string": "To protect your account, make sure your password is 10 characters or longer."
         }
       },
       "oidc": {
@@ -2670,7 +2670,7 @@
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
         },
         "link": {
-          "string": "Entity List linked successfully."
+          "string": "Entity List successfully linked."
         }
       },
       "header": {
@@ -2994,7 +2994,7 @@
           "string": "The new Form definition has been saved as your Draft."
         },
         "publish": {
-          "string": "Your Draft has been published. Any devices using this Form will now get the new Form definition and attachments."
+          "string": "Your Draft has been published. Any devices using this Form will now get the updated Form definition and attachments."
         },
         "abandon": {
           "string": "The Draft version of this Form has been successfully deleted."

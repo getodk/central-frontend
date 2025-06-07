@@ -185,7 +185,7 @@ body:has(#form-edit) { background-color: #fff; }
       // @transifexKey component.FormDraftStatus.alert.upload
       "upload": "The new Form definition has been saved as your Draft.",
       // @transifexKey component.FormDraftStatus.alert.publish
-      "publish": "Your Draft has been published. Any devices using this Form will now get the new Form definition and attachments.",
+      "publish": "Your Draft has been published. Any devices using this Form will now get the updated Form definition and attachments.",
       // @transifexKey component.FormDraftStatus.alert.abandon
       "abandon": "The Draft version of this Form has been successfully deleted.",
       // @transifexKey component.FormSettings.alert.delete

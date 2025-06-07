@@ -347,7 +347,7 @@ export default {
     },
     "alert": {
       "success": "{count} file has been successfully uploaded. | {count} files have been successfully uploaded.",
-      "link": "Entity List linked successfully."
+      "link": "Entity List successfully linked."
     }
   }
 }
