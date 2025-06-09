@@ -33,6 +33,10 @@ export const waitUntil = (f) => new Promise(resolve => {
 
 export const block = () => {
   let unlock;
-  const lock = new Promise(resolve => { unlock = resolve; });
-  return [lock, unlock];
+  let fail;
+  const lock = new Promise((resolve, reject) => {
+    unlock = resolve;
+    fail = reject;
+  });
+  return [lock, unlock, fail];
 };

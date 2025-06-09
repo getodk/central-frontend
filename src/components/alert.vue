@@ -18,14 +18,17 @@ except according to the terms contained in the LICENSE file.
     </button>
     <span class="alert-message">{{ alert.message }}</span>
     <button v-if="alert.ctaText != null" type="button"
-      class="alert-cta btn btn-default" @click="alert.ctaHandler">
-      {{ alert.ctaText }}
+      class="alert-cta btn btn-default" :aria-disabled="alert.ctaPending"
+      @click="alert.ctaHandler">
+      {{ alert.ctaText }} <spinner :state="alert.ctaPending"/>
     </button>
   </div>
 </template>
 
 <script setup>
 import { inject } from 'vue';
+
+import Spinner from './spinner.vue';
 
 const alert = inject('alert');
 </script>
