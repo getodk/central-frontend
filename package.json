@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
-    "@getodk/web-forms": "^0.12.0",
+    "@getodk/web-forms": "^0.13.0",
     "axios": "^1.6.2",
     "bootstrap": "~3",
     "dompurify": "^3.2.5",
