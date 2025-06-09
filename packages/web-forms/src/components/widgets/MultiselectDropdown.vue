@@ -49,6 +49,7 @@ if (props.question.appearances['no-buttons']) {
 		filter-match-mode="contains"
 		:auto-filter-focus="question.appearances.autocomplete"
 		:show-toggle-all="false"
+		:disabled="props.question.currentState.readonly"
 		:options="options"
 		option-label="label"
 		option-value="value"

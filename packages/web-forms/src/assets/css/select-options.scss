@@ -31,7 +31,8 @@
 		background-color: var(--odk-primary-lighter-background-color);
 	}
 
-	&.active {
+	&.active,
+	&.active:hover {
 		outline: 2px solid var(--odk-primary-border-color);
 		background-color: var(--odk-primary-lighter-background-color);
 	}
@@ -39,10 +40,11 @@
 	&.disabled,
 	&.disabled label {
 		cursor: not-allowed;
+		opacity: 0.5;
 
-		&:hover {
+		&:not(.active):hover {
 			outline-color: var(--odk-border-color);
-			background-color: unset;
+			background: var(--odk-base-background-color);
 		}
 	}
 
@@ -91,9 +93,4 @@
 	background: var(--odk-light-background-color);
 	align-content: flex-start;
 	flex-wrap: wrap;
-
-	&.disabled,
-	&.disabled label {
-		opacity: 0.5;
-	}
 }

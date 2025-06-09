@@ -39,6 +39,7 @@ const selectValue = (value: string) => {
 		filter-match-mode="contains"
 		:auto-filter-focus="true"
 		:model-value="question.currentState.value[0]"
+		:disabled="props.question.currentState.readonly"
 		:options="options"
 		option-label="label"
 		option-value="value"
