@@ -1416,6 +1416,9 @@
         "max_entity_branch_delay": {
           "string": "Maximum time to process offline Entity update chain"
         },
+        "num_owner_only_datasets": {
+          "string": "Number of Entity Lists restricted to Owner Only"
+        },
         "num_xml_only_form_defs": {
           "string": "Number of Form Definitions with no associated XLSForm"
         },
