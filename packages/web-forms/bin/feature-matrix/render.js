@@ -17,14 +17,14 @@ const template = await fs.readFile(
 const readmeFile = await fs.readFile(new URL('./README.md', rootUrl), 'utf-8');
 
 // Modified version of https://gist.github.com/rougier/c0d31f5cbdaac27b876c?permalink_comment_id=2269298#gistcomment-2269298
-const progress = ({ value, length = 15 }) => {
-	const v = (value / 100) * length;
-	const x = v < 1 ? 1 : Math.floor(v);
-	const bar = Array(x).fill('█').join('');
-	const remaining = Array(length - bar.length)
-		.fill('█')
+const progress = (fraction) => {
+	const totalLength = 15;
+	const barLength = Math.floor(fraction * totalLength);
+	const bar = Array(barLength).fill('🟩').join('');
+	const remaining = Array(totalLength - barLength)
+		.fill('⬜')
 		.join('');
-	return `\\color{green}${bar}\\color{LightGray}${remaining} \\color{initial} ${value}\\\\%`;
+	return `${bar}${remaining} ${Math.floor(fraction * 100)}\\%`;
 };
 
 // Not so smart, blindly breaks the word. Okay for now.
@@ -36,18 +36,6 @@ const wrapString = (str, maxLength) => {
 	return parts.join('<br/>');
 };
 
-// prettier-ignore
-const categoryPaddings = {
-	'Question types (basic functionality)': 5,
-	'Appearances': 41,
-	'Parameters': 43,
-	'Form Logic': 43,
-	'Descriptions and Annotations': 14,
-	'Theme and Layouts': 30,
-	'Offline capabilities': 31,
-	'XPath': 51,
-}
-
 // Transform feature-matrix.json object into array
 const featureCategories = Object.keys(featureMatrix).map((featureCategory) => {
 	const features = Object.keys(featureMatrix[featureCategory]).map((feature) => {
@@ -58,20 +46,10 @@ const featureCategories = Object.keys(featureMatrix).map((featureCategory) => {
 	});
 
 	// no points for 🚧
-	const progressPercentage = Math.floor(
-		(features.filter((f) => f.status === '✅').length / features.length) * 100
-	);
-
-	// hack: Characters in GitHub Latex monospace font is not same size.
-	//       Hardcoding padding 🙃
-	let label = `${featureCategory}\\hspace{${categoryPaddings[featureCategory]}mm}`;
-
-	const progressOutput = progress({ value: progressPercentage });
+	const progressFraction = features.filter((f) => f.status === '✅').length / features.length;
 
 	return {
-		// Using Latex for <summary> of collapsible - this allows using colored text in MD.
-		// mathtt is for monospace.
-		label: '#####  $\\texttt{' + label + '' + progressOutput + '}$',
+		label: `##### ${featureCategory}<br/>${progress(progressFraction)}`,
 		features,
 	};
 });
