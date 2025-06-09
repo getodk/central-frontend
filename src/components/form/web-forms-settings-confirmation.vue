@@ -53,7 +53,8 @@ except according to the terms contained in the LICENSE file.
         {{ $t('enketoConfirmation.description') }}
       </p>
       <div class="modal-actions">
-        <button class="btn btn-link" type="button" @click="$emit('hide')">
+        <button class="btn btn-link" type="button"
+          :aria-disabled="form.awaitingResponse" @click="$emit('hide')">
           {{ $t('action.cancel') }}
         </button>
         <button type="button" class="btn btn-primary"

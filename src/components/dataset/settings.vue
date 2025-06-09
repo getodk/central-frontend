@@ -40,6 +40,7 @@ except according to the terms contained in the LICENSE file.
         </form>
       </div>
     </div>
+    <dataset-owner-only/>
 
     <dataset-pending-submissions v-bind="pendingSubmissionModal" @hide="hideAndReset" @success="hideAndUpdate"/>
   </div>
@@ -49,6 +50,7 @@ except according to the terms contained in the LICENSE file.
 import { ref, watch, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import DatasetOwnerOnly from './owner-only.vue';
 import DatasetPendingSubmissions from './pending-submissions.vue';
 
 import { apiPaths, isProblem } from '../../util/request';
@@ -105,9 +107,6 @@ const hideAndReset = () => {
   approvalRequired.value = dataset.approvalRequired;
 };
 </script>
-
-
-<style lang="scss"></style>
 
 <i18n lang="json5">
 {
