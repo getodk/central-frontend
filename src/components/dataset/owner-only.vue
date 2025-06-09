@@ -62,7 +62,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -75,6 +76,9 @@ import { useRequestData } from '../../request-data';
 defineOptions({
   name: 'DatasetOwnerOnly'
 });
+
+const { t } = useI18n();
+const { alert } = inject('container');
 
 // The component assumes that this data will exist when the component is
 // created.
@@ -101,7 +105,12 @@ const confirm = () => {
     data: { ownerOnly: ownerOnly.value },
     patch: ({ data }) => { dataset.ownerOnly = data.ownerOnly; }
   })
-    .then(() => { confirmationModal.hide(); })
+    .then(() => {
+      confirmationModal.hide();
+      alert.success(dataset.ownerOnly
+        ? t('alert.changeToTrue')
+        : t('alert.changeToFalse'));
+    })
     .catch(noop);
 };
 </script>
@@ -128,6 +137,10 @@ const confirm = () => {
       "action": {
         "confirm": "Access own Entities"
       }
+    },
+    "alert": {
+      "changeToFalse": "App Users and Data Collectors will now have access to all Entities.",
+      "changeToTrue": "App Users and Data Collectors will now only have access to Entities they create."
     }
   }
 }

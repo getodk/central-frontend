@@ -1706,6 +1706,14 @@
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": "App Users and Data Collectors will now have access to all Entities."
+        },
+        "changeToTrue": {
+          "string": "App Users and Data Collectors will now only have access to Entities they create."
+        }
       }
     },
     "DatasetPendingSubmissions": {
