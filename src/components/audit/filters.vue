@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <form class="form-inline" @submit.prevent>
-    <div class="form-group">
-      <span class="icon-filter"></span>
-    </div>
     <audit-filters-action :model-value="action"
       @update:model-value="$emit('update:action', $event)"/>
     <date-range-picker :model-value="dateRange"

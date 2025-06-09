@@ -74,8 +74,7 @@ const placeholder = (counts) => t('placeholder', counts);
   "en": {
     // This is the text of a dropdown that allows the user to select which
     // columns to display in a table. {selected} is the number of columns
-    // selected; {total} is the total number of columns.
-    "placeholder": "{selected} of {total}",
+    "placeholder": "{selected}",
     "field": {
       // This is shown beneath text that indicates the number of columns that
       // the user has selected to display in a table. For example, that text may
@@ -87,19 +86,13 @@ const placeholder = (counts) => t('placeholder', counts);
     "action": {
       "select": {
         /*
-        This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {all} is in the
-        following text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of column selector,
+        that allows the user to select all columns.
         */
         "all": "All",
         /*
-        This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {none} is in
-        the following text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of column selector,
+        that allows the user to unselect all columns.
         */
         "none": "None"
       }

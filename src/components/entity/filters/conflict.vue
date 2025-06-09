@@ -65,29 +65,22 @@ const placeholder = (counts) => {
     // This is the text of a dropdown that allows the user to select one or more
     // conflict statuses. {selected} is the number of selected conflict
     // statuses; {total} is the total number of conflict statuses.
-    "placeholder": "{selected} of {total}",
     "action": {
       "select": {
         /*
-        This text is shown in a dropdown that allows the user to select one or
-        more conflict statuses. It will be inserted where {all} is in the
-        following text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of conflict statuses filter,
+        that allows the user to select all conflict statuses.
         */
         "all": "All",
         /*
-        This text is shown in a dropdown that allows the user to select one or
-        more conflict statuses. It will be inserted where {none} is in the
-        following text:
-
-        Select {all} / {none}
+         This is the text of the button in dropdown menu of conflict statuses filter,
+        that allows the user to unselect all conflict statuses.
         */
         "none": "None"
       }
     },
     // Text shown when all conflict statuses are selected in the filter dropdown
-    "allSelectedConflictSelected": "(All)"
+    "allSelectedConflictSelected": "All"
   }
 }
 </i18n>

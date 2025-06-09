@@ -13,9 +13,6 @@ except according to the terms contained in the LICENSE file.
   <div id="entity-list">
     <div id="entity-list-actions" class="table-actions-bar">
       <form class="form-inline" @submit.prevent>
-        <div class="form-group">
-          <span class="icon-filter"></span>
-        </div>
         <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted"/>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>

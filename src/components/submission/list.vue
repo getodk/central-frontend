@@ -554,14 +554,6 @@ export default {
   // wide enough.
   gap: 10px;
 }
-#submission-field-dropdown {
-  // This is the entire spacing between the dropdown and the filters to its
-  // left. Since they're both child elements of the form, the flexbox gap does
-  // not apply to them.
-  margin-left: 15px;
-  // Additional space between the dropdown and the refresh button
-  margin-right: 5px;
-}
 
 // Adjust the spacing between actions on the draft testing page.
 #submission-list-test-in-browser {

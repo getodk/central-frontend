@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <label id="search-textbox" class="form-group">
+    <span class="icon-search"></span>
     <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="label"
       :aria-label="label" :aria-disabled="disabled" autocomplete="off" @keydown.enter="setSearchTerm" @focusout="revert">
     <button v-show="searchTextbox" type="button" class="close"
@@ -61,10 +62,25 @@ watch(() => props.modelValue, (value) => {
 </script>
 
 <style lang="scss">
+@import '../assets/scss/mixins';
+@import '../assets/scss/variables';
+
 #search-textbox {
+  @include filter-control;
+
   .form-control {
     // Add padding so that the .close button does not overlay long input text.
     padding-right: 21px;
+    font-size: 12px;
+    background: #FFF;
+
+    &::placeholder {
+      color: $color-text-secondary;
+    }
+  }
+
+  .close {
+    right: 10px;
   }
 }
 </style>

@@ -14,12 +14,10 @@ except according to the terms contained in the LICENSE file.
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
-    <div :data-toggle="(options == null || disabled) ? null : 'dropdown'">
-      <span v-show="!hideLabel" class="form-label">
-        {{ label }}
-      </span>
-      <select :id="toggleId" ref="toggle" class="form-control"
-        :class="{ none: modelValue?.length === options?.length || modelValue?.length === 0 }"
+    <div class="dropdown-trigger" :data-toggle="(options == null || disabled) ? null : 'dropdown'">
+      <slot name="icon"></slot>
+      <span>{{ label }}</span>
+      <select :id="toggleId" ref="toggle" class="display-value"
         :aria-disabled="options == null || disabled"
         role="button"
         v-tooltip.aria-describedby="disabledMessage"
@@ -34,6 +32,7 @@ except according to the terms contained in the LICENSE file.
     <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
       <li v-if="search != null" class="search">
         <div class="form-group">
+          <span class="icon-search"></span>
           <input ref="searchInput" v-model="searchValue" class="form-control"
             :placeholder="search" :aria-label="search" autocomplete="off">
           <button v-show="searchValue !== ''" type="button" class="close"
@@ -43,14 +42,14 @@ except according to the terms contained in the LICENSE file.
         </div>
       </li>
       <li class="change-all">
-        <i18n-t tag="div" keypath="action.select">
-          <template #all>
-            <a class="select-all" href="#" role="button" @click.prevent="changeAll(true)">{{ all }}</a>
-          </template>
-          <template #none>
-            <a class="select-none" href="#" role="button" @click.prevent="changeAll(false)">{{ none }}</a>
-          </template>
-        </i18n-t>
+        <button type="button"
+          class="btn btn-outlined" @click.prevent="changeAll(true)">
+          {{ all }}
+        </button>
+        <button type="button"
+          class="btn btn-outlined" @click.prevent="changeAll(false)">
+         {{ none }}
+        </button>
       </li>
       <li>
         <ul ref="optionList" class="option-list"
@@ -75,6 +74,11 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li class="after-list">
         <slot name="after-list" :selected="selected"></slot>
+      </li>
+      <li class="action-bar">
+        <button type="button" class="btn btn-primary" @click="apply()">
+         {{ $t('action.apply') }}
+        </button>
       </li>
     </ul>
   </div>
@@ -168,10 +172,6 @@ const props = defineProps({
   disabledMessage: {
     type: String,
     required: false
-  },
-  hideLabel: {
-    type: Boolean,
-    default: false
   }
 });
 const emit = defineEmits(['update:modelValue']);
@@ -365,8 +365,7 @@ const $dropdown = computed(() => $(dropdown.value));
 onMounted(() => {
   $dropdown.value.on('shown.bs.dropdown', syncWithModelValue);
   $dropdown.value.on('hidden.bs.dropdown', () => {
-    searchValue.value = '';
-    emitIfChanged();
+    needsSync = true;
   });
 });
 onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
@@ -375,6 +374,12 @@ const toggle = ref(null);
 const $toggle = computed(() => $(toggle.value));
 const toggleAfterEnter = ({ key }) => {
   if (key === 'Enter') $toggle.value.dropdown('toggle');
+};
+
+const apply = () => {
+  searchValue.value = '';
+  emitIfChanged();
+  $dropdown.value.removeClass('open');
 };
 
 const verifyAttached = buildMode === 'test'
@@ -427,16 +432,19 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
 <style lang="scss">
 @import '../assets/scss/mixins';
+@import '../assets/scss/variables';
 
 .multiselect {
-  cursor: pointer;
+
+  .dropdown-trigger {
+    @include filter-control;
+  }
 
   &.disabled {
     cursor: not-allowed;
   }
 
   select {
-    min-width: 111px;
     appearance: none;
   }
 
@@ -444,9 +452,6 @@ const emptyMessage = computed(() => (searchValue.value === ''
     font-size: 16px;
     color: #555555;
     font-weight: bold;
-    position: absolute;
-    right: 0;
-    top: 26px;
     pointer-events: none;
     z-index: 1;
   }
@@ -457,6 +462,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
     line-height: $line-height;
     margin-top: 0;
     padding-bottom: 0;
+    padding: 5px;
   }
 
   $hpadding: 9px;
@@ -465,7 +471,10 @@ const emptyMessage = computed(() => (searchValue.value === ''
     padding: $vpadding $hpadding;
 
     // The Multiselect component may be inside a .form-inline.
-    .form-group { display: block; }
+    .form-group {
+      @include filter-control;
+      width: 100%;
+    }
 
     .form-control {
       background-color: #fff;
@@ -477,11 +486,8 @@ const emptyMessage = computed(() => (searchValue.value === ''
       padding: 0 16px 0 0;
       width: 100%;
 
-      &, &:focus { border-bottom: none; }
-
       &::placeholder {
-        color: #666;
-        font-style: italic;
+        color: $color-text-secondary;
       }
       &:lang(ja), &:lang(zh) {
         &::placeholder {
@@ -493,15 +499,23 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
     .close {
       font-size: 18px;
-      right: 0;
-      top: -5px;
+      position: static;
     }
   }
 
-  .change-all { padding: #{0.5 * $vpadding} $hpadding $vpadding; }
+  .change-all {
+    padding: #{0.5 * $vpadding} $hpadding $vpadding;
+    display: flex;
+    gap: 10px;
+
+    button {
+      flex: 1 1 50%;
+      line-height: 15px;
+    }
+  }
 
   .option-list {
-    background-color: $color-subpanel-background;
+    background-color: #FFF;
     font-size: 14px;
     list-style: none;
     max-height: 250px;
@@ -548,6 +562,13 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
     &:empty { display: none; }
   }
+  .action-bar {
+    margin-top: 5px;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 </style>
 
@@ -559,7 +580,8 @@ const emptyMessage = computed(() => (searchValue.value === ''
       // more selections. {all} has the text "All", and {none} has the text
       // "None". {all} and {none} will be translated separately based on what is
       // being selected.
-      "select": "Select {all} / {none}"
+      "select": "Select {all} / {none}",
+      "apply": "Apply"
     }
   }
 }

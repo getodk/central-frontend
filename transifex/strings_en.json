@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "(All Actions)",
+        "string": "All Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -2076,24 +2076,20 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
           },
           "none": {
             "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
           }
         }
       },
       "allSelectedConflictSelected": {
-        "string": "(All)",
+        "string": "All",
         "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
@@ -3625,6 +3621,10 @@
         "select": {
           "string": "Select {all} / {none}",
           "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        },
+        "apply": {
+          "string": "Apply",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4743,8 +4743,8 @@
     },
     "SubmissionFieldDropdown": {
       "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
+        "string": "{selected}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns"
       },
       "field": {
         "columns": {
@@ -4760,11 +4760,11 @@
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
           },
           "none": {
             "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
           }
         }
       },
@@ -4780,29 +4780,29 @@
         }
       },
       "allSubmissionDateSelected": {
-        "string": "(All)",
+        "string": "All time",
         "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
       "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
+        "string": "{selected}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States;"
       },
       "action": {
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
           },
           "none": {
             "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
           }
         }
       },
       "allReviewStateSelected": {
-        "string": "(All)",
+        "string": "All",
         "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
@@ -4818,18 +4818,18 @@
         }
       },
       "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
+        "string": "{selected}",
+        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected;"
       },
       "action": {
         "select": {
           "all": {
             "string": "All",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
           },
           "none": {
             "string": "None",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
+            "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
           }
         }
       },
@@ -4837,7 +4837,7 @@
         "string": "Unknown submitter"
       },
       "allSubmitterSelected": {
-        "string": "(All)",
+        "string": "All",
         "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },

@@ -285,3 +285,9 @@
 .icon-file-code-o:before {
   content: "\f1c9";
 }
+.icon-search:before {
+  content: "\f002";
+}
+.icon-calendar:before {
+  content: "\f073";
+}

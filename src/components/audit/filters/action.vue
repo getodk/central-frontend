@@ -11,7 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="audit-filters-action" class="form-group">
-    <span class="form-label">{{ $t('field.type') }}</span>
+    <span>{{ $t('field.type') }}</span>
+    <div class="display-value">
+      {{ displayValue }}
+    </div>
     <select class="form-control" :value="modelValue"
       @change="$emit('update:modelValue', $event.target.value)">
       <option v-for="option of options" :key="option.value"
@@ -84,6 +87,9 @@ export default {
         this.categoryOption('config'),
         this.actionOption('config.set')
       ];
+    },
+    displayValue() {
+      return this.categoryMessage(this.modelValue) ? this.categoryMessage(this.modelValue) : this.actionMessage(this.modelValue);
     }
   },
   methods: {
@@ -106,34 +112,28 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+@import '../../../assets/scss/variables';
+
 #audit-filters-action {
+  @include filter-control;
+
   select {
-    appearance: none;
-    cursor: pointer;
-    padding-top: 23px;
-    padding-right: 25px;
-    min-height: 48px;
-  }
-  .form-label {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 2;
+    opacity: 0;
+    width: 100%;
+    height: 40px;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+
   }
   .icon-angle-down {
     font-size: 16px;
     color: #555555;
     font-weight: bold;
-    position: absolute;
-    right: 10px;
-    top: 25px;
     z-index: 1;
     pointer-events: none;
   }
-
-  .audit-filters-action-category {
-    // Not all browsers support styling an <option> element this way.
-      font-weight: bold;
-    }
 }
 </style>

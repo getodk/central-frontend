@@ -62,30 +62,23 @@ const placeholder = (counts) => {
   "en": {
     // This is the text of a dropdown that allows the user to select one or more
     // Review States. {selected} is the number of selected Review States;
-    // {total} is the total number of Review States.
-    "placeholder": "{selected} of {total}",
+    "placeholder": "{selected}",
     "action": {
       "select": {
         /*
-        This text is shown in a dropdown that allows the user to select one or
-        more Review States. It will be inserted where {all} is in the following
-        text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of Review States filter,
+        that allows the user to select all Review States.
         */
         "all": "All",
         /*
-        This text is shown in a dropdown that allows the user to select one or
-        more Review States. It will be inserted where {none} is in the following
-        text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of Review States filter,
+        that allows the user to unselect all Review States.
         */
         "none": "None"
       }
     },
     // Text shown when all Review States are selected in the filter
-    "allReviewStateSelected": "(All)"
+    "allReviewStateSelected": "All"
   }
 }
 </i18n>

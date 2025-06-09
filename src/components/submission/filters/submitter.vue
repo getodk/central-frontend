@@ -15,7 +15,11 @@ except according to the terms contained in the LICENSE file.
     :label="$t('field.submitter')" :placeholder="placeholder"
     :all="$t('action.select.all')" :none="$t('action.select.none')"
     :search="$t('field.search')" :empty="$t('submission.emptyTable')"
-    @update:model-value="update"/>
+    @update:model-value="update">
+    <template #icon>
+      <span class="icon-user"></span>
+    </template>
+    </multiselect>
 </template>
 
 <script setup>
@@ -114,31 +118,24 @@ const placeholder = (counts) => {
     // This is the text of a dropdown that allows the user to select one or more
     // "submitters". A submitter can be a user, a team of users, a Public Access
     // Link, or an automation. {selected} is the number of submitters selected;
-    // {total} is the total number of submitters.
-    "placeholder": "{selected} of {total}",
+    "placeholder": "{selected}",
     "action": {
       "select": {
         /*
-        This is the text of a dropdown that allows the user to select one or
-        more submitters. It will be inserted where {all} is in the following
-        text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of submitter filter,
+        that allows the user to select all submitters.
         */
         "all": "All",
         /*
-        This is the text of a dropdown that allows the user to select one or
-        more submitters. It will be inserted where {none} is in the following
-        text:
-
-        Select {all} / {none}
+        This is the text of the button in dropdown menu of submitter filter,
+        that allows the user to unselect all submitters.
         */
         "none": "None"
       }
     },
     "unknown": "Unknown submitter",
     // Text shown when all Submitters are selected in the filter
-    "allSubmitterSelected": "(All)"
+    "allSubmitterSelected": "All"
   }
 }
 </i18n>
