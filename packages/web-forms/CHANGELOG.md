@@ -1,5 +1,18 @@
 # @getodk/web-forms
 
+## 0.13.0
+
+### Minor Changes
+
+- ca72cef: Improves UI of groups and repeats
+- 15b64bb: Adds support for multiline appearance in input text
+
+### Patch Changes
+
+- e05918e: Improves rank's highlight effect when an option is moved to a new position
+- d56adf1: Fixes select's search to filter by label
+- 6ae5218: Fixes select question type when read-only is true
+
 ## 0.12.0
 
 ### Minor Changes
