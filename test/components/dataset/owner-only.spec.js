@@ -147,8 +147,7 @@ describe('DatasetOwnerOnly', () => {
         })
         .beforeAnyResponse(component => {
           const inputs = component.findAll('input');
-          for (const input of component.findAll('input'))
-            input.element.disabled.should.be.true;
+          for (const input of inputs) input.element.disabled.should.be.true;
           inputs.map(input => input.element.checked).should.eql([true, false]);
         })
         .respondWithData(() =>
@@ -160,8 +159,7 @@ describe('DatasetOwnerOnly', () => {
         }])
         .afterResponse(component => {
           const inputs = component.findAll('input');
-          for (const input of component.findAll('input'))
-            input.element.disabled.should.be.false;
+          for (const input of inputs) input.element.disabled.should.be.false;
           inputs.map(input => input.element.checked).should.eql([false, true]);
         });
     });
