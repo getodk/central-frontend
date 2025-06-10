@@ -19,7 +19,8 @@ except according to the terms contained in the LICENSE file.
         <div class="radio">
           <label>
             <input v-model="ownerOnly" type="radio" :value="false"
-              aria-describedby="dataset-owner-only-false-help">
+              aria-describedby="dataset-owner-only-false-help"
+              :disabled="awaitingResponse">
             <strong>{{ $t('accessAllDefault') }}</strong>
           </label>
           <p id="dataset-owner-only-false-help" class="help-block">
@@ -29,7 +30,8 @@ except according to the terms contained in the LICENSE file.
         <div class="radio">
           <label>
             <input v-model="ownerOnly" type="radio" :value="true"
-              aria-describedby="dataset-owner-only-true-help">
+              aria-describedby="dataset-owner-only-true-help"
+              :disabled="awaitingResponse">
             <strong>{{ $t('ownerOnly') }}</strong>
           </label>
           <p id="dataset-owner-only-true-help" class="help-block">
@@ -68,6 +70,7 @@ import { useI18n } from 'vue-i18n';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
@@ -97,22 +100,27 @@ const cancel = () => {
   ownerOnly.value = !ownerOnly.value;
 };
 
-const { awaitingResponse } = dataset.toRefs();
-const confirm = () => {
-  dataset.request({
+const { request, awaitingResponse } = useRequest();
+const update = async (value) => {
+  const { data } = await request({
     method: 'PATCH',
     url: apiPaths.dataset(dataset.projectId, dataset.name),
-    data: { ownerOnly: ownerOnly.value },
-    patch: ({ data }) => { dataset.ownerOnly = data.ownerOnly; }
-  })
-    .then(() => {
-      confirmationModal.hide();
-      alert.success(dataset.ownerOnly
-        ? t('alert.changeToTrue')
-        : t('alert.changeToFalse'));
-    })
-    .catch(noop);
+    data: { ownerOnly: value }
+  });
+  dataset.ownerOnly = data.ownerOnly;
 };
+const undo = () => update(!ownerOnly.value)
+  .then(() => { ownerOnly.value = !ownerOnly.value; })
+  .catch(noop);
+const confirm = () => update(ownerOnly.value)
+  .then(() => {
+    confirmationModal.hide();
+    alert.success(dataset.ownerOnly
+      ? t('alert.changeToTrue')
+      : t('alert.changeToFalse'));
+    alert.cta(t('action.undo'), undo);
+  })
+  .catch(noop);
 </script>
 
 <i18n lang="json5">

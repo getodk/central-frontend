@@ -44,7 +44,7 @@ class AlertData {
       at: new Date(),
       // Information about the Call to Action (CTA) button that's shown in the
       // alert
-      cta: null
+      cta: shallowReactive({ text: null, handler: null, pending: false })
     });
   }
 
@@ -52,17 +52,22 @@ class AlertData {
   get message() { return this.#data.message; }
   get state() { return this.#data.state; }
   get at() { return this.#data.at; }
-  get ctaText() { return this.#data.cta?.text; }
-  get ctaHandler() { return this.#data.cta?.handler; }
+  get ctaText() { return this.#data.cta.text; }
+  get ctaHandler() { return this.#data.cta.handler; }
+  get ctaPending() { return this.#data.cta.pending; }
+
+  #resetCta() {
+    Object.assign(this.#data.cta, { text: null, handler: null, pending: false });
+  }
 
   #show(type, message) {
     Object.assign(this.#data, {
       type,
       message,
       state: true,
-      at: new Date(),
-      cta: null
+      at: new Date()
     });
+    this.#resetCta();
     // Return the alert object for chaining.
     return this;
   }
@@ -74,12 +79,27 @@ class AlertData {
 
   // `text` is the text of the CTA. `handler` is a function to call when the
   // user clicks the CTA.
-  cta(text, handler) { this.#data.cta = { text, handler }; }
+  cta(text, handler) {
+    const { cta } = this.#data;
+    cta.text = text;
+    cta.handler = () => {
+      if (cta.pending) return Promise.reject(new Error('CTA is pending'));
+      cta.pending = true;
+      const startAt = this.at;
+      return Promise.resolve(handler())
+        .then(() => {
+          if (this.state && this.at === startAt) this.blank();
+        })
+        .catch(() => {
+          if (this.state && this.at === startAt) cta.pending = false;
+        });
+    };
+  }
 
   blank() {
     this.#data.state = false;
     this.#data.message = null;
-    this.#data.cta = null;
+    this.#resetCta();
   }
 
   install(app) { app.provide('alert', this); }

@@ -429,6 +429,10 @@
       "string": "Sort",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
+    "undo": {
+      "string": "Undo",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "update": {
       "string": "Update",
       "developer_comment": "This is the text for an action, for example, the text of a button."

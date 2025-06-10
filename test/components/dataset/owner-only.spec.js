@@ -128,6 +128,41 @@ describe('DatasetOwnerOnly', () => {
           });
         });
     });
+
+    it('shows a CTA to undo', () => {
+      testData.extendedDatasets.createPast(1, { ownerOnly: true });
+      return mockHttp()
+        .mount(DatasetOwnerOnly, mountOptions())
+        .request(async (component) => {
+          await component.get('input').setChecked();
+          await component.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithData(() =>
+          testData.extendedDatasets.update(-1, { ownerOnly: false }))
+        .complete()
+        .request(component => {
+          const { alert } = component.vm.$container;
+          alert.ctaText.should.equal('Undo');
+          return alert.ctaHandler();
+        })
+        .beforeAnyResponse(component => {
+          const inputs = component.findAll('input');
+          for (const input of inputs) input.element.disabled.should.be.true;
+          inputs.map(input => input.element.checked).should.eql([true, false]);
+        })
+        .respondWithData(() =>
+          testData.extendedDatasets.update(-1, { ownerOnly: true }))
+        .testRequests([{
+          method: 'PATCH',
+          url: '/v1/projects/1/datasets/trees',
+          data: { ownerOnly: true }
+        }])
+        .afterResponse(component => {
+          const inputs = component.findAll('input');
+          for (const input of inputs) input.element.disabled.should.be.false;
+          inputs.map(input => input.element.checked).should.eql([false, true]);
+        });
+    });
   });
 
   it('remembers the new setting', () => {

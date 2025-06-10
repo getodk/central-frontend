@@ -210,6 +210,7 @@
     "saveSettings": "Save settings",
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
     "sort": "Sort",
+    "undo": "Undo",
     "update": "Update",
     // @transifexKey component.FormNew.action.upload
     "upload": "Upload",
