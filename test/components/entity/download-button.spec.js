@@ -96,4 +96,15 @@ describe('EntityDownloadButton', () => {
       });
     });
   });
+
+  describe('disabled (on deleted entity page)', () => {
+    it('disables the button', async () => {
+      testData.extendedDatasets.createPast(1, { entities: 2000 });
+      const component = mountComponent({
+        props: { disabled: true }
+      });
+      const button = component.find('.btn-primary');
+      button.classes().should.include('disabled');
+    });
+  });
 });
