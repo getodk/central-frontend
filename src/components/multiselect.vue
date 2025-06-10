@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     across browsers. -->
     <div class="dropdown-trigger" :data-toggle="(options == null || disabled) ? null : 'dropdown'">
       <slot name="icon"></slot>
-      <span>{{ label }}</span>
+      <span class="multiselect-label">{{ label }}</span>
       <select :id="toggleId" ref="toggle" class="display-value"
         :aria-disabled="options == null || disabled"
         role="button"
@@ -43,11 +43,11 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li class="change-all">
         <button type="button"
-          class="btn btn-outlined" @click.prevent="changeAll(true)">
+          class="btn btn-outlined select-all" @click.prevent="changeAll(true)">
           {{ all }}
         </button>
         <button type="button"
-          class="btn btn-outlined" @click.prevent="changeAll(false)">
+          class="btn btn-outlined select-none" @click.prevent="changeAll(false)">
          {{ none }}
         </button>
       </li>

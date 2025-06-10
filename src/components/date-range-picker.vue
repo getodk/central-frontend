@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
-    <span>{{ requiredLabel(label, required) }}</span>
+    <span class="date-range-picker-label">{{ requiredLabel(label, required) }}</span>
     <span class="display-value">{{ displayValue }}</span>
     <flatpickr id="datepicker" ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control"
