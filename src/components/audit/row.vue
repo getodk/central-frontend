@@ -107,6 +107,9 @@ const acteeSpeciesByCategory = {
   },
   field_key: {
     title: getDisplayName
+  },
+  null_actee: {
+    title: () => null
   }
 };
 // Presumably at some point, the actee of an upgrade audit might not be a form,
@@ -151,12 +154,14 @@ export default {
     },
     target() {
       if (this.category == null) return null;
-      const species = acteeSpeciesByCategory[this.category];
+      let species = acteeSpeciesByCategory[this.category];
       if (species == null) return null;
 
       const { actee } = this.audit;
-      const deleted = actee.deletedAt != null;
-      const purged = actee.purgedAt != null;
+      if (actee == null)
+        species = acteeSpeciesByCategory.null_actee;
+      const deleted = actee?.deletedAt != null;
+      const purged = actee?.purgedAt != null;
       const result = {
         title: purged ? actee.purgedName : species.title(actee),
         deleted,
