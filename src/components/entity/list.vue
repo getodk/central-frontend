@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="entity-list">
     <div id="entity-list-actions" class="table-actions-bar">
       <form class="form-inline" @submit.prevent>
-        <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted"/>
+        <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
         <entity-filters v-model:conflict="conflict" :disabled="deleted"
         :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
@@ -502,6 +502,7 @@ export default {
       "delete": "Entity “{label}” has been deleted."
     },
     "filterDisabledMessage": "Filtering is unavailable for deleted Entities",
+    "searchDisabledMessage": "Search is unavailable for deleted Entities",
     "downloadDisabled": "Download is unavailable for deleted Entities",
     "deletedEntity": {
       "emptyTable": "There are no deleted Entities.",

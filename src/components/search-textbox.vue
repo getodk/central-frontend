@@ -11,10 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <label id="search-textbox" class="form-group">
+  <label id="search-textbox" class="form-group" :class="{ disabled }">
     <span class="icon-search"></span>
     <input v-model="searchTextbox" class="form-control search-textbox" :placeholder="label"
-      :aria-label="label" :aria-disabled="disabled" autocomplete="off" @keydown.enter="setSearchTerm" @focusout="revert">
+      :aria-label="label" :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
+      autocomplete="off" @keydown.enter="setSearchTerm" @focusout="revert">
     <button v-show="searchTextbox" type="button" class="close"
       :aria-label="$t('action.clearSearch')" @click="clearSearch">
       <span aria-hidden="true">&times;</span>
@@ -30,6 +31,7 @@ import { ref, watch } from 'vue';
 const props = defineProps({
   modelValue: String,
   disabled: Boolean,
+  disabledMessage: String,
   /**
    * Text for label and placeholder
    */
@@ -72,7 +74,7 @@ watch(() => props.modelValue, (value) => {
     // Add padding so that the .close button does not overlay long input text.
     padding-right: 21px;
     font-size: 12px;
-    background: #FFF;
+    background: inherit;
 
     &::placeholder {
       color: $color-text-secondary;

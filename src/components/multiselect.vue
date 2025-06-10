@@ -10,11 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="dropdown" class="multiselect form-group" :class="{ disabled }">
+  <div ref="dropdown" class="multiselect form-group">
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
-    <div class="dropdown-trigger" :data-toggle="(options == null || disabled) ? null : 'dropdown'">
+    <div class="dropdown-trigger"
+      :class="{ disabled }"
+      :data-toggle="(options == null || disabled) ? null : 'dropdown'">
       <slot name="icon"></slot>
       <span class="multiselect-label">{{ label }}</span>
       <select :id="toggleId" ref="toggle" class="display-value"
@@ -438,10 +440,6 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
   .dropdown-trigger {
     @include filter-control;
-  }
-
-  &.disabled {
-    cursor: not-allowed;
   }
 
   select {

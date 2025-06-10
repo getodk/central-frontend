@@ -2115,6 +2115,9 @@
       "filterDisabledMessage": {
         "string": "Filtering is unavailable for deleted Entities"
       },
+      "searchDisabledMessage": {
+        "string": "Search is unavailable for deleted Entities"
+      },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Entities"
       },

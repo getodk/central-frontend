@@ -79,6 +79,16 @@
   border: 1px solid #EEE;
   background: #FFF;
 
+  &.disabled {
+    cursor: not-allowed;
+    background: #ddd;
+    opacity: 0.65;
+
+    .display-value {
+      cursor: not-allowed;
+    }
+  }
+
   .display-value {
     height: 24px;
     min-width: 22px;
