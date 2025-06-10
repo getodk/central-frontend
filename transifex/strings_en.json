@@ -1670,6 +1670,55 @@
         }
       }
     },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "App User and Data Collector Entity Access",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": "Access all Entities"
+      },
+      "accessAllDefault": {
+        "string": "Access all Entities (default)"
+      },
+      "ownerOnly": {
+        "string": "Only access own Entities"
+      },
+      "radio": {
+        "false": {
+          "string": "App Users and Data Collectors within this Project will have access to all Entities within their assigned Forms."
+        },
+        "true": {
+          "string": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": "App Users and Data Collectors will have access to all Entities, including ones they did not create."
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": "App Users and Data Collectors will lose access to the Entities they have not created. All other user types keep access to all Entities."
+        },
+        "action": {
+          "confirm": {
+            "string": "Access own Entities",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": "App Users and Data Collectors will now have access to all Entities."
+        },
+        "changeToTrue": {
+          "string": "App Users and Data Collectors will now only have access to Entities they create."
+        }
+      }
+    },
     "DatasetPendingSubmissions": {
       "title": {
         "string": "Pending Submissions"
