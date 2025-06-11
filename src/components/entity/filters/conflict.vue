@@ -64,7 +64,8 @@ const placeholder = (counts) => {
     },
     // This is the text of a dropdown that allows the user to select one or more
     // conflict statuses. {selected} is the number of selected conflict
-    // statuses; {total} is the total number of conflict statuses.
+    // statuses;
+    "placeholder": "{selected}",
     "action": {
       "select": {
         /*

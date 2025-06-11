@@ -461,6 +461,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
     margin-top: 0;
     padding-bottom: 0;
     padding: 5px;
+    min-width: 200px;
   }
 
   $hpadding: 9px;

@@ -75,10 +75,17 @@ watch(() => props.modelValue, (value) => {
     padding-right: 21px;
     font-size: 12px;
     background: inherit;
+    border: none;
 
     &::placeholder {
       color: $color-text-secondary;
     }
+  }
+
+  .form-label {
+    position: absolute;
+    top: 37px;
+    left: 33px;
   }
 
   .close {
