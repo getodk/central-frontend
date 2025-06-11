@@ -357,7 +357,7 @@ describe('AuditTable', () => {
     await testTarget(row, '');
   });
 
-  describe('system operation', () => {
+  describe('system logging without a target', () => {
     it('renders an analytics audit correctly', async () => {
       testData.extendedAudits.createPast(1, { action: 'analytics' });
       const row = mountComponent();
