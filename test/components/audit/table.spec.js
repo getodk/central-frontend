@@ -357,7 +357,7 @@ describe('AuditTable', () => {
     await testTarget(row, '');
   });
 
-  describe('system operation', () => {
+  describe('system logging without a target', () => {
     it('renders an analytics audit correctly', async () => {
       testData.extendedAudits.createPast(1, { action: 'analytics' });
       const row = mountComponent();
@@ -385,6 +385,13 @@ describe('AuditTable', () => {
       });
       const row = mountComponent();
       testType(row, ['System Operation', 'Mark Files for Re-Upload to Storage']);
+      await testTarget(row, '');
+    });
+
+    it('renders an upgrade.server audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'upgrade.server' });
+      const row = mountComponent();
+      testType(row, ['Server Upgrade', 'New Version']);
       await testTarget(row, '');
     });
   });

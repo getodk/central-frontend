@@ -162,7 +162,8 @@
       "upgrade": {
         "process_form": "Process Form",
         "process_form_draft": "Process Form Draft",
-        "process_form_entities_version": "Flag Form for Upgrade"
+        "process_form_entities_version": "Flag Form for Upgrade",
+        "server": "New Version"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on or for a Web User.

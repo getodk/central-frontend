@@ -155,6 +155,7 @@ export default {
       if (species == null) return null;
 
       const { actee } = this.audit;
+      if (actee == null) return null;
       const deleted = actee.deletedAt != null;
       const purged = actee.purgedAt != null;
       const result = {
