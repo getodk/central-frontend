@@ -4,6 +4,7 @@
  */
 
 @use 'primeflex/primeflex.scss' as pf;
+@use 'sass:map';
 
 /**
  * ODK CSS Variables
@@ -12,15 +13,15 @@
 :root {
 	--odk-font-family: Roboto, sans-serif;
 
-	--odk-base-font-size: #{map-get(pf.$font-size-props, 'text-base')};
-	--odk-heading-font-size: #{map-get(pf.$font-size-props, 'text-4xl')};
-	--odk-title-font-size: #{map-get(pf.$font-size-props, 'text-3xl')};
-	--odk-top-group-font-size: #{map-get(pf.$font-size-props, 'text-2xl')};
-	--odk-sub-group-font-size: #{map-get(pf.$font-size-props, 'text-xl')};
-	--odk-dialog-title-font-size: #{map-get(pf.$font-size-props, 'text-xl')};
-	--odk-question-font-size: #{map-get(pf.$font-size-props, 'text-lg')};
-	--odk-answer-font-size: #{map-get(pf.$font-size-props, 'text-base')};
-	--odk-hint-font-size: #{map-get(pf.$font-size-props, 'text-sm')};
+	--odk-base-font-size: #{map.get(pf.$font-size-props, 'text-base')};
+	--odk-heading-font-size: #{map.get(pf.$font-size-props, 'text-4xl')};
+	--odk-title-font-size: #{map.get(pf.$font-size-props, 'text-3xl')};
+	--odk-top-group-font-size: #{map.get(pf.$font-size-props, 'text-2xl')};
+	--odk-sub-group-font-size: #{map.get(pf.$font-size-props, 'text-xl')};
+	--odk-dialog-title-font-size: #{map.get(pf.$font-size-props, 'text-xl')};
+	--odk-question-font-size: #{map.get(pf.$font-size-props, 'text-lg')};
+	--odk-answer-font-size: #{map.get(pf.$font-size-props, 'text-base')};
+	--odk-hint-font-size: #{map.get(pf.$font-size-props, 'text-sm')};
 
 	--odk-primary-text-color: var(--p-primary-500);
 	--odk-primary-light-background-color: var(--p-primary-100);
