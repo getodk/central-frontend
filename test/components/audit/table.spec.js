@@ -387,6 +387,13 @@ describe('AuditTable', () => {
       testType(row, ['System Operation', 'Mark Files for Re-Upload to Storage']);
       await testTarget(row, '');
     });
+
+    it('renders an upgrade.server audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'upgrade.server' });
+      const row = mountComponent();
+      testType(row, ['Server Upgrade', 'New Version']);
+      await testTarget(row, '');
+    });
   });
 
   it('renders an audit with an unknown action correctly', () => {
