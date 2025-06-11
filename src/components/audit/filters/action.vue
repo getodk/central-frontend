@@ -82,7 +82,8 @@ export default {
         this.actionOption('dataset.create'),
         this.actionOption('dataset.update'),
         this.categoryOption('config'),
-        this.actionOption('config.set')
+        this.actionOption('config.set'),
+        this.categoryOption('upgrade')
       ];
     }
   },
