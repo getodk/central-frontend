@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="initiallyLoading"/>
   <template v-if="dataExists">
     <OdkWebForm
       :form-xml="formVersionXml.data"
@@ -77,11 +76,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, inject, onMounted, onUnmounted } from 'vue';
+import { computed, createApp, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import Loading from './loading.vue';
 import Modal from './modal.vue';
 
 import { apiPaths, isProblem, queryString, requestAlertMessage } from '../util/request';
@@ -113,6 +111,8 @@ const props = defineProps({
   instanceId: String
 });
 
+const emit = defineEmits(['loaded']);
+
 // Install WebFormsPlugin in the component instead of installing it at the
 // application level so that @getodk/web-forms package is not loaded for every
 // page, thus increasing the initial bundle
@@ -125,6 +125,10 @@ Object.assign(inst.appContext.config.globalProperties, app._context.config.globa
 const { i18n } = inject('container');
 
 const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
+
+watch(() => initiallyLoading.value, (value) => {
+  if (!value) emit('loaded');
+});
 
 const isPublicLink = computed(() => !!route.query.st);
 
