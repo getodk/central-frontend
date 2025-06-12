@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <multiselect id="submission-filters-review-state" :model-value="modelValue"
     :options="options" default-to-all :label="$t('common.reviewState')"
-    :placeholder="placeholder" :all="$t('action.select.all')"
-    :none="$t('action.select.none')"
+    :placeholder="placeholder" :all="$t('action.all')"
+    :none="$t('action.none')"
     @update:model-value="$emit('update:modelValue', $event)"/>
 </template>
 
@@ -46,8 +46,8 @@ const options = reviewStates.map(reviewState => ({
 
 const { t } = useI18n();
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('allReviewStateSelected');
-  return t('placeholder', counts);
+  if (counts.total === counts.selected) return t('action.all');
+  return counts.selected;
 };
 </script>
 
@@ -60,32 +60,18 @@ const placeholder = (counts) => {
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a dropdown that allows the user to select one or more
-    // Review States. {selected} is the number of selected Review States;
-    // {total} is the total number of Review States.
-    "placeholder": "{selected} of {total}",
     "action": {
-      "select": {
-        /*
-        This text is shown in a dropdown that allows the user to select one or
-        more Review States. It will be inserted where {all} is in the following
-        text:
-
-        Select {all} / {none}
-        */
-        "all": "All",
-        /*
-        This text is shown in a dropdown that allows the user to select one or
-        more Review States. It will be inserted where {none} is in the following
-        text:
-
-        Select {all} / {none}
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of Review States filter,
+      that allows the user to select all Review States.
+      */
+      "all": "All",
+      /*
+      This is the text of the button in dropdown menu of Review States filter,
+      that allows the user to unselect all Review States.
+      */
+      "none": "None"
     },
-    // Text shown when all Review States are selected in the filter
-    "allReviewStateSelected": "(All)"
   }
 }
 </i18n>

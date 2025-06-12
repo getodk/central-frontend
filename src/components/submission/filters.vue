@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span id="submission-filters">
-    <div class="form-group">
-      <span class="icon-filter"></span>
-    </div>
     <submission-filters-submitter :model-value="submitterId"
       :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:submitterId', $event)"/>
@@ -75,7 +72,7 @@ export default {
       "submissionDate": "Submitted at"
     },
     // Text shown when in Submission date filter when Submissions for all dates are shown
-    "allSubmissionDateSelected": "(All)"
+    "allSubmissionDateSelected": "All time"
   }
 }
 </i18n>

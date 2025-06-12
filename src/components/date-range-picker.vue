@@ -11,15 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="date-range-picker-container" class="date-range-picker form-group" :class="{ disabled }">
+    <span class="icon-calendar"></span>
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
-    <span class="form-label">{{ requiredLabel(label, required) }}</span>
+    <span class="date-range-picker-label">{{ requiredLabel(label, required) }}</span>
+    <span class="display-value" aria-hidden="true">{{ displayValue }}</span>
     <flatpickr id="datepicker" ref="flatpickr" v-model="flatpickrValue" :config="config"
       class="form-control"
       :class="{ required, 'flatpickr-input': true, 'has-value': modelValue.length === 2, none: modelValue.length === 0 }"
       :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
       :placeholder="placeholder" autocomplete="off"
+      @change="setDisplayValue"
       @keydown="stopPropagationIfDisabled"
       @on-close="close"/>
     <template v-if="!required">
@@ -100,7 +103,8 @@ export default {
       // We initialize this.flatpickrValue as an array of Date objects, but
       // vue-flatpickr-component will replace it with a string when the user
       // makes a selection.
-      flatpickrValue: this.modelValue.map(dateTime => dateTime.toJSDate())
+      flatpickrValue: this.modelValue.map(dateTime => dateTime.toJSDate()),
+      displayValue: ''
     };
   },
   computed: {
@@ -117,7 +121,10 @@ export default {
   watch: {
     modelValue(value) {
       this.flatpickrValue = value.map(dateTime => dateTime.toJSDate());
-    }
+    },
+  },
+  mounted() {
+    this.setDisplayValue();
   },
   methods: {
     // Converts an array of Date objects from a selection to an array of
@@ -174,12 +181,17 @@ export default {
       if (this.disabled) {
         e.stopPropagation();
       }
+    },
+    setDisplayValue() {
+      const controlValue = this.$refs.flatpickr?.$el.value;
+      this.displayValue = controlValue || this.placeholder;
     }
   }
 };
 </script>
 
 <style lang="scss">
+@import '../assets/scss/mixins';
 @import '../assets/scss/variables';
 
 // The flatpickr input is readonly by default, but we do not want to style it as
@@ -214,7 +226,9 @@ export default {
 }
 
 #date-range-picker-container {
-  cursor: pointer;
+  @include filter-control;
+
+
   &.disabled {
     cursor: not-allowed;
   }
@@ -225,12 +239,15 @@ export default {
     vertical-align: -4px;
   }
 
-  .form-label {
-    transform: translateY(2px);
+  // hide the flatpickr because we can't its width to fit-content
+  .form-control {
+    position: absolute;
+    opacity: 0;
   }
 
   .close {
-    top: 20px;
+    position: static;
+    transform: translateY(-2px);
   }
 }
 </style>

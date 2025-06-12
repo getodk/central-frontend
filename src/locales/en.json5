@@ -74,7 +74,7 @@
     // This is a category of actions performed on the server. It is shown in a
     // dropdown when filtering the log of actions by type.
     "category": {
-      "nonverbose": "(All Actions)",
+      "nonverbose": "All Actions",
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",

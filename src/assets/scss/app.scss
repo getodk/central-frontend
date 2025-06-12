@@ -956,8 +956,9 @@ becomes more complicated.
 // The action bar shown above the data table
 
 .table-actions-bar {
-  background-color: $color-subpanel-background;
-  padding: 10px 20px;
+  background-color: $color-page-background;
+  padding: 10px 0;
+  font-size: 12px;
 
   .form-inline {
     margin-bottom: 0;
@@ -973,6 +974,6 @@ becomes more complicated.
   }
 
   .form-group + .form-group {
-    margin-left: 30px;
+    margin-left: 10px;
   }
 }

@@ -38,3 +38,9 @@ defineProps({
 });
 defineEmits(['update:conflict']);
 </script>
+
+<style lang="scss">
+#entity-filters {
+  margin-left: 10px;
+}
+</style>
