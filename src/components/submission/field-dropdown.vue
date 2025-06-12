@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <multiselect id="submission-field-dropdown" :model-value="modelValue"
     :options="options" :label="$t('field.columns')" :placeholder="placeholder"
-    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :all="$t('action.all')" :none="$t('action.none')"
     :search="$t('field.search')"
     @update:model-value="$emit('update:modelValue', $event)">
     <template #after-list="{ selected }">
@@ -25,7 +25,6 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import Multiselect from '../multiselect.vue';
 import { useRequestData } from '../../request-data';
@@ -50,8 +49,7 @@ const options = computed(() => fields.selectable.map(field => ({
   text: field.name,
   description: field.header
 })));
-const { t } = useI18n();
-const placeholder = (counts) => t('placeholder', counts);
+const placeholder = (counts) => counts.selected;
 </script>
 
 <style lang="scss">
@@ -72,9 +70,6 @@ const placeholder = (counts) => t('placeholder', counts);
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a dropdown that allows the user to select which
-    // columns to display in a table. {selected} is the number of columns
-    "placeholder": "{selected}",
     "field": {
       // This is shown beneath text that indicates the number of columns that
       // the user has selected to display in a table. For example, that text may
@@ -84,18 +79,16 @@ const placeholder = (counts) => t('placeholder', counts);
       "search": "Search columns…"
     },
     "action": {
-      "select": {
-        /*
-        This is the text of the button in dropdown menu of column selector,
-        that allows the user to select all columns.
-        */
-        "all": "All",
-        /*
-        This is the text of the button in dropdown menu of column selector,
-        that allows the user to unselect all columns.
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of column selector,
+      that allows the user to select all columns.
+      */
+      "all": "All",
+      /*
+      This is the text of the button in dropdown menu of column selector,
+      that allows the user to unselect all columns.
+      */
+      "none": "None"
     },
     "warning": "Selecting too many columns might slow down your computer."
   }

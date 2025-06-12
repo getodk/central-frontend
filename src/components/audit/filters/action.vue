@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <label id="audit-filters-action" class="form-group">
     <span>{{ $t('field.type') }}</span>
-    <div class="display-value">
+    <div class="display-value" aria-hidden="true">
       {{ displayValue }}
     </div>
     <select class="form-control" :value="modelValue"
@@ -122,7 +122,7 @@ export default {
     position: absolute;
     opacity: 0;
     width: 100%;
-    height: 40px;
+    height: 100%;
     top: 0;
     left: 0;
     cursor: pointer;

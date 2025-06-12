@@ -2076,25 +2076,15 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses;"
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
-      },
-      "allSelectedConflictSelected": {
-        "string": "All",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -3625,10 +3615,6 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "Select {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
-        },
         "apply": {
           "string": "Apply",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -4749,10 +4735,6 @@
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "{selected}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns"
-      },
       "field": {
         "columns": {
           "string": "Columns shown",
@@ -4764,15 +4746,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4792,25 +4772,15 @@
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States;"
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "All",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4824,28 +4794,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected;"
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": "Unknown submitter"
-      },
-      "allSubmitterSelected": {
-        "string": "All",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {

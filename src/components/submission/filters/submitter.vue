@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <multiselect id="submission-filters-submitter" :model-value="selectValue"
     :options="options" :loading="submitters.initiallyLoading"
     :label="$t('field.submitter')" :placeholder="placeholder"
-    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :all="$t('action.all')" :none="$t('action.none')"
     :search="$t('field.search')" :empty="$t('submission.emptyTable')"
     @update:model-value="update">
     <template #icon>
@@ -94,9 +94,9 @@ const update = (value) => {
 };
 
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('allSubmitterSelected');
+  if (counts.total === counts.selected) return t('action.all');
 
-  return t('placeholder', counts);
+  return counts.selected;
 };
 </script>
 
@@ -115,27 +115,19 @@ const placeholder = (counts) => {
       "submitter": "Submitted by",
       "search": "Search submitters…"
     },
-    // This is the text of a dropdown that allows the user to select one or more
-    // "submitters". A submitter can be a user, a team of users, a Public Access
-    // Link, or an automation. {selected} is the number of submitters selected;
-    "placeholder": "{selected}",
     "action": {
-      "select": {
-        /*
-        This is the text of the button in dropdown menu of submitter filter,
-        that allows the user to select all submitters.
-        */
-        "all": "All",
-        /*
-        This is the text of the button in dropdown menu of submitter filter,
-        that allows the user to unselect all submitters.
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of submitter filter,
+      that allows the user to select all submitters.
+      */
+      "all": "All",
+      /*
+      This is the text of the button in dropdown menu of submitter filter,
+      that allows the user to unselect all submitters.
+      */
+      "none": "None"
     },
     "unknown": "Unknown submitter",
-    // Text shown when all Submitters are selected in the filter
-    "allSubmitterSelected": "All"
   }
 }
 </i18n>

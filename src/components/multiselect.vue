@@ -14,12 +14,12 @@ except according to the terms contained in the LICENSE file.
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
-    <div class="dropdown-trigger"
+    <div ref="toggle" class="dropdown-trigger"
       :class="{ disabled }"
       :data-toggle="(options == null || disabled) ? null : 'dropdown'">
       <slot name="icon"></slot>
       <span class="multiselect-label">{{ label }}</span>
-      <select :id="toggleId" ref="toggle" class="display-value"
+      <select :id="toggleId" class="display-value"
         :aria-disabled="options == null || disabled"
         role="button"
         v-tooltip.aria-describedby="disabledMessage"
@@ -78,7 +78,7 @@ except according to the terms contained in the LICENSE file.
         <slot name="after-list" :selected="selected"></slot>
       </li>
       <li class="action-bar">
-        <button type="button" class="btn btn-primary" @click="apply()">
+        <button type="button" class="btn btn-primary" :aria-disabled="changes.size === 0" @click="apply()">
          {{ $t('action.apply') }}
         </button>
       </li>
@@ -215,7 +215,7 @@ not be (if an update:modelValue event was ignored).
 
 // `selected` needs to be reactive for the after-list slot.
 const selected = shallowReactive(new Set());
-const changes = new Set();
+const changes = shallowReactive(new Set());
 const change = (value) => {
   if (selected.has(value))
     selected.delete(value);
@@ -367,21 +367,25 @@ const $dropdown = computed(() => $(dropdown.value));
 onMounted(() => {
   $dropdown.value.on('shown.bs.dropdown', syncWithModelValue);
   $dropdown.value.on('hidden.bs.dropdown', () => {
-    needsSync = true;
+    searchValue.value = '';
+    needsSync = changes.size !== 0;
+    changes.clear();
   });
 });
 onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
 
+//  this should be changed i think
 const toggle = ref(null);
 const $toggle = computed(() => $(toggle.value));
 const toggleAfterEnter = ({ key }) => {
+  // console.log('toggleAfterEnter');
   if (key === 'Enter') $toggle.value.dropdown('toggle');
 };
 
 const apply = () => {
   searchValue.value = '';
   emitIfChanged();
-  $dropdown.value.removeClass('open');
+  $toggle.value.dropdown('toggle');
 };
 
 const verifyAttached = buildMode === 'test'
@@ -575,11 +579,6 @@ const emptyMessage = computed(() => (searchValue.value === ''
 {
   "en": {
     "action": {
-      // This text is shown in a dropdown that allows the user to make one or
-      // more selections. {all} has the text "All", and {none} has the text
-      // "None". {all} and {none} will be translated separately based on what is
-      // being selected.
-      "select": "Select {all} / {none}",
       "apply": "Apply"
     }
   }

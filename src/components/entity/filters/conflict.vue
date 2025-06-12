@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <multiselect id="entity-filters-conflict" :model-value="modelValue"
     :options="options" default-to-all :label="$t('field.conflict')"
-    :placeholder="placeholder" :all="$t('action.select.all')"
-    :none="$t('action.select.none')"
+    :placeholder="placeholder" :all="$t('action.all')"
+    :none="$t('action.none')"
     @update:model-value="$emit('update:modelValue', $event)"/>
 </template>
 
@@ -38,9 +38,10 @@ const { t } = useI18n();
 const options = computed(() => [true, false].map(value =>
   ({ value, text: t(`conflict.${value}`) })));
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('allSelectedConflictSelected');
+  if (counts.total === counts.selected) return t('action.all');
 
-  return t('placeholder', counts);
+  // counts are already localized by multiselect component
+  return counts.selected;
 };
 </script>
 
@@ -62,26 +63,18 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Conflict status"
     },
-    // This is the text of a dropdown that allows the user to select one or more
-    // conflict statuses. {selected} is the number of selected conflict
-    // statuses;
-    "placeholder": "{selected}",
     "action": {
-      "select": {
-        /*
+      /*
+      This is the text of the button in dropdown menu of conflict statuses filter,
+      that allows the user to select all conflict statuses.
+      */
+      "all": "All",
+      /*
         This is the text of the button in dropdown menu of conflict statuses filter,
-        that allows the user to select all conflict statuses.
-        */
-        "all": "All",
-        /*
-         This is the text of the button in dropdown menu of conflict statuses filter,
-        that allows the user to unselect all conflict statuses.
-        */
-        "none": "None"
-      }
+      that allows the user to unselect all conflict statuses.
+      */
+      "none": "None"
     },
-    // Text shown when all conflict statuses are selected in the filter dropdown
-    "allSelectedConflictSelected": "All"
   }
 }
 </i18n>
