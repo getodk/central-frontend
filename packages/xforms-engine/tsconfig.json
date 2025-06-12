@@ -12,6 +12,7 @@
     "paths": {
       "@getodk/common/types/*": ["../common/types/*"],
       "@getodk/common/*": ["../common/src/*"]
-    }
+    },
+    "types": ["vite/client"]
   }
 }
