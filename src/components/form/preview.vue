@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent, ref, watch } from 'vue';
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -69,6 +69,10 @@ const fetchForm = () => {
 };
 
 if (!form.dataExists) fetchForm();
+
+watch(() => form.initiallyLoading, (value) => {
+  if (!value) loadingState.value = form.dataExists;
+});
 </script>
 
 <style lang="scss">

@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineAsyncComponent, watchEffect, computed, ref } from 'vue';
+import { defineAsyncComponent, watchEffect, computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
@@ -93,9 +93,10 @@ const hideLoading = () => {
   loadingState.value = false;
 };
 
-const { dataExists } = computed(() => {
+const { initiallyLoading, dataExists } = computed(() => {
   const state = resourceStates(resources.value);
   return {
+    initiallyLoading: state.initiallyLoading,
     dataExists: state.dataExists
   };
 }).value;
@@ -152,6 +153,10 @@ const hasAccess = computed(() => {
     result = false;
 
   return result;
+});
+
+watch(() => initiallyLoading.value, (value) => {
+  if (!value) loadingState.value = dataExists.value;
 });
 
 watchEffect(() => {
