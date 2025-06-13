@@ -144,8 +144,8 @@ export const useAlert = (elementRef) => {
 
   // Hide an alert after a link is opened in a new tab.
   const hideAfterClick = (event) => {
-    if (alert.state && event.target.closest('a[target="_blank"]') != null &&
-      !event.defaultPrevented) {
+    if (alert.state && !event.defaultPrevented &&
+      event.target.closest('a[target="_blank"]') != null) {
       alert.hide();
     }
   };
