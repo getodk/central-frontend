@@ -102,10 +102,10 @@ onMounted(() => {
 });
 
 const alert = inject('alert');
-let oldAlertAt;
-watchPostEffect(() => { oldAlertAt = alert.at; });
+let oldAlertId;
+watchPostEffect(() => { oldAlertId = alert.messageId; });
 watch(() => props.state, (state) => {
-  if (state || alert.at === oldAlertAt) alert.blank();
+  if (state || alert.messageId === oldAlertId) alert.hide();
 });
 
 // checkScroll() checks whether the modal vertically overflows the viewport,

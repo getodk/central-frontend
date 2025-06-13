@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="alert.state" :key="alert.at.getTime()"
+  <div v-show="alert.state" :key="alert.messageId"
     class="alert alert-dismissible" :class="`alert-${alert.type}`" role="alert">
     <button type="button" class="close" :aria-label="$t('action.close')"
       @click="alert.hide()">

@@ -29,11 +29,15 @@ import { inject, onBeforeUnmount, shallowReactive, watch } from 'vue';
 
 import useEventListener from './composables/event-listener';
 
+let messageId = 0;
+
 class AlertData {
   #data;
 
   constructor() {
     this.#data = shallowReactive({
+      // Unique identifier for each individual message
+      messageId,
       // The alert's "contextual" type: 'success', 'info', 'warning', or
       // 'danger'.
       type: 'danger',
@@ -48,6 +52,7 @@ class AlertData {
     });
   }
 
+  get messageId() { return this.state ? this.#data.messageId : null; }
   get type() { return this.#data.type; }
   get message() { return this.#data.message; }
   get state() { return this.#data.state; }
@@ -61,7 +66,9 @@ class AlertData {
   }
 
   #show(type, message) {
+    messageId += 1;
     Object.assign(this.#data, {
+      messageId,
       type,
       message,
       state: true,
@@ -85,13 +92,13 @@ class AlertData {
     cta.handler = () => {
       if (cta.pending) return Promise.reject(new Error('CTA is pending'));
       cta.pending = true;
-      const startAt = this.at;
+      const startId = this.messageId;
       return Promise.resolve(handler())
         .then(() => {
-          if (this.state && this.at === startAt) this.hide();
+          if (this.messageId === startId) this.hide();
         })
         .catch(() => {
-          if (this.state && this.at === startAt) cta.pending = false;
+          if (this.messageId === startId) cta.pending = false;
         });
     };
   }
@@ -124,7 +131,7 @@ export const useAlert = (elementRef) => {
       timeoutId = null;
     }
   };
-  watch([() => alert.state, () => alert.at], () => {
+  watch(() => alert.messageId, () => {
     clearExistingTimeout();
     if (alert.state && alert.type === 'success')
       timeoutId = setTimeout(hideAfterTimeout, 7000);
