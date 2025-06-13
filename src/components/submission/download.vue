@@ -117,6 +117,8 @@ except according to the terms contained in the LICENSE file.
       the iframe form is submitted. -->
       <!-- eslint-disable-next-line vuejs-accessibility/iframe-has-title -->
       <iframe v-show="false" ref="iframe" src="/blank.html"></iframe>
+      <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
+      <a v-show="false" ref="tryAgain"></a>
     </template>
   </modal>
 </template>
@@ -297,13 +299,29 @@ export default {
     download(event) {
       const a = event.target.closest('a');
       if (a == null) return;
+      const href = a.getAttribute('href');
+
+      // `true` if the click will go through and the download will be attempted;
+      // `false` if the form is invalid.
       const willDownload = this.managedKey == null ||
         this.$refs.form.reportValidity();
+
       if (this.managedKey != null) {
         event.preventDefault();
-        if (willDownload) this.decrypt(a.getAttribute('href'));
+        if (willDownload) this.decrypt(href);
       }
-      if (willDownload) this.alert.info(this.$t('alert.submit'));
+
+      if (willDownload) {
+        const alertChain = this.alert.info(this.$t('alert.submit'));
+        if (this.managedKey == null) {
+          alertChain.cta(this.$t('action.tryAgain'), () => {
+            this.$refs.tryAgain.setAttribute('href', href);
+            this.$refs.tryAgain.click();
+          });
+        }
+
+        this.$emit('hide');
+      }
     }
   }
 };
@@ -397,7 +415,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "The data download is not yet available. Please try again in a moment.",
-      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again.",
+      "submit": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again.",
       "parseError": "Something went wrong while requesting your data."
     }
   }
