@@ -32,7 +32,7 @@ may add the `in` class to the element, and the checkScroll() method may add the
             <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
           </div>
           <div ref="body" class="modal-body">
-            <Alert/>
+            <RedAlert v-show="redAlert.state"/>
             <slot name="body"></slot>
           </div>
         </div>
@@ -48,7 +48,7 @@ let id = 0;
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from 'vue';
 import 'bootstrap/js/modal';
 
-import Alert from './alert.vue';
+import RedAlert from './red-alert.vue';
 import TeleportIfExists from './teleport-if-exists.vue';
 
 import { noop } from '../util/util';
@@ -84,6 +84,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['shown', 'hide', 'resize', 'mutate']);
 
+const { toast, redAlert } = inject('container');
+
 const el = ref(null);
 const body = ref(null);
 
@@ -101,11 +103,11 @@ onMounted(() => {
   }
 });
 
-const alert = inject('alert');
 let oldAlertId;
-watchPostEffect(() => { oldAlertId = alert.messageId; });
+watchPostEffect(() => { oldAlertId = redAlert.messageId; });
 watch(() => props.state, (state) => {
-  if (state || alert.messageId === oldAlertId) alert.hide();
+  if (state || redAlert.messageId === oldAlertId) redAlert.hide();
+  if (state) toast.hide();
 });
 
 // checkScroll() checks whether the modal vertically overflows the viewport,

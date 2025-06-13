@@ -108,10 +108,10 @@ describe('FormNew', () => {
       testData.extendedProjects.createPast(1);
     });
 
-    it('shows an info alert if no file is selected', async () => {
+    it('shows an alert if no file is selected', async () => {
       const modal = mount(FormNew, mountOptions());
       await modal.get('#form-new-upload-button').trigger('click');
-      modal.should.alert('info');
+      modal.should.alert('danger');
     });
 
     it('hides the alert after a file is selected', async () => {

@@ -11,21 +11,14 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-createAlert() returns an object to manage the reactive data for the toast, which
-is called the "alert" in the codebase. Only a single alert is shown at a time.
-An alert may be shown at the top of the page or in a modal. Regardless of where
-the alert is shown, its data will be stored in the object returned by
-createAlert(). The object will be installed as a plugin, allowing it to be
-injected in components. The object will also be accessible from the container
-object.
+createAlert() returns an object to manage the reactive data for an alert. The
+Alert component uses this data to render the alert.
 
-The Alert component renders the alert using the alert object.
-
-The root component should call useAlert() to set up additional functionality for
-the alert. For example, useAlert() will hide a success alert automatically.
+The root component can call useAlert() to set up additional functionality for
+an alert. For example, useAlert() will auto-hide the alert.
 */
 
-import { inject, onBeforeUnmount, readonly, shallowReactive, watch, watchEffect } from 'vue';
+import { onBeforeUnmount, readonly, shallowReactive, watch, watchEffect } from 'vue';
 
 import useEventListener from './composables/event-listener';
 
@@ -35,19 +28,22 @@ class AlertData {
   #data;
   #cta;
   #readonlyCta;
+  #defaultOptions;
 
-  constructor() {
+  constructor(defaultOptions = undefined) {
+    this.#defaultOptions = {
+      autoHide: true,
+      ...defaultOptions
+    };
     this.#data = shallowReactive({
       // `true` if the alert should be visible and `false` if not.
       state: false,
       // Unique identifier for each individual message
       messageId,
-      // The alert's "contextual" type: 'success', 'info', 'warning', or
-      // 'danger'.
-      type: 'danger',
       message: null,
       // The time at which the alert was last shown
-      at: new Date()
+      at: new Date(),
+      ...this.#defaultOptions
     });
 
     // Information about the Call to Action (CTA) button that's shown in the
@@ -58,33 +54,28 @@ class AlertData {
 
   get state() { return this.#data.state; }
   get messageId() { return this.state ? this.#data.messageId : null; }
-  get type() { return this.#data.type; }
   get message() { return this.#data.message; }
   get at() { return this.#data.at; }
+  get autoHide() { return this.state && this.#data.autoHide; }
   get cta() { return this.#cta.text != null ? this.#readonlyCta : null; }
 
   #resetCta() {
     Object.assign(this.#cta, { text: null, handler: null, pending: false });
   }
 
-  #show(type, message) {
+  show(message, options = undefined) {
     messageId += 1;
     Object.assign(this.#data, {
       state: true,
       messageId,
-      type,
       message,
       at: new Date()
     });
+    Object.assign(this.#data, this.#defaultOptions, options);
     this.#resetCta();
     // Return the alert object for chaining.
     return this;
   }
-
-  success(message) { return this.#show('success', message); }
-  info(message) { return this.#show('info', message); }
-  warning(message) { return this.#show('warning', message); }
-  danger(message) { return this.#show('danger', message); }
 
   // `text` is the text of the CTA. `handler` is a function to call when the
   // user clicks the CTA.
@@ -105,14 +96,11 @@ class AlertData {
   }
 
   hide() {
-    this.#data.state = false;
-    this.#data.message = null;
+    if (!this.state) return;
+    Object.assign(this.#data, { state: false, message: null });
+    Object.assign(this.#data, this.#defaultOptions);
     this.#resetCta();
   }
-
-  blank() { this.hide(); }
-
-  install(app) { app.provide('alert', this); }
 }
 
 export const createAlert = () => new AlertData();
@@ -137,7 +125,7 @@ const autoHide = (alert) => {
   };
   watch(() => alert.messageId, () => {
     clearExistingTimeout();
-    if (alert.state && alert.type === 'success')
+    if (alert.state && alert.autoHide)
       timeoutId = setTimeout(hideAfterTimeout, 7000);
   });
   watchEffect(() => {
@@ -160,9 +148,7 @@ const hideAfterLinkClick = (alert, elementRef) => {
   useEventListener(elementRef, 'click', handleClick, true);
 };
 
-export const useAlert = (elementRef) => {
-  const alert = inject('alert');
+export const useAlert = (alert, elementRef) => {
   autoHide(alert);
   hideAfterLinkClick(alert, elementRef);
-  return alert;
 };

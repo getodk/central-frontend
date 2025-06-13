@@ -314,17 +314,41 @@ addAsyncMethod('textTooltip', async function textTooltip() {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// OTHER
+// ALERTS
+
+Assertion.addMethod('toast', function assertToast(message = undefined) {
+  expect(this._obj).to.be.instanceof(VueWrapper);
+  const { toast } = this._obj.vm.$container;
+  this.assert(
+    toast.state,
+    'expected the component to show a toast',
+    'expected the component not to show a toast'
+  );
+  if (checkNegate(this, [message])) return;
+  if (message != null) toast.message.should.stringMatch(message);
+});
+
+Assertion.addMethod('redAlert', function assertRedAlert(message = undefined) {
+  expect(this._obj).to.be.instanceof(VueWrapper);
+  const { redAlert } = this._obj.vm.$container;
+  this.assert(
+    redAlert.state,
+    'expected the component to show a red alert',
+    'expected the component not to show a red alert'
+  );
+  if (checkNegate(this, [message])) return;
+  if (message != null) redAlert.message.should.stringMatch(message);
+});
 
 Assertion.addMethod('alert', function assertAlert(type = undefined, message = undefined) {
   expect(this._obj).to.be.instanceof(VueWrapper);
-  const { alert } = this._obj.vm.$container;
+  const { toast, redAlert, alert } = this._obj.vm.$container;
   this.assert(
     alert.state,
     'expected the component to show an alert',
     'expected the component not to show an alert'
   );
   if (checkNegate(this, [type, message])) return;
-  if (type != null) alert.type.should.equal(type);
+  if (type != null) alert.last.should.equal(type === 'danger' ? redAlert : toast);
   if (message != null) alert.message.should.stringMatch(message);
 });

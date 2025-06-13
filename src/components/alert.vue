@@ -10,27 +10,37 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="alert.state" :key="alert.messageId" class="alert"
-    :class="`alert-${alert.type}`" role="alert">
-    <button type="button" class="close" :aria-label="$t('action.close')"
-      @click="alert.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <span class="alert-message">{{ alert.message }}</span>
-    <button v-if="cta != null" type="button" class="alert-cta btn btn-default"
-      :aria-disabled="cta.pending" @click="cta.handler">
-      {{ cta.text }} <spinner :state="cta.pending"/>
-    </button>
+  <div :key="alert.messageId" class="alert" role="alert">
+    <div class="alert-message">{{ alert.message }}</div>
+    <div v-if="cta != null" class="alert-cta-container">
+      <button type="button" class="alert-cta btn btn-link"
+        :aria-disabled="cta.pending" @click="cta.handler">
+        {{ cta.text }}
+      </button>
+      <spinner :state="cta.pending"/>
+    </div>
+    <div class="alert-close-container">
+      <button type="button" class="close" :aria-label="$t('action.close')"
+        @click="alert.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
 import Spinner from './spinner.vue';
 
-const alert = inject('alert');
-const cta = computed(() => alert.cta);
+const props = defineProps({
+  alert: {
+    type: Object,
+    required: true
+  }
+});
+
+const cta = computed(() => props.alert.cta);
 </script>
 
 <style lang="scss">
@@ -46,40 +56,52 @@ const cta = computed(() => alert.cta);
   animation-iteration-count: 1;
   animation-name: fadein;
   animation-timing-function: ease-out;
-  border-top: 2px solid transparent;
-  // This only affects alerts in modals, as App's alert has a fixed position.
+
+  display: flex;
+  align-items: center;
+
+  border-radius: 4px;
   margin-bottom: 15px;
+}
+
+.alert > div {
+  display: flex;
+  align-items: center;
+}
+
+.alert-message {
+  flex-grow: 1;
   padding: 15px;
-  padding-right: 35px;
+  padding-right: 60px;
+}
 
-  .alert-message {
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
+.alert-cta-container, .alert-close-container {
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.alert-cta-container {
+  padding-inline: 2px;
+  // Needed for Spinner
+  position: relative;
+}
+
+.alert-close-container { width: 48px; }
+
+.alert-cta {
+  font-size: $font-size-text;
+
+  &:hover, &:focus {
+    background-color: transparent;
+    text-decoration: none;
   }
 
-  .close {
-    position: relative;
-    top: -2px;
-    right: -21px;
-    color: inherit;
-  }
+  &[aria-disabled="true"] { opacity: 0; }
 }
 
-.alert-success {
-  background-color: $color-success-light;
-  border-top-color: $color-success;
-  color: $color-success;
-}
-
-.alert-info {
-  background-color: $color-info-light;
-  border-top-color: $color-info;
-  color: $color-info;
-}
-
-.alert-danger {
-  background-color: $color-danger-light;
-  border-top-color: $color-danger;
-  color: $color-danger;
+.alert .close {
+  float: none;
+  position: relative;
+  top: -2px;
 }
 </style>

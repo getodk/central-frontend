@@ -94,7 +94,7 @@ const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.
       return;
     }
 
-    alert.danger(joinSentences(i18n, [
+    alert.info(joinSentences(i18n, [
       i18n.t('util.session.alert.logoutError.thereWasProblem'),
       requestAlertMessage(i18n, error),
       i18n.t('util.session.alert.logoutError.pleaseRefresh')

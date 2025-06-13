@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     will affect how the navbar is rendered. -->
     <navbar v-if="!standalone" v-show="routerReady"/>
     <outdated-version/>
-    <alert id="app-alert"/>
+    <alerts/>
     <feedback-button v-if="showsFeedbackButton"/>
     <div v-if="routerReady && !standalone" ref="containerEl" class="container-fluid">
       <router-view/>
@@ -31,11 +31,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
+import { computed, defineAsyncComponent, inject, useTemplateRef } from 'vue';
 
 import { START_LOCATION, useRouter, useRoute } from 'vue-router';
 
-import Alert from './alert.vue';
+import Alerts from './alerts.vue';
 import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
@@ -49,7 +49,7 @@ import { useSessions } from '../util/session';
 export default {
   name: 'App',
   components: {
-    Alert,
+    Alerts,
     HoverCards: defineAsyncComponent(loadAsync('HoverCards')),
     Navbar,
     FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
@@ -57,16 +57,18 @@ export default {
   },
   inject: ['alert', 'config', 'location'],
   setup() {
+    const router = useRouter();
+    const route = useRoute();
+    const { toast } = inject('container');
+
     const { visiblyLoggedIn } = useSessions();
     useDisabled();
 
     const containerEl = useTemplateRef('containerEl');
-    useAlert(containerEl);
+    useAlert(toast, containerEl);
 
     // Add background color to the html tag; this is done to avoid magenta
     // splash on standalone routes such as FormPreview.
-    const router = useRouter();
-    const route = useRoute();
     router.isReady()
       .then(() => {
         if (!route.meta.standalone)
@@ -110,10 +112,10 @@ export default {
             return false;
 
           // Alert the user about the version change, then keep alerting them.
-          // One benefit of this approach is that the user should see the alert
-          // even if there is another alert (say, about session expiration).
+          // One benefit of this approach is that the user should see the toast
+          // even if there is another toast (say, about session expiration).
           this.callWait(
-            'alertVersionChange',
+            'versionChange',
             () => {
               this.alert.info(this.$t('alert.versionChange'))
                 .cta(this.$t('action.refreshPage'), () => { this.location.reload(); });
@@ -130,37 +132,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-@import '../assets/scss/variables';
-
-#app-alert {
-  border-bottom: 1px solid transparent;
-  border-left: 1px solid transparent;
-  border-right: 1px solid transparent;
-  left: 50%;
-  margin-left: -250px;
-  position: fixed;
-  text-align: center;
-  top: 34px;
-  width: 500px;
-  // 1 greater than the Bootstrap maximum
-  z-index: 1061;
-
-  &.alert-success {
-    border-color: $color-success;
-  }
-
-  &.alert-info {
-    border-color: $color-info;
-  }
-
-  &.alert-danger {
-    border-color: $color-danger;
-  }
-}
-
-body.modal-open #app-alert {
-  display: none;
-}
-</style>

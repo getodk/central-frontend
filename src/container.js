@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 import axios from 'axios';
 import { Translation } from 'vue-i18n';
 
+import createAlerts from './container/alerts';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createHoverCard from './container/hover-card';
 import createUnsavedChanges from './unsaved-changes';
 import { $tcn } from './util/i18n';
-import { createAlert } from './alert';
 import { createRequestData } from './request-data';
 
 const provide = [
@@ -40,7 +40,6 @@ export default ({
   // requestData must be a function that returns an object. The function will be
   // passed a partial container.
   requestData = createRequestData,
-  alert = createAlert(),
   hoverCard = createHoverCard(),
   unsavedChanges = createUnsavedChanges(i18n.global),
   http = axios,
@@ -49,15 +48,16 @@ export default ({
   logger = console,
   buildMode = import.meta.env?.MODE ?? 'production'
 } = {}) => {
+  const alerts = createAlerts();
   const container = {
     i18n: i18n.global,
-    alert,
     hoverCard,
     unsavedChanges,
     http,
     location,
     logger,
-    buildMode
+    buildMode,
+    ...alerts
   };
   container.requestData = requestData(container);
   container.config = container.requestData.config;
@@ -72,7 +72,7 @@ export default ({
 
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
-    app.use(alert);
+    app.use(alerts);
 
     app.provide('container', container);
     for (const key of provide)

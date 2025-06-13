@@ -3,7 +3,8 @@ import { nextTick, ref } from 'vue';
 
 import Home from '../src/components/home.vue';
 
-import { createAlert, useAlert } from '../src/alert';
+import createAlerts from '../src/container/alerts';
+import { useAlert } from '../src/alert';
 import { noop } from '../src/util/util';
 
 import { block } from './util/util';
@@ -12,10 +13,10 @@ import { mockLogin } from './util/session';
 import { withSetup } from './util/lifecycle';
 
 describe('createAlert()', () => {
-  for (const type of ['success', 'info', 'warning', 'danger']) {
+  for (const type of ['success', 'info', 'danger']) {
     describe(`${type}()`, () => {
       it('updates the data', () => {
-        const alert = createAlert();
+        const { alert } = createAlerts();
         alert[type]('Something happened!');
         alert.type.should.equal(type);
         alert.message.should.equal('Something happened!');
@@ -26,7 +27,7 @@ describe('createAlert()', () => {
 
   describe('cta()', () => {
     it('updates the data', () => {
-      const alert = createAlert();
+      const { alert } = createAlerts();
       should.not.exist(alert.cta);
 
       alert.info('Something happened!');
@@ -40,7 +41,7 @@ describe('createAlert()', () => {
     });
 
     it('hides the alert after the CTA handler resolves', async () => {
-      const alert = createAlert();
+      const { alert } = createAlerts();
       alert.info('Something happened!').cta('Click here', noop);
       alert.cta.handler();
       await nextTick();
@@ -48,7 +49,7 @@ describe('createAlert()', () => {
     });
 
     it('supports an async CTA handler', async () => {
-      const alert = createAlert();
+      const { alert } = createAlerts();
 
       // Async handler that resolves
       const [lock1, unlock1] = block();
@@ -73,7 +74,7 @@ describe('createAlert()', () => {
       await nextTick();
       alert.state.should.be.true;
       alert.cta.pending.should.be.false;
-      alert.hide();
+      alert.last.hide();
 
       // First handler resolves during second handler
       const [lock3, unlock3] = block();
@@ -115,9 +116,9 @@ describe('createAlert()', () => {
 
   describe('hide()', () => {
     it('updates the data', () => {
-      const alert = createAlert();
+      const { alert } = createAlerts();
       alert.info('Something happened!').cta('Click here', noop);
-      alert.hide();
+      alert.last.hide();
       alert.state.should.be.false;
       should.not.exist(alert.message);
       should.not.exist(alert.cta);
@@ -129,7 +130,8 @@ describe('useAlert()', () => {
   describe('hiding alert after 7 seconds', () => {
     it('hides a success alert after 7 seconds', async () => {
       const clock = sinon.useFakeTimers();
-      const alert = withSetup(() => useAlert(ref(null)));
+      const { alert, toast } = createAlerts();
+      withSetup(() => useAlert(toast, ref(null)));
       alert.success('Something good!');
       await clock.tickAsync(6999);
       alert.state.should.be.true;
@@ -139,15 +141,17 @@ describe('useAlert()', () => {
 
     it('does not hide a non-success alert', async () => {
       const clock = sinon.useFakeTimers();
-      const alert = withSetup(() => useAlert(ref(null)));
-      alert.danger('Something bad!');
+      const { alert, toast } = createAlerts();
+      withSetup(() => useAlert(toast, ref(null)));
+      alert.info('Something happened!');
       await clock.tickAsync(7000);
       alert.state.should.be.true;
     });
 
     it('restarts the clock for each new alert', async () => {
       const clock = sinon.useFakeTimers();
-      const alert = withSetup(() => useAlert(ref(null)));
+      const { alert, toast } = createAlerts();
+      withSetup(() => useAlert(toast, ref(null)));
 
       alert.success('Something good!');
       await clock.tickAsync(6999);
@@ -162,7 +166,7 @@ describe('useAlert()', () => {
 
       alert.success('Something good again!');
       await clock.tickAsync(6999);
-      alert.danger('Something bad!');
+      alert.info('Something happened!');
       await clock.tickAsync(1);
       alert.state.should.be.true;
       await clock.tickAsync(6999);

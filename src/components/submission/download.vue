@@ -284,7 +284,7 @@ export default {
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
       if (this.$refs.iframe.contentWindow.document.readyState === 'loading') {
-        this.alert.info('alert.unavailable');
+        this.alert.danger('alert.unavailable');
         return;
       }
 
