@@ -82,7 +82,7 @@ const status = computed(() => (props.progress < 1
   background-color: $color-subpanel-background;
   border: 2px solid $color-action-foreground;
   border-radius: 6px;
-  bottom: 70px;
+  bottom: 80px;
   outline: 5px solid #{color.change($color-action-foreground, $alpha: 0.15)};
   padding: 15px;
   position: absolute;
