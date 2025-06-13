@@ -21,7 +21,6 @@ import { queryString } from '../util/request';
 import { useRequestData } from '../request-data';
 
 import useEventListener from '../composables/event-listener';
-import useRoutes from '../composables/routes';
 import { getCookieValue } from '../util/util';
 
 defineOptions({
@@ -47,7 +46,6 @@ const { location, buildMode } = inject('container');
 const { form } = useRequestData();
 const route = useRoute();
 const router = useRouter();
-const { submissionPath } = useRoutes();
 
 const redirectUrl = computed(() => {
   const { return_url: returnUrlPascalCase, returnUrl } = route.query;
@@ -89,13 +87,11 @@ const setEnketoSrc = () => {
   }
   if (props.actionType === 'public-link') {
     prefix += '/single';
-  } else if (props.actionType === 'edit') {
-    prefix += `/${props.actionType}`;
-    query.instance_id = props.instanceId;
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
   // for actionType 'new', we don't need to add anything to the prefix.
+  // we no longer render Enketo for Edit Submission from central-frontend.
 
   if (props.enketoId === form.enketoOnceId) {
     lastSubmitted(props.enketoId)
@@ -130,10 +126,7 @@ const handleIframeMessage = (event) => {
     try { eventData = JSON.parse(event.data); } catch {}
 
     if (eventData?.enketoEvent === 'submissionsuccess') {
-      if (props.actionType === 'edit') {
-        // for edit we always redirect to Submission details page
-        router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
-      } else if (props.actionType === 'public-link' && redirectUrl.value) {
+      if (props.actionType === 'public-link' && redirectUrl.value) {
         // for public link, we read return value from query parameter. The value could be 3rd party
         // site as well, typically a thank you page
         try {
