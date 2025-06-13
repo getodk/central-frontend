@@ -88,7 +88,7 @@ class AlertData {
       const startAt = this.at;
       return Promise.resolve(handler())
         .then(() => {
-          if (this.state && this.at === startAt) this.blank();
+          if (this.state && this.at === startAt) this.hide();
         })
         .catch(() => {
           if (this.state && this.at === startAt) cta.pending = false;
@@ -96,11 +96,13 @@ class AlertData {
     };
   }
 
-  blank() {
+  hide() {
     this.#data.state = false;
     this.#data.message = null;
     this.#resetCta();
   }
+
+  blank() { this.hide(); }
 
   install(app) { app.provide('alert', this); }
 }
@@ -113,7 +115,7 @@ export const useAlert = (elementRef) => {
   // Hide a success alert after 7 seconds.
   let timeoutId;
   const hideAfterTimeout = () => {
-    alert.blank();
+    alert.hide();
     timeoutId = null;
   };
   const clearExistingTimeout = () => {
@@ -133,7 +135,7 @@ export const useAlert = (elementRef) => {
   const hideAfterClick = (event) => {
     if (alert.state && event.target.closest('a[target="_blank"]') != null &&
       !event.defaultPrevented) {
-      alert.blank();
+      alert.hide();
     }
   };
   // Specifying `true` for event capturing so that an alert is not hidden

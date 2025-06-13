@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div v-show="alert.state" :key="alert.at.getTime()"
     class="alert alert-dismissible" :class="`alert-${alert.type}`" role="alert">
     <button type="button" class="close" :aria-label="$t('action.close')"
-      @click="alert.blank()">
+      @click="alert.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
     <span class="alert-message">{{ alert.message }}</span>

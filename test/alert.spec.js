@@ -75,7 +75,7 @@ describe('createAlert()', () => {
       await nextTick();
       alert.state.should.be.true;
       alert.ctaPending.should.be.false;
-      alert.blank();
+      alert.hide();
 
       // First handler resolves during second handler
       const [lock3, unlock3] = block();
@@ -115,11 +115,11 @@ describe('createAlert()', () => {
     });
   });
 
-  describe('blank()', () => {
+  describe('hide()', () => {
     it('updates the data', () => {
       const alert = createAlert();
       alert.info('Something happened!').cta('Click here', noop);
-      alert.blank();
+      alert.hide();
       alert.state.should.be.false;
       should.not.exist(alert.message);
       should.not.exist(alert.ctaText);
