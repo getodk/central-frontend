@@ -36,14 +36,14 @@ class AlertData {
 
   constructor() {
     this.#data = shallowReactive({
+      // `true` if the alert should be visible and `false` if not.
+      state: false,
       // Unique identifier for each individual message
       messageId,
       // The alert's "contextual" type: 'success', 'info', 'warning', or
       // 'danger'.
       type: 'danger',
       message: null,
-      // `true` if the alert should be visible and `false` if not.
-      state: false,
       // The time at which the alert was last shown
       at: new Date(),
       // Information about the Call to Action (CTA) button that's shown in the
@@ -52,10 +52,10 @@ class AlertData {
     });
   }
 
+  get state() { return this.#data.state; }
   get messageId() { return this.state ? this.#data.messageId : null; }
   get type() { return this.#data.type; }
   get message() { return this.#data.message; }
-  get state() { return this.#data.state; }
   get at() { return this.#data.at; }
   get ctaText() { return this.#data.cta.text; }
   get ctaHandler() { return this.#data.cta.handler; }
@@ -68,10 +68,10 @@ class AlertData {
   #show(type, message) {
     messageId += 1;
     Object.assign(this.#data, {
+      state: true,
       messageId,
       type,
       message,
-      state: true,
       at: new Date()
     });
     this.#resetCta();
