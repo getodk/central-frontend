@@ -94,12 +94,13 @@ const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.
       return;
     }
 
-    alert.info(joinSentences(i18n, [
+    const message = joinSentences(i18n, [
       i18n.t('util.session.alert.logoutError.thereWasProblem'),
       requestAlertMessage(i18n, error),
       i18n.t('util.session.alert.logoutError.pleaseRefresh')
-    ]));
-    alert.cta(i18n.t('action.refresh'), () => { location.reload(); });
+    ]);
+    alert.info(message)
+      .cta(i18n.t('action.refresh'), () => { location.reload(); });
     throw error;
   });
 

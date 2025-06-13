@@ -25,8 +25,8 @@ describe('createAlert()', () => {
     });
   }
 
-  describe('cta()', () => {
-    it('updates the data', () => {
+  describe('CTA', () => {
+    it('updates the data via show().cta()', () => {
       const { alert } = createAlerts();
       should.not.exist(alert.cta);
 
@@ -34,7 +34,7 @@ describe('createAlert()', () => {
       should.not.exist(alert.cta);
 
       const fake = sinon.fake();
-      alert.cta('Click here', fake);
+      alert.info('Something else happened!').cta('Click here', fake);
       alert.cta.text.should.equal('Click here');
       alert.cta.handler();
       fake.called.should.be.true;

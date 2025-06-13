@@ -115,10 +115,10 @@ const undo = () => update(!ownerOnly.value)
 const confirm = () => update(ownerOnly.value)
   .then(() => {
     confirmationModal.hide();
-    alert.success(dataset.ownerOnly
+    const message = dataset.ownerOnly
       ? t('alert.changeToTrue')
-      : t('alert.changeToFalse'));
-    alert.cta(t('action.undo'), undo);
+      : t('alert.changeToFalse');
+    alert.success(message).cta(t('action.undo'), undo);
   })
   .catch(noop);
 </script>
