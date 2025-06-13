@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="alert.state" :key="alert.messageId"
-    class="alert alert-dismissible" :class="`alert-${alert.type}`" role="alert">
+  <div v-show="alert.state" :key="alert.messageId" class="alert"
+    :class="`alert-${alert.type}`" role="alert">
     <button type="button" class="close" :aria-label="$t('action.close')"
       @click="alert.hide()">
       <span aria-hidden="true">&times;</span>
@@ -46,15 +46,22 @@ const cta = computed(() => alert.cta);
   animation-iteration-count: 1;
   animation-name: fadein;
   animation-timing-function: ease-out;
-  border: none;
   border-top: 2px solid transparent;
-  border-radius: 0;
   // This only affects alerts in modals, as App's alert has a fixed position.
   margin-bottom: 15px;
+  padding: 15px;
+  padding-right: 35px;
 
   .alert-message {
     overflow-wrap: break-word;
     white-space: pre-wrap;
+  }
+
+  .close {
+    position: relative;
+    top: -2px;
+    right: -21px;
+    color: inherit;
   }
 }
 
