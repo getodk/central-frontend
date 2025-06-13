@@ -716,7 +716,7 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|edit|preview)',
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)',
     component: 'FormSubmission',
     name: 'EnketoRedirector',
     props: true,
