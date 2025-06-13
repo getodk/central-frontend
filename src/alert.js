@@ -25,7 +25,7 @@ The root component should call useAlert() to set up additional functionality for
 the alert. For example, useAlert() will hide a success alert automatically.
 */
 
-import { inject, onBeforeUnmount, readonly, shallowReactive, watch } from 'vue';
+import { inject, onBeforeUnmount, readonly, shallowReactive, watch, watchEffect } from 'vue';
 
 import useEventListener from './composables/event-listener';
 
@@ -136,6 +136,9 @@ export const useAlert = (elementRef) => {
     clearExistingTimeout();
     if (alert.state && alert.type === 'success')
       timeoutId = setTimeout(hideAfterTimeout, 7000);
+  });
+  watchEffect(() => {
+    if (alert.cta != null && alert.cta.pending) clearExistingTimeout();
   });
   onBeforeUnmount(clearExistingTimeout);
 
