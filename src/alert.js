@@ -117,10 +117,13 @@ class AlertData {
 
 export const createAlert = () => new AlertData();
 
-export const useAlert = (elementRef) => {
-  const alert = inject('alert');
 
-  // Hide a success alert after 7 seconds.
+
+////////////////////////////////////////////////////////////////////////////////
+// useAlert()
+
+// Sets up the mechanism to auto-hide the alert.
+const autoHide = (alert) => {
   let timeoutId;
   const hideAfterTimeout = () => {
     alert.hide();
@@ -141,17 +144,25 @@ export const useAlert = (elementRef) => {
     if (alert.cta != null && alert.cta.pending) clearExistingTimeout();
   });
   onBeforeUnmount(clearExistingTimeout);
+};
 
-  // Hide an alert after a link is opened in a new tab.
-  const hideAfterClick = (event) => {
+// Sets up an event listener to hide the alert after a link is opened in a new
+// tab.
+const hideAfterLinkClick = (alert, elementRef) => {
+  const handleClick = (event) => {
     if (alert.state && !event.defaultPrevented &&
       event.target.closest('a[target="_blank"]') != null) {
       alert.hide();
     }
   };
-  // Specifying `true` for event capturing so that an alert is not hidden
+  // Specifying `true` for event capturing so that the alert is not hidden
   // immediately if it was shown after the click.
-  useEventListener(elementRef, 'click', hideAfterClick, true);
+  useEventListener(elementRef, 'click', handleClick, true);
+};
 
+export const useAlert = (elementRef) => {
+  const alert = inject('alert');
+  autoHide(alert);
+  hideAfterLinkClick(alert, elementRef);
   return alert;
 };
