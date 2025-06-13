@@ -110,15 +110,18 @@ const update = async (value) => {
   dataset.ownerOnly = data.ownerOnly;
 };
 const undo = () => update(!ownerOnly.value)
-  .then(() => { ownerOnly.value = !ownerOnly.value; })
+  .then(() => {
+    ownerOnly.value = !ownerOnly.value;
+    return true;
+  })
   .catch(noop);
 const confirm = () => update(ownerOnly.value)
   .then(() => {
     confirmationModal.hide();
-    alert.success(dataset.ownerOnly
+    const message = dataset.ownerOnly
       ? t('alert.changeToTrue')
-      : t('alert.changeToFalse'));
-    alert.cta(t('action.undo'), undo);
+      : t('alert.changeToFalse');
+    alert.success(message).cta(t('action.undo'), undo);
   })
   .catch(noop);
 </script>

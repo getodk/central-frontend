@@ -4641,7 +4641,7 @@
           "string": "The data download is not yet available. Please try again in a moment."
         },
         "submit": {
-          "string": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
+          "string": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again."
         },
         "parseError": {
           "string": "Something went wrong while requesting your data."

@@ -318,9 +318,6 @@ export default {
           this.formVersion.submissions += this.deleted ? size : -size;
         }
       }
-    },
-    downloadModalState(newState) {
-      this.downloadModal.state = newState;
     }
   },
   created() {

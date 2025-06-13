@@ -96,7 +96,7 @@ const step = ref(0);
 const createdDataset = ref(null);
 
 const emit = defineEmits(['hide', 'success']);
-const alert = inject('alert');
+const redAlert = inject('redAlert');
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
@@ -114,8 +114,8 @@ const submit = () => {
         : null)
   })
     .then(({ data }) => {
-      // Reset the alert
-      alert.blank();
+      // Hide the error message if there is one
+      redAlert.hide();
       // Reset the form
       name.value = '';
       // Show the next panel of the modal

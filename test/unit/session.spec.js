@@ -406,9 +406,9 @@ describe('util/session', () => {
           })
           .afterResponse(() => {
             alert.state.should.be.true;
-            alert.type.should.equal('danger');
+            alert.type.should.equal('info');
             alert.message.should.equal('There was a problem logging out. logOut() problem. Please refresh the page and try again.');
-            alert.ctaHandler();
+            alert.cta.handler();
             reload.called.should.be.true;
           });
       });
@@ -761,7 +761,7 @@ describe('util/session', () => {
         .afterResponse(() => {
           clock.tick(120000);
           alert.state.should.be.true;
-          alert.blank();
+          alert.last.hide();
           clock.tick(30000);
           alert.state.should.be.false;
         })
@@ -797,7 +797,7 @@ describe('util/session', () => {
         .request(() => logOut(container, false))
         .respondWithSuccess()
         .afterResponse(() => {
-          alert.blank();
+          alert.last.hide();
           clock.tick(120000);
           alert.state.should.be.false;
         });

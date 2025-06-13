@@ -132,7 +132,7 @@ import { apiPaths, isProblem } from '../../util/request';
 export default {
   name: 'FormNew',
   components: { DocLink, FileDropZone, Modal, SentenceSeparator, Spinner },
-  inject: ['alert'],
+  inject: ['redAlert'],
   props: {
     state: {
       type: Boolean,
@@ -182,7 +182,7 @@ export default {
   },
   methods: {
     afterFileSelection(file) {
-      this.alert.blank();
+      this.redAlert.hide();
       this.file = file;
       this.warnings = null;
     },
@@ -192,7 +192,7 @@ export default {
     },
     upload(ignoreWarnings) {
       if (this.file == null) {
-        this.alert.info(this.$t('alert.fileRequired'));
+        this.redAlert.show(this.$t('alert.fileRequired'));
         return;
       }
 
@@ -231,7 +231,7 @@ export default {
       })
         .then(({ data }) => {
           if (isProblem(data)) {
-            this.alert.blank();
+            this.redAlert.hide();
             this.warnings = data.details.warnings;
           } else {
             this.$emit('success', data);

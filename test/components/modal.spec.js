@@ -89,7 +89,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { state: false }
       });
-      modal.vm.$container.alert.info('Some alert');
+      modal.vm.$container.alert.danger('Some alert');
       await modal.setProps({ state: true });
       modal.should.not.alert();
     });
@@ -109,7 +109,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { state: true }
       });
-      modal.vm.$container.alert.info('Some alert');
+      modal.vm.$container.alert.danger('Some alert');
       await modal.vm.$nextTick();
       await modal.setProps({ state: false });
       modal.should.not.alert();
@@ -119,7 +119,7 @@ describe('Modal', () => {
       const modal = mountComponent({
         props: { state: true }
       });
-      modal.vm.$container.alert.info('Some alert');
+      modal.vm.$container.alert.danger('Some alert');
       await modal.setProps({ state: false });
       modal.should.alert();
     });

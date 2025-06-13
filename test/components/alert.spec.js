@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { nextTick } from 'vue';
+import { markRaw } from 'vue';
 
 import Alert from '../../src/components/alert.vue';
 import Spinner from '../../src/components/spinner.vue';
@@ -8,11 +8,15 @@ import createTestContainer from '../util/container';
 import { block } from '../util/util';
 import { mount } from '../util/lifecycle';
 
-const mountComponent = () => {
+const showDefault = (toast) => { toast.show('Something happened!'); };
+const mountComponent = (show = showDefault) => {
   const container = createTestContainer();
-  const { alert } = container;
-  alert.info('Something happened!');
-  return mount(Alert, { container });
+  const { toast } = container;
+  show(toast);
+  return mount(Alert, {
+    props: { alert: markRaw(toast) },
+    container
+  });
 };
 
 describe('Alert', () => {
@@ -21,45 +25,34 @@ describe('Alert', () => {
     text.should.equal('Something happened!');
   });
 
-  it('adds a contextual class', () => {
-    mountComponent().classes('alert-info').should.be.true;
-  });
-
   it('clicking the .close button hides the alert', async () => {
     const component = mountComponent();
     await component.get('.close').trigger('click');
-    component.should.be.hidden();
+    component.vm.$container.toast.state.should.be.false;
   });
 
   describe('CTA', () => {
     it('shows the CTA button', async () => {
-      const container = createTestContainer();
-      const { alert } = container;
       const fake = sinon.fake();
-      alert.info('Something happened!').cta('Click here', fake);
-      const button = mount(Alert, { container }).get('.alert-cta');
+      const component = mountComponent(toast => {
+        toast.show('Something happened!').cta('Click here', fake);
+      });
+      const button = component.get('.alert-cta');
       button.text().should.equal('Click here');
       await button.trigger('click');
       fake.called.should.be.true;
     });
 
     it('updates the button during an async CTA', async () => {
-      const container = createTestContainer();
-      const { alert } = container;
       const [lock, unlock] = block();
-      alert.info('Something happened!').cta('Click here', () => lock);
-      const component = mount(Alert, { container });
+      const component = mountComponent(toast => {
+        toast.show('Something happened!').cta('Click here', () => lock);
+      });
       const button = component.get('.alert-cta');
-
       await button.trigger('click');
-      component.should.be.visible();
       button.attributes('aria-disabled').should.equal('true');
-      button.getComponent(Spinner).props().state.should.be.true;
-
+      component.getComponent(Spinner).props().state.should.be.true;
       unlock();
-      await nextTick();
-      await nextTick();
-      component.should.be.hidden();
     });
   });
 });

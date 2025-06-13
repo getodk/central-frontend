@@ -63,7 +63,7 @@ export default {
     FormAttachmentTable,
     FormAttachmentUploadFiles
   },
-  inject: ['alert', 'projectId', 'dragDisabled', 'dragHandler'],
+  inject: ['toast', 'redAlert', 'projectId', 'dragDisabled', 'dragHandler'],
   setup() {
     const { project, form, draftAttachments, datasets } = useRequestData();
     const { request } = useRequest();
@@ -269,7 +269,8 @@ export default {
         .then(({ data }) => { updates.push(data); });
     },
     uploadFiles() {
-      this.alert.blank();
+      this.toast.hide();
+      this.redAlert.hide();
       this.uploadStatus.total = this.plannedUploads.length;
       // This will soon be decremented by 1.
       this.uploadStatus.remaining = this.plannedUploads.length + 1;
@@ -289,7 +290,7 @@ export default {
         .finally(() => {
           if (this.$route !== initialRoute) return;
           if (updates.length === this.uploadStatus.total)
-            this.alert.success(this.$tcn('alert.success', updates.length));
+            this.toast.show(this.$tcn('alert.success', updates.length));
 
           for (const updatedAttachment of updates) {
             const { name } = updatedAttachment;
@@ -310,7 +311,7 @@ export default {
     },
     afterLinkDataset(updatedAttachment) {
       this.linkDatasetModal.hide();
-      this.alert.success(this.$t('alert.link', {
+      this.toast.show(this.$t('alert.link', {
         attachmentName: updatedAttachment.name
       }));
       this.draftAttachments.set(updatedAttachment.name, updatedAttachment);

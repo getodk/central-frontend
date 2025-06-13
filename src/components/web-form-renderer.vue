@@ -59,7 +59,7 @@ except according to the terms contained in the LICENSE file.
         || (submissionModal.type === 'sessionTimeoutModal' && !submissionModal.hideable)"
         class="modal-actions">
         <button type="button" class="btn btn-primary" @click="submitData()">
-          {{ $t('retryModal.action.tryAgain') }}
+          {{ $t('action.tryAgain') }}
         </button>
       </div>
       <!-- Preview modal or any type of error while submitting primary instance -->
@@ -494,10 +494,7 @@ onUnmounted(() => {
       },
       "retryModal": {
         "title": "Submission error",
-        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}.",
-        "action": {
-          "tryAgain": "Try again"
-        }
+        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
       },
     }
   }

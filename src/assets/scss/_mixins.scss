@@ -94,12 +94,14 @@
     min-width: 22px;
     padding: 4px 8px;
     border-radius: 100px;
-    background: #D0E7F1;
+    background: $color-action-light;
     border: none;
     color: $color-text;
     line-height: 16px;
   }
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // UTILITIES
