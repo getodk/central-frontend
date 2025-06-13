@@ -25,7 +25,7 @@ The root component should call useAlert() to set up additional functionality for
 the alert. For example, useAlert() will hide a success alert automatically.
 */
 
-import { inject, onBeforeUnmount, shallowReactive, watch } from 'vue';
+import { inject, onBeforeUnmount, readonly, shallowReactive, watch } from 'vue';
 
 import useEventListener from './composables/event-listener';
 
@@ -33,6 +33,8 @@ let messageId = 0;
 
 class AlertData {
   #data;
+  #cta;
+  #readonlyCta;
 
   constructor() {
     this.#data = shallowReactive({
@@ -45,11 +47,13 @@ class AlertData {
       type: 'danger',
       message: null,
       // The time at which the alert was last shown
-      at: new Date(),
-      // Information about the Call to Action (CTA) button that's shown in the
-      // alert
-      cta: shallowReactive({ text: null, handler: null, pending: false })
+      at: new Date()
     });
+
+    // Information about the Call to Action (CTA) button that's shown in the
+    // alert
+    this.#cta = shallowReactive({ text: null, handler: null, pending: false });
+    this.#readonlyCta = readonly(this.#cta);
   }
 
   get state() { return this.#data.state; }
@@ -57,12 +61,10 @@ class AlertData {
   get type() { return this.#data.type; }
   get message() { return this.#data.message; }
   get at() { return this.#data.at; }
-  get ctaText() { return this.#data.cta.text; }
-  get ctaHandler() { return this.#data.cta.handler; }
-  get ctaPending() { return this.#data.cta.pending; }
+  get cta() { return this.#cta.text != null ? this.#readonlyCta : null; }
 
   #resetCta() {
-    Object.assign(this.#data.cta, { text: null, handler: null, pending: false });
+    Object.assign(this.#cta, { text: null, handler: null, pending: false });
   }
 
   #show(type, message) {
@@ -87,18 +89,17 @@ class AlertData {
   // `text` is the text of the CTA. `handler` is a function to call when the
   // user clicks the CTA.
   cta(text, handler) {
-    const { cta } = this.#data;
-    cta.text = text;
-    cta.handler = () => {
-      if (cta.pending) return Promise.reject(new Error('CTA is pending'));
-      cta.pending = true;
+    this.#cta.text = text;
+    this.#cta.handler = () => {
+      if (this.#cta.pending) return Promise.reject(new Error('CTA is pending'));
+      this.#cta.pending = true;
       const startId = this.messageId;
       return Promise.resolve(handler())
         .then(() => {
           if (this.messageId === startId) this.hide();
         })
         .catch(() => {
-          if (this.messageId === startId) cta.pending = false;
+          if (this.messageId === startId) this.#cta.pending = false;
         });
     };
   }

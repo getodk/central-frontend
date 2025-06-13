@@ -27,24 +27,22 @@ describe('createAlert()', () => {
   describe('cta()', () => {
     it('updates the data', () => {
       const alert = createAlert();
-      should.not.exist(alert.ctaText);
-      should.not.exist(alert.ctaHandler);
+      should.not.exist(alert.cta);
 
       alert.info('Something happened!');
-      should.not.exist(alert.ctaText);
-      should.not.exist(alert.ctaHandler);
+      should.not.exist(alert.cta);
 
       const fake = sinon.fake();
       alert.cta('Click here', fake);
-      alert.ctaText.should.equal('Click here');
-      alert.ctaHandler();
+      alert.cta.text.should.equal('Click here');
+      alert.cta.handler();
       fake.called.should.be.true;
     });
 
     it('hides the alert after the CTA handler resolves', async () => {
       const alert = createAlert();
       alert.info('Something happened!').cta('Click here', noop);
-      alert.ctaHandler();
+      alert.cta.handler();
       await nextTick();
       alert.state.should.be.false;
     });
@@ -55,63 +53,63 @@ describe('createAlert()', () => {
       // Async handler that resolves
       const [lock1, unlock1] = block();
       alert.info('Something happened!').cta('Click here', () => lock1);
-      alert.ctaHandler();
+      alert.cta.handler();
       alert.state.should.be.true;
-      alert.ctaPending.should.be.true;
+      alert.cta.pending.should.be.true;
       unlock1();
       await nextTick();
       await nextTick();
       alert.state.should.be.false;
-      alert.ctaPending.should.be.false;
+      should.not.exist(alert.cta);
 
       // Async handler that rejects
       const [lock2, , fail2] = block();
       alert.info('Something happened!').cta('Click here', () => lock2);
-      alert.ctaHandler();
+      alert.cta.handler();
       alert.state.should.be.true;
-      alert.ctaPending.should.be.true;
+      alert.cta.pending.should.be.true;
       fail2();
       await nextTick();
       await nextTick();
       alert.state.should.be.true;
-      alert.ctaPending.should.be.false;
+      alert.cta.pending.should.be.false;
       alert.hide();
 
       // First handler resolves during second handler
       const [lock3, unlock3] = block();
       alert.info('Something happened!').cta('Click here', () => lock3);
-      alert.ctaHandler();
+      alert.cta.handler();
       const [lock4, unlock4] = block();
       alert.info('Something happened!').cta('Click here', () => lock4);
-      alert.ctaHandler();
+      alert.cta.handler();
       unlock3();
       await nextTick();
       await nextTick();
       alert.state.should.be.true;
-      alert.ctaPending.should.be.true;
+      alert.cta.pending.should.be.true;
       unlock4();
       await nextTick();
       await nextTick();
       alert.state.should.be.false;
-      alert.ctaPending.should.be.false;
+      should.not.exist(alert.cta);
 
       // First handler rejects during second handler
       const [lock5, , fail5] = block();
       alert.info('Something happened!').cta('Click here', () => lock5);
-      alert.ctaHandler();
+      alert.cta.handler();
       const [lock6, unlock6] = block();
       alert.info('Something happened!').cta('Click here', () => lock6);
-      alert.ctaHandler();
+      alert.cta.handler();
       fail5();
       await nextTick();
       await nextTick();
       alert.state.should.be.true;
-      alert.ctaPending.should.be.true;
+      alert.cta.pending.should.be.true;
       unlock6();
       await nextTick();
       await nextTick();
       alert.state.should.be.false;
-      alert.ctaPending.should.be.false;
+      should.not.exist(alert.cta);
     });
   });
 
@@ -122,8 +120,7 @@ describe('createAlert()', () => {
       alert.hide();
       alert.state.should.be.false;
       should.not.exist(alert.message);
-      should.not.exist(alert.ctaText);
-      should.not.exist(alert.ctaHandler);
+      should.not.exist(alert.cta);
     });
   });
 });

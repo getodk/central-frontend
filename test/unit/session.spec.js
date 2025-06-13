@@ -408,7 +408,7 @@ describe('util/session', () => {
             alert.state.should.be.true;
             alert.type.should.equal('danger');
             alert.message.should.equal('There was a problem logging out. logOut() problem. Please refresh the page and try again.');
-            alert.ctaHandler();
+            alert.cta.handler();
             reload.called.should.be.true;
           });
       });

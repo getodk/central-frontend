@@ -17,20 +17,20 @@ except according to the terms contained in the LICENSE file.
       <span aria-hidden="true">&times;</span>
     </button>
     <span class="alert-message">{{ alert.message }}</span>
-    <button v-if="alert.ctaText != null" type="button"
-      class="alert-cta btn btn-default" :aria-disabled="alert.ctaPending"
-      @click="alert.ctaHandler">
-      {{ alert.ctaText }} <spinner :state="alert.ctaPending"/>
+    <button v-if="cta != null" type="button" class="alert-cta btn btn-default"
+      :aria-disabled="cta.pending" @click="cta.handler">
+      {{ cta.text }} <spinner :state="cta.pending"/>
     </button>
   </div>
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { computed, inject } from 'vue';
 
 import Spinner from './spinner.vue';
 
 const alert = inject('alert');
+const cta = computed(() => alert.cta);
 </script>
 
 <style lang="scss">
