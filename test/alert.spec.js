@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { T } from 'ramda';
 import { nextTick, ref } from 'vue';
 
 import Home from '../src/components/home.vue';
@@ -7,7 +8,7 @@ import createAlerts from '../src/container/alerts';
 import { useAlert } from '../src/alert';
 import { noop } from '../src/util/util';
 
-import { block } from './util/util';
+import { block, wait } from './util/util';
 import { load } from './util/http';
 import { mockLogin } from './util/session';
 import { withSetup } from './util/lifecycle';
@@ -40,9 +41,18 @@ describe('createAlert()', () => {
       fake.called.should.be.true;
     });
 
-    it('hides the alert after the CTA handler resolves', async () => {
+    it('hides the alert if the CTA handler returns true', async () => {
       const { alert } = createAlerts();
+
+      // Handler returns `undefined`; don't hide.
       alert.info('Something happened!').cta('Click here', noop);
+      alert.cta.handler();
+      await nextTick();
+      alert.state.should.be.true;
+
+      // Handler returns `true`; hide.
+      alert.info('Something happened!').cta('Click here', T);
+      alert.state.should.be.true;
       alert.cta.handler();
       await nextTick();
       alert.state.should.be.false;
@@ -50,65 +60,60 @@ describe('createAlert()', () => {
 
     it('supports an async CTA handler', async () => {
       const { alert } = createAlerts();
+      const fromLock = (lock) => () => lock.then(T);
 
       // Async handler that resolves
       const [lock1, unlock1] = block();
-      alert.info('Something happened!').cta('Click here', () => lock1);
+      alert.info('Something happened!').cta('Click here', fromLock(lock1));
       alert.cta.handler();
       alert.state.should.be.true;
       alert.cta.pending.should.be.true;
       unlock1();
-      await nextTick();
-      await nextTick();
+      await wait();
       alert.state.should.be.false;
       should.not.exist(alert.cta);
 
       // Async handler that rejects
       const [lock2, , fail2] = block();
-      alert.info('Something happened!').cta('Click here', () => lock2);
+      alert.info('Something happened!').cta('Click here', fromLock(lock2));
       alert.cta.handler();
       alert.state.should.be.true;
       alert.cta.pending.should.be.true;
       fail2();
-      await nextTick();
-      await nextTick();
+      await wait();
       alert.state.should.be.true;
       alert.cta.pending.should.be.false;
       alert.last.hide();
 
       // First handler resolves during second handler
       const [lock3, unlock3] = block();
-      alert.info('Something happened!').cta('Click here', () => lock3);
+      alert.info('Something happened!').cta('Click here', fromLock(lock3));
       alert.cta.handler();
       const [lock4, unlock4] = block();
-      alert.info('Something happened!').cta('Click here', () => lock4);
+      alert.info('Something happened!').cta('Click here', fromLock(lock4));
       alert.cta.handler();
       unlock3();
-      await nextTick();
-      await nextTick();
+      await wait();
       alert.state.should.be.true;
       alert.cta.pending.should.be.true;
       unlock4();
-      await nextTick();
-      await nextTick();
+      await wait();
       alert.state.should.be.false;
       should.not.exist(alert.cta);
 
       // First handler rejects during second handler
       const [lock5, , fail5] = block();
-      alert.info('Something happened!').cta('Click here', () => lock5);
+      alert.info('Something happened!').cta('Click here', fromLock(lock5));
       alert.cta.handler();
       const [lock6, unlock6] = block();
-      alert.info('Something happened!').cta('Click here', () => lock6);
+      alert.info('Something happened!').cta('Click here', fromLock(lock6));
       alert.cta.handler();
       fail5();
-      await nextTick();
-      await nextTick();
+      await wait();
       alert.state.should.be.true;
       alert.cta.pending.should.be.true;
       unlock6();
-      await nextTick();
-      await nextTick();
+      await wait();
       alert.state.should.be.false;
       should.not.exist(alert.cta);
     });

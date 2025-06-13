@@ -105,8 +105,12 @@ class AlertChain {
     if (this.#alert.messageId !== this.#startId) throw new Error('new alert');
   }
 
-  // `text` is the text of the CTA. `handler` is a function to call when the
-  // user clicks the CTA.
+  /*
+  - text. Text of the CTA.
+  - handler. Function to call when the user clicks the CTA. The function can be
+    async. If the function returns or resolves to `true`, the alert will be
+    hidden.
+  */
   cta(text, handler) {
     this.#checkChange();
     this.#cta.text = text;
@@ -117,8 +121,13 @@ class AlertChain {
       if (this.#cta.pending) return Promise.reject(new Error('CTA is pending'));
       this.#cta.pending = true;
       return Promise.resolve(handler())
-        .then(() => {
-          if (this.#alert.messageId === this.#startId) this.#alert.hide();
+        .then(result => {
+          if (this.#alert.messageId === this.#startId) {
+            if (result === true)
+              this.#alert.hide();
+            else
+              this.#cta.pending = false;
+          }
         })
         .catch(() => {
           if (this.#alert.messageId === this.#startId) this.#cta.pending = false;

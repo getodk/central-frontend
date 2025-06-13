@@ -110,7 +110,10 @@ const update = async (value) => {
   dataset.ownerOnly = data.ownerOnly;
 };
 const undo = () => update(!ownerOnly.value)
-  .then(() => { ownerOnly.value = !ownerOnly.value; })
+  .then(() => {
+    ownerOnly.value = !ownerOnly.value;
+    return true;
+  })
   .catch(noop);
 const confirm = () => update(ownerOnly.value)
   .then(() => {
