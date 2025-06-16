@@ -32,10 +32,6 @@ class AlertData {
   #showChain;
 
   constructor(defaultOptions = undefined) {
-    this.#defaultOptions = {
-      autoHide: true,
-      ...defaultOptions
-    };
     this.#data = shallowReactive({
       // `true` if the alert should be visible and `false` if not.
       state: false,
@@ -44,8 +40,12 @@ class AlertData {
       message: null,
       // The time at which the alert was last shown
       at: new Date(),
-      ...this.#defaultOptions
+      options: null
     });
+    this.#defaultOptions = {
+      autoHide: true,
+      ...defaultOptions
+    };
 
     // Data about the Call to Action (CTA) button that's shown in the alert
     this.#cta = shallowReactive({ text: null, handler: null, pending: false });
@@ -58,7 +58,7 @@ class AlertData {
   get messageId() { return this.#data.messageId; }
   get message() { return this.#data.message; }
   get at() { return this.#data.at; }
-  get autoHide() { return this.state && this.#data.autoHide; }
+  get options() { return this.#data.options; }
   get cta() { return this.#cta.text != null ? this.#readonlyCta : null; }
 
   // Shows a new alert message. Returns an object with a cta() method to add a
@@ -69,9 +69,9 @@ class AlertData {
       state: true,
       messageId,
       message,
-      at: new Date()
+      at: new Date(),
+      options: { ...this.#defaultOptions, ...options }
     });
-    Object.assign(this.#data, this.#defaultOptions, options);
     this.#hideCta();
     return this.#showChain;
   }
@@ -81,7 +81,8 @@ class AlertData {
     Object.assign(this.#data, {
       state: false,
       messageId: null,
-      message: null
+      message: null,
+      options: null
     });
     Object.assign(this.#data, this.#defaultOptions);
     this.#hideCta();
@@ -143,7 +144,7 @@ const autoHide = (alert) => {
   };
   watch(() => alert.messageId, () => {
     clearExistingTimeout();
-    if (alert.state && alert.autoHide)
+    if (alert.state && alert.options.autoHide)
       timeoutId = setTimeout(hideAfterTimeout, 7000);
   });
   watchEffect(() => {

@@ -42,7 +42,7 @@ export default () => {
     get type() {
       return this.last === redAlert
         ? 'danger'
-        : (toast.autoHide ? 'success' : 'info');
+        : (toast.options.autoHide ? 'success' : 'info');
     },
 
     success: (message) => toast.show(message),
