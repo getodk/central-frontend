@@ -469,10 +469,11 @@ describe('SubmissionDownload', () => {
       onSubmit.called.should.be.true;
     });
 
-    it('shows an info alert', async () => {
+    it('hides the modal and shows a toast', async () => {
       const modal = await setup();
       modal.get('a').trigger('click');
       modal.emitted('hide').should.eql([[]]);
+      await modal.setProps({ state: false });
       modal.should.alert('info');
       should.not.exist(modal.vm.$container.alert.cta);
     });
@@ -487,6 +488,7 @@ describe('SubmissionDownload', () => {
       });
       modal.get('a').element.dispatchEvent(event).should.be.false;
       onSubmit.called.should.be.false;
+      should.not.exist(modal.emitted('hide'));
       modal.should.not.alert();
     });
 
@@ -496,6 +498,7 @@ describe('SubmissionDownload', () => {
       const a = modal.get('a');
       a.element.setAttribute('href', '/test/files/problem.html');
       a.trigger('click');
+      await modal.setProps({ state: false });
       const iframe = modal.get('iframe').element;
       await waitForIframe(iframe, '/test/files/problem.html');
       clock.tick(1000);
@@ -514,6 +517,7 @@ describe('SubmissionDownload', () => {
           body.textContent = '500 Internal Server Error';
         });
         modal.get('a').trigger('click');
+        await modal.setProps({ state: false });
         clock.tick(1000);
         modal.should.alert('danger', 'Something went wrong while requesting your data.');
       });
@@ -526,6 +530,7 @@ describe('SubmissionDownload', () => {
           body.textContent = '500 Internal Server Error';
         });
         modal.get('a').trigger('click');
+        await modal.setProps({ state: false });
         clock.tick(1000);
         const { logger } = modal.vm.$container;
         logger.log.calledWith('500 Internal Server Error').should.be.true;
@@ -537,6 +542,7 @@ describe('SubmissionDownload', () => {
       const modal = await setup();
       const checkForProblem = sinon.spy(modal.vm, 'checkForProblem');
       modal.get('a').trigger('click');
+      await modal.setProps({ state: false });
       clock.tick(1000);
       checkForProblem.callCount.should.equal(1);
       // Calling tickAsync() rather than tick() so that the callWait promise

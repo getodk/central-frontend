@@ -133,7 +133,7 @@ import { getCookieValue } from '../../util/util';
 export default {
   name: 'SubmissionDownload',
   components: { FormGroup, Modal },
-  inject: ['alert', 'logger'],
+  inject: ['toast', 'redAlert', 'logger'],
   props: {
     state: Boolean,
     formVersion: Object,
@@ -194,9 +194,10 @@ export default {
         // same options. Preserving the form fields is also needed for the
         // "Try again" link to work.
         this.passphrase = '';
-
-        this.cancelCall('checkForProblem');
       }
+    },
+    'toast.state': function toastState(state) {
+      if (!state) this.cancelCall('checkForProblem');
     }
   },
   methods: {
@@ -276,9 +277,9 @@ export default {
         problem = JSON.parse(doc.body.textContent);
       } catch (e) {
         this.logger.log(doc.body.textContent);
-        this.alert.danger(this.$t('alert.parseError'));
+        this.redAlert.show(this.$t('alert.parseError'));
       }
-      if (isProblem(problem)) this.alert.danger(problem.message);
+      if (isProblem(problem)) this.redAlert.show(problem.message);
       return true;
     },
     decrypt(action) {
@@ -288,7 +289,7 @@ export default {
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
       if (this.$refs.iframe.contentWindow.document.readyState === 'loading') {
-        this.alert.danger('alert.unavailable');
+        this.redAlert.show('alert.unavailable');
         return;
       }
 
@@ -318,7 +319,7 @@ export default {
       if (willDownload) {
         this.$emit('hide');
 
-        const { cta } = this.alert.info(this.$t('alert.submit'));
+        const { cta } = this.toast.show(this.$t('alert.submit'));
         if (this.managedKey == null)
           cta(this.$t('action.tryAgain'), () => { a.click(); });
       }
