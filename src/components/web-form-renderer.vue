@@ -193,7 +193,8 @@ const fetchSubmissionAttachments = () => {
   const requestUrl = apiPaths.submissionAttachments(form.projectId, form.xmlFormId, props.instanceId);
   return submissionAttachments.request({
     url: requestUrl,
-    alert: false
+    alert: false,
+    responseType: 'blob', // Handle all file types for attachments.
   })
     .then(transformAttachmentResponse)
     .catch(noop);
@@ -204,7 +205,8 @@ const fetchSubmissionAttachment = (attachmentName) => {
   const requestUrl = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, props.instanceId, attachmentName);
   return request({
     url: requestUrl,
-    alert: false
+    alert: false,
+    responseType: 'blob', // Handle all file types for attachments.
   })
     .then(transformAttachmentResponse)
     .catch(noop);
