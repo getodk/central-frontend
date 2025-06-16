@@ -59,10 +59,5 @@ export default () => {
     });
   }
 
-  const install = (app) => {
-    app.provide('toast', toast);
-    app.provide('redAlert', redAlert);
-    app.provide('alert', alert);
-  };
-  return { alert, toast, redAlert, install };
+  return { toast, redAlert, alert };
 };

@@ -21,6 +21,9 @@ import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
 
 const provide = [
+  'toast',
+  'redAlert',
+  'alert',
   'hoverCard',
   'unsavedChanges',
   'config',
@@ -48,7 +51,6 @@ export default ({
   logger = console,
   buildMode = import.meta.env?.MODE ?? 'production'
 } = {}) => {
-  const alerts = createAlerts();
   const container = {
     i18n: i18n.global,
     hoverCard,
@@ -57,7 +59,7 @@ export default ({
     location,
     logger,
     buildMode,
-    ...alerts
+    ...createAlerts()
   };
   container.requestData = requestData(container);
   container.config = container.requestData.config;
@@ -72,7 +74,6 @@ export default ({
 
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
-    app.use(alerts);
 
     app.provide('container', container);
     for (const key of provide)
