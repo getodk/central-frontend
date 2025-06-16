@@ -26,18 +26,11 @@ const toast = inject('toast');
 
 .toast {
   background-color: #333;
-
-  .alert-message { color: #fff; }
+  color: #fff;
 
   .alert-cta {
     color: $color-action-light;
     &:hover, &:focus { color: $color-action-background; }
-  }
-
-  .close {
-    color: #fff;
-    opacity: 1;
-    font-weight: 300;
   }
 }
 </style>

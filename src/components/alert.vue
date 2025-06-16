@@ -100,5 +100,10 @@ const cta = computed(() => props.alert.cta);
   float: none;
   position: relative;
   top: -2px;
+
+  color: inherit;
+  opacity: 1;
+  font-weight: 400;
+  text-shadow: none;
 }
 </style>
