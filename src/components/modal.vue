@@ -45,7 +45,7 @@ may add the `in` class to the element, and the checkScroll() method may add the
 let id = 0;
 </script>
 <script setup>
-import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from 'vue';
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import 'bootstrap/js/modal';
 
 import RedAlert from './red-alert.vue';
@@ -103,10 +103,30 @@ onMounted(() => {
   }
 });
 
-let oldAlertId;
-watchPostEffect(() => { oldAlertId = redAlert.messageId; });
+/*
+Showing a modal hides alerts, both `toast` and `redAlert`. A modal is a new
+floating element, so as we show it, we hide any alert floating at the bottom of
+the screen.
+
+While shown, modals are never expected to call toast.show(). The toast would be
+shown outside the modal. However, modals frequently call redAlert.show()
+(perhaps indirectly, e.g., when handling request errors). The `redAlert` will be
+shown at the top of the modal body.
+
+When a modal is hidden, we hide `redAlert`. Otherwise, it would move to the
+bottom of the screen.
+
+We do not similarly hide `toast` when a modal is hidden. A modal is not expected
+to call toast.show(), so if there is a toast when a modal is hidden, it must be
+from something external to the modal. For example, it could be a toast about
+upcoming session expiration. We don't want to hide such a toast when hiding the
+modal.
+
+This logic is tested in tests of the Alerts component. See the Alerts component
+for related comments.
+*/
 watch(() => props.state, (state) => {
-  if (state || redAlert.messageId === oldAlertId) redAlert.hide();
+  redAlert.hide();
   if (state) toast.hide();
 });
 

@@ -9,20 +9,43 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+
+<!-- Alerts shown at the bottom of the screen. See the comments in the CSS below
+for notes about expected behavior. -->
 <template>
-  <div v-show="alert.state" id="alerts">
-    <Toast v-show="alert.last === toast"/>
-    <Red-Alert v-show="alert.last === redAlert"/>
+  <div id="alerts">
+    <Toast v-show="showsToast"/>
+    <RedAlert v-show="showsRedAlert"/>
   </div>
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { inject, ref, watch } from 'vue';
 
 import RedAlert from './red-alert.vue';
 import Toast from './toast.vue';
 
-const { alert, toast, redAlert } = inject('container');
+const { toast, redAlert } = inject('container');
+
+const showsToast = ref(false);
+const showsRedAlert = ref(false);
+watch(() => toast.messageId, () => {
+  showsToast.value = toast.state;
+  if (toast.state && showsRedAlert.value) showsRedAlert.value = false;
+});
+watch(() => redAlert.messageId, () => {
+  const modalOpen = document.body.classList.contains('modal-open');
+  // If a modal is shown, the red alert will be shown inside the modal (see the
+  // Modal component). In that case, it shouldn't be shown in this component at
+  // the bottom of the screen.
+  showsRedAlert.value = redAlert.state && !modalOpen;
+  // Showing a red alert at the bottom of the screen should hide a toast: we
+  // never want to show both alerts at the bottom of the screen. However,
+  // showing a red alert inside a modal should not hide a toast. In that case,
+  // the two are not competing for for space. Also, a modal is never expected to
+  // show a toast: see the comments in the Modal component.
+  if (redAlert.state && showsToast.value && !modalOpen) showsToast.value = false;
+});
 </script>
 
 <style lang="scss">
@@ -44,7 +67,5 @@ const { alert, toast, redAlert } = inject('container');
     margin-bottom: 0;
     pointer-events: auto;
   }
-
-  body.modal-open & .red-alert { display: none; }
 }
 </style>
