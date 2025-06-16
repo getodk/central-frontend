@@ -15,7 +15,8 @@
   "formHead": {
     "tab": {
       "publicAccess": "公共存取",
-      "versions": "版本"
+      "versions": "版本",
+      "editForm": "編輯表格"
     }
   },
   "systemHome": {
@@ -48,7 +49,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "所有活動",
       "user": "網頁使用者活動",
       "project": "專案活動",
       "form": "表單活動",
@@ -93,6 +93,7 @@
         "update_draft_delete": "放棄草稿",
         "attachment_update": "更新附件",
         "submission_export": "下載提交內容",
+        "restore": "還原",
         "purge": "清除",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -135,6 +136,7 @@
     "comment": "評論",
     "continue": "繼續",
     "create": "建立",
+    "createSubmission": "新提交",
     "delete": "刪除",
     "done": "完成",
     "download": "下載",
@@ -150,11 +152,13 @@
     "ok": "好",
     "proceed": "繼續",
     "refresh": "重整",
+    "refreshPage": "刷新頁面",
     "resetPassword": "重設密碼",
     "review": "審核",
     "save": "儲存",
     "saveSettings": "保存設定",
     "sort": "排序",
+    "undo": "撤銷",
     "update": "更新",
     "yesProceed": "是的，請繼續",
     "showPreview": "預覽",
@@ -163,7 +167,9 @@
     "expand": "開啟",
     "collapse": "閉合",
     "reviewParallelUpdates": "查看並行更新",
-    "upload": "上傳"
+    "tryAgain": "再試一次",
+    "upload": "上傳",
+    "restore": "還原"
   },
   "field": {
     "comment": "發表評論...",
@@ -208,6 +214,7 @@
   },
   "count": {
     "appUser": "{count} App 使用者",
+    "attachments": "{count}個附件",
     "form": "{count} 表單",
     "submission": "{count} 提交",
     "warning": "{count} 警告"
@@ -215,6 +222,7 @@
   "resource": {
     "appUser": "App 使用者",
     "appUsers": "App 使用者",
+    "attachments": "附件",
     "config": "伺服器設置",
     "entity": "實體資料",
     "entities": "實體",
@@ -240,11 +248,13 @@
     "draft": "草稿"
   },
   "alert": {
-    "passwordTooShort": "請輸入長度至少為 10 個字元的密碼。",
-    "updateEntity": "實體已更新！",
-    "updateReviewState": "審核狀態已儲存！",
-    "versionChange": "服器已更新。請更新頁面以避免出現不可預測的問題。",
-    "submissionDeleted": "提交內容已刪除。",
+    "passwordTooShort": "密碼必須至少有 10 個字元長。",
+    "updateEntity": "實體已成功更新。",
+    "updateReviewState": "審核已成功儲存。",
+    "versionChange": "伺服器已成功更新。",
+    "submissionDeleted": "提交已成功刪除。",
+    "submissionRestored": "已恢復提交。",
+    "entityRestored": "實體 「{label}」 已經還原。",
     "entityDeleted": "實體「1{label}」已被刪除。"
   },
   "moreInfo": {
@@ -318,6 +328,9 @@
     "totalEntities": "實體總數",
     "versionShort": "v{version}",
     "warning": "警告",
+    "beta": "測試版",
+    "none": "(無)",
+    "search": "檢索",
     "reviewState": "審核狀態",
     "status": "狀態",
     "version": "版本"
@@ -353,9 +366,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "您的登入狀態將於 2 分鐘後過期，並且您將自動登出。",
-        "expired": "您的登入狀態已過期。若要繼續作業，請重新登入。",
-        "logoutError": "出現問題，您尚未完全登出。請重新載入頁面並嘗試再次登出。 {message}"
+        "expiresSoon": "您的會話即將到期！您將於 2 分鐘後登出。",
+        "expired": "您的會話已過期。請重新登入以繼續。",
+        "logoutError": {
+          "thereWasProblem": "登出時出現問題。",
+          "pleaseRefresh": "請刷新頁面並重試。"
+        }
       }
     }
   },

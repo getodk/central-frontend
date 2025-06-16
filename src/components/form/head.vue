@@ -212,8 +212,10 @@ export default {
       "tabTitle": "Veröffentlichen Sie diesen Formularentwurf, um diese Funktionen zu aktivieren"
     },
     "infoNav": {
+      "entityLists": "{count} Verwandte Entitätsliste | {count} Verwandte Entitätslisten",
       "updatedDatasets": "Aktualisierungen",
-      "attachedDatasets": "Verwendet"
+      "attachedDatasets": "Verwendet",
+      "appUsers": "{count}App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
     }
   },
   "es": {
@@ -283,6 +285,9 @@ export default {
       "action": {
         "back": "Voltar à visão geral do projeto"
       }
+    },
+    "infoNav": {
+      "attachedDatasets": "Utiliza"
     }
   },
   "sw": {
@@ -297,6 +302,15 @@ export default {
       "action": {
         "back": "返回專案概覽"
       }
+    },
+    "formNav": {
+      "tabTitle": "發布此表格草稿以啟用這些功能"
+    },
+    "infoNav": {
+      "entityLists": "{count}個相關實體清單",
+      "updatedDatasets": "更新",
+      "attachedDatasets": "用途",
+      "appUsers": "已指派{count}位 App 使用者"
     }
   }
 }

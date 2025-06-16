@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "（すべての操作）",
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -298,6 +298,10 @@
         "process_form_entities_version": {
           "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
       "user": {
@@ -405,6 +409,10 @@
       "string": "更新",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "パスワードのリセット",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -424,6 +432,10 @@
     "sort": {
       "string": "",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
+    "undo": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
       "string": "更新",
@@ -723,13 +735,13 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "10文字以上の長さのパスワードを入力してください。"
+      "string": ""
     },
     "updateEntity": {
       "string": ""
     },
     "updateReviewState": {
-      "string": "レビュー・ステータス保存完了！"
+      "string": ""
     },
     "versionChange": {
       "string": ""
@@ -954,6 +966,9 @@
     },
     "none": {
       "string": ""
+    },
+    "search": {
+      "string": ""
     }
   },
   "mixin": {
@@ -1023,14 +1038,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "あと2分でセッションの有効期限が切れ、自動的にログアウトされます。"
+          "string": ""
         },
         "expired": {
-          "string": "セッションの有効期限が切れています。\n\n作業を続けるには、再度ログインして下さい。"
+          "string": ""
         },
         "logoutError": {
-          "string": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みて下さい。{message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": ""
+          },
+          "pleaseRefresh": {
+            "string": ""
+          }
         }
       }
     }
@@ -1056,7 +1075,7 @@
       },
       "alert": {
         "success": {
-          "string": "パスワードが正常にリセットされました。"
+          "string": ""
         }
       }
     },
@@ -1066,7 +1085,7 @@
           "string": "すでにユーザーでログインされています。\n続けるにはページを更新してください。"
         },
         "changePassword": {
-          "string": "あなたのパスワードは10文字以下です。アカウントを守るため、パスワードを長いものに変更してください。"
+          "string": ""
         }
       },
       "oidc": {
@@ -1163,7 +1182,7 @@
       },
       "alert": {
         "success": {
-          "string": "設定が保存されました！"
+          "string": ""
         }
       }
     },
@@ -1403,6 +1422,9 @@
           "string": ""
         },
         "max_entity_branch_delay": {
+          "string": ""
+        },
+        "num_owner_only_datasets": {
           "string": ""
         },
         "num_xml_only_form_defs": {
@@ -1652,6 +1674,55 @@
       },
       "problem": {
         "409_3": {
+          "string": ""
+        }
+      }
+    },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": ""
+      },
+      "accessAllDefault": {
+        "string": ""
+      },
+      "ownerOnly": {
+        "string": ""
+      },
+      "radio": {
+        "false": {
+          "string": ""
+        },
+        "true": {
+          "string": ""
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": ""
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": ""
+        },
+        "action": {
+          "confirm": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": ""
+        },
+        "changeToTrue": {
           "string": ""
         }
       }
@@ -2069,25 +2140,15 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
-      },
-      "allSelectedConflictSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2110,6 +2171,9 @@
         }
       },
       "filterDisabledMessage": {
+        "string": ""
+      },
+      "searchDisabledMessage": {
         "string": ""
       },
       "downloadDisabled": {
@@ -2463,7 +2527,7 @@
           "string": "アプリユーザー\"{displayName}\"は正常に作成されました。"
         },
         "revoke": {
-          "string": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
+          "string": ""
         }
       }
     },
@@ -2980,16 +3044,13 @@
       },
       "alert": {
         "upload": {
-          "string": "成功です！新しい定義フォームが下書きとして保存されました。"
+          "string": ""
         },
         "publish": {
           "string": ""
         },
         "abandon": {
           "string": "このフォームの下書きは正常に削除されました。"
-        },
-        "delete": {
-          "string": "フォーム\"{name}\"は削除されました。"
         }
       }
     },
@@ -3377,7 +3438,7 @@
       },
       "alert": {
         "delete": {
-          "string": "フォーム\"{name}\"は削除されました。"
+          "string": ""
         }
       },
       "webFormsSetting": {
@@ -3615,9 +3676,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
+        "apply": {
           "string": "",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3819,7 +3880,7 @@
       },
       "alert": {
         "success": {
-          "string": "プロジェクト設定の保存完了！"
+          "string": ""
         }
       }
     },
@@ -3941,7 +4002,7 @@
       },
       "alert": {
         "success": {
-          "string": "変更が保存されました。"
+          "string": ""
         }
       }
     },
@@ -4159,7 +4220,7 @@
       },
       "alert": {
         "archive": {
-          "string": "プロジェクト\"{name}\"はアーカイブされました。"
+          "string": ""
         }
       }
     },
@@ -4258,12 +4319,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "検索条件の解除",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4297,7 +4352,13 @@
           "string": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。"
         },
         "unassignRole": {
-          "string": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
+          "string": ""
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "検索条件の解除",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4367,7 +4428,7 @@
       },
       "alert": {
         "create": {
-          "string": "成功です！一般公開リンクが作成され、利用可能です。\n以下をコピーして配布できます。"
+          "string": ""
         },
         "revoke": {
           "string": "一般公開リンク\"{displayName}\"の無効化に成功しました。以後、このリンクでのサフォームの提出は受付られません。"
@@ -4735,10 +4796,6 @@
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "表示された列",
@@ -4750,15 +4807,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "全て",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "なし",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4778,25 +4833,15 @@
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4810,28 +4855,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": ""
-      },
-      "allSubmitterSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {

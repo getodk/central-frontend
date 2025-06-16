@@ -47,7 +47,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "（すべての操作）",
       "user": "Webユーザーに対する操作",
       "project": "プロジェクトに対する操作",
       "form": "フォームに対する操作",
@@ -200,10 +199,6 @@
     "projectRoles": "プロジェクトでの役割",
     "draft": "下書き"
   },
-  "alert": {
-    "passwordTooShort": "10文字以上の長さのパスワードを入力してください。",
-    "updateReviewState": "レビュー・ステータス保存完了！"
-  },
   "moreInfo": {
     "clickHere": {
       "full": "さらに詳細を表示するには、{clickHere}して下さい。",
@@ -262,13 +257,6 @@
       "noRequest": "問題発生：リクエストがありません。",
       "noResponse": "問題発生：リクエストへの応答がありません。",
       "errorNotProblem": "問題発生：エラーコード{status}"
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "あと2分でセッションの有効期限が切れ、自動的にログアウトされます。",
-        "expired": "セッションの有効期限が切れています。 作業を続けるには、再度ログインして下さい。",
-        "logoutError": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みて下さい。{message}"
-      }
     }
   },
   "router": {

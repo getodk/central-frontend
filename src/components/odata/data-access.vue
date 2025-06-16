@@ -71,6 +71,11 @@ const { oidcEnabled } = inject('config');
     "action": {
       "connectData": "Collegare Dati"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "connectData": "連接資料"
+    }
   }
 }
 </i18n>

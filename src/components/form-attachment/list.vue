@@ -363,8 +363,7 @@ export default {
       "someUploaded": "{message} Úspěšně byl nahrán pouze {uploaded} soubor ze {total}. | {message} Úspěšně byly nahrány pouze {uploaded} soubory z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}. | {message} Úspěšně bylo nahráno pouze {uploaded} souborů z {total}."
     },
     "alert": {
-      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno.",
-      "link": "Seznam entit byl úspěšně propojen."
+      "success": "{count} soubor byl úspěšně nahrán. | {count} soubory byly úspěšně nahrány. | {count} souborů bylo úspěšně nahráno. | {count} souborů bylo úspěšně nahráno."
     }
   },
   "de": {
@@ -377,8 +376,7 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
-      "link": "Entitätsliste erfolgreich verknüpft."
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
     }
   },
   "es": {
@@ -429,7 +427,7 @@ export default {
     },
     "alert": {
       "success": "{count} file è stato caricato con successo | {count} files sono stati caricati con successo | {count} files sono stati caricati con successo",
-      "link": "Lista Entità collegata correttamente."
+      "link": "Lista Entità correttamente collegata."
     }
   },
   "ja": {
@@ -442,13 +440,16 @@ export default {
     }
   },
   "pt": {
+    "action": {
+      "upload": "Escolher arquivos"
+    },
+    "orDrag": "ou arraste arquivos aqui para carregar",
     "problem": {
       "noneUploaded": "{message} Nenhum arquivo foi carregado.",
       "someUploaded": "{message} Apenas {uploaded} de {total} arquivo foi carregado com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso."
     },
     "alert": {
-      "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso.",
-      "link": "Lista de Entidades vinculada com sucesso."
+      "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso."
     }
   },
   "sw": {
@@ -457,18 +458,21 @@ export default {
       "someUploaded": "{message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa. | {message} {uploaded} pekee kati ya faili {total} ndizo zilizopakiwa."
     },
     "alert": {
-      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa.",
-      "link": "Orodha ya Huluki imeunganishwa."
+      "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
     }
   },
   "zh-Hant": {
+    "action": {
+      "upload": "選擇檔案"
+    },
+    "orDrag": "或將檔案拖曳至此頁上傳",
     "problem": {
       "noneUploaded": "{message} 沒有文件上傳成功。",
       "someUploaded": "{message} 僅 {uploaded} 個檔案成功上傳，共 {total} 個檔案。"
     },
     "alert": {
       "success": "{count} 個文件已成功上傳。",
-      "link": "實體列表連結成功。"
+      "link": "實體清單已成功連結。"
     }
   }
 }

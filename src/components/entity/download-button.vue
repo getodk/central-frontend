@@ -148,6 +148,27 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
         }
       }
     }
+  },
+  "pt": {
+    "action": {
+      "download": {
+        "unfiltered": "Baixar {count}Entidade | Baixar todas as {count}Entidades | Baixar todas as {count} Entidades",
+        "filtered": {
+          "withoutCount": "Baixar todas as Entidades correspondentes"
+        }
+      }
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": {
+        "unfiltered": "下載所有{count}個實體",
+        "filtered": {
+          "withCount": "下載符合篩選條件的{count}個實體",
+          "withoutCount": "下載符合篩選條件的所有實體"
+        }
+      }
+    }
   }
 }
 </i18n>

@@ -240,8 +240,7 @@ export default {
     },
     "emptyTable": "Zatím nejsou žádní uživatelé aplikace. Pro stažení formulářů a odeslání dat z vašeho zařízení budete muset vytvořit nějaké.",
     "alert": {
-      "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen.",
-      "revoke": "Přístup k aplikaci byl zrušen uživateli „{displayName}“."
+      "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen."
     }
   },
   "de": {
@@ -264,8 +263,7 @@ export default {
     },
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
     "alert": {
-      "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
-      "revoke": "Die Zugriffsberechtigng für App-Benuzter \"{displayName}\" wurde entzogen."
+      "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden."
     }
   },
   "es": {
@@ -288,8 +286,7 @@ export default {
     },
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
     "alert": {
-      "create": "El usuario móvil \"{displayName}\" se creó correctamente.",
-      "revoke": "Se revocó el acceso para el usuario móvil \"{displayName}\"."
+      "create": "El usuario móvil \"{displayName}\" se creó correctamente."
     }
   },
   "fr": {
@@ -336,8 +333,7 @@ export default {
     },
     "emptyTable": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda.",
     "alert": {
-      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat.",
-      "revoke": "Akses untuk Pengguna Aplikasi \"{displayName}\" telah dicabut."
+      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat."
     }
   },
   "it": {
@@ -361,7 +357,7 @@ export default {
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",
     "alert": {
       "create": "L'Utente App \"{displayName}\" è stato creato correttamente.",
-      "revoke": "L'accesso per l'Utente App “{displayName}” è stato revocato."
+      "revoke": "L'accesso per Utente App {displayName}è stato revocato con successo."
     }
   },
   "ja": {
@@ -384,8 +380,7 @@ export default {
     },
     "emptyTable": "アプリユーザーが登録されていません。デバイスからフォームのダウンロードと提出を行うには、アプリユーザーを作成する必要があります。",
     "alert": {
-      "create": "アプリユーザー\"{displayName}\"は正常に作成されました。",
-      "revoke": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
+      "create": "アプリユーザー\"{displayName}\"は正常に作成されました。"
     }
   },
   "pt": {
@@ -408,8 +403,7 @@ export default {
     },
     "emptyTable": "Não existe nenhum usuário de aplicativo ainda. Você terá que criar um para baixar formulários e enviar dados a partir do seu dispositivo.",
     "alert": {
-      "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso.",
-      "revoke": "O acesso foi revogado para o usuário de aplicativo \"{displayName}\"."
+      "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso."
     }
   },
   "sw": {
@@ -432,8 +426,7 @@ export default {
     },
     "emptyTable": "Bado hakuna Watumiaji wa Programu. Utahitaji kuunda baadhi ili kupakua Fomu na kuwasilisha data kutoka kwa kifaa chako",
     "alert": {
-      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa.",
-      "revoke": "Ufikiaji umebatilishwa kwa Mtumiaji wa Programu \"{displayName}\"."
+      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa."
     }
   },
   "zh-Hant": {
@@ -457,7 +450,7 @@ export default {
     "emptyTable": "還沒有應用程式用戶。您將需要建立一些表格來下載表格並從您的裝置提交資料。",
     "alert": {
       "create": "APP使用者「{displayName}」已成功建立。",
-      "revoke": "APP使用者「{displayName}」的存取權限已被撤銷。"
+      "revoke": "App 使用者{displayName}的存取權成功撤銷。"
     }
   }
 }

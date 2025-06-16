@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "(Todas las acciones)",
+        "string": "Todas las acciones",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -298,6 +298,10 @@
         "process_form_entities_version": {
           "string": "Marcar formulario para actualización",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "Nueva versión",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
       "user": {
@@ -405,6 +409,10 @@
       "string": "Actualizar",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "Refresque la página",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "Restablecer contraseña",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -424,6 +432,10 @@
     "sort": {
       "string": "Ordenar",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
+    "undo": {
+      "string": "Deshacer",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
       "string": "Actualizar",
@@ -723,19 +735,19 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "Introduzca una contraseña de al menos 10 caracteres."
+      "string": "La contraseña debe tener al menos 10 caracteres."
     },
     "updateEntity": {
-      "string": "¡La Entidad ha sido actualizada!"
+      "string": "La entidad se ha actualizado correctamente."
     },
     "updateReviewState": {
-      "string": "Estado de revisión guardado!"
+      "string": "Revisión guardada correctamente."
     },
     "versionChange": {
-      "string": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles."
+      "string": "El servidor se ha actualizado correctamente."
     },
     "submissionDeleted": {
-      "string": "El envío ha sido eliminado."
+      "string": "El envío se ha eliminado correctamente."
     },
     "submissionRestored": {
       "string": "La Sumisión ha sido restablecida."
@@ -954,6 +966,9 @@
     },
     "none": {
       "string": "(ninguno)"
+    },
+    "search": {
+      "string": "Buscar"
     }
   },
   "mixin": {
@@ -1023,14 +1038,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "Su sesión caducará en 2 minutos y se cerrará automáticamente."
+          "string": "Su sesión está caducando. Se cerrará su sesión en 2 minutos."
         },
         "expired": {
-          "string": "Su sesión ha caducado. Para seguir trabajando, por favor conectarse de nuevo."
+          "string": "Su sesión ha caducado. Inicie sesión de nuevo para continuar."
         },
         "logoutError": {
-          "string": "Hubo un problema y no se desconectó por completo. Actualice la página e intente cerrar la sesión nuevamente. {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": "Hubo un problema al cerrar la sesión."
+          },
+          "pleaseRefresh": {
+            "string": "Por favor, actualice la página e inténtelo de nuevo."
+          }
         }
       }
     }
@@ -1056,7 +1075,7 @@
       },
       "alert": {
         "success": {
-          "string": "La contraseña fue restablecida exitosamente."
+          "string": "Contraseña restablecida correctamente."
         }
       }
     },
@@ -1066,7 +1085,7 @@
           "string": "Un usuario ya ha iniciado sesión. Actualice la página para continuar."
         },
         "changePassword": {
-          "string": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
+          "string": "Para proteger tu cuenta, asegúrate de que tu contraseña tiene 10 caracteres o más."
         }
       },
       "oidc": {
@@ -1163,7 +1182,7 @@
       },
       "alert": {
         "success": {
-          "string": "¡Configuración guardada!"
+          "string": "Ajustes guardados correctamente."
         }
       }
     },
@@ -1405,6 +1424,9 @@
         "max_entity_branch_delay": {
           "string": "Tiempo máximo para procesar fuera de línea la cadena de actualización de entidades"
         },
+        "num_owner_only_datasets": {
+          "string": "Número de listas de entidades restringidas sólo al propietario"
+        },
         "num_xml_only_form_defs": {
           "string": "Número de definiciones de formulario sin XLSForm asociado"
         },
@@ -1541,7 +1563,7 @@
       },
       "alert": {
         "upload": {
-          "string": "¡Éxito! Tus entidades han sido cargadas."
+          "string": "Sus Entidades han sido cargadas con éxito."
         }
       },
       "purgeDescription": {
@@ -1653,6 +1675,55 @@
       "problem": {
         "409_3": {
           "string": "Ya existe una propiedad en esta lista de entidades con el nombre “{propertyName}”."
+        }
+      }
+    },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "Acceso a la entidad del Usuario de la aplicación y recopilador de datos ",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": "Acceder a todas las entidades"
+      },
+      "accessAllDefault": {
+        "string": "Acceder a todas las Entidades (por defecto)"
+      },
+      "ownerOnly": {
+        "string": ""
+      },
+      "radio": {
+        "false": {
+          "string": ""
+        },
+        "true": {
+          "string": ""
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": ""
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": ""
+        },
+        "action": {
+          "confirm": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": ""
+        },
+        "changeToTrue": {
+          "string": ""
         }
       }
     },
@@ -2069,25 +2140,15 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Ninguno",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "Todos",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "Ninguno",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
-      },
-      "allSelectedConflictSelected": {
-        "string": "(Todos)",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2111,6 +2172,9 @@
       },
       "filterDisabledMessage": {
         "string": "El Filtro no está disponible para Entidades eliminadas"
+      },
+      "searchDisabledMessage": {
+        "string": ""
       },
       "downloadDisabled": {
         "string": "La descarga no está disponible para Entidades eliminadas"
@@ -2463,7 +2527,7 @@
           "string": "El usuario móvil \"{displayName}\" se creó correctamente."
         },
         "revoke": {
-          "string": "Se revocó el acceso para el usuario móvil \"{displayName}\"."
+          "string": ""
         }
       }
     },
@@ -2980,16 +3044,13 @@
       },
       "alert": {
         "upload": {
-          "string": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador"
+          "string": "La nueva definición del formulario se ha guardado como su borrador"
         },
         "publish": {
-          "string": "Su borrador ya está publicado. Todos los dispositivos que obtengan formularios para este proyecto ahora recibirán la nueva definición del formulario y los archivos adjuntos del formulario."
+          "string": "Su borrador ha sido publicado. Todos los dispositivos que utilicen este formulario recibirán ahora la definición actualizada del formulario y los archivos adjuntos."
         },
         "abandon": {
           "string": "La versión borrador de este formulario ha sido eliminado con éxito."
-        },
-        "delete": {
-          "string": "El formulario {name} fue eliminado."
         }
       }
     },
@@ -3196,7 +3257,7 @@
       },
       "alert": {
         "create": {
-          "string": "Su nuevo formulario \"{name}\" se ha creado como un borrador. Cargue archivos y pruebe su formulario a continuación, y cuando considere que está listo, puede publicar el formulario para su uso."
+          "string": "\"{name}\" se ha creado como borrador de formulario."
         }
       }
     },
@@ -3377,7 +3438,7 @@
       },
       "alert": {
         "delete": {
-          "string": "El formulario \"{name}\" fue borrado."
+          "string": "El formulario {name} fue eliminado correctamente."
         }
       },
       "webFormsSetting": {
@@ -3459,7 +3520,7 @@
       },
       "alert": {
         "restore": {
-          "string": "El formulario {name} fue restablecido."
+          "string": "El formulario {name} fue restablecido correctamente."
         }
       },
       "message": {
@@ -3615,9 +3676,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "Seleccionar {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        "apply": {
+          "string": "Aplicar",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3819,7 +3880,7 @@
       },
       "alert": {
         "success": {
-          "string": "¡Configuración del proyecto guardada!"
+          "string": "Configuración del proyecto guardada."
         }
       }
     },
@@ -3941,7 +4002,7 @@
       },
       "alert": {
         "success": {
-          "string": "¡Sus modificaciones han sido guardadas!"
+          "string": "¡Sus modificaciones han sido guardadas correctamente!"
         }
       }
     },
@@ -4159,7 +4220,7 @@
       },
       "alert": {
         "archive": {
-          "string": "El proyecto \"{name}\" fue archivado."
+          "string": "El proyecto \"{name}\" ha sido archivado."
         }
       }
     },
@@ -4258,12 +4319,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "Limpiar la búsqueda",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4297,7 +4352,13 @@
           "string": "A \"{displayName}\" se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto."
         },
         "unassignRole": {
-          "string": "\"{displayName}\" ha sido removido exitosamente de este proyecto."
+          "string": "\"{displayName}\" ha sido removido de este proyecto."
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Limpiar la búsqueda",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4367,7 +4428,7 @@
       },
       "alert": {
         "create": {
-          "string": "¡Operación exitosa! Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo."
+          "string": "Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo."
         },
         "revoke": {
           "string": "El enlace de acceso público \"{displayName}\" fue revocado con éxito. No se aceptarán más envíos a través de este enlace."
@@ -4735,10 +4796,6 @@
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "Se muestran las columnas",
@@ -4750,15 +4807,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todas",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Ninguna",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "Todos",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "Ninguno",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4773,30 +4828,20 @@
         }
       },
       "allSubmissionDateSelected": {
-        "string": "(Todos)",
+        "string": "Todos los tiempos",
         "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Ninguno",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "Todos",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "Ninguno",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "(Todos)",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4810,28 +4855,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Ninguno",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "Todos",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "Ninguno",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": "Remitente desconocido"
-      },
-      "allSubmitterSelected": {
-        "string": "(Todos)",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {

@@ -172,7 +172,11 @@ export default {
     "back": "Zpět na projektové entity"
   },
   "de": {
-    "back": "Zurück zu den Projekteinheiten"
+    "back": "Zurück zu den Projekteinheiten",
+    "infoNav": {
+      "connectedForms": "Update durch {count} Formular | Update durch {count} Formulare",
+      "linkedForms": "Verwendet in {count} Formular | Verwendet in {count} Formulare"
+    }
   },
   "es": {
     "back": "Back to Project Entities",
@@ -196,13 +200,20 @@ export default {
     }
   },
   "pt": {
-    "back": "Voltar para Entidades do Projeto"
+    "back": "Voltar para Entidades do Projeto",
+    "infoNav": {
+      "linkedForms": "Utilizado em {count} Formulário | Utilizado em {count} Formulários | Utilizado em {count} Formulários"
+    }
   },
   "sw": {
     "back": "Rudi kwenye vyombo vya Mradi"
   },
   "zh-Hant": {
-    "back": "返回專案實體"
+    "back": "返回專案實體",
+    "infoNav": {
+      "connectedForms": "由{count}個表格更新",
+      "linkedForms": "用於{count}個表格"
+    }
   }
 }
 </i18n>

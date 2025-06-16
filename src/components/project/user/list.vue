@@ -289,9 +289,6 @@ export default {
         "dataCollectors": "Sběrači dat"
       }
     ],
-    "action": {
-      "clearSearch": "Vymazat vyhledávání"
-    },
     "field": {
       "q": {
         "canList": "Vyhledat uživatele…",
@@ -305,8 +302,7 @@ export default {
     "emptyTable": "K tomuto projektu zatím nejsou přiřazeni žádní uživatelé. Chcete-li přidat jednoho, vyhledejte uživatele výše.",
     "alert": {
       "unassignWithoutReassign": "Něco se pokazilo. „{displayName}“ Byl z projektu odstraněn.",
-      "assignRole": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“.",
-      "unassignRole": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
+      "assignRole": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“."
     }
   },
   "de": {
@@ -325,9 +321,6 @@ export default {
         "dataCollectors": "Datensammler"
       }
     ],
-    "action": {
-      "clearSearch": "Suche löschen"
-    },
     "field": {
       "q": {
         "canList": "Suche nach einem Benutzer...",
@@ -341,8 +334,7 @@ export default {
     "emptyTable": "Es wurden noch keine Benutzer diesem Projekt zugewiesen. Um einen hinzuzufügen, suchen Sie oben nach einem Benutzer.",
     "alert": {
       "unassignWithoutReassign": "Irgendetwas hat nicht funktioniert. \"{displayName}\" wurde aus diesem Projekt entfernt.",
-      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen.",
-      "unassignRole": "\"{displayName}\" wurde erfolgreich aus dem Projekt entfernt."
+      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen."
     }
   },
   "es": {
@@ -361,9 +353,6 @@ export default {
         "dataCollectors": "Recolectores de datos"
       }
     ],
-    "action": {
-      "clearSearch": "Limpiar la búsqueda"
-    },
     "field": {
       "q": {
         "canList": "Buscar un usuario...",
@@ -378,7 +367,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Algo salió mal. \"{displayName}\" ha sido removido del proyecto",
       "assignRole": "A \"{displayName}\" se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto.",
-      "unassignRole": "\"{displayName}\" ha sido removido exitosamente de este proyecto."
+      "unassignRole": "\"{displayName}\" ha sido removido de este proyecto."
     }
   },
   "fr": {
@@ -397,9 +386,6 @@ export default {
         "dataCollectors": "collecteurs de données"
       }
     ],
-    "action": {
-      "clearSearch": "Effacer la recherche"
-    },
     "field": {
       "q": {
         "canList": "Rechercher un utilisateur...",
@@ -414,7 +400,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Quelque chose a mal tourné. \"{displayName}\" a été retiré du projet.",
       "assignRole": "Succès ! \"{displayName}\" a reçu un rôle de \"{roleName}\" dans ce projet.",
-      "unassignRole": "Succès ! “{displayName}” a été retiré de ce projet."
+      "unassignRole": "“{displayName}” a été retiré de ce projet."
     }
   },
   "id": {
@@ -430,9 +416,6 @@ export default {
         "dataCollectors": "Pengumpul Data"
       }
     ],
-    "action": {
-      "clearSearch": "Hapus pencarian"
-    },
     "field": {
       "q": {
         "canList": "Cari pengguna...",
@@ -446,8 +429,7 @@ export default {
     "emptyTable": "Belum ada Pengguna yang ditugaskan dalam Proyek ini. Untuk menambah Pengguna, cari nama Pengguna di atas.",
     "alert": {
       "unassignWithoutReassign": "Terjadi kesalahan. \"{displayName}\" sudah dihapus dari Proyek.",
-      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini.",
-      "unassignRole": "Berhasil! \"{displayName}\" telah dihapus dari Proyek ini."
+      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini."
     }
   },
   "it": {
@@ -466,9 +448,6 @@ export default {
         "dataCollectors": "Raccoglitori di dati"
       }
     ],
-    "action": {
-      "clearSearch": "Cancella ricerca"
-    },
     "field": {
       "q": {
         "canList": "Cerca un utente...",
@@ -483,7 +462,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Qualcosa è andato storto. “{displayName}” è stato rimosso dal progetto.",
       "assignRole": "Successo! A \"{displayName}\" è stato assegnato un ruolo di \"{roleName}\" in questo progetto.",
-      "unassignRole": "Successo! \"{displayName}\" è stato rimosso da questo progetto."
+      "unassignRole": "\"{displayName}\" è stato rimosso da questo progetto."
     }
   },
   "ja": {
@@ -499,9 +478,6 @@ export default {
         "dataCollectors": "データ収集者"
       }
     ],
-    "action": {
-      "clearSearch": "検索条件の解除"
-    },
     "field": {
       "q": {
         "canList": "ユーザーの検索",
@@ -515,8 +491,7 @@ export default {
     "emptyTable": "このプロジェクトに割り当てられたユーザーはまだいません。ユーザーを追加するには、上の検索ボックスでユーザーを検索してください。",
     "alert": {
       "unassignWithoutReassign": "問題が発生しました 。\"{displayName}\"はプロジェクトから除外されました。",
-      "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。",
-      "unassignRole": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
+      "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。"
     }
   },
   "pt": {
@@ -535,9 +510,6 @@ export default {
         "dataCollectors": "Coletores de dados"
       }
     ],
-    "action": {
-      "clearSearch": "Limpar a busca"
-    },
     "field": {
       "q": {
         "canList": "Localizar um usuário...",
@@ -551,8 +523,7 @@ export default {
     "emptyTable": "Não existem usuário designados para esse projeto ainda. Para adicionar um usuário utilize a busca acima.",
     "alert": {
       "unassignWithoutReassign": "Algo deu errado. \"{displayName}\" foi removido do projeto.",
-      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto.",
-      "unassignRole": "Sucesso! \"{displayName}\" foi removido deste projeto."
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto."
     }
   },
   "sw": {
@@ -571,9 +542,6 @@ export default {
         "dataCollectors": "Wakusanyaji Data"
       }
     ],
-    "action": {
-      "clearSearch": "Futa utafutaji"
-    },
     "field": {
       "q": {
         "canList": "Tafuta mtumiaji...",
@@ -587,8 +555,7 @@ export default {
     "emptyTable": "Bado hakuna watumiaji waliokabidhiwa kwa Mradi huu. Ili kuongeza moja, tafuta mtumiaji hapo juu.",
     "alert": {
       "unassignWithoutReassign": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi.",
-      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu.",
-      "unassignRole": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
+      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu."
     }
   },
   "zh-Hant": {
@@ -607,9 +574,6 @@ export default {
         "dataCollectors": "資料收集者"
       }
     ],
-    "action": {
-      "clearSearch": "清除搜尋"
-    },
     "field": {
       "q": {
         "canList": "搜尋使用者",
@@ -624,7 +588,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "出了些問題。 「{displayName}」已從專案中刪除。",
       "assignRole": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。",
-      "unassignRole": "成功！ 「{displayName}」已從此項目中刪除。"
+      "unassignRole": "「{displayName}」已從本專案中刪除。"
     }
   }
 }

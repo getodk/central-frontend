@@ -101,7 +101,10 @@ const restore = () => {
       "Sind Sie sicher, dass Sie “{label}” wiederherstellen wollen?",
       "Die Entität wird in ihrem vorherigen Zustand wiederhergestellt.",
       "Wenn die Entität erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
-    ]
+    ],
+    "field": {
+      "noConfirm": "Sofortige Wiederherstellen ohne Bestätigung, bis ich die Seite verlasse"
+    }
   },
   "es": {
     "title": "Restablecer {label}",
@@ -134,6 +137,28 @@ const restore = () => {
     ],
     "field": {
       "noConfirm": "Ripristino immediato senza conferma fino a quando non lascio la pagina"
+    }
+  },
+  "pt": {
+    "title": "Recuperar {label}",
+    "introduction": [
+      "Tem certeza que deseja recuperar \"{label}\"?",
+      "A Entidade vai ser restaurada ao seu estado anterior.",
+      "Se a Entidade for excluída novamente, serão mais 30 dias até que ela seja removida."
+    ],
+    "field": {
+      "noConfirm": "Recuperar imediatamente sem pedir confirmação até que eu saia desta página"
+    }
+  },
+  "zh-Hant": {
+    "title": "恢復{label}",
+    "introduction": [
+      "您確定要恢復「{label}」嗎？",
+      "實體將恢復到先前的狀態。",
+      "如果實體再次被刪除，將再過 30 天才能移除。"
+    ],
+    "field": {
+      "noConfirm": "立即還原，無需確認，直到我離開頁面"
     }
   }
 }

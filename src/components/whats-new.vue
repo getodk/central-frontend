@@ -97,7 +97,7 @@ function hideModal() {
   },
   "fr": {
     "title": "Les ébauches de Formulaires ont été déplacées.",
-    "body": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer Formulaire»",
+    "body": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer le Formulaire»",
     "action": {
       "gotIt": "J'ai compris !"
     }
@@ -107,6 +107,18 @@ function hideModal() {
     "body": "Creare un nuovo formulario e modificarlo nella nuova scheda Modifica del formulario.",
     "action": {
       "gotIt": "Capito!"
+    }
+  },
+  "pt": {
+    "action": {
+      "gotIt": "Entendi!"
+    }
+  },
+  "zh-Hant": {
+    "title": "表單草稿已移動",
+    "body": "建立新表單，並在新的「編輯表單」標籤上編輯它",
+    "action": {
+      "gotIt": "知道了！"
     }
   }
 }

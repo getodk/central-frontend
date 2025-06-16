@@ -128,7 +128,11 @@ const convert = ref(null);
       "changeSetting": "Einstellung ändern"
     },
     "explanation": {
-      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden."
+      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
+      "implication": {
+        "full": "Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist. | Sie haben derzeit{records}Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.",
+        "records": "{count}Hervorragender Rekord | {count} Ausstehende Aufzeichnungen"
+      }
     },
     "dontConvert": {
       "label": "Ich verstehe und das ist für mich kein Problem.",
@@ -208,7 +212,11 @@ const convert = ref(null);
       "changeSetting": "Alterar configuração"
     },
     "explanation": {
-      "userAction": "Você está definindo a criação da Entidade para ocorrer quando as Respostas forem recebidas pelo Central."
+      "userAction": "Você está definindo a criação da Entidade para ocorrer quando as Respostas forem recebidas pelo Central.",
+      "implication": {
+        "full": "Você tem atualmente {records} não marcado como Aprovado ou Rejeitado. | Você tem atualmente {records} não marcados como Aprovado ou Rejeitado. | Você tem atualmente {records} não marcado como Aprovado ou Rejeitado.",
+        "records": "{count} registro pendente | {count} registros pendentes | {count} registro pendente"
+      }
     },
     "dontConvert": {
       "label": "Eu entendo e isso não é um problema para mim."
@@ -232,10 +240,19 @@ const convert = ref(null);
       "changeSetting": "修改設定"
     },
     "explanation": {
-      "userAction": "您將設定實體建立在 Central 首次收到提交時進行。"
+      "userAction": "您將設定實體建立在 Central 首次收到提交時進行。",
+      "implication": {
+        "full": "您目前有未標示已核准或拒絕的項目{records}。",
+        "records": "{count}筆待決記錄"
+      }
     },
     "dontConvert": {
-      "label": "我理解，這對我來說不是問題。"
+      "label": "我理解，這對我來說不是問題。",
+      "description": "改設定並對待處理的提交不執行任何操作。"
+    },
+    "convert": {
+      "label": "轉換所有建立實體的待處理的提交內容。",
+      "description": "變更設定，並從任何顯示實體建立且未被核准或拒絕的提交中建立實體。"
     }
   }
 }

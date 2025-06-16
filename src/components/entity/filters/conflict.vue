@@ -89,13 +89,6 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Stav konfliktu"
-    },
-    "placeholder": "{selected} z {total}",
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Žádný"
-      }
     }
   },
   "de": {
@@ -105,15 +98,7 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Konfliktstatus"
-    },
-    "placeholder": "{selected} von {total}",
-    "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
-    },
-    "allSelectedConflictSelected": "(Alle)"
+    }
   },
   "es": {
     "conflict": {
@@ -123,14 +108,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Estado de conflicto"
     },
-    "placeholder": "{selected} de {total}",
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Ninguno"
-      }
-    },
-    "allSelectedConflictSelected": "(Todos)"
+      "all": "Todos",
+      "none": "Ninguno"
+    }
   },
   "fr": {
     "conflict": {
@@ -140,14 +121,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Statut du conflit"
     },
-    "placeholder": "{selected} sur {total}",
     "action": {
-      "select": {
-        "all": "Tous",
-        "none": "Aucun"
-      }
-    },
-    "allSelectedConflictSelected": "(Tous)"
+      "all": "Tous",
+      "none": "Aucun"
+    }
   },
   "it": {
     "conflict": {
@@ -157,14 +134,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Stato sui conflitti"
     },
-    "placeholder": "{selected} di {total}",
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
-    },
-    "allSelectedConflictSelected": "(Tutto)"
+      "all": "Tutto",
+      "none": "Nessuno/a"
+    }
   },
   "pt": {
     "conflict": {
@@ -173,13 +146,6 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Status de conflitos"
-    },
-    "placeholder": "{selected} de {total}",
-    "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Nenhum"
-      }
     }
   },
   "sw": {
@@ -189,13 +155,6 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Hali ya migogoro"
-    },
-    "placeholder": "{selected} kati ya {total}",
-    "action": {
-      "select": {
-        "all": "Wote",
-        "none": "Hakuna"
-      }
     }
   },
   "zh-Hant": {
@@ -205,13 +164,6 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "衝突狀態"
-    },
-    "placeholder": "{selected}/{total}",
-    "action": {
-      "select": {
-        "all": "全部",
-        "none": "無"
-      }
     }
   }
 }

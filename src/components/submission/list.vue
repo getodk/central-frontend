@@ -687,6 +687,8 @@ export default {
       "testInBrowser": "Testar no navegador"
     },
     "noMatching": "Não foram encontradas respostas com esses parâmetros.",
+    "allDeleted": "Todas as Respostas foram excluídas.",
+    "allDeletedOnPage": "Todas as Respostas nesta página foram excluídas.",
     "downloadDisabled": "O download está indisponível para Respostas excluídas",
     "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
     "deletedSubmission": {
@@ -702,10 +704,14 @@ export default {
       "testInBrowser": "在瀏覽器中測試"
     },
     "noMatching": "沒有符合的提交內容。",
+    "allDeleted": "所有提交內容都會被刪除。",
+    "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
     "downloadDisabled": "已刪除的提交內容無法下載",
     "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
     "deletedSubmission": {
-      "emptyTable": "沒有已刪除的提交內容。"
+      "emptyTable": "沒有已刪除的提交內容。",
+      "allRestored": "所有已刪除的提交內容都會還原。",
+      "allRestoredOnPage": "頁面上的所有提交內容都已還原。"
     }
   }
 }

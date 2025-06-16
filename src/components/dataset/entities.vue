@@ -213,9 +213,6 @@ export default {
 {
   "de": {
     "upload": "Entitäten hochladen",
-    "alert": {
-      "upload": "Erfolgreich! Ihre Entitäten wurden hochgeladen."
-    },
     "purgeDescription": "Entitäten werden nach 30 Tagen im Papierkorb gelöscht",
     "action": {
       "toggleDeletedEntities": "{count} gelöscht Entität | {count} gelöschte Entitäten"
@@ -225,7 +222,7 @@ export default {
   "es": {
     "upload": "Subir entidades",
     "alert": {
-      "upload": "¡Éxito! Tus entidades han sido cargadas."
+      "upload": "Sus Entidades han sido cargadas con éxito."
     },
     "purgeDescription": "Las Entidades se eliminan después de 30 días en la Papelera",
     "action": {
@@ -236,7 +233,7 @@ export default {
   "fr": {
     "upload": "Téléverser des entités",
     "alert": {
-      "upload": "Succès : Vos Entités ont été téléversées.."
+      "upload": "Vos Entités ont été téléversées."
     },
     "purgeDescription": "Les entités sont supprimées après 30 jours passés dans la corbeille.",
     "action": {
@@ -247,7 +244,7 @@ export default {
   "it": {
     "upload": "Caricare Entità",
     "alert": {
-      "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
+      "upload": "Le entità sono state caricate con successo."
     },
     "purgeDescription": "Le Entità vengono eliminate dopo 30 giorni nel Cestino",
     "action": {
@@ -256,9 +253,7 @@ export default {
     "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Entità cancellate"
   },
   "pt": {
-    "alert": {
-      "upload": "Sucesso! Suas entidades foram carregadas."
-    },
+    "upload": "Carregar Entidades",
     "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
     "action": {
       "toggleDeletedEntities": "{count} Entidade excluída | {count} Entidades excluídas | {count} Entidades excluídas"
@@ -266,9 +261,15 @@ export default {
     "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
   },
   "zh-Hant": {
+    "upload": "上傳實體",
     "alert": {
-      "upload": "成功！您的實體已上傳。"
-    }
+      "upload": "您的實體已成功上傳。"
+    },
+    "purgeDescription": "實體將在 30 天後從垃圾箱中刪除",
+    "action": {
+      "toggleDeletedEntities": "{count} 個已刪除的實體"
+    },
+    "analyzeDisabledDeletedData": "已刪除實體的 OData 存取不可用"
   }
 }
 </i18n>

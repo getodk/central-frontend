@@ -470,7 +470,6 @@ watch(() => props.state, (state) => {
       "append": "Daten hinzufügen"
     },
     "alert": {
-      "blankLabel": "Das Etikett fehlt.",
       "noData": "Ihre Datei enthält keine Daten."
     },
     "noEntities": "Es gibt keine Entitäten zum Anzeigen."
@@ -500,7 +499,7 @@ watch(() => props.state, (state) => {
       "append": "Ajouter les données"
     },
     "alert": {
-      "blankLabel": "Le label manque",
+      "blankLabel": "Étiquette manquante.",
       "noData": "Votre fichier ne contient aucune donnée"
     },
     "noEntities": "Pas d'entités à montrer."
@@ -515,7 +514,7 @@ watch(() => props.state, (state) => {
       "append": "Aggiungi dati"
     },
     "alert": {
-      "blankLabel": "Manca l'etichetta.",
+      "blankLabel": "Etichetta mancante",
       "noData": "Il tuo file non contiene alcun dato."
     },
     "noEntities": "Non ci sono entità da mostrare."
@@ -530,7 +529,6 @@ watch(() => props.state, (state) => {
       "append": "Anexar dados"
     },
     "alert": {
-      "blankLabel": "Está faltando o rótulo.",
       "noData": "Seu arquivo não contém dados."
     },
     "noEntities": "Não há Entidades para mostrar."

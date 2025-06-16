@@ -44,7 +44,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "editForm": {
-        "string": "",
+        "string": "Editar Formulário",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "(Todas as ações)",
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -262,7 +262,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "",
+          "string": "Recuperar",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -297,6 +297,10 @@
         },
         "process_form_entities_version": {
           "string": "Marcar Formulário para Atualização",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -342,7 +346,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "",
+      "string": "Nova Resposta",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
@@ -405,6 +409,10 @@
       "string": "Atualizar",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "Redefinir senha",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -424,6 +432,10 @@
     "sort": {
       "string": "Ordenar ",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
+    "undo": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
       "string": "Atualizar",
@@ -603,7 +615,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "attachments": {
-      "string": "{count, plural, one {} many {} other {}}",
+      "string": "{count, plural, one {{count} anexo} many {{count} anexos} other {{count} anexos}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "form": {
@@ -629,7 +641,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "attachments": {
-      "string": "",
+      "string": "Anexos",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -723,25 +735,25 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "Por favor, insira uma senha com pelo menos 10 caracteres. "
+      "string": ""
     },
     "updateEntity": {
-      "string": "A Entidade foi atualizada!"
+      "string": ""
     },
     "updateReviewState": {
-      "string": "Status de revisão salvo!"
+      "string": ""
     },
     "versionChange": {
-      "string": "O servidor foi atualizado. Por favor atualize a página para evitar comportamentos indesejáveis."
+      "string": ""
     },
     "submissionDeleted": {
-      "string": "A Resposta foi deletada."
+      "string": ""
     },
     "submissionRestored": {
-      "string": ""
+      "string": "A Resposta foi recuperada."
     },
     "entityRestored": {
-      "string": ""
+      "string": "A Entidade \"{label}\" foi recuperada."
     }
   },
   "moreInfo": {
@@ -950,9 +962,12 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "beta": {
-      "string": ""
+      "string": "Beta"
     },
     "none": {
+      "string": "(nenhum)"
+    },
+    "search": {
       "string": ""
     }
   },
@@ -1023,14 +1038,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "Sua sessão irá expirar em 2 minutos e será encerrada automaticamente."
+          "string": ""
         },
         "expired": {
-          "string": "Sua sessão expirou. Para continuar trabalhando efetue login novamente."
+          "string": ""
         },
         "logoutError": {
-          "string": "Houve um problema e sua última sessão não foi encerrada corretamente. Por favor, atualize a página ou tente efetuar login novamente. {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": ""
+          },
+          "pleaseRefresh": {
+            "string": ""
+          }
         }
       }
     }
@@ -1056,7 +1075,7 @@
       },
       "alert": {
         "success": {
-          "string": "A senha foi redefinida com sucesso."
+          "string": ""
         }
       }
     },
@@ -1066,7 +1085,7 @@
           "string": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar."
         },
         "changePassword": {
-          "string": "Sua senha é menor que 10 caracteres. Para proteger sua conta, por favor crie uma senha mais longa."
+          "string": ""
         }
       },
       "oidc": {
@@ -1163,7 +1182,7 @@
       },
       "alert": {
         "success": {
-          "string": "Configurações gravadas com sucesso!"
+          "string": ""
         }
       }
     },
@@ -1274,7 +1293,7 @@
           "string": "Número de formulários com auditoria"
         },
         "num_forms_webforms_enabled": {
-          "string": ""
+          "string": "Número de Formulários com Web Forms habilitado"
         },
         "num_reused_form_ids": {
           "string": "Número de IDs de Formulário reutilizados"
@@ -1405,6 +1424,9 @@
         "max_entity_branch_delay": {
           "string": "Tempo máximo para processar cadeia de atualização de Entidades offline"
         },
+        "num_owner_only_datasets": {
+          "string": ""
+        },
         "num_xml_only_form_defs": {
           "string": "Número de Definições de Formulário sem nenhum XLSForm associado"
         },
@@ -1480,7 +1502,7 @@
     },
     "AuditFilters": {
       "noLogDateSelected": {
-        "string": "",
+        "string": "(nenhum)",
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
@@ -1537,11 +1559,11 @@
     },
     "DatasetEntities": {
       "upload": {
-        "string": ""
+        "string": "Carregar Entidades"
       },
       "alert": {
         "upload": {
-          "string": "Sucesso! Suas entidades foram carregadas."
+          "string": ""
         }
       },
       "purgeDescription": {
@@ -1656,6 +1678,55 @@
         }
       }
     },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": ""
+      },
+      "accessAllDefault": {
+        "string": ""
+      },
+      "ownerOnly": {
+        "string": ""
+      },
+      "radio": {
+        "false": {
+          "string": ""
+        },
+        "true": {
+          "string": ""
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": ""
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": ""
+        },
+        "action": {
+          "confirm": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": ""
+        },
+        "changeToTrue": {
+          "string": ""
+        }
+      }
+    },
     "DatasetPendingSubmissions": {
       "title": {
         "string": "Respostas Pendentes"
@@ -1672,11 +1743,11 @@
         },
         "implication": {
           "full": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Você tem atualmente {records} não marcado como Aprovado ou Rejeitado.} many {Você tem atualmente {records} não marcados como Aprovado ou Rejeitado.} other {Você tem atualmente {records} não marcado como Aprovado ou Rejeitado.}}",
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {{count} registro pendente} many {{count} registros pendentes} other {{count} registro pendente}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
@@ -1748,7 +1819,7 @@
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {} many {} other {}}",
+          "string": "{count, plural, one {Utilizado em {count} Formulário} many {Utilizado em {count} Formulários} other {Utilizado em {count} Formulários}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -1803,7 +1874,7 @@
     },
     "EntityBasicDetails": {
       "entityDetails": {
-        "string": ""
+        "string": "Detalhes da Entidade"
       },
       "creatingSubmission": {
         "string": "Criando Resposta",
@@ -2042,7 +2113,7 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           },
           "restore": {
-            "string": "",
+            "string": "Entidade {label} recuperada por {name}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
@@ -2069,25 +2140,15 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nenhum",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
-      },
-      "allSelectedConflictSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2099,10 +2160,10 @@
         "string": "Não há Entidades correspondentes."
       },
       "allDeleted": {
-        "string": ""
+        "string": "Todas as Entidades foram excluídas."
       },
       "allDeletedOnPage": {
-        "string": ""
+        "string": "Todas as Entidades nesta página foram excluídas."
       },
       "alert": {
         "delete": {
@@ -2112,24 +2173,27 @@
       "filterDisabledMessage": {
         "string": "Não é possível filtrar Entidades excluídas"
       },
+      "searchDisabledMessage": {
+        "string": ""
+      },
       "downloadDisabled": {
         "string": "Não é possível fazer download de Entidades excluídas"
       },
       "deletedEntity": {
         "emptyTable": {
-          "string": ""
+          "string": "Não há Entidades excluídas."
         },
         "allRestored": {
-          "string": ""
+          "string": "Todas as Entidades excluídas foram recuperadas."
         },
         "allRestoredOnPage": {
-          "string": ""
+          "string": "Todas as Entidades nesta página foram recuperadas."
         }
       },
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {} many {} other {}}",
+            "string": "{count, plural, one {Baixar {count}Entidade} many {Baixar todas as {count}Entidades} other {Baixar todas as {count} Entidades}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
@@ -2138,7 +2202,7 @@
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "",
+              "string": "Baixar todas as Entidades correspondentes",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -2199,12 +2263,12 @@
     },
     "EntityRestore": {
       "title": {
-        "string": "",
+        "string": "Recuperar {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "Tem certeza que deseja recuperar \"{label}\"?",
           "developer_comment": "{label} is the label of an Entity."
         },
         "1": {
@@ -2282,7 +2346,7 @@
       },
       "alert": {
         "blankLabel": {
-          "string": "Está faltando o rótulo."
+          "string": ""
         },
         "noData": {
           "string": "Seu arquivo não contém dados."
@@ -2463,7 +2527,7 @@
           "string": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso."
         },
         "revoke": {
-          "string": "O acesso foi revogado para o usuário de aplicativo \"{displayName}\"."
+          "string": ""
         }
       }
     },
@@ -2636,12 +2700,12 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "",
+          "string": "Escolher arquivos",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "orDrag": {
-        "string": "",
+        "string": "ou arraste arquivos aqui para carregar",
         "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "problem": {
@@ -2659,7 +2723,7 @@
           "string": "{count, plural, one {{count} arquivo foi carregado com sucesso.} many {{count} arquivos foram carregados com sucesso.} other {{count} arquivos foram carregados com sucesso.}}"
         },
         "link": {
-          "string": "Lista de Entidades vinculada com sucesso."
+          "string": ""
         }
       },
       "header": {
@@ -2980,22 +3044,19 @@
       },
       "alert": {
         "upload": {
-          "string": "Sucesso! A nova definição de formulário foi armazenada como o seu rascunho."
+          "string": ""
         },
         "publish": {
-          "string": "Seu Rascunho agora está publicado. Todos os dispositivos que obtêm Formulários deste Projeto agora receberão a nova definição de Formulário e Anexos do Formulário."
+          "string": ""
         },
         "abandon": {
           "string": "A versão de rascunho desse formulário foi excluída com sucesso."
-        },
-        "delete": {
-          "string": "O formulário \"{name}\" foi excluído."
         }
       }
     },
     "FormDraftTesting": {
       "title": {
-        "string": "",
+        "string": "Testar esse Rascunho",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "entitiesTesting": {
@@ -3007,7 +3068,7 @@
           "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
         },
         "willBeDeleted": {
-          "string": "",
+          "string": "serão excluídas",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
       },
@@ -3018,15 +3079,15 @@
     },
     "FormEditAttachments": {
       "noAttachments": {
-        "string": "",
+        "string": "Essa definição de formulário não requer anexos, portanto não há nada a ser carregado.",
         "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
       },
       "missingCount": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {{count} anexo faltando} many {{count} anexos faltando} other {{count} anexos faltando}}"
       },
       "diff": {
         "newCount": {
-          "string": "{count, plural, one {} many {} other {}}"
+          "string": "{count, plural, one {{count} novo anexo} many {{count} novos anexos} other {{count} novos anexos}}"
         },
         "changedCount": {
           "string": "{count, plural, one {} many {} other {}}"
@@ -3039,11 +3100,11 @@
     },
     "FormEditCreateDraft": {
       "title": {
-        "string": "",
+        "string": "Versão Rascunho",
         "developer_comment": "This refers to the draft version of a Form."
       },
       "subtitle": {
-        "string": ""
+        "string": "Não há Rascunho ativo para esse Formulário"
       },
       "toMakeChanges": {
         "string": "",
@@ -3055,7 +3116,7 @@
     },
     "FormEditDef": {
       "subtitle": {
-        "string": "",
+        "string": "Carregado",
         "developer_comment": "This refers to the draft version of a Form."
       },
       "changed": {
@@ -3080,12 +3141,12 @@
     "FormEditDraftControls": {
       "action": {
         "delete": {
-          "string": "",
+          "string": "Excluir Formulário",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "subtitle": {
-        "string": "",
+        "string": "Pronto para publicar",
         "developer_comment": "This refers to the draft version of a Form."
       }
     },
@@ -3121,12 +3182,12 @@
         "developer_comment": "\"Definition\" refers to a Form Definition."
       },
       "whatAreEntities": {
-        "string": ""
+        "string": "O que são Entidades?"
       }
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "",
+        "string": "Versão atual",
         "developer_comment": "This refers to the current version of a Form."
       },
       "subtitle": {
@@ -3160,7 +3221,7 @@
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists updated by this form."
         },
         "attachedDatasets": {
-          "string": "",
+          "string": "Utiliza",
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
@@ -3326,7 +3387,7 @@
     },
     "FormRestore": {
       "title": {
-        "string": "",
+        "string": "Recuperar Formulário",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -3377,12 +3438,12 @@
       },
       "alert": {
         "delete": {
-          "string": "O formulário \"{name}\" foi excluído."
+          "string": ""
         }
       },
       "webFormsSetting": {
         "webForms": {
-          "string": "",
+          "string": "Web Forms",
           "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
         },
         "description": {
@@ -3390,7 +3451,7 @@
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDefault": {
-          "string": "",
+          "string": "Enketo (padrão)",
           "developer_comment": "The word \"Enketo\" should not be translated"
         }
       }
@@ -3478,7 +3539,7 @@
       },
       "action": {
         "restore": {
-          "string": "",
+          "string": "Recuperar",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3505,7 +3566,7 @@
     },
     "FormVersionRow": {
       "current": {
-        "string": "",
+        "string": "Versão publicada atualmente",
         "developer_comment": "This is a label shown for the current version of a Form."
       }
     },
@@ -3536,7 +3597,7 @@
     "FormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
         "useOdkWebForms": {
-          "string": "",
+          "string": "Utilizar ODK Web Forms",
           "developer_comment": "The words \"ODK Web Forms\" should not be translated"
         },
         "intro": {
@@ -3552,7 +3613,7 @@
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
           },
           "previewYourForm": {
-            "string": "",
+            "string": "visualizar o seu formulário",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
           }
         }
@@ -3563,7 +3624,7 @@
           "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
         },
         "useEnketo": {
-          "string": "",
+          "string": "Utilizar o Enketo",
           "developer_comment": "The word \"Enketo\" should not be translated"
         }
       }
@@ -3615,9 +3676,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "Selecionar {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        "apply": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3819,7 +3880,7 @@
       },
       "alert": {
         "success": {
-          "string": "Configurações do projeto salvas!"
+          "string": ""
         }
       }
     },
@@ -3941,7 +4002,7 @@
       },
       "alert": {
         "success": {
-          "string": "Suas alterações foram gravadas!"
+          "string": ""
         }
       }
     },
@@ -4159,7 +4220,7 @@
       },
       "alert": {
         "archive": {
-          "string": "O projeto \"{name}\" foi arquivado."
+          "string": ""
         }
       }
     },
@@ -4258,12 +4319,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "Limpar a busca",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4297,7 +4352,13 @@
           "string": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto."
         },
         "unassignRole": {
-          "string": "Sucesso! \"{displayName}\" foi removido deste projeto."
+          "string": ""
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Limpar a busca",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4367,7 +4428,7 @@
       },
       "alert": {
         "create": {
-          "string": "Sucesso! Seu link de acesso público foi criado e está ativo agora. Copie o link abaixo para distribuí-lo."
+          "string": ""
         },
         "revoke": {
           "string": "O link de acesso público \"{displayName}\" foi revogado com sucesso. Nenhuma resposta usando esse link será aceita de agora em diante."
@@ -4735,10 +4796,6 @@
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "Colunas exibidas",
@@ -4750,15 +4807,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nenhum",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4778,25 +4833,15 @@
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nenhum",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4810,28 +4855,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} de {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Todos",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nenhum",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": "Remetente desconhecido"
-      },
-      "allSubmitterSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {
@@ -4849,10 +4884,10 @@
         "string": "Não foram encontradas respostas com esses parâmetros."
       },
       "allDeleted": {
-        "string": ""
+        "string": "Todas as Respostas foram excluídas."
       },
       "allDeletedOnPage": {
-        "string": ""
+        "string": "Todas as Respostas nesta página foram excluídas."
       },
       "downloadDisabled": {
         "string": "O download está indisponível para Respostas excluídas"
@@ -4917,12 +4952,12 @@
     },
     "SubmissionRestore": {
       "title": {
-        "string": "",
+        "string": "Recuperar Resposta",
         "developer_comment": "This is the title at the top of Submission restore pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Você tem certeza que quer recuperar essa Resposta?"
         },
         "1": {
           "string": "A Resposta vai ser restaurada ao seu estado anterior, incluindo dados associados, como comentários."
@@ -4933,7 +4968,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "",
+          "string": "Recuperar imediatamente sem pedir confirmação até que eu saia desta página",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -5157,7 +5192,7 @@
     "WebFormRenderer": {
       "previewModal": {
         "title": {
-          "string": ""
+          "string": "Os dados são válidos"
         },
         "body": {
           "string": ""
@@ -5165,24 +5200,24 @@
       },
       "submissionModal": {
         "title": {
-          "string": ""
+          "string": "Formulário enviado com sucesso!"
         },
         "body": {
           "string": ""
         },
         "action": {
           "fillOutAgain": {
-            "string": "",
+            "string": "Preencher novamente",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "thankYouModal": {
         "title": {
-          "string": ""
+          "string": "Obrigado pela sua participação!"
         },
         "body": {
-          "string": ""
+          "string": "Você pode fechar essa janela agora."
         }
       },
       "editSubmissionModal": {
@@ -5190,7 +5225,7 @@
           "string": ""
         },
         "body": {
-          "string": ""
+          "string": "Você será redirecionado agora."
         }
       },
       "errorModal": {
@@ -5203,7 +5238,7 @@
       },
       "sendingDataModal": {
         "title": {
-          "string": ""
+          "string": "Enviando a Resposta"
         },
         "body": {
           "string": ""
@@ -5211,7 +5246,7 @@
       },
       "sessionTimeoutModal": {
         "title": {
-          "string": ""
+          "string": "Sessão expirada"
         },
         "body": {
           "full": {
@@ -5219,7 +5254,7 @@
             "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
           },
           "here": {
-            "string": "",
+            "string": "aqui",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
           }
         }
@@ -5233,7 +5268,7 @@
         },
         "action": {
           "tryAgain": {
-            "string": "",
+            "string": "Tentar novamente",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -5249,7 +5284,7 @@
       },
       "action": {
         "gotIt": {
-          "string": "",
+          "string": "Entendi!",
           "developer_comment": "This is the text of a button that is used to close the modal."
         }
       }

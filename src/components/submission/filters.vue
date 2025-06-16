@@ -88,20 +88,19 @@ export default {
   "de": {
     "field": {
       "submissionDate": "Übermittelt um"
-    },
-    "allSubmissionDateSelected": "(Alle)"
+    }
   },
   "es": {
     "field": {
       "submissionDate": "Enviado a"
     },
-    "allSubmissionDateSelected": "(Todos)"
+    "allSubmissionDateSelected": "Todos los tiempos"
   },
   "fr": {
     "field": {
       "submissionDate": "Soumis à"
     },
-    "allSubmissionDateSelected": "(Toutes)"
+    "allSubmissionDateSelected": "Tout temps"
   },
   "id": {
     "field": {
@@ -112,7 +111,7 @@ export default {
     "field": {
       "submissionDate": "Inviato alle"
     },
-    "allSubmissionDateSelected": "(Tutto)"
+    "allSubmissionDateSelected": "Per tutto il tempo"
   },
   "ja": {
     "field": {

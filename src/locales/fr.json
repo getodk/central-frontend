@@ -16,7 +16,7 @@
     "tab": {
       "publicAccess": "Accès public",
       "versions": "Versions",
-      "editForm": "Éditer Formulaire"
+      "editForm": "Éditer le Formulaire"
     }
   },
   "systemHome": {
@@ -49,7 +49,7 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Toutes actions)",
+      "nonverbose": "Toutes actions",
       "user": "Actions d'utilisateur web",
       "project": "Actions de projet",
       "form": "Actions de formulaire",
@@ -113,7 +113,8 @@
       "upgrade": {
         "process_form": "Traiter le formulaire",
         "process_form_draft": "Traiter l'ébauche du formulaire",
-        "process_form_entities_version": "Marquer le formulaire pour mise à jour"
+        "process_form_entities_version": "Marquer le formulaire pour mise à jour",
+        "server": "Nouvelle version"
       },
       "user": {
         "assignment_create": "Attribuer un rôle",
@@ -153,11 +154,13 @@
     "ok": "OK",
     "proceed": "Continuer",
     "refresh": "Rafraîchir",
+    "refreshPage": "Rafraîchir la page",
     "resetPassword": "Réinitialiser le mot de passe",
     "review": "Réviser",
     "save": "Enregistrer",
     "saveSettings": "Enregistrer les réglages",
     "sort": "Trier",
+    "undo": "Annuler",
     "update": "Actualiser",
     "yesProceed": "Oui, continuer",
     "showPreview": "Aperçu",
@@ -166,6 +169,7 @@
     "expand": "Déplier",
     "collapse": "Replier",
     "reviewParallelUpdates": "Examiner les mises à jour parallèles",
+    "tryAgain": "Essayer encore",
     "upload": "Téléverser",
     "restore": "Restaurer"
   },
@@ -246,11 +250,11 @@
     "draft": "Ébauche"
   },
   "alert": {
-    "passwordTooShort": "Merci de renseigner un mot de passe d'au moins 10 caractères.",
-    "updateEntity": "L'entité a été mise à jour !",
-    "updateReviewState": "État sauvegardé !",
-    "versionChange": "Le serveur a été mis à jour. Merci de rafraîchir la page pour éviter tout comportement inattendu.",
-    "submissionDeleted": "La soumission a été supprimée",
+    "passwordTooShort": "Le mot de passe doit avoir au moins 10 caractères.",
+    "updateEntity": "L'entité a été mise à jour avec succès.",
+    "updateReviewState": "État sauvegardé.",
+    "versionChange": "Le serveur a été mis à jours.",
+    "submissionDeleted": "La soumission a été supprimée.",
     "submissionRestored": "La Soumission a été restaurée",
     "entityRestored": "L'Entité \"{label}\" a été restaurée.",
     "entityDeleted": "L'Entité \"{label}\" a été supprimée."
@@ -328,6 +332,7 @@
     "warning": "Avertissement",
     "beta": "Beta",
     "none": "(aucun)",
+    "search": "Recherche",
     "reviewState": "État",
     "status": "Statut",
     "version": "Version"
@@ -363,9 +368,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "Votre session expirera dans 2minutes, et vous serez automatiquement déconnecté.",
-        "expired": "Votre session a expiré. Pour continuer à travailler, merci de vous connecter à nouveau.",
-        "logoutError": "Il y a eu un problème et vous n’avez pas été complètement déconnecté. Merci de rafraîchir la page et d'essayer à nouveau de vous déconnecter. {message}"
+        "expiresSoon": "Votre session expirera dans 2 minutes, et vous serez automatiquement déconnecté.",
+        "expired": "Votre session a expiré. Pour continuer à travailler, connectez vous à nouveau.",
+        "logoutError": {
+          "thereWasProblem": "Il y a eu un problème de déconnexion.",
+          "pleaseRefresh": "Veuillez rafraîchir la page et réessayer."
+        }
       }
     }
   },

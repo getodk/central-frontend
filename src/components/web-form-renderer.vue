@@ -527,16 +527,14 @@ onUnmounted(() => {
       "title": "Übermittlungsfehler"
     },
     "sendingDataModal": {
-      "title": "Übermittlung senden"
+      "title": "Übermittlung senden",
+      "body": "Ihre Daten werden jetzt übermittelt. Bitte schliessen Sie dieses Fenster nicht, bevor es fertig ist."
     },
     "sessionTimeoutModal": {
       "title": "Sitzung abgelaufen"
     },
     "retryModal": {
-      "title": "Übermittlungsfehler",
-      "action": {
-        "tryAgain": "Nochmals versuchen"
-      }
+      "title": "Übermittlungsfehler"
     }
   },
   "es": {
@@ -576,10 +574,7 @@ onUnmounted(() => {
     },
     "retryModal": {
       "title": "Error de envío",
-      "body": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}.",
-      "action": {
-        "tryAgain": "Inténtalo de nuevo"
-      }
+      "body": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}."
     }
   },
   "fr": {
@@ -619,10 +614,7 @@ onUnmounted(() => {
     },
     "retryModal": {
       "title": "Erreur de soumission",
-      "body": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}.",
-      "action": {
-        "tryAgain": "Essayer encore"
-      }
+      "body": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
     }
   },
   "it": {
@@ -662,10 +654,71 @@ onUnmounted(() => {
     },
     "retryModal": {
       "title": "Errore invio",
-      "body": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}.",
+      "body": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+    }
+  },
+  "pt": {
+    "previewModal": {
+      "title": "Os dados são válidos"
+    },
+    "submissionModal": {
+      "title": "Formulário enviado com sucesso!",
       "action": {
-        "tryAgain": "Ritenta ancora"
+        "fillOutAgain": "Preencher novamente"
       }
+    },
+    "thankYouModal": {
+      "title": "Obrigado pela sua participação!",
+      "body": "Você pode fechar essa janela agora."
+    },
+    "editSubmissionModal": {
+      "body": "Você será redirecionado agora."
+    },
+    "sendingDataModal": {
+      "title": "Enviando a Resposta"
+    },
+    "sessionTimeoutModal": {
+      "title": "Sessão expirada"
+    }
+  },
+  "zh-Hant": {
+    "previewModal": {
+      "title": "資料有效",
+      "body": "您輸入的資料是有效的，但因為這是表單預覽，所以沒有提交。"
+    },
+    "submissionModal": {
+      "title": "表單已成功傳送！",
+      "body": "填寫完畢後，您可以再次填寫此表單或關閉。",
+      "action": {
+        "fillOutAgain": "再次填寫"
+      }
+    },
+    "thankYouModal": {
+      "title": "感謝您的參與！",
+      "body": "您現在可以關閉此視窗。"
+    },
+    "editSubmissionModal": {
+      "title": "提交成功",
+      "body": "現在您將會被重定向。"
+    },
+    "errorModal": {
+      "title": "提交錯誤",
+      "body": "您的資料未提交。錯誤訊息：{errorMessage} 您可以關閉此對話框再試一次。如果錯誤持續發生，請聯絡要求您填寫本表單的人員或{supportEmail}。"
+    },
+    "sendingDataModal": {
+      "title": "發送提交內容",
+      "body": "正在提交您的資料。在完成之前，請不要關閉此視窗。"
+    },
+    "sessionTimeoutModal": {
+      "title": "會期已過期",
+      "body": {
+        "full": "請在不同的瀏覽器標籤中{here}登入，然後再試一次。",
+        "here": "從這裡"
+      }
+    },
+    "retryModal": {
+      "title": "提交錯誤",
+      "body": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
     }
   }
 }

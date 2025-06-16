@@ -140,13 +140,6 @@ const placeholder = (counts) => {
       "submitter": "Odesláno od",
       "search": "Hledat odesílatele..."
     },
-    "placeholder": "{selected} z {total}",
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Žádný"
-      }
-    },
     "unknown": "Neznámý odesílatel"
   },
   "de": {
@@ -154,56 +147,33 @@ const placeholder = (counts) => {
       "submitter": "Übermittelt von",
       "search": "Einsender suchen…"
     },
-    "placeholder": "{selected} von {total}",
-    "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
-    },
-    "unknown": "Unbekannter Einsender",
-    "allSubmitterSelected": "(Alle)"
+    "unknown": "Unbekannter Einsender"
   },
   "es": {
     "field": {
       "submitter": "Enviado por",
       "search": "Buscar remitentes…"
     },
-    "placeholder": "{selected} de {total}",
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Ninguno"
-      }
+      "all": "Todos",
+      "none": "Ninguno"
     },
-    "unknown": "Remitente desconocido",
-    "allSubmitterSelected": "(Todos)"
+    "unknown": "Remitente desconocido"
   },
   "fr": {
     "field": {
       "submitter": "Soumis par",
       "search": "Rechercher des expéditeurs"
     },
-    "placeholder": "{selected} sur {total}",
     "action": {
-      "select": {
-        "all": "Tous",
-        "none": "Aucun"
-      }
+      "all": "Tous",
+      "none": "Aucun"
     },
-    "unknown": "Expéditeur inconnu",
-    "allSubmitterSelected": "(Toutes)"
+    "unknown": "Expéditeur inconnu"
   },
   "id": {
     "field": {
       "submitter": "Terkirim oleh"
-    },
-    "placeholder": "{selected} dari {total}",
-    "action": {
-      "select": {
-        "all": "Semua",
-        "none": "Tidak Ada"
-      }
     }
   },
   "it": {
@@ -211,15 +181,11 @@ const placeholder = (counts) => {
       "submitter": "Inviato da",
       "search": "Cerca tra gli utenti..."
     },
-    "placeholder": "{selected} di {total}",
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
+      "all": "Tutto",
+      "none": "Nessuno/a"
     },
-    "unknown": "Utente invio sconosciuto",
-    "allSubmitterSelected": "(Tutto)"
+    "unknown": "Utente invio sconosciuto"
   },
   "ja": {
     "field": {
@@ -231,13 +197,6 @@ const placeholder = (counts) => {
       "submitter": "Enviado por",
       "search": "Pesquisar remetentes…"
     },
-    "placeholder": "{selected} de {total}",
-    "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Nenhum"
-      }
-    },
     "unknown": "Remetente desconhecido"
   },
   "sw": {
@@ -245,26 +204,12 @@ const placeholder = (counts) => {
       "submitter": "Iliyowasilishwa na",
       "search": "Tafuta wawasilishaji..."
     },
-    "placeholder": "{selected} kati ya {total}",
-    "action": {
-      "select": {
-        "all": "Wote",
-        "none": "Hakuna"
-      }
-    },
     "unknown": "Mwasilishaji asiyejulikana"
   },
   "zh-Hant": {
     "field": {
       "submitter": "由提交者",
       "search": "搜尋提交者..."
-    },
-    "placeholder": "{selected} /{total}",
-    "action": {
-      "select": {
-        "all": "全部",
-        "none": "無"
-      }
     },
     "unknown": "未知提交者"
   }

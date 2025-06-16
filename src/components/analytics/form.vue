@@ -224,9 +224,6 @@ export default {
     "field": {
       "workEmail": "Pracovní e-mailová adresa",
       "organization": "Název organizace"
-    },
-    "alert": {
-      "success": "Nastavení uloženo!"
     }
   },
   "de": {
@@ -256,9 +253,6 @@ export default {
     "field": {
       "workEmail": "Email Adresse (geschäftlich)",
       "organization": "Name der Organisation"
-    },
-    "alert": {
-      "success": "Einstellungen gespeichert!"
     }
   },
   "es": {
@@ -290,7 +284,7 @@ export default {
       "organization": "Nombre de la Organización"
     },
     "alert": {
-      "success": "¡Configuración guardada!"
+      "success": "Ajustes guardados correctamente."
     }
   },
   "fr": {
@@ -347,9 +341,6 @@ export default {
     "field": {
       "workEmail": "Alamat email kantor",
       "organization": "Nama Organisasi"
-    },
-    "alert": {
-      "success": "Pengaturan disimpan!"
     }
   },
   "it": {
@@ -381,7 +372,7 @@ export default {
       "organization": "Nome dell'Organizzazione"
     },
     "alert": {
-      "success": "Impostazioni salvate!"
+      "success": "Impostazioni salvate con successo!"
     }
   },
   "ja": {
@@ -411,9 +402,6 @@ export default {
     "field": {
       "workEmail": "職場のメールアドレス",
       "organization": "組織名"
-    },
-    "alert": {
-      "success": "設定が保存されました！"
     }
   },
   "pt": {
@@ -443,9 +431,6 @@ export default {
     "field": {
       "workEmail": "Endereço de email de trabalho",
       "organization": "Nome da organização"
-    },
-    "alert": {
-      "success": "Configurações gravadas com sucesso!"
     }
   },
   "sw": {
@@ -475,9 +460,6 @@ export default {
     "field": {
       "workEmail": "Anwani ya barua pepe ya kazini",
       "organization": "Jina la shirika"
-    },
-    "alert": {
-      "success": "Mipangilio imehifadhiwa!"
     }
   },
   "zh-Hant": {
@@ -509,7 +491,7 @@ export default {
       "organization": "組織名稱"
     },
     "alert": {
-      "success": "設定已儲存！"
+      "success": "設定已成功儲存。"
     }
   }
 }

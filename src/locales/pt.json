@@ -15,7 +15,8 @@
   "formHead": {
     "tab": {
       "publicAccess": "Acesso Público",
-      "versions": "Versões"
+      "versions": "Versões",
+      "editForm": "Editar Formulário"
     }
   },
   "systemHome": {
@@ -48,7 +49,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Todas as ações)",
       "user": "Ações de usuários do site",
       "project": "Ações do projeto",
       "form": "Ações de formulário",
@@ -93,6 +93,7 @@
         "update_draft_delete": "Abandonar rascunho",
         "attachment_update": "Atualizar anexos",
         "submission_export": "Baixar respostas",
+        "restore": "Recuperar",
         "purge": "Limpar",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -135,6 +136,7 @@
     "comment": "Comentário",
     "continue": "Continuar",
     "create": "Criar",
+    "createSubmission": "Nova Resposta",
     "delete": "Excluir",
     "done": "Concluído",
     "download": "Baixar",
@@ -163,7 +165,9 @@
     "expand": "Expandir",
     "collapse": "Condensar",
     "reviewParallelUpdates": "Revisar atualizações paralelas",
-    "upload": "Carregar"
+    "tryAgain": "Tentar novamente",
+    "upload": "Carregar",
+    "restore": "Recuperar"
   },
   "field": {
     "comment": "Deixe um comentário",
@@ -208,6 +212,7 @@
   },
   "count": {
     "appUser": "{count} usuário de aplicativo | {count} usuários de aplicativo | {count} usuários de aplicativo",
+    "attachments": "{count} anexo | {count} anexos | {count} anexos",
     "form": "{count} formulário | {count} formulários | {count} formulários",
     "submission": "{count} resposta | {count} respostas | {count} respostas",
     "warning": "{count} aviso | {count} avisos | {count} avisos"
@@ -215,6 +220,7 @@
   "resource": {
     "appUser": "Usuário de aplicativo",
     "appUsers": "Usuários de aplicativo",
+    "attachments": "Anexos",
     "config": "Configuração do servidor",
     "entity": "Entidade",
     "entities": "Entidades",
@@ -240,11 +246,8 @@
     "draft": "Rascunho"
   },
   "alert": {
-    "passwordTooShort": "Por favor, insira uma senha com pelo menos 10 caracteres.",
-    "updateEntity": "A Entidade foi atualizada!",
-    "updateReviewState": "Status de revisão salvo!",
-    "versionChange": "O servidor foi atualizado. Por favor atualize a página para evitar comportamentos indesejáveis.",
-    "submissionDeleted": "A Resposta foi deletada.",
+    "submissionRestored": "A Resposta foi recuperada.",
+    "entityRestored": "A Entidade \"{label}\" foi recuperada.",
     "entityDeleted": "A Entidade \"{label}\" foi excluída."
   },
   "moreInfo": {
@@ -318,6 +321,8 @@
     "totalEntities": "Total de Entidades",
     "versionShort": "v{version}",
     "warning": "Aviso",
+    "beta": "Beta",
+    "none": "(nenhum)",
     "reviewState": "Status da revisão",
     "status": "Situação",
     "version": "Versão"
@@ -349,13 +354,6 @@
           "message": "Este Formulário tenta criar uma nova propriedade de Entidade que corresponde a uma já existente, exceto pelas letras maiúsculas: | Este Formulário tenta criar novas propriedades de Entidade que correspondem às existentes, exceto pelas letras maiúsculas: | Este Formulário tenta criar novas propriedades de Entidade que correspondem às existentes, exceto pelas letras maiúsculas:",
           "duplicateProperty": "{provided}(existentes: {current})"
         }
-      }
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Sua sessão irá expirar em 2 minutos e será encerrada automaticamente.",
-        "expired": "Sua sessão expirou. Para continuar trabalhando efetue login novamente.",
-        "logoutError": "Houve um problema e sua última sessão não foi encerrada corretamente. Por favor, atualize a página ou tente efetuar login novamente. {message}"
       }
     }
   },

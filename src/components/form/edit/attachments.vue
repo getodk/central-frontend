@@ -104,7 +104,12 @@ const tag = computed(() => {
 <i18n>
 {
   "de": {
-    "noAttachments": "Diese Definition erfordert keine Anhänge, es muss also nichts hochgeladen werden."
+    "noAttachments": "Diese Definition erfordert keine Anhänge, es muss also nichts hochgeladen werden.",
+    "missingCount": "{count}Fehlender Anhang | {count}Fehlende Anhänge",
+    "diff": {
+      "newCount": "{count} Neue Anhang | {count}Neue Anhänge",
+      "changedCount": "{count} geänderte Anhang | {count}geänderte Anhänge"
+    }
   },
   "es": {
     "noAttachments": "Esta definición no requiere archivos adjuntos, por lo que no hay nada que «subir».",
@@ -131,6 +136,22 @@ const tag = computed(() => {
       "newCount": "{count} nuovo allegato | {count} nuovi allegati | {count} nuovi allegati",
       "changedCount": "{count} allegato modificato | {count} allegati modificati | {count} allegati modificati",
       "summary": "{changes} rispetto alla versione pubblicata"
+    }
+  },
+  "pt": {
+    "noAttachments": "Essa definição de formulário não requer anexos, portanto não há nada a ser carregado.",
+    "missingCount": "{count} anexo faltando | {count} anexos faltando | {count} anexos faltando",
+    "diff": {
+      "newCount": "{count} novo anexo | {count} novos anexos | {count} novos anexos"
+    }
+  },
+  "zh-Hant": {
+    "noAttachments": "此定義不需要任何附件，因此沒有任何東西需要上傳。",
+    "missingCount": "{count}個遺失附件",
+    "diff": {
+      "newCount": "{count}個新附件",
+      "changedCount": "{count}個變更附件",
+      "summary": "{changes}自發布版本以來"
     }
   }
 }

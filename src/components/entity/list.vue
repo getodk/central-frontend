@@ -561,6 +561,7 @@ export default {
       "delete": "L'Entité \"{label}\" a été supprimée."
     },
     "filterDisabledMessage": "Le filtrage n'est pas disponible pour les entités supprimées.",
+    "searchDisabledMessage": "La recherche n'est pas disponible pour les entités supprimées",
     "downloadDisabled": "Le téléchargement n'est pas disponible pour les entités supprimées.",
     "deletedEntity": {
       "emptyTable": "Il n'y a pas d'Entité supprimée.",
@@ -577,6 +578,7 @@ export default {
       "delete": "La Entità “{label}” è stata cancellata."
     },
     "filterDisabledMessage": "Il filtro non è disponibile per le Entità eliminate.",
+    "searchDisabledMessage": "La ricerca non è disponibile per le entità eliminate",
     "downloadDisabled": "Il download non è disponibile per le Entità eliminate",
     "deletedEntity": {
       "emptyTable": "Non ci sono Entità cancellate.",
@@ -587,11 +589,18 @@ export default {
   "pt": {
     "noEntities": "Não há Entidades para mostrar.",
     "noMatching": "Não há Entidades correspondentes.",
+    "allDeleted": "Todas as Entidades foram excluídas.",
+    "allDeletedOnPage": "Todas as Entidades nesta página foram excluídas.",
     "alert": {
       "delete": "A Entidade \"{label}\" foi excluída."
     },
     "filterDisabledMessage": "Não é possível filtrar Entidades excluídas",
-    "downloadDisabled": "Não é possível fazer download de Entidades excluídas"
+    "downloadDisabled": "Não é possível fazer download de Entidades excluídas",
+    "deletedEntity": {
+      "emptyTable": "Não há Entidades excluídas.",
+      "allRestored": "Todas as Entidades excluídas foram recuperadas.",
+      "allRestoredOnPage": "Todas as Entidades nesta página foram recuperadas."
+    }
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
@@ -600,8 +609,17 @@ export default {
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
     "noMatching": "無相符的實體。",
+    "allDeleted": "所有實體都會被刪除。",
+    "allDeletedOnPage": "頁面上的所有實體都已刪除。",
     "alert": {
       "delete": "實體「1{label}」已被刪除。"
+    },
+    "filterDisabledMessage": "已刪除的實體無法使用篩選功能",
+    "downloadDisabled": "已刪除的實體無法下載",
+    "deletedEntity": {
+      "emptyTable": "沒有已刪除的實體。",
+      "allRestored": "所有已刪除的實體都會還原。",
+      "allRestoredOnPage": "頁面上的所有實體都已還原。"
     }
   }
 }

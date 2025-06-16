@@ -49,7 +49,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Alle Aktionen)",
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
@@ -153,11 +152,13 @@
     "ok": "Okay",
     "proceed": "Fortfahren",
     "refresh": "Aktualisieren",
+    "refreshPage": "Seite aktualisieren",
     "resetPassword": "Passwort zurücksetzen",
     "review": "Überprüfen",
     "save": "Speichern",
     "saveSettings": "Einstellungen speichern",
     "sort": "Sortieren",
+    "undo": "Rückgängig machen",
     "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren",
     "showPreview": "Vorschau",
@@ -166,6 +167,7 @@
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
     "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "tryAgain": "Nochmals versuchen",
     "upload": "Hochladen",
     "restore": "Wiederherstellen"
   },
@@ -246,11 +248,7 @@
     "draft": "Entwurf"
   },
   "alert": {
-    "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
-    "updateEntity": "Das Objekt wurde aktualisiert!",
-    "updateReviewState": "Überprüfungsstatus gespeichert!",
-    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden.",
-    "submissionDeleted": "Die Übermittlung wurde gelöscht.",
+    "passwordTooShort": "Das Passwort muss mindestens 10 Zeichen lang sein.",
     "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
     "entityRestored": "Die Entität \"{label}“ wurde wiederhergestellt.",
     "entityDeleted": "Die Entität \"{label}“ wurde gelöscht."
@@ -328,6 +326,7 @@
     "warning": "Warnung",
     "beta": "Beta",
     "none": "(keine)",
+    "search": "Suchen",
     "reviewState": "Überprüfungsstatus",
     "status": "Status",
     "version": "Version"
@@ -359,13 +358,6 @@
           "message": "Mit diesem Formular wird versucht, eine neue Entitätseigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Entitätseigenschaften zu erstellen, die mit Ausnahme der Gross- und Kleinschreibung mit den vorhandenen übereinstimmen:",
           "duplicateProperty": "{provided} (bestehende: {current})"
         }
-      }
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Ihre Sitzung läuft in 2 Minuten ab und Sie werden automatisch ausgeloggt.",
-        "expired": "Ihre Sitzung ist abgelaufen. Um weiterzuarbeiten, bitte erneut einloggen.",
-        "logoutError": "Es gab ein Problem und Sie wurden nicht vollständig ausgeloggt. Bitte die Seite aktualisieren und versuchen sich erneut einzuloggen. {message}"
       }
     }
   },

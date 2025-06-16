@@ -174,7 +174,6 @@ export default {
     ],
     "emptyTable": "Pro tento formulář neexistují žádné veřejně přístupné odkazy.",
     "alert": {
-      "create": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho.",
       "revoke": "Veřejně přístupný odkaz „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
     }
   },
@@ -194,7 +193,6 @@ export default {
     ],
     "emptyTable": "Es gibt keine öffentlichen Zugangslinks für dieses Formular.",
     "alert": {
-      "create": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen.",
       "revoke": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
     }
   },
@@ -214,7 +212,7 @@ export default {
     ],
     "emptyTable": "No hay enlaces de acceso público para este formulario.",
     "alert": {
-      "create": "¡Operación exitosa! Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo.",
+      "create": "Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo.",
       "revoke": "El enlace de acceso público \"{displayName}\" fue revocado con éxito. No se aceptarán más envíos a través de este enlace."
     }
   },
@@ -234,7 +232,7 @@ export default {
     ],
     "emptyTable": "Il n'y a aucun lien d'accès public pour ce formulaire.",
     "alert": {
-      "create": "Succès ! Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
+      "create": "Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
       "revoke": "Le lien d'accès public \"{displayName}\" a été révoqué avec succès. Aucune soumission ne sera acceptée depuis ce lien."
     }
   },
@@ -254,7 +252,6 @@ export default {
     ],
     "emptyTable": "Tidak ada Tautan Akses Publik untuk formulir ini.",
     "alert": {
-      "create": "Berhasil! Tautan Akses Publik telah dibuat dan aktif. Salin tautan di bawah untuk disebar.",
       "revoke": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini."
     }
   },
@@ -274,7 +271,7 @@ export default {
     ],
     "emptyTable": "Non ci sono link di accesso pubblico per questo formulario.",
     "alert": {
-      "create": "Riuscito! Il tuo link di accesso pubblico è stato creato ed è ora attivo. Copialo qui sotto per distribuirlo.",
+      "create": "Il tuo link di accesso pubblico è stato creato ed è ora attivo. Copialo qui sotto per distribuirlo.",
       "revoke": "Il link di accesso pubblico \"{displayName}\" è stato revocato con successo. Non saranno accettati ulteriori Invii utilizzando questo Link."
     }
   },
@@ -294,7 +291,6 @@ export default {
     ],
     "emptyTable": "このフォームに一般公開リンクはありません。",
     "alert": {
-      "create": "成功です！一般公開リンクが作成され、利用可能です。 以下をコピーして配布できます。",
       "revoke": "一般公開リンク\"{displayName}\"の無効化に成功しました。以後、このリンクでのサフォームの提出は受付られません。"
     }
   },
@@ -314,7 +310,6 @@ export default {
     ],
     "emptyTable": "Não existem links de acesso público para esse formulário.",
     "alert": {
-      "create": "Sucesso! Seu link de acesso público foi criado e está ativo agora. Copie o link abaixo para distribuí-lo.",
       "revoke": "O link de acesso público \"{displayName}\" foi revogado com sucesso. Nenhuma resposta usando esse link será aceita de agora em diante."
     }
   },
@@ -334,7 +329,6 @@ export default {
     ],
     "emptyTable": "Hakuna Viungo vya Ufikiaji wa Umma vya Fomu hii.",
     "alert": {
-      "create": "Mafanikio! Kiungo chako cha Kufikia Umma kimeundwa na sasa kinapatikana. Nakili hapa chini ili kuisambaza.",
       "revoke": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
     }
   },
@@ -354,7 +348,7 @@ export default {
     ],
     "emptyTable": "此表格沒有公共存取連結。",
     "alert": {
-      "create": "成功！您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。",
+      "create": "您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。",
       "revoke": "公共存取連結“{displayName}”已成功撤銷。使用此連結將不再接受任何提交。"
     }
   }

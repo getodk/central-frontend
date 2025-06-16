@@ -64,6 +64,12 @@ export default {
   },
   "it": {
     "noLogDateSelected": "(nessuno)"
+  },
+  "pt": {
+    "noLogDateSelected": "(nenhum)"
+  },
+  "zh-Hant": {
+    "noLogDateSelected": "(無)"
   }
 }
 </i18n>

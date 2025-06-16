@@ -239,6 +239,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "zh-Hant": {
+    "submissionDetails": "提交詳情",
     "formVersion": "表單版本",
     "deviceId": "裝置ID",
     "userAgent": "使用者代理",

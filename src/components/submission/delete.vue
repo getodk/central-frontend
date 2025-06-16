@@ -94,7 +94,8 @@ const del = () => {
   "de": {
     "title": "Übermittlung löschen",
     "introduction": [
-      "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?"
+      "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?",
+      "Diese Aktion verschiebt die Übermittlung in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
     ],
     "field": {
       "noConfirm": "Sofortiges Löschen ohne Bestätigung, bis ich die Seite verlasse"
@@ -142,7 +143,8 @@ const del = () => {
   "zh-Hant": {
     "title": "刪除提交內容",
     "introduction": [
-      "您確定要刪除此提交嗎？"
+      "您確定要刪除此提交嗎？",
+      "此操作會將提交內容移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以還原。"
     ],
     "field": {
       "noConfirm": "立即刪除，無需確認，直到我離開頁面"

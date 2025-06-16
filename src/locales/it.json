@@ -49,7 +49,7 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Tutte le Azioni)",
+      "nonverbose": "Tutte le Azioni",
       "user": "Azioni utente web",
       "project": "Azioni di progetto",
       "form": "Azioni del form",
@@ -113,7 +113,8 @@
       "upgrade": {
         "process_form": "Processare il formulario",
         "process_form_draft": "Elabora la bozza del formulario",
-        "process_form_entities_version": "Segnala formulario per l'Aggiornamento"
+        "process_form_entities_version": "Segnala formulario per l'Aggiornamento",
+        "server": "Nuova versione"
       },
       "user": {
         "assignment_create": "Assegna ruolo",
@@ -153,11 +154,13 @@
     "ok": "Okay",
     "proceed": "Procedere",
     "refresh": "Aggiornare",
+    "refreshPage": "Aggiorna la pagina",
     "resetPassword": "Resetta la password",
     "review": "Rivedi",
     "save": "Salvare",
     "saveSettings": "Salva le impostazioni",
     "sort": "Ordina",
+    "undo": "Annulla",
     "update": "Aggiorna",
     "yesProceed": "Si, procedere",
     "showPreview": "Anteprima",
@@ -166,6 +169,7 @@
     "expand": "Espandere",
     "collapse": "Chiudere",
     "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
+    "tryAgain": "Ritenta ancora",
     "upload": "Carica",
     "restore": "Ripristino"
   },
@@ -246,11 +250,11 @@
     "draft": "Bozza"
   },
   "alert": {
-    "passwordTooShort": "Si prega di inserire una password di almeno 10 caratteri.",
-    "updateEntity": "L'Entità è stata aggiornata!",
-    "updateReviewState": "Stato revisione salvato!",
-    "versionChange": "Il server è stato aggiornato. Aggiorna la pagina per evitare comportamenti imprevedibili.",
-    "submissionDeleted": "L'invio è stato cancellato.",
+    "passwordTooShort": "La password deve essere almeno 10 caratteri.",
+    "updateEntity": "L'Entità è stata aggiornata con successo.",
+    "updateReviewState": "Stato revisione salvato correttamente!",
+    "versionChange": "Il server è stato aggiornato con successo.",
+    "submissionDeleted": "L'invio è stato eliminato con successo.",
     "submissionRestored": "L'invio è stata ripristinato.",
     "entityRestored": "La Entità “{label}” è stata ripristinata.",
     "entityDeleted": "La Entità “{label}” è stata cancellata."
@@ -328,6 +332,7 @@
     "warning": "Avvertimento",
     "beta": "Beta",
     "none": "(nessuno)",
+    "search": "Cerca",
     "reviewState": "Stato Revisione",
     "status": "Stato",
     "version": "Versione"
@@ -363,9 +368,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "La tua sessione scadrà tra 2 minuti e verrai automaticamente disconnesso.",
-        "expired": "La tua sessione è scaduta. Per continuare a lavorare, effettua nuovamente il login.",
-        "logoutError": "Si è verificato un problema e non sei stato completamente disconnesso. Aggiorna la pagina e prova a disconnetterti di nuovo. {message}"
+        "expiresSoon": "La tua sessione sta scadendo! Verrai disconnesso tra 2 minuti.",
+        "expired": "La tua sessione è scaduta. Effettua nuovamente il login per continuare.",
+        "logoutError": {
+          "thereWasProblem": "C'è stato un errore nel log out.",
+          "pleaseRefresh": "Aggiorna la pagina e riprova."
+        }
       }
     }
   },

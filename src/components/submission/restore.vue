@@ -98,7 +98,10 @@ const restore = () => {
       "Sind Sie sicher, dass Sie diese Übermittlung wiederherstellen wollen?",
       "Die Übermittlung wird in seinem vorherigen Zustand wiederhergestellt, einschliesslich zugehöriger Daten wie Kommentare.",
       "Wenn die Übermittlung erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
-    ]
+    ],
+    "field": {
+      "noConfirm": "Sofortige Wiederherstellen ohne Bestätigung, bis ich die Seite verlasse"
+    }
   },
   "es": {
     "title": "Restablecer el envío",
@@ -131,6 +134,28 @@ const restore = () => {
     ],
     "field": {
       "noConfirm": "Ripristino immediato senza conferma fino a quando non lascio la pagina"
+    }
+  },
+  "pt": {
+    "title": "Recuperar Resposta",
+    "introduction": [
+      "Você tem certeza que quer recuperar essa Resposta?",
+      "A Resposta vai ser restaurada ao seu estado anterior, incluindo dados associados, como comentários.",
+      "Se a Resposta foi excluída novamente, haverá um novo prazo de 30 dias até que seja removida."
+    ],
+    "field": {
+      "noConfirm": "Recuperar imediatamente sem pedir confirmação até que eu saia desta página"
+    }
+  },
+  "zh-Hant": {
+    "title": "恢復提交內容",
+    "introduction": [
+      "您確定要還原此提交嗎？",
+      "提交內容將恢復到先前的狀態，包括評論等相關資料。",
+      "如果提交內容再次被刪除，則需要 30 天後才會被刪除。"
+    ],
+    "field": {
+      "noConfirm": "立即還原，無需確認，直到我離開頁面"
     }
   }
 }

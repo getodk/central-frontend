@@ -392,7 +392,8 @@ export default {
       "若要連接到此 OData 來源，請選擇您的工具並將連結複製到其中。"
     ],
     "tab": {
-      "microsoft": "Power BI 或 Excel"
+      "microsoft": "Power BI 或 Excel",
+      "other": "其他 (API)"
     },
     "help": {
       "microsoft": {

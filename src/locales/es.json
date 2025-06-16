@@ -49,7 +49,7 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Todas las acciones)",
+      "nonverbose": "Todas las acciones",
       "user": "Acciones de usuarios web",
       "project": "Acciones de proyectos",
       "form": "Acciones de formulario",
@@ -113,7 +113,8 @@
       "upgrade": {
         "process_form": "Procesar formulario",
         "process_form_draft": "Procesar borrador de formulario",
-        "process_form_entities_version": "Marcar formulario para actualización"
+        "process_form_entities_version": "Marcar formulario para actualización",
+        "server": "Nueva versión"
       },
       "user": {
         "assignment_create": "Asignar rol",
@@ -153,11 +154,13 @@
     "ok": "De acuerdo",
     "proceed": "Continuar",
     "refresh": "Actualizar",
+    "refreshPage": "Refresque la página",
     "resetPassword": "Restablecer contraseña",
     "review": "Revisar",
     "save": "Guardar",
     "saveSettings": "Guardar las configuraciónes",
     "sort": "Ordenar",
+    "undo": "Deshacer",
     "update": "Actualizar",
     "yesProceed": "Sí, continuar",
     "showPreview": "Vista previa",
@@ -166,6 +169,7 @@
     "expand": "Expandir",
     "collapse": "Contraer",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
+    "tryAgain": "Inténtalo de nuevo",
     "upload": "Subir",
     "restore": "Restablecer"
   },
@@ -246,11 +250,11 @@
     "draft": "Borrador"
   },
   "alert": {
-    "passwordTooShort": "Introduzca una contraseña de al menos 10 caracteres.",
-    "updateEntity": "¡La Entidad ha sido actualizada!",
-    "updateReviewState": "Estado de revisión guardado!",
-    "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles.",
-    "submissionDeleted": "El envío ha sido eliminado.",
+    "passwordTooShort": "La contraseña debe tener al menos 10 caracteres.",
+    "updateEntity": "La entidad se ha actualizado correctamente.",
+    "updateReviewState": "Revisión guardada correctamente.",
+    "versionChange": "El servidor se ha actualizado correctamente.",
+    "submissionDeleted": "El envío se ha eliminado correctamente.",
     "submissionRestored": "La Sumisión ha sido restablecida.",
     "entityRestored": "Entidad “{label}” fue recuperada.",
     "entityDeleted": "Entidad “{label}” se ha eliminado."
@@ -328,6 +332,7 @@
     "warning": "Advertencia",
     "beta": "Beta",
     "none": "(ninguno)",
+    "search": "Buscar",
     "reviewState": "Estado de revisión",
     "status": "Estado",
     "version": "Versión"
@@ -363,9 +368,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "Su sesión caducará en 2 minutos y se cerrará automáticamente.",
-        "expired": "Su sesión ha caducado. Para seguir trabajando, por favor conectarse de nuevo.",
-        "logoutError": "Hubo un problema y no se desconectó por completo. Actualice la página e intente cerrar la sesión nuevamente. {message}"
+        "expiresSoon": "Su sesión está caducando. Se cerrará su sesión en 2 minutos.",
+        "expired": "Su sesión ha caducado. Inicie sesión de nuevo para continuar.",
+        "logoutError": {
+          "thereWasProblem": "Hubo un problema al cerrar la sesión.",
+          "pleaseRefresh": "Por favor, actualice la página e inténtelo de nuevo."
+        }
       }
     }
   },

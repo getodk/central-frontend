@@ -197,6 +197,9 @@ if (!form.dataExists) fetchForm();
   },
   "it": {
     "formNotFound": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+  },
+  "zh-Hant": {
+    "formNotFound": "此 URL 未找到表單，請仔細檢查。"
   }
 }
 </i18n>
