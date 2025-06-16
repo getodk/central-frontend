@@ -32,7 +32,9 @@ may add the `in` class to the element, and the checkScroll() method may add the
             <h4 :id="titleId" class="modal-title"><slot name="title"></slot></h4>
           </div>
           <div ref="body" class="modal-body">
-            <RedAlert v-show="redAlert.state"/>
+            <template v-if="state">
+              <RedAlert v-show="redAlert.state"/>
+            </template>
             <slot name="body"></slot>
           </div>
         </div>
