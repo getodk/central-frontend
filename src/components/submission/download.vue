@@ -117,8 +117,6 @@ except according to the terms contained in the LICENSE file.
       the iframe form is submitted. -->
       <!-- eslint-disable-next-line vuejs-accessibility/iframe-has-title -->
       <iframe v-show="false" ref="iframe" src="/blank.html"></iframe>
-      <!-- eslint-disable-next-line vuejs-accessibility/anchor-has-content -->
-      <a v-show="false" ref="tryAgain"></a>
     </template>
   </modal>
 </template>
@@ -297,9 +295,11 @@ export default {
         (tries < 300 ? 1000 : null));
     },
     download(event) {
+      // Return early if triggered from the "Try again" link.
+      if (!this.state) return;
+
       const a = event.target.closest('a');
       if (a == null) return;
-      const href = a.getAttribute('href');
 
       // `true` if the click will go through and the download will be attempted;
       // `false` if the form is invalid.
@@ -308,19 +308,15 @@ export default {
 
       if (this.managedKey != null) {
         event.preventDefault();
-        if (willDownload) this.decrypt(href);
+        if (willDownload) this.decrypt(a.getAttribute('href'));
       }
 
       if (willDownload) {
-        const { cta } = this.alert.info(this.$t('alert.submit'));
-        if (this.managedKey == null) {
-          cta(this.$t('action.tryAgain'), () => {
-            this.$refs.tryAgain.setAttribute('href', href);
-            this.$refs.tryAgain.click();
-          });
-        }
-
         this.$emit('hide');
+
+        const { cta } = this.alert.info(this.$t('alert.submit'));
+        if (this.managedKey == null)
+          cta(this.$t('action.tryAgain'), () => { a.click(); });
       }
     }
   }
