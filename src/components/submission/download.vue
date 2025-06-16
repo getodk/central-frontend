@@ -312,9 +312,9 @@ export default {
       }
 
       if (willDownload) {
-        const alertChain = this.alert.info(this.$t('alert.submit'));
+        const { cta } = this.alert.info(this.$t('alert.submit'));
         if (this.managedKey == null) {
-          alertChain.cta(this.$t('action.tryAgain'), () => {
+          cta(this.$t('action.tryAgain'), () => {
             this.$refs.tryAgain.setAttribute('href', href);
             this.$refs.tryAgain.click();
           });

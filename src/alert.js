@@ -29,6 +29,7 @@ class AlertData {
   #cta;
   #readonlyCta;
   #defaultOptions;
+  #showChain;
 
   constructor(defaultOptions = undefined) {
     this.#defaultOptions = {
@@ -49,6 +50,8 @@ class AlertData {
     // Data about the Call to Action (CTA) button that's shown in the alert
     this.#cta = shallowReactive({ text: null, handler: null, pending: false });
     this.#readonlyCta = readonly(this.#cta);
+
+    this.#showChain = { cta: this.#showCta.bind(this) };
   }
 
   get state() { return this.#data.state; }
@@ -57,11 +60,6 @@ class AlertData {
   get at() { return this.#data.at; }
   get autoHide() { return this.state && this.#data.autoHide; }
   get cta() { return this.#cta.text != null ? this.#readonlyCta : null; }
-
-  #resetCta() {
-    if (this.#cta.text == null) return;
-    Object.assign(this.#cta, { text: null, handler: null, pending: false });
-  }
 
   // Shows a new alert message. Returns an object with a cta() method to add a
   // CTA to the alert.
@@ -74,35 +72,15 @@ class AlertData {
       at: new Date()
     });
     Object.assign(this.#data, this.#defaultOptions, options);
-    this.#resetCta();
-    // eslint-disable-next-line no-use-before-define
-    return new AlertChain(this, this.#cta);
+    this.#hideCta();
+    return this.#showChain;
   }
 
   hide() {
     if (!this.state) return;
     Object.assign(this.#data, { state: false, message: null });
     Object.assign(this.#data, this.#defaultOptions);
-    this.#resetCta();
-  }
-}
-
-class AlertChain {
-  #alert;
-  #cta;
-  #startId;
-
-  constructor(alert, cta) {
-    this.#alert = alert;
-    this.#cta = cta;
-    this.#startId = alert.messageId;
-  }
-
-  // Checks that there hasn't been a change to the alert since the AlertChain
-  // was created.
-  #checkChange() {
-    if (!this.#alert.state) throw new Error('no alert');
-    if (this.#alert.messageId !== this.#startId) throw new Error('new alert');
+    this.#hideCta();
   }
 
   /*
@@ -111,28 +89,31 @@ class AlertChain {
     async. If the function returns or resolves to `true`, the alert will be
     hidden.
   */
-  cta(text, handler) {
-    this.#checkChange();
+  #showCta(text, handler) {
     this.#cta.text = text;
-
     // Wraps the specified handler in a function with some extra behavior.
     this.#cta.handler = () => {
-      this.#checkChange();
       if (this.#cta.pending) return Promise.reject(new Error('CTA is pending'));
       this.#cta.pending = true;
+      const startId = this.messageId;
       return Promise.resolve(handler())
         .then(result => {
-          if (this.#alert.messageId === this.#startId) {
+          if (this.messageId === startId) {
             if (result === true)
-              this.#alert.hide();
+              this.hide();
             else
               this.#cta.pending = false;
           }
         })
         .catch(() => {
-          if (this.#alert.messageId === this.#startId) this.#cta.pending = false;
+          if (this.messageId === startId) this.#cta.pending = false;
         });
     };
+  }
+
+  #hideCta() {
+    if (this.#cta.text == null) return;
+    Object.assign(this.#cta, { text: null, handler: null, pending: false });
   }
 }
 

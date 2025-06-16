@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div :key="alert.messageId" class="alert" role="alert">
-    <div class="alert-message">{{ alert.message }}</div>
+    <div class="alert-message"><span>{{ alert.message }}</span></div>
     <div v-if="cta != null" class="alert-cta-container">
       <button type="button" class="alert-cta btn btn-link"
         :aria-disabled="cta.pending" @click="cta.handler">
