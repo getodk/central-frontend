@@ -16,6 +16,9 @@ Alert component uses this data to render the alert.
 
 The root component can call useAlert() to set up additional functionality for
 an alert. For example, useAlert() will auto-hide the alert.
+
+See src/container/alerts.js for information about the different alert objects in
+use.
 */
 
 import { onBeforeUnmount, readonly, shallowReactive, watch, watchEffect } from 'vue';
@@ -91,8 +94,8 @@ class AlertData {
   /*
   - text. Text of the CTA.
   - handler. Function to call when the user clicks the CTA. The function can be
-    async. If the function returns or resolves to `true`, the alert will be
-    hidden.
+    async. If the function returns `true` or resolves to `true`, the alert will
+    be hidden.
   */
   #showCta(text, handler) {
     this.#cta.text = text;
@@ -103,6 +106,8 @@ class AlertData {
       const startId = this.messageId;
       return Promise.resolve(handler())
         .then(result => {
+          // If there has been a new message since the promise began, do
+          // nothing.
           if (this.messageId === startId) {
             if (result === true)
               this.hide();

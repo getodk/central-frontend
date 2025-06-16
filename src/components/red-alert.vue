@@ -29,6 +29,8 @@ const redAlert = inject('redAlert');
 
   .alert-message {
     color: $color-danger;
+
+    // Error messages from pyxform sometimes include newlines and indentation.
     overflow-wrap: break-word;
     white-space: pre-wrap;
   }

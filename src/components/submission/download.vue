@@ -189,8 +189,12 @@ export default {
   watch: {
     state(state) {
       if (!state) {
-        // Reset the passphrase, but don't reset the other form fields.
+        // Reset the passphrase, but don't reset the other form fields. If the
+        // user reopens the modal, they won't want to have to re-select all the
+        // same options. Preserving the form fields is also needed for the
+        // "Try again" link to work.
         this.passphrase = '';
+
         this.cancelCall('checkForProblem');
       }
     }
