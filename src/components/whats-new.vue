@@ -33,25 +33,27 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 
 import Modal from './modal.vue';
 
 import { useRequestData } from '../request-data';
 
-const { currentUser, projects } = useRequestData();
-const isVisible = ref(false);
-
 defineOptions({
   name: 'WhatsNew'
 });
+
+const { openModal } = inject('container');
+const { currentUser, projects } = useRequestData();
+
+const isVisible = ref(false);
 
 watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
     projects.data.some(project => project.verbs.has('form.update'));
   if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
     new Date(currentUser.data.createdAt) < new Date('2025-05-06') && // Check that user was created prior to 2025.1 release (approx)
-    !document.body.classList.contains('modal-open') && // Check that no other modal (e.g. new project) is open
+    !openModal.state && // Check that no other modal (e.g. new project) is open
     !currentUser.preferences.site.whatsNewDismissed2025_1) {
     isVisible.value = true;
   }

@@ -68,6 +68,16 @@ describe('Modal', () => {
       });
       modal.emitted().resize.should.eql([[22]]);
     });
+
+    it('updates openModal', () => {
+      const modal = mountComponent({
+        props: { state: true }
+      });
+      modal.vm.$container.openModal.should.eql({
+        state: true,
+        el: modal.get('.modal').element
+      });
+    });
   });
 
   describe('after the state prop changes to true', () => {
@@ -100,6 +110,14 @@ describe('Modal', () => {
       });
       await modal.setProps({ state: false });
       modal.emitted().resize.should.eql([[22], [0]]);
+    });
+
+    it('updates openModal', async () => {
+      const modal = mountComponent({
+        props: { state: true }
+      });
+      await modal.setProps({ state: false });
+      modal.vm.$container.openModal.should.eql({ state: false, el: null });
     });
   });
 
