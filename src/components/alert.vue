@@ -44,8 +44,6 @@ const cta = computed(() => props.alert.cta);
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
-
 @keyframes fadein {
   from { opacity: 0.2; }
   to { opacity: 1; }
@@ -88,7 +86,7 @@ const cta = computed(() => props.alert.cta);
 .alert-close-container { padding-inline: 10px 18px; }
 
 .alert-cta {
-  font-size: $font-size-text;
+  font-size: inherit;
 
   &:hover, &:focus {
     background-color: transparent;
