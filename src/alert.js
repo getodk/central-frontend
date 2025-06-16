@@ -40,7 +40,7 @@ class AlertData {
       // `true` if the alert should be visible and `false` if not.
       state: false,
       // Unique identifier for each individual message
-      messageId,
+      messageId: null,
       message: null,
       // The time at which the alert was last shown
       at: new Date(),
@@ -55,7 +55,7 @@ class AlertData {
   }
 
   get state() { return this.#data.state; }
-  get messageId() { return this.state ? this.#data.messageId : null; }
+  get messageId() { return this.#data.messageId; }
   get message() { return this.#data.message; }
   get at() { return this.#data.at; }
   get autoHide() { return this.state && this.#data.autoHide; }
@@ -78,7 +78,11 @@ class AlertData {
 
   hide() {
     if (!this.state) return;
-    Object.assign(this.#data, { state: false, message: null });
+    Object.assign(this.#data, {
+      state: false,
+      messageId: null,
+      message: null
+    });
     Object.assign(this.#data, this.#defaultOptions);
     this.#hideCta();
   }
