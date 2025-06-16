@@ -11,109 +11,134 @@ except according to the terms contained in the LICENSE file.
 */
 
 /*
-createAlert() returns an object to manage the reactive data for the toast, which
-is called the "alert" in the codebase. Only a single alert is shown at a time.
-An alert may be shown at the top of the page or in a modal. Regardless of where
-the alert is shown, its data will be stored in the object returned by
-createAlert(). The object will be installed as a plugin, allowing it to be
-injected in components. The object will also be accessible from the container
-object.
+createAlert() returns an object to manage the reactive data for an alert. The
+Alert component uses this data to render the alert.
 
-The Alert component renders the alert using the alert object.
+The root component can call useAlert() to set up additional functionality for
+an alert. For example, useAlert() will auto-hide the alert.
 
-The root component should call useAlert() to set up additional functionality for
-the alert. For example, useAlert() will hide a success alert automatically.
+See src/container/alerts.js for information about the different alert objects in
+use.
 */
 
-import { inject, onBeforeUnmount, shallowReactive, watch } from 'vue';
+import { onBeforeUnmount, readonly, shallowReactive, watch, watchEffect } from 'vue';
 
 import useEventListener from './composables/event-listener';
 
+let messageId = 0;
+
 class AlertData {
   #data;
+  #cta;
+  #readonlyCta;
+  #defaultOptions;
+  #showChain;
 
-  constructor() {
+  constructor(defaultOptions = undefined) {
     this.#data = shallowReactive({
-      // The alert's "contextual" type: 'success', 'info', 'warning', or
-      // 'danger'.
-      type: 'danger',
-      message: null,
       // `true` if the alert should be visible and `false` if not.
       state: false,
+      // Unique identifier for each individual message
+      messageId: null,
+      message: null,
       // The time at which the alert was last shown
       at: new Date(),
-      // Information about the Call to Action (CTA) button that's shown in the
-      // alert
-      cta: shallowReactive({ text: null, handler: null, pending: false })
+      options: null
     });
+    this.#defaultOptions = {
+      autoHide: true,
+      ...defaultOptions
+    };
+
+    // Data about the Call to Action (CTA) button that's shown in the alert
+    this.#cta = shallowReactive({ text: null, handler: null, pending: false });
+    this.#readonlyCta = readonly(this.#cta);
+
+    this.#showChain = { cta: this.#showCta.bind(this) };
   }
 
-  get type() { return this.#data.type; }
-  get message() { return this.#data.message; }
   get state() { return this.#data.state; }
+  get messageId() { return this.#data.messageId; }
+  get message() { return this.#data.message; }
   get at() { return this.#data.at; }
-  get ctaText() { return this.#data.cta.text; }
-  get ctaHandler() { return this.#data.cta.handler; }
-  get ctaPending() { return this.#data.cta.pending; }
+  get options() { return this.#data.options; }
+  get cta() { return this.#cta.text != null ? this.#readonlyCta : null; }
 
-  #resetCta() {
-    Object.assign(this.#data.cta, { text: null, handler: null, pending: false });
-  }
-
-  #show(type, message) {
+  // Shows a new alert message. Returns an object with a cta() method to add a
+  // CTA to the alert.
+  show(message, options = undefined) {
+    messageId += 1;
     Object.assign(this.#data, {
-      type,
-      message,
       state: true,
-      at: new Date()
+      messageId,
+      message,
+      at: new Date(),
+      options: { ...this.#defaultOptions, ...options }
     });
-    this.#resetCta();
-    // Return the alert object for chaining.
-    return this;
+    this.#hideCta();
+    return this.#showChain;
   }
 
-  success(message) { return this.#show('success', message); }
-  info(message) { return this.#show('info', message); }
-  warning(message) { return this.#show('warning', message); }
-  danger(message) { return this.#show('danger', message); }
+  hide() {
+    if (!this.state) return;
+    Object.assign(this.#data, {
+      state: false,
+      messageId: null,
+      message: null,
+      options: null
+    });
+    Object.assign(this.#data, this.#defaultOptions);
+    this.#hideCta();
+  }
 
-  // `text` is the text of the CTA. `handler` is a function to call when the
-  // user clicks the CTA.
-  cta(text, handler) {
-    const { cta } = this.#data;
-    cta.text = text;
-    cta.handler = () => {
-      if (cta.pending) return Promise.reject(new Error('CTA is pending'));
-      cta.pending = true;
-      const startAt = this.at;
+  /*
+  - text. Text of the CTA.
+  - handler. Function to call when the user clicks the CTA. The function can be
+    async. If the function returns `true` or resolves to `true`, the alert will
+    be hidden.
+  */
+  #showCta(text, handler) {
+    this.#cta.text = text;
+    // Wraps the specified handler in a function with some extra behavior.
+    this.#cta.handler = () => {
+      if (this.#cta.pending) return Promise.reject(new Error('CTA is pending'));
+      this.#cta.pending = true;
+      const startId = this.messageId;
       return Promise.resolve(handler())
-        .then(() => {
-          if (this.state && this.at === startAt) this.blank();
+        .then(result => {
+          // If there has been a new message since the promise began, do
+          // nothing.
+          if (this.messageId === startId) {
+            if (result === true)
+              this.hide();
+            else
+              this.#cta.pending = false;
+          }
         })
         .catch(() => {
-          if (this.state && this.at === startAt) cta.pending = false;
+          if (this.messageId === startId) this.#cta.pending = false;
         });
     };
   }
 
-  blank() {
-    this.#data.state = false;
-    this.#data.message = null;
-    this.#resetCta();
+  #hideCta() {
+    if (this.#cta.text == null) return;
+    Object.assign(this.#cta, { text: null, handler: null, pending: false });
   }
-
-  install(app) { app.provide('alert', this); }
 }
 
 export const createAlert = () => new AlertData();
 
-export const useAlert = (elementRef) => {
-  const alert = inject('alert');
 
-  // Hide a success alert after 7 seconds.
+
+////////////////////////////////////////////////////////////////////////////////
+// useAlert()
+
+// Sets up the mechanism to auto-hide the alert.
+const autoHide = (alert) => {
   let timeoutId;
   const hideAfterTimeout = () => {
-    alert.blank();
+    alert.hide();
     timeoutId = null;
   };
   const clearExistingTimeout = () => {
@@ -122,23 +147,32 @@ export const useAlert = (elementRef) => {
       timeoutId = null;
     }
   };
-  watch([() => alert.state, () => alert.at], () => {
+  watch(() => alert.messageId, () => {
     clearExistingTimeout();
-    if (alert.state && alert.type === 'success')
+    if (alert.state && alert.options.autoHide)
       timeoutId = setTimeout(hideAfterTimeout, 7000);
   });
+  watchEffect(() => {
+    if (alert.cta != null && alert.cta.pending) clearExistingTimeout();
+  });
   onBeforeUnmount(clearExistingTimeout);
+};
 
-  // Hide an alert after a link is opened in a new tab.
-  const hideAfterClick = (event) => {
-    if (alert.state && event.target.closest('a[target="_blank"]') != null &&
-      !event.defaultPrevented) {
-      alert.blank();
+// Sets up an event listener to hide the alert after a link is opened in a new
+// tab.
+const hideAfterLinkClick = (alert, elementRef) => {
+  const handleClick = (event) => {
+    if (alert.state && !event.defaultPrevented &&
+      event.target.closest('a[target="_blank"]') != null) {
+      alert.hide();
     }
   };
-  // Specifying `true` for event capturing so that an alert is not hidden
+  // Specifying `true` for event capturing so that the alert is not hidden
   // immediately if it was shown after the click.
-  useEventListener(elementRef, 'click', hideAfterClick, true);
+  useEventListener(elementRef, 'click', handleClick, true);
+};
 
-  return alert;
+export const useAlert = (alert, elementRef) => {
+  autoHide(alert);
+  hideAfterLinkClick(alert, elementRef);
 };

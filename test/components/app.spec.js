@@ -108,7 +108,7 @@ describe('App', () => {
           .respondWithData(() => '(v2024.1.3-sha)')
           .afterResponse(async (app) => {
             clock.tick(0);
-            app.vm.$container.alert.blank();
+            await app.get('.red-alert .close').trigger('click');
             await clock.tickAsync(60000);
             app.should.alert('info', 'The server has been successfully updated.');
           });

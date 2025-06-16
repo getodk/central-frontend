@@ -146,7 +146,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'ProjectEnableEncryption',
   components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
-  inject: ['alert'],
+  inject: ['redAlert'],
   props: {
     state: {
       type: Boolean,
@@ -186,7 +186,7 @@ export default {
     },
     submit() {
       if (this.passphrase.length < 10) {
-        this.alert.danger(this.$t('alert.passphraseTooShort'));
+        this.redAlert.show(this.$t('alert.passphraseTooShort'));
         return;
       }
 
@@ -198,7 +198,7 @@ export default {
         data
       })
         .then(() => {
-          this.alert.blank();
+          this.redAlert.hide();
           this.step += 1;
           this.success = true;
         })

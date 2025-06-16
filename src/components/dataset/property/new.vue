@@ -37,8 +37,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, ref, watch } from 'vue';
 import { equals } from 'ramda';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Modal from '../../modal.vue';
@@ -66,7 +66,6 @@ const nameGroup = ref(null);
 const name = ref('');
 
 const emit = defineEmits(['hide', 'success']);
-const alert = inject('alert');
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
@@ -84,7 +83,6 @@ const submit = () => {
         : null)
   })
     .then(() => {
-      alert.blank();
       emit('success');
     })
     .catch(noop);

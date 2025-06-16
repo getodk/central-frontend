@@ -82,7 +82,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FieldKeyNew',
   components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
-  inject: ['alert'],
+  inject: ['redAlert'],
   props: {
     state: {
       type: Boolean,
@@ -131,7 +131,7 @@ export default {
       })
         .then(({ data }) => {
           // Reset the form.
-          this.alert.blank();
+          this.redAlert.hide();
           this.displayName = '';
 
           this.step = 1;

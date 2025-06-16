@@ -21,6 +21,7 @@ $screen-sm-min: 768px;
 $screen-md-min: 992px;
 $screen-lg-min: 1200px;
 
+$z-index-toast: 1061; // 1 greater than the Bootstrap maximum
 $z-index-modal: 1050;
 $z-index-modal-backdrop: 1040;
 
@@ -53,6 +54,7 @@ $color-action-foreground: #0c7bd1;
 $color-action-background: #009ecc;
 $color-action-background-hover: #0086ad;
 $color-action-background-disabled: #999;
+$color-action-light: #d0e7f1;
 $color-action-overlay: #0096c1;
 $color-input: #555;
 $color-input-inactive: #777;

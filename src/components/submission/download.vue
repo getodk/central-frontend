@@ -189,8 +189,12 @@ export default {
   watch: {
     state(state) {
       if (!state) {
-        // Reset the passphrase, but don't reset the other form fields.
+        // Reset the passphrase, but don't reset the other form fields. If the
+        // user reopens the modal, they won't want to have to re-select all the
+        // same options. Preserving the form fields is also needed for the
+        // "Try again" link to work.
         this.passphrase = '';
+
         this.cancelCall('checkForProblem');
       }
     }
@@ -284,7 +288,7 @@ export default {
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
       if (this.$refs.iframe.contentWindow.document.readyState === 'loading') {
-        this.alert.info('alert.unavailable');
+        this.alert.danger('alert.unavailable');
         return;
       }
 
@@ -295,15 +299,29 @@ export default {
         (tries < 300 ? 1000 : null));
     },
     download(event) {
+      // Return early if triggered from the "Try again" link.
+      if (!this.state) return;
+
       const a = event.target.closest('a');
       if (a == null) return;
+
+      // `true` if the click will go through and the download will be attempted;
+      // `false` if the form is invalid.
       const willDownload = this.managedKey == null ||
         this.$refs.form.reportValidity();
+
       if (this.managedKey != null) {
         event.preventDefault();
         if (willDownload) this.decrypt(a.getAttribute('href'));
       }
-      if (willDownload) this.alert.info(this.$t('alert.submit'));
+
+      if (willDownload) {
+        this.$emit('hide');
+
+        const { cta } = this.alert.info(this.$t('alert.submit'));
+        if (this.managedKey == null)
+          cta(this.$t('action.tryAgain'), () => { a.click(); });
+      }
     }
   }
 };
@@ -397,7 +415,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "The data download is not yet available. Please try again in a moment.",
-      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again.",
+      "submit": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again.",
       "parseError": "Something went wrong while requesting your data."
     }
   }

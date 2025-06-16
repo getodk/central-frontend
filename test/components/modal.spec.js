@@ -1,6 +1,5 @@
 import { nextTick } from 'vue';
 
-import Alert from '../../src/components/alert.vue';
 import Modal from '../../src/components/modal.vue';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
@@ -43,10 +42,6 @@ describe('Modal', () => {
     modal.get('.modal-banner .test-banner').text().should.equal('foo');
   });
 
-  it('shows any alert', () => {
-    mountComponent().findComponent(Alert).exists().should.be.true;
-  });
-
   describe('state prop is initially true', () => {
     it('shows the modal', () => {
       mountComponent({
@@ -84,15 +79,6 @@ describe('Modal', () => {
       await modal.setProps({ state: true });
       document.body.classList.contains('modal-open').should.be.true;
     });
-
-    it('hides the current alert', async () => {
-      const modal = mountComponent({
-        props: { state: false }
-      });
-      modal.vm.$container.alert.info('Some alert');
-      await modal.setProps({ state: true });
-      modal.should.not.alert();
-    });
   });
 
   describe('after the state prop changes to false', () => {
@@ -103,25 +89,6 @@ describe('Modal', () => {
       });
       await modal.setProps({ state: false });
       document.body.classList.contains('modal-open').should.be.false;
-    });
-
-    it('hides an alert that was shown before modal was hidden', async () => {
-      const modal = mountComponent({
-        props: { state: true }
-      });
-      modal.vm.$container.alert.info('Some alert');
-      await modal.vm.$nextTick();
-      await modal.setProps({ state: false });
-      modal.should.not.alert();
-    });
-
-    it('does not hide an alert that is set as modal is hidden', async () => {
-      const modal = mountComponent({
-        props: { state: true }
-      });
-      modal.vm.$container.alert.info('Some alert');
-      await modal.setProps({ state: false });
-      modal.should.alert();
     });
 
     it('emits a resize event', async () => {

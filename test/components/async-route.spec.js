@@ -89,7 +89,7 @@ describe('AsyncRoute', () => {
       });
       await wait();
       asyncRoute.should.alert('danger');
-      asyncRoute.vm.$container.alert.ctaHandler();
+      asyncRoute.vm.$container.alert.cta.handler();
       reload.called.should.be.true;
     });
 

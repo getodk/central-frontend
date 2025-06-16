@@ -10,32 +10,40 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="alert.state" :key="alert.at.getTime()"
-    class="alert alert-dismissible" :class="`alert-${alert.type}`" role="alert">
-    <button type="button" class="close" :aria-label="$t('action.close')"
-      @click="alert.blank()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <span class="alert-message">{{ alert.message }}</span>
-    <button v-if="alert.ctaText != null" type="button"
-      class="alert-cta btn btn-default" :aria-disabled="alert.ctaPending"
-      @click="alert.ctaHandler">
-      {{ alert.ctaText }} <spinner :state="alert.ctaPending"/>
-    </button>
+  <div :key="alert.messageId" class="alert" role="alert">
+    <div class="alert-message"><span>{{ alert.message }}</span></div>
+    <div v-if="cta != null" class="alert-cta-container">
+      <button type="button" class="alert-cta btn btn-link"
+        :aria-disabled="cta.pending" @click="cta.handler">
+        {{ cta.text }}
+      </button>
+      <spinner :state="cta.pending"/>
+    </div>
+    <div class="alert-close-container">
+      <button type="button" class="close" :aria-label="$t('action.close')"
+        @click="alert.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { computed } from 'vue';
 
 import Spinner from './spinner.vue';
 
-const alert = inject('alert');
+const props = defineProps({
+  alert: {
+    type: Object,
+    required: true
+  }
+});
+
+const cta = computed(() => props.alert.cta);
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
-
 @keyframes fadein {
   from { opacity: 0.2; }
   to { opacity: 1; }
@@ -46,33 +54,51 @@ const alert = inject('alert');
   animation-iteration-count: 1;
   animation-name: fadein;
   animation-timing-function: ease-out;
-  border: none;
-  border-top: 2px solid transparent;
-  border-radius: 0;
-  // This only affects alerts in modals, as App's alert has a fixed position.
+
+  display: flex;
+  align-items: center;
+
+  border-radius: 4px;
   margin-bottom: 15px;
+}
 
-  .alert-message {
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
+.alert > div {
+  display: flex;
+  align-items: center;
+}
+
+.alert-message {
+  flex-grow: 1;
+  padding: 15px;
+  padding-right: 62px;
+}
+
+.alert-cta-container, .alert-close-container {
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.alert-cta-container {
+  // Needed for Spinner
+  position: relative;
+}
+
+.alert-close-container { padding-inline: 10px 18px; }
+
+.alert-cta {
+  font-size: inherit;
+
+  &:hover, &:focus {
+    background-color: transparent;
+    text-decoration: none;
   }
+
+  &[aria-disabled="true"] { opacity: 0; }
 }
 
-.alert-success {
-  background-color: $color-success-light;
-  border-top-color: $color-success;
-  color: $color-success;
-}
-
-.alert-info {
-  background-color: $color-info-light;
-  border-top-color: $color-info;
-  color: $color-info;
-}
-
-.alert-danger {
-  background-color: $color-danger-light;
-  border-top-color: $color-danger;
-  color: $color-danger;
+.alert .close {
+  float: none;
+  position: relative;
+  top: -2px;
 }
 </style>

@@ -244,7 +244,7 @@ const rowToEntity = (values, columns) => {
   obj.data = noPropertyData;
   return obj;
 };
-const { i18n: globalI18n, alert } = inject('container');
+const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, signal) => {
   const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
@@ -257,7 +257,7 @@ const parseEntities = async (file, headerResults, signal) => {
   warnings.value = results.warnings;
 };
 const selectFile = (file) => {
-  alert.blank();
+  redAlert.hide();
   headerErrors.value = null;
   dataError.value = null;
 
@@ -268,7 +268,7 @@ const selectFile = (file) => {
   parsing.value = true;
   return parseCSVHeader(globalI18n, file, signal)
     .catch(error => {
-      if (!signal.aborted) alert.danger(error.message);
+      if (!signal.aborted) redAlert.show(error.message);
       throw error;
     })
     .then(headerResults => (validateHeader(headerResults, file)

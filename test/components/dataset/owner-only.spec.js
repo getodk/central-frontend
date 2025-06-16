@@ -142,8 +142,8 @@ describe('DatasetOwnerOnly', () => {
         .complete()
         .request(component => {
           const { alert } = component.vm.$container;
-          alert.ctaText.should.equal('Undo');
-          return alert.ctaHandler();
+          alert.cta.text.should.equal('Undo');
+          return alert.cta.handler();
         })
         .beforeAnyResponse(component => {
           const inputs = component.findAll('input');
