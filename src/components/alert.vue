@@ -72,7 +72,7 @@ const cta = computed(() => props.alert.cta);
 .alert-message {
   flex-grow: 1;
   padding: 15px;
-  padding-right: 60px;
+  padding-right: 62px;
 }
 
 .alert-cta-container, .alert-close-container {
@@ -81,12 +81,11 @@ const cta = computed(() => props.alert.cta);
 }
 
 .alert-cta-container {
-  padding-inline: 2px;
   // Needed for Spinner
   position: relative;
 }
 
-.alert-close-container { width: 48px; }
+.alert-close-container { padding-inline: 10px 18px; }
 
 .alert-cta {
   font-size: $font-size-text;

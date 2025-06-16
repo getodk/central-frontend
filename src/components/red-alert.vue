@@ -35,8 +35,7 @@ const redAlert = inject('redAlert');
 
   .close {
     color: $color-danger;
-    opacity: 0.2;
-    font-weight: bold;
+    opacity: 0.5;
   }
 }
 </style>
