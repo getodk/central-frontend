@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "",
+        "string": "Alle Aktionen",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -300,7 +300,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "server": {
-          "string": "",
+          "string": "Neue Version",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -741,7 +741,7 @@
       "string": ""
     },
     "updateReviewState": {
-      "string": ""
+      "string": "Überprüfung erfolgreich gespeichert."
     },
     "versionChange": {
       "string": ""
@@ -1743,11 +1743,11 @@
         },
         "implication": {
           "full": {
-            "string": "{count, plural, one {Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist.} other {Sie haben derzeit{records}Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.}}",
+            "string": "{count, plural, one {Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist.} other {Sie haben derzeit {records} Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.}}",
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
-            "string": "{count, plural, one {{count}Hervorragender Rekord} other {{count} Ausstehende Aufzeichnungen}}",
+            "string": "{count, plural, one {{count} Hervorragender Rekord} other {{count} Ausstehende Aufzeichnungen}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
@@ -2142,11 +2142,11 @@
       },
       "action": {
         "all": {
-          "string": "",
+          "string": "Alle",
           "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
         },
         "none": {
-          "string": "",
+          "string": "Keine",
           "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
       }
@@ -3083,14 +3083,14 @@
         "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
       },
       "missingCount": {
-        "string": "{count, plural, one {{count}Fehlender Anhang} other {{count}Fehlende Anhänge}}"
+        "string": "{count, plural, one {{count} Fehlender Anhang} other {{count} Fehlende Anhänge}}"
       },
       "diff": {
         "newCount": {
-          "string": "{count, plural, one {{count} Neue Anhang} other {{count}Neue Anhänge}}"
+          "string": "{count, plural, one {{count} Neue Anhang} other {{count} Neue Anhänge}}"
         },
         "changedCount": {
-          "string": "{count, plural, one {{count} geänderte Anhang} other {{count}geänderte Anhänge}}"
+          "string": "{count, plural, one {{count} geänderte Anhang} other {{count} geänderte Anhänge}}"
         },
         "summary": {
           "string": "",
@@ -3225,7 +3225,7 @@
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
-          "string": "{count, plural, one {{count}App-Benutzer zugewiesen} other {{count} App-Benutzer zugewiesen}}"
+          "string": "{count, plural, one {{count} App-Benutzer zugewiesen} other {{count} App-Benutzer zugewiesen}}"
         }
       },
       "draftNav": {
@@ -3677,7 +3677,7 @@
     "Multiselect": {
       "action": {
         "apply": {
-          "string": "",
+          "string": "Anwenden",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3880,7 +3880,7 @@
       },
       "alert": {
         "success": {
-          "string": ""
+          "string": "Projekteinstellungen wurden gespeichert"
         }
       }
     },
@@ -4002,7 +4002,7 @@
       },
       "alert": {
         "success": {
-          "string": ""
+          "string": "Ihre Änderungen wurden erfolgreich gespeichert."
         }
       }
     },
@@ -4641,7 +4641,7 @@
           "string": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal."
         },
         "submit": {
-          "string": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut."
+          "string": ""
         },
         "parseError": {
           "string": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
@@ -4808,11 +4808,11 @@
       },
       "action": {
         "all": {
-          "string": "",
+          "string": "Alle",
           "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
         },
         "none": {
-          "string": "",
+          "string": "Keine",
           "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
@@ -4835,11 +4835,11 @@
     "SubmissionFiltersReviewState": {
       "action": {
         "all": {
-          "string": "",
+          "string": "Alle",
           "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
         },
         "none": {
-          "string": "",
+          "string": "Keine",
           "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
       }
@@ -4857,11 +4857,11 @@
       },
       "action": {
         "all": {
-          "string": "",
+          "string": "Alle",
           "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
         },
         "none": {
-          "string": "",
+          "string": "Keine",
           "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },

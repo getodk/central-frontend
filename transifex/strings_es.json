@@ -1692,38 +1692,38 @@
         "string": "Acceder a todas las Entidades (por defecto)"
       },
       "ownerOnly": {
-        "string": ""
+        "string": "Acceder sólo a Entidades propias"
       },
       "radio": {
         "false": {
-          "string": ""
+          "string": "Los usuarios de la aplicación y los recopiladores de datos de este proyecto tendrán acceso a todas las entidades de sus formularios asignados."
         },
         "true": {
-          "string": ""
+          "string": "Los usuarios de la aplicación y los recopiladores de datos dentro de este proyecto sólo tendrán acceso a las entidades que creen, promoviendo la privacidad y limitando las transferencias de datos."
         }
       },
       "falseModal": {
         "introduction": {
-          "string": ""
+          "string": "Los usuarios de la aplicación y los recopiladores de datos tendrán acceso a todas las entidades, incluidas las que no hayan creado."
         }
       },
       "trueModal": {
         "introduction": {
-          "string": ""
+          "string": "Los usuarios de aplicaciones y los recopiladores de datos perderán el acceso a las entidades que no hayan creado. Todos los demás tipos de usuario conservan el acceso a todas las Entidades."
         },
         "action": {
           "confirm": {
-            "string": "",
+            "string": "Acceso a entidades propias",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "alert": {
         "changeToFalse": {
-          "string": ""
+          "string": "Los usuarios de la aplicación y los recopiladores de datos tendrán ahora acceso a todas las entidades."
         },
         "changeToTrue": {
-          "string": ""
+          "string": "Los usuarios de la aplicación y los recopiladores de datos ahora sólo tendrán acceso a las entidades que creen."
         }
       }
     },
@@ -2174,7 +2174,7 @@
         "string": "El Filtro no está disponible para Entidades eliminadas"
       },
       "searchDisabledMessage": {
-        "string": ""
+        "string": "La búsqueda no está disponible para las entidades eliminadas"
       },
       "downloadDisabled": {
         "string": "La descarga no está disponible para Entidades eliminadas"
@@ -2527,7 +2527,7 @@
           "string": "El usuario móvil \"{displayName}\" se creó correctamente."
         },
         "revoke": {
-          "string": ""
+          "string": "El usuario móvil \"{displayName}\" ha sido revocado con éxito."
         }
       }
     },
@@ -4641,7 +4641,7 @@
           "string": "La descarga de datos aún no está disponible. Vuelva a intentarlo en un momento."
         },
         "submit": {
-          "string": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente. "
+          "string": "Su descarga de datos debería comenzar en breve. Una vez que inicie, puede cerrar este mensaje. Si no se ha comenzado en 20 segundos, por favor inténtelo nuevamente. "
         },
         "parseError": {
           "string": "Algo salió mal al solicitar tus datos."

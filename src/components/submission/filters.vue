@@ -131,7 +131,8 @@ export default {
   "zh-Hant": {
     "field": {
       "submissionDate": "提交於"
-    }
+    },
+    "allSubmissionDateSelected": "全部時間"
   }
 }
 </i18n>

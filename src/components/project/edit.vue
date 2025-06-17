@@ -122,6 +122,9 @@ const submit = () => {
       "name": "Projektname",
       "description": "Projektbeschreibung",
       "note": "Fügen Sie hier Notizen, Links, Anweisungen und andere Ressourcen hinzu."
+    },
+    "alert": {
+      "success": "Projekteinstellungen wurden gespeichert"
     }
   },
   "es": {

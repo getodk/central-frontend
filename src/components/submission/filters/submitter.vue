@@ -147,6 +147,10 @@ const placeholder = (counts) => {
       "submitter": "Übermittelt von",
       "search": "Einsender suchen…"
     },
+    "action": {
+      "all": "Alle",
+      "none": "Keine"
+    },
     "unknown": "Unbekannter Einsender"
   },
   "es": {
@@ -210,6 +214,10 @@ const placeholder = (counts) => {
     "field": {
       "submitter": "由提交者",
       "search": "搜尋提交者..."
+    },
+    "action": {
+      "all": "全部",
+      "none": "無"
     },
     "unknown": "未知提交者"
   }

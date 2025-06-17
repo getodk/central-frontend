@@ -98,6 +98,10 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Konfliktstatus"
+    },
+    "action": {
+      "all": "Alle",
+      "none": "Keine"
     }
   },
   "es": {
@@ -164,6 +168,10 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "衝突狀態"
+    },
+    "action": {
+      "all": "全部",
+      "none": "無"
     }
   }
 }
