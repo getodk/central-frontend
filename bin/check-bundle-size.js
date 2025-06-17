@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-console, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
+
 const { execSync } = require('node:child_process');
 
 const log = (...args) => console.log('[check-bundle-size]', ...args);
@@ -37,7 +39,7 @@ log('   actual size: ', humanSize(actualSize));
 log('  maximum size: ', humanSize(maxSize));
 log('---');
 
-if(actualSize < minSize) {
+if (actualSize < minSize) {
   log('!!!');
   log('!!! Bundle is too small !!!');
   log('!!!');
@@ -46,7 +48,7 @@ if(actualSize < minSize) {
   log('!!!');
   process.exit(1);
 }
-if(actualSize > maxSize) {
+if (actualSize > maxSize) {
   log('!!!');
   log('!!! Bundle is too big !!!');
   log('!!!');
@@ -58,7 +60,7 @@ if(actualSize > maxSize) {
 log('Bundle size looks OK.');
 
 function humanSize(bytes) {
-  if(bytes > 1048576) return (bytes / 1048576).toFixed(3).padStart(5, ' ') + ' MB';
-  if(bytes >    1024) return (bytes /    1024).toFixed(3).padStart(5, ' ') + ' KB';
+  if (bytes > 1048576) return (bytes / 1048576).toFixed(3).padStart(5, ' ') + ' MB';
+  if (bytes >    1024) return (bytes /    1024).toFixed(3).padStart(5, ' ') + ' KB';
   else                return bytes + ' B';
 }
