@@ -86,7 +86,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['shown', 'hide', 'resize', 'mutate']);
 
-const { toast, redAlert } = inject('container');
+const { toast, redAlert, openModal } = inject('container');
 
 const el = ref(null);
 const body = ref(null);
@@ -188,7 +188,6 @@ const show = () => {
   bs('show');
   checkScroll();
   bodyHeight = body.value.getBoundingClientRect().height;
-  emit('resize', bodyHeight);
   observer.observe(body.value, {
     subtree: true,
     childList: true,
@@ -197,6 +196,8 @@ const show = () => {
   });
   window.addEventListener('resize', handleWindowResize);
   emit('shown');
+  emit('resize', bodyHeight);
+  openModal.shown(el.value);
 };
 const removeSelection = () => {
   const selection = getSelection();
@@ -209,9 +210,10 @@ const hide = () => {
   bs('hide');
   el.value.classList.remove('has-scroll');
   bodyHeight = 0;
-  emit('resize', 0);
   window.removeEventListener('resize', handleWindowResize);
   removeSelection();
+  emit('resize', 0);
+  openModal.hidden();
 };
 watch(() => props.state, (state) => {
   if (state)

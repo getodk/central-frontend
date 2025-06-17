@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- Alerts shown at the bottom of the screen. See the comments in the CSS below
-for notes about expected behavior. -->
+<!-- Alerts shown at the bottom of the screen -->
 <template>
   <div id="alerts">
     <Toast v-show="showsToast"/>
@@ -25,26 +24,25 @@ import { inject, ref, watch } from 'vue';
 import RedAlert from './red-alert.vue';
 import Toast from './toast.vue';
 
-const { toast, redAlert } = inject('container');
+const { toast, redAlert, openModal } = inject('container');
 
 const showsToast = ref(false);
 const showsRedAlert = ref(false);
 watch(() => toast.messageId, () => {
   showsToast.value = toast.state;
-  if (toast.state && showsRedAlert.value) showsRedAlert.value = false;
+  if (toast.state) showsRedAlert.value = false;
 });
 watch(() => redAlert.messageId, () => {
-  const modalOpen = document.body.classList.contains('modal-open');
   // If a modal is shown, the red alert will be shown inside the modal (see the
   // Modal component). In that case, it shouldn't be shown in this component at
   // the bottom of the screen.
-  showsRedAlert.value = redAlert.state && !modalOpen;
+  showsRedAlert.value = redAlert.state && !openModal.state;
   // Showing a red alert at the bottom of the screen should hide a toast: we
   // never want to show both alerts at the bottom of the screen. However,
   // showing a red alert inside a modal should not hide a toast. In that case,
-  // the two are not competing for for space. Also, a modal is never expected to
+  // the two are not competing for space. Also, a modal is never expected to
   // show a toast: see the comments in the Modal component.
-  if (redAlert.state && showsToast.value && !modalOpen) showsToast.value = false;
+  if (showsRedAlert.value) showsToast.value = false;
 });
 </script>
 

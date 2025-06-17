@@ -16,6 +16,7 @@ import createAlerts from './container/alerts';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
 import createHoverCard from './container/hover-card';
+import createOpenModal from './container/open-modal';
 import createUnsavedChanges from './unsaved-changes';
 import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
@@ -53,6 +54,7 @@ export default ({
 } = {}) => {
   const container = {
     i18n: i18n.global,
+    openModal: createOpenModal(),
     hoverCard,
     unsavedChanges,
     http,
