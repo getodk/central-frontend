@@ -2,56 +2,58 @@
 set -o pipefail
 shopt -s inherit_errexit
 
-minSize=3276
-maxSize=4096
-
 log() { echo >&2 "[$(basename "$0")] $*"; }
 
-humanSize() {
-  if [[ "$1" -gt 1024 ]]; then
-    echo "$(bc <<< "scale=3; $1 / 1024") MB"
-  else
-    echo "$1 KB"
-  fi
-}
-
 log "---"
-log "Individual file sizes:"
 find dist/ -type f -exec du -b {} \; |
     sort -k2 |
     awk '
-      BEGIN {
-        print  "[check-bundle-size.sh]  SIZE/b PATH"
+      function humanSize(bytes) {
+        if(bytes > 1048576) return sprintf("%6.3f MB", bytes / 1048576)
+        if(bytes >    1024) return sprintf("%6.3f KB", bytes /    1024)
+        else             return bytes " B"
       }
-      { printf "[check-bundle-size.sh] %7s %s\n", $1, $2 }
+
+      BEGIN {
+        minSize = 5000000
+        maxSize = 6000000
+
+        print  "[check-bundle-size.sh] Individual file sizes:\n";
+        print  "[check-bundle-size.sh]  SIZE/b PATH";
+      }
+      {
+        printf "[check-bundle-size.sh] %7s %s\n", $1, $2;
+
+        ++count
+        actualSize += $1
+      }
+      END {
+        print "[check-bundle-size.sh] ---"
+        print "[check-bundle-size.sh]   files: " count
+        print "[check-bundle-size.sh]   minimum size: " humanSize(minSize);
+        print "[check-bundle-size.sh]    actual size: " humanSize(actualSize)
+        print "[check-bundle-size.sh]   maximum size: " humanSize(maxSize)
+        print "[check-bundle-size.sh] ---"
+
+        if(actualSize < minSize) {
+          print "[check-bundle-size.sh] !!!"
+          print "[check-bundle-size.sh] !!! Bundle is too small !!!"
+          print "[check-bundle-size.sh] !!!"
+          print "[check-bundle-size.sh] !!! Please check what may have changed, and either fix"
+          print "[check-bundle-size.sh] !!! the issue, or adjust expectations in this script."
+          print "[check-bundle-size.sh] !!!"
+          exit 1
+        }
+        if(actualSize > maxSize) {
+          print "[check-bundle-size.sh] !!!"
+          print "[check-bundle-size.sh] !!! Bundle is too big !!!"
+          print "[check-bundle-size.sh] !!!"
+          print "[check-bundle-size.sh] !!! Please check what may have changed, and either fix"
+          print "[check-bundle-size.sh] !!! the issue, or adjust expectations in this script."
+          print "[check-bundle-size.sh] !!!"
+          exit 1
+        }
+
+        print "[check-bundle-size.sh] Bundle size looks OK."
+      }
     '
-
-actualSize="$(du -s dist/ | cut -f1)"
-
-log "---"
-log "  minimum size: $(humanSize "$minSize")"
-log "   actual size: $(humanSize "$actualSize")"
-log "  maximum size: $(humanSize "$maxSize")"
-log "---"
-
-if [[ "$actualSize" -lt "$minSize" ]]; then
-  log "!!!"
-  log "!!! Bundle is too small !!!"
-  log "!!!"
-  log "!!! Please check what may have changed, and either fix"
-  log "!!! the issue, or adjust expectations in this script."
-  log "!!!"
-  exit 1
-fi
-
-if [[ "$actualSize" -gt "$maxSize" ]]; then
-  log "!!!"
-  log "!!! Bundle is too big !!!"
-  log "!!!"
-  log "!!! Please check what may have changed, and either fix"
-  log "!!! the issue, or adjust expectations in this script."
-  log "!!!"
-  exit 1
-fi
-
-log "Bundle size looks OK."
