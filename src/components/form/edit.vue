@@ -200,80 +200,64 @@ body:has(#form-edit) { background-color: #fff; }
 {
   "cs": {
     "alert": {
-      "upload": "Bezva! Nová definice formuláře byla uložena jako koncept.",
-      "publish": "Váš návrh je nyní zveřejněn. Všechna zařízení, která načítají formuláře pro tento projekt, nyní obdrží novou definici formuláře a přílohy formuláře.",
-      "abandon": "Koncept verze tohoto formuláře byl úspěšně odstraněn.",
-      "delete": "Formulář „{name}“ byl odstraněn."
+      "abandon": "Koncept verze tohoto formuláře byl úspěšně odstraněn."
     }
   },
   "de": {
     "alert": {
-      "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
-      "publish": "Ihr Entwurf ist jetzt veröffentlicht. Alle Geräte, die Formulare für dieses Projekt beziehen, erhalten ab jetzt die neuen Formularedefinitionen und Anhängen.",
-      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
-      "delete": "Das Formular \"{name}\" wurde gelöscht."
+      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht."
     }
   },
   "es": {
     "alert": {
-      "upload": "¡Éxito! La nueva definición del formulario se ha guardado como su borrador",
-      "publish": "Su borrador ya está publicado. Todos los dispositivos que obtengan formularios para este proyecto ahora recibirán la nueva definición del formulario y los archivos adjuntos del formulario.",
+      "upload": "La nueva definición del formulario se ha guardado como su borrador",
+      "publish": "Su borrador ha sido publicado. Todos los dispositivos que utilicen este formulario recibirán ahora la definición actualizada del formulario y los archivos adjuntos.",
       "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
-      "delete": "El formulario {name} fue eliminado."
+      "delete": "El formulario {name} fue eliminado correctamente."
     }
   },
   "fr": {
     "alert": {
-      "upload": "Succès ! La nouvelle définition du formulaire a été enregistrée comme ébauche.",
-      "publish": "Votre ébauche est maintenant publiée. Chaque terminal qui reçoit des Formulaires de ce Projet recevra désormais la nouvelle définition de ce formulaire et les fichiers joints associés.",
+      "upload": "La nouvelle définition du formulaire a été enregistrée comme ébauche.",
+      "publish": "Votre ébauche est maintenant publiée. Chaque terminal qui reçoit ce formulaires recevra désormais la nouvelle définition et les fichiers joints associés.",
       "abandon": "La version d'ébauche de ce formulaire a été supprimée avec succès.",
-      "delete": "Le formulaire {name} a été supprimé."
+      "delete": "Le formulaire \"{name}\" a été supprimé."
     }
   },
   "id": {
     "alert": {
-      "upload": "Sukses! Definisi formulir baru telah disimpan di Draf.",
-      "abandon": "Versi draf dari formulir ini telah sukses dihapus.",
-      "delete": "Formulir {name} sudah dihapus."
+      "abandon": "Versi draf dari formulir ini telah sukses dihapus."
     }
   },
   "it": {
     "alert": {
-      "upload": "Successo! La nuova definizione del formulario è stata salvata come bozza.",
+      "upload": "La nuova definizione del formulario è stata salvata come bozza.",
       "publish": "La tua bozza è ora pubblicata. Tutti i dispositivi che utilizzano i formulari per questo progetto riceveranno ora la nuova definizione del formulario e i suoi allegati.",
       "abandon": "La versione bozza di questo formulario è stata eliminata con successo.",
-      "delete": "Il Formulario “{name}” è stato cancellato."
+      "delete": "Il formulario “{name}” è stato eliminato con successo."
     }
   },
   "ja": {
     "alert": {
-      "upload": "成功です！新しい定義フォームが下書きとして保存されました。",
-      "abandon": "このフォームの下書きは正常に削除されました。",
-      "delete": "フォーム\"{name}\"は削除されました。"
+      "abandon": "このフォームの下書きは正常に削除されました。"
     }
   },
   "pt": {
     "alert": {
-      "upload": "Sucesso! A nova definição de formulário foi armazenada como o seu rascunho.",
-      "publish": "Seu Rascunho agora está publicado. Todos os dispositivos que obtêm Formulários deste Projeto agora receberão a nova definição de Formulário e Anexos do Formulário.",
-      "abandon": "A versão de rascunho desse formulário foi excluída com sucesso.",
-      "delete": "O formulário \"{name}\" foi excluído."
+      "abandon": "A versão de rascunho desse formulário foi excluída com sucesso."
     }
   },
   "sw": {
     "alert": {
-      "upload": "Mafanikio! Ufafanuzi mpya wa Fomu umehifadhiwa kama Rasimu yako",
-      "publish": "Rasimu yako sasa imechapishwa. Kifaa chochote kinachorejesha Fomu za Mradi huu sasa kitapokea ufafanuzi mpya wa Fomu na Viambatisho vya Fomu.",
-      "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi.",
-      "delete": "Fomu \"{name}\" ilifutwa."
+      "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi."
     }
   },
   "zh-Hant": {
     "alert": {
-      "upload": "成功！新的表單定義已儲存為您的草稿。",
-      "publish": "您的草稿現已發布。任何檢索該專案表單的裝置現在都將收到新的表單定義和表單附件。",
+      "upload": "新的表單定義已儲存為您的草稿。",
+      "publish": "您的草稿已發佈。任何使用此表格的裝置現在都會收到更新的表格定義和附件。",
       "abandon": "此表格的草稿版本已成功刪除。",
-      "delete": "表單「{name}」已刪除。"
+      "delete": "表單 「{name}」 已成功刪除。"
     }
   }
 }

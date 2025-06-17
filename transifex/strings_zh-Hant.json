@@ -44,7 +44,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "editForm": {
-        "string": "",
+        "string": "編輯表格",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "所有活動",
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -262,7 +262,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "",
+          "string": "還原",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -297,6 +297,10 @@
         },
         "process_form_entities_version": {
           "string": "升級標記表格",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -342,7 +346,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "",
+      "string": "新提交",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
@@ -405,6 +409,10 @@
       "string": "重整",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "刷新頁面",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "重設密碼",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -424,6 +432,10 @@
     "sort": {
       "string": "排序",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
+    "undo": {
+      "string": "撤銷",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
       "string": "更新",
@@ -603,7 +615,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "attachments": {
-      "string": "{count, plural, other {}}",
+      "string": "{count, plural, other {{count}個附件}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "form": {
@@ -629,7 +641,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "attachments": {
-      "string": "",
+      "string": "附件",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -723,25 +735,25 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "請輸入長度至少為 10 個字元的密碼。"
+      "string": "密碼必須至少有 10 個字元長。"
     },
     "updateEntity": {
-      "string": "實體已更新！"
+      "string": "實體已成功更新。"
     },
     "updateReviewState": {
-      "string": "審核狀態已儲存！"
+      "string": "審核已成功儲存。"
     },
     "versionChange": {
-      "string": "服器已更新。請更新頁面以避免出現不可預測的問題。"
+      "string": "伺服器已成功更新。"
     },
     "submissionDeleted": {
-      "string": "提交內容已刪除。"
+      "string": "提交已成功刪除。"
     },
     "submissionRestored": {
-      "string": ""
+      "string": "已恢復提交。"
     },
     "entityRestored": {
-      "string": ""
+      "string": "實體 「{label}」 已經還原。"
     }
   },
   "moreInfo": {
@@ -950,10 +962,13 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "beta": {
-      "string": ""
+      "string": "測試版"
     },
     "none": {
-      "string": ""
+      "string": "(無)"
+    },
+    "search": {
+      "string": "檢索"
     }
   },
   "mixin": {
@@ -1023,14 +1038,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "您的登入狀態將於 2 分鐘後過期，並且您將自動登出。"
+          "string": "您的會話即將到期！您將於 2 分鐘後登出。"
         },
         "expired": {
-          "string": "您的登入狀態已過期。若要繼續作業，請重新登入。"
+          "string": "您的會話已過期。請重新登入以繼續。"
         },
         "logoutError": {
-          "string": "出現問題，您尚未完全登出。請重新載入頁面並嘗試再次登出。 {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": "登出時出現問題。"
+          },
+          "pleaseRefresh": {
+            "string": "請刷新頁面並重試。"
+          }
         }
       }
     }
@@ -1056,7 +1075,7 @@
       },
       "alert": {
         "success": {
-          "string": "密碼已重設成功。"
+          "string": "密碼重設成功。"
         }
       }
     },
@@ -1066,7 +1085,7 @@
           "string": "使用者已登入，重新載入頁面再繼續進行。"
         },
         "changePassword": {
-          "string": "您的密碼少於 10 個字元。為了保護您的帳戶，請變更密碼並增加密碼長度。"
+          "string": "為了保護您的帳戶，請確保您的密碼為 10 個字元以上。"
         }
       },
       "oidc": {
@@ -1163,7 +1182,7 @@
       },
       "alert": {
         "success": {
-          "string": "設定已儲存！"
+          "string": "設定已成功儲存。"
         }
       }
     },
@@ -1274,7 +1293,7 @@
           "string": "審核表格數量"
         },
         "num_forms_webforms_enabled": {
-          "string": ""
+          "string": "啟用 Web 表單的表單數量"
         },
         "num_reused_form_ids": {
           "string": "重複使用的表單 ID 數量"
@@ -1405,6 +1424,9 @@
         "max_entity_branch_delay": {
           "string": "處理離線實體更新鏈的最長時間"
         },
+        "num_owner_only_datasets": {
+          "string": "僅限於業主的實體清單數量"
+        },
         "num_xml_only_form_defs": {
           "string": "沒有關聯 XLSForm 的表單定義數量"
         },
@@ -1480,7 +1502,7 @@
     },
     "AuditFilters": {
       "noLogDateSelected": {
-        "string": "",
+        "string": "(無)",
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
@@ -1537,24 +1559,24 @@
     },
     "DatasetEntities": {
       "upload": {
-        "string": ""
+        "string": "上傳實體"
       },
       "alert": {
         "upload": {
-          "string": "成功！您的實體已上傳。"
+          "string": "您的實體已成功上傳。"
         }
       },
       "purgeDescription": {
-        "string": ""
+        "string": "實體將在 30 天後從垃圾箱中刪除"
       },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, other {}}",
+          "string": "{count, plural, other {{count} 個已刪除的實體}}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "analyzeDisabledDeletedData": {
-        "string": ""
+        "string": "已刪除實體的 OData 存取不可用"
       }
     },
     "DatasetList": {
@@ -1656,6 +1678,55 @@
         }
       }
     },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "應用程式使用者和資料收集器實體存取",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": "存取所有實體"
+      },
+      "accessAllDefault": {
+        "string": "存取所有實體 (預設)"
+      },
+      "ownerOnly": {
+        "string": "僅存取自己的實體"
+      },
+      "radio": {
+        "false": {
+          "string": "此專案中的 App 使用者和資料收集者將可存取其指定表單中的所有實體。"
+        },
+        "true": {
+          "string": "此專案中的 App 使用者和資料收集者僅能存取他們所建立的實體，以促進隱私權並限製資料傳輸。"
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": "App 使用者和資料收集者將可存取所有實體，包括他們未建立的實體。"
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": "App 使用者和資料收集者將失去對他們未建立的實體的存取權。所有其他使用者類型則保留對所有實體的存取權。"
+        },
+        "action": {
+          "confirm": {
+            "string": "存取自己的實體",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": "App 使用者和資料收集者現在可以存取所有實體。"
+        },
+        "changeToTrue": {
+          "string": "App 使用者和資料收集者現在只能存取他們所建立的實體。"
+        }
+      }
+    },
     "DatasetPendingSubmissions": {
       "title": {
         "string": "待提交的內容"
@@ -1672,11 +1743,11 @@
         },
         "implication": {
           "full": {
-            "string": "{count, plural, other {}}",
+            "string": "{count, plural, other {您目前有未標示已核准或拒絕的項目{records}。}}",
             "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
-            "string": "{count, plural, other {}}",
+            "string": "{count, plural, other {{count}筆待決記錄}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
@@ -1686,15 +1757,15 @@
           "string": "我理解，這對我來說不是問題。"
         },
         "description": {
-          "string": ""
+          "string": "改設定並對待處理的提交不執行任何操作。"
         }
       },
       "convert": {
         "label": {
-          "string": ""
+          "string": "轉換所有建立實體的待處理的提交內容。"
         },
         "description": {
-          "string": ""
+          "string": "變更設定，並從任何顯示實體建立且未被核准或拒絕的提交中建立實體。"
         }
       }
     },
@@ -1744,11 +1815,11 @@
       },
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, other {}}",
+          "string": "{count, plural, other {由{count}個表格更新}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, other {}}",
+          "string": "{count, plural, other {用於{count}個表格}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -1803,7 +1874,7 @@
     },
     "EntityBasicDetails": {
       "entityDetails": {
-        "string": ""
+        "string": "實體詳細資料"
       },
       "creatingSubmission": {
         "string": "建立提交",
@@ -2038,11 +2109,11 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           },
           "delete": {
-            "string": "",
+            "string": "由{name}刪除的實體{label}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           },
           "restore": {
-            "string": "",
+            "string": "由{name}恢復的實體{label}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
@@ -2069,25 +2140,15 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected}/{total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "全部",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "無",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
-      },
-      "allSelectedConflictSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
       }
     },
     "EntityList": {
@@ -2099,10 +2160,10 @@
         "string": "無相符的實體。"
       },
       "allDeleted": {
-        "string": ""
+        "string": "所有實體都會被刪除。"
       },
       "allDeletedOnPage": {
-        "string": ""
+        "string": "頁面上的所有實體都已刪除。"
       },
       "alert": {
         "delete": {
@@ -2110,35 +2171,38 @@
         }
       },
       "filterDisabledMessage": {
+        "string": "已刪除的實體無法使用篩選功能"
+      },
+      "searchDisabledMessage": {
         "string": ""
       },
       "downloadDisabled": {
-        "string": ""
+        "string": "已刪除的實體無法下載"
       },
       "deletedEntity": {
         "emptyTable": {
-          "string": ""
+          "string": "沒有已刪除的實體。"
         },
         "allRestored": {
-          "string": ""
+          "string": "所有已刪除的實體都會還原。"
         },
         "allRestoredOnPage": {
-          "string": ""
+          "string": "頁面上的所有實體都已還原。"
         }
       },
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {}}",
+            "string": "{count, plural, other {下載所有{count}個實體}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, other {}}",
+              "string": "{count, plural, other {下載符合篩選條件的{count}個實體}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "",
+              "string": "下載符合篩選條件的所有實體",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -2199,19 +2263,19 @@
     },
     "EntityRestore": {
       "title": {
-        "string": "",
+        "string": "恢復{label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "introduction": {
         "0": {
-          "string": "",
+          "string": "您確定要恢復「{label}」嗎？",
           "developer_comment": "{label} is the label of an Entity."
         },
         "1": {
-          "string": ""
+          "string": "實體將恢復到先前的狀態。"
         },
         "2": {
-          "string": ""
+          "string": "如果實體再次被刪除，將再過 30 天才能移除。"
         }
       }
     },
@@ -2234,7 +2298,7 @@
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
         },
         "deletedAt": {
-          "string": "",
+          "string": "刪除於",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
         }
       }
@@ -2463,7 +2527,7 @@
           "string": "APP使用者「{displayName}」已成功建立。"
         },
         "revoke": {
-          "string": "APP使用者「{displayName}」的存取權限已被撤銷。"
+          "string": "App 使用者{displayName}的存取權成功撤銷。"
         }
       }
     },
@@ -2636,12 +2700,12 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "",
+          "string": "選擇檔案",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "orDrag": {
-        "string": "",
+        "string": "或將檔案拖曳至此頁上傳",
         "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "problem": {
@@ -2659,7 +2723,7 @@
           "string": "{count, plural, other {{count} 個文件已成功上傳。}}"
         },
         "link": {
-          "string": "實體列表連結成功。"
+          "string": "實體清單已成功連結。"
         }
       },
       "header": {
@@ -2845,7 +2909,7 @@
           "string": "您確定要刪除表單{name}及其所有提交內容嗎？\n"
         },
         "1": {
-          "string": ""
+          "string": "此動作會將表單移至垃圾桶。在垃圾桶中存放 30 天後，該表格將被永久清除，但在此之前可以還原。"
         }
       },
       "noDeleteEntities": {
@@ -2923,7 +2987,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, other {}}"
+        "string": "{count, plural, other {發布此草稿將建立{count}種屬性。這些屬性無法刪除。}}"
       },
       "problem": {
         "409_6": {
@@ -2980,34 +3044,31 @@
       },
       "alert": {
         "upload": {
-          "string": "成功！新的表單定義已儲存為您的草稿。"
+          "string": "新的表單定義已儲存為您的草稿。"
         },
         "publish": {
-          "string": "您的草稿現已發布。任何檢索該專案表單的裝置現在都將收到新的表單定義和表單附件。"
+          "string": "您的草稿已發佈。任何使用此表格的裝置現在都會收到更新的表格定義和附件。"
         },
         "abandon": {
           "string": "此表格的草稿版本已成功刪除。"
-        },
-        "delete": {
-          "string": "表單「{name}」已刪除。"
         }
       }
     },
     "FormDraftTesting": {
       "title": {
-        "string": "",
+        "string": "測試此草稿",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "entitiesTesting": {
-        "string": ""
+        "string": "此表格定義會建立或更新實體。目前，實體不會由草稿表單建立或更新，因此您需要發佈表單以驗證實體功能。"
       },
       "subtitle": {
         "full": {
-          "string": "",
+          "string": "當您發布本草稿時，在此{willBeDeleted}提交！",
           "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
         },
         "willBeDeleted": {
-          "string": "",
+          "string": "將會刪除",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
       },
@@ -3018,120 +3079,120 @@
     },
     "FormEditAttachments": {
       "noAttachments": {
-        "string": "",
+        "string": "此定義不需要任何附件，因此沒有任何東西需要上傳。",
         "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
       },
       "missingCount": {
-        "string": "{count, plural, other {}}"
+        "string": "{count, plural, other {{count}個遺失附件}}"
       },
       "diff": {
         "newCount": {
-          "string": "{count, plural, other {}}"
+          "string": "{count, plural, other {{count}個新附件}}"
         },
         "changedCount": {
-          "string": "{count, plural, other {}}"
+          "string": "{count, plural, other {{count}個變更附件}}"
         },
         "summary": {
-          "string": "",
+          "string": "{changes}自發布版本以來",
           "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
         }
       }
     },
     "FormEditCreateDraft": {
       "title": {
-        "string": "",
+        "string": "草稿版本",
         "developer_comment": "This refers to the draft version of a Form."
       },
       "subtitle": {
-        "string": ""
+        "string": "此表格無活動草稿"
       },
       "toMakeChanges": {
-        "string": "",
+        "string": "以變更本表格或其附件。",
         "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
       },
       "noEffectUntilPublish": {
-        "string": ""
+        "string": "在您發布草稿之前，已發佈的版本不會受到影響。"
       }
     },
     "FormEditDef": {
       "subtitle": {
-        "string": "",
+        "string": "已上傳",
         "developer_comment": "This refers to the draft version of a Form."
       },
       "changed": {
-        "string": "",
+        "string": "與發布版本相比有變更",
         "developer_comment": "This refers to the draft version of a Form."
       },
       "versionName": {
-        "string": "",
+        "string": "版本名稱：{name}",
         "developer_comment": "This is shown for a Form version."
       },
       "action": {
         "upload": {
-          "string": "",
+          "string": "上傳新表單定義",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "withinDef": {
-        "string": "",
+        "string": "在此表格定義內：",
         "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
       }
     },
     "FormEditDraftControls": {
       "action": {
         "delete": {
-          "string": "",
+          "string": "刪除表單",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "subtitle": {
-        "string": "",
+        "string": "準備發佈",
         "developer_comment": "This refers to the draft version of a Form."
       }
     },
     "FormEditEntities": {
       "datasetCount": {
-        "string": "{count, plural, other {}}"
+        "string": "{count, plural, other {提交此表格定義將更新{count}個實體清單。}}"
       },
       "diffCounts": {
         "datasetsOnly": {
-          "string": "{count, plural, other {}}"
+          "string": "{count, plural, other {發布此草案將更新{count}個實體清單。}}"
         },
         "newProperties": {
           "full": {
-            "string": "",
+            "string": "發布此草案將更新{entityLists}並創建{properties}。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
           },
           "entityLists": {
-            "string": "{count, plural, other {}}",
+            "string": "{count, plural, other {{count}個實體清單}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           },
           "properties": {
-            "string": "{count, plural, other {}}",
+            "string": "{count, plural, other {{count}種屬性}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           }
         }
       },
       "cannotDeleteProperties": {
-        "string": "",
+        "string": "屬性無法刪除。",
         "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
-        "string": "",
+        "string": "此定義不會更新任何實體。",
         "developer_comment": "\"Definition\" refers to a Form Definition."
       },
       "whatAreEntities": {
-        "string": ""
+        "string": "什麼是實體？"
       }
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "",
+        "string": "當前版本",
         "developer_comment": "This refers to the current version of a Form."
       },
       "subtitle": {
         "published": {
-          "string": "",
+          "string": "{dateTime}已發布",
           "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       }
@@ -3147,24 +3208,24 @@
       },
       "formNav": {
         "tabTitle": {
-          "string": "",
+          "string": "發布此表格草稿以啟用這些功能",
           "developer_comment": "Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc."
         }
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, other {}}"
+          "string": "{count, plural, other {{count}個相關實體清單}}"
         },
         "updatedDatasets": {
-          "string": "",
+          "string": "更新",
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists updated by this form."
         },
         "attachedDatasets": {
-          "string": "",
+          "string": "用途",
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
-          "string": "{count, plural, other {}}"
+          "string": "{count, plural, other {已指派{count}位 App 使用者}}"
         }
       },
       "draftNav": {
@@ -3196,7 +3257,7 @@
       },
       "alert": {
         "create": {
-          "string": ""
+          "string": "「{name}」已建立為表單草稿。"
         }
       }
     },
@@ -3289,7 +3350,7 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": ""
+            "string": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法還原具有符合 ID 的另一張表單。"
           },
           "structureChanged": {
             "string": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。"
@@ -3326,12 +3387,12 @@
     },
     "FormRestore": {
       "title": {
-        "string": "",
+        "string": "還原表格",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "您確定要還原表格{name}吗？"
         },
         "1": {
           "string": "表單將恢復到先前的狀態，包括所有資料、設定和權限。"
@@ -3377,20 +3438,20 @@
       },
       "alert": {
         "delete": {
-          "string": "表單「{name}」已刪除。"
+          "string": "表單 「{name}」 已成功刪除。"
         }
       },
       "webFormsSetting": {
         "webForms": {
-          "string": "",
+          "string": "網頁表單",
           "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
         },
         "description": {
-          "string": "",
+          "string": "使用以下功能填寫、預覽和編輯您的表單 「{formName}」",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDefault": {
-          "string": "",
+          "string": "Enketo (預設)",
           "developer_comment": "The word \"Enketo\" should not be translated"
         }
       }
@@ -3409,7 +3470,7 @@
     },
     "FormSubmission": {
       "formNotFound": {
-        "string": ""
+        "string": "此 URL 未找到表單，請仔細檢查。"
       }
     },
     "FormSubmissions": {
@@ -3459,7 +3520,7 @@
       },
       "alert": {
         "restore": {
-          "string": ""
+          "string": "表單「{name}」已成功還原。"
         }
       },
       "message": {
@@ -3473,12 +3534,12 @@
       },
       "disabled": {
         "conflict": {
-          "string": ""
+          "string": "該表單無法還原，因為存在具有相同 ID 的活動表單。"
         }
       },
       "action": {
         "restore": {
-          "string": "",
+          "string": "還原",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3505,7 +3566,7 @@
     },
     "FormVersionRow": {
       "current": {
-        "string": "",
+        "string": "當前已發布版本",
         "developer_comment": "This is a label shown for the current version of a Form."
       }
     },
@@ -3536,34 +3597,34 @@
     "FormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
         "useOdkWebForms": {
-          "string": "",
+          "string": "使用 ODK Web Forms",
           "developer_comment": "The words \"ODK Web Forms\" should not be translated"
         },
         "intro": {
-          "string": ""
+          "string": "我們正在建立一個全新的 web 表單體驗，設計快速且易於使用！"
         },
         "description": {
           "full": {
-            "string": "",
+            "string": "某些功能可能會遺失；{seeSupportedFeatures}瞭解詳情，{previewYourForm}再選擇加入。",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
           },
           "seeSupportedFeatures": {
-            "string": "",
+            "string": "查看支援的功能",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
           },
           "previewYourForm": {
-            "string": "",
+            "string": "預覽您的表格",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
           }
         }
       },
       "enketoConfirmation": {
         "description": {
-          "string": "",
+          "string": "您確定要從 ODK Web Forms 轉換到 Enketo？",
           "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
         },
         "useEnketo": {
-          "string": "",
+          "string": "使用 Enketo",
           "developer_comment": "The word \"Enketo\" should not be translated"
         }
       }
@@ -3584,22 +3645,22 @@
     "HomeSummary": {
       "projects": {
         "body": {
-          "string": ""
+          "string": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
         }
       },
       "users": {
         "body": {
-          "string": ""
+          "string": "使用者可被指派至專案，以管理專案、收集資料或檢閱提交內容。"
         }
       },
       "docs": {
         "body": {
-          "string": ""
+          "string": "ODK 文件網站上提供了入門指南和使用者文件。"
         }
       },
       "forum": {
         "body": {
-          "string": ""
+          "string": "需要協助嗎？訪問論壇提問或瀏覽過去的討論。"
         }
       }
     },
@@ -3615,9 +3676,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "選擇 {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        "apply": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3679,7 +3740,7 @@
     "OdataDataAccess": {
       "action": {
         "connectData": {
-          "string": "",
+          "string": "連接資料",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -3819,7 +3880,7 @@
       },
       "alert": {
         "success": {
-          "string": "專案設定已儲存！"
+          "string": "專案設定已儲存。"
         }
       }
     },
@@ -3941,7 +4002,7 @@
       },
       "alert": {
         "success": {
-          "string": "你的修改已被儲存！"
+          "string": "您的變更已成功儲存。"
         }
       }
     },
@@ -4159,7 +4220,7 @@
       },
       "alert": {
         "archive": {
-          "string": "項目「{name}」已歸檔。"
+          "string": "專案「{name}」已歸檔。"
         }
       }
     },
@@ -4258,12 +4319,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "清除搜尋",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4297,7 +4352,13 @@
           "string": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。"
         },
         "unassignRole": {
-          "string": "成功！ 「{displayName}」已從此項目中刪除。"
+          "string": "「{displayName}」已從本專案中刪除。"
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "清除搜尋",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4367,7 +4428,7 @@
       },
       "alert": {
         "create": {
-          "string": "成功！您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。"
+          "string": "您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。"
         },
         "revoke": {
           "string": "公共存取連結“{displayName}”已成功撤銷。使用此連結將不再接受任何提交。"
@@ -4438,7 +4499,7 @@
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
-          "string": "",
+          "string": "其他 (API)",
           "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
         }
       },
@@ -4479,7 +4540,7 @@
     },
     "SubmissionBasicDetails": {
       "submissionDetails": {
-        "string": ""
+        "string": "提交詳情"
       },
       "formVersion": {
         "string": "表單版本"
@@ -4597,7 +4658,7 @@
           "string": "您確定要刪除此提交嗎？"
         },
         "1": {
-          "string": ""
+          "string": "此操作會將提交內容移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以還原。"
         }
       }
     },
@@ -4621,16 +4682,16 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, other {}}",
+            "string": "{count, plural, other {下載全部{count} 個提交資料}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withoutCount": {
-              "string": "",
+              "string": "下載符合篩選條件的所有提交內容",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
-              "string": "{count, plural, other {}}",
+              "string": "{count, plural, other {下載{count}個符合篩選條件的提交內容}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             }
           }
@@ -4715,7 +4776,7 @@
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
         },
         "undelete": {
-          "string": "",
+          "string": "已由{name}恢復",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Restored\", so it is essential for \"Restored\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nRestored by {name}\n\nyou could split it into:\n\nRestored • {name}"
         },
         "submissionBacklog": {
@@ -4735,10 +4796,6 @@
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "顯示欄位",
@@ -4750,15 +4807,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "全部",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "無",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4778,25 +4833,15 @@
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected} /{total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "全部",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "無",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4810,28 +4855,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} /{total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "全部",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "無",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": "未知提交者"
-      },
-      "allSubmitterSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {
@@ -4849,10 +4884,10 @@
         "string": "沒有符合的提交內容。"
       },
       "allDeleted": {
-        "string": ""
+        "string": "所有提交內容都會被刪除。"
       },
       "allDeletedOnPage": {
-        "string": ""
+        "string": "頁面上的所有提交內容都已刪除。"
       },
       "downloadDisabled": {
         "string": "已刪除的提交內容無法下載"
@@ -4865,10 +4900,10 @@
           "string": "沒有已刪除的提交內容。"
         },
         "allRestored": {
-          "string": ""
+          "string": "所有已刪除的提交內容都會還原。"
         },
         "allRestoredOnPage": {
-          "string": ""
+          "string": "頁面上的所有提交內容都已還原。"
         }
       },
       "loading": {
@@ -4917,12 +4952,12 @@
     },
     "SubmissionRestore": {
       "title": {
-        "string": "",
+        "string": "恢復提交內容",
         "developer_comment": "This is the title at the top of Submission restore pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "您確定要還原此提交嗎？"
         },
         "1": {
           "string": "提交內容將恢復到先前的狀態，包括評論等相關資料。"
@@ -4933,7 +4968,7 @@
       },
       "field": {
         "noConfirm": {
-          "string": "",
+          "string": "立即還原，無需確認，直到我離開頁面",
           "developer_comment": "This is the text of a form field."
         }
       }
@@ -5157,83 +5192,83 @@
     "WebFormRenderer": {
       "previewModal": {
         "title": {
-          "string": ""
+          "string": "資料有效"
         },
         "body": {
-          "string": ""
+          "string": "您輸入的資料是有效的，但因為這是表單預覽，所以沒有提交。"
         }
       },
       "submissionModal": {
         "title": {
-          "string": ""
+          "string": "表單已成功傳送！"
         },
         "body": {
-          "string": ""
+          "string": "填寫完畢後，您可以再次填寫此表單或關閉。"
         },
         "action": {
           "fillOutAgain": {
-            "string": "",
+            "string": "再次填寫",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "thankYouModal": {
         "title": {
-          "string": ""
+          "string": "感謝您的參與！"
         },
         "body": {
-          "string": ""
+          "string": "您現在可以關閉此視窗。"
         }
       },
       "editSubmissionModal": {
         "title": {
-          "string": ""
+          "string": "提交成功"
         },
         "body": {
-          "string": ""
+          "string": "現在您將會被重定向。"
         }
       },
       "errorModal": {
         "title": {
-          "string": ""
+          "string": "提交錯誤"
         },
         "body": {
-          "string": ""
+          "string": "您的資料未提交。錯誤訊息：{errorMessage} 您可以關閉此對話框再試一次。如果錯誤持續發生，請聯絡要求您填寫本表單的人員或{supportEmail}。"
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": ""
+          "string": "發送提交內容"
         },
         "body": {
-          "string": ""
+          "string": "正在提交您的資料。在完成之前，請不要關閉此視窗。"
         }
       },
       "sessionTimeoutModal": {
         "title": {
-          "string": ""
+          "string": "會期已過期"
         },
         "body": {
           "full": {
-            "string": "",
+            "string": "請在不同的瀏覽器標籤中{here}登入，然後再試一次。",
             "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
           },
           "here": {
-            "string": "",
+            "string": "從這裡",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
           }
         }
       },
       "retryModal": {
         "title": {
-          "string": ""
+          "string": "提交錯誤"
         },
         "body": {
-          "string": ""
+          "string": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
         },
         "action": {
           "tryAgain": {
-            "string": "",
+            "string": "再試一次",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -5241,15 +5276,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "",
+        "string": "表單草稿已移動",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "建立新表單，並在新的「編輯表單」標籤上編輯它"
       },
       "action": {
         "gotIt": {
-          "string": "",
+          "string": "知道了！",
           "developer_comment": "This is the text of a button that is used to close the modal."
         }
       }

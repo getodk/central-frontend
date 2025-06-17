@@ -48,7 +48,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Semua Tindakan)",
       "user": "Tindakan Pengguna Web",
       "project": "Tindakan Proyek",
       "form": "Tindakan Formulir",
@@ -215,12 +214,6 @@
     "projectRoles": "Peran Proyek",
     "draft": "Draf"
   },
-  "alert": {
-    "passwordTooShort": "Silahkan masukan password minimal 10 karakter.",
-    "updateEntity": "Entitas telah diperbarui!",
-    "updateReviewState": "Status Ulasan disimpan!",
-    "versionChange": "Server telah diperbarui. Harap segarkan halaman untuk menghindari tindakan yang tidak terduga."
-  },
   "moreInfo": {
     "clickHere": {
       "full": "Untuk informasi lebih lanjut, {clickHere}.",
@@ -295,12 +288,6 @@
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
       "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda",
       "errorNotProblem": "Terjadi kesalahan: kode error {status}."
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Sesi Anda akan berakhir dalam 2 menit, dan Anda akan keluar secara otomatis.",
-        "expired": "Sesi Anda telah berakhir. Untuk melanjutkan pekerjaan, mohon masuk kembali."
-      }
     }
   },
   "router": {

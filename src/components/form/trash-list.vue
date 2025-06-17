@@ -177,16 +177,13 @@ export default {
   "de": {
     "title": "Papierkorb",
     "trashCount": "{count}",
-    "alert": {
-      "restore": "Das Formular {name} wurde wiederhergestellt."
-    },
     "message": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
   },
   "es": {
     "title": "Papelera",
     "trashCount": "({count})",
     "alert": {
-      "restore": "El formulario {name} fue restablecido."
+      "restore": "El formulario {name} fue restablecido correctamente."
     },
     "message": "Los formularios y los datos relacionados con los formularios se eliminan después de 30 días en la Papelera"
   },
@@ -205,7 +202,7 @@ export default {
     "title": "Cestino",
     "trashCount": "({count})",
     "alert": {
-      "restore": "Il formulario “{name}” è stato ripristinato."
+      "restore": "Il formulario “{name}” è stato ripristinato con successo."
     },
     "message": "I formulari e i dati relativi ai formulari vengono eliminati dopo 30 giorni nel Cestino"
   },
@@ -227,6 +224,9 @@ export default {
   "zh-Hant": {
     "title": "垃圾桶",
     "trashCount": "({count})",
+    "alert": {
+      "restore": "表單「{name}」已成功還原。"
+    },
     "message": "表單和表單相關資料將在 30 天後從垃圾箱中刪除"
   }
 }

@@ -260,19 +260,13 @@ export default {
     "heading": [
       "Uživatelé aplikace mohou vidět a vyplnit pouze formuláře, k nimž mají výslovný přístup v níže uvedené tabulce. Projektoví manažeři a sběratelé dat mohou pomocí webového prohlížeče vyplnit jakýkoli formulář v projektu, který je ve stavu Otevřený."
     ],
-    "emptyTable": "Nejsou k dispozici žádné formuláře.",
-    "alert": {
-      "success": "Vaše změny byly uloženy!"
-    }
+    "emptyTable": "Nejsou k dispozici žádné formuláře."
   },
   "de": {
     "heading": [
       "Benutzer der App können nur diejenigen Formulare ansehen oder ausfüllen, für die sie expliziten Zugriff haben. Projekt-Manager und Datensammler können einen Browser benutzen, um beliebige Formulare im Projekt, die sich noch im offenen Zustand befinden, auszufüllen."
     ],
-    "emptyTable": "Es gibt keine Formulare zum Anzeigen.",
-    "alert": {
-      "success": "Ihre Änderungen wurden gespeichert."
-    }
+    "emptyTable": "Es gibt keine Formulare zum Anzeigen."
   },
   "es": {
     "heading": [
@@ -280,7 +274,7 @@ export default {
     ],
     "emptyTable": "No existen formularios para mostrar.",
     "alert": {
-      "success": "¡Sus modificaciones han sido guardadas!"
+      "success": "¡Sus modificaciones han sido guardadas correctamente!"
     }
   },
   "fr": {
@@ -296,10 +290,7 @@ export default {
     "heading": [
       "Pengguna Aplikasi hanya bisa melihat dan mengisi formulir yang aksesnya telah diberikan kepada mereka pada tabel di bawah ini. Manajer Proyek dan pengumpul data dapat menggunakan web browser untuk mengisi formulir apapun dalam Proyek yang statusnya adalah Terbuka."
     ],
-    "emptyTable": "Tidak ada formulir untuk ditampilkan.",
-    "alert": {
-      "success": "Perubahan telah disimpan!"
-    }
+    "emptyTable": "Tidak ada formulir untuk ditampilkan."
   },
   "it": {
     "heading": [
@@ -307,35 +298,26 @@ export default {
     ],
     "emptyTable": "Non ci sono formulari da mostrare.",
     "alert": {
-      "success": "Le tue modifiche sono state salvate!"
+      "success": "I tuoi cambi sono stati salvati con successo!"
     }
   },
   "ja": {
     "heading": [
       "アプリユーザーは、以下の表で明示的にアクセス権限を与えられたフォームに対してのみ、閲覧・記入ができます。プロジェクト・マネージャーとデータ収集者は、Webブラウザを使って、公開状態のプロジェクト内のどのフォームにも、記入できます。"
     ],
-    "emptyTable": "表示できるフォームはありません。",
-    "alert": {
-      "success": "変更が保存されました。"
-    }
+    "emptyTable": "表示できるフォームはありません。"
   },
   "pt": {
     "heading": [
       "Usuários de aplicativo somente podem ver e preencher os formulários para os quais receberem autorização explícita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
     ],
-    "emptyTable": "Não há formulários para exibir.",
-    "alert": {
-      "success": "Suas alterações foram gravadas!"
-    }
+    "emptyTable": "Não há formulários para exibir."
   },
   "sw": {
     "heading": [
       "Watumiaji wa Programu wanaweza tu kuona na kujaza Fomu ambazo wamepewa ufikiaji wa uwazi katika jedwali lililo hapa chini. Wasimamizi wa Miradi na Wakusanyaji Data wanaweza kutumia kivinjari cha wavuti kujaza Fomu yoyote katika Mradi ambayo iko katika hali ya Wazi."
     ],
-    "emptyTable": "Hakuna Fomu za kuonyesha.",
-    "alert": {
-      "success": "Mabadiliko yako yamehifadhiwa!"
-    }
+    "emptyTable": "Hakuna Fomu za kuonyesha."
   },
   "zh-Hant": {
     "heading": [
@@ -343,7 +325,7 @@ export default {
     ],
     "emptyTable": "沒有可顯示的表格。",
     "alert": {
-      "success": "你的修改已被儲存！"
+      "success": "您的變更已成功儲存。"
     }
   }
 }

@@ -184,6 +184,29 @@ const setWebformsEnabled = () => {
       "description": "Siete sicuri di voler passare da ODK Web Forms a Enketo?",
       "useEnketo": "Usa Enketo"
     }
+  },
+  "pt": {
+    "webformsConfirmation": {
+      "useOdkWebForms": "Utilizar ODK Web Forms"
+    },
+    "enketoConfirmation": {
+      "useEnketo": "Utilizar o Enketo"
+    }
+  },
+  "zh-Hant": {
+    "webformsConfirmation": {
+      "useOdkWebForms": "使用 ODK Web Forms",
+      "intro": "我們正在建立一個全新的 web 表單體驗，設計快速且易於使用！",
+      "description": {
+        "full": "某些功能可能會遺失；{seeSupportedFeatures}瞭解詳情，{previewYourForm}再選擇加入。",
+        "seeSupportedFeatures": "查看支援的功能",
+        "previewYourForm": "預覽您的表格"
+      }
+    },
+    "enketoConfirmation": {
+      "description": "您確定要從 ODK Web Forms 轉換到 Enketo？",
+      "useEnketo": "使用 Enketo"
+    }
   }
 }
 </i18n>

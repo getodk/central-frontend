@@ -562,7 +562,8 @@ const showBranchData = () => {
           "api": "Dados atualizados por {name}"
         },
         "update_resolve": "Aviso de conflito resolvido por {name}",
-        "delete": "Entidade {label} excluída por {name}"
+        "delete": "Entidade {label} excluída por {name}",
+        "restore": "Entidade {label} recuperada por {name}"
       }
     },
     "offlineUpdate": "Atualização offline"
@@ -632,7 +633,9 @@ const showBranchData = () => {
           },
           "api": "由{name}更親資料"
         },
-        "update_resolve": "衝突警告已由{name}解決"
+        "update_resolve": "衝突警告已由{name}解決",
+        "delete": "由{name}刪除的實體{label}",
+        "restore": "由{name}恢復的實體{label}"
       }
     },
     "offlineUpdate": "離線更新"

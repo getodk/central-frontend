@@ -135,6 +135,8 @@ const create = () => {
     }
   },
   "pt": {
+    "title": "Versão Rascunho",
+    "subtitle": "Não há Rascunho ativo para esse Formulário",
     "action": {
       "create": "Criar um novo rascunho"
     }
@@ -145,6 +147,10 @@ const create = () => {
     }
   },
   "zh-Hant": {
+    "title": "草稿版本",
+    "subtitle": "此表格無活動草稿",
+    "toMakeChanges": "以變更本表格或其附件。",
+    "noEffectUntilPublish": "在您發布草稿之前，已發佈的版本不會受到影響。",
     "action": {
       "create": "建立新草稿"
     }

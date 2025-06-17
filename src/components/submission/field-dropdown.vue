@@ -103,53 +103,34 @@ const placeholder = (counts) => counts.selected;
       "columns": "Zobrazené sloupce",
       "search": "Hledat sloupce…"
     },
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Nic"
-      }
-    },
     "warning": "Výběr příliš mnoha sloupců může zpomalit počítač."
   },
   "de": {
-    "placeholder": "{selected} von {total}",
     "field": {
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
     },
-    "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
-    },
     "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
-    "placeholder": "{selected} de {total}",
     "field": {
       "columns": "Se muestran las columnas",
       "search": "Buscar columnas…"
     },
     "action": {
-      "select": {
-        "all": "Todas",
-        "none": "Ninguna"
-      }
+      "all": "Todos",
+      "none": "Ninguno"
     },
     "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
-    "placeholder": "{selected} sur {total}",
     "field": {
       "columns": "Colonnes affichées",
       "search": "Chercher des colonnes"
     },
     "action": {
-      "select": {
-        "all": "Tous/toutes",
-        "none": "Aucun(e)"
-      }
+      "all": "Toutes",
+      "none": "Aucune"
     },
     "warning": "Sélectionner trop de colonnes peut ralentir votre ordinateur."
   },
@@ -157,25 +138,16 @@ const placeholder = (counts) => counts.selected;
     "field": {
       "columns": "Kolom terlihat",
       "search": "Mencari kolom..."
-    },
-    "action": {
-      "select": {
-        "all": "Semua",
-        "none": "Jangan Semua"
-      }
     }
   },
   "it": {
-    "placeholder": "{selected} di {total}",
     "field": {
       "columns": "Colonne mostrate",
       "search": "Cerca colonne..."
     },
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
+      "all": "Tutto",
+      "none": "Nessuno/a"
     },
     "warning": "La selezione di troppe colonne potrebbe rallentare il computer."
   },
@@ -183,24 +155,12 @@ const placeholder = (counts) => counts.selected;
     "field": {
       "columns": "表示された列",
       "search": "列を検索"
-    },
-    "action": {
-      "select": {
-        "all": "全て",
-        "none": "なし"
-      }
     }
   },
   "pt": {
     "field": {
       "columns": "Colunas exibidas",
       "search": "Colunas de busca..."
-    },
-    "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Nenhum"
-      }
     },
     "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
   },
@@ -209,24 +169,12 @@ const placeholder = (counts) => counts.selected;
       "columns": "Safu wima zimeonyeshwa",
       "search": "Tafuta safu wima..."
     },
-    "action": {
-      "select": {
-        "all": "zote",
-        "none": "hakuna"
-      }
-    },
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
   },
   "zh-Hant": {
     "field": {
       "columns": "顯示欄位",
       "search": "搜尋欄位..."
-    },
-    "action": {
-      "select": {
-        "all": "全部",
-        "none": "無"
-      }
     },
     "warning": "選擇太多列可能會降低計算機的速度。"
   }

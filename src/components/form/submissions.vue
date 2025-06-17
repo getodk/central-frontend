@@ -249,7 +249,7 @@ export default {
     "analyzeDisabledDeletedData": "L'accès OData n'est pas possible pour les soumissions supprimées.",
     "purgeDescription": "Les soumissions et les données associées sont supprimées aprés 30 jours passés dans la corbeille.",
     "action": {
-      "toggleDeletedSubmissions": "{count} Soumission supprimée | {count} Soumissions supprimées | {count} Soumission supprimée"
+      "toggleDeletedSubmissions": "{count} Soumission supprimée | {count} Soumissions supprimées | {count} Soumissions supprimées"
     }
   },
   "it": {

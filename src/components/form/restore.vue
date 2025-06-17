@@ -120,6 +120,17 @@ export default {
       "Il Formulario verrà ripristinato allo stato precedente, inclusi tutti i dati, le impostazioni e le autorizzazioni.",
       "Se il Formulario viene nuovamente eliminato, ci vorranno altri 30 giorni prima che venga rimosso."
     ]
+  },
+  "pt": {
+    "title": "Recuperar Formulário"
+  },
+  "zh-Hant": {
+    "title": "還原表格",
+    "introduction": [
+      "您確定要還原表格{name}吗？",
+      "表單將恢復到先前的狀態，包括所有資料、設定和權限。",
+      "如果再次刪除該表格，則需要再過 30 天才會被刪除。"
+    ]
   }
 }
 </i18n>

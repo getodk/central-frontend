@@ -199,9 +199,6 @@ const hideAndReset = () => {
     },
     "action": {
       "delete": "Odstranit tento formulář"
-    },
-    "alert": {
-      "delete": "Formulář „{name}“ byl odstraněn."
     }
   },
   "de": {
@@ -214,9 +211,6 @@ const hideAndReset = () => {
     },
     "action": {
       "delete": "Dieses Formular löschen"
-    },
-    "alert": {
-      "delete": "Das Formular \"{name}\" wurde gelöscht."
     },
     "webFormsSetting": {
       "webForms": "Web-Formulare",
@@ -235,7 +229,7 @@ const hideAndReset = () => {
       "delete": "Borrar este formulario"
     },
     "alert": {
-      "delete": "El formulario \"{name}\" fue borrado."
+      "delete": "El formulario {name} fue eliminado correctamente."
     },
     "webFormsSetting": {
       "webForms": "Formularios web",
@@ -255,7 +249,7 @@ const hideAndReset = () => {
       "delete": "Supprimer ce formulaire"
     },
     "alert": {
-      "delete": "Le formulaire {name} a été supprimé."
+      "delete": "Le formulaire \"{name}\" a été supprimé."
     },
     "webFormsSetting": {
       "webForms": "Web Forms",
@@ -273,9 +267,6 @@ const hideAndReset = () => {
     },
     "action": {
       "delete": "Hapus formulir ini"
-    },
-    "alert": {
-      "delete": "Formulir {name} telah dihapus."
     }
   },
   "it": {
@@ -290,7 +281,7 @@ const hideAndReset = () => {
       "delete": "Cancella questo formulario"
     },
     "alert": {
-      "delete": "Il Formulario “{name}” è stato cancellato."
+      "delete": "Il formulario “{name}” è stato eliminato con successo."
     },
     "webFormsSetting": {
       "webForms": "Formulari Web",
@@ -308,9 +299,6 @@ const hideAndReset = () => {
     },
     "action": {
       "delete": "フォームを削除"
-    },
-    "alert": {
-      "delete": "フォーム\"{name}\"は削除されました。"
     }
   },
   "pt": {
@@ -324,8 +312,9 @@ const hideAndReset = () => {
     "action": {
       "delete": "Excluir esse formulário"
     },
-    "alert": {
-      "delete": "O formulário \"{name}\" foi excluído."
+    "webFormsSetting": {
+      "webForms": "Web Forms",
+      "enketoDefault": "Enketo (padrão)"
     }
   },
   "sw": {
@@ -338,9 +327,6 @@ const hideAndReset = () => {
     },
     "action": {
       "delete": "Futa Fomu hii"
-    },
-    "alert": {
-      "delete": "Fomu \"{name}\" ilifutwa."
     }
   },
   "zh-Hant": {
@@ -355,7 +341,12 @@ const hideAndReset = () => {
       "delete": "刪除此表單"
     },
     "alert": {
-      "delete": "表單「{name}」已刪除。"
+      "delete": "表單 「{name}」 已成功刪除。"
+    },
+    "webFormsSetting": {
+      "webForms": "網頁表單",
+      "description": "使用以下功能填寫、預覽和編輯您的表單 「{formName}」",
+      "enketoDefault": "Enketo (預設)"
     }
   }
 }

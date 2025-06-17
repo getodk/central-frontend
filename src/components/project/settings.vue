@@ -197,9 +197,6 @@ export default {
         "Tento projekt byl archivován.",
         "V této verzi ODK Central nelze archivovat Projekt. Schopnost vyjmout projekt z archivu je však naplánována na budoucí vydání."
       ]
-    },
-    "alert": {
-      "archive": "Projekt „{name}“ byl archivován."
     }
   },
   "de": {
@@ -229,9 +226,6 @@ export default {
         "Dieses Projekt wurde archiviert.",
         "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
       ]
-    },
-    "alert": {
-      "archive": "Das Projekt \"{name}\" wurde archiviert."
     }
   },
   "es": {
@@ -263,7 +257,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "El proyecto \"{name}\" fue archivado."
+      "archive": "El proyecto \"{name}\" ha sido archivado."
     }
   },
   "fr": {
@@ -325,9 +319,6 @@ export default {
         "Proyek ini telah diarsipkan.",
         "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
       ]
-    },
-    "alert": {
-      "archive": "Proyek \"{name}\" telah diarsipkan."
     }
   },
   "it": {
@@ -389,9 +380,6 @@ export default {
         "このプロジェクトはアーカイブされました。",
         "このバージョンのODK Centralでは、プロジェクトの非アーカイブ化はできません。プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
       ]
-    },
-    "alert": {
-      "archive": "プロジェクト\"{name}\"はアーカイブされました。"
     }
   },
   "pt": {
@@ -421,9 +409,6 @@ export default {
         "O projeto foi arquivado.",
         "Nessa versão do ODK Central você não pode desarquivar um projeto. Entretanto, essa funcionalidade está planejada para uma versão futura."
       ]
-    },
-    "alert": {
-      "archive": "O projeto \"{name}\" foi arquivado."
     }
   },
   "sw": {
@@ -453,9 +438,6 @@ export default {
         "Mradi huu umewekwa kwenye kumbukumbu.",
         "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
       ]
-    },
-    "alert": {
-      "archive": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
     }
   },
   "zh-Hant": {
@@ -487,7 +469,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "項目「{name}」已歸檔。"
+      "archive": "專案「{name}」已歸檔。"
     }
   }
 }

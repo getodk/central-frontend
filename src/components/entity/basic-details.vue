@@ -155,6 +155,7 @@ watchEffect(() => {
     "submissionDeleted": "Questo invio è stato eliminato."
   },
   "pt": {
+    "entityDetails": "Detalhes da Entidade",
     "creatingSubmission": "Criando Resposta",
     "creatingSource": "Criando fonte",
     "upload": "Fazer upload",
@@ -165,6 +166,7 @@ watchEffect(() => {
     "submissionDeleted": "Wasilisho hili limefutwa."
   },
   "zh-Hant": {
+    "entityDetails": "實體詳細資料",
     "creatingSubmission": "建立提交",
     "creatingSource": "建立來源",
     "upload": "更新",

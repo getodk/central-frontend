@@ -165,7 +165,8 @@ th.col-deleted-at { color: $color-danger; }
   },
   "zh-Hant": {
     "header": {
-      "updatedAtAndActions": "最後更新/操作"
+      "updatedAtAndActions": "最後更新/操作",
+      "deletedAt": "刪除於"
     }
   }
 }

@@ -166,13 +166,13 @@ const viewXml = modalData('FormVersionViewXml');
     "title": "Versión borrador"
   },
   "fr": {
-    "subtitle": "Envoyé",
-    "changed": "Modifié par le version publiée",
+    "subtitle": "Téléversée",
+    "changed": "Différente de la version publiée",
     "versionName": "Nom de version : {name}",
     "action": {
-      "upload": "Envoyer une nouvelle Définition de Formulaire"
+      "upload": "Téléverser une nouvelle définition de formulaire"
     },
-    "withinDef": "Au sein de cette Définition de Formulaire",
+    "withinDef": "Dans cette définition de formulaire",
     "title": "Version de l'ébauche"
   },
   "it": {
@@ -184,6 +184,20 @@ const viewXml = modalData('FormVersionViewXml');
     },
     "withinDef": "All'interno di questa definizione del formulario:",
     "title": "Versione bozza"
+  },
+  "pt": {
+    "subtitle": "Carregado",
+    "title": "Versão Rascunho"
+  },
+  "zh-Hant": {
+    "subtitle": "已上傳",
+    "changed": "與發布版本相比有變更",
+    "versionName": "版本名稱：{name}",
+    "action": {
+      "upload": "上傳新表單定義"
+    },
+    "withinDef": "在此表格定義內：",
+    "title": "草稿版本"
   }
 }
 </i18n>

@@ -170,6 +170,20 @@ if (currentUser.can('user.list'))
     "forum": {
       "body": "Avete bisogno di aiuto? Visitate il forum per porre domande o consultare le discussioni precedenti."
     }
+  },
+  "zh-Hant": {
+    "projects": {
+      "body": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
+    },
+    "users": {
+      "body": "使用者可被指派至專案，以管理專案、收集資料或檢閱提交內容。"
+    },
+    "docs": {
+      "body": "ODK 文件網站上提供了入門指南和使用者文件。"
+    },
+    "forum": {
+      "body": "需要協助嗎？訪問論壇提問或瀏覽過去的討論。"
+    }
   }
 }
 </i18n>

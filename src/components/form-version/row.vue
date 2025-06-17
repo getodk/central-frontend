@@ -93,6 +93,12 @@ defineEmits(['view-xml']);
   },
   "it": {
     "current": "Versione corrente pubblicata"
+  },
+  "pt": {
+    "current": "Versão publicada atualmente"
+  },
+  "zh-Hant": {
+    "current": "當前已發布版本"
   }
 }
 </i18n>

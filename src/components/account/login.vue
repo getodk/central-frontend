@@ -234,8 +234,7 @@ export default {
 {
   "cs": {
     "alert": {
-      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku.",
-      "changePassword": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
+      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
     },
     "oidc": {
       "body": "Kliknutím na tlačítko Pokračovat přejdete na přihlašovací stránku.",
@@ -252,8 +251,7 @@ export default {
   },
   "de": {
     "alert": {
-      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten.",
-      "changePassword": "Ihr Passwort ist kürzer als 10 Zeichen. Um Ihr Konto zu schützen, verlängerns Sie bitte Ihr Passwort."
+      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
     },
     "oidc": {
       "body": "Klicken Sie auf Weiter, um zur Anmeldeseite zu gelangen.",
@@ -271,7 +269,7 @@ export default {
   "es": {
     "alert": {
       "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar.",
-      "changePassword": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
+      "changePassword": "Para proteger tu cuenta, asegúrate de que tu contraseña tiene 10 caracteres o más."
     },
     "oidc": {
       "body": "Haga clic en Continuar para pasar a la página de inicio de sesión.",
@@ -289,7 +287,7 @@ export default {
   "fr": {
     "alert": {
       "alreadyLoggedIn": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer.",
-      "changePassword": "Votre mot de passe fait moins de 10 caractères. Pour protéger votre compte, merci de choisir un mot de passe plus long."
+      "changePassword": "Pour protéger votre compte, assurez vous de choisir un mot de passe d'au moins 10 caractères."
     },
     "oidc": {
       "body": "Cliquez sur Continuer pour accéder à la page de connexion.",
@@ -315,7 +313,7 @@ export default {
   "it": {
     "alert": {
       "alreadyLoggedIn": "Un utente ha già effettuato l'accesso. Aggiorna la pagina per continuare.",
-      "changePassword": "La tua password è lunga meno di 10 caratteri. Per proteggere il tuo account, cambia la password per renderla più lunga."
+      "changePassword": "Per proteggere il tuo account, assicurati che la password sia lunga almeno 10 caratteri."
     },
     "oidc": {
       "body": "Fare clic su Continua per passare alla pagina di Login.",
@@ -332,8 +330,7 @@ export default {
   },
   "ja": {
     "alert": {
-      "alreadyLoggedIn": "すでにユーザーでログインされています。 続けるにはページを更新してください。",
-      "changePassword": "あなたのパスワードは10文字以下です。アカウントを守るため、パスワードを長いものに変更してください。"
+      "alreadyLoggedIn": "すでにユーザーでログインされています。 続けるにはページを更新してください。"
     },
     "problem": {
       "401_2": "メールアドレスとパスワードの一方、または両方が違います。"
@@ -341,8 +338,7 @@ export default {
   },
   "pt": {
     "alert": {
-      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar.",
-      "changePassword": "Sua senha é menor que 10 caracteres. Para proteger sua conta, por favor crie uma senha mais longa."
+      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar."
     },
     "oidc": {
       "body": "Clique em Continuar para prosseguir para a página de login.",
@@ -359,8 +355,7 @@ export default {
   },
   "sw": {
     "alert": {
-      "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea.",
-      "changePassword": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+      "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea."
     },
     "oidc": {
       "body": "Bofya Endelea ili kuendelea na ukurasa wa kuingia.",
@@ -378,7 +373,7 @@ export default {
   "zh-Hant": {
     "alert": {
       "alreadyLoggedIn": "使用者已登入，重新載入頁面再繼續進行。",
-      "changePassword": "您的密碼少於 10 個字元。為了保護您的帳戶，請變更密碼並增加密碼長度。"
+      "changePassword": "為了保護您的帳戶，請確保您的密碼為 10 個字元以上。"
     },
     "oidc": {
       "body": "點選繼續進入登入頁面。",

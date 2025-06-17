@@ -48,7 +48,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Všechny akce)",
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
@@ -232,13 +231,6 @@
     "formPreview": "Náhled formuláře",
     "draft": "Koncept"
   },
-  "alert": {
-    "passwordTooShort": "Zadejte heslo dlouhé alespoň 10 znaků.",
-    "updateEntity": "Entita byla aktualizována!",
-    "updateReviewState": "Stav kontroly uložen!",
-    "versionChange": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování.",
-    "submissionDeleted": "Podání bylo smazáno."
-  },
   "moreInfo": {
     "clickHere": {
       "full": "Pro více informací {clickHere}.",
@@ -337,13 +329,6 @@
         "409_17": {
           "duplicateProperty": "{provided} (stávající: {current})"
         }
-      }
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Vaše relace vyprší za 2 minuty a budete automaticky odhlášeni.",
-        "expired": "Vaše relace vypršela. Chcete-li pokračovat v práci, přihlaste se prosím znovu.",
-        "logoutError": "Došlo k problému a nebyli jste úplně odhlášeni. Obnovte stránku a zkuste se znovu odhlásit. {message}"
       }
     }
   },

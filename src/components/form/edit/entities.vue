@@ -148,6 +148,23 @@ const diffCounts = computed(() => {
     "cannotDeleteProperties": "Le proprietà non possono essere eliminate.",
     "notEntityRelated": "Questa definizione non aggiorna alcuna entità.",
     "whatAreEntities": "Cosa sono le entità?"
+  },
+  "pt": {
+    "whatAreEntities": "O que são Entidades?"
+  },
+  "zh-Hant": {
+    "datasetCount": "提交此表格定義將更新{count}個實體清單。",
+    "diffCounts": {
+      "datasetsOnly": "發布此草案將更新{count}個實體清單。",
+      "newProperties": {
+        "full": "發布此草案將更新{entityLists}並創建{properties}。",
+        "entityLists": "{count}個實體清單",
+        "properties": "{count}種屬性"
+      }
+    },
+    "cannotDeleteProperties": "屬性無法刪除。",
+    "notEntityRelated": "此定義不會更新任何實體。",
+    "whatAreEntities": "什麼是實體？"
   }
 }
 </i18n>
