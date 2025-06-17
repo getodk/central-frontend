@@ -2,9 +2,6 @@
 set -o pipefail
 shopt -s inherit_errexit
 
-log() { echo >&2 "[$(basename "$0")] $*"; }
-
-log "---"
 find dist/ -type f -exec du -b {} \; |
     sort -k2 |
     awk '
@@ -18,8 +15,10 @@ find dist/ -type f -exec du -b {} \; |
         minSize = 5000000
         maxSize = 6000000
 
-        print  "[check-bundle-size.sh] Individual file sizes:\n";
-        print  "[check-bundle-size.sh]  SIZE/b PATH";
+        print "[check-bundle-size.sh] ---"
+        print "[check-bundle-size.sh] Individual file sizes:";
+        print "[check-bundle-size.sh]"
+        print "[check-bundle-size.sh]  SIZE/b PATH";
       }
       {
         printf "[check-bundle-size.sh] %7s %s\n", $1, $2;
