@@ -105,10 +105,10 @@ const tag = computed(() => {
 {
   "de": {
     "noAttachments": "Diese Definition erfordert keine Anhänge, es muss also nichts hochgeladen werden.",
-    "missingCount": "{count}Fehlender Anhang | {count}Fehlende Anhänge",
+    "missingCount": "{count} Fehlender Anhang | {count} Fehlende Anhänge",
     "diff": {
-      "newCount": "{count} Neue Anhang | {count}Neue Anhänge",
-      "changedCount": "{count} geänderte Anhang | {count}geänderte Anhänge"
+      "newCount": "{count} Neue Anhang | {count} Neue Anhänge",
+      "changedCount": "{count} geänderte Anhang | {count} geänderte Anhänge"
     }
   },
   "es": {

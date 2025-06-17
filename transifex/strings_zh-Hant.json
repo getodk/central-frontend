@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "",
+        "string": "所有活動",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -300,7 +300,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "server": {
-          "string": "",
+          "string": "新版本",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -2142,11 +2142,11 @@
       },
       "action": {
         "all": {
-          "string": "",
+          "string": "全部",
           "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
         },
         "none": {
-          "string": "",
+          "string": "無",
           "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
       }
@@ -2174,7 +2174,7 @@
         "string": "已刪除的實體無法使用篩選功能"
       },
       "searchDisabledMessage": {
-        "string": ""
+        "string": "已刪除的實體無法使用搜尋功能"
       },
       "downloadDisabled": {
         "string": "已刪除的實體無法下載"
@@ -3677,7 +3677,7 @@
     "Multiselect": {
       "action": {
         "apply": {
-          "string": "",
+          "string": "應用",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4641,7 +4641,7 @@
           "string": "資料下載尚不可用。請稍後重試。"
         },
         "submit": {
-          "string": "您的資料下載應該很快就會開始。一旦開始，您可以關閉此框。如果您一直在等待但尚未開始，請重試。"
+          "string": "資料下載即將開始。一旦開始，您可以關閉此訊息。如果 20 秒內仍未開始，請再試一次。"
         },
         "parseError": {
           "string": "請求您的資料時出現問題。"
@@ -4808,11 +4808,11 @@
       },
       "action": {
         "all": {
-          "string": "",
+          "string": "全部",
           "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
         },
         "none": {
-          "string": "",
+          "string": "無",
           "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
@@ -4828,18 +4828,18 @@
         }
       },
       "allSubmissionDateSelected": {
-        "string": "",
+        "string": "全部時間",
         "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
       "action": {
         "all": {
-          "string": "",
+          "string": "全部",
           "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
         },
         "none": {
-          "string": "",
+          "string": "無",
           "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
       }
@@ -4857,11 +4857,11 @@
       },
       "action": {
         "all": {
-          "string": "",
+          "string": "全部",
           "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
         },
         "none": {
-          "string": "",
+          "string": "無",
           "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },

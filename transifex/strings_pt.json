@@ -2193,7 +2193,7 @@
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {Baixar {count}Entidade} many {Baixar todas as {count}Entidades} other {Baixar todas as {count} Entidades}}",
+            "string": "{count, plural, one {Baixar {count} Entidade} many {Baixar todas as {count} Entidades} other {Baixar todas as {count} Entidades}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
@@ -4641,7 +4641,7 @@
           "string": "O download de dados ainda não está disponível. Tente novamente em instantes."
         },
         "submit": {
-          "string": "O processo de baixar seus dados começará em breve. Assim que ele começar você poderá fechar essa caixa. Se você já está esperando e ele ainda não começou, por favor tente novamente."
+          "string": ""
         },
         "parseError": {
           "string": "Algo deu errado ao solicitar seus dados."

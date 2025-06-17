@@ -165,7 +165,25 @@ const confirm = () => update(ownerOnly.value)
       "title": "Acceso a la entidad del Usuario de la aplicación y recopilador de datos"
     },
     "accessAll": "Acceder a todas las entidades",
-    "accessAllDefault": "Acceder a todas las Entidades (por defecto)"
+    "accessAllDefault": "Acceder a todas las Entidades (por defecto)",
+    "ownerOnly": "Acceder sólo a Entidades propias",
+    "radio": {
+      "false": "Los usuarios de la aplicación y los recopiladores de datos de este proyecto tendrán acceso a todas las entidades de sus formularios asignados.",
+      "true": "Los usuarios de la aplicación y los recopiladores de datos dentro de este proyecto sólo tendrán acceso a las entidades que creen, promoviendo la privacidad y limitando las transferencias de datos."
+    },
+    "falseModal": {
+      "introduction": "Los usuarios de la aplicación y los recopiladores de datos tendrán acceso a todas las entidades, incluidas las que no hayan creado."
+    },
+    "trueModal": {
+      "introduction": "Los usuarios de aplicaciones y los recopiladores de datos perderán el acceso a las entidades que no hayan creado. Todos los demás tipos de usuario conservan el acceso a todas las Entidades.",
+      "action": {
+        "confirm": "Acceso a entidades propias"
+      }
+    },
+    "alert": {
+      "changeToFalse": "Los usuarios de la aplicación y los recopiladores de datos tendrán ahora acceso a todas las entidades.",
+      "changeToTrue": "Los usuarios de la aplicación y los recopiladores de datos ahora sólo tendrán acceso a las entidades que creen."
+    }
   },
   "fr": {
     "panel": {

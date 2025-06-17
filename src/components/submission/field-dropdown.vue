@@ -110,6 +110,10 @@ const placeholder = (counts) => counts.selected;
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
     },
+    "action": {
+      "all": "Alle",
+      "none": "Keine"
+    },
     "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
@@ -175,6 +179,10 @@ const placeholder = (counts) => counts.selected;
     "field": {
       "columns": "顯示欄位",
       "search": "搜尋欄位..."
+    },
+    "action": {
+      "all": "全部",
+      "none": "無"
     },
     "warning": "選擇太多列可能會降低計算機的速度。"
   }

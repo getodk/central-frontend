@@ -215,7 +215,7 @@ export default {
       "entityLists": "{count} Verwandte Entitätsliste | {count} Verwandte Entitätslisten",
       "updatedDatasets": "Aktualisierungen",
       "attachedDatasets": "Verwendet",
-      "appUsers": "{count}App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
+      "appUsers": "{count} App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
     }
   },
   "es": {

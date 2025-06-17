@@ -4641,7 +4641,7 @@
           "string": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi"
         },
         "submit": {
-          "string": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena."
+          "string": ""
         },
         "parseError": {
           "string": "Hitilafu fulani imetokea wakati wa kuomba data yako."

@@ -49,6 +49,7 @@
   },
   "audit": {
     "category": {
+      "nonverbose": "Alle Aktionen",
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
@@ -112,7 +113,8 @@
       "upgrade": {
         "process_form": "Formular verarbeiten",
         "process_form_draft": "Formularentwurf verarbeiten",
-        "process_form_entities_version": "Formular für Upgrade markieren"
+        "process_form_entities_version": "Formular für Upgrade markieren",
+        "server": "Neue Version"
       },
       "user": {
         "assignment_create": "Rolle zuweisen",
@@ -249,6 +251,7 @@
   },
   "alert": {
     "passwordTooShort": "Das Passwort muss mindestens 10 Zeichen lang sein.",
+    "updateReviewState": "Überprüfung erfolgreich gespeichert.",
     "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
     "entityRestored": "Die Entität \"{label}“ wurde wiederhergestellt.",
     "entityDeleted": "Die Entität \"{label}“ wurde gelöscht."
