@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- Alerts shown at the bottom of the screen. See the comments in the CSS below
-for notes about expected behavior. -->
+<!-- Alerts shown at the bottom of the screen -->
 <template>
   <div id="alerts">
     <Toast v-show="showsToast"/>
