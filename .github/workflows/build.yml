@@ -16,4 +16,4 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build
-    - run: ./bin/check-bundle-size.sh
+    - run: ./bin/check-bundle-size.js
