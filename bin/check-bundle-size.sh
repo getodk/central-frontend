@@ -15,9 +15,18 @@ humanSize() {
 	fi
 }
 
-log "Checking bundle size..."
+log "---"
+log "Individual file sizes:"
+find dist/ -type f -exec du -b {} \; |
+    sort -k2 |
+		awk '
+			BEGIN {
+			  print  "[check-bundle-size.sh]  SIZE/b PATH"
+			}
+		  { printf "[check-bundle-size.sh] %7s %s\n", $1, $2 }
+		'
 
-actualSize="$(du -s ./dist/ | cut -f1)"
+actualSize="$(du -s dist/ | cut -f1)"
 
 log "---"
 log "  minimum size: $(humanSize "$minSize")"
