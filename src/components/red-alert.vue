@@ -26,18 +26,12 @@ const redAlert = inject('redAlert');
 
 .red-alert {
   background-color: $color-danger-light;
+  color: $color-danger;
 
   .alert-message {
-    color: $color-danger;
-
     // Error messages from pyxform sometimes include newlines and indentation.
     overflow-wrap: break-word;
     white-space: pre-wrap;
-  }
-
-  .close {
-    color: $color-danger;
-    opacity: 0.5;
   }
 }
 </style>
