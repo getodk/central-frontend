@@ -319,7 +319,7 @@ export default {
       if (willDownload) {
         this.$emit('hide');
 
-        const { cta } = this.toast.show(this.$t('alert.submit'));
+        const { cta } = this.toast.show(this.$t('alert.submit'), { autoHide: false });
         if (this.managedKey == null)
           cta(this.$t('action.tryAgain'), () => { a.click(); });
       }
