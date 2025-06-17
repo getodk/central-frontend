@@ -342,13 +342,18 @@ Assertion.addMethod('redAlert', function assertRedAlert(message = undefined) {
 
 Assertion.addMethod('alert', function assertAlert(type = undefined, message = undefined) {
   expect(this._obj).to.be.instanceof(VueWrapper);
-  const { toast, redAlert, alert } = this._obj.vm.$container;
-  this.assert(
-    alert.state,
-    'expected the component to show an alert',
-    'expected the component not to show an alert'
-  );
-  if (checkNegate(this, [type, message])) return;
-  if (type != null) alert.last.should.equal(type === 'danger' ? redAlert : toast);
-  if (message != null) alert.message.should.stringMatch(message);
+  if (type == null) {
+    const { alert } = this._obj.vm.$container;
+    this.assert(
+      alert.state,
+      'expected the component to show an alert',
+      'expected the component not to show an alert'
+    );
+  } else {
+    if (checkNegate(this, [type, message])) return;
+    if (type === 'danger')
+      this._obj.should.redAlert(message);
+    else
+      this._obj.should.toast(message);
+  }
 });
