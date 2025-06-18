@@ -140,7 +140,8 @@
     "local persistence (single)": "",
     "save as draft": "",
     "offline entities": "",
-    "MBtiles / offline map layers": ""
+    "MBtiles / offline map layers": "",
+    "Data encryption": ""
   },
   "XPath": {
     "operators": "✅",
