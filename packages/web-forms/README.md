@@ -67,6 +67,30 @@ Individual test environments, and their corresponding watch modes, also have sep
 
 Upload XLSForm and XForm functionality in [`demo`](./src/demo/) app and in dev mode depends on [XLSForm-online](https://github.com/getodk/xlsform-online). Run the xlsform-online locally. By default it runs on port 8000, if you are running it on another port then you should update the [`config`](./src/demo/config.json) file.
 
+### Project Structure
+
+```
+web-forms/
+├── public/                   # Static assets (e.g., favicon.ico)
+├── src/
+│   ├── assets/
+│   │   ├── images/           # Web Forms and Demo page images
+│   │   ├── styles/           # Web Forms and Demo page styles
+│   ├── components/           # UI components
+│   │   ├── form-elements/    # Form elements or controllers (question types, hints, labels, inputs)
+│   │   ├── form-layout/      # Form layout and rendering (e.g., form panel, groups, repeats, form error classes)
+│   │   ├── common/           # Reusable smaller components (e.g., icon, image, checkbox components)
+│   ├── demo/                 # Demo page
+│   ├── lib/                  # Utilities
+│   ├── index.ts
+│   ├── web-forms-plugin.ts   # Vue plugin
+├── tests/                    # Unit tests
+├── e2e/                      # E2e tests
+├── package.json
+├── vite.config.ts
+├── playwright.config.ts
+```
+
 ### Styling Overview
 
 This project uses a combination of [PrimeFlex](https://primeflex.org/) and [PrimeVue](https://primevue.org/) for consistent styling, alongside specific font rules for the ODK Website's Web Forms Preview.
@@ -83,7 +107,7 @@ We use CSS variables for theming with two prefixes:
 
 #### Z-Index Layering System
 
-This package uses a centralized `z-index` layering system to manage UI stacking order, defined in `src/assets/css/style.scss`. The ODK variables (e.g., `--odk-z-index-error-banner`) ensure elements like floating error messages, form controls, and overlays stack correctly without overlap.
+This package uses a centralized `z-index` layering system to manage UI stacking order, defined in `src/assets/styles/style.scss`. The ODK variables (e.g., `--odk-z-index-error-banner`) ensure elements like floating error messages, form controls, and overlays stack correctly without overlap.
 
 - **Key layers**:
 

@@ -5,7 +5,7 @@ import type {
 	HostSubmissionResult,
 	HostSubmissionResultCallback,
 	OptionalAwaitableHostSubmissionResult,
-} from '@/lib/submission/HostSubmissionResultCallback.ts';
+} from '@/lib/submission/host-submission-result-callback.ts';
 import type {
 	MonolithicInstancePayload,
 	ResolvableInstanceAttachmentsMap,

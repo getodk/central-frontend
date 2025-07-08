@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import IconSVG from '@/components/widgets/IconSVG.vue';
+import IconSVG from '@/components/common/IconSVG.vue';
 import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms';
 import { xlsFormUrlMap } from '@getodk/common/fixtures/xlsforms';
 import Button from 'primevue/button';
