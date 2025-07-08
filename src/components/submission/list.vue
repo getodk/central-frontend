@@ -78,7 +78,7 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
-      @hide="downloadModal.hide()"/>
+      @hide="downloadModal.hide(false)"/>
     <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
       :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
@@ -523,9 +523,7 @@ export default {
       this.fetchChunk(false);
     },
     showDownloadModal(filtered = false) {
-      if (filtered) {
-        this.downloadModal.odataFilter = this.odataFilter;
-      }
+      this.downloadModal.odataFilter = filtered ? this.odataFilter : null;
       this.downloadModal.show();
     }
   }
