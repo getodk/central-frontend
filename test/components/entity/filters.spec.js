@@ -1,3 +1,4 @@
+import { DateTime, Settings } from 'luxon';
 import EntityFiltersConflict from '../../../src/components/entity/filters/conflict.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 
@@ -6,9 +7,20 @@ import { changeMultiselect } from '../../util/trigger';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { relativeUrl } from '../../util/request';
+import DateRangePicker from '../../../src/components/date-range-picker.vue';
+import { setLuxon } from '../../util/date-time';
+
+const createFieldKeys = (count) => new Array(count).fill(undefined)
+  .map((_, i) => testData.extendedFieldKeys
+    .createPast(1, { displayName: `App User ${i}` })
+    .last());
 
 describe('EntityFilters', () => {
   beforeEach(mockLogin);
+
+  beforeEach(() => {
+    setLuxon({ defaultZoneName: 'UTC' });
+  });
 
   describe('conflict filter', () => {
     beforeEach(() => {
@@ -160,6 +172,143 @@ describe('EntityFilters', () => {
             modelValue.should.eql([true]);
           }));
     });
+  });
+
+  describe('creator filter', () => {
+    beforeEach(() => {
+      testData.extendedProjects.createPast(1, { forms: 1, appUsers: 3 });
+      testData.extendedDatasets.createPast(1, { entities: 3 });
+      const fieldKeys = createFieldKeys(3);
+      testData.extendedEntities
+        .createPast(1, { creator: fieldKeys[2] })
+        .createPast(1, { creator: fieldKeys[1] })
+        .createPast(1, { creator: fieldKeys[0] });
+    });
+
+    it('sends a request', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(changeMultiselect('#entity-filters-creator', [0]))
+        .beforeEachResponse((_, { url }) => {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          const { id } = testData.extendedFieldKeys.first();
+          filter.should.include(`(__system/creatorId eq ${id})`);
+        })
+        .respondWithData(() => ({
+          ...testData.entityOData(1),
+          '@odata.count': 1
+        })));
+
+    it('updates the URL', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(changeMultiselect('#entity-filters-creator', [0]))
+        .respondWithData(() => ({
+          ...testData.entityOData(1),
+          '@odata.count': 1
+        }))
+        .afterResponse(component => {
+          const { creatorId } = component.vm.$route.query;
+          const { id } = testData.extendedFieldKeys.first();
+          creatorId.should.eql([id.toString()]);
+        }));
+
+    it('re-renders the table', () => {
+      testData.extendedEntities.createPast(250);
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(component => {
+          component.get('button[aria-label="Next page"]').trigger('click');
+        })
+        .respondWithData(() => testData.entityOData(250, 250))
+        .afterResponse(component => {
+          component.findAllComponents(EntityMetadataRow).length.should.equal(3);
+        })
+        .request(changeMultiselect('#entity-filters-creator', [0]))
+        .beforeEachResponse((component, { url }) => {
+          component.findComponent(EntityMetadataRow).exists().should.be.false;
+          relativeUrl(url).searchParams.get('$skip').should.be.eql('0');
+        })
+        .respondWithData(() => ({
+          ...testData.entityOData(1),
+          '@odata.count': 1
+        }))
+        .afterResponse(component => {
+          component.findAllComponents(EntityMetadataRow).length.should.equal(1);
+        });
+    });
+
+    it('allows multiple submitters to be selected', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(changeMultiselect('#entity-filters-creator', [0, 1]))
+        .beforeEachResponse((_, { url }) => {
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          const id0 = testData.extendedFieldKeys.get(0).id;
+          const id1 = testData.extendedFieldKeys.get(1).id;
+          filter.should.include(`(__system/creatorId eq ${id0} or __system/creatorId eq ${id1})`);
+        })
+        .respondWithData(() => ({
+          ...testData.entityOData(2),
+          '@odata.count': 2
+        })));
+  });
+
+  describe('createdAt filter', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1);
+    });
+
+    it('sends a request', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(component => {
+          component.getComponent(DateRangePicker).vm.close([
+            DateTime.fromISO('1970-01-01').toJSDate(),
+            DateTime.fromISO('1970-01-02').toJSDate()
+          ]);
+        })
+        .beforeEachResponse((_, { url }) => {
+          const filters = new URL(url, window.location.origin).searchParams.get('$filter').split(' and ');
+
+          const start = filters[2].split(' ge ')[1];
+          start.should.equal('1970-01-01T00:00:00.000Z');
+
+          DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
+
+          const end = filters[3].split(' le ')[1];
+          end.should.equal('1970-01-02T23:59:59.999Z');
+          DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
+        })
+        .respondWithData(testData.entityOData));
+
+    it('updates the URL', () =>
+      load('/projects/1/entity-lists/trees/entities', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(component => {
+          component.getComponent(DateRangePicker).vm.close([
+            DateTime.fromISO('1970-01-01').toJSDate(),
+            DateTime.fromISO('1970-01-02').toJSDate()
+          ]);
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponse(component => {
+          const { start, end } = component.vm.$route.query;
+          start.should.equal('1970-01-01');
+          end.should.equal('1970-01-02');
+        }));
   });
 
   it('shows correct message if there are no entities after filtering', async () => {

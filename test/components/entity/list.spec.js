@@ -47,7 +47,8 @@ describe('EntityList', () => {
           searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
           searchParams.get('$top').should.be.eql('250');
         }
-      }
+      },
+      { url: '/v1/projects/1/datasets/trees/entities/creators' },
     ]);
   });
 
