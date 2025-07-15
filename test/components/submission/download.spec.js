@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 
+import { nextTick } from 'vue';
 import Modal from '../../../src/components/modal.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
 
@@ -550,5 +551,33 @@ describe('SubmissionDownload', () => {
       await clock.tickAsync(1000);
       checkForProblem.callCount.should.equal(2);
     });
+  });
+
+  it('does not remove filter from link after modal is hidden', async () => {
+    testData.extendedForms.createPast(1);
+    const component = await load('/projects/1/forms/f/submissions?reviewState=null');
+
+    let clickCount = 0;
+    let failure = false;
+    component.element.addEventListener('click', (event) => {
+      if (event.target.tagName !== 'A') return;
+      event.preventDefault(); // Don't actually download the file.
+      clickCount += 1;
+      const url = relativeUrl(event.target.getAttribute('href'));
+      const filter = url.searchParams.get('$filter');
+      if (filter == null || !filter.includes('reviewState')) failure = true;
+    });
+
+    // Click the link in the modal.
+    await component.find('#submission-download-button .btn-primary').trigger('click');
+    await component.find('#submission-download-button li:nth-of-type(1) button').trigger('click');
+    await component.getComponent(SubmissionDownload).get('a').trigger('click');
+
+    // Click the link via the CTA in the toast.
+    component.vm.$container.toast.cta.handler();
+    await nextTick();
+
+    clickCount.should.equal(2);
+    failure.should.be.false;
   });
 });
