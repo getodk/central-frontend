@@ -47,42 +47,56 @@ const detail = computed((): FormLoadErrorDetail | null => {
 		:keep-in-viewport="true"
 	>
 		<div class="content">
-			<Message severity="error" class="message" :closable="false">
+			<Message severity="error" class="message" :closable="false" :unstyled="true">
 				{{ error.message }}
 			</Message>
 
 			<details v-if="detail != null" class="initialize-form-failure-details">
 				<summary>{{ FORM_LOAD_ERROR_TEXT.DETAILS_SUMMARY_LABEL }}</summary>
 
-				<pre v-if="detail.unknownCauseDetail != null">{{
-				detail.unknownCauseDetail
-				}}</pre>
+				<pre v-if="detail.unknownCauseDetail != null">{{ detail.unknownCauseDetail }}</pre>
 
-				<pre v-if="detail.stack != null">{{
-				detail.stack
-				}}</pre>
+				<pre v-if="detail.stack != null">{{ detail.stack }}</pre>
 			</details>
 		</div>
 	</Dialog>
 </template>
 
-<style scoped>
-.form-load-failure-dialog .content {
-	width: calc(100dvw - 6rem) !important;
-}
-
+<style lang="scss" scoped>
 .form-load-failure-dialog .message {
-	margin-top: 0;
+	margin: 10px 0 30px 0;
+	color: var(--odk-error-text-color);
+	font-size: var(--odk-base-font-size);
+	white-space: pre-wrap;
 }
 
 .initialize-form-failure-details {
 	display: block;
 	position: relative;
 	max-width: 100%;
-	overflow: auto;
+	overflow: hidden;
+	font-size: var(--odk-base-font-size);
 }
 
 .initialize-form-failure-details summary {
 	cursor: pointer;
+}
+
+.initialize-form-failure-details pre {
+	overflow: auto;
+}
+</style>
+
+<style lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+
+.p-dialog {
+	width: 50vw;
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	.p-dialog {
+		width: 80vw;
+	}
 }
 </style>
