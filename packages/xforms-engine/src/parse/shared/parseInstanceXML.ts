@@ -68,11 +68,13 @@ const getWrappedInstanceRootElement = (xml: WrappedInstanceXML): Element => {
  * @todo Aside from this being a hack, it's not very robust because it makes
  * assumptions which are _likely but definitely not guaranteed_!
  *
- * - Instance XML (probably) doeesn't declare a default namespace
+ * - Instance XML (probably) doesn't declare a default namespace
  * - Instance XML **definitely** declares non-default namespaces
  */
 export const parseInstanceXML = (model: ModelDefinition, instanceXML: string): StaticDocument => {
-	const wrappedXML = wrapInstanceXML(model, instanceXML);
+	// Remove XML declaration if present: xforms-engine defaults to UTF-8
+	const cleanedXML = instanceXML.replace(/<\?xml\s+[^?]*\?>\s*/, '');
+	const wrappedXML = wrapInstanceXML(model, cleanedXML);
 	const root = getWrappedInstanceRootElement(wrappedXML);
 
 	return parseStaticDocumentFromDOMSubtree(root);

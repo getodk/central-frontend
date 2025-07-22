@@ -117,6 +117,44 @@ describe.each<InstanceRoundTripCase>([
 		cleanupCallbacks = [];
 	});
 
+	it('should deserialize submission when XML declaration is present', async () => {
+		const scenario = await Scenario.init(
+			'Submission with XML declaration',
+			html(
+				head(
+					title('Submission with XML declaration'),
+					model(
+						mainInstance(
+							t(
+								'data id="submission-with-xml-declaration"',
+								t('node', 'default value'),
+								t('meta', t('instanceID'))
+							)
+						),
+						bind('/data/meta/instanceID').preload('uid')
+					)
+				),
+				body(input('/data/node', label('Node')))
+			)
+		);
+
+		const serializedInput = t(
+			'data id="submission-with-xml-declaration"',
+			t('node', 'restored value')
+		);
+
+		const instanceXML = `<?xml version="1.0" encoding="UTF-8"?> ${serializedInput.asXml()}`;
+		const instanceFile = new File([instanceXML], INSTANCE_FILE_NAME, { type: INSTANCE_FILE_TYPE });
+		const instanceData = new FormData();
+		instanceData.set(INSTANCE_FILE_NAME, instanceFile);
+
+		const result = await scenario.restoreWebFormsInstanceState({
+			data: [instanceData as InstanceData],
+		});
+
+		expect(result.answerOf('/data/node')).toEqualAnswer(stringAnswer('restored value'));
+	});
+
 	/**
 	 * Note: this is _implicitly covered_ by tests exercising less basic concepts,
 	 * e.g. restoration of non-relevant nodes. Is there any value (maybe social?)
