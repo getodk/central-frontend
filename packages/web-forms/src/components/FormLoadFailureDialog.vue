@@ -90,12 +90,12 @@ const detail = computed((): FormLoadErrorDetail | null => {
 <style lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
 
-.p-dialog {
+.p-dialog.form-load-failure-dialog {
 	width: 50vw;
 }
 
 @media screen and (max-width: #{pf.$sm}) {
-	.p-dialog {
+	.p-dialog.form-load-failure-dialog {
 		width: 80vw;
 	}
 }
