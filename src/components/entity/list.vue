@@ -25,6 +25,7 @@ except according to the terms contained in the LICENSE file.
       </button>
       <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
         <entity-download-button :odata-filter="deleted ? null : odataFilter"
+        :search-term="deleted ? null : searchTerm"
         :disabled="deleted"
         v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
       </teleport-if-exists>

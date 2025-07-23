@@ -23,10 +23,26 @@ describe('EntityDownloadButton', () => {
     });
 
     describe('entities are filtered', () => {
-      it('show the dropdown menu', () => {
+      it('show the dropdown menu when odataFilter is set', () => {
         testData.extendedDatasets.createPast(1);
         const component = mountComponent({
           props: { odataFilter: '__system/conflict ne null' }
+        });
+        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
+      });
+
+      it('show the dropdown menu when searchTerm is set', () => {
+        testData.extendedDatasets.createPast(1);
+        const component = mountComponent({
+          props: { searchTerm: 'lorem ipsum' }
+        });
+        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
+      });
+
+      it('show the dropdown menu when both odataFilter and searchTerm are set', () => {
+        testData.extendedDatasets.createPast(1);
+        const component = mountComponent({
+          props: { odataFilter: '__system/conflict ne null', searchTerm: 'lorem ipsum' }
         });
         component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
       });
@@ -36,7 +52,7 @@ describe('EntityDownloadButton', () => {
         const component = mountComponent({
           props: { odataFilter: '__system/conflict ne null' }
         });
-        component.find('li:nth-of-type(1)').text().should.equal('Download all Entities matching the filter');
+        component.find('li:nth-of-type(1)').text().should.equal('Download all matching Entities');
       });
 
       it('shows correct text after first chunk of entities has loaded for the first button', () => {
@@ -49,7 +65,7 @@ describe('EntityDownloadButton', () => {
             }
           }
         });
-        component.find('li:nth-of-type(1)').text().should.equal('Download 1,000 Entities matching the filter');
+        component.find('li:nth-of-type(1)').text().should.equal('Download 1,000 matching Entities');
       });
 
       it('shows correct text for the second button', () => {
@@ -72,8 +88,7 @@ describe('EntityDownloadButton', () => {
     });
 
     describe('entities are filtered', () => {
-      // I am here, add href test for two menu items
-      it('sets the correct attribute for downloading filtered entities', () => {
+      it('sets the correct attribute for downloading filtered entities with odataFilter', () => {
         testData.extendedDatasets.createPast(1, { name: 'á' });
         const component = mountComponent({
           props: { odataFilter: '__system/conflict ne null' }
@@ -82,6 +97,29 @@ describe('EntityDownloadButton', () => {
         const url = relativeUrl(href);
         url.pathname.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
         url.searchParams.get('$filter').should.equal('__system/conflict ne null');
+      });
+
+      it('sets the correct attribute for downloading filtered entities with searchTerm', () => {
+        testData.extendedDatasets.createPast(1, { name: 'á' });
+        const component = mountComponent({
+          props: { searchTerm: 'lorem ipsum' }
+        });
+        const { href } = component.find('li:nth-of-type(1) a').attributes();
+        const url = relativeUrl(href);
+        url.pathname.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+        url.searchParams.get('$search').should.equal('lorem ipsum');
+      });
+
+      it('sets the correct attribute for downloading filtered entities with both odataFilter and searchTerm', () => {
+        testData.extendedDatasets.createPast(1, { name: 'á' });
+        const component = mountComponent({
+          props: { odataFilter: '__system/conflict ne null', searchTerm: 'lorem ipsum' }
+        });
+        const { href } = component.find('li:nth-of-type(1) a').attributes();
+        const url = relativeUrl(href);
+        url.pathname.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+        url.searchParams.get('$filter').should.equal('__system/conflict ne null');
+        url.searchParams.get('$search').should.equal('lorem ipsum');
       });
 
       it('sets the correct attribute for downloading all entities', () => {

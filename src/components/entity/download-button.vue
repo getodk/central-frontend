@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="entity-download-button" class="dropdown">
     <a class="btn btn-primary" :class="{ disabled }" :href="href"
-      :data-toggle="odataFilter ? 'dropdown' : null">
+      :data-toggle="odataFilter || searchTerm ? 'dropdown' : null">
       <span class="icon-arrow-circle-down"></span>
       <span>{{ $t('action.download') }}</span>
     </a>
@@ -41,6 +41,7 @@ import { useRequestData } from '../../request-data';
 
 const props = defineProps({
   odataFilter: String,
+  searchTerm: String,
   disabled: Boolean
 });
 
@@ -51,7 +52,7 @@ const href = computed(() =>
   apiPaths.entities(projectId, datasetName, '.csv'));
 
 const filteredHref = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter }));
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter, $search: props.searchTerm }));
 
 const { dataset, odataEntities } = useRequestData();
 const { t } = useI18n();
@@ -91,10 +92,10 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Download {count} Entity | Download all {count} Entities",
         "filtered": {
-          "withCount": "Download {count} Entity matching the filter | Download {count} Entities matching the filter",
+          "withCount": "Download {count} matching Entity | Download {count} matching Entities",
           // This is the text of a button. This text is shown when the number of
           // matching Entities is unknown.
-          "withoutCount": "Download all Entities matching the filter"
+          "withoutCount": "Download all matching Entities"
         }
       }
     }
