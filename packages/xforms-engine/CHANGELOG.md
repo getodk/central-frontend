@@ -1,5 +1,15 @@
 # @getodk/xforms-engine
 
+## 0.11.0
+
+### Minor Changes
+
+- f8000cf: Fixes an issue where a submission with an XML declaration causes a crash during edits.
+
+### Patch Changes
+
+- b05498c: Improves error dialog message and style.
+
 ## 0.10.0
 
 ### Minor Changes

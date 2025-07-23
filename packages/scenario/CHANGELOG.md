@@ -1,5 +1,11 @@
 # @getodk/scenario
 
+## 0.6.4
+
+### Patch Changes
+
+- f8000cf: Fixes an issue where a submission with an XML declaration causes a crash during edits.
+
 ## 0.6.3
 
 ### Patch Changes

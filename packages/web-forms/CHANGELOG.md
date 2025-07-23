@@ -1,5 +1,11 @@
 # @getodk/web-forms
 
+## 0.13.1
+
+### Patch Changes
+
+- b05498c: Improves error dialog message and style.
+
 ## 0.13.0
 
 ### Minor Changes
