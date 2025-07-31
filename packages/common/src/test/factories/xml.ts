@@ -22,7 +22,7 @@ export const xformsElement = (
 	// comparisons *do* match but attributes *do not* mismatch (because `xmlns`
 	// *is* a DOM attribute, even if it isn't an attribute in most other XML
 	// domain contexts...)
-	const { firstElementChild } = element/* xml */ `
+	const { firstElementChild } = element /* xml */ `
 		<ns
 			xmlns="${XFORMS_NAMESPACE_URI}"
 			xmlns:jr="${JAVAROSA_NAMESPACE_URI}"

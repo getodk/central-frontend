@@ -19,7 +19,6 @@ declare global {
 	 * @example 'America/Phoenix' // Fixed UTC-7, no DST
 	 * @example 'Europe/London' // UTC+0 (GMT) or UTC+1 (BST) with DST
 	 */
-	// eslint-disable-next-line no-var
 	var TZ: string | undefined;
 	/**
 	 * The locale string defining the language and regional formatting for tests.
@@ -28,9 +27,7 @@ declare global {
 	 *
 	 * @example 'en-US' // American English
 	 */
-	// eslint-disable-next-line no-var
 	var LOCALE_ID: string | undefined;
-	// eslint-disable-next-line no-var
 	var IMPLEMENTATION: string | undefined;
 }
 

@@ -93,7 +93,6 @@
 ### Patch Changes
 
 - 7859da4: Several repeat-related fixes:
-
   - Fix: most cases of inconsistent children state in Solid-based clients
   - Fix: many cases of incomplete functionality on/within N > 1 repeat instances
   - Fix: computation of bind states (`relevant` especially) before values, properly clear non-relevant default values

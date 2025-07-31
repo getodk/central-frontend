@@ -468,7 +468,7 @@ describe('Dependency analysis', () => {
 				let dataFooWhateverContext: Element;
 
 				beforeEach(() => {
-					fixture = xml/* xml */ `
+					fixture = xml /* xml */ `
 						<data>
 							<foo>
 								<whatever>2</whatever>

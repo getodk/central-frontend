@@ -55,28 +55,28 @@
   },
   "dependencies": {
     "bin-packer": "1.7.0",
-    "papaparse": "^5.5.2",
-    "solid-js": "^1.9.5",
+    "papaparse": "^5.5.3",
+    "solid-js": "^1.9.7",
     "temporal-polyfill": "^0.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.10",
+    "@babel/core": "^7.28.0",
     "@getodk/tree-sitter-xpath": "0.1.3",
     "@getodk/xpath": "0.6.0",
-    "@playwright/test": "^1.49.1",
-    "@types/papaparse": "^5.3.15",
-    "@vitest/browser": "^3.0.9",
+    "@playwright/test": "^1.53.2",
+    "@types/papaparse": "^5.3.16",
+    "@vitest/browser": "3.1.4",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",
     "http-server": "^14.1.1",
-    "jsdom": "^26.0.0",
-    "typedoc": "^0.28.2",
-    "vite": "^6.2.3",
-    "vite-plugin-dts": "^4.5.3",
+    "jsdom": "^26.1.0",
+    "typedoc": "^0.28.7",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "^3.0.9"
+    "vitest": "3.1.4"
   },
   "peerDependencies": {
-    "solid-js": "^1.9.5"
+    "solid-js": "^1.9.7"
   },
   "peerDependenciesMeta": {
     "solid-js": {

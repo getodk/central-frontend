@@ -1,5 +1,5 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ message?: string; showMessage: boolean; addPlaceholder?: boolean }>(), {
+withDefaults(defineProps<{ message?: string; showMessage?: boolean; addPlaceholder?: boolean }>(), {
 	message: undefined,
 	showMessage: false,
 	addPlaceholder: true,

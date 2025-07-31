@@ -18,7 +18,6 @@ compatibility as tests and benchmarks are ported and maintained.
 All of JavaRosa's tests as of [https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6](`5ae6894`) have been:
 
 1. Ported in full…
-
    - … with only minor syntax changes.
 
    - … with minor changes, with a best effort to match their apparent intent, reducing their reliance on apparent JavaRosa internals.

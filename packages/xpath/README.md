@@ -106,7 +106,6 @@ evaluator.evaluate('jr:itext("hello")', xform, null, XPathResult.STRING_TYPE).st
 There are currently a few caveats to `jr:itext` use:
 
 - `<itext>` and its translations are evaluated from the **document root** of the `rootNode` specified in `XFormsXPathEvaluator` options. As such:
-
   - translations _will_ be resolved if a descendant `rootNode` (e.g. the XForm's primary `<instance>` element) is specified
 
   - translations _will not_ be resolved for an XForm in an unusual DOM structure (e.g. a `DocumentFragment`, or in an arbitrary subtree of an unrelated document)

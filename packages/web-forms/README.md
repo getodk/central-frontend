@@ -110,7 +110,6 @@ We use CSS variables for theming with two prefixes:
 This package uses a centralized `z-index` layering system to manage UI stacking order, defined in `src/assets/styles/style.scss`. The ODK variables (e.g., `--odk-z-index-error-banner`) ensure elements like floating error messages, form controls, and overlays stack correctly without overlap.
 
 - **Key layers**:
-
   - `--odk-z-index-base` (background)
   - `--odk-z-index-form-content` (inputs, buttons)
   - `--odk-z-index-form-floating` (highlights, tooltips)

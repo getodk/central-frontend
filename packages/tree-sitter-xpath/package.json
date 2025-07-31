@@ -37,7 +37,7 @@
     "@asgerf/dts-tree-sitter": "^0.1.0",
     "tree-sitter": "0.22.1",
     "tree-sitter-cli": "0.24.5",
-    "vite": "^6.2.3",
+    "vite": "^6.3.5",
     "vite-plugin-static-copy": "^2.3.1",
     "web-tree-sitter": "0.24.5"
   },

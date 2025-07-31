@@ -58,7 +58,6 @@
 ### Minor Changes
 
 - e7bef0c: Support for `appearances`:
-
   - Added `PartiallyKnownString` type.
   - Several custom assertion helpers.
 

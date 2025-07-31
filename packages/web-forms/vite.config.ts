@@ -8,7 +8,7 @@ import { fileURLToPath, URL } from 'node:url';
 import type { LibraryOptions, PluginOption } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 
 const currentVersion = execSync(
 	'git describe --tags --dirty --always --match "@getodk/web-forms*" | cut -d "@" -f 3',

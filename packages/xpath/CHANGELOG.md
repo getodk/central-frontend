@@ -45,7 +45,6 @@
   including the addition of derivation of seeds from non-numeric inputs.
   Previously, entering a non-integer in a form field seed input would result in an exception being thrown.
 - 48cb3c9: Improved consistency with Collect/JavaRosa:
-
   - `area` and `distance` handle a trailing semicolon in serialized semicolon-separated `geopoint` lists
   - `distance` produces an error for invalid input
   - `area` returns `0` for invalid input

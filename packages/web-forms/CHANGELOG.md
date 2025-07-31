@@ -93,7 +93,6 @@
 ### Minor Changes
 
 - fcda4d8: Support for numeric controls:
-
   - inputs with `int` and `decimal` types
   - inputs with `appearance="numbers"`
   - (all types) support for `appearance="thousands-sep"`
@@ -143,7 +142,6 @@
 ### Minor Changes
 
 - 721506a: Added support for following `select_one` and `select_multiple` appearances (#141):
-
   - minimal
   - search
   - columns-pack
