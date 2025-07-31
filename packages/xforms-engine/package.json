@@ -29,7 +29,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.20.5 || ^20.18.1 || ^22.12.0",
+    "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
     "yarn": "1.22.22"
   },
   "scripts": {
@@ -65,15 +65,15 @@
     "@getodk/xpath": "0.6.0",
     "@playwright/test": "^1.53.2",
     "@types/papaparse": "^5.3.16",
-    "@vitest/browser": "3.1.4",
+    "@vitest/browser": "^3.2.4",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
     "typedoc": "^0.28.7",
-    "vite": "^6.3.5",
+    "vite": "^7.0.3",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "3.1.4"
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "solid-js": "^1.9.7"

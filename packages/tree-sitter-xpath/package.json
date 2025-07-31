@@ -20,7 +20,7 @@
     "index.d.ts"
   ],
   "engines": {
-    "node": "^18.20.5 || ^20.18.1 || ^22.12.0",
+    "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
     "yarn": "1.22.22"
   },
   "scripts": {
@@ -37,8 +37,8 @@
     "@asgerf/dts-tree-sitter": "^0.1.0",
     "tree-sitter": "0.22.1",
     "tree-sitter-cli": "0.24.5",
-    "vite": "^6.3.5",
-    "vite-plugin-static-copy": "^2.3.1",
+    "vite": "^7.0.3",
+    "vite-plugin-static-copy": "^3.1.0",
     "web-tree-sitter": "0.24.5"
   },
   "peerDependencies": {
