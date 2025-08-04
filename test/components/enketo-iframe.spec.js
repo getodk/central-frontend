@@ -141,6 +141,32 @@ describe('EnketoIframe', () => {
 
     postMessage.called.should.be.false;
   });
+
+  it('encodes spaces as %20 instead of + in query parameters', () => {
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new' },
+      container: {
+        router: mockRouter('/?d[/some/path]=hello world')
+      }
+    });
+    const iframe = wrapper.find('iframe');
+    const src = iframe.attributes('src');
+
+    src.should.contain('hello%20world');
+  });
+
+  it('passes + sign as it is', () => {
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new' },
+      container: {
+        router: mockRouter('/?d[/some/path]=hello + world')
+      }
+    });
+    const iframe = wrapper.find('iframe');
+    const src = iframe.attributes('src');
+
+    src.should.contain('hello%20+%20world');
+  });
 });
 
 

@@ -17,7 +17,6 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { queryString } from '../util/request';
 import { useRequestData } from '../request-data';
 
 import useEventListener from '../composables/event-listener';
@@ -78,9 +77,15 @@ const setEnketoSrc = () => {
     basePath = `/#${basePath}`;
   }
   let prefix = basePath;
-  const { return_url: _, returnUrl: __, ...query } = route.query;
+  const { search } = new URL(route.fullPath, location.origin);
 
-  query.parentWindowOrigin = location.origin;
+  // pass URL query parameters as it is to the Enketo iframe after stripping return URLs
+  let qs = `?parentWindowOrigin=${encodeURIComponent(location.origin)}`;
+  qs += (!search ? ''
+    : `&${search.substring(1)
+      .split('&')
+      .filter(queryParameter => !queryParameter.startsWith('return_url=') && !queryParameter.startsWith('returnUrl='))
+      .join('&')}`);
 
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
@@ -99,11 +104,11 @@ const setEnketoSrc = () => {
         if (result) {
           enketoSrc.value = `${basePath}/thanks?taken=${result}`;
         } else {
-          enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
+          enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
         }
       });
   } else {
-    enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
+    enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
   }
 
   emit('loaded');

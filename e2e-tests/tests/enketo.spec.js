@@ -250,4 +250,21 @@ test.describe('Enketo', () => {
 
     await expect(frame.getByRole('heading', { name: 'Successful' })).toBeVisible();
   });
+
+  test('default value is consistent between rendering enketo directly or via iframe', async ({ page }) => {
+    await login(page);
+
+    const queryWithSpaces = '?d[/data/first_name]=hello earth + hello mars %20 hello jupiter %2B hello saturn';
+
+    await page.goto(`${appUrl}/enketo-passthrough/${publishedForm.enketoId}${queryWithSpaces}`);
+    await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+    const defaultValueInEnketo = await page.getByLabel('First Name').inputValue();
+
+    await page.goto(`${appUrl}/projects/${projectId}/forms/${publishedForm.xmlFormId}/submissions/new${queryWithSpaces}`);
+    const iframe = await page.frameLocator('iframe');
+    await expect(iframe.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+    await expect(iframe.getByLabel('First Name')).toHaveValue(defaultValueInEnketo);
+  });
 });
