@@ -12,12 +12,13 @@ import type {
 } from '@getodk/xforms-engine';
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import packageJson from '../../package.json' with { type: 'json' };
 import {
+	type ElementMethodName,
 	getFormXml,
 	getWebFormsTestFixture,
 	globalMountOptions,
 	mockElementPrototypeMethod,
-	type ElementMethodName,
 } from '../helpers';
 
 interface MountComponentOptions {
@@ -123,6 +124,16 @@ describe('OdkWebForm', () => {
 		// Assert validation banner is visible and question container is highlighted again
 		expect(component.get('.form-error-message').isVisible()).toBe(true);
 		expect(component.get('.question-container').classes().includes('highlight')).toBe(true);
+	});
+
+	it('shows Web Forms version number in "Powered by" section', async () => {
+		const component = mountComponent(formXML);
+		await flushPromises();
+
+		const displayedVersion = component.find('.powered-by-wrapper .version');
+
+		expect(/^v\d+\.\d+\.\d+$/.test(displayedVersion.text())).toBeTruthy();
+		expect(displayedVersion.text()).toEqual(`v${packageJson.version}`);
 	});
 
 	describe('form load failure', () => {

@@ -2,7 +2,7 @@ import { CollectionValues } from '@getodk/common/types/collections/CollectionVal
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { execSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import type { LibraryOptions, PluginOption } from 'vite';
@@ -10,10 +10,15 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { defineConfig } from 'vite';
 
-const currentVersion = execSync(
-	'git describe --tags --dirty --always --match "@getodk/web-forms*" | cut -d "@" -f 3',
-	{ encoding: 'utf-8' }
-).trim();
+interface PackageJson {
+	version?: string;
+}
+const { version = 'Unknown' } = JSON.parse(
+	readFileSync(resolve('package.json'), 'utf-8')
+) as PackageJson;
+const buildNumber = execSync('git rev-parse --short HEAD', {
+	encoding: 'utf-8',
+}).trim();
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
@@ -94,9 +99,11 @@ export default defineConfig(({ mode }) => {
 		};
 	}
 
+	const versionSuffix = buildNumber && (isVueBundled || isDev) ? ` - ${buildNumber}` : '';
+
 	return {
 		define: {
-			__WEB_FORMS_VERSION__: `"v${currentVersion}"`,
+			__WEB_FORMS_VERSION__: `"v${version}${versionSuffix}"`,
 		},
 		base: './',
 		plugins: [vue(), vueJsx(), cssInjectedByJsPlugin(), ...extraPlugins],
