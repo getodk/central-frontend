@@ -21,14 +21,14 @@ log "Verifying executable integrity..."
 
 cd -
 log "Shrinking images..."
-find src -type f -name '*.png' | xargs -I{} bash -c "
-  '$tmpDir'/pngout-20200115-linux/amd64/pngout {}
-  if [[ \$? = 1 ]]; then
-    exit 1
-  else
-    exit 0
-  fi
-"
+set +e
+find src -type f -name '*.png' | xargs -I{} "$tmpDir"/pngout-20200115-linux/amd64/pngout {}
+# exit code 2: "unable to compress further"
+# exit code 1: true error
+if [[ $? = 1 ]]; then
+  exit 1
+fi
+set -e
 
 log "Checking for changes..."
 if [[ "$(git status --porcelain)" != "" ]]; then
