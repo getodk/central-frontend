@@ -50,7 +50,7 @@ module.exports = (config) => {
       '/blank.html': '/base/public/blank.html',
       '/test/files/': '/base/test/files/',
       '/img/banner@2x.d6298b0b.png': '/base/src/assets/images/whats-new/banner@2x.png', // Image in what's new modal with hash
-      '/img/banner@1x.eb0595a6.png': '/base/src/assets/images/whats-new/banner@1x.png' // Smaller resolution for circleCI test
+      '/img/banner@1x.13a17571.png': '/base/src/assets/images/whats-new/banner@1x.png' // Smaller resolution for circleCI test
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
