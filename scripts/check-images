@@ -4,35 +4,54 @@ log() {
   echo "[check-images] $*"
 }
 
-tmpDir="$(mktemp -d)"
-cd "$tmpDir"
 
-log "Fetching pngout..."
-wget https://www.jonof.id.au/files/kenutils/pngout-20200115-linux.tar.gz
+if command -v pngout &> /dev/null; then
+  log "Local pngout found."
+  pngoutExe=pngout
+else
+  log "Local pngout not found; downloading..."
+  tmpDir="$(mktemp -d)"
+  cd "$tmpDir"
 
-log "Verifying download integrity..."
-[[ $(sha256sum pngout-20200115-linux.tar.gz | cut -d" " -f1) = ac38bba6f0de29033de866538c3afa64341319b695bbe388efbc5fd9e830e928 ]]
+  wget https://www.jonof.id.au/files/kenutils/pngout-20200115-linux.tar.gz
 
-log "Extracting executable..."
-tar -xf pngout-20200115-linux.tar.gz
+  log "Verifying download integrity..."
+  [[ $(sha256sum pngout-20200115-linux.tar.gz | cut -d" " -f1) = ac38bba6f0de29033de866538c3afa64341319b695bbe388efbc5fd9e830e928 ]]
 
-log "Verifying executable integrity..."
-[[ $(sha256sum pngout-20200115-linux/amd64/pngout | cut -d" " -f1) = c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ]]
+  log "Extracting executable..."
+  tar -xf pngout-20200115-linux.tar.gz
 
-cd -
+  log "Verifying executable integrity..."
+  [[ $(sha256sum pngout-20200115-linux/amd64/pngout | cut -d" " -f1) = c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ]]
+
+  pngoutExe='$tmpDir'/pngout-20200115-linux/amd64/pngout
+
+  cd -
+fi
+
 log "Shrinking images..."
+# pngout exit codes:
+#   0: success
+#   1: true error
+#   2: "unable to compress further"
 find src -type f -name '*.png' | xargs -I{} bash -c "
-  '$tmpDir'/pngout-20200115-linux/amd64/pngout {}
+  '$pngoutExe' {}
   [[ \$? != 1 ]]
 "
-# exit code 2: "unable to compress further"
-# exit code 1: true error
 set -e
 
 log "Checking for changes..."
 if [[ "$(git status --porcelain)" != "" ]]; then
   git status
-  log "!!! Changes detected !!!"
+  log "!!!"
+  log "!!! Changes detected!"
+  log "!!!"
+  log "!!! Non-optimised PNGs should not be merged to master."
+  log "!!!"
+  log "!!! To see these changes locally, run:"
+  log "!!!"
+  log "!!!     $0"
+  log "!!!"
   exit 1
 fi
 
