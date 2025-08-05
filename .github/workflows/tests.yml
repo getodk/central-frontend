@@ -10,20 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: cd /tmp
-    - name: Fetching pngout
-      run: wget https://www.jonof.id.au/files/kenutils/pngout-20200115-linux.tar.gz
-    - name: Verifying download integrity
-      run: '[[ $(sha256sum pngout-20200115-linux.tar.gz | cut -d" " -f1) = ac38bba6f0de29033de866538c3afa64341319b695bbe388efbc5fd9e830e928 ]]'
-    - run: tar -xf pngout-20200115-linux.tar.gz
-    - run: ls /tmp
-    - name: Verifying executable integrity
-      run: '[[ $(sha256sum /tmp/pngout-20200115-linux/amd64/pngout | cut -d" " -f1) = c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ]]'
-    - run: cd -
-    - name: Shrinking images
-      run: "find src -type f -name '*.png' | xargs -I{} bash -c '/tmp/pngout-20200115-linux/amd64/pngout {}; [[ $? = 1 ]] && exit 1 || exit 0'"
-    - name: Checking for changes
-      run: bash -c '[[ "$(git status --porcelain)" = "" ]] && exit; git status; echo "!!! Changes detected"; exit 1'
+    - run: ./scripts/check-images
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
