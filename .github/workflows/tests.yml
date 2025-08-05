@@ -18,7 +18,7 @@ jobs:
     - name: Verifying executable integrity
       run: '[[ $(sha256sum ./pngout-20200115-linux/amd64/pngout | cut -d" " -f1) = c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ]]'
     - name: Shrinking images
-      run: "find src -type f -name '*.png' | xargs -I{} bash -c './pngout-20200115-linux/amd64/pngout {}; [[ $? = 1 ]] && exit 1; exit 0'"
+      run: "find src -type f -name '*.png' | xargs -I{} bash -c './pngout-20200115-linux/amd64/pngout {}; [[ $? = 1 ]] && exit 1 || exit 0'"
     - name: Checking for changes
       run: '[[ "$(git status --porcelain) = "" ]]'
   e2e-tests:
