@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: git diff 8036aa77227b0fb2ad39e529d6d5c496dd51118d
     - run: ./scripts/check-images
   e2e-tests:
     timeout-minutes: 120
