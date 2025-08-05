@@ -20,7 +20,7 @@ jobs:
     - name: Shrinking images
       run: "find src -type f -name '*.png' | xargs -I{} bash -c './pngout-20200115-linux/amd64/pngout {}; [[ $? = 1 ]] && exit 1 || exit 0'"
     - name: Checking for changes
-      run: '[[ "$(git status --porcelain)" = "" ]]'
+      run: bash -c '[[ "$(git status --porcelain)" = "" ]] && exit; git status; echo "!!! Changes detected"; exit 1'
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
