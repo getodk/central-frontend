@@ -24,7 +24,7 @@ else
   log "Verifying executable integrity..."
   [[ $(sha256sum pngout-20200115-linux/amd64/pngout | cut -d" " -f1) = c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ]]
 
-  pngoutExe='$tmpDir'/pngout-20200115-linux/amd64/pngout
+  pngoutExe="$tmpDir/pngout-20200115-linux/amd64/pngout"
 
   cd -
 fi
