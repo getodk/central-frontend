@@ -168,10 +168,10 @@ export const apiPaths = {
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
   datasetProperties: datasetPath('/properties'),
-  entities: (projectId, datasetName, extension = '', query = undefined) => {
+  entities: (projectId, datasetName, suffix = '', query = undefined) => {
     const encodedName = encodeURIComponent(datasetName);
     const qs = queryString(query);
-    return `/v1/projects/${projectId}/datasets/${encodedName}/entities${extension}${qs}`;
+    return `/v1/projects/${projectId}/datasets/${encodedName}/entities${suffix}${qs}`;
   },
   odataEntitiesSvc: datasetPath('.svc'),
   odataEntities: datasetPath('.svc/Entities'),
