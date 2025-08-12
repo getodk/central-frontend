@@ -38,6 +38,8 @@ Follow these steps to set up your development environment:
   - You will need to create a user using an ODK Central Backend command line script.
   - You will probably also want to promote that user to a sitewide administrator.
 
+If you're looking for an IDE recommendation, we'd suggest VS Code. Use the [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) extension (previously Volar), and disable Vetur.
+
 ## Running in development
 
 Follow these instructions to run ODK Central Frontend in development. For deploying to production, see the next section.
