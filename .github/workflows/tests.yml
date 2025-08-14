@@ -1,10 +1,16 @@
-name: E2E Tests
+name: Tests
 
 on:
   push:
   pull_request:
 
 jobs:
+  image-compression:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: ./bin/check-images.sh
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
