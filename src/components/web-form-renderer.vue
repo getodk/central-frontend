@@ -361,7 +361,7 @@ const handleResult = () => {
   // Error handler - Primary Instance
   if (!submissionResult.primaryInstanceResult.success) {
     const error = submissionResult.primaryInstanceResult.data;
-    if (error.response && isProblem(error.response.data) && error.response.data.code === 403.1) {
+    if (error.response && isProblem(error.response.data) && error.response.data.code === 401.2) {
       showModal({ type: 'sessionTimeoutModal' });
     } else {
       showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error) });
@@ -372,7 +372,7 @@ const handleResult = () => {
   if (attachmentResultArr.some(r => !r.success)) {
     const isSessionTimeout = attachmentResultArr.some(r => {
       const error = r.data;
-      return error.response && isProblem(error.response.data) && error.response.data.code === 403.1;
+      return error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
     });
     if (isSessionTimeout) {
       showModal({ type: 'sessionTimeoutModal', hideable: false });
