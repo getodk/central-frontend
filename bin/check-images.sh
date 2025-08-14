@@ -38,7 +38,6 @@ find src -type f -name '*.png' | xargs -I{} bash -c "
   '$pngoutExe' {}
   [[ \$? != 1 ]]
 "
-set -e
 
 log "Checking for changes..."
 if [[ "$(git status --porcelain)" != "" ]]; then
