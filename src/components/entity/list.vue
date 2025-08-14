@@ -545,6 +545,7 @@ export default {
       "delete": "Entidad “{label}” se ha eliminado."
     },
     "filterDisabledMessage": "El Filtro no está disponible para Entidades eliminadas",
+    "searchDisabledMessage": "La búsqueda no está disponible para las entidades eliminadas",
     "downloadDisabled": "La descarga no está disponible para Entidades eliminadas",
     "deletedEntity": {
       "emptyTable": "No hay entidades eliminadas.",
@@ -615,6 +616,7 @@ export default {
       "delete": "實體「1{label}」已被刪除。"
     },
     "filterDisabledMessage": "已刪除的實體無法使用篩選功能",
+    "searchDisabledMessage": "已刪除的實體無法使用搜尋功能",
     "downloadDisabled": "已刪除的實體無法下載",
     "deletedEntity": {
       "emptyTable": "沒有已刪除的實體。",

@@ -452,7 +452,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu.",
-      "submit": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu.",
       "parseError": "Při vyžádání vašich dat se něco pokazilo."
     }
   },
@@ -482,7 +481,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal.",
-      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut.",
       "parseError": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
     }
   },
@@ -512,7 +510,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "La descarga de datos aún no está disponible. Vuelva a intentarlo en un momento.",
-      "submit": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente.",
+      "submit": "Su descarga de datos debería comenzar en breve. Una vez que inicie, puede cerrar este mensaje. Si no se ha comenzado en 20 segundos, por favor inténtelo nuevamente.",
       "parseError": "Algo salió mal al solicitar tus datos."
     }
   },
@@ -542,7 +540,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Le téléchargement des données n'est pas encore disponible. Merci de réessayer dans un moment.",
-      "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer.",
+      "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer ce message. Si vous avez attendu et le téléchargement n'a pas commencé, veuillez réessayer.",
       "parseError": "Quelque chose s'est mal passé pendant la requête de vos données"
     }
   },
@@ -557,9 +555,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "download": {
         "mainTable": "Tabel data utama (tanpa pengulangan)"
       }
-    },
-    "alert": {
-      "submit": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
     }
   },
   "it": {
@@ -588,7 +583,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Il download dei dati non è ancora disponibile. Si prega di riprovare in un altro momento.",
-      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova.",
+      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questo messaggio. Se non è iniziato in 20 secondi, riprova.",
       "parseError": "Qualcosa è andato storto durante la richiesta dei tuoi dati"
     }
   },
@@ -614,8 +609,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       }
     },
     "alert": {
-      "unavailable": "データのダウンロードはまだ利用できません。しばらく待って、再試行してください。",
-      "submit": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
+      "unavailable": "データのダウンロードはまだ利用できません。しばらく待って、再試行してください。"
     }
   },
   "pt": {
@@ -644,7 +638,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "O download de dados ainda não está disponível. Tente novamente em instantes.",
-      "submit": "O processo de baixar seus dados começará em breve. Assim que ele começar você poderá fechar essa caixa. Se você já está esperando e ele ainda não começou, por favor tente novamente.",
       "parseError": "Algo deu errado ao solicitar seus dados."
     }
   },
@@ -674,7 +667,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi",
-      "submit": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena.",
       "parseError": "Hitilafu fulani imetokea wakati wa kuomba data yako."
     }
   },
@@ -704,7 +696,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "資料下載尚不可用。請稍後重試。",
-      "submit": "您的資料下載應該很快就會開始。一旦開始，您可以關閉此框。如果您一直在等待但尚未開始，請重試。",
+      "submit": "資料下載即將開始。一旦開始，您可以關閉此訊息。如果 20 秒內仍未開始，請再試一次。",
       "parseError": "請求您的資料時出現問題。"
     }
   }

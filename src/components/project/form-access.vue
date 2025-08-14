@@ -266,7 +266,10 @@ export default {
     "heading": [
       "Benutzer der App können nur diejenigen Formulare ansehen oder ausfüllen, für die sie expliziten Zugriff haben. Projekt-Manager und Datensammler können einen Browser benutzen, um beliebige Formulare im Projekt, die sich noch im offenen Zustand befinden, auszufüllen."
     ],
-    "emptyTable": "Es gibt keine Formulare zum Anzeigen."
+    "emptyTable": "Es gibt keine Formulare zum Anzeigen.",
+    "alert": {
+      "success": "Ihre Änderungen wurden erfolgreich gespeichert."
+    }
   },
   "es": {
     "heading": [

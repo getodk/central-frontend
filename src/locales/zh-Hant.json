@@ -49,6 +49,7 @@
   },
   "audit": {
     "category": {
+      "nonverbose": "所有活動",
       "user": "網頁使用者活動",
       "project": "專案活動",
       "form": "表單活動",
@@ -112,7 +113,8 @@
       "upgrade": {
         "process_form": "處理表單",
         "process_form_draft": "處理草稿",
-        "process_form_entities_version": "升級標記表格"
+        "process_form_entities_version": "升級標記表格",
+        "server": "新版本"
       },
       "user": {
         "assignment_create": "指派角色",

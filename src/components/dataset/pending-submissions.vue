@@ -130,8 +130,8 @@ const convert = ref(null);
     "explanation": {
       "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
       "implication": {
-        "full": "Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist. | Sie haben derzeit{records}Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.",
-        "records": "{count}Hervorragender Rekord | {count} Ausstehende Aufzeichnungen"
+        "full": "Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist. | Sie haben derzeit {records} Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.",
+        "records": "{count} Hervorragender Rekord | {count} Ausstehende Aufzeichnungen"
       }
     },
     "dontConvert": {

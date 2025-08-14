@@ -4641,7 +4641,7 @@
           "string": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu."
         },
         "submit": {
-          "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
+          "string": ""
         },
         "parseError": {
           "string": "Při vyžádání vašich dat se něco pokazilo."

@@ -2527,7 +2527,7 @@
           "string": "L'Utente App \"{displayName}\" è stato creato correttamente. "
         },
         "revoke": {
-          "string": "L'accesso per Utente App {displayName}è stato revocato con successo."
+          "string": "L'accesso per Utente App {displayName} è stato revocato con successo."
         }
       }
     },
@@ -4641,7 +4641,7 @@
           "string": "Il download dei dati non è ancora disponibile. Si prega di riprovare in un altro momento."
         },
         "submit": {
-          "string": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova. "
+          "string": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questo messaggio. Se non è iniziato in 20 secondi, riprova."
         },
         "parseError": {
           "string": "Qualcosa è andato storto durante la richiesta dei tuoi dati"

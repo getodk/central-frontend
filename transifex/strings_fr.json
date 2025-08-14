@@ -4641,7 +4641,7 @@
           "string": "Le téléchargement des données n'est pas encore disponible.\nMerci de réessayer dans un moment."
         },
         "submit": {
-          "string": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer."
+          "string": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer ce message. Si vous avez attendu et le téléchargement n'a pas commencé, veuillez réessayer."
         },
         "parseError": {
           "string": "Quelque chose s'est mal passé pendant la requête de vos données"

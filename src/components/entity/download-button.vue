@@ -152,7 +152,7 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
   "pt": {
     "action": {
       "download": {
-        "unfiltered": "Baixar {count}Entidade | Baixar todas as {count}Entidades | Baixar todas as {count} Entidades",
+        "unfiltered": "Baixar {count} Entidade | Baixar todas as {count} Entidades | Baixar todas as {count} Entidades",
         "filtered": {
           "withoutCount": "Baixar todas as Entidades correspondentes"
         }

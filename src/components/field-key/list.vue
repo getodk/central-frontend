@@ -286,7 +286,8 @@ export default {
     },
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
     "alert": {
-      "create": "El usuario móvil \"{displayName}\" se creó correctamente."
+      "create": "El usuario móvil \"{displayName}\" se creó correctamente.",
+      "revoke": "El usuario móvil \"{displayName}\" ha sido revocado con éxito."
     }
   },
   "fr": {
@@ -357,7 +358,7 @@ export default {
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",
     "alert": {
       "create": "L'Utente App \"{displayName}\" è stato creato correttamente.",
-      "revoke": "L'accesso per Utente App {displayName}è stato revocato con successo."
+      "revoke": "L'accesso per Utente App {displayName} è stato revocato con successo."
     }
   },
   "ja": {
