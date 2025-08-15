@@ -223,11 +223,11 @@ export const restoreSession = (session) =>
     .catch(error => {
       // The user's session may be deleted without the user logging out, for
       // example, if a backup is restored. In that case, the request will result
-      // in a 404. We remove sessionExpires from local storage so that
+      // in a 401. We remove sessionExpires from local storage so that
       // AccountLogin doesn't prevent the user from logging in.
       const { response } = error;
       if (response != null && isProblem(response.data) &&
-        response.data.code === 404.1) {
+        response.data.code === 401.2) {
         removeSessionFromStorage();
       }
 

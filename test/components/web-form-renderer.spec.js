@@ -150,7 +150,7 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent()
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-      .respondWithProblem(403.1);
+      .respondWithProblem(401.2);
 
     const modal = component.getComponent(Modal);
 
@@ -276,7 +276,7 @@ describe('WebFormRenderer', () => {
         return c.find('.odk-form .footer button').trigger('click');
       })
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-      .respondWithProblem(403.1);
+      .respondWithProblem(401.2);
 
     const modal = component.getComponent(Modal);
 
