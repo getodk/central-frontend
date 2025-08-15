@@ -15,6 +15,9 @@ except according to the terms contained in the LICENSE file.
     :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
+      <th v-if="!deleted">
+        <input type="checkbox" name="select" aria-label="select" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
+      </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
       <th v-if="!deleted">{{ $t('header.updatedAtAndActions') }}</th>
@@ -30,11 +33,12 @@ except according to the terms contained in the LICENSE file.
       <th>{{ $t('entity.entityId') }}</th>
     </template>
 
-    <template #data-frozen="{ data }">
+    <template #data-frozen="{ data, index }">
       <entity-metadata-row :entity="data"
         :row-number="data.__system.rowNumber"
         :verbs="project.verbs" :deleted="deleted"
-        :awaiting-response="awaitingDeletedResponses.has(data.__id)"/>
+        :awaiting-response="awaitingDeletedResponses.has(data.__id)"
+        @selection-changed="handleSelectionChanged($event, index)"/>
     </template>
     <template #data-scrolling="{ data }">
       <entity-data-row :entity="data" :properties="properties"/>
@@ -66,7 +70,9 @@ defineProps({
     required: true
   }
 });
-const emit = defineEmits(['update', 'resolve', 'delete', 'restore']);
+const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionChanged']);
+
+const allSelected = ref(false);
 
 // The component does not assume that this data will exist when the component is
 // created.
@@ -87,6 +93,25 @@ const table = ref(null);
 const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
 const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
 defineExpose({ afterUpdate, afterDelete });
+
+const handleSelectionChanged = (checked, index) => {
+  const data = odataEntities.value[index];
+  data.__system.selected = checked;
+
+  // If unchecking any item, uncheck the header
+  if (!checked) {
+    allSelected.value = false;
+  }
+  emit('selectionChanged', [data.__id], checked);
+};
+
+const changeAllSelection = (checked) => {
+  allSelected.value = checked;
+  odataEntities.value.forEach(e => {
+    e.__system.selected = checked;
+  });
+  emit('selectionChanged', 'all', checked);
+};
 </script>
 
 <style lang="scss">
@@ -99,6 +124,10 @@ defineExpose({ afterUpdate, afterDelete });
       max-width: 250px;
       &:last-child { max-width: 325px; }
     }
+  }
+
+  input[type="checkbox"] {
+    margin-top: 0;
   }
 
 th.col-deleted-at { color: $color-danger; }

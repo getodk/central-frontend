@@ -1174,4 +1174,146 @@ describe('EntityList', () => {
           app.get('.search-textbox').element.value.should.be.equal('john');
         }));
   });
+
+  describe('bulk delete functionality', () => {
+    beforeEach(() => {
+      createEntities(3);
+    });
+
+    it('shows action bar when entities are selected', async () => {
+      const component = await loadEntityList();
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+      actionBar.props().state.should.be.false;
+
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+      await checkboxes[1].setValue(true);
+
+      actionBar.props().state.should.be.true;
+      actionBar.props().message.should.equal('2 Entities selected');
+    });
+
+    it('hides action bar when all entities are deselected', async () => {
+      const component = await loadEntityList();
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+
+      // Click on checkboxes to select entities first
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+      await checkboxes[1].setValue(true);
+
+      actionBar.props().state.should.be.true;
+
+      await checkboxes[0].setValue(false);
+      await checkboxes[1].setValue(false);
+
+      actionBar.props().state.should.be.false;
+    });
+
+    it('handles select all functionality', async () => {
+      const component = await loadEntityList();
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+
+      actionBar.props().state.should.be.false;
+
+      // Click the header "select all" checkbox
+      const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+      await headerCheckbox.setValue(true);
+
+      actionBar.props().state.should.be.true;
+      actionBar.props().message.should.equal('3 Entities selected');
+    });
+
+    it('handles bulk delete request successfully', async () => loadEntityList()
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.false;
+      }));
+
+    it('handles bulk delete failure with retry functionality', () => loadEntityList()
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+      })
+      .respondWithProblem(500.1)
+      .afterResponse(component => {
+        component.should.alert('danger');
+      }));
+
+    it('should undo the bulk delete', () => loadEntityList()
+      .complete()
+      .request(async component => {
+        // First perform bulk delete to have entities to restore
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        component.should.alert('success');
+      })
+      .complete()
+      .request(component => component.vm.$container.alert.cta.handler())
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        component.should.alert('success', /Entities successfully restored/);
+      }));
+
+    it('handles bulk restore failure with onHide callback', () => loadEntityList()
+      .complete()
+      .request(async component => {
+        // First perform bulk delete to have entities to restore
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(component => component.vm.$container.alert.cta.handler())
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+      })
+      .respondWithProblem(500.1)
+      .afterResponse(component => {
+        component.should.alert('danger');
+        component.vm.alert.last.hide();
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.false;
+      }));
+
+    it('hides alert when entities are selected', async () => {
+      const component = await loadEntityList();
+
+      // Show an alert first
+      component.vm.alert.info('Some alert message');
+      component.vm.alert.state.should.be.true;
+
+      // Select an entity by clicking its checkbox - this should hide the alert
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+
+      component.vm.alert.state.should.be.false;
+    });
+  });
 });
