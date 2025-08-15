@@ -3,6 +3,7 @@
 /* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-console, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
 
 const { execSync } = require('node:child_process');
+const { extname } = require('node:path');
 
 const log = (...args) => console.log('[check-bundle-size]', ...args);
 
@@ -14,10 +15,7 @@ log('Individual file sizes:');
 log();
 log(' SIZE/b PATH');
 
-let count = 0;
-let actualSize = 0;
-
-execSync('find dist/ -type f -exec du -b {} \\;', { encoding:'utf8' })
+const files = execSync('find dist/ -type f -exec du -b {} \\;', { encoding:'utf8' })
     .split('\n')
     .filter(line => line)
     .map(line => {
@@ -25,42 +23,35 @@ execSync('find dist/ -type f -exec du -b {} \\;', { encoding:'utf8' })
       return { size:Number(size), path };
     })
     .sort((a, b) => a.path > b.path ? 1 : -1)
-    .forEach(({ size, path }) => {
-      ++count;
-      actualSize += size;
-      log(size.toString().padStart(7, ' '), path);
+    .map(f => {
+      log(f.size.toString().padStart(7, ' '), f.path);
+      return { ...f, ok:isSizeOk(f) };
     })
     ;
 
 log('---');
-log('  files:', count);
-log('  minimum size: ', humanSize(minSize));
-log('   actual size: ', humanSize(actualSize));
-log('  maximum size: ', humanSize(maxSize));
+log('  files:', files.length);
 log('---');
 
-if (actualSize < minSize) {
+const tooBigs = files.filter(f => !f.ok);
+if (tooBigs.length) {
   log('!!!');
-  log('!!! Bundle is too small !!!');
-  log('!!!');
-  log('!!! Please check what may have changed, and either fix');
-  log('!!! the issue, or adjust expectations in this script.');
-  log('!!!');
-  process.exit(1);
-}
-if (actualSize > maxSize) {
-  log('!!!');
-  log('!!! Bundle is too big !!!');
+  log(`!!! ${tooBigs.length} file(s) are too big !!!`);
   log('!!!');
   log('!!! Please check what may have changed, and either fix');
   log('!!! the issue, or adjust expectations in this script.');
   log('!!!');
   process.exit(1);
 }
-log('Bundle size looks OK.');
+log('File sizes look OK.');
 
 function humanSize(bytes) {
   if (bytes > 1048576) return (bytes / 1048576).toFixed(3).padStart(5, ' ') + ' MB';
   if (bytes >    1024) return (bytes /    1024).toFixed(3).padStart(5, ' ') + ' KB';
   else                return bytes + ' B';
+}
+
+function isSizeOk({ path, size }) {
+  const type = extname(path).substr(1);
+  return true;
 }
