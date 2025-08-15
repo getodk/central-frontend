@@ -49,22 +49,17 @@ if (tooBigs.length) {
 }
 log('File sizes look OK.');
 
-function humanSize(bytes) {
-  if (bytes > 1048576) return (bytes / 1048576).toFixed(3).padStart(5, ' ') + ' MB';
-  if (bytes >    1024) return (bytes /    1024).toFixed(3).padStart(5, ' ') + ' KB';
-  else                return bytes + ' B';
-}
 
 function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/-\w{8}\./, '.');
-  switch(simpleName) {
+  switch (simpleName) { // eslint-disable-line default-case
     case 'index.js':             return size >   450_000;
     case 'web-form-renderer.js': return size > 3_000_000;
   }
 
   const type = extname(path).substr(1);
-  switch(type) {
+  switch (type) { // eslint-disable-line default-case
     case 'css':  return size > 220_000;
     case 'html': return size >   1_200;
     case 'ico':  return size >  16_000;
@@ -78,7 +73,7 @@ function isTooBig({ path, size }) {
 }
 
 function redBold(text) {
-  if(!enableColours) return text;
+  if (!enableColours) return text;
   return [ RED, BOLD, text, RESET ].join('');
 }
 function normal(text) {
