@@ -129,13 +129,13 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
-      <template v-else-if="entry.action === 'entity.delete'">
+      <template v-else-if="(entry.action === 'entity.delete' || entry.action === 'entity.bulk.delete')">
         <span class="icon-trash"></span>
         <i18n-t keypath="title.entity.delete">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
-      <template v-else-if="entry.action === 'entity.restore'">
+      <template v-else-if="(entry.action === 'entity.restore' || entry.action === 'entity.bulk.restore')">
         <span class="icon-recycle"></span>
         <i18n-t keypath="title.entity.restore">
           <template #label>
@@ -146,6 +146,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
+      {{ entity.action }}
       <entity-diff v-if="entityVersion != null && entityVersion.version !== 1"/>
     </template>
   </feed-entry>
