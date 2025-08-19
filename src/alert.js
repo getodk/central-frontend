@@ -32,7 +32,6 @@ class AlertData {
   #cta;
   #readonlyCta;
   #defaultOptions;
-  #onHideCb;
   #showChain;
 
   constructor(defaultOptions = undefined) {
@@ -55,7 +54,7 @@ class AlertData {
     this.#cta = shallowReactive({ text: null, handler: null, pending: false });
     this.#readonlyCta = readonly(this.#cta);
 
-    this.#showChain = { cta: this.showCta.bind(this), onHide: this.#setOnHideCb.bind(this) };
+    this.#showChain = { cta: this.#showCta.bind(this) };
   }
 
   get state() { return this.#data.state; }
@@ -77,7 +76,6 @@ class AlertData {
       options: { ...this.#defaultOptions, ...options }
     });
     this.#hideCta();
-    this.#onHideCb = null;
     return this.#showChain;
   }
 
@@ -91,7 +89,6 @@ class AlertData {
     });
     Object.assign(this.#data, this.#defaultOptions);
     this.#hideCta();
-    if (this.#onHideCb) this.#onHideCb();
   }
 
   /*
@@ -100,7 +97,7 @@ class AlertData {
     async. If the function returns `true` or resolves to `true`, the alert will
     be hidden.
   */
-  showCta(text, handler) {
+  #showCta(text, handler) {
     this.#cta.text = text;
     // Wraps the specified handler in a function with some extra behavior.
     this.#cta.handler = () => {
@@ -127,10 +124,6 @@ class AlertData {
   #hideCta() {
     if (this.#cta.text == null) return;
     Object.assign(this.#cta, { text: null, handler: null, pending: false });
-  }
-
-  #setOnHideCb(f) {
-    this.#onHideCb = f;
   }
 }
 

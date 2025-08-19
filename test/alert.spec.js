@@ -128,16 +128,6 @@ describe('createAlert()', () => {
       should.not.exist(alert.message);
       should.not.exist(alert.cta);
     });
-
-    it('calls the onHide callback when alert is hidden', () => {
-      const { alert } = createAlerts();
-      const onHideSpy = sinon.spy();
-
-      alert.info('Something happened!').onHide(onHideSpy);
-      alert.last.hide();
-
-      onHideSpy.called.should.be.true;
-    });
   });
 });
 

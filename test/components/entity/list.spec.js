@@ -1241,7 +1241,7 @@ describe('EntityList', () => {
         actionBar.props().state.should.be.false;
       }));
 
-    it('handles bulk delete failure with retry functionality', () => loadEntityList()
+    it('shows alert on failure of bulk delete request', () => loadEntityList()
       .complete()
       .request(async component => {
         const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
@@ -1280,7 +1280,7 @@ describe('EntityList', () => {
         component.should.alert('success', /Entities successfully restored/);
       }));
 
-    it('handles bulk restore failure with onHide callback', () => loadEntityList()
+    it('shows alert when bulk restore fails and doesnt show action bar on hiding the alert', () => loadEntityList()
       .complete()
       .request(async component => {
         // First perform bulk delete to have entities to restore
