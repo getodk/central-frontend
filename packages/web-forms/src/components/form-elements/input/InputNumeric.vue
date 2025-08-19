@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { InputNumberInputEvent } from 'primevue/inputnumber';
 import InputNumber from 'primevue/inputnumber';
-import type { Ref } from 'vue';
-import { computed, customRef, inject, ref } from 'vue';
+import { type ComponentPublicInstance, nextTick, type Ref, watch } from 'vue';
+import { customRef, inject, ref } from 'vue';
 
 interface NumericNodeState {
 	get required(): boolean;
@@ -26,9 +26,16 @@ interface InputNumericProps {
 	readonly isDecimal?: boolean;
 	readonly min?: number;
 	readonly max?: number;
+	readonly maxCharacters: number;
 }
 
 const props = defineProps<InputNumericProps>();
+
+const doneAnswering = inject<Ref<boolean>>('doneAnswering', ref(false));
+const submitPressed = inject<boolean>('submitPressed', false);
+const isInvalid = inject<boolean>('isInvalid', false);
+const inputRef = ref<ComponentPublicInstance | null>(null);
+const renderKey = ref(1);
 
 interface FractionalDigitOptions {
 	readonly min?: number;
@@ -45,56 +52,29 @@ type NumericInputMode = 'decimal' | 'numeric';
 let inputMode: NumericInputMode;
 
 if (props.isDecimal) {
-	fractionalDigits = {
-		min: 0,
-		max: 18,
-	};
+	fractionalDigits = { min: 0, max: 13 };
 	inputMode = 'decimal';
 } else {
-	fractionalDigits = {};
+	fractionalDigits = { min: 0, max: 0 };
 	inputMode = 'numeric';
 }
 
 /**
- * Manages component-local state in tandem with the node's state, where:
+ * Tracks local model state while syncing with the node’s state.
  *
- * - If `min`/`max` are specified, the value is clamped to those prop values
- * - If assigning node state fails, local state is rolled back to the previous
- *   state
- *
- * In either case, if the value assigned from the input's event handlers (or
- * `v-model`) differs from the value which will become effective (whether
- * clamped or rolled back), **local state** assignment is performed in two
- * stages:
- *
- * 1. The value is first assigned the _invalid value_ (reflecting the input's
- *    current DOM state).
- * 2. On the next event loop tick, the value is then assigned the effective
- *    value.
- *
- * This must be performed in two ticks to ensure PrimeVue's management of the
- * DOM state reflects the effective state (otherwise the second assignment is
- * lost!).
+ * - Enforces `min`/`max` constraints if provided.
+ * - Rolls back to the previous value if assignment fails.
+ * - If the assigned value differs from the effective value (due to clamping or rollback),
+ *   triggers a re-render via `renderKey` to update the displayed value.
  */
 const modelValue = customRef<number | null>(() => {
 	const internalValue = ref(props.numericValue);
-
-	const setValidValue = (initialValue: number | null, validValue: number | null) => {
-		internalValue.value = initialValue;
-
-		if (validValue !== initialValue) {
-			queueMicrotask(() => {
-				internalValue.value = validValue;
-			});
-		}
-	};
-
 	return {
-		get: () => {
-			return internalValue.value;
-		},
+		get: () => internalValue.value,
 		set: (assignedValue) => {
-			let newValue = assignedValue;
+			const currentValue = internalValue.value;
+			const stringValue = assignedValue != null ? assignedValue.toString() : '';
+			let newValue = stringValue.length <= props.maxCharacters ? assignedValue : currentValue;
 
 			if (newValue != null) {
 				const { min = newValue, max = newValue } = props;
@@ -106,45 +86,35 @@ const modelValue = customRef<number | null>(() => {
 
 			try {
 				props.setNumericValue(newValue);
-				setValidValue(assignedValue, newValue);
+				internalValue.value = newValue;
+				if (newValue !== assignedValue) {
+					// Re-render if value is clamped
+					renderKey.value++;
+				}
 			} catch {
-				const previousValue = internalValue.value;
-
-				setValidValue(newValue, previousValue);
+				internalValue.value = currentValue;
+				// Re-render to restore previous value if something fails
+				renderKey.value++;
 			}
 		},
 	};
 });
 
-const injectRef = <T,>(name: string, defaultValue?: T): Ref<T> => {
-	const missingRef = computed((): T => {
-		if (defaultValue == null) {
-			throw new Error(`Expected injected ref for ${name}`);
-		}
-
-		return defaultValue;
-	});
-
-	return inject<Ref<T>>(name, missingRef);
-};
-
-const doneAnswering = injectRef<boolean>('doneAnswering');
-const submitPressed = inject<boolean>('submitPressed');
-const isInvalid = inject<boolean>('isInvalid');
+// After re-render, refocus input so user can continue typing seamlessly
+watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
 
 const onInput = (event: InputNumberInputEvent) => {
 	doneAnswering.value = false;
 
 	const { value = null } = event;
-
 	if (value == null || value === '') {
-		// props.setNumericValue(null);
 		modelValue.value = null;
-	} else if (typeof value === 'number') {
+		return;
+	}
+
+	if (typeof value === 'number') {
 		modelValue.value = value;
-	} else {
-		// TODO: the types suggest this may be a string, but it's not clear how or
-		// why that would ever happen!
+		return;
 	}
 };
 </script>
@@ -152,6 +122,8 @@ const onInput = (event: InputNumberInputEvent) => {
 <template>
 	<InputNumber
 		:id="node.nodeId"
+		:key="renderKey"
+		ref="inputRef"
 		v-model="modelValue"
 		:required="node.currentState.required"
 		:disabled="node.currentState.readonly"
@@ -171,11 +143,7 @@ const onInput = (event: InputNumberInputEvent) => {
 </template>
 
 <style scoped lang="scss">
-// These styles are largely intended to override some of the least appealing
-// visual design of PrimeVue 3's Material theme for numeric inputs, preferring
-// styles closer to the much nicer looking Aura default. The main deviations
-// from Aura are consistent input size with the rest of the Material theme and a
-// default background color for the increment/decrement buttons.
+// Overrides PrimeVue styles to adhere to Web Forms design.
 
 .p-inputnumber {
 	position: relative;

@@ -2,7 +2,7 @@
 import type { StringInputNode, TemporaryStringValueInputNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
-import { computed, inject } from 'vue';
+import { computed, inject, ref, type Ref } from 'vue';
 
 const MULTILINE_APPEARANCE_ROW_SIZE = 4;
 
@@ -21,8 +21,8 @@ const setValue = (value = '') => {
 	props.node.setValue(value);
 };
 
-const doneAnswering = inject<boolean>('doneAnswering');
-const submitPressed = inject<boolean>('submitPressed');
+const doneAnswering = inject<Ref<boolean>>('doneAnswering', ref(false));
+const submitPressed = inject<boolean>('submitPressed', false);
 const invalid = computed(() => props.node.validationState.violation?.valid === false);
 const rows = computed(() => {
 	const options = props.node.nodeOptions;

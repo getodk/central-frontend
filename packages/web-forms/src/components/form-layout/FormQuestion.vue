@@ -25,7 +25,7 @@ const isRangeNode = (node: ControlNode) => node.nodeType === 'range';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
 const isUploadNode = (node: ControlNode) => node.nodeType === 'upload';
 
-const submitPressed = inject('submitPressed');
+const submitPressed = inject<boolean>('submitPressed', false);
 </script>
 
 <template>

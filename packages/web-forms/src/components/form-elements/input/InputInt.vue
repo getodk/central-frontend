@@ -5,6 +5,7 @@ import InputNumeric from './InputNumeric.vue';
 
 const MIN_INT_NUMERIC_VALUE = -999_999_999;
 const MAX_INT_NUMERIC_VALUE = 999_999_999;
+const MAX_CHARACTERS = 9;
 
 interface InputIntProps {
 	readonly node: IntInputNode;
@@ -34,5 +35,6 @@ const setNumberValue = (value: number | null): void => {
 		:set-numeric-value="setNumberValue"
 		:min="MIN_INT_NUMERIC_VALUE"
 		:max="MAX_INT_NUMERIC_VALUE"
+		:max-characters="MAX_CHARACTERS"
 	/>
 </template>

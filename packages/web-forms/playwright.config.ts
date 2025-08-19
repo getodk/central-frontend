@@ -49,6 +49,10 @@ export default defineConfig({
 			name: 'chromium',
 			use: {
 				...devices['Desktop Chrome'],
+				contextOptions: {
+					//Chrome-specific permissions for test cases requiring copy/paste actions
+					permissions: ['clipboard-read', 'clipboard-write'],
+				},
 			},
 		},
 		{

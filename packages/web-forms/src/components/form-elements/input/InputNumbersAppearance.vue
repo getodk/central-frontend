@@ -1,7 +1,15 @@
 <script setup lang="ts">
+import InputText from 'primevue/inputtext';
 import type { StringInputNode } from '@getodk/xforms-engine';
-import { computed } from 'vue';
-import InputNumeric from './InputNumeric.vue';
+import {
+	type ComponentPublicInstance,
+	computed,
+	inject,
+	nextTick,
+	type Ref,
+	ref,
+	watch,
+} from 'vue';
 
 interface InputNumbersAppearanceProps {
 	readonly node: StringInputNode;
@@ -9,32 +17,82 @@ interface InputNumbersAppearanceProps {
 
 const props = defineProps<InputNumbersAppearanceProps>();
 
-const numericValue = computed((): number | null => {
-	const { value } = props.node.currentState;
+const inputRef = ref<ComponentPublicInstance | null>(null);
+const doneAnswering = inject<Ref<boolean>>('doneAnswering', ref(false));
+const submitPressed = inject<boolean>('submitPressed', false);
+const invalid = computed(() => props.node.validationState.violation?.valid === false);
+const renderKey = ref(1);
 
-	if (value == '') {
-		return null;
-	}
+const inputValue = computed({
+	get() {
+		return props.node.currentState.value;
+	},
+	set(value) {
+		/**
+		 * With 'thousands-sep' appearance: Formats with thousands separators and
+		 * enforces strict numeric rules (e.g., single decimal, no invalid chars) for proper numbers.
+		 *
+		 * Without: More relaxed filtering, allows multiple dots/commas/minus signs
+		 * for non-numeric fields like IDs, phone numbers, etc.
+		 */
+		const filteredValue = props.node.appearances['thousands-sep']
+			? formatThousandsSep(value)
+			: value.replace(/[^0-9,.-]/g, '');
 
-	const result = Number(value);
+		props.node.setValue(filteredValue);
 
-	if (!Number.isFinite(result)) {
-		return null;
-	}
-
-	return result;
+		if (value !== filteredValue) {
+			// Re-render to display cleaned value
+			renderKey.value++;
+		}
+	},
 });
 
-const setNumberValue = (value: number | null): void => {
-	props.node.setValue(String(value));
+// After re-render, refocus input so user can continue typing seamlessly
+watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
+
+const formatThousandsSep = (numberString: string) => {
+	const parts = new Intl.NumberFormat().formatToParts(1234567.89);
+	const thousandSeparator = parts.find((part) => part.type === 'group')?.value ?? ',';
+	const decimalSeparator = parts.find((part) => part.type === 'decimal')?.value ?? '.';
+
+	const nonDigitDot = new RegExp(`[^0-9${decimalSeparator}]`, 'g');
+	const leadingDots = new RegExp(`^\\${decimalSeparator}+`);
+	const extraDots = new RegExp(`(?<=.*\\${decimalSeparator}.*)\\${decimalSeparator}`, 'g');
+
+	const [integerPart, decimalPart = ''] = numberString
+		.replace(nonDigitDot, '')
+		.replace(leadingDots, '')
+		.replace(extraDots, '')
+		.split(decimalSeparator);
+
+	const formattedInt = [...integerPart]
+		.map((digit, i) => {
+			const notFirstDigit = i > 0;
+			const isSeparatorIndex = (integerPart.length - i) % 3 === 0;
+			return notFirstDigit && isSeparatorIndex ? thousandSeparator + digit : digit;
+		})
+		.join('');
+
+	const sign = numberString.startsWith('-') ? '-' : '';
+	const formattedDecimal = numberString.includes(decimalSeparator)
+		? decimalSeparator + decimalPart
+		: '';
+	return `${sign}${formattedInt}${formattedDecimal}`;
 };
 </script>
 
 <template>
-	<InputNumeric
-		:node="node"
-		:numeric-value="numericValue"
-		:set-numeric-value="setNumberValue"
-		:is-decimal="true"
+	<InputText
+		:id="node.nodeId"
+		:key="renderKey"
+		ref="inputRef"
+		v-model="inputValue"
+		:required="node.currentState.required"
+		:disabled="node.currentState.readonly"
+		:class="{'inside-highlighted': invalid && submitPressed}"
+		inputmode="numeric"
+		@input="doneAnswering = false"
+		@blur="doneAnswering = true"
 	/>
 </template>

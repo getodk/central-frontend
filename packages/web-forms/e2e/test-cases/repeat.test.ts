@@ -10,7 +10,7 @@ test.describe('Repeats', () => {
 
 		const previewPage = new PreviewPage(page);
 		await previewPage.goToDevPage();
-		await previewPage.openDemoForm('repeats', '01-basic-repeat.xml', 'Repeat (basic)');
+		await previewPage.openDevDemoForm('repeats', '01-basic-repeat.xml', 'Repeat (basic)');
 	});
 
 	test('renders one instance by default', async () => {
@@ -18,7 +18,7 @@ test.describe('Repeats', () => {
 		expect(instances?.length).toBe(1);
 
 		await formPage.repeat.expectInstanceHeader(instances[0], 'Repeat Item', '1');
-		await formPage.expectLabel('Repeat input a');
+		await formPage.text.expectLabel('Repeat input a');
 	});
 
 	test('adds instances', async () => {

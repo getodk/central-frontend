@@ -13,7 +13,7 @@ test.describe('Geopoint Question Type', () => {
 
 			const previewPage = new PreviewPage(page);
 			await previewPage.goToDevPage();
-			await previewPage.openDemoForm('geopoint', 'geopoint.xml', 'Geopoint');
+			await previewPage.openDevDemoForm('geopoint', 'geopoint.xml', 'Geopoint');
 		});
 
 		test('captures good-accuracy location', async ({ context }) => {
@@ -24,14 +24,14 @@ test.describe('Geopoint Question Type', () => {
 				altitude: 0,
 			});
 
-			await formPage.expectLabel(`
+			await formPage.text.expectLabel(`
         The browser will display a permission prompt to allow or block location access.
         Click 'Allow' to enable location services. If dismissed, the prompt may not appear
         again unless permissions are reset in browser settings.
       `);
 
-			await formPage.expectLabel('Where are you filling out the survey?');
-			await formPage.expectHint('(No autosave)');
+			await formPage.text.expectLabel('Where are you filling out the survey?');
+			await formPage.text.expectHint('(No autosave)');
 			await formPage.geopoint.openDialog();
 			await formPage.geopoint.expectGeopointDialog('Finding your location', '10 m - Good accuracy');
 			await formPage.geopoint.saveLocation();
@@ -50,7 +50,7 @@ test.describe('Geopoint Question Type', () => {
 				altitude: 0,
 			});
 
-			await formPage.expectLabel('Where are you filling out the survey?');
+			await formPage.text.expectLabel('Where are you filling out the survey?');
 			await formPage.geopoint.openDialog();
 			await formPage.geopoint.expectGeopointDialog(
 				'Finding your location',
@@ -114,11 +114,11 @@ test.describe('Geopoint Question Type', () => {
 
 			const previewPage = new PreviewPage(page);
 			await previewPage.goToDevPage();
-			await previewPage.openDemoForm('geopoint', 'geopoint.xml', 'Geopoint');
+			await previewPage.openDevDemoForm('geopoint', 'geopoint.xml', 'Geopoint');
 		});
 
 		test('displays troubleshooting message when permission is denied', async () => {
-			await formPage.expectLabel('Where are you filling out the survey?');
+			await formPage.text.expectLabel('Where are you filling out the survey?');
 			await formPage.geopoint.openDialog();
 			await formPage.geopoint.expectGeopointErrorMessage(
 				'Cannot access location Grant location permission in the browser settings and make sure location is turned on.'

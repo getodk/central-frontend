@@ -22,7 +22,7 @@ interface InputGeopointProps {
 
 const props = defineProps<InputGeopointProps>();
 
-const submitPressed = inject<boolean>('submitPressed');
+const submitPressed = inject<boolean>('submitPressed', false);
 
 const isInvalid = computed(() => props.question.validationState.violation?.valid === false);
 
