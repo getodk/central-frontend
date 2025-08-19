@@ -60,7 +60,6 @@ defineEmits(['hide']);
   display: flex;
   align-items: center;
   border-radius: 4px;
-  margin-bottom: 15px;
 
   .message {
     flex-grow: 1;

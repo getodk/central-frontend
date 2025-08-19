@@ -76,7 +76,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { reactive } from 'vue';
 
 import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
@@ -160,8 +160,7 @@ export default {
 
     const pageSizeOptions = [250, 500, 1000];
 
-    const selectedEntities = ref(new Set());
-    return { dataset, odataEntities, conflict, request, deletedEntityCount, pageSizeOptions, searchTerm, selectedEntities };
+    return { dataset, odataEntities, conflict, request, deletedEntityCount, pageSizeOptions, searchTerm };
   },
   data() {
     return {
@@ -190,6 +189,7 @@ export default {
       snapshotFilter: '',
       // used for restoring them back when undo button is pressed
       deletedEntities: [],
+      selectedEntities: new Set(),
 
       actionBarState: false
     };
@@ -244,6 +244,11 @@ export default {
       handler(state) {
         if (state) {
           this.actionBarState = false;
+        } else {
+          this.deletedEntities.length = 0;
+          if (this.selectedEntities.size > 0) {
+            this.actionBarState = true;
+          }
         }
       }
     }
@@ -512,7 +517,6 @@ export default {
       });
 
       const onSuccess = () => {
-        // this.actionBar.hide();
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += uuids.length;
 
         uuids.forEach(uuid => this.odataEntities.removedEntities.add(uuid));
@@ -528,11 +532,8 @@ export default {
       bulkDelete()
         .then(onSuccess)
         .catch((error) => {
-          const { cta, onHide } = this.alert.danger(requestAlertMessage(this.container.i18n, error));
-          onHide(() => {
-            this.actionBarState = true;
-          });
-          cta('Try Again', () => {
+          const { cta } = this.alert.danger(requestAlertMessage(this.container.i18n, error));
+          cta(this.$t('action.tryAgain'), () => {
             bulkDelete()
               .then(() => {
                 this.alert.last.hide();
@@ -554,9 +555,12 @@ export default {
       });
 
       const onSuccess = () => {
+        this.deletedEntities.forEach(e => {
+          e.__system.selected = false;
+        });
         const combined = [
           ...this.odataEntities.value,
-          ...this.deletedEntities.map(e => ({ ...e, __system: { ...e.__system, selected: false } }))
+          ...this.deletedEntities
         ];
 
         this.odataEntities.value = combined.sort((a, b) =>
@@ -571,11 +575,8 @@ export default {
       bulkRestore()
         .then(onSuccess)
         .catch((error) => {
-          const { cta, onHide } = this.alert.danger(requestAlertMessage(this.container.i18n, error));
-          onHide(() => {
-            this.deletedEntities.length = 0;
-          });
-          cta('Try Again', () => {
+          const { cta } = this.alert.danger(requestAlertMessage(this.container.i18n, error));
+          cta(this.$t('action.tryAgain'), () => {
             bulkRestore()
               .then(() => {
                 this.alert.last.hide();
@@ -585,16 +586,16 @@ export default {
           });
         });
     },
-    handleSelectionChange(uuids, selected) {
-      if (uuids === 'all') {
+    handleSelectionChange(uuid, selected) {
+      if (uuid === 'all') {
         this.selectedEntities.clear();
         if (selected) {
           this.odataEntities.value.forEach(e => this.selectedEntities.add(e.__id));
         }
       } else if (selected) {
-        uuids.forEach(uuid => this.selectedEntities.add(uuid));
+        this.selectedEntities.add(uuid);
       } else {
-        uuids.forEach(uuid => this.selectedEntities.delete(uuid));
+        this.selectedEntities.delete(uuid);
       }
     }
   }

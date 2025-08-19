@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
@@ -102,7 +102,7 @@ const handleSelectionChanged = (checked, index) => {
   if (!checked) {
     allSelected.value = false;
   }
-  emit('selectionChanged', [data.__id], checked);
+  emit('selectionChanged', data.__id, checked);
 };
 
 const changeAllSelection = (checked) => {
@@ -112,6 +112,12 @@ const changeAllSelection = (checked) => {
   });
   emit('selectionChanged', 'all', checked);
 };
+
+// When all rows are deleted, we want allSelected to be false
+watch(() => odataEntities.value?.length, (count) => {
+  if (count === 0) allSelected.value = false;
+});
+
 </script>
 
 <style lang="scss">

@@ -146,7 +146,6 @@ except according to the terms contained in the LICENSE file.
       </template>
     </template>
     <template #body>
-      {{ entity.action }}
       <entity-diff v-if="entityVersion != null && entityVersion.version !== 1"/>
     </template>
   </feed-entry>
