@@ -40,7 +40,10 @@ log('---');
 const tooBigs = files.filter(f => f.tooBig);
 if (tooBigs.length) {
   log('!!!');
-  log(`!!! ${tooBigs.length} file(s) are too big !!!`);
+  log(`!!! ${tooBigs.length} file(s) are too big:`);
+  log('!!!');
+  tooBigs.map(f => log(`!!! * ${f.path}`));
+  log('!!!');
   log('!!!');
   log('!!! Please check what may have changed, and either fix');
   log('!!! the issue, or adjust expectations in this script.');
@@ -52,7 +55,7 @@ log('File sizes look OK.');
 
 function isTooBig({ path, size }) {
   // Special cases:
-  const simpleName = basename(path).replace(/-\w{8}\./, '.');
+  const simpleName = basename(path).replace(/-[\w-]{8}\./, '.');
   switch (simpleName) { // eslint-disable-line default-case
     case 'index.js':             return size >   450_000;
     case 'web-form-renderer.js': return size > 3_000_000;
