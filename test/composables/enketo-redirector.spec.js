@@ -29,6 +29,14 @@ describe('useEnketoRedirector', () => {
         });
     });
 
+    it.only('should keep query parameters as it is after redirection', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      return load(`/f/${enketoId}/new?d[firstname]=john%20doe`)
+        .afterResponses(app => {
+          app.vm.$route.fullPath.should.equal('/projects/1/forms/a/submissions/new?d[firstname]=john%20doe');
+        });
+    });
+
     it('should redirect to new draft submission page', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
       return load(`/f/${enketoId}/new`)
