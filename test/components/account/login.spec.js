@@ -168,6 +168,23 @@ describe('AccountLogin', () => {
       external.called.should.be.false;
     });
 
+    it.only('should pass %20 in query param as it is', () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+      return load('/login?next=%2Fprojects%2F1%2Fforms%2Ff%2Fsubmissions%2Fnew%3Fd%5Bfirstname%5D%3Djohn%2520doe')
+        .restoreSession(false)
+        .complete()
+        .request(submit)
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondWithData(() => ({})) //analytics
+        .respondWithData(() => testData.extendedProjects.first())
+        .respondWithData(() => testData.extendedForms.last())
+        .afterResponses(app => {
+          app.vm.$route.fullPath.should.be.equal('/projects/1/forms/f/submissions/new?d[firstname]=john%20doe');
+        });
+    });
+
     it('uses the param after the user submits the form', () => {
       testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
       return load('/login?next=%2Faccount%2Fedit')
