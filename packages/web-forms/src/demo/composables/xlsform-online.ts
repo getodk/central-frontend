@@ -22,19 +22,18 @@ export const useXlsFormOnline = (baseUrl: Ref<string | undefined>) => {
 
 		formData.append('file', file);
 
-		const response = await fetch(`${baseUrl.value}/api/xlsform`, {
-			method: 'POST',
-			body: formData,
-		})
-			.then((res) => res.json())
-			.then((json: XlsOnlineResponse) => json)
-			.catch((fetchError: string) => {
-				error = fetchError;
-				return null;
+		try {
+			const res = await fetch(`${baseUrl.value}/api/xlsform`, {
+				method: 'POST',
+				body: formData,
 			});
-
-		if (response) {
-			data = response;
+			if (res.ok) {
+				data = (await res.json()) as XlsOnlineResponse;
+			} else {
+				error = `Error connecting to xlsform-online server, status: ${res.status}. If problem persists, please report it on ODK Forum.`;
+			}
+		} catch (fetchError: unknown) {
+			error = String(fetchError);
 		}
 
 		return { data, error };
