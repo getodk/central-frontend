@@ -29,11 +29,13 @@ describe('useEnketoRedirector', () => {
         });
     });
 
-    it.only('should keep query parameters as it is after redirection', () => {
+    it('should pass query parameters as it is after redirection', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
       return load(`/f/${enketoId}/new?d[firstname]=john%20doe`)
         .afterResponses(app => {
-          app.vm.$route.fullPath.should.equal('/projects/1/forms/a/submissions/new?d[firstname]=john%20doe');
+          const iframe = app.find('iframe');
+          const src = iframe.attributes('src');
+          src.should.contain('john%20doe');
         });
     });
 
