@@ -2129,10 +2129,6 @@
           "string": "At",
           "developer_comment": "This is the text of a form field that allows the user to filter Entities by a date range."
         }
-      },
-      "allCreationDateSelected": {
-        "string": "All time",
-        "developer_comment": "Text shown when in Entities date filter when Entities for all dates are shown"
       }
     },
     "EntityFiltersConflict": {
@@ -2167,7 +2163,7 @@
       "field": {
         "creator": {
           "string": "Created by",
-          "developer_comment": "This is the text of a form field."
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
         },
         "search": {
           "string": "Search creators…",
@@ -2177,7 +2173,7 @@
       "action": {
         "all": {
           "string": "All",
-          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all creators."
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
         },
         "none": {
           "string": "None",
@@ -2186,6 +2182,9 @@
       },
       "unknown": {
         "string": "Unknown creator"
+      },
+      "emptyTable": {
+        "string": "There are no Entities yet."
       }
     },
     "EntityList": {
@@ -4866,7 +4865,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "All time",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {

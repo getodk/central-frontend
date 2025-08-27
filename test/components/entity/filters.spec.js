@@ -1,13 +1,13 @@
 import { DateTime, Settings } from 'luxon';
 import EntityFiltersConflict from '../../../src/components/entity/filters/conflict.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
+import DateRangePicker from '../../../src/components/date-range-picker.vue';
 
 import testData from '../../data';
 import { changeMultiselect } from '../../util/trigger';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { relativeUrl } from '../../util/request';
-import DateRangePicker from '../../../src/components/date-range-picker.vue';
 import { setLuxon } from '../../util/date-time';
 
 const createFieldKeys = (count) => new Array(count).fill(undefined)
@@ -50,6 +50,16 @@ describe('EntityFilters', () => {
             if (index !== 1) return;
             const filter = relativeUrl(url).searchParams.get('$filter');
             filter.should.match(/__system\/conflict eq null/);
+          }));
+
+      it('filters on submitter if ?submitter is specified', () =>
+        load('/projects/1/entity-lists/trees/entities?creatorId=1&creatorId=2')
+          .beforeEachResponse((_, { url }, index) => {
+            if (index !== 1) return;
+            if (url.includes('.svc')) {
+              const filter = relativeUrl(url).searchParams.get('$filter');
+              filter.should.match(/__system\/creatorId eq 1 or __system\/creatorId eq 2/);
+            }
           }));
     });
 
@@ -244,7 +254,7 @@ describe('EntityFilters', () => {
         });
     });
 
-    it('allows multiple submitters to be selected', () =>
+    it('allows multiple creators to be selected', () =>
       load('/projects/1/entity-lists/trees/entities', {
         attachTo: document.body
       })
@@ -355,6 +365,8 @@ describe('EntityFilters', () => {
       .afterResponses(component => {
         const conflictFilter = component.findAll('.multiselect select');
         conflictFilter[0].attributes('aria-disabled').should.equal('true');
+        conflictFilter[1].attributes('aria-disabled').should.equal('true');
+        component.getComponent(DateRangePicker).props().disabled.should.be.true;
       });
   });
 });

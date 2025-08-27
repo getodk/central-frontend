@@ -66,7 +66,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { reactive, watch } from 'vue';
 
-import { DateTime } from 'luxon';
 import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
 import EntityRestore from './restore.vue';
@@ -81,6 +80,7 @@ import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 
 import useQueryRef from '../../composables/query-ref';
+import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
@@ -146,7 +146,7 @@ export default {
 
     const creatorIds = useQueryRef({
       fromQuery: (query) => {
-        const stringIds = arrayQuery(query.submitterId, {
+        const stringIds = arrayQuery(query.creatorId, {
           validator: (value) => /^[1-9]\d*$/.test(value)
         });
         return stringIds.length !== 0
@@ -164,20 +164,8 @@ export default {
         creatorIds.value = [...entityCreators.ids];
     });
 
-    const creationDateRange = useQueryRef({
-      fromQuery: (query) => {
-        if (typeof query.start === 'string' && typeof query.end === 'string') {
-          const start = DateTime.fromISO(query.start);
-          const end = DateTime.fromISO(query.end);
-          if (start.isValid && end.isValid && start <= end)
-            return [start.startOf('day'), end.startOf('day')];
-        }
-        return [];
-      },
-      toQuery: (value) => (value.length !== 0
-        ? { start: value[0].toISODate(), end: value[1].toISODate() }
-        : { start: null, end: null })
-    });
+    const creationDateRange = useDateRangeQueryRef();
+
     const { request } = useRequest();
 
     const pageSizeOptions = [250, 500, 1000];

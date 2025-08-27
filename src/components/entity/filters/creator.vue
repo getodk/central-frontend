@@ -10,16 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <multiselect id="entity-filters-creator" :model-value="selectValue"
-    :options="options" :loading="entityCreators.initiallyLoading"
-    :label="$t('field.creator')" :placeholder="placeholder"
-    :all="$t('action.all')" :none="$t('action.none')"
-    :search="$t('field.search')" :empty="$t('creator.emptyTable')"
+  <multiselect id="entity-filters-creator" :model-value="selectValue" :options="options"
+    :loading="entityCreators.initiallyLoading" :label="$t('field.creator')" :placeholder="placeholder"
+    :all="$t('action.all')" :none="$t('action.none')" :search="$t('field.search')" :empty="$t('emptyTable')"
     @update:model-value="update">
     <template #icon>
       <span class="icon-user"></span>
     </template>
-    </multiselect>
+  </multiselect>
 </template>
 
 <script setup>
@@ -101,7 +99,7 @@ const placeholder = (counts) => {
 </script>
 
 <style lang="scss">
-#submission-filters-submitter .none {
+#entity-filters-creator .none {
   font-style: italic;
 }
 </style>
@@ -110,12 +108,13 @@ const placeholder = (counts) => {
 {
   "en": {
     "field": {
+      // This is the text of a form field that shows the names of users that have created Entities.
       "creator": "Created by",
       "search": "Search creators…"
     },
     "action": {
       /*
-      This is the text of the button in dropdown menu of submitter filter,
+      This is the text of the button in dropdown menu of entity "created by" filter,
       that allows the user to select all creators.
       */
       "all": "All",
@@ -126,6 +125,7 @@ const placeholder = (counts) => {
       "none": "None"
     },
     "unknown": "Unknown creator",
+    "emptyTable": "There are no Entities yet."
   }
 }
 </i18n>

@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import EntityFiltersConflict from './filters/conflict.vue';
 import EntityFiltersCreator from './filters/creator.vue';
-import dateRangePicker from '../date-range-picker.vue';
+import DateRangePicker from '../date-range-picker.vue';
 
 defineOptions({
   name: 'EntityFilters'
@@ -72,7 +72,7 @@ defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
       // Entities by a date range.
       "creationDate": "At"
     },
-    // Text shown when in Entities date filter when Entities for all dates are shown
+    // @transifexKey component.SubmissionFilters.allSubmissionDateSelected
     "allCreationDateSelected": "All time"
   }
 }

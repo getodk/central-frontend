@@ -92,7 +92,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { DateTime } from 'luxon';
 import { shallowRef, watch, reactive } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
@@ -112,6 +111,7 @@ import TeleportIfExists from '../teleport-if-exists.vue';
 
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
+import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useReviewState from '../../composables/review-state';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
@@ -182,20 +182,7 @@ export default {
       if (submitterIds.value.length === 0 && submitters.length !== 0)
         submitterIds.value = [...submitters.ids];
     });
-    const submissionDateRange = useQueryRef({
-      fromQuery: (query) => {
-        if (typeof query.start === 'string' && typeof query.end === 'string') {
-          const start = DateTime.fromISO(query.start);
-          const end = DateTime.fromISO(query.end);
-          if (start.isValid && end.isValid && start <= end)
-            return [start.startOf('day'), end.startOf('day')];
-        }
-        return [];
-      },
-      toQuery: (value) => (value.length !== 0
-        ? { start: value[0].toISODate(), end: value[1].toISODate() }
-        : { start: null, end: null })
-    });
+    const submissionDateRange = useDateRangeQueryRef();
     const { reviewStates: allReviewStates } = useReviewState();
     const reviewStates = useQueryRef({
       fromQuery: (query) => arrayQuery(query.reviewState, {
