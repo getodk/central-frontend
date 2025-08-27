@@ -198,7 +198,12 @@ const responsesByComponent = {
   DatasetOverview: [],
   DatasetEntities: componentResponses({
     deletedEntityCount: () => testData.entityDeletedOData(0),
-    odataEntities: true
+    odataEntities: true,
+    entityCreators: () => testData.extendedFieldKeys
+      .sorted()
+      .sort((fieldKey1, fieldKey2) =>
+        fieldKey1.displayName.localeCompare(fieldKey2.displayName))
+      .map(testData.toActor)
   }),
   DatasetSettings: [],
   EntityShow: componentResponses({

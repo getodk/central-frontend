@@ -2123,6 +2123,14 @@
         "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
+    "EntityFilters": {
+      "field": {
+        "creationDate": {
+          "string": "At",
+          "developer_comment": "This is the text of a form field that allows the user to filter Entities by a date range."
+        }
+      }
+    },
     "EntityFiltersConflict": {
       "conflict": {
         "true": {
@@ -2149,6 +2157,34 @@
           "string": "None",
           "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
         }
+      }
+    },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "Created by",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "Search creators…",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": "Unknown creator"
+      },
+      "emptyTable": {
+        "string": "There are no Entities yet."
       }
     },
     "EntityList": {
@@ -4829,7 +4865,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "All time",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {

@@ -71,7 +71,7 @@ export default {
       // Submissions by a date range.
       "submissionDate": "Submitted at"
     },
-    // Text shown when in Submission date filter when Submissions for all dates are shown
+    // Text shown when in date filter when records for all dates are shown
     "allSubmissionDateSelected": "All time"
   }
 }
