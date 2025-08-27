@@ -49,41 +49,61 @@ describe('EnketoIframe', () => {
     });
   });
 
-  it('redirects on submissionsuccess message with return_url - internal', async () => {
-    const wrapper = mountComponent({
-      props: { enketoId, actionType: 'public-link' },
-      container: {
-        router: mockRouter(`/?return_url=${window.location.origin}/projects/1`)
-      }
+  describe('endOfFormBehavior prop', () => {
+    it('renders iframe with /single prefix when endOfFormBehavior is "single"', () => {
+      const wrapper = mountComponent({
+        props: { enketoId, actionType: 'new', endOfFormBehavior: 'single' }
+      });
+      const iframe = wrapper.find('iframe');
+      iframe.attributes('src').should.contain(`/enketo-passthrough/single/${enketoId}`);
     });
-    const iframe = wrapper.find('iframe');
 
-    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-    await postMessageToParent(iframe, data);
-
-    wrapper.vm.$router.push.calledWith('/projects/1').should.be.true;
+    it('renders iframe without /single prefix when endOfFormBehavior is "multiple"', () => {
+      const wrapper = mountComponent({
+        props: { enketoId, actionType: 'public-link', endOfFormBehavior: 'multiple' }
+      });
+      const iframe = wrapper.find('iframe');
+      iframe.attributes('src').should.contain(`/enketo-passthrough/${enketoId}`);
+    });
   });
 
-  it('redirects on submissionsuccess message with return_url - external', async () => {
-    const fakeAssign = sinon.fake();
-    const wrapper = mountComponent({
-      props: { enketoId, actionType: 'public-link' },
-      container: {
-        router: mockRouter('/?return_url=http://example.com/projects/1'),
-        location: {
-          origin: window.location.origin,
-          assign: (url) => {
-            fakeAssign(url);
+  ['public-link', 'new'].forEach(actionType => {
+    it(`redirects on submissionsuccess message with return_url - internal (${actionType})`, async () => {
+      const wrapper = mountComponent({
+        props: { enketoId, actionType },
+        container: {
+          router: mockRouter(`/?return_url=${window.location.origin}/projects/1`)
+        }
+      });
+      const iframe = wrapper.find('iframe');
+
+      const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+      await postMessageToParent(iframe, data);
+
+      wrapper.vm.$router.push.calledWith('/projects/1').should.be.true;
+    });
+
+    it(`redirects on submissionsuccess message with return_url - external (${actionType})`, async () => {
+      const fakeAssign = sinon.fake();
+      const wrapper = mountComponent({
+        props: { enketoId, actionType },
+        container: {
+          router: mockRouter('/?return_url=http://example.com/projects/1'),
+          location: {
+            origin: window.location.origin,
+            assign: (url) => {
+              fakeAssign(url);
+            }
           }
         }
-      }
+      });
+      const iframe = wrapper.find('iframe');
+
+      const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+      await postMessageToParent(iframe, data);
+
+      fakeAssign.calledWith(new URL('http://example.com/projects/1')).should.be.true;
     });
-    const iframe = wrapper.find('iframe');
-
-    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-    await postMessageToParent(iframe, data);
-
-    fakeAssign.calledWith(new URL('http://example.com/projects/1')).should.be.true;
   });
 
   it('does not redirect on invalid return URL', async () => {

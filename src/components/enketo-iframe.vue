@@ -35,6 +35,7 @@ const props = defineProps({
     type: String,
     required: true
   },
+  endOfFormBehavior: String,
   instanceId: String
 });
 
@@ -92,7 +93,7 @@ const setEnketoSrc = () => {
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
   }
-  if (props.actionType === 'public-link') {
+  if ((props.actionType === 'public-link' && props.endOfFormBehavior !== 'multiple') || props.endOfFormBehavior === 'single') {
     prefix += '/single';
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
@@ -133,7 +134,7 @@ const handleIframeMessage = (event) => {
     try { eventData = JSON.parse(event.data); } catch {}
 
     if (eventData?.enketoEvent === 'submissionsuccess') {
-      if (props.actionType === 'public-link' && redirectUrl.value) {
+      if ((props.actionType === 'public-link' || props.actionType === 'new') && redirectUrl.value) {
         // for public link, we read return value from query parameter. The value could be 3rd party
         // site as well, typically a thank you page
         try {

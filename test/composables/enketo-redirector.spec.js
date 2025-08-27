@@ -39,6 +39,14 @@ describe('useEnketoRedirector', () => {
         });
     });
 
+    it('should redirect to new submission page with /single suffix', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      return load(`/f/${enketoId}/new/single`)
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/new/single');
+        });
+    });
+
     it('should redirect to new draft submission page', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
       return load(`/f/${enketoId}/new`)

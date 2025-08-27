@@ -24,6 +24,7 @@ except according to the terms contained in the LICENSE file.
     :enketo-id="enketoId ?? form.enketoId"
     :action-type="actionType"
     :instance-id="instanceId"
+    :end-of-form-behavior="endOfFormBehavior"
     @loaded="hideLoading"/>
 </template>
 
@@ -78,6 +79,18 @@ const props = defineProps({
       return ['new', 'edit', 'public-link', 'offline', 'preview'].includes(value);
     }
   },
+  /**
+ * Only applicable for EnketoIFrame. Possible values are:
+ *
+ * `single`:   Adds the `single` prefix to the Enketo iframe `src`. After submission, the user is
+ *             redirected to a thank-you page or to the `return_url` query parameter. This is the
+ *             default behavior for public links.
+ *
+ * `multiple`: No prefix is added to the Enketo iframe `src`. After submission, the user is shown
+ *             a modal with the option to either close the modal and fill out another submission,
+ *             or close the window/tab. This is the default behavior for logged-in users.
+ */
+  endOfFormBehavior: String,
   enketoId: String,
   draft: Boolean
 });
@@ -130,7 +143,7 @@ const fetchForm = () => {
       if (redirected) {
         project.cancelRequest();
       } else {
-        ensureCanonicalPath(props.actionType);
+        ensureCanonicalPath(props.actionType, props.endOfFormBehavior);
       }
     })
     .catch(noop);

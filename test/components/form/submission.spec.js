@@ -69,6 +69,28 @@ describe('FormSubmission', () => {
       iframe.exists().should.be.true;
     });
 
+    it('renders Enketo Iframe with single behavior for /single route', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+      const app = await load('/projects/1/forms/a/submissions/new/single', mountOptions())
+        .complete();
+
+      const iframe = app.find('iframe');
+      iframe.exists().should.be.true;
+      iframe.attributes('src').should.contain('/enketo-passthrough/single/');
+    });
+
+    it('renders Enketo Iframe with multiple behavior for public-link when route is /multiple ', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+      const app = await load(`/f/${enketoId}/multiple?st=token`, mountOptions())
+        .complete();
+
+      const iframe = app.find('iframe');
+      iframe.exists().should.be.true;
+      iframe.attributes('src').should.not.contain('/single');
+    });
+
     it('renders new Web Form', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', webformsEnabled: true });
 
