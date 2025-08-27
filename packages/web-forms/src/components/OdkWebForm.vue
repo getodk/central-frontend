@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
+import { FORM_IMAGE_CACHE, FORM_OPTIONS, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import type { FormStateSuccessResult } from '@/lib/init/form-state.ts';
 import { initializeFormState } from '@/lib/init/initialize-form-state.ts';
 import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
@@ -144,8 +145,8 @@ const formOptions = readonly<FormOptions>({
 	fetchFormAttachment: props.fetchFormAttachment,
 	missingResourceBehavior: props.missingResourceBehavior,
 });
-provide('formOptions', formOptions);
-provide('imageCache', new Map<JRResourceURLString, ObjectURL>());
+provide(FORM_OPTIONS, formOptions);
+provide(FORM_IMAGE_CACHE, new Map<JRResourceURLString, ObjectURL>());
 
 const state = initializeFormState();
 const submitPressed = ref(false);
@@ -177,7 +178,7 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	}
 };
 
-provide('submitPressed', submitPressed);
+provide(SUBMIT_PRESSED, submitPressed);
 
 const validationErrorMessage = computed(() => {
 	const violationLength = state.value.root?.validationState.violations.length ?? 0;

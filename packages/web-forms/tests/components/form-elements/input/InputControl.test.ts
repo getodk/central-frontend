@@ -1,19 +1,19 @@
-import InputControl from '@/components/form-elements/input/InputControl.vue';
+import FormQuestion from '@/components/form-layout/FormQuestion.vue';
+import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import { mount } from '@vue/test-utils';
 import { assert, describe, expect, it } from 'vitest';
+import { ref } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers';
 
 const mountComponent = async (questionNumber: number, submitPressed = false) => {
 	const xform = await getReactiveForm('1-validation.xml');
-	const node = xform.currentState.children[questionNumber];
+	const question = xform.currentState.children[questionNumber];
 
-	assert(node.nodeType === 'input');
+	assert(question.nodeType === 'input');
 
-	return mount(InputControl, {
-		props: {
-			node,
-		},
-		global: { ...globalMountOptions, provide: { submitPressed } },
+	return mount(FormQuestion, {
+		props: { question },
+		global: { ...globalMountOptions, provide: { [SUBMIT_PRESSED]: ref(submitPressed) } },
 		attachTo: document.body,
 	});
 };
@@ -28,7 +28,8 @@ describe('InputControl', () => {
 		it('shows validation message for invalid state and user has done editing', async () => {
 			const component = await mountComponent(0);
 			const input = component.find('input');
-			await input.trigger('blur');
+			await input.setValue('lorem ipsum');
+			await input.setValue('');
 			expect(component.get('.validation-message').isVisible()).toBe(true);
 			expect(component.get('.validation-message').text()).toBe('Condition not satisfied: required');
 		});

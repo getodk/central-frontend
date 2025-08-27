@@ -7,7 +7,7 @@ import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import CheckboxWidget from '@/components/common/CheckboxWidget.vue';
 import MultiselectDropdown from '@/components/common/MultiselectDropdown.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 interface SelectNControlProps {
 	readonly question: SelectNode;
@@ -17,8 +17,6 @@ const props = defineProps<SelectNControlProps>();
 const isSelectWithImages = computed(() => props.question.currentState.isSelectWithImages);
 const hasColumnsAppearance = ref(false);
 const hasFieldListRelatedAppearance = ref(false);
-const touched = ref(false);
-const submitPressed = inject<boolean>('submitPressed', false);
 
 watchEffect(() => {
 	const appearances = [...props.question.appearances];
@@ -40,7 +38,6 @@ watchEffect(() => {
 	<MultiselectDropdown
 		v-if="question.appearances.autocomplete || question.appearances.minimal"
 		:question="question"
-		@change="touched = true"
 	/>
 
 	<FieldListTable v-else-if="hasFieldListRelatedAppearance" :class="{ 'select-with-images': isSelectWithImages }" :appearances="question.appearances">
@@ -48,12 +45,12 @@ watchEffect(() => {
 			<ControlText :question="question" />
 		</template>
 		<template #default>
-			<CheckboxWidget :question="question" @change="touched = true" />
+			<CheckboxWidget :question="question" />
 		</template>
 	</FieldListTable>
 
 	<ColumnarAppearance v-else-if="hasColumnsAppearance" :class="{ 'select-with-images': isSelectWithImages }" :appearances="question.appearances">
-		<CheckboxWidget :question="question" @change="touched = true" />
+		<CheckboxWidget :question="question" />
 	</ColumnarAppearance>
 
 	<template v-else>
@@ -64,13 +61,12 @@ watchEffect(() => {
 			/>
 		</template>
 		<div class="default-appearance">
-			<CheckboxWidget :question="question" @change="touched = true" />
+			<CheckboxWidget :question="question" />
 		</div>
 	</template>
 
 	<ValidationMessage
 		:message="question.validationState.violation?.message.asString"
-		:show-message="touched || submitPressed"
 		:add-placeholder="!hasFieldListRelatedAppearance"
 	/>
 </template>

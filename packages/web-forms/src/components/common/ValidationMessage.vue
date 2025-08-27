@@ -1,9 +1,22 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ message?: string; showMessage?: boolean; addPlaceholder?: boolean }>(), {
-	message: undefined,
-	showMessage: false,
-	addPlaceholder: true,
-});
+import { QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
+import { type ComputedRef, inject, computed } from 'vue';
+
+withDefaults(
+	defineProps<{
+		message?: string;
+		addPlaceholder?: boolean;
+	}>(),
+	{
+		message: undefined,
+		addPlaceholder: true,
+	}
+);
+
+const showMessage = inject<ComputedRef<boolean>>(
+	QUESTION_HAS_ERROR,
+	computed(() => false)
+);
 </script>
 
 <template>

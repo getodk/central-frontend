@@ -5,7 +5,7 @@ import IconSVG from '@/components/common/IconSVG.vue';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import UploadImagePreview from './UploadImagePreview.vue';
 
 const IS_CAPTURE_SUPPORTED = (() => {
@@ -22,11 +22,7 @@ interface UploadImageControlProps {
 }
 
 const props = defineProps<UploadImageControlProps>();
-
-const touched = ref(props.question.currentState.value != null);
-const submitPressed = inject<boolean>('submitPressed', false);
 const isDisabled = computed(() => props.question.currentState.readonly === true);
-
 const selectImageInput = ref<HTMLInputElement | null>(null);
 const takePictureInput = ref<HTMLInputElement | null>(null);
 
@@ -43,7 +39,6 @@ const triggerInputField = (inputField: HTMLInputElement | null) => {
 };
 
 const updateValue = (file: File | null) => {
-	touched.value = true;
 	props.question.setValue(file);
 };
 
@@ -119,7 +114,6 @@ watchEffect(() => {
 
 	<ValidationMessage
 		:message="question.validationState.violation?.message.asString"
-		:show-message="touched || submitPressed"
 	/>
 </template>
 

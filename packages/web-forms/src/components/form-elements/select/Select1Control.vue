@@ -8,7 +8,7 @@ import LikertWidget from '@/components/common/LikertWidget.vue';
 import RadioButton from '@/components/common/RadioButton.vue';
 import SearchableDropdown from '@/components/common/SearchableDropdown.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 interface Select1ControlProps {
 	readonly question: SelectNode;
@@ -18,8 +18,6 @@ const props = defineProps<Select1ControlProps>();
 const isSelectWithImages = computed(() => props.question.currentState.isSelectWithImages);
 const hasColumnsAppearance = ref(false);
 const hasFieldListRelatedAppearance = ref(false);
-const touched = ref(false);
-const submitPressed = inject<boolean>('submitPressed', false);
 
 watchEffect(() => {
 	const appearances = [...props.question.appearances];
@@ -41,14 +39,12 @@ watchEffect(() => {
 	<SearchableDropdown
 		v-if="question.appearances.autocomplete || question.appearances.minimal"
 		:question="question"
-		@change="touched = true"
 	/>
 
 	<LikertWidget
 		v-else-if="question.appearances.likert"
 		:class="{ 'select-with-images': isSelectWithImages }"
 		:question="question"
-		@change="touched = true"
 	/>
 
 	<FieldListTable v-else-if="hasFieldListRelatedAppearance" :class="{ 'select-with-images': isSelectWithImages }" :appearances="question.appearances">
@@ -56,12 +52,12 @@ watchEffect(() => {
 			<ControlText :question="question" />
 		</template>
 		<template #default>
-			<RadioButton :question="question" @change="touched = true" />
+			<RadioButton :question="question" />
 		</template>
 	</FieldListTable>
 
 	<ColumnarAppearance v-else-if="hasColumnsAppearance" :class="{ 'select-with-images': isSelectWithImages }" :appearances="question.appearances">
-		<RadioButton :question="question" @change="touched = true" />
+		<RadioButton :question="question" />
 	</ColumnarAppearance>
 
 	<template v-else>
@@ -72,13 +68,12 @@ watchEffect(() => {
 			/>
 		</template>
 		<div class="default-appearance">
-			<RadioButton :question="question" @change="touched = true" />
+			<RadioButton :question="question" />
 		</div>
 	</template>
 
 	<ValidationMessage
 		:message="question.validationState.violation?.message.asString"
-		:show-message="touched || submitPressed"
 		:add-placeholder="!hasFieldListRelatedAppearance"
 	/>
 </template>

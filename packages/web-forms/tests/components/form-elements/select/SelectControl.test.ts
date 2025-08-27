@@ -1,7 +1,9 @@
-import SelectControl from '@/components/form-elements/select/SelectControl.vue';
+import FormQuestion from '@/components/form-layout/FormQuestion.vue';
+import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
 import { afterAll, assert, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { ref } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers.ts';
 
 // TODO: these are tied to PrimeVue's classes, we should control this!
@@ -45,22 +47,16 @@ const getSelectNodeByReference = (root: RootNode, reference: string): SelectNode
 	return result;
 };
 
-interface MountComponentOptions {
-	readonly submitPressed?: boolean;
-}
-
 type MountedComponent = ReturnType<typeof mountComponent>;
 
-const mountComponent = (selectNode: SelectNode, options?: MountComponentOptions) => {
-	const { submitPressed = false } = options ?? {};
-
-	return mount(SelectControl, {
+const mountComponent = (selectNode: SelectNode, submitPressed = false) => {
+	return mount(FormQuestion, {
 		props: {
 			question: selectNode,
 		},
 		global: {
 			...globalMountOptions,
-			provide: { submitPressed },
+			provide: { [SUBMIT_PRESSED]: ref(submitPressed) },
 		},
 		attachTo: document.body,
 	});
@@ -407,7 +403,7 @@ describe('SelectControl', () => {
 		it('shows validation message on submit pressed even when no interaction is made with the component', async () => {
 			const root = await getReactiveForm('1-validation.xml');
 			const selectNode = getSelectNodeByReference(root, '/data/citizen');
-			const component = mountComponent(selectNode, { submitPressed: true });
+			const component = mountComponent(selectNode, true);
 
 			expect(component.get('.validation-message').isVisible()).toBe(true);
 			expect(component.get('.validation-message').text()).toBe('Condition not satisfied: required');

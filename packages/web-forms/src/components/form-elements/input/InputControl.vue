@@ -8,20 +8,12 @@ import InputInt from '@/components/form-elements/input/InputInt.vue';
 import InputNumbersAppearance from '@/components/form-elements/input/InputNumbersAppearance.vue';
 import type { AnyInputNode } from '@getodk/xforms-engine';
 import InputText from '@/components/form-elements/input/InputText.vue';
-import { computed, inject, provide, ref } from 'vue';
 
 interface InputControlProps {
 	readonly node: AnyInputNode;
 }
 
-const props = defineProps<InputControlProps>();
-
-const doneAnswering = ref(false);
-const submitPressed = inject<boolean>('submitPressed', false);
-const isInvalid = computed(() => props.node.validationState.violation?.valid === false);
-
-provide('doneAnswering', doneAnswering);
-provide('isInvalid', isInvalid);
+defineProps<InputControlProps>();
 </script>
 
 <template>
@@ -47,23 +39,13 @@ provide('isInvalid', isInvalid);
 			<InputText :node="node" />
 		</template>
 	</div>
-	<ValidationMessage
-		:message="node.validationState.violation?.message.asString"
-		:show-message="doneAnswering || submitPressed"
-	/>
+	<ValidationMessage :message="node.validationState.violation?.message.asString" />
 </template>
 
 <style scoped lang="scss">
 .input-control-container {
 	--input-bgcolor: var(--odk-muted-background-color);
 	--input-bgcolor-emphasized: var(--odk-light-background-color);
-
-	// Using `:has` allows sharing the same state of these custom properties for the
-	// state of the `input` itself and associated elements (e.g. number
-	// increment/decrement buttons)
-	&:has(input.inside-highlighted) {
-		--input-bgcolor: var(--odk-base-background-color);
-	}
 
 	// TODO: these styles are probably not long for this world, but it is
 	// surprising to me that hover/focus/readonly were treated the same!
