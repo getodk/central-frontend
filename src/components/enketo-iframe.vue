@@ -77,15 +77,17 @@ const setEnketoSrc = () => {
     basePath = `/#${basePath}`;
   }
   let prefix = basePath;
-  const { search } = new URL(route.fullPath, location.origin);
+  const { return_url: _, returnUrl: __, ...query } = route.query;
 
-  // pass URL query parameters as it is to the Enketo iframe after stripping return URLs
-  let qs = `?parentWindowOrigin=${encodeURIComponent(location.origin)}`;
-  qs += (!search ? ''
-    : `&${search.substring(1)
-      .split('&')
-      .filter(queryParameter => !queryParameter.startsWith('return_url=') && !queryParameter.startsWith('returnUrl='))
-      .join('&')}`);
+  query.parentWindowOrigin = location.origin;
+
+  // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
+  // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
+  // space into '+' sign.
+  const qs = `?${Object.entries(query)
+    .filter(([, value]) => typeof value === 'string')
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&')}`;
 
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
