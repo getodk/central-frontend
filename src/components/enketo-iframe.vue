@@ -77,14 +77,15 @@ const setEnketoSrc = () => {
     basePath = `/#${basePath}`;
   }
   let prefix = basePath;
-  const { return_url: _, returnUrl: __, ...query } = route.query;
+  const { search } = new URL(route.fullPath, location.origin);
 
-  query.parentWindowOrigin = location.origin;
-
-
-  const qs = `?${Object.entries(query)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&')}`;
+  // pass URL query parameters as it is to the Enketo iframe after stripping return URLs
+  let qs = `?parentWindowOrigin=${encodeURIComponent(location.origin)}`;
+  qs += (!search ? ''
+    : `&${search.substring(1)
+      .split('&')
+      .filter(queryParameter => !queryParameter.startsWith('return_url=') && !queryParameter.startsWith('returnUrl='))
+      .join('&')}`);
 
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
