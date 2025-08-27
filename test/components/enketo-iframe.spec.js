@@ -185,8 +185,7 @@ describe('EnketoIframe', () => {
       .complete()
       .request(submit)
       .respondWithData(() => testData.sessions.createNew())
-      .respondWithData(() => testData.extendedUsers.first())
-      .respondWithData(() => ({})) //analytics
+      .respondWithData(() => testData.extendedUsers.last())
       .respondWithData(() => testData.extendedProjects.first())
       .respondWithData(() => testData.extendedForms.last())
       .afterResponses(app => {

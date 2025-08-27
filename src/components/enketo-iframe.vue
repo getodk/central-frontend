@@ -81,8 +81,11 @@ const setEnketoSrc = () => {
 
   query.parentWindowOrigin = location.origin;
 
-
+  // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
+  // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
+  // space into '+' sign.
   const qs = `?${Object.entries(query)
+    .filter(([, value]) => typeof value === 'string')
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
     .join('&')}`;
 
