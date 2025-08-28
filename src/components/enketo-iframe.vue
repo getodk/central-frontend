@@ -35,7 +35,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  endOfFormBehavior: String,
   instanceId: String
 });
 
@@ -78,7 +77,7 @@ const setEnketoSrc = () => {
     basePath = `/#${basePath}`;
   }
   let prefix = basePath;
-  const { return_url: _, returnUrl: __, ...query } = route.query;
+  const { return_url: _, returnUrl: __, single, ...query } = route.query;
 
   query.parentWindowOrigin = location.origin;
 
@@ -93,12 +92,15 @@ const setEnketoSrc = () => {
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
   }
-  if ((props.actionType === 'public-link' && props.endOfFormBehavior !== 'multiple') || props.endOfFormBehavior === 'single') {
+  if (props.actionType === 'public-link' && single !== 'false') {
     prefix += '/single';
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
+  // for actionType 'new', we add '/single' only if 'single' query parameter is true
+  } else if (props.actionType === 'new' && single === 'true') {
+    prefix += '/single';
   }
-  // for actionType 'new', we don't need to add anything to the prefix.
+
   // we no longer render Enketo for Edit Submission from central-frontend.
 
   if (props.enketoId === form.enketoOnceId) {

@@ -678,15 +678,14 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:suffix(offline|single)?',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
     name: 'SubmissionNew',
     props: (route) => {
-      const { suffix, ...params } = route.params;
+      const { offline, ...params } = route.params;
       return {
         ...params,
-        actionType: suffix === 'offline' ? 'offline' : 'new',
-        endOfFormBehavior: suffix === 'single' ? 'single' : 'multiple',
+        actionType: offline === 'offline' ? 'offline' : 'new',
       };
     },
     loading: 'page',
@@ -698,15 +697,14 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:suffix(offline|single)?',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
     component: 'FormSubmission',
     name: 'DraftSubmissionNew',
     props: (route) => {
-      const { suffix, ...params } = route.params;
+      const { offline, ...params } = route.params;
       return {
         ...params,
-        actionType: suffix === 'offline' ? 'offline' : 'new',
-        endOfFormBehavior: suffix === 'single' ? 'single' : 'multiple',
+        actionType: offline === 'offline' ? 'offline' : 'new',
         draft: true
       };
     },
@@ -718,33 +716,24 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]+)/:suffix(new|preview|new\\/single)',
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)',
     component: 'FormSubmission',
     name: 'EnketoRedirector',
-    props: (route) => {
-      const { suffix, ...params } = route.params;
-      return {
-        ...params,
-        actionType: suffix === 'preview' ? 'preview' : 'new',
-        endOfFormBehavior: suffix === 'new/single' ? 'single' : 'multiple'
-      };
-    },
+    props: true,
     loading: 'page',
     meta: {
       standalone: true
     }
   }),
   asyncRoute({
-    // offline always behave like multiple submissions
-    path: '/f/:enketoId([a-zA-Z0-9]+)/:suffix(offline|multiple)?',
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
     component: 'FormSubmission',
     name: 'WebFormDirectLink',
     props: (route) => {
-      const { suffix, ...params } = route.params;
+      const { offline, ...params } = route.params;
       return {
         ...params,
-        actionType: suffix === 'offline' ? 'offline' : 'public-link',
-        endOfFormBehavior: suffix === 'multiple' ? 'multiple' : 'single'
+        actionType: offline === 'offline' ? 'offline' : 'public-link',
       };
     },
     loading: 'page',

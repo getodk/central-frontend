@@ -24,18 +24,14 @@ export default memoizeForContainer(({ router, requestData }) => {
   const { newSubmissionPath, formPreviewPath, offlineSubmissionPath } = useRoutes();
   const { location } = inject('container');
 
-  const ensureCanonicalPath = (actionType, endOfFormBehavior) => {
+  const ensureCanonicalPath = (actionType) => {
     let target;
 
     // We can redirect to canonical path only if Form data exists and session token `st` is not
     // provided in the URL. If `st` is provided in the URL then it means that it is a public link
     if (route.path.startsWith('/f/') && !route.query.st && form.dataExists) {
       if (actionType === 'new') {
-        if (endOfFormBehavior === 'single') {
-          target = `${newSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt)}/single`;
-        } else {
-          target = newSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
-        }
+        target = newSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
       } else if (actionType === 'preview') {
         target = formPreviewPath(form.projectId, form.xmlFormId, !form.publishedAt);
       } else if (actionType === 'offline') {
