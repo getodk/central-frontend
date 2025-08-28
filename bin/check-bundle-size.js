@@ -40,7 +40,10 @@ log('---');
 const tooBigs = files.filter(f => f.tooBig);
 if (tooBigs.length) {
   log('!!!');
-  log(`!!! ${tooBigs.length} file(s) are too big !!!`);
+  log(`!!! ${tooBigs.length} file(s) are too big:`);
+  log('!!!');
+  tooBigs.map(f => log(`!!! * ${f.path}`));
+  log('!!!');
   log('!!!');
   log('!!! Please check what may have changed, and either fix');
   log('!!! the issue, or adjust expectations in this script.');
