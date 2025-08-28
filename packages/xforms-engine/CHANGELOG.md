@@ -1,5 +1,17 @@
 # @getodk/xforms-engine
 
+## 0.12.0
+
+### Minor Changes
+
+- 6b3e6c0: Dropped support for Node.js version 18.
+  - Added support for Node.js version 24.
+  - Upgraded Vite to version 7, along with Vitest and other libraries that support Node.js versions greater than 20.
+
+### Patch Changes
+
+- 8a56391: Upgrade dependencies to latest minor versions
+
 ## 0.11.0
 
 ### Minor Changes

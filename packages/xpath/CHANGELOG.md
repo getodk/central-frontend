@@ -1,5 +1,21 @@
 # @getodk/xpath
 
+## 0.7.0
+
+### Minor Changes
+
+- 6b3e6c0: Dropped support for Node.js version 18.
+  - Added support for Node.js version 24.
+  - Upgraded Vite to version 7, along with Vitest and other libraries that support Node.js versions greater than 20.
+
+### Patch Changes
+
+- 49a2159: Round nanoseconds to nearest nano before calling BigInt to avoid RangeError when given a decimal
+- 8a56391: Upgrade dependencies to latest minor versions
+- Updated dependencies [6b3e6c0]
+- Updated dependencies [8a56391]
+  - @getodk/common@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes
