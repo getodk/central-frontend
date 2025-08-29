@@ -12,7 +12,7 @@ describe('util/composable', () => {
       const memoized = memoizeForContainer(composable);
       const container = createTestContainer();
       withSetup(memoized, { container });
-      composable.calledWith(container).should.be.true();
+      composable.calledWith(container).should.be.true;
     });
 
     it('returns the same result for the same container', () => {

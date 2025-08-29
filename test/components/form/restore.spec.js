@@ -59,7 +59,7 @@ describe('FormRestore', () => {
       .afterResponses(async (app) => {
         const button = app.get('[data-form-id="111"]');
         button.attributes('aria-disabled').should.equal('true');
-        button.should.have.ariaDescription('This Form cannot be undeleted because an active Form with the same ID exists.');
+        button.should.have.ariaDescription('This Form cannot be restored because an active Form with the same ID exists.');
         await button.should.have.tooltip();
       });
   });
@@ -114,7 +114,7 @@ describe('FormRestore', () => {
         111: { xmlFormId: '111', id: 111, name: 'Delete Me', projectId: 1, deletedAt: ago({ days: 15 }).toISO() }
       };
       const app = await restore(trashedForms, 111);
-      app.find('#form-trash-list').exists().should.be.false();
+      app.find('#form-trash-list').exists().should.be.false;
       app.findAllComponents(FormRow).length.should.equal(1);
     });
 
@@ -126,7 +126,7 @@ describe('FormRestore', () => {
       const app = await restore(trashedForms, 111);
       app.findAllComponents(FormRow).length.should.equal(1);
       app.findAllComponents(FormTrashRow).length.should.equal(1);
-      app.should.alert('success', 'The Form “Delete Me” has been undeleted.');
+      app.should.alert('success', 'The Form “Delete Me” has been successfully restored.');
     });
 
     it('sends the correct requests', () => {

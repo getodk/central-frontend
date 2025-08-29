@@ -1,3 +1,5 @@
+import ProjectOverviewDescription from '../../../src/components/project/overview/description.vue';
+import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
 import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import ProjectOverview from '../../../src/components/project/overview.vue';
@@ -5,13 +7,14 @@ import ProjectOverview from '../../../src/components/project/overview.vue';
 import { loadLocale } from '../../../src/util/i18n';
 
 import testData from '../../data';
+import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('ProjectShow', () => {
   it('requires the projectId route param to be integer', async () => {
     const app = await load('/projects/p');
-    app.findComponent(NotFound).exists().should.be.true();
+    app.findComponent(NotFound).exists().should.be.true;
   });
 
   it('sends the correct initial requests', () => {
@@ -35,7 +38,7 @@ describe('ProjectShow', () => {
     it('reconciles project and datasets', async () => {
       testData.extendedProjects.createPast(1, { datasets: 1 });
       testData.extendedDatasets.createPast(2);
-      const app = await load('/projects/1/datasets');
+      const app = await load('/projects/1/entity-lists');
       app.vm.$container.requestData.project.datasets.should.equal(2);
     });
 
@@ -52,31 +55,31 @@ describe('ProjectShow', () => {
       });
 
       it('clears datasets after a request for forms', () =>
-        load('/projects/1/datasets')
+        load('/projects/1/entity-lists')
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.true();
+            datasets.dataExists.should.be.true;
           })
           .load('/projects/1', { project: false })
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.false();
+            datasets.dataExists.should.be.false;
           })
-          .load('/projects/1/datasets', { project: false })
+          .load('/projects/1/entity-lists', { project: false })
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.true();
+            datasets.dataExists.should.be.true;
           }));
 
       it('does not clear datasets if forms are not re-requested', () =>
         load('/projects/1')
           .complete()
-          .load('/projects/1/datasets', { project: false })
+          .load('/projects/1/entity-lists', { project: false })
           .complete()
           .route('/projects/1')
           .afterResponses(app => {
             const { datasets } = app.vm.$container.requestData.localResources;
-            datasets.dataExists.should.be.true();
+            datasets.dataExists.should.be.true;
           }));
     });
   });
@@ -95,8 +98,20 @@ describe('ProjectShow', () => {
         project: () => testData.extendedProjects.last()
       })
       .afterResponses(app => {
-        should(app.getComponent(ProjectOverview).vm).not.equal(vm);
+        expect(app.getComponent(ProjectOverview).vm).to.not.equal(vm);
       });
+  });
+
+
+  it('renders breadcrumbs', async () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1, { name: 'My Project' });
+    testData.extendedDatasets.createPast(1);
+    const component = await load('/projects/1');
+    const { links } = component.getComponent(Breadcrumbs).props();
+    links.length.should.equal(1);
+    links[0].text.should.equal('My Project');
+    links[0].path.should.equal('/projects/1');
   });
 
   describe('title', () => {
@@ -132,6 +147,44 @@ describe('ProjectShow', () => {
     });
   });
 
+  describe('project description', () => {
+    it('allows admins to see instructions about editing', async () => {
+      mockLogin({ role: 'admin' });
+      testData.extendedProjects.createPast(1);
+      const app = await load('/projects/1');
+      const desc = app.getComponent(ProjectOverviewDescription);
+      desc.props().description.should.equal('');
+      desc.props().canUpdate.should.equal(true);
+    });
+
+    it('allows managers to see instructions about editing', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'manager' });
+      const app = await load('/projects/1');
+      const desc = app.getComponent(ProjectOverviewDescription);
+      desc.props().description.should.equal('');
+      desc.props().canUpdate.should.equal(true);
+    });
+
+    it('does not allow viewers to see instructions about editing', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer' });
+      const app = await load('/projects/1', {}, { deletedForms: false });
+      const desc = app.getComponent(ProjectOverviewDescription);
+      desc.props().description.should.equal('');
+      desc.props().canUpdate.should.equal(false);
+    });
+
+    it('passes project description through', async () => {
+      mockLogin({ role: 'admin' });
+      testData.extendedProjects.createPast(1, { description: 'Description' });
+      const app = await load('/projects/1');
+      const desc = app.getComponent(ProjectOverviewDescription);
+      desc.props().description.should.equal('Description');
+      desc.props().canUpdate.should.equal(true);
+    });
+  });
+
   describe('tabs', () => {
     it('shows all tabs to an administrator', async () => {
       mockLogin({ role: 'admin' });
@@ -140,8 +193,8 @@ describe('ProjectShow', () => {
       const app = await load('/projects/1', { attachTo: document.body });
       const li = app.findAll('#page-head-tabs li');
       li.map(wrapper => wrapper.get('a').text()).should.eql([
-        'Overview',
-        'Datasets New',
+        'Forms 1',
+        'Entity Lists 1',
         'Project Roles',
         'App Users',
         'Form Access',
@@ -166,7 +219,7 @@ describe('ProjectShow', () => {
         });
         const li = app.findAll('#page-head-tabs li');
         const text = li.map(wrapper => wrapper.get('a').text());
-        text.should.eql(['Overview', 'Datasets New']);
+        text.should.eql(['Forms 1', 'Entity Lists 1']);
         li[0].should.be.visible(true);
       });
     });
@@ -180,6 +233,21 @@ describe('ProjectShow', () => {
       const li = app.findAll('#page-head-tabs li');
       li.length.should.equal(1);
       li[0].should.be.hidden(true);
+    });
+
+    it('shows the form count', async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { forms: 1000 });
+      // Navigate to a page that does not request the form list.
+      const app = await load('/projects/1/settings');
+      findTab(app, 'Forms').get('.badge').text().should.equal('1,000');
+    });
+
+    it('shows the count of entity lists', async () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1, { datasets: 1000 });
+      const app = await load('/projects/1');
+      findTab(app, 'Entity Lists').get('.badge').text().should.equal('1,000');
     });
   });
 

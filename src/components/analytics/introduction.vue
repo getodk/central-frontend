@@ -32,36 +32,34 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
+        <button type="button" class="btn btn-link" @click="$emit('hide')">
+          {{ $t('action.close') }}
+        </button>
         <router-link v-slot="{ href, navigate }" to="/system/analytics" custom>
           <a class="btn btn-primary" :href="href"
             @click="hideAndNavigate(navigate, $event)">
             {{ $t('action.improveCentral') }}
           </a>
         </router-link>
-        <button type="button" class="btn btn-link" @click="$emit('hide')">
-          {{ $t('action.close') }}
-        </button>
       </div>
     </template>
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../modal.vue';
 
-export default {
-  name: 'AnalyticsIntroduction',
-  components: { Modal },
-  props: {
-    state: Boolean
-  },
-  emits: ['hide'],
-  methods: {
-    hideAndNavigate(navigate, event) {
-      this.$emit('hide');
-      navigate(event);
-    }
-  }
+defineOptions({
+  name: 'AnalyticsIntroduction'
+});
+defineProps({
+  state: Boolean
+});
+const emit = defineEmits(['hide']);
+
+const hideAndNavigate = (navigate, event) => {
+  emit('hide');
+  navigate(event);
 };
 </script>
 
@@ -139,6 +137,12 @@ export default {
       "improveCentral": "Améliorer Central"
     }
   },
+  "id": {
+    "title": "Bantu Tingkatkan Central!",
+    "action": {
+      "improveCentral": "Tingkatkan Central"
+    }
+  },
   "it": {
     "title": "Aiuta a migliorare Central",
     "introduction": [
@@ -165,6 +169,19 @@ export default {
       "improveCentral": "Centralを改善する。"
     }
   },
+  "pt": {
+    "title": "Ajude a melhorar o Central!",
+    "introduction": [
+      {
+        "full": "Na aba de {usageReporting} das configurações do sistema você pode escolher compartilhar dados anônimos de uso ou suas informações de contato com a equipe do Central.",
+        "usageReporting": "Relatório de uso"
+      },
+      "Lá você pode escolher não ver mais essa mensagem novamente."
+    ],
+    "action": {
+      "improveCentral": "Aprimorar o Central"
+    }
+  },
   "sw": {
     "title": "Saidia Kuboresha Central!",
     "introduction": [
@@ -176,6 +193,19 @@ export default {
     ],
     "action": {
       "improveCentral": "Boresha Central"
+    }
+  },
+  "zh-Hant": {
+    "title": "幫助改善 Central!",
+    "introduction": [
+      {
+        "full": "在 {usageReporting}系統設定頁簽中，您可以選擇與 Central 團隊分享匿名使用資料或聯絡資訊。",
+        "usageReporting": "使用情況報告"
+      },
+      "在那裡，您還可以選擇不再看到此訊息。"
+    ],
+    "action": {
+      "improveCentral": "改善 Central"
     }
   }
 }

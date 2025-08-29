@@ -8,7 +8,8 @@ const mountComponent = (options = undefined) =>
   mount(HomeSummaryItem, mergeMountOptions(options, {
     props: { icon: 'user-circle' },
     slots: {
-      title: { template: '<span id="title">Some Title</span>' },
+      header: { template: '<span id="header">Some Header</span>' },
+      subheader: { template: '<span id="subheader">Some Subheader</span>' },
       body: { template: '<span id="body">Some body text</span>' }
     },
     container: { router: mockRouter('/') }
@@ -16,15 +17,19 @@ const mountComponent = (options = undefined) =>
 
 describe('HomeSummaryItem', () => {
   it('renders the correct icon', () => {
-    mountComponent().find('.icon-user-circle').exists().should.be.true();
+    mountComponent().find('.icon-user-circle').exists().should.be.true;
   });
 
-  it('uses the title slot', () => {
-    mountComponent().find('#title').exists().should.be.true();
+  it('uses the header slot', () => {
+    mountComponent().find('#header').exists().should.be.true;
+  });
+
+  it('uses the subheader slot', () => {
+    mountComponent().find('#subheader').exists().should.be.true;
   });
 
   it('uses the body slot', () => {
-    mountComponent().find('#body').exists().should.be.true();
+    mountComponent().find('#body').exists().should.be.true;
   });
 
   it('passes the to prop to the Linkable', () => {
@@ -32,12 +37,5 @@ describe('HomeSummaryItem', () => {
       props: { to: '/users' }
     });
     component.getComponent(Linkable).props().to.should.equal('/users');
-  });
-
-  it('renders a count if one is specified', () => {
-    const component = mountComponent({
-      props: { count: 1234 }
-    });
-    component.get('.count').text().should.equal('1,234');
   });
 });

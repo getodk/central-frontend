@@ -31,13 +31,13 @@ except according to the terms contained in the LICENSE file.
           </p>
         </div>
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
-          </button>
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
+          </button>
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>
@@ -193,6 +193,16 @@ export default {
     },
     "onceHelp": "各プラウザから一回しかフォームの提出を受け付けない。"
   },
+  "pt": {
+    "title": "Criar link de acesso público",
+    "introduction": [
+      "Qualquer pessoa com esse link poderá preencher esse formulário num navegador de internet. Use o nome de exibição do formulário para se lembrar de onde você o colocou, com quem você compartilhou, quando ele está previsto para estar ativo, e assim por diante."
+    ],
+    "field": {
+      "once": "Resposta única"
+    },
+    "onceHelp": "Permitir apenas uma resposta de cada navegador."
+  },
   "sw": {
     "title": "Unda Kiungo cha Ufikiaji wa Umma",
     "introduction": [
@@ -202,6 +212,16 @@ export default {
       "once": "Uwasilishaji Mmoja"
     },
     "onceHelp": "Ruhusu Uwasilishaji mmoja tu kutoka kwa kila kivinjari."
+  },
+  "zh-Hant": {
+    "title": "建立公共訪問連結",
+    "introduction": [
+      "任何擁有此連結的人都可以在網頁瀏覽器中填寫此表格。使用顯示名稱提醒您自己發布該內容的位置、與誰分享該內容、該內容何時處於活動狀態等等。"
+    ],
+    "field": {
+      "once": "單次提交"
+    },
+    "onceHelp": "每個瀏覽器僅允許一次提交。"
   }
 }
 </i18n>

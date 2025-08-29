@@ -1,5 +1,8 @@
 import SubmissionList from '../../src/components/submission/list.vue';
 
+import useForm from '../../src/request-data/form';
+import useSubmissions from '../../src/request-data/submissions';
+
 import testData from '../data';
 import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
@@ -16,10 +19,10 @@ export const loadSubmissionList = (mountOptions = {}) => {
       projectId: project.id.toString(),
       xmlFormId: form.xmlFormId,
       draft: form.publishedAt == null,
-      top: SubmissionList.props.top.default
+      deleted: false
     },
     container: {
-      requestData: testRequestData(['keys'], {
+      requestData: testRequestData([useForm, 'keys', useSubmissions], {
         project,
         form,
         formDraft: form.publishedAt == null
@@ -29,14 +32,14 @@ export const loadSubmissionList = (mountOptions = {}) => {
       }),
       router: mockRouter(form.publishedAt != null
         ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
-        : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft/testing`)
+        : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft`)
     }
   });
-  const { top } = mergedOptions.props;
+  const { deleted } = mergedOptions.props;
   return mockHttp()
     .mount(SubmissionList, mergedOptions)
     .respondWithData(() => form._fields)
-    .respondWithData(() => testData.submissionOData(top(0)))
+    .respondWithData(() => (deleted ? testData.submissionDeletedOData() : testData.submissionOData()))
     .modify(series => {
       if (form.publishedAt == null) return series;
       return series.respondWithData(() => testData.extendedFieldKeys

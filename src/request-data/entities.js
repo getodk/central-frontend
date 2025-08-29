@@ -9,18 +9,44 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { shallowReactive } from 'vue';
+import { shallowReactive, reactive } from 'vue';
 
 import { useRequestData } from './index';
+
+const transformValue = (data, config) => {
+  const { searchParams } = new URL(config.url, window.location.origin);
+
+  const skip = searchParams.get('$skip') ?? 0;
+  const count = data['@odata.count'];
+  return data.value.map((entity, index) => ({
+    ...entity,
+    __system: {
+      ...entity.__system,
+      rowNumber: count - skip - index
+    }
+  }));
+};
 
 export default () => {
   const { createResource } = useRequestData();
   const entityOData = createResource('odataEntities', () => ({
-    transformResponse: ({ data }) =>
-      shallowReactive({
-        value: shallowReactive(data.value),
-        count: data['@odata.count']
-      })
+    transformResponse: ({ data, config }) => shallowReactive({
+      value: reactive(transformValue(data, config)),
+      count: data['@odata.count'],
+      removedEntities: reactive(new Set())
+    }),
+    replaceData(data, config) {
+      entityOData.count = data['@odata.count'];
+      entityOData.value = reactive(transformValue({
+        ...data,
+        value: data.value.filter(e => !entityOData.removedEntities.has(e.__id))
+      }, config));
+    }
   }));
-  return entityOData;
+  const deletedEntityCount = createResource('deletedEntityCount', () => ({
+    transformResponse: ({ data }) => reactive({
+      value: data['@odata.count']
+    })
+  }));
+  return { odataEntities: entityOData, deletedEntityCount };
 };

@@ -14,14 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Versi",
-      "publicAccess": "Akses Publik"
-    },
-    "draftNav": {
-      "tab": {
-        "status": "Status",
-        "testing": "Uji Coba"
-      }
+      "publicAccess": "Akses Publik",
+      "versions": "Versi"
     }
   },
   "systemHome": {
@@ -41,7 +35,8 @@
   "formState": {
     "open": "Buka",
     "closing": "Menutup",
-    "closed": "Tutup"
+    "closed": "Tutup",
+    "unpublished": "Belum diterbitkan"
   },
   "reviewState": {
     "received": "Diterima",
@@ -53,7 +48,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Semua Tindakan)",
       "user": "Tindakan Pengguna Web",
       "project": "Tindakan Proyek",
       "form": "Tindakan Formulir",
@@ -74,6 +68,8 @@
         "set": "Set"
       },
       "dataset": {
+        "update": "Perbarui",
+        "update_publish": "Terbitkan",
         "create": "@:audit.action.default.create"
       },
       "field_key": {
@@ -89,6 +85,7 @@
         "update_draft_delete": "Buang Draf",
         "attachment_update": "Perbarui Lampiran",
         "submission_export": "Unduh kiriman",
+        "purge": "Hapus",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "delete": "@:audit.action.default.delete"
@@ -125,11 +122,11 @@
     "close": "Tutup",
     "comment": "Komentar",
     "create": "Buat",
-    "createSubmission": "Baru",
     "done": "Selesai",
     "download": "Unduh",
     "edit": "Ubah",
     "editProfile": "Ubah Profil",
+    "finish": "Selesai",
     "logIn": "Masuk",
     "looksGood": "Terlihat bagus, lanjutkan",
     "more": "Lebih banyak",
@@ -143,10 +140,14 @@
     "review": "Tinjau",
     "save": "Simpan",
     "saveSettings": "Simpan pengaturan",
+    "sort": "Sortir",
     "update": "Memperbarui",
     "yesProceed": "Ya, lanjutkan",
     "showPreview": "Pratinjau",
-    "hidePreview": "Sembunyikan pratinjau"
+    "hidePreview": "Sembunyikan pratinjau",
+    "expand": "Perluas",
+    "collapse": "Tutup",
+    "upload": "Unggah"
   },
   "field": {
     "comment": "Tinggalkan komentar",
@@ -159,13 +160,14 @@
     "passphrase": "Frasa sandi",
     "password": "Kata sandi",
     "passwordConfirm": "Kata sandi baru (konfirmasi)",
-    "reviewState": "Status ulasan",
     "type": "Tipe"
   },
   "header": {
     "actions": "Tindakan",
     "created": "Dibuat",
     "createdBy": "Dibuat oleh",
+    "createdAt": "Dibuat pada",
+    "updatedBy": "Diperbarui oleh",
     "displayName": "Nama tampilan",
     "email": "Alamat Email",
     "instanceId": "ID Instansi",
@@ -174,13 +176,16 @@
     "submitterName": "Terkirim oleh",
     "submissionDate": "Terkirim pada",
     "time": "Waktu",
-    "type": "Tipe"
+    "type": "Tipe",
+    "entities": "Total Entitas",
+    "lastEntity": "Entitas Terbaru"
   },
   "plural": {
     "appUser": "Pengguna Aplikasi",
     "form": "Formulir",
     "project": "Proyek",
     "submission": "Kiriman",
+    "user": "Pengguna",
     "webUser": "Pengguna Web"
   },
   "count": {
@@ -192,10 +197,13 @@
     "appUser": "Pengguna Aplikasi",
     "appUsers": "Pengguna Aplikasi",
     "config": "Konfigurasi server",
+    "entities": "Entitas",
     "form": "Formulir",
     "forms": "Formulir",
+    "formAttachments": "Lampiran Formulir",
     "project": "Proyek",
     "projects": "Proyek",
+    "property": "Properti",
     "publicLink": "Tautan Akses Publik",
     "user": "Pengguna",
     "users": "Pengguna",
@@ -203,10 +211,8 @@
     "webUsers": "Pengguna Web",
     "session": "Sesi",
     "submissions": "Kiriman",
-    "projectRoles": "Peran Proyek"
-  },
-  "alert": {
-    "updateReviewState": "Status Ulasan disimpan!"
+    "projectRoles": "Peran Proyek",
+    "draft": "Draf"
   },
   "moreInfo": {
     "clickHere": {
@@ -227,51 +233,74 @@
     }
   },
   "submission": {
+    "missingAttachment": "Kehilangan Lampiran",
     "action": {
       "edit": "Ubah ({count})"
     },
     "editDisabled": "Anda tidak dapat mengubah kiriman terenkripsi",
     "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
-    "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi"
+    "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi",
+    "noSubmission": "(tidak ada)",
+    "emptyTable": "Belum ada kiriman data."
+  },
+  "entity": {
+    "label": "Label",
+    "entityLabel": "Label Entitas",
+    "entityId": "ID Entitas"
   },
   "common": {
     "activity": "Aktivitas",
     "anybody": "(Semua orang)",
     "areYouSure": "Apakah Anda yakin ingin melanjutkan?",
     "basicInfo": "Informasi dasar",
-    "currentDraft": "Draf Anda Saat Ini",
     "dangerZone": "Zona Bahaya",
+    "data": "Data",
+    "docs": "Dokumentasi",
+    "emptyValue": "(kosong)",
+    "error": "Error",
     "filter": "Filter",
+    "forum": "Forum",
+    "loading": "Memuat...",
     "no": "Tidak",
     "noResults": "Tidak ada hasil",
-    "rightNow": "Sekarang Juga",
     "success": "Sukses!",
     "system": "Sistem",
     "yes": "Iya",
     "tab": {
-      "settings": "Pengaturan",
-      "overview": "Gambaran"
+      "settings": "Pengaturan"
     },
-    "total": "Total"
+    "total": "Total",
+    "totalSubmissions": "Total Kiriman",
+    "propertiesCount": "{inform} dari {count} properti",
+    "reviewState": "Status ulasan",
+    "status": "Status",
+    "version": "Versi"
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (diarsipkan)"
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "File \"{name}\" yang anda coba unggah lebih besar dari batas 100 MB."
+      }
     }
   },
   "util": {
     "request": {
       "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
-      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda"
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Sesi Anda akan berakhir dalam 2 menit, dan Anda akan keluar secara otomatis.",
-        "expired": "Sesi Anda telah berakhir. Untuk melanjutkan pekerjaan, mohon masuk kembali."
-      }
+      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda",
+      "errorNotProblem": "Terjadi kesalahan: kode error {status}."
     }
   },
   "router": {
     "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+  },
+  "formStateDescription": {
+    "open": "Formulir ini bisa diunduh dan sedang menerima kiriman data.",
+    "closing": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data.",
+    "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (diarsipkan)"
+    }
   }
 }

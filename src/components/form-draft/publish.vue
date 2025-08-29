@@ -20,14 +20,12 @@ except according to the terms contained in the LICENSE file.
           <i18n-t v-if="rendersAttachmentsWarning" tag="li"
             keypath="warnings.attachments.full">
             <template #formAttachments>
-              <router-link :to="formPath('draft/attachments')">{{ $t('warnings.attachments.formAttachments') }}</router-link>
+              {{ $t('warnings.attachments.formAttachments') }}
             </template>
           </i18n-t>
           <i18n-t v-if="rendersTestingWarning" tag="li"
             keypath="warnings.testing.full">
-            <template #tested>
-              <router-link :to="formPath('draft/testing')">{{ $t('warnings.testing.tested') }}</router-link>
-            </template>
+            <template #tested>{{ $t('warnings.testing.tested') }}</template>
           </i18n-t>
         </ul>
       </div>
@@ -35,32 +33,9 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[0]') }}</p>
         <p>{{ $t('introduction[1]') }}</p>
 
-        <template v-if="formDraft.entityRelated && hasDatasetDiff">
+        <template v-if="datasetDiff.dataExists && newProperties !== 0">
           <hr>
-          <i18n-t tag="p" keypath="dataset.introduction.full">
-            <template #inAddition>
-              <strong>{{ $t('dataset.introduction.inAddition') }}</strong>
-            </template>
-          </i18n-t>
-          <ul class="dataset-list">
-            <template v-for="dataset of formDraftDatasetDiff" :key="dataset.name">
-              <i18n-t v-if="dataset.isNew" tag="li" keypath="dataset.newDataset">
-                <template #datasetName>
-                  <strong>{{ dataset.name }}</strong>
-                </template>
-              </i18n-t>
-              <template v-for="property of dataset.properties" :key="property.name">
-                <i18n-t v-if="property.isNew && property.inForm" tag="li" keypath="dataset.newProperty">
-                  <template #datasetName>
-                    <strong>{{ dataset.name }}</strong>
-                  </template>
-                  <template #propertyName>
-                    <strong>{{ property.name }}</strong>
-                  </template>
-                </i18n-t>
-              </template>
-            </template>
-          </ul>
+          <p>{{ $tcn('newProperties', newProperties) }}</p>
         </template>
 
         <hr v-if="draftVersionStringIsDuplicate">
@@ -70,30 +45,30 @@ except according to the terms contained in the LICENSE file.
       </div>
       <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
         <form-group ref="versionString" v-model.trim="versionString"
-          :placeholder="$t('field.version')" required autocomplete="off"/>
+          :placeholder="$t('common.version')" required autocomplete="off"/>
         <p>{{ $t('introduction[3]') }}</p>
         <!-- We specify two nearly identical .modal-actions, because here we
         want the Proceed button to be a submit button (which means that browsers
         will do some basic form validation when it is clicked). -->
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
-          </button>
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
           </button>
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
+            {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
+          </button>
         </div>
       </form>
       <div v-else class="modal-actions">
-        <button type="button" class="btn btn-primary"
-          :aria-disabled="awaitingResponse" @click="publish">
-          {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="awaitingResponse" @click="publish">
+          {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
@@ -101,14 +76,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { any } from 'ramda';
-
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
-import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -127,14 +99,13 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { formVersions, attachments, resourceView, formDraftDatasetDiff } = useRequestData();
+    const { formVersions, draftAttachments, formDraftDatasetDiff: datasetDiff, resourceView } = useRequestData();
     const formDraft = resourceView('formDraft', (data) => data.get());
 
     const { request, awaitingResponse } = useRequest();
-    const { formPath } = useRoutes();
     return {
-      formVersions, formDraft, attachments, formDraftDatasetDiff,
-      request, awaitingResponse, formPath
+      formVersions, formDraft, draftAttachments, datasetDiff,
+      request, awaitingResponse
     };
   },
   data() {
@@ -157,14 +128,13 @@ export default {
         version.version === this.formDraft.version);
     },
     rendersAttachmentsWarning() {
-      return this.attachments.dataExists && this.attachments.missingCount !== 0;
+      return this.draftAttachments.dataExists && this.draftAttachments.missingCount !== 0;
     },
     rendersTestingWarning() {
       return this.formDraft.dataExists && this.formDraft.submissions === 0;
     },
-    hasDatasetDiff() {
-      return this.formDraftDatasetDiff.dataExists &&
-        any(d => d.isNew || any(p => p.isNew && p.inForm, d.properties), this.formDraftDatasetDiff.data);
+    newProperties() {
+      return this.datasetDiff.counts.newProperties;
     }
   },
   watch: {
@@ -202,38 +172,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../assets/scss/variables';
-@import '../../assets/css/icomoon';
-
-.dataset-list {
-  list-style: none;
-  padding-left: 5px;
-
-  li {
-    hyphens: auto;
-    overflow-wrap: break-word;
-  }
-
-  li::before {
-    @extend [class^="icon-"];
-    content: '\f055';
-    margin-right:5px;
-    color: green;
-  }
-}
-
-.field-list{
-  list-style: none;
-
-  li::before {
-    @extend [class^="icon-"];
-    content: '\f055';
-  }
-}
-
-</style>
-
 <i18n lang="json5">
 {
   "en": {
@@ -257,21 +195,9 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
-    "field": {
-      // This is the text of a form field. It is used to specify a unique
-      // version name for the version of the Form that is about to be published.
-      "version": "Version"
-    },
+    "newProperties": "Publishing this draft will create {count} property. It cannot be deleted. | Publishing this draft will create {count} properties. These cannot be deleted.",
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publishing this Form definition will make the following changes to this Project:",
-        "inAddition": "In addition,"
-      },
-      "newDataset": "A new Dataset {datasetName} will be created.",
-      "newProperty": "In Dataset {datasetName}, a new property {propertyName} will be created."
     }
   }
 }
@@ -298,19 +224,8 @@ export default {
       "Každá verze formuláře vyžaduje jedinečný název verze. Váš pracovní formulář má nyní stejný název verze jako dříve publikovaná verze. Nový můžete nastavit tak, že nahrajete definici formuláře s požadovaným jménem, nebo můžete napsat nový a server jej za vás změní.",
       "Chcete pokračovat?"
     ],
-    "field": {
-      "version": "Verze"
-    },
     "problem": {
       "409_6": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
-        "inAddition": "Navíc,"
-      },
-      "newDataset": "Bude vytvořena nová datová sada {datasetName}.",
-      "newProperty": "V Datové sadě {datasetName}, bude vytvořena nová vlastnost {propertyName}."
     }
   },
   "de": {
@@ -331,19 +246,8 @@ export default {
       "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen.",
       "Möchten Sie fortfahren?"
     ],
-    "field": {
-      "version": "Version"
-    },
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} durch die Veröffentlichung dieser Formulardefinition werden die folgenden Änderungen an diesem Projekt vorgenommen:",
-        "inAddition": "Zusätzlich,"
-      },
-      "newDataset": "Ein neuer Datensatz {datasetName} wird erstellt.",
-      "newProperty": "Im Datensatz {datasetName} wird eine neue Eigenschaft {propertyName} erstellt."
     }
   },
   "es": {
@@ -364,19 +268,9 @@ export default {
       "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted.",
       "¿Le gustaría continuar?"
     ],
-    "field": {
-      "version": "Versión"
-    },
+    "newProperties": "La publicación de este borrador actualizará {count} propiedad. Esta no se puede eliminar. | La publicación de este borrador actualizará {count} propiedades. Estas no se pueden eliminar. | La publicación de este borrador actualizará {count} propiedades. Estas no se pueden eliminar.",
     "problem": {
       "409_6": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publicar esta definición de Formulario hará los siguientes cambios a este Proyecto:",
-        "inAddition": "Además,"
-      },
-      "newDataset": "Se creará un nuevo conjunto de datos {datasetName}.",
-      "newProperty": "En el conjunto de datos {datasetName}, se creará una nueva propiedad {propertyName}."
     }
   },
   "fr": {
@@ -395,28 +289,15 @@ export default {
       "Vous êtes sur le point de faire de cette ébauche la publiée de votre formulaire. Cela va finaliser les changements que vous avez apportés à la définition du formulaire et aux fichiers joints.",
       "Les données existantes pour le formulaire finalisé ne seront pas affectées, mais toutes les données de test de cette ébauche seront supprimées.",
       "Chaque version de formulaire requiert une nom unique. Actuellement, votre ébauche a le même nom de version qu'une version précédemment publiée. Vous pouvez en définir un nouveau en téléversant une définition de formulaire avec le nom désiré, ou vous pouvez en préciser un nouveau ci-dessous et le serveur le changera pour vous.",
-      "Voulez vous procéder ?"
+      "Voulez vous continuer ?"
     ],
-    "field": {
-      "version": "Version"
-    },
+    "newProperties": "Publier cette ébauche créera {count} propriété. Cela ne peut être annulé. | Publier cette ébauche créera {count} propriétés. Cela ne peut être annulé. | Publier cette ébauche créera {count} propriété(s). Cela ne peut être annulé.",
     "problem": {
       "409_6": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé. Merci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} publier cette Définition du formualire apportera les changements suivants au Projet :",
-        "inAddition": "De plus,"
-      },
-      "newDataset": "Un nouveau Dataset {datasetName} va être créé.",
-      "newProperty": "Dans le Dataset {datasetName}, une nouvelle propriété {propertyName} sera créée."
     }
   },
   "id": {
-    "title": "Terbitkan Draf",
-    "field": {
-      "version": "Versi"
-    }
+    "title": "Terbitkan Draf"
   },
   "it": {
     "title": "Pubblica bozza",
@@ -436,19 +317,9 @@ export default {
       "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te.",
       "Vuoi procedere?"
     ],
-    "field": {
-      "version": "Versione"
-    },
+    "newProperties": "La pubblicazione di questa bozza creerà {count} proprietà. Questa non può essere eliminata. | La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate. | La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.",
     "problem": {
       "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} la pubblicazione di questa definizione del formulario apporterà le seguenti modifiche a questo progetto:",
-        "inAddition": "Inoltre,"
-      },
-      "newDataset": "Un nuovo set di dati {datasetName} sarà creato.",
-      "newProperty": "Nel set di dati {datasetName}, una nuova proprietà {propertyName} sarà creata."
     }
   },
   "ja": {
@@ -459,11 +330,30 @@ export default {
         "tested": "このフォームをテスト"
       }
     },
-    "field": {
-      "version": "バージョン"
-    },
     "problem": {
       "409_6": "バージョン名が以前の下書き、または削除されたフォームと競合しています。以下の入力項目から新しいものに変更するか、もしくは新しい定義フォームをアップロードしてください。"
+    }
+  },
+  "pt": {
+    "title": "Publicar rascunho",
+    "warnings": {
+      "attachments": {
+        "full": "Você não forneceu todos os {formAttachments} que seu Formulário requer. Você pode ignorar isso se desejar, mas precisará fazer uma nova versão Rascunho para fornecer esses Anexos mais tarde.",
+        "formAttachments": "Anexos do Formulário"
+      },
+      "testing": {
+        "full": "Você ainda não {tested} enviando uma resposta de teste. Você não é obrigado a fazê-lo, mas isso é altamente recomendado.",
+        "tested": "Testar esse formulário"
+      }
+    },
+    "introduction": [
+      "Você está prestes a tornar este Rascunho a versão publicada do seu Formulário. Isso finalizará todas as alterações feitas na definição do Formulário e nos Anexos do Formulário.",
+      "As respostas existentes do formulário principal não serão afetadas, mas todas as respostas de teste do rascunho serão removidas.",
+      "Cada versão de um formulário requer um nome de versão exclusivo. No momento, seu formulário de rascunho tem o mesmo nome de versão de outro publicado anteriormente. Você pode definir um novo carregando uma definição de formulário com o nome desejado ou pode digitar um novo abaixo e o servidor irá alterá-lo para você.",
+      "Você quer prosseguir?"
+    ],
+    "problem": {
+      "409_6": "O nome da versão deste Rascunho está em conflito com uma versão anterior deste Formulário ou de um Formulário excluído. Use o campo abaixo para alterá-lo para algo novo ou carregar uma nova definição do Formulário."
     }
   },
   "sw": {
@@ -484,19 +374,31 @@ export default {
       "Kila toleo la Fomu linahitaji jina la toleo la kipekee. Kwa sasa, Rasimu ya Fomu yako ina jina la toleo sawa na toleo lililochapishwa hapo awali. Unaweza kuweka mpya kwa kupakia ufafanuzi wa Fomu kwa jina unalotaka, au unaweza kuandika mpya hapa chini na seva itakubadilisha.",
       "Je, ungependa kuendelea?"
     ],
-    "field": {
-      "version": "Toleo"
-    },
     "problem": {
       "409_6": "Jina la toleo la Rasimu hii linakinzana na toleo la awali la Fomu hii au Fomu iliyofutwa. Tafadhali tumia sehemu iliyo hapa chini ili kuibadilisha hadi kitu kipya au kupakia ufafanuzi mpya wa Fomu"
-    },
-    "dataset": {
-      "introduction": {
-        "full": "{inAddition} kuchapisha ufafanuzi huu wa Fomu kutafanya mabadiliko yafuatayo kwenye Mradi huu:",
-        "inAddition": "Zaidi ya hayo,"
+    }
+  },
+  "zh-Hant": {
+    "title": "發布草稿",
+    "warnings": {
+      "attachments": {
+        "full": "您尚未提供表單所需的所有 {formAttachments}。如果您願意，可以忽略此內容，但您需要製作新的草稿版本才能稍後提供這些附件。",
+        "formAttachments": "表格附件"
       },
-      "newDataset": "Seti mpya ya Data {datasetName} itaundwa",
-      "newProperty": "Katika Seti ya Data {datasetName}, sifa mpya ya {propertyName} itaundwa"
+      "testing": {
+        "full": "您尚未透過上傳測試提交來{tested}。您不必這樣做，但強烈建議您這樣做。",
+        "tested": "測試此表單"
+      }
+    },
+    "introduction": [
+      "您即將將此草稿作為您表格的發布版本。這將完成您對表單定義和表單附件所做的任何變更。",
+      "現有的表單提交將不受影響，但所有草稿測試提交將被刪除。",
+      "表單的每個版本，都需要獨一版本名稱。現在，您的草稿表單與先前發布的版本具有相同的版本名稱。您可以透過上傳具有所需名稱的表單定義來設定新的，也可以在下面輸入一個新的版本名稱，伺服器將為您更改它。",
+      "您想繼續嗎？"
+    ],
+    "newProperties": "發布此草稿將建立{count}種屬性。這些屬性無法刪除。",
+    "problem": {
+      "409_6": "此草案的版本名稱與此表單的過去版本或已刪除的表單衝突。請使用下面的欄位將其變更為新內容或上傳新的表單定義。"
     }
   }
 }

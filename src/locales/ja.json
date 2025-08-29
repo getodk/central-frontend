@@ -14,14 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "バージョン",
-      "publicAccess": "一般公開"
-    },
-    "draftNav": {
-      "tab": {
-        "status": "ステータス",
-        "testing": "テスト"
-      }
+      "publicAccess": "一般公開",
+      "versions": "バージョン"
     }
   },
   "systemHome": {
@@ -53,7 +47,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "（すべての操作）",
       "user": "Webユーザーに対する操作",
       "project": "プロジェクトに対する操作",
       "form": "フォームに対する操作",
@@ -89,7 +82,6 @@
         "update_draft_delete": "下書きの削除",
         "attachment_update": "メディアファイルの更新",
         "submission_export": "提出済フォームのダウンロード",
-        "restore": "復元",
         "purge": "完全に削除",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -127,7 +119,6 @@
     "close": "閉じる",
     "comment": "コメント",
     "create": "作成",
-    "createSubmission": "新規作成",
     "done": "完了",
     "download": "ダウンロード",
     "edit": "編集",
@@ -148,7 +139,8 @@
     "update": "更新",
     "yesProceed": "はい、続けます。",
     "showPreview": "プレビュー",
-    "hidePreview": "プレビューを隠す"
+    "hidePreview": "プレビューを隠す",
+    "upload": "アップロード"
   },
   "field": {
     "comment": "コメントを残す...",
@@ -161,7 +153,6 @@
     "passphrase": "パスフレーズ",
     "password": "パスワード",
     "passwordConfirm": "新しいパスワード（確認用）",
-    "reviewState": "レビュー・ステータス",
     "type": "タイプ"
   },
   "header": {
@@ -205,11 +196,8 @@
     "webUsers": "Webユーザー",
     "session": "セッション",
     "submissions": "提出済フォーム",
-    "projectRoles": "プロジェクトでの役割"
-  },
-  "alert": {
-    "passwordTooShort": "10文字以上の長さのパスワードを入力してください。",
-    "updateReviewState": "レビュー・ステータス保存完了！"
+    "projectRoles": "プロジェクトでの役割",
+    "draft": "下書き"
   },
   "moreInfo": {
     "clickHere": {
@@ -242,20 +230,20 @@
     "anybody": "（全員）",
     "areYouSure": "本当に続けて問題ないですか？",
     "basicInfo": "基本情報",
-    "currentDraft": "現在の下書き",
     "dangerZone": "危険エリア",
     "filter": "フィルター",
     "no": "いいえ",
     "noResults": "該当なし",
-    "rightNow": "現在の状況",
     "success": "成功です！",
     "system": "システム",
     "yes": "はい",
     "tab": {
-      "settings": "設定",
-      "overview": "概要"
+      "settings": "設定"
     },
-    "total": "全期間"
+    "total": "全期間",
+    "reviewState": "レビュー・ステータス",
+    "status": "ステータス",
+    "version": "バージョン"
   },
   "mixin": {
     "request": {
@@ -264,26 +252,24 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name}（アーカイブ済）"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "問題発生：リクエストがありません。",
       "noResponse": "問題発生：リクエストへの応答がありません。",
       "errorNotProblem": "問題発生：エラーコード{status}"
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "あと2分でセッションの有効期限が切れ、自動的にログアウトされます。",
-        "expired": "セッションの有効期限が切れています。 作業を続けるには、再度ログインして下さい。",
-        "logoutError": "問題が発生し、正しくログアウトできませんでした。ページを更新し、再度ログアウトを試みて下さい。{message}"
-      }
     }
   },
   "router": {
     "unsavedChanges": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
+  },
+  "formStateDescription": {
+    "open": "このフォームはダウンロードでき、フォームの提出も受け付けています。",
+    "closing": "このフォームはダウンロードできませんが、フォームの提出は受け付けています。",
+    "closed": "このフォームはダウンロードできませんし、フォームの提出も受け付けていません。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name}（アーカイブ済）"
+    }
   }
 }

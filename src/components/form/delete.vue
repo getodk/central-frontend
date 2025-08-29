@@ -26,13 +26,13 @@ except according to the terms contained in the LICENSE file.
         </p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse" @click="del">
-          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.noCancel') }}
+        </button>
+        <button type="button" class="btn btn-danger"
+          :aria-disabled="awaitingResponse" @click="del">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
@@ -61,9 +61,9 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { form } = useRequestData();
+    const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
+    return { project, form, request, awaitingResponse };
   },
   methods: {
     del() {
@@ -72,9 +72,10 @@ export default {
         url: apiPaths.form(this.form.projectId, this.form.xmlFormId)
       })
         .then(() => {
-          // project.forms and project.lastSubmission may now be out-of-date. If
-          // the user navigates to ProjectOverview, project.forms should be
-          // updated. project.lastSubmission is not used within ProjectShow.
+          this.project.forms -= 1;
+          // project.lastSubmission may now be out-of-date. However,
+          // project.lastSubmission is not used within ProjectShow.
+
           this.$emit('success');
         })
         .catch(noop);
@@ -90,7 +91,7 @@ export default {
     "title": "Delete Form",
     "introduction": [
       "Are you sure you want to delete the Form {name} and all of its Submissions?",
-      "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be undeleted before then."
+      "This action will move the Form to the Trash. After 30 days in the Trash, it will be permanently purged, but it can be restored before then."
     ],
     "noDeleteEntities": "Any Entities created by this Form’s Submissions will not be deleted. In a future version of Central, it will be possible to delete Entities."
   }
@@ -103,8 +104,7 @@ export default {
   "cs": {
     "title": "Odstranit formulář",
     "introduction": [
-      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?",
-      "Tato akce přesune formulář do koše. Po 30 dnech v koši bude trvale vymazán, ale předtím jej lze zrušit."
+      "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
     ],
     "noDeleteEntities": "Subjekty vytvořené na základě podání tohoto formuláře nebudou vymazány. V některé z budoucích verzí Centralu bude možné Entity odstranit."
   },
@@ -120,7 +120,7 @@ export default {
     "title": "Borrar formulario",
     "introduction": [
       "¿Está seguro que desea eliminar el formulario {name} y todos sus envíos?",
-      "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede recuperar antes de esa fecha."
+      "Esta acción moverá el Formulario a la Papelera. Después de 30 días en la Papelera, se eliminará de forma permanente, pero se puede restablecer antes de esa fecha."
     ],
     "noDeleteEntities": "No se eliminará ninguna entidad creada por los envíos de este formulario. En una versión futura de Central, será posible eliminar Entidades."
   },
@@ -128,7 +128,7 @@ export default {
     "title": "Supprimer le formulaire",
     "introduction": [
       "Êtes vous sûr de vouloir supprimer le formulaire {name} et toutes les données soumises ?",
-      "Cette action va envoyer le formulaire à la corbeille. Après 30 jours dans la corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
+      "Cette action va envoyer le formulaire à la corbeille. Après 30 jours dans la Corbeille, il sera purgé de manière permanente, mais il peut être restauré avant ce délai."
     ],
     "noDeleteEntities": "Chaque entité crée par cette Soumission de formulaire ne sera pas supprimée. Dans une version future, il sera possible de supprimer des Entités."
   },
@@ -149,17 +149,30 @@ export default {
   "ja": {
     "title": "フォームの削除",
     "introduction": [
-      "フォーム{name}および、その提出済フォームが削除されます。 本当に削除してもよろしいですか？",
-      "この操作はフォームをゴミ箱に移動します。ゴミ箱に入れた30日後、完全に削除されますが、それ以前であれば削除を取り消せます。"
+      "フォーム{name}および、その提出済フォームが削除されます。 本当に削除してもよろしいですか？"
     ]
+  },
+  "pt": {
+    "title": "Excluir formulário",
+    "introduction": [
+      "Você tem certeza que deseja excluir o formulário {name} e todas as suas respostas?"
+    ],
+    "noDeleteEntities": "Nenhuma Entidade criada pelas Respostas deste Formulário será excluída. Em uma versão futura do Central, será possível excluir Entidades."
   },
   "sw": {
     "title": "Futa Fomu",
     "introduction": [
-      "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?",
-      "kitendo hiki kitahamisha Fomu hadi kwenye Tupio. Baada ya siku 30 kwenye Tupio, itasafishwa kabisa, lakini inaweza kufutwa kabla ya wakati huo."
+      "Je, una uhakika ungependa kufuta Fomu ya {name} na Mawasilisho yake yote?"
     ],
     "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
+  },
+  "zh-Hant": {
+    "title": "刪除表單",
+    "introduction": [
+      "您確定要刪除表單{name}及其所有提交內容嗎？",
+      "此動作會將表單移至垃圾桶。在垃圾桶中存放 30 天後，該表格將被永久清除，但在此之前可以還原。"
+    ],
+    "noDeleteEntities": "透過此表單提交建立的任何實體都不會被刪除。在 Central 的未來版本中，將可以刪除實體。"
   }
 }
 </i18n>

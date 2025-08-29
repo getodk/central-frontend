@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
 
 import { useRoute } from 'vue-router';
 
+import { apiPaths } from '../util/request';
 import { canRoute } from '../util/router';
 import { memoizeForContainer } from '../util/composable';
 
@@ -29,7 +30,7 @@ const _formPath = (projectId, xmlFormId, suffix = '') => {
 const _datasetPath = (projectId, datasetName, suffix = '') => {
   const encodedName = encodeURIComponent(datasetName);
   const slash = suffix !== '' ? '/' : '';
-  return `/projects/${projectId}/datasets/${encodedName}${slash}${suffix}`;
+  return `/projects/${projectId}/entity-lists/${encodedName}${slash}${suffix}`;
 };
 
 export default memoizeForContainer(({ router, requestData }) => {
@@ -79,27 +80,50 @@ export default memoizeForContainer(({ router, requestData }) => {
     }
     return _formPath(projectIdOrSuffix, xmlFormId, suffix);
   };
-  const publishedFormPath = (projectId, xmlFormId) => {
-    const path = formPath(projectId, xmlFormId);
-    // A project viewer can't navigate to the form overview, but anyone who can
-    // navigate to the form should be able to navigate to .../submissions.
-    return canRouteToLocation(path) ? path : `${path}/submissions`;
-  };
-  // Returns the path to the primary page for a form. This changes based on the
-  // current user's role, as well as whether the form has a published version.
-  const primaryFormPath = (form) => {
-    if (form.publishedAt != null) {
-      return publishedFormPath(form.projectId, form.xmlFormId);
-    } else { // eslint-disable-line no-else-return
-      const path = formPath(form.projectId, form.xmlFormId, 'draft');
-      return canRouteToLocation(path) ? path : `${path}/testing`;
+  // Returns the path to the primary page of a published form.
+  const publishedFormPath = (projectId, xmlFormId) =>
+    formPath(projectId, xmlFormId, 'submissions');
+  // Returns the path to the primary page for a form. This changes based on
+  // whether the form has a published version.
+  const primaryFormPath = (form) => (form.publishedAt != null
+    ? publishedFormPath(form.projectId, form.xmlFormId)
+    : formPath(form.projectId, form.xmlFormId, 'draft'));
+
+  const newSubmissionPath = (projectIdOrDraft, xmlFormId, draft) => {
+    const suffix = draft ? 'draft/submissions/new' : 'submissions/new';
+    if (!xmlFormId) {
+      return formPath(suffix);
     }
+    return formPath(projectIdOrDraft, xmlFormId, suffix);
   };
 
-  const submissionPath = (projectId, xmlFormId, instanceId) => {
+  const offlineSubmissionPath = (projectIdOrDraft, xmlFormId, draft) =>
+    `${newSubmissionPath(projectIdOrDraft, xmlFormId, draft)}/offline`;
+
+  const formPreviewPath = (projectIdOrDraft, xmlFormId, draft) => {
+    const suffix = draft ? 'draft/preview' : 'preview';
+    if (!xmlFormId) {
+      return formPath(suffix);
+    }
+    return formPath(projectIdOrDraft, xmlFormId, suffix);
+  };
+
+  const submissionPath = (projectId, xmlFormId, instanceId, suffix) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);
-    return `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    let result = `/projects/${projectId}/forms/${encodedFormId}/submissions/${encodedInstanceId}`;
+    if (suffix) {
+      result += `/${suffix}`;
+    }
+    return result;
+  };
+  const editSubmissionPath = (projectId, xmlFormId, instanceId, webformsEnabled) => {
+    if (webformsEnabled) {
+      return submissionPath(projectId, xmlFormId, instanceId, 'edit');
+    }
+    // Although we now have canonical path to edit submission, we still need to go through backend
+    // if Enketo is enable to provide Enketo with submission data
+    return apiPaths.editSubmission(projectId, xmlFormId, instanceId);
   };
 
   const datasetPath = (projectIdOrSuffix, datasetName, suffix) => {
@@ -112,15 +136,15 @@ export default memoizeForContainer(({ router, requestData }) => {
 
   const entityPath = (projectId, datasetName, entityUuid) => {
     const encodedName = encodeURIComponent(datasetName);
-    return `/projects/${projectId}/datasets/${encodedName}/entities/${entityUuid}`;
+    return `/projects/${projectId}/entity-lists/${encodedName}/entities/${entityUuid}`;
   };
 
   const userPath = (id) => `/users/${id}/edit`;
 
   return {
     projectPath,
-    formPath, publishedFormPath, primaryFormPath,
-    submissionPath,
+    formPath, publishedFormPath, primaryFormPath, formPreviewPath,
+    submissionPath, newSubmissionPath, offlineSubmissionPath, editSubmissionPath,
     datasetPath,
     entityPath,
     userPath,

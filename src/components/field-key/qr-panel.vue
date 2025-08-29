@@ -10,15 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="field-key-qr-panel panel panel-default"
-    :class="{ legacy: !managed }">
-    <div class="panel-heading">
-      <h1 class="panel-title">
-        {{ managed ? $t('title.managed') : $t('title.legacy') }}
-      </h1>
-      <span class="icon-mobile"></span>
-    </div>
-    <div v-if="fieldKey != null" class="panel-body">
+  <qr-panel class="field-key-qr-panel" :class="{ legacy: !managed }">
+    <template #title>
+      {{ managed ? $t('title.managed') : $t('title.legacy') }}
+    </template>
+    <template v-if="fieldKey != null" #body>
       <collect-qr :settings="settings" error-correction-level="L"
         :cell-size="3"/>
       <p>
@@ -62,13 +58,14 @@ except according to the terms contained in the LICENSE file.
         <sentence-separator/>
         <doc-link to="collect-import-export/">{{ $t('moreInfo.learnMore') }}</doc-link>
       </p>
-    </div>
-  </div>
+    </template>
+  </qr-panel>
 </template>
 
 <script>
 import CollectQr from '../collect-qr.vue';
 import DocLink from '../doc-link.vue';
+import QrPanel from '../qr-panel.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import { apiPaths } from '../../util/request';
@@ -76,7 +73,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FieldKeyQrPanel',
-  components: { CollectQr, DocLink, SentenceSeparator },
+  components: { CollectQr, DocLink, QrPanel, SentenceSeparator },
   props: {
     fieldKey: Object,
     managed: Boolean
@@ -108,49 +105,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
-
 .field-key-qr-panel {
-  margin-bottom: 0;
-  width: 500px;
-
-  .panel-heading {
-    background-color: $color-action-background;
-    position: relative;
-  }
-
-  // The icon is not animated, because in the popover, switching between a
-  // managed and a legacy QR code would reset the animation.
-  .icon-mobile {
-    color: $color-action-overlay;
-    font-size: 98px;
-    position: absolute;
-    right: 18px;
-    top: -32px;
-    transform: rotate(15deg);
-
-    &::after {
-      background-color: #fff;
-      content: '';
-      height: 65px;
-      left: 5px;
-      position: absolute;
-      top: 18px;
-      width: 32px;
-      z-index: -1;
-    }
-  }
-
-  .collect-qr {
-    float: left;
-    margin-right: 15px;
-  }
-
-  p {
-    &:first-child { margin-top: 5px; }
-    &:last-child { margin-bottom: 5px; }
-  }
-
   &.legacy {
     .panel-heading { background-color: #777; }
     .icon-mobile { color: #555; }
@@ -449,6 +404,41 @@ export default {
       "このQRコードをスキャンして、アカウント名\"{displayName}\"の端末を設定する。"
     ]
   },
+  "pt": {
+    "title": {
+      "managed": "Código de configuração de cliente",
+      "legacy": "Código legado de configuração do cliente"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "Isso é um {managedCode}.",
+          "managedCode": "Código QR gerenciado"
+        },
+        "legacy": {
+          "full": "Isso é um {legacyCode}.",
+          "legacyCode": "Código QR legado"
+        }
+      },
+      {
+        "managed": "O Collect irá fazer a correspondência exata dos formulários disponíveis para \"{displayName}\" aplicando atualizações de forma automática. Os usuários não precisarão obter formulários em branco de forma manual. Além disso, respostas marcadas como finalizadas serão enviadas automaticamente assim que uma conexão de rede for encontrada.",
+        "legacy": "Os usuários terão que obter formulários em branco de forma manual no dispositivo e determinar quais formulários devem ser atualizados. Eles também precisarão enviar manualmente respostas finalizadas."
+      },
+      {
+        "managed": {
+          "full": "Para o comportamento anterior, {switchToLegacy}.",
+          "switchToLegacy": "altere para um {legacyCode}",
+          "legacyCode": "Código QR legado"
+        },
+        "legacy": {
+          "full": "Para um processo mais controlado e à prova de bobagens, {switchToManaged}.",
+          "switchToManaged": "mudar para um {managedCode}",
+          "managedCode": "Código QR gerenciado"
+        }
+      },
+      "Use um scanner de código QR para configurar um dispositivo com a conta \"{displayName}\"."
+    ]
+  },
   "sw": {
     "title": {
       "managed": "Msimbo wa Usanidi wa Mteja",
@@ -482,6 +472,41 @@ export default {
         }
       },
       "Changanua msimbo huu wa QR ili kusanidi kifaa kilicho na akaunti \"{displayName}\"."
+    ]
+  },
+  "zh-Hant": {
+    "title": {
+      "managed": "客戶端配置QR code",
+      "legacy": "舊版客戶端配置QR code"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "此為一個 {managedCode}。",
+          "managedCode": "管理 QR Code"
+        },
+        "legacy": {
+          "full": "這是一個 {legacyCode}。",
+          "legacyCode": "舊版 QR Code"
+        }
+      },
+      {
+        "managed": "Collect 將與「{displayName}」可用的表單完全匹配，包括自動套用更新。用戶無需手動取得空白表格。此外，一旦找到連接，最終的表格將自動發送。",
+        "legacy": "使用者必須在裝置上手動取得空白表單並確定要更新哪些表單。他們還需要手動發送最終表格。"
+      },
+      {
+        "managed": {
+          "full": "對於舊的行為， {switchToLegacy}。",
+          "switchToLegacy": "切換到 {legacyCode}",
+          "legacyCode": "舊版 QR Code"
+        },
+        "legacy": {
+          "full": "為了實現更受控和萬無一失的過程， {switchToManaged}。",
+          "switchToManaged": "切換到{managedCode}",
+          "managedCode": "管理 QR Code"
+        }
+      },
+      "掃描此 QR code 即可使用「{displayName}」帳戶配置到設備。"
     ]
   }
 }

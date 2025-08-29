@@ -1,25 +1,210 @@
-import createAlert from '../src/alert';
+import sinon from 'sinon';
+import { T } from 'ramda';
+import { nextTick, ref } from 'vue';
+
+import Home from '../src/components/home.vue';
+
+import createAlerts from '../src/container/alerts';
+import { useAlert } from '../src/alert';
+import { noop } from '../src/util/util';
+
+import { block, wait } from './util/util';
+import { load } from './util/http';
+import { mockLogin } from './util/session';
+import { withSetup } from './util/lifecycle';
 
 describe('createAlert()', () => {
-  for (const type of ['success', 'info', 'warning', 'danger']) {
+  for (const type of ['success', 'info', 'danger']) {
     describe(`${type}()`, () => {
       it('updates the data', () => {
-        const alert = createAlert();
+        const { alert } = createAlerts();
         alert[type]('Something happened!');
         alert.type.should.equal(type);
         alert.message.should.equal('Something happened!');
-        alert.state.should.be.true();
+        alert.state.should.be.true;
       });
     });
   }
 
-  describe('blank()', () => {
-    it('updates the data', () => {
-      const alert = createAlert();
+  describe('CTA', () => {
+    it('updates the data via show().cta()', () => {
+      const { alert } = createAlerts();
+      should.not.exist(alert.cta);
+
       alert.info('Something happened!');
-      alert.blank();
-      alert.state.should.be.false();
+      should.not.exist(alert.cta);
+
+      const fake = sinon.fake();
+      alert.info('Something else happened!').cta('Click here', fake);
+      alert.cta.text.should.equal('Click here');
+      alert.cta.handler();
+      fake.called.should.be.true;
+    });
+
+    it('hides the alert if the CTA handler returns true', async () => {
+      const { alert } = createAlerts();
+
+      // Handler returns `undefined`; don't hide.
+      alert.info('Something happened!').cta('Click here', noop);
+      alert.cta.handler();
+      await nextTick();
+      alert.state.should.be.true;
+
+      // Handler returns `true`; hide.
+      alert.info('Something happened!').cta('Click here', T);
+      alert.state.should.be.true;
+      alert.cta.handler();
+      await nextTick();
+      alert.state.should.be.false;
+    });
+
+    it('supports an async CTA handler', async () => {
+      const { alert } = createAlerts();
+      const fromLock = (lock) => () => lock.then(T);
+
+      // Async handler that resolves
+      const [lock1, unlock1] = block();
+      alert.info('Something happened!').cta('Click here', fromLock(lock1));
+      alert.cta.handler();
+      alert.state.should.be.true;
+      alert.cta.pending.should.be.true;
+      unlock1();
+      await wait();
+      alert.state.should.be.false;
+      should.not.exist(alert.cta);
+
+      // Async handler that rejects
+      const [lock2, , fail2] = block();
+      alert.info('Something happened!').cta('Click here', fromLock(lock2));
+      alert.cta.handler();
+      alert.state.should.be.true;
+      alert.cta.pending.should.be.true;
+      fail2();
+      await wait();
+      alert.state.should.be.true;
+      alert.cta.pending.should.be.false;
+      alert.last.hide();
+
+      // First handler resolves during second handler
+      const [lock3, unlock3] = block();
+      alert.info('Something happened!').cta('Click here', fromLock(lock3));
+      alert.cta.handler();
+      const [lock4, unlock4] = block();
+      alert.info('Something happened!').cta('Click here', fromLock(lock4));
+      alert.cta.handler();
+      unlock3();
+      await wait();
+      alert.state.should.be.true;
+      alert.cta.pending.should.be.true;
+      unlock4();
+      await wait();
+      alert.state.should.be.false;
+      should.not.exist(alert.cta);
+
+      // First handler rejects during second handler
+      const [lock5, , fail5] = block();
+      alert.info('Something happened!').cta('Click here', fromLock(lock5));
+      alert.cta.handler();
+      const [lock6, unlock6] = block();
+      alert.info('Something happened!').cta('Click here', fromLock(lock6));
+      alert.cta.handler();
+      fail5();
+      await wait();
+      alert.state.should.be.true;
+      alert.cta.pending.should.be.true;
+      unlock6();
+      await wait();
+      alert.state.should.be.false;
+      should.not.exist(alert.cta);
+    });
+  });
+
+  describe('hide()', () => {
+    it('updates the data', () => {
+      const { alert } = createAlerts();
+      alert.info('Something happened!').cta('Click here', noop);
+      alert.last.hide();
+      alert.state.should.be.false;
       should.not.exist(alert.message);
+      should.not.exist(alert.cta);
+    });
+  });
+});
+
+describe('useAlert()', () => {
+  describe('hiding alert after 7 seconds', () => {
+    it('hides a success alert after 7 seconds', async () => {
+      const clock = sinon.useFakeTimers();
+      const { alert, toast } = createAlerts();
+      withSetup(() => useAlert(toast, ref(null)));
+      alert.success('Something good!');
+      await clock.tickAsync(6999);
+      alert.state.should.be.true;
+      await clock.tickAsync(1);
+      alert.state.should.be.false;
+    });
+
+    it('does not hide a non-success alert', async () => {
+      const clock = sinon.useFakeTimers();
+      const { alert, toast } = createAlerts();
+      withSetup(() => useAlert(toast, ref(null)));
+      alert.info('Something happened!');
+      await clock.tickAsync(7000);
+      alert.state.should.be.true;
+    });
+
+    it('restarts the clock for each new alert', async () => {
+      const clock = sinon.useFakeTimers();
+      const { alert, toast } = createAlerts();
+      withSetup(() => useAlert(toast, ref(null)));
+
+      alert.success('Something good!');
+      await clock.tickAsync(6999);
+      alert.state.should.be.true;
+      alert.success('Something else good!');
+      await clock.tickAsync(1);
+      alert.state.should.be.true;
+      await clock.tickAsync(6998);
+      alert.state.should.be.true;
+      await clock.tickAsync(1);
+      alert.state.should.be.false;
+
+      alert.success('Something good again!');
+      await clock.tickAsync(6999);
+      alert.info('Something happened!');
+      await clock.tickAsync(1);
+      alert.state.should.be.true;
+      await clock.tickAsync(6999);
+      alert.state.should.be.true;
+    });
+  });
+
+  describe('hiding alert after user clicks an a[target="_blank"]', () => {
+    beforeEach(mockLogin);
+
+    const preventDefault = (event) => { event.preventDefault(); };
+    beforeAll(() => {
+      document.addEventListener('click', preventDefault);
+    });
+    afterAll(() => {
+      document.removeEventListener('click', preventDefault);
+    });
+
+    it('hides the alert', async () => {
+      const app = await load('/', { attachTo: document.body });
+      app.vm.$container.alert.info('Something happened!');
+      await app.getComponent(Home).get('a[target="_blank"]').trigger('click');
+      app.should.not.alert();
+    });
+
+    it('does not hide the alert if it was shown after the click', async () => {
+      const app = await load('/', { attachTo: document.body });
+      const a = app.getComponent(Home).get('a[target="_blank"]');
+      a.element.addEventListener('click', () => {
+        app.vm.$container.alert.info('Something happened!');
+      });
+      a.trigger('click');
+      app.should.alert();
     });
   });
 });

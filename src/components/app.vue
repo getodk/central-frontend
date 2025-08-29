@@ -10,71 +10,116 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div :class="features">
     <!-- If the user's session is restored during the initial navigation, that
     will affect how the navbar is rendered. -->
-    <navbar v-show="routerReady"/>
-    <alert id="app-alert"/>
-    <!-- Specifying .capture so that an alert is not hidden immediately if it
-    was shown after the click. -->
-    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
-    <div class="container-fluid" @click.capture="hideAlertAfterClick">
+    <navbar v-if="!standalone" v-show="routerReady"/>
+    <outdated-version/>
+    <alerts/>
+    <feedback-button v-if="showsFeedbackButton"/>
+    <div v-if="routerReady && !standalone" ref="containerEl" class="container-fluid">
       <router-view/>
     </div>
+    <template v-else-if="standalone">
+      <router-view/>
+    </template>
+
+    <div id="modals"></div>
     <div id="tooltips"></div>
+    <hover-cards/>
   </div>
 </template>
 
 <script>
-import { START_LOCATION } from 'vue-router';
+import { computed, defineAsyncComponent, inject, useTemplateRef } from 'vue';
 
-import Alert from './alert.vue';
+import { START_LOCATION, useRouter, useRoute } from 'vue-router';
+
+import Alerts from './alerts.vue';
 import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
+import useFeatureFlags from '../composables/feature-flags';
+import { loadAsync } from '../util/load-async';
+import { useAlert } from '../alert';
 import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 
 export default {
   name: 'App',
-  components: { Alert, Navbar },
-  inject: ['alert'],
+  components: {
+    Alerts,
+    HoverCards: defineAsyncComponent(loadAsync('HoverCards')),
+    Navbar,
+    FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
+    OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))
+  },
+  inject: ['alert', 'config', 'location'],
   setup() {
-    useSessions();
+    const router = useRouter();
+    const route = useRoute();
+    const { toast } = inject('container');
+
+    const { visiblyLoggedIn } = useSessions();
     useDisabled();
+
+    const containerEl = useTemplateRef('containerEl');
+    useAlert(toast, containerEl);
+
+    // Add background color to the html tag; this is done to avoid magenta
+    // splash on standalone routes such as FormPreview.
+    router.isReady()
+      .then(() => {
+        if (!route.meta.standalone)
+          document.documentElement.style.backgroundColor = 'var(--color-accent-secondary)';
+      });
+
+    const standalone = computed(() => route.meta.standalone);
+    const { features } = useFeatureFlags();
 
     const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();
-    return { centralVersion, callWait };
+    return { visiblyLoggedIn, centralVersion, callWait, features, standalone };
   },
   computed: {
     routerReady() {
       return this.$route !== START_LOCATION;
-    }
+    },
+    showsFeedbackButton() {
+      return this.config.loaded && this.config.showsFeedbackButton &&
+        this.visiblyLoggedIn;
+    },
   },
   created() {
     this.callWait('checkVersion', this.checkVersion, (tries) =>
       (tries === 0 ? 15000 : 60000));
   },
+  // Reset backgroundColor after each test.
+  beforeUnmount() {
+    document.documentElement.style.backgroundColor = '';
+  },
   methods: {
     checkVersion() {
-      const previousVersion = this.centralVersion.data;
+      const previousVersion = this.centralVersion.versionText;
       return this.centralVersion.request({
         url: '/version.txt',
         clear: false,
         alert: false
       })
         .then(() => {
-          if (previousVersion == null || this.centralVersion.data === previousVersion)
+          if (previousVersion == null || this.centralVersion.versionText === previousVersion)
             return false;
 
           // Alert the user about the version change, then keep alerting them.
-          // One benefit of this approach is that the user should see the alert
-          // even if there is another alert (say, about session expiration).
+          // One benefit of this approach is that the user should see the toast
+          // even if there is another toast (say, about session expiration).
           this.callWait(
-            'alertVersionChange',
-            () => { this.alert.info(this.$t('alert.versionChange')); },
+            'versionChange',
+            () => {
+              this.alert.info(this.$t('alert.versionChange'))
+                .cta(this.$t('action.refreshPage'), () => { this.location.reload(); });
+            },
             (count) => (count === 0 ? 0 : 60000)
           );
           return true;
@@ -83,47 +128,7 @@ export default {
         // requests.
         .catch(error =>
           (error.response != null && error.response.status === 404));
-    },
-    hideAlertAfterClick(event) {
-      if (this.alert.state && event.target.closest('a[target="_blank"]') != null &&
-        !event.defaultPrevented) {
-        this.alert.blank();
-      }
     }
   }
 };
 </script>
-
-<style lang="scss">
-@import '../assets/scss/variables';
-
-#app-alert {
-  border-bottom: 1px solid transparent;
-  border-left: 1px solid transparent;
-  border-right: 1px solid transparent;
-  left: 50%;
-  margin-left: -250px;
-  position: fixed;
-  text-align: center;
-  top: 34px;
-  width: 500px;
-  // 1 greater than the Bootstrap maximum
-  z-index: 1061;
-
-  &.alert-success {
-    border-color: $color-success;
-  }
-
-  &.alert-info {
-    border-color: $color-info;
-  }
-
-  &.alert-danger {
-    border-color: $color-danger;
-  }
-}
-
-body.modal-open #app-alert {
-  display: none;
-}
-</style>

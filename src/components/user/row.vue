@@ -26,9 +26,7 @@ except according to the terms contained in the LICENSE file.
             <option value="admin">{{ $t('role.admin') }}</option>
             <option value="">{{ $t('role.none') }}</option>
           </select>
-          <span class="spinner-container">
-            <spinner :state="awaitingResponse"/>
-          </span>
+          <spinner :state="awaitingResponse"/>
         </div>
       </form>
     </td>
@@ -46,7 +44,7 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.editProfile') }}
             </router-link>
           </li>
-          <li :class="{ disabled }">
+          <li v-if="!config.oidcEnabled" :class="{ disabled }">
             <a class="reset-password" href="#"
               v-tooltip.aria-describedby="disabled ? $t('cannotResetPassword') : null"
               @click.prevent="$emit('reset-password', user)">
@@ -78,6 +76,7 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'UserRow',
   components: { Spinner },
+  inject: ['config'],
   props: {
     user: {
       type: Object,
@@ -141,12 +140,6 @@ export default {
     .form-control {
       display: inline-block;
       width: 150px;
-    }
-
-    .spinner-container {
-      margin-left: 15px;
-      // Spinner is positioned absolutely.
-      position: relative;
     }
   }
 }
@@ -249,6 +242,17 @@ export default {
       "retire": "ユーザーの除外"
     }
   },
+  "pt": {
+    "cannotAssignRole": "Você não pode alterar a sua própria função do site.",
+    "field": {
+      "sitewideRole": "Função do site"
+    },
+    "cannotResetPassword": "Você não pode redefinir sua própria senha nesta página. Para alterar sua senha, edite seu perfil.",
+    "cannotRetire": "Você não pode desativar você mesmo.",
+    "action": {
+      "retire": "Desativar usuário"
+    }
+  },
   "sw": {
     "cannotAssignRole": "Huenda usihariri Jukumu lako la Tovuti nzima.",
     "field": {
@@ -258,6 +262,17 @@ export default {
     "cannotRetire": "Huenda usistaafu mwenyewe.",
     "action": {
       "retire": "Staafu mtumiaji"
+    }
+  },
+  "zh-Hant": {
+    "cannotAssignRole": "您不得編輯自己的網站範圍角色",
+    "field": {
+      "sitewideRole": "全站角色"
+    },
+    "cannotResetPassword": "您無法在此頁面重設您自己的密碼。若要變更您的密碼，請編輯您的個人資料。",
+    "cannotRetire": "您無法自己停用。",
+    "action": {
+      "retire": "停用使用者"
     }
   }
 }

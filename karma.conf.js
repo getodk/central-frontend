@@ -7,10 +7,22 @@ This config is based on:
   - https://github.com/Nikku/karma-browserify
 */
 
+// eslint-disable-next-line import/no-unresolved
+const VueI18nPlugin = require('@intlify/unplugin-vue-i18n/webpack');
+const { resolve } = require('node:path');
 // eslint-disable-next-line import/extensions
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
+webpackConfigForKarma.plugins.push(VueI18nPlugin({
+  include: resolve(__dirname, './src/locales/**'),
+  compositionOnly: false,
+  defaultSFCLang: 'json5',
+  // `false` doesn't work for some reason. When `false` is specified, Vue I18n
+  // warns that it's been installed already.
+  fullInstall: true,
+  dropMessageCompiler: true
+}));
 webpackConfigForKarma.devtool = 'inline-source-map';
 // See additional warning information.
 webpackConfigForKarma.stats = {
@@ -18,6 +30,10 @@ webpackConfigForKarma.stats = {
   children: true,
   errorDetails: true
 };
+webpackConfigForKarma.module.rules.push({
+  test: /\.xml$/,
+  use: 'raw-loader'
+});
 
 module.exports = (config) => {
   config.set({
@@ -25,15 +41,16 @@ module.exports = (config) => {
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
-      { pattern: 'public/images/*', served: true, included: false },
       { pattern: 'public/blank.html', served: true, included: false },
-      { pattern: 'test/files/*', served: true, included: false }
+      { pattern: 'test/files/*', served: true, included: false },
+      { pattern: 'src/assets/images/whats-new/*', served: true, included: false }
     ],
     proxies: {
       '/fonts/': '/base/public/fonts/',
-      '/img/entities-intro.b0dd3b62.svg': '/base/public/images/entities-intro.svg',
       '/blank.html': '/base/public/blank.html',
-      '/test/files/': '/base/test/files/'
+      '/test/files/': '/base/test/files/',
+      '/img/banner@2x.d6298b0b.png': '/base/src/assets/images/whats-new/banner@2x.png', // Image in what's new modal with hash
+      '/img/banner@1x.13a17571.png': '/base/src/assets/images/whats-new/banner@1x.png' // Smaller resolution for circleCI test
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
@@ -42,6 +59,9 @@ module.exports = (config) => {
     browsers: ['ChromeHeadless'],
     reporters: ['spec'],
     singleRun: true,
+    client: {
+      mocha: { grep: process.env.TEST_PATTERN || '.' }
+    },
     customLaunchers: {
       ChromeDebugging: {
         base: 'Chrome',

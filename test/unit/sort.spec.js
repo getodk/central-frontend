@@ -17,26 +17,28 @@ describe('util/sort', () => {
       testData.extendedForms.createPast(1, { name: 'C', lastSubmission: ago({ days: 15 }).toISO() });
       testData.extendedForms.createPast(1, { name: 'D', lastSubmission: ago({ days: 20 }).toISO() });
       testData.extendedForms.createPast(1, { name: 'E', lastSubmission: ago({ days: 10 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'F', lastSubmission: ago({ days: 5 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'G', lastSubmission: ago({ days: 12 }).toISO() });
       testData.extendedForms.createPast(1, { name: 'A' });
       testData.extendedForms.createPast(1, { name: 'B' });
     });
 
-    it('can sort forms by latest submission including breaking ties (null submissions) alphabetically', () => {
+    it('can sort forms by latest activity including breaking ties (null submissions) alphabetically', () => {
       const forms = testData.extendedForms.sorted();
       forms.sort(sortFunctions.latest);
-      forms.map((form) => form.name).should.eql(['E', 'C', 'D', 'A', 'B']);
+      forms.map((form) => form.name).should.eql(['F', 'E', 'G', 'C', 'D', 'A', 'B']);
     });
 
     it('can sort forms alphabetically', () => {
       const forms = testData.extendedForms.sorted();
       forms.sort(sortFunctions.alphabetical);
-      forms.map((form) => form.name).should.eql(['A', 'B', 'C', 'D', 'E']);
+      forms.map((form) => form.name).should.eql(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
     });
 
     it('can sort forms by newest creation', () => {
       const forms = testData.extendedForms.sorted();
       forms.sort(sortFunctions.newest);
-      forms.map((form) => form.name).should.eql(['B', 'A', 'E', 'D', 'C']);
+      forms.map((form) => form.name).should.eql(['B', 'A', 'G', 'F', 'E', 'D', 'C']);
     });
   });
 
@@ -59,26 +61,27 @@ describe('util/sort', () => {
     beforeEach(() => {
       testData.extendedProjects.createPast(1, { name: 'A', lastSubmission: ago({ days: 15 }).toISO() });
       testData.extendedProjects.createPast(1, { name: 'D', lastSubmission: ago({ days: 10 }).toISO() });
+      testData.extendedProjects.createPast(1, { name: 'E', lastSubmission: ago({ days: 10 }).toISO(), lastEntity: ago({ days: 5 }).toISO() });
       testData.extendedProjects.createPast(1, { name: 'B' });
       testData.extendedProjects.createPast(1, { name: 'C' });
     });
 
-    it('can sort projects by latest submission including breaking ties (null submissions) alphabetically', () => {
+    it('can sort projects by latest activity including breaking ties (null submissions/entities) alphabetically', () => {
       const projects = testData.extendedProjects.sorted();
       projects.sort(sortFunctions.latest);
-      projects.map((project) => project.name).should.eql(['D', 'A', 'B', 'C']);
+      projects.map((project) => project.name).should.eql(['E', 'D', 'A', 'B', 'C']);
     });
 
     it('can sort projects alphabetically', () => {
       const projects = testData.extendedProjects.sorted();
       projects.sort(sortFunctions.alphabetical);
-      projects.map((project) => project.name).should.eql(['A', 'B', 'C', 'D']);
+      projects.map((project) => project.name).should.eql(['A', 'B', 'C', 'D', 'E']);
     });
 
     it('can sort projects by newest creation date', () => {
       const projects = testData.extendedProjects.sorted();
       projects.sort(sortFunctions.newest);
-      projects.map((project) => project.name).should.eql(['C', 'B', 'D', 'A']);
+      projects.map((project) => project.name).should.eql(['C', 'B', 'E', 'D', 'A']);
     });
   });
 });

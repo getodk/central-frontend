@@ -11,106 +11,93 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <page-back :to="[projectPath(), projectPath()]">
-      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.forms') }}</template>
-    </page-back>
-    <div id="form-head-form-nav" class="row">
-      <div class="col-xs-12">
-        <div class="row">
-          <!-- Using .col-xs-6 so that if the form name is long, it is not
-          behind #form-head-draft-nav. -->
-          <div class="col-xs-6">
-            <div v-if="form.dataExists" class="h1" v-tooltip.text>
-              {{ form.nameOrId }}
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-6">
-            <ul id="form-head-form-tabs" class="nav nav-tabs">
-              <!-- Using rendersFormTabs rather than canRoute(), because we want
-              to render the tabs even if the form does not have a published
-              version (in which case canRoute() will return `false`). -->
-              <li v-if="rendersFormTabs" :class="formTabClass('')"
-                role="presentation">
-                <router-link :to="tabPath('')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('common.tab.overview') }}
-                </router-link>
-              </li>
-              <!-- No v-if, because anyone who can navigate to the form should
-              be able to navigate to .../versions and .../submissions. -->
-              <li :class="formTabClass('versions')" role="presentation">
-                <router-link :to="tabPath('versions')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('formHead.tab.versions') }}
-                </router-link>
-              </li>
-              <li :class="formTabClass('submissions')" role="presentation">
-                <router-link :to="tabPath('submissions')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('resource.submissions') }}
-                </router-link>
-              </li>
-              <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
-                role="presentation">
-                <router-link :to="tabPath('public-links')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('formHead.tab.publicAccess') }}
-                </router-link>
-              </li>
-              <li v-if="rendersFormTabs" :class="formTabClass('settings')"
-                role="presentation">
-                <router-link :to="tabPath('settings')"
-                  v-tooltip.aria-describedby="formTabDescription">
-                  {{ $t('common.tab.settings') }}
-                </router-link>
-              </li>
-            </ul>
-          </div>
-          <div v-if="rendersDraftNav" id="form-head-draft-nav"
-            class="col-xs-6" :class="{ 'draft-exists': formDraft.isDefined() }">
-            <span id="form-head-draft-nav-title">{{ $t('draftNav.title') }}</span>
-            <button v-show="formDraft.isEmpty()"
-              id="form-head-create-draft-button" type="button"
-              class="btn btn-primary" @click="$emit('create-draft')">
-              <span class="icon-plus-circle"></span>{{ $t('draftNav.action.create') }}
-            </button>
-            <ul v-show="formDraft.isDefined()" class="nav nav-tabs">
-              <li v-if="canRoute(tabPath('draft'))" :class="tabClass('draft')"
-                role="presentation">
-                <router-link :to="tabPath('draft')">
-                  {{ $t('formHead.draftNav.tab.status') }}
-                </router-link>
-              </li>
-              <li v-if="canRoute(tabPath('draft/attachments'))"
-                :class="tabClass('draft/attachments')" role="presentation">
-                <router-link :to="tabPath('draft/attachments')">
-                  {{ $t('resource.formAttachments') }}
-                  <template v-if="attachments.dataExists">
-                    <span v-show="attachments.missingCount !== 0" class="badge">
-                      {{ $n(attachments.missingCount, 'default') }}
-                    </span>
-                  </template>
-                </router-link>
-              </li>
-              <li v-if="canRoute(tabPath('draft/testing'))"
-                :class="tabClass('draft/testing')" role="presentation">
-                <router-link :to="tabPath('draft/testing')">
-                  {{ $t('formHead.draftNav.tab.testing') }}
-                </router-link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
+    <page-head>
+      <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
+      <template #infonav>
+        <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
+          && uniqueDatasetCount > 0">
+          <template #title>
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
+          </template>
+          <template #dropdown>
+            <li v-if="formDatasetDiff.length > 0">
+              <span class="dropdown-header">{{ $t('infoNav.updatedDatasets') }}</span>
+            </li>
+            <li v-for="dataset in formDatasetDiff" :key="dataset.name">
+              <dataset-link :name="dataset.name" :project-id="project.id"/>
+            </li>
+            <li v-if="formDatasetDiff.length > 0 && publishedAttachments.linkedDatasets.length > 0"><hr class="dropdown-divider"></li>
+            <li v-if="publishedAttachments.linkedDatasets.length > 0">
+              <span class="dropdown-header">{{ $t('infoNav.attachedDatasets') }}</span>
+            </li>
+            <li v-for="dataset in publishedAttachments.linkedDatasets" :key="dataset">
+              <dataset-link :name="dataset" :project-id="project.id"/>
+            </li>
+          </template>
+        </infonav>
+        <infonav v-if="appUserCount.dataExists" :link="projectPath('form-access')">
+          <template #title><span class="icon-user"></span>{{ $tc('infoNav.appUsers', appUserCount.data) }}</template>
+        </infonav>
+      </template>
+      <template #tabs>
+        <!-- No v-if, because anyone who can navigate to the form should be able
+        to navigate to .../submissions and .../versions. -->
+        <li :class="formTabClass('submissions')" role="presentation">
+          <router-link :to="tabPath('submissions')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('resource.submissions') }}
+            <span v-if="form.dataExists" class="badge">
+              {{ $n(form.submissions, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <!-- Using rendersFormTabs rather than canRoute(), because we want to
+        render the tabs even if the form does not have a published version (in
+        which case canRoute() will return `false`). -->
+        <li v-if="rendersFormTabs" :class="formTabClass('public-links')"
+          role="presentation">
+          <router-link :to="tabPath('public-links')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('formHead.tab.publicAccess') }}
+            <span v-if="form.dataExists" class="badge">
+              {{ $n(form.publicLinks, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <li v-if="canRoute(tabPath('draft'))" id="form-head-draft-tab"
+          :class="tabClass('draft')" role="presentation">
+          <router-link :to="tabPath('draft')">
+            <span>{{ $t('formHead.tab.editForm') }}</span>
+            <span class="icon-pencil"></span>
+          </router-link>
+        </li>
+        <li :class="formTabClass('versions')" role="presentation">
+          <router-link :to="tabPath('versions')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('formHead.tab.versions') }}
+          </router-link>
+        </li>
+        <li v-if="rendersFormTabs" :class="formTabClass('settings')"
+          role="presentation">
+          <router-link :to="tabPath('settings')"
+            v-tooltip.aria-describedby="formTabDescription">
+            {{ $t('common.tab.settings') }}
+            <span v-if="form.dataExists" class="badge">
+              {{ $t(`formState.${form.state}`) }}
+            </span>
+          </router-link>
+        </li>
+      </template>
+    </page-head>
   </div>
 </template>
 
 <script>
-import PageBack from '../page/back.vue';
+import Breadcrumbs from '../breadcrumbs.vue';
+import Infonav from '../infonav.vue';
+import DatasetLink from '../dataset/link.vue';
+import PageHead from '../page/head.vue';
 
 import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';
@@ -118,18 +105,17 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormHead',
-  components: { PageBack },
-  emits: ['create-draft'],
+  components: { Breadcrumbs, DatasetLink, Infonav, PageHead },
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, form, formDraft, attachments, resourceStates } = useRequestData();
-    const { dataExists } = resourceStates([project, form, formDraft, attachments]);
+    const { project, form, formDatasetDiff, publishedAttachments, appUserCount } = useRequestData();
 
     const { projectPath, formPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(formPath());
     return {
-      project, form, formDraft, attachments, dataExists,
+      project, form,
+      formDatasetDiff, publishedAttachments, appUserCount,
       projectPath, formPath, canRoute, tabPath, tabClass
     };
   },
@@ -142,9 +128,18 @@ export default {
         ? this.$t('formNav.tabTitle')
         : null;
     },
-    rendersDraftNav() {
-      return this.dataExists &&
-        (this.formDraft.isDefined() || this.project.permits('form.update'));
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath(), icon: 'icon-archive' },
+        { text: this.form.dataExists ? this.form.nameOrId : this.$t('resource.form'), path: this.form.publishedAt != null ? this.formPath() : '', icon: 'icon-file' }
+      ];
+    },
+    uniqueDatasetCount() {
+      const uniqueDatasets = new Set([
+        ...this.formDatasetDiff.map(dataset => dataset.name),
+        ...this.publishedAttachments.linkedDatasets
+      ]);
+      return uniqueDatasets.size;
     }
   },
   methods: {
@@ -159,64 +154,16 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
-
-$draft-nav-padding: 23px;
-$tab-li-margin-top: 5px;
-
-#form-head-form-nav {
-  background-color: $color-subpanel-background;
-  border-bottom: 1px solid $color-subpanel-border-strong;
-
-  .h1 {
-    @include text-overflow-ellipsis;
-    margin-bottom: -10px;
+#form-head-draft-tab {
+  a {
+    align-items: center;
+    column-gap: 5px;
+    display: flex;
   }
 
-  .nav-tabs > li {
-    // It might be simpler to move this margin to the .nav-tabs element so that
-    // fewer elements have margin.
-    margin-top: $tab-li-margin-top;
-  }
-}
-
-#form-head-form-tabs {
-  margin-top: $draft-nav-padding;
-
-  > li.active > a {
-    &, &:hover, &:focus { background-color: $color-subpanel-active; }
-  }
-}
-
-#form-head-draft-nav {
-  background-color: #ddd;
-  padding-top: $draft-nav-padding;
-  position: relative;
-
-  #form-head-draft-nav-title {
-    color: #666;
-    font-size: 12px;
-    position: absolute;
-    top: 7px;
-  }
-  &.draft-exists #form-head-draft-nav-title {
-    left: /* .col-xs-6 padding-left */ 15px +
-      /* .nav-tabs > li > a padding-left */ 8px;
-  }
-
-  #form-head-create-draft-button {
-    /*
-    6px =   1px (.nav-tabs > li > a has more top padding than .btn)
-          + 1px (.nav-tabs > li > a has more bottom padding)
-          + 1px (.nav-tabs > li > a has a bottom border)
-          + 3px (because .nav-tabs > li > a has a higher font size?)
-    */
-    margin-bottom: 6px;
-    margin-top: $tab-li-margin-top;
-  }
-
-  .nav-tabs > li.active > a {
-    &, &:hover, &:focus { background-color: $color-page-background; }
+  .icon-pencil {
+    color: #555;
+    font-size: 16px;
   }
 }
 </style>
@@ -230,15 +177,16 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      // Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc.
-      "tabTitle": "These functions will become available once you publish your Draft Form"
+      // Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc.
+      "tabTitle": "Publish this Draft Form to enable these functions"
     },
-    "draftNav": {
-      // This is shown above the navigation tabs for the Form Draft.
-      "title": "Draft",
-      "action": {
-        "create": "Create a new Draft"
-      },
+    "infoNav": {
+      "entityLists": "{count} Related Entity List | {count} Related Entity Lists",
+      // This text is shown as a header in a dropdown about related entity lists updated by this form.
+      "updatedDatasets": "Updates",
+      // This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form.
+      "attachedDatasets": "Uses",
+      "appUsers": "{count} App User assigned | {count} App Users assigned"
     }
   }
 }
@@ -252,15 +200,6 @@ $tab-li-margin-top: 5px;
       "action": {
         "back": "Zpět na přehled projektu"
       }
-    },
-    "formNav": {
-      "tabTitle": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře"
-    },
-    "draftNav": {
-      "title": "Koncept",
-      "action": {
-        "create": "Vytvořit nový koncept"
-      }
     }
   },
   "de": {
@@ -270,13 +209,13 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tabTitle": "Diese Funktionen stehen zur Verfügung, wenn Sie Ihren Entwurf veröffentlicht haben."
+      "tabTitle": "Veröffentlichen Sie diesen Formularentwurf, um diese Funktionen zu aktivieren"
     },
-    "draftNav": {
-      "title": "Entwurf",
-      "action": {
-        "create": "Neuen Entwurf erstellen"
-      }
+    "infoNav": {
+      "entityLists": "{count} Verwandte Entitätsliste | {count} Verwandte Entitätslisten",
+      "updatedDatasets": "Aktualisierungen",
+      "attachedDatasets": "Verwendet",
+      "appUsers": "{count} App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
     }
   },
   "es": {
@@ -286,13 +225,13 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tabTitle": "Estas funciones estarán disponibles una vez que publique su borrador de formulario."
+      "tabTitle": "Publique este borrador de formulario para habilitar estas funciones"
     },
-    "draftNav": {
-      "title": "Borrador",
-      "action": {
-        "create": "Crear un nuevo borrador"
-      }
+    "infoNav": {
+      "entityLists": "{count} Lista de entidades relacionadas | {count} Listas de entidades relacionadas | {count} Listas de entidades relacionadas",
+      "updatedDatasets": "Actualizaciones",
+      "attachedDatasets": "Usos",
+      "appUsers": "{count} Usuario de la aplicación asignados | {count} Usuarios de la aplicación asignados | {count} Usuarios de la aplicación asignados"
     }
   },
   "fr": {
@@ -302,28 +241,19 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tabTitle": "Ces fonctions seront disponibles quand vous publierez votre ébauche"
+      "tabTitle": "Publier cette Ébauche de Formulaire pour activer ces fonctions"
     },
-    "draftNav": {
-      "title": "Ébauche",
-      "action": {
-        "create": "Créer une nouvelle ébauche"
-      }
+    "infoNav": {
+      "entityLists": "{count} Liste d'Entité liée | {count} Listes d'Entité liées | {count} Liste(s) d'Entité liée(s)",
+      "updatedDatasets": "Mises à jour",
+      "attachedDatasets": "Utilise",
+      "appUsers": "{count} Utilisateur mobile assigné | {count} Utilisateurs mobile assignés | {count} Utilisateur(s) mobile assigné(s)"
     }
   },
   "id": {
     "projectNav": {
       "action": {
         "back": "Kembali ke Gambaran Proyek"
-      }
-    },
-    "formNav": {
-      "tabTitle": "Fungsi ini akan tersedia setelah Anda menerbitkan draf formulir Anda"
-    },
-    "draftNav": {
-      "title": "Draf",
-      "action": {
-        "create": "Buat draf baru"
       }
     }
   },
@@ -334,13 +264,13 @@ $tab-li-margin-top: 5px;
       }
     },
     "formNav": {
-      "tabTitle": "Queste funzioni diventeranno disponibili una volta che avrai pubblicato la tua bozza del formulario"
+      "tabTitle": "Pubblicare questa bozza di formulario per abilitare queste funzioni"
     },
-    "draftNav": {
-      "title": "Bozza",
-      "action": {
-        "create": "Crea una nuova bozza"
-      }
+    "infoNav": {
+      "entityLists": "{count} Elenco di entità correlate | {count} Elenchi di entità correlate | {count} Elenchi di entità correlate",
+      "updatedDatasets": "Aggiornamenti",
+      "attachedDatasets": "Utilizzi",
+      "appUsers": "{count} Utente App assegnato | {count} Utenti App assegnati | {count} Utenti App assegnati"
     }
   },
   "ja": {
@@ -348,15 +278,16 @@ $tab-li-margin-top: 5px;
       "action": {
         "back": "プロジェクトの概要に戻る"
       }
-    },
-    "formNav": {
-      "tabTitle": "これらの機能は下書きフォームが公開された際に有効になります。"
-    },
-    "draftNav": {
-      "title": "下書き",
+    }
+  },
+  "pt": {
+    "projectNav": {
       "action": {
-        "create": "新規下書きの作成"
+        "back": "Voltar à visão geral do projeto"
       }
+    },
+    "infoNav": {
+      "attachedDatasets": "Utiliza"
     }
   },
   "sw": {
@@ -364,15 +295,22 @@ $tab-li-margin-top: 5px;
       "action": {
         "back": "Rudi kwa Muhtasari wa Mradi"
       }
+    }
+  },
+  "zh-Hant": {
+    "projectNav": {
+      "action": {
+        "back": "返回專案概覽"
+      }
     },
     "formNav": {
-      "tabTitle": "Vipengele hivi vitapatikana mara tu utakapochapisha Rasimu ya Fomu yako"
+      "tabTitle": "發布此表格草稿以啟用這些功能"
     },
-    "draftNav": {
-      "title": "Rasimu",
-      "action": {
-        "create": "Unda Rasimu mpya"
-      }
+    "infoNav": {
+      "entityLists": "{count}個相關實體清單",
+      "updatedDatasets": "更新",
+      "attachedDatasets": "用途",
+      "appUsers": "已指派{count}位 App 使用者"
     }
   }
 }

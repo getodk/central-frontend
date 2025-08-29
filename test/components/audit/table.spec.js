@@ -3,6 +3,8 @@ import { RouterLinkStub } from '@vue/test-utils';
 import ActorLink from '../../../src/components/actor-link.vue';
 import AuditRow from '../../../src/components/audit/row.vue';
 import DateTime from '../../../src/components/date-time.vue';
+import FormLink from '../../../src/components/form/link.vue';
+import DatasetLink from '../../../src/components/dataset/link.vue';
 import Selectable from '../../../src/components/selectable.vue';
 
 import { ago } from '../../../src/util/date-time';
@@ -28,19 +30,23 @@ const testType = (row, type) => {
   else
     throw new Error('invalid type');
 };
-const testTarget = async (row, text, to = undefined) => {
+const testTarget = async (row, text, ...linkOptions) => {
   if (text === '') {
     row.get('.target').text().should.equal('');
-  } else if (to == null) {
+  } else if (linkOptions.length === 0) {
     const span = row.get('.target span');
     span.text().should.equal(text);
     await span.should.have.textTooltip();
+  } else if (typeof linkOptions[0] === 'string') {
+    testTarget(row, text, RouterLinkStub, (link) => {
+      link.props().to.should.equal(linkOptions[0]);
+    });
   } else {
-    const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
-      wrapper.element.closest('.target') != null);
+    const [component, f] = linkOptions;
+    const link = row.get('.target').getComponent(component);
     link.text().should.equal(text);
     await link.should.have.textTooltip();
-    link.props().to.should.equal(to);
+    if (f != null) f(link);
   }
 };
 
@@ -108,10 +114,10 @@ describe('AuditTable', () => {
         actee: deletedUser
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('User Name');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -149,10 +155,10 @@ describe('AuditTable', () => {
         actee: deletedProject
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My Project');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -162,15 +168,17 @@ describe('AuditTable', () => {
       ['form.create', ['Form', 'Create']],
       ['form.update', ['Form', 'Update Details']],
       ['form.update.draft.set', ['Form', 'Create or Update Draft']],
+      ['form.update.draft.replace', ['Form', 'Replace Draft']],
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
       ['form.submission.export', ['Form', 'Download Submissions']],
       ['form.delete', ['Form', 'Delete']],
-      ['form.restore', ['Form', 'Undelete']],
+      ['form.restore', ['Form', 'Restore']],
       ['form.purge', ['Form', 'Purge']],
       ['upgrade.process.form', ['Server Upgrade', 'Process Form']],
-      ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']]
+      ['upgrade.process.form.draft', ['Server Upgrade', 'Process Form Draft']],
+      ['upgrade.process.form.entities_version', ['Server Upgrade', 'Flag Form for Upgrade']]
     ];
 
     for (const [action, type] of cases) {
@@ -179,12 +187,14 @@ describe('AuditTable', () => {
           actor: testData.extendedUsers.first(),
           action,
           actee: testData.standardForms
-            .createPast(1, { xmlFormId: 'a b', name: 'My Form' })
+            .createPast(1, { name: 'My Form' })
             .last()
         });
         const row = mountComponent();
         testType(row, type);
-        await testTarget(row, 'My Form', '/projects/1/forms/a%20b');
+        await testTarget(row, 'My Form', FormLink, (link) => {
+          link.props().form.xmlFormId.should.equal('f');
+        });
       });
     }
 
@@ -199,10 +209,10 @@ describe('AuditTable', () => {
         actee: deletedForm
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My Form');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
 
@@ -265,18 +275,18 @@ describe('AuditTable', () => {
         actee: deletedActor
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My Public Link');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
 
   describe('dataset target', () => {
     const cases = [
-      ['dataset.create', ['Dataset', 'Create']],
-      ['dataset.update', ['Dataset', 'Update']]
+      ['dataset.create', ['Entity List', 'Create']],
+      ['dataset.update', ['Entity List', 'Update']]
     ];
 
     for (const [action, type] of cases) {
@@ -290,7 +300,9 @@ describe('AuditTable', () => {
         });
         const row = mountComponent();
         testType(row, type);
-        await testTarget(row, 'people');
+        await testTarget(row, 'people', DatasetLink, (link) => {
+          link.props().should.eql({ projectId: 1, name: 'people' });
+        });
       });
     }
   });
@@ -330,10 +342,10 @@ describe('AuditTable', () => {
         actee: deletedActor
       });
       const target = mountComponent().get('.target');
-      target.find('a').exists().should.be.false();
+      target.find('a').exists().should.be.false;
       target.get('span:nth-child(2)').text().should.equal('My App User');
       const icon = target.find('.icon-trash');
-      icon.exists().should.be.true();
+      icon.exists().should.be.true;
       await icon.should.have.tooltip('This resource has been deleted.');
     });
   });
@@ -345,11 +357,43 @@ describe('AuditTable', () => {
     await testTarget(row, '');
   });
 
-  it('renders an analytics audit correctly', async () => {
-    testData.extendedAudits.createPast(1, { action: 'analytics' });
-    const row = mountComponent();
-    testType(row, ['Report Usage']);
-    await testTarget(row, '');
+  describe('system logging without a target', () => {
+    it('renders an analytics audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'analytics' });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Report Usage']);
+      await testTarget(row, '');
+    });
+
+    it('renders a submission.purge audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'submission.purge' });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Purge Submissions']);
+      await testTarget(row, '');
+    });
+
+    it('renders a blobs.s3.upload audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'blobs.s3.upload' });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Upload Files to Storage']);
+      await testTarget(row, '');
+    });
+
+    it('renders a blobs.s3.failed-to-pending audit correctly', async () => {
+      testData.extendedAudits.createPast(1, {
+        action: 'blobs.s3.failed-to-pending'
+      });
+      const row = mountComponent();
+      testType(row, ['System Operation', 'Mark Files for Re-Upload to Storage']);
+      await testTarget(row, '');
+    });
+
+    it('renders an upgrade.server audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'upgrade.server' });
+      const row = mountComponent();
+      testType(row, ['Server Upgrade', 'New Version']);
+      await testTarget(row, '');
+    });
   });
 
   it('renders an audit with an unknown action correctly', () => {
@@ -409,7 +453,7 @@ describe('AuditTable', () => {
         actee: testData.toActor(testData.extendedUsers.first())
       });
       const row = mountComponent();
-      row.findComponent(ActorLink).exists().should.be.true();
+      row.findComponent(ActorLink).exists().should.be.true;
       const icon = row.get('.initiator .icon-trash');
       await icon.should.have.tooltip('This resource has been deleted.');
     });
@@ -436,7 +480,7 @@ describe('AuditTable', () => {
     selectable.text().should.equal('{"some":"json"}');
   });
 
-  it('renders a purged form row correctly', async () => {
+  it('renders a purged target correctly', async () => {
     testData.extendedAudits.createPast(1, {
       actor: testData.extendedUsers.first(),
       action: 'form.purge',
@@ -447,15 +491,18 @@ describe('AuditTable', () => {
       },
       details: { some: 'json' }
     });
-    const target = mountComponent().get('.target');
-    target.find('a').exists().should.be.false();
+    const component = mountComponent();
+
+    const target = component.get('.target');
+    target.find('a').exists().should.be.false;
     target.get('span:nth-child(2)').text().should.equal('Purged Form');
     const icon = target.find('.icon-trash');
-    icon.exists().should.be.true();
+    icon.exists().should.be.true;
     await icon.should.have.tooltip('This resource has been purged.');
+
     // The purged details aren't part of the audit and don't show up here
     // but the original details of the audit do
-    const selectable = mountComponent().getComponent(Selectable);
+    const selectable = component.getComponent(Selectable);
     selectable.text().should.equal('{"some":"json"}');
   });
 });

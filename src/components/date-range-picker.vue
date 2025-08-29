@@ -10,21 +10,29 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label class="form-group"><!-- eslint-disable-line vuejs-accessibility/label-has-for -->
+  <label id="date-range-picker-container" class="date-range-picker form-group" :class="{ disabled }">
+    <span class="icon-calendar"></span>
     <!-- We use a class to indicate whether the input is required, because
     flatpickr does not support the `required` attribute:
     https://github.com/ankurk91/vue-flatpickr-component/issues/47 -->
-    <flatpickr ref="flatpickr" v-model="flatpickrValue" :config="config"
-      class="form-control" :class="{ required }"
-      :placeholder="requiredLabel(placeholder, required)" autocomplete="off"
+    <span class="date-range-picker-label">{{ requiredLabel(label, required) }}</span>
+    <span class="display-value" aria-hidden="true">{{ displayValue }}</span>
+    <flatpickr id="datepicker" ref="flatpickr" v-model="flatpickrValue" :config="config"
+      class="form-control"
+      :class="{ required, 'flatpickr-input': true, 'has-value': modelValue.length === 2, none: modelValue.length === 0 }"
+      :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
+      :placeholder="placeholder" autocomplete="off"
+      @change="setDisplayValue"
+      @keydown="stopPropagationIfDisabled"
       @on-close="close"/>
     <template v-if="!required">
-      <button v-show="modelValue.length === 2" type="button" class="close"
+      <button v-show="modelValue.length === 2 && !disabled" type="button" class="close"
         :aria-label="$t('action.clear')" @click="clear">
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
+    <span v-show="required || modelValue.length < 2" aria-hidden="true" class="icon-angle-down">
+    </span>
   </label>
 </template>
 
@@ -41,8 +49,19 @@ import 'flatpickr/dist/l10n/fr';
 import 'flatpickr/dist/l10n/id';
 import 'flatpickr/dist/l10n/it';
 import 'flatpickr/dist/l10n/ja';
+import 'flatpickr/dist/l10n/pt';
+import 'flatpickr/dist/l10n/zh-tw';
 
+import { locales } from '../i18n';
 import { requiredLabel } from '../util/dom';
+
+// Map locales.
+const l10ns = {};
+for (const locale of locales.keys()) {
+  const l10n = flatpickr.l10ns[locale];
+  if (l10n != null) l10ns[locale] = l10n;
+}
+l10ns['zh-Hant'] = flatpickr.l10ns.zh_tw;
 
 export default {
   name: 'DateRangePicker',
@@ -57,9 +76,22 @@ export default {
       type: Boolean,
       default: false
     },
+    label: {
+      type: String,
+      required: true
+    },
+    // Displayed when no date is selected
     placeholder: {
       type: String,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    disabledMessage: {
+      type: String,
+      required: false
     }
   },
   emits: ['update:modelValue'],
@@ -71,25 +103,28 @@ export default {
       // We initialize this.flatpickrValue as an array of Date objects, but
       // vue-flatpickr-component will replace it with a string when the user
       // makes a selection.
-      flatpickrValue: this.modelValue.map(dateTime => dateTime.toJSDate())
+      flatpickrValue: this.modelValue.map(dateTime => dateTime.toJSDate()),
+      displayValue: ''
     };
   },
   computed: {
     config() {
-      const config = {
+      return {
         mode: 'range',
         // See https://github.com/flatpickr/flatpickr/issues/1549
-        dateFormat: 'Y/m/d'
+        dateFormat: 'Y/m/d',
+        locale: l10ns[this.$i18n.locale] ?? l10ns[this.$i18n.fallbackLocale],
+        clickOpens: !this.disabled
       };
-      const l10n = flatpickr.l10ns[this.$i18n.locale];
-      if (l10n != null) config.locale = l10n;
-      return config;
     }
   },
   watch: {
     modelValue(value) {
       this.flatpickrValue = value.map(dateTime => dateTime.toJSDate());
-    }
+    },
+  },
+  mounted() {
+    this.setDisplayValue();
   },
   methods: {
     // Converts an array of Date objects from a selection to an array of
@@ -141,12 +176,22 @@ export default {
       // https://github.com/ankurk91/vue-flatpickr-component/issues/33
       this.$refs.flatpickr.$el.focus();
       this.$refs.flatpickr.fp.close();
+    },
+    stopPropagationIfDisabled(e) {
+      if (this.disabled) {
+        e.stopPropagation();
+      }
+    },
+    setDisplayValue() {
+      const controlValue = this.$refs.flatpickr?.$el.value;
+      this.displayValue = controlValue || this.placeholder;
     }
   }
 };
 </script>
 
 <style lang="scss">
+@import '../assets/scss/mixins';
 @import '../assets/scss/variables';
 
 // The flatpickr input is readonly by default, but we do not want to style it as
@@ -157,14 +202,52 @@ export default {
   &::placeholder { color: $color-text; }
 }
 
-.form-inline .flatpickr-input {
-  // Leave space for the .close button.
-  width: 205px;
-  &.required { width: 193px };
+.form-group .flatpickr-input[aria-disabled="true"]::placeholder {
+  color: $color-input-inactive;
+}
 
-  &:lang(ja) {
+.form-inline .flatpickr-input {
+  width: 87px;
+
+  &.has-value {
+    // Leave space for the .close button.
+    width: 207px;
+    &.required { width: 193px };
+  }
+
+  &.has-value:lang(ja) {
     width: 252px;
     &.required { width: 240px; }
+  }
+
+  &.none {
+    font-style: italic;
+  }
+}
+
+#date-range-picker-container {
+  @include filter-control;
+
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+  .icon-angle-down {
+    font-size: 16px;
+    color: #555555;
+    font-weight: bold;
+    vertical-align: -4px;
+  }
+
+  // hide the flatpickr because we can't its width to fit-content
+  .form-control {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .close {
+    position: static;
+    transform: translateY(-2px);
   }
 }
 </style>

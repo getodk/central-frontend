@@ -1,11 +1,39 @@
 // Common tests for a series of request-response cycles
 
-import { pick } from 'ramda';
-
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
-import { withAuth } from '../../../src/util/request';
+import { relativeUrl } from '../request';
+
+const assertRequestsMatch = (actual, expected) => {
+  const { extended = false, ...expectedNormalized } = expected;
+  if (expectedNormalized.headers == null) expectedNormalized.headers = {};
+  if (extended) {
+    expectedNormalized.headers = { ...expectedNormalized.headers };
+    expectedNormalized.headers['X-Extended-Metadata'] = 'true';
+  }
+
+  (actual.method ?? 'GET').should.equal(expectedNormalized.method ?? 'GET');
+
+  if (typeof expectedNormalized.url === 'function') {
+    expectedNormalized.url.call(null, relativeUrl(actual.url));
+  } else {
+    actual.url.should.equal(expectedNormalized.url);
+  }
+
+  try {
+    expect(actual.data).to.eql(expectedNormalized.data);
+  } catch (error) {
+    try {
+      expect(JSON.stringify(actual.data)).to.equal(JSON.stringify(expectedNormalized.data));
+    } catch (_) {
+      throw error;
+    }
+  }
+
+  const { headers: expectedHeaders = {} } = expectedNormalized;
+  (actual.headers ?? {}).should.eql(expectedHeaders);
+};
 
 export function testRequests(expectedConfigs) {
   let count = 0;
@@ -17,30 +45,38 @@ export function testRequests(expectedConfigs) {
       // requests, and the afterResponses() hook will throw an error. If
       // expectedConfigs[i] == null, the request is intentionally not checked
       // (presumably because it is checked elsewhere).
-      if (i < expectedConfigs.length && expectedConfigs[i] != null) {
-        const normalized = pick(['method', 'url', 'headers', 'data'], config);
-        if (normalized.method == null) normalized.method = 'GET';
-        if (normalized.headers == null) normalized.headers = {};
+      if (i < expectedConfigs.length && expectedConfigs[i] != null)
+        assertRequestsMatch(config, expectedConfigs[i]);
+    })
+    .afterResponses(() => {
+      if (count !== expectedConfigs.length) {
+        const messageActual = count === 1
+          ? '1 request was sent'
+          : `${count} requests were sent`;
+        const messageExpected = expectedConfigs.length === 1
+          ? '1 was expected'
+          : `${expectedConfigs.length} were expected`;
+        throw new Error(`${messageActual}, but ${messageExpected}`);
+      }
+    });
+}
 
-        const { extended = false, ...expectedConfig } = expectedConfigs[i];
-        if (expectedConfig.method == null) expectedConfig.method = 'GET';
-        if (extended) {
-          expectedConfig.headers = {
-            ...expectedConfig.headers,
-            'X-Extended-Metadata': 'true'
-          };
-        }
-        const expectedWithAuth = withAuth(expectedConfig, component != null
-          ? component.vm.$container.requestData.session.token
-          : null);
-        if (expectedWithAuth.headers == null) expectedWithAuth.headers = {};
-
-        normalized.should.eql(expectedWithAuth);
+export function testRequestsInclude(expectedConfigs) {
+  const matched = [];
+  return this
+    .beforeEachResponse((component, config) => {
+      for (const [i, expected] of expectedConfigs.entries()) {
+        if (matched.includes(i)) continue; // eslint-disable-line no-continue
+        try {
+          assertRequestsMatch(config, expected);
+          matched.push(i);
+          return;
+        } catch (_) {}
       }
     })
     .afterResponses(() => {
-      if (count !== expectedConfigs.length)
-        throw new Error('unexpected number of requests');
+      if (matched.length !== expectedConfigs.length)
+        throw new Error('an expected request was not sent');
     });
 }
 
@@ -63,29 +99,34 @@ export function testModalToggles({
   // shown
   respond = (series) => series
 }) {
+  if (typeof modal === 'string')
+    throw new Error('modal must be a component, not a string');
+  const getModal = (component) => (modal === Modal
+    ? component.getComponent(Modal)
+    : component.getComponent(modal).getComponent(Modal));
   return this
     // First, test that the show button actually shows the modal.
     .afterResponses(component => {
-      component.getComponent(modal).props().state.should.be.false();
+      component.getComponent(modal).props().state.should.be.false;
     })
     .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
-      const m = component.getComponent(modal);
-      m.props().state.should.be.true();
+      const m = getModal(component);
+      m.props().state.should.be.true;
 
       // Next, test that `modal` listens for `hide` events from Modal.
       await m.get('.close').trigger('click');
-      m.props().state.should.be.false();
+      m.props().state.should.be.false;
     })
     // Finally, test that the hide button actually hides the modal.
     .request(component => component.get(show).trigger('click'))
     .modify(respond)
     .afterResponses(async (component) => {
-      const m = component.getComponent(modal);
-      m.props().state.should.be.true();
+      const m = getModal(component);
+      m.props().state.should.be.true;
       await m.get(hide).trigger('click');
-      m.props().state.should.be.false();
+      m.props().state.should.be.false;
     });
 }
 
@@ -94,29 +135,33 @@ export function testModalToggles({
 ////////////////////////////////////////////////////////////////////////////////
 // STANDARD BUTTON THINGS
 
-const assertStandardButton = (
-  component,
-  buttonSelector,
-  disabledSelectors,
+const assertStandardButton = (component, {
+  button: buttonSelector,
+  disabled: disabledSelectors,
   modal,
+  spinner: hasSpinner,
   awaitingResponse,
-  showsAlert
-) => {
+  alert: showsAlert
+}) => {
   const button = component.get(buttonSelector);
   (button.attributes('aria-disabled') === 'true').should.equal(awaitingResponse);
 
-  const spinners = component.findAllComponents(Spinner).filter(spinner =>
-    button.element.contains(spinner.element));
-  spinners.length.should.equal(1);
-  spinners[0].props().state.should.equal(awaitingResponse);
+  const spinner = button.findComponent(Spinner);
+  spinner.exists().should.equal(hasSpinner);
+  if (hasSpinner) spinner.props().state.should.equal(awaitingResponse);
 
   for (const selector of disabledSelectors) {
     const wrapper = component.get(selector);
-    (wrapper.attributes('aria-disabled') === 'true').should.equal(awaitingResponse);
+    const disabled = wrapper.element.tagName === 'A'
+      ? wrapper.classes('disabled')
+      : wrapper.attributes('aria-disabled') === 'true';
+    disabled.should.equal(awaitingResponse);
   }
 
   if (modal != null) {
-    const parent = (modal === true ? component : component.getComponent(modal));
+    const parent = modal === true || modal === Modal
+      ? component
+      : component.getComponent(modal);
     parent.getComponent(Modal).props().hideable.should.equal(!awaitingResponse);
   }
 
@@ -132,15 +177,21 @@ export function testStandardButton({
   // Selector for the button
   button,
   request = (component) => component.get(button).trigger('click'),
-  // Selectors for additional buttons that should be disabled during the request
+  // Selectors for additional actions that should be disabled during the request
   disabled = [],
   // Specifies a modal that should not be hideable during the request. If the
   // series' component is a modal, specify `true`. Otherwise, specify the modal
   // component.
-  modal = undefined
+  modal = undefined,
+  // `true` if the button is expected to contain a spinner and `false` if not.
+  spinner = true
 }) {
-  const assert = (awaitingResponse, showsModal) => (component) =>
-    assertStandardButton(component, button, disabled, modal, awaitingResponse, showsModal);
+  const assert = (awaitingResponse, alert) => (component) => {
+    assertStandardButton(
+      component,
+      { button, disabled, modal, spinner, awaitingResponse, alert }
+    );
+  };
   let series = this;
   if (request != null) {
     series = series.request(component => {

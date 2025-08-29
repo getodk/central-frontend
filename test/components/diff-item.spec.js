@@ -12,10 +12,10 @@ describe('DiffItem', () => {
       path: ['age']
     };
     const component = mountComponent(diff);
-    component.find('.full-path').exists().should.be.false();
+    component.find('.full-path').exists().should.be.false;
     component.get('.field-name').text().should.equal('age');
     component.get('.data-old').text().should.equal('15');
-    component.get('.icon-arrow-circle-right').exists().should.be.true();
+    component.get('.icon-arrow-circle-right').exists().should.be.true;
     component.get('.data-new').text().should.equal('17');
   });
 
@@ -59,7 +59,7 @@ describe('DiffItem', () => {
       path: ['name']
     };
     const component = mountComponent(diff);
-    component.find('.data-old').exists().should.be.false();
+    component.find('.data-old').exists().should.be.false;
     component.get('.data-empty').text().should.equal('empty');
     component.get('.data-new').text().should.equal('Stacy');
   });
@@ -75,12 +75,12 @@ describe('DiffItem', () => {
     };
     const component = mountComponent(diff);
     component.get('.full-path').text().should.equal('children › child › toy');
-    component.find('.diff-item.outer-item > .field-name').exists().should.be.false();
+    component.find('.diff-item.outer-item > .field-name').exists().should.be.false;
     component.get('.nested-change-type').text().should.equal('(added)');
-    component.get('.nested-change-type').classes('added').should.be.true();
+    component.get('.nested-change-type').classes('added').should.be.true;
     const nestedDiffs = component.findAll('.diff-item.inner-item');
     nestedDiffs.length.should.equal(3);
-    nestedDiffs[0].find('.data-old').exists().should.be.false();
+    nestedDiffs[0].find('.data-old').exists().should.be.false;
     nestedDiffs[0].get('.data-new').text().should.equal('Really Cool Toy');
   });
 
@@ -95,13 +95,13 @@ describe('DiffItem', () => {
     };
     const component = mountComponent(diff);
     component.get('.full-path').text().should.equal('children › child › toy');
-    component.find('.diff-item.outer-item > .field-name').exists().should.be.false();
+    component.find('.diff-item.outer-item > .field-name').exists().should.be.false;
     component.get('.nested-change-type').text().should.equal('(deleted)');
-    component.get('.nested-change-type').classes('deleted').should.be.true();
+    component.get('.nested-change-type').classes('deleted').should.be.true;
     const nestedDiffs = component.findAll('.diff-item.inner-item');
     nestedDiffs.length.should.equal(3);
     nestedDiffs[0].get('.data-old').text().should.equal('Really Cool Toy');
-    nestedDiffs[0].find('.data-new').exists().should.be.false();
+    nestedDiffs[0].find('.data-new').exists().should.be.false;
   });
 
   it('shows nested instance diffs correctly', () => {
@@ -124,7 +124,7 @@ describe('DiffItem', () => {
     component.get('.full-path').text().should.equal('children › child › toy');
     const nestedDiffs = component.findAll('.diff-item.inner-item');
     nestedDiffs.length.should.equal(6);
-    nestedDiffs[0].find('.full-path').exists().should.be.false();
+    nestedDiffs[0].find('.full-path').exists().should.be.false;
     nestedDiffs[0].get('.field-name').text().should.equal('name');
     nestedDiffs[0].get('.data-new').text().should.equal('Really Cool Toy');
     nestedDiffs[3].get('.full-path').text().should.equal('manufacturer');
@@ -159,7 +159,7 @@ describe('DiffItem', () => {
     component.get('.full-path').text().should.equal('children › child #2');
     const nestedDiffs = component.findAll('.diff-item.inner-item');
     nestedDiffs.length.should.equal(6);
-    nestedDiffs[0].find('.full-path').exists().should.be.false();
+    nestedDiffs[0].find('.full-path').exists().should.be.false;
     nestedDiffs[0].get('.field-name').text().should.equal('first_name');
     nestedDiffs[0].get('.data-old').text().should.equal('Windy');
     nestedDiffs[5].get('.full-path').text().should.equal('toys › toy #2');
@@ -214,8 +214,8 @@ describe('DiffItem', () => {
     nestedDiffs.length.should.equal(1);
     nestedDiffs[0].get('.field-name').text().should.equal('name');
     nestedDiffs[0].findAll('.data-empty').length.should.equal(2);
-    nestedDiffs[0].find('.data-old').exists().should.be.false();
-    nestedDiffs[0].find('.data-new').exists().should.be.false();
+    nestedDiffs[0].find('.data-old').exists().should.be.false;
+    nestedDiffs[0].find('.data-new').exists().should.be.false;
   });
 
   describe('slot', () => {
@@ -250,7 +250,7 @@ describe('DiffItem', () => {
       });
       const nestedDiffs = component.findAll('.diff-item.inner-item');
       nestedDiffs.length.should.equal(3);
-      nestedDiffs[0].find('.data-old').exists().should.be.false();
+      nestedDiffs[0].find('.data-old').exists().should.be.false;
       const text = nestedDiffs[0].get('.data-new').text();
       text.should.equal('children.child.toy/name: Really Cool Toy (new)');
     });

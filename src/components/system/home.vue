@@ -33,11 +33,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SystemHome'
-};
-</script>
 <script setup>
 import { inject } from 'vue';
 
@@ -45,6 +40,10 @@ import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
 import useTabs from '../../composables/tabs';
+
+defineOptions({
+  name: 'SystemHome'
+});
 
 const { tabPath, tabClass } = useTabs('/system');
 const config = inject('config');

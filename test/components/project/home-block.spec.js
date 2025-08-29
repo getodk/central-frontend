@@ -2,6 +2,7 @@ import { RouterLinkStub } from '@vue/test-utils';
 
 import ProjectHomeBlock from '../../../src/components/project/home-block.vue';
 import FormRow from '../../../src/components/project/form-row.vue';
+import DatasetRow from '../../../src/components/project/dataset-row.vue';
 
 import useProjects from '../../../src/request-data/projects';
 
@@ -15,6 +16,7 @@ import { testRequestData } from '../../util/request-data';
 const mountComponent = () => {
   const projectData = { ...testData.extendedProjects.last() };
   projectData.formList = testData.extendedForms.sorted();
+  projectData.datasetList = testData.extendedDatasets.sorted();
   const container = createTestContainer({
     requestData: testRequestData([useProjects], { projects: [projectData] }),
     router: mockRouter('/')
@@ -25,7 +27,7 @@ const mountComponent = () => {
       project: projects[0],
       // This is a placeholder sort function. The real one will be
       // passed through from project/list.vue
-      sortFunc: (a, b) => a.xmlFormId.localeCompare(b.xmlFormId)
+      sortFunc: (a, b) => (a.xmlFormId ? a.xmlFormId.localeCompare(b.xmlFormId) : a.name.localeCompare(b.name))
       // maxForms prop defaults to 3 and that default is used in the following tests.
       // Tests that alter maxForms can be found in project/list.spec.js
     },
@@ -46,13 +48,13 @@ describe('ProjectHomeBlock', () => {
   it('shows the encrypted label for encrypted forms', () => {
     const key = testData.standardKeys.createPast(1, { managed: true }).last();
     testData.extendedProjects.createPast(1, { key });
-    mountComponent().find('.encrypted').exists().should.be.true();
+    mountComponent().find('.encrypted').exists().should.be.true;
   });
 
   it('shows empty table when there are zero forms', () => {
     testData.extendedProjects.createPast(1);
     const table = mountComponent().find('.project-form-table');
-    table.exists().should.be.false();
+    table.exists().should.be.false;
   });
 
   it('shows the correct number of forms if there are only a few', () => {
@@ -60,7 +62,7 @@ describe('ProjectHomeBlock', () => {
     testData.extendedForms.createPast(3);
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
-    block.find('.expand-button').exists().should.be.false();
+    block.find('.expand-button').exists().should.be.false;
   });
 
   it('shows the correct number of forms if there are a lot and some should be hidden', () => {
@@ -69,9 +71,9 @@ describe('ProjectHomeBlock', () => {
     const block = mountComponent();
     block.findAllComponents(FormRow).length.should.equal(3);
     const expand = block.find('.expand-button');
-    expand.exists().should.be.true();
-    expand.text().should.equal('Show 4 total');
-    expand.find('.icon-angle-down').exists().should.be.true();
+    expand.exists().should.be.true;
+    expand.text().should.equal('Show 4 total Forms');
+    expand.find('.icon-angle-down').exists().should.be.true;
   });
 
   it('expands the forms to show more forms', async () => {
@@ -82,8 +84,8 @@ describe('ProjectHomeBlock', () => {
     const expand = block.find('.expand-button');
     await expand.trigger('click');
     block.findAllComponents(FormRow).length.should.equal(4);
-    expand.text().should.equal('Show fewer of 4 total');
-    expand.find('.icon-angle-up').exists().should.be.true();
+    expand.text().should.equal('Show fewer of 4 total Forms');
+    expand.find('.icon-angle-up').exists().should.be.true;
   });
 
   it('sorts the forms by a given sort function', () => {
@@ -125,10 +127,127 @@ describe('ProjectHomeBlock', () => {
     testData.extendedForms.createPast(1, { name: 'e' });
     const block = mountComponent();
     const expand = block.find('.expand-button');
-    expand.exists().should.be.true();
-    expand.text().should.equal('Show 4 total');
+    expand.exists().should.be.true;
+    expand.text().should.equal('Show 4 total Forms');
     await expand.trigger('click');
     const rows = block.findAllComponents(FormRow);
     rows.map((row) => row.props().form.name).should.eql(['a', 'c', 'd', 'e']);
+  });
+
+  it('shows the correct number of forms and datasets if there are only a few', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedForms.createPast(3);
+    testData.extendedDatasets.createPast(3);
+    const block = mountComponent();
+    block.findAllComponents(FormRow).length.should.equal(3);
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    block.find('.expand-button').exists().should.be.false;
+    block.find('.margin').exists().should.be.true;
+  });
+
+  it('shows the correct number of datasets if there are a lot and some should be hidden', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(4);
+    const block = mountComponent();
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    block.find('.project-form-row .expand-button').exists().should.be.false;
+    const expand = block.find('.project-dataset-row .expand-button');
+    expand.exists().should.be.true;
+    expand.text().should.equal('Show 4 total Entity Lists');
+    expand.find('.icon-angle-down').exists().should.be.true;
+    block.find('.margin').exists().should.be.false;
+  });
+
+  it('expands the datasets to show more datasets', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(4);
+    const block = mountComponent();
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    const expand = block.find('.project-dataset-row .expand-button');
+    await expand.trigger('click');
+    block.findAllComponents(DatasetRow).length.should.equal(4);
+    expand.text().should.equal('Show fewer of 4 total Entity Lists');
+    expand.find('.icon-angle-up').exists().should.be.true;
+  });
+
+  it('sorts the datasets by a given sort function', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(1, { name: 'Bravo' });
+    testData.extendedDatasets.createPast(1, { name: 'Charlie' });
+    testData.extendedDatasets.createPast(1, { name: 'Alpha' });
+    const block = mountComponent();
+    const { datasetList } = block.props().project;
+    datasetList.map((dataset) => dataset.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
+    const rows = block.findAllComponents(DatasetRow);
+    rows.map((row) => row.props().dataset.name).should.eql(['Alpha', 'Bravo', 'Charlie']);
+  });
+
+  it('shows the correct number of forms and datasets if there are a lot and some should be hidden', () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedForms.createPast(5);
+    testData.extendedDatasets.createPast(4);
+
+    const block = mountComponent();
+
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+    const formExpand = block.find('.project-form-row .expand-button');
+    formExpand.exists().should.be.true;
+    formExpand.text().should.equal('Show 5 total Forms');
+    formExpand.find('.icon-angle-down').exists().should.be.true;
+
+    block.findAllComponents(FormRow).length.should.equal(3);
+    const dsExpand = block.find('.project-dataset-row .expand-button');
+    dsExpand.exists().should.be.true;
+    dsExpand.text().should.equal('Show 4 total Entity Lists');
+    dsExpand.find('.icon-angle-down').exists().should.be.true;
+  });
+
+  it('sums conflicts for hidden datasets', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(6, { conflicts: 2 });
+    const block = mountComponent();
+    const expandingRow = block.findAll('.project-dataset-row')[3];
+
+    // there is a caption text 'hidden'
+    expandingRow.find('.conflict-caption').text().should.equal('hidden');
+
+    // conflicts are summed up for the hidden rows
+    const hiddenConflictCell = expandingRow.find('.conflicts-count a');
+    hiddenConflictCell.text().should.equal('6 conflicts');
+
+    // conflict badge expands the rows
+    await hiddenConflictCell.trigger('click');
+    const expand = expandingRow.find('.expand-button');
+    expand.text().should.equal('Show fewer of 6 total Entity Lists');
+  });
+
+  it('sums conflicts for hidden datasets with sort function', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(1, { conflicts: 2, name: 'Alpha', lastEntity: '2023-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 3, name: 'Bravo', lastEntity: '2020-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 2, name: 'Charlie', lastEntity: '2020-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 5, name: 'Delta', lastEntity: '2023-01-01' });
+    testData.extendedDatasets.createPast(1, { conflicts: 3, name: 'Echo', lastEntity: '2023-01-01' });
+    const block = mountComponent();
+    const expandingRow = block.findAll('.project-dataset-row')[3];
+
+    // conflicts are summed up for the hidden rows
+    const hiddenConflictCell = expandingRow.find('.conflicts-count a');
+    hiddenConflictCell.text().should.equal('8 conflicts'); // sum of Delta & Echo
+
+    await block.setProps({ sortFunc: (a, b) => b.lastEntity.localeCompare(a.lastEntity) });
+    hiddenConflictCell.text().should.equal('5 conflicts'); // sum of Bravo & Charlie
+  });
+
+  it('shows nothing when there is no conflict', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.extendedDatasets.createPast(4);
+    const block = mountComponent();
+    block.findAllComponents(DatasetRow).length.should.equal(3);
+
+    // nothing is show in conflict column when there's no conflict
+    const expandingRow = block.findAll('.project-dataset-row')[3];
+    expandingRow.find('.conflicts-count').exists().should.be.false;
+    expandingRow.find('.conflict-caption').exists().should.be.false;
   });
 });

@@ -15,26 +15,25 @@ except according to the terms contained in the LICENSE file.
       <tr>
         <th>{{ $t('header.name') }}</th>
         <th>{{ $t('header.published') }}</th>
-        <th>{{ $t('header.definition') }}</th>
+        <th>{{ $t('header.actions') }}</th>
       </tr>
     </thead>
     <tbody v-if="formVersions.dataExists">
-      <form-version-row v-for="version of formVersions" :key="version.version"
-        :version="version" @view-xml="$emit('view-xml')"/>
+      <form-version-row v-for="(version, index) in formVersions"
+        :key="version.version" :version="version" :current="index === 0"
+        @view-xml="$emit('view-xml')"/>
     </tbody>
   </table>
 </template>
 
-<script>
-export default {
-  name: 'FormVersionTable'
-};
-</script>
 <script setup>
 import FormVersionRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'FormVersionTable'
+});
 defineEmits(['view-xml']);
 
 // The component does not assume that this data will exist when the component is
@@ -112,10 +111,22 @@ const { formVersions } = useRequestData();
       "definition": "定義フォーム"
     }
   },
+  "pt": {
+    "header": {
+      "published": "Publicado",
+      "definition": "Definição"
+    }
+  },
   "sw": {
     "header": {
       "published": "Imechapishwa",
       "definition": "Ufafanuzi"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "published": "已發布",
+      "definition": "定義"
     }
   }
 }

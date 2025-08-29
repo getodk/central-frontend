@@ -28,9 +28,9 @@ const createData = (roles) => {
   }
 };
 const changeQ = (component, q) => {
-  const input = component.get('#project-user-list-search-form input');
-  input.element.value = q;
-  return input.trigger('change');
+  const input = component.get('#search-textbox input');
+  input.setValue(q);
+  return input.trigger('keydown', { key: 'enter' });
 };
 // Changes the role select element of the first row of the table.
 const changeRole = (component, systemOrNone) => {
@@ -77,16 +77,7 @@ describe('ProjectUserList', () => {
         createData(['none']);
         return load('/projects/1/users', { root: false })
           .beforeEachResponse(component => {
-            const input = component.get('#project-user-list-search-form input');
-            input.attributes('aria-disabled').should.equal('true');
-          });
-      });
-
-      it('hides the .close button', () => {
-        createData(['none']);
-        return load('/projects/1/users', { root: false })
-          .beforeEachResponse(component => {
-            component.get('.close').should.be.hidden();
+            component.getComponent('#search-textbox').props().disabled.should.be.true;
           });
       });
     });
@@ -261,7 +252,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            component.getComponent(Spinner).props().state.should.be.true();
+            component.getComponent(Spinner).props().state.should.be.true;
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -273,8 +264,7 @@ describe('ProjectUserList', () => {
           .complete()
           .request(component => changeRole(component, 'viewer'))
           .beforeEachResponse(component => {
-            const input = component.get('#project-user-list-search-form input');
-            input.attributes('aria-disabled').should.equal('true');
+            component.getComponent('#search-textbox').props().disabled.should.be.true;
           })
           .respondWithSuccess()
           .respondWithSuccess();
@@ -374,18 +364,12 @@ describe('ProjectUserList', () => {
   describe('during a search request', () => {
     it('hides the assignments', () =>
       search({ root: false }).beforeAnyResponse(component => {
-        component.find('tbody tr').exists().should.be.false();
+        component.find('tbody tr').exists().should.be.false;
       }));
 
-    it('does not disable the search input', () =>
+    it('sets the value of SearchTextbox', () =>
       search({ root: false }).beforeAnyResponse(component => {
-        const input = component.get('#project-user-list-search-form input');
-        input.attributes('aria-disabled').should.equal('false');
-      }));
-
-    it('shows the .close button', () =>
-      search({ root: false }).beforeAnyResponse(component => {
-        component.get('.close').should.be.visible();
+        component.getComponent('#search-textbox').props().modelValue.should.be.eql('some search term');
       }));
 
     it('allows another search, canceling the first search', () =>
@@ -434,11 +418,6 @@ describe('ProjectUserList', () => {
         tr[3].get('select').element.value.should.equal(
           standardRoles.find(role => role.system === 'viewer').id.toString()
         );
-      }));
-
-    it('shows the .close button', () =>
-      search({ root: false }).afterResponse(component => {
-        component.get('.close').should.be.visible();
       }));
   });
 
@@ -496,15 +475,9 @@ describe('ProjectUserList', () => {
         })
         .sorted());
 
-    it('disables the search input during the request', () =>
+    it('clears the value of SearchTextbox', () =>
       giveRoleThenClearSearch().beforeAnyResponse(component => {
-        const input = component.get('#project-user-list-search-form input');
-        input.attributes('aria-disabled').should.equal('true');
-      }));
-
-    it('hides the .close button during the request', () =>
-      giveRoleThenClearSearch().beforeAnyResponse(component => {
-        component.get('.close').should.be.hidden();
+        component.getComponent('#search-textbox').props().modelValue.should.be.eql('');
       }));
 
     it('shows the assignments after the .close button is clicked', () =>

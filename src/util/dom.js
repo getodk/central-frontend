@@ -29,7 +29,8 @@ for (const [propName, styleName = propName] of [
   ['marginTop'],
   ['marginRight'],
   ['marginBottom'],
-  ['marginLeft']
+  ['marginLeft'],
+  ['lineHeight']
 ]) {
   Object.defineProperty(StyleBox.prototype, propName, {
     get() {
@@ -44,10 +45,23 @@ for (const [propName, styleName = propName] of [
 
 export const styleBox = (style) => new StyleBox(style);
 
+// Returns `true` if the text of the element is truncated and `false` if not.
+// Works with both the text-overflow and the line-clamp mixins. `element` must
+// be a block element.
+export const truncatesText = (element) =>
+  (element.scrollWidth > element.clientWidth ||
+  (element.scrollHeight > element.clientHeight &&
+  getComputedStyle(element)['-webkit-line-clamp'] !== 'none'));
+
 export const requiredLabel = (text, required) => {
   const star = required ? ' *' : '';
   return `${text}${star}`;
 };
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TABLE ROW ANIMATIONS
 
 export const markRowsChanged = (trs) => {
   for (const tr of trs) tr.dataset.markRowsChanged = 'true';
@@ -55,6 +69,15 @@ export const markRowsChanged = (trs) => {
   // transition: see app.scss. The CSS specifies the duration of the transition.
   setTimeout(() => {
     for (const tr of trs) tr.dataset.markRowsChanged = 'false';
-  });
+  }, 6000);
 };
 export const markRowChanged = (tr) => { markRowsChanged([tr]); };
+
+export const markRowsDeleted = (trs) => {
+  for (const tr of trs) tr.dataset.markRowsDeleted = 'true';
+  setTimeout(
+    () => { for (const tr of trs) tr.dataset.markRowsDeleted = 'false'; },
+    750
+  );
+};
+export const markRowDeleted = (tr) => { markRowsDeleted([tr]); };

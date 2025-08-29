@@ -24,24 +24,19 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse" @click="archive">
-          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.noCancel') }}
+        </button>
+        <button type="button" class="btn btn-danger"
+          :aria-disabled="awaitingResponse" @click="archive">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
   </modal>
 </template>
 
-<script>
-export default {
-  name: 'ProjectArchive'
-};
-</script>
 <script setup>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -50,6 +45,9 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'ProjectArchive'
+});
 defineProps({
   state: {
     type: Boolean,
@@ -164,6 +162,16 @@ const archive = () => {
       }
     ]
   },
+  "pt": {
+    "title": "Arquivando o projeto",
+    "introduction": [
+      "Você está prestes a arquivar o projeto \"{name}\". Ele continuará funcionando como está agora, mas será exibido no final da lista de projetos da página principal do Central.",
+      {
+        "full": "{noUndo}, mas a possibilidade de desarquivar um projeto está planejada para uma versão futura.",
+        "noUndo": "Essa ação não pode ser desfeita"
+      }
+    ]
+  },
   "sw": {
     "title": "Mradi wa Kuhifadhi kumbukumbu",
     "introduction": [
@@ -171,6 +179,16 @@ const archive = () => {
       {
         "full": "{noUndo}, lakini uwezo wa kutoa Mradi kwenye kumbukumbu umepangwa kutolewa siku zijazo.",
         "noUndo": "Kitendo hiki hakiwezi kutenduliwa"
+      }
+    ]
+  },
+  "zh-Hant": {
+    "title": "歸檔專案",
+    "introduction": [
+      "您即將歸檔「{name}」專案。它仍一樣工作，但它將被排序到 Central 主頁項目清單的底部。",
+      {
+        "full": "{noUndo}，但計劃在未來版本中提供取消專案歸檔的功能。",
+        "noUndo": "此操作無法撤銷"
       }
     ]
   }

@@ -18,9 +18,15 @@ const mountComponent = (options) =>
     }
   }));
 const toggle = (component) => component.get('select').trigger('click');
+const apply = (component) => component.get('.action-bar button').trigger('click');
 const assertChecked = (component, checked) => {
   const inputs = component.findAll('input[type="checkbox"]');
   inputs.map(input => input.element.checked).should.eql(checked);
+};
+const assertDisabled = (component) => {
+  component.get('select').attributes('aria-disabled').should.equal('true');
+  component.get('select').attributes('aria-expanded').should.equal('false');
+  component.classes().should.not.contain('open');
 };
 
 describe('Multiselect', () => {
@@ -126,7 +132,7 @@ describe('Multiselect', () => {
       assertChecked(component, [false, true]);
     });
 
-    it('emits an update:modelValue event if a checkbox has changed', async () => {
+    it('emits an update:modelValue event apply button is clicked', async () => {
       const component = mountComponent({
         props: {
           options: [{ value: 0 }, { value: 1 }],
@@ -136,7 +142,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.findAll('input[type="checkbox"]')[1].setValue(true);
-      await toggle(component);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[0, 1]]]);
     });
 
@@ -185,7 +191,7 @@ describe('Multiselect', () => {
         });
         await toggle(component);
         await component.findAll('input[type="checkbox"]')[1].setValue(true);
-        await toggle(component);
+        await apply(component);
         await toggle(component);
         assertChecked(component, [true, true]);
       });
@@ -200,9 +206,9 @@ describe('Multiselect', () => {
         });
         await toggle(component);
         await component.findAll('input[type="checkbox"]')[1].setValue(true);
+        await apply(component);
         await toggle(component);
-        await toggle(component);
-        await toggle(component);
+        await apply(component);
         component.emitted('update:modelValue').length.should.equal(1);
       });
     });
@@ -242,6 +248,79 @@ describe('Multiselect', () => {
     assertChecked(component, [true, true]);
   });
 
+  describe('defaultToAll prop is true', () => {
+    describe('some (not all) options were checked, then were unchecked', () => {
+      it('emits all option values', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.get('input[type="checkbox"]').setValue(false);
+        await apply(component);
+        component.emitted('update:modelValue').should.eql([[[0, 1]]]);
+      });
+
+      it('checks all checkboxes again', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        await component.get('input[type="checkbox"]').setValue(false);
+        await toggle(component);
+        await component.setProps({ modelValue: [0, 1] });
+        await toggle(component);
+        assertChecked(component, [true, true]);
+      });
+    });
+
+    describe('all options were checked, then were unchecked', () => {
+      it('does not emit an event', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0, 1],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        const inputs = component.findAll('input[type="checkbox"]');
+        await inputs[0].setValue(false);
+        await inputs[1].setValue(false);
+        await toggle(component);
+        should.not.exist(component.emitted('update:modelValue'));
+      });
+
+      it('checks all checkboxes again', async () => {
+        const component = mountComponent({
+          props: {
+            options: [{ value: 0 }, { value: 1 }],
+            modelValue: [0, 1],
+            defaultToAll: true
+          },
+          attachTo: document.body
+        });
+        await toggle(component);
+        const inputs = component.findAll('input[type="checkbox"]');
+        await inputs[0].setValue(false);
+        await inputs[1].setValue(false);
+        await toggle(component);
+        await toggle(component);
+        assertChecked(component, [true, true]);
+      });
+    });
+  });
+
   describe('search', () => {
     const users = [
       { value: 1, text: 'Alice', description: 'Has a role of admin.' },
@@ -252,14 +331,14 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { search: 'Search' }
       });
-      component.find('.search').exists().should.be.true();
+      component.find('.search').exists().should.be.true;
     });
 
     it('does not show the input if the search prop is not specified', () => {
       const component = mountComponent({
         props: { search: null }
       });
-      component.find('.search').exists().should.be.false();
+      component.find('.search').exists().should.be.false;
     });
 
     it('uses the value of the search prop', () => {
@@ -381,7 +460,7 @@ describe('Multiselect', () => {
       await toggle(component);
       const input = component.get('.search input');
       await input.setValue('foo');
-      await toggle(component);
+      await apply(component);
       input.element.value.should.equal('');
     });
   });
@@ -481,7 +560,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.select-all').trigger('click');
-      await toggle(component);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[0, 1]]]);
     });
 
@@ -497,7 +576,7 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.search input').setValue('0');
       await component.get('.select-all').trigger('click');
-      await toggle(component);
+      await apply(component);
       assertChecked(component, [true, false]);
     });
   });
@@ -527,7 +606,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.select-none').trigger('click');
-      await toggle(component);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
     });
 
@@ -543,7 +622,7 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.search input').setValue('0');
       await component.get('.select-none').trigger('click');
-      await toggle(component);
+      await apply(component);
       assertChecked(component, [false, true]);
     });
   });
@@ -556,11 +635,13 @@ describe('Multiselect', () => {
       component.get('option').text().should.equal('Loading…');
     });
 
-    it('is disabled', () => {
+    it('is disabled', async () => {
       const component = mountComponent({
-        props: { options: null, loading: true }
+        props: { options: null, loading: true },
+        attachTo: document.body
       });
-      component.get('select').attributes('aria-disabled').should.equal('true');
+      await toggle(component);
+      assertDisabled(component);
     });
   });
 
@@ -572,11 +653,13 @@ describe('Multiselect', () => {
       component.get('option').text().should.equal('Error');
     });
 
-    it('is disabled', () => {
+    it('is disabled', async () => {
       const component = mountComponent({
-        props: { options: null, loading: false }
+        props: { options: null, loading: false },
+        attachTo: document.body
       });
-      component.get('select').attributes('aria-disabled').should.equal('true');
+      await toggle(component);
+      assertDisabled(component);
     });
   });
 
@@ -584,7 +667,7 @@ describe('Multiselect', () => {
     const component = mountComponent({
       props: { label: 'Review State' }
     });
-    component.get('.form-label').text().should.equal('Review State');
+    component.get('.multiselect-label').text().should.equal('Review State');
     const select = component.get('select');
     select.attributes('aria-label').should.equal('Review State');
   });
@@ -636,6 +719,20 @@ describe('Multiselect', () => {
         'after-list': { template: '<span id="foo"></span>' }
       }
     });
-    component.find('.after-list #foo').exists().should.be.true();
+    component.find('.after-list #foo').exists().should.be.true;
+  });
+
+  it('is disabled', async () => {
+    const component = mountComponent({
+      props: {
+        options: [{ value: 'foo' }],
+        disabled: true,
+        disabledMessage: 'disabled due to some reason.'
+      },
+      attachTo: document.body
+    });
+    await toggle(component);
+    assertDisabled(component);
+    component.get('select').should.have.ariaDescription('disabled due to some reason.');
   });
 });

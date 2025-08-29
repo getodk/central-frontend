@@ -9,26 +9,50 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
 <template>
   <div id="dataset-show">
-    <page-back v-show="dataExists" :to="[projectPath(), projectPath('datasets')]">
-      <template #title>{{ project.dataExists ? project.nameWithArchived : '' }}</template>
-      <template #back>{{ $t('resource.datasets') }}</template>
-    </page-back>
+    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
       <template #title>
         {{ datasetName }}
       </template>
+      <template #infonav>
+        <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0">
+          <template #title>
+            <span class="icon-magic-wand"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
+          </template>
+          <template #dropdown>
+            <li v-for="form in dataset.sourceForms" :key="form.xmlFormId">
+              <form-link :form="form" :to="publishedFormPath(form.projectId, form.xmlFormId)"/>
+            </li>
+          </template>
+        </infonav>
+        <infonav v-if="dataset.dataExists && dataset.linkedForms.length > 0">
+          <template #title>
+            <span class="icon-chain"></span>{{ $tc('infoNav.linkedForms', dataset.linkedForms.length) }}
+          </template>
+          <template #dropdown>
+            <li v-for="form in dataset.linkedForms" :key="form.xmlFormId">
+              <form-link :form="form" :to="publishedFormPath(form.projectId, form.xmlFormId)"/>
+            </li>
+          </template>
+        </infonav>
+      </template>
       <template #tabs>
-        <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">
-            {{ $t('common.tab.overview') }}
-          </router-link>
-        </li>
         <li :class="tabClass('entities')" role="presentation">
           <router-link :to="tabPath('entities')">
-            {{ $t('common.data') }}
+            {{ $t('resource.entities') }}
+            <span v-if="dataset.dataExists" class="badge">
+              {{ $n(dataset.entities, 'default') }}
+            </span>
+          </router-link>
+        </li>
+        <li :class="tabClass('properties')" role="presentation">
+          <router-link :to="tabPath('properties')">
+            {{ $t('resource.properties') }}
+            <span v-if="dataset.dataExists" class="badge">
+              {{ $n(dataset.properties.length, 'default') }}
+            </span>
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('settings'))" :class="tabClass('settings')" role="presentation">
@@ -40,14 +64,17 @@ except according to the terms contained in the LICENSE file.
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>
-      <router-view v-show="dataExists"/>
+      <router-view v-show="dataExists" @fetch-dataset="fetchDataset"/>
     </page-body>
   </div>
 </template>
 
 <script>
+import Breadcrumbs from '../breadcrumbs.vue';
+import FormLink from '../form/link.vue';
+
+import Infonav from '../infonav.vue';
 import Loading from '../loading.vue';
-import PageBack from '../page/back.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
 
@@ -60,8 +87,10 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetShow',
   components: {
+    Breadcrumbs,
+    FormLink,
+    Infonav,
     Loading,
-    PageBack,
     PageBody,
     PageHead
   },
@@ -80,12 +109,20 @@ export default {
     // component is created.
     const { project, dataset, resourceStates } = useRequestData();
 
-    const { projectPath, datasetPath, canRoute } = useRoutes();
+    const { projectPath, datasetPath, canRoute, publishedFormPath } = useRoutes();
     const { tabPath, tabClass } = useTabs(datasetPath());
     return {
       project, dataset, ...resourceStates([project, dataset]),
-      projectPath, datasetPath, tabPath, tabClass, canRoute
+      datasetPath, projectPath, tabPath, tabClass, canRoute, publishedFormPath
     };
+  },
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.nameWithArchived, path: this.projectPath('entity-lists'), icon: 'icon-archive' },
+        { text: this.datasetName, path: this.datasetPath(), icon: 'icon-database' }
+      ];
+    }
   },
   created() {
     this.fetchData();
@@ -117,8 +154,14 @@ export default {
 {
   "en": {
     // This is shown at the top of the page.
-    "back": "Back to Project Datasets"
-  }
+    "back": "Back to Project Entities",
+    "infoNav": {
+      // This dropdown title refers to Entity Lists that are updated by a Form.
+      "connectedForms": "Updated by {count} Form | Updated by {count} Forms",
+      // This dropdown title refers to Entity Lists that are linked to a Form.
+      "linkedForms": "Used in {count} Form | Used in {count} Forms"
+    }
+  },
 }
 </i18n>
 
@@ -126,22 +169,51 @@ export default {
 <i18n>
 {
   "cs": {
-    "back": "Zpět na datové sady projektu"
+    "back": "Zpět na projektové entity"
   },
   "de": {
-    "back": "Zurück zu den Projektdatensätzen"
+    "back": "Zurück zu den Projekteinheiten",
+    "infoNav": {
+      "connectedForms": "Update durch {count} Formular | Update durch {count} Formulare",
+      "linkedForms": "Verwendet in {count} Formular | Verwendet in {count} Formulare"
+    }
   },
   "es": {
-    "back": "Volver a conjuntos de datos del proyecto"
+    "back": "Back to Project Entities",
+    "infoNav": {
+      "connectedForms": "Actualizar por {count} formulario | Actualizar por {count} formularios | Actualizar por {count} formularios",
+      "linkedForms": "Utilizado en {count} formulario | Utilizado en {count} formularios | Utilizado en {count} formularios"
+    }
   },
   "fr": {
-    "back": "Retour aux Dataset du Projet"
+    "back": "Retour aux entités du projet",
+    "infoNav": {
+      "connectedForms": "Mise à jour par {count} Formulaire | Mise à jour par {count} Formulaires | Mise à jour par {count} Formulaire(s)",
+      "linkedForms": "Utilisée dans {count} Formulaire | Utilisée dans {count} Formulaires | Utilisée dans {count} Formulaire(s)"
+    }
   },
   "it": {
-    "back": "Torna ai set di dati del progetto"
+    "back": "Torna alle Entità del progetto",
+    "infoNav": {
+      "connectedForms": "Aggiornato da {count} Formulario | Aggiornato da {count} Formulari | Aggiornato da {count} Formulari",
+      "linkedForms": "Usato da {count} Formulario | Usato da {count} Formulari | Usato da {count} Formulari"
+    }
+  },
+  "pt": {
+    "back": "Voltar para Entidades do Projeto",
+    "infoNav": {
+      "linkedForms": "Utilizado em {count} Formulário | Utilizado em {count} Formulários | Utilizado em {count} Formulários"
+    }
   },
   "sw": {
-    "back": "Rudi kwenye Hifadhidata za Mradi"
+    "back": "Rudi kwenye vyombo vya Mradi"
+  },
+  "zh-Hant": {
+    "back": "返回專案實體",
+    "infoNav": {
+      "connectedForms": "由{count}個表格更新",
+      "linkedForms": "用於{count}個表格"
+    }
   }
 }
 </i18n>

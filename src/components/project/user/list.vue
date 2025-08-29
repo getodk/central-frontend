@@ -42,18 +42,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
     </div>
     <form id="project-user-list-search-form" class="form-inline"
       @submit.prevent>
-      <label class="form-group">
-        <input class="form-control" :value="q" :placeholder="searchLabel"
-          :aria-disabled="searchDisabled" autocomplete="off"
-          @change="changeQ($event.target.value)">
-        <!-- When search is disabled, we hide rather than disable this button,
-        because Bootstrap does not have CSS for .close[disabled]. -->
-        <button v-show="q !== '' && !searchDisabled" type="button" class="close"
-          :aria-label="$t('action.clearSearch')" @click="clearSearch">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <span class="form-label">{{ searchLabel }}</span>
-      </label>
+      <search-textbox v-model="searchTerm" :label="searchLabel" :disabled="searchDisabled"/>
     </form>
 
     <table class="table">
@@ -81,6 +70,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
 import DocLink from '../../doc-link.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
+import SearchTextbox from '../../search-textbox.vue';
 
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
@@ -88,7 +78,7 @@ import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, Loading, ProjectUserRow },
+  components: { DocLink, Loading, ProjectUserRow, SearchTextbox },
   inject: ['alert'],
   props: {
     projectId: {
@@ -117,7 +107,7 @@ export default {
   data() {
     return {
       // Search term
-      q: '',
+      searchTerm: '',
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
     };
@@ -142,7 +132,7 @@ export default {
     },
     // The assignments to show in the table
     tableAssignments() {
-      return this.q !== '' ? this.searchAssignments : this.projectAssignments;
+      return this.searchTerm !== '' ? this.searchAssignments : this.projectAssignments;
     },
     emptyMessage() {
       if (!(this.tableAssignments.dataExists && this.tableAssignments.length === 0))
@@ -150,6 +140,15 @@ export default {
       return this.tableAssignments === this.projectAssignments
         ? this.$t('emptyTable')
         : this.$t('common.noResults');
+    }
+  },
+  watch: {
+    searchTerm(searchTerm) {
+      if (!searchTerm) {
+        this.clearSearch();
+      } else {
+        this.search();
+      }
     }
   },
   created() {
@@ -168,19 +167,11 @@ export default {
     },
     clearSearch() {
       this.fetchData(true);
-      this.q = '';
       this.searchAssignments.data = null;
     },
     search() {
-      this.searchAssignments.request({ url: apiPaths.users({ q: this.q }) })
+      this.searchAssignments.request({ url: apiPaths.users({ q: this.searchTerm }) })
         .catch(noop);
-    },
-    changeQ(q) {
-      this.q = q;
-      if (this.q === '')
-        this.clearSearch();
-      else
-        this.search();
     },
     incrementCount() {
       this.assignRequestCount += 1;
@@ -229,8 +220,6 @@ export default {
 @import '../../../assets/scss/variables';
 
 #project-user-list-search-form .form-control {
-  // Add padding so that the .close button does not overlay long input text.
-  padding-right: 21px;
   width: 250px;
 }
 
@@ -252,7 +241,7 @@ export default {
       },
       {
         // This text is shown in a list of Roles.
-        "full": "{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data",
+        "full": "{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data",
         "projectViewers": "Project Viewers"
       },
       {
@@ -261,9 +250,6 @@ export default {
         "dataCollectors": "Data Collectors"
       }
     ],
-    "action": {
-      "clearSearch": "Clear search"
-    },
     "field": {
       "q": {
         "canList": "Search for a user…",
@@ -278,7 +264,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Something went wrong. “{displayName}” has been removed from the Project.",
       "assignRole": "Success! “{displayName}” has been given a Role of “{roleName}” on this Project.",
-      "unassignRole": "Success! “{displayName}” has been removed from this Project."
+      "unassignRole": "“{displayName}” has been removed from this Project."
     }
   }
 }
@@ -295,7 +281,7 @@ export default {
         "projectManagers": "Projektoví manažeři"
       },
       {
-        "full": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
+        "full": "{projectViewers} může přistupovat ke všem datům formulářů a entit v tomto projektu a stahovat je, ale nemůže provádět žádné změny nastavení nebo dat.",
         "projectViewers": "Prohlížeči Projektu"
       },
       {
@@ -303,9 +289,6 @@ export default {
         "dataCollectors": "Sběrači dat"
       }
     ],
-    "action": {
-      "clearSearch": "Vymazat vyhledávání"
-    },
     "field": {
       "q": {
         "canList": "Vyhledat uživatele…",
@@ -319,8 +302,7 @@ export default {
     "emptyTable": "K tomuto projektu zatím nejsou přiřazeni žádní uživatelé. Chcete-li přidat jednoho, vyhledejte uživatele výše.",
     "alert": {
       "unassignWithoutReassign": "Něco se pokazilo. „{displayName}“ Byl z projektu odstraněn.",
-      "assignRole": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“.",
-      "unassignRole": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
+      "assignRole": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“."
     }
   },
   "de": {
@@ -331,7 +313,7 @@ export default {
         "projectManagers": "Projekt-Manager"
       },
       {
-        "full": "{projectViewers} können auf alle Formulardaten in diesem Projekt zugreifen und sie herunterladen, aber können keine Änderungen an Einstellungen oder Daten durchführen.",
+        "full": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
         "projectViewers": "Projekt-Viewer"
       },
       {
@@ -339,9 +321,6 @@ export default {
         "dataCollectors": "Datensammler"
       }
     ],
-    "action": {
-      "clearSearch": "Suche löschen"
-    },
     "field": {
       "q": {
         "canList": "Suche nach einem Benutzer...",
@@ -355,8 +334,7 @@ export default {
     "emptyTable": "Es wurden noch keine Benutzer diesem Projekt zugewiesen. Um einen hinzuzufügen, suchen Sie oben nach einem Benutzer.",
     "alert": {
       "unassignWithoutReassign": "Irgendetwas hat nicht funktioniert. \"{displayName}\" wurde aus diesem Projekt entfernt.",
-      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen.",
-      "unassignRole": "\"{displayName}\" wurde erfolgreich aus dem Projekt entfernt."
+      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen."
     }
   },
   "es": {
@@ -367,7 +345,7 @@ export default {
         "projectManagers": "Administradores de proyecto"
       },
       {
-        "full": "{projectViewers} puede acceder y descargar todos los datos del Formulario en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
+        "full": "{projectViewers} puede acceder y descargar todos los datos de formularios y entidades en este proyecto, pero no puede realizar ningún cambio en la configuración o los datos.",
         "projectViewers": "Visores de proyecto"
       },
       {
@@ -375,9 +353,6 @@ export default {
         "dataCollectors": "Recolectores de datos"
       }
     ],
-    "action": {
-      "clearSearch": "Limpiar la búsqueda"
-    },
     "field": {
       "q": {
         "canList": "Buscar un usuario...",
@@ -392,7 +367,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Algo salió mal. \"{displayName}\" ha sido removido del proyecto",
       "assignRole": "A \"{displayName}\" se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto.",
-      "unassignRole": "\"{displayName}\" ha sido removido exitosamente de este proyecto."
+      "unassignRole": "\"{displayName}\" ha sido removido de este proyecto."
     }
   },
   "fr": {
@@ -403,7 +378,7 @@ export default {
         "projectManagers": "gestionnaires de projet"
       },
       {
-        "full": "Les {projectViewers} ont accès aux données de tous les formulaires de ce projet et peuvent les télécharger mais ne peuvent apporter aucune modification aux données ou paramètres.",
+        "full": "{projectViewers} peut/peuvent accéder et télécharger tous les Formulaires et entités dans ce Projet, mais ne peut/peuvent apporter aucun changement aux paramètres ou aux données.",
         "projectViewers": "lecteurs de projet"
       },
       {
@@ -411,9 +386,6 @@ export default {
         "dataCollectors": "collecteurs de données"
       }
     ],
-    "action": {
-      "clearSearch": "Effacer la recherche"
-    },
     "field": {
       "q": {
         "canList": "Rechercher un utilisateur...",
@@ -428,7 +400,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Quelque chose a mal tourné. \"{displayName}\" a été retiré du projet.",
       "assignRole": "Succès ! \"{displayName}\" a reçu un rôle de \"{roleName}\" dans ce projet.",
-      "unassignRole": "Succès ! “{displayName}” a été retiré de ce projet."
+      "unassignRole": "“{displayName}” a été retiré de ce projet."
     }
   },
   "id": {
@@ -438,18 +410,12 @@ export default {
         "full": "{projectManagers} bisa melakukan pekerjaan administratif apapun sehubungan dengan Proyek ini dan bisa mengisi formulir lewat web browser.",
         "projectManagers": "Manajer Proyek"
       },
-      {
-        "full": "{projectViewers} dapat mengakses dan mengunduh semua data formulir di Proyek ini, tetapi tidak bisa membuat perubahan terhadap pengaturan maupun data",
-        "projectViewers": "Pemerhati Proyek"
-      },
+      {},
       {
         "full": "{dataCollectors} dapat mengisi formulir di web browser, tetapi tidak bisa melihat atau mengubah data atau pengaturan.",
         "dataCollectors": "Pengumpul Data"
       }
     ],
-    "action": {
-      "clearSearch": "Hapus pencarian"
-    },
     "field": {
       "q": {
         "canList": "Cari pengguna...",
@@ -463,8 +429,7 @@ export default {
     "emptyTable": "Belum ada Pengguna yang ditugaskan dalam Proyek ini. Untuk menambah Pengguna, cari nama Pengguna di atas.",
     "alert": {
       "unassignWithoutReassign": "Terjadi kesalahan. \"{displayName}\" sudah dihapus dari Proyek.",
-      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini.",
-      "unassignRole": "Berhasil! \"{displayName}\" telah dihapus dari Proyek ini."
+      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini."
     }
   },
   "it": {
@@ -475,7 +440,7 @@ export default {
         "projectManagers": "Responsabili del progetto"
       },
       {
-        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
+        "full": "{projectViewers} possono accedere e scaricare tutti i dati del formulario e delle Entità di questo progetto, ma non possono apportare modifiche alle impostazioni o ai dati",
         "projectViewers": "Visualizzatori del progetto"
       },
       {
@@ -483,9 +448,6 @@ export default {
         "dataCollectors": "Raccoglitori di dati"
       }
     ],
-    "action": {
-      "clearSearch": "Cancella ricerca"
-    },
     "field": {
       "q": {
         "canList": "Cerca un utente...",
@@ -500,7 +462,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Qualcosa è andato storto. “{displayName}” è stato rimosso dal progetto.",
       "assignRole": "Successo! A \"{displayName}\" è stato assegnato un ruolo di \"{roleName}\" in questo progetto.",
-      "unassignRole": "Successo! \"{displayName}\" è stato rimosso da questo progetto."
+      "unassignRole": "\"{displayName}\" è stato rimosso da questo progetto."
     }
   },
   "ja": {
@@ -510,18 +472,12 @@ export default {
         "full": "{projectManagers}は、このプロジェクトに関連するあらゆる管理作業を行うことができ、Webブラウザでフォームを入力できます。",
         "projectManagers": "プロジェクト・マネージャー"
       },
-      {
-        "full": "{projectViewers}は、このプロジェクトの全てのフォームにアクセスし、ダウンロードできますが、設定やデータの変更はできません。",
-        "projectViewers": "プロジェクト・閲覧者"
-      },
+      {},
       {
         "full": "{dataCollectors}は、Webブラウザでフォームを入力できますが、データや設定を閲覧・変更はできません。",
         "dataCollectors": "データ収集者"
       }
     ],
-    "action": {
-      "clearSearch": "検索条件の解除"
-    },
     "field": {
       "q": {
         "canList": "ユーザーの検索",
@@ -535,8 +491,39 @@ export default {
     "emptyTable": "このプロジェクトに割り当てられたユーザーはまだいません。ユーザーを追加するには、上の検索ボックスでユーザーを検索してください。",
     "alert": {
       "unassignWithoutReassign": "問題が発生しました 。\"{displayName}\"はプロジェクトから除外されました。",
-      "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。",
-      "unassignRole": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
+      "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。"
+    }
+  },
+  "pt": {
+    "heading": [
+      "Administradores são automaticamente considerados gerentes de todos os projetos. Outros usuários de site podem ter funções específicas para esse projeto:",
+      {
+        "full": "{projectManagers} podem realizar qualquer tarefa administrativa relacionada a esse projeto e podem preencher formulários no navegador de internet.",
+        "projectManagers": "Gerentes de projeto"
+      },
+      {
+        "full": "{projectViewers} podem acessar e baixar todos os dados de Formulários e Entidades neste projeto, mas não podem fazer nenhuma alteração em configurações ou dados",
+        "projectViewers": "Observadores de projeto"
+      },
+      {
+        "full": "{dataCollectors} podem preencher Formulários em um navegador de internet, mas não podem ver ou fazer mudanças nos dados ou configurações.",
+        "dataCollectors": "Coletores de dados"
+      }
+    ],
+    "field": {
+      "q": {
+        "canList": "Localizar um usuário...",
+        "cannotList": "Inclua o endereço de email completo do(a) usuário(a)"
+      }
+    },
+    "header": {
+      "user": "Usuário",
+      "projectRole": "Função de projeto"
+    },
+    "emptyTable": "Não existem usuário designados para esse projeto ainda. Para adicionar um usuário utilize a busca acima.",
+    "alert": {
+      "unassignWithoutReassign": "Algo deu errado. \"{displayName}\" foi removido do projeto.",
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto."
     }
   },
   "sw": {
@@ -547,7 +534,7 @@ export default {
         "projectManagers": "Wasimamizi wa Mradi"
       },
       {
-        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data",
+        "full": "{projectViewers} inaweza kufikia na kupakua data yote ya Fomu na Huluki katika Mradi huu, lakini haiwezi kufanya mabadiliko yoyote kwenye mipangilio au data.",
         "projectViewers": "Watazamaji wa Mradi"
       },
       {
@@ -555,9 +542,6 @@ export default {
         "dataCollectors": "Wakusanyaji Data"
       }
     ],
-    "action": {
-      "clearSearch": "Futa utafutaji"
-    },
     "field": {
       "q": {
         "canList": "Tafuta mtumiaji...",
@@ -571,8 +555,40 @@ export default {
     "emptyTable": "Bado hakuna watumiaji waliokabidhiwa kwa Mradi huu. Ili kuongeza moja, tafuta mtumiaji hapo juu.",
     "alert": {
       "unassignWithoutReassign": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi.",
-      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu.",
-      "unassignRole": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
+      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu."
+    }
+  },
+  "zh-Hant": {
+    "heading": [
+      "網站管理員自動被視為每個專案的管理者。其他使用者可以擁有特定於此專案的角色：",
+      {
+        "full": "{projectManagers}可以執行與該專案相關的任何管理任務，並可以在網頁瀏覽器中填寫表格",
+        "projectManagers": "專案管理員"
+      },
+      {
+        "full": "{projectViewers}可以存取和下載此專案中的所有表單和實體數據，但無法對設定或數據進行任何更改",
+        "projectViewers": "專案瀏覽者"
+      },
+      {
+        "full": "{dataCollectors}在網頁瀏覽器中填寫表格，但無法查看或變更資料或設定",
+        "dataCollectors": "資料收集者"
+      }
+    ],
+    "field": {
+      "q": {
+        "canList": "搜尋使用者",
+        "cannotList": "輸入準確的使用者電子郵件地址..."
+      }
+    },
+    "header": {
+      "user": "使用者",
+      "projectRole": "專案角色"
+    },
+    "emptyTable": "尚未為該專案分配任何使用者。若要新增用戶，請在上面搜尋用戶。",
+    "alert": {
+      "unassignWithoutReassign": "出了些問題。 「{displayName}」已從專案中刪除。",
+      "assignRole": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。",
+      "unassignRole": "「{displayName}」已從本專案中刪除。"
     }
   }
 }

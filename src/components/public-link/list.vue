@@ -12,8 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="public-link-list">
     <div class="heading-with-button">
-      <button type="button" class="btn btn-primary"
-        @click="showModal('create')">
+      <button type="button" class="btn btn-primary" @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <p>
@@ -31,23 +30,24 @@ except according to the terms contained in the LICENSE file.
       </p>
       <i18n-t tag="p" keypath="heading[1].full">
         <template #clickHere>
-          <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
+          <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
         </template>
       </i18n-t>
     </div>
 
-    <public-link-table :highlighted="highlighted" @revoke="showRevoke"/>
+    <public-link-table :highlighted="highlighted"
+      @revoke="revokeModal.show({ publicLink: $event })"/>
     <loading :state="publicLinks.initiallyLoading"/>
     <p v-if="publicLinks.dataExists && publicLinks.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
 
-    <public-link-create v-bind="create" @hide="hideModal('create')"
+    <public-link-create v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
     <project-submission-options v-bind="submissionOptions"
-      @hide="hideModal('submissionOptions')"/>
-    <public-link-revoke v-bind="revoke" @hide="hideRevoke"
+      @hide="submissionOptions.hide()"/>
+    <public-link-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
       @success="afterRevoke"/>
   </div>
 </template>
@@ -61,9 +61,9 @@ import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -78,7 +78,6 @@ export default {
     PublicLinkTable,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -100,16 +99,9 @@ export default {
       // The id of the highlighted public link
       highlighted: null,
       // Modals
-      create: {
-        state: false
-      },
-      submissionOptions: {
-        state: false
-      },
-      revoke: {
-        state: false,
-        publicLink: null
-      }
+      createModal: modalData(),
+      submissionOptions: modalData(),
+      revokeModal: modalData()
     };
   },
   created() {
@@ -123,23 +115,15 @@ export default {
       }).catch(noop);
       this.highlighted = null;
     },
-    showRevoke(publicLink) {
-      this.revoke.publicLink = publicLink;
-      this.showModal('revoke');
-    },
-    hideRevoke() {
-      this.hideModal('revoke');
-      this.revoke.publicLink = null;
-    },
     afterCreate(publicLink) {
       this.fetchData(true);
-      this.hideModal('create');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create'));
       this.highlighted = publicLink.id;
     },
     afterRevoke(publicLink) {
       this.fetchData(true);
-      this.hideRevoke();
+      this.revokeModal.hide();
       this.alert.success(this.$t('alert.revoke', publicLink));
     }
   }
@@ -164,7 +148,7 @@ export default {
     ],
     "emptyTable": "There are no Public Access Links for this Form.",
     "alert": {
-      "create": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it.",
+      "create": "Your Public Access Link has been created and is now live. Copy it below to distribute it.",
       "revoke": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
     }
   }
@@ -190,7 +174,6 @@ export default {
     ],
     "emptyTable": "Pro tento formulář neexistují žádné veřejně přístupné odkazy.",
     "alert": {
-      "create": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho.",
       "revoke": "Veřejně přístupný odkaz „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
     }
   },
@@ -210,7 +193,6 @@ export default {
     ],
     "emptyTable": "Es gibt keine öffentlichen Zugangslinks für dieses Formular.",
     "alert": {
-      "create": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen.",
       "revoke": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
     }
   },
@@ -230,7 +212,7 @@ export default {
     ],
     "emptyTable": "No hay enlaces de acceso público para este formulario.",
     "alert": {
-      "create": "¡Operación exitosa! Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo.",
+      "create": "Su enlace de acceso público ha sido creado y está ahora en vivo. Cópialo abajo para distribuirlo.",
       "revoke": "El enlace de acceso público \"{displayName}\" fue revocado con éxito. No se aceptarán más envíos a través de este enlace."
     }
   },
@@ -250,7 +232,7 @@ export default {
     ],
     "emptyTable": "Il n'y a aucun lien d'accès public pour ce formulaire.",
     "alert": {
-      "create": "Succès! Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
+      "create": "Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
       "revoke": "Le lien d'accès public \"{displayName}\" a été révoqué avec succès. Aucune soumission ne sera acceptée depuis ce lien."
     }
   },
@@ -270,7 +252,6 @@ export default {
     ],
     "emptyTable": "Tidak ada Tautan Akses Publik untuk formulir ini.",
     "alert": {
-      "create": "Berhasil! Tautan Akses Publik telah dibuat dan aktif. Salin tautan di bawah untuk disebar.",
       "revoke": "Tautan Akses Publik \"{displayName}\" telah berhasil dicabut. Tidak akan ada lagi kiriman data baru yang diterima lewat tautan ini."
     }
   },
@@ -290,7 +271,7 @@ export default {
     ],
     "emptyTable": "Non ci sono link di accesso pubblico per questo formulario.",
     "alert": {
-      "create": "Riuscito! Il tuo link di accesso pubblico è stato creato ed è ora attivo. Copialo qui sotto per distribuirlo.",
+      "create": "Il tuo link di accesso pubblico è stato creato ed è ora attivo. Copialo qui sotto per distribuirlo.",
       "revoke": "Il link di accesso pubblico \"{displayName}\" è stato revocato con successo. Non saranno accettati ulteriori Invii utilizzando questo Link."
     }
   },
@@ -310,8 +291,26 @@ export default {
     ],
     "emptyTable": "このフォームに一般公開リンクはありません。",
     "alert": {
-      "create": "成功です！一般公開リンクが作成され、利用可能です。 以下をコピーして配布できます。",
       "revoke": "一般公開リンク\"{displayName}\"の無効化に成功しました。以後、このリンクでのサフォームの提出は受付られません。"
+    }
+  },
+  "pt": {
+    "action": {
+      "create": "Criar link de acesso público"
+    },
+    "heading": [
+      {
+        "full": "Qualquer pessoa com um link de acesso público pode preencher este formulário em um navegador de internet. Você pode criar vários links para rastrear distribuições diferentes do formulário, para limitar por quanto tempo um grupo específico de pessoas tem acesso ao formulário e muito mais. Esses links só funcionarão se o formulário estiver com {state} Aberto.",
+        "state": "status"
+      },
+      {
+        "full": "Links públicos destinam-se a preenchimento autônomo. Se você está trabalhando com coletores de dados que precisam responder o mesmo formulário várias vezes, {clickHere} para outras opções.",
+        "clickHere": "clique aqui"
+      }
+    ],
+    "emptyTable": "Não existem links de acesso público para esse formulário.",
+    "alert": {
+      "revoke": "O link de acesso público \"{displayName}\" foi revogado com sucesso. Nenhuma resposta usando esse link será aceita de agora em diante."
     }
   },
   "sw": {
@@ -330,8 +329,27 @@ export default {
     ],
     "emptyTable": "Hakuna Viungo vya Ufikiaji wa Umma vya Fomu hii.",
     "alert": {
-      "create": "Mafanikio! Kiungo chako cha Kufikia Umma kimeundwa na sasa kinapatikana. Nakili hapa chini ili kuisambaza.",
       "revoke": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "create": "建立公共訪問連結"
+    },
+    "heading": [
+      {
+        "full": "任何擁有公共存取連結的人都可以在網頁瀏覽器中填寫此表格。您可以建立多個連結來追蹤表單的不同分發、限制特定人群存取表單的時間等等。只有當表單處於「開放{state}」時，這些連結才有效。",
+        "state": "狀態"
+      },
+      {
+        "full": "公共連結用於自我報告。如果您與需要多次提交相同表單的資料收集者合作，請{clickHere}以了解其他選項。",
+        "clickHere": "點擊此處"
+      }
+    ],
+    "emptyTable": "此表格沒有公共存取連結。",
+    "alert": {
+      "create": "您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。",
+      "revoke": "公共存取連結“{displayName}”已成功撤銷。使用此連結將不再接受任何提交。"
     }
   }
 }

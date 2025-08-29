@@ -8,7 +8,6 @@ import useSubmissions from '../../../src/request-data/submissions';
 import createTestContainer from '../../util/container';
 import testData from '../../data';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
-import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
 
@@ -17,11 +16,13 @@ const mountComponent = (options = undefined) => {
     props: {
       projectId: '1',
       xmlFormId: 'f',
-      draft: false
+      draft: false,
+      awaitingDeletedResponses: new Set()
     },
     container: {
       requestData: testRequestData([useFields, useSubmissions], {
         project: testData.extendedProjects.last(),
+        form: testData.extendedForms.last(),
         fields: testData.extendedForms.last()._fields,
         odata: {
           status: 200,
@@ -32,7 +33,7 @@ const mountComponent = (options = undefined) => {
     }
   });
   merged.container.router = mockRouter(merged.props.draft
-    ? '/projects/1/forms/f/draft/testing'
+    ? '/projects/1/forms/f/draft'
     : '/projects/1/forms/f/submissions');
   merged.container = createTestContainer(merged.container);
   const { requestData } = merged.container;
@@ -50,7 +51,12 @@ describe('SubmissionTable', () => {
         props: { draft: false }
       });
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['', 'Submitted by', 'Submitted at', 'State and actions']);
+      headers(table).should.eql([
+        'Row',
+        'Submitted by',
+        'Submitted at',
+        'State and actions'
+      ]);
     });
 
     it('renders the correct headers for a form draft', () => {
@@ -60,7 +66,21 @@ describe('SubmissionTable', () => {
         props: { draft: true }
       });
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['', 'Submitted at']);
+      headers(table).should.eql(['Row', 'Submitted at']);
+    });
+
+    it('renders the correct headers for deleted submissions', () => {
+      testData.extendedSubmissions.createPast(1);
+      const component = mountComponent({
+        props: { draft: false, deleted: true }
+      });
+      const table = component.get('.table-freeze-frozen');
+      headers(table).should.eql([
+        'Row',
+        'Submitted by',
+        'Submitted at',
+        'Deleted at'
+      ]);
     });
   });
 
@@ -114,22 +134,5 @@ describe('SubmissionTable', () => {
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
     rows.map(row => row.props().rowNumber).should.eql([10, 9]);
-  });
-
-  describe('canUpdate prop of SubmissionMetadataRow', () => {
-    it('passes true if the user can submission.update', () => {
-      mockLogin();
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.true();
-    });
-
-    it('passes false if the user cannot submission.update', () => {
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer', forms: 1 });
-      testData.extendedSubmissions.createPast(1);
-      const row = mountComponent().getComponent(SubmissionMetadataRow);
-      row.props().canUpdate.should.be.false();
-    });
   });
 });

@@ -14,18 +14,27 @@ except according to the terms contained in the LICENSE file.
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
-    <select :id="toggleId" ref="toggle" class="form-control"
-      :aria-disabled="options == null" data-toggle="dropdown" role="button"
-      aria-haspopup="true" aria-expanded="false" :aria-label="label"
-      @keydown="toggleAfterEnter" @mousedown.prevent>
-      <option value="">{{ selectOption }}</option>
-    </select>
-    <span class="form-label" aria-hidden="true">{{ label }}</span>
+    <div ref="toggle" class="dropdown-trigger"
+      :class="{ disabled }"
+      :data-toggle="(options == null || disabled) ? null : 'dropdown'">
+      <slot name="icon"></slot>
+      <span class="multiselect-label">{{ label }}</span>
+      <select :id="toggleId" class="display-value"
+        :aria-disabled="options == null || disabled"
+        role="button"
+        v-tooltip.aria-describedby="disabledMessage"
+        aria-haspopup="true" aria-expanded="false" :aria-label="label"
+        @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
+        <option value="">{{ selectOption }}</option>
+      </select>
+      <span class="icon-angle-down"></span>
+    </div>
     <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
     hide it. -->
     <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
       <li v-if="search != null" class="search">
         <div class="form-group">
+          <span class="icon-search"></span>
           <input ref="searchInput" v-model="searchValue" class="form-control"
             :placeholder="search" :aria-label="search" autocomplete="off">
           <button v-show="searchValue !== ''" type="button" class="close"
@@ -35,14 +44,14 @@ except according to the terms contained in the LICENSE file.
         </div>
       </li>
       <li class="change-all">
-        <i18n-t tag="div" keypath="action.select">
-          <template #all>
-            <a class="select-all" href="#" role="button" @click.prevent="changeAll(true)">{{ all }}</a>
-          </template>
-          <template #none>
-            <a class="select-none" href="#" role="button" @click.prevent="changeAll(false)">{{ none }}</a>
-          </template>
-        </i18n-t>
+        <button type="button"
+          class="btn btn-outlined select-all" @click.prevent="changeAll(true)">
+          {{ all }}
+        </button>
+        <button type="button"
+          class="btn btn-outlined select-none" @click.prevent="changeAll(false)">
+         {{ none }}
+        </button>
       </li>
       <li>
         <ul ref="optionList" class="option-list"
@@ -68,6 +77,11 @@ except according to the terms contained in the LICENSE file.
       <li class="after-list">
         <slot name="after-list" :selected="selected"></slot>
       </li>
+      <li class="action-bar">
+        <button type="button" class="btn btn-primary" :aria-disabled="changes.size === 0" @click="apply()">
+         {{ $t('action.apply') }}
+        </button>
+      </li>
     </ul>
   </div>
 </template>
@@ -76,7 +90,9 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computed, inject, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+
+import { noop } from '../util/util';
 
 const props = defineProps({
   /*
@@ -115,6 +131,11 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  // By default, the user can uncheck all options. However, if defaultToAll is
+  // `true`, then at least one option must be selected. If all options are
+  // unchecked, then the selection falls back to all options. That can be useful
+  // in cases where selecting none is guaranteed to lead to an empty result.
+  defaultToAll: Boolean,
 
   // `true` if the options are loading and `false` if not.
   loading: Boolean,
@@ -143,9 +164,21 @@ const props = defineProps({
   empty: {
     type: String,
     required: false
+  },
+
+  // disabled the control
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  disabledMessage: {
+    type: String,
+    required: false
   }
 });
 const emit = defineEmits(['update:modelValue']);
+
+const { i18n, buildMode } = inject('container');
 
 const idPrefix = `multiselect${id}`;
 id += 1;
@@ -182,7 +215,7 @@ not be (if an update:modelValue event was ignored).
 
 // `selected` needs to be reactive for the after-list slot.
 const selected = shallowReactive(new Set());
-const changes = new Set();
+const changes = shallowReactive(new Set());
 const change = (value) => {
   if (selected.has(value))
     selected.delete(value);
@@ -214,16 +247,30 @@ const changeCheckbox = ({ target }) => {
   change(props.options[target.dataset.index].value);
 };
 
-// emittedValue holds the last value that has been emitted since
-// props.modelValue was last set. It equals `null` if no value has been emitted
-// since then, or if no value has ever been emitted. We use emittedValue for an
-// optimization in order to avoid an extra sync.
+// emittedValue is used for an optimization, to avoid an unnecessary sync.
+// Unless it is `null`, it holds the last value emitted since props.modelValue
+// was last set. It equals `null` if no value has been emitted since then (or if
+// no value has ever been emitted).
 let emittedValue = null;
 const emitIfChanged = () => {
   if (changes.size === 0) return;
   changes.clear();
-  emittedValue = [...selected];
-  emit('update:modelValue', emittedValue);
+
+  if (props.defaultToAll && selected.size === 0) {
+    if (props.modelValue.length === props.options.length) {
+      // If props.modelValue is already all options, then there hasn't been a
+      // change. We don't need to emit a new value, but we do need to sync the
+      // checkboxes.
+      needsSync = true;
+    } else {
+      // Setting emittedValue to `null` so that checkboxes are synced.
+      emittedValue = null;
+      emit('update:modelValue', props.options.map(({ value }) => value));
+    }
+  } else {
+    emittedValue = [...selected];
+    emit('update:modelValue', emittedValue);
+  }
 };
 
 watch(
@@ -248,7 +295,7 @@ watch(
   { deep: true }
 );
 
-if (process.env.NODE_ENV === 'development') {
+if (buildMode === 'development') {
   const optionValues = computed(() =>
     props.options.reduce((set, { value }) => set.add(value), new Set()));
   const notFound = computed(() =>
@@ -272,7 +319,6 @@ if (process.env.NODE_ENV === 'development') {
 
 const searchValue = ref('');
 const searchMatches = shallowReactive(new Set());
-const { i18n } = inject('container');
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
   const result = [text.toLocaleLowerCase(i18n.locale)];
@@ -322,28 +368,33 @@ onMounted(() => {
   $dropdown.value.on('shown.bs.dropdown', syncWithModelValue);
   $dropdown.value.on('hidden.bs.dropdown', () => {
     searchValue.value = '';
-    emitIfChanged();
+    needsSync = changes.size !== 0;
+    changes.clear();
   });
 });
 onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
 
+//  this should be changed i think
 const toggle = ref(null);
 const $toggle = computed(() => $(toggle.value));
 const toggleAfterEnter = ({ key }) => {
+  // console.log('toggleAfterEnter');
   if (key === 'Enter') $toggle.value.dropdown('toggle');
 };
 
-if (process.env.NODE_ENV === 'test') {
-  const verifyAttached = ({ target }) => {
+const apply = () => {
+  searchValue.value = '';
+  emitIfChanged();
+  $toggle.value.dropdown('toggle');
+};
+
+const verifyAttached = buildMode === 'test'
+  ? ({ target }) => {
     if (target.closest('body') == null)
       // eslint-disable-next-line no-console
       console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
-  };
-  onMounted(() => { toggle.value.addEventListener('click', verifyAttached); });
-  onBeforeUnmount(() => {
-    toggle.value.removeEventListener('click', verifyAttached);
-  });
-}
+  }
+  : noop;
 
 
 
@@ -387,9 +438,25 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
 <style lang="scss">
 @import '../assets/scss/mixins';
+@import '../assets/scss/variables';
 
 .multiselect {
-  select { min-width: 111px; }
+
+  .dropdown-trigger {
+    @include filter-control;
+  }
+
+  select {
+    appearance: none;
+  }
+
+  .icon-angle-down {
+    font-size: 16px;
+    color: #555555;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1;
+  }
 
   $line-height: 1;
   .dropdown-menu {
@@ -397,6 +464,8 @@ const emptyMessage = computed(() => (searchValue.value === ''
     line-height: $line-height;
     margin-top: 0;
     padding-bottom: 0;
+    padding: 5px;
+    min-width: 200px;
   }
 
   $hpadding: 9px;
@@ -405,7 +474,10 @@ const emptyMessage = computed(() => (searchValue.value === ''
     padding: $vpadding $hpadding;
 
     // The Multiselect component may be inside a .form-inline.
-    .form-group { display: block; }
+    .form-group {
+      @include filter-control;
+      width: 100%;
+    }
 
     .form-control {
       background-color: #fff;
@@ -417,25 +489,36 @@ const emptyMessage = computed(() => (searchValue.value === ''
       padding: 0 16px 0 0;
       width: 100%;
 
-      &, &:focus { border-bottom: none; }
-
       &::placeholder {
-        color: #666;
-        font-style: italic;
+        color: $color-text-secondary;
+      }
+      &:lang(ja), &:lang(zh) {
+        &::placeholder {
+          font-style: normal;
+          font-weight: bold;
+        }
       }
     }
 
     .close {
       font-size: 18px;
-      right: 0;
-      top: -5px;
+      position: static;
     }
   }
 
-  .change-all { padding: #{0.5 * $vpadding} $hpadding $vpadding; }
+  .change-all {
+    padding: #{0.5 * $vpadding} $hpadding $vpadding;
+    display: flex;
+    gap: 10px;
+
+    button {
+      flex: 1 1 50%;
+      line-height: 15px;
+    }
+  }
 
   .option-list {
-    background-color: $color-subpanel-background;
+    background-color: #FFF;
     font-size: 14px;
     list-style: none;
     max-height: 250px;
@@ -482,6 +565,13 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
     &:empty { display: none; }
   }
+  .action-bar {
+    margin-top: 5px;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 </style>
 
@@ -489,11 +579,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
 {
   "en": {
     "action": {
-      // This text is shown in a dropdown that allows the user to make one or
-      // more selections. {all} has the text "All", and {none} has the text
-      // "None". {all} and {none} will be translated separately based on what is
-      // being selected.
-      "select": "Select {all} / {none}"
+      "apply": "Apply"
     }
   }
 }
@@ -502,34 +588,29 @@ const emptyMessage = computed(() => (searchValue.value === ''
 <!-- Autogenerated by destructure.js -->
 <i18n>
 {
-  "cs": {
-    "action": {
-      "select": "Vyberte {all} / {none}"
-    }
-  },
   "de": {
     "action": {
-      "select": "{all} / {none} auswählen"
+      "apply": "Anwenden"
     }
   },
   "es": {
     "action": {
-      "select": "Seleccionar {all} / {none}"
+      "apply": "Aplicar"
     }
   },
   "fr": {
     "action": {
-      "select": "Sélectionner {all}/{none}"
+      "apply": "Appliquer"
     }
   },
   "it": {
     "action": {
-      "select": "Seleziona {all} / {none}"
+      "apply": "Applica"
     }
   },
-  "sw": {
+  "zh-Hant": {
     "action": {
-      "select": "Changua {all} / {none}"
+      "apply": "應用"
     }
   }
 }

@@ -27,11 +27,11 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[1]') }}</p>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-primary" type="button" @click="confirm">
-          {{ $t('action.yesProceed') }}
-        </button>
         <button class="btn btn-link" type="button" @click="cancel">
           {{ $t('action.noCancel') }}
+        </button>
+        <button class="btn btn-primary" type="button" @click="confirm">
+          {{ $t('action.yesProceed') }}
         </button>
       </div>
     </template>
@@ -172,6 +172,16 @@ export default {
       "ファイル名が一致しないため、ダブルチェックしています。"
     ]
   },
+  "pt": {
+    "title": {
+      "upload": "Subir arquivo",
+      "replace": "Substituir arquivo"
+    },
+    "introduction": [
+      "Você tem certeza que deseja carregar o arquivo {filename} como {attachmentName}?",
+      "Nós estamos verificando novamente porque os nomes dos arquivos não coincidem."
+    ]
+  },
   "sw": {
     "title": {
       "upload": "Pakia Faili",
@@ -180,6 +190,16 @@ export default {
     "introduction": [
       "Je, una uhakika unataka kupakia {filename} kama {attachmentName}?",
       "Tunakagua mara mbili kwa sababu majina ya faili hayalingani"
+    ]
+  },
+  "zh-Hant": {
+    "title": {
+      "upload": "上傳檔案",
+      "replace": "替換檔案"
+    },
+    "introduction": [
+      "您確定要將 {filename} 上傳為 {attachmentName} 嗎？",
+      "們正在仔細檢查，因為檔案名稱不符。"
     ]
   }
 }

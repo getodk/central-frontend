@@ -12,9 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="form-row">
     <td class="name">
-      <link-if-can :to="primaryFormPath(form)">
-        {{ form.nameOrId }}
-      </link-if-can>
+      <form-link :form="form"/>
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
 
@@ -32,7 +30,7 @@ except according to the terms contained in the LICENSE file.
       <td class="last-submission">
         <span v-tooltip.no-aria="lastSubmissionTooltip">
           <template v-if="form.lastSubmission != null">
-            <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)">
+            <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')">
               <date-time :iso="form.lastSubmission" relative="past"
                 :tooltip="false"/>
               <span class="icon-clock-o"></span>
@@ -42,7 +40,7 @@ except according to the terms contained in the LICENSE file.
         </span>
       </td>
       <td class="total-submissions">
-        <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions`)"
+        <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
           <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
@@ -73,9 +71,9 @@ except according to the terms contained in the LICENSE file.
           </enketo-fill>
         </template>
         <template v-else>
-          <router-link :to="draftTestingPath" class="btn btn-default">
+          <router-link :to="editPath" class="btn btn-default">
             <span class="icon-pencil"></span>
-            <span>{{ $t('action.test') }}</span>
+            <span>{{ $t('action.edit') }}</span>
           </router-link>
         </template>
       </template>
@@ -89,6 +87,7 @@ import { DateTime } from 'luxon';
 import DateTimeComponent from '../date-time.vue';
 import EnketoFill from '../enketo/fill.vue';
 import EnketoPreview from '../enketo/preview.vue';
+import FormLink from './link.vue';
 import LinkIfCan from '../link-if-can.vue';
 
 import useReviewState from '../../composables/review-state';
@@ -98,7 +97,13 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormRow',
-  components: { DateTime: DateTimeComponent, EnketoFill, EnketoPreview, LinkIfCan },
+  components: {
+    DateTime: DateTimeComponent,
+    EnketoFill,
+    EnketoPreview,
+    FormLink,
+    LinkIfCan
+  },
   props: {
     form: {
       type: Object,
@@ -111,11 +116,11 @@ export default {
   },
   setup() {
     const { project, duplicateFormNames } = useRequestData();
-    const { formPath, primaryFormPath } = useRoutes();
+    const { formPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       project, duplicateFormNames,
-      formPath, primaryFormPath,
+      formPath,
       reviewStateIcon
     };
   },
@@ -127,11 +132,11 @@ export default {
         .set('hasIssues', '%27hasIssues%27')
         .set('edited', '%27edited%27');
     },
-    draftTestingPath() {
+    editPath() {
       return this.formPath(
         this.form.projectId,
         this.form.xmlFormId,
-        'draft/testing'
+        'draft'
       );
     },
     showIdForDuplicateName() {
@@ -199,7 +204,10 @@ export default {
   }
 
   .actions {
-    width: 100px,
+    width: 100px;
+    // Make sure there is enough width for .btn-web-form so that toggling Web
+    // Forms does not change the width of the column.
+    &:has(.enketo-preview) { min-width: 127px; }
   }
 
   .last-submission{
@@ -228,9 +236,7 @@ export default {
   "en": {
     "action": {
       // This appears on a button linking to a fillable Form
-      "fill": "Fill Form",
-      // This appears on a button linking to the draft testing form page
-      "test": "Test"
+      "fill": "Fill Form"
     },
     "formClosingTip": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
   }
@@ -242,29 +248,25 @@ export default {
 {
   "cs": {
     "action": {
-      "fill": "Vyplnit formulář",
-      "test": "Test"
+      "fill": "Vyplnit formulář"
     },
     "formClosingTip": "Tento formulář se uzavírá a přijímá poslední podání. Není ke stažení, ale stále přijímá příspěvky."
   },
   "de": {
     "action": {
-      "fill": "Formular ausfüllen",
-      "test": "testen"
+      "fill": "Formular ausfüllen"
     },
     "formClosingTip": "Dieses Formular steht auf Schliessen und akzeptiert seine endgültigen Übermittlungen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert."
   },
   "es": {
     "action": {
-      "fill": "Llenar formulario",
-      "test": "Probar"
+      "fill": "Llenar formulario"
     },
     "formClosingTip": "Este formulario se está cerrando y aceptando sus Envíos finales. No se puede descargar, pero aún acepta Envíos."
   },
   "fr": {
     "action": {
-      "fill": "Remplir le formulaire",
-      "test": "Test"
+      "fill": "Remplir le formulaire"
     },
     "formClosingTip": "Ce formulaire est en cours de fermeture et accepte ses dernières soumissions. Il n'est plus téléchargeable mais peut encore recevoir des soumissions."
   },
@@ -275,8 +277,7 @@ export default {
   },
   "it": {
     "action": {
-      "fill": "Compila il Formulario",
-      "test": "Test"
+      "fill": "Compila il Formulario"
     },
     "formClosingTip": "Questo Formulario è in fase di chiusura e accetta i suoi ultimi Invii. Non è scaricabile ma tuttavia accetta Invii."
   },
@@ -285,12 +286,23 @@ export default {
       "fill": "フォームに記入"
     }
   },
+  "pt": {
+    "action": {
+      "fill": "Preencher formulário"
+    },
+    "formClosingTip": "Este Formulário está sendo fechado e aceitando suas respostas finais. Ele não pode ser baixado, mas ainda aceita Respostas."
+  },
   "sw": {
     "action": {
-      "fill": "Jaza Fomu",
-      "test": "jaribio"
+      "fill": "Jaza Fomu"
     },
     "formClosingTip": "Fomu Hii Inafungwa na inakubali Mawasilisho yake ya mwisho. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
+  },
+  "zh-Hant": {
+    "action": {
+      "fill": "填寫表格"
+    },
+    "formClosingTip": "該表格即將結束並接受其最終提交資料。它不可下載，但仍接受提交。"
   }
 }
 </i18n>

@@ -10,13 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze id="submission-table" ref="table" :data="chunkyOData"
-    key-prop="__id" :frozen-only="fields == null" divider @action="review">
+  <table-freeze v-if="project.dataExists && form.dataExists" id="submission-table" ref="table"
+    :data="chunkyOData" key-prop="__id" :frozen-only="fields == null" divider
+    @action="handleActions">
     <template #head-frozen>
-      <th><!-- Row number --></th>
+      <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
       <th>{{ $t('header.submissionDate') }}</th>
-      <th v-if="!draft">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && !deleted">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && deleted" class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
       <template v-if="fields != null">
@@ -27,34 +29,32 @@ except according to the terms contained in the LICENSE file.
       <th>{{ $t('header.instanceId') }}</th>
     </template>
 
-    <template #data-frozen="{ data, index }">
+    <template #data-frozen="{ data }">
       <submission-metadata-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data"
-        :row-number="odata.originalCount - index" :can-update="canUpdate"/>
+        :draft="draft" :submission="data" :deleted="deleted" :awaiting-response="awaitingDeletedResponses.has(data.__id)"
+        :row-number="data.__system.rowNumber" :verbs="project.verbs"/>
     </template>
     <template #data-scrolling="{ data }">
       <submission-data-row :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :submission="data" :fields="fields"/>
+        :draft="draft" :submission="data" :fields="fields" :deleted="deleted"/>
     </template>
   </table-freeze>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionTable'
-};
-</script>
 <script setup>
 import { computed, ref } from 'vue';
 
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
-import TableFreeze from '../table-freeze.vue';
+import TableFreeze from '../table/freeze.vue';
 
 import useChunkyArray from '../../composables/chunky-array';
-import { markRowsChanged } from '../../util/dom';
+import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'SubmissionTable'
+});
 defineProps({
   projectId: {
     type: String,
@@ -64,36 +64,49 @@ defineProps({
     type: String,
     required: true
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   draft: Boolean,
-  fields: Array
+  fields: Array,
+  awaitingDeletedResponses: {
+    type: Set,
+    required: true
+  }
 });
-const emit = defineEmits(['review']);
+const emit = defineEmits(['review', 'delete', 'restore']);
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { project, odata } = useRequestData();
+const { project, form, odata } = useRequestData();
 
 const chunkyOData = useChunkyArray(computed(() => odata.value));
-const canUpdate = computed(() =>
-  project.dataExists && project.permits('submission.update'));
 
-const review = ({ target, data }) => {
+const handleActions = ({ target, data }) => {
   if (target.classList.contains('review-button')) emit('review', data);
+  if (target.classList.contains('delete-button')) emit('delete', data);
+  if (target.classList.contains('restore-button')) emit('restore', data);
 };
 const table = ref(null);
 const afterReview = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-defineExpose({ afterReview });
+const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+defineExpose({ afterReview, afterDelete });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-#submission-table .table-freeze-scrolling {
-  th, td {
-    @include text-overflow-ellipsis;
-    max-width: 250px;
-    &:last-child { max-width: 325px; }
+#submission-table {
+  .table-freeze-scrolling {
+    th, td {
+      @include text-overflow-ellipsis;
+      max-width: 250px;
+      &:last-child { max-width: 325px; }
+    }
   }
+
+  th.col-deleted-at { color: $color-danger; }
 }
 </style>
 
@@ -101,7 +114,9 @@ defineExpose({ afterReview });
 {
   "en": {
     "header": {
-      "stateAndActions": "State and actions"
+      "stateAndActions": "State and actions",
+      // Heading of the column that shows Submission deletion timestamp
+      "deletedAt": "Deleted at"
     }
   }
 }
@@ -117,17 +132,20 @@ defineExpose({ afterReview });
   },
   "de": {
     "header": {
-      "stateAndActions": "Status und Aktionen"
+      "stateAndActions": "Status und Aktionen",
+      "deletedAt": "Gelöscht am"
     }
   },
   "es": {
     "header": {
-      "stateAndActions": "Estado y acciones"
+      "stateAndActions": "Estado y acciones",
+      "deletedAt": "Suprimido el"
     }
   },
   "fr": {
     "header": {
-      "stateAndActions": "État et actions"
+      "stateAndActions": "État et actions",
+      "deletedAt": "Supprimé à"
     }
   },
   "id": {
@@ -137,7 +155,8 @@ defineExpose({ afterReview });
   },
   "it": {
     "header": {
-      "stateAndActions": "Stato e azioni"
+      "stateAndActions": "Stato e azioni",
+      "deletedAt": "Eliminato il"
     }
   },
   "ja": {
@@ -145,9 +164,21 @@ defineExpose({ afterReview });
       "stateAndActions": "レビュー・ステータスと操作"
     }
   },
+  "pt": {
+    "header": {
+      "stateAndActions": "Status e ações",
+      "deletedAt": "Excluída em"
+    }
+  },
   "sw": {
     "header": {
       "stateAndActions": "Hali na vitendo"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "stateAndActions": "狀態和動作",
+      "deletedAt": "刪除於"
     }
   }
 }

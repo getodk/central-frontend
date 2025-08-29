@@ -1,19 +1,19 @@
 version: 2.1
 orbs:
-  browser-tools: circleci/browser-tools@1.2.3
+  browser-tools: circleci/browser-tools@1.4.8
 jobs:
   build:
     docker:
-      - image: cimg/node:16.19.1-browsers
+      - image: cimg/node:22.12.0-browsers
 
     working_directory: ~/repo
 
     steps:
-      - browser-tools/install-chrome
       - checkout
       - run: npm ci
       - run: |
           node bin/transifex/restructure.js
           git diff --exit-code -- transifex/strings_en.json
       - run: npm run lint
+      - browser-tools/install-chrome
       - run: npm run test

@@ -17,7 +17,7 @@ either is an Administrator or has no role. -->
   <div>
     <div class="heading-with-button">
       <button id="user-list-new-button" type="button" class="btn btn-primary"
-        @click="showModal('newUser')">
+        @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <i18n-t tag="p" keypath="heading[0]">
@@ -38,17 +38,19 @@ either is an Administrator or has no role. -->
       <tbody v-if="dataExists">
         <user-row v-for="user of users" :key="user.id" :user="user"
           :admin="adminIds.has(user.id)" :highlighted="highlighted"
-          @assigned-role="afterAssignRole" @reset-password="showResetPassword"
-          @retire="showRetire"/>
+          @assigned-role="afterAssignRole"
+          @reset-password="resetPassword.show({ user: $event })"
+          @retire="retireModal.show({ user: $event })"/>
       </tbody>
     </table>
     <loading :state="initiallyLoading"/>
 
-    <user-new v-bind="newUser" @hide="hideModal('newUser')"
+    <user-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
-    <user-reset-password v-bind="resetPassword" @hide="hideResetPassword"
-      @success="afterResetPassword"/>
-    <user-retire v-bind="retire" @hide="hideRetire" @success="afterRetire"/>
+    <user-reset-password v-if="!config.oidcEnabled" v-bind="resetPassword"
+      @hide="resetPassword.hide()" @success="afterResetPassword"/>
+    <user-retire v-bind="retireModal" @hide="retireModal.hide()"
+      @success="afterRetire"/>
   </div>
 </template>
 
@@ -60,7 +62,7 @@ import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
 import UserRow from './row.vue';
 
-import modal from '../../mixins/modal';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -73,8 +75,7 @@ export default {
     UserRetire,
     UserRow
   },
-  mixins: [modal()],
-  inject: ['alert'],
+  inject: ['alert', 'config'],
   setup() {
     const { createResource, resourceStates } = useRequestData();
     const users = createResource('users');
@@ -89,17 +90,9 @@ export default {
       // The id of the highlighted user
       highlighted: null,
       // Modals
-      newUser: {
-        state: false
-      },
-      resetPassword: {
-        state: false,
-        user: null
-      },
-      retire: {
-        state: false,
-        user: null
-      }
+      createModal: modalData(),
+      resetPassword: modalData(),
+      retireModal: modalData()
     };
   },
   created() {
@@ -114,7 +107,7 @@ export default {
     },
     afterCreate(user) {
       this.fetchData();
-      this.hideModal('newUser');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create', user));
       this.highlighted = user.id;
     },
@@ -148,30 +141,13 @@ export default {
         }
       }
     },
-    showResetPassword(user) {
-      this.resetPassword.user = user;
-      this.showModal('resetPassword');
-    },
-    hideResetPassword() {
-      this.hideModal('resetPassword');
-      this.resetPassword.user = null;
-    },
     afterResetPassword(user) {
-      this.hideResetPassword();
-      this.hideModal('resetPassword');
+      this.resetPassword.hide();
       this.alert.success(this.$t('alert.resetPassword', user));
-    },
-    showRetire(user) {
-      this.retire.user = user;
-      this.showModal('retire');
-    },
-    hideRetire() {
-      this.hideModal('retire');
-      this.retire.user = null;
     },
     afterRetire(user) {
       this.fetchData();
-      this.hideRetire();
+      this.retireModal.hide();
       this.alert.success(this.$t('alert.retire', user));
       this.highlighted = null;
     }
@@ -332,6 +308,23 @@ export default {
       "retire": "ユーザー\"{displayName}\"を除外しました。"
     }
   },
+  "pt": {
+    "action": {
+      "create": "Criar usuário do site"
+    },
+    "heading": [
+      "Os usuários de site têm contas nesse servidor para supervisionar e administrar os projetos neste servidor. Os administradores podem gerenciar qualquer coisa no site. Os usuários sem permissões de administração do site podem receber uma função em qualquer projeto, a partir das configurações do projeto. Os administradores e algumas funções do projeto podem usar um navegador da web para preencher os formulários. Para enviar dados por meio de um aplicativo como o {collect}, crie usuários de aplicativo para cada projeto."
+    ],
+    "header": {
+      "sitewideRole": "Função do site"
+    },
+    "alert": {
+      "create": "Um usuário foi criado com sucesso para \"{displayName}\".",
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função do site de \"{roleName}\".",
+      "resetPassword": "A senha para \"{displayName}\" foi invalidada. Um email foi enviado para {email} com as instruções de como prosseguir.",
+      "retire": "O usuário \"{displayName}\" foi desativado."
+    }
+  },
   "sw": {
     "action": {
       "create": "Unda Mtumiaji wa Wavuti"
@@ -347,6 +340,23 @@ export default {
       "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la Eneo Lote la \"{roleName}\".",
       "resetPassword": "Nenosiri la \"{displayName}\" limebatilishwa. Barua pepe imetumwa kwa {email} ikiwa na maagizo ya jinsi ya kuendelea.",
       "retire": "Mtumiaji \"{displayName}\" amestaafu."
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "create": "建立網頁用戶"
+    },
+    "heading": [
+      "網路使用者，在該網站上擁有帳戶來監督和管理該伺服器上的項目。管理員可以管理網站上的任何內容。沒有網站範圍角色的使用者可以從該專案的設定中獲得任何專案的角色。網站管理員和某些專案角色可以使用 Web 瀏覽器填寫表格。若要透過應用程式（例如 {collect}）提交數據，請為每個項目建立APP使用者。"
+    ],
+    "header": {
+      "sitewideRole": "全站角色"
+    },
+    "alert": {
+      "create": "已成功為「{displayName}」建立使用者。",
+      "assignRole": "成功！ 「{displayName}」已被授予網站範圍角色「{roleName}」。",
+      "resetPassword": "「{displayName}」的密碼已失效。一封電子郵件已發送至 {email}，其中包含有關如何繼續操作的說明。",
+      "retire": "用戶「{displayName}」已停用。"
     }
   }
 }

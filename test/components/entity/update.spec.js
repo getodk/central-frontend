@@ -123,6 +123,7 @@ describe('EntityUpdate', () => {
     testData.extendedEntities.createPast(1, {
       uuid: 'e',
       label: 'My Entity',
+      version: 1,
       data: { height: '1' }
     });
     return mockHttp()
@@ -136,11 +137,11 @@ describe('EntityUpdate', () => {
       .respondWithProblem()
       .testRequests([{
         method: 'PATCH',
-        url: '/v1/projects/1/datasets/%C3%A1/entities/e?force=true',
+        url: '/v1/projects/1/datasets/%C3%A1/entities/e?baseVersion=1',
         data: {
           label: 'Updated Entity',
           data: Object.assign(Object.create(null), { height: '2' })
-        }
+        },
       }]);
   });
 
@@ -230,19 +231,36 @@ describe('EntityUpdate', () => {
         return modal.get('form').trigger('submit');
       })
       .respondWithData(() => {
-        const { currentVersion } = testData.extendedEntities.last();
-        testData.extendedEntities.update(-1, {
-          currentVersion: {
-            ...currentVersion,
-            label: 'Updated Entity',
-            data: { height: '2' }
-          }
+        testData.extendedEntityVersions.createNew({
+          label: 'Updated Entity',
+          data: { height: '2' }
         });
         return testData.standardEntities.last();
       })
       .afterResponse(modal => {
         const updated = testData.standardEntities.last();
         modal.emitted('success').should.eql([[updated]]);
+      });
+  });
+
+  it('shows conflict error', () => {
+    testData.extendedEntities.createPast(1, {
+      label: 'My Entity',
+      data: { height: '1' }
+    });
+    return mockHttp()
+      .mount(EntityUpdate, mountOptions())
+      .request(async (modal) => {
+        const textareas = modal.findAll('textarea');
+        await textareas[0].setValue('Updated Entity');
+        await textareas[1].setValue('2');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithProblem(409.15)
+      .afterResponse(component => {
+        component.should.alert('danger', (message) => {
+          message.should.eql('Data has been modified by another user. Please refresh to see the updated data.');
+        });
       });
   });
 });

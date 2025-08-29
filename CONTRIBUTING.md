@@ -17,7 +17,7 @@ We want ODK Central Frontend to be easy to use, yet flexible for a wide variety 
 
 If you are looking for help, please take a look at the [Documentation Website](https://docs.getodk.org/central-intro/). If that doesn't solve your problem, please head over to the [ODK Forum](https://forum.getodk.org/) and do a search to see if anybody else has had the same problem. If you've identified a new problem, please post on the forum. We prefer forum posts to GitHub issues because more of the community is on the forum.
 
-If you have suggestions about how to improve ODK Central, please share them with us on the [Features board](https://forum.getodk.org/c/features) of the ODK Forum.
+If you have suggestions about how to improve ODK Central, please share them with us on the [Ideas board](https://forum.getodk.org/c/ideas) of the ODK Forum.
 
 If you are looking for help on how ODK Central works internally or how to update its code, the ODK [developer Slack](https://slack.getodk.org/) is for you.
 
@@ -82,16 +82,6 @@ If a utility is used in a limited number of components, consider using a mixin i
 
 We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [Response Data](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) for more on sending a GET request.
 
-### Presenter Classes
-
-Many ODK Central Backend resources have an associated presenter class in Frontend ([`/src/presenters/`](/src/presenters/)). This class extends the [base presenter class](/src/presenters/base.js).
-
-Each presenter class defines a whitelist of properties that the presenter object can read from the underlying resource data. If a new property is added to a Backend resource, it must also be added to the presenter class before a presenter object can read it.
-
-When you use the [`request` module](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) of the Vuex store to send a GET request, then if there is a presenter class associated with the response data, the `request` module will automatically wrap the response data within a presenter object.
-
-Some presenter classes need access to the internationalization object `i18n`. If you retrieve a presenter class from the container rather than importing it, the class will have a static method named `from()` that will create a new presenter object and automatically pass in `i18n`: see [`subclassPresenters()`](/src/presenters/index.js). If you define a new presenter class, you should also add it to `subclassPresenters()`. For more on internationalization, see the section [below](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#internationalization).
-
 ### Learning About a Component
 
 To learn how a given component works, one of the best places to start is how the component communicates with its parent component:
@@ -106,7 +96,7 @@ A component can also communicate with other components using the Vuex store. For
 
 We specify a name for every component, which facilitates the use of the Vue devtools. In general, we try not to use component names to drive behavior: in most ways, renaming a component should have no effect.
 
-Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormOverview`. The following are common suffixes:
+Most components are named according to the combination of a resource and an action or other descriptor, for example, `ProjectEdit` or `FormRow`. The following are common suffixes:
 
 * `List`. A component that lists resources of a particular type. The component often includes a table, an empty table message, text and buttons above the table, and one or more modals.
 * `Table`. A table for a particular type of resource. A `Table` component should just be the `<table>` element and should not include an empty table message or other content.
@@ -116,10 +106,6 @@ Most components are named according to the combination of a resource and an acti
 * `Create` (or `New`). A modal used to create a new resource of a particular type.
 * `Edit` or `Update`. A component used to update an existing resource of a particular type.
 * `Delete`. A modal used to delete an existing resource of a particular type.
-
-### Vue Mixins
-
-Each component may use one or more mixins. Each file in [`/src/mixins/`](/src/mixins/) exports a mixin factory for a single type of mixin. (We use factories so that the component can pass in options for the mixin. We don't use this pattern much anymore though, so we will likely change this when we move to Vue 3.)
 
 ### Composables
 
@@ -203,7 +189,11 @@ Also note about comments:
 - `restructure.js` will automatically generate comments for any message whose path ends with `.full`, because such messages are used for component interpolation.
 - Use JSON with comments, but do not use other features of JSON5, which our workflow might not support.
 
-Before each release, we download all translations from Transifex and save them in [`/transifex/`](/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, use the Transifex client, specifying `translator` as the mode.
+Before each release, we download all translations from Transifex and save them in [`/transifex/`](/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, run the Transifex CLI in the root directory of the repository:
+
+```bash
+tx pull --mode translator --force
+```
 
 Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/src/locales/` other than `en.json5`.
 
@@ -235,10 +225,8 @@ To add a new locale to ODK Central Frontend:
 1. Add the locale to Transifex.
 2. Add the locale to `locales` in [`/src/i18n.js`](/src/i18n.js) and [`/bin/util/transifex.js`](/bin/util/transifex.js).
 3. If the locale pluralizes differently from the default, specify its pluralization rules in `/src/i18n.js`.
-4. Check whether there is a [flatpickr localization](https://github.com/flatpickr/flatpickr/tree/master/src/l10n) for the locale. If there is, add it to [`DateRangePicker`](/src/components/date-range-picker.vue). If there isn't, create a GitHub issue in this repository or contact us on Slack.
+4. Check whether there is a [flatpickr localization](https://github.com/flatpickr/flatpickr/tree/master/src/l10n) for the locale. If there is, add it to [`DateRangePicker`](/src/components/date-range-picker.vue). If there isn't, let us know about it in the ODK forum.
 5. Consider spot-checking the translations. In particular, check that messages used in component interpolation have been translated correctly.
-
-Note that right now, the router will use the user's preferred language to load the locale, but it will only use the first subtag of the language. If/when we add a locale with multiple subtags, we will need to update the router.
 
 ### Styles
 
@@ -318,14 +306,14 @@ Our tests use a number of external packages:
 
 - Karma, a test runner that we have configured to run tests in Headless Chrome
 - Mocha, a test framework
-- Should.js, for assertions
+- Chai, for assertions
 - Sinon.JS, for spies and stubs
 - faker.js, to generate test data
 - Vue Test Utils, to test Vue components
 
 `npm run test` runs [`/test/index.js`](/test/index.js), which mocks global utilities and sets up Mocha hooks.
 
-We extend Should.js assertions in [`/test/assertions.js`](/test/assertions.js).
+[`/test/assertions.js`](/test/assertions.js) adds Chai helpers.
 
 [Vue Test Utils](https://test-utils.vuejs.org/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of Vue Test Utils, in particular [`mount()`](/test/util/lifecycle.js). We define components used only for testing in [`/test/util/components/`](/test/util/components/).
 
@@ -348,3 +336,11 @@ We generate and store test data specific to ODK Central using the [`testData`](/
 Most Backend resources have a `createdAt` property. To generate an object whose `createdAt` property is in the past, use the `createPast()` method of the store or view. To generate an object whose `createdAt` property is set to the current time, use `createNew()`. Most of the time, you will use `createPast()`. For a test that mounts a component, use `createPast()` to set up data that exists before the component is mounted. Use `createNew()` for data created after the component is mounted, for example, after the component sends a POST request. You can pass options to `createPast()` and `createNew()`; each store accepts a different set of options.
 
 To learn more about stores and views, see [`/test/data/data-store.js`](/test/data/data-store.js).
+
+
+#### E2E Tests
+
+E2E tests can be run using `npm run test:e2e`. These tests assume the full Central stack is running — including central-backend, enketo, pyxform, and postgresql.
+By default, tests run against `http://central-dev.localhost:8989`, but you can override it with `--protocol`, `--domain`, and `--port` CLI options.
+You can also set a custom `--user` and `--password` from the CLI.
+Finally, add the `--ui` flag to run tests in UI mode, which is useful for debugging.

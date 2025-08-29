@@ -1,4 +1,4 @@
-<!--
+ <!--
 Copyright 2020 ODK Central Developers
 See the NOTICE file at the top-level directory of this distribution and at
 https://github.com/getodk/central-frontend/blob/master/NOTICE.
@@ -11,15 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span id="submission-filters">
-    <div class="form-group">
-      <span class="icon-filter"></span><span>{{ $t('common.filter') }}</span>
-    </div>
     <submission-filters-submitter :model-value="submitterId"
+      :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:submitterId', $event)"/>
     <date-range-picker :model-value="submissionDate"
-      :placeholder="$t('field.submissionDate')"
+      :label="$t('field.submissionDate')"
+      :disabled="disabled" :disabled-message="disabledMessage"
+      :placeholder="$t('allSubmissionDateSelected')"
       @update:model-value="$emit('update:submissionDate', $event)"/>
     <submission-filters-review-state :model-value="reviewState"
+      :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:reviewState', $event)"/>
   </span>
 </template>
@@ -48,6 +49,14 @@ export default {
     reviewState: {
       type: Array,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: true
+    },
+    disabledMessage: {
+      type: String,
+      required: false
     }
   },
   emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState']
@@ -61,7 +70,9 @@ export default {
       // This is the text of a form field that allows the user to filter
       // Submissions by a date range.
       "submissionDate": "Submitted at"
-    }
+    },
+    // Text shown when in Submission date filter when Submissions for all dates are shown
+    "allSubmissionDateSelected": "All time"
   }
 }
 </i18n>
@@ -82,12 +93,14 @@ export default {
   "es": {
     "field": {
       "submissionDate": "Enviado a"
-    }
+    },
+    "allSubmissionDateSelected": "Todos los tiempos"
   },
   "fr": {
     "field": {
       "submissionDate": "Soumis à"
-    }
+    },
+    "allSubmissionDateSelected": "Tout temps"
   },
   "id": {
     "field": {
@@ -97,17 +110,29 @@ export default {
   "it": {
     "field": {
       "submissionDate": "Inviato alle"
-    }
+    },
+    "allSubmissionDateSelected": "Per tutto il tempo"
   },
   "ja": {
     "field": {
       "submissionDate": "フォームの送信日"
     }
   },
+  "pt": {
+    "field": {
+      "submissionDate": "Enviado em"
+    }
+  },
   "sw": {
     "field": {
       "submissionDate": "Imewasilishwa kwa"
     }
+  },
+  "zh-Hant": {
+    "field": {
+      "submissionDate": "提交於"
+    },
+    "allSubmissionDateSelected": "全部時間"
   }
 }
 </i18n>

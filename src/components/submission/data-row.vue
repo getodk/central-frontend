@@ -16,7 +16,9 @@ except according to the terms contained in the LICENSE file.
         <template v-if="field.binary === true">
           <a v-if="rawValue(submission, field) != null" class="binary-link"
             :href="formattedValue(submission, field)" target="_blank"
-            :aria-label="$t('submission.binaryLinkTitle')" v-tooltip.aria-label>
+            :aria-disabled="deleted"
+            :aria-label="deleted ? $t('submission.fileDownloadUnavailable') : $t('submission.binaryLinkTitle')"
+            v-tooltip.aria-label>
             <span class="icon-check"></span> <span class="icon-download"></span>
           </a>
         </template>
@@ -76,7 +78,11 @@ export default {
     fields: {
       type: Array,
       required: true
-    }
+    },
+    deleted: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     htmlClass() {
@@ -174,11 +180,15 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #submission-table {
   .int-field, .decimal-field { text-align: right; }
-  .geopoint-field { max-width: 500px; }
+
+  // Geopoint width should always have enough room to show full data.
+  // This neeeds an extra CSS selector to not be overwritten by
+  // max-width:250px in submission/table.vue
+  .table-freeze-scrolling .geopoint-field { max-width: 500px; }
 
   .binary-field { text-align: center; }
   .binary-link {
@@ -211,7 +221,7 @@ export default {
       vertical-align: -2px;
     }
 
-    .encryption-message { font-style: italic; }
+    .encryption-message { @include italic; }
 
     ~ .encrypted-submission {
       .encrypted-data { position: relative; }

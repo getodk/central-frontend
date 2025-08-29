@@ -68,11 +68,6 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
-export default {
-  name: 'ProjectSubmissionOptions'
-};
-</script>
 <script setup>
 import DocLink from '../doc-link.vue';
 import LinkIfCan from '../link-if-can.vue';
@@ -80,6 +75,9 @@ import Modal from '../modal.vue';
 
 import useRoutes from '../../composables/routes';
 
+defineOptions({
+  name: 'ProjectSubmissionOptions'
+});
 defineProps({
   state: Boolean
 });
@@ -254,6 +252,25 @@ const { projectPath, formPath } = useRoutes();
       }
     ]
   },
+  "pt": {
+    "title": "Opções de resposta",
+    "introduction": [
+      "Existem várias maneiras de enviar respostas para o ODK Central:",
+      {
+        "full": "Crie {appUsers} e utilize o aplicativo {collect} para Android. Isso é o mais apropriado quando os coletores de dados precisam de acesso a múltiplos formulários, ficam sem internet, ou quando você tem um formulário complexo.",
+        "appUsers": "Usuários de aplicativo"
+      },
+      {
+        "full": "Crie um ou mais {publicLinks} para compartilhar com entrevistados que preencherão o formulário de forma autônoma.",
+        "publicLinks": "Links de acesso público"
+      },
+      {
+        "full": "Crie um {webUser} com a função de {dataCollector} para cada indivíduo que fará a coleta de dados. Esses usuários poderão fazer login no Central para preencher o formulário em um navegador de internet. Gerentes de projeto também podem preencher formulários a partir do navegador de internet.",
+        "webUser": "Usuário da web",
+        "dataCollector": "Coletor de dados"
+      }
+    ]
+  },
   "sw": {
     "title": "Chaguzi za Uwasilishaji",
     "introduction": [
@@ -270,6 +287,25 @@ const { projectPath, formPath } = useRoutes();
         "full": "Unda {webUser} na Jukumu la {dataCollector} kwa kila mtu ambaye atakuwa akikusanya data. Watumiaji hawa wataingia katika Kituo Kikuu ili kujaza Fomu hii katika kivinjari cha wavuti. Wasimamizi wa Miradi wanaweza pia kuunda Mawasilisho kutoka kwa kivinjari cha wavuti.",
         "webUser": "Mtumiaji wa Mtandao",
         "dataCollector": "Mkusanya Data"
+      }
+    ]
+  },
+  "zh-Hant": {
+    "title": "提交選項",
+    "introduction": [
+      "有多種選項可用於向 ODK Central 提交資料：",
+      {
+        "full": "建立 {appUsers} 並使用 {collect} Android 應用程式。當資料收集者需要存取多個表單、處於離線狀態或您有一個複雜的表單時，這是最合適的。",
+        "appUsers": "App 使用者"
+      },
+      {
+        "full": "建立一個或多個 {publicLinks} 以與進行自我報告的受訪者分享。",
+        "publicLinks": "公共訪問連結"
+      },
+      {
+        "full": "為每個要收集資料的人建立一個角色為 {dataCollector} 的 {webUser}。這些使用者將登入 Central 以在網頁瀏覽器中填寫此表格。專案管理員也可以從網頁瀏覽器建立提交。",
+        "webUser": "網路使用者",
+        "dataCollector": "資料收集者"
       }
     ]
   }

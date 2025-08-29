@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <page-section id="submission-basic-details">
-    <template #heading><span>{{ $t('common.basicInfo') }}</span></template>
+    <template #heading><span><span class="icon-file"></span>{{ $t('submissionDetails') }}</span></template>
     <template #body>
       <loading :state="initiallyLoading"/>
       <dl v-if="dataExists">
@@ -30,10 +30,9 @@ except according to the terms contained in the LICENSE file.
           <dd><date-time :iso="submission.__system.submissionDate"/></dd>
         </div>
         <div>
-          <dt>{{ $t('reviewState') }}</dt>
-          <dd id="submission-basic-details-review-state">
-            <span :class="reviewStateIcon(submission.__system.reviewState)"></span>
-            <span>{{ $t(`reviewState.${submission.__system.reviewState}`) }}</span>
+          <dt>{{ $t('common.reviewState') }}</dt>
+          <dd>
+            <submission-review-state :value="submission.__system.reviewState"/>
           </dd>
         </div>
         <div>
@@ -74,20 +73,24 @@ import DateTime from '../date-time.vue';
 import FormVersionString from '../form-version/string.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import SubmissionReviewState from './review-state.vue';
 
-import useReviewState from '../../composables/review-state';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionBasicDetails',
-  components: { DateTime, FormVersionString, Loading, PageSection },
+  components: {
+    DateTime,
+    FormVersionString,
+    Loading,
+    PageSection,
+    SubmissionReviewState
+  },
   setup() {
     const { submission, submissionVersion, resourceStates } = useRequestData();
-    const { reviewStateIcon } = useReviewState();
     return {
       submission, submissionVersion,
-      ...resourceStates([submission, submissionVersion]),
-      reviewStateIcon
+      ...resourceStates([submission, submissionVersion])
     };
   },
   computed: {
@@ -110,6 +113,12 @@ export default {
 @import '../../assets/scss/mixins';
 
 #submission-basic-details {
+  .icon-file {
+    @include icon-box;
+    font-size: 20px;
+    margin-right: $margin-right-icon;
+  }
+
   margin-bottom: 35px;
 
   dd { @include text-overflow-ellipsis; }
@@ -121,22 +130,12 @@ export default {
     margin-right: $margin-right-icon;
   }
 }
-
-#submission-basic-details-review-state {
-  [class^="icon-"] { margin-right: $margin-right-icon; }
-
-  .icon-dot-circle-o { color: #999; }
-  .icon-comments { color: $color-warning; }
-  .icon-pencil { color: #666; }
-  .icon-check-circle { color: $color-success; }
-  .icon-times-circle { color: $color-danger; }
-}
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "reviewState": "Review State",
+    "submissionDetails": "Submission Details",
     "formVersion": "Form version",
     "deviceId": "Device ID",
     "userAgent": "User agent",
@@ -157,7 +156,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "reviewState": "Stav kontroly",
     "formVersion": "Verze formuláře",
     "deviceId": "ID zařízení",
     "userAgent": "Uživatelský agent",
@@ -167,7 +165,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "de": {
-    "reviewState": "Überprüfungsstatus",
+    "submissionDetails": "Übermittlungsdetails",
     "formVersion": "Formular Version",
     "deviceId": "Geräte-ID",
     "userAgent": "User-Agent",
@@ -177,7 +175,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "es": {
-    "reviewState": "Estado de revisión",
+    "submissionDetails": "Detalles de envío",
     "formVersion": "Versión formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente de usuario",
@@ -187,7 +185,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "fr": {
-    "reviewState": "État",
+    "submissionDetails": "Détail de la soumission",
     "formVersion": "Version de formulaire",
     "deviceId": "ID d'appareil",
     "userAgent": "\"User agent\"",
@@ -197,14 +195,15 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "id": {
-    "reviewState": "Status ulasan",
+    "formVersion": "Versi formulir",
     "deviceId": "ID Perangkat",
+    "attachments": "Lampiran",
     "present": "{count} berkas",
     "expected": "{count} diharapkan",
     "attachmentSummary": "{present} / {expected}"
   },
   "it": {
-    "reviewState": "Rivedi lo stato",
+    "submissionDetails": "Dettagli invio",
     "formVersion": "Versione formulario",
     "deviceId": "ID del dispositivo",
     "userAgent": "Agente utente",
@@ -214,7 +213,6 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "ja": {
-    "reviewState": "レビュー・ステータス",
     "formVersion": "フォームのバージョン",
     "deviceId": "デバイスID",
     "userAgent": "ユーザーエージェント",
@@ -222,14 +220,32 @@ export default {
     "expected": "{count}件の期待されるメディアファイル数",
     "attachmentSummary": "{present} / {expected}"
   },
+  "pt": {
+    "formVersion": "Versão do formulário",
+    "deviceId": "ID do dispositivo",
+    "userAgent": "Agente de usuário",
+    "attachments": "Anexos",
+    "present": "{count} arquivo | {count} arquivos | {count} arquivos",
+    "expected": "{count} esperado | {count} esperados | {count} esperados",
+    "attachmentSummary": "{present} / {expected}"
+  },
   "sw": {
-    "reviewState": "Kagua hali",
     "formVersion": "Toleo la fomu",
     "deviceId": "Kitambulisho cha Kifaa",
     "userAgent": "Wakala wa mtumiaji",
     "attachments": "Viambatisho",
     "present": "faili {count} | faili {count}",
     "expected": "{count} inatarajiwa | {count} inatarajiwa",
+    "attachmentSummary": "{present} / {expected}"
+  },
+  "zh-Hant": {
+    "submissionDetails": "提交詳情",
+    "formVersion": "表單版本",
+    "deviceId": "裝置ID",
+    "userAgent": "使用者代理",
+    "attachments": "附件",
+    "present": "{count} 個檔案",
+    "expected": "{count} 預期的",
     "attachmentSummary": "{present} / {expected}"
   }
 }

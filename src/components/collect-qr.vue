@@ -12,38 +12,200 @@ except according to the terms contained in the LICENSE file.
 
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <span class="collect-qr" v-html="imgHtml"></span>
+  <span class="collect-qr" :class="idClass" v-html="imgHtml"></span>
+  <canvas v-show="false" ref="qrCanvas"></canvas>
 </template>
 <!-- eslint-enable vue/no-v-html -->
 
 <script>
+let id = 0;
+</script>
+<script setup>
 import qrcode from 'qrcode-generator';
 import pako from 'pako/lib/deflate';
+import { inject, onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-export default {
-  name: 'CollectQr',
-  props: {
-    settings: {
-      type: Object,
-      required: true
-    },
-    errorCorrectionLevel: {
-      type: String,
-      required: true
-    },
-    cellSize: {
-      type: Number,
-      required: true
-    }
+import useEventListener from '../composables/event-listener';
+
+const { t } = useI18n();
+
+defineOptions({
+  name: 'CollectQr'
+});
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    required: true
   },
-  computed: {
-    imgHtml() {
-      const code = qrcode(0, this.errorCorrectionLevel);
-      const json = JSON.stringify(this.settings);
-      code.addData(btoa(pako.deflate(json, { to: 'string' })));
-      code.make();
-      return code.createImgTag(this.cellSize, 0);
+  errorCorrectionLevel: {
+    type: String,
+    required: true
+  },
+  cellSize: {
+    type: Number,
+    required: true
+  },
+  draft: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const qrCanvas = ref(null);
+const imgHtml = ref('');
+
+const margin = 15;
+const textFontSize = 16;
+
+const renderQrCode = () => {
+  const code = qrcode(0, props.errorCorrectionLevel);
+  const json = JSON.stringify(props.settings);
+  code.addData(btoa(pako.deflate(json, { to: 'string' })));
+  code.make();
+
+  // Compute image size
+  // blocks (based on length of encoded data) * cell size + (2 * margin)
+  const width = code.getModuleCount() * props.cellSize + margin * 2;
+  const height = props.draft ? width + textFontSize : width;
+  qrCanvas.value.width = width;
+  qrCanvas.value.height = height;
+
+  // Get the canvas context to render into
+  const ctx = qrCanvas.value.getContext('2d');
+
+  // Background
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, width, height);
+
+  // The QR code renders at position (0,0) so in order to draw it with a margin,
+  // we need to transform the coordinate system by 15px horizontally and vertically.
+  // After drawing the QR code, we reset the transformation so the rest of the
+  // rendering (icon and text) is positioned relative to the entire image.
+  ctx.translate(margin, margin);
+  code.renderTo2dContext(ctx, props.cellSize);
+  ctx.resetTransform();
+
+  if (props.draft) {
+    // Draw outlined rounded white rect to put icon inside of
+    ctx.beginPath();
+    ctx.roundRect(width * 0.4, width * 0.4, width * 0.2, width * 0.2, [10, 10]);
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fill();
+
+    // Draw icon
+    ctx.font = `${width * 0.15}px icomoon`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const icon = '\u{1F4DD}'; // memo emoji
+    ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
+
+    // Write text at the bottom
+    ctx.font = `${textFontSize}px Monaco, Menlo, Consolas, "Courier New", monospace`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'red';
+    ctx.fillText(t('draft'), margin, width, width);
+  }
+
+  const img = document.createElement('img');
+  img.src = qrCanvas.value.toDataURL();
+  img.width = width;
+  img.height = height;
+  img.alt = t('altText');
+
+  imgHtml.value = img.outerHTML;
+};
+
+// The QR code is rendered to a canvas (possibly with additional icons and text)
+// and then the canvas data is converted to an image via toDataURL and used as the source
+// of an image tag.
+// If the settings change, the QR code image is re-rendered.
+onMounted(() => {
+  renderQrCode();
+});
+
+id += 1;
+// We have to use a class, not an id, because a QR code shown in a popover will
+// be rendered in two places in the DOM. Also due to the popover, we can't use
+// Vue event handlers. See the Popover component for details.
+const idClass = `collect-qr${id}`;
+const config = inject('config');
+useEventListener(document.body, 'click', (event) => {
+  if (config.devTools && event.target.parentNode.classList.contains(idClass))
+    console.log(props.settings); // eslint-disable-line no-console
+});
+
+watch(() => props.settings, () => {
+  // If the settings change, we should re-render the QR code.
+  // This whole component could probably change again now that
+  // the popover is allowed to have a reactive component within it.
+  renderQrCode();
+});
+</script>
+
+<style lang="scss">
+
+.collect-qr img {
+  margin: -15px;
+}
+
+</style>
+
+<i18n lang="json5">
+  {
+    "en": {
+      // This is shown below a QR code for a draft form.
+      "draft": "Temporary Testing Code",
+      // @transifexKey component.FieldKeyQrPanel.title.managed
+      "altText": "Client Configuration Code"
     }
   }
-};
-</script>
+</i18n>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "cs": {
+    "draft": "Dočasný testovací kód",
+    "altText": "Konfigurační kód klienta"
+  },
+  "de": {
+    "draft": "Vorläufiger Testcode",
+    "altText": "Client Configuration Code"
+  },
+  "es": {
+    "draft": "Código de prueba temporal",
+    "altText": "Código de configuración del cliente"
+  },
+  "fr": {
+    "draft": "Code de Test Temporaire",
+    "altText": "Code de configuration du client."
+  },
+  "id": {
+    "altText": "Kode Konfigurrasi Klien"
+  },
+  "it": {
+    "draft": "Codice di test temporaneo",
+    "altText": "Codice configurazione del Client"
+  },
+  "ja": {
+    "altText": "クライアントの設定コード"
+  },
+  "pt": {
+    "draft": "Código para teste temporário",
+    "altText": "Código de configuração de cliente"
+  },
+  "sw": {
+    "altText": "Msimbo wa Usanidi wa Mteja"
+  },
+  "zh-Hant": {
+    "draft": "臨時測試程式碼",
+    "altText": "客戶端配置QR code"
+  }
+}
+</i18n>

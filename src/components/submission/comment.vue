@@ -99,7 +99,6 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
-@import '../../assets/scss/mixins';
 
 #submission-comment {
   margin-bottom: 15px;
@@ -113,21 +112,6 @@ export default {
     .icon-pencil { margin-right: 10px; }
   }
 }
-
-#submission-comment-actions {
-  @include clearfix;
-  animation-duration: 0.4s;
-  animation-iteration-count: 1;
-  animation-name: expand;
-  animation-timing-function: $ease-extreme-out;
-  margin-top: 5px;
-}
-
-@keyframes expand {
-  0% { margin-bottom: -12px; }
-  100% { margin-bottom: 0; }
-}
-
 </style>
 
 <i18n lang="json5">
@@ -162,8 +146,14 @@ export default {
   "ja": {
     "editWithoutComment": "データが編集されました。あなたが実施した変更について説明して下さい。"
   },
+  "pt": {
+    "editWithoutComment": "Você fez alterações nesse registro. Por favor, descreva as mudanças efetuadas."
+  },
   "sw": {
     "editWithoutComment": "Umefanya mabadiliko kwenye data hii. Tafadhali eleza mabadiliko uliyofanya."
+  },
+  "zh-Hant": {
+    "editWithoutComment": "您已對此資料進行了編輯。請描述您所做的變更。"
   }
 }
 </i18n>

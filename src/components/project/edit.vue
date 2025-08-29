@@ -33,11 +33,6 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ProjectEdit'
-};
-</script>
 <script setup>
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -49,6 +44,10 @@ import MarkdownTextarea from '../markdown/textarea.vue';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'ProjectEdit'
+});
 
 // The component assumes that this data will exist when the component is
 // created.
@@ -100,7 +99,7 @@ const submit = () => {
       "note": "Add notes, links, instructions and other resources here."
     },
     "alert": {
-      "success": "Project settings saved!"
+      "success": "Project settings saved."
     }
   }
 }
@@ -115,9 +114,6 @@ const submit = () => {
       "name": "Název projektu",
       "description": "Popis Projektu",
       "note": "Sem přidejte poznámky, odkazy, návody a další zdroje."
-    },
-    "alert": {
-      "success": "Nastavení projektu uloženo."
     }
   },
   "de": {
@@ -139,7 +135,7 @@ const submit = () => {
       "note": "Agregue notas, enlaces, instrucciones y otros recursos aquí."
     },
     "alert": {
-      "success": "¡Configuración del proyecto guardada!"
+      "success": "Configuración del proyecto guardada."
     }
   },
   "fr": {
@@ -150,16 +146,14 @@ const submit = () => {
       "note": "Ajoutez des notes, des liens, des instructions ou autres ressources ici."
     },
     "alert": {
-      "success": "Paramètres du projet enregistrés !"
+      "success": "Paramètres du projet enregistrés."
     }
   },
   "id": {
     "title": "Rincian Dasar",
     "field": {
-      "name": "Nama Proyek"
-    },
-    "alert": {
-      "success": "Pengaturan proyek tersimpan!"
+      "name": "Nama Proyek",
+      "description": "Deskripsi Proyek"
     }
   },
   "it": {
@@ -170,16 +164,21 @@ const submit = () => {
       "note": "Aggiungi note, collegamenti, istruzioni e altre risorse qui."
     },
     "alert": {
-      "success": "Impostazioni del progetto salvate!"
+      "success": "Impostazioni progetto salvate."
     }
   },
   "ja": {
     "title": "基本詳細",
     "field": {
       "name": "プロジェクト名"
-    },
-    "alert": {
-      "success": "プロジェクト設定の保存完了！"
+    }
+  },
+  "pt": {
+    "title": "Detalhes básicos",
+    "field": {
+      "name": "Nome do projeto",
+      "description": "Descrição do projeto",
+      "note": "Adicione notas, links, instruções e outros recursos aqui."
     }
   },
   "sw": {
@@ -188,9 +187,17 @@ const submit = () => {
       "name": "Jina la mradi",
       "description": "Maelezo ya mradi",
       "note": "Ongeza vidokezo, viungo, maagizo na nyenzo zingine hapa."
+    }
+  },
+  "zh-Hant": {
+    "title": "基本訊息",
+    "field": {
+      "name": "專案名稱",
+      "description": "專案描述",
+      "note": "在此處新增註釋、連結、指示和其他資源。"
     },
     "alert": {
-      "success": "Mipangilio ya mradi imehifadhiwa!"
+      "success": "專案設定已儲存。"
     }
   }
 }

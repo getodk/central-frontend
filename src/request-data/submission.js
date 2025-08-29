@@ -22,12 +22,14 @@ export default () => {
       result.__system = reactive(result.__system);
       return result;
     },
-    instanceNameOrId: computeIfExists(() => {
+    instanceName: computeIfExists(() => {
       const { meta } = submission;
-      return meta != null && typeof meta.instanceName === 'string'
-        ? meta.instanceName
-        : submission.__id;
-    })
+      if (meta == null || typeof meta !== 'object') return null;
+      const { instanceName } = meta;
+      return typeof instanceName === 'string' ? instanceName : null;
+    }),
+    instanceNameOrId: computeIfExists(() =>
+      submission.instanceName ?? submission.__id)
   }));
   const submissionVersion = createResource('submissionVersion');
   const audits = createResource('audits');

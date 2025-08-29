@@ -6,6 +6,7 @@ import useDatasets from '../../../src/request-data/datasets';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
+import { apiPaths } from '../../../src/util/request';
 
 // The names of the following properties correspond to requestData resources.
 const responseDefaults = {
@@ -18,31 +19,51 @@ const responseDefaults = {
   forms: () => testData.extendedForms.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
   // useForm()
-  formVersions: () => testData.extendedFormVersions.published(),
-  // useFields()
-  fields: () => testData.extendedForms.last()._fields,
+  formVersions: [
+    ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/versions$/.test(url),
+    () => testData.extendedFormVersions.published()
+  ],
 
   // Common local resources
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
-  odata: testData.submissionOData,
   odataEntities: testData.entityOData,
-  keys: () => testData.standardKeys.sorted(),
   audits: () => testData.extendedAudits.sorted()
 };
 
-for (const [resourceName, callback] of Object.entries(responseDefaults))
-  responseDefaults[resourceName] = () => mockResponse.of(callback());
+/**
+ * Checks if a given URL matches the expected API path pattern.
+ *
+ * This function converts an API path function into a regex pattern and tests
+ * whether the provided URL conforms to that pattern.
+ *
+ * @param {Function} apiPathFn
+ * A function that generates the expected API path. Optional arguments are ignored
+ * @param {string} url
+ * The URL to be tested against the API path pattern.
+ * @returns {boolean}
+ * `true` if the URL matches the expected API path pattern, otherwise `false`.
+ */
+const matchesApiPath = (apiPathFn, url) => {
+  const ALPHA_NUMERIC = 'ALPHA_NUMERIC';
+  const ALPH_NUMERIC_REGEX = '[^/]+';
+
+  // call apiPathFn with placeholders, fn.length returns lenght of required args only
+  const regex = new RegExp(`^${apiPathFn(...Array(apiPathFn.length).fill(ALPHA_NUMERIC))
+    .replaceAll(ALPHA_NUMERIC, ALPH_NUMERIC_REGEX)}(\\?.+)?$`);
+
+  return regex.test(url);
+};
 
 const componentResponses = (map) => Object.entries(map)
-  .map(([resourceName, callbackOrTrue]) => {
-    const callback = callbackOrTrue === true
-      ? responseDefaults[resourceName]
-      : () => mockResponse.of(callbackOrTrue());
-    return [resourceName, callback];
-  });
+  .map(([resourceName, response]) => [
+    resourceName,
+    response === true ? responseDefaults[resourceName] : response
+  ]);
 
 const responsesByComponent = {
+  ConfigError: [],
+
   AccountLogin: [],
   AccountResetPassword: [],
   AccountClaim: [],
@@ -71,21 +92,49 @@ const responsesByComponent = {
   FormShow: componentResponses({
     project: true,
     form: () => testData.extendedForms.last(),
-    formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
-      ? testData.extendedFormDrafts.last()
-      : mockResponse.problem(404.1)),
-    attachments: () => (testData.extendedFormVersions.last().publishedAt == null
-      ? testData.standardFormAttachments.sorted()
-      : mockResponse.problem(404.1))
+
+    // Conditional responses (mockHttp().respondIf())
+    publishedAttachments: [
+      ({ url }) => matchesApiPath(apiPaths.publishedAttachments, url),
+      () => testData.standardFormAttachments.sorted()
+    ],
+    formDatasetDiff: [
+      ({ url }) => matchesApiPath(apiPaths.formDatasetDiff, url),
+      () => testData.formDatasetDiffs.sorted()
+    ],
+    appUserCount: [
+      ({ url }) => matchesApiPath(apiPaths.formActors, url),
+      () => testData.extendedFieldKeys.sorted()
+    ]
   }),
-  FormOverview: componentResponses({
-    publishedAttachments: () => testData.standardFormAttachments.sorted()
+  FormPreview: componentResponses({
+    form: [
+      ({ url }) => matchesApiPath(apiPaths.form, url) ||
+                   matchesApiPath(apiPaths.formDraft, url),
+      () => (testData.extendedFormVersions.last().publishedAt
+        ? testData.extendedForms.last()
+        : testData.extendedFormDrafts.last())
+    ]
   }),
-  FormVersionList: componentResponses({ formVersions: true }),
+  FormSubmission: componentResponses({
+    project: [
+      ({ url }) => matchesApiPath(apiPaths.project, url),
+      () => testData.extendedProjects.last()
+    ],
+    form: [
+      ({ url }) => matchesApiPath(apiPaths.form, url) ||
+                   matchesApiPath(apiPaths.formDraft, url) ||
+                   matchesApiPath(apiPaths.formByEnketoId, url),
+      () => (testData.extendedFormVersions.last().publishedAt
+        ? testData.extendedForms.last()
+        : testData.extendedFormDrafts.last())
+    ]
+  }),
   FormSubmissions: componentResponses({
-    keys: true,
-    fields: true,
-    odata: true,
+    keys: () => testData.standardKeys.sorted(),
+    deletedSubmissionCount: () => testData.submissionDeletedOData(0),
+    fields: () => testData.extendedForms.last()._fields,
+    odata: testData.submissionOData,
     submitters: () => testData.extendedFieldKeys
       .sorted()
       .sort((fieldKey1, fieldKey2) =>
@@ -95,23 +144,49 @@ const responsesByComponent = {
   PublicLinkList: componentResponses({
     publicLinks: () => testData.standardPublicLinks.sorted()
   }),
-  FormSettings: [],
-  FormDraftStatus: componentResponses({ formVersions: true }),
-  FormAttachmentList: [],
-  FormDraftTesting: componentResponses({
-    keys: true,
-    fields: true,
-    odata: true
+  FormVersionList: componentResponses({ formVersions: true }),
+  FormEdit: componentResponses({
+    formDraft: () => (testData.extendedFormVersions.last().publishedAt == null
+      ? testData.extendedFormDrafts.last()
+      : mockResponse.problem(404.1)),
+
+    draftAttachments: [
+      ({ url }) => matchesApiPath(apiPaths.formDraftAttachments, url),
+      () => testData.standardFormAttachments.sorted()
+    ],
+    formVersions: true,
+    formDraftDatasetDiff: [
+      ({ url }) => matchesApiPath(apiPaths.formDraftDatasetDiff, url),
+      () => testData.formDraftDatasetDiffs.sorted()
+    ],
+    datasets: [
+      ({ url }) => matchesApiPath(apiPaths.datasets, url),
+      () => testData.extendedDatasets.sorted()
+    ],
+    keys: [
+      ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.submissionKeys(projectId, xmlFormId, true), url),
+      () => testData.standardKeys.sorted()
+    ],
+    fields: [
+      ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.fields(projectId, xmlFormId, true), url),
+      () => testData.extendedForms.last()._fields
+    ],
+    odata: [
+      ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.odataSubmissions(projectId, xmlFormId, true), url),
+      testData.submissionOData
+    ]
   }),
+  FormSettings: [],
   SubmissionShow: componentResponses({
     project: true,
+    form: () => testData.extendedForms.last(),
     submission: () => {
       const odata = testData.submissionOData();
       const selected = odata.value.map(pick(['__id', '__system', 'meta']));
       return { ...odata, value: selected };
     },
     submissionVersion: () => ({}),
-    fields: true,
+    fields: () => testData.extendedForms.last()._fields,
     audits: true,
     comments: () => testData.extendedComments.sorted(),
     diffs: () => ({})
@@ -122,6 +197,7 @@ const responsesByComponent = {
   }),
   DatasetOverview: [],
   DatasetEntities: componentResponses({
+    deletedEntityCount: () => testData.entityDeletedOData(0),
     odataEntities: true
   }),
   DatasetSettings: [],
@@ -131,7 +207,7 @@ const responsesByComponent = {
     dataset: true,
     audits: () => testData.extendedAudits.sorted()
       .filter(({ action }) => action.startsWith('entity.')),
-    diffs: () => []
+    entityVersions: () => testData.extendedEntityVersions.sorted()
   }),
 
   UserHome: [],

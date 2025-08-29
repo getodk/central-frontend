@@ -2,7 +2,6 @@ import useRoutes from '../../src/composables/routes';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
-import { mockLogin } from '../util/session';
 import { mockRouter } from '../util/router';
 import { withSetup } from '../util/lifecycle';
 
@@ -88,20 +87,8 @@ describe('useRoutes()', () => {
   });
 
   describe('publishedFormPath', () => {
-    it('returns form overview URL when user can route', () => {
-      mockLogin({ role: 'admin' });
+    it('returns a path', () => {
       const project = testData.extendedProjects.createNew();
-      const container = createTestContainer({
-        router: mockRouter('/projects/1'),
-        requestData: { project }
-      });
-      const { publishedFormPath } = withSetup(useRoutes, { container });
-      publishedFormPath(1, 'f').should.equal('/projects/1/forms/f');
-    });
-
-    it('returns submissions page URL when user can not route', () => {
-      mockLogin({ role: 'none' });
-      const project = testData.extendedProjects.createNew({ role: 'viewer' });
       const container = createTestContainer({
         router: mockRouter('/projects/1'),
         requestData: { project }
@@ -120,41 +107,57 @@ describe('useRoutes()', () => {
     });
   });
 
+  describe('editSubmissionPath()', () => {
+    it('returns the correct path if webformsEnabled is true', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { editSubmissionPath } = withSetup(useRoutes, { container });
+      const path = editSubmissionPath(1, 'a b', 'c d', true);
+      path.should.equal('/projects/1/forms/a%20b/submissions/c%20d/edit');
+    });
+
+    it('returns the correct path if webformsEnabled is false', () => {
+      const container = createTestContainer({ router: mockRouter('/') });
+      const { editSubmissionPath } = withSetup(useRoutes, { container });
+      const path = editSubmissionPath(1, 'a b', 'c d', false);
+      path.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
+    });
+  });
+
   describe('datasetPath()', () => {
     it('returns a path if given three arguments', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { datasetPath } = withSetup(useRoutes, { container });
       const path = datasetPath(1, 'trees', 'entities');
-      path.should.equal('/projects/1/datasets/trees/entities');
+      path.should.equal('/projects/1/entity-lists/trees/entities');
     });
 
     it('returns a path if given two arguments', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { datasetPath } = withSetup(useRoutes, { container });
-      datasetPath(1, 'trees').should.equal('/projects/1/datasets/trees');
+      datasetPath(1, 'trees').should.equal('/projects/1/entity-lists/trees');
     });
 
     it('infers projectId and datasetName if given one argument', () => {
       const container = createTestContainer({
-        router: mockRouter('/projects/1/datasets/trees')
+        router: mockRouter('/projects/1/entity-lists/trees/properties')
       });
       const { datasetPath } = withSetup(useRoutes, { container });
       const path = datasetPath('entities');
-      path.should.equal('/projects/1/datasets/trees/entities');
+      path.should.equal('/projects/1/entity-lists/trees/entities');
     });
 
     it('infers projectId and datasetName if given no arguments', () => {
       const container = createTestContainer({
-        router: mockRouter('/projects/1/datasets/trees/entities')
+        router: mockRouter('/projects/1/entity-lists/trees/entities')
       });
       const { datasetPath } = withSetup(useRoutes, { container });
-      datasetPath().should.equal('/projects/1/datasets/trees');
+      datasetPath().should.equal('/projects/1/entity-lists/trees');
     });
 
     it('encodes the dataset name', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { datasetPath } = withSetup(useRoutes, { container });
-      datasetPath(1, 'á').should.equal('/projects/1/datasets/%C3%A1');
+      datasetPath(1, 'á').should.equal('/projects/1/entity-lists/%C3%A1');
     });
   });
 
@@ -163,7 +166,7 @@ describe('useRoutes()', () => {
       const container = createTestContainer({ router: mockRouter('/') });
       const { entityPath } = withSetup(useRoutes, { container });
       const path = entityPath(1, 'a b', 'abcd1234');
-      path.should.equal('/projects/1/datasets/a%20b/entities/abcd1234');
+      path.should.equal('/projects/1/entity-lists/a%20b/entities/abcd1234');
     });
   });
 });

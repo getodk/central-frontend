@@ -2,19 +2,25 @@ import { RouterLinkStub } from '@vue/test-utils';
 import { START_LOCATION, createMemoryHistory, routeLocationKey, routerKey } from 'vue-router';
 import { shallowRef } from 'vue';
 
+import sinon from 'sinon';
 import RouterViewStub from './components/router-view-stub.vue';
 
 import createCentralRouter from '../../src/router';
+import { createScrollBehavior } from '../../src/scroll-behavior';
 import { noop } from '../../src/util/util';
 
 // Returns a function to create a real router configured for use in testing.
-export const testRouter = () => (container) =>
+export const testRouter = () => (container) => createCentralRouter(container, {
   // Using memory history mode because there were issues using hash mode. In
   // hash mode, when the router is installed on an application instance, the
   // router examines the hash to determine the initial location. But that
   // becomes an issue during testing, because the hash diverges from the current
   // route over time: Headless Chrome seems to rate-limit hash changes.
-  createCentralRouter(container, createMemoryHistory());
+  history: createMemoryHistory(),
+  // In production, scrolling animates smoothly, but in testing, we make it
+  // instant. That way, we don't have to wait for the animation to complete.
+  scrollBehavior: createScrollBehavior('instant')
+});
 
 /*
 Use setInstallLocation() when you want to trigger a navigation, then mount a
@@ -44,12 +50,13 @@ is initialized. If installed on an app instance, the object will register stubs
 for <router-link> and <router-view>. If you need a router that can navigate, use
 testRouter(). */
 export const mockRouter = (location = undefined) => (container) => {
-  const router = createCentralRouter(container, createMemoryHistory());
+  const router = testRouter()(container);
   const currentRoute = shallowRef(location != null
     ? router.resolve(location)
     : START_LOCATION);
   const mock = {
     currentRoute,
+    options: router.options,
     isReady: currentRoute.value !== START_LOCATION
       ? () => Promise.resolve()
       : () => { throw new Error('not ready'); },
@@ -66,7 +73,8 @@ export const mockRouter = (location = undefined) => (container) => {
 
       app.component('RouterLink', RouterLinkStub);
       app.component('RouterView', RouterViewStub);
-    }
+    },
+    push: sinon.fake()
   };
   for (const prop of ['getRoutes', 'hasRoute', 'resolve'])
     mock[prop] = router[prop].bind(router);

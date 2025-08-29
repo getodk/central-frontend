@@ -11,17 +11,16 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="expandable-row">
-    <div class="title-cell">
+    <div class="expandable-row-title">
       <slot name="title"></slot>
     </div>
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div class="caption-cell" @click="toggleExpanded">
       <slot name="caption"></slot>
     </div>
-
     <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
     <div class="button-cell" @click="toggleExpanded">
-      <button type="button" class="btn btn-link">
+      <button type="button" class="expandable-row-toggle-button btn btn-link">
         <span v-if="!expanded" class="sr-only">{{ $t('action.expand') }}</span>
         <span v-else class="sr-only">{{ $t('action.collapse') }}</span>
         <span v-if="!expanded" class="icon-caret-left"></span>
@@ -29,42 +28,42 @@ except according to the terms contained in the LICENSE file.
       </button>
     </div>
     <div v-show="expanded" class="expanded-row">
-        <slot name="details"></slot>
+      <slot name="details"></slot>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 
-export default {
-  name: 'ExpandableRow',
-  data() {
-    return {
-      expanded: false
-    };
+defineOptions({
+  name: 'ExpandableRow'
+});
+
+const props = defineProps({
+  initiallyExpanded: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    toggleExpanded() {
-      this.expanded = !this.expanded;
-    }
-  }
-};
+});
 
+const expanded = ref(props.initiallyExpanded);
+const toggleExpanded = () => { expanded.value = !expanded.value; };
 </script>
 
 <style lang="scss">
-@import '../assets/scss/_variables.scss';
 @import '../assets/scss/mixins';
 
 .expandable-row {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
 
-  &> div {
-    padding: 8px 0;
+  > div {
+    padding-block: $padding-top-expandable-row;
   }
 
-  .title-cell {
+  .expandable-row-title {
     flex-grow: 1;
   }
 
@@ -78,21 +77,18 @@ export default {
   .button-cell {
     align-self: center;
     text-align: center;
-    padding: 0px;
+    padding-block: 0;
     width: 30px;
-
-    button {
-      padding: 0;
-
-      @include text-link;
-    }
   }
 
-  .expanded-row{
+  .expanded-row {
     width: 100%;
-    padding: 0 8px 16px 8px;
+    padding: 0 8px $padding-bottom-expandable-row 8px;
   }
 }
 
-
+.expandable-row-toggle-button {
+  @include text-link;
+  padding: 0;
+}
 </style>

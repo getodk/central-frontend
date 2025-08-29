@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { comparator, omit } from 'ramda';
 
 import { dataStore, view } from './data-store';

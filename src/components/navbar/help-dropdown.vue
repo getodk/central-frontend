@@ -23,19 +23,18 @@ except according to the terms contained in the LICENSE file.
         <a href="https://forum.getodk.org/" target="_blank">{{ $t('common.forum') }}</a>
       </li>
       <li>
-        <a href="/version.txt" target="_blank">{{ $t('version') }}</a>
+        <a href="/version.txt" target="_blank">{{ $t('common.version') }}</a>
       </li>
     </ul>
   </li>
 </template>
 
-<script>
+<script setup>
 import DocLink from '../doc-link.vue';
 
-export default {
-  name: 'NavbarHelpDropdown',
-  components: { DocLink }
-};
+defineOptions({
+  name: 'NavbarHelpDropdown'
+});
 </script>
 
 <i18n lang="json5">
@@ -43,10 +42,7 @@ export default {
   "en": {
     // This text is used to label a help menu that lists links to useful
     // resources.
-    "help": "Help",
-    // This is the text of a link that shows what version of ODK Central is in
-    // use.
-    "version": "Version"
+    "help": "Help"
   }
 }
 </i18n>
@@ -55,34 +51,31 @@ export default {
 <i18n>
 {
   "cs": {
-    "help": "Nápověda",
-    "version": "Verze"
+    "help": "Nápověda"
   },
   "de": {
-    "help": "Hilfe",
-    "version": "Version"
+    "help": "Hilfe"
   },
   "es": {
-    "help": "Ayuda",
-    "version": "Versión"
+    "help": "Ayuda"
   },
   "fr": {
-    "help": "Aide",
-    "version": "Version"
+    "help": "Aide"
   },
   "id": {
-    "version": "Versi"
+    "help": "Bantuan"
   },
   "it": {
-    "help": "Aiuto",
-    "version": "Versione"
+    "help": "Aiuto"
   },
-  "ja": {
-    "version": "バージョン"
+  "pt": {
+    "help": "Ajuda"
   },
   "sw": {
-    "help": "msaada",
-    "version": "Toleo"
+    "help": "msaada"
+  },
+  "zh-Hant": {
+    "help": "幫助"
   }
 }
 </i18n>

@@ -6,6 +6,7 @@
 
     <popover :target="popover.target" placement="left" @hide="hide">
       <p>{{ popover.text }}</p>
+      <button type="button" data-closes-popover>close</button>
     </popover>
   </div>
 </template>

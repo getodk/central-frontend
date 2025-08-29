@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { pick, sum } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -55,7 +55,7 @@ const forms = dataStore({
         })
         .last(),
     xmlFormId = `f${id !== 1 ? id : ''}`,
-    name = faker.random.boolean() ? faker.name.findName() : null,
+    name = null,
     enketoId = 'xyz',
     draft = !inPast,
     publishedAt = undefined,
@@ -66,6 +66,8 @@ const forms = dataStore({
       : extendedUsers.createPast(1).last(),
     fields = [testDataFields.string('/s')],
     entityRelated = false,
+    publicLinks = 0,
+    webformsEnabled = false,
 
     ...extraVersionOptions
   }) => {
@@ -78,6 +80,8 @@ const forms = dataStore({
       enketoOnceId,
       state,
       entityRelated,
+      publicLinks,
+      webformsEnabled,
       // If publishedAt was specified, set createdAt to publishedAt in order to
       // ensure that createdAt is not after publishedAt.
       createdAt: !draft && publishedAt != null
@@ -137,6 +141,7 @@ formVersions = dataStore({
     version = 'v1',
     draft = false,
     key = null,
+    hash = 'a'.repeat(32),
     sha256 = 'a'.repeat(64),
     enketoId,
     publishedAt = undefined,
@@ -145,13 +150,14 @@ formVersions = dataStore({
     lastSubmission = undefined,
     reviewStates = undefined,
     publishedBy = undefined,
-    draftToken = draft ? faker.random.alphaNumeric(64) : null
+    draftToken = draft ? faker.string.alphanumeric(64) : null
   }) => {
     if (form === undefined) throw new Error('form not found');
     const result = {
       formId: form.id,
       version,
       keyId: key != null ? key.id : null,
+      hash,
       sha256,
       excelContentType
     };
@@ -197,11 +203,19 @@ const basicFormProps = [
   'state',
   'createdAt',
   'updatedAt',
+  'webformsEnabled',
   '_fields'
 ];
 // Properties from formVersions above that will be added to all forms and form
 // versions in the views below
-const basicVersionProps = ['version', 'keyId', 'publishedAt', 'draftToken'];
+const basicVersionProps = [
+  'version',
+  'keyId',
+  'hash',
+  'sha256',
+  'publishedAt',
+  'draftToken'
+];
 
 const findVersionForForm = (form) => {
   let draft;
@@ -233,7 +247,10 @@ export const extendedForms = view(
   (form) => {
     const version = findVersionForForm(form);
     return {
-      ...pick([...basicFormProps, 'enketoId', 'createdBy', 'entityRelated'], form),
+      ...pick(
+        [...basicFormProps, 'enketoId', 'createdBy', 'entityRelated', 'publicLinks'],
+        form
+      ),
       ...pick([...basicVersionProps, 'excelContentType'], version),
       ...pick(
         ['submissions', 'lastSubmission', 'reviewStates'],
@@ -266,7 +283,10 @@ export const standardFormDrafts = view(
 export const extendedFormDrafts = view(
   formVersions,
   (version) => ({
-    ...pick([...basicFormProps, 'createdBy', 'entityRelated'], findFormForVersion(version)),
+    ...pick(
+      [...basicFormProps, 'createdBy', 'entityRelated', 'publicLinks'],
+      findFormForVersion(version)
+    ),
     ...pick(
       [...basicVersionProps, 'enketoId', 'excelContentType', 'submissions', 'reviewStates'],
       version

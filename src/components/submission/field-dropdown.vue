@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <multiselect id="submission-field-dropdown" :model-value="modelValue"
     :options="options" :label="$t('field.columns')" :placeholder="placeholder"
-    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :all="$t('action.all')" :none="$t('action.none')"
     :search="$t('field.search')"
     @update:model-value="$emit('update:modelValue', $event)">
     <template #after-list="{ selected }">
@@ -23,18 +23,15 @@ except according to the terms contained in the LICENSE file.
   </multiselect>
 </template>
 
-<script>
-export default {
-  name: 'SubmissionFieldDropdown'
-};
-</script>
 <script setup>
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import Multiselect from '../multiselect.vue';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'SubmissionFieldDropdown'
+});
 defineProps({
   modelValue: {
     type: Array,
@@ -52,18 +49,13 @@ const options = computed(() => fields.selectable.map(field => ({
   text: field.name,
   description: field.header
 })));
-const { t } = useI18n();
-const placeholder = (counts) => t('placeholder', counts);
+const placeholder = (counts) => counts.selected;
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
 #submission-field-dropdown {
-  select {
-    background-color: #777;
-    color: #fff;
-  }
 
   .dropdown-menu { width: 275px; }
   .after-list {
@@ -78,10 +70,6 @@ const placeholder = (counts) => t('placeholder', counts);
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a dropdown that allows the user to select which
-    // columns to display in a table. {selected} is the number of columns
-    // selected; {total} is the total number of columns.
-    "placeholder": "{selected} of {total}",
     "field": {
       // This is shown beneath text that indicates the number of columns that
       // the user has selected to display in a table. For example, that text may
@@ -91,24 +79,16 @@ const placeholder = (counts) => t('placeholder', counts);
       "search": "Search columns…"
     },
     "action": {
-      "select": {
-        /*
-        This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {all} is in the
-        following text:
-
-        Select {all} / {none}
-        */
-        "all": "All",
-        /*
-        This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {none} is in
-        the following text:
-
-        Select {all} / {none}
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of column selector,
+      that allows the user to select all columns.
+      */
+      "all": "All",
+      /*
+      This is the text of the button in dropdown menu of column selector,
+      that allows the user to unselect all columns.
+      */
+      "none": "None"
     },
     "warning": "Selecting too many columns might slow down your computer."
   }
@@ -119,114 +99,92 @@ const placeholder = (counts) => t('placeholder', counts);
 <i18n>
 {
   "cs": {
-    "placeholder": "{selected} z {total}",
     "field": {
       "columns": "Zobrazené sloupce",
       "search": "Hledat sloupce…"
     },
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Nic"
-      }
-    },
     "warning": "Výběr příliš mnoha sloupců může zpomalit počítač."
   },
   "de": {
-    "placeholder": "{selected} von {total}",
     "field": {
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
     },
     "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
+      "all": "Alle",
+      "none": "Keine"
     },
     "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
-    "placeholder": "{selected} de {total}",
     "field": {
       "columns": "Se muestran las columnas",
       "search": "Buscar columnas…"
     },
     "action": {
-      "select": {
-        "all": "Todas",
-        "none": "Ninguna"
-      }
+      "all": "Todos",
+      "none": "Ninguno"
     },
     "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
-    "placeholder": "{selected} sur {total}",
     "field": {
       "columns": "Colonnes affichées",
       "search": "Chercher des colonnes"
     },
     "action": {
-      "select": {
-        "all": "Tous/toutes",
-        "none": "Aucun(e)"
-      }
+      "all": "Toutes",
+      "none": "Aucune"
     },
     "warning": "Sélectionner trop de colonnes peut ralentir votre ordinateur."
   },
   "id": {
-    "placeholder": "{selected} dari {total}",
     "field": {
       "columns": "Kolom terlihat",
       "search": "Mencari kolom..."
-    },
-    "action": {
-      "select": {
-        "all": "Semua",
-        "none": "Jangan Semua"
-      }
     }
   },
   "it": {
-    "placeholder": "{selected} di {total}",
     "field": {
       "columns": "Colonne mostrate",
       "search": "Cerca colonne..."
     },
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
+      "all": "Tutto",
+      "none": "Nessuno/a"
     },
     "warning": "La selezione di troppe colonne potrebbe rallentare il computer."
   },
   "ja": {
-    "placeholder": "{total}列の内{selected}列",
     "field": {
       "columns": "表示された列",
       "search": "列を検索"
-    },
-    "action": {
-      "select": {
-        "all": "全て",
-        "none": "なし"
-      }
     }
   },
+  "pt": {
+    "field": {
+      "columns": "Colunas exibidas",
+      "search": "Colunas de busca..."
+    },
+    "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
+  },
   "sw": {
-    "placeholder": "{selected} kati ya {total}",
     "field": {
       "columns": "Safu wima zimeonyeshwa",
       "search": "Tafuta safu wima..."
     },
-    "action": {
-      "select": {
-        "all": "zote",
-        "none": "hakuna"
-      }
-    },
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
+  },
+  "zh-Hant": {
+    "field": {
+      "columns": "顯示欄位",
+      "search": "搜尋欄位..."
+    },
+    "action": {
+      "all": "全部",
+      "none": "無"
+    },
+    "warning": "選擇太多列可能會降低計算機的速度。"
   }
 }
 </i18n>

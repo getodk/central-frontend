@@ -16,6 +16,6 @@ describe('FormVersionString', () => {
       props: { version: '' }
     });
     component.text().should.equal('(blank)');
-    component.classes('blank-version').should.be.true();
+    component.classes('blank-version').should.be.true;
   });
 });

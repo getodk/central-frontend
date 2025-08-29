@@ -102,7 +102,7 @@ describe('FormTrashRow', () => {
       const button = mountComponent({ xmlFormId: 'foo' }).get('.form-trash-row-restore-button');
       button.element.tagName.should.equal('BUTTON');
       button.attributes('aria-disabled').should.equal('true');
-      button.should.have.ariaDescription('This Form cannot be undeleted because an active Form with the same ID exists.');
+      button.should.have.ariaDescription('This Form cannot be restored because an active Form with the same ID exists.');
       await button.should.tooltip();
     });
   });

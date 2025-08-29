@@ -15,18 +15,25 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('title') }}</span>
     </template>
     <template #body>
-      <iframe src="https://getodk.github.io/central/news.html" :title="$t('title')"></iframe>
+      <iframe :src="iframeSrc" :title="$t('title')"></iframe>
     </template>
   </page-section>
 </template>
 
-<script>
+<script setup>
+import { computed, inject } from 'vue';
 import PageSection from '../page/section.vue';
 
-export default {
-  name: 'HomeNews',
-  components: { PageSection }
-};
+defineOptions({
+  name: 'HomeNews'
+});
+
+const container = inject('container');
+const { i18n: globalI18n } = container;
+const locale = computed(() => globalI18n.locale);
+
+const iframeSrc = computed(() => `https://getodk.github.io/central/news.html?outdatedVersionWarning=false&lang=${locale.value}`);
+
 </script>
 
 <style lang="scss">
@@ -36,6 +43,7 @@ export default {
   iframe {
     border-width: 0;
     height: 40px;
+    width: calc(100% - 35px);
   }
 }
 </style>
@@ -64,11 +72,20 @@ export default {
   "fr": {
     "title": "Nouvelles"
   },
+  "id": {
+    "title": "Berita"
+  },
   "it": {
     "title": "Novità"
   },
+  "pt": {
+    "title": "Notícias"
+  },
   "sw": {
     "title": "Habari"
+  },
+  "zh-Hant": {
+    "title": "新訊息"
   }
 }
 </i18n>

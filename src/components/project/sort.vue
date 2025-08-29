@@ -12,12 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="project-sort">
     <form class="form-inline" @submit.prevent>
-      <span id="project-sort-label">{{ $t('action.sort') }}</span>
       <label class="form-group">
+        <span id="project-sort-label">{{ $t('action.sort') }}</span>
         <select :value="modelValue" class="form-control"
           @change="$emit('update:modelValue', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
-          <option value="latest">{{ $t('header.lastSubmission') }}</option>
+          <option value="latest">{{ $t('header.recentActivity') }}</option>
           <option value="newest">{{ $t('sortOptions.newest') }}</option>
         </select>
       </label>
@@ -25,31 +25,28 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'ProjectSort',
-  components: {},
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue']
-};
+<script setup>
+defineOptions({
+  name: 'ProjectSort'
+});
+defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
 </script>
 
 <style lang="scss">
-
 #project-sort {
   float: right;
 
   #project-sort-label {
     font-size: 14px;
     padding-right: 8px;
+    vertical-align: middle;
   }
-
 }
 </style>
 
@@ -92,16 +89,34 @@ export default {
       "newest": "Plus récent"
     }
   },
+  "id": {
+    "sortOptions": {
+      "alphabetical": "Urutan Abjad",
+      "newest": "Terbaru"
+    }
+  },
   "it": {
     "sortOptions": {
       "alphabetical": "Alfabetico",
       "newest": "Il più nuovo"
     }
   },
+  "pt": {
+    "sortOptions": {
+      "alphabetical": "Em ordem alfabética",
+      "newest": "Mais recentes"
+    }
+  },
   "sw": {
     "sortOptions": {
       "alphabetical": "Kialfabeti",
       "newest": "Mpya zaidi"
+    }
+  },
+  "zh-Hant": {
+    "sortOptions": {
+      "alphabetical": "按字母順序",
+      "newest": "新專案優先"
     }
   }
 }

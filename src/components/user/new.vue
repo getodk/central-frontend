@@ -14,20 +14,22 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')" @shown="focusEmailInput">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
+      <p class="modal-introduction">
+        {{ !config.oidcEnabled ? $t('introduction[0]') : $t('oidcIntroduction[0]') }}
+      </p>
       <form @submit.prevent="submit">
         <form-group ref="email" v-model.trim="email" type="email"
           :placeholder="$t('field.email')" required autocomplete="off"/>
         <form-group v-model.trim="displayName" type="text"
           :placeholder="$t('field.displayName')" autocomplete="off"/>
         <div class="modal-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
-          </button>
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
+          </button>
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
+            {{ $t('action.create') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>
@@ -36,6 +38,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { equals } from 'ramda';
+
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
@@ -46,6 +50,7 @@ import { noop } from '../../util/util';
 export default {
   name: 'UserNew',
   components: { FormGroup, Modal, Spinner },
+  inject: ['config'],
   props: {
     state: {
       type: Boolean,
@@ -77,7 +82,15 @@ export default {
     submit() {
       const postData = { email: this.email };
       if (this.displayName !== '') postData.displayName = this.displayName;
-      this.request({ method: 'POST', url: '/v1/users', data: postData })
+      this.request({
+        method: 'POST',
+        url: '/v1/users',
+        data: postData,
+        problemToAlert: ({ code, details }) =>
+          (code === 409.3 && equals(details.fields, ['email', 'deleted'])
+            ? this.$t('problem.409_3', { email: details.values[0] })
+            : null)
+      })
         .then(response => {
           this.$emit('success', response.data);
         })
@@ -94,7 +107,13 @@ export default {
     "title": "Create Web User",
     "introduction": [
       "Once you create this account, the email address you provide will be sent instructions on how to set a password and proceed."
-    ]
+    ],
+    "oidcIntroduction": [
+      "Users on your login server must have a Central account to log in to Central. Once you create this account, the user on your login server with the email address you provide will be able to log in to Central."
+    ],
+    "problem": {
+      "409_3": "It looks like {email} already has an account. Please try another email address."
+    }
   }
 }
 </i18n>
@@ -106,25 +125,46 @@ export default {
     "title": "Vytvořit webového uživatele",
     "introduction": [
       "Po vytvoření tohoto účtu vám bude zaslána e-mailová adresa, kterou zadáte, s pokyny, jak nastavit heslo a jak pokračovat."
+    ],
+    "oidcIntroduction": [
+      "Uživatelé na přihlašovacím serveru musí mít účet Central, aby se mohli přihlásit do Central. Jakmile tento účet vytvoříte, bude se uživatel na přihlašovacím serveru s vámi zadanou e-mailovou adresou moci přihlásit do Centralu."
     ]
   },
   "de": {
     "title": "Web-Benutzer anlegen",
     "introduction": [
       "Sobald Sie dieses Benutzerkonto angelegt haben, senden wir eine Email mit weiteren Schritten zur Passworterstellung an die angegebene E-Mail-Adresse."
-    ]
+    ],
+    "oidcIntroduction": [
+      "Benutzer auf Ihrem Anmeldeserver müssen über ein Central-Konto verfügen, um sich bei Central anzumelden. Sobald Sie dieses Konto erstellt haben, kann sich der Benutzer auf Ihrem Anmeldeserver mit der von Ihnen angegebenen E-Mail-Adresse bei Central anmelden."
+    ],
+    "problem": {
+      "409_3": "Es sieht so aus, als hätte {email} bereits ein Konto. Bitte versuchen Sie eine andere Emailadresse."
+    }
   },
   "es": {
     "title": "Crear usuario web",
     "introduction": [
       "Al crear esta cuenta, se enviarán al correo electrónico que ha proporcionado las instrucciones para establecer una contraseña y cómo proceder."
-    ]
+    ],
+    "oidcIntroduction": [
+      "Los usuarios de su servidor de inicio de sesión deben tener una cuenta de Central para iniciar sesión en Central. Una vez que cree esta cuenta, el usuario en su servidor de inicio de sesión con la dirección de correo electrónico que proporcione podrá iniciar sesión en Central."
+    ],
+    "problem": {
+      "409_3": "Parece que {email} ya tiene una cuenta. Por favor, prueba con otra dirección de correo electrónico."
+    }
   },
   "fr": {
     "title": "Créer un utilisateur web",
     "introduction": [
       "Une fois que vous aurez créé ce compte, l'adresse de courriel que vous aurez fournie recevra des instructions sur la manière de définir un mot de passe et de procéder."
-    ]
+    ],
+    "oidcIntroduction": [
+      "Les utilisateurs de votre serveur de connexion doivent avoir un compte Central pour se connecter à Central. Une fois ce compte créé, l'utilisateur de votre serveur de connexion ayant cette adresse de courriel pourra se connecter à Central."
+    ],
+    "problem": {
+      "409_3": "Il semblerait que {email} dispose déjà d'un compte. Merci d'essayer une autre adresse de courriel."
+    }
   },
   "id": {
     "title": "Buat Pengguna Web",
@@ -136,7 +176,13 @@ export default {
     "title": "Crea un Utente Web",
     "introduction": [
       "Una volta creato questo account, all'indirizzo email fornito verranno inviate le istruzioni su come impostare una password e procedere."
-    ]
+    ],
+    "oidcIntroduction": [
+      "Gli utenti del server di accesso devono avere un account Central per accedere a Central. Una volta creato questo account, l'utente del server di accesso con l'indirizzo e-mail fornito potrà accedere a Central."
+    ],
+    "problem": {
+      "409_3": "Sembra che {email} abbia già un account. Per favore, prova un altro indirizzo email."
+    }
   },
   "ja": {
     "title": "Webユーザーの作成",
@@ -144,11 +190,38 @@ export default {
       "このアカウントを作成すると、登録したメールアドレスにパスワード設定方法と今後の手順を記載したメールが送信されます。"
     ]
   },
+  "pt": {
+    "title": "Criar usuário do site",
+    "introduction": [
+      "Quando você criar essa conta, o endereço de email fornecido receberá instruções sobre como criar uma senha e os próximos passos."
+    ],
+    "oidcIntroduction": [
+      "Usuários em seu servidor de login devem ter uma conta no Central para fazer login no Central. Depois de criar essa conta, o usuário no seu servidor de login com o endereço de e-mail que você fornecer poderá fazer login no Central."
+    ],
+    "problem": {
+      "409_3": "Parece que {email} já tem uma conta. Tente outro endereço de e-mail."
+    }
+  },
   "sw": {
     "title": "Unda Mtumiaji wa Wavuti",
     "introduction": [
       "Ukishafungua akaunti hii, barua pepe utakayotoa itatumiwa maelekezo ya jinsi ya kuweka nenosiri na kuendelea."
+    ],
+    "oidcIntroduction": [
+      "Watumiaji kwenye seva yako ya kuingia lazima wawe na akaunti ya Kati ili kuingia Kati. Mara tu unapofungua akaunti hii, mtumiaji kwenye seva yako ya kuingia na anwani ya barua pepe unayotoa ataweza kuingia kwenye Central."
     ]
+  },
+  "zh-Hant": {
+    "title": "建立網頁使用者",
+    "introduction": [
+      "建立此帳戶後，您提供的電子郵件地址將收到有關如何設定密碼並繼續操作的說明。"
+    ],
+    "oidcIntroduction": [
+      "登入伺服器上的使用者必須擁有 Central 帳戶才能登入 Central。建立此帳戶後，登入伺服器上使用您提供的電子郵件地址的使用者將能夠登入 Central。"
+    ],
+    "problem": {
+      "409_3": "{email} 似乎已經有一個帳戶。請嘗試其他電子郵件地址。"
+    }
   }
 }
 </i18n>

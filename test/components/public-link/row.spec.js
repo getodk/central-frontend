@@ -48,7 +48,7 @@ describe('PublicLinkRow', () => {
           token: 'abc'
         });
         const url = mountComponent().get('.access-link .selectable').text();
-        url.should.equal('http://localhost:9876/-/single/xyz?st=abc');
+        url.should.equal('http://localhost:9876/f/xyz?st=abc');
       });
 
       it('indicates if the form does not have an enketoId', async () => {
@@ -77,7 +77,7 @@ describe('PublicLinkRow', () => {
           token: 'abc'
         });
         const url = mountComponent().get('.access-link .selectable').text();
-        url.should.equal('http://localhost:9876/-/single/zyx?st=abc');
+        url.should.equal('http://localhost:9876/f/zyx?st=abc');
       });
 
       it('indicates if the form does not have an enketoOnceId', async () => {
@@ -113,7 +113,7 @@ describe('PublicLinkRow', () => {
 
     it('does not render button if public link does not have a token', () => {
       testData.standardPublicLinks.createPast(1, { token: null });
-      mountComponent().find('.btn-danger').exists().should.be.false();
+      mountComponent().find('.btn-danger').exists().should.be.false;
     });
   });
 });

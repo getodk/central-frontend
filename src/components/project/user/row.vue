@@ -28,9 +28,7 @@ except according to the terms contained in the LICENSE file.
             </option>
             <option value="">{{ $t('role.none') }}</option>
           </select>
-          <span class="spinner-container">
-            <spinner :state="awaitingResponse"/>
-          </span>
+          <spinner :state="awaitingResponse"/>
         </div>
       </form>
     </td>
@@ -137,12 +135,6 @@ export default {
     display: inline-block;
     width: 215px;
   }
-
-  .spinner-container {
-    margin-left: 15px;
-    // Spinner is positioned absolutely.
-    position: relative;
-  }
 }
 </style>
 
@@ -202,10 +194,22 @@ export default {
       "projectRole": "プロジェクトでの役割"
     }
   },
+  "pt": {
+    "cannotAssignRole": "Você não pode alterar a sua própria função no projeto.",
+    "field": {
+      "projectRole": "Função de projeto"
+    }
+  },
   "sw": {
     "cannotAssignRole": "Huenda usihariri Jukumu lako la Mradi.",
     "field": {
       "projectRole": "Jukumu la Mradi"
+    }
+  },
+  "zh-Hant": {
+    "cannotAssignRole": "您不得編輯自己的專案角色。",
+    "field": {
+      "projectRole": "專案角色"
     }
   }
 }

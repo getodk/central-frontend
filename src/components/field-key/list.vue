@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div>
     <div class="heading-with-button">
       <button id="field-key-list-create-button" type="button"
-        class="btn btn-primary" @click="showModal('newFieldKey')">
+        class="btn btn-primary" @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
       <i18n-t tag="p" keypath="heading[0].full">
@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
       <i18n-t tag="p" keypath="heading[1].full">
         <template #clickHere>
-          <a href="#" @click.prevent="showModal('submissionOptions')">{{ $t('heading[1].clickHere') }}</a>
+          <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
         </template>
       </i18n-t>
     </div>
@@ -43,7 +43,8 @@ except according to the terms contained in the LICENSE file.
       <tbody v-if="fieldKeys.dataExists">
         <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
           :field-key="fieldKey" :highlighted="highlighted"
-          @show-code="showPopover" @revoke="showRevoke"/>
+          @toggle-qr="togglePopover"
+          @revoke="revokeModal.show({ fieldKey: $event })"/>
       </tbody>
     </table>
     <loading :state="fieldKeys.initiallyLoading"/>
@@ -56,11 +57,11 @@ except according to the terms contained in the LICENSE file.
       @hide="hidePopover">
       <field-key-qr-panel :field-key="popover.fieldKey" :managed="managed"/>
     </popover>
-    <field-key-new :state="newFieldKey.state" :managed="managed"
-      @hide="hideModal('newFieldKey')" @success="afterCreate"/>
+    <field-key-new v-bind="createModal" :managed="managed"
+      @hide="createModal.hide()" @success="afterCreate"/>
     <project-submission-options v-bind="submissionOptions"
-      @hide="hideModal('submissionOptions')"/>
-    <field-key-revoke v-bind="revoke" @hide="hideRevoke"
+      @hide="submissionOptions.hide()"/>
+    <field-key-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
       @success="afterRevoke"/>
   </div>
 </template>
@@ -75,8 +76,8 @@ import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -91,7 +92,6 @@ export default {
     FieldKeyRevoke,
     ProjectSubmissionOptions
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -116,16 +116,9 @@ export default {
         fieldKey: null
       },
       // Modals
-      newFieldKey: {
-        state: false
-      },
-      submissionOptions: {
-        state: false
-      },
-      revoke: {
-        state: false,
-        fieldKey: null
-      }
+      createModal: modalData(),
+      submissionOptions: modalData(),
+      revokeModal: modalData()
     };
   },
   created() {
@@ -142,13 +135,17 @@ export default {
       this.$emit('fetch-field-keys', resend);
       this.highlighted = null;
     },
-    showPopover(fieldKey, link) {
-      this.popover.target = link;
-      this.popover.fieldKey = fieldKey;
-    },
     hidePopover() {
       this.popover.target = null;
       this.popover.fieldKey = null;
+    },
+    togglePopover(fieldKey, link) {
+      if (this.popover.target == null) {
+        this.popover.target = link;
+        this.popover.fieldKey = fieldKey;
+      } else {
+        this.hidePopover();
+      }
     },
     switchCode(event) {
       if (event.target.closest('.field-key-qr-panel .switch-code') == null)
@@ -159,33 +156,20 @@ export default {
 
       if (this.popover.target != null) {
         this.$nextTick(() => {
-          // Changing this.managed may change the height of the popover: the
-          // height of the QR code may change, and there may be a locale for
-          // which the height of the text will change.
-          this.$refs.popover.update();
-
           document.querySelector('.popover .field-key-qr-panel .switch-code')
             .focus();
         });
       }
     },
-    showRevoke(fieldKey) {
-      this.revoke.fieldKey = fieldKey;
-      this.showModal('revoke');
-    },
-    hideRevoke() {
-      this.hideModal('revoke');
-      this.revoke.fieldKey = null;
-    },
     afterCreate(fieldKey) {
       this.fetchData(true);
-      this.hideModal('newFieldKey');
+      this.createModal.hide();
       this.alert.success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
       this.fetchData(true);
-      this.hideRevoke();
+      this.revokeModal.hide();
       this.alert.success(this.$t('alert.revoke', fieldKey));
     }
   }
@@ -227,7 +211,7 @@ export default {
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
-      "revoke": "Access was revoked for the App User “{displayName}”."
+      "revoke": "App User {displayName}’s access successfully revoked."
     }
   }
 }
@@ -256,8 +240,7 @@ export default {
     },
     "emptyTable": "Zatím nejsou žádní uživatelé aplikace. Pro stažení formulářů a odeslání dat z vašeho zařízení budete muset vytvořit nějaké.",
     "alert": {
-      "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen.",
-      "revoke": "Přístup k aplikaci byl zrušen uživateli „{displayName}“."
+      "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen."
     }
   },
   "de": {
@@ -280,8 +263,7 @@ export default {
     },
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
     "alert": {
-      "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
-      "revoke": "Die Zugriffsberechtigng für App-Benuzter \"{displayName}\" wurde entzogen."
+      "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden."
     }
   },
   "es": {
@@ -305,7 +287,7 @@ export default {
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
     "alert": {
       "create": "El usuario móvil \"{displayName}\" se creó correctamente.",
-      "revoke": "Se revocó el acceso para el usuario móvil \"{displayName}\"."
+      "revoke": "El usuario móvil \"{displayName}\" ha sido revocado con éxito."
     }
   },
   "fr": {
@@ -352,8 +334,7 @@ export default {
     },
     "emptyTable": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda.",
     "alert": {
-      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat.",
-      "revoke": "Akses untuk Pengguna Aplikasi \"{displayName}\" telah dicabut."
+      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat."
     }
   },
   "it": {
@@ -377,7 +358,7 @@ export default {
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",
     "alert": {
       "create": "L'Utente App \"{displayName}\" è stato creato correttamente.",
-      "revoke": "L'accesso per l'Utente App “{displayName}” è stato revocato."
+      "revoke": "L'accesso per Utente App {displayName} è stato revocato con successo."
     }
   },
   "ja": {
@@ -400,8 +381,30 @@ export default {
     },
     "emptyTable": "アプリユーザーが登録されていません。デバイスからフォームのダウンロードと提出を行うには、アプリユーザーを作成する必要があります。",
     "alert": {
-      "create": "アプリユーザー\"{displayName}\"は正常に作成されました。",
-      "revoke": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
+      "create": "アプリユーザー\"{displayName}\"は正常に作成されました。"
+    }
+  },
+  "pt": {
+    "action": {
+      "create": "Criar usuário de aplicativo"
+    },
+    "heading": [
+      {
+        "full": "Usuários de aplicativo são usados para coletar dados usando uma aplicação como o {collect}. Eles tipicamente representam uma função como \"Vacinador\" mas também podem representar indivíduos. Usuários de aplicativo nesse projeto pode baixar e utilizar formulários apenas dentro desse projeto. Quando você cria um novo usuário de aplicativo, ele não terá acesso a nenhum formulário inicialmente. Para definir os formulários que cada usuário de aplicativo pode acessar, utilize a aba {formAccess}.",
+        "formAccess": "Acesso ao formulário"
+      },
+      {
+        "full": "Usuários de aplicativo são mais apropriados quando coletores de dados precisam acessar múltiplos formulários, não tem acesso constante à internet, ou quando você tem um formulário complexo. Se você precisa que os entrevistados preencham o formulário sozinhos ou ter o formulário disponível apenas na internet, {clickHere} para outras opções.",
+        "clickHere": "clique aqui"
+      }
+    ],
+    "header": {
+      "lastUsed": "Última utilização em",
+      "configureClient": "Configurar cliente"
+    },
+    "emptyTable": "Não existe nenhum usuário de aplicativo ainda. Você terá que criar um para baixar formulários e enviar dados a partir do seu dispositivo.",
+    "alert": {
+      "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso."
     }
   },
   "sw": {
@@ -424,8 +427,31 @@ export default {
     },
     "emptyTable": "Bado hakuna Watumiaji wa Programu. Utahitaji kuunda baadhi ili kupakua Fomu na kuwasilisha data kutoka kwa kifaa chako",
     "alert": {
-      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa.",
-      "revoke": "Ufikiaji umebatilishwa kwa Mtumiaji wa Programu \"{displayName}\"."
+      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa."
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "create": "建立APP使用者"
+    },
+    "heading": [
+      {
+        "full": "APP使用者用於從應用程式（例如 {collect}）收集資料。他們通常代表一個共同的角色，例如「疫苗接種者」，但也可能代表個人。本專案內的App使用者只能下載和使用本專案內的表單。當您建立新的APP使用者時，它首先無法存取任何表單。若要設定每個應用程式使用者可以存取的表單，請使用 {formAccess} 標籤。",
+        "formAccess": "表單存取"
+      },
+      {
+        "full": "當資料收集者需要存取多個表單、離線或您有複雜的表單時，應用程式使用者是最合適的。如果您需要受訪者自我報告或擁有僅限線上的表格，請{clickHere}了解其他選項。",
+        "clickHere": "點選此處"
+      }
+    ],
+    "header": {
+      "lastUsed": "最後更新",
+      "configureClient": "設定客戶端"
+    },
+    "emptyTable": "還沒有應用程式用戶。您將需要建立一些表格來下載表格並從您的裝置提交資料。",
+    "alert": {
+      "create": "APP使用者「{displayName}」已成功建立。",
+      "revoke": "App 使用者{displayName}的存取權成功撤銷。"
     }
   }
 }

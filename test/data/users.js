@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -18,13 +18,14 @@ export const extendedUsers = dataStore({
     id,
     lastCreatedAt,
 
-    displayName = faker.name.findName(),
-    email = `${faker.random.uuid()}@getodk.org`,
+    displayName = faker.person.fullName(),
+    email = `${faker.string.uuid()}@getodk.org`,
     // Sitewide role
     role = 'admin',
     verbs = verbsByRole(role),
     createdAt = undefined,
-    deletedAt = undefined
+    deletedAt = undefined,
+    preferences = undefined
   }) => ({
     id,
     type: 'user',
@@ -35,10 +36,17 @@ export const extendedUsers = dataStore({
       ? createdAt
       : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
     updatedAt: null,
-    deletedAt
+    deletedAt,
+    preferences: {
+      site: preferences?.site ?? {},
+      projects: preferences?.projects ?? {}
+    }
   }),
   sort: (administrator1, administrator2) =>
     administrator1.email.localeCompare(administrator2.email)
 });
 
-export const standardUsers = view(extendedUsers, omit(['verbs']));
+export const standardUsers = view(
+  extendedUsers,
+  omit(['verbs', 'preferences'])
+);

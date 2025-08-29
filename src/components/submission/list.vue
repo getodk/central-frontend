@@ -13,67 +13,110 @@ except according to the terms contained in the LICENSE file.
   <div id="submission-list">
     <loading :state="fields.initiallyLoading"/>
     <div v-show="selectedFields != null">
-      <div id="submission-list-actions">
-        <form class="form-inline" @submit.prevent>
-          <submission-filters v-if="!draft" v-model:submitterId="submitterIds"
-            v-model:submissionDate="submissionDateRange"
-            v-model:reviewState="reviewStates"/>
-          <submission-field-dropdown
-            v-if="selectedFields != null && fields.selectable.length > 11"
-            v-model="selectedFields"/>
-          <button id="submission-list-refresh-button" type="button"
-            class="btn btn-default" :aria-disabled="refreshing"
-            @click="fetchChunk(0, false)">
-            <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-            <spinner :state="refreshing"/>
+      <div id="submission-list-actions" class="table-actions-bar">
+        <template v-if="draft">
+          <button id="submission-list-test-on-device" type="button"
+            class="btn btn-outlined" @click="$emit('toggle-qr', $event.target)">
+            <span class="icon-qrcode"></span>{{ $t('action.testOnDevice') }}
           </button>
+          <enketo-fill v-if="formVersion.dataExists"
+            id="submission-list-test-in-browser" :form-version="formVersion">
+            <span class="icon-desktop"></span>{{ $t('action.testInBrowser') }}
+          </enketo-fill>
+        </template>
+        <form v-if="!draft" class="form-inline" @submit.prevent>
+          <submission-filters v-model:submitterId="submitterIds"
+            v-model:submissionDate="submissionDateRange"
+            v-model:reviewState="reviewStates"
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
-        <submission-download-button :form-version="formVersion"
-          :filtered="odataFilter != null" @download="showModal('download')"/>
+        <!-- TODO: merge these two forms -->
+        <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
+          <submission-field-dropdown
+          v-if="selectedFields != null && fields.selectable.length > 11"
+          v-model="selectedFields"/>
+        </form>
+        <button id="submission-list-refresh-button" type="button"
+          class="btn btn-outlined move-right" :aria-disabled="refreshing"
+          @click="fetchChunk(false, true)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
+        <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
+          :to="'.form-submissions-heading-row'">
+          <submission-download-button :form-version="formVersion"
+            :aria-disabled="deleted"
+            :filtered="odataFilter != null && !deleted"
+            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+            @download="showDownloadModal"
+            @download-filtered="showDownloadModal(true)"/>
+        </teleport-if-exists>
       </div>
-      <submission-table v-show="odata.dataExists && odata.value.length !== 0"
+      <submission-table v-show="odata.dataExists"
         ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :fields="selectedFields" @review="showReview"/>
-      <p v-show="odata.dataExists && odata.value.length === 0"
-        class="empty-table-message">
-        {{ odataFilter == null ? $t('submission.emptyTable') : $t('noMatching') }}
+        :draft="draft" :fields="selectedFields"
+        :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+        @review="reviewModal.show({ submission: $event })"
+        @delete="showDelete"
+        @restore="showRestore"/>
+      <p v-show="emptyTableMessage" class="empty-table-message">
+        {{ emptyTableMessage }}
       </p>
-      <div v-show="odataLoadingMessage != null" id="submission-list-message">
-        <div id="submission-list-spinner-container">
-          <spinner :state="odataLoadingMessage != null"/>
-        </div>
-        <div id="submission-list-message-text">{{ odataLoadingMessage }}</div>
-      </div>
+      <odata-loading-message type="submission"
+        :top="pagination.size"
+        :odata="odata"
+        :filter="!!odataFilter"
+        :refreshing="refreshing"
+        :total-count="formVersion.dataExists ? formVersion.submissions : 0"/>
+
+        <!-- @update:page is emitted on size change as well -->
+        <pagination v-if="pagination.count > 0"
+              v-model:page="pagination.page" v-model:size="pagination.size"
+              :count="pagination.count" :size-options="pageSizeOptions"
+              :spinner="odata.awaitingResponse"
+              @update:page="handlePageChange()"/>
     </div>
 
-    <submission-download :state="download.state" :form-version="formVersion"
-      :odata-filter="odataFilter" @hide="hideModal('download')"/>
-    <submission-update-review-state :state="review.state"
-      :project-id="projectId" :xml-form-id="xmlFormId"
-      :submission="review.submission" @hide="hideReview"
+    <submission-download v-bind="downloadModal" :form-version="formVersion"
+      @hide="downloadModal.hide(false)"/>
+    <submission-update-review-state v-bind="reviewModal" :project-id="projectId"
+      :xml-form-id="xmlFormId" @hide="reviewModal.hide()"
       @success="afterReview"/>
+    <submission-delete v-bind="deleteModal" checkbox
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.submission.__id)"
+      @hide="deleteModal.hide()" @delete="requestDelete"/>
+    <submission-restore v-bind="restoreModal" checkbox
+      :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.submission.__id)"
+      @hide="restoreModal.hide()" @restore="requestRestore"/>
   </div>
 </template>
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watchEffect } from 'vue';
+import { shallowRef, watch, reactive } from 'vue';
 
+import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
+import OdataLoadingMessage from '../odata-loading-message.vue';
 import SubmissionDownload from './download.vue';
 import SubmissionDownloadButton from './download-button.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
 import SubmissionTable from './table.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
+import SubmissionDelete from './delete.vue';
+import SubmissionRestore from './restore.vue';
+import Pagination from '../pagination.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 
-import modal from '../../mixins/modal';
 import useFields from '../../request-data/fields';
+import useQueryRef from '../../composables/query-ref';
 import useReviewState from '../../composables/review-state';
-import useSubmissions from '../../request-data/submissions';
+import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
+import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
@@ -81,16 +124,21 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'SubmissionList',
   components: {
+    EnketoFill,
     Loading,
+    OdataLoadingMessage,
+    Pagination,
     Spinner,
+    SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
     SubmissionFieldDropdown,
     SubmissionFilters,
+    SubmissionRestore,
     SubmissionTable,
-    SubmissionUpdateReviewState
+    SubmissionUpdateReviewState,
+    TeleportIfExists
   },
-  mixins: [modal()],
   inject: ['alert'],
   props: {
     projectId: {
@@ -102,32 +150,71 @@ export default {
       required: true
     },
     draft: Boolean,
-    // Returns the value of the $top query parameter.
-    top: {
-      type: Function,
-      default: (skip) => (skip < 1000 ? 250 : 1000)
+    deleted: {
+      type: Boolean,
+      required: false
     }
   },
+  emits: ['fetch-keys', 'fetch-deleted-count', 'toggle-qr'],
   setup(props) {
-    const { form, keys, resourceView } = useRequestData();
+    const { form, keys, resourceView, odata, submitters, deletedSubmissionCount } = useRequestData();
     const formVersion = props.draft
       ? resourceView('formDraft', (data) => data.get())
       : form;
     const fields = useFields();
-    const { odata, submitters } = useSubmissions();
-    // We do not reconcile `odata` with either form.lastSubmission or
-    // project.lastSubmission.
-    watchEffect(() => {
-      if (formVersion.dataExists && odata.dataExists &&
-        formVersion.submissions !== odata.count && !odata.filtered)
-        formVersion.submissions = odata.count;
-    });
 
+    const submitterIds = useQueryRef({
+      fromQuery: (query) => {
+        const stringIds = arrayQuery(query.submitterId, {
+          validator: (value) => /^[1-9]\d*$/.test(value)
+        });
+        return stringIds.length !== 0
+          ? stringIds.map(id => Number.parseInt(id, 10))
+          : (submitters.dataExists ? [...submitters.ids] : []);
+      },
+      toQuery: (value) => ({
+        submitterId: value.length === submitters.length
+          ? []
+          : value.map(id => id.toString())
+      })
+    });
+    watch(() => submitters.dataExists, () => {
+      if (submitterIds.value.length === 0 && submitters.length !== 0)
+        submitterIds.value = [...submitters.ids];
+    });
+    const submissionDateRange = useQueryRef({
+      fromQuery: (query) => {
+        if (typeof query.start === 'string' && typeof query.end === 'string') {
+          const start = DateTime.fromISO(query.start);
+          const end = DateTime.fromISO(query.end);
+          if (start.isValid && end.isValid && start <= end)
+            return [start.startOf('day'), end.startOf('day')];
+        }
+        return [];
+      },
+      toQuery: (value) => (value.length !== 0
+        ? { start: value[0].toISODate(), end: value[1].toISODate() }
+        : { start: null, end: null })
+    });
     const { reviewStates: allReviewStates } = useReviewState();
+    const reviewStates = useQueryRef({
+      fromQuery: (query) => arrayQuery(query.reviewState, {
+        validator: (value) => allReviewStates.some(reviewState =>
+          value === odataLiteral(reviewState)),
+        default: () => allReviewStates.map(odataLiteral)
+      }),
+      toQuery: (value) => ({
+        reviewState: value.length === allReviewStates.length ? [] : value
+      })
+    });
+    const { request } = useRequest();
+
+    const pageSizeOptions = [250, 500, 1000];
 
     return {
-      form, keys, fields, formVersion, odata, submitters,
-      allReviewStates
+      form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      request, pageSizeOptions
     };
   },
   data() {
@@ -139,56 +226,25 @@ export default {
       // among the options.)
       selectedFields: shallowRef(null),
       refreshing: false,
-      download: {
-        state: false
-      },
-      review: {
-        state: false,
-        submission: null
-      }
+      // Modals
+      downloadModal: modalData(),
+      reviewModal: modalData(),
+      deleteModal: modalData(),
+      restoreModal: modalData(),
+
+      // state that indicates whether we need to show delete confirmation dialog
+      confirmDelete: true,
+      // state that indicates whether we need to show restore confirmation dialog
+      confirmRestore: true,
+
+      awaitingResponses: new Set(),
+
+      pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
+      now: new Date().toISOString(),
+      snapshotFilter: ''
     };
   },
   computed: {
-    submitterIds: {
-      get() {
-        const stringIds = arrayQuery(this.$route.query.submitterId, {
-          validator: (value) => /^[1-9]\d*$/.test(value)
-        });
-        return stringIds.length !== 0
-          ? stringIds.map(id => Number.parseInt(id, 10))
-          : (this.submitters.dataExists ? [...this.submitters.ids] : []);
-      },
-      set(submitterIds) {
-        this.replaceFilters({ submitterIds });
-      }
-    },
-    submissionDateRange: {
-      get() {
-        const { query } = this.$route;
-        if (typeof query.start === 'string' && typeof query.end === 'string') {
-          const start = DateTime.fromISO(query.start);
-          const end = DateTime.fromISO(query.end);
-          if (start.isValid && end.isValid && start <= end)
-            return [start.startOf('day'), end.startOf('day')];
-        }
-        return [];
-      },
-      set(submissionDateRange) {
-        this.replaceFilters({ submissionDateRange });
-      }
-    },
-    reviewStates: {
-      get() {
-        return arrayQuery(this.$route.query.reviewState, {
-          validator: (value) => this.allReviewStates.some(reviewState =>
-            value === odataLiteral(reviewState)),
-          default: () => this.allReviewStates.map(odataLiteral)
-        });
-      },
-      set(reviewStates) {
-        this.replaceFilters({ reviewStates });
-      }
-    },
     filtersOnSubmitterId() {
       if (this.submitterIds.length === 0) return false;
       const selectedAll = this.submitters.dataExists &&
@@ -198,6 +254,7 @@ export default {
     },
     odataFilter() {
       if (this.draft) return null;
+
       const conditions = [];
       if (this.filtersOnSubmitterId) {
         const condition = this.submitterIds
@@ -225,77 +282,108 @@ export default {
       paths.unshift('__id', '__system');
       return paths.join(',');
     },
-    odataLoadingMessage() {
-      if (!this.odata.awaitingResponse || this.refreshing) return null;
-      if (!this.odata.dataExists) {
-        if (this.odataFilter != null)
-          return this.$t('loading.filtered.withoutCount');
-        if (!this.formVersion.dataExists || this.formVersion.submissions === 0)
-          return this.$t('loading.withoutCount');
-        const top = this.top(0);
-        if (this.formVersion.submissions <= top)
-          return this.$tcn('loading.all', this.formVersion.submissions);
-        return this.$tcn('loading.first', this.formVersion.submissions, {
-          top: this.$n(top, 'default')
-        });
-      }
+    emptyTableMessage() {
+      if (!this.odata.dataExists) return '';
+      if (this.odata.value.length > 0) return '';
 
-      const pathPrefix = this.odataFilter == null
-        ? 'loading'
-        : 'loading.filtered';
-      const remaining = this.odata.originalCount - this.odata.value.length;
-      const top = this.top(this.odata.skip);
-      if (remaining > top) {
-        return this.$tcn(`${pathPrefix}.middle`, remaining, {
-          top: this.$n(top, 'default')
-        });
+      if (this.odata.removedSubmissions.size === this.odata.count && this.odata.count > 0) {
+        return this.deleted ? this.$t('deletedSubmission.allRestored') : this.$t('allDeleted');
       }
-      return remaining > 1
-        ? this.$tcn(`${pathPrefix}.last.multiple`, remaining)
-        : this.$t(`${pathPrefix}.last.one`);
+      if (this.odata.removedSubmissions.size > 0 && this.odata.value.length === 0) {
+        return this.deleted ? this.$t('deletedSubmission.allRestoredOnPage') : this.$t('allDeletedOnPage');
+      }
+      return this.deleted ? this.$t('deletedSubmission.emptyTable')
+        : (this.odataFilter ? this.$t('noMatching') : this.$t('submission.emptyTable'));
     }
   },
   watch: {
     odataFilter() {
-      this.fetchChunk(0, true);
+      this.fetchChunk(true);
     },
     selectedFields(_, oldFields) {
-      if (oldFields != null) this.fetchChunk(0, true);
+      if (oldFields != null) this.fetchChunk(true);
+    },
+    deleted() {
+      this.fetchChunk(true);
+    },
+    'odata.count': {
+      handler() {
+        if (this.formVersion.dataExists && this.odata.dataExists && !this.odataFilter)
+          this.formVersion.submissions = this.odata.count;
+      }
+    },
+    'odata.removedSubmissions.size': {
+      handler(size) {
+        if (this.formVersion.dataExists && this.odata.dataExists) {
+          this.formVersion.submissions += this.deleted ? size : -size;
+        }
+      }
     }
   },
   created() {
     this.fetchData();
   },
-  mounted() {
-    document.addEventListener('scroll', this.afterScroll);
-  },
-  beforeUnmount() {
-    document.removeEventListener('scroll', this.afterScroll);
-  },
   methods: {
-    fetchChunk(skip, clear) {
-      this.refreshing = skip === 0 && !clear;
+    // `clear` indicates whether this.odata should be cleared before sending the
+    // request. `refresh` indicates whether the request is a background refresh.
+    fetchChunk(clear, refresh = false) {
+      this.refreshing = refresh;
+      // Are we fetching the first chunk of submissions or the next chunk?
+      const first = clear || refresh;
+
+      if (first) {
+        this.now = new Date().toISOString();
+        this.setSnapshotFilter();
+        this.pagination.page = 0;
+      }
+
+      let $filter = this.snapshotFilter;
+      if (this.odataFilter) {
+        $filter += ` and ${this.odataFilter}`;
+      }
+
       this.odata.request({
         url: apiPaths.odataSubmissions(
           this.projectId,
           this.xmlFormId,
           this.draft,
           {
-            $top: this.top(skip),
-            $skip: skip,
+            $top: this.pagination.size,
+            $skip: this.pagination.page * this.pagination.size,
             $count: true,
             $wkt: true,
-            $filter: this.odataFilter,
-            $select: this.odataSelect
+            $filter,
+            $select: this.odataSelect,
+            $orderby: '__system/submissionDate desc'
           }
         ),
         clear,
-        patch: skip === 0
-          ? null
-          : (response) => { this.odata.addChunk(response.data); }
+        patch: !first
+          ? (response) => this.odata.replaceData(response.data, response.config)
+          : null
       })
+        .then(() => {
+          this.pagination.count = this.odata.count;
+
+          if (this.deleted) {
+            this.deletedSubmissionCount.cancelRequest();
+            if (!this.deletedSubmissionCount.dataExists) {
+              this.deletedSubmissionCount.data = reactive({});
+            }
+            this.deletedSubmissionCount.value = this.odata.count;
+          }
+        })
         .finally(() => { this.refreshing = false; })
         .catch(noop);
+
+      // emit event to parent component to re-fetch deleted Submissions count
+      if (refresh && !this.deleted && !this.draft) {
+        this.$emit('fetch-deleted-count');
+      }
+
+      // emit event to parent component to re-fetch keys if needed
+      if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
+        this.$emit('fetch-keys');
     },
     fetchData() {
       this.fields.request({
@@ -310,55 +398,29 @@ export default {
             : this.fields.selectable.slice(0, 10);
         })
         .catch(noop);
-      this.fetchChunk(0, true);
+      this.fetchChunk(true);
       if (!this.draft) {
         this.submitters.request({
           url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
         }).catch(noop);
       }
     },
-    scrolledToBottom() {
-      // Using pageYOffset rather than scrollY in order to support IE.
-      return window.pageYOffset + window.innerHeight >=
-        document.body.offsetHeight - 5;
-    },
-    // This method may need to change once we support submission deletion.
-    afterScroll() {
-      if (this.formVersion.dataExists && this.keys.dataExists &&
-        this.fields.dataExists && this.odata.dataExists &&
-        this.odata.value.length < this.odata.originalCount &&
-        !this.odata.awaitingResponse && this.scrolledToBottom())
-        this.fetchChunk(this.odata.skip, false);
-    },
-    replaceFilters({
-      submitterIds = this.submitterIds,
-      submissionDateRange = this.submissionDateRange,
-      reviewStates = this.reviewStates
-    }) {
-      const query = {};
-      if (submitterIds.length !== this.submitters.length)
-        query.submitterId = submitterIds.map(id => id.toString());
-      if (submissionDateRange.length !== 0) {
-        query.start = submissionDateRange[0].toISODate();
-        query.end = submissionDateRange[1].toISODate();
+    setSnapshotFilter() {
+      this.snapshotFilter = '';
+      if (this.deleted) {
+        // This is not foolproof. Missing clause: __system/deletedAt became null after `now`.
+        // We don't keep restore date, that would have helped here.
+        this.snapshotFilter += `__system/deletedAt le ${this.now}`;
+      } else {
+        this.snapshotFilter += `__system/submissionDate le ${this.now} and `;
+        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
       }
-      if (reviewStates.length !== this.allReviewStates.length)
-        query.reviewState = reviewStates;
-      this.$router.replace({ path: this.$route.path, query });
-    },
-    showReview(submission) {
-      this.review.submission = submission;
-      this.showModal('review');
-    },
-    hideReview() {
-      this.hideModal('review');
-      this.review.submission = null;
     },
     // This method accounts for the unlikely case that the user clicked the
     // refresh button before reviewing the submission. In that case, the
     // submission may have been edited or may no longer be shown.
     afterReview(originalSubmission, reviewState) {
-      this.hideReview();
+      this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
       const index = this.odata.value.findIndex(submission =>
         submission.__id === originalSubmission.__id);
@@ -366,6 +428,103 @@ export default {
         this.odata.value[index].__system.reviewState = reviewState;
         this.$refs.table.afterReview(index);
       }
+    },
+    showDelete(submission) {
+      if (this.confirmDelete) {
+        this.deleteModal.show({ submission });
+      } else {
+        this.requestDelete([submission, this.confirmDelete]);
+      }
+    },
+    showRestore(submission) {
+      if (this.confirmRestore) {
+        this.restoreModal.show({ submission });
+      } else {
+        this.requestRestore([submission, this.confirmRestore]);
+      }
+    },
+    requestDelete(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      this.awaitingResponses.add(instanceId);
+
+      this.request({
+        method: 'DELETE',
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.deleteModal.hide();
+          if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
+
+          this.alert.success(this.$t('alert.submissionDeleted'));
+          if (confirm != null) this.confirmDelete = confirm;
+
+          this.odata.removedSubmissions.add(instanceId);
+          /* Before doing a couple more things, we first determine whether
+          this.odata.value still includes the Submission and if so, what the
+          current index of the Submission is. If a request to refresh
+          this.odata was sent while the deletion request was in
+          progress, then there could be a race condition such that data doesn't
+          exist for this.odata, or this.odata.value no longer
+          includes the Submission. Another possible result of the race condition is
+          that this.odata.value still includes the Submission, but the
+          Submission's index has changed. */
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.$refs.table.afterDelete(index);
+            this.odata.value.splice(index, 1);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
+        });
+    },
+    requestRestore(event) {
+      const [{ __id: instanceId }, confirm] = event;
+
+      this.awaitingResponses.add(instanceId);
+
+      this.request({
+        method: 'POST',
+        url: apiPaths.restoreSubmission(this.projectId, this.xmlFormId, instanceId)
+      })
+        .then(() => {
+          this.restoreModal.hide();
+          if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0) {
+            this.deletedSubmissionCount.value -= 1;
+          }
+
+          this.alert.success(this.$t('alert.submissionRestored'));
+          if (confirm != null) this.confirmRestore = confirm;
+
+          this.odata.removedSubmissions.add(instanceId);
+
+          // See the comments in requestDelete().
+          const index = this.odata.dataExists
+            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
+            : -1;
+          if (index !== -1) {
+            this.$refs.table.afterDelete(index);
+            this.odata.value.splice(index, 1);
+          }
+        })
+        .catch(noop)
+        .finally(() => {
+          this.awaitingResponses.delete(instanceId);
+        });
+    },
+    handlePageChange() {
+      // This function is called for size change as well. So the total number of submissions are
+      // less than the lowest size option, hence we don't need to make a request.
+      if (this.odata.count < this.pageSizeOptions[0]) return;
+      this.fetchChunk(false);
+    },
+    showDownloadModal(filtered = false) {
+      this.downloadModal.odataFilter = filtered ? this.odataFilter : null;
+      this.downloadModal.show();
     }
   }
 };
@@ -377,82 +536,69 @@ export default {
 #submission-list {
   // Make sure that there is enough space for the DateRangePicker when it is
   // open.
-  min-height: 375px;
+  &:has(.date-range-picker) { min-height: 375px; }
 }
 
 #submission-list-actions {
-  align-items: baseline;
+  align-items: center;
   display: flex;
   flex-wrap: wrap-reverse;
+  // This results in 10px of space between elements on the row, as well as 10px
+  // between rows if elements start wrapping. The main example of that is that
+  // the download button can wrap above the other actions if the viewport is not
+  // wide enough.
+  gap: 10px;
+}
 
-  form > :first-child { margin-left: 0; }
+// Adjust the spacing between actions on the draft testing page.
+#submission-list-test-in-browser {
+  ~ .form-inline {
+    // It is possible for .form-inline to be :empty, but we still render it so
+    // that the buttons that follow it are shown on the righthand side of the
+    // page.
+    margin-left: auto;
+
+    #submission-field-dropdown {
+      // There are no filters, so no need for margin-left.
+      margin-left: 0;
+      // Further increase the space between the dropdown and the refresh button.
+      margin-right: 10px;
+    }
+  }
+
+  ~ #submission-download-button { margin-left: 0; }
 }
-#submission-field-dropdown {
-  margin-left: 15px;
-  margin-right: 5px;
-}
-#submission-list-refresh-button {
-  margin-left: 10px;
-  margin-right: 5px;
-}
-#submission-download-button {
-  // The bottom margin is for if the download button wraps above the other
-  // actions.
-  margin-bottom: 10px;
+
+#submission-list-refresh-button.move-right {
   margin-left: auto;
 }
 
-#submission-list-message {
-  margin-left: 28px;
-  padding-bottom: 38px;
-  position: relative;
+#submission-list table:has(tbody:empty) {
+  display: none;
+}
 
-  #submission-list-spinner-container {
-    margin-right: 8px;
-    position: absolute;
-    top: 8px;
-    width: 16px; // eventually probably better not to default spinner to center.
-  }
-
-  #submission-list-message-text {
-    color: #555;
-    font-size: 12px;
-    padding-left: 24px;
-  }
+#submission-table:has(tbody tr) + .empty-table-message {
+  display: none;
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "loading": {
-      // This text is shown when the number of Submissions loading is unknown.
-      "withoutCount": "Loading Submissions…",
-      "all": "Loading {count} Submission… | Loading {count} Submissions…",
-      // {top} is a number that is either 250 or 1000. {count} may be any number
-      // that is at least 250. The string will be pluralized based on {count}.
-      "first": "Loading the first {top} of {count} Submission… | Loading the first {top} of {count} Submissions…",
-      // {top} is a number that is either 250 or 1000. {count} may be any number
-      // that is at least 250. The string will be pluralized based on {count}.
-      "middle": "Loading {top} more of {count} remaining Submission… | Loading {top} more of {count} remaining Submissions…",
-      "last": {
-        "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
-        "one": "Loading the last Submission…"
-      },
-      "filtered": {
-        // This text is shown when the number of Submissions loading is unknown.
-        "withoutCount": "Loading matching Submissions…",
-        // {top} is a number that is either 250 or 1000. {count} may be any
-        // number that is at least 250. The string will be pluralized based on
-        // {count}.
-        "middle": "Loading {top} more of {count} remaining matching Submission… | Loading {top} more of {count} remaining matching Submissions…",
-        "last": {
-          "multiple": "Loading the last {count} matching Submission… | Loading the last {count} matching Submissions…",
-          "one": "Loading the last matching Submission…"
-        }
-      }
+    "action": {
+      "testOnDevice": "Test on device",
+      "testInBrowser": "Test in browser"
     },
-    "noMatching": "There are no matching Submissions."
+    "noMatching": "There are no matching Submissions.",
+    "allDeleted": "All Submissions are deleted.",
+    "allDeletedOnPage": "All Submissions on the page have been deleted.",
+    "downloadDisabled": "Download is unavailable for deleted Submissions",
+    "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
+    "deletedSubmission": {
+      "emptyTable": "There are no deleted Submissions.",
+      "allRestored": "All deleted Submissions are restored.",
+      "allRestoredOnPage": "All Submissions on the page have been restored."
+    }
   }
 }
 </i18n>
@@ -461,172 +607,110 @@ export default {
 <i18n>
 {
   "cs": {
-    "loading": {
-      "withoutCount": "Načítání příspěvků…",
-      "all": "Načítání {count} příspěvku ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ... | Načítání {count} příspěvků ...",
-      "first": "Načítání prvního {top} z {count} příspěvku… | Načítání prvního {top} ze {count} příspěvků… | Načítání prvního {top} z {count} příspěvků… | Načítání prvního {top} z {count} příspěvků…",
-      "middle": "Načítání {top} z dalšího {count} zbývajícího příspěvku… | Načítání {top} z dalších {count} zbývajících příspěvků… | Načítání {top} z dalších {count} zbývajících příspěvků… | Načítání {top} z dalších {count} zbývajících příspěvků…",
-      "last": {
-        "multiple": "Načítání posledního {count} příspěvku… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků… | Načítání posledních {count} příspěvků…",
-        "one": "Načítání posledního příspěvku…"
-      },
-      "filtered": {
-        "withoutCount": "Načítání odpovídajících příspěvků…",
-        "middle": "Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků… | Načítání {top} z dalších {count} zbývajících odpovídajících příspěvků…",
-        "last": {
-          "multiple": "Načítání posledního {count} odpovídajícího příspěvku… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků… | Načítání posledních {count} odpovídajících příspěvků…",
-          "one": "Načítání posledního odpovídajícího příspěvku…"
-        }
-      }
-    },
     "noMatching": "Neexistují žádné odpovídající příspěvky."
   },
   "de": {
-    "loading": {
-      "withoutCount": "Übermittlungen laden...",
-      "all": "{count} Übermittlung laden... | {count} Übermittlungen laden...",
-      "first": "Lade die ersten {top} von {count} Übermittlung... | Lade die ersten {top} von {count} Übermittlungen...",
-      "middle": "Lade weitere {top} von {count} übrigen Übermittlung... | Lade weitere {top} von {count} übrigen Übermittlungen...",
-      "last": {
-        "multiple": "Die letzte {count} Übermittlung laden... | Die letzten {count} Übermittlungen laden...",
-        "one": "Letzte Übermittlung laden..."
-      },
-      "filtered": {
-        "withoutCount": "Lade passende Übermittlungen...",
-        "middle": "Lade weitere {top} von {count} übrigen passenden Übermittlung... | Lade weitere {top} von {count} übrigen passenden Übermittlungen...",
-        "last": {
-          "multiple": "Lade die letzte {count} passenden Übermittlung... | Lade die letzten {count} passenden Übermittlungen...",
-          "one": "Lade die letzten passenden Übermittlungen..."
-        }
-      }
+    "action": {
+      "testOnDevice": "Test am Gerät",
+      "testInBrowser": "Test im Browser"
     },
-    "noMatching": "Es gibt keine passenden Übermittlungen."
+    "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "allDeleted": "Alle Übermittlungen werden gelöscht.",
+    "allDeletedOnPage": "Alle Übermittlungen auf dieser Seite wurden gelöscht.",
+    "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
+    "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
+    "deletedSubmission": {
+      "emptyTable": "Es gibt keine gelöschten Übermittlungen.",
+      "allRestored": "Alle gelöschten Übermittlungen werden wiederhergestellt.",
+      "allRestoredOnPage": "Alle Übermittlungen auf dieser Seite wurden wiederhergestellt."
+    }
   },
   "es": {
-    "loading": {
-      "withoutCount": "Cargando los envíos...",
-      "all": "Cargando {count} envío... | Cargando {count} envíos... | Cargando {count} envíos...",
-      "first": "Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios... | Cargando la primera {top} de {count} envios...",
-      "middle": "Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes... | Cargando {top} más de {count} envíos restantes...",
-      "last": {
-        "multiple": "Cargando el último {count} envío... | Cargando los últimos {count} envíos... | Cargando los últimos {count} envíos...",
-        "one": "Cargando el último envío..."
-      },
-      "filtered": {
-        "withoutCount": "Cargando envíos coincidentes…",
-        "middle": "Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes... | Cargando {top} más de {count} envíos restantes coincidentes...",
-        "last": {
-          "multiple": "Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes… | Cargando los últimos {count} envíos coincidentes…",
-          "one": "Cargando el último envío coincidente…"
-        }
-      }
+    "action": {
+      "testOnDevice": "Prueba en el dispositivo",
+      "testInBrowser": "Prueba en el navegador"
     },
-    "noMatching": "No hay envíos coincidentes."
+    "noMatching": "No hay envíos coincidentes.",
+    "allDeleted": "Todos los envíos se han eliminado.",
+    "allDeletedOnPage": "Se han eliminado todos los envíos de la página.",
+    "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
+    "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
+    "deletedSubmission": {
+      "emptyTable": "No hay envíos eliminados.",
+      "allRestored": "Se restablecen todos los envíos eliminados.",
+      "allRestoredOnPage": "Se han restablecido todas las Envíos de la página."
+    }
   },
   "fr": {
-    "loading": {
-      "withoutCount": "Chargement des soumissions...",
-      "all": "Chargement de {count} soumission... | Chargement de {count} soumissions... | Chargement de {count} soumissions...",
-      "first": "Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions... | Chargement des premières {top} sur {count} soumissions...",
-      "middle": "Chargement de {top} autres de {count} soumission restante... | Chargement de {top} autres des {count} soumissions restantes... | Chargement de {top} autres des {count} soumissions restantes...",
-      "last": {
-        "multiple": "Chargement de la {count} dernière soumissions... | Chargement des {count} dernières soumissions... | Chargement des {count} dernières soumissions...",
-        "one": "Chargement la dernière soumission..."
-      },
-      "filtered": {
-        "withoutCount": "Chargement des soumissions correspondantes...",
-        "middle": "Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes... | Chargement de {top} autres des {count} soumissions correspondantes restantes...",
-        "last": {
-          "multiple": "Chargement d'{count} dernière soumission correspondante... | Chargement des {count} dernières soumissions correspondantes... | Chargement des {count} dernières soumissions correspondantes...",
-          "one": "Chargement de la dernière soumission correspondante..."
-        }
-      }
+    "action": {
+      "testOnDevice": "Tester sur un appareil",
+      "testInBrowser": "Tester dans le naviguateur"
     },
-    "noMatching": "Il n'y a pas de soumission correspondante."
+    "noMatching": "Il n'y a pas de soumission correspondante.",
+    "allDeleted": "Toutes les soumissions sont supprimées.",
+    "allDeletedOnPage": "Toutes les soumissions de la page ont été supprimées.",
+    "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
+    "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
+    "deletedSubmission": {
+      "emptyTable": "Il n'y a pas de Soumissions supprimées",
+      "allRestored": "Toutes les Soumissions supprimées ont été restaurées.",
+      "allRestoredOnPage": "Toutes les Soumissions de la page ont été restaurées."
+    }
   },
   "id": {
-    "loading": {
-      "withoutCount": "Memuat kiriman data...",
-      "all": "Memuat {count} kiriman data...",
-      "first": "Memuat yang pertama {top} dari {count} Pengiriman…",
-      "middle": "Memuat {top} dari {count} sisa Pengiriman…",
-      "last": {
-        "multiple": "Memuat {count} kiriman data terakhir...",
-        "one": "Memuat kiriman data terakhir..."
-      },
-      "filtered": {
-        "withoutCount": "Memuat Pengiriman yang cocok...",
-        "middle": "Memuat {top} dari {count} sisa Pengiriman yang cocok…",
-        "last": {
-          "multiple": "Memuat sisa {count} Pengiriman yang cocok…",
-          "one": "Memuat Pengiriman terakhir yang cocok"
-        }
-      }
-    },
     "noMatching": "Tidak ada Pengiriman yang cocok."
   },
   "it": {
-    "loading": {
-      "withoutCount": "Caricando invii...",
-      "all": "Cricando {count} invio... | Cricando {count} invii... | Caricando {count} invii...",
-      "first": "Loading the first {top} of {count} Submission… | Caricando il primo {top} di {count} Invio… | Caricando il primo {top} di {count} Invio…",
-      "middle": "Caricamento di {top} in più di {count} invio rimanente... | Caricamento di {top} in più di {count} invii rimanenti... | Caricamento di {top} in più di {count} invii rimanenti...",
-      "last": {
-        "multiple": "Caricando l'ultimo {count} invio… | Caricando gli ultimi {count} invii… | Caricando gli ultimi {count} invii…",
-        "one": "Caricamento dell'ultimo invio in corso..."
-      },
-      "filtered": {
-        "withoutCount": "Caricando invii corrispondenti...",
-        "middle": "Caricamento di {top} in più di {count} invio corrispondente rimanente... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti... | Caricamento di {top} in più di {count} invii corrispondenti rimanenti...",
-        "last": {
-          "multiple": "Caricando l'ultimo {count} invio corrispondente… | Caricando gli ultimi {count} invii corrispondenti… | Caricando gli ultimi {count} invii corrispondenti…",
-          "one": "Caricando gli ultimi invii corrispondenti..."
-        }
-      }
+    "action": {
+      "testOnDevice": "Testa sul dispositivo",
+      "testInBrowser": "Testa nel browser"
     },
-    "noMatching": "Non sono presenti invii corrispondenti."
+    "noMatching": "Non sono presenti invii corrispondenti.",
+    "allDeleted": "Tutti gli invii vengono cancellati.",
+    "allDeletedOnPage": "Tutti gli invii presenti nella pagina sono stati cancellati.",
+    "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
+    "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
+    "deletedSubmission": {
+      "emptyTable": "Non ci sono invii cancellati.",
+      "allRestored": "Tutti gli invii cancellati vengono ripristinati.",
+      "allRestoredOnPage": "Tutti i contributi presenti nella pagina sono stati ripristinati."
+    }
   },
   "ja": {
-    "loading": {
-      "withoutCount": "提出済フォームの読み込み中...",
-      "all": "{count}の提出済フォームを読み込み中...",
-      "first": "{count}件の提出済フォームの内、最初の{top}を読み込み中...",
-      "middle": "残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...",
-      "last": {
-        "multiple": "最後の{count}件の提出済フォームを読み込み中...",
-        "one": "最後の提出済フォームを読み込み中..."
-      },
-      "filtered": {
-        "withoutCount": "照合できる提出済フォームの読み込み中...",
-        "middle": "一致する残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...",
-        "last": {
-          "multiple": "一致する最後の{count}件の提出済フォームを読み込み中...",
-          "one": "最後の照合できる提出済フォームを読み込み中..."
-        }
-      }
-    },
     "noMatching": "照合できる提出済フォームはありません。"
   },
-  "sw": {
-    "loading": {
-      "withoutCount": "Inapakia Mawasilisho...",
-      "all": "Inapakia Mawasilisho {count}... | Inapakia Mawasilisho {count}...",
-      "first": "Inapakia {top} ya kwanza kati ya Mawasilisho {count}... | Inapakia {top} ya kwanza kati ya Mawasilisho {count}...",
-      "middle": "Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia... | Inapakia {top} zaidi ya Mawasilisho {count} yaliyosalia...",
-      "last": {
-        "multiple": "Inapakia Mawasilisho {count} ya mwisho... | Inapakia Mawasilisho {count} ya mwisho...",
-        "one": "Inapakia Wasilisho la mwisho..."
-      },
-      "filtered": {
-        "withoutCount": "Inapakia Mawasilisho yanayolingana...",
-        "middle": "Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana... | Inapakia {top} zaidi ya Mawasilisho {count} yanayolingana...",
-        "last": {
-          "multiple": "Inapakia Mawasilisho {count} ya mwisho yanayolingana... | Inapakia Mawasilisho {count} ya mwisho yanayolingana...",
-          "one": "Inapakia Wasilisho linalolingana la mwisho..."
-        }
-      }
+  "pt": {
+    "action": {
+      "testOnDevice": "Testar no dispositivo'",
+      "testInBrowser": "Testar no navegador"
     },
+    "noMatching": "Não foram encontradas respostas com esses parâmetros.",
+    "allDeleted": "Todas as Respostas foram excluídas.",
+    "allDeletedOnPage": "Todas as Respostas nesta página foram excluídas.",
+    "downloadDisabled": "O download está indisponível para Respostas excluídas",
+    "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
+    "deletedSubmission": {
+      "emptyTable": "Não há Respostas excluídas"
+    }
+  },
+  "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
+  },
+  "zh-Hant": {
+    "action": {
+      "testOnDevice": "在設備上測試",
+      "testInBrowser": "在瀏覽器中測試"
+    },
+    "noMatching": "沒有符合的提交內容。",
+    "allDeleted": "所有提交內容都會被刪除。",
+    "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
+    "downloadDisabled": "已刪除的提交內容無法下載",
+    "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
+    "deletedSubmission": {
+      "emptyTable": "沒有已刪除的提交內容。",
+      "allRestored": "所有已刪除的提交內容都會還原。",
+      "allRestoredOnPage": "頁面上的所有提交內容都已還原。"
+    }
   }
 }
 </i18n>

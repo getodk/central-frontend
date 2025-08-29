@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 
 import createCentralI18n from '../../src/i18n';
-import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withAuth, withHttpMethods } from '../../src/util/request';
+import { apiPaths, isProblem, logAxiosError, queryString, requestAlertMessage, withHttpMethods } from '../../src/util/request';
 
 import { mockAxiosError } from '../util/axios';
 import { mockLogger } from '../util/util';
@@ -164,9 +164,14 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments');
     });
 
-    it('formDraftAttachment', () => {
-      const path = apiPaths.formDraftAttachment(1, 'a b', 'c d');
+    it('formAttachment - draft', () => {
+      const path = apiPaths.formAttachment(1, 'a b', true, 'c d');
       path.should.equal('/v1/projects/1/forms/a%20b/draft/attachments/c%20d');
+    });
+
+    it('formAttachment - published', () => {
+      const path = apiPaths.formAttachment(1, 'a b', false, 'c d');
+      path.should.equal('/v1/projects/1/forms/a%20b/attachments/c%20d');
     });
 
     it('publishedAttachments', () => {
@@ -301,9 +306,25 @@ describe('util/request', () => {
       apiPaths.dataset(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b');
     });
 
-    it('entities', () => {
-      const path = apiPaths.entities(1, 'á');
-      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+    it('datasetProperties', () => {
+      apiPaths.datasetProperties(1, 'a b').should.equal('/v1/projects/1/datasets/a%20b/properties');
+    });
+
+    describe('entities', () => {
+      it('returns the correct path', () => {
+        const path = apiPaths.entities(1, 'á');
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities');
+      });
+
+      it('appends a file extension', () => {
+        const path = apiPaths.entities(1, 'á', '.csv');
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv');
+      });
+
+      it('returns a query string', () => {
+        const path = apiPaths.entities(1, 'á', '.csv', { $filter: 'true' });
+        path.should.equal('/v1/projects/1/datasets/%C3%A1/entities.csv?%24filter=true');
+      });
     });
 
     it('odataEntitiesSvc', () => {
@@ -333,9 +354,9 @@ describe('util/request', () => {
       path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/audits');
     });
 
-    it('entityDiffs', () => {
-      const path = apiPaths.entityDiffs(1, 'á', 'e');
-      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/diffs');
+    it('entityVersions', () => {
+      const path = apiPaths.entityVersions(1, 'á', 'e');
+      path.should.equal('/v1/projects/1/datasets/%C3%A1/entities/e/versions');
     });
 
     it('fieldKeys', () => {
@@ -477,77 +498,37 @@ describe('util/request', () => {
     });
 
     it('returns undefined for a property that is not on the function', () => {
-      should(withHttpMethods(() => {}).foo).be.undefined();
-    });
-  });
-
-  describe('withAuth()', () => {
-    it('specifies the session token in the Authorization header', () => {
-      withAuth({ url: '/v1/users' }, 'xyz').should.eql({
-        url: '/v1/users',
-        headers: { Authorization: 'Bearer xyz' }
-      });
-    });
-
-    it('does not add an Authorization header if URL does not start with /v1', () => {
-      const config = { url: '/version.txt' };
-      withAuth(config, 'xyz').should.equal(config);
-    });
-
-    it('does not add an Authorization header if there is not a token', () => {
-      const config = { url: '/v1/users' };
-      withAuth(config, null).should.equal(config);
-    });
-
-    it('does not overwrite an existing Authorization header', () => {
-      const config = {
-        url: '/v1/users',
-        headers: { Authorization: 'auth' }
-      };
-      withAuth(config, 'xyz').should.equal(config);
-    });
-
-    it('preserves other headers and options', () => {
-      const config = {
-        method: 'GET',
-        url: '/v1/users',
-        headers: { 'X-Extended-Metadata': 'true' }
-      };
-      withAuth(config, 'xyz').should.eql({
-        method: 'GET',
-        url: '/v1/users',
-        headers: { 'X-Extended-Metadata': 'true', Authorization: 'Bearer xyz' }
-      });
+      expect(withHttpMethods(() => {}).foo).to.be.undefined;
     });
   });
 
   describe('isProblem()', () => {
     it('returns true for a Problem', () => {
-      isProblem({ code: 404.1, message: 'Not found.' }).should.be.true();
+      isProblem({ code: 404.1, message: 'Not found.' }).should.be.true;
     });
 
     it('returns false for null', () => {
-      isProblem(null).should.be.false();
+      isProblem(null).should.be.false;
     });
 
     it('returns false for a string', () => {
-      isProblem('foo').should.be.false();
+      isProblem('foo').should.be.false;
     });
 
     it('returns false for an object without a code property', () => {
-      isProblem({ message: 'Not found.' }).should.be.false();
+      isProblem({ message: 'Not found.' }).should.be.false;
     });
 
     it('returns false for an object whose code property is not a number', () => {
-      isProblem({ code: '404.1', message: 'Not found.' }).should.be.false();
+      isProblem({ code: '404.1', message: 'Not found.' }).should.be.false;
     });
 
     it('returns false for an object without a message property', () => {
-      isProblem({ code: 404.1 }).should.be.false();
+      isProblem({ code: 404.1 }).should.be.false;
     });
 
     it('returns false for an object whose message property is not a string', () => {
-      isProblem({ code: 404.1, message: 123 }).should.be.false();
+      isProblem({ code: 404.1, message: 123 }).should.be.false;
     });
   });
 
@@ -557,7 +538,7 @@ describe('util/request', () => {
       const error = new Error();
       error.response = {};
       logAxiosError(logger, error);
-      logger.log.called.should.be.false();
+      logger.log.called.should.be.false;
     });
 
     it('logs the request if there was one', () => {
@@ -565,14 +546,14 @@ describe('util/request', () => {
       const error = new Error();
       error.request = {};
       logAxiosError(logger, error);
-      logger.log.calledWith(error.request).should.be.true();
+      logger.log.calledWith(error.request).should.be.true;
     });
 
     it('logs the error message if there was no request', () => {
       const logger = mockLogger();
       const error = new Error('foo');
       logAxiosError(logger, error);
-      logger.log.calledWith('foo').should.be.true();
+      logger.log.calledWith('foo').should.be.true;
     });
   });
 
@@ -615,9 +596,25 @@ describe('util/request', () => {
       message.should.equal('Something went wrong: error code 500.');
     });
 
+    it('returns a message about 413 error response that is not a Problem', () => {
+      const message = requestAlertMessage(i18n, mockAxiosError({
+        status: 413,
+        data: '<html><head><title>413 Request Entity Too Large</title></head>...',
+        config: { url: '/v1/projects/1/datasets/trees/entities' }
+      }));
+      message.should.equal('The data that you are trying to upload is too large.');
+    });
+
     it('returns the message of a Problem', () => {
       const message = requestAlertMessage(i18n, errorWithProblem());
       message.should.equal('Message from API');
+    });
+
+    describe('custom messages for specific Problems', () => {
+      it('returns a message for a 404.1', () => {
+        const message = requestAlertMessage(i18n, errorWithProblem(404.1));
+        message.should.equal('The resource you are looking for cannot be found. The resource may have been deleted.');
+      });
     });
 
     describe('problemToAlert', () => {
@@ -631,7 +628,7 @@ describe('util/request', () => {
         message.should.equal('Message from problemToAlert: Message from API (500.1)');
       });
 
-      it('returns the Problem message if the function returns null', () => {
+      it('falls back to default message if function returns a nullish value', () => {
         const message = requestAlertMessage(
           i18n,
           errorWithProblem(),

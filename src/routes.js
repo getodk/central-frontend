@@ -13,7 +13,6 @@ import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
 import AsyncRoute from './components/async-route.vue';
-
 import { routeProps } from './util/router';
 
 export default (container) => {
@@ -54,8 +53,8 @@ Route Meta Fields
 
 The following meta fields are supported for bottom-level routes:
 
-  Login
-  -----
+  Login/Logout
+  ------------
 
   - restoreSession (default: true). The router looks to restoreSession right
     after the user has navigated to Frontend, when the router is navigating to
@@ -78,6 +77,10 @@ The following meta fields are supported for bottom-level routes:
     In almost all cases, a route either requires login or requires anonymity.
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
+
+  - skipAutoLogout (default: false): If `true`, no alert will be displayed when
+    session is about to expire. Also user will be not be redirected to login
+    page when session has expired.
 
   requestData
   -----------
@@ -159,6 +162,10 @@ The following meta fields are supported for bottom-level routes:
   - fullWidth (default: false). If fullWidth is `true`, and the route renders a
     PageBody component, then the PageBody will use the full width of the page.
     By default, PageBody has a max width.
+
+  - standalone (default: false): If standalone is `true` then application layout
+    elements like navigation bar, background color, etc are not rendered.
+
 */
 
 /*
@@ -207,8 +214,20 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, formDraft, attachments, dataset } = requestData;
+const { currentUser, project, form, dataset } = requestData;
 const routes = [
+  asyncRoute({
+    path: '/load-error',
+    component: 'ConfigError',
+    loading: 'page',
+    meta: {
+      requireLogin: false,
+      requireAnonymity: true,
+      title: () => [i18n.t('common.error')]
+    },
+    beforeEnter: () => (config.loadError == null ? '/login' : true)
+  }),
+
   {
     path: '/login',
     name: 'AccountLogin',
@@ -227,7 +246,8 @@ const routes = [
       requireLogin: false,
       requireAnonymity: true,
       title: () => [i18n.t('title.resetPassword')]
-    }
+    },
+    beforeEnter: () => (config.oidcEnabled ? '/404' : true)
   }),
   asyncRoute({
     path: '/account/claim',
@@ -238,7 +258,8 @@ const routes = [
       requireLogin: false,
       requireAnonymity: true,
       title: () => [i18n.t('title.setPassword')]
-    }
+    },
+    beforeEnter: () => (config.oidcEnabled ? '/404' : true)
   }),
 
   asyncRoute({
@@ -263,9 +284,9 @@ const routes = [
         loading: 'tab',
         meta: {
           validateData: {
-            project: () => project.permits('form.list')
+            project: () => project.permits('form.list') || project.permits('open_form.list')
           },
-          title: () => [project.name]
+          title: () => [i18n.t('resource.forms'), project.name]
         }
       }),
       asyncRoute({
@@ -322,7 +343,7 @@ const routes = [
         }
       }),
       asyncRoute({
-        path: 'datasets',
+        path: 'entity-lists',
         component: 'DatasetList',
         props: true,
         loading: 'tab',
@@ -330,7 +351,7 @@ const routes = [
           validateData: {
             project: () => project.permits(['dataset.list', 'entity.list'])
           },
-          title: () => [i18n.t('resource.datasets'), project.name]
+          title: () => [i18n.t('resource.entities'), project.name]
         }
       }),
       asyncRoute({
@@ -346,9 +367,6 @@ const routes = [
       })
     ]
   }),
-  // Note the unlikely possibility that
-  // form.publishedAt == null && formDraft.isEmpty(). In that case, the user
-  // will be unable to navigate to a form route.
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId',
     component: 'FormShow',
@@ -357,22 +375,6 @@ const routes = [
     key: ({ projectId, xmlFormId }) =>
       `/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}`,
     children: [
-      asyncRoute({
-        path: '',
-        component: 'FormOverview',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            // Including form.update in order to exclude project viewers and
-            // Data Collectors.
-            project: () => project.permits(['form.read', 'form.update', 'dataset.list']),
-            form: () => form.publishedAt != null
-          },
-          title: () => [form.nameOrId],
-          fullWidth: true
-        }
-      }),
       asyncRoute({
         path: 'versions',
         component: 'FormVersionList',
@@ -389,6 +391,7 @@ const routes = [
       }),
       asyncRoute({
         path: 'submissions',
+        alias: '',
         component: 'FormSubmissions',
         props: true,
         loading: 'tab',
@@ -441,7 +444,7 @@ const routes = [
       }),
       asyncRoute({
         path: 'draft',
-        component: 'FormDraftStatus',
+        component: 'FormEdit',
         props: true,
         loading: 'tab',
         meta: {
@@ -450,50 +453,13 @@ const routes = [
               'form.read',
               'form.update',
               'form.delete',
-              'dataset.list'
-            ]),
-            formDraft: () => formDraft.isDefined()
-          },
-          title: () => [i18n.t('formHead.draftNav.tab.status'), form.nameOrId]
-        }
-      }),
-      asyncRoute({
-        path: 'draft/attachments',
-        component: 'FormAttachmentList',
-        loading: 'tab',
-        props: true,
-        meta: {
-          validateData: {
-            project: () => project.permits([
-              'form.read',
-              'form.update',
               'dataset.list',
-              'entity.list'
-            ]),
-            attachments: () => attachments.isDefined() &&
-              attachments.get().size !== 0
-          },
-          title: () => [i18n.t('resource.formAttachments'), form.nameOrId]
-        }
-      }),
-      asyncRoute({
-        path: 'draft/testing',
-        component: 'FormDraftTesting',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            project: () => project.permits([
-              'form.read',
+              'entity.list',
               'submission.list',
               'submission.read'
-            ]),
-            formDraft: () => formDraft.isDefined()
+            ])
           },
-          title: () => [
-            i18n.t('formHead.draftNav.tab.testing'),
-            form.nameOrId
-          ],
+          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
           fullWidth: true
         }
       })
@@ -511,20 +477,47 @@ const routes = [
     }
   }),
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
+    component: 'FormPreview',
+    props: (route) => ({
+      ...route.params,
+      draft: false
+    }),
+    loading: 'page',
+    meta: {
+      standalone: true,
+      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ?? '']
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/preview',
+    name: 'FormDraftPreview',
+    component: 'FormPreview',
+    props: (route) => ({
+      ...route.params,
+      draft: true
+    }),
+    loading: 'page',
+    meta: {
+      standalone: true,
+      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ? `${form.nameOrId} (${i18n.t('resource.draft')})` : '']
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName',
     component: 'DatasetShow',
     props: true,
     loading: 'page',
     key: ({ projectId, datasetName }) =>
-      `/projects/${projectId}/datasets/${encodeURIComponent(datasetName)}`,
+      `/projects/${projectId}/entity-lists/${encodeURIComponent(datasetName)}`,
     children: [
       asyncRoute({
-        path: '',
+        path: 'properties',
         component: 'DatasetOverview',
         props: true,
         loading: 'tab',
         meta: {
-          title: () => [dataset.name],
+          title: () => [i18n.t('resource.properties'), dataset.name],
           validateData: {
             project: () => project.permits('dataset.read')
           }
@@ -532,11 +525,12 @@ const routes = [
       }),
       asyncRoute({
         path: 'entities',
+        alias: '',
         component: 'DatasetEntities',
         props: true,
         loading: 'tab',
         meta: {
-          title: () => [i18n.t('common.data'), dataset.name],
+          title: () => [i18n.t('resource.entities'), dataset.name],
           validateData: {
             project: () => project.permits(['dataset.read', 'entity.list'])
           },
@@ -561,7 +555,7 @@ const routes = [
     // We don't validate that :uuid is a valid UUID (and it isn't in tests), but
     // we do validate that it doesn't need to be URL-encoded (for example, in
     // requests to Backend).
-    path: '/projects/:projectId([1-9]\\d*)/datasets/:datasetName/entities/:uuid([0-9a-f-]+)',
+    path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName/entities/:uuid([0-9a-f-]+)',
     component: 'EntityShow',
     props: true,
     loading: 'page',
@@ -655,7 +649,7 @@ const routes = [
           ],
           fullWidth: true
         },
-        beforeEnter: () => (config.showsAnalytics ? true : '/')
+        beforeEnter: () => (config.showsAnalytics ? true : '/404')
       })
     ]
   }),
@@ -667,6 +661,88 @@ const routes = [
     loading: 'page',
     meta: {
       title: () => [i18n.t('title.download')]
+    }
+  }),
+
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
+    component: 'FormSubmission',
+    name: 'SubmissionEdit',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true,
+      skipAutoLogout: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
+    component: 'FormSubmission',
+    name: 'SubmissionNew',
+    props: (route) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'new',
+      };
+    },
+    loading: 'page',
+    meta: {
+      standalone: true,
+      skipAutoLogout: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
+    component: 'FormSubmission',
+    name: 'DraftSubmissionNew',
+    props: (route) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'new',
+        draft: true
+      };
+    },
+    loading: 'page',
+    meta: {
+      standalone: true,
+      // validateData is done inside FormSubmission component
+      title: () => [form.nameOrId],
+    }
+  }),
+  asyncRoute({
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)',
+    component: 'FormSubmission',
+    name: 'EnketoRedirector',
+    props: true,
+    loading: 'page',
+    meta: {
+      standalone: true
+    }
+  }),
+  asyncRoute({
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
+    component: 'FormSubmission',
+    name: 'WebFormDirectLink',
+    props: (route) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'public-link',
+      };
+    },
+    loading: 'page',
+    meta: {
+      standalone: true,
+      restoreSession: true,
+      requireLogin: false,
+      skipAutoLogout: true,
+      title: () => [form.nameOrId]
     }
   }),
 
@@ -696,6 +772,8 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
+    standalone: false,
+    skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []
@@ -728,6 +806,7 @@ const routesByName = new Map();
   const alwaysPreserve = always([
     requestData.session,
     currentUser,
+    config,
     requestData.centralVersion,
     requestData.analyticsConfig,
     requestData.roles
@@ -754,14 +833,11 @@ const routesByName = new Map();
     'ProjectSettings'
   ];
   const formRoutes = [
-    'FormOverview',
-    'FormVersionList',
     'FormSubmissions',
     'PublicLinkList',
-    'FormSettings',
-    'FormDraftStatus',
-    'FormAttachmentList',
-    'FormDraftTesting'
+    'FormVersionList',
+    'FormEdit',
+    'FormSettings'
   ];
   const datasetRoutes = [
     'DatasetEntities',
@@ -780,6 +856,18 @@ const routesByName = new Map();
       : false)
   );
 
+  // Preserve Form data when redirected to canoncial path
+  [
+    'SubmissionNew',
+    'DraftSubmissionNew',
+    'SubmissionEdit',
+    'FormPreview',
+    'FormDraftPreview'
+  ].forEach(redirectTo => {
+    const preserve = (_, from) =>
+      (from.name === 'EnketoRedirector' || from.name === 'WebFormDirectLink') && [form];
+    routesByName.get(redirectTo).meta.preserveData.push(preserve);
+  });
 
 
   //////////////////////////////////////////////////////////////////////////////

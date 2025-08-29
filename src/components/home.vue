@@ -11,7 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div id="home-heading">{{ $t('heading[0]') }}</div>
     <home-summary/>
     <page-body>
       <div id="home-news-container">
@@ -21,14 +20,10 @@ except according to the terms contained in the LICENSE file.
       </div>
       <project-list/>
     </page-body>
+    <whats-new/>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Home'
-};
-</script>
 <script setup>
 import { defineAsyncComponent, inject } from 'vue';
 
@@ -36,32 +31,26 @@ import HomeNews from './home/news.vue';
 import HomeSummary from './home/summary.vue';
 import PageBody from './page/body.vue';
 import ProjectList from './project/list.vue';
+import WhatsNew from './whats-new.vue';
 
 import useProjects from '../request-data/projects';
 import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
+defineOptions({
+  name: 'Home'
+});
+
 const HomeConfigSection = defineAsyncComponent(loadAsync('HomeConfigSection'));
 
 const projects = useProjects();
-projects.request({ url: '/v1/projects?forms=true' }).catch(noop);
+projects.request({ url: '/v1/projects?forms=true&datasets=true' }).catch(noop);
 
 const config = inject('config');
 </script>
 
 <style lang="scss">
 @import '../assets/scss/variables';
-
-#home-heading {
-  background: $color-subpanel-background;
-  color: $color-accent-primary;
-  font-size: 35px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin-left: -15px;
-  margin-right: -15px;
-  padding: 20px 15px 15px 15px;
-}
 
 #home-news-container {
   display: flex;
@@ -102,14 +91,29 @@ const config = inject('config');
       "Bienvenue sur Central"
     ]
   },
+  "id": {
+    "heading": [
+      "Selamat datang di Central."
+    ]
+  },
   "it": {
     "heading": [
       "Benvenuto su Central"
     ]
   },
+  "pt": {
+    "heading": [
+      "Bem-vindo ao Central."
+    ]
+  },
   "sw": {
     "heading": [
       "Karibu Central"
+    ]
+  },
+  "zh-Hant": {
+    "heading": [
+      "歡迎來到 Central."
     ]
   }
 }

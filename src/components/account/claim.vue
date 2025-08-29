@@ -100,7 +100,7 @@ export default {
       "401_2": "{message} The link in your email may have expired, and a new email may have to be sent."
     },
     "alert": {
-      "success": "The password was reset successfully."
+      "success": "Password successfully reset."
     }
   }
 }
@@ -115,9 +115,6 @@ export default {
     },
     "problem": {
       "401_2": "{message} Platnost odkazu ve vašem e-mailu pravděpodobně skončila a možná bude nutné zaslat nový e-mail."
-    },
-    "alert": {
-      "success": "Heslo bylo úspěšně resetováno."
     }
   },
   "de": {
@@ -126,9 +123,6 @@ export default {
     },
     "problem": {
       "401_2": "{message} Der Hyperlink in Ihrer E-Mail könnte abgelaufen sein und vielleicht sollte eine neue E-Mail gesendet werden."
-    },
-    "alert": {
-      "success": "Das Passwort wurde erfolgreich zurückgesetzt."
     }
   },
   "es": {
@@ -139,7 +133,7 @@ export default {
       "401_2": "{message} Es posible que el enlace de su correo electrónico haya expirado y tenga que enviarse un nuevo correo electrónico."
     },
     "alert": {
-      "success": "La contraseña fue restablecida exitosamente."
+      "success": "Contraseña restablecida correctamente."
     }
   },
   "fr": {
@@ -159,9 +153,6 @@ export default {
     },
     "problem": {
       "401_2": "{message} Tautan menuju email Anda sudah kedaluwarsa, Anda harus mengirimkan email baru."
-    },
-    "alert": {
-      "success": "Kata sandi berhasil diatur ulang."
     }
   },
   "it": {
@@ -172,7 +163,7 @@ export default {
       "401_2": "{message} Il link nella tua e-mail potrebbe essere scaduto e potrebbe essere necessario inviare una nuova e-mail."
     },
     "alert": {
-      "success": "La password è stata reimpostata con successo."
+      "success": "Password ristabilita con successo."
     }
   },
   "ja": {
@@ -181,9 +172,14 @@ export default {
     },
     "problem": {
       "401_2": "{message} メールに記載されているリンクの有効期限が切れている可能性があり、新たにメールを送信する必要があるようです。"
+    }
+  },
+  "pt": {
+    "action": {
+      "set": "Definir senha"
     },
-    "alert": {
-      "success": "パスワードが正常にリセットされました。"
+    "problem": {
+      "401_2": "{message} O link de seu email expirou e um novo link precisa ser enviado."
     }
   },
   "sw": {
@@ -192,9 +188,17 @@ export default {
     },
     "problem": {
       "401_2": "{message} Huenda muda wa kiungo katika barua pepe yako umeisha, na huenda barua pepe mpya ikatumwa."
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "set": "設定密碼"
+    },
+    "problem": {
+      "401_2": "{message} 您電子郵件中的連結可能已過期，可能需要發送新電子郵件。"
     },
     "alert": {
-      "success": "Nenosiri limewekwa upya."
+      "success": "密碼重設成功。"
     }
   }
 }

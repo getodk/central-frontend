@@ -26,15 +26,14 @@ except according to the terms contained in the LICENSE file.
   </table>
 </template>
 
-<script>
-export default {
-  name: 'AuditTable'
-};
-</script>
 <script setup>
 import AuditRow from './row.vue';
 
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'AuditTable'
+});
 
 const { audits } = useRequestData();
 </script>
@@ -110,11 +109,25 @@ const { audits } = useRequestData();
       "details": "詳細"
     }
   },
+  "pt": {
+    "header": {
+      "initiator": "Initiator",
+      "target": "Target",
+      "details": "Detalhes"
+    }
+  },
   "sw": {
     "header": {
       "initiator": "Mwanzilishi",
       "target": "Lengo",
       "details": "Maelezo"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "initiator": "引發者",
+      "target": "目標",
+      "details": "細節"
     }
   }
 }

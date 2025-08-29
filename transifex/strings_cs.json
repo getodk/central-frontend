@@ -35,24 +35,23 @@
   },
   "formHead": {
     "tab": {
+      "publicAccess": {
+        "string": "Veřejný přístup",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "versions": {
         "string": "Verze",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
-      "publicAccess": {
-        "string": "Veřejný přístup",
+      "editForm": {
+        "string": "",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
     "draftNav": {
       "tab": {
         "status": {
-          "string": "Stav",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "testing": {
-          "string": "Testování",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+          "string": "Stav"
         }
       }
     }
@@ -138,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "(Všechny akce)",
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -153,10 +152,6 @@
         "string": "Akce formuláře",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
-      "dataset": {
-        "string": "Akce datové sady",
-        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
-      },
       "field_key": {
         "string": "Akce uživatelů aplikace",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
@@ -165,12 +160,20 @@
         "string": "Akce s veřejným přístupem",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
+      "dataset": {
+        "string": "Seznam akcí entit",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
       "config": {
         "string": "Akce konfigurace serveru",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "upgrade": {
         "string": "Upgrade serveru",
+        "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
+      },
+      "task": {
+        "string": "",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -197,6 +200,16 @@
         "string": "Zpráva o použití",
         "developer_comment": "This is shown in the log of actions performed on the server."
       },
+      "blobs": {
+        "s3_upload": {
+          "string": "Nahrávání souborů do úložiště",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        },
+        "s3_failed_to_pending": {
+          "string": "Označení souborů k opětovnému nahrání do úložiště",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
+      },
       "config": {
         "set": {
           "string": "Nastavit",
@@ -206,11 +219,11 @@
       "dataset": {
         "update": {
           "string": "Aktualizovat",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "update_publish": {
           "string": "Zveřejnit",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Dataset."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "field_key": {
@@ -226,6 +239,10 @@
       "form": {
         "update_draft_set": {
           "string": "Vytvořit nebo aktualizovat koncept",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_replace": {
+          "string": "Nahrazení návrhu",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -245,7 +262,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "Zrušit smazání",
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -263,6 +280,12 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
         }
       },
+      "submission": {
+        "purge": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server."
+        }
+      },
       "upgrade": {
         "process_form": {
           "string": "Zpracování formuláře",
@@ -270,6 +293,14 @@
         },
         "process_form_draft": {
           "string": "Zpracování návrhu formuláře",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "process_form_entities_version": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -306,13 +337,21 @@
       "string": "Komentář",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "continue": {
+      "string": "Pokračovat",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "create": {
       "string": "Vytvořit",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "Nový",
-      "developer_comment": "This is the text of a button that is used to fill out a new Submission. It is shown next to a heading whose text is \"Submissions\"."
+      "string": "",
+      "developer_comment": "This is the text of a button that is used to fill out a new Submission."
+    },
+    "delete": {
+      "string": "Smazat",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "done": {
       "string": "Hotovo",
@@ -370,6 +409,10 @@
       "string": "Obnovit",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "Resetovat heslo",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -390,6 +433,10 @@
       "string": "Seřadit",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
+    "undo": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "update": {
       "string": "Aktualizovat",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -405,6 +452,10 @@
     "hidePreview": {
       "string": "Skrýt náhled",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
+    },
+    "newPreview": {
+      "string": "Nový náhled",
+      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
     },
     "expand": {
       "string": "Rozbalit",
@@ -456,13 +507,12 @@
       "string": "Nové heslo (potvrzení)",
       "developer_comment": "This is the text of a form field."
     },
-    "reviewState": {
-      "string": "Přezkoumání stavu",
-      "developer_comment": "This is the text of a form field."
-    },
     "type": {
       "string": "Typ",
       "developer_comment": "This is the text of a form field."
+    },
+    "reviewState": {
+      "string": "Přezkoumání stavu"
     }
   },
   "header": {
@@ -502,8 +552,16 @@
       "string": "Poslední podání",
       "developer_comment": "This is the text of a table column header."
     },
+    "recentActivity": {
+      "string": "Nedávná aktivita",
+      "developer_comment": "This is the text of a table column header."
+    },
     "name": {
       "string": "Jméno",
+      "developer_comment": "This is the text of a table column header."
+    },
+    "listName": {
+      "string": "Název seznamu",
       "developer_comment": "This is the text of a table column header."
     },
     "submitterName": {
@@ -524,7 +582,7 @@
     },
     "entities": {
       "string": "Celkem subjektů",
-      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the dataset"
+      "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
       "string": "Nejnovější entita",
@@ -556,12 +614,20 @@
       "string": "{count, plural, one {{count} uživatel aplikace} few {{count} uživatelů aplikace} many {{count} uživatelů aplikace} other {{count} uživatelů aplikace}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
+    "attachments": {
+      "string": "{count, plural, one {} few {} many {} other {}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
     "form": {
       "string": "{count, plural, one {{count} formulář} few {{count} formulářů} many {{count} formulářů} other {{count} formulářů}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     },
     "submission": {
       "string": "{count, plural, one {{count} podaný příspěvek} few {{count} podaných příspěvků} many {{count} podaných příspěvků} other {{count} podaných příspěvků}}",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence."
+    },
+    "warning": {
+      "string": "{count, plural, one {} few {} many {} other {}}",
       "developer_comment": "This text appears on its own and is not part of a longer sentence."
     }
   },
@@ -574,20 +640,28 @@
       "string": "Uživatelé aplikace",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "attachments": {
+      "string": "",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "config": {
       "string": "Konfigurace serveru",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
-    "dataset": {
-      "string": "Datová sada",
-      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-    },
-    "datasets": {
-      "string": "Datové sady",
+    "entity": {
+      "string": "Entita",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
       "string": "Subjekty",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entityList": {
+      "string": "Seznam entit",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "entityLists": {
+      "string": "Seznamy entit",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -611,8 +685,12 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "property": {
-      "string": "",
+      "string": "Vlastnost",
       "developer_comment": "This is a data property of an Entity."
+    },
+    "properties": {
+      "string": "Vlastnosti",
+      "developer_comment": "This refers to the data properties of an Entity."
     },
     "publicLink": {
       "string": "Veřejný odkaz",
@@ -638,6 +716,10 @@
       "string": "Relace",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "submission": {
+      "string": "Podání",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "submissions": {
       "string": "Příspěvky",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -645,20 +727,33 @@
     "projectRoles": {
       "string": "Role projektu",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "formPreview": {
+      "string": "Náhled formuláře",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     }
   },
   "alert": {
     "passwordTooShort": {
-      "string": "Zadejte heslo dlouhé alespoň 10 znaků."
+      "string": ""
     },
     "updateEntity": {
       "string": ""
     },
     "updateReviewState": {
-      "string": "Stav kontroly uložen!"
+      "string": ""
     },
     "versionChange": {
-      "string": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
+      "string": ""
+    },
+    "submissionDeleted": {
+      "string": ""
+    },
+    "submissionRestored": {
+      "string": ""
+    },
+    "entityRestored": {
+      "string": ""
     }
   },
   "moreInfo": {
@@ -729,6 +824,9 @@
     },
     "emptyTable": {
       "string": "Zatím nejsou žádné příspěvky."
+    },
+    "fileDownloadUnavailable": {
+      "string": ""
     }
   },
   "entity": {
@@ -737,11 +835,20 @@
       "developer_comment": "This is the label of an Entity."
     },
     "entityLabel": {
-      "string": ""
+      "string": "Štítek Entity"
     },
     "entityId": {
       "string": "ID subjektu",
       "developer_comment": "This is the UUID of an Entity."
+    },
+    "noProperties": {
+      "string": "Tento formulář nastavuje pouze \"štítek\"."
+    },
+    "noEntity": {
+      "string": "(žádný)"
+    },
+    "conflictsCount": {
+      "string": "{count, plural, one {{count} konflikt} few {{count} konflikty} many {{count} konfliktů} other {{count} konfliktů}}"
     }
   },
   "common": {
@@ -761,9 +868,11 @@
       "string": "Základní informace",
       "developer_comment": "This is a title shown above a section of the page."
     },
-    "currentDraft": {
-      "string": "Váš aktuální koncept",
-      "developer_comment": "This is a title shown above a section of the page."
+    "conflict": {
+      "string": "Konflikt"
+    },
+    "conflicts": {
+      "string": "Konflikty"
     },
     "dangerZone": {
       "string": "Nebezpečná zóna",
@@ -792,6 +901,9 @@
       "string": "Fórum",
       "developer_comment": "This is the text of a link that links to the ODK forum."
     },
+    "lastUpdate": {
+      "string": "Poslední aktualizace"
+    },
     "loading": {
       "string": "Načítání..."
     },
@@ -802,9 +914,12 @@
       "string": "Žádné výsledky",
       "developer_comment": "This is shown if a search returned no results."
     },
-    "rightNow": {
-      "string": "Právě teď",
-      "developer_comment": "This is the title of a section that shows status information for the entire server such as project count."
+    "noUndo": {
+      "string": "Tuto akci nelze vrátit zpět."
+    },
+    "rowNumber": {
+      "string": "Řádek",
+      "developer_comment": "This is shown for the row number."
     },
     "success": {
       "string": "Úspěch!"
@@ -820,10 +935,6 @@
       "settings": {
         "string": "Nastavení",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "overview": {
-        "string": "Přehled",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
     "total": {
@@ -832,14 +943,32 @@
     "totalSubmissions": {
       "string": "Celkem odeslání"
     },
-    "punctuations": {
-      "comma": {
-        "string": ","
-      }
-    },
     "propertiesCount": {
       "string": "{count, plural, one {} few {} many {} other {}}",
-      "developer_comment": "{inform} is the number of dataset properties defined by the form. {count} is the total number of properties. The string will be pluralized based on {count}."
+      "developer_comment": "{inform} is the number of Entity Properties defined by the form. {count} is the total number of Properties. The string will be pluralized based on {count}."
+    },
+    "new": {
+      "string": "Novinka!"
+    },
+    "totalEntities": {
+      "string": "Celkem entit"
+    },
+    "versionShort": {
+      "string": "v{version}",
+      "developer_comment": "A short identifier of an Entity version. \"v\" is short for \"version\". {version} is a version number."
+    },
+    "warning": {
+      "string": "Upozornění",
+      "developer_comment": "This text is shown on its own before details about a warning."
+    },
+    "beta": {
+      "string": ""
+    },
+    "none": {
+      "string": ""
+    },
+    "search": {
+      "string": ""
     }
   },
   "mixin": {
@@ -847,19 +976,38 @@
       "alert": {
         "fileSize": {
           "string": "Soubor \"{name}\" který se pokoušíte nahrát, je větší než limit 100 MB."
+        },
+        "entityTooLarge": {
+          "string": "Data, která se snažíte nahrát, jsou příliš velká."
         }
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": {
-        "string": "{name} (archivováno)",
-        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
-      }
-    }
-  },
   "util": {
+    "csv": {
+      "readError": {
+        "string": "Při čtení vašeho souboru došlo k problému: {message}",
+        "developer_comment": "{message} is a description of the problem."
+      },
+      "invalidCSV": {
+        "string": "Soubor \"{name}\" není platný soubor .csv. Nelze jej přečíst."
+      },
+      "rowError": {
+        "string": "Na {row} řádku souboru je problém: {message}",
+        "developer_comment": "{row} is a row number. {message} is a description of the problem."
+      },
+      "invalidQuotes": {
+        "string": "Pole s uvozovkami je neplatné. Zkontrolujte řádek, zda v něm nejsou neobvyklé hodnoty.",
+        "developer_comment": "This is an error that is shown for a spreadsheet. The field may be any cell in the spreadsheet."
+      },
+      "emptyRow": {
+        "string": "Řádek je prázdný."
+      },
+      "dataWithoutHeader": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This is an error that is shown for a data file. {expected} and {actual} are each a number of columns. The string will be pluralized based on {expected}."
+      }
+    },
     "request": {
       "noRequest": {
         "string": "Něco se pokazilo: nebyl žádný požadavek."
@@ -870,19 +1018,38 @@
       "errorNotProblem": {
         "string": "Něco se pokazilo: chybový kód {status}.",
         "developer_comment": "{status} is an HTTP status code, for example, 404."
+      },
+      "problem": {
+        "404_1": {
+          "string": "Hledaný zdroj nelze nalézt. Zdroj mohl být smazán.",
+          "developer_comment": "A \"resource\" is a generic term for something in Central, for example, a Project, a Web User, or a Form."
+        },
+        "409_17": {
+          "message": {
+            "string": "{count, plural, one {} few {} many {} other {}}"
+          },
+          "duplicateProperty": {
+            "string": " {provided} (stávající: {current})",
+            "developer_comment": "Error message format for the duplicate properties (different capitalization) in an Entity-list. {provided} is the property name in the uploaded Form. {current} is the existing property name in the Entity-list."
+          }
+        }
       }
     },
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "Vaše relace vyprší za 2 minuty a budete automaticky odhlášeni."
+          "string": ""
         },
         "expired": {
-          "string": "Vaše relace vypršela. Chcete-li pokračovat v práci, přihlaste se prosím znovu."
+          "string": ""
         },
         "logoutError": {
-          "string": "Došlo k problému a nebyli jste úplně odhlášeni. Obnovte stránku a zkuste se znovu odhlásit. {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": ""
+          },
+          "pleaseRefresh": {
+            "string": ""
+          }
         }
       }
     }
@@ -908,7 +1075,7 @@
       },
       "alert": {
         "success": {
-          "string": "Heslo bylo úspěšně resetováno."
+          "string": ""
         }
       }
     },
@@ -918,7 +1085,26 @@
           "string": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
         },
         "changePassword": {
-          "string": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
+          "string": ""
+        }
+      },
+      "oidc": {
+        "body": {
+          "string": "Kliknutím na tlačítko Pokračovat přejdete na přihlašovací stránku."
+        },
+        "error": {
+          "auth-ok-user-not-found": {
+            "string": "K vaší e-mailové adrese není přiřazen žádný centrální účet. Požádejte prosím správce Central, aby vám vytvořil účet, abyste mohli pokračovat."
+          },
+          "email-not-verified": {
+            "string": "Vaše e-mailová adresa nebyla ověřena přihlašovacím serverem. Obraťte se prosím na správce serveru."
+          },
+          "email-claim-not-provided": {
+            "string": "Central nemohl získat přístup k e-mailové adrese přidružené k vašemu účtu. Může to být způsobeno tím, že správce serveru něco špatně nakonfiguroval nebo že e-mailovou adresu pro váš účet nenastavil. Může to být také důsledek možností ochrany osobních údajů, které můžete zvolit během přihlašovacího procesu. V takovém případě to zkuste znovu a ujistěte se, že je váš e-mail sdílený."
+          },
+          "internal-server-error": {
+            "string": "Při přihlašování se něco pokazilo. Kontaktujte prosím správce serveru."
+          }
         }
       },
       "problem": {
@@ -996,7 +1182,7 @@
       },
       "alert": {
         "success": {
-          "string": "Nastavení uloženo!"
+          "string": ""
         }
       }
     },
@@ -1106,6 +1292,9 @@
         "num_forms_with_audits": {
           "string": "Počet formulářů s audity"
         },
+        "num_forms_webforms_enabled": {
+          "string": ""
+        },
         "num_reused_form_ids": {
           "string": "Počet opakovaně použitých ID formulářů"
         },
@@ -1148,9 +1337,6 @@
         "num_submissions_from_web_users": {
           "string": "Počet podání od uživatelů webu"
         },
-        "has_description": {
-          "string": "Projekt má popis"
-        },
         "description_length": {
           "string": "Délka popisu projektu"
         },
@@ -1158,18 +1344,108 @@
           "string": "Počet vlastností"
         },
         "num_creation_forms": {
-          "string": "Počet formulářů, které aktualizují datovou sadu"
+          "string": "Počet formulářů, které aktualizují seznam subjektů"
         },
         "num_followup_forms": {
-          "string": "Počet formulářů, které používají datovou sadu"
+          "string": "Počet formulářů, které používají seznam subjektů"
         },
         "num_entities": {
-          "string": "Počet subjektů v datovém souboru"
+          "string": "Počet subjektů v seznamu subjektů"
         },
         "num_failed_entities": {
           "string": "Počet chyb při vytváření subjektu"
         },
         "num_entity_updates": {
+          "string": "Počet aktualizací entity"
+        },
+        "num_entity_updates_sub": {
+          "string": "Počet aktualizací entity prostřednictvím podání"
+        },
+        "num_entity_updates_api": {
+          "string": ""
+        },
+        "num_entities_updated": {
+          "string": ""
+        },
+        "num_entity_conflicts": {
+          "string": ""
+        },
+        "num_entity_conflicts_resolved": {
+          "string": ""
+        },
+        "num_bulk_create_events": {
+          "string": ""
+        },
+        "biggest_bulk_upload": {
+          "string": ""
+        },
+        "sso_enabled": {
+          "string": "SSO povoleno na serveru"
+        },
+        "num_client_audit_attachments": {
+          "string": "Počet příloh auditu klienta"
+        },
+        "num_client_audit_attachments_failures": {
+          "string": "Počet selhání zpracování auditu klienta"
+        },
+        "num_client_audit_rows": {
+          "string": "Počet řádků auditu klienta"
+        },
+        "num_audits_failed": {
+          "string": "Počet událostí protokolu auditů, které selhaly alespoň jednou"
+        },
+        "num_audits_failed5": {
+          "string": "Počet událostí protokolu auditů, které zcela selhaly"
+        },
+        "num_audits_unprocessed": {
+          "string": "Počet událostí protokolu auditů, jejichž zpracování bylo odloženo"
+        },
+        "num_offline_entity_branches": {
+          "string": ""
+        },
+        "num_offline_entity_interrupted_branches": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_reprocessed": {
+          "string": ""
+        },
+        "max_entity_submission_delay": {
+          "string": ""
+        },
+        "avg_entity_submission_delay": {
+          "string": ""
+        },
+        "uses_external_blob_store": {
+          "string": ""
+        },
+        "num_offline_entity_submissions_force_processed": {
+          "string": ""
+        },
+        "max_entity_branch_delay": {
+          "string": ""
+        },
+        "num_owner_only_datasets": {
+          "string": ""
+        },
+        "num_xml_only_form_defs": {
+          "string": ""
+        },
+        "num_blob_files": {
+          "string": "Počet binárních souborů"
+        },
+        "num_blob_files_on_s3": {
+          "string": "Počet binárních souborů aktuálně uložených v úložišti kompatibilním s S3"
+        },
+        "num_reset_failed_to_pending_count": {
+          "string": "Počet případů, kdy uživatel resetoval neúspěšné odeslání do úložiště kompatibilního s S3"
+        },
+        "num_entity_creates_sub": {
+          "string": ""
+        },
+        "num_entity_creates_api": {
+          "string": ""
+        },
+        "num_entity_creates_bulk": {
           "string": ""
         }
       }
@@ -1203,10 +1479,10 @@
         "string": "Stavy odeslání",
         "developer_comment": "This is the title of a single table in the analytics metrics report of metrics about submission state (approved, rejected, etc)"
       },
-      "datasets": {
+      "entities": {
         "title": {
-          "string": "Souhrny datových sad a entit",
-          "developer_comment": "This is the title shown above a series of metrics about Datasets and Entities usage."
+          "string": "Souhrny subjektů",
+          "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
           "string": "{count, plural, one {} few {} many {} other {}}"
@@ -1222,6 +1498,12 @@
         "loadError": {
           "string": "Požadovanou stránku se nepodařilo načíst. Obnovte prosím stránku a zkuste to znovu."
         }
+      }
+    },
+    "AuditFilters": {
+      "noLogDateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
     "AuditList": {
@@ -1260,46 +1542,83 @@
         }
       }
     },
-    "DatasetIntroduction": {
+    "CollectQr": {
+      "draft": {
+        "string": "Dočasný testovací kód",
+        "developer_comment": "This is shown below a QR code for a draft form."
+      }
+    },
+    "ConfigError": {
       "title": {
-        "string": ""
+        "string": "Chyba načítání Central",
+        "developer_comment": "This is the title at the top of a panel."
       },
       "body": {
+        "string": ""
+      }
+    },
+    "DatasetEntities": {
+      "upload": {
+        "string": ""
+      },
+      "alert": {
+        "upload": {
+          "string": ""
+        }
+      },
+      "purgeDescription": {
+        "string": ""
+      },
+      "action": {
+        "toggleDeletedEntities": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "analyzeDisabledDeletedData": {
+        "string": ""
+      }
+    },
+    "DatasetList": {
+      "heading": {
+        "0": {
+          "string": "Entity umožňují sdílet informace mezi formuláři, takže můžete shromažďovat longitudinální data, spravovat případy v čase a reprezentovat další pracovní postupy s více kroky.",
+          "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
+        },
+        "1": {
+          "string": "Entity se vytvářejí prostřednictvím návrhu formuláře a lze je připojit k libovolnému formuláři."
+        }
+      },
+      "new": {
+        "string": "Nový",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+      }
+    },
+    "DatasetNew": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "encrypted": {
+        "string": "",
+        "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
+      },
+      "entityListName": {
+        "string": "",
+        "developer_comment": "This appears above a text input field for the name of an Entity List"
+      },
+      "success": {
         "0": {
           "string": ""
         },
         "1": {
-          "string": "",
-          "developer_comment": "{icon1} is an icon that display the number 1. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "2": {
-          "string": "",
-          "developer_comment": "{icon2} is an icon that display the number 2. It refers to the first step in an image that shows the relationship between Forms and Entities."
-        },
-        "3": {
-          "string": "",
-          "developer_comment": "{icon3} is an icon that displays the numbers 3. It refers to the third step in an image that that shows the relationship between Forms and Entities."
-        },
-        "4": {
-          "string": "",
-          "developer_comment": "{icon4} is an icon that displays the number 4. It refers to the fourth step in an image that that shows the relationship between Forms and Entities."
-        },
-        "5": {
+          "string": "Můžete s ním začít pracovat přidáním jeho datových vlastností přímo na této stránce nebo nahráním formulářů, které jej používají. V takovém případě se všechny vlastnosti, které Formulář volá, vytvoří automaticky při publikování Formuláře."
+        }
+      },
+      "problem": {
+        "409_3": {
           "string": ""
         }
-      },
-      "getStarted": {
-        "full": {
-          "string": "Další informace o tom, jak začít, najdete {clickHere}.",
-          "developer_comment": "{clickHere} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nclick here"
-        },
-        "clickHere": {
-          "string": "klikněte zde",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nFor more information on how to get started, {clickHere}."
-        }
-      },
-      "datasetsWorkflow": {
-        "string": "Pracovní postup s datovými sadami"
       }
     },
     "DatasetOverview": {
@@ -1307,20 +1626,28 @@
         "string": "Připojení k formulářům",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "datasetProperties": {
-        "string": "Vlastnosti datové sady",
+      "entityProperties": {
+        "string": "Vlastnosti entity",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "new": {
+        "string": "",
+        "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
     "DatasetOverviewConnectionToForms": {
-      "formsCreateEntities": {
+      "formsUpdateEntities": {
         "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "developer_comment": "The number of Form(s) is shown separately above this text."
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "V této datové sadě nejsou žádné vlastnosti."
+        "string": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
+      },
+      "none": {
+        "string": "(žádný)",
+        "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
       }
     },
     "DatasetOverviewLinkedForms": {
@@ -1329,37 +1656,108 @@
         "developer_comment": "Number of form(s) is shown separately above this text"
       }
     },
+    "DatasetOverviewNewProperty": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
+      },
+      "newPropertyName": {
+        "string": "Název nové vlastnosti"
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
+        }
+      }
+    },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": ""
+      },
+      "accessAllDefault": {
+        "string": ""
+      },
+      "ownerOnly": {
+        "string": ""
+      },
+      "radio": {
+        "false": {
+          "string": ""
+        },
+        "true": {
+          "string": ""
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": ""
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": ""
+        },
+        "action": {
+          "confirm": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": ""
+        },
+        "changeToTrue": {
+          "string": ""
+        }
+      }
+    },
     "DatasetPendingSubmissions": {
       "title": {
-        "string": ""
+        "string": "Nevyřízená podání"
       },
       "action": {
         "changeSetting": {
-          "string": "",
+          "string": "Změnit nastavení",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "explanation": {
         "userAction": {
-          "string": ""
+          "string": "Nastavujete vytvoření entit tak, aby k němu došlo při prvním přijetí Podání do Central."
         },
         "implication": {
           "full": {
             "string": "{count, plural, one {} few {} many {} other {}}",
-            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} records"
+            "developer_comment": "{records} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} pending records"
           },
           "records": {
             "string": "{count, plural, one {} few {} many {} other {}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nOnce this takes effect, Entities will no longer be generated when Submissions are marked Approved, including {records} we found that have neither been marked Approved nor Rejected."
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {records} is in the following text. (The plural form of the text is shown.)\n\nYou currently have {records} not marked Approved nor Rejected."
           }
         }
       },
       "dontConvert": {
         "label": {
-          "string": ""
+          "string": "Rozumím tomu a nepředstavuje to pro mě problém."
         },
         "description": {
-          "string": "{count, plural, one {} few {} many {} other {}}"
+          "string": ""
         }
       },
       "convert": {
@@ -1367,7 +1765,7 @@
           "string": ""
         },
         "description": {
-          "string": "{count, plural, one {} few {} many {} other {}}"
+          "string": ""
         }
       }
     },
@@ -1377,56 +1775,68 @@
           "string": "Stáhnout data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "possibleConflictsCount": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "DatasetSettings": {
       "entityWorkflow": {
-        "string": "",
+        "string": "Entity Workflow",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "onReceipt": {
         "label": {
-          "string": ""
+          "string": "Vytvořit entity, jakmile Central obdrží podání."
         },
         "description": {
-          "string": ""
+          "string": "Před vytvořením entit nebudete mít možnost údaje zkontrolovat nebo opravit."
         },
         "successMessage": {
-          "string": ""
+          "string": "Entity budou vytvořeny, jakmile Central obdrží podání."
         }
       },
       "onApproval": {
         "label": {
-          "string": ""
+          "string": "Vytvořit entity, když jsou podání označena jako schválená"
         },
         "description": {
-          "string": ""
+          "string": "Data entit se neaktualizují, dokud je některá osoba nezkontroluje. V případě potřeby lze provést opravy."
         },
         "successMessage": {
-          "string": ""
+          "string": "Entity se vytvoří, když jsou podání označena jako schválená."
         }
       }
     },
     "DatasetShow": {
       "back": {
-        "string": "Zpět na datové sady projektu",
+        "string": "Zpět na projektové entity",
         "developer_comment": "This is shown at the top of the page."
-      }
-    },
-    "DatasetSummary": {
-      "datasetUpdates": {
-        "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "Number of dataset(s) is shown separately above this text"
+      },
+      "infoNav": {
+        "connectedForms": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
+        },
+        "linkedForms": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
+        }
       }
     },
     "DatasetSummaryRow": {
       "new": {
         "string": "nový!",
-        "developer_comment": "This is shown when a dataset is new"
+        "developer_comment": "This is shown when an Entity List is new"
       },
       "addedByThisDraft": {
         "string": "Přidáno podle tohoto návrhu",
-        "developer_comment": "This is shown when mouse hovers over plus icon of new Dataset Property"
+        "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
+      }
+    },
+    "DatasetTable": {
+      "emptyTable": {
+        "string": "Nebyly vytvořeny žádné entity pro tento projekt."
       }
     },
     "Download": {
@@ -1454,19 +1864,192 @@
         }
       }
     },
+    "EntityActivity": {
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "EntityBasicDetails": {
+      "entityDetails": {
+        "string": ""
+      },
       "creatingSubmission": {
-        "string": "",
+        "string": "Vytvoření podání",
         "developer_comment": "This is shown above the Submission that created the Entity."
       },
+      "creatingSource": {
+        "string": "",
+        "developer_comment": "This is shown above the source (e.g. a CSV file) that created the entity"
+      },
+      "upload": {
+        "string": "",
+        "developer_comment": "This describes an \"upload\" being a generic source of an entity"
+      },
       "submissionDeleted": {
+        "string": "Toto podání bylo smazáno."
+      }
+    },
+    "EntityConflictSummary": {
+      "title": {
+        "string": "Aktualizace dat paralelně"
+      },
+      "subtitle": {
+        "0": {
+          "string": "Jedna nebo více aktualizací bylo provedeno na základě dat, která mohla být zastaralá."
+        },
+        "1": {
+          "string": "Prosím, zkontrolujte tuto souhrn paralelních aktualizací."
+        }
+      },
+      "footer": {
+        "0": {
+          "string": "Pokud je třeba upravit nějaké hodnoty, můžete přímo upravit data Entity."
+        },
+        "1": {
+          "string": "Pokud vše vypadá v pořádku, klikněte na \"Označit jako vyřešeno\" k zavření tohoto varování."
+        }
+      },
+      "confirmation": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": "Poté, co jste zkontrolovali možně konfliktní aktualizace a provedli všechny potřebné aktualizace, můžete kliknout na Potvrdit níže, abyste odstranili varování o paralelní aktualizaci."
+        },
+        "confirm": {
+          "string": "Potvrdit"
+        }
+      },
+      "conflictResolved": {
         "string": ""
       }
     },
-    "EntityData": {
+    "EntityConflictTable": {
+      "noConflicts": {
+        "string": "Nejsou žádné konflikty k zobrazení.",
+        "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
+      },
+      "basedOn": {
+        "label": {
+          "string": "",
+          "developer_comment": "\"Based on\" as in \"the version of the Entity that this version is based on\". That version is known as the \"base version\". It is the version of the Entity that the author saw when they made their changes."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "source": {
+        "label": {
+          "string": "Zdroj"
+        },
+        "description": {
+          "string": "Aktualizace, která vygenerovala tuto verzi"
+        }
+      },
+      "status": {
+        "historical": {
+          "string": "Tato historická verze je zahrnuta, protože nedávná paralelní aktualizace byla provedena na základě této verze této Entity."
+        },
+        "lastGoodVersion": {
+          "string": "Toto je nejnovější verze v dobré shodě. Po této aktualizaci byly provedeny potenciálně konfliktní aktualizace paralelně."
+        },
+        "softConflict": {
+          "string": "Tato verze může být vytvořena na základě starých dat."
+        },
+        "hardConflict": {
+          "string": "Tato verze byla vytvořena paralelně s dalšími aktualizacemi, z nichž některé se snaží zapisovat do stejných vlastností jako tato aktualizace."
+        }
+      },
+      "branch": {
+        "string": "",
+        "developer_comment": "A series of updates that were made offline"
+      }
+    },
+    "EntityDelete": {
       "title": {
         "string": "",
-        "developer_comment": "This is a title shown above a section of the page."
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "",
+          "developer_comment": "{label} is the label of an Entity."
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "EntityDiff": {
+      "noChange": {
+        "string": "Nejsou žádné změny k zobrazení."
+      }
+    },
+    "EntityDiffHead": {
+      "introduction": {
+        "string": "",
+        "developer_comment": "{version} and {baseVersion} are version numbers."
+      },
+      "hardConflict": {
+        "description": {
+          "string": ""
+        }
+      },
+      "softConflict": {
+        "title": {
+          "string": "Paralelní aktualizace",
+          "developer_comment": "An update to an Entity that was made at the same time as another update"
+        }
+      },
+      "tab": {
+        "baseDiff": {
+          "string": "Pohled autora",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the data collector (the author)"
+        },
+        "serverDiff": {
+          "string": "Pohled Centralu",
+          "developer_comment": "A comparison between two versions of an Entity, from the point of view of the Central server"
+        },
+        "updating": {
+          "string": "(aktualizace {version})",
+          "developer_comment": "This text is shown for an update to an Entity. {version} is a short version identifier, for example, \"v3\". It is the version that the update was applied to."
+        }
+      }
+    },
+    "EntityDiffRow": {
+      "conflictingProp": {
+        "string": "Další aktualizace již zapsala do této vlastnosti.",
+        "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity."
+      }
+    },
+    "EntityDiffTable": {
+      "header": {
+        "oldValue": {
+          "string": "Stará hodnota",
+          "developer_comment": "The value of an Entity property in an older version of the Entity"
+        },
+        "newValue": {
+          "string": "Nová hodnota",
+          "developer_comment": "The value of an Entity property in a newer version of the Entity"
+        }
+      },
+      "comparing": {
+        "string": "Srovnání",
+        "developer_comment": "This is shown when Central displays a comparison of two versions of an Entity."
+      },
+      "version": {
+        "string": "{version} ({source})",
+        "developer_comment": "{version} is a short identifier of an Entity version, for example, \"v3\". {source} indicates what created the Entity version, for example, \"Update by Alice\"."
+      },
+      "accuracyWarning": {
+        "string": "",
+        "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
     "EntityFeedEntry": {
@@ -1474,16 +2057,16 @@
         "submission": {
           "create": {
             "notDeleted": {
-              "string": "",
+              "string": "Podání {instanceName} nahrané {submitter}",
               "developer_comment": "This text is shown in a list of events. {submitter} is the name of a user, a team of users, or a Public Access Link."
             },
             "deleted": {
               "full": {
-                "string": "",
+                "string": "{deletedSubmission} nahráno od {name}",
                 "developer_comment": "This text is shown in a list of events. {name} is the name of a user, a team of users, or a Public Access Link.\n\n{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
               },
               "deletedSubmission": {
-                "string": "",
+                "string": "(smazané podání {id})",
                 "developer_comment": "This text is shown in a list of events. {id} is the Submission instance ID.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\n{deletedSubmission} uploaded by {name}"
               }
             }
@@ -1492,41 +2075,218 @@
         "entity": {
           "create": {
             "api": {
+              "string": "Entita {label}  vytvořena od {name}",
+              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            },
+            "bulkSource": {
               "string": "",
-              "developer_comment": "This text is shown in a list of events. {name} is the name of a Web user."
+              "developer_comment": "This text is shown in a list of events. {name} is a filename, e.g. myfile.csv, and {actor} is a name/link to a Web User."
             }
           },
           "update_version": {
+            "submission": {
+              "notDeleted": {
+                "string": "Data aktualizována prostřednictvím odeslání {instanceName}"
+              },
+              "deleted": {
+                "full": {
+                  "string": "Data aktualizována pomocí {deletedSubmission}",
+                  "developer_comment": "{deletedSubmission} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\n(deleted Submission {id})"
+                },
+                "deletedSubmission": {
+                  "string": "(smazáno Odeslání {id})",
+                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {deletedSubmission} is in the following text:\n\nData updated by {deletedSubmission}"
+                }
+              }
+            },
             "api": {
-              "string": "",
+              "string": "Data aktualizovaná od {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+            }
+          },
+          "update_resolve": {
+            "string": "Varování konfliktu vyřešeno {name}",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "delete": {
+            "string": "",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          },
+          "restore": {
+            "string": "",
+            "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
+          }
+        }
+      },
+      "offlineUpdate": {
+        "string": "",
+        "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
+      }
+    },
+    "EntityFiltersConflict": {
+      "conflict": {
+        "true": {
+          "string": "Možný konflikt",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        },
+        "false": {
+          "string": "Žádný konflikt",
+          "developer_comment": "This is an option in a dropdown that allows the user to select one or more conflict statuses."
+        }
+      },
+      "field": {
+        "conflict": {
+          "string": "Stav konfliktu",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
+        }
+      }
+    },
+    "EntityList": {
+      "noEntities": {
+        "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
+        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      },
+      "noMatching": {
+        "string": "Neexistují žádné odpovídající entity."
+      },
+      "allDeleted": {
+        "string": ""
+      },
+      "allDeletedOnPage": {
+        "string": ""
+      },
+      "alert": {
+        "delete": {
+          "string": ""
+        }
+      },
+      "filterDisabledMessage": {
+        "string": ""
+      },
+      "searchDisabledMessage": {
+        "string": ""
+      },
+      "downloadDisabled": {
+        "string": ""
+      },
+      "deletedEntity": {
+        "emptyTable": {
+          "string": ""
+        },
+        "allRestored": {
+          "string": ""
+        },
+        "allRestoredOnPage": {
+          "string": ""
+        }
+      },
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {} few {} many {} other {}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withCount": {
+              "string": "{count, plural, one {} few {} many {} other {}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            },
+            "withoutCount": {
+              "string": "",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
         }
       }
     },
-    "EntityList": {
-      "action": {
-        "download": {
-          "unfiltered": {
-            "string": "{count, plural, one {} few {} many {} other {}}",
-            "developer_comment": "This is the text of a button shown when the count of Entities is known."
-          }
+    "EntityMetadataRow": {
+      "reviewParallelUpdates": {
+        "string": "",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
+      }
+    },
+    "EntityResolve": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "instructions": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": "Zkontrolujte aktualizace, provedte případné úpravy, a pokud jste si jisti, že tato data Entity jsou správná, stiskněte „Označit jako vyřešené“, abyste vymazali tuto varovnou zprávu."
         }
       },
-      "noEntities": {
-        "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
-        "developer_comment": "This text is shown when there are no Entities to show in a table."
+      "action": {
+        "table": {
+          "show": {
+            "string": "Zobrazit souhrnnou tabulku",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "hide": {
+            "string": "Skrýt souhrnnou tabulku",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "seeMoreDetails": {
+          "string": "Více podrobností",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "editEntity": {
+          "string": "Upravit entitu",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "markAsResolved": {
+          "string": "Označit jako vyřešeno",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "successMessage": {
+        "string": "Varování konfliktu bylo odstraněno z Entity."
+      },
+      "problem": {
+        "400_32": {
+          "string": "Jiný uživatel již označil konflikt jako vyřešený. Aktualizujte prosím, abyste viděli aktualizovaná data."
+        }
+      }
+    },
+    "EntityRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "introduction": {
+        "0": {
+          "string": "",
+          "developer_comment": "{label} is the label of an Entity."
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
       }
     },
     "EntityShow": {
       "back": {
         "title": {
-          "string": "",
+          "string": "Detail entity",
           "developer_comment": "This is shown at the top of the page."
         },
         "back": {
-          "string": "",
+          "string": "Zpět na tabulku {datasetName}",
           "developer_comment": "This is shown at the top of the page. The user can click it to go back."
         }
       }
@@ -1534,25 +2294,190 @@
     "EntityTable": {
       "header": {
         "updatedAtAndActions": {
-          "string": "",
+          "string": "Poslední aktualizace / Akce",
           "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
+        },
+        "deletedAt": {
+          "string": "",
+          "developer_comment": "Heading of the column that shows Entity deletion timestamp"
         }
       }
     },
     "EntityUpdate": {
       "title": {
-        "string": "",
+        "string": "Aktualizace {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
       "header": {
         "currentValue": {
-          "string": "",
+          "string": "Aktuální hodnota",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         },
         "updatedValue": {
-          "string": "",
+          "string": "Aktualizovaná hodnota",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "problem": {
+        "409_15": {
+          "string": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
+        }
+      }
+    },
+    "EntityUpload": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "table": {
+        "server": {
+          "string": "",
+          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
+        },
+        "file": {
+          "string": ""
+        }
+      },
+      "action": {
+        "append": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "blankLabel": {
+          "string": ""
+        },
+        "noData": {
+          "string": ""
+        }
+      },
+      "headersNote": {
+        "string": ""
+      }
+    },
+    "EntityUploadDataError": {
+      "title": {
+        "string": ""
+      }
+    },
+    "EntityUploadDataTemplate": {
+      "text": {
+        "full": {
+          "string": "",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+        },
+        "downloadTemplate": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+        }
+      }
+    },
+    "EntityUploadFileSelect": {
+      "text": {
+        "full": {
+          "string": "",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        }
+      },
+      "parsing": {
+        "string": ""
+      }
+    },
+    "EntityUploadHeaderErrors": {
+      "expectedHeader": {
+        "string": "",
+        "developer_comment": "This refers to the header row of a spreadsheet."
+      },
+      "suggestions": {
+        "title": {
+          "string": "",
+          "developer_comment": "Suggestions to fix an error"
+        },
+        "invalidQuotes": {
+          "string": ""
+        },
+        "missingLabel": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "unknownProperty": {
+          "string": ""
+        },
+        "duplicateColumn": {
+          "string": ""
+        },
+        "emptyColumn": {
+          "string": ""
+        },
+        "delimiterNotComma": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadPopup": {
+      "rowCount": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
+      },
+      "status": {
+        "sending": {
+          "string": "",
+          "developer_comment": "This text is shown while a file is being uploaded to the server."
+        },
+        "processing": {
+          "string": "",
+          "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
+    "EntityUploadWarnings": {
+      "row": {
+        "raggedRows": {
+          "string": "",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        },
+        "largeCell": {
+          "string": "",
+          "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityVersionLink": {
+      "submission": {
+        "string": "Odeslání {instanceName}",
+        "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
+      },
+      "api": {
+        "string": "Aktualizace od {name}",
+        "developer_comment": "This refers to an update to an Entity. {name} is the name of a Web User."
+      },
+      "bulk": {
+        "string": "",
+        "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
+      }
+    },
+    "ExtraTranslations": {
+      "outdatedVersionHtml": {
+        "heading": {
+          "string": ""
+        },
+        "sentence1": {
+          "string": ""
+        },
+        "sentence2": {
+          "string": "",
+          "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
+        }
+      }
+    },
+    "FeedbackButton": {
+      "feedback": {
+        "string": "",
+        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
     "FieldKeyList": {
@@ -1602,7 +2527,7 @@
           "string": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen."
         },
         "revoke": {
-          "string": "Přístup k aplikaci byl  zrušen uživateli  „{displayName}“."
+          "string": ""
         }
       }
     },
@@ -1733,9 +2658,6 @@
         },
         "1": {
           "string": "Stávající příspěvky od tohoto uživatele zůstanou, ale kdokoli se na tohoto uživatele obrátí, bude muset vytvořit nové, aby pokračoval ve stahování formulářů nebo odesílání příspěvků."
-        },
-        "2": {
-          "string": "Tuto akci nelze vrátit zpět."
         }
       }
     },
@@ -1757,12 +2679,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Odkaz Datové sady",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Určitě chcete datovou sadu propojit?"
+          "string": "Opravdu chcete propojit seznam entit?"
         },
         "1": {
           "string": "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
@@ -1778,23 +2700,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Nahrát soubory",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
-      "heading": {
-        "0": {
-          "string": "Na základě nahraného formuláře se očekávají následující přílohy formuláře. Můžete se podívat, které z nich byly poskytnuty nebo které ještě chybí."
-        },
-        "1": {
-          "string": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na stránku."
-        }
-      },
-      "header": {
-        "uploaded": {
-          "string": "Nahráno",
-          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
-        }
+      "orDrag": {
+        "string": "",
+        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
       },
       "problem": {
         "noneUploaded": {
@@ -1811,17 +2723,13 @@
           "string": "{count, plural, one {{count} soubor byl úspěšně nahrán.} few {{count} soubory byly úspěšně nahrány.} many {{count} souborů bylo úspěšně nahráno.} other {{count} souborů bylo úspěšně nahráno.}}"
         },
         "link": {
-          "string": "Datová sada byla úspěšně propojena."
+          "string": ""
         }
       },
-      "datasetsPreview": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "0": {
-            "string": "Jedna nebo více příloh formuláře mají názvy souborů shodné s názvy datových sad. Ve výchozím nastavení jsou tyto soubory propojeny s datovými sadami. Pro účely testování můžete chtít nahrát dočasná data jako soubory .csv a poté je propojit s Datasety, jakmile ověříte logiku formuláře."
-          }
+      "header": {
+        "uploaded": {
+          "string": "Nahráno",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
         }
       }
     },
@@ -1939,28 +2847,28 @@
       "notUploaded": {
         "text": {
           "string": "Nebyl nahrán",
-          "developer_comment": "This is shown for a Media File that has not been uploaded."
+          "developer_comment": "This is shown for a Form Attachment that has not been uploaded."
         },
         "title": {
           "string": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na tuto stránku"
         }
       },
       "linkedToDataset": {
-        "string": "Propojeno s datovou sadou {datasetName}",
-        "developer_comment": "This is shown for a Form Attachment that is linked to a Dataset"
+        "string": "",
+        "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
         "string": "Nahrajte soubor, který chcete přepsat."
       },
       "action": {
         "linkDataset": {
-          "string": "Odkaz Datové sady {datasetName}",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "override": {
         "string": "Přepsat",
-        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to a Dataset, which would be overriden if the selected files were uploaded."
+        "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
     "FormAttachmentUploadFiles": {
@@ -2001,7 +2909,7 @@
           "string": "Opravdu chcete odstranit formulář {name} a všechny jeho odeslání?"
         },
         "1": {
-          "string": "Tato akce přesune formulář do koše. Po 30 dnech v koši bude trvale vymazán, ale předtím jej lze zrušit."
+          "string": ""
         }
       },
       "noDeleteEntities": {
@@ -2012,10 +2920,6 @@
       "title": {
         "abandon": {
           "string": "Opustit koncept",
-          "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "deleteForm": {
-          "string": "Opustit koncept a smazat formulář",
           "developer_comment": "This is the title at the top of a pop-up."
         }
       },
@@ -2038,110 +2942,6 @@
         "abandon": {
           "string": "Opustit",
           "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
-    "FormDraftChecklist": {
-      "clickForInfo": {
-        "string": "Klikněte sem a dozvíte se více"
-      },
-      "steps": {
-        "0": {
-          "title": {
-            "string": "Nahrajte počáteční definici formuláře",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "string": "Skvělá práce!"
-            },
-            "1": {
-              "string": "Návrh formuláře byl úspěšně načten."
-            }
-          }
-        },
-        "1": {
-          "title": {
-            "string": "Nahrát revidovanou definici formuláře (volitelné)",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas nahrát nový XML nebo XLSForm pomocí tlačítka napravo.",
-                "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated."
-              },
-              "link": {
-                "full": {
-                  "string": "Pokud jste provedli změny v samotném formuláři, včetně textu otázek nebo logických pravidel, je nyní čas na {upload} nového XML nebo XLSForm.",
-                  "developer_comment": "This refers to changes to the Form definition as opposed to just the Attachments associated with the Form. The word \"XLSForm\" should not be translated.\n\n{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload"
-                },
-                "upload": {
-                  "string": "nahrát",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nIf you have made changes to the Form itself, including question text or logic rules, now is the time to {upload} the new XML or XLSForm."
-                }
-              }
-            }
-          }
-        },
-        "2": {
-          "title": {
-            "string": "Nahrát přílohy formuláře",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Návrh vašeho formuláře odkazuje na soubory, které jsou potřebné k prezentaci formuláře. Jejich nové nebo aktualizované kopie můžete nahrát k distribuci na kartě {formAttachments}.",
-                "developer_comment": "{formAttachments} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nForm Attachments"
-              },
-              "formAttachments": {
-                "string": "Přílohy formuláře",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {formAttachments} is in the following text:\n\nYour Form design references files that are needed in order to present your Form. You can upload new or updated copies of these for distribution under the {formAttachments} tab."
-              }
-            }
-          }
-        },
-        "3": {
-          "title": {
-            "string": "Otestujte formulář vytvořením podání",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "full": {
-                "string": "Můžete {test} formulář abyste se ujistili, že funguje tak, jak očekáváte. Testovací odeslání nejsou součástí vašich konečných údajů.",
-                "developer_comment": "{test} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntest"
-              },
-              "test": {
-                "string": "otestovat",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {test} is in the following text:\n\nYou can {test} a Form to be sure it works the way you expect. Test Submissions are not included in your final data."
-              }
-            }
-          }
-        },
-        "4": {
-          "title": {
-            "string": "Publikovat koncept",
-            "developer_comment": "This is the title of a checklist item."
-          },
-          "body": {
-            "0": {
-              "status": {
-                "string": "Pokud jste si jisti, že je koncept připraven a chcete jej uvést do provozu v terénu, můžete jej publikovat pomocí tlačítka napravo."
-              },
-              "link": {
-                "full": {
-                  "string": "Pokud jste si jisti, že je koncept připraven a chcete jej uvést do provozu v terénu, můžete ho {publish}.",
-                  "developer_comment": "{publish} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\npublish"
-                },
-                "publish": {
-                  "string": "publikovat",
-                  "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publish} is in the following text:\n\nWhen you are sure your Draft is ready and you wish to roll it out to your devices in the field, you can {publish} it."
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -2186,120 +2986,214 @@
           "string": "Chcete pokračovat?"
         }
       },
-      "field": {
-        "version": {
-          "string": "Verze",
-          "developer_comment": "This is the text of a form field. It is used to specify a unique version name for the version of the Form that is about to be published."
-        }
+      "newProperties": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       },
       "problem": {
         "409_6": {
           "string": "Název verze tohoto návrhu je v rozporu s minulou verzí tohoto formuláře nebo s odstraněným formulářem. Použijte prosím níže uvedené pole a změňte jej na nový nebo nahrajte novou definici Formuláře."
         }
+      }
+    },
+    "FormDraftQrPanel": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
       },
-      "dataset": {
-        "introduction": {
-          "full": {
-            "string": "{inAddition} zveřejněním této definice formuláře dojde k následujícím změnám v tomto projektu:",
-            "developer_comment": "{inAddition} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nIn addition,"
-          },
-          "inAddition": {
-            "string": "Navíc,",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {inAddition} is in the following text:\n\n{inAddition} publishing this Form definition will make the following changes to this Project:"
-          }
+      "introduction": {
+        "full": {
+          "string": "",
+          "developer_comment": "This is shown next to a QR code.\n\n{temporaryCode} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nTemporary Testing Code"
         },
-        "newDataset": {
-          "string": "Bude vytvořena nová datová sada {datasetName}."
+        "temporaryCode": {
+          "string": "",
+          "developer_comment": "\"Code\" refers to a QR code.\n\nThis text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {temporaryCode} is in the following text:\n\nThis is a {temporaryCode}."
+        }
+      },
+      "stopsWorking": {
+        "string": "",
+        "developer_comment": "\"It\" refers to a temporary testing code."
+      },
+      "instructions": {
+        "string": "",
+        "developer_comment": "The table is a table of test Submissions."
+      },
+      "codesForUsers": {
+        "full": {
+          "string": "",
+          "developer_comment": "\"Codes\" refers to \"QR codes\".\n\n{appUsers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApp Users"
         },
-        "newProperty": {
-          "string": "V Datové sadě {datasetName}, bude vytvořena nová vlastnost {propertyName}."
+        "appUsers": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {appUsers} is in the following text:\n\nTo create codes to distribute to users, please see the {appUsers} page."
         }
       }
     },
     "FormDraftStatus": {
-      "draftChecklist": {
-        "title": {
-          "string": "Návrh odškrtávacího seznamu",
-          "developer_comment": "This is a title shown above a section of the page."
-        }
-      },
-      "currentDraft": {
-        "versionCaption": {
-          "full": {
-            "string": "{draftVersion} tohoto formuláře.",
-            "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-          },
-          "draftVersion": {
-            "string": "Verze konceptu",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-          }
-        },
-        "action": {
-          "upload": {
-            "string": "Nahrát novou definici",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      },
       "actions": {
-        "title": {
-          "string": "Akce",
-          "developer_comment": "This is a title shown above a section of the page."
-        },
         "action": {
-          "publish": {
-            "string": "Publikovat koncept",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
           "abandon": {
             "string": "Opustit koncept",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "publish": {
+            "string": "Publikovat koncept",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "alert": {
         "upload": {
-          "string": "Bezva! Nová definice formuláře byla uložena jako koncept."
+          "string": ""
         },
         "publish": {
-          "string": "Váš návrh je nyní zveřejněn. Všechna zařízení, která načítají formuláře pro tento projekt, nyní obdrží novou definici formuláře a přílohy formuláře."
+          "string": ""
         },
         "abandon": {
           "string": "Koncept verze tohoto formuláře byl úspěšně odstraněn."
-        },
-        "delete": {
-          "string": "Formulář „{name}“ byl odstraněn."
         }
       }
     },
     "FormDraftTesting": {
       "title": {
-        "string": "Testování konceptu",
+        "string": "",
         "developer_comment": "This is a title shown above a section of the page."
       },
-      "body": {
-        "0": {
-          "string": "Pomocí konfiguračního kódu vpravo můžete nastavit mobilní zařízení ke stažení tohoto konceptu. Můžete také klepnout na tlačítko Nový výše a vytvořit nový příspěvek z webového prohlížeče."
+      "entitiesTesting": {
+        "string": ""
+      },
+      "subtitle": {
+        "full": {
+          "string": "",
+          "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
         },
-        "1": {
-          "string": "Pro koncept příspěvku přejděte do níže uvedené testovací tabulky, kde si ho můžete prohlédnout a stáhnout. Při publikování tohoto konceptu formuláře budou jeho testovací příspěvky trvale odstraněny."
+        "willBeDeleted": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
         }
       },
       "collectProjectName": {
         "string": "[Návrh] {name}",
         "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
+      }
+    },
+    "FormEditAttachments": {
+      "noAttachments": {
+        "string": "",
+        "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
       },
-      "datasetsPreview": {
-        "title": {
-          "string": ""
+      "missingCount": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
+      },
+      "diff": {
+        "newCount": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
         },
-        "body": {
-          "0": {
-            "string": ""
+        "changedCount": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        },
+        "summary": {
+          "string": "",
+          "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
+        }
+      }
+    },
+    "FormEditCreateDraft": {
+      "title": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "subtitle": {
+        "string": ""
+      },
+      "toMakeChanges": {
+        "string": "",
+        "developer_comment": "This text is shown below a button with the text \"Create a new Draft\"."
+      },
+      "noEffectUntilPublish": {
+        "string": ""
+      }
+    },
+    "FormEditDef": {
+      "subtitle": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "changed": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      },
+      "versionName": {
+        "string": "",
+        "developer_comment": "This is shown for a Form version."
+      },
+      "action": {
+        "upload": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "withinDef": {
+        "string": "",
+        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
+      }
+    },
+    "FormEditDraftControls": {
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "subtitle": {
+        "string": "",
+        "developer_comment": "This refers to the draft version of a Form."
+      }
+    },
+    "FormEditEntities": {
+      "datasetCount": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
+      },
+      "diffCounts": {
+        "datasetsOnly": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        },
+        "newProperties": {
+          "full": {
+            "string": "",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
           },
-          "1": {
-            "string": ""
+          "entityLists": {
+            "string": "{count, plural, one {} few {} many {} other {}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
+          },
+          "properties": {
+            "string": "{count, plural, one {} few {} many {} other {}}",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           }
+        }
+      },
+      "cannotDeleteProperties": {
+        "string": "",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "notEntityRelated": {
+        "string": "",
+        "developer_comment": "\"Definition\" refers to a Form Definition."
+      },
+      "whatAreEntities": {
+        "string": ""
+      }
+    },
+    "FormEditPublishedVersion": {
+      "title": {
+        "string": "",
+        "developer_comment": "This refers to the current version of a Form."
+      },
+      "subtitle": {
+        "published": {
+          "string": "",
+          "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
       }
     },
@@ -2314,20 +3208,36 @@
       },
       "formNav": {
         "tabTitle": {
-          "string": "Tyto funkce budou k dispozici, jakmile zveřejníte svůj koncept formuláře",
-          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Form Overview, Submissions, etc."
+          "string": "",
+          "developer_comment": "Tooltip text that will be shown when hovering over tabs for Submissions, Public Access, etc."
+        }
+      },
+      "infoNav": {
+        "entityLists": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        },
+        "updatedDatasets": {
+          "string": "",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists updated by this form."
+        },
+        "attachedDatasets": {
+          "string": "",
+          "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
+        },
+        "appUsers": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
         }
       },
       "draftNav": {
-        "title": {
-          "string": "Koncept",
-          "developer_comment": "This is shown above the navigation tabs for the Form Draft."
-        },
         "action": {
           "create": {
             "string": "Vytvořit nový koncept",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
+        },
+        "title": {
+          "string": "Koncept",
+          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
         }
       }
     },
@@ -2347,7 +3257,7 @@
       },
       "alert": {
         "create": {
-          "string": "Váš nový formulář „{name}“ byl vytvořen jako koncept. Podívejte se na odškrtávací seznam níže a až budete mít pocit, že je připraven, můžete formulář publikovat k použití."
+          "string": ""
         }
       }
     },
@@ -2398,12 +3308,12 @@
         }
       },
       "action": {
-        "upload": {
-          "string": "Nahrát",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
         "uploadAnyway": {
           "string": "Přesto nahrát",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "upload": {
+          "string": "Nahrát",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2440,10 +3350,13 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": "V koši je formulář s ID \"{value}\". Pokud tento formulář nahrajete, nebude možné smazat jiný formulář se stejným ID."
+            "string": ""
           },
           "structureChanged": {
             "string": "Následující pole byla odstraněna, přejmenována nebo jsou nyní v jiných skupinách či opakováních. Tato pole nebudou ve výchozím nastavení viditelná v tabulce Podání ani zahrnuta do exportů."
+          },
+          "oldEntityVersion": {
+            "string": ""
           }
         },
         "4": {
@@ -2459,42 +3372,7 @@
         }
       }
     },
-    "FormOverview": {
-      "draft": {
-        "none": {
-          "title": {
-            "string": "Žádný aktuální koncept",
-            "developer_comment": "This is a title shown above a section of the page."
-          },
-          "body": {
-            "string": "V současné době neexistuje návrh tohoto formuláře. Pokud chcete provést změny ve formuláři nebo jeho přílohách, začněte vytvořením návrhu pomocí výše uvedeného tlačítka."
-          }
-        },
-        "any": {
-          "versionCaption": {
-            "full": {
-              "string": "{draftVersion} tohoto formuláře.",
-              "developer_comment": "{draftVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDraft version"
-            },
-            "draftVersion": {
-              "string": "Verze konceptu",
-              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {draftVersion} is in the following text:\n\n{draftVersion} of this Form."
-            }
-          }
-        }
-      }
-    },
     "FormOverviewRightNow": {
-      "version": {
-        "full": {
-          "string": "{publishedVersion} tohoto formuláře.",
-          "developer_comment": "{publishedVersion} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nPublished version"
-        },
-        "publishedVersion": {
-          "string": "Publikovaná verze",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {publishedVersion} is in the following text:\n\n{publishedVersion} of this Form."
-        }
-      },
       "stateCaption": {
         "open": {
           "string": "Tento formulář je ke stažení a přijímá příspěvky."
@@ -2505,30 +3383,16 @@
         "closed": {
           "string": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
         }
-      },
-      "submissions": {
-        "full": {
-          "string": "{count, plural, one {{submissions} byl pro tento formulář uložen.} few {{submissions} byly pro tento formulář uloženy.} many {{submissions} bylo pro tento formulář uloženo.} other {{submissions} bylo pro tento formulář uloženo.}}",
-          "developer_comment": "The count of Submissions is shown separately above this text.\n\n{submissions} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\nSubmissions"
-        },
-        "submissions": {
-          "string": "{count, plural, one {Příspěvek} few {Příspěvky} many {Příspěvků} other {Příspěvků}}",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {submissions} is in the following text. (The plural form of the text is shown.)\n\n{submissions} have been saved for this Form."
-        }
-      },
-      "datasetsLinked": {
-        "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "The count of Dataset(s) is shown separately above this text."
       }
     },
     "FormRestore": {
       "title": {
-        "string": "Zrušit smazání formuláře",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Opravdu chcete formulář {name} smazat ?"
+          "string": ""
         },
         "1": {
           "string": "Formulář bude obnoven do předchozího stavu včetně všech dat, nastavení a oprávnění."
@@ -2543,10 +3407,6 @@
         "fill": {
           "string": "Vyplnit formulář",
           "developer_comment": "This appears on a button linking to a fillable Form"
-        },
-        "test": {
-          "string": "Test",
-          "developer_comment": "This appears on a button linking to the draft testing form page"
         }
       },
       "formClosingTip": {
@@ -2578,7 +3438,21 @@
       },
       "alert": {
         "delete": {
-          "string": "Formulář „{name}“ byl odstraněn."
+          "string": ""
+        }
+      },
+      "webFormsSetting": {
+        "webForms": {
+          "string": "",
+          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+        },
+        "description": {
+          "string": "",
+          "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
+        },
+        "enketoDefault": {
+          "string": "",
+          "developer_comment": "The word \"Enketo\" should not be translated"
         }
       }
     },
@@ -2594,9 +3468,26 @@
         }
       }
     },
+    "FormSubmission": {
+      "formNotFound": {
+        "string": ""
+      }
+    },
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "Přístup k OData není dostupný kvůli šifrování formuláře"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": ""
+      },
+      "purgeDescription": {
+        "string": ""
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
       }
     },
     "FormTable": {
@@ -2629,7 +3520,7 @@
       },
       "alert": {
         "restore": {
-          "string": "Formuláři \"{name}\" bylo zrušeno smazání."
+          "string": ""
         }
       },
       "message": {
@@ -2637,19 +3528,19 @@
       }
     },
     "FormTrashRow": {
-      "action": {
-        "restore": {
-          "string": "Zrušit smazání",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "deletedDate": {
         "string": "Smazáno {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
       },
       "disabled": {
         "conflict": {
-          "string": "Tento formulář nelze smazat, protože existuje aktivní formulář se stejným ID."
+          "string": ""
+        }
+      },
+      "action": {
+        "restore": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -2671,6 +3562,12 @@
           "string": "Stáhnout jako XLSForm ({extension})",
           "developer_comment": "This is the text of a link to download a Form definition. {extension} is either .xls or .xlsx. The word \"XLSForm\" should not be translated."
         }
+      }
+    },
+    "FormVersionRow": {
+      "current": {
+        "string": "",
+        "developer_comment": "This is a label shown for the current version of a Form."
       }
     },
     "FormVersionString": {
@@ -2697,6 +3594,41 @@
         "developer_comment": "This is the title at the top of a pop-up."
       }
     },
+    "FormWebFormsSettingsConfirmation": {
+      "webformsConfirmation": {
+        "useOdkWebForms": {
+          "string": "",
+          "developer_comment": "The words \"ODK Web Forms\" should not be translated"
+        },
+        "intro": {
+          "string": ""
+        },
+        "description": {
+          "full": {
+            "string": "",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
+          },
+          "seeSupportedFeatures": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          },
+          "previewYourForm": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
+          }
+        }
+      },
+      "enketoConfirmation": {
+        "description": {
+          "string": "",
+          "developer_comment": "The words \"Enketo\" and \"ODK Web Forms\" should not be translated"
+        },
+        "useEnketo": {
+          "string": "",
+          "developer_comment": "The word \"Enketo\" should not be translated"
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -2713,22 +3645,22 @@
     "HomeSummary": {
       "projects": {
         "body": {
-          "string": "Central je organizován do Projektů, které obsahují vlastní Formuláře a související data."
+          "string": ""
         }
       },
       "users": {
         "body": {
-          "string": "Uživatelé mohou být přiřazeni k projektům, aby je mohli spravovat nebo shromažďovat či kontrolovat předložená data."
+          "string": ""
         }
       },
       "docs": {
         "body": {
-          "string": "Na webových stránkách ODK Docs je k dispozici úvodní příručka a uživatelská dokumentace."
+          "string": ""
         }
       },
       "forum": {
         "body": {
-          "string": "Vždy můžete získat pomoc od ostatních na fóru, kde můžete také vyhledávat předchozí dotazy."
+          "string": ""
         }
       }
     },
@@ -2744,9 +3676,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "Vyberte {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        "apply": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -2785,7 +3717,7 @@
       },
       "version": {
         "string": "Verze",
-        "developer_comment": "This is the text of a link that shows what version of ODK Central is in use."
+        "developer_comment": "An identifier of a particular version of something (of Central, of a Form, of an Entity)"
       }
     },
     "NavbarLinks": {
@@ -2807,13 +3739,102 @@
     },
     "OdataDataAccess": {
       "action": {
-        "apiAccess": {
-          "string": "Přístup k API",
+        "connectData": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "OdataLoadingMessage": {
+      "entity": {
+        "withoutCount": {
+          "string": "Načítání entit...",
+          "developer_comment": "This text is shown when the number of Entities loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        },
+        "first": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {} few {} many {} other {}}"
+          },
+          "one": {
+            "string": "Načítání poslední entity..."
+          }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "Načítání odpovídajících entit...",
+            "developer_comment": "This text is shown when the number of Entities loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {} few {} many {} other {}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {} few {} many {} other {}}"
+            },
+            "one": {
+              "string": "Načítání poslední odpovídající entity..."
+            }
+          }
+        }
+      }
+    },
+    "OutdatedVersion": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
+      },
+      "instructionsToUpgrade": {
+        "string": ""
+      },
+      "instructionsToUpgradeTooltip": {
+        "string": ""
+      },
+      "dismiss": {
+        "string": ""
+      },
+      "dismissTooltip": {
+        "string": ""
+      }
+    },
+    "Pagination": {
+      "action": {
+        "first": {
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
-        "analyze": {
-          "string": "Analýza přes OData",
+        "previous": {
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "next": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "last": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "rows": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "field": {
+        "size": {
+          "string": "",
+          "developer_comment": "This is shown next to a field to select the number of rows to show on each page."
         }
       }
     },
@@ -2859,7 +3880,7 @@
       },
       "alert": {
         "success": {
-          "string": "Nastavení projektu uloženo."
+          "string": ""
         }
       }
     },
@@ -2892,10 +3913,10 @@
                 }
               },
               "4": {
-                "string": "Již nebudete mít možnost zobrazit online náhled odeslaných údajů."
+                "string": ""
               },
               "5": {
-                "string": "Již se nebudete moci připojit k datům přes OData."
+                "string": ""
               },
               "6": {
                 "string": "Ve svém webovém prohlížeči již nebudete moci upravovat příspěvky."
@@ -2906,23 +3927,21 @@
             },
             "1": {
               "0": {
-                "string": "Kromě toho platí pro tuto verzi ODK Central následující:"
+                "string": "Kromě toho platí pro tuto verzi ODK Central následující:",
+                "developer_comment": "don't translate this sentence, it is not used anywhere"
               },
               "1": {
                 "0": {
                   "string": "Stávající příspěvky zůstanou nezašifrované."
-                },
-                "1": {
-                  "string": "V budoucí verzi budete mít možnost šifrovat stávající data."
                 }
               },
               "2": {
                 "0": {
                   "string": "Po aktivaci nelze šifrování vypnout."
-                },
-                "1": {
-                  "string": "V budoucí verzi budete moci zakázat šifrování, které dešifruje vaše data. To bude platit, i když nyní povolíte šifrování."
                 }
+              },
+              "3": {
+                "string": "Testovací odeslání ke stávajícím návrhům formulářů budou trvale odstraněna."
               }
             },
             "2": {
@@ -2983,7 +4002,7 @@
       },
       "alert": {
         "success": {
-          "string": "Vaše změny byly uloženy!"
+          "string": ""
         }
       }
     },
@@ -3076,12 +4095,24 @@
         "string": "Tento projekt používá řízené šifrování."
       },
       "showMore": {
-        "string": "Zobrazit celkem {count}",
+        "string": "{count, plural, one {} few {} many {} other {}}",
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
+      "showMoreDatasets": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This clickable text is shown below a table of entity lists where only a few out of the total number (\"count\") of entity lists is shown."
+      },
       "showFewer": {
-        "string": "Zobrazit méně naž {count} z celkového počtu",
+        "string": "{count, plural, one {} few {} many {} other {}}",
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
+      },
+      "showFewerDatasets": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
+      },
+      "hidden": {
+        "string": "skryto",
+        "developer_comment": "Static text shown besides hidden Entity Lists with number of conflicts on the Homepage"
       }
     },
     "ProjectList": {
@@ -3189,7 +4220,7 @@
       },
       "alert": {
         "archive": {
-          "string": "Projekt „{name}“ byl archivován."
+          "string": ""
         }
       }
     },
@@ -3269,12 +4300,12 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} mohou přistupovat a stahovat všechna data formuláře v tomto projektu, ale nemohou provádět žádné změny nastavení nebo dat",
+            "string": "{projectViewers} může přistupovat ke všem datům formulářů a entit v tomto projektu a stahovat je, ale nemůže provádět žádné změny nastavení nebo dat.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
             "string": "Prohlížeči Projektu",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form data in this Project, but cannot make any changes to settings or data"
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {projectViewers} is in the following text:\n\n{projectViewers} can access and download all Form and Entity data in this Project, but cannot make any changes to settings or data"
           }
         },
         "3": {
@@ -3286,12 +4317,6 @@
             "string": "Sběrači dat",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {dataCollectors} is in the following text:\n\n{dataCollectors} can fill Forms out in a web browser, but cannot view or change data or settings"
           }
-        }
-      },
-      "action": {
-        "clearSearch": {
-          "string": "Vymazat vyhledávání",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "field": {
@@ -3327,7 +4352,13 @@
           "string": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“."
         },
         "unassignRole": {
-          "string": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
+          "string": ""
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Vymazat vyhledávání",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3397,7 +4428,7 @@
       },
       "alert": {
         "create": {
-          "string": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho."
+          "string": ""
         },
         "revoke": {
           "string": "Veřejně přístupný odkaz  „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
@@ -3468,7 +4499,7 @@
           "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
         },
         "other": {
-          "string": "Jiné",
+          "string": "",
           "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
         }
       },
@@ -3508,8 +4539,8 @@
       }
     },
     "SubmissionBasicDetails": {
-      "reviewState": {
-        "string": "Stav kontroly"
+      "submissionDetails": {
+        "string": ""
       },
       "formVersion": {
         "string": "Verze formuláře"
@@ -3610,10 +4641,24 @@
           "string": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu."
         },
         "submit": {
-          "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
+          "string": ""
         },
         "parseError": {
           "string": "Při vyžádání vašich dat se něco pokazilo."
+        }
+      }
+    },
+    "SubmissionDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission delete pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
         }
       }
     },
@@ -3642,7 +4687,7 @@
           },
           "filtered": {
             "withoutCount": {
-              "string": "Stáhnout odpovídající příspěvky",
+              "string": "",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
             },
             "withCount": {
@@ -3661,10 +4706,13 @@
         },
         "entity": {
           "create": {
-            "string": "Vytvořená entita {label} v datové sadě {dataset}"
+            "string": ""
+          },
+          "update": {
+            "string": ""
           },
           "error": {
-            "string": "Problém s vytvořením entity"
+            "string": ""
           }
         },
         "updateReviewState": {
@@ -3722,14 +4770,32 @@
         "comment": {
           "string": "Komentář od {name}",
           "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Comment\", so it is essential for \"Comment\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nComment by {name}\n\nyou could split it into:\n\nComment • {name}"
+        },
+        "delete": {
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Deleted\", so it is essential for \"Deleted\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nDeleted by {name}\n\nyou could split it into:\n\nDeleted • {name}"
+        },
+        "undelete": {
+          "string": "",
+          "developer_comment": "This text is shown in the list of actions performed on a Submission. There is an icon before the text that corresponds to the word \"Restored\", so it is essential for \"Restored\" to also come first in the translation. If that is unnatural in your language, you can also split the text into two parts. For example, instead of:\n\nRestored by {name}\n\nyou could split it into:\n\nRestored • {name}"
+        },
+        "submissionBacklog": {
+          "hold": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "force": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          },
+          "reprocess": {
+            "string": "",
+            "developer_comment": "This text is shown in the list of actions performed on a Submission."
+          }
         }
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "{selected} z {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "Zobrazené sloupce",
@@ -3741,15 +4807,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nic",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -3762,23 +4826,21 @@
           "string": "Odesláno v",
           "developer_comment": "This is the text of a form field that allows the user to filter Submissions by a date range."
         }
+      },
+      "allSubmissionDateSelected": {
+        "string": "",
+        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected} z {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nic",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
       }
     },
@@ -3793,20 +4855,14 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} z {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Žádný",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
@@ -3814,6 +4870,42 @@
       }
     },
     "SubmissionList": {
+      "action": {
+        "testOnDevice": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "testInBrowser": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "noMatching": {
+        "string": "Neexistují žádné odpovídající příspěvky."
+      },
+      "allDeleted": {
+        "string": ""
+      },
+      "allDeletedOnPage": {
+        "string": ""
+      },
+      "downloadDisabled": {
+        "string": ""
+      },
+      "filterDisabledMessage": {
+        "string": ""
+      },
+      "deletedSubmission": {
+        "emptyTable": {
+          "string": ""
+        },
+        "allRestored": {
+          "string": ""
+        },
+        "allRestoredOnPage": {
+          "string": ""
+        }
+      },
       "loading": {
         "withoutCount": {
           "string": "Načítání příspěvků…",
@@ -3856,9 +4948,29 @@
             }
           }
         }
+      }
+    },
+    "SubmissionRestore": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of Submission restore pop-up."
       },
-      "noMatching": {
-        "string": "Neexistují žádné odpovídající příspěvky."
+      "introduction": {
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        },
+        "2": {
+          "string": ""
+        }
+      },
+      "field": {
+        "noConfirm": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
       }
     },
     "SubmissionShow": {
@@ -3878,6 +4990,10 @@
         "stateAndActions": {
           "string": "Stav a akce",
           "developer_comment": "This is the text of a table column header."
+        },
+        "deletedAt": {
+          "string": "",
+          "developer_comment": "Heading of the column that shows Submission deletion timestamp"
         }
       }
     },
@@ -3904,10 +5020,18 @@
         "string": "Základní podrobnosti",
         "developer_comment": "This is a title shown above a section of the page."
       },
+      "emailDisabled": {
+        "string": "Vaši e-mailovou adresu nelze změnit. Používá se mezi serverem Central a přihlašovacím serverem k zajištění vaší identity."
+      },
       "action": {
         "update": {
           "string": "Aktualizovat podrobnosti",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       },
       "alert": {
@@ -3920,6 +5044,9 @@
       "title": {
         "string": "Změnit heslo",
         "developer_comment": "This is a title shown above a section of the page."
+      },
+      "oidcBody": {
+        "string": "Tento centrální server nespravuje žádná přihlašovací hesla."
       },
       "action": {
         "change": {
@@ -3943,20 +5070,6 @@
       "title": {
         "string": "Uživatelské nastavení",
         "developer_comment": "This is shown as the title at the top of the page."
-      },
-      "tab": {
-        "users": {
-          "string": "Uživatelé webu",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "roles": {
-          "string": "Nastavení role",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        }
-      },
-      "comingSoon": {
-        "string": "(již brzy)",
-        "developer_comment": "This is shown within a disabled navigation tab to indicate that the functionality is not yet implemented, but will be soon."
       }
     },
     "UserList": {
@@ -4001,6 +5114,16 @@
       "introduction": {
         "0": {
           "string": "Po vytvoření tohoto účtu vám bude zaslána e-mailová adresa, kterou zadáte,  s pokyny, jak nastavit heslo a jak pokračovat."
+        }
+      },
+      "oidcIntroduction": {
+        "0": {
+          "string": "Uživatelé na přihlašovacím serveru musí mít účet Central, aby se mohli přihlásit do Central. Jakmile tento účet vytvoříte, bude se uživatel na přihlašovacím serveru s vámi zadanou e-mailovou adresou moci přihlásit do Centralu."
+        }
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       }
     },
@@ -4064,6 +5187,114 @@
           "string": "Uspat uživatele",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      }
+    },
+    "WebFormRenderer": {
+      "previewModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "full": {
+            "string": "",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "tryAgain": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      }
+    },
+    "WhatsNew": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "body": {
+        "string": ""
+      },
+      "action": {
+        "gotIt": {
+          "string": "",
+          "developer_comment": "This is the text of a button that is used to close the modal."
+        }
+      }
+    }
+  },
+  "presenter": {
+    "Project": {
+      "nameWithArchived": {
+        "string": "{name} (archivováno)",
+        "developer_comment": "{name} is the name of a Project. We append \"(archived)\" to the name if the Project is archived."
       }
     }
   }

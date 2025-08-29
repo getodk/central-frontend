@@ -16,11 +16,16 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
     <td><date-time :iso="entity.__system.createdAt"/></td>
-    <td>
+    <td v-if="!deleted" class="action-cell">
       <div class="col-content">
         <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
         <span class="updates">
-          <template v-if="entity.__system.updates !== 0">
+          <template v-if="entity.__system.conflict">
+            <span class="wrap-circle">
+              <span class="icon-warning"></span>
+            </span>
+          </template>
+          <template v-else-if="entity.__system.updates !== 0">
             <span class="icon-pencil"></span>
             <span>{{ $n(entity.__system.updates, 'default') }}</span>
           </template>
@@ -28,10 +33,20 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-angle-right"></span>
       </div>
       <div class="btn-group">
-        <button v-if="canUpdate" type="button"
+        <button v-if="verbs.has('entity.delete')" type="button"
+          class="delete-button btn btn-default"
+          :aria-label="$t('action.delete')" v-tooltip.aria-label>
+          <span class="icon-trash"></span><spinner :state="awaitingResponse"/>
+        </button>
+        <button v-if="verbs.has('entity.update')" type="button"
           class="update-button btn btn-default" :aria-label="updateLabel"
           v-tooltip.aria-label>
           <span class="icon-pencil"></span>
+        </button>
+        <button v-if="entity.__system.conflict" type="button"
+          class="resolve-button btn btn-danger" :aria-label="$t('action.reviewParallelUpdates')"
+          v-tooltip.aria-label>
+          <span class="icon-random"></span>
         </button>
         <router-link v-slot="{ href }"
           :to="entityPath(projectId, datasetName, entity.__id)" custom>
@@ -42,21 +57,33 @@ except according to the terms contained in the LICENSE file.
         </router-link>
       </div>
     </td>
+    <td v-else class="action-cell">
+      <div class="col-content col-deleted-at">
+        <date-time :iso="entity.__system.deletedAt"/>
+      </div>
+      <div v-if="verbs.has('entity.restore')" class="btn-group">
+        <button type="button"
+          class="restore-button btn btn-default"
+          :aria-disabled="awaitingResponse"
+          :aria-label="$t('action.restore')" v-tooltip.aria-label>
+          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
+        </button>
+      </div>
+    </td>
   </tr>
 </template>
 
-<script>
-export default {
-  name: 'EntityMetadataRow'
-};
-</script>
 <script setup>
 import { computed, inject } from 'vue';
 
 import DateTime from '../date-time.vue';
+import Spinner from '../spinner.vue';
 
 import useRoutes from '../../composables/routes';
 
+defineOptions({
+  name: 'EntityMetadataRow'
+});
 const props = defineProps({
   entity: {
     type: Object,
@@ -66,7 +93,15 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  canUpdate: Boolean
+  verbs: {
+    type: Set,
+    required: true
+  },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
+  awaitingResponse: Boolean
 });
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
@@ -83,23 +118,24 @@ const { entityPath } = useRoutes();
 @import '../../assets/scss/mixins';
 
 .entity-metadata-row {
-  // TODO: move .row-number to app.css
-  .row-number {
-    color: #999;
-    font-size: 11px;
-    padding-top: 11px;
-    text-align: right;
-    vertical-align: middle;
-  }
-
   .creator-name {
     @include text-overflow-ellipsis;
     max-width: 250px;
   }
 
+  .action-cell {
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    // Ensure that the column is wide enough that the .btn-group does not wrap.
+    min-width: 170px;
+    &:lang(id) { min-width: 215px; }
+  }
+
   .col-content {
     align-items: flex-start;
     display: flex;
+    margin-top: 3px;
   }
   .updated-at {
     margin-right: 21px;
@@ -113,10 +149,25 @@ const { entityPath } = useRoutes();
 
     .icon-pencil { margin-right: 5px; }
   }
+  .wrap-circle {
+    width: 22px;
+    display: inline-block;
+    background: $color-danger;
+    height: 22px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+
+    margin-left: 8px;
+  }
+  .icon-warning { font-size: 12px; }
   .col-content .icon-angle-right {
     color: $color-accent-primary;
     font-size: 20px;
-    margin-top: -1px;
   }
+
+  .delete-button .icon-trash { color: $color-danger; }
+
+  .col-deleted-at { color: $color-danger; }
 }
 </style>

@@ -9,21 +9,28 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { START_LOCATION, createRouter, createWebHashHistory } from 'vue-router';
+import { START_LOCATION, createRouter, createWebHistory } from 'vue-router';
+import { last } from 'ramda';
 import { watchEffect } from 'vue';
 
 import createRoutes from './routes';
-import { canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
+import { beforeNextNavigation, canRoute, forceReplace, preservedData, unlessFailure } from './util/router';
+import { createScrollBehavior } from './scroll-behavior';
 import { loadAsync } from './util/load-async';
-import { loadLocale } from './util/i18n';
+import { loadLocale, userLocale } from './util/i18n';
 import { localStore } from './util/storage';
 import { logIn, restoreSession } from './util/session';
 import { noop } from './util/util';
 import { setDocumentTitle } from './util/reactivity';
 
-export default (container, history = createWebHashHistory()) => {
-  const router = createRouter({ history, routes: createRoutes(container) });
-  const { requestData, alert, unsavedChanges } = container;
+export default (container, {
+  history = createWebHistory(),
+  scrollBehavior = createScrollBehavior()
+} = {}) => {
+  const routes = createRoutes(container);
+  const router = createRouter({ history, routes, scrollBehavior });
+  const { requestData, toast, redAlert, unsavedChanges, config } = container;
+  const { session } = requestData;
 
 
 
@@ -49,6 +56,36 @@ router.afterEach(unlessFailure(to => {
   }
 }));
 
+  //////////////////////////////////////////////////////////////////////////////
+  // REDIRECTS
+
+  // If a route is nested, its relative path is '', and that path is an alias,
+  // then we redirect to the canonical path. That turned out to be easier than
+  // using the `redirect` option of Vue Router.
+  router.beforeEach(to => {
+    if (to.matched.length === 1) return true;
+    const routeRecord = last(to.matched);
+    const { aliasOf } = routeRecord;
+    if (aliasOf == null || !aliasOf.path.startsWith(`${routeRecord.path}/`))
+      return true;
+    const redirect = aliasOf.path.replace(`${routeRecord.path}/`, '');
+    // This `if` should never be `true` given how we structure route paths. It's
+    // just here as a double-check.
+    if (!/^[\w-]+$/.test(redirect)) return true;
+    return {
+      path: `${to.path}/${redirect}`,
+      query: to.query,
+      hash: to.hash
+    };
+  });
+
+  // We used to have hash-based navigation, we have now switched to web-history-based
+  // navigation. To support, bookmarked links, we are redirecting old URL to the new one.
+  // Using to.fullPath instead of to.hash because to.hash has URL decoded value whereas to.fullPath
+  // gives percentage encoded value - central#919.
+  // Note: to.path is '/#/some/path' when the route has query parameter after '#'
+  // e.g. /#/some/path?next=/ - central#939
+  router.beforeEach(to => (to.fullPath.startsWith('/#/') ? to.fullPath.substring(2) : true));
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -57,34 +94,51 @@ router.afterEach(unlessFailure(to => {
   // During the initial navigation, the router sends requests for essential data
   // that is needed to render the app.
 
-  const { session } = requestData;
-  {
-    const requests = [
-      () => {
-        const storageLocale = localStore.getItem('locale');
-        const locale = storageLocale != null
-          ? storageLocale
-          : navigator.language.split('-', 1)[0];
-        return loadLocale(container, locale);
-      },
+  beforeNextNavigation(router, async (to) => {
+    // A test can skip this request by setting the session before the initial
+    // navigation.
+    const needsLogin = to.meta.restoreSession && !session.dataExists;
+    const sessionPromise = needsLogin
+      ? restoreSession(session)
+      : Promise.resolve();
 
-      // Implements the restoreSession meta field. A test can skip this request
-      // by setting the session before the initial navigation.
-      async (to) => {
-        if (to.meta.restoreSession && !session.dataExists) {
-          await restoreSession(session);
-          await logIn(container, false);
-        }
-      }
-    ];
+    // A test can skip this request by setting `config` before the initial
+    // navigation.
+    const configPromise = config.dataExists
+      ? Promise.resolve()
+      : config.request({ url: '/client-config.json', alert: false })
+        .catch(error => {
+          config.data = { loadError: error };
+          /* If the request for the session is still in progress, it will be
+          canceled. We're about to redirect the user to /load-error, where we
+          won't need session data. If the request is already complete, we clear
+          `session`. If we didn't, then Frontend would attempt to log out before
+          the session expired. Note that without `config`, it's not possible to
+          complete login below. */
+          session.reset();
+        });
 
-    const removeGuard = router.beforeEach(async (to) => {
-      await Promise.allSettled(requests.map(request => request(to)));
-      removeGuard();
-    });
-  }
+    const locale = userLocale();
+    const localePromise = locale != null
+      ? loadLocale(container, locale)
+      : Promise.resolve();
 
+    // Once the session and the config have been received, we can complete
+    // login.
+    await Promise.allSettled([sessionPromise, configPromise]);
+    if (needsLogin && session.dataExists) {
+      // If this is the first time that the session has been restored since the
+      // most recent OIDC login, set sessionExpires in local storage. If
+      // sessionExpires is already set (for example, if the previous session
+      // expired), then it will be overwritten.
+      const newSession = config.oidcEnabled &&
+        Date.parse(session.expiresAt).toString() !== localStore.getItem('sessionExpires');
+      await logIn(container, newSession).catch(noop);
+    }
 
+    await localePromise.catch(noop);
+    return config.loadError != null ? '/load-error' : true;
+  });
 
   //////////////////////////////////////////////////////////////////////////////
   // LOGIN
@@ -182,7 +236,8 @@ router.afterEach(unlessFailure(() => {
 // OTHER NAVIGATION HOOKS
 
 router.afterEach(unlessFailure(() => {
-  alert.blank();
+  toast.hide();
+  redAlert.hide();
 }));
 
 

@@ -10,18 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a v-if="disabledDescription == null" class="enketo-fill btn btn-primary"
-    :href="href" target="_blank">
+  <a v-if="disabledDescription == null" :class="htmlClass" :href="href"
+    target="_blank">
     <slot></slot>
   </a>
-  <button v-else type="button" class="enketo-fill btn btn-primary" aria-disabled="true"
+  <button v-else type="button" :class="htmlClass" aria-disabled="true"
     v-tooltip.aria-describedby="disabledDescription">
     <slot></slot>
   </button>
 </template>
 
 <script>
-import { enketoBasePath } from '../../util/util';
+import useRoutes from '../../composables/routes';
 
 export default {
   name: 'EnketoFill',
@@ -29,10 +29,19 @@ export default {
     formVersion: {
       type: Object,
       required: true
+    },
+    btn: {
+      type: String,
+      default: 'primary'
     }
+  },
+  setup() {
+    const { newSubmissionPath } = useRoutes();
+    return { newSubmissionPath };
   },
   computed: {
     disabledDescription() {
+      if (this.formVersion.webformsEnabled) return null;
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');
@@ -40,9 +49,11 @@ export default {
         return this.$t('disabled.processing');
       return null;
     },
+    htmlClass() {
+      return `enketo-fill btn btn-${this.btn}`;
+    },
     href() {
-      const encodedId = encodeURIComponent(this.formVersion.enketoId);
-      return `${enketoBasePath}/${encodedId}`;
+      return this.newSubmissionPath(this.formVersion.projectId, this.formVersion.xmlFormId, !this.formVersion.publishedAt);
     }
   }
 };
@@ -104,10 +115,22 @@ export default {
       "notOpen": "このフォームは現在、新規のフォーム提出を受け付けていません。"
     }
   },
+  "pt": {
+    "disabled": {
+      "processing": "O formulário da web não está disponível ainda. O processamento dele ainda não terminou. Por favor, atualize a página mais tarde e tente novamente.",
+      "notOpen": "Esse formulário não está aceitando respostas nesse momento."
+    }
+  },
   "sw": {
     "disabled": {
       "processing": "Fomu ya Wavuti bado haipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena",
       "notOpen": "Fomu hii haikubali Mawasilisho mapya kwa sasa"
+    }
+  },
+  "zh-Hant": {
+    "disabled": {
+      "processing": "網路表單尚不可用。它尚未完成處理。請稍後重新載入並重試。",
+      "notOpen": "此表單目前不接受新的提交。"
     }
   }
 }

@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { omit } from 'ramda';
 
 import { dataStore, view } from './data-store';
@@ -19,34 +19,56 @@ const verbsForUserAndRole = (extendedUser, roleSystem) => {
   return Array.from(verbs);
 };
 
+// Returns extended metadata that tries to be internally consistent. The
+// extended metadata will not necessarily match other test data stores.
+const normalizeMetadata = (metadata) => {
+  const result = { ...metadata };
+
+  if (result.datasets == null) {
+    result.datasets = result.datasetList != null
+      ? result.datasetList.length
+      : (result.lastEntity != null ? 1 : 0);
+  }
+  if (result.datasetList == null) result.datasetList = [];
+
+  if (result.forms == null) {
+    result.forms = result.formList != null
+      ? result.formList.length
+      : (result.lastSubmission != null || result.datasets !== 0 ? 1 : 0);
+  }
+  if (result.formList == null) result.formList = [];
+
+  return result;
+};
+
 export const extendedProjects = dataStore({
   factory: ({
     inPast,
     id,
     lastCreatedAt,
 
-    name = faker.name.findName(),
+    name = faker.word.noun(),
     description = '',
     archived = false,
-    // The default value of this property does not necessarily match
-    // testData.extendedDatasets.
-    datasets = 0,
-    // The default value of this property does not necessarily match
-    // testData.extendedForms.
-    forms = datasets === 0 ? 0 : 1,
+    key = null,
     // The default value of this property does not necessarily match
     // testData.extendedFieldKeys.
     appUsers = 0,
+    forms = undefined,
     // The default value of this property does not necessarily match
     // testData.extendedForms or testData.extendedSubmissions.
     lastSubmission = null,
-    key = null,
+    datasets = undefined,
+    // The default value of this property does not necessarily match
+    // testData.extendedDatasets or testData.extendedEntities.
+    lastEntity = null,
+    formList = undefined,
+    datasetList = undefined,
     currentUser = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
     // The current user's role on the project
-    role = 'none',
-    formList = []
+    role = 'none'
   }) => ({
     id,
     name,
@@ -58,17 +80,21 @@ export const extendedProjects = dataStore({
       : new Date().toISOString(),
     updatedAt: null,
     // Extended metadata
-    forms,
-    lastSubmission,
-    datasets,
-    appUsers,
-    verbs: verbsForUserAndRole(currentUser, role),
-    formList
+    ...normalizeMetadata({
+      appUsers,
+      forms,
+      lastSubmission,
+      datasets,
+      lastEntity,
+      formList,
+      datasetList,
+      verbs: verbsForUserAndRole(currentUser, role)
+    })
   }),
   sort: (project1, project2) => project1.name.localeCompare(project2.name)
 });
 
 export const standardProjects = view(
   extendedProjects,
-  omit(['forms', 'lastSubmission', 'datasets', 'appUsers', 'verbs', 'formList'])
+  omit(['appUsers', 'forms', 'lastSubmission', 'datasets', 'lastEntity', 'formList', 'datasetList', 'verbs'])
 );

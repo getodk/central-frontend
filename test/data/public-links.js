@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { comparator } from 'ramda';
 
 import { dataStore } from './data-store';
@@ -16,9 +16,9 @@ export const standardPublicLinks = dataStore({
     form = extendedForms.size !== 0
       ? extendedForms.first()
       : extendedForms.createPast(1).last(),
-    displayName = faker.name.findName(),
+    displayName = faker.word.noun(),
     once = false,
-    token = faker.random.alphaNumeric(64)
+    token = faker.string.alphanumeric(64)
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
     const createdBy = extendedUsers.first();

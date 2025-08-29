@@ -19,7 +19,9 @@ const locales = {
   id: {},
   it: { pluralCategories: ['one', 'many', 'other'] },
   ja: { warnVariableSeparator: false },
-  sw: {}
+  pt: {},
+  sw: {},
+  'zh-Hant': { warnVariableSeparator: false }
 };
 
 const sourceLocale = 'en';

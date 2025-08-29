@@ -15,20 +15,22 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
-          <p>
-            <span>{{ $t('introduction[0]') }}</span>
-            <sentence-separator/>
-            <template v-if="blobExists">{{ $t('introduction[1]') }}</template>
-          </p>
+        <p>
+          <span>{{ $t('introduction[0]') }}</span>
+          <sentence-separator/>
+          <template v-if="attachment != null && attachment.blobExists">
+            {{ $t('introduction[1]') }}
+          </template>
+        </p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-primary btn-link-dataset"
-          :aria-disabled="awaitingResponse" @click="link">
-          {{ $t('action.link') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-primary btn-link-dataset"
+          :aria-disabled="awaitingResponse" @click="link">
+          {{ $t('action.link') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
@@ -53,14 +55,7 @@ export default {
       type: Boolean,
       default: false
     },
-    attachmentName: {
-      type: String,
-      required: true
-    },
-    blobExists: {
-      type: Boolean,
-      default: false
-    }
+    attachment: Object
   },
   emits: ['hide', 'success'],
   setup() {
@@ -72,11 +67,11 @@ export default {
     link() {
       this.request({
         method: 'PATCH',
-        url: apiPaths.formDraftAttachment(this.form.projectId, this.form.xmlFormId, this.attachmentName),
+        url: apiPaths.formAttachment(this.form.projectId, this.form.xmlFormId, true, this.attachment.name),
         data: { dataset: true }
       })
-        .then(() => {
-          this.$emit('success', this.form);
+        .then(({ data }) => {
+          this.$emit('success', data);
         })
         .catch(noop);
     }
@@ -88,9 +83,9 @@ export default {
 {
   "en": {
     // This is the title at the top of a pop-up.
-    "title": "Link Dataset",
+    "title": "Link Entity List",
     "introduction": [
-      "Are you sure you want to link the Dataset?",
+      "Are you sure you want to link the Entity List?",
       "The file you uploaded will be deleted. You can always upload it again later."
     ],
     "action": {
@@ -104,9 +99,8 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Odkaz Datové sady",
     "introduction": [
-      "Určitě chcete datovou sadu propojit?",
+      "Opravdu chcete propojit seznam entit?",
       "Nahraný soubor bude odstraněn. Později jej můžete vždy nahrát znovu."
     ],
     "action": {
@@ -114,9 +108,9 @@ export default {
     }
   },
   "de": {
-    "title": "Datensatz verknüpfen",
+    "title": "Entitätsliste verknüpfen",
     "introduction": [
-      "Möchten Sie den Datensatz wirklich verknüpfen?",
+      "Sind Sie sicher, dass Sie die Entitätsliste verknüpfen möchten?",
       "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
     ],
     "action": {
@@ -124,9 +118,9 @@ export default {
     }
   },
   "es": {
-    "title": "Vincular conjunto de datos",
+    "title": "Enlazar lista de entidades",
     "introduction": [
-      "¿Estás seguro de que quieres vincular el conjunto de datos?",
+      "¿Está seguro de que desea enlazar la lista de entidades?",
       "El archivo que subiste será eliminado. Siempre puedes volver a subirlo más tarde."
     ],
     "action": {
@@ -134,9 +128,9 @@ export default {
     }
   },
   "fr": {
-    "title": "Lier le Dataset",
+    "title": "Lier la liste d'entités",
     "introduction": [
-      "Êtes vous sûr de vouloir lier le Dataset ?",
+      "Êtes-vous sûr de vouloir lier la liste d'entités?",
       "Le fichier que vous avez envoyé va être supprimé. Vous pouvez toujours l'envoyer à nouveau."
     ],
     "action": {
@@ -144,23 +138,43 @@ export default {
     }
   },
   "it": {
-    "title": "Collega set di dati",
+    "title": "Collega la Lista Entità",
     "introduction": [
-      "Sei sicuro di voler collegare il set di dati?",
+      "Sei sicuro di voler collegare la Lista Entità?",
       "Il file che hai caricato verrà eliminato. Puoi sempre caricarlo di nuovo in un secondo momento."
     ],
     "action": {
       "link": "Collegamento"
     }
   },
-  "sw": {
-    "title": "Kiungo Dataset",
+  "pt": {
+    "title": "Vincular Lista de Entidades",
     "introduction": [
-      "Je, una uhakika unataka kuunganisha Seti ya Data?",
+      "Tem certeza de que deseja vincular a Lista de Entidades?",
+      "O aquivo que você carregou via upload vai ser deletado. Você sempre pode carregá-lo novamente."
+    ],
+    "action": {
+      "link": "Link"
+    }
+  },
+  "sw": {
+    "title": "Orodha ya Huluki",
+    "introduction": [
+      "Je, una uhakika unataka kuunganisha Orodha ya Huluki?",
       "Faili uliyopakia itafutwa. Unaweza kuipakia tena baadaye."
     ],
     "action": {
       "link": "Kiungo"
+    }
+  },
+  "zh-Hant": {
+    "title": "連結實體清單",
+    "introduction": [
+      "您確定要連結實體清單嗎？",
+      "您上傳的檔案將會被刪除。您稍後可以隨時重新上傳。"
+    ],
+    "action": {
+      "link": "連結"
     }
   }
 }

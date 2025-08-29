@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import ProjectFormAccessRow from './row.vue';
-import TableFreeze from '../../table-freeze.vue';
+import TableFreeze from '../../table/freeze.vue';
 
 import { useRequestData } from '../../../request-data';
 
@@ -132,6 +132,8 @@ export default {
   }
 
   .table-freeze-scrolling {
+    width: auto;
+
     thead {
       background-color: transparent;
     }
@@ -256,10 +258,22 @@ export default {
       "state": "状態"
     }
   },
+  "pt": {
+    "header": {
+      "form": "Formulário",
+      "state": "Status"
+    }
+  },
   "sw": {
     "header": {
       "form": "fomu",
       "state": "hali"
+    }
+  },
+  "zh-Hant": {
+    "header": {
+      "form": "表單",
+      "state": "狀態"
     }
   }
 }

@@ -8,7 +8,7 @@ describe('AccountEdit', () => {
 
   it('renders a UserEdit component', async () => {
     const component = await load('/account/edit', { root: false });
-    component.findComponent(UserEdit).exists().should.be.true();
+    component.findComponent(UserEdit).exists().should.be.true;
   });
 
   it('passes the id of the current user', async () => {

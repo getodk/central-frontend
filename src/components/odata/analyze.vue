@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="odata-analyze" :state="state" hideable backdrop
+  <modal v-if="!config.oidcEnabled" id="odata-analyze" :state="state" hideable backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -71,7 +71,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
         <i18n-t v-else-if="tool === 'other'" tag="p" keypath="help.other.full">
           <template #article>
-            <a href="https://odkcentral.docs.apiary.io/#reference/odata-endpoints/" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
+            <a href="https://docs.getodk.org/central-api-odata-endpoints/" target="_blank" rel="noopener">{{ $t('help.other.article') }}</a>
           </template>
         </i18n-t>
       </div>
@@ -93,6 +93,7 @@ import Selectable from '../selectable.vue';
 export default {
   name: 'OdataAnalyze',
   components: { Modal, Selectable },
+  inject: ['config'],
   props: {
     state: Boolean,
     odataUrl: String
@@ -179,7 +180,7 @@ export default {
     "tab": {
       "microsoft": "Power BI or Excel",
       // This is the text of a navigation tab. "Other" refers to "other tool".
-      "other": "Other"
+      "other": "Other (API)"
     },
     "help": {
       "microsoft": {
@@ -206,8 +207,7 @@ export default {
   "cs": {
     "title": "Pomocí OData",
     "tab": {
-      "microsoft": "Power BI nebo Excel",
-      "other": "Jiné"
+      "microsoft": "Power BI nebo Excel"
     },
     "help": {
       "microsoft": {
@@ -230,7 +230,7 @@ export default {
     ],
     "tab": {
       "microsoft": "Power BI oder Excel",
-      "other": "Anderes"
+      "other": "Sonstiges (API)"
     },
     "help": {
       "microsoft": {
@@ -254,7 +254,7 @@ export default {
     ],
     "tab": {
       "microsoft": "Power BI o Excel",
-      "other": "Otro"
+      "other": "Otro (API)"
     },
     "help": {
       "microsoft": {
@@ -278,7 +278,7 @@ export default {
     ],
     "tab": {
       "microsoft": "Power BI ou Excel",
-      "other": "Autre"
+      "other": "Autre (API)"
     },
     "help": {
       "microsoft": {
@@ -297,7 +297,7 @@ export default {
   "id": {
     "title": "Menggunakan OData",
     "tab": {
-      "other": "Lainnya"
+      "microsoft": "Power BI atau Excel"
     },
     "help": {
       "other": {
@@ -314,7 +314,7 @@ export default {
     ],
     "tab": {
       "microsoft": "Power BI o Excel",
-      "other": "Altro"
+      "other": "Altro (API)"
     },
     "help": {
       "microsoft": {
@@ -332,13 +332,33 @@ export default {
   },
   "ja": {
     "title": "ODataの利用",
-    "tab": {
-      "other": "その他"
-    },
     "help": {
       "other": {
         "full": "ODataに関するサポートの詳細は、{article}を参照して下さい。",
         "article": "こちら"
+      }
+    }
+  },
+  "pt": {
+    "title": "Utilizando OData",
+    "introduction": [
+      "OData é um padrão para transferência de dados entre ferramentas e serviços. Ferramentas de análise poderosas como {powerBi}, {excel}, {python} e {r} podem buscar dados via OData para análise.",
+      "Para conectar-se a este feed OData, selecione sua ferramenta e copie o link para ela."
+    ],
+    "tab": {
+      "microsoft": "Power BI ou Excel"
+    },
+    "help": {
+      "microsoft": {
+        "full": "Para obter ajuda ao usar OData com Power BI, consulte {pageForPowerBi}. Para obter ajuda com Excel, consulte {pageForExcel}.",
+        "pageForExcel": "esta página",
+        "pageForPowerBi": "esta página"
+      },
+      "python": "Para conectar-se ao Central a partir do Python, recomendamos {pyODK}. O pyODK é o cliente Python oficial para o Central. Ele simplifica a análise de dados e a automação do fluxo de trabalho.",
+      "r": "Para conectar-se ao Central a partir do R, recomendamos {ruODK}. O ruODK é desenvolvido e suportado por membros da comunidade ODK.",
+      "other": {
+        "full": "Para uma descrição detalhada do nosso suporte a OData, por favor veja {article}.",
+        "article": "esse artigo"
       }
     }
   },
@@ -349,8 +369,7 @@ export default {
       "Ili kuunganisha kwenye mpasho huu wa OData, chagua zana yako na unakili kiungo humo."
     ],
     "tab": {
-      "microsoft": "Power BI au Excel",
-      "other": "Nyingine"
+      "microsoft": "Power BI au Excel"
     },
     "help": {
       "microsoft": {
@@ -363,6 +382,30 @@ export default {
       "other": {
         "full": "Kwa maelezo kamili ya usaidizi wetu wa OData, tafadhali angalia {article}.",
         "article": "Makala hii"
+      }
+    }
+  },
+  "zh-Hant": {
+    "title": "使用 OData",
+    "introduction": [
+      "OData 是在工具和服務之間傳輸資料的標準。 {powerBi}、{excel}、{python}、{r}等強大的分析工具可以透過OData取得資料進行分析。",
+      "若要連接到此 OData 來源，請選擇您的工具並將連結複製到其中。"
+    ],
+    "tab": {
+      "microsoft": "Power BI 或 Excel",
+      "other": "其他 (API)"
+    },
+    "help": {
+      "microsoft": {
+        "full": "如需將 OData 與 Power BI 結合使用的協助，請參閱 {pageForPowerBi}。有關 Excel 的協助，請參閱 {pageForExcel}。",
+        "pageForExcel": "這個網頁",
+        "pageForPowerBi": "這個網頁"
+      },
+      "python": "要從 Python 連接到 Central，我們建議使用 {pyODK}。 pyODK 是 Central 的官方 Python 用戶端。它簡化了數據分析和工作流程自動化。",
+      "r": "要從 R 連接到 Central，我們建議使用 {ruODK}。 ruODK 由 ODK 社群成員開發和支援。",
+      "other": {
+        "full": "有關 OData 支援的完整說明，請參閱{article}。",
+        "article": "本文"
       }
     }
   }

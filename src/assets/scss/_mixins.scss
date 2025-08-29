@@ -1,9 +1,38 @@
 @import './variables';
 
+@mixin icon-box {
+  padding: 10px;
+  border-radius: 6px;
+  color: $color-accent-primary;
+  background-color: rgba($color-accent-primary, 0.1);  
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TEXT
+
+@mixin italic {
+  font-style: italic;
+
+  &:lang(ja), &:lang(zh) {
+    font-style: normal;
+    font-weight: bold;
+  }
+}
+
 @mixin text-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// Truncates content after the specified number of lines.
+@mixin line-clamp($lines) {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  display: -webkit-box;
+  overflow: hidden;
 }
 
 @mixin text-link {
@@ -16,8 +45,9 @@
 @mixin text-block {
   // 15-17 words per line in English
   max-width: 77ch;
+  overflow-wrap: break-word;
   // 35 characters per line in Hiragino Kaku Gothic ProN
-  &:lang(ja) { max-width: 54ch; }
+  &:lang(ja), &:lang(zh) { max-width: 54ch; }
 }
 
 // A list that shows descriptive text
@@ -26,6 +56,55 @@
 
   li { margin-bottom: 5px; }
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// FORMS
+
+@mixin form-control-background {
+  background-color: #eee;
+  .panel-body &, .modal-body & { background-color: #f7f7f7; }
+}
+
+@mixin filter-control {
+  cursor: pointer;
+  display: inline-flex;
+  height: 40px;
+  padding: 0 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 2px;
+  border: 1px solid #EEE;
+  background: #FFF;
+
+  &.disabled {
+    cursor: not-allowed;
+    background: #ddd;
+    opacity: 0.65;
+
+    .display-value {
+      cursor: not-allowed;
+    }
+  }
+
+  .display-value {
+    height: 24px;
+    min-width: 22px;
+    padding: 4px 8px;
+    border-radius: 100px;
+    background: $color-action-light;
+    border: none;
+    color: $color-text;
+    line-height: 16px;
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UTILITIES
 
 @mixin clearfix {
   &::before, &::after {

@@ -10,50 +10,55 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="home-summary">
-    <div>
-      <loading :state="projects.initiallyLoading"/>
-      <home-summary-item v-if="projects.dataExists" icon="archive"
-        :count="projects.length">
-        <template #title>{{ $tc('plural.project', projects.length) }}</template>
+  <div id="home-summary-container">
+    <div id="home-summary">
+      <home-summary-item icon="archive">
+        <template #header>
+          <template v-if="!projects.initiallyLoading">
+            {{ $n(projects.length, 'default') }}
+          </template>
+          <template v-else>
+            <spinner inline/>
+          </template>
+        </template>
+        <template #subheader>{{ $tc('plural.project', projects.length ?? 0) }}</template>
         <template #body>{{ $t('projects.body') }}</template>
       </home-summary-item>
-    </div>
-    <div v-if="currentUser.can('user.list')">
-      <loading :state="users.initiallyLoading"/>
-      <home-summary-item v-if="users.dataExists" to="/users" icon="user-circle"
-        :count="users.length">
-        <template #title>{{ $tc('plural.user', users.length) }}</template>
+      <home-summary-item v-if="currentUser.can('user.list')" to="/users" icon="user-circle">
+        <template #header>
+          <template v-if="!users.initiallyLoading">
+            {{ $n(users.length, 'default') }}
+          </template>
+          <template v-else>
+            <spinner inline/>
+          </template>
+        </template>
+        <template #subheader>{{ $tc('plural.user', users.length ?? 0) }}</template>
         <template #body>{{ $t('users.body') }}</template>
       </home-summary-item>
-    </div>
-    <div>
       <home-summary-item to="https://docs.getodk.org/central-intro/"
         icon="book">
-        <template #title>{{ $t('common.docs') }}</template>
+        <template #header>{{ $t('common.docs') }}</template>
         <template #body>{{ $t('docs.body') }}</template>
       </home-summary-item>
-    </div>
-    <div>
       <home-summary-item to="https://forum.getodk.org/" icon="comments-o">
-        <template #title>{{ $t('common.forum') }}</template>
+        <template #header>{{ $t('common.forum') }}</template>
         <template #body>{{ $t('forum.body') }}</template>
       </home-summary-item>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeSummary'
-};
-</script>
 <script setup>
 import HomeSummaryItem from './summary/item.vue';
-import Loading from '../loading.vue';
+import Spinner from '../spinner.vue';
 
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'HomeSummary'
+});
 
 const { currentUser, projects, createResource } = useRequestData();
 const users = createResource('users');
@@ -65,33 +70,26 @@ if (currentUser.can('user.list'))
 @use 'sass:math';
 @import '../../assets/scss/variables';
 
+#home-summary-container {
+  background-color: $color-subpanel-background;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding: 20px;
+}
+
 #home-summary {
-  background: $color-subpanel-background;
-  border-bottom: 2px solid $color-subpanel-border;
   display: flex;
-  margin: 0 -15px 35px;
-  padding-bottom: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
+  flex-wrap: wrap;
+  gap: 20px;
 
-  > div {
-    $border-width: 1px;
-    $padding-left: 20px;
-    $padding-right: 12px;
-    border-left: $border-width solid $color-subpanel-border;
-    box-sizing: content-box;
-    padding-bottom: 3px;
-    padding-left: $padding-left;
-    padding-right: $padding-right;
-    // width(#home-summary) = 4 * width(#home-summary > div) + 3 * $padding-right + 3 * $border-width + 3 * $padding-left
-    width: calc(25% - #{math.ceil(math.div(3 * $padding-right + 3 * $border-width + 3 * $padding-left, 4))});
-
-    &:first-child {
-      border-left: none;
-      padding-left: 0;
+  @media (max-width: $screen-sm-min) {
+    > * {
+      flex: 1 1 calc(50% - 20px);
     }
-    &:last-child { padding-right: 0; }
   }
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $max-width-page-body;
 }
 </style>
 
@@ -99,16 +97,16 @@ if (currentUser.can('user.list'))
 {
   "en": {
     "projects": {
-      "body": "Central is organized into Projects, which each contain their own Forms and related data."
+      "body": "Central is organized into Projects, each containing its own Forms and related data."
     },
     "users": {
-      "body": "Users can be assigned to Projects to manage them, or to collect or review submitted data."
+      "body": "Users can be assigned to Projects to manage them, collect data, or review Submissions."
     },
     "docs": {
-      "body": "There is a getting started guide and user documentation available on the ODK Docs website."
+      "body": "A Getting Started Guide and user documentation are available on the ODK Docs website."
     },
     "forum": {
-      "body": "You can always get help from others on the forum, where you can also search previous questions."
+      "body": "Need help? Visit the forum to ask questions or browse past discussions."
     }
   }
 }
@@ -117,37 +115,23 @@ if (currentUser.can('user.list'))
 <!-- Autogenerated by destructure.js -->
 <i18n>
 {
-  "cs": {
-    "projects": {
-      "body": "Central je organizován do Projektů, které obsahují vlastní Formuláře a související data."
-    },
-    "users": {
-      "body": "Uživatelé mohou být přiřazeni k projektům, aby je mohli spravovat nebo shromažďovat či kontrolovat předložená data."
-    },
-    "docs": {
-      "body": "Na webových stránkách ODK Docs je k dispozici úvodní příručka a uživatelská dokumentace."
-    },
-    "forum": {
-      "body": "Vždy můžete získat pomoc od ostatních na fóru, kde můžete také vyhledávat předchozí dotazy."
-    }
-  },
   "de": {
     "projects": {
       "body": "Central ist in Projekte organisiert, die jeweils ihre eigenen Formulare und zugehörigen Daten enthalten."
     },
     "users": {
-      "body": "Benutzer können Projekten zugewiesen werden, um sie zu verwalten oder eingereichte Daten zu sammeln oder zu überprüfen."
+      "body": "Benutzer können Projekten zugewiesen werden, um sie zu verwalten oder eingereichte Daten zu sammeln oder Übermittlungen zu überprüfen."
     },
     "docs": {
       "body": "Es gibt ein Erste-Schritte-Tutorial und die Benutzerdokumentation auf der ODK Docs Webseite."
     },
     "forum": {
-      "body": "Sie können im Forum immer Hilfe von anderen erhalten. Dort können Sie auch nach Antworten auf ähnliche Fragen suchen."
+      "body": "Brauchen Sie Hilfe? Besuchen Sie das Forum, um Fragen zu stellen oder frühere Diskussionen zu verfolgen."
     }
   },
   "es": {
     "projects": {
-      "body": "Central está organizado en Proyectos, cada uno de los cuales contiene sus propios Formularios y datos relacionados."
+      "body": "Central está organizada en Proyectos, cada uno de los cuales contiene sus propios Formularios y datos relacionados."
     },
     "users": {
       "body": "Los usuarios pueden asignarse a Proyectos para administrarlos o para recopilar o revisar los datos enviados."
@@ -156,21 +140,21 @@ if (currentUser.can('user.list'))
       "body": "Hay una guía de inicio y documentación del usuario disponibles en el sitio web de ODK Docs."
     },
     "forum": {
-      "body": "Siempre puede obtener ayuda de otros en el foro, donde también puede buscar preguntas previas."
+      "body": "¿Necesita ayuda? Visite el foro para hacer preguntas o consultar debates anteriores."
     }
   },
   "fr": {
     "projects": {
-      "body": "Central est organisé en projets, chacun contenant ses propres formulaires et données associées."
+      "body": "Central est organisé en Projets, ayant chacun ses propres formulaires et les données associées."
     },
     "users": {
-      "body": "Les utilisateurs peuvent être assignés à des projets pour les gérer, ou pour collecter ou réviser les données soumises."
+      "body": "Les utilisateurs peuvent être assignés à des Projets pour les gérer, collecter des données ou passer en revue les soumissions."
     },
     "docs": {
-      "body": "Un guide de démarrage et la documentation utilisateur sont disponibles sur le site internet d'ODK."
+      "body": "Un Guide de Démarrage et une documentation utilisateur sont disponibles sur le site web ODK Docs."
     },
     "forum": {
-      "body": "Vous pouvez toujours obtenir l'aide d'autres utilisateurs sur le forum, où vous pouvez aussi chercher les questions précédentes."
+      "body": "Besoin d'aide ? Visitez le forum pour poser des questions ou parcourir les anciennes discussions."
     }
   },
   "it": {
@@ -178,27 +162,27 @@ if (currentUser.can('user.list'))
       "body": "Central è organizzato in Progetti, ognuno dei quali contiene i propri Formulari e i relativi dati."
     },
     "users": {
-      "body": "Gli utenti possono essere assegnati ai progetti per gestirli o per raccogliere o rivedere i dati inviati."
+      "body": "Gli utenti possono essere assegnati ai progetti per gestirli, per raccogliere o rivedere i dati inviati."
     },
     "docs": {
       "body": "Sul sito Web di ODK Docs sono disponibili una guida introduttiva e una documentazione per l'utente."
     },
     "forum": {
-      "body": "Puoi sempre ottenere aiuto dagli altri sul forum, dove puoi anche cercare domande precedenti."
+      "body": "Avete bisogno di aiuto? Visitate il forum per porre domande o consultare le discussioni precedenti."
     }
   },
-  "sw": {
+  "zh-Hant": {
     "projects": {
-      "body": "Central imepangwa katika Miradi, ambayo kila moja ina Fomu zake na data zinazohusiana."
+      "body": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"
     },
     "users": {
-      "body": "Watumiaji wanaweza kupewa Miradi ili kuisimamia, au kukusanya au kukagua data iliyowasilishwa."
+      "body": "使用者可被指派至專案，以管理專案、收集資料或檢閱提交內容。"
     },
     "docs": {
-      "body": "Kuna mwongozo wa kuanza na hati za mtumiaji zinazopatikana kwenye tovuti ya Hati za ODK."
+      "body": "ODK 文件網站上提供了入門指南和使用者文件。"
     },
     "forum": {
-      "body": "Unaweza kupata usaidizi kutoka kwa wengine kila wakati kwenye mijadala, ambapo unaweza pia kutafuta maswali yaliyotangulia."
+      "body": "需要協助嗎？訪問論壇提問或瀏覽過去的討論。"
     }
   }
 }

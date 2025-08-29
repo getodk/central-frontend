@@ -14,14 +14,8 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Matoleo",
-      "publicAccess": "Ufikiaji wa Umma"
-    },
-    "draftNav": {
-      "tab": {
-        "status": "Hali",
-        "testing": "Upimaji"
-      }
+      "publicAccess": "Ufikiaji wa Umma",
+      "versions": "Matoleo"
     }
   },
   "systemHome": {
@@ -54,13 +48,12 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "vitendo vyote",
       "user": "vitendo vya mtumiaji wa wavuti",
       "project": "hatua za mradi",
       "form": "Vitendo vya fomu",
-      "dataset": "Vitendo vya Seti ya Data",
       "field_key": "Vitendo vya mtumiaji wa programu",
       "public_link": "vitendo vya kiungo cha ufikiaji wa umma",
+      "dataset": "Vitendo vya Orodha ya Huluki",
       "config": "vitendo vya usanidi wa seva",
       "upgrade": "uboreshaji wa seva"
     },
@@ -93,7 +86,6 @@
         "update_draft_delete": "Acha rasimu",
         "attachment_update": "Sasisha Viambatisho",
         "submission_export": "Pakua mawasilisho",
-        "restore": "futa kufuta",
         "purge": "Safisha",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -130,8 +122,8 @@
     "clear": "Safisha",
     "close": "Funga",
     "comment": "Maoni",
+    "continue": "Endelea",
     "create": "Unda",
-    "createSubmission": "Mpya",
     "done": "Imekamilika",
     "download": "Pakua",
     "edit": "Hariri",
@@ -156,7 +148,9 @@
     "showPreview": "Hakiki",
     "hidePreview": "Ficha hakiki",
     "expand": "Panua",
-    "collapse": "Punguza"
+    "collapse": "Punguza",
+    "reviewParallelUpdates": "Kagua masasisho sambamba",
+    "upload": "pakia"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -169,7 +163,6 @@
     "passphrase": "Nenosiri",
     "password": "Password",
     "passwordConfirm": "Password mpya (thibitisha)",
-    "reviewState": "Kagua hali",
     "type": "Aina"
   },
   "header": {
@@ -182,7 +175,9 @@
     "email": "Barua pepe",
     "instanceId": "Kitambulisho cha Mfano",
     "lastSubmission": "uwasilishaji wa hivi karibuni",
+    "recentActivity": "Shughuli ya Hivi Karibuni",
     "name": "Jina",
+    "listName": "Jina la Orodha",
     "submitterName": "iliyowasilishwa na",
     "submissionDate": "imewasilishwa kwa",
     "time": "Muda",
@@ -207,14 +202,14 @@
     "appUser": "mtumiaji wa programu",
     "appUsers": "watumiaji wa programu",
     "config": "usanidi wa seva",
-    "dataset": "Seti ya data",
-    "datasets": "Seti za data",
     "entities": "vyombo",
+    "entityList": "Orodha ya Huluki",
     "form": "Fomu",
     "forms": "fomu",
     "formAttachments": "Viambatisho vya Fomu",
     "project": "Mradi",
     "projects": "miradi",
+    "property": "Mali",
     "publicLink": "Kiungo cha ufikiaji wa umma",
     "user": "mtumiaji",
     "users": "Watumiaji",
@@ -222,12 +217,8 @@
     "webUsers": "watumiaji wa mtandao",
     "session": "kipindi",
     "submissions": "mawasilisho",
-    "projectRoles": "majukumu ya mradi"
-  },
-  "alert": {
-    "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",
-    "updateReviewState": "Kagua Jimbo limehifadhiwa!",
-    "versionChange": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka tabia isiyotabirika."
+    "projectRoles": "majukumu ya mradi",
+    "draft": "Rasimu"
   },
   "moreInfo": {
     "clickHere": {
@@ -260,14 +251,18 @@
   },
   "entity": {
     "label": "Label",
-    "entityId": "Kitambulisho cha huluki"
+    "entityLabel": "Lebo ya Huluki",
+    "entityId": "Kitambulisho cha huluki",
+    "noProperties": "Fomu hii huweka \"lebo\" pekee.",
+    "noEntity": "(hakuna)",
+    "conflictsCount": "{count} mzozo | {count} migogoro"
   },
   "common": {
     "activity": "shughuli",
     "anybody": "(Mtu yeyote)",
     "areYouSure": "Je, una uhakika ungependa kuendelea?",
     "basicInfo": "Taarifa za Msingi",
-    "currentDraft": "Rasimu Yako ya Sasa",
+    "conflicts": "migogoro",
     "dangerZone": "Eneo la Hatari",
     "data": "Data",
     "docs": "Hati",
@@ -278,20 +273,20 @@
     "loading": "Inapakia...",
     "no": "Hapana",
     "noResults": "Hakuna majibu",
-    "rightNow": "Sasaivi",
     "success": "Mafanikio!",
     "system": "mfumo",
     "yes": "Ndiyo",
     "tab": {
-      "settings": "mipangilio",
-      "overview": "muhtasari"
+      "settings": "mipangilio"
     },
     "total": "jumla",
     "totalSubmissions": "Jumla ya Mawasilisho",
-    "punctuations": {
-      "comma": ","
-    },
-    "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}"
+    "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}",
+    "new": "Mpya!",
+    "totalEntities": "Jumla ya Mashirika",
+    "reviewState": "Kagua hali",
+    "status": "Hali",
+    "version": "Toleo"
   },
   "mixin": {
     "request": {
@@ -300,26 +295,24 @@
       }
     }
   },
-  "presenter": {
-    "Project": {
-      "nameWithArchived": "{name} (iliyohifadhiwa)"
-    }
-  },
   "util": {
     "request": {
       "noRequest": "Hitilafu fulani imetokea: hakukuwa na ombi.",
       "noResponse": "Hitilafu fulani imetokea: hakukuwa na jibu kwa ombi lako.",
       "errorNotProblem": "Hitilafu fulani imetokea: msimbo wa hitilafu {status}."
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Muda wa kipindi chako utaisha baada ya dakika 2, na utaondolewa kiotomatiki.",
-        "expired": "Muda wa kipindi chako umeisha. Ili kuendelea kufanya kazi, tafadhali ingia tena.",
-        "logoutError": "Kulikuwa na tatizo, na hukuwa umetoka nje kikamilifu. Tafadhali onyesha upya ukurasa na ujaribu kutoka tena. {message}"
-      }
     }
   },
   "router": {
     "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
+  },
+  "formStateDescription": {
+    "open": "Fomu hii inaweza kupakuliwa na inakubali Mawasilisho.",
+    "closing": "Fomu hii haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
+    "closed": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (iliyohifadhiwa)"
+    }
   }
 }

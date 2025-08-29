@@ -11,19 +11,19 @@ describe('AuditFiltersAction', () => {
   describe('options', () => {
     it('renders a category option correctly', () => {
       const option = mountComponent().get('option[value="nonverbose"]');
-      option.text().should.equal('(All Actions)');
-      option.classes('audit-filters-action-category').should.be.true();
+      option.text().should.equal('» All Actions');
+      option.classes('audit-filters-action-category').should.be.true;
     });
 
     it('renders an action option correctly', () => {
       const option = mountComponent().get('option[value="user.create"]');
-      option.element.textContent.should.containEql('\u00a0\u00a0\u00a0Create');
+      option.element.textContent.should.include('\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0Create');
       option.classes().should.eql([]);
     });
 
     it('renders option correctly for an action with multiple periods', () => {
       const option = mountComponent().get('option[value="form.update.draft.set"]');
-      option.element.textContent.should.containEql('\u00a0\u00a0\u00a0Create or Update Draft');
+      option.element.textContent.should.include('\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0Create or Update Draft');
       option.classes().should.eql([]);
     });
   });

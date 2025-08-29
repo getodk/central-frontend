@@ -33,7 +33,7 @@ describe('OdataAnalyze', () => {
       modal.get('.nav-tabs li.active a').text().should.equal(tabText);
 
       const help = modal.get('#odata-analyze-tool-help');
-      help.text().should.containEql(helpSubstring);
+      help.text().should.include(helpSubstring);
     };
 
     it('defaults to the Power BI tab', () => {
@@ -62,8 +62,8 @@ describe('OdataAnalyze', () => {
 
     it('renders the Other tab correctly', async () => {
       const modal = mountComponent();
-      await clickTab(modal, 'Other');
-      assertContent(modal, 'Other', 'For a full description of our OData support,');
+      await clickTab(modal, 'Other (API)');
+      assertContent(modal, 'Other (API)', 'For a full description of our OData support,');
     });
   });
 

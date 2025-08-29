@@ -23,30 +23,45 @@ describe('SubmissionDownloadButton', () => {
   describe('text', () => {
     it('shows the correct text if the submissions are not filtered', () => {
       testData.extendedForms.createPast(1, { submissions: 2 });
-      const text = mountComponent().get('button').text();
-      text.should.equal('Download 2 Submissions…');
+      mountComponent().find('.btn-primary').text().should.equal('Download');
     });
 
     describe('submissions are filtered', () => {
-      it('shows correct text while first chunk of submissions is loading', () => {
+      it('show the dropdown menu', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
-        const dropdown = mountComponent({
+        const component = mountComponent({
           props: { filtered: true }
         });
-        const text = dropdown.get('button').text();
-        text.should.equal('Download matching Submissions…');
+        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
       });
 
-      it('shows correct text after first chunk of submissions has loaded', async () => {
+      it('shows correct text while first chunk of submissions is loading for the first button', () => {
         testData.extendedForms.createPast(1, { submissions: 2 });
-        const dropdown = mountComponent({
+        const component = mountComponent({
           props: { filtered: true }
         });
-        const { odata } = dropdown.vm.$container.requestData.localResources;
-        odata.data = { count: 1 };
-        await dropdown.vm.$nextTick();
-        const text = dropdown.get('button').text();
-        text.should.equal('Download 1 matching Submission…');
+        component.find('li:nth-of-type(1)').text().should.equal('Download all Submissions matching the filter');
+      });
+
+      it('shows correct text after first chunk of submissions has loaded for the first button', () => {
+        testData.extendedForms.createPast(1, { submissions: 2 });
+        const component = mountComponent({
+          props: { filtered: true },
+          container: {
+            requestData: {
+              odata: { count: 1 }
+            }
+          }
+        });
+        component.find('li:nth-of-type(1)').text().should.equal('Download 1 Submission matching the filter');
+      });
+
+      it('shows correct text while first chunk of submissions is loading for the second button', () => {
+        testData.extendedForms.createPast(1, { submissions: 2 });
+        const component = mountComponent({
+          props: { filtered: true }
+        });
+        component.find('li:nth-of-type(2)').text().should.equal('Download all 2 Submissions');
       });
     });
   });

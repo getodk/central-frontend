@@ -177,6 +177,19 @@ export default {
       }
     ]
   },
+  "pt": {
+    "title": "Carregar arquivos",
+    "introduction": [
+      {
+        "full": "Para carregar arquivos, você pode {dragAndDrop} um ou mais arquivos sobre a tabela nessa página.",
+        "dragAndDrop": "arrastar e soltar"
+      },
+      {
+        "full": "Se você preferir selecionar arquivos a partir de uma janela de seleção, certifique-se que os nomes deles correspondem aos que estão na tabela e {clickHere}.",
+        "clickHere": "clique aqui para selecionar"
+      }
+    ]
+  },
   "sw": {
     "title": "Pakia Faili",
     "introduction": [
@@ -187,6 +200,19 @@ export default {
       {
         "full": "ikiwa ungependa kuchagua faili kutoka kwa haraka, hakikisha kwamba majina yao yanalingana na yale yaliyo kwenye jedwali kisha {clickHere}",
         "clickHere": "bonyeza hapa kuchagua"
+      }
+    ]
+  },
+  "zh-Hant": {
+    "title": "上傳檔案",
+    "introduction": [
+      {
+        "full": "若要上傳檔案，您可以將一個或多個檔案{dragAndDrop}到此頁面的表格中。",
+        "dragAndDrop": "拖放"
+      },
+      {
+        "full": "如果您想從提示中選擇檔案，請確保名稱與表中的名稱相同，然後{clickHere}。",
+        "clickHere": "點這裡進行選擇"
       }
     ]
   }

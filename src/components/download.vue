@@ -87,14 +87,23 @@ onMounted(() => { link.value.click(); });
   "fr": {
     "body": "Le téléchargement du fichier {filename} va bientôt commencer. Une fois qu'il aura démarré, vous pourrez quitter la page."
   },
+  "id": {
+    "body": "{filename} akan segera mulai mengunduh. Setelah unduhan dimulai, anda dapat meninggalkan halaman ini."
+  },
   "it": {
     "body": "A breve inizierà il download di {filename}. Una volta avviato il download, puoi lasciare questa pagina."
   },
   "ja": {
     "body": "{filename}はすぐにダウンロードされます。ダウンロードが始めると、このページから移動しても構いません。"
   },
+  "pt": {
+    "body": "O arquivo {filename} será baixado em breve. Assim que o download começar, você poderá sair dessa página."
+  },
   "sw": {
     "body": "{filename} itaanza kupakuliwa hivi karibuni. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu"
+  },
+  "zh-Hant": {
+    "body": "{filename}即將開始下載。下載開始後，您可以離開此頁面。"
   }
 }
 </i18n>

@@ -8,6 +8,7 @@ const mountComponent = (options = undefined) =>
     props: { modelValue: ['null'] }
   }));
 const toggle = (multiselect) => multiselect.get('select').trigger('click');
+const apply = (multiselect) => multiselect.get('.action-bar button').trigger('click');
 
 describe('SubmissionFiltersReviewState', () => {
   it('renders the correct options', () => {
@@ -25,7 +26,7 @@ describe('SubmissionFiltersReviewState', () => {
       props: { modelValue: ['null', "'approved'"] }
     });
     const multiselect = component.getComponent(Multiselect);
-    multiselect.props().modelValue.should.eql(['null', "'approved'"]);
+    expect(multiselect.props().modelValue).to.eql(['null', "'approved'"]);
   });
 
   it('passes a new value for modelValue prop to Multiselect', async () => {
@@ -33,10 +34,10 @@ describe('SubmissionFiltersReviewState', () => {
       props: { modelValue: ['null', "'approved'"] }
     });
     await component.setProps({ modelValue: ['null'] });
-    component.getComponent(Multiselect).props().modelValue.should.eql(['null']);
+    expect(component.getComponent(Multiselect).props().modelValue).to.eql(['null']);
   });
 
-  it('passes up an update:modelValue event from the Multiselect', async () => {
+  it('emits an update:modelValue event if selection is changed', async () => {
     const component = mountComponent({
       props: { modelValue: ['null', "'approved'"] },
       attachTo: document.body
@@ -44,8 +45,7 @@ describe('SubmissionFiltersReviewState', () => {
     const multiselect = component.getComponent(Multiselect);
     await toggle(multiselect);
     await multiselect.get('input[type="checkbox"]').setValue(false);
-    await toggle(multiselect);
-    multiselect.emitted('update:modelValue').should.eql([[["'approved'"]]]);
+    await apply(multiselect);
     component.emitted('update:modelValue').should.eql([[["'approved'"]]]);
   });
 
@@ -60,39 +60,20 @@ describe('SubmissionFiltersReviewState', () => {
       const multiselect = component.getComponent(Multiselect);
       await toggle(multiselect);
       await multiselect.get('.select-none').trigger('click');
-      await toggle(multiselect);
-      multiselect.emitted('update:modelValue').should.eql([[[]]]);
+      await apply(multiselect);
       component.emitted('update:modelValue').should.eql([[all]]);
     });
 
-    describe('all review states were already selected', () => {
-      it('does not emit an event', async () => {
-        const component = mountComponent({
-          props: { modelValue: all },
-          attachTo: document.body
-        });
-        const multiselect = component.getComponent(Multiselect);
-        await toggle(multiselect);
-        await multiselect.get('.select-none').trigger('click');
-        await toggle(multiselect);
-        multiselect.emitted('update:modelValue').should.eql([[[]]]);
-        should.not.exist(component.emitted('update:modelValue'));
+    it('does not emit an event if all were already selected', async () => {
+      const component = mountComponent({
+        props: { modelValue: all },
+        attachTo: document.body
       });
-
-      it('updates the Multiselect', async () => {
-        const component = mountComponent({
-          props: { modelValue: all },
-          attachTo: document.body
-        });
-        const multiselect = component.getComponent(Multiselect);
-        await toggle(multiselect);
-        await multiselect.get('.select-none').trigger('click');
-        await toggle(multiselect);
-        multiselect.props().modelValue.should.eql(all);
-        await toggle(multiselect);
-        const inputs = multiselect.findAll('input[type="checkbox"]:checked');
-        inputs.length.should.equal(5);
-      });
+      const multiselect = component.getComponent(Multiselect);
+      await toggle(multiselect);
+      await multiselect.get('.select-none').trigger('click');
+      await apply(multiselect);
+      should.not.exist(component.emitted('update:modelValue'));
     });
   });
 });

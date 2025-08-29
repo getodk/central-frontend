@@ -1,15 +1,12 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: 2020
+    ecmaVersion: 'latest'
   },
   extends: [
     'plugin:vue/vue3-recommended',
     '@vue/airbnb'
   ],
-  env: {
-    node: true
-  },
   globals: {
     $: 'readonly',
     alert: 'readonly',
@@ -55,9 +52,8 @@ module.exports = {
     'spaced-comment': 'off',
     'vue/attributes-order': ['error', {
       order: [
-        'DEFINITION',
         'LIST_RENDERING',
-        'CONDITIONALS',
+        ['CONDITIONALS', 'DEFINITION'],
         'RENDER_MODIFIERS',
         'GLOBAL',
         ['UNIQUE', 'SLOT'],
@@ -90,9 +86,16 @@ module.exports = {
     }],
     'vue/max-attributes-per-line': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/no-setup-props-destructure': 'off',
     'vue/no-template-target-blank': 'off',
     'vue/object-curly-newline': 'off',
     'vue/require-default-prop': 'off',
-    'vue/singleline-html-element-content-newline': 'off'
+    'vue/singleline-html-element-content-newline': 'off',
+    'vuejs-accessibility/label-has-for': ['error', {
+      controlComponents: ['flatpickr'],
+      required: {
+        some: ['nesting', 'id']
+      }
+    }]
   }
 };

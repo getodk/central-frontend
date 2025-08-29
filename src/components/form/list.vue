@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         <span>{{ $t('title') }}</span>
         <button v-if="project.dataExists && project.permits('form.create')"
           id="form-list-create-button" type="button" class="btn btn-primary"
-          @click="showModal('newForm')">
+          @click="createModal.show()">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
         <form-sort v-model="sortMode"/>
@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         </p>
       </template>
     </page-section>
-    <form-new v-bind="newForm" @hide="hideModal('newForm')"
+    <form-new v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
   </div>
 </template>
@@ -43,15 +43,14 @@ import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
 import FormSort from './sort.vue';
 
-import modal from '../../mixins/modal';
 import sortFunctions from '../../util/sort';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
   components: { FormTable, FormNew, FormSort, Loading, PageSection },
-  mixins: [modal()],
   inject: ['alert'],
   setup() {
     // The component does not assume that this data will exist when the
@@ -62,9 +61,7 @@ export default {
   },
   data() {
     return {
-      newForm: {
-        state: false
-      },
+      createModal: modalData(),
       sortMode: 'alphabetical'
     };
   },
@@ -74,12 +71,15 @@ export default {
     }
   },
   methods: {
-    afterCreate(form) {
+    async afterCreate(form) {
       const message = this.$t('alert.create', {
         name: form.name != null ? form.name : form.xmlFormId
       });
-      this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'))
-        .then(() => { this.alert.success(message); });
+      await this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'));
+      // Increment the count so that if the user returns to a project page, they
+      // will see the new count.
+      this.project.forms += 1;
+      this.alert.success(message);
     }
   }
 };
@@ -106,7 +106,7 @@ export default {
     },
     "emptyTable": "There are no Forms to show.",
     "alert": {
-      "create": "Your new Form “{name}” has been created as a Draft. Take a look at the checklist below, and when you feel it’s ready, you can publish the Form for use."
+      "create": "“{name}” has been created as a Form Draft."
     }
   }
 }
@@ -120,20 +120,14 @@ export default {
     "action": {
       "create": "Nový"
     },
-    "emptyTable": "Nejsou k dispozici žádné formuláře.",
-    "alert": {
-      "create": "Váš nový formulář „{name}“ byl vytvořen jako koncept. Podívejte se na odškrtávací seznam níže a až budete mít pocit, že je připraven, můžete formulář publikovat k použití."
-    }
+    "emptyTable": "Nejsou k dispozici žádné formuláře."
   },
   "de": {
     "title": "Formulare",
     "action": {
       "create": "Neu"
     },
-    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
-    "alert": {
-      "create": "Ihr neues Formular \"{name}\" wurde als Entwurf erstellt. Überprüfen Sie die Checkliste unten: Wenn Sie finden, das sie abgearbeitet ist, können sie das Formular veröffentlichen."
-    }
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden."
   },
   "es": {
     "title": "Formularios",
@@ -142,7 +136,7 @@ export default {
     },
     "emptyTable": "No hay formularios para mostrar.",
     "alert": {
-      "create": "Su nuevo formulario \"{name}\" se ha creado como un borrador. De un vistazo a la lista de verificación a continuación, y cuando sienta que está lista, puede publicar el formulario para su uso."
+      "create": "\"{name}\" se ha creado como borrador de formulario."
     }
   },
   "fr": {
@@ -152,7 +146,7 @@ export default {
     },
     "emptyTable": "Il n'y a pas de formulaire à montrer.",
     "alert": {
-      "create": "Votre nouveau formulaire \"{name}\" a été créé en tant qu'ébauche. Jetez un œil à la liste de contrôle ci-dessous, et quand vous pensez que c'est prêt, vous pouvez publier le formulaire pour utilisation."
+      "create": "\"{name}\" a été créé comme ébauche."
     }
   },
   "id": {
@@ -160,10 +154,7 @@ export default {
     "action": {
       "create": "Formulir Baru"
     },
-    "emptyTable": "Tidak ada formulir untuk ditampilkan.",
-    "alert": {
-      "create": "Formulir {name} telah berhasil disimpan sebagai draf. Lihatlah daftar periksa di bawah, dan ketika Anda merasa sudah siap, Anda dapat menerbitkan formulir untuk digunakan."
-    }
+    "emptyTable": "Tidak ada formulir untuk ditampilkan."
   },
   "it": {
     "title": "Formulari",
@@ -172,7 +163,7 @@ export default {
     },
     "emptyTable": "Non ci sono formulari da mostrare.",
     "alert": {
-      "create": "Il tuo nuovo formulario\"{name}\" è stato creato come bozza. Dai un'occhiata alla lista di controllo qui sotto e quando ritieni che sia pronto, puoi pubblicare il formulario per l'uso."
+      "create": "“{name}” è stato creato come bozza di formulario."
     }
   },
   "ja": {
@@ -180,19 +171,30 @@ export default {
     "action": {
       "create": "新規作成"
     },
-    "emptyTable": "表示できるフォームはありません。",
-    "alert": {
-      "create": "新規フォーム\"{name}\"が下書きとして作成されました。以下のチェックリストを参考にして、準備が整ったらフォームを公開して使用できます。"
-    }
+    "emptyTable": "表示できるフォームはありません。"
+  },
+  "pt": {
+    "title": "Formulários",
+    "action": {
+      "create": "Novo"
+    },
+    "emptyTable": "Não há formulários para exibir."
   },
   "sw": {
     "title": "Fomu",
     "action": {
       "create": "Mpya"
     },
-    "emptyTable": "hakuna Fomu za kuonyesha",
+    "emptyTable": "hakuna Fomu za kuonyesha"
+  },
+  "zh-Hant": {
+    "title": "表單",
+    "action": {
+      "create": "新增"
+    },
+    "emptyTable": "沒有可顯示的表單。",
     "alert": {
-      "create": "Fomu yako mpya \"{name}\" imeundwa kama Rasimu. Angalia orodha hapa chini, na unapohisi iko tayari, unaweza kuchapisha Fomu kwa matumizi."
+      "create": "「{name}」已建立為表單草稿。"
     }
   }
 }

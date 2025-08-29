@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
               <p>
                 <button id="project-settings-enable-encryption-button"
                   type="button" class="btn btn-primary"
-                  @click="showModal('enableEncryption')">
+                  @click="enableEncryption.show()">
                   {{ $t('encryption.action.enableEncryption') }}&hellip;
                 </button>
               </p>
@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
             <template v-if="!project.archived">
               <p>
                 <button id="project-settings-archive-button" type="button"
-                  class="btn btn-danger" @click="showModal('archive')">
+                  class="btn btn-danger" @click="archiveModal.show()">
                   {{ $t('dangerZone.action.archive') }}&hellip;
                 </button>
               </p>
@@ -72,8 +72,8 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <project-enable-encryption v-bind="enableEncryption"
-      @hide="hideModal('enableEncryption')" @success="afterEnableEncryption"/>
-    <project-archive v-bind="archive" @hide="hideModal('archive')"
+      @hide="enableEncryption.hide()" @success="afterEnableEncryption"/>
+    <project-archive v-bind="archiveModal" @hide="archiveModal.hide()"
       @success="afterArchive"/>
   </div>
 </template>
@@ -85,8 +85,8 @@ import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -98,27 +98,20 @@ export default {
     ProjectEnableEncryption,
     SentenceSeparator
   },
-  mixins: [modal()],
   inject: ['alert'],
   emits: ['fetch-project'],
   setup() {
     const { project } = useRequestData();
     const { projectPath } = useRoutes();
-    return { project, projectPath };
-  },
-  data() {
     return {
-      enableEncryption: {
-        state: false
-      },
-      archive: {
-        state: false
-      }
+      project,
+      enableEncryption: modalData(), archiveModal: modalData(),
+      projectPath
     };
   },
   methods: {
     afterEnableEncryption() {
-      this.hideModal('enableEncryption');
+      this.enableEncryption.hide();
       this.$emit('fetch-project', true);
     },
     afterArchive() {
@@ -168,7 +161,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "The Project “{name}” was archived."
+      "archive": "The Project “{name}” has been archived."
     }
   }
 }
@@ -204,9 +197,6 @@ export default {
         "Tento projekt byl archivován.",
         "V této verzi ODK Central nelze archivovat Projekt. Schopnost vyjmout projekt z archivu je však naplánována na budoucí vydání."
       ]
-    },
-    "alert": {
-      "archive": "Projekt „{name}“ byl archivován."
     }
   },
   "de": {
@@ -236,9 +226,6 @@ export default {
         "Dieses Projekt wurde archiviert.",
         "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
       ]
-    },
-    "alert": {
-      "archive": "Das Projekt \"{name}\" wurde archiviert."
     }
   },
   "es": {
@@ -270,7 +257,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "El proyecto \"{name}\" fue archivado."
+      "archive": "El proyecto \"{name}\" ha sido archivado."
     }
   },
   "fr": {
@@ -332,9 +319,6 @@ export default {
         "Proyek ini telah diarsipkan.",
         "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
       ]
-    },
-    "alert": {
-      "archive": "Proyek \"{name}\" telah diarsipkan."
     }
   },
   "it": {
@@ -396,9 +380,35 @@ export default {
         "このプロジェクトはアーカイブされました。",
         "このバージョンのODK Centralでは、プロジェクトの非アーカイブ化はできません。プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
       ]
+    }
+  },
+  "pt": {
+    "encryption": {
+      "title": "Encriptação",
+      "body": {
+        "unencrypted": [
+          "A encriptação de respostas não está habilitada para esse projeto."
+        ],
+        "encrypted": [
+          {
+            "full": "A encriptação de dados de respostas está {enabled} para esse projeto.",
+            "enabled": "habilitado"
+          },
+          "Nessa versão do ODK Central você não poderá desabilitar a encriptação uma vez que ela estive ligada."
+        ]
+      },
+      "action": {
+        "enableEncryption": "Habilitar encriptação"
+      }
     },
-    "alert": {
-      "archive": "プロジェクト\"{name}\"はアーカイブされました。"
+    "dangerZone": {
+      "action": {
+        "archive": "Arquivar esse projeto"
+      },
+      "archived": [
+        "O projeto foi arquivado.",
+        "Nessa versão do ODK Central você não pode desarquivar um projeto. Entretanto, essa funcionalidade está planejada para uma versão futura."
+      ]
     }
   },
   "sw": {
@@ -428,9 +438,38 @@ export default {
         "Mradi huu umewekwa kwenye kumbukumbu.",
         "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
       ]
+    }
+  },
+  "zh-Hant": {
+    "encryption": {
+      "title": "加密",
+      "body": {
+        "unencrypted": [
+          "該專案未啟用提交資料加密。"
+        ],
+        "encrypted": [
+          {
+            "full": "此專案已{enabled}提交資料加密。",
+            "enabled": "啟用"
+          },
+          "在此版本的 ODK Central 中，加密一旦開啟就無法停用。"
+        ]
+      },
+      "action": {
+        "enableEncryption": "啟用加密"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "歸檔該專案"
+      },
+      "archived": [
+        "該專案已歸檔。",
+        "在此版本的 ODK Central 中，您無法取消專案的歸檔。但是，計劃在未來版本中提供專案取消歸檔的功能。"
+      ]
     },
     "alert": {
-      "archive": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
+      "archive": "專案「{name}」已歸檔。"
     }
   }
 }

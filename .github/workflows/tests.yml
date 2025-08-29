@@ -1,0 +1,56 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  image-compression:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: ./bin/check-images.sh
+  e2e-tests:
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: client
+        fetch-depth: 0
+    - name: Clone getodk/central repo
+      run: |
+        git clone -b next https://github.com/getodk/central.git
+        cd central
+        git submodule set-branch -b master server
+        git submodule update --init --remote server
+        mv ../client .
+    - name: Modify files
+      working-directory: central
+      run: |
+        yq e '.services.enketo.extra_hosts += ["${DOMAIN}:host-gateway"]' -i docker-compose.yml
+        sed -i 's|\${BASE_URL}|http://${DOMAIN}|g' files/enketo/config.json.template
+        sed -i 's|\${BASE_URL}|http://${DOMAIN}|g' files/service/config.json.template
+        sed -i 's/\$scheme/https/g' files/nginx/odk.conf.template
+        sed 's/your.domain.com/central-test.localhost/; s/^SSL_TYPE=letsencrypt/SSL_TYPE=upstream/' .env.template > .env
+    - name: Add domain
+      run: echo '127.0.0.1 central-test.localhost' | sudo tee --append /etc/hosts
+    - name: Start services
+      working-directory: central
+      run: touch ./files/allow-postgres14-upgrade && docker compose build && docker compose up -d
+    - name: Set node version
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.12.0
+        cache: 'npm'
+        cache-dependency-path: 'central/client/package-lock.json'
+    - name: Run tests
+      working-directory: central
+      run: client/e2e-tests/run-tests.sh --domain=central-test.localhost --port=80
+    - name: Archive playwright result
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Playwright Artifacts
+        path: central/client/test-results

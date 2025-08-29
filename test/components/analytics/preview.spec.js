@@ -71,6 +71,23 @@ describe('AnalyticsPreview', () => {
     table.props().metrics.should.eql(analyticsPreview.system);
   });
 
+  it('shows preview even when there are zero projects (fresh central install)', async () => {
+    const emptyProjects = {
+      system: { num_admins: { recent: 1, total: 1 } },
+      projects: []
+    };
+    const container = await mockHttp()
+      .mount(AnalyticsPreview)
+      .request(modal => modal.setProps({ state: true }))
+      .respondWithData(() => emptyProjects);
+    // Only the system preview table should be shown
+    const tables = container.findAllComponents(AnalyticsMetricsTable);
+    tables.length.should.equal(1);
+    tables[0].props().metrics.should.eql(emptyProjects.system);
+    // Project summary should not exist
+    container.find('#analytics-preview-project-summary').exists().should.be.false;
+  });
+
   it('shows the project number and plurailization for a single project', async () => {
     const singleProject = {
       system: { num_admins: { recent: 1, total: 1 } },
@@ -145,7 +162,7 @@ describe('AnalyticsPreview', () => {
       .request(modal => modal.setProps({ state: true }))
       .respondWithData(() => assocPath(['projects', 1, 'datasets'], [], analyticsPreview));
 
-    component.find('#analytics-preview-dataset-summary').exists().should.be.false();
+    component.find('#analytics-preview-dataset-summary').exists().should.be.false;
     should.not.exist(component.findAllComponents(AnalyticsMetricsTable)[6]);
   });
 });

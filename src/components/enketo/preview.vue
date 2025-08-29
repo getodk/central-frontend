@@ -10,18 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <a v-if="disabledDescription == null" class="enketo-preview btn btn-default"
-    :href="href" target="_blank">
+  <a v-if="disabledDescription == null" class="enketo-preview btn" :class="btnClass" :href="previewPath"
+    target="_blank">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </a>
-  <button v-else type="button" class="enketo-preview btn btn-default" aria-disabled="true"
+  <button v-else type="button" class="enketo-preview btn" :class="btnClass" aria-disabled="true"
     v-tooltip.aria-describedby="disabledDescription">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>
+
+  <router-link class="btn btn-web-form" :class="btnClass" :to="webFormsPath"
+    target="_blank">
+    <span class="icon-eye"></span>{{ $t('action.newPreview') }}
+  </router-link>
 </template>
 
 <script>
-import { enketoBasePath } from '../../util/util';
+import useRoutes from '../../composables/routes';
+import { queryString } from '../../util/request';
 
 export default {
   name: 'EnketoPreview',
@@ -29,10 +35,16 @@ export default {
     formVersion: {
       type: Object,
       required: true
-    }
+    },
+    outlined: Boolean
+  },
+  setup() {
+    const { formPath, formPreviewPath } = useRoutes();
+    return { formPath, formPreviewPath };
   },
   computed: {
     disabledDescription() {
+      if (this.formVersion.webformsEnabled) return null;
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');
@@ -40,15 +52,44 @@ export default {
         return this.$t('disabled.processing');
       return null;
     },
-    href() {
-      // enketoId probably doesn't need to be encoded, but there is also little
-      // harm.
-      const encodedId = encodeURIComponent(this.formVersion.enketoId);
-      return `${enketoBasePath}/preview/${encodedId}`;
+    btnClass() {
+      return this.outlined ? 'btn-outlined' : 'btn-default';
+    },
+    previewPath() {
+      return this.formPreviewPath(
+        this.formVersion.projectId,
+        this.formVersion.xmlFormId,
+        !this.formVersion.publishedAt
+      );
+    },
+    webFormsPath() {
+      return `${this.formPreviewPath(
+        this.formVersion.projectId,
+        this.formVersion.xmlFormId,
+        !this.formVersion.publishedAt
+      )}${queryString({ webforms: true })}`;
     }
   }
 };
 </script>
+
+<style lang="scss">
+.btn-web-form {
+  display: none;
+}
+
+// `new-web-forms` class is added to the root of App component when the
+// new web form feature is enabled.
+.new-web-forms {
+  .enketo-preview {
+    display: none;
+  }
+
+  .btn-web-form {
+    display: inline-block;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
@@ -106,10 +147,22 @@ export default {
       "notOpen": "このバージョンのODK Centralでは、プレビューは、公開状態のフォームでのみ利用可能です。"
     }
   },
+  "pt": {
+    "disabled": {
+      "processing": "A visualização prévia não terminou de processar esse formulário. Por favor, atualize a página mais tarde e tente novamente.",
+      "notOpen": "Nessa versão do ODK Central, a pré-visualização está disponível apenas para formulários com status aberto."
+    }
+  },
   "sw": {
     "disabled": {
       "processing": "Onyesho la kuchungulia halijamaliza kuchakata Fomu hii. Tafadhali onyesha upya baadaye na ujaribu tena.",
       "notOpen": "Katika toleo hili la ODK Central, onyesho la kukagua linapatikana kwa Fomu zilizo katika \"OPEN STATE\""
+    }
+  },
+  "zh-Hant": {
+    "disabled": {
+      "processing": "預覽尚未完成此表單的處理。請稍後重新載入並重試。",
+      "notOpen": "在此版本的 ODK Central 中，預覽僅適用於「開啟」狀態的表單。"
     }
   }
 }

@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-sort">
     <form class="form-inline" @submit.prevent>
-      <span id="form-sort-label">{{ $t('action.sort') }}</span>
       <label class="form-group">
+        <span id="form-sort-label">{{ $t('action.sort') }}</span>
         <select :value="modelValue" class="form-control"
           @change="$emit('update:modelValue', $event.target.value)">
           <option value="alphabetical">{{ $t('sortOptions.alphabetical') }}</option>
@@ -25,31 +25,28 @@ except according to the terms contained in the LICENSE file.
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'FormSort',
-  components: {},
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['update:modelValue']
-};
+<script setup>
+defineOptions({
+  name: 'FormSort'
+});
+defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
 </script>
 
 <style lang="scss">
-
 #form-sort {
   float: right;
 
   #form-sort-label {
     font-size: 14px;
     padding-right: 8px;
+    vertical-align: middle;
   }
-
 }
 </style>
 
@@ -92,16 +89,33 @@ export default {
       "newest": "Plus récent"
     }
   },
+  "id": {
+    "sortOptions": {
+      "newest": "Terbaru"
+    }
+  },
   "it": {
     "sortOptions": {
       "alphabetical": "Alfabetico",
       "newest": "Il più nuovo"
     }
   },
+  "pt": {
+    "sortOptions": {
+      "alphabetical": "Em ordem alfabética",
+      "newest": "Mais recentes"
+    }
+  },
   "sw": {
     "sortOptions": {
       "alphabetical": "Kialfabeti",
       "newest": "Mpya zaidi"
+    }
+  },
+  "zh-Hant": {
+    "sortOptions": {
+      "alphabetical": "按字母順序",
+      "newest": "新表單優先"
     }
   }
 }

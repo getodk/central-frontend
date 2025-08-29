@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 
@@ -20,7 +18,7 @@ const mountOptions = (options = undefined) => ({
     requestData: testRequestData([useForm], {
       formVersions: testData.extendedFormVersions.published(),
       formDraft: testData.extendedFormDrafts.last(),
-      attachments: testData.standardFormAttachments.sorted(),
+      draftAttachments: testData.standardFormAttachments.sorted(),
       formDraftDatasetDiff: testData.formDraftDatasetDiffs.sorted()
     })
   },
@@ -36,7 +34,7 @@ describe('FormDraftPublish', () => {
       return load('/projects/1/forms/f/draft', { root: false })
         .testModalToggles({
           modal: FormDraftPublish,
-          show: '#form-draft-status-publish-button',
+          show: '#form-edit-publish-button',
           hide: '.btn-link'
         });
     });
@@ -60,8 +58,6 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(1);
-      const { to } = modal.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/draft/attachments');
     });
 
     it('shows a warning if there are no test submissions', async () => {
@@ -79,8 +75,6 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.findAll('.modal-warnings li').length.should.equal(1);
-      const { to } = modal.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/draft/testing');
     });
 
     it('shows both warnings if both conditions are true', async () => {
@@ -95,7 +89,7 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('.modal-warnings').exists().should.be.false();
+      modal.find('.modal-warnings').exists().should.be.false;
     });
   });
 
@@ -123,7 +117,7 @@ describe('FormDraftPublish', () => {
       });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('input').exists().should.be.false();
+      modal.find('input').exists().should.be.false;
       modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
@@ -131,7 +125,7 @@ describe('FormDraftPublish', () => {
       testData.extendedForms.createPast(1, { draft: true });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
-      modal.find('input').exists().should.be.false();
+      modal.find('input').exists().should.be.false;
       modal.findAll('.modal-introduction p').length.should.equal(3);
     });
 
@@ -282,6 +276,28 @@ describe('FormDraftPublish', () => {
       });
   });
 
+  it('shows a custom alert message for a duplicate property name', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+    return mockHttp()
+      .mount(FormDraftPublish, mountOptions())
+      .request(async (modal) => {
+        await modal.setProps({ state: true });
+        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+      })
+      .respondWithProblem({
+        code: 409.17,
+        message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+        details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+      })
+      .afterResponse(modal => {
+        modal.should.alert(
+          'danger',
+          /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+        );
+      });
+  });
+
   it('shows the version input field after request returns duplicate version problem', () => {
     // The scenario here is a user trying to publish a form that conflicts with
     // a form/version combo probably found in the trash. This component doesn't
@@ -318,59 +334,78 @@ describe('FormDraftPublish', () => {
       .respondWithProblem(500.1)
       .afterResponse(modal => {
         modal.should.alert('danger');
-        modal.find('input').exists().should.be.false();
+        modal.find('input').exists().should.be.false;
         modal.findAll('.modal-introduction p').length.should.equal(3);
       });
   });
 
   describe('after a successful response', () => {
+    const respondToPublish = (series) => series
+      .respondWithData(() => {
+        testData.extendedFormDrafts.publish(-1);
+        return { success: true };
+      })
+      .respondWithData(() => testData.extendedProjects.last())
+      .respondWithData(() => testData.extendedForms.last())
+      .respondWithData(() => testData.standardFormAttachments.sorted()) // publishedAttachments
+      .respondWithData(() => testData.formDatasetDiffs.sorted());
     const publish = () => {
       testData.extendedForms.createPast(1, { draft: true });
       return load('/projects/1/forms/f/draft')
         .complete()
         .request(async (app) => {
-          await app.get('#form-draft-status-publish-button').trigger('click');
+          await app.get('#form-edit-publish-button').trigger('click');
           return app.get('#form-draft-publish .btn-primary').trigger('click');
         })
-        .respondWithData(() => {
-          testData.extendedFormDrafts.publish(-1);
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted());
+        .modify(respondToPublish);
     };
 
-    it('sends requests for the project and form', () =>
+    it('sends the correct requests', () =>
       publish().testRequests([
         null,
-        { url: '/v1/projects/1/forms/f', extended: true },
         { url: '/v1/projects/1', extended: true },
-        { url: '/v1/projects/1/forms/f/attachments' }
+        { url: '/v1/projects/1/forms/f', extended: true },
+        { url: '/v1/projects/1/forms/f/attachments' },
+        { url: '/v1/projects/1/forms/f/dataset-diff' }
       ]));
 
-    it('shows a success alert', () =>
-      publish().then(app => {
-        app.should.alert('success');
-      }));
+    it('hides the modal', () =>
+      publish()
+        .afterResponses(app => {
+          // After the form draft is published, the modal is removed from the
+          // DOM.
+          app.findComponent(FormDraftPublish).exists().should.be.false;
+        })
+        .request(app =>
+          app.get('#form-edit-create-draft-button').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({ draft: true });
+          return { success: true };
+        })
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          // After a new draft is created, the modal should be rendered, but it
+          // should still be hidden.
+          app.getComponent(FormDraftPublish).props().state.should.be.false;
+        }));
 
-    it('redirects to the form overview', () =>
-      publish().then(app => {
-        app.vm.$route.path.should.equal('/projects/1/forms/f');
-      }));
+    it('shows a success alert', async () => {
+      const app = await publish();
+      app.should.alert('success');
+    });
 
     it('updates requestData', async () => {
       const app = await publish();
       const { requestData } = app.vm.$container;
-      requestData.localResources.formVersions.dataExists.should.be.false();
-      requestData.formDraft.isEmpty().should.be.true();
-      requestData.attachments.isEmpty().should.be.true();
+      requestData.localResources.formVersions.dataExists.should.be.false;
+      requestData.localResources.formDraft.isEmpty().should.be.true;
+      requestData.localResources.draftAttachments.dataExists.should.be.false;
     });
 
-    it('shows the create draft button', () =>
-      publish().then(app => {
-        app.get('#form-head-create-draft-button').should.be.visible();
-      }));
+    it('shows the create draft button', async () => {
+      const app = await publish();
+      app.get('#form-edit-create-draft-button').should.be.visible();
+    });
 
     it('shows the published version in .../versions', () => {
       testData.extendedForms.createPast(1);
@@ -383,17 +418,13 @@ describe('FormDraftPublish', () => {
           app.findAllComponents(FormVersionRow).length.should.equal(1);
         })
         .route('/projects/1/forms/f/draft')
+        .respondForComponent('FormEdit', { formVersions: false })
+        .complete()
         .request(async (app) => {
-          await app.get('#form-draft-status-publish-button').trigger('click');
+          await app.get('#form-edit-publish-button').trigger('click');
           return app.get('#form-draft-publish .btn-primary').trigger('click');
         })
-        .respondWithData(() => {
-          testData.extendedFormDrafts.publish(-1);
-          return { success: true };
-        })
-        .respondWithData(() => testData.extendedForms.last())
-        .respondWithData(() => testData.extendedProjects.last())
-        .respondWithData(() => testData.standardFormAttachments.sorted())
+        .modify(respondToPublish)
         .complete()
         .route('/projects/1/forms/f/versions')
         .respondWithData(() => testData.extendedFormVersions.sorted())
@@ -409,31 +440,19 @@ describe('FormDraftPublish', () => {
           testData.extendedDatasets.createPast(1);
         })
         .complete()
-        .load('/projects/1/datasets', { project: false })
+        .load('/projects/1/entity-lists', { project: false })
         .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/datasets');
+          app.vm.$route.path.should.equal('/projects/1/entity-lists');
         }));
   });
 
-  it('shows dataset delta', async () => {
+  it('shows the number of new entity properties', async () => {
     testData.extendedForms.createPast(1, { draft: true, entityRelated: true });
     testData.formDraftDatasetDiffs.createPast(1, { isNew: true, properties: [Property.NewProperty] });
     testData.formDraftDatasetDiffs.createPast(1, { isNew: false, properties: [Property.NewProperty, Property.InFormProperty, Property.DefaultProperty] });
     const modal = mount(FormDraftPublish, mountOptions());
     await modal.setProps({ state: true });
-
-    const delta = modal.findAll('.dataset-list li');
-
-    let liCounter = -1;
-    testData.formDraftDatasetDiffs.sorted().forEach(ds => {
-      if (ds.isNew) {
-        delta[liCounter += 1].text().should.match(/A new Dataset \w+ will be created./);
-      }
-      ds.properties.forEach(p => {
-        if (p.isNew) {
-          delta[liCounter += 1].text().should.match(/In Dataset \w+, a new property \w+ will be created./);
-        }
-      });
-    });
+    const text = modal.get('hr + p').text();
+    text.should.startWith('Publishing this draft will create 2 properties.');
   });
 });

@@ -17,6 +17,7 @@ export default () => {
         'backup.run',
         'config.read',
         'config.set',
+        'dataset.create',
         'dataset.list',
         'dataset.read',
         'dataset.update',
@@ -25,6 +26,7 @@ export default () => {
         'entity.read',
         'entity.update',
         'entity.delete',
+        'entity.restore',
         'field_key.create',
         'field_key.list',
         'form.create',
@@ -42,6 +44,8 @@ export default () => {
         'submission.list',
         'submission.read',
         'submission.update',
+        'submission.delete',
+        'submission.restore',
         'user.create',
         'user.list',
         'user.read',
@@ -65,6 +69,7 @@ export default () => {
         'assignment.create',
         'assignment.list',
         'assignment.delete',
+        'dataset.create',
         'dataset.list',
         'dataset.read',
         'dataset.update',
@@ -73,6 +78,7 @@ export default () => {
         'entity.read',
         'entity.update',
         'entity.delete',
+        'entity.restore',
         'field_key.create',
         'field_key.list',
         'form.create',
@@ -88,7 +94,9 @@ export default () => {
         'submission.create',
         'submission.list',
         'submission.read',
-        'submission.update'
+        'submission.update',
+        'submission.delete',
+        'submission.restore'
       ]
     })
     .createPast(1, {
@@ -109,8 +117,9 @@ export default () => {
       name: 'Data Collector',
       system: 'formfill',
       verbs: [
-        'form.list',
-        'form.read',
+        'project.read',
+        'open_form.list',
+        'open_form.read',
         'submission.create'
       ]
     });

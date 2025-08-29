@@ -1,8 +1,7 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import ActorLink from '../../../src/components/actor-link.vue';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityBasicDetails from '../../../src/components/entity/basic-details.vue';
+import SubmissionLink from '../../../src/components/submission/link.vue';
 
 import useEntity from '../../../src/request-data/entity';
 
@@ -24,7 +23,7 @@ const mountComponent = () => {
         entity,
         audits: testData.extendedAudits.sorted()
       }),
-      router: mockRouter(`/projects/1/datasets/trees/entities/${entity.uuid}`)
+      router: mockRouter(`/projects/1/entity-lists/trees/entities/${entity.uuid}`)
     }
   });
 };
@@ -41,26 +40,23 @@ describe('EntityBasicDetails', () => {
 
   describe('creating submission', () => {
     const createEntityFromSubmission = ({
-      deleted: submissionDeleted = false,
-      ...submissionOptions
+      deleted: submissionDeleted = false
     } = {}) => {
       const submission = testData.extendedSubmissions
-        .createPast(1, { instanceId: 's', ...submissionOptions })
+        .createPast(1, { instanceId: 's' })
         .last();
-      const submissionCreate = testData.extendedAudits
-        .createPast(1, {
-          action: 'submission.create',
-          details: { instanceId: submission.instanceId }
-        })
-        .last();
-
       testData.extendedEntities.createPast(1, { uuid: 'e' });
       const details = {
         entity: { uuid: 'e' },
-        submissionCreate
+        source: {}
       };
       if (!submissionDeleted)
-        details.submission = { ...submission, xmlFormId: 'f' };
+        details.source = { submission: { ...submission, xmlFormId: 'f' } }; // Use entire submission, augmented with form id
+      else {
+        // If submission is deleted, these are the only fields we pass through in the audit log
+        const { instanceId, submitter, createdAt } = submission;
+        details.source = { submission: { instanceId, submitter, createdAt } };
+      }
       testData.extendedAudits.createPast(1, {
         action: 'entity.create',
         details
@@ -70,32 +66,10 @@ describe('EntityBasicDetails', () => {
     it('shows creating submission if there is a submission in audit log', () => {
       createEntityFromSubmission();
       const component = mountComponent();
-      const dd = component.find('#entity-basic-details-creating-submission');
-      dd.exists().should.be.true();
-    });
-
-    it('shows the instance name if the submission has one', () => {
-      createEntityFromSubmission({
-        meta: { instanceName: 'My Submission' }
-      });
-      const component = mountComponent();
       const dd = component.get('#entity-basic-details-creating-submission');
-      dd.text().should.equal('My Submission');
-    });
-
-    it('falls back to showing the instance ID', () => {
-      createEntityFromSubmission();
-      const component = mountComponent();
-      const dd = component.get('#entity-basic-details-creating-submission');
-      dd.text().should.equal('s');
-    });
-
-    it('links to the submission', () => {
-      createEntityFromSubmission();
-      const component = mountComponent();
-      const dd = component.get('#entity-basic-details-creating-submission');
-      const { to } = dd.getComponent(RouterLinkStub).props();
-      to.should.equal('/projects/1/forms/f/submissions/s');
+      const link = dd.getComponent(SubmissionLink);
+      link.props().should.include({ projectId: '1', xmlFormId: 'f' });
+      link.props().submission.instanceId.should.equal('s');
     });
 
     describe('submission was deleted', () => {
@@ -103,7 +77,7 @@ describe('EntityBasicDetails', () => {
         createEntityFromSubmission({ deleted: true });
         const component = mountComponent();
         const dd = component.get('#entity-basic-details-creating-submission');
-        dd.findComponent(RouterLinkStub).exists().should.be.false();
+        dd.findComponent(SubmissionLink).exists().should.be.false;
       });
 
       it('shows a trash icon with a tooltip', async () => {
@@ -126,7 +100,7 @@ describe('EntityBasicDetails', () => {
 
     it('does not remove creating submission while activity feed is being refreshed', () => {
       createEntityFromSubmission();
-      return load('/projects/1/datasets/trees/entities/e', { root: false })
+      return load('/projects/1/entity-lists/trees/entities/e', { root: false })
         .afterResponses(component => {
           const dd = component.get('#entity-basic-details-creating-submission');
           dd.text().should.equal('s');
@@ -142,21 +116,35 @@ describe('EntityBasicDetails', () => {
           dd.text().should.equal('s');
         })
         .respondWithData(() => {
-          const { currentVersion } = testData.extendedEntities.last();
-          testData.extendedEntities.update(-1, {
-            currentVersion: { ...currentVersion, label: 'Updated Entity' }
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity'
           });
           testData.extendedAudits.createPast(1, {
-            action: 'entity.update.version'
+            action: 'entity.update.version',
+            details: { source: {} }
           });
           return testData.standardEntities.last();
         })
         .respondWithData(() => testData.extendedAudits.sorted())
-        .respondWithData(() => [])
+        .respondWithData(() => testData.extendedEntityVersions.sorted())
         .afterResponses(component => {
           const dd = component.get('#entity-basic-details-creating-submission');
           dd.text().should.equal('s');
         });
+    });
+  });
+
+  describe('entity created using single entity API', () => {
+    it('does not show any block about entity creation', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {
+          entity: { uuid: 'e' }
+        }
+      });
+      const component = mountComponent();
+      component.findAll('dd').length.should.equal(3);
     });
 
     it('does not show creating submission for entity created using API', () => {
@@ -169,7 +157,22 @@ describe('EntityBasicDetails', () => {
       });
       const component = mountComponent();
       const dd = component.find('#entity-basic-details-creating-submission');
-      dd.exists().should.be.false();
+      dd.exists().should.be.false;
+    });
+  });
+
+  describe('entity created using bulk upload', () => {
+    it('shows the creating source as the word upload', () => {
+      testData.extendedEntities.createPast(1, { uuid: 'e' });
+      testData.extendedAudits.createPast(1, {
+        action: 'entity.create',
+        details: {
+          source: { name: 'my_file.csv' }
+        }
+      });
+      const component = mountComponent();
+      const dd = component.find('#entity-basic-details-creating-source');
+      dd.text().should.equal('Upload');
     });
   });
 

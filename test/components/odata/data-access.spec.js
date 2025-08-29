@@ -10,6 +10,15 @@ const mountComponent = (options = undefined) =>
   }));
 
 describe('OdataDataAccess', () => {
+  it('does not render anything if SSO is enabled', () => {
+    const component = mountComponent({
+      container: {
+        config: { oidcEnabled: true }
+      }
+    });
+    component.find('*').exists().should.be.false;
+  });
+
   describe('"Analyze via OData" button', () => {
     it('emits an analyze event', async () => {
       testData.extendedForms.createPast(1);

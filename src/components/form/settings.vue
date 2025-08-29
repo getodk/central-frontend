@@ -25,6 +25,39 @@ except according to the terms contained in the LICENSE file.
             </i18n-t>
           </div>
         </div>
+        <div class="panel panel-simple panel-web-forms">
+          <div class="panel-heading">
+            <h1 class="panel-title">
+              <span class="badge beta">
+                {{ $t('common.beta') }}
+              </span>
+              {{ $t('webFormsSetting.webForms') }}
+            </h1>
+          </div>
+          <div class="panel-body">
+            <i18n-t tag="p" keypath="webFormsSetting.description">
+              <template #formName>
+                <strong>{{ form.nameOrId }}</strong>
+              </template>
+            </i18n-t>
+            <form id="web-form-settings-form">
+              <div class="radio">
+                <label>
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
+                    @change="confirmationModal.show({ webformsEnabled: false })">
+                  {{ $t('webFormsSetting.enketoDefault') }}
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
+                    @change="confirmationModal.show({ webformsEnabled: true })">
+                  ODK Web Forms
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
       <div class="col-xs-6">
         <div class="panel panel-simple-danger">
@@ -34,7 +67,7 @@ except according to the terms contained in the LICENSE file.
           <div class="panel-body">
             <p>
               <button type="button" class="btn btn-danger"
-                @click="showModal('deleteForm')">
+                @click="deleteModal.show()">
                 {{ $t('action.delete') }}&hellip;
               </button>
             </p>
@@ -42,50 +75,85 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
     </div>
-    <form-delete v-bind="deleteForm" @hide="hideModal('deleteForm')"
+    <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
+    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="confirmationModal.hide()"/>
   </div>
 </template>
 
-<script>
+<script setup>
+import { inject, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
+import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
 
-import modal from '../../mixins/modal';
 import useRoutes from '../../composables/routes';
+import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'FormSettings',
-  components: { FormDelete },
-  mixins: [modal()],
-  inject: ['alert'],
-  setup() {
-    const { form } = useRequestData();
-    const { projectPath } = useRoutes();
-    return { form, projectPath };
-  },
-  data() {
-    return {
-      deleteForm: {
-        state: false
-      }
-    };
-  },
-  methods: {
-    afterDelete() {
-      const message = this.$t('alert.delete', { name: this.form.nameOrId });
-      this.$router.push(this.projectPath())
-        .then(() => { this.alert.success(message); });
-    }
-  }
+defineOptions({
+  name: 'FormSettings'
+});
+
+const alert = inject('alert');
+
+const { t } = useI18n();
+const router = useRouter();
+const { form } = useRequestData();
+const { projectPath } = useRoutes();
+
+const deleteModal = modalData();
+const confirmationModal = modalData();
+
+const afterDelete = () => {
+  const message = t('alert.delete', { name: form.nameOrId });
+  router.push(projectPath())
+    .then(() => { alert.success(message); });
+};
+
+const webformsEnabled = ref(form.webformsEnabled);
+watch(() => form.dataExists, () => {
+  webformsEnabled.value = form.webformsEnabled;
+});
+
+const hideAndReset = () => {
+  webformsEnabled.value = form.webformsEnabled;
+  confirmationModal.hide();
 };
 </script>
 
 <style lang="scss">
-#form-settings .panel-simple-danger .panel-body p {
-  margin-bottom: 15px;
-  margin-top: 10px;
-  text-align: center;
+@import '../../assets/scss/_variables.scss';
+
+#form-settings {
+  .panel-simple-danger .panel-body p {
+    margin-bottom: 15px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  .panel-web-forms {
+    .panel-body > p {
+      margin-bottom: 20px;
+    }
+    .beta {
+      text-transform: uppercase;
+      background: #F1DEE7;
+      padding: 5px 10px;
+      color: $color-accent-primary;
+      font-family: Helvetica;
+      font-weight: 400;
+      vertical-align: baseline;
+    }
+    .radio {
+      min-height: 48px;
+      margin-bottom: 0;
+      label {
+        cursor: pointer;
+        padding-left: 30px;
+      }
+    }
+  }
 }
 </style>
 
@@ -104,7 +172,15 @@ export default {
       "delete": "Delete this Form"
     },
     "alert": {
-      "delete": "The Form “{name}” was deleted."
+      "delete": "The Form “{name}” has been successfully deleted."
+    },
+    "webFormsSetting": {
+      // Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms
+      "webForms": "Web Forms",
+      // Description of a section. {formName} is replaced with the name of the Form
+      "description": "Fill out, preview and edit your “{formName}” Form using",
+      // The word "Enketo" should not be translated
+      "enketoDefault": "Enketo (default)"
     }
   }
 }
@@ -123,9 +199,6 @@ export default {
     },
     "action": {
       "delete": "Odstranit tento formulář"
-    },
-    "alert": {
-      "delete": "Formulář „{name}“ byl odstraněn."
     }
   },
   "de": {
@@ -139,8 +212,9 @@ export default {
     "action": {
       "delete": "Dieses Formular löschen"
     },
-    "alert": {
-      "delete": "Das Formular \"{name}\" wurde gelöscht."
+    "webFormsSetting": {
+      "webForms": "Web-Formulare",
+      "enketoDefault": "Enketo (default)"
     }
   },
   "es": {
@@ -155,7 +229,12 @@ export default {
       "delete": "Borrar este formulario"
     },
     "alert": {
-      "delete": "El formulario \"{name}\" fue borrado."
+      "delete": "El formulario {name} fue eliminado correctamente."
+    },
+    "webFormsSetting": {
+      "webForms": "Formularios web",
+      "description": "Rellene, previsualice y edite su Formulario “{formName}” utilizando",
+      "enketoDefault": "Enketo (default)"
     }
   },
   "fr": {
@@ -170,7 +249,12 @@ export default {
       "delete": "Supprimer ce formulaire"
     },
     "alert": {
-      "delete": "Le formulaire {name} a été supprimé."
+      "delete": "Le formulaire \"{name}\" a été supprimé."
+    },
+    "webFormsSetting": {
+      "webForms": "Web Forms",
+      "description": "Remplissez, prévisualisez et éditez votre Formulaire \"{formName}\" en utilisant",
+      "enketoDefault": "Enketo (par défaut)"
     }
   },
   "id": {
@@ -183,9 +267,6 @@ export default {
     },
     "action": {
       "delete": "Hapus formulir ini"
-    },
-    "alert": {
-      "delete": "Formulir {name} telah dihapus."
     }
   },
   "it": {
@@ -200,7 +281,12 @@ export default {
       "delete": "Cancella questo formulario"
     },
     "alert": {
-      "delete": "Il Formulario “{name}” è stato cancellato."
+      "delete": "Il formulario “{name}” è stato eliminato con successo."
+    },
+    "webFormsSetting": {
+      "webForms": "Formulari Web",
+      "description": "Compilate, visualizzate in anteprima e modificate il vostro “{formName}” Formulario usando",
+      "enketoDefault": "Enketo (default)"
     }
   },
   "ja": {
@@ -213,9 +299,22 @@ export default {
     },
     "action": {
       "delete": "フォームを削除"
+    }
+  },
+  "pt": {
+    "state": {
+      "title": "Status do formulário",
+      "body": {
+        "full": "Para definir o status desse formulário, visite as {formAccessSettings} aos formulários do projeto.",
+        "formAccessSettings": "Configurações de acesso ao formulário"
+      }
     },
-    "alert": {
-      "delete": "フォーム\"{name}\"は削除されました。"
+    "action": {
+      "delete": "Excluir esse formulário"
+    },
+    "webFormsSetting": {
+      "webForms": "Web Forms",
+      "enketoDefault": "Enketo (padrão)"
     }
   },
   "sw": {
@@ -228,9 +327,26 @@ export default {
     },
     "action": {
       "delete": "Futa Fomu hii"
+    }
+  },
+  "zh-Hant": {
+    "state": {
+      "title": "表單狀態",
+      "body": {
+        "full": "若要設定此表單的狀態，請存取專案 {formAccessSettings}。",
+        "formAccessSettings": "表單存取設定"
+      }
+    },
+    "action": {
+      "delete": "刪除此表單"
     },
     "alert": {
-      "delete": "Fomu \"{name}\" ilifutwa."
+      "delete": "表單 「{name}」 已成功刪除。"
+    },
+    "webFormsSetting": {
+      "webForms": "網頁表單",
+      "description": "使用以下功能填寫、預覽和編輯您的表單 「{formName}」",
+      "enketoDefault": "Enketo (預設)"
     }
   }
 }

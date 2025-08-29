@@ -12,10 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="form-draft-abandon" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template #title>{{ title }}</template>
+    <template #title>
+      {{ published ? $t('title.abandon') : $t('title.deleteForm') }}
+    </template>
     <template #body>
       <div class="modal-introduction">
-        <template v-if="form.publishedAt != null">
+        <template v-if="published">
           <p>{{ $t('introduction.abandon[0]') }}</p>
           <p>{{ $t('introduction.abandon[1]') }}</p>
         </template>
@@ -25,13 +27,14 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse" @click="abandon">
-          {{ $t('action.abandon') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.cancel') }}
+        </button>
+        <button type="button" class="btn btn-danger"
+          :aria-disabled="awaitingResponse" @click="abandon">
+          {{ published ? $t('action.abandon') : $t('action.delete') }}
+          <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
@@ -58,17 +61,13 @@ export default {
   },
   emits: ['hide', 'success'],
   setup() {
-    // The component assumes that this data will exist when the component is
-    // created.
-    const { form } = useRequestData();
+    const { project, form } = useRequestData();
     const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
+    return { project, form, request, awaitingResponse };
   },
   computed: {
-    title() {
-      return this.form.publishedAt != null
-        ? this.$t('title.abandon')
-        : this.$t('title.deleteForm');
+    published() {
+      return this.form.dataExists && this.form.publishedAt != null;
     }
   },
   methods: {
@@ -80,9 +79,7 @@ export default {
           : apiPaths.form(this.form.projectId, this.form.xmlFormId)
       })
         .then(() => {
-          // project.forms and project.lastSubmission may now be out-of-date. If
-          // the user navigates to ProjectOverview, project.forms should be
-          // updated. project.lastSubmission is not used within ProjectShow.
+          if (this.form.publishedAt == null) this.project.forms -= 1;
           this.$emit('success');
         })
         .catch(noop);
@@ -97,7 +94,8 @@ export default {
     // This is the title at the top of a pop-up.
     "title": {
       "abandon": "Abandon Draft",
-      "deleteForm": "Abandon Draft and Delete Form"
+      // @transifexKey component.FormDelete.title
+      "deleteForm": "Delete Form"
     },
     "introduction": {
       "abandon": [
@@ -121,7 +119,7 @@ export default {
   "cs": {
     "title": {
       "abandon": "Opustit koncept",
-      "deleteForm": "Opustit koncept a smazat formulář"
+      "deleteForm": "Odstranit formulář"
     },
     "introduction": {
       "abandon": [
@@ -139,7 +137,7 @@ export default {
   "de": {
     "title": {
       "abandon": "Entwurf verwerfen",
-      "deleteForm": "Entwurf verwerfen und Formular löschen"
+      "deleteForm": "Formulare löschen"
     },
     "introduction": {
       "abandon": [
@@ -157,7 +155,7 @@ export default {
   "es": {
     "title": {
       "abandon": "Abandonar borrador",
-      "deleteForm": "Abandonar borrador y borrar formulario"
+      "deleteForm": "Borrar formulario"
     },
     "introduction": {
       "abandon": [
@@ -175,7 +173,7 @@ export default {
   "fr": {
     "title": {
       "abandon": "Abandonner l'ébauche",
-      "deleteForm": "Abandonner l'ébauche et supprimer le formulaire"
+      "deleteForm": "Supprimer le formulaire"
     },
     "introduction": {
       "abandon": [
@@ -193,7 +191,7 @@ export default {
   "id": {
     "title": {
       "abandon": "Buang Draf",
-      "deleteForm": "Buang Draf dan Hapus Formulir"
+      "deleteForm": "Hapus Formulir"
     },
     "action": {
       "abandon": "Buang"
@@ -202,7 +200,7 @@ export default {
   "it": {
     "title": {
       "abandon": "Abbandona bozza",
-      "deleteForm": "Abbandona ed elimina la bozza"
+      "deleteForm": "Cancellare il formulario"
     },
     "introduction": {
       "abandon": [
@@ -220,16 +218,34 @@ export default {
   "ja": {
     "title": {
       "abandon": "下書きの削除",
-      "deleteForm": "下書きとフォームの削除"
+      "deleteForm": "フォームの削除"
     },
     "action": {
       "abandon": "削除"
     }
   },
+  "pt": {
+    "title": {
+      "abandon": "Abandonar rascunho",
+      "deleteForm": "Excluir formulário"
+    },
+    "introduction": {
+      "abandon": [
+        "Você está prestes a excluir permanentemente a versão Rascunho deste Formulário. Isso significa que a definição de Formulário de rascunho, quaisquer Anexos do Formulário de rascunho que você carregou e todas as Respostas de teste serão removidos.",
+        "Sua definição de Formulário publicada, seus Anexos de Formulário e suas Respostas não serão afetados."
+      ],
+      "deleteForm": [
+        "Você está prestes a excluir esta definição de Formulário de rascunho, juntamente com todos os Anexos de Formulário de rascunho que você carregou e todos as Respostas de teste. Como você ainda não o publicou, este Formulário será totalmente excluído e movido para a Lixeira."
+      ]
+    },
+    "action": {
+      "abandon": "Abandonar"
+    }
+  },
   "sw": {
     "title": {
       "abandon": "acha rasimu",
-      "deleteForm": "Achana na Rasimu na ufute Fomu"
+      "deleteForm": "Futa Fomu"
     },
     "introduction": {
       "abandon": [
@@ -242,6 +258,24 @@ export default {
     },
     "action": {
       "abandon": "Achana"
+    }
+  },
+  "zh-Hant": {
+    "title": {
+      "abandon": "放棄草稿",
+      "deleteForm": "刪除表單"
+    },
+    "introduction": {
+      "abandon": [
+        "您將永久刪除此表單的草稿版本。這意味著草稿表單定義、您上傳的任何草稿表單附件以及所有測試提交都將被刪除。",
+        "您發布的表單定義、其表單附件和提交內容不會受到影響。"
+      ],
+      "deleteForm": [
+        "您將刪除此草稿的表單定義以及您已上傳的任何附件以及所有測試提交。由於您尚未發布該表單，因此整個表單將被刪除並移至垃圾桶。"
+      ]
+    },
+    "action": {
+      "abandon": "放棄"
     }
   }
 }

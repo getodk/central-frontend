@@ -16,10 +16,8 @@ object, as well as an associated cookie that is Secure and HttpOnly. If the user
 then opens Frontend in a new tab, Frontend will use the cookie to restore the
 session.
 
-The cookie is used in only limited ways: mostly Frontend specifies the session
-token as a bearer token. The cookie is used to restore the session. It is also
-used for non-AJAX requests, including download links and iframe forms. When the
-user logs out, the cookie is removed.
+Frontend relies on session cookie for the authentication for all types of
+requests. When the user logs out, the cookie is removed.
 
 Across tabs, Frontend allows only one user to be logged in at a time. (Otherwise
 one user would use another user's cookie.) Further, Frontend allows only one
@@ -27,11 +25,9 @@ session to be in use at a time. We use local storage to enforce this,
 coordinating login and logout across tabs:
 
   - If the user has the login page open in two tabs, logs in in one tab, then
-    tries to log in in the other, the second login will fail, because the cookie
-    will be sent without a CSRF token and without other auth. Because the cookie
-    is HttpOnly, Frontend cannot check for the cookie directly. Instead, when
-    the user logs in, Frontend stores the session expiration date in local
-    storage, then checks it before another login attempt.
+    tries to log in in the other, user will see message that they are already
+    logged in. When the user logs in, Frontend stores the session expiration
+    date in local storage, then checks it before another login attempt.
   - If the user logs out in one tab, Frontend removes the session expiration
     date from local storage, triggering other tabs to log out.
 
@@ -47,28 +43,27 @@ expiration date is also stored in local storage. This approach is designed to:
 
   - Support cookie auth
   - Ensure the user knows when they are logged out; prevent the user from seeing
-    401 messages after their session has been deleted
+    40x messages after their session has been deleted
   - Prevent one user from using another user's cookie
   - Ensure that the cookie is removed when the user logs out
 
-If the user clears the cookie, then functionality that relies on it will stop
-working. Chrome allows the user to clear cookies and local storage separately.
+If the user clears the cookie, all requests will result in failure.
 If the user clears local storage, it will trigger Frontend to log out in Chrome.
 However, it will not in Firefox or Safari. Yet Frontend will still be able to
 coordinate logout across tabs, enforcing a single session.
 
-Similarly, if cookies are blocked, then functionality that relies on the cookie
-will not work. If local storage is blocked, the user will be able to create
-multiple sessions, and logout will not be coordinated across tabs. In Chrome,
-Firefox, and Safari, blocking cookies and blocking local storage seem to go
-hand-in-hand.
+Similarly, if cookies are blocked, then Frontend will not work. If local
+storage is blocked, the user will be able to create multiple sessions, and
+logout will not be coordinated across tabs. In Chrome, Firefox, and Safari,
+blocking cookies and blocking local storage seem to go hand-in-hand.
 */
 
 import { START_LOCATION } from 'vue-router';
-import { inject, onBeforeUnmount } from 'vue';
+import { computed, inject, onBeforeUnmount, provide } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
+import { joinSentences } from './i18n';
 import { localStore } from './storage';
 import { noop } from './util';
 
@@ -88,34 +83,34 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ i18n, requestData, alert, http }) => {
-  const { token } = requestData.session;
-  return http.delete(apiPaths.session(token), {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .catch(error => {
-      // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
-      // log out a session that has already been logged out. That will result in
-      // a 401.2 or a 403.1, which we ignore.
-      const { response } = error;
-      if (response != null && isProblem(response.data) &&
-        (response.data.code === 401.2 || response.data.code === 403.1)) {
-        return;
-      }
+const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.currentSession())
+  .catch(error => {
+    // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
+    // log out a session that has already been logged out. That will result in
+    // a 401.2 or a 403.1 or a 404.1, which we ignore.
+    const { response } = error;
+    if (response != null && isProblem(response.data) &&
+      (response.data.code === 401.2 || response.data.code === 403.1 || response.data.code === 404.1)) {
+      return;
+    }
 
-      alert.danger(i18n.t('util.session.alert.logoutError', {
-        message: requestAlertMessage(i18n, error)
-      }));
-      throw error;
-    });
-};
+    const message = joinSentences(i18n, [
+      i18n.t('util.session.alert.logoutError.thereWasProblem'),
+      requestAlertMessage(i18n, error),
+      i18n.t('util.session.alert.logoutError.pleaseRefresh')
+    ]);
+    alert.info(message)
+      .cta(i18n.t('action.refresh'), () => { location.reload(); });
+    throw error;
+  });
 
+// Resets requestData, clearing data and canceling requests. Some general/system
+// resources are not reset.
 const resetRequestData = (requestData) => {
-  // We clear all data and cancel any requests. However, that isn't ideal for
-  // requestData.centralVersion, and we may need to revisit this logic in the
-  // future.
-  for (const resource of requestData.resources)
-    resource.reset();
+  const preserve = new Set([requestData.config, requestData.centralVersion]);
+  for (const resource of requestData.resources) {
+    if (!preserve.has(resource)) resource.reset();
+  }
 };
 
 export const logOut = (container, setNext) => {
@@ -160,10 +155,11 @@ export const logOut = (container, setNext) => {
 // approach rather than using setTimeout() to schedule logout, because
 // setTimeout() does not seem to clock time while the computer is asleep.
 const logOutBeforeSessionExpires = (container) => {
-  const { i18n, requestData, alert } = container;
+  const { i18n, requestData, alert, router } = container;
   const { session } = requestData;
   let alerted;
   return () => {
+    if (router.currentRoute.value.meta.skipAutoLogout) return;
     if (!session.dataExists) return;
     const millisUntilExpires = Date.parse(session.expiresAt) - Date.now();
     const millisUntilLogout = millisUntilExpires - 60000;
@@ -171,14 +167,14 @@ const logOutBeforeSessionExpires = (container) => {
       logOut(container, true)
         .then(() => { alert.info(i18n.t('util.session.alert.expired')); })
         .catch(noop);
-    } else if (alerted !== session.token) {
+    } else if (alerted !== session.expiresAt) {
       // The alert also mentions this number. The alert will be a little
       // misleading if millisUntilAlert is markedly less than zero, but that
       // case is unlikely.
       const millisUntilAlert = millisUntilLogout - 120000;
       if (millisUntilAlert <= 0) {
         alert.info(i18n.t('util.session.alert.expiresSoon'));
-        alerted = session.token;
+        alerted = session.expiresAt;
       }
     }
   };
@@ -187,49 +183,56 @@ const logOutBeforeSessionExpires = (container) => {
 const logOutAfterStorageChange = (container) => (event) => {
   // event.key == null if the user clears local storage in Chrome.
   if ((event.key == null || event.key === 'sessionExpires') &&
-    container.requestData.session.dataExists) {
+    container.requestData.session.dataExists && !container.router.currentRoute.value.meta.skipAutoLogout) {
     logOut(container, true).catch(noop);
   }
 };
 
 export const useSessions = () => {
   const container = inject('container');
-  const id = setInterval(logOutBeforeSessionExpires(container), 15000);
-  const handler = logOutAfterStorageChange(container);
-  window.addEventListener('storage', handler);
+  const intervalId = setInterval(logOutBeforeSessionExpires(container), 15000);
+  const storageHandler = logOutAfterStorageChange(container);
+  window.addEventListener('storage', storageHandler);
   onBeforeUnmount(() => {
-    clearInterval(id);
-    window.removeEventListener('storage', handler);
+    clearInterval(intervalId);
+    window.removeEventListener('storage', storageHandler);
   });
+
+  /* visiblyLoggedIn.value is `true` if the user not only has all the data from
+  login, but is also visibly logged in. An example of when the user has data,
+  but isn't visibly logged in is if the user has submitted the login form and is
+  being redirected to outside Frontend (which isn't instant). In that case, they
+  will remain on /login until the redirect is complete, and the navbar will not
+  change to reflect their login. */
+  const { router, requestData } = container;
+  const { currentUser } = requestData;
+  const visiblyLoggedIn = computed(() => currentUser.dataExists &&
+    router.currentRoute.value !== START_LOCATION &&
+    router.currentRoute.value.path !== '/login');
+  provide('visiblyLoggedIn', visiblyLoggedIn);
+
+  return { visiblyLoggedIn };
 };
 
-export const restoreSession = (session) => {
-  const sessionExpires = localStore.getItem('sessionExpires');
-  // We send a request if sessionExpires == null, partly in case there was a
-  // logout error.
-  if (sessionExpires != null && parseInt(sessionExpires, 10) <= Date.now())
-    return Promise.reject();
+export const restoreSession = (session) =>
   // There is a chance that the user's session will be restored almost
   // immediately before the session expires, such that the session expires
   // before logOutBeforeSessionExpires() logs out the user. However, that case
   // is unlikely, and the worst case should be that the user sees 401 messages.
-  return session.request({ url: '/v1/sessions/restore', alert: false })
+  session.request({ url: '/v1/sessions/restore', alert: false })
     .catch(error => {
-      // The user's session may be removed without the user logging out, for
+      // The user's session may be deleted without the user logging out, for
       // example, if a backup is restored. In that case, the request will result
-      // in a 404. sessionExpires may need to be removed from local storage in
-      // order for the user to log in again.
-      if (sessionExpires != null) {
-        const { response } = error;
-        if (response != null && isProblem(response.data) &&
-          response.data.code === 404.1) {
-          removeSessionFromStorage();
-        }
+      // in a 401. We remove sessionExpires from local storage so that
+      // AccountLogin doesn't prevent the user from logging in.
+      const { response } = error;
+      if (response != null && isProblem(response.data) &&
+        response.data.code === 401.2) {
+        removeSessionFromStorage();
       }
 
       throw error;
     });
-};
 
 /* requestData.session must be set before logIn() is called, meaning that
 logIn() will be preceded by either the request to restore the session or a
@@ -241,12 +244,18 @@ export const logIn = (container, newSession) => {
   const { requestData, config } = container;
   const { session, currentUser, analyticsConfig } = requestData;
   if (newSession) {
-    /* If two tabs submit the login form at the same time, then both will end up
+    /*
+    If two tabs submit the login form at the same time, then both will end up
     logged out: the first tab to log in will set sessionExpires; then the second
     tab will set sessionExpires, logging out the first tab; which will remove
     sessionExpires, logging out the second tab. That will be true even in the
     (very unlikely) case that the two sessions have the same expiration date,
-    because sessionExpires is removed before it is set. */
+    because sessionExpires is removed before it is set.
+
+    Similarly, if two tabs log in via OIDC at the same time, then both will end
+    up logged out. However, that won't be the case if the two sessions have the
+    same expiration date.
+    */
     localStore.removeItem('sessionExpires');
     localStore.setItem('sessionExpires', Date.parse(session.expiresAt).toString());
   }

@@ -17,11 +17,11 @@ some point. -->
 <template>
   <div id="form-attachment-popups" ref="popups" class="modal-dialog">
     <div v-show="state" id="form-attachment-popups-main" class="modal-content">
-      <div class="modal-header">
+      <div class="dialog-header">
         <span class="icon-cloud-upload"></span>
         <h4 class="modal-title">{{ $t('title') }}</h4>
       </div>
-      <div class="modal-body">
+      <div class="dialog-body">
         <template v-if="shownDuringDragover">
           <i18n-t v-if="dragoverAttachment != null" tag="p"
             keypath="duringDragover.dropToUpload">
@@ -56,14 +56,14 @@ some point. -->
                 </template>
               </i18n-t>
             </p>
-            <p>
-              <button type="button" class="btn btn-primary"
-                @click="$emit('confirm')">
-                {{ $t('action.looksGood') }}
-              </button>
+            <p class="modal-actions">
               <button type="button" class="btn btn-link"
                 @click="$emit('cancel')">
                 {{ $t('action.cancel') }}
+              </button>
+              <button type="button" class="btn btn-primary"
+                @click="$emit('confirm')">
+                {{ $t('action.looksGood') }}
               </button>
             </p>
           </template>
@@ -71,7 +71,7 @@ some point. -->
             <p>
               {{ $tc('afterSelection.noneMatched', unmatchedFiles.length) }}
             </p>
-            <p>
+            <p class="modal-actions">
               <button type="button" class="btn btn-primary"
                 @click="$emit('cancel')">
                 {{ $t('action.ok') }}
@@ -146,26 +146,18 @@ export default {
         this.shownDuringUpload;
     },
     percentUploaded() {
-      const { progress } = this.uploadStatus;
-      const fraction = progress != null && progress.lengthComputable
-        ? progress.loaded / progress.total
-        : 0;
-      return this.$n(fraction, 'percent');
+      return this.$n(this.uploadStatus.progress, 'percent');
     }
   },
   updated() {
     if (this.shownAfterSelection)
-      $(this.$refs.popups).find('.btn-primary').focus();
+      this.$refs.popups.querySelector('.btn-primary').focus();
   }
 };
 </script>
 
 <style lang="scss">
-@use 'sass:math';
 @import '../../assets/scss/variables';
-
-$z-index-backdrop: 1;
-$z-index-main: $z-index-backdrop + 1;
 
 $edge-offset: 25px;
 $popup-width: 300px;
@@ -177,12 +169,18 @@ $popup-width: 300px;
 #form-attachment-popups-main {
   bottom: $edge-offset;
   position: fixed;
-  right: calc($edge-offset + max(50% - #{math.div($max-width-page-body, 2)}, 0px));
+  right: $edge-offset;
   width: $popup-width;
-  z-index: $z-index-main;
+  z-index: $z-index-modal;
 
-  .modal-header {
+  &.modal-content {
+    border-radius: 0px;
+  }
+
+  .dialog-header {
+    padding: 15px;
     background-color: $color-action-background;
+    color: #fff;
 
     .icon-cloud-upload {
       animation-direction: alternate;
@@ -221,8 +219,10 @@ $popup-width: 300px;
     }
   }
 
-  .modal-body {
+  .dialog-body {
+    padding: 15px;
     padding-bottom: 10px;
+    border-radius: 0px;
 
     #form-attachment-popups-unmatched {
       $padding: 10px;
@@ -241,6 +241,10 @@ $popup-width: 300px;
         position: absolute;
       }
     }
+
+    .modal-actions {
+      text-align: right;
+    }
   }
 }
 
@@ -252,7 +256,7 @@ $popup-width: 300px;
   position: fixed;
   right: 0;
   top: 0;
-  z-index: $z-index-backdrop;
+  z-index: $z-index-modal-backdrop;
 }
 
 @keyframes bob {
@@ -514,6 +518,36 @@ $popup-width: 300px;
       }
     }
   },
+  "pt": {
+    "title": "Subir arquivos",
+    "duringDragover": {
+      "dropToUpload": "Solte agora para carregar esse arquivo como {attachmentName}.",
+      "dragover": "Arraste o Anexo do Formulário que deseja substituir pelo arquivo e solte para carregar.",
+      "dropToPrepare": {
+        "full": "Solte agora para preparar {countOfFiles} para carregar nesse formulário.",
+        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles} pronto para carregar. | {countOfFiles} prontos para carregar. | {countOfFiles} prontos para carregar.",
+        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
+      },
+      "someUnmatched": {
+        "full": "{countOfFiles} tem nome que não foi reconhecido e será ignorado. Para carregá-lo, troque o nomes dele ou arraste individualmente sobre o destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.",
+        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
+      },
+      "noneMatched": "Nós não reconhecemos o nome do arquivo que você está tentando carregar. Por favor, troque o nome dele para corresponder ao nome da lista acima, ou solte-o individualmente sobre o destino correto. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino."
+    },
+    "duringUpload": {
+      "total": "Por favor aguarde, carregando {count} arquivo: | Por favor aguarde, carregando {count} arquivos: | Por favor aguarde, carregando {count} arquivos:",
+      "current": "Enviando {filename}({percentUploaded})",
+      "remaining": {
+        "beforeLast": "{count} arquivo permanece. | {count} arquivos permanecem. | {count} arquivos permanecem.",
+        "last": "Esse é o último arquivo."
+      }
+    }
+  },
   "sw": {
     "title": "Pakia Faili",
     "duringDragover": {
@@ -541,6 +575,36 @@ $popup-width: 300px;
       "remaining": {
         "beforeLast": "faili {count} itasalia. | faili {count} zitasalia.",
         "last": "Hili ndilo faili la mwisho."
+      }
+    }
+  },
+  "zh-Hant": {
+    "title": "上傳多個檔案",
+    "duringDragover": {
+      "dropToUpload": "立即將此文件上傳為 {attachmentName}。",
+      "dragover": "將您想要替換為文件的表單附件拖曳並拖曳以上傳。",
+      "dropToPrepare": {
+        "full": "立即準備 {countOfFiles} 上傳到此表單。",
+        "countOfFiles": "{count} 個檔案"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles} 個檔案準備上傳",
+        "countOfFiles": "{count} 個檔案"
+      },
+      "someUnmatched": {
+        "full": "{countOfFiles} 個檔案，有我們不認識的名字並且會被忽略。要上傳它們，請重新命名它們或將它們單獨拖曳到目標上。",
+        "countOfFiles": "{count} 個檔案"
+      },
+      "noneMatched": "我們無法識別您嘗試上傳的任何文件。請重新命名它們以符合上面列出的名稱，或將它們單獨拖曳到目標上。"
+    },
+    "duringUpload": {
+      "total": "請稍候，正在上傳您的 {count} 個檔案：",
+      "current": "正在傳送{filename} ({percentUploaded})",
+      "remaining": {
+        "beforeLast": "{count} 個檔案仍然存在。",
+        "last": "這是最後一個檔案。"
       }
     }
   }

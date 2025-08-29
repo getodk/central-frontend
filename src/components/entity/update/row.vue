@@ -34,10 +34,6 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 let id = 0;
-
-export default {
-  name: 'EntityUpdateRow'
-};
 </script>
 <script setup>
 import { computed, ref, watch } from 'vue';
@@ -46,6 +42,9 @@ import TextareaAutosize from '../../textarea-autosize.vue';
 
 import { requiredLabel } from '../../../util/dom';
 
+defineOptions({
+  name: 'EntityUpdateRow'
+});
 const props = defineProps({
   modelValue: String,
   oldValue: String,
@@ -97,7 +96,6 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
   $vpadding: 4px;
   .label-cell, .old-value, .new-value { padding-bottom: $vpadding; }
   .label-cell {
-    padding-left: $padding-left-modal-header;
     padding-right: 15px;
     padding-top: #{$vpadding + $padding-top-form-control};
   }
@@ -112,8 +110,8 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
     }
   }
   .new-value {
-    padding-right: $padding-left-modal-header;
     padding-top: $vpadding;
+    padding-right: 0px;
   }
 
   .label-cell { @include text-overflow-ellipsis; }
@@ -128,8 +126,8 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
     white-space: break-spaces;
 
     &.empty {
+      @include italic;
       color: #999;
-      font-style: italic;
     }
   }
 

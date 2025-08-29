@@ -24,13 +24,13 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('common.areYouSure') }}</p>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse" @click="retire">
-          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
-        </button>
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
           @click="$emit('hide')">
           {{ $t('action.noCancel') }}
+        </button>
+        <button type="button" class="btn btn-danger"
+          :aria-disabled="awaitingResponse" @click="retire">
+          {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
     </template>
@@ -159,6 +159,16 @@ export default {
       }
     ]
   },
+  "pt": {
+    "title": "Desativando usuário",
+    "introduction": [
+      "Você está prestes a desativar a conta de usuário \"{displayName}\" \u003c{email}>. Essa conta será imediatamente impedida de realizar qualquer ação e sairá do sistema.",
+      {
+        "full": "{noUndo}, mas uma nova conta sempre poderá ser criada para aquela pessoa com o mesmo endereço de email.",
+        "noUndo": "Essa ação não pode ser desfeita"
+      }
+    ]
+  },
   "sw": {
     "title": "Mtumiaji Anayestaafu",
     "introduction": [
@@ -166,6 +176,16 @@ export default {
       {
         "full": "{noUndo}, lakini akaunti mpya inaweza kufunguliwa kwa ajili ya mtu huyo kwa kutumia anwani sawa ya barua pepe.",
         "noUndo": "Kitendo hiki hakiwezi kutenduliwa"
+      }
+    ]
+  },
+  "zh-Hant": {
+    "title": "停用使用者",
+    "introduction": [
+      "您即將停用使用者帳號「{displayName}」\u003c{email}>。該用戶將被立即禁止執行任何操作並註銷。",
+      {
+        "full": "{noUndo}，但可以使用相同的電子郵件地址，為該人建立一個新帳戶。",
+        "noUndo": "此操作無法取消"
       }
     ]
   }

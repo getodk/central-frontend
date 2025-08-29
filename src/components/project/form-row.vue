@@ -11,12 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-form-row">
+    <td class="col-icon">
+      <span v-if="showIcon" class="icon-file"></span>
+    </td>
     <td class="form-name">
-      <template v-if="canLinkToFormOverview">
-        <router-link :to="primaryFormPath(form)">{{ form.nameOrId }}</router-link>
+      <template v-if="canLinkToDraftStatus">
+        <form-link :form="form"/>
       </template>
       <template v-else-if="canLinkToSubmissions">
-        <router-link :to="submissionsPath.all">{{ form.nameOrId }}</router-link>
+        <form-link :form="form" :to="submissionsPath.all"/>
       </template>
       <template v-else>
         <template v-if="canLinkToEnketo">
@@ -26,6 +29,7 @@ except according to the terms contained in the LICENSE file.
           {{ form.nameOrId }}
         </template>
       </template>
+
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
     <template v-if="form.publishedAt != null">
@@ -90,16 +94,16 @@ except according to the terms contained in the LICENSE file.
 import { DateTime } from 'luxon';
 
 import DateTimeComponent from '../date-time.vue';
+import FormLink from '../form/link.vue';
 
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
-import { enketoBasePath } from '../../util/util';
 import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectFormRow',
-  components: { DateTime: DateTimeComponent },
+  components: { DateTime: DateTimeComponent, FormLink },
   props: {
     form: {
       type: Object,
@@ -108,22 +112,29 @@ export default {
     project: {
       type: Object,
       required: true
+    },
+    // Whether to show the Form icon or not
+    // We show it only for the first row
+    showIcon: {
+      type: Boolean,
+      required: true
     }
   },
   setup() {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
-    const { formPath, primaryFormPath } = useRoutes();
+    const { formPath, newSubmissionPath } = useRoutes();
     const { reviewStateIcon } = useReviewState();
     return {
       duplicateFormNamesPerProject,
-      formPath, primaryFormPath,
+      formPath,
+      newSubmissionPath,
       reviewStateIcon
     };
   },
   computed: {
-    canLinkToFormOverview() {
-      return this.project.permits('form.update');
+    canLinkToDraftStatus() {
+      return this.form.publishedAt == null && this.project.permits('form.update');
     },
     canLinkToSubmissions() {
       return this.project.permits('submission.list');
@@ -146,8 +157,7 @@ export default {
       };
     },
     enketoPath() {
-      const encodedId = encodeURIComponent(this.form.enketoId);
-      return `${enketoBasePath}/${encodedId}`;
+      return this.newSubmissionPath(this.form.projectId, this.form.xmlFormId, !this.form.publishedAt);
     },
     showIdForDuplicateName() {
       const formNames = this.duplicateFormNamesPerProject[this.project.id];

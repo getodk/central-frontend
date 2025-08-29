@@ -20,14 +20,9 @@
   },
   "formHead": {
     "tab": {
-      "versions": "Versions",
       "publicAccess": "Public Access",
-    },
-    "draftNav": {
-      "tab": {
-        "status": "Status",
-        "testing": "Testing"
-      }
+      "versions": "Versions",
+      "editForm": "Edit Form"
     }
   },
   "systemHome": {
@@ -60,6 +55,12 @@
     // This is a note about a Form that is not yet published.
     "unpublished": "Not published yet"
   },
+  // @transifexKey component.FormOverviewRightNow.stateCaption
+  "formStateDescription": {
+    "open": "This Form is downloadable and is accepting Submissions.",
+    "closing": "This Form is not downloadable but still accepts Submissions.",
+    "closed": "This Form is not downloadable and does not accept Submissions."
+  },
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
@@ -73,15 +74,16 @@
     // This is a category of actions performed on the server. It is shown in a
     // dropdown when filtering the log of actions by type.
     "category": {
-      "nonverbose": "(All Actions)",
+      "nonverbose": "All Actions",
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",
-      "dataset": "Dataset Actions",
       "field_key": "App User Actions",
       "public_link": "Public Access Link Actions",
+      "dataset": "Entity List Actions",
       "config": "Server Configuration Actions",
-      "upgrade": "Server Upgrade"
+      "upgrade": "Server Upgrade",
+      "task": "System Operation"
     },
     "action": {
       // This is shown in the log of actions performed on the server. It is a
@@ -94,13 +96,18 @@
       },
       // This is shown in the log of actions performed on the server.
       "analytics": "Report Usage",
+      // This is shown in the log of actions performed on the server.
+      "blobs": {
+        "s3_upload": "Upload Files to Storage",
+        "s3_failed_to_pending": "Mark Files for Re-Upload to Storage"
+      },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Server Configuration.
       "config": {
         "set": "Set"
       },
       // This is shown in the log of actions performed on the server. It is a
-      // type of action that can be taken on a Dataset.
+      // type of action that can be taken on an Entity List.
       "dataset": {
         "create": "@:audit.action.default.create",
         "update": "Update",
@@ -121,12 +128,13 @@
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
         "update_draft_set": "Create or Update Draft",
+        "update_draft_replace": "Replace Draft",
         "update_publish": "Publish Draft",
         "update_draft_delete": "Abandon Draft",
         "attachment_update": "Update Attachments",
         "submission_export": "Download Submissions",
         "delete": "@:audit.action.default.delete",
-        "restore": "Undelete",
+        "restore": "Restore",
         "purge": "Purge"
       },
       // This is shown in the log of actions performed on the server. It is a
@@ -145,11 +153,17 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      // This is shown in the log of actions performed on the server.
+      "submission": {
+        "purge": "Purge Submissions"
+      },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that the server performs when it is upgraded.
       "upgrade": {
         "process_form": "Process Form",
-        "process_form_draft": "Process Form Draft"
+        "process_form_draft": "Process Form Draft",
+        "process_form_entities_version": "Flag Form for Upgrade",
+        "server": "New Version"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on or for a Web User.
@@ -168,10 +182,11 @@
     "clear": "Clear",
     "close": "Close",
     "comment": "Comment",
+    "continue": "Continue",
     "create": "Create",
     // This is the text of a button that is used to fill out a new Submission.
-    // It is shown next to a heading whose text is "Submissions".
-    "createSubmission": "New",
+    "createSubmission": "New Submission",
+    "delete": "Delete",
     "done": "Done",
     "download": "Download",
     "edit": "Edit",
@@ -187,20 +202,32 @@
     "proceed": "Proceed",
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
+    "refreshPage": "Refresh page",
     "resetPassword": "Reset password",
     "review": "Review",
+    // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
+    "reviewParallelUpdates": "Review parallel updates",
     "save": "Save",
     "saveSettings": "Save settings",
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
     "sort": "Sort",
+    // @transifexKey component.WebFormRenderer.retryModal.action.tryAgain
+    "tryAgain": "Try again",
+    "undo": "Undo",
     "update": "Update",
+    // @transifexKey component.FormNew.action.upload
+    "upload": "Upload",
     "yesProceed": "Yes, proceed",
     // This text is shown on a button that the user clicks to show a preview of something
     "showPreview": "Preview",
     // This text is shown on a button that the user clicks to hide a preview of something
     "hidePreview": "Hide preview",
+    // This text is show on a button that the user clicks to see the Form preview in the new Web Forms component
+    "newPreview": "New Preview",
     "expand": "Expand",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    // @transifexKey component.FormTrashRow.action.restore
+    "restore": "Restore"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -213,7 +240,6 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
-    "reviewState": "Review State",
     "type": "Type"
   },
   "header": {
@@ -234,7 +260,9 @@
     "email": "Email Address",
     "instanceId": "Instance ID",
     "lastSubmission": "Latest Submission",
+    "recentActivity": "Recent Activity",
     "name": "Name",
+    "listName": "List Name",
     // This is the text of a table column header. The column shows the user or
     // Public Access Link that submitted each Submission.
     "submitterName": "Submitted by",
@@ -246,7 +274,7 @@
     "time": "Time",
     "type": "Type",
     // This is the text of a table column header. The column shows the number of entities
-    // for the dataset
+    // for the Entity List
     "entities": "Total Entities",
     // This is the text of a table column header. The column shows the date and time of the 
     // newest entity
@@ -263,39 +291,54 @@
   // This text appears on its own and is not part of a longer sentence.
   "count": {
     "appUser": "{count} App User | {count} App Users",
+    "attachments": "{count} attachment | {count} attachments",
     "form": "{count} Form | {count} Forms",
-    "submission": "{count} Submission | {count} Submissions"
+    "submission": "{count} Submission | {count} Submissions",
+    "warning": "{count} warning | {count} warnings"
   },
   // This text appears on its own and is not part of a longer sentence. It may
   // be shown as a title, for example, at the top of the page.
   "resource": {
     "appUser": "App User",
     "appUsers": "App Users",
+    "attachments": "Attachments",
     "config": "Server Configuration",
-    "dataset": "Dataset",
-    "datasets": "Datasets",
+    "entity": "Entity",
     "entities": "Entities",
+    "entityList": "Entity List",
+    "entityLists": "Entity Lists",
     "form": "Form",
     "forms": "Forms",
+    // @transifexKey component.FormHead.draftNav.title
+    "draft": "Draft",
     "formAttachments": "Form Attachments",
     "project": "Project",
     "projects": "Projects",
     // This is a data property of an Entity.
     "property": "Property",
+    // This refers to the data properties of an Entity.
+    "properties": "Properties",
     "publicLink": "Public Access Link",
     "user": "User",
     "users": "Users",
     "webUser": "Web User",
     "webUsers": "Web Users",
     "session": "Session",
+    "submission": "Submission",
     "submissions": "Submissions",
     "projectRoles": "Project Roles",
+    "formPreview": "Form Preview"
   },
   "alert": {
-    "passwordTooShort": "Please input a password at least 10 characters long.",
-    "updateEntity": "The Entity has been updated!",
-    "updateReviewState": "Review State saved!",
-    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+    "passwordTooShort": "Password must be at least 10 characters long.",
+    "updateEntity": "Entity has been successfully updated.",
+    "updateReviewState": "Review successfully saved.",
+    "versionChange": "The server has been successfully updated.",
+    "submissionDeleted": "Submission has been successfully deleted.",
+    "submissionRestored": "The Submission has been restored.",
+    // @transifexKey component.EntityList.alert.delete
+    "entityDeleted": "Entity “{label}” has been deleted.",
+    "entityRestored": "Entity “{label}” has been restored."
   },
   "moreInfo": {
     "clickHere": {
@@ -332,14 +375,18 @@
     // This text is shown under the "Latest Submission" column of the tables
     // for Projects and Forms. It is shown for a Project or Form with no Submissions.
     "noSubmission": "(none)",
-    "emptyTable": "There are no Submissions yet."
+    "emptyTable": "There are no Submissions yet.",
+    "fileDownloadUnavailable": "File download is not available for deleted Submissions."
   },
   "entity": {
     // This is the label of an Entity.
     "label": "Label",
     "entityLabel": "Entity Label",
     // This is the UUID of an Entity.
-    "entityId": "Entity ID"
+    "entityId": "Entity ID",
+    "noProperties": "This Form only sets the “label”.",
+    "noEntity": "(none)",
+    "conflictsCount": "{count} conflict | {count} conflicts"
   },
   "common": {
     // This is a title shown above a section of the page.
@@ -352,8 +399,8 @@
     "areYouSure": "Are you sure you wish to proceed?",
     // This is a title shown above a section of the page.
     "basicInfo": "Basic Information",
-    // This is a title shown above a section of the page.
-    "currentDraft": "Your Current Draft",
+    "conflict": "Conflict",
+    "conflicts": "Conflicts",
     // This is a title shown above a section of the page.
     "dangerZone": "Danger Zone",
     // This is shown in the tab above a table of data.
@@ -367,58 +414,104 @@
     "filter": "Filter",
     // This is the text of a link that links to the ODK forum.
     "forum": "Forum",
+    "lastUpdate": "Last update",
     "loading": "Loading…",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
-    // This is the title of a section that shows status information for the entire server such as project count.
-    "rightNow": "Right Now",
+    "noUndo": "This action cannot be undone.",
+    // @transifexKey field.reviewState
+    "reviewState": "Review State",
+    // This is shown for the row number.
+    "rowNumber": "Row",
+    // @transifexKey formHead.draftNav.tab.status
+    "status": "Status",
     "success": "Success!",
     // "System" refers to the server and how it is configured. It may be shown
     // as a title, for example, at the top of the page.
     "system": "System",
     "yes": "Yes",
     "tab": {
-      "settings": "Settings",
-      "overview": "Overview"
+      "settings": "Settings"
     },
     "total": "Total",
     "totalSubmissions": "Total Submissions",
-    "punctuations": {
-      "comma": ","
-    },
-    // {inform} is the number of dataset properties defined by the form.
-    // {count} is the total number of properties. The string will be pluralized based on {count}.
+    // {inform} is the number of Entity Properties defined by the form.
+    // {count} is the total number of Properties. The string will be pluralized based on {count}.
     "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
-    "new": "New"
+    "new": "New!",
+    "totalEntities": "Total Entities",
+    // @transifexKey component.NavbarHelpDropdown.version
+    // An identifier of a particular version of something (of Central, of a
+    // Form, of an Entity)
+    "version": "Version",
+    // A short identifier of an Entity version. "v" is short for "version".
+    // {version} is a version number.
+    "versionShort": "v{version}",
+    // This text is shown on its own before details about a warning.
+    "warning": "Warning",
+    "beta": "Beta",
+    "none": "(none)",
+    "search": "Search"
   },
   "mixin": {
     "request": {
       "alert": {
-        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit."
+        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit.",
+        "entityTooLarge":  "The data that you are trying to upload is too large.",
       }
     }
   },
-  "presenter": {
-    "Project": {
+  "requestData": {
+    "project": {
+      // @transifexKey presenter.Project.nameWithArchived
       // {name} is the name of a Project. We append "(archived)" to the name if
       // the Project is archived.
       "nameWithArchived": "{name} (archived)"
     }
   },
   "util": {
+    "csv": {
+      // {message} is a description of the problem.
+      "readError": "There was a problem reading your file: {message}",
+      "invalidCSV": "The file “{name}” is not a valid .csv file. It cannot be read.",
+      // {row} is a row number. {message} is a description of the problem.
+      "rowError": "There is a problem on row {row} of the file: {message}",
+      // This is an error that is shown for a spreadsheet. The field may be any
+      // cell in the spreadsheet.
+      "invalidQuotes": "A quoted field is invalid. Check the row to see if there are any unusual values.",
+      "emptyRow": "The row is empty.",
+      // This is an error that is shown for a data file. {expected} and {actual}
+      // are each a number of columns. The string will be pluralized based on
+      // {expected}.
+      "dataWithoutHeader": "Expected {expected} column, but found {actual}. | Expected {expected} columns, but found {actual}."
+    },
     "request": {
       "noRequest": "Something went wrong: there was no request.",
       "noResponse": "Something went wrong: there was no response to your request.",
       // {status} is an HTTP status code, for example, 404.
-      "errorNotProblem": "Something went wrong: error code {status}."
+      "errorNotProblem": "Something went wrong: error code {status}.",
+      "problem": {
+        // A "resource" is a generic term for something in Central, for example,
+        // a Project, a Web User, or a Form.
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted.",
+        "409_17": {
+          "message": "This Form attempts to create a new Entity property that matches with an existing one except for capitalization: | This Form attempts to create new Entity properties that match with existing ones except for capitalization:",
+          // Error message format for the duplicate properties (different capitalization) in an Entity-list.
+          // {provided} is the property name in the uploaded Form.
+          // {current} is the existing property name in the Entity-list.
+          "duplicateProperty": "{provided} (existing: {current})"
+        }
+      }
     },
     "session": {
       "alert": {
-        "expiresSoon": "Your session will expire in 2 minutes, and you be automatically logged out.",
-        "expired": "Your session has expired. To continue working, please log in again.",
-        // {message} is a more detailed error message.
-        "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
+        "expiresSoon": "Your session is expiring! You will be logged out in 2 minutes.",
+        "expired": "Your session has expired. Log in again to continue.",
+        "logoutError": {
+          "thereWasProblem": "There was a problem logging out.",
+          "pleaseRefresh": "Please refresh the page and try again."
+        }
       }
     }
   },

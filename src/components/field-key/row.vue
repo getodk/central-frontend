@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <td>
       <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
         class="field-key-row-popover-link" role="button"
-        @click.prevent="showCode">
+        @click.prevent="toggleQr">
         <span class="icon-qrcode"></span>{{ $t('seeCode') }}
       </a>
       <template v-else>
@@ -62,15 +62,15 @@ export default {
     },
     highlighted: Number
   },
-  emits: ['show-code', 'revoke'],
+  emits: ['toggle-qr', 'revoke'],
   computed: {
     actionsId() {
       return `field-key-row-actions${this.fieldKey.id}`;
     }
   },
   methods: {
-    showCode() {
-      this.$emit('show-code', this.fieldKey, this.$refs.popoverLink);
+    toggleQr() {
+      this.$emit('toggle-qr', this.fieldKey, this.$refs.popoverLink);
     }
   }
 };
@@ -154,11 +154,25 @@ export default {
       "revokeAccess": "アクセス権の取消"
     }
   },
+  "pt": {
+    "seeCode": "Ver código",
+    "accessRevoked": "Acesso removido",
+    "action": {
+      "revokeAccess": "Remover acesso"
+    }
+  },
   "sw": {
     "seeCode": "Angalia msimbo",
     "accessRevoked": "Ufikiaji umebatilishwa",
     "action": {
       "revokeAccess": "Batilisha ufikiaji"
+    }
+  },
+  "zh-Hant": {
+    "seeCode": "查看 QR code",
+    "accessRevoked": "存取權限被撤銷",
+    "action": {
+      "revokeAccess": "撤銷存取權限"
     }
   }
 }

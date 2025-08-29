@@ -11,26 +11,29 @@ except according to the terms contained in the LICENSE file.
 */
 import axios from 'axios';
 import { Translation } from 'vue-i18n';
-import { createPinia } from 'pinia';
 
-import createAlert from './alert';
+import createAlerts from './container/alerts';
 import createCentralI18n from './i18n';
 import createCentralRouter from './router';
+import createHoverCard from './container/hover-card';
+import createOpenModal from './container/open-modal';
 import createUnsavedChanges from './unsaved-changes';
-import defaultConfig from './config';
 import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
-import { noop } from './util/util';
 
 const provide = [
+  'toast',
+  'redAlert',
   'alert',
+  'hoverCard',
   'unsavedChanges',
   'config',
   'http',
+  'location',
   'logger'
 ];
 
-const piniaMock = { install: noop };
+axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
 
 export default ({
   // `router` must be a function that returns an object. The function will be
@@ -41,32 +44,36 @@ export default ({
   // requestData must be a function that returns an object. The function will be
   // passed a partial container.
   requestData = createRequestData,
-  alert = createAlert(),
+  hoverCard = createHoverCard(),
   unsavedChanges = createUnsavedChanges(i18n.global),
-  config = defaultConfig,
   http = axios,
+  location = window.location,
   // Adding `logger` in part in order to silence certain logging during testing.
-  logger = console
+  logger = console,
+  buildMode = import.meta.env?.MODE ?? 'production'
 } = {}) => {
   const container = {
-    pinia: process.env.NODE_ENV === 'development' ? createPinia() : piniaMock,
     i18n: i18n.global,
-    alert,
+    openModal: createOpenModal(),
+    hoverCard,
     unsavedChanges,
-    config,
     http,
-    logger
+    location,
+    logger,
+    buildMode,
+    ...createAlerts()
   };
   container.requestData = requestData(container);
+  container.config = container.requestData.config;
   if (router != null) container.router = router(container);
   container.install = (app) => {
-    // Register <i18n-t>, since we specify `false` for the fullInstall option of
-    // vue-cli-plugin-i18n.
-    app.use(i18n).component(Translation.name, Translation);
+    app.use(i18n);
+    // Register <i18n-t>, since we specify VueI18nPlugin({ fullInstall: false })
+    // in vite.config.js. Testing works a little differently: see karma.conf.js.
+    if (buildMode !== 'test') app.component(Translation.name, Translation);
     // eslint-disable-next-line no-param-reassign
     app.config.globalProperties.$tcn = $tcn;
 
-    app.use(container.pinia);
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
 

@@ -1,9 +1,46 @@
 import createCentralI18n from '../../src/i18n';
-import { $tcn, loadLocale } from '../../src/util/i18n';
+import { $tcn, loadLocale, useI18nUtils, userLocale } from '../../src/util/i18n';
 
 import createTestContainer from '../util/container';
+import { setLanguages } from '../util/i18n';
+import { withSetup } from '../util/lifecycle';
 
 describe('util/i18n', () => {
+  describe('userLocale()', () => {
+    it('returns a locale that exactly matches the navigator language', () => {
+      setLanguages(['es']);
+      userLocale().should.equal('es');
+    });
+
+    it('ignores subtags of navigator language other than language subtag', () => {
+      setLanguages(['ja-JP-u-ca-japanese']);
+      userLocale().should.equal('ja');
+    });
+
+    it('ignores a mismatch on the script subtag', () => {
+      setLanguages(['zh']);
+      userLocale().should.equal('zh-Hant');
+      setLanguages(['zh-Hans']);
+      userLocale().should.equal('zh-Hant');
+    });
+
+    it('returns null if there is no matching locale', () => {
+      setLanguages(['la']);
+      should.not.exist(userLocale());
+    });
+
+    it('returns the first locale that matches on the language subtag', () => {
+      setLanguages(['la', 'zh-Hans', 'es']);
+      userLocale().should.equal('zh-Hant');
+    });
+
+    it('returns the previously selected locale set in local storage', () => {
+      localStorage.setItem('locale', 'zh-Hant');
+      setLanguages(['es']);
+      userLocale().should.equal('zh-Hant');
+    });
+  });
+
   describe('loadLocale()', () => {
     it('changes the locale', async () => {
       const container = createTestContainer();
@@ -48,7 +85,7 @@ describe('util/i18n', () => {
     for (const [locale, [path, casesForLocale]] of Object.entries(cases)) {
       describe(locale, () => {
         const container = createTestContainer();
-        before(() => loadLocale(container, locale));
+        beforeAll(() => loadLocale(container, locale));
 
         const { i18n } = container;
         for (const [count, form] of casesForLocale) {
@@ -85,6 +122,119 @@ describe('util/i18n', () => {
     it('uses values', () => {
       const message = i18nProps.$tcn('parts', 3, { name: 'Gallia' });
       message.should.equal('Gallia est omnis divisa in partes 3.');
+    });
+  });
+
+  describe('useI18nUtils()', () => {
+    describe('formatRange()', () => {
+      it('returns a formatted range', () => {
+        const { formatRange } = withSetup(useI18nUtils);
+        formatRange(1000, 2000).should.equal('1,000–2,000');
+      });
+
+      it('returns a single number if start and end are the same', () => {
+        const { formatRange } = withSetup(useI18nUtils);
+        formatRange(1000, 1000).should.equal('1,000');
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatRange } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        formatRange(1000, 2000).should.equal('1,000～2,000');
+      });
+
+      it('accepts a number format key', () => {
+        const { formatRange } = withSetup(useI18nUtils);
+        formatRange(0.1, 0.2, 'percent').should.equal('10% – 20%');
+      });
+    });
+
+    describe('formatList()', () => {
+      it('returns a formatted list', () => {
+        const { formatList } = withSetup(useI18nUtils);
+        formatList(['x', 'y']).should.equal('x, y');
+        formatList(['x', 'y', 'z']).should.equal('x, y, z');
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatList } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        formatList(['x', 'y']).should.equal('x、y');
+        formatList(['x', 'y', 'z']).should.equal('x、y、z');
+      });
+
+      it('uses the specified format', () => {
+        const { formatList } = withSetup(useI18nUtils);
+        formatList(['x', 'y'], 'long').should.equal('x and y');
+      });
+    });
+
+    describe('formatListToParts()', () => {
+      it('returns a formatted list', () => {
+        const { formatListToParts } = withSetup(useI18nUtils);
+        formatListToParts(['x', 'y']).should.eql([
+          { type: 'element', value: 'x' },
+          { type: 'literal', value: ', ' },
+          { type: 'element', value: 'y' }
+        ]);
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatListToParts } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        formatListToParts(['x', 'y']).should.eql([
+          { type: 'element', value: 'x' },
+          { type: 'literal', value: '、' },
+          { type: 'element', value: 'y' }
+        ]);
+      });
+
+      it('uses the specified format', () => {
+        const { formatListToParts } = withSetup(useI18nUtils);
+        formatListToParts(['x', 'y'], 'long').should.eql([
+          { type: 'element', value: 'x' },
+          { type: 'literal', value: ' and ' },
+          { type: 'element', value: 'y' }
+        ]);
+      });
+    });
+
+    describe('sentenceSeparator', () => {
+      it('is a space for en', () => {
+        const { sentenceSeparator } = withSetup(useI18nUtils);
+        sentenceSeparator.value.should.equal(' ');
+      });
+
+      it('is a space for es', () => {
+        const container = createTestContainer();
+        const { sentenceSeparator } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'es';
+        sentenceSeparator.value.should.equal(' ');
+      });
+
+      it('is empty for ja', () => {
+        const container = createTestContainer();
+        const { sentenceSeparator } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        sentenceSeparator.value.should.equal('');
+      });
+    });
+
+    describe('joinSentences()', () => {
+      it('uses a space for en', () => {
+        const { joinSentences } = withSetup(useI18nUtils);
+        joinSentences(['foo.', 'bar.']).should.equal('foo. bar.');
+      });
+
+      it('does not use a space for ja', () => {
+        const container = createTestContainer();
+        const { joinSentences } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        joinSentences(['ほげ。', 'ふが。']).should.equal('ほげ。ふが。');
+      });
     });
   });
 });

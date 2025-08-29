@@ -11,21 +11,33 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
+    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="project.dataExists">
       <template v-if="project.dataExists" #title>
         {{ project.nameWithArchived }}
       </template>
-      <template #tabs>
+      <template #description>
+        <project-overview-description v-if="project.dataExists"
+        :description="project.description" :can-update="canUpdate"/>
+      </template>
+        <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
-        the project overview. -->
+        the forms page. -->
         <li :class="tabClass('')" role="presentation">
-          <router-link :to="tabPath('')">{{ $t('common.tab.overview') }}</router-link>
+          <router-link :to="tabPath('')">
+            {{ $t('resource.forms') }}
+            <span v-if="project.dataExists" class="badge">
+              {{ $n(project.forms, 'default') }}
+            </span>
+          </router-link>
         </li>
-        <li v-if="canRoute(tabPath('datasets'))" :class="tabClass('datasets')"
+        <li v-if="canRoute(tabPath('entity-lists'))" :class="tabClass('entity-lists')"
           role="presentation">
-          <router-link :to="tabPath('datasets')">
-            {{ $t('resource.datasets') }}
-            <span class="chip">{{ $t('common.new') }}</span>
+          <router-link :to="tabPath('entity-lists')">
+            {{ $t('resource.entityLists') }}
+            <span v-if="project.dataExists" class="badge">
+              {{ $n(project.datasets, 'default') }}
+            </span>
           </router-link>
         </li>
         <li v-if="canRoute(tabPath('users'))" :class="tabClass('users')"
@@ -65,9 +77,11 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import ProjectOverviewDescription from './overview/description.vue';
 
 import useDatasets from '../../request-data/datasets';
 import useProject from '../../request-data/project';
@@ -78,7 +92,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'ProjectShow',
-  components: { Loading, PageBody, PageHead },
+  components: { Breadcrumbs, Loading, PageBody, PageHead, ProjectOverviewDescription },
   props: {
     projectId: {
       type: String,
@@ -94,6 +108,16 @@ export default {
       project, forms, datasets, fieldKeys,
       tabPath, tabClass, projectPath, canRoute
     };
+  },
+  computed: {
+    breadcrumbLinks() {
+      return [
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath(), icon: 'icon-archive' }
+      ];
+    },
+    canUpdate() {
+      return this.project.dataExists && this.project.permits('project.update');
+    }
   },
   created() {
     this.fetchProject(false);

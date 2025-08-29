@@ -3,6 +3,21 @@ import { comparator } from 'ramda';
 import { dataStore } from './data-store';
 import { extendedProjects } from './projects';
 
+// Returns summary statistics about entities that try to be internally
+// consistent. The stats will not necessarily match testData.extendedEntities or
+// the project's lastEntity property.
+const normalizeEntityStats = (stats) => {
+  const result = { ...stats };
+  if (result.entities == null) {
+    result.entities = result.conflicts !== 0
+      ? result.conflicts
+      : (result.lastEntity != null ? 1 : 0);
+  }
+  if (result.lastEntity == null && result.entities !== 0)
+    result.lastEntity = new Date().toISOString();
+  return result;
+};
+
 const normalizeProperty = (property) => ({
   odataName: property.name,
   forms: [],
@@ -14,24 +29,39 @@ export const extendedDatasets = dataStore({
   factory: ({
     id,
 
-    project = extendedProjects.size !== 0
-      ? extendedProjects.first()
-      : extendedProjects.createPast(1, { datasets: 1 }).last(),
+    project: projectOption = extendedProjects.first(),
     name = 'trees',
-    entities = 0,
-    lastEntity = null,
     properties = [],
+    approvalRequired = false,
+    ownerOnly = false,
+    entities = undefined,
+    lastEntity = undefined,
+    lastUpdate = undefined,
+    conflicts = 0,
     linkedForms = [],
-    approvalRequired = false
-  }) => ({
-    id,
-    projectId: project.id,
-    name,
-    entities,
-    lastEntity,
-    properties: properties.map(normalizeProperty),
-    linkedForms,
-    approvalRequired
-  }),
+    sourceForms = []
+  }) => {
+    const entityStats = normalizeEntityStats({ entities, lastEntity, lastUpdate, conflicts });
+    const project = projectOption ?? extendedProjects
+      .createPast(1, { datasets: 1, lastEntity: entityStats.lastEntity })
+      .last();
+    return {
+      id,
+      projectId: project.id,
+      name,
+      properties: properties.map(normalizeProperty),
+      approvalRequired,
+      ownerOnly,
+      ...entityStats,
+      linkedForms,
+      sourceForms
+    };
+  },
   sort: comparator((dataset1, dataset2) => dataset1.name < dataset2.name)
 });
+
+extendedDatasets.addProperty = (index, property) => {
+  const properties = [...extendedDatasets.get(index).properties, normalizeProperty({ name: property })];
+  extendedDatasets.update(index, { properties });
+  return extendedDatasets.get(index);
+};

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr :class="htmlClass">
+  <tr :class="htmlClass" :data-name="attachment.name">
     <td class="form-attachment-list-type">{{ type }}</td>
     <td class="form-attachment-list-name">
       <a v-if="attachment.blobExists" :href="href" target="_blank"
@@ -42,7 +42,10 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-exclamation-triangle"></span>
           <span>{{ $t('notUploaded.text') }}</span>
         </span>
-        <span class="sr-only">&nbsp;{{ $t('notUploaded.title') }}</span>
+        <span class="sr-only">&nbsp;{{ $t('notUploaded.title') }}&nbsp;</span>
+        <span v-show="targeted" class="label label-primary">
+          {{ $t('action.upload') }}
+        </span>
       </template>
     </td>
     <td class="form-attachment-list-action">
@@ -52,7 +55,7 @@ except according to the terms contained in the LICENSE file.
         </template>
         <template v-else-if="linkable && !attachment.datasetExists">
           <button type="button" class="btn btn-primary btn-link-dataset"
-            @click="$emit('link', { name: attachment.name, blobExists: attachment.blobExists })">
+            @click="$emit('link', attachment)">
             <span class="icon-link"></span>
             <i18n-t keypath="action.linkDataset">
               <template #datasetName>{{ datasetName }}</template>
@@ -66,6 +69,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
+
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
@@ -81,7 +85,7 @@ export default {
       type: Boolean,
       default: false
     },
-    dragoverAttachment: Object, // eslint-disable-line vue/require-default-prop
+    dragoverAttachment: Object,
     plannedUploads: {
       type: Array,
       required: true
@@ -130,9 +134,10 @@ export default {
       return this.$te(path, this.$i18n.fallbackLocale) ? this.$t(path) : type;
     },
     href() {
-      return apiPaths.formDraftAttachment(
+      return apiPaths.formAttachment(
         this.form.projectId,
         this.form.xmlFormId,
+        true,
         this.attachment.name
       );
     },
@@ -144,53 +149,50 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
-#form-attachment-list-table {
-  > tbody > tr {
-    &.targeted {
-      > td {
-        box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
+.form-attachment-row {
+  &.targeted td {
+    box-shadow: inset 0 1px $color-info, inset 0 -1px $color-info;
 
-        &:first-child {
-          box-shadow: inset 1px 1px $color-info, inset 0 -1px $color-info;
-        }
-
-        &:last-child {
-          box-shadow: inset 0 1px $color-info, inset -1px -1px $color-info;
-        }
-      }
+    &:first-child {
+      border-left: none;
+      box-shadow: inset 1px 1px $color-info, inset 0 -1px $color-info;
     }
 
-    .label {
-      margin-left: 5px;
+    &:last-child {
+      border-right: none;
+      box-shadow: inset 0 1px $color-info, inset -1px -1px $color-info;
     }
+  }
 
-    .icon-exclamation-triangle {
-      color: #e1bf50;
+  .form-attachment-list-name { @include text-overflow-ellipsis; }
+
+  .label {
+    margin-left: 5px;
+  }
+
+  .icon-exclamation-triangle {
+    color: #e1bf50;
+    margin-right: $margin-right-icon;
+  }
+
+  .form-attachment-list-uploaded {
+    .icon-link {
       margin-right: $margin-right-icon;
+      color: $color-action-foreground;
     }
+  }
 
-    .form-attachment-list-uploaded{
-      .icon-link {
-        margin-right: $margin-right-icon;
-        color: $color-action-foreground;
+  .form-attachment-list-action {
+    div {
+      text-align: right;
+
+      button {
+        // adjusting for td padding
+        margin-top: -8px;
+        margin-bottom: -4px;
       }
-    }
-
-    .form-attachment-list-action {
-
-      div {
-        text-align: right;
-        width: 200px;
-
-        button {
-          // adjusting for td padding
-          margin-top: -8px;
-          margin-bottom: -4px;
-        }
-      }
-
     }
   }
 }
@@ -210,17 +212,17 @@ export default {
     // if the selected files were uploaded.
     "replace": "Replace",
     "notUploaded": {
-      // This is shown for a Media File that has not been uploaded.
+      // This is shown for a Form Attachment that has not been uploaded.
       "text": "Not yet uploaded",
       "title": "To upload files, drag and drop one or more files onto this page"
     },
-    // This is shown for a Form Attachment that is linked to a Dataset
-    "linkedToDataset": "Linked to Dataset {datasetName}",
+    // This is shown for a Form Attachment that is linked to an Entity List
+    "linkedToDataset": "Linked to Entity List {datasetName}",
     "uploadToOverride": "Upload a file to override.",
     "action": {
-      "linkDataset": "Link Dataset {datasetName}"
+      "linkDataset": "Link Entity List {datasetName}"
     },
-    // This is a label that is shown next to a Form Attachment that is linked to a Dataset,
+    // This is a label that is shown next to a Form Attachment that is linked to an Entity List,
     // which would be overriden if the selected files were uploaded.
     "override": "Override"
   }
@@ -242,11 +244,7 @@ export default {
       "text": "Nebyl nahrán",
       "title": "Chcete-li nahrát soubory, přetáhněte jeden nebo více souborů na tuto stránku"
     },
-    "linkedToDataset": "Propojeno s datovou sadou {datasetName}",
     "uploadToOverride": "Nahrajte soubor, který chcete přepsat.",
-    "action": {
-      "linkDataset": "Odkaz Datové sady {datasetName}"
-    },
     "override": "Přepsat"
   },
   "de": {
@@ -261,10 +259,10 @@ export default {
       "text": "Noch nicht hochgeladen",
       "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
     },
-    "linkedToDataset": "Mit Datensatz verknüpft {datasetName}",
+    "linkedToDataset": "Mit Entitätsliste {datasetName} verknüpft",
     "uploadToOverride": "Laden Sie eine zu überschreibende Datei hoch.",
     "action": {
-      "linkDataset": "Datensatz verknüpfen {datasetName}"
+      "linkDataset": "Mit Entitätsliste {datasetName} verknüpfen"
     },
     "override": "Überschreiben"
   },
@@ -280,10 +278,10 @@ export default {
       "text": "Aún no cargado",
       "title": "Para cargar archivos, arrastre y suelte uno o más archivos en esta página."
     },
-    "linkedToDataset": "Vinculado al conjunto de datos {datasetName}",
+    "linkedToDataset": "Vinculado a la lista de entidades {datasetName}",
     "uploadToOverride": "Cargue un archivo para anular.",
     "action": {
-      "linkDataset": "Vincular conjunto de datos {datasetName}"
+      "linkDataset": "Vincular la lista de entidades {datasetName}"
     },
     "override": "Invalidar"
   },
@@ -299,10 +297,10 @@ export default {
       "text": "Non encore téléversé",
       "title": "Pour téléverser des fichiers, glissez/déposer un ou plusieurs fichiers sur le tableau de cette page."
     },
-    "linkedToDataset": "Lié au Dataset {datasetName}",
+    "linkedToDataset": "Lié à la liste d'entités {datasetName}",
     "uploadToOverride": "Envoyer un fichier pour écraser.",
     "action": {
-      "linkDataset": "Lier le Dataset {datasetName}"
+      "linkDataset": "Lier la liste d'entités {datasetName}"
     },
     "override": "Écraser"
   },
@@ -331,10 +329,10 @@ export default {
       "text": "Non ancora caricato",
       "title": "Per caricare file, trascina e rilascia uno o più file su questa pagina"
     },
-    "linkedToDataset": "Collegato al set di dati {datasetName}",
+    "linkedToDataset": "Collegato a Lista Entità {datasetName}",
     "uploadToOverride": "Carica un file da sovrascrivere.",
     "action": {
-      "linkDataset": "Collega set di dati {datasetName}"
+      "linkDataset": "Collega Lista Entità {datasetName}"
     },
     "override": "Sovrascrivere"
   },
@@ -351,6 +349,25 @@ export default {
       "title": "１つ以上のファイルをドラッグ＆ドロップしてアップロードする。"
     }
   },
+  "pt": {
+    "type": {
+      "image": "Imagem",
+      "audio": "Áudio",
+      "video": "Vídeo",
+      "file": "Arquivo de dados"
+    },
+    "replace": "Substituir",
+    "notUploaded": {
+      "text": "Não carregado ainda",
+      "title": "Para carregar arquivos, arraste e solte um ou mais arquivos nessa página"
+    },
+    "linkedToDataset": "Vinculado à Lista de Entidades {datasetName}",
+    "uploadToOverride": "Carregue um arquivo para suprimir.",
+    "action": {
+      "linkDataset": "Vincule a Lista de Entidades {datasetName}"
+    },
+    "override": "Substituir"
+  },
   "sw": {
     "type": {
       "image": "Picha",
@@ -363,12 +380,31 @@ export default {
       "text": "Bado haijapakiwa",
       "title": "Ili kupakia faili, buruta na udondoshe faili moja au zaidi kwenye ukurasa huu"
     },
-    "linkedToDataset": "Imeunganishwa kwenye Seti ya Data {datasetName}",
+    "linkedToDataset": "Imeunganishwa kwenye Orodha ya Huluki {datasetName}",
     "uploadToOverride": "Pakia faili ili kubatilisha",
     "action": {
-      "linkDataset": "Unganisha Seti ya Data {datasetName}"
+      "linkDataset": "Unganisha Orodha ya Huluki {datasetName}"
     },
     "override": "Batilisha"
+  },
+  "zh-Hant": {
+    "type": {
+      "image": "影像",
+      "audio": "聲音檔",
+      "video": "影片檔",
+      "file": "資料檔"
+    },
+    "replace": "替代",
+    "notUploaded": {
+      "text": "尚未上傳",
+      "title": "若要上傳檔案，請將一個或多個檔案拖曳到此頁面上"
+    },
+    "linkedToDataset": "連結到實體列表 {datasetName}",
+    "uploadToOverride": "上傳要覆蓋的檔案。",
+    "action": {
+      "linkDataset": "連結實體列表 {datasetName}"
+    },
+    "override": "覆蓋"
   }
 }
 </i18n>

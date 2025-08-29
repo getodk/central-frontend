@@ -20,7 +20,7 @@ describe('Linkable', () => {
       props: { to: '/users' }
     });
     linkable.getComponent(RouterLinkStub).props().to.should.equal('/users');
-    linkable.find('#content').exists().should.be.true();
+    linkable.find('#content').exists().should.be.true;
   });
 
   it('renders a simple <a> element if the to prop is an absolute URL', () => {
@@ -30,7 +30,7 @@ describe('Linkable', () => {
     const a = linkable.get('a');
     a.attributes().href.should.equal('https://getodk.org');
     a.attributes().target.should.equal('_blank');
-    a.find('#content').exists().should.be.true();
+    a.find('#content').exists().should.be.true;
   });
 
   it('renders a button-like <a> element if the clickable prop is true', () => {
@@ -41,15 +41,15 @@ describe('Linkable', () => {
     a.attributes().href.should.equal('#');
     a.trigger('click');
     linkable.emitted().click.should.eql([[]]);
-    a.find('#content').exists().should.be.true();
+    a.find('#content').exists().should.be.true;
   });
 
   describe('to prop does not exist and clickable prop is false', () => {
     it('renders a <span> by default', () => {
       const linkable = mountComponent();
       linkable.element.tagName.should.equal('SPAN');
-      linkable.find('a').exists().should.be.false();
-      linkable.find('#content').exists().should.be.true();
+      linkable.find('a').exists().should.be.false;
+      linkable.find('#content').exists().should.be.true;
     });
 
     it('uses the tag prop', () => {
