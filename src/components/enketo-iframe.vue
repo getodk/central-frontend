@@ -70,6 +70,12 @@ const lastSubmitted = (enketoOnceId) => {
 
 const enketoSrc = ref();
 
+const single = computed(() => {
+  const { query } = route;
+  return (props.actionType === 'public-link' && query.single !== 'false') ||
+         (props.actionType === 'new' && query.single === 'true');
+});
+
 const setEnketoSrc = () => {
   let basePath = '/enketo-passthrough';
   // this is to avoid 404 warning
@@ -92,12 +98,14 @@ const setEnketoSrc = () => {
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
   }
-  if (props.actionType === 'public-link') {
+  // for actionType 'new', we add '/single' only if 'single' query parameter is true
+  // for actionType 'public-link', we add '/single' only if 'single' query parameter is not false
+  if (single.value) {
     prefix += '/single';
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
-  // for actionType 'new', we don't need to add anything to the prefix.
+
   // we no longer render Enketo for Edit Submission from central-frontend.
 
   if (props.enketoId === form.enketoOnceId) {
@@ -133,7 +141,7 @@ const handleIframeMessage = (event) => {
     try { eventData = JSON.parse(event.data); } catch {}
 
     if (eventData?.enketoEvent === 'submissionsuccess') {
-      if (props.actionType === 'public-link' && redirectUrl.value) {
+      if (redirectUrl.value && single.value) {
         // for public link, we read return value from query parameter. The value could be 3rd party
         // site as well, typically a thank you page
         try {

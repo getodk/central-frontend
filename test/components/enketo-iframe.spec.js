@@ -5,6 +5,7 @@ import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
 import testData from '../data';
 import { load } from '../util/http';
+import { mockLogin } from '../util/session';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -49,6 +50,28 @@ describe('EnketoIframe', () => {
     });
   });
 
+  it('renders iframe with /single prefix when single=true query parameter for new submission', async () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    const app = await load('/projects/1/forms/a/submissions/new?single=true')
+      .complete();
+
+    const iframe = app.find('iframe');
+    iframe.attributes('src').should.contain('/enketo-passthrough/single/');
+  });
+
+  it('renders iframe without /single prefix when single=false for public-link', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const app = await load(`/f/${enketoId}?single=false&st=token`)
+      .restoreSession(false) // it's public link so not need to restore sessioin
+      .complete();
+
+    const iframe = app.find('iframe');
+    iframe.attributes('src').should.contain(`/enketo-passthrough/${enketoId}`);
+    iframe.attributes('src').should.not.contain('/single/');
+  });
+
   it('redirects on submissionsuccess message with return_url - internal', async () => {
     const wrapper = mountComponent({
       props: { enketoId, actionType: 'public-link' },
@@ -86,6 +109,29 @@ describe('EnketoIframe', () => {
     fakeAssign.calledWith(new URL('http://example.com/projects/1')).should.be.true;
   });
 
+  it('redirect on submissionsuccess for new submission when single=true', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new' },
+      container: {
+        router: mockRouter('/?return_url=http://example.com/projects/1&single=true'),
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.true;
+    fakeAssign.args[0][0].href.should.equal('http://example.com/projects/1');
+  });
+
   it('does not redirect on invalid return URL', async () => {
     const fakeAssign = sinon.fake();
     const wrapper = mountComponent({
@@ -107,6 +153,51 @@ describe('EnketoIframe', () => {
 
     fakeAssign.called.should.be.false;
     wrapper.vm.$router.push.called.should.be.false;
+  });
+
+  it('does not redirect on submissionsuccess for public-link when single=false', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'public-link' },
+      container: {
+        router: mockRouter('/?return_url=http://example.com/projects/1&single=false'),
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.false;
+  });
+
+  // 'single' query parameter is false implicitly
+  it('does not redirects on submissionsuccess for new submission', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new' },
+      container: {
+        router: mockRouter('/?return_url=http://example.com/projects/1'),
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.false;
   });
 
   it('bubbles up the message event', async () => {
