@@ -3,6 +3,8 @@ import EnketoIframe from '../../src/components/enketo-iframe.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
+import testData from '../data';
+import { load } from '../util/http';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -22,6 +24,13 @@ const postMessageToParent = async (iframe, data) => {
   script.textContent = `window.parent.postMessage('${data}', "*");`;
   iframe.element.contentDocument.body.appendChild(script);
   await wait();
+};
+
+const submit = async (component) => {
+  const form = component.get('#account-login form');
+  await form.get('input[type="email"]').setValue('test@email.com');
+  await form.get('input[type="password"]').setValue('foo');
+  return form.trigger('submit');
 };
 
 describe('EnketoIframe', () => {
@@ -155,7 +164,7 @@ describe('EnketoIframe', () => {
     src.should.contain('hello%20world');
   });
 
-  it('passes + sign as it is', () => {
+  it('passes + sign as %20', () => {
     const wrapper = mountComponent({
       props: { enketoId, actionType: 'new' },
       container: {
@@ -165,7 +174,25 @@ describe('EnketoIframe', () => {
     const iframe = wrapper.find('iframe');
     const src = iframe.attributes('src');
 
-    src.should.contain('hello%20+%20world');
+    src.should.contain('hello%20%20%20world');
+  });
+
+  it('should pass %20 to the iframe after login redirect', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+    return load('/login?next=%2Fprojects%2F1%2Fforms%2Ff%2Fsubmissions%2Fnew%3Fd%5Bfirstname%5D%3Djohn%2520doe')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.last())
+      .respondWithData(() => testData.extendedProjects.first())
+      .respondWithData(() => testData.extendedForms.last())
+      .afterResponses(app => {
+        const iframe = app.find('iframe');
+        const src = iframe.attributes('src');
+        src.should.contain('john%20doe');
+      });
   });
 });
 
