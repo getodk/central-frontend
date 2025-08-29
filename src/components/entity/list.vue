@@ -32,6 +32,7 @@ except according to the terms contained in the LICENSE file.
     <entity-table v-show="odataEntities.dataExists" ref="table"
       :properties="dataset.properties"
       :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+      @selection-changed="handleSelectionChange"
       @update="showUpdate"
       @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
 
@@ -60,6 +61,17 @@ except according to the terms contained in the LICENSE file.
     <entity-restore v-bind="restoreModal" checkbox
       :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.entity.__id)"
       @hide="restoreModal.hide()" @restore="requestRestore"/>
+    <action-bar :state="actionBarState"
+      :message="$tcn('actionBar.message', selectedEntities.size)"
+      @hide="clearSelectedEntities()">
+      <template #actions>
+        <button class="btn btn-primary" type="button" :aria-disabled="awaitingResponses.size > 0" @click="requestBulkDelete">
+            <span class="icon-trash"></span>
+            {{ $t('actionBar.cta') }}
+            <spinner :state="awaitingResponses.size > 0"/>
+          </button>
+      </template>
+    </action-bar>
   </div>
 </template>
 
@@ -81,15 +93,17 @@ import SearchTextbox from '../search-textbox.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useRequest from '../../composables/request';
-import { apiPaths } from '../../util/request';
+import { apiPaths, requestAlertMessage } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import ActionBar from '../action-bar.vue';
 
 export default {
   name: 'EntityList',
   components: {
+    ActionBar,
     EntityDelete,
     EntityDownloadButton,
     EntityRestore,
@@ -103,7 +117,7 @@ export default {
     Spinner,
     TeleportIfExists
   },
-  inject: ['alert'],
+  inject: ['alert', 'toast', 'container'],
   props: {
     projectId: {
       type: String,
@@ -173,6 +187,11 @@ export default {
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
       now: new Date().toISOString(),
       snapshotFilter: '',
+      // used for restoring them back when undo button is pressed
+      deletedEntities: [],
+      selectedEntities: new Set(),
+
+      actionBarState: false
     };
   },
   computed: {
@@ -209,6 +228,27 @@ export default {
       handler(size) {
         if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted && !this.searchTerm) {
           this.dataset.entities = this.odataEntities.count - size;
+        }
+      }
+    },
+    'selectedEntities.size': {
+      handler(size) {
+        this.actionBarState = size > 0;
+        if (size > 0) {
+          this.alert.last.hide();
+        }
+      }
+    },
+    // Hide the action bar if any alert is raised.
+    'alert.state': {
+      handler(state) {
+        if (state) {
+          this.actionBarState = false;
+        } else {
+          this.deletedEntities.length = 0;
+          if (this.selectedEntities.size > 0) {
+            this.actionBarState = true;
+          }
         }
       }
     }
@@ -458,6 +498,105 @@ export default {
       // less than the lowest size option, hence we don't need to make a request.
       if (this.odataEntities.count < this.pageSizeOptions[0]) return;
       this.fetchChunk(false);
+    },
+    clearSelectedEntities() {
+      this.odataEntities.value.forEach(e => { e.__system.selected = false; });
+      this.selectedEntities.clear();
+    },
+    requestBulkDelete() {
+      const uuids = Array.from(this.selectedEntities);
+      // TODO: disable the whole table
+
+      const bulkDelete = () => this.request({
+        method: 'POST',
+        url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-delete'),
+        alert: false,
+        data: {
+          ids: uuids
+        }
+      });
+
+      const onSuccess = () => {
+        if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += uuids.length;
+
+        uuids.forEach(uuid => this.odataEntities.removedEntities.add(uuid));
+
+        this.deletedEntities = [];
+        this.deletedEntities.push(...this.odataEntities.value.filter(e => uuids.includes(e.__id)));
+        this.odataEntities.value = this.odataEntities.value.filter(e => !uuids.includes(e.__id));
+        this.alert.success(this.$tcn('alert.bulkDelete', this.selectedEntities.size))
+          .cta(this.$t('undo'), () => this.requestBulkRestore(uuids));
+        this.selectedEntities.clear();
+      };
+
+      bulkDelete()
+        .then(onSuccess)
+        .catch((error) => {
+          const { cta } = this.alert.danger(requestAlertMessage(this.container.i18n, error));
+          cta(this.$t('action.tryAgain'), () => {
+            bulkDelete()
+              .then(() => {
+                this.alert.last.hide();
+                onSuccess();
+              })
+              .catch(noop);
+          });
+        });
+    },
+    requestBulkRestore() {
+      const uuids = this.deletedEntities.map(e => e.__id);
+      const bulkRestore = () => this.request({
+        method: 'POST',
+        url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-restore'),
+        alert: false,
+        data: {
+          ids: uuids
+        }
+      });
+
+      const onSuccess = () => {
+        this.deletedEntities.forEach(e => {
+          e.__system.selected = false;
+        });
+        const combined = [
+          ...this.odataEntities.value,
+          ...this.deletedEntities
+        ];
+
+        this.odataEntities.value = combined.sort((a, b) =>
+          b.__system.rowNumber - a.__system.rowNumber);
+
+        this.deletedEntities.length = 0;
+        if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value -= uuids.length;
+        uuids.forEach(uuid => this.odataEntities.removedEntities.delete(uuid));
+        this.alert.success(this.$tcn('alert.restored', uuids.length));
+      };
+
+      bulkRestore()
+        .then(onSuccess)
+        .catch((error) => {
+          const { cta } = this.alert.danger(requestAlertMessage(this.container.i18n, error));
+          cta(this.$t('action.tryAgain'), () => {
+            bulkRestore()
+              .then(() => {
+                this.alert.last.hide();
+                onSuccess();
+              })
+              .catch(noop);
+          });
+        });
+    },
+    handleSelectionChange(uuid, selected) {
+      if (uuid === 'all') {
+        this.selectedEntities.clear();
+        if (selected) {
+          this.odataEntities.value.forEach(e => this.selectedEntities.add(e.__id));
+        }
+      } else if (selected) {
+        this.selectedEntities.add(uuid);
+      } else {
+        this.selectedEntities.delete(uuid);
+      }
     }
   }
 };
@@ -499,7 +638,9 @@ export default {
     "allDeleted": "All Entities are deleted.",
     "allDeletedOnPage": "All Entities on the page have been deleted.",
     "alert": {
-      "delete": "Entity “{label}” has been deleted."
+      "delete": "Entity “{label}” has been deleted.",
+      "bulkDelete": "{count} Entity successfully deleted | {count} Entities successfully deleted",
+      "restored": "{count} Entity successfully restored | {count} Entities successfully restored",
     },
     "filterDisabledMessage": "Filtering is unavailable for deleted Entities",
     "searchDisabledMessage": "Search is unavailable for deleted Entities",
@@ -508,7 +649,12 @@ export default {
       "emptyTable": "There are no deleted Entities.",
       "allRestored": "All deleted Entities are restored.",
       "allRestoredOnPage": "All Entities on the page have been restored."
-    }
+    },
+    "actionBar": {
+      "message": "{count} Entity selected | {count} Entities selected",
+      "cta": "Delete"
+    },
+    "undo": "Undo"
   }
 }
 </i18n>
