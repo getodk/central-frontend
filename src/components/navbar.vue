@@ -22,7 +22,8 @@ except according to the terms contained in the LICENSE file.
             <span class="navbar-icon-bar"></span>
             <span class="navbar-icon-bar"></span>
           </button>
-          <router-link to="/" class="navbar-brand">ODK Central</router-link>
+          <!--<img src="/logo.png" alt="">-->
+          <router-link to="/" class="navbar-brand"><img src="/logo-b.png" alt=""> ODK Central | ARCED</router-link>
         </div>
         <div class="collapse navbar-collapse">
           <navbar-links v-if="visiblyLoggedIn"/>
@@ -97,24 +98,26 @@ export default {
 $border-height: 3px;
 
 .navbar-default {
-  background-color: $color-accent-primary;
+ /* background-color: $color-accent-primary; */
+  background-color: #facb1e;
   border: none;
-  border-top: $border-height solid $color-accent-secondary;
-  box-shadow: 0 $border-height 0 #dedede;
-  height: 30px + $border-height; // the way bootstrap is set up, the border eats the body.
+ // border-top: $border-height solid $color-accent-secondary;
+ // box-shadow: 0 $border-height 0 #dedede;
+  height: 42px + $border-height;
   margin-bottom: 0;
   min-height: auto;
 
   .navbar-brand {
     float: left;
-    font-size: $font-size-btn;
+    /*font-size: $font-size-btn;*/
+    font-size: 16px !important; //new add
     font-weight: bold;
     height: auto;
     letter-spacing: -0.02em;
     line-height: 20px;
-    padding: 5px 15px;
+    padding: 14px 15px;
 
-    &, &:hover, &:focus { color: #fff; }
+    &, &:hover, &:focus { color: #000000; }
 
     &:focus {
       background-color: transparent;
@@ -123,10 +126,11 @@ $border-height: 3px;
   }
 
   .navbar-nav {
-    font-size: $font-size-btn;
+    //font-size: $font-size-btn;
+    font-size: 16px !important;
 
     > li > a {
-      &, &:hover, &:focus { color: #fff; }
+      &, &:hover, &:focus { color: #000000; }
     }
   }
 }
@@ -151,14 +155,16 @@ $border-height: 3px;
 @media (min-width: 768px) {
   .navbar-default {
     border-radius: 0;
-
-    .navbar-brand { margin-left: -15px; }
+    margin-left: 50px !important; //new add
+    .navbar-brand { margin-left: -12px; } //25px
 
     .navbar-nav {
-      margin-top: -1 * $border-height;
+      //margin-top: -1 * $border-height;
+       margin-top: 4px;
 
       > li > a {
-        border-top: transparent solid $border-height;
+       /* border-top: transparent solid $border-height; */
+       border-top: transparent solid 0px;
         padding: 5px 10px;
         transition: 0.25s border-top-color;
 
@@ -169,72 +175,108 @@ $border-height: 3px;
 
         &:focus {
           border-top-color: transparentize(#fff, 0.15);
-          box-shadow: 0 3px 0 transparentize(#000, 0.9);
+          //box-shadow: 0 3px 0 transparentize(#000, 0.9);
           outline: none;
           transition-duration: 0s;
         }
       }
 
       .active > a, .open > a {
-        box-shadow: 0 0 6px transparentize($color-accent-secondary, 0.7) inset;
+        box-shadow: 0 0 6px transparentize(#e51479, 0.7) inset;
 
         &, &:hover, &:focus {
-          background-color: #b40066;
-          border-top-color: #fff;
-          color: #fff;
+          background-color: #181616;
+         /* border-top-color: #fff; */
+          color: #ffffff !important;
+          border-radius: 5px;
         }
       }
     }
   }
 
+
   .navbar-right {
     // Counters the 15px padding of .navbar-collapse and the 15px padding of
     // .container-fluid. The Bootstrap default is -15px.
-    margin-right: -25px;
+    margin-right: -22px;
+    padding-top: 2px !important; //new add
   }
 
-  #navbar-actions { margin-left: 10px; }
+  #navbar-actions { margin-left: 10px;color: #000000; }
+/////new/////
+  #navbar-actions>a:focus { border-radius: 5px; background-color: #000000; }
+
+  #navbar-actions>a:focus {
+    color: #ffffff !important;
+ }
+
+////end//////
+  /* The toggle button is hidden when the navbar is not collapsed. */
+  #navbar-links{
+    padding-top: 3px !important;
+  }
+  ///// new add
+  #navbar-links #navbar-links-users {
+        margin-left: 20px;
+    }
 }
 
 // Navbar is collapsed.
 @media (max-width: 767px) {
   .navbar-default {
+    margin-left: 50px; //new add
     .navbar-toggle {
+      padding: 15px 15px !important; //new add
       border: none;
       margin: -2px 5px;
 
       &:hover, &:focus { background-color: inherit; }
 
-      .navbar-icon-bar { background-color: #fff; }
+      .navbar-icon-bar { background-color: #000000; }
     }
 
     .navbar-collapse {
-      background-color: $color-accent-secondary;
+      /*background-color: $color-accent-secondary;*/
+      background-color: #f7f7f7;
       border: none;
       position: relative;
       z-index: 99;
+      margin-left: -72px !important; //new add
+      top: -2px !important; //new add
     }
 
     .navbar-nav {
       margin-top: 0;
 
       .active > a, .open > a {
-        border-left: $border-height solid #fff;
+        //border-left: $border-height solid #fff;
+        border-left: 0px solid #fff;
         padding-left: 15px - $border-height;
 
         &, &:hover, &:focus {
-          background-color: $color-accent-secondary;
-          color: #fff;
+          //background-color: $color-accent-secondary;
+          background-color:#e0e0e0 ; // new added
+          color: #000000;
         }
       }
 
       .open .dropdown-menu > li > a {
-        &, &:hover, &:focus { color: #fff; }
+        &, &:hover, &:focus { color: #000000; font-size: 14px;}
       }
     }
   }
 
   #navbar-analytics-notice { display: none; }
+}
+
+
+/***********logo add******************/
+
+img { width: 46px !important; height: 46px !important; position: absolute !important; top: 0px !important; left: -50px !important;padding: 2px; }
+
+.dropdown-menu {
+    font-size: 14px !important;
+    min-width: 150px;
 }
 </style>
 
