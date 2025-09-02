@@ -2,6 +2,7 @@
 import { MD5, SHA1, SHA256, SHA384, SHA512 } from 'crypto-js';
 import * as base64 from 'crypto-js/enc-base64';
 import * as hex from 'crypto-js/enc-hex';
+import { base64Decode as decode } from '../../../../common/src/lib/web-compat/base64.ts';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { IncompatibleRuntimeEnvironmentError } from '../../error/IncompatibleRuntimeEnvironmentError.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
@@ -11,6 +12,14 @@ import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplem
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { evaluateInt } from '../_shared/number.ts';
 import { toStrings } from '../_shared/string.ts';
+
+export const base64Decode = new StringFunction(
+	'base64-decode',
+	[{ arityType: 'required', typeHint: 'string' }],
+	(context, [base64]): string => {
+		return decode(base64!.evaluate(context).toString());
+	}
+);
 
 export const coalesce = new StringFunction(
 	'coalesce',
