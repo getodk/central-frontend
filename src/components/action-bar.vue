@@ -13,13 +13,13 @@ except according to the terms contained in the LICENSE file.
   <div v-show="state" class="action-bar-container">
     <div class="action-bar" role="alert">
       <div class="close-container">
-        <button type="button" class="close" :aria-label="$t('action.close')" @click="$emit('hide')">
+        <button type="button" class="close" :aria-disabled="disableClose" @click="$emit('hide')">
           <span aria-hidden="true" class="icon-times-circle"></span>
         </button>
       </div>
       <div class="message"><span>{{ message }}</span></div>
       <div class="cta-container">
-        <slot name="actions"></slot>
+        <slot></slot>
       </div>
     </div>
   </div>
@@ -35,6 +35,7 @@ defineProps({
     type: String,
     required: true
   },
+  disableClose: Boolean
 });
 
 defineEmits(['hide']);
@@ -42,56 +43,52 @@ defineEmits(['hide']);
 
 <style lang="scss">
 @import '../assets/scss/variables';
+@import '../assets/scss/mixins';
 
 .action-bar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  left: 10vw;
-  width: 80vw;
-  bottom: 34px;
-  z-index: $z-index-toast;
-}
+  @include floating-container;
 
-.action-bar {
-  box-shadow: $m3-elevation-light-3;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
+  .action-bar {
+    box-shadow: $m3-elevation-light-3;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    pointer-events: auto;
 
-  .message {
-    flex-grow: 1;
-    padding: 15px;
-    padding-right: 62px;
-  }
+    .message {
+      flex-grow: 1;
+      padding: 15px;
+      padding-right: 62px;
+    }
 
-  .cta-container,
-  .close-container {
-    flex-shrink: 0;
-    justify-content: center;
-  }
+    .cta-container,
+    .close-container {
+      flex-shrink: 0;
+      justify-content: center;
+    }
 
-  .cta-container {
-    // Needed for Spinner
-    position: relative;
-  }
+    .cta-container {
+      // Needed for Spinner
+      position: relative;
+    }
 
-  .cta-container {
-    padding-inline: 10px 18px;
-  }
+    .cta-container {
+      padding-inline: 10px 18px;
+    }
 
-  .close-container {
-    padding-inline: 10px 0;
-  }
+    .close-container {
+      padding-inline: 10px 0;
+    }
 
-  .close {
-    opacity: 1;
-    color: #595E6A;
+    .close {
+      opacity: 1;
+      color: #595E6A;
 
-    &:hover {
-      color: #000;
+      &:not([aria-disabled]):hover,
+      &:not([aria-disabled]):focus {
+        color: #000;
+      }
     }
   }
 }

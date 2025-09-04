@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="entity-metadata-row" :class="{ 'entity-row-selected': entity.__system.selected }">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="!deleted">
-      <input type="checkbox" name="select" aria-label="select" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
+      <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
     </td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>

@@ -186,7 +186,7 @@ class. */
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
-.btn, a {
+.btn, a, button.close {
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     cursor: not-allowed;
     opacity: 0.65;

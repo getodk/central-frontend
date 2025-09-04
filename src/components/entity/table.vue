@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!deleted">
-        <input type="checkbox" name="select" aria-label="select" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
+        <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
       </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
@@ -102,7 +102,7 @@ const handleSelectionChanged = (checked, index) => {
   if (!checked) {
     allSelected.value = false;
   }
-  emit('selectionChanged', data.__id, checked);
+  emit('selectionChanged', data, checked);
 };
 
 const changeAllSelection = (checked) => {
@@ -113,9 +113,10 @@ const changeAllSelection = (checked) => {
   emit('selectionChanged', 'all', checked);
 };
 
-// When all rows are deleted, we want allSelected to be false
-watch(() => odataEntities.value?.length, (count) => {
-  if (count === 0) allSelected.value = false;
+// When odatEntities change by deleting all rows or changing filters or page naviagation, etc,
+// we should unchecked allSelected checkbox
+watch(() => odataEntities.value, () => {
+  allSelected.value = false;
 });
 
 </script>
