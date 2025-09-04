@@ -14,8 +14,8 @@ except according to the terms contained in the LICENSE file.
     <div id="entity-list-actions" class="table-actions-bar">
       <form class="form-inline" @submit.prevent>
         <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
-        <entity-filters v-model:conflict="conflict" :disabled="deleted"
-        :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
+        <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
+        :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
       <button id="entity-list-refresh-button" type="button"
         class="btn btn-outlined" :aria-disabled="refreshing"
@@ -64,7 +64,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 
 import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
@@ -80,12 +80,14 @@ import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 
 import useQueryRef from '../../composables/query-ref';
+import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import { arrayQuery } from '../../util/router';
 
 export default {
   name: 'EntityList',
@@ -122,7 +124,7 @@ export default {
   setup() {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
-    const { dataset, deletedEntityCount, odataEntities } = useRequestData();
+    const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
 
     // Array of conflict statuses, where a conflict status is represented as a
     // boolean
@@ -142,11 +144,37 @@ export default {
       })
     });
 
+    const creatorIds = useQueryRef({
+      fromQuery: (query) => {
+        const stringIds = arrayQuery(query.creatorId, {
+          validator: (value) => /^[1-9]\d*$/.test(value)
+        });
+        return stringIds.length !== 0
+          ? stringIds.map(id => Number.parseInt(id, 10))
+          : (entityCreators.dataExists ? [...entityCreators.ids] : []);
+      },
+      toQuery: (value) => ({
+        creatorId: value.length === entityCreators.length
+          ? []
+          : value.map(id => id.toString())
+      })
+    });
+    watch(() => entityCreators.dataExists, () => {
+      if (creatorIds.value.length === 0 && entityCreators.length !== 0)
+        creatorIds.value = [...entityCreators.ids];
+    });
+
+    const creationDateRange = useDateRangeQueryRef();
+
     const { request } = useRequest();
 
     const pageSizeOptions = [250, 500, 1000];
 
-    return { dataset, odataEntities, conflict, request, deletedEntityCount, pageSizeOptions, searchTerm };
+    return {
+      dataset, odataEntities, conflict, request,
+      deletedEntityCount, pageSizeOptions, searchTerm, entityCreators, creatorIds,
+      creationDateRange
+    };
   },
   data() {
     return {
@@ -176,10 +204,31 @@ export default {
     };
   },
   computed: {
+    filtersOnCreatorId() {
+      if (this.creatorIds.length === 0) return false;
+      const selectedAll = this.entityCreators.dataExists &&
+        this.creatorIds.length === this.entityCreators.length &&
+        this.creatorIds.every(id => this.entityCreators.ids.has(id));
+      return !selectedAll;
+    },
     odataFilter() {
-      return this.conflict.length === 2
-        ? null
-        : (this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
+      const conditions = [];
+      if (this.filtersOnCreatorId) {
+        const condition = this.creatorIds
+          .map(id => `__system/creatorId eq ${id}`)
+          .join(' or ');
+        conditions.push(`(${condition})`);
+      }
+      if (this.creationDateRange.length !== 0) {
+        const start = this.creationDateRange[0].toISO();
+        const end = this.creationDateRange[1].endOf('day').toISO();
+        conditions.push(`__system/createdAt ge ${start}`);
+        conditions.push(`__system/createdAt le ${end}`);
+      }
+      if (this.conflict.length === 1) {
+        conditions.push(this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
+      }
+      return conditions.length !== 0 ? conditions.join(' and ') : null;
     },
     emptyTableMessage() {
       if (!this.odataEntities.dataExists) return '';
@@ -216,6 +265,7 @@ export default {
   created() {
     this.fetchChunk(true);
     this.$watch(() => [this.odataFilter, this.searchTerm], () => this.fetchChunk(true));
+    this.fetchCreators();
   },
   methods: {
     // `clear` indicates whether this.odataEntities should be cleared before
@@ -295,6 +345,11 @@ export default {
         this.conflict = [true, false];
         this.searchTerm = '';
       }
+    },
+    fetchCreators() {
+      this.entityCreators.request({
+        url: apiPaths.entityCreators(this.projectId, this.datasetName)
+      }).catch(noop);
     },
     showUpdate(index) {
       if (this.refreshing) return;
