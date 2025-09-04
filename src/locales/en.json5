@@ -416,6 +416,7 @@
     "forum": "Forum",
     "lastUpdate": "Last update",
     "loading": "Loading…",
+    "map": "Map",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
@@ -434,6 +435,7 @@
     "tab": {
       "settings": "Settings"
     },
+    "table": "Table",
     "total": "Total",
     "totalSubmissions": "Total Submissions",
     // {inform} is the number of Entity Properties defined by the form.

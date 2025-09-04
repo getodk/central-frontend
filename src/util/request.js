@@ -25,8 +25,14 @@ export const queryString = (query) => {
   const entries = Object.entries(query);
   if (entries.length === 0) return '';
   const params = new URLSearchParams();
-  for (const [name, value] of entries)
-    if (value != null) params.set(name, value.toString());
+  for (const [name, value] of entries) {
+    if (Array.isArray(value)) {
+      for (const element of value)
+        params.append(name, element === null ? 'null' : element.toString());
+    } else if (value != null) {
+      params.set(name, value.toString());
+    }
+  }
   const qs = params.toString();
   return qs !== '' ? `?${qs}` : qs;
 };

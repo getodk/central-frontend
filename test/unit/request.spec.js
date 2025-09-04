@@ -16,6 +16,14 @@ describe('util/request', () => {
       queryString({ x: 1, y: null }).should.eql('?x=1');
     });
 
+    it('supports arrays', () => {
+      queryString({ x: [1, 2] }).should.equal('?x=1&x=2');
+    });
+
+    it('allows an array to include null', () => {
+      queryString({ x: [1, null] }).should.equal('?x=1&x=null');
+    });
+
     it('returns an empty string for an empty object', () => {
       queryString({}).should.equal('');
     });

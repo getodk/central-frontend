@@ -52,6 +52,8 @@ export default () => {
     binaryPaths: computeIfExists(() => fields.reduce(
       (acc, cur) => (cur.binary ? acc.add(cur.path) : acc),
       new Set()
-    ))
+    )),
+    hasGeo: computeIfExists(() => fields.some(({ type }) =>
+      type === 'geopoint' || type === 'geotrace' || type === 'geoshape'))
   }));
 };

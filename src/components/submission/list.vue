@@ -33,15 +33,18 @@ except according to the terms contained in the LICENSE file.
         <!-- TODO: merge these two forms -->
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
           <submission-field-dropdown
-          v-if="selectedFields != null && fields.selectable.length > 11"
-          v-model="selectedFields"/>
+            v-if="selectedFields != null && fields.selectable.length > 11"
+            v-model="selectedFields"/>
         </form>
         <button id="submission-list-refresh-button" type="button"
-          class="btn btn-outlined move-right" :aria-disabled="refreshing"
-          @click="fetchChunk(false, true)">
+          class="btn btn-outlined" :aria-disabled="refreshing"
+          @click="refresh">
           <span class="icon-refresh"></span>{{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
+        <radio-buttons v-if="!draft && fields.dataExists && fields.hasGeo"
+          v-model="dataView" :options="viewOptions" :disabled="encrypted"
+          :disabled-message="$t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
           :to="'.form-submissions-heading-row'">
           <submission-download-button :form-version="formVersion"
@@ -52,29 +55,22 @@ except according to the terms contained in the LICENSE file.
             @download-filtered="showDownloadModal(true)"/>
         </teleport-if-exists>
       </div>
-      <submission-table v-show="odata.dataExists"
-        ref="table" :project-id="projectId" :xml-form-id="xmlFormId"
-        :draft="draft" :fields="selectedFields"
-        :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+
+      <submission-table-view v-if="dataView === 'table'" ref="view"
+        :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
+        :filter="odataFilter" :fields="selectedFields"
+        :refreshing="refreshing" :total-count="formVersion.submissions"
+        :awaiting-responses="awaitingResponses"
         @review="reviewModal.show({ submission: $event })"
         @delete="showDelete"
         @restore="showRestore"/>
+      <submission-map-view v-else ref="view"
+        :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
+        :filter="geojsonFilter"
+        :refreshing="refreshing" :total-count="formVersion.submissions"/>
       <p v-show="emptyTableMessage" class="empty-table-message">
         {{ emptyTableMessage }}
       </p>
-      <odata-loading-message type="submission"
-        :top="pagination.size"
-        :odata="odata"
-        :filter="!!odataFilter"
-        :refreshing="refreshing"
-        :total-count="formVersion.dataExists ? formVersion.submissions : 0"/>
-
-        <!-- @update:page is emitted on size change as well -->
-        <pagination v-if="pagination.count > 0"
-              v-model:page="pagination.page" v-model:size="pagination.size"
-              :count="pagination.count" :size-options="pageSizeOptions"
-              :spinner="odata.awaitingResponse"
-              @update:page="handlePageChange()"/>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
@@ -93,21 +89,21 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import { DateTime } from 'luxon';
-import { shallowRef, watch, reactive } from 'vue';
+import { computed, shallowRef, watch, watchEffect } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
-import OdataLoadingMessage from '../odata-loading-message.vue';
+import RadioButtons from '../radio-buttons.vue';
+import SubmissionDelete from './delete.vue';
 import SubmissionDownload from './download.vue';
 import SubmissionDownloadButton from './download-button.vue';
 import SubmissionFieldDropdown from './field-dropdown.vue';
 import SubmissionFilters from './filters.vue';
-import SubmissionTable from './table.vue';
-import SubmissionUpdateReviewState from './update-review-state.vue';
-import SubmissionDelete from './delete.vue';
+import SubmissionMapView from './map-view.vue';
 import SubmissionRestore from './restore.vue';
-import Pagination from '../pagination.vue';
+import SubmissionTableView from './table-view.vue';
+import SubmissionUpdateReviewState from './update-review-state.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
 
 import useFields from '../../request-data/fields';
@@ -126,16 +122,16 @@ export default {
   components: {
     EnketoFill,
     Loading,
-    OdataLoadingMessage,
-    Pagination,
+    RadioButtons,
     Spinner,
     SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
     SubmissionFieldDropdown,
     SubmissionFilters,
+    SubmissionMapView,
     SubmissionRestore,
-    SubmissionTable,
+    SubmissionTableView,
     SubmissionUpdateReviewState,
     TeleportIfExists
   },
@@ -150,10 +146,8 @@ export default {
       required: true
     },
     draft: Boolean,
-    deleted: {
-      type: Boolean,
-      required: false
-    }
+    deleted: Boolean,
+    encrypted: Boolean
   },
   emits: ['fetch-keys', 'fetch-deleted-count', 'toggle-qr'],
   setup(props) {
@@ -207,14 +201,27 @@ export default {
         reviewState: value.length === allReviewStates.length ? [] : value
       })
     });
-    const { request } = useRequest();
 
-    const pageSizeOptions = [250, 500, 1000];
+    const mapQuery = useQueryRef({
+      fromQuery: (query) => query.map === 'true',
+      toQuery: (value) => ({ map: value ? 'true' : null })
+    });
+    const dataView = computed({
+      get: () => (mapQuery.value && !props.draft ? 'map' : 'table'),
+      set: (value) => { mapQuery.value = value === 'map'; }
+    });
+    watchEffect(() => {
+      if (dataView.value === 'map' &&
+        ((fields.dataExists && !fields.hasGeo) || props.encrypted))
+        dataView.value = 'table';
+    });
+
+    const { request } = useRequest();
 
     return {
       form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates,
-      request, pageSizeOptions
+      submitterIds, submissionDateRange, reviewStates, allReviewStates, dataView,
+      request
     };
   },
   data() {
@@ -237,14 +244,16 @@ export default {
       // state that indicates whether we need to show restore confirmation dialog
       confirmRestore: true,
 
-      awaitingResponses: new Set(),
-
-      pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
-      now: new Date().toISOString(),
-      snapshotFilter: ''
+      awaitingResponses: new Set()
     };
   },
   computed: {
+    viewOptions() {
+      return [
+        { value: 'table', text: this.$t('common.table') },
+        { value: 'map', text: this.$t('common.map') }
+      ];
+    },
     filtersOnSubmitterId() {
       if (this.submitterIds.length === 0) return false;
       const selectedAll = this.submitters.dataExists &&
@@ -276,11 +285,20 @@ export default {
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
     },
-    odataSelect() {
-      if (this.selectedFields == null) return null;
-      const paths = this.selectedFields.map(({ path }) => path.replace('/', ''));
-      paths.unshift('__id', '__system');
-      return paths.join(',');
+    geojsonFilter() {
+      if (this.draft) return null;
+      const query = {};
+      if (this.filtersOnSubmitterId) query.submitterId = this.submitterIds;
+      if (this.submissionDateRange.length !== 0) {
+        query.start__gte = this.submissionDateRange[0].toISO();
+        query.end__lte = this.submissionDateRange[1].endOf('day').toISO();
+      }
+      if (this.reviewStates.length !== this.allReviewStates.length) {
+        query.reviewState = this.reviewStates.map(reviewState =>
+          // Undo odataLiteral(): remove quotes.
+          (reviewState === 'null' ? reviewState : reviewState.slice(1, -1)));
+      }
+      return Object.keys(query).length !== 0 ? query : null;
     },
     emptyTableMessage() {
       if (!this.odata.dataExists) return '';
@@ -297,18 +315,13 @@ export default {
     }
   },
   watch: {
-    odataFilter() {
-      this.fetchChunk(true);
-    },
-    selectedFields(_, oldFields) {
-      if (oldFields != null) this.fetchChunk(true);
-    },
-    deleted() {
-      this.fetchChunk(true);
+    dataView() {
+      this.odata.reset();
     },
     'odata.count': {
       handler() {
-        if (this.formVersion.dataExists && this.odata.dataExists && !this.odataFilter)
+        if (this.formVersion.dataExists && this.odata.dataExists &&
+          this.dataView === 'table' && !this.odataFilter)
           this.formVersion.submissions = this.odata.count;
       }
     },
@@ -324,67 +337,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    // `clear` indicates whether this.odata should be cleared before sending the
-    // request. `refresh` indicates whether the request is a background refresh.
-    fetchChunk(clear, refresh = false) {
-      this.refreshing = refresh;
-      // Are we fetching the first chunk of submissions or the next chunk?
-      const first = clear || refresh;
-
-      if (first) {
-        this.now = new Date().toISOString();
-        this.setSnapshotFilter();
-        this.pagination.page = 0;
-      }
-
-      let $filter = this.snapshotFilter;
-      if (this.odataFilter) {
-        $filter += ` and ${this.odataFilter}`;
-      }
-
-      this.odata.request({
-        url: apiPaths.odataSubmissions(
-          this.projectId,
-          this.xmlFormId,
-          this.draft,
-          {
-            $top: this.pagination.size,
-            $skip: this.pagination.page * this.pagination.size,
-            $count: true,
-            $wkt: true,
-            $filter,
-            $select: this.odataSelect,
-            $orderby: '__system/submissionDate desc'
-          }
-        ),
-        clear,
-        patch: !first
-          ? (response) => this.odata.replaceData(response.data, response.config)
-          : null
-      })
-        .then(() => {
-          this.pagination.count = this.odata.count;
-
-          if (this.deleted) {
-            this.deletedSubmissionCount.cancelRequest();
-            if (!this.deletedSubmissionCount.dataExists) {
-              this.deletedSubmissionCount.data = reactive({});
-            }
-            this.deletedSubmissionCount.value = this.odata.count;
-          }
-        })
-        .finally(() => { this.refreshing = false; })
-        .catch(noop);
-
-      // emit event to parent component to re-fetch deleted Submissions count
-      if (refresh && !this.deleted && !this.draft) {
-        this.$emit('fetch-deleted-count');
-      }
-
-      // emit event to parent component to re-fetch keys if needed
-      if (refresh && this.formVersion.keyId != null && this.keys.length === 0)
-        this.$emit('fetch-keys');
-    },
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
@@ -398,23 +350,24 @@ export default {
             : this.fields.selectable.slice(0, 10);
         })
         .catch(noop);
-      this.fetchChunk(true);
       if (!this.draft) {
         this.submitters.request({
           url: apiPaths.submitters(this.projectId, this.xmlFormId, this.draft)
         }).catch(noop);
       }
     },
-    setSnapshotFilter() {
-      this.snapshotFilter = '';
-      if (this.deleted) {
-        // This is not foolproof. Missing clause: __system/deletedAt became null after `now`.
-        // We don't keep restore date, that would have helped here.
-        this.snapshotFilter += `__system/deletedAt le ${this.now}`;
-      } else {
-        this.snapshotFilter += `__system/submissionDate le ${this.now} and `;
-        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
-      }
+    refresh() {
+      this.refreshing = true;
+      this.$refs.view.refresh()
+        .finally(() => { this.refreshing = false; })
+        .catch(noop);
+
+      // emit event to parent component to re-fetch deleted Submissions count
+      if (!this.deleted && !this.draft) this.$emit('fetch-deleted-count');
+
+      // emit event to parent component to re-fetch keys if needed
+      if (this.formVersion.keyId != null && this.keys.length === 0)
+        this.$emit('fetch-keys');
     },
     // This method accounts for the unlikely case that the user clicked the
     // refresh button before reviewing the submission. In that case, the
@@ -426,7 +379,7 @@ export default {
         submission.__id === originalSubmission.__id);
       if (index !== -1) {
         this.odata.value[index].__system.reviewState = reviewState;
-        this.$refs.table.afterReview(index);
+        this.$refs.view.afterReview(index);
       }
     },
     showDelete(submission) {
@@ -463,7 +416,7 @@ export default {
           /* Before doing a couple more things, we first determine whether
           this.odata.value still includes the Submission and if so, what the
           current index of the Submission is. If a request to refresh
-          this.odata was sent while the deletion request was in
+          this.odata (or the GeoJSON) was sent while the deletion request was in
           progress, then there could be a race condition such that data doesn't
           exist for this.odata, or this.odata.value no longer
           includes the Submission. Another possible result of the race condition is
@@ -473,7 +426,7 @@ export default {
             ? this.odata.value.findIndex(submission => submission.__id === instanceId)
             : -1;
           if (index !== -1) {
-            this.$refs.table.afterDelete(index);
+            this.$refs.view.afterDelete(index);
             this.odata.value.splice(index, 1);
           }
         })
@@ -507,7 +460,7 @@ export default {
             ? this.odata.value.findIndex(submission => submission.__id === instanceId)
             : -1;
           if (index !== -1) {
-            this.$refs.table.afterDelete(index);
+            this.$refs.view.afterDelete(index);
             this.odata.value.splice(index, 1);
           }
         })
@@ -515,12 +468,6 @@ export default {
         .finally(() => {
           this.awaitingResponses.delete(instanceId);
         });
-    },
-    handlePageChange() {
-      // This function is called for size change as well. So the total number of submissions are
-      // less than the lowest size option, hence we don't need to make a request.
-      if (this.odata.count < this.pageSizeOptions[0]) return;
-      this.fetchChunk(false);
     },
     showDownloadModal(filtered = false) {
       this.downloadModal.odataFilter = filtered ? this.odataFilter : null;
@@ -569,13 +516,7 @@ export default {
   ~ #submission-download-button { margin-left: 0; }
 }
 
-#submission-list-refresh-button.move-right {
-  margin-left: auto;
-}
-
-#submission-list table:has(tbody:empty) {
-  display: none;
-}
+#submission-list .radio-buttons { margin-left: auto; }
 
 #submission-table:has(tbody tr) + .empty-table-message {
   display: none;
@@ -594,6 +535,7 @@ export default {
     "allDeletedOnPage": "All Submissions on the page have been deleted.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
     "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
+    "noMapEncryption": "Map is unavailable due to Form encryption",
     "deletedSubmission": {
       "emptyTable": "There are no deleted Submissions.",
       "allRestored": "All deleted Submissions are restored.",

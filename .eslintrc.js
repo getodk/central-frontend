@@ -11,7 +11,8 @@ module.exports = {
     $: 'readonly',
     alert: 'readonly',
     document: 'readonly',
-    window: 'readonly'
+    window: 'readonly',
+    defineModel: 'readonly'
   },
   rules: {
     'arrow-parens': 'off',

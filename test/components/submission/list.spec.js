@@ -27,36 +27,27 @@ describe('SubmissionList', () => {
   describe('initial requests', () => {
     it('sends the correct requests for a form', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      let count = 0;
-      return loadSubmissionList()
-        .beforeEachResponse((_, { url }, i) => {
-          count += 1;
-          if (i === 0)
-            url.should.equal('/v1/projects/1/forms/a%20b/fields?odata=true');
-          else if (i === 1)
-            url.should.startWith('/v1/projects/1/forms/a%20b.svc/Submissions?');
-          else
-            url.should.equal('/v1/projects/1/forms/a%20b/submissions/submitters');
-        })
-        .afterResponses(() => {
-          count.should.equal(3);
-        });
+      return loadSubmissionList().testRequests([
+        { url: '/v1/projects/1/forms/a%20b/fields?odata=true' },
+        { url: '/v1/projects/1/forms/a%20b/submissions/submitters' },
+        {
+          url: ({ pathname }) => {
+            pathname.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions');
+          }
+        }
+      ]);
     });
 
     it('sends the correct requests for a form draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      let count = 0;
-      return loadSubmissionList()
-        .beforeEachResponse((_, { url }, i) => {
-          count += 1;
-          if (i === 0)
-            url.should.equal('/v1/projects/1/forms/a%20b/draft/fields?odata=true');
-          else
-            url.should.startWith('/v1/projects/1/forms/a%20b/draft.svc/Submissions?');
-        })
-        .afterResponses(() => {
-          count.should.equal(2);
-        });
+      return loadSubmissionList().testRequests([
+        { url: '/v1/projects/1/forms/a%20b/draft/fields?odata=true' },
+        {
+          url: ({ pathname }) => {
+            pathname.should.equal('/v1/projects/1/forms/a%20b/draft.svc/Submissions');
+          }
+        }
+      ]);
     });
   });
 
@@ -77,8 +68,8 @@ describe('SubmissionList', () => {
   describe('after the refresh button is clicked', () => {
     it('completes a background refresh', () => {
       testData.extendedSubmissions.createPast(1);
-      const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
-        if (i === responseIndex) {
+      const assertRowCount = (count) => (component, _, i) => {
+        if (i === 0 || i == null) {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(count);
           component.findAllComponents(SubmissionDataRow).length.should.equal(count);
         }
@@ -587,8 +578,7 @@ describe('SubmissionList', () => {
     const loadDeletedSubmissions = () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 'e', deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-        deletedSubmissionCount: false,
-        odata: testData.submissionDeletedOData
+        deletedSubmissionCount: false
       });
     };
 
@@ -666,8 +656,7 @@ describe('SubmissionList', () => {
 
       it('hides the table', () =>
         load('/projects/1/forms/f/submissions?deleted=true', { root: false, attachTo: document.body }, {
-          deletedSubmissionCount: false,
-          odata: testData.submissionDeletedOData
+          deletedSubmissionCount: false
         })
           .complete()
           .request(restore(1))
@@ -683,8 +672,7 @@ describe('SubmissionList', () => {
 
       it('shows a message', () =>
         load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-          deletedSubmissionCount: false,
-          odata: testData.submissionDeletedOData
+          deletedSubmissionCount: false
         })
           .complete()
           .request(restore(1))
@@ -703,8 +691,7 @@ describe('SubmissionList', () => {
     it('continues to show modal if checkbox was not checked', () => {
       testData.extendedSubmissions.createPast(2, { deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-        deletedSubmissionCount: false,
-        odata: testData.submissionDeletedOData
+        deletedSubmissionCount: false
       })
         .complete()
         .request(async (component) => {
@@ -725,8 +712,7 @@ describe('SubmissionList', () => {
           .createPast(1, { instanceId: 'e1', deletedAt: new Date().toISOString() })
           .createPast(1, { instanceId: 'e2', deletedAt: new Date().toISOString() });
         return load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-          deletedSubmissionCount: false,
-          odata: testData.submissionDeletedOData
+          deletedSubmissionCount: false
         })
           .complete()
           .request(async (component) => {

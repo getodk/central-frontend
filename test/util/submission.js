@@ -39,7 +39,6 @@ export const loadSubmissionList = (mountOptions = {}) => {
   return mockHttp()
     .mount(SubmissionList, mergedOptions)
     .respondWithData(() => form._fields)
-    .respondWithData(() => (deleted ? testData.submissionDeletedOData() : testData.submissionOData()))
     .modify(series => {
       if (form.publishedAt == null) return series;
       return series.respondWithData(() => testData.extendedFieldKeys
@@ -47,5 +46,6 @@ export const loadSubmissionList = (mountOptions = {}) => {
         .sort((fieldKey1, fieldKey2) =>
           fieldKey1.displayName.localeCompare(fieldKey2.displayName))
         .map(testData.toActor));
-    });
+    })
+    .respondWithData(() => (deleted ? testData.submissionDeletedOData() : testData.submissionOData()));
 };
