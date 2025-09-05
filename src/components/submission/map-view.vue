@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <geojson-map v-if="geojson.dataExists" :features="geojson.features"/>
+  <geojson-map v-if="geojson.dataExists && geojson.features.length !== 0"
+    :features="geojson.features"/>
   <odata-loading-message type="submission" :odata="geojson"
     :filter="filter != null" :refreshing="refreshing"
     :total-count="totalCount" :top="totalCount"/>

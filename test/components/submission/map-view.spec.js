@@ -3,6 +3,7 @@ import { F } from 'ramda';
 import GeojsonMap from '../../../src/components/geojson-map.vue';
 import RadioField from '../../../src/components/radio-field.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
+import SubmissionMapView from '../../../src/components/submission/map-view.vue';
 
 import testData from '../../data';
 import { changeMultiselect } from '../../util/trigger';
@@ -15,6 +16,15 @@ const findToggle = (component) =>
   component.getComponent(SubmissionList).findComponent(RadioField);
 const toggleView = (view) => (app) =>
   findToggle(app).get(`input[type="radio"][value="${view}"]`).setChecked();
+const getView = (app) => {
+  // SubmissionTableView always renders #submission-table.
+  const hasTable = app.find('#submission-table').exists();
+  // In contrast, SubmissionMapView doesn't always render .geojson-map.
+  const hasMap = app.findComponent(SubmissionMapView).exists();
+  if (hasTable && hasMap) throw new Error('both views are rendered');
+  if (!hasTable && !hasMap) throw new Error('neither view is rendered');
+  return hasTable ? 'table' : 'map';
+};
 
 const mypoint = testData.fields.geopoint('/mypoint');
 
@@ -71,8 +81,7 @@ describe('SubmissionMapView', () => {
         .respondWithData(testData.submissionGeojson)
         .testRequests([{ url: '/v1/projects/1/forms/a%20b/submissions.geojson' }])
         .afterResponses(app => {
-          app.find('.geojson-map').exists().should.be.true;
-          app.find('#submission-table').exists().should.be.false;
+          getView(app).should.equal('map');
           expect(app.vm.$route.query.map).to.equal('true');
         });
     });
@@ -92,19 +101,18 @@ describe('SubmissionMapView', () => {
           }
         }])
         .afterResponses(app => {
-          app.find('#submission-table').exists().should.be.true;
-          app.find('.geojson-map').exists().should.be.false;
+          getView(app).should.equal('table');
           should.not.exist(app.vm.$route.query.map);
         });
     });
   });
 
-  it('shows the map immediately if ?map=true', () => {
+  it('shows map view immediately if ?map=true', () => {
     testData.extendedForms.createPast(1, { fields: [mypoint] });
     return load('/projects/1/forms/f/submissions?map=true')
       .testRequestsInclude([{ url: '/v1/projects/1/forms/f/submissions.geojson' }])
       .afterResponses(component => {
-        component.find('.geojson-map').exists().should.be.true;
+        getView(component).should.equal('map');
       });
   });
 
@@ -126,18 +134,23 @@ describe('SubmissionMapView', () => {
           }
         }]));
 
-    it('refreshes the map after a filter changes', () =>
-      load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
-        .complete()
+    it('refreshes the map after a filter changes', () => {
+      testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
+      return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
+        .afterResponses(app => {
+          app.find('.geojson-map').exists().should.be.true;
+        })
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeEachResponse((app, { url }) => {
           url.should.equal('/v1/projects/1/forms/f/submissions.geojson?reviewState=hasIssues');
+          // Not a background refresh: the map disappears during the request.
           app.find('.geojson-map').exists().should.be.false;
         })
         .respondWithData(testData.submissionGeojson)
         .afterResponse(app => {
           app.find('.geojson-map').exists().should.be.true;
-        }));
+        });
+    });
   });
 
   describe('deleted submissions', () => {
@@ -145,14 +158,14 @@ describe('SubmissionMapView', () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
     });
 
-    it('shows a map for deleted submissions', () => {
+    it('shows map view for deleted submissions', () => {
       testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?map=true&deleted=true')
         .testRequestsInclude([{
           url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
         }])
         .afterResponses(app => {
-          app.find('.geojson-map').exists().should.be.true;
+          getView(app).should.equal('map');
         });
     });
 
@@ -167,14 +180,14 @@ describe('SubmissionMapView', () => {
           url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
         }])
         .afterResponse(app => {
-          app.find('.geojson-map').exists().should.be.true;
+          getView(app).should.equal('map');
           const { fullPath } = app.vm.$route;
           fullPath.should.equal('/projects/1/forms/f/submissions?deleted=true&map=true');
         })
         .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
         .respondWithData(() => testData.submissionGeojson(F))
         .afterResponse(app => {
-          app.find('.geojson-map').exists().should.be.true;
+          getView(app).should.equal('map');
           const { fullPath } = app.vm.$route;
           fullPath.should.equal('/projects/1/forms/f/submissions?map=true');
         });
@@ -241,6 +254,7 @@ describe('SubmissionMapView', () => {
       const message = app.get('.empty-table-message');
       message.should.be.visible();
       message.text().should.equal('There are no Submissions yet.');
+      app.find('.geojson-map').exists().should.be.false;
     });
 
     it('shows a different message if a filter is applied', async () => {
@@ -248,6 +262,7 @@ describe('SubmissionMapView', () => {
       const message = app.get('.empty-table-message');
       message.should.be.visible();
       message.text().should.equal('There are no matching Submissions.');
+      app.find('.geojson-map').exists().should.be.false;
     });
 
     it('hides the empty message after toggling to map view', () =>
@@ -267,6 +282,7 @@ describe('SubmissionMapView', () => {
         })
         .afterResponse(app => {
           app.get('.empty-table-message').should.be.hidden();
+          app.find('.geojson-map').exists().should.be.true;
         }));
   });
 
