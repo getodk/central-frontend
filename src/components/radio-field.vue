@@ -19,10 +19,10 @@ except according to the terms contained in the LICENSE file.
           :aria-describedby="disabledMessageId">
         <span>{{ text }}</span>
       </label>
-      <p v-if="disabledMessageId != null" :id="disabledMessageId">
-        {{ disabledMessage }}
-      </p>
     </div>
+    <p v-if="disabledMessageId != null" :id="disabledMessageId" class="sr-only">
+      {{ disabledMessage }}
+    </p>
   </div>
 </template>
 
