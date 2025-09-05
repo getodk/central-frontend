@@ -135,7 +135,10 @@ describe('SubmissionMapView', () => {
         }]));
 
     it('refreshes the map after a filter changes', () => {
-      testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
+      testData.extendedSubmissions.createPast(1, {
+        mypoint: 'POINT (1 2)',
+        reviewState: 'hasIssues'
+      });
       return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
         .afterResponses(app => {
           app.find('.geojson-map').exists().should.be.true;
