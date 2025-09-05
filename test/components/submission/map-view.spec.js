@@ -108,71 +108,75 @@ describe('SubmissionMapView', () => {
       });
   });
 
-  it('passes filters through to the request', () => {
-    setLuxon({ defaultZoneName: 'UTC' });
-    testData.extendedForms.createPast(1, { fields: [mypoint] });
-    return load('/projects/1/forms/f/submissions?map=true&submitterId=1&submitterId=2&start=1970-01-01&end=1970-01-02&reviewState=%27approved%27&reviewState=null')
-      .testRequestsInclude([{
-        url: ({ pathname, searchParams }) => {
-          pathname.should.equal('/v1/projects/1/forms/f/submissions.geojson');
-          searchParams.getAll('submitterId').should.eql(['1', '2']);
-          searchParams.get('start__gte').should.equal('1970-01-01T00:00:00.000Z');
-          searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
-          searchParams.getAll('reviewState').should.eql(['approved', 'null']);
-        }
-      }]);
+  describe('filters', () => {
+    it('passes filters through to the request', () => {
+      setLuxon({ defaultZoneName: 'UTC' });
+      testData.extendedForms.createPast(1, { fields: [mypoint] });
+      return load('/projects/1/forms/f/submissions?map=true&submitterId=1&submitterId=2&start=1970-01-01&end=1970-01-02&reviewState=%27approved%27&reviewState=null')
+        .testRequestsInclude([{
+          url: ({ pathname, searchParams }) => {
+            pathname.should.equal('/v1/projects/1/forms/f/submissions.geojson');
+            searchParams.getAll('submitterId').should.eql(['1', '2']);
+            searchParams.get('start__gte').should.equal('1970-01-01T00:00:00.000Z');
+            searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
+            searchParams.getAll('reviewState').should.eql(['approved', 'null']);
+          }
+        }]);
+    });
+
+    it('refreshes after a filter changes', () => {
+      testData.extendedForms.createPast(1, { fields: [mypoint] });
+      return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-filters-review-state', [1]))
+        .beforeEachResponse((app, { url }) => {
+          url.should.equal('/v1/projects/1/forms/f/submissions.geojson?reviewState=hasIssues');
+          app.find('.geojson-map').exists().should.be.false;
+        })
+        .respondWithData(testData.submissionGeojson)
+        .afterResponse(app => {
+          app.find('.geojson-map').exists().should.be.true;
+        });
+    });
   });
 
-  it('shows a map for deleted submissions', () => {
-    testData.extendedForms.createPast(1, { fields: [mypoint] });
-    testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
-    return load('/projects/1/forms/f/submissions?map=true&deleted=true')
-      .testRequestsInclude([{
-        url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
-      }])
-      .afterResponses(app => {
-        app.find('.geojson-map').exists().should.be.true;
-      });
-  });
+  describe('deleted submissions', () => {
+    it('shows a map for deleted submissions', () => {
+      testData.extendedForms.createPast(1, { fields: [mypoint] });
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions?map=true&deleted=true')
+        .testRequestsInclude([{
+          url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
+        }])
+        .afterResponses(app => {
+          app.find('.geojson-map').exists().should.be.true;
+        });
+    });
 
-  it('preserves map view while toggling deleted submissions', () => {
-    testData.extendedForms.createPast(1, { fields: [mypoint] });
-    testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
-    return load('/projects/1/forms/f/submissions?map=true&reviewState=null')
-      .complete()
-      .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
-      .respondWithData(testData.submissionGeojson)
-      .testRequestsInclude([{
-        // Map view is preserved, but the review state filter is not.
-        url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
-      }])
-      .afterResponse(app => {
-        app.find('.geojson-map').exists().should.be.true;
-        const { fullPath } = app.vm.$route;
-        fullPath.should.equal('/projects/1/forms/f/submissions?deleted=true&map=true');
-      })
-      .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
-      .respondWithData(() => testData.submissionGeojson(F))
-      .afterResponse(app => {
-        app.find('.geojson-map').exists().should.be.true;
-        const { fullPath } = app.vm.$route;
-        fullPath.should.equal('/projects/1/forms/f/submissions?map=true');
-      });
-  });
-
-  it('refreshes after a filter changes', () => {
-    testData.extendedForms.createPast(1, { fields: [mypoint] });
-    return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
-      .complete()
-      .request(changeMultiselect('#submission-filters-review-state', [1]))
-      .beforeEachResponse((app, { url }) => {
-        url.should.equal('/v1/projects/1/forms/f/submissions.geojson?reviewState=hasIssues');
-        app.find('.geojson-map').exists().should.be.false;
-      })
-      .respondWithData(testData.submissionGeojson)
-      .afterResponse(app => {
-        app.find('.geojson-map').exists().should.be.true;
-      });
+    it('preserves map view while toggling deleted submissions', () => {
+      testData.extendedForms.createPast(1, { fields: [mypoint] });
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions?map=true&reviewState=null')
+        .complete()
+        .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(testData.submissionGeojson)
+        .testRequestsInclude([{
+          // Map view is preserved, but the review state filter is not.
+          url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
+        }])
+        .afterResponse(app => {
+          app.find('.geojson-map').exists().should.be.true;
+          const { fullPath } = app.vm.$route;
+          fullPath.should.equal('/projects/1/forms/f/submissions?deleted=true&map=true');
+        })
+        .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(() => testData.submissionGeojson(F))
+        .afterResponse(app => {
+          app.find('.geojson-map').exists().should.be.true;
+          const { fullPath } = app.vm.$route;
+          fullPath.should.equal('/projects/1/forms/f/submissions?map=true');
+        });
+    });
   });
 
   describe('after the Refresh button is clicked', () => {
