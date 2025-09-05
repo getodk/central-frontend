@@ -295,6 +295,13 @@ export default {
   },
   watch: {
     dataView() {
+      /* Both view components set this.odata, but they don't reset this.odata
+      when they're unmounted. It's important for this.odata to be reset,
+      especially when toggling from table view to map view. Map view doesn't
+      modify this.odata at all until after the GeoJSON response is received.
+      That means that if this.odata isn't reset, the stale data from the table
+      view could persist for a bit, affecting things like
+      this.emptyTableMessage. */
       this.odata.reset();
     },
     'odata.count': {

@@ -249,6 +249,25 @@ describe('SubmissionMapView', () => {
       message.should.be.visible();
       message.text().should.equal('There are no matching Submissions.');
     });
+
+    it('hides the empty message after toggling to map view', () =>
+      load('/projects/1/forms/f/submissions')
+        .afterResponses(app => {
+          app.get('.empty-table-message').should.be.visible();
+        })
+        .request(toggleView('map'))
+        .beforeEachResponse(app => {
+          // The message should disappear immediately, not just after the
+          // GeoJSON response is received.
+          app.get('.empty-table-message').should.be.hidden();
+        })
+        .respondWithData(() => {
+          testData.extendedSubmissions.createNew({ mypoint: 'POINT (1 2)' });
+          return testData.submissionGeojson();
+        })
+        .afterResponse(app => {
+          app.get('.empty-table-message').should.be.hidden();
+        }));
   });
 
   it('does not update the tab badge', async () => {
