@@ -23,17 +23,13 @@ describe('SubmissionMapView', () => {
   describe('toggle', () => {
     it('shows the toggle if the form has a geo field', async () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
-      const component = await load('/projects/1/forms/a%20b/submissions', {
-        root: false
-      });
+      const component = await load('/projects/1/forms/f/submissions', { root: false });
       component.findComponent(RadioButtons).exists().should.be.true;
     });
 
     it('does not show toggle if form does not have a geo field', async () => {
       testData.extendedForms.createPast(1);
-      const component = await load('/projects/1/forms/a%20b/submissions', {
-        root: false
-      });
+      const component = await load('/projects/1/forms/f/submissions', { root: false });
       component.findComponent(RadioButtons).exists().should.be.false;
     });
 
@@ -53,9 +49,7 @@ describe('SubmissionMapView', () => {
         fields: [mypoint],
         key: testData.standardKeys.createPast(1, { managed: true }).last()
       });
-      const component = await load('/projects/1/forms/a%20b/submissions', {
-        root: false
-      });
+      const component = await load('/projects/1/forms/f/submissions', { root: false });
       component.getComponent(RadioButtons).props().disabled.should.be.true;
     });
 
