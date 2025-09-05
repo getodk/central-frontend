@@ -99,26 +99,13 @@ describe('SubmissionMapView', () => {
     });
   });
 
-  describe('?map=true', () => {
-    it('shows the map immediately if ?map=true', () => {
-      testData.extendedForms.createPast(1, { fields: [mypoint] });
-      return load('/projects/1/forms/f/submissions?map=true')
-        .testRequestsInclude([{ url: '/v1/projects/1/forms/f/submissions.geojson' }])
-        .afterResponses(component => {
-          component.find('.geojson-map').exists().should.be.true;
-        });
-    });
-
-    it('ignores ?map=true for a form draft', () => {
-      testData.extendedForms.createPast(1, { fields: [mypoint] });
-      return load('/projects/1/forms/f/draft?map=true')
-        .beforeEachResponse((_, { url }) => {
-          url.should.not.contain('.geojson');
-        })
-        .afterResponses(app => {
-          app.find('.geojson-map').exists().should.be.false;
-        });
-    });
+  it('shows the map immediately if ?map=true', () => {
+    testData.extendedForms.createPast(1, { fields: [mypoint] });
+    return load('/projects/1/forms/f/submissions?map=true')
+      .testRequestsInclude([{ url: '/v1/projects/1/forms/f/submissions.geojson' }])
+      .afterResponses(component => {
+        component.find('.geojson-map').exists().should.be.true;
+      });
   });
 
   it('passes filters through to the request', () => {

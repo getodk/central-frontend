@@ -88,7 +88,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { computed, shallowRef, watch } from 'vue';
+import { shallowRef, watch } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -157,6 +157,7 @@ export default {
       : form;
     const fields = useFields();
 
+    // Filter query parameters
     const submitterIds = useQueryRef({
       fromQuery: (query) => {
         const stringIds = arrayQuery(query.submitterId, {
@@ -189,13 +190,9 @@ export default {
       })
     });
 
-    const mapQuery = useQueryRef({
-      fromQuery: (query) => query.map === 'true',
-      toQuery: (value) => ({ map: value ? 'true' : null })
-    });
-    const dataView = computed({
-      get: () => (mapQuery.value && !props.draft ? 'map' : 'table'),
-      set: (value) => { mapQuery.value = value === 'map'; }
+    const dataView = useQueryRef({
+      fromQuery: (query) => (query.map === 'true' ? 'map' : 'table'),
+      toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
     });
 
     const { request } = useRequest();
