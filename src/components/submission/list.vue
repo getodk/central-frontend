@@ -346,8 +346,7 @@ export default {
     refresh() {
       this.refreshing = true;
       this.$refs.view.refresh()
-        .finally(() => { this.refreshing = false; })
-        .catch(noop);
+        .then(() => { this.refreshing = false; });
 
       // emit event to parent component to re-fetch deleted Submissions count
       if (!this.deleted && !this.draft) this.$emit('fetch-deleted-count');

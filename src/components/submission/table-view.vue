@@ -106,7 +106,7 @@ const odataSelect = computed(() => {
 
 // `clear` indicates whether this.odata should be cleared before sending the
 // request. `refresh` indicates whether the request is a background refresh.
-const fetchChunk = async (clear, refresh = false) => {
+const fetchChunk = (clear, refresh = false) => {
   // Are we fetching the first chunk of submissions or the next chunk?
   const first = clear || refresh;
   if (first) {
@@ -119,7 +119,7 @@ const fetchChunk = async (clear, refresh = false) => {
     $filter += ` and ${props.filter}`;
   }
 
-  await odata.request({
+  return odata.request({
     url: apiPaths.odataSubmissions(
       props.projectId,
       props.xmlFormId,
@@ -138,31 +138,30 @@ const fetchChunk = async (clear, refresh = false) => {
     patch: !first
       ? (response) => odata.replaceData(response.data, response.config)
       : null
-  });
+  })
+    .then(() => {
+      pagination.count = odata.count;
 
-  pagination.count = odata.count;
-
-  if (props.deleted) {
-    deletedSubmissionCount.cancelRequest();
-    if (!deletedSubmissionCount.dataExists) {
-      deletedSubmissionCount.data = reactive({});
-    }
-    deletedSubmissionCount.value = odata.count;
-  }
+      if (props.deleted) {
+        deletedSubmissionCount.cancelRequest();
+        if (!deletedSubmissionCount.dataExists) {
+          deletedSubmissionCount.data = reactive({});
+        }
+        deletedSubmissionCount.value = odata.count;
+      }
+    })
+    .catch(noop);
 };
-fetchChunk(true).catch(noop);
-watch(
-  [() => props.filter, () => props.deleted],
-  () => { fetchChunk(true).catch(noop); }
-);
+fetchChunk(true);
+watch([() => props.filter, () => props.deleted], () => { fetchChunk(true); });
 watch(() => props.fields, (_, oldFields) => {
-  if (oldFields != null) fetchChunk(true).catch(noop);
+  if (oldFields != null) fetchChunk(true);
 });
 const handlePageChange = () => {
   // This function is called for size change as well. So the total number of submissions are
   // less than the lowest size option, hence we don't need to make a request.
   if (odata.count < pageSizeOptions[0]) return;
-  fetchChunk(false).catch(noop);
+  fetchChunk(false);
 };
 const refresh = () => fetchChunk(false, true);
 

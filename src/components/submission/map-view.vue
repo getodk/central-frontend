@@ -23,7 +23,7 @@ import GeojsonMap from '../geojson-map.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
+import { noargs, noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -78,13 +78,10 @@ const fetchData = (clear = true) => {
     '.geojson',
     query
   );
-  return geojson.request({ url, clear });
+  return geojson.request({ url, clear }).catch(noop);
 };
-fetchData().catch(noop);
-watch(
-  [() => props.filter, () => props.deleted],
-  () => { fetchData().catch(noop); }
-);
+fetchData();
+watch([() => props.filter, () => props.deleted], noargs(fetchData));
 const refresh = () => fetchData(false);
 
 defineExpose({ refresh });
