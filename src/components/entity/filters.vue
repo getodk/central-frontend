@@ -11,6 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span id="entity-filters">
+    <entity-filters-creator :model-value="creatorId"
+      :disabled="disabled" :disabled-message="disabledMessage"
+      @update:model-value="$emit('update:creatorId', $event)"/>
+    <date-range-picker :model-value="creationDate"
+      :label="$t('field.creationDate')"
+      :disabled="disabled" :disabled-message="disabledMessage"
+      :placeholder="$t('allCreationDateSelected')"
+      @update:model-value="$emit('update:creationDate', $event)"/>
     <entity-filters-conflict :model-value="conflict" :disabled="disabled"
       :disabled-message="disabledMessage" @update:model-value="$emit('update:conflict', $event)"/>
   </span>
@@ -18,6 +26,8 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import EntityFiltersConflict from './filters/conflict.vue';
+import EntityFiltersCreator from './filters/creator.vue';
+import DateRangePicker from '../date-range-picker.vue';
 
 defineOptions({
   name: 'EntityFilters'
@@ -34,9 +44,18 @@ defineProps({
   disabledMessage: {
     type: String,
     required: false
+  },
+  creatorId: {
+    type: Array,
+    required: false
+  },
+  creationDate: {
+    type: Array,
+    required: true
   }
 });
-defineEmits(['update:conflict']);
+defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
+
 </script>
 
 <style lang="scss">
@@ -44,3 +63,17 @@ defineEmits(['update:conflict']);
   margin-left: 10px;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "field": {
+      // This is the text of a form field that allows the user to filter
+      // Entities by a date range.
+      "creationDate": "At"
+    },
+    // @transifexKey component.SubmissionFilters.allSubmissionDateSelected
+    "allCreationDateSelected": "All time"
+  }
+}
+</i18n>
