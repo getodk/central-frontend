@@ -55,6 +55,11 @@ const props = defineProps({
 const { odata, createResource } = useRequestData();
 const geojson = createResource('geojson', () => ({
   transformResponse: ({ data, config }) => {
+    // After the GeoJSON response is received, we also set `odata`, as if we
+    // received an OData response. That's needed because `odata` drives much of
+    // the logic in SubmissionList. For a long time, SubmissionList was only a
+    // table and only cared about OData. When we set `odata`, we set as little
+    // data as possible in order to minimize the memory footprint.
     const { features } = data;
     odata.setFromResponse({
       data: {
@@ -63,6 +68,8 @@ const geojson = createResource('geojson', () => ({
       },
       config
     });
+
+    // After setting `odata`, return the GeoJSON unchanged.
     return data;
   }
 }));
