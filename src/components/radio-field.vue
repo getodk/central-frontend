@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="radio-field btn-group"
+  <div class="radio-field"
     v-tooltip.no-aria="disabled ? disabledMessage : null">
     <div v-for="{ value, text } of options" :key="value" class="radio"
       :class="{ disabled }">
-      <label class="btn">
+      <label>
         <input v-model="model" type="radio" :value="value" :disabled="disabled"
           :aria-describedby="disabledMessageId">
         <span>{{ text }}</span>
