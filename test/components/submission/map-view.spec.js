@@ -228,6 +228,26 @@ describe('SubmissionMapView', () => {
     });
   });
 
+  describe('empty message', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1, { fields: [mypoint] });
+    });
+
+    it('shows a message if no submissions are returned', async () => {
+      const app = await load('/projects/1/forms/f/submissions?map=true');
+      const message = app.get('.empty-table-message');
+      message.should.be.visible();
+      message.text().should.equal('There are no Submissions yet.');
+    });
+
+    it('shows a different message if a filter is applied', async () => {
+      const app = await load('/projects/1/forms/f/submissions?map=true&reviewState=null');
+      const message = app.get('.empty-table-message');
+      message.should.be.visible();
+      message.text().should.equal('There are no matching Submissions.');
+    });
+  });
+
   it('does not update the tab badge', async () => {
     testData.extendedForms.createPast(1, { fields: [mypoint], submissions: 2 });
     testData.extendedSubmissions
