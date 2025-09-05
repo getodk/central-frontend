@@ -2,6 +2,7 @@ import { F } from 'ramda';
 
 import GeojsonMap from '../../../src/components/geojson-map.vue';
 import RadioButtons from '../../../src/components/radio-buttons.vue';
+import SubmissionList from '../../../src/components/submission/list.vue';
 
 import testData from '../../data';
 import { changeMultiselect } from '../../util/trigger';
@@ -10,10 +11,10 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
 
-const toggleView = (view) => (app) => {
-  const input = app.get(`#submission-list .radio-buttons input[type="radio"][value="${view}"]`);
-  return input.setChecked();
-};
+const findToggle = (component) =>
+  component.getComponent(SubmissionList).findComponent(RadioButtons);
+const toggleView = (view) => (app) =>
+  findToggle(app).get(`input[type="radio"][value="${view}"]`).setChecked();
 
 const mypoint = testData.fields.geopoint('/mypoint');
 
@@ -24,13 +25,13 @@ describe('SubmissionMapView', () => {
     it('shows the toggle if the form has a geo field', async () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
       const component = await load('/projects/1/forms/f/submissions', { root: false });
-      component.findComponent(RadioButtons).exists().should.be.true;
+      findToggle(component).exists().should.be.true;
     });
 
     it('does not show toggle if form does not have a geo field', async () => {
       testData.extendedForms.createPast(1);
       const component = await load('/projects/1/forms/f/submissions', { root: false });
-      component.findComponent(RadioButtons).exists().should.be.false;
+      findToggle(component).exists().should.be.false;
     });
 
     it('does not show toggle if the only geo field is in a repeat group', async () => {
@@ -41,7 +42,13 @@ describe('SubmissionMapView', () => {
         ]
       });
       const component = await load('/projects/1/forms/f/submissions', { root: false });
-      component.findComponent(RadioButtons).exists().should.be.false;
+      findToggle(component).exists().should.be.false;
+    });
+
+    it('does not show toggle on Edit Form page', async () => {
+      testData.extendedForms.createPast(1, { draft: true, fields: [mypoint] });
+      const component = await load('/projects/1/forms/f/draft', { root: false });
+      findToggle(component).exists().should.be.false;
     });
 
     it('disables the toggle if there is an encrypted submission', async () => {
@@ -50,7 +57,7 @@ describe('SubmissionMapView', () => {
         key: testData.standardKeys.createPast(1, { managed: true }).last()
       });
       const component = await load('/projects/1/forms/f/submissions', { root: false });
-      component.getComponent(RadioButtons).props().disabled.should.be.true;
+      findToggle(component).props().disabled.should.be.true;
     });
 
     it('switches to map view', () => {
