@@ -37,6 +37,17 @@ describe('SubmissionMapView', () => {
       component.findComponent(RadioButtons).exists().should.be.false;
     });
 
+    it('does not show toggle if the only geo field is in a repeat group', async () => {
+      testData.extendedForms.createPast(1, {
+        fields: [
+          testData.fields.repeat('/plot'),
+          testData.fields.geopoint('/plot/plotpoint')
+        ]
+      });
+      const component = await load('/projects/1/forms/f/submissions', { root: false });
+      component.findComponent(RadioButtons).exists().should.be.false;
+    });
+
     it('disables the toggle if there is an encrypted submission', async () => {
       testData.extendedForms.createPast(1, {
         fields: [mypoint],

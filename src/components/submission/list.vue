@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-refresh"></span>{{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
-        <radio-buttons v-if="!draft && fields.dataExists && fields.hasGeo"
+        <radio-buttons v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted"
           :disabled-message="$t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
@@ -199,7 +199,7 @@ export default {
     });
     watchEffect(() => {
       if (dataView.value === 'map' &&
-        ((fields.dataExists && !fields.hasGeo) || props.encrypted))
+        ((fields.dataExists && !fields.hasMappable) || props.encrypted))
         dataView.value = 'table';
     });
 
