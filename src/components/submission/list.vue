@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-refresh"></span>{{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
         </button>
-        <radio-buttons v-if="!draft && fields.dataExists && fields.hasMappable"
+        <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted"
           :disabled-message="$t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
@@ -93,7 +93,7 @@ import { computed, shallowRef, watch, watchEffect } from 'vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
-import RadioButtons from '../radio-buttons.vue';
+import RadioField from '../radio-field.vue';
 import SubmissionDelete from './delete.vue';
 import SubmissionDownload from './download.vue';
 import SubmissionDownloadButton from './download-button.vue';
@@ -122,7 +122,7 @@ export default {
   components: {
     EnketoFill,
     Loading,
-    RadioButtons,
+    RadioField,
     Spinner,
     SubmissionDelete,
     SubmissionDownload,
@@ -502,7 +502,7 @@ export default {
   ~ #submission-download-button { margin-left: 0; }
 }
 
-#submission-list .radio-buttons { margin-left: auto; }
+#submission-list .radio-field { margin-left: auto; }
 
 #submission-table:has(tbody tr) + .empty-table-message {
   display: none;

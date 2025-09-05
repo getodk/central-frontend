@@ -1,10 +1,10 @@
-import RadioButtons from '../../src/components/radio-buttons.vue';
+import RadioField from '../../src/components/radio-field.vue';
 
 import { mount } from '../util/lifecycle';
 
-describe('RadioButtons', () => {
+describe('RadioField', () => {
   it('uses the options prop', () => {
-    const component = mount(RadioButtons, {
+    const component = mount(RadioField, {
       props: {
         options: [
           { value: 'jan', text: 'January' },
@@ -22,7 +22,7 @@ describe('RadioButtons', () => {
   });
 
   it('uses the modelValue prop', async () => {
-    const component = mount(RadioButtons, {
+    const component = mount(RadioField, {
       props: {
         // Using numeric values, not string, in order to confirm that values are
         // not converted to string in all circumstances.
@@ -38,7 +38,7 @@ describe('RadioButtons', () => {
   });
 
   it('uses the disabled prop', () => {
-    const component = mount(RadioButtons, {
+    const component = mount(RadioField, {
       props: {
         options: [{ value: 1, text: 'one' }, { value: 2, text: 'two' }],
         modelValue: 1,

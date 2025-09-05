@@ -1,7 +1,7 @@
 import { F } from 'ramda';
 
 import GeojsonMap from '../../../src/components/geojson-map.vue';
-import RadioButtons from '../../../src/components/radio-buttons.vue';
+import RadioField from '../../../src/components/radio-field.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
 
 import testData from '../../data';
@@ -12,7 +12,7 @@ import { mockLogin } from '../../util/session';
 import { setLuxon } from '../../util/date-time';
 
 const findToggle = (component) =>
-  component.getComponent(SubmissionList).findComponent(RadioButtons);
+  component.getComponent(SubmissionList).findComponent(RadioField);
 const toggleView = (view) => (app) =>
   findToggle(app).get(`input[type="radio"][value="${view}"]`).setChecked();
 

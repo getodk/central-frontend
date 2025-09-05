@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="radio-buttons btn-group"
+  <div class="radio-field btn-group"
     v-tooltip.no-aria="disabled ? disabledMessage : null">
     <div v-for="{ value, text } of options" :key="value" class="radio"
       :class="{ disabled }">
@@ -45,7 +45,5 @@ const props = defineProps({
 const id = nextId;
 nextId += 1;
 const disabledMessageId = computed(() =>
-  (props.disabled && props.disabledMessage != null
-    ? `radio-buttons-disabled${id}`
-    : null));
+  (props.disabled && props.disabledMessage != null ? `radio-field-disabled${id}` : null));
 </script>
