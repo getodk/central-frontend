@@ -109,10 +109,13 @@ describe('SubmissionMapView', () => {
   });
 
   describe('filters', () => {
-    it('passes filters through to the request', () => {
+    beforeEach(() => {
       setLuxon({ defaultZoneName: 'UTC' });
       testData.extendedForms.createPast(1, { fields: [mypoint] });
-      return load('/projects/1/forms/f/submissions?map=true&submitterId=1&submitterId=2&start=1970-01-01&end=1970-01-02&reviewState=%27approved%27&reviewState=null')
+    });
+
+    it('passes filters through to the request', () =>
+      load('/projects/1/forms/f/submissions?map=true&submitterId=1&submitterId=2&start=1970-01-01&end=1970-01-02&reviewState=%27approved%27&reviewState=null')
         .testRequestsInclude([{
           url: ({ pathname, searchParams }) => {
             pathname.should.equal('/v1/projects/1/forms/f/submissions.geojson');
@@ -121,12 +124,10 @@ describe('SubmissionMapView', () => {
             searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
             searchParams.getAll('reviewState').should.eql(['approved', 'null']);
           }
-        }]);
-    });
+        }]));
 
-    it('refreshes the map after a filter changes', () => {
-      testData.extendedForms.createPast(1, { fields: [mypoint] });
-      return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
+    it('refreshes the map after a filter changes', () =>
+      load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
         .complete()
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeEachResponse((app, { url }) => {
@@ -136,13 +137,15 @@ describe('SubmissionMapView', () => {
         .respondWithData(testData.submissionGeojson)
         .afterResponse(app => {
           app.find('.geojson-map').exists().should.be.true;
-        });
-    });
+        }));
   });
 
   describe('deleted submissions', () => {
-    it('shows a map for deleted submissions', () => {
+    beforeEach(() => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
+    });
+
+    it('shows a map for deleted submissions', () => {
       testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?map=true&deleted=true')
         .testRequestsInclude([{
@@ -154,7 +157,6 @@ describe('SubmissionMapView', () => {
     });
 
     it('preserves map view while toggling deleted submissions', () => {
-      testData.extendedForms.createPast(1, { fields: [mypoint] });
       testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?map=true&reviewState=null')
         .complete()
@@ -180,9 +182,12 @@ describe('SubmissionMapView', () => {
   });
 
   describe('after the Refresh button is clicked', () => {
-    it('sends the correct requests', () => {
+    beforeEach(() => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
-      return load('/projects/1/forms/f/submissions?map=true')
+    });
+
+    it('sends the correct requests', () =>
+      load('/projects/1/forms/f/submissions?map=true')
         .complete()
         .request(app =>
           app.get('#submission-list-refresh-button').trigger('click'))
@@ -198,11 +203,9 @@ describe('SubmissionMapView', () => {
               searchParams.get('$top').should.equal('0');
             }
           }
-        ]);
-    });
+        ]));
 
     it('updates the map', () => {
-      testData.extendedForms.createPast(1, { fields: [mypoint] });
       testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
       const assertCount = (component, count) => {
         const { features } = component.getComponent(GeojsonMap).props();
