@@ -124,7 +124,7 @@ describe('SubmissionMapView', () => {
         }]);
     });
 
-    it('refreshes after a filter changes', () => {
+    it('refreshes the map after a filter changes', () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
       return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
         .complete()
