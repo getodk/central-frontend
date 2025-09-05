@@ -306,6 +306,12 @@ export default {
     },
     'odata.count': {
       handler() {
+        // Update this.formVersion.submissions to match this.odata.count.
+        // this.odata.count is more likely to be up-to-date, since it's
+        // refreshed more frequently. We don't update this.formVersion if
+        // this.odata is a subset of submissions. That includes when the map
+        // view sets this.odata, as some submissions might not have geo data and
+        // won't appear on the map.
         if (this.formVersion.dataExists && this.odata.dataExists &&
           this.dataView === 'table' && !this.odataFilter)
           this.formVersion.submissions = this.odata.count;
