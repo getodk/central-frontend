@@ -34,14 +34,14 @@ describe('SubmissionMapView', () => {
   describe('toggle', () => {
     it('shows the toggle if the form has a geo field', async () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
-      const component = await load('/projects/1/forms/f/submissions', { root: false });
-      findToggle(component).exists().should.be.true;
+      const app = await load('/projects/1/forms/f/submissions');
+      findToggle(app).exists().should.be.true;
     });
 
     it('does not show toggle if form does not have a geo field', async () => {
       testData.extendedForms.createPast(1);
-      const component = await load('/projects/1/forms/f/submissions', { root: false });
-      findToggle(component).exists().should.be.false;
+      const app = await load('/projects/1/forms/f/submissions');
+      findToggle(app).exists().should.be.false;
     });
 
     it('does not show toggle if the only geo field is in a repeat group', async () => {
@@ -51,14 +51,14 @@ describe('SubmissionMapView', () => {
           testData.fields.geopoint('/plot/plotpoint')
         ]
       });
-      const component = await load('/projects/1/forms/f/submissions', { root: false });
-      findToggle(component).exists().should.be.false;
+      const app = await load('/projects/1/forms/f/submissions');
+      findToggle(app).exists().should.be.false;
     });
 
     it('does not show toggle on Edit Form page', async () => {
       testData.extendedForms.createPast(1, { draft: true, fields: [mypoint] });
-      const component = await load('/projects/1/forms/f/draft', { root: false });
-      findToggle(component).exists().should.be.false;
+      const app = await load('/projects/1/forms/f/draft');
+      findToggle(app).exists().should.be.false;
     });
 
     it('disables the toggle if there is an encrypted submission', async () => {
@@ -66,8 +66,8 @@ describe('SubmissionMapView', () => {
         fields: [mypoint],
         key: testData.standardKeys.createPast(1, { managed: true }).last()
       });
-      const component = await load('/projects/1/forms/f/submissions', { root: false });
-      findToggle(component).props().disabled.should.be.true;
+      const app = await load('/projects/1/forms/f/submissions');
+      findToggle(app).props().disabled.should.be.true;
     });
 
     it('switches to map view', () => {
@@ -111,8 +111,8 @@ describe('SubmissionMapView', () => {
     testData.extendedForms.createPast(1, { fields: [mypoint] });
     return load('/projects/1/forms/f/submissions?map=true')
       .testRequestsInclude([{ url: '/v1/projects/1/forms/f/submissions.geojson' }])
-      .afterResponses(component => {
-        getView(component).should.equal('map');
+      .afterResponses(app => {
+        getView(app).should.equal('map');
       });
   });
 
@@ -223,8 +223,8 @@ describe('SubmissionMapView', () => {
 
     it('updates the map', () => {
       testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
-      const assertCount = (component, count) => {
-        const { features } = component.getComponent(GeojsonMap).props();
+      const assertCount = (app, count) => {
+        const { features } = app.getComponent(GeojsonMap).props();
         features.length.should.equal(count);
       };
       return load('/projects/1/forms/f/submissions?map=true')
