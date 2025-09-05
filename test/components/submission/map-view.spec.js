@@ -109,37 +109,6 @@ describe('SubmissionMapView', () => {
         });
     });
 
-    it('redirects from the map if the form does not have a geo field', () => {
-      testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f/submissions?map=true')
-        .testRequestsInclude([
-          { url: '/v1/projects/1/forms/f/submissions.geojson' },
-          {
-            url: ({ pathname, searchParams }) => {
-              pathname.should.equal('/v1/projects/1/forms/f.svc/Submissions');
-              // Check that it's not the request for deletedSubmissionCount,
-              // where $top=0.
-              searchParams.get('$top').should.equal('250');
-            }
-          }
-        ])
-        .afterResponses(app => {
-          app.find('#submission-table').exists().should.be.true;
-          app.find('.geojson-map').exists().should.be.false;
-          should.not.exist(app.vm.$route.query.map);
-        });
-    });
-
-    it('redirects from map if there is an encrypted submission', async () => {
-      testData.extendedForms.createPast(1, {
-        key: testData.standardKeys.createPast(1, { managed: true }).last()
-      });
-      const app = await load('/projects/1/forms/f/submissions?map=true');
-      app.find('#submission-table').exists().should.be.true;
-      app.find('.geojson-map').exists().should.be.false;
-      should.not.exist(app.vm.$route.query.map);
-    });
-
     it('ignores ?map=true for a form draft', () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
       return load('/projects/1/forms/f/draft?map=true')

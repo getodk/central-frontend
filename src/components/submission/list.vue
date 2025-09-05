@@ -88,7 +88,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { computed, shallowRef, watch, watchEffect } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -196,11 +196,6 @@ export default {
     const dataView = computed({
       get: () => (mapQuery.value && !props.draft ? 'map' : 'table'),
       set: (value) => { mapQuery.value = value === 'map'; }
-    });
-    watchEffect(() => {
-      if (dataView.value === 'map' &&
-        ((fields.dataExists && !fields.hasMappable) || props.encrypted))
-        dataView.value = 'table';
     });
 
     const { request } = useRequest();
