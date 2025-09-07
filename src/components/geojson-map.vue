@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { shallowRef, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   features: {
@@ -31,7 +31,7 @@ const props = defineProps({
   }
 });
 
-const json = shallowRef(null);
+const json = ref(null);
 const showJson = () => { json.value = JSON.stringify(props.features, null, 2); };
 watch(() => props.features, () => { json.value = null; });
 </script>
