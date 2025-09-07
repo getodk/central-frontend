@@ -66,8 +66,7 @@ except according to the terms contained in the LICENSE file.
         @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
-        :filter="geojsonFilter"
-        :refreshing="refreshing" :total-count="formVersion.submissions"/>
+        :filter="geojsonFilter" :refreshing="refreshing"/>
       <p v-show="emptyTableMessage" class="empty-table-message">
         {{ emptyTableMessage }}
       </p>

@@ -13,8 +13,8 @@ except according to the terms contained in the LICENSE file.
   <geojson-map v-if="geojson.dataExists && geojson.features.length !== 0"
     :features="geojson.features"/>
   <odata-loading-message type="submission" :odata="geojson"
-    :filter="filter != null" :refreshing="refreshing"
-    :total-count="totalCount" :top="totalCount"/>
+    :filter="filter != null" :refreshing="refreshing" :total-count="0"
+    :top="0"/>
 </template>
 
 <script setup>
@@ -46,11 +46,7 @@ const props = defineProps({
   filter: Object,
 
   // Loading message
-  refreshing: Boolean,
-  totalCount: {
-    type: Number,
-    default: 0
-  }
+  refreshing: Boolean
 });
 
 const { odata, createResource } = useRequestData();
