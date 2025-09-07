@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <p>GeoJSON loaded!</p>
 
     <button v-if="json == null" type="button" class="btn btn-primary"
-      @click="setJson">
+      @click="showJson">
       Show JSON
     </button>
     <pre v-else><code>{{ json }}</code></pre>
@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { shallowRef } from 'vue';
+import { shallowRef, watch } from 'vue';
 
 const props = defineProps({
   features: {
@@ -32,5 +32,6 @@ const props = defineProps({
 });
 
 const json = shallowRef(null);
-const setJson = () => { json.value = JSON.stringify(props.features, null, 2); };
+const showJson = () => { json.value = JSON.stringify(props.features, null, 2); };
+watch(() => props.features, () => { json.value = null; });
 </script>
