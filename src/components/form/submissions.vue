@@ -27,15 +27,15 @@ except according to the terms contained in the LICENSE file.
             </button>
           </template>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <odata-data-access :analyze-disabled="analyzeDisabled"
+          <odata-data-access :analyze-disabled="hasEncryption || deleted"
             :analyze-disabled-message="analyzeDisabledMessage"
             @analyze="analyzeModal.show()"/>
         </div>
         </template>
       <template #body>
         <submission-list ref="submissionList" :project-id="projectId"
-          :xml-form-id="xmlFormId" :deleted="deleted" @fetch-keys="fetchKeys"
-          @fetch-deleted-count="fetchDeletedCount"/>
+          :xml-form-id="xmlFormId" :deleted="deleted" :encrypted="hasEncryption"
+          @fetch-keys="fetchKeys" @fetch-deleted-count="fetchDeletedCount"/>
       </template>
     </page-section>
     <odata-analyze v-bind="analyzeModal" :odata-url="odataUrl"
@@ -116,20 +116,18 @@ export default {
         this.project.permits('submission.create') && this.form.dataExists;
     },
     /*
-    Disable the "Analyze via OData" button if:
+    Disable some functionality (e.g., the "Analyze via OData" button) if:
 
       - There are encrypted submissions, or
       - There are no submissions yet, but the form is encrypted. In that case,
         there will never be decrypted submissions available to OData (as long as
-        the form remains encrypted), or
-      - Showing deleted Submissions
+        the form remains encrypted).
     */
-    analyzeDisabled() {
+    hasEncryption() {
       if (this.keys.dataExists && this.keys.length !== 0) return true;
       if (this.form.dataExists && this.form.keyId != null &&
         this.form.submissions === 0)
         return true;
-      if (this.deleted) return true;
       return false;
     },
     analyzeDisabledMessage() {
@@ -167,8 +165,11 @@ export default {
       }).catch(noop);
     },
     toggleDeleted() {
-      const { path } = this.$route;
-      this.$router.push(this.deleted ? path : `${path}?deleted=true`);
+      const query = {};
+      if (!this.deleted) query.deleted = 'true';
+      if (this.$route.query.map === 'true') query.map = 'true';
+
+      this.$router.push({ path: this.$route.path, query });
     }
   }
 };

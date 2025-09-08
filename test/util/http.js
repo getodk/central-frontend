@@ -462,7 +462,10 @@ class MockHttp {
         if (Array.isArray(response)) {
           return series.respondIf(
             response[0],
-            () => mockResponse.of((option ?? response[1])())
+            (config) => {
+              const f = option ?? response[1];
+              return mockResponse.of(f(config));
+            }
           );
         }
         throw new Error(`invalid response for component ${componentName}`);
@@ -699,7 +702,7 @@ class MockHttp {
       let isOrdered = false;
       for (const [i, [f, ifCallback]] of this._respondIf.entries()) {
         if (!respondedIf.has(i) && f(config)) {
-          responseCallback = ifCallback;
+          responseCallback = () => ifCallback(config);
           respondedIf.add(i);
           break;
         }

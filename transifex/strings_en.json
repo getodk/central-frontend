@@ -907,6 +907,9 @@
     "loading": {
       "string": "Loading…"
     },
+    "map": {
+      "string": "Map"
+    },
     "no": {
       "string": "No"
     },
@@ -936,6 +939,9 @@
         "string": "Settings",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "table": {
+      "string": "Table"
     },
     "total": {
       "string": "Total"
@@ -4930,6 +4936,9 @@
       },
       "filterDisabledMessage": {
         "string": "Filtering is unavailable for deleted Submissions"
+      },
+      "noMapEncryption": {
+        "string": "Map is unavailable due to Form encryption"
       },
       "deletedSubmission": {
         "emptyTable": {

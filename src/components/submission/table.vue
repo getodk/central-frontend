@@ -98,6 +98,8 @@ defineExpose({ afterReview, afterDelete });
 @import '../../assets/scss/mixins';
 
 #submission-table {
+  table:has(tbody:empty) { display: none; }
+
   .table-freeze-scrolling {
     th, td {
       @include text-overflow-ellipsis;
