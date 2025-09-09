@@ -3,6 +3,7 @@ import { getLabelElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
 import type { ItemsetDefinition } from '../body/control/ItemsetDefinition.ts';
 import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
+import { isTranslationExpression } from '../xpath/semantic-analysis.ts';
 import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';
 
 interface LabelElement extends LocalNamedElement<'label'> {}
@@ -20,6 +21,7 @@ export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 
 	readonly role = 'item-label';
 	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
+	readonly messageExpression: string | null = null;
 
 	private constructor(form: XFormDefinition, owner: ItemsetDefinition, element: LabelElement) {
 		super(form, owner, element);
@@ -30,9 +32,10 @@ export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 			throw new Error('<itemset><label> missing ref attribute');
 		}
 
-		const expression = TextChunkExpression.fromTranslation(this, refExpression);
-		if (expression != null) {
-			this.chunks = [expression];
+		if (isTranslationExpression(refExpression)) {
+			this.isTranslated = true;
+			this.messageExpression = /jr:itext\((.*)\)/.exec(refExpression)?.[1]!; // TODO it must match because of isTranslationExpression
+			this.chunks = [];
 		} else {
 			this.chunks = [TextChunkExpression.fromReference(this, refExpression)];
 		}

@@ -63,6 +63,13 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
 		return new TextChunkExpression(context, 'string', element.getAttribute('value'), 'output');
 	}
 
+	static fromImage(
+		context: AnyTextRangeDefinition,
+		url: string
+	): TextChunkExpression<'string'> {
+		return new TextChunkExpression(context, 'string', 'null', 'image', {}, url);
+	}
+
 	static fromTranslation(
 		context: AnyTextRangeDefinition,
 		maybeExpression: string

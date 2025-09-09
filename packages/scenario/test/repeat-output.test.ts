@@ -316,7 +316,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					).toBe('Position: 2');
 				});
 
-				it.fails(
+				it(
 					'produces the output of an expression with a relative reference (alternate #2)',
 					async () => {
 						const scenario = await Scenario.init(

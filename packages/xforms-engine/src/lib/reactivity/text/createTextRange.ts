@@ -5,10 +5,11 @@ import type { TextRole } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
-import { isEngineXPathElement } from '../../../integration/xpath/adapter/kind.ts';
-import { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
 import { type TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
+import { TextElementDefinition } from '../../../parse/text/abstract/TextElementDefinition.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
+import { ItemsetLabelDefinition } from '../../../parse/text/ItemsetLabelDefinition.ts';
+import { MessageDefinition } from '../../../parse/text/MessageDefinition.ts';
 import { createComputedExpression } from '../createComputedExpression.ts';
 
 interface ChunksAndMedia {
@@ -25,17 +26,35 @@ interface ChunksAndMedia {
  * @param chunkExpressions - Array of text source expressions to process.
  * @returns An accessor for an object with all chunks and the first image (if any).
  */
-const createTextChunks = (
+const createTextChunks = <Role extends TextRole>(
 	context: EvaluationContext,
-	chunkExpressions: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>
+	definition: TextRangeDefinition<Role>
 ): Accessor<ChunksAndMedia> => {
 	return createMemo(() => {
 		const chunks: TextChunk[] = [];
 		const mediaSources: MediaSources = {};
 
+		let chunkExpressions: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
+
+		if (definition.isTranslated) {
+			if (definition instanceof MessageDefinition || definition instanceof ItemsetLabelDefinition || definition instanceof TextElementDefinition) {
+				const itextId = context.evaluator.evaluateString(definition.messageExpression!, { contextNode: context.contextNode });
+				chunkExpressions = definition.form.model.getTranslationChunks(itextId, context.getActiveLanguage());
+			} else {
+				throw new Error('TODO Unsupported definition type');
+			}
+		} else {
+			chunkExpressions = definition.chunks;
+		}
+
 		chunkExpressions.forEach((chunkExpression) => {
 			if (chunkExpression.source === 'literal') {
 				chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
+				return;
+			}
+
+			if (chunkExpression.source === 'image') {
+				mediaSources['image'] = JRResourceURL.from(chunkExpression.stringValue);
 				return;
 			}
 
@@ -48,20 +67,8 @@ const createTextChunks = (
 			} else {
 				// translation expression evaluates to an entire itext block, process forms separately
 				computed.forEach((itextForm) => {
-					if (isEngineXPathElement(itextForm) && itextForm instanceof StaticElement) {
-						const formAttribute = itextForm.getAttributeValue('form');
-
-						if (!formAttribute) {
-							const defaultFormValue = itextForm.getXPathValue();
-							chunks.push(new TextChunk(context, chunkExpression.source, defaultFormValue));
-						} else if (['image', 'video', 'audio'].includes(formAttribute)) {
-							const formValue = itextForm.getXPathValue();
-
-							if (JRResourceURL.isJRResourceReference(formValue)) {
-								mediaSources[formAttribute as keyof MediaSources] = JRResourceURL.from(formValue);
-							}
-						}
-					}
+					const defaultFormValue = itextForm.getXPathValue();
+					chunks.push(new TextChunk(context, chunkExpression.source, defaultFormValue));
 				});
 			}
 		});
@@ -86,7 +93,7 @@ export const createTextRange = <Role extends TextRole>(
 	definition: TextRangeDefinition<Role>
 ): ComputedFormTextRange<Role> => {
 	return context.scope.runTask(() => {
-		const textChunks = createTextChunks(context, definition.chunks);
+		const textChunks = createTextChunks(context, definition);
 
 		return createMemo(() => {
 			const chunks = textChunks();

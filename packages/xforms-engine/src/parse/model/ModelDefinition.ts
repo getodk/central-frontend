@@ -1,5 +1,8 @@
+import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
+import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
+import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocumentFromDOMSubtree.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
@@ -17,6 +20,9 @@ export class ModelDefinition {
 	readonly instance: StaticDocument;
 	readonly itextTranslations: ItextTranslationsDefinition;
 
+	// TODO move this into the ItextTranslationsDefinition
+	readonly itextChunks: Map<string, Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>>> = new Map();
+
 	constructor(readonly form: XFormDefinition) {
 		const submission = new SubmissionDefinition(form.xformDOM);
 
@@ -27,6 +33,39 @@ export class ModelDefinition {
 		this.root = new RootDefinition(form, this, submission, form.body.classes);
 		this.nodes = nodeDefinitionMap(this.root);
 		this.itextTranslations = ItextTranslationsDefinition.from(form.xformDOM);
+		this.getITextChunks();
+	}
+
+	getITextChunks() {
+		this.form.xformDOM.itextTranslationElements.forEach((itextTranslationElement) => {
+			const lang = itextTranslationElement.attributes.getNamedItem('lang')?.value ?? 'default';
+			this.itextChunks.set(lang, new Map());
+
+			for (const element of itextTranslationElement.children) {
+				const id = element.getAttribute('id');
+				const chunks: TextChunkExpression<'nodes' | 'string'>[] = [];
+				for (const val of element.childNodes!) {
+					for (const child of val.childNodes)	{
+						if (isElementNode(child)) {
+							const output = TextChunkExpression.fromOutput(this.root, child);
+							if (output) {
+								chunks.push(output);
+							}
+						}
+
+						if (isTextNode(child)) {
+							const formAttribute = child.parentElement!.getAttribute('form');
+							if (formAttribute === 'image') { // TODO also video and audio
+								chunks.push(TextChunkExpression.fromImage(this.root, child.data));
+							} else {
+								chunks.push(TextChunkExpression.fromLiteral(this.root, child.data));
+							}
+						}
+					}
+				}
+				this.itextChunks.get(lang)!.set(id!, chunks);
+			}
+		});
 	}
 
 	getNodeDefinition(nodeset: string): AnyNodeDefinition {
@@ -53,5 +92,9 @@ export class ModelDefinition {
 		const { form, ...rest } = this;
 
 		return rest;
+	}
+
+	getTranslationChunks(itextId: string, language: ActiveLanguage): ReadonlyArray<TextChunkExpression<'nodes' | 'string'>> {
+		return this.itextChunks.get(language.language)?.get(itextId)!;
 	}
 }
