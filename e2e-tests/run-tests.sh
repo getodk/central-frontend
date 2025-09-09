@@ -67,7 +67,7 @@ if [[ ${CI-} = true ]]; then
 fi
 
 log "Installing npm packages..."
-npm install
+npm ci
 
 cd e2e-tests
 log "Playwright: $(npx playwright --version)"
