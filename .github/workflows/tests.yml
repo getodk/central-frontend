@@ -21,7 +21,7 @@ jobs:
         fetch-depth: 0
     - name: Clone getodk/central repo
       run: |
-        git clone -b next https://github.com/getodk/central.git
+        git clone --depth 1 --single-branch --branch next https://github.com/getodk/central.git
         cd central
         git submodule set-branch -b master server
         git submodule update --init --remote server
