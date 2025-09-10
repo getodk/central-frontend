@@ -48,22 +48,13 @@ watch(() => redAlert.messageId, () => {
 
 <style lang="scss">
 @import '../assets/scss/variables';
+@import '../assets/scss/mixins';
 
 #alerts {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  position: fixed;
-  left: 10vw;
-  width: 80vw;
-  bottom: 34px;
-  z-index: $z-index-toast;
-  pointer-events: none;
+  @include floating-container;
 
   .alert {
     margin-bottom: 0;
-    pointer-events: auto;
   }
 }
 </style>

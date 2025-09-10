@@ -464,6 +464,10 @@
     "collapse": {
       "string": "Collapse",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "Select row",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -2210,6 +2214,12 @@
       "alert": {
         "delete": {
           "string": "Entity “{label}” has been deleted."
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {{count} Entity successfully deleted.} other {{count} Entities successfully deleted.}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {{count} Entity successfully restored.} other {{count} Entities successfully restored.}}"
         }
       },
       "filterDisabledMessage": {
@@ -2230,6 +2240,11 @@
         },
         "allRestoredOnPage": {
           "string": "All Entities on the page have been restored."
+        }
+      },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {{count} Entity selected} other {{count} Entities selected}}"
         }
       },
       "action": {

@@ -227,7 +227,8 @@
     "expand": "Expand",
     "collapse": "Collapse",
     // @transifexKey component.FormTrashRow.action.restore
-    "restore": "Restore"
+    "restore": "Restore",
+    "selectRow": "Select row"
   },
   "field": {
     "comment": "Leave a comment…",

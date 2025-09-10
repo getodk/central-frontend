@@ -23,7 +23,8 @@ const transformValue = (data, config) => {
     ...entity,
     __system: {
       ...entity.__system,
-      rowNumber: count - skip - index
+      rowNumber: count - skip - index,
+      selected: false
     }
   }));
 };

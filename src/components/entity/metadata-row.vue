@@ -10,8 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="entity-metadata-row">
+  <tr class="entity-metadata-row" :class="{ 'entity-row-selected': entity.__system.selected }">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
+    <td v-if="!deleted">
+      <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
+    </td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
@@ -103,6 +106,7 @@ const props = defineProps({
   },
   awaitingResponse: Boolean
 });
+defineEmits(['selectionChanged']);
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
 
@@ -116,6 +120,12 @@ const { entityPath } = useRoutes();
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
+
+
+.entity-row-selected {
+  background-color: $color-selected-row;
+}
 
 .entity-metadata-row {
   .creator-name {
