@@ -1,4 +1,4 @@
-import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import { JRResourceURL, type JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRole } from '../../../client/TextRange.ts';
@@ -6,10 +6,7 @@ import type { EvaluationContext } from '../../../instance/internal-api/Evaluatio
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
 import { type TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
-import { TextElementDefinition } from '../../../parse/text/abstract/TextElementDefinition.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
-import { ItemsetLabelDefinition } from '../../../parse/text/ItemsetLabelDefinition.ts';
-import { MessageDefinition } from '../../../parse/text/MessageDefinition.ts';
 import { createComputedExpression } from '../createComputedExpression.ts';
 
 interface ChunksAndMedia {
@@ -36,25 +33,21 @@ const createTextChunks = <Role extends TextRole>(
 
 		let chunkExpressions: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
-		if (definition.isTranslated) {
-			if (definition instanceof MessageDefinition || definition instanceof ItemsetLabelDefinition || definition instanceof TextElementDefinition) {
-				const itextId = context.evaluator.evaluateString(definition.messageExpression!, { contextNode: context.contextNode });
-				chunkExpressions = definition.form.model.getTranslationChunks(itextId, context.getActiveLanguage());
-			} else {
-				throw new Error('TODO Unsupported definition type');
-			}
+		if (definition.isTranslated && definition.chunks[0] && definition.chunks[0].source === 'translation') {
+			const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, { contextNode: context.contextNode });
+			chunkExpressions = definition.form.model.getTranslationChunks(itextId, context.getActiveLanguage());
 		} else {
 			chunkExpressions = definition.chunks;
 		}
 
 		chunkExpressions.forEach((chunkExpression) => {
-			if (chunkExpression.source === 'literal') {
-				chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
+			if (chunkExpression.resourceType) {
+				mediaSources[chunkExpression.resourceType] = JRResourceURL.from(chunkExpression.stringValue as JRResourceURLString);
 				return;
 			}
 
-			if (chunkExpression.source === 'image') {
-				mediaSources['image'] = JRResourceURL.from(chunkExpression.stringValue);
+			if (chunkExpression.source === 'literal') {
+				chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
 				return;
 			}
 
@@ -65,11 +58,7 @@ const createTextChunks = <Role extends TextRole>(
 				chunks.push(new TextChunk(context, chunkExpression.source, computed));
 				return;
 			} else {
-				// translation expression evaluates to an entire itext block, process forms separately
-				computed.forEach((itextForm) => {
-					const defaultFormValue = itextForm.getXPathValue();
-					chunks.push(new TextChunk(context, chunkExpression.source, defaultFormValue));
-				});
+				throw new Error('should not get here');
 			}
 		});
 

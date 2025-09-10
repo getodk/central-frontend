@@ -1,3 +1,4 @@
+import { isResourceType, type JRResourceURLString, type ResourceType } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
@@ -47,7 +48,7 @@ export class ModelDefinition {
 				for (const val of element.childNodes!) {
 					for (const child of val.childNodes)	{
 						if (isElementNode(child)) {
-							const output = TextChunkExpression.fromOutput(this.root, child);
+							const output = TextChunkExpression.fromOutput(child);
 							if (output) {
 								chunks.push(output);
 							}
@@ -55,10 +56,10 @@ export class ModelDefinition {
 
 						if (isTextNode(child)) {
 							const formAttribute = child.parentElement!.getAttribute('form');
-							if (formAttribute === 'image') { // TODO also video and audio
-								chunks.push(TextChunkExpression.fromImage(this.root, child.data));
+							if (isResourceType(formAttribute as ResourceType)) {
+								chunks.push(TextChunkExpression.fromResource(child.data as JRResourceURLString, formAttribute as ResourceType));
 							} else {
-								chunks.push(TextChunkExpression.fromLiteral(this.root, child.data));
+								chunks.push(TextChunkExpression.fromLiteral(child.data));
 							}
 						}
 					}

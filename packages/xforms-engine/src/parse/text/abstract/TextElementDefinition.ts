@@ -4,7 +4,6 @@ import type { XFormDefinition } from '../../../parse/XFormDefinition.ts';
 import type { ItemDefinition } from '../../body/control/ItemDefinition.ts';
 import { TextChunkExpression } from '../../expression/TextChunkExpression.ts';
 import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
-import { isTranslationExpression } from '../../xpath/semantic-analysis.ts';
 import type { HintDefinition } from '../HintDefinition.ts';
 import type { ItemLabelDefinition } from '../ItemLabelDefinition.ts';
 import type { ItemsetLabelDefinition } from '../ItemsetLabelDefinition.ts';
@@ -18,7 +17,6 @@ export abstract class TextElementDefinition<
 	Role extends ElementTextRole,
 > extends TextRangeDefinition<Role> {
 	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
-	readonly messageExpression: string | null = null;
 
 	constructor(form: XFormDefinition, owner: TextElementOwner, sourceNode: TextSourceNode<Role>) {
 		super(form, owner, sourceNode);
@@ -29,23 +27,22 @@ export abstract class TextElementDefinition<
 		if (refExpression == null) {
 			this.chunks = Array.from(sourceNode.childNodes).flatMap((childNode) => {
 				if (isElementNode(childNode)) {
-					return TextChunkExpression.fromOutput(context, childNode) ?? [];
+					return TextChunkExpression.fromOutput(childNode) ?? [];
 				}
 
 				if (isTextNode(childNode)) {
-					return TextChunkExpression.fromLiteral(context, childNode.data);
+					return TextChunkExpression.fromLiteral(childNode.data);
 				}
 
 				return [];
 			});
 		} else {
 
-			if (isTranslationExpression(refExpression)) {
-				this.isTranslated = true;
-				this.messageExpression = /jr:itext\((.*)\)/.exec(refExpression)?.[1]!; // TODO it must match because of isTranslationExpression
-				this.chunks = [];
+			const translationChunk = TextChunkExpression.fromTranslation(context, refExpression);
+			if (translationChunk) {
+				this.chunks = [translationChunk];
 			} else {
-				this.chunks = [TextChunkExpression.fromReference(context, refExpression)];
+				this.chunks = [TextChunkExpression.fromReference(refExpression)];
 			}
 		}
 	}

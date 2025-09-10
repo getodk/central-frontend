@@ -47,17 +47,15 @@ export class BindComputationExpression<
 			return null as BindComputationFactoryResult<Type>;
 		}
 
-		return new this(bind, computation, expression);
+		return new this(computation, expression);
 	}
 
 	readonly isDefaultExpression: boolean;
 
 	protected constructor(
-		bind: BindDefinition,
 		readonly computation: Computation,
 		expression: string | null
 	) {
-		const ignoreContextReference = computation === 'constraint';
 
 		let isDefaultExpression: boolean;
 		let resolvedExpression: string;
@@ -75,9 +73,7 @@ export class BindComputationExpression<
 			resolvedExpression = expression;
 		}
 
-		super(bind, bindComputationResultTypes[computation], resolvedExpression, {
-			ignoreContextReference,
-		});
+		super(bindComputationResultTypes[computation], resolvedExpression);
 
 		this.isDefaultExpression = isDefaultExpression;
 	}

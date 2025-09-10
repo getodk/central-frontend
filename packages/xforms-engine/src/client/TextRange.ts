@@ -63,8 +63,7 @@ export type TextChunkSource =
 	| 'literal'
 	| 'output'
 	| 'reference'
-	| 'translation'
-	| 'image'; // TODO replace this - probably it shouldn't be a TextChunkExpression, but a MediaChunkExpression or similar
+	| 'translation';
 
 /**
  * @todo This (and everything else to do with {@link TextRange}s is for

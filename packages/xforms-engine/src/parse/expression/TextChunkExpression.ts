@@ -1,11 +1,12 @@
+import type { JRResourceURLString, ResourceType } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { TextChunkSource } from '../../client/TextRange.ts';
 import type { AnyTextRangeDefinition } from '../text/abstract/TextRangeDefinition.ts';
-import { isTranslationExpression } from '../xpath/semantic-analysis.ts';
+import { getTranslationExpression } from '../xpath/semantic-analysis.ts';
 import { DependentExpression } from './abstract/DependentExpression.ts';
 
 interface TextChunkExpressionOptions {
-	readonly isTranslated?: true;
+	readonly type?: ResourceType;
 }
 
 interface OutputElement extends KnownAttributeLocalNamedElement<'output', 'value'> {}
@@ -18,66 +19,59 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
 	readonly source: TextChunkSource;
 	// Set for the literal source, blank otherwise
 	readonly stringValue: string;
+	readonly resourceType: ResourceType | null;
 
 	constructor(
-		context: AnyTextRangeDefinition,
 		resultType: T,
 		expression: string,
 		source: TextChunkSource,
+		literalValue = '',
 		options: TextChunkExpressionOptions = {},
-		literalValue = ''
 	) {
-		super(context, resultType, expression, {
-			semanticDependencies: {
-				translations: options.isTranslated,
-			},
-			ignoreContextReference: true,
-		});
+		super(resultType, expression);
 
+		this.resourceType = options.type ?? null;
 		this.source = source;
 		this.stringValue = literalValue;
 	}
 
 	static fromLiteral(
-		context: AnyTextRangeDefinition,
 		stringValue: string
 	): TextChunkExpression<'string'> {
-		return new TextChunkExpression(context, 'string', 'null', 'literal', {}, stringValue);
+		return new TextChunkExpression('string', 'null', 'literal', stringValue);
 	}
 
 	static fromReference(
-		context: AnyTextRangeDefinition,
 		ref: string
 	): TextChunkExpression<'string'> {
-		return new TextChunkExpression(context, 'string', ref, 'reference');
+		return new TextChunkExpression('string', ref, 'reference');
 	}
 
 	static fromOutput(
-		context: AnyTextRangeDefinition,
 		element: Element
 	): TextChunkExpression<'string'> | null {
 		if (!isOutputElement(element)) {
 			return null;
 		}
 
-		return new TextChunkExpression(context, 'string', element.getAttribute('value'), 'output');
+		return new TextChunkExpression('string', element.getAttribute('value'), 'output');
 	}
 
-	static fromImage(
-		context: AnyTextRangeDefinition,
-		url: string
+	static fromResource(
+		url: JRResourceURLString,
+		type: ResourceType
 	): TextChunkExpression<'string'> {
-		return new TextChunkExpression(context, 'string', 'null', 'image', {}, url);
+		return new TextChunkExpression('string', 'null', 'literal', url, { type });
 	}
 
 	static fromTranslation(
 		context: AnyTextRangeDefinition,
 		maybeExpression: string
 	): TextChunkExpression<'nodes'> | null {
-		if (isTranslationExpression(maybeExpression)) {
-			return new TextChunkExpression(context, 'nodes', maybeExpression, 'translation', {
-				isTranslated: true,
-			});
+		const translationExpression = getTranslationExpression(maybeExpression);
+		if (translationExpression) {
+			context.isTranslated = true;
+			return new TextChunkExpression('nodes', translationExpression, 'translation');
 		}
 
 		return null;

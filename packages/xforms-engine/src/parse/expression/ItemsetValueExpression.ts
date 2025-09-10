@@ -6,6 +6,6 @@ export class ItemsetValueExpression extends DependentExpression<'string'> {
 		readonly itemset: ItemsetDefinition,
 		expression: string
 	) {
-		super(itemset, 'string', expression);
+		super('string', expression);
 	}
 }

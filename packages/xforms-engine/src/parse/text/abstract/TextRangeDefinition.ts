@@ -28,7 +28,7 @@ export abstract class TextRangeDefinition<Role extends TextRole> extends Depende
 
 	override get isTranslated(): boolean {
 		return (
-			this.ownerContext.isTranslated || this.chunks.some((chunk) => chunk.source === 'translation')
+			this.ownerContext.isTranslated || this.chunks.some((chunk) => chunk.source === 'translation') // TODO can remove the chunk check, right?
 		);
 	}
 

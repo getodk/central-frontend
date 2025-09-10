@@ -1,7 +1,6 @@
 import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import type { BindDefinition } from '../model/BindDefinition.ts';
-import { isTranslationExpression } from '../xpath/semantic-analysis.ts';
 import type { TextBindAttributeLocalName } from './abstract/TextRangeDefinition.ts';
 import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';
 
@@ -22,7 +21,6 @@ export class MessageDefinition<
 	}
 
 	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
-	readonly messageExpression: string | null = null;
 
 	private constructor(
 		bind: BindDefinition,
@@ -31,12 +29,11 @@ export class MessageDefinition<
 	) {
 		super(bind.form, bind, null);
 
-		if (isTranslationExpression(message)) {
-			this.isTranslated = true;
-			this.messageExpression = /jr:itext\((.*)\)/.exec(message)?.[1]!; // TODO it must match because of isTranslationExpression
-			this.chunks = [];
+		const translationChunk = TextChunkExpression.fromTranslation(this, message);
+		if (translationChunk) {
+			this.chunks = [translationChunk];
 		} else {
-			this.chunks = [TextChunkExpression.fromLiteral(this, message)];
+			this.chunks = [TextChunkExpression.fromLiteral(message)];
 		}
 	}
 }
