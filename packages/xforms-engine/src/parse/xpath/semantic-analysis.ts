@@ -143,9 +143,7 @@ export const isTranslationExpression = (
 	return isTranslationFunctionCall(functionCallNode);
 };
 
-export const getTranslationExpression = (
-	expression: string
-): string | null => {
+export const getTranslationExpression = (expression: string): string | null => {
 	const functionCallNode = findFunctionPrincipalExpressionNode(expression);
 	if (!functionCallNode) {
 		return null;

@@ -1,4 +1,8 @@
-import { isResourceType, type JRResourceURLString, type ResourceType } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import {
+	isResourceType,
+	type JRResourceURLString,
+	type ResourceType,
+} from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
@@ -22,7 +26,10 @@ export class ModelDefinition {
 	readonly itextTranslations: ItextTranslationsDefinition;
 
 	// TODO move this into the ItextTranslationsDefinition
-	readonly itextChunks: Map<string, Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>>> = new Map();
+	readonly itextChunks: Map<
+		string,
+		Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>>
+	> = new Map();
 
 	constructor(readonly form: XFormDefinition) {
 		const submission = new SubmissionDefinition(form.xformDOM);
@@ -46,7 +53,7 @@ export class ModelDefinition {
 				const id = element.getAttribute('id');
 				const chunks: TextChunkExpression<'nodes' | 'string'>[] = [];
 				for (const val of element.childNodes!) {
-					for (const child of val.childNodes)	{
+					for (const child of val.childNodes) {
 						if (isElementNode(child)) {
 							const output = TextChunkExpression.fromOutput(child);
 							if (output) {
@@ -57,7 +64,12 @@ export class ModelDefinition {
 						if (isTextNode(child)) {
 							const formAttribute = child.parentElement!.getAttribute('form');
 							if (isResourceType(formAttribute as ResourceType)) {
-								chunks.push(TextChunkExpression.fromResource(child.data as JRResourceURLString, formAttribute as ResourceType));
+								chunks.push(
+									TextChunkExpression.fromResource(
+										child.data as JRResourceURLString,
+										formAttribute as ResourceType
+									)
+								);
 							} else {
 								chunks.push(TextChunkExpression.fromLiteral(child.data));
 							}
@@ -95,7 +107,10 @@ export class ModelDefinition {
 		return rest;
 	}
 
-	getTranslationChunks(itextId: string, language: ActiveLanguage): ReadonlyArray<TextChunkExpression<'nodes' | 'string'>> {
+	getTranslationChunks(
+		itextId: string,
+		language: ActiveLanguage
+	): ReadonlyArray<TextChunkExpression<'nodes' | 'string'>> {
 		return this.itextChunks.get(language.language)?.get(itextId)!;
 	}
 }

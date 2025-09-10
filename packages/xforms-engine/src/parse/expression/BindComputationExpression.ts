@@ -56,7 +56,6 @@ export class BindComputationExpression<
 		readonly computation: Computation,
 		expression: string | null
 	) {
-
 		let isDefaultExpression: boolean;
 		let resolvedExpression: string;
 

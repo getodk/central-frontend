@@ -4,7 +4,7 @@ type JRResourceURLProtocol = typeof JR_RESOURCE_URL_PROTOCOL;
 export type JRResourceURLString = `${JRResourceURLProtocol}${string}`;
 
 const All_RESOURCE_TYPES = ['image', 'audio', 'video'] as const;
-export type ResourceType = typeof All_RESOURCE_TYPES[number];
+export type ResourceType = (typeof All_RESOURCE_TYPES)[number];
 
 export const isResourceType = (string: string): string is ResourceType => {
 	return All_RESOURCE_TYPES.includes(string as ResourceType);

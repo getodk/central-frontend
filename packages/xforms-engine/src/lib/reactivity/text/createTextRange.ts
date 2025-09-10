@@ -1,4 +1,7 @@
-import { JRResourceURL, type JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import {
+	JRResourceURL,
+	type JRResourceURLString,
+} from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRole } from '../../../client/TextRange.ts';
@@ -33,16 +36,27 @@ const createTextChunks = <Role extends TextRole>(
 
 		let chunkExpressions: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
-		if (definition.isTranslated && definition.chunks[0] && definition.chunks[0].source === 'translation') {
-			const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, { contextNode: context.contextNode });
-			chunkExpressions = definition.form.model.getTranslationChunks(itextId, context.getActiveLanguage());
+		if (
+			definition.isTranslated &&
+			definition.chunks[0] &&
+			definition.chunks[0].source === 'translation'
+		) {
+			const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
+				contextNode: context.contextNode,
+			});
+			chunkExpressions = definition.form.model.getTranslationChunks(
+				itextId,
+				context.getActiveLanguage()
+			);
 		} else {
 			chunkExpressions = definition.chunks;
 		}
 
 		chunkExpressions.forEach((chunkExpression) => {
 			if (chunkExpression.resourceType) {
-				mediaSources[chunkExpression.resourceType] = JRResourceURL.from(chunkExpression.stringValue as JRResourceURLString);
+				mediaSources[chunkExpression.resourceType] = JRResourceURL.from(
+					chunkExpression.stringValue as JRResourceURLString
+				);
 				return;
 			}
 

@@ -3,10 +3,7 @@ import type {
 	ConstantExpression,
 	ConstantTruthyExpression,
 } from '../../xpath/semantic-analysis.ts';
-import {
-	isConstantExpression,
-	isConstantTruthyExpression
-} from '../../xpath/semantic-analysis.ts';
+import { isConstantExpression, isConstantTruthyExpression } from '../../xpath/semantic-analysis.ts';
 
 const evaluatorMethodsByResultType = {
 	boolean: 'evaluateBoolean',

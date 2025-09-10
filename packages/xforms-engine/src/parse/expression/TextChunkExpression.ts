@@ -1,4 +1,7 @@
-import type { JRResourceURLString, ResourceType } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import type {
+	JRResourceURLString,
+	ResourceType,
+} from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { TextChunkSource } from '../../client/TextRange.ts';
 import type { AnyTextRangeDefinition } from '../text/abstract/TextRangeDefinition.ts';
@@ -26,7 +29,7 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
 		expression: string,
 		source: TextChunkSource,
 		literalValue = '',
-		options: TextChunkExpressionOptions = {},
+		options: TextChunkExpressionOptions = {}
 	) {
 		super(resultType, expression);
 
@@ -35,21 +38,15 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
 		this.stringValue = literalValue;
 	}
 
-	static fromLiteral(
-		stringValue: string
-	): TextChunkExpression<'string'> {
+	static fromLiteral(stringValue: string): TextChunkExpression<'string'> {
 		return new TextChunkExpression('string', 'null', 'literal', stringValue);
 	}
 
-	static fromReference(
-		ref: string
-	): TextChunkExpression<'string'> {
+	static fromReference(ref: string): TextChunkExpression<'string'> {
 		return new TextChunkExpression('string', ref, 'reference');
 	}
 
-	static fromOutput(
-		element: Element
-	): TextChunkExpression<'string'> | null {
+	static fromOutput(element: Element): TextChunkExpression<'string'> | null {
 		if (!isOutputElement(element)) {
 			return null;
 		}
@@ -57,10 +54,7 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
 		return new TextChunkExpression('string', element.getAttribute('value'), 'output');
 	}
 
-	static fromResource(
-		url: JRResourceURLString,
-		type: ResourceType
-	): TextChunkExpression<'string'> {
+	static fromResource(url: JRResourceURLString, type: ResourceType): TextChunkExpression<'string'> {
 		return new TextChunkExpression('string', 'null', 'literal', url, { type });
 	}
 
