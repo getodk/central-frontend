@@ -1461,4 +1461,33 @@ describe('EntityList', () => {
         headerCheckbox.element.checked.should.be.false;
       });
   });
+
+  it('preserves select all checkbox state when edit modal is cancelled', async () => {
+    createEntities(3);
+    const component = await loadEntityList();
+
+    const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+    await headerCheckbox.setValue(true);
+    headerCheckbox.element.checked.should.be.true;
+
+    await component.get('.entity-metadata-row:first-child .update-button').trigger('click');
+
+    await component.get('#entity-update .btn-link').trigger('click');
+
+    headerCheckbox.element.checked.should.be.true;
+  });
+
+  it('unchecks select all checkbox when action bar close button is pressed', async () => {
+    createEntities(3);
+    const component = await loadEntityList();
+
+    const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+    await headerCheckbox.setValue(true);
+    headerCheckbox.element.checked.should.be.true;
+
+    const actionBar = component.findComponent({ name: 'ActionBar' });
+    await actionBar.find('.close').trigger('click');
+
+    headerCheckbox.element.checked.should.be.false;
+  });
 });

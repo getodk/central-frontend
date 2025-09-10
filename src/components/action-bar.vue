@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div v-show="state" class="action-bar-container">
     <div class="action-bar" role="alert">
       <div class="close-container">
-        <button type="button" class="close" :aria-disabled="disableClose" @click="$emit('hide')">
+        <button type="button" class="close" :aria-disabled="disableClose"
+          :aria-label="$t('action.close')" @click="$emit('hide')">
           <span aria-hidden="true" class="icon-times-circle"></span>
         </button>
       </div>
@@ -54,7 +55,6 @@ defineEmits(['hide']);
     display: flex;
     align-items: center;
     border-radius: 4px;
-    pointer-events: auto;
 
     .message {
       flex-grow: 1;
@@ -66,11 +66,6 @@ defineEmits(['hide']);
     .close-container {
       flex-shrink: 0;
       justify-content: center;
-    }
-
-    .cta-container {
-      // Needed for Spinner
-      position: relative;
     }
 
     .cta-container {

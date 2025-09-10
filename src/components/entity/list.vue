@@ -30,8 +30,9 @@ except according to the terms contained in the LICENSE file.
       </teleport-if-exists>
     </div>
     <entity-table v-show="odataEntities.dataExists" ref="table"
-      :properties="dataset.properties"
-      :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
+      v-model:all-selected="allSelected"
+      :properties="dataset.properties" :deleted="deleted"
+      :awaiting-deleted-responses="awaitingResponses"
       @selection-changed="handleSelectionChange"
       @update="showUpdate"
       @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
@@ -219,7 +220,7 @@ export default {
       selectedEntities: new Set(),
       bulkOperationInProgress: false,
 
-      actionBarState: false
+      allSelected: false
     };
   },
   computed: {
@@ -261,6 +262,9 @@ export default {
       }
       return this.deleted ? this.$t('deletedEntity.emptyTable')
         : (this.odataFilter ? this.$t('noMatching') : this.$t('noEntities'));
+    },
+    actionBarState() {
+      return this.selectedEntities.size > 0 && !this.alert.state && !this.container.openModal.state;
     }
   },
   watch: {
@@ -287,7 +291,6 @@ export default {
     },
     'selectedEntities.size': {
       handler(size) {
-        this.actionBarState = size > 0;
         if (size > 0) {
           this.alert.last.hide();
         }
@@ -296,27 +299,20 @@ export default {
     // Hide the action bar if any alert is raised.
     'alert.state': {
       handler(state) {
-        if (state) {
-          this.actionBarState = false;
-        } else {
+        if (!state) {
           // since alert is hidden, we no longer need to keep bulkDeletedEntities list as there is
           // no longer a way to undo bulk delete
           this.bulkDeletedEntities.length = 0;
-          if (this.selectedEntities.size > 0) {
-            this.actionBarState = true;
-          }
         }
       }
     },
-    'container.openModal.state': {
-      handler(state) {
-        if (state) {
-          this.actionBarState = false;
-        } else if (this.selectedEntities.size > 0) {
-          this.actionBarState = true;
-        }
+    actionBarState(state) {
+      // only if all rows are unselected, this doesn't happen when a modal is shown
+      if (!state && this.selectedEntities.size === 0) {
+        this.allSelected = false;
       }
     }
+
   },
   created() {
     this.fetchChunk(true);
@@ -574,6 +570,7 @@ export default {
     clearSelectedEntities() {
       this.selectedEntities.clear();
       this.odataEntities.value?.forEach(e => { e.__system.selected = false; });
+      this.allSelected = false;
     },
     requestBulkDelete() {
       const uuids = Array.from(this.selectedEntities).map(e => e.__id);
@@ -588,6 +585,8 @@ export default {
           data: {
             ids: uuids
           }
+        }).finally(() => {
+          this.bulkOperationInProgress = false;
         });
       };
 
@@ -607,33 +606,29 @@ export default {
         .then(onSuccess)
         .catch((error) => {
           const { cta } = this.alert.danger(requestAlertMessage(this.$i18n, error));
-          cta(this.$t('action.tryAgain'), () => {
-            bulkDelete()
-              .then(() => {
-                onSuccess();
-                return true;
-              })
-              .catch(noop)
-              .finally(() => {
-                this.bulkOperationInProgress = false;
-              });
-          });
-        })
-        .finally(() => {
-          this.bulkOperationInProgress = false;
+          cta(this.$t('action.tryAgain'), () => bulkDelete()
+            .then(() => {
+              onSuccess();
+              return true;
+            })
+            .catch(noop));
         });
     },
     requestBulkRestore() {
-      this.bulkOperationInProgress = true;
       const uuids = this.bulkDeletedEntities.map(e => e.__id);
-      const bulkRestore = () => this.request({
-        method: 'POST',
-        url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-restore'),
-        alert: false,
-        data: {
-          ids: uuids
-        }
-      });
+      const bulkRestore = () => {
+        this.bulkOperationInProgress = true;
+        return this.request({
+          method: 'POST',
+          url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-restore'),
+          alert: false,
+          data: {
+            ids: uuids
+          }
+        }).finally(() => {
+          this.bulkOperationInProgress = false;
+        });
+      };
 
       const onSuccess = () => {
         this.bulkDeletedEntities.forEach(e => {
@@ -657,20 +652,12 @@ export default {
         .then(onSuccess)
         .catch((error) => {
           const { cta } = this.alert.danger(requestAlertMessage(this.$i18n, error));
-          cta(this.$t('action.tryAgain'), () => {
-            bulkRestore()
-              .then(() => {
-                onSuccess();
-                return true;
-              })
-              .catch(noop)
-              .finally(() => {
-                this.bulkOperationInProgress = false;
-              });
-          });
-        })
-        .finally(() => {
-          this.bulkOperationInProgress = false;
+          cta(this.$t('action.tryAgain'), () => bulkRestore()
+            .then(() => {
+              onSuccess();
+              return true;
+            })
+            .catch(noop));
         });
     },
     handleSelectionChange(entity, selected) {

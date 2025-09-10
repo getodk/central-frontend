@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
@@ -68,11 +68,11 @@ defineProps({
   awaitingDeletedResponses: {
     type: Set,
     required: true
-  }
+  },
+  allSelected: Boolean
 });
-const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionChanged']);
+const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionChanged', 'update:allSelected']);
 
-const allSelected = ref(false);
 
 // The component does not assume that this data will exist when the component is
 // created.
@@ -100,25 +100,18 @@ const handleSelectionChanged = (checked, index) => {
 
   // If unchecking any item, uncheck the header
   if (!checked) {
-    allSelected.value = false;
+    emit('update:allSelected', false);
   }
   emit('selectionChanged', data, checked);
 };
 
 const changeAllSelection = (checked) => {
-  allSelected.value = checked;
+  emit('update:allSelected', checked);
   odataEntities.value.forEach(e => {
     e.__system.selected = checked;
   });
   emit('selectionChanged', 'all', checked);
 };
-
-// When odatEntities change by deleting all rows or changing filters or page naviagation, etc,
-// we should unchecked allSelected checkbox
-watch(() => odataEntities.value, () => {
-  allSelected.value = false;
-});
-
 </script>
 
 <style lang="scss">

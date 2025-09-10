@@ -125,4 +125,6 @@
   bottom: 34px;
   z-index: $z-index-toast;
   pointer-events: none;
+
+  & > * { pointer-events: auto; }
 }

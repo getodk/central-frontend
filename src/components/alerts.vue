@@ -55,7 +55,6 @@ watch(() => redAlert.messageId, () => {
 
   .alert {
     margin-bottom: 0;
-    pointer-events: auto;
   }
 }
 </style>
