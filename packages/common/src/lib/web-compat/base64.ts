@@ -4,12 +4,10 @@ let base64Decode: Base64Decode;
 
 if (typeof atob === 'function') {
 	base64Decode = (base64) => {
-		const ascii = atob(base64);
+		const ascii: string = atob(base64);
 		return decodeURIComponent(
 			Array.from(ascii)
-				.map((char) => {
-					return '%' + char.charCodeAt(0).toString(16).padStart(2, '0');
-				})
+				.map((char) => '%' + char.charCodeAt(0).toString(16).padStart(2, '0'))
 				.join('')
 		);
 	};

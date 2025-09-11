@@ -17,7 +17,11 @@ export const base64Decode = new StringFunction(
 	'base64-decode',
 	[{ arityType: 'required', typeHint: 'string' }],
 	(context, [base64]): string => {
-		return decode(base64!.evaluate(context).toString());
+		try {
+			return decode(base64!.evaluate(context).toString());
+		} catch (error) {
+			return '';
+		}
 	}
 );
 
