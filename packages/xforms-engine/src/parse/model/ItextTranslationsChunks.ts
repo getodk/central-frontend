@@ -21,13 +21,15 @@ const generateChunk = (node: Node): TextChunkExpression<'string'> | null => {
 	return null;
 };
 
-const generateChunksForValues = (valueElement: ChildNode): TextChunkExpression<'string'>[] => {
+const generateChunksForValues = (valueElement: ChildNode): Array<TextChunkExpression<'string'>> => {
 	return Array.from(valueElement.childNodes)
 		.map((node) => generateChunk(node))
 		.filter((chunk) => chunk !== null);
 };
 
-const generateChunksForTranslation = (textElement: Element): TextChunkExpression<'string'>[] => {
+const generateChunksForTranslation = (
+	textElement: Element
+): Array<TextChunkExpression<'string'>> => {
 	return Array.from(textElement.childNodes).flatMap((valueElement) =>
 		generateChunksForValues(valueElement)
 	);

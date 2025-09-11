@@ -46,7 +46,7 @@ const createTextChunks = <Role extends TextRole>(
 			);
 		} else {
 			// only translations have 'nodes' chunks
-			chunkExpressions = definition.chunks as TextChunkExpression<'string'>[];
+			chunkExpressions = definition.chunks as Array<TextChunkExpression<'string'>>;
 		}
 
 		chunkExpressions.forEach((chunkExpression) => {
