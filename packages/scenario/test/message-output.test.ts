@@ -47,7 +47,7 @@ describe('Translation text can contain `<output>`', () => {
 								),
 								t(
 									'text id="/data/date:jr:requiredMsg"',
-									t('value', `Cher <output value=" ${path} " />, s\'il te plaît, renseigne-moi`)
+									t('value', `Cher <output value=" ${path} " />, s'il te plaît, renseigne-moi`)
 								)
 							)
 						),
