@@ -1,15 +1,10 @@
-import {
-	isResourceType,
-	type JRResourceURLString,
-	type ResourceType,
-} from '@getodk/common/jr-resources/JRResourceURL.ts';
-import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocumentFromDOMSubtree.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { generateItextChunks } from './ItextTranslationsChunks.ts';
 import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
 import { ModelBindMap } from './ModelBindMap.ts';
 import type { AnyNodeDefinition } from './NodeDefinition.ts';
@@ -24,12 +19,10 @@ export class ModelDefinition {
 	readonly nodes: NodeDefinitionMap;
 	readonly instance: StaticDocument;
 	readonly itextTranslations: ItextTranslationsDefinition;
-
-	// TODO move this into the ItextTranslationsDefinition
 	readonly itextChunks: Map<
 		string,
 		Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>>
-	> = new Map();
+	>;
 
 	constructor(readonly form: XFormDefinition) {
 		const submission = new SubmissionDefinition(form.xformDOM);
@@ -41,44 +34,7 @@ export class ModelDefinition {
 		this.root = new RootDefinition(form, this, submission, form.body.classes);
 		this.nodes = nodeDefinitionMap(this.root);
 		this.itextTranslations = ItextTranslationsDefinition.from(form.xformDOM);
-		this.getITextChunks();
-	}
-
-	getITextChunks() {
-		this.form.xformDOM.itextTranslationElements.forEach((itextTranslationElement) => {
-			const lang = itextTranslationElement.attributes.getNamedItem('lang')?.value ?? 'default';
-			this.itextChunks.set(lang, new Map());
-
-			for (const element of itextTranslationElement.children) {
-				const id = element.getAttribute('id');
-				const chunks: TextChunkExpression<'nodes' | 'string'>[] = [];
-				for (const val of element.childNodes!) {
-					for (const child of val.childNodes) {
-						if (isElementNode(child)) {
-							const output = TextChunkExpression.fromOutput(child);
-							if (output) {
-								chunks.push(output);
-							}
-						}
-
-						if (isTextNode(child)) {
-							const formAttribute = child.parentElement!.getAttribute('form');
-							if (isResourceType(formAttribute as ResourceType)) {
-								chunks.push(
-									TextChunkExpression.fromResource(
-										child.data as JRResourceURLString,
-										formAttribute as ResourceType
-									)
-								);
-							} else {
-								chunks.push(TextChunkExpression.fromLiteral(child.data));
-							}
-						}
-					}
-				}
-				this.itextChunks.get(lang)!.set(id!, chunks);
-			}
-		});
+		this.itextChunks = generateItextChunks(form.xformDOM.itextTranslationElements);
 	}
 
 	getNodeDefinition(nodeset: string): AnyNodeDefinition {
@@ -109,8 +65,9 @@ export class ModelDefinition {
 
 	getTranslationChunks(
 		itextId: string,
-		language: ActiveLanguage
+		activeLanguage: ActiveLanguage
 	): ReadonlyArray<TextChunkExpression<'nodes' | 'string'>> {
-		return this.itextChunks.get(language.language)?.get(itextId)!;
+		const languageMap = this.itextChunks.get(activeLanguage.language);
+		return languageMap?.get(itextId) ?? [];
 	}
 }
