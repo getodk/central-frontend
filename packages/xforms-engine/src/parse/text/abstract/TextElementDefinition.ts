@@ -21,7 +21,6 @@ export abstract class TextElementDefinition<
 	constructor(form: XFormDefinition, owner: TextElementOwner, sourceNode: TextSourceNode<Role>) {
 		super(form, owner, sourceNode);
 
-		const context = this as AnyTextElementDefinition;
 		const refExpression = parseNodesetReference(owner, sourceNode, 'ref');
 
 		if (refExpression == null) {
@@ -37,7 +36,7 @@ export abstract class TextElementDefinition<
 				return [];
 			});
 		} else {
-			const translationChunk = TextChunkExpression.fromTranslation(context, refExpression);
+			const translationChunk = TextChunkExpression.fromTranslation(refExpression);
 			if (translationChunk) {
 				this.chunks = [translationChunk];
 			} else {

@@ -4,7 +4,6 @@ import type {
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { KnownAttributeLocalNamedElement } from '@getodk/common/types/dom.ts';
 import type { TextChunkSource } from '../../client/TextRange.ts';
-import type { AnyTextRangeDefinition } from '../text/abstract/TextRangeDefinition.ts';
 import { getTranslationExpression } from '../xpath/semantic-analysis.ts';
 import { DependentExpression } from './abstract/DependentExpression.ts';
 
@@ -58,13 +57,9 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
 		return new TextChunkExpression('string', 'null', 'literal', url, { type });
 	}
 
-	static fromTranslation(
-		context: AnyTextRangeDefinition,
-		maybeExpression: string
-	): TextChunkExpression<'nodes'> | null {
+	static fromTranslation(maybeExpression: string): TextChunkExpression<'nodes'> | null {
 		const translationExpression = getTranslationExpression(maybeExpression);
 		if (translationExpression) {
-			context.isTranslated = true;
 			return new TextChunkExpression('nodes', translationExpression, 'translation');
 		}
 

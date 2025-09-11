@@ -29,7 +29,7 @@ export class MessageDefinition<
 	) {
 		super(bind.form, bind, null);
 
-		const translationChunk = TextChunkExpression.fromTranslation(this, message);
+		const translationChunk = TextChunkExpression.fromTranslation(message);
 		if (translationChunk) {
 			this.chunks = [translationChunk];
 		} else {

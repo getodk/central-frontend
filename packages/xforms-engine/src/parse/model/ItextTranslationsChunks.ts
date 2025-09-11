@@ -7,7 +7,7 @@ import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts'
 import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import type { DOMItextTranslationElement } from '../XFormDOM.ts';
 
-const generateChunk = (node: Node): TextChunkExpression<'nodes' | 'string'> | null => {
+const generateChunk = (node: Node): TextChunkExpression<'string'> | null => {
 	if (isElementNode(node)) {
 		return TextChunkExpression.fromOutput(node);
 	}
@@ -21,17 +21,13 @@ const generateChunk = (node: Node): TextChunkExpression<'nodes' | 'string'> | nu
 	return null;
 };
 
-const generateChunksForValues = (
-	valueElement: ChildNode
-): TextChunkExpression<'nodes' | 'string'>[] => {
+const generateChunksForValues = (valueElement: ChildNode): TextChunkExpression<'string'>[] => {
 	return Array.from(valueElement.childNodes)
 		.map((node) => generateChunk(node))
 		.filter((chunk) => chunk !== null);
 };
 
-const generateChunksForTranslation = (
-	textElement: Element
-): TextChunkExpression<'nodes' | 'string'>[] => {
+const generateChunksForTranslation = (textElement: Element): TextChunkExpression<'string'>[] => {
 	return Array.from(textElement.childNodes).flatMap((valueElement) =>
 		generateChunksForValues(valueElement)
 	);
@@ -39,7 +35,7 @@ const generateChunksForTranslation = (
 
 const generateChunksForLanguage = (
 	translationElement: DOMItextTranslationElement
-): Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>> => {
+): Map<string, ReadonlyArray<TextChunkExpression<'string'>>> => {
 	return new Map(
 		Array.from(translationElement.children).map((textElement) => {
 			const itextId = textElement.getAttribute('id');
@@ -50,7 +46,7 @@ const generateChunksForLanguage = (
 
 export const generateItextChunks = (
 	translationElements: readonly DOMItextTranslationElement[]
-): Map<string, Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>>> => {
+): Map<string, Map<string, ReadonlyArray<TextChunkExpression<'string'>>>> => {
 	return new Map(
 		translationElements.map((translationElement) => {
 			const lang = translationElement.getAttribute('lang');

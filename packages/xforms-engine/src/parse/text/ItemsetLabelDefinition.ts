@@ -7,8 +7,6 @@ import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';
 
 interface LabelElement extends LocalNamedElement<'label'> {}
 
-// TODO have two separate abstract parents - one for translated and one not.
-// then we can use instanceof to enforce whether chunks or messageExpression is present
 export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 	static from(form: XFormDefinition, owner: ItemsetDefinition): ItemsetLabelDefinition | null {
 		const labelElement = getLabelElement(owner.element);
@@ -32,7 +30,7 @@ export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 			throw new Error('<itemset><label> missing ref attribute');
 		}
 
-		const translationChunk = TextChunkExpression.fromTranslation(this, refExpression);
+		const translationChunk = TextChunkExpression.fromTranslation(refExpression);
 		if (translationChunk) {
 			this.chunks = [translationChunk];
 		} else {

@@ -19,10 +19,7 @@ export class ModelDefinition {
 	readonly nodes: NodeDefinitionMap;
 	readonly instance: StaticDocument;
 	readonly itextTranslations: ItextTranslationsDefinition;
-	readonly itextChunks: Map<
-		string,
-		Map<string, ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>>
-	>;
+	readonly itextChunks: Map<string, Map<string, ReadonlyArray<TextChunkExpression<'string'>>>>;
 
 	constructor(readonly form: XFormDefinition) {
 		const submission = new SubmissionDefinition(form.xformDOM);
@@ -66,7 +63,7 @@ export class ModelDefinition {
 	getTranslationChunks(
 		itextId: string,
 		activeLanguage: ActiveLanguage
-	): ReadonlyArray<TextChunkExpression<'nodes' | 'string'>> {
+	): ReadonlyArray<TextChunkExpression<'string'>> {
 		const languageMap = this.itextChunks.get(activeLanguage.language);
 		return languageMap?.get(itextId) ?? [];
 	}

@@ -34,13 +34,9 @@ const createTextChunks = <Role extends TextRole>(
 		const chunks: TextChunk[] = [];
 		const mediaSources: MediaSources = {};
 
-		let chunkExpressions: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
+		let chunkExpressions: ReadonlyArray<TextChunkExpression<'string'>>;
 
-		if (
-			definition.isTranslated &&
-			definition.chunks[0] &&
-			definition.chunks[0].source === 'translation'
-		) {
+		if (definition.chunks[0]?.source === 'translation') {
 			const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
 				contextNode: context.contextNode,
 			});
@@ -49,7 +45,8 @@ const createTextChunks = <Role extends TextRole>(
 				context.getActiveLanguage()
 			);
 		} else {
-			chunkExpressions = definition.chunks;
+			// only translations have 'nodes' chunks
+			chunkExpressions = definition.chunks as TextChunkExpression<'string'>[];
 		}
 
 		chunkExpressions.forEach((chunkExpression) => {
@@ -66,14 +63,7 @@ const createTextChunks = <Role extends TextRole>(
 			}
 
 			const computed = createComputedExpression(context, chunkExpression)();
-
-			if (typeof computed === 'string') {
-				// not a translation expression
-				chunks.push(new TextChunk(context, chunkExpression.source, computed));
-				return;
-			} else {
-				throw new Error('should not get here');
-			}
+			chunks.push(new TextChunk(context, chunkExpression.source, computed));
 		});
 
 		return { chunks, mediaSources };
