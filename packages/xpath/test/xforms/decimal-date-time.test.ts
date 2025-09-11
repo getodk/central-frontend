@@ -53,6 +53,12 @@ describe('#decimal-date-time()', () => {
 		});
 	});
 
+	// Tests this bug: https://github.com/getodk/web-forms/issues/272
+	it('should handle milliseconds losing precision during conversion', () => {
+		const expression = 'decimal-date-time(date("2025-08-18T02:03:23.958Z"))';
+		testContext.assertNumberValue(expression, 20318.085693958332);
+	});
+
 	it.fails('with invalid args, throws an error', () => {
 		testContext.evaluate('decimal-date-time("1970-01-01T00:00:00.000Z", 2)');
 	});

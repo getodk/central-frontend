@@ -1,3 +1,4 @@
+import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { RootNode } from '@getodk/xforms-engine';
@@ -6,7 +7,7 @@ import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { odkThemePreset } from '../src/odk-theme-preset';
 
 /**
@@ -70,7 +71,7 @@ type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];
 export const globalMountOptions: GlobalMountOptions = {
 	plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
 	provide: {
-		submitPressed: false,
+		[SUBMIT_PRESSED]: ref(false),
 	},
 	stubs: {
 		teleport: true,

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FORM_IMAGE_CACHE, FORM_OPTIONS } from '@/lib/constants/injection-keys.ts';
 import type { FormOptions } from '@/lib/init/load-form-state.ts';
 import type {
 	JRResourceURL,
@@ -22,9 +23,9 @@ const SMALL_IMAGE_SIZE = 300;
 
 const props = defineProps<ImageBlockProps>();
 
-const formOptions = inject<FormOptions>('formOptions');
+const formOptions = inject<FormOptions>(FORM_OPTIONS);
 const loading = ref<boolean>(true);
-const imageCache = inject<Map<JRResourceURLString, ObjectURL>>('imageCache', new Map());
+const imageCache = inject<Map<JRResourceURLString, ObjectURL>>(FORM_IMAGE_CACHE, new Map());
 const imageUrl = ref<string>('');
 const loadedDimensions = ref<NaturalDimensions>({ naturalWidth: 0, naturalHeight: 0 });
 const errorMessage = ref<string>('');

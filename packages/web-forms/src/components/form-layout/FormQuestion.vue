@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { QUESTION_HAS_ERROR, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import type {
 	AnyInputNode,
 	AnyNoteNode,
@@ -6,7 +7,7 @@ import type {
 	RankNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
-import { inject } from 'vue';
+import { computed, inject, provide, type Ref, ref, watch } from 'vue';
 import InputControl from '@/components/form-elements/input/InputControl.vue';
 import NoteControl from '../form-elements/NoteControl.vue';
 import RangeControl from '@/components/form-elements/range/RangeControl.vue';
@@ -15,7 +16,7 @@ import SelectControl from '@/components/form-elements/select/SelectControl.vue';
 import TriggerControl from '../form-elements/TriggerControl.vue';
 import UploadControl from '@/components/form-elements/upload/UploadControl.vue';
 
-defineProps<{ question: ControlNode }>();
+const props = defineProps<{ question: ControlNode }>();
 
 const isInputNode = (node: ControlNode): node is AnyInputNode => node.nodeType === 'input';
 const isSelectNode = (node: ControlNode): node is SelectNode => node.nodeType === 'select';
@@ -25,7 +26,25 @@ const isRangeNode = (node: ControlNode) => node.nodeType === 'range';
 const isTriggerNode = (node: ControlNode) => node.nodeType === 'trigger';
 const isUploadNode = (node: ControlNode) => node.nodeType === 'upload';
 
-const submitPressed = inject<boolean>('submitPressed', false);
+const submitPressed = inject<Ref<boolean>>(SUBMIT_PRESSED, ref(false));
+
+const touched = ref(false);
+const stopWatch = watch(
+	() => props.question.currentState.instanceValue,
+	() => {
+		touched.value = true;
+		stopWatch();
+	},
+	{ deep: true }
+);
+
+const questionHasError = computed(() => {
+	return (
+		(touched.value || submitPressed.value) &&
+		props.question.validationState.violation?.valid === false
+	);
+});
+provide(QUESTION_HAS_ERROR, questionHasError);
 </script>
 
 <template>
@@ -33,7 +52,7 @@ const submitPressed = inject<boolean>('submitPressed', false);
 		:id="question.nodeId + '_container'"
 		:class="{
 			'question-container': true,
-			'highlight': submitPressed && question.validationState.violation?.valid === false,
+			'highlight': questionHasError,
 		}"
 	>
 		<InputControl v-if="isInputNode(question)" :node="question" />

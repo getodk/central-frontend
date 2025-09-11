@@ -142,6 +142,28 @@ export const join = new StringFunction(
 	}
 );
 
+export const pulldata = new StringFunction(
+	'pulldata',
+	[
+		{ arityType: 'required', typeHint: 'string' },
+		{ arityType: 'required', typeHint: 'string' },
+		{ arityType: 'required', typeHint: 'string' },
+		{ arityType: 'required', typeHint: 'string' },
+	],
+	(
+		context,
+		[instanceExpression, desiredElementExpression, queryElementExpression, queryExpression]
+	): string => {
+		const instanceId = instanceExpression!.evaluate(context).toString();
+		const desiredElement = desiredElementExpression!.evaluate(context).toString();
+		const queryElement = queryElementExpression!.evaluate(context).toString();
+		const query = queryExpression!.evaluate(context).toString();
+
+		const expr = `instance('${instanceId}')/root/item[${queryElement}='${query}']/${desiredElement}`;
+		return context.evaluator.evaluateString(expr);
+	}
+);
+
 export const regex = new BooleanFunction(
 	'regex',
 	[

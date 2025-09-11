@@ -161,7 +161,7 @@
     "ends-with(string haystack, string needle)": "✅",
     "uuid(number?)": "✅",
     "digest(string src, string algorithm, string encoding?)": "✅",
-    "pulldata(string instance_id, string desired_element, string query_element, string query)": "",
+    "pulldata(string instance_id, string desired_element, string query_element, string query)": "✅",
     "if(boolean condition, * then, * else)": "✅",
     "coalesce(string arg1, string arg2)": "✅",
     "once(string calc)": "✅",

@@ -1,9 +1,9 @@
-import { Temporal } from 'temporal-polyfill';
 import {
 	MILLISECOND_NANOSECONDS,
-	VALID_OFFSET_VALUE,
 	TIMEZONE_OFFSET_PATTERN,
+	VALID_OFFSET_VALUE,
 } from '@getodk/common/constants/datetime.ts';
+import { Temporal } from 'temporal-polyfill';
 import { isISODateOrDateTimeLike } from './predicates.ts';
 
 export const tryParseDateString = (value: string): Date | null => {
@@ -54,8 +54,10 @@ export const dateTimeFromString = (
 	return Temporal.PlainDateTime.from(value).toZonedDateTime(timeZone);
 };
 
-const toNanoseconds = (milliseconds: bigint | number): bigint =>
-	BigInt(milliseconds) * MILLISECOND_NANOSECONDS;
+const toNanoseconds = (milliseconds: number): bigint => {
+	// Math.round is required in case milliseconds is a decimal
+	return BigInt(Math.round(milliseconds)) * MILLISECOND_NANOSECONDS;
+};
 
 export const dateTimeFromNumber = (
 	timeZone: Temporal.TimeZoneLike,

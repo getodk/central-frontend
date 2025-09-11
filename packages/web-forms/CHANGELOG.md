@@ -1,5 +1,26 @@
 # @getodk/web-forms
 
+## 0.14.0
+
+### Minor Changes
+
+- 6b3e6c0: Dropped support for Node.js version 18.
+  - Added support for Node.js version 24.
+  - Upgraded Vite to version 7, along with Vitest and other libraries that support Node.js versions greater than 20.
+
+### Patch Changes
+
+- 18895ad: Retrieve Web Forms version from package.json and build number from commit hash.
+- 6a50728: Catch and handle http status error codes and provide a useful message to the client
+- a8efeb0: Show error highlight on required questions
+- 8214929: Fix display of list table's labels
+- 8aff0d5: Limit integer fields to 9 characters.
+  - Limit decimal fields to 15 characters.
+  - Remove character limit and add support for the `thousands-sep` appearance in string fields with `numbers` appearance.
+  - Improve handling of extra-long numbers by switching to a more reliable input field.
+  - Fix an issue where commas in integer fields could cause errors.
+- 8a56391: Upgrade dependencies to latest minor versions
+
 ## 0.13.1
 
 ### Patch Changes

@@ -13,6 +13,9 @@ defineEmits(['update:modelValue', 'change']);
 const props = defineProps<CheckboxWidgetProps>();
 
 const selectValues = (values: readonly string[]) => {
+	if (props.question.appearances.label) {
+		return;
+	}
 	props.question.selectValues(values);
 };
 </script>

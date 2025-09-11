@@ -12,6 +12,9 @@ defineEmits(['update:modelValue', 'change']);
 const props = defineProps<RadioButtonProps>();
 
 const selectValue = (value: string) => {
+	if (props.question.appearances.label) {
+		return;
+	}
 	props.question.selectValue(value);
 };
 </script>

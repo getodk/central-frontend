@@ -5,7 +5,7 @@ import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import type { TimerID } from '@getodk/common/types/timers.ts';
 import type { RankNode } from '@getodk/xforms-engine';
 import type { Ref } from 'vue';
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 
 interface RankControlProps {
@@ -18,8 +18,7 @@ interface HighlightOption {
 }
 
 const props = defineProps<RankControlProps>();
-const touched = ref(false);
-const submitPressed = inject<boolean>('submitPressed', false);
+const showOverlay = computed(() => !props.question.currentState.instanceValue.length);
 const disabled = computed(() => props.question.currentState.readonly === true);
 const highlight: HighlightOption = {
 	index: ref(null),
@@ -47,7 +46,6 @@ const values = computed<string[]>({
 		return getRankItems();
 	},
 	set: (orderedValues) => {
-		touched.value = true;
 		props.question.setValues(orderedValues);
 	},
 });
@@ -115,7 +113,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 	<ControlText :question="question" />
 
 	<div class="rank-control-container">
-		<div v-if="!touched" class="rank-overlay">
+		<div v-if="showOverlay" class="rank-overlay">
 			<button :disabled="disabled" @click="selectDefaultOrder">
 				<IconSVG name="mdiUnfoldMoreHorizontal" size="sm" :variant="disabled ? 'muted' : 'base'" />
 				<!-- TODO: translations -->
@@ -172,10 +170,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 		</VueDraggable>
 	</div>
 
-	<ValidationMessage
-		:message="question.validationState.violation?.message.asString"
-		:show-message="touched || submitPressed"
-	/>
+	<ValidationMessage :message="question.validationState.violation?.message.asString" />
 </template>
 
 <style scoped lang="scss">
