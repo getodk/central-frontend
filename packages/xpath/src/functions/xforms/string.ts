@@ -20,6 +20,7 @@ export const base64Decode = new StringFunction(
 		try {
 			return decode(base64!.evaluate(context).toString());
 		} catch (error) {
+			// invalid base64 string
 			return '';
 		}
 	}
