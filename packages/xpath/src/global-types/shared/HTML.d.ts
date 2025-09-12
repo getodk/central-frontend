@@ -15,3 +15,7 @@
  */
 // eslint-disable-next-line no-var -- consistency with upstream types
 declare var atob: (value: string) => string;
+
+class TextDecoder {
+	decode(other: Uint8Array): string;
+};
