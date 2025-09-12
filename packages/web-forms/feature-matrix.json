@@ -216,6 +216,6 @@
     "indexed-repeat(node-set arg, node-set repeat1, number index1, [node-set repeatN, number indexN]{0,2})": "✅",
     "area(node-set ns|geoshape gs)": "✅",
     "distance(node-set ns|geoshape gs|geotrace gt|(geopoint|string) arg*)": "✅",
-    "base64-decode(base64Binary input)": ""
+    "base64-decode(base64Binary input)": "✅"
   }
 }
