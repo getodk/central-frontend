@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { type XFormsTestContext, createXFormsTestContext } from '../helpers.ts';
 
 describe('#base64-decode()', () => {
@@ -28,8 +28,8 @@ describe('#base64-decode()', () => {
 		testContext.assertStringValue(`base64-decode('AGEAYgBj')`, '\u0000a\u0000b\u0000c');
 	});
 
-	it.fails('produces an error throws when not exactly one arg', () => {
-		testContext.evaluate(`base64-decode()`);
+	it('produces an error throws when not exactly one arg', () => {
+		expect(() => testContext.evaluate(`base64-decode()`)).toThrowError();
 	});
 
 	it('returns an empty string for invalid input when input invalid', () => {
