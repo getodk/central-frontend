@@ -22,7 +22,7 @@ describe('Translation text can contain `<output>`', () => {
 			'translation text with <output>',
 			html(
 				head(
-					title('translation text with <output>'),
+					title('translation text with output'),
 					model(
 						t(
 							'itext',
