@@ -19,10 +19,10 @@ describe('Translation text can contain `<output>`', () => {
 	it.each(['relative', 'absolute'])('resolves $0 references', async (ref) => {
 		const path = ref === 'relative' ? '../name' : '/data/name';
 		const scenario = await Scenario.init(
-			'translation text with <output> with absolute ref',
+			'translation text with <output>',
 			html(
 				head(
-					title('output with absolute ref'),
+					title('translation text with <output>'),
 					model(
 						t(
 							'itext',
