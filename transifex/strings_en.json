@@ -3510,6 +3510,14 @@
         "enketoDefault": {
           "string": "Enketo (default)",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form.",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
