@@ -32,6 +32,7 @@ either is an Administrator or has no role. -->
           <th>{{ $t('header.displayName') }}</th>
           <th>{{ $t('header.email') }}</th>
           <th>{{ $t('header.sitewideRole') }}</th>
+          <th>{{ $t('header.lastActive') }}</th>
           <th class="actions">{{ $t('header.actions') }}</th>
         </tr>
       </thead>
@@ -174,7 +175,8 @@ export default {
       "Web Users have accounts on this website to oversee and administer the Projects on this server. Administrators can manage anything on the site. Users with no Sitewide Role can be given a Role on any Project, from that Project’s settings. Sitewide Administrators and some Project Roles can use a web browser to fill out Forms. To submit data through an application such as {collect}, create App Users for each Project."
     ],
     "header": {
-      "sitewideRole": "Sitewide Role"
+      "sitewideRole": "Sitewide Role",
+      "lastActive": "Last active"
     },
     "alert": {
       "create": "A user was created successfully for “{displayName}”.",

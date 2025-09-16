@@ -30,6 +30,10 @@ except according to the terms contained in the LICENSE file.
         </div>
       </form>
     </td>
+    <td class="last-active">
+      <date-time v-if="user.lastLoginAt" :iso="user.lastLoginAt"/>
+      <span v-else>{{ $t('invitationPending') }}</span>
+    </td>
     <td>
       <div class="dropdown">
         <button :id="actionsButtonId" type="button"
@@ -66,6 +70,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Spinner from '../spinner.vue';
+import DateTime from '../date-time.vue';
 
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
@@ -75,7 +80,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'UserRow',
-  components: { Spinner },
+  components: { Spinner, DateTime },
   inject: ['config'],
   props: {
     user: {
@@ -159,7 +164,8 @@ export default {
     "cannotRetire": "You may not retire yourself.",
     "action": {
       "retire": "Retire user"
-    }
+    },
+    "invitationPending": "Invitation Pending"
   }
 }
 </i18n>
