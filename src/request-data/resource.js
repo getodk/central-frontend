@@ -45,6 +45,8 @@ class BaseResource {
   }
 
   get awaitingResponse() { return this[_store].awaitingResponse; }
+  get setAt() { return this[_store].setAt; }
+  get patchedAt() { return this[_store].patchedAt; }
 
   get dataExists() { return this[_store].data != null; }
   get initiallyLoading() { return this.awaitingResponse && !this.dataExists; }
@@ -62,14 +64,24 @@ const _container = Symbol('container');
 const _abortController = Symbol('abortController');
 class Resource extends BaseResource {
   constructor(container, name) {
-    const store = shallowReactive({ data: null, awaitingResponse: false });
+    const store = shallowReactive({
+      data: null,
+      awaitingResponse: false,
+      setAt: null,
+      patchedAt: null
+    });
     super(name, store);
     this[_container] = container;
     this[_abortController] = null;
   }
 
   get data() { return this[_store].data; }
-  set data(value) { this[_store].data = value; }
+
+  set data(value) {
+    this[_store].data = value;
+    this[_store].setAt = new Date();
+  }
+
   toRefs() { return { ...super.toRefs(), data: toRef(this[_store], 'data') }; }
 
   cancelRequest() { if (this.awaitingResponse) this[_abortController].abort(); }
@@ -277,6 +289,7 @@ class Resource extends BaseResource {
         } else {
           if (!this.dataExists) throw new Error('data does not exist');
           patch(response, this);
+          this[_store].patchedAt = new Date();
         }
       });
   }
