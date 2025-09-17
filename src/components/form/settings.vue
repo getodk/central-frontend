@@ -77,7 +77,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
-    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="confirmationModal.hide()"/>
+    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="afterSettingChanged"/>
   </div>
 </template>
 
@@ -97,6 +97,7 @@ defineOptions({
 });
 
 const alert = inject('alert');
+const toast = inject('toast');
 
 const { t } = useI18n();
 const router = useRouter();
@@ -112,10 +113,19 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
+
 const webformsEnabled = ref(form.webformsEnabled);
 watch(() => form.dataExists, () => {
   webformsEnabled.value = form.webformsEnabled;
 });
+
+const afterSettingChanged = () => {
+  const message = webformsEnabled.value
+    ? t('webFormsSetting.owfSelected', { formName: form.nameOrId })
+    : t('webFormsSetting.enketoSelected', { formName: form.nameOrId });
+  toast.show(message);
+  confirmationModal.hide();
+};
 
 const hideAndReset = () => {
   webformsEnabled.value = form.webformsEnabled;
@@ -180,7 +190,11 @@ const hideAndReset = () => {
       // Description of a section. {formName} is replaced with the name of the Form
       "description": "Fill out, preview and edit your “{formName}” Form using",
       // The word "Enketo" should not be translated
-      "enketoDefault": "Enketo (default)"
+      "enketoDefault": "Enketo (default)",
+      // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
+      "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
+      // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
+      "owfSelected": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form."
     }
   }
 }
