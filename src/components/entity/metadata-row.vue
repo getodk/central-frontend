@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <tr class="entity-metadata-row" :class="{ 'entity-row-selected': entity.__system.selected }">
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
-    <td v-if="!deleted">
+    <td v-if="!deleted && verbs.has('entity.delete')">
       <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
     </td>
     <td class="creator-name">
