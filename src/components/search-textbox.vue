@@ -90,6 +90,7 @@ watch(() => props.modelValue, (value) => {
 
   .close {
     right: 10px;
+    top: 6px;
   }
 }
 </style>
