@@ -45,7 +45,11 @@ class BaseResource {
   }
 
   get awaitingResponse() { return this[_store].awaitingResponse; }
+  // `Date` object for when the `data` property was last set (including setting
+  // it to `null`)
   get setAt() { return this[_store].setAt; }
+  // `Date` object for when the `data` property was last patched. See the
+  // `patch` option of the request() method below.
   get patchedAt() { return this[_store].patchedAt; }
 
   get dataExists() { return this[_store].data != null; }
