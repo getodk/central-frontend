@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { clone } from 'ramda';
-
 import { faker } from '@faker-js/faker';
+
 import testData from '../data';
 
 let loggedIn = false;
@@ -18,10 +18,10 @@ export const mockLogin = (options = undefined) => {
     DateTime.fromISO(expiresAt).toMillis().toString()
   );
 
-  loggedIn = true;
-
   const csrf = faker.string.alphanumeric(64);
   document.cookie = `__csrf=${csrf}`;
+
+  loggedIn = true;
 };
 
 mockLogin.setRequestData = (requestData) => {
@@ -37,4 +37,23 @@ mockLogin.setRequestData = (requestData) => {
   }
 };
 
-mockLogin.reset = () => { loggedIn = false; };
+// Undoes the effects of mockLogin().
+mockLogin.reset = () => {
+  if (!loggedIn) return;
+
+  if (testData.extendedUsers.size === 1 && testData.sessions.size === 1) {
+    testData.extendedUsers.reset();
+    testData.sessions.reset();
+  } else {
+    testData.extendedUsers.splice(0, 1);
+    testData.sessions.splice(0, 1);
+  }
+
+  localStorage.removeItem('sessionExpires');
+
+  document.cookie = document.cookie.split('; ')
+    .filter(cookie => !cookie.startsWith('__csrf='))
+    .join('; ');
+
+  loggedIn = false;
+};
