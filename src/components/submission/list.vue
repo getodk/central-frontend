@@ -116,6 +116,8 @@ import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 
+let originalSubmissionsCount;
+
 export default {
   name: 'SubmissionList',
   components: {
@@ -312,14 +314,19 @@ export default {
         // view sets this.odata, as some submissions might not have geo data and
         // won't appear on the map.
         if (this.formVersion.dataExists && this.odata.dataExists &&
-          this.dataView === 'table' && !this.odataFilter)
+          this.dataView === 'table' && !this.odataFilter && !this.deleted) {
           this.formVersion.submissions = this.odata.count;
+          originalSubmissionsCount = this.odata.count;
+        }
       }
     },
     'odata.removedSubmissions.size': {
       handler(size) {
+        if (!originalSubmissionsCount || size === 0) {
+          originalSubmissionsCount = this.formVersion.submissions;
+        }
         if (this.formVersion.dataExists && this.odata.dataExists) {
-          this.formVersion.submissions += this.deleted ? size : -size;
+          this.formVersion.submissions = originalSubmissionsCount + (this.deleted ? size : -size);
         }
       }
     }
