@@ -30,30 +30,32 @@ except according to the terms contained in the LICENSE file.
         v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
       </teleport-if-exists>
     </div>
-    <entity-table v-show="odataEntities.dataExists" ref="table"
-      v-model:all-selected="allSelected"
-      :properties="dataset.properties" :deleted="deleted"
-      :awaiting-deleted-responses="awaitingResponses"
-      @selection-changed="handleSelectionChange"
-      @update="showUpdate"
-      @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
+    <div v-disable-container="bulkOperationInProgress">
+      <entity-table v-show="odataEntities.dataExists" ref="table"
+        v-model:all-selected="allSelected"
+        :properties="dataset.properties" :deleted="deleted"
+        :awaiting-deleted-responses="awaitingResponses"
+        @selection-changed="handleSelectionChange"
+        @update="showUpdate"
+        @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
 
-    <p v-show="emptyTableMessage" class="empty-table-message">
-      {{ emptyTableMessage }}
-    </p>
-    <odata-loading-message type="entity"
-      :top="pagination.size"
-      :odata="odataEntities"
-      :filter="odataFilter != null || !!searchTerm"
-      :refreshing="refreshing"
-      :total-count="dataset.dataExists ? dataset.entities : 0"/>
+      <p v-show="emptyTableMessage" class="empty-table-message">
+        {{ emptyTableMessage }}
+      </p>
+      <odata-loading-message type="entity"
+        :top="pagination.size"
+        :odata="odataEntities"
+        :filter="odataFilter != null || !!searchTerm"
+        :refreshing="refreshing"
+        :total-count="dataset.dataExists ? dataset.entities : 0"/>
 
-    <!-- @update:page is emitted on size change as well -->
-    <pagination v-if="pagination.count > 0"
-            v-model:page="pagination.page" v-model:size="pagination.size"
-            :count="pagination.count" :size-options="pageSizeOptions"
-            :spinner="odataEntities.awaitingResponse"
-            @update:page="handlePageChange()"/>
+      <!-- @update:page is emitted on size change as well -->
+      <pagination v-if="pagination.count > 0"
+              v-model:page="pagination.page" v-model:size="pagination.size"
+              :count="pagination.count" :size-options="pageSizeOptions"
+              :spinner="odataEntities.awaitingResponse"
+              @update:page="handlePageChange()"/>
+    </div>
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
@@ -684,6 +686,7 @@ export default {
   // Make sure that there is enough space for the DateRangePicker when it is
   // open.
   min-height: 375px;
+  position: relative;
 }
 
 #entity-list-actions {

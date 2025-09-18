@@ -19,6 +19,7 @@ import App from './components/app.vue';
 
 import createContainer from './container';
 import vTooltip from './directives/tooltip';
+import vDisableContainer from './directives/disable-container';
 // ./jquery must be imported before any of Bootstrap's JavaScript plugins,
 // because the plugins require jQuery.
 import './jquery';
@@ -27,4 +28,5 @@ import './bootstrap';
 createApp(App)
   .use(createContainer())
   .directive('tooltip', vTooltip)
+  .directive('disable-container', vDisableContainer)
   .mount('#app');
