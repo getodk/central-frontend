@@ -28,8 +28,6 @@ window.expect = expect;
 // async components associated with the route.
 beforeAll(loadAsyncRouteComponents);
 
-beforeEach(testData.seed);
-
 enableAutoUnmount(afterEach);
 afterEach(() => {
   const app = document.querySelector('[data-v-app]');
