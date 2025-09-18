@@ -70,7 +70,7 @@ defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
     "field": {
       // This is the text of a form field that allows the user to filter
       // Entities by a date range.
-      "creationDate": "At"
+      "creationDate": "Created at"
     },
     // @transifexKey component.SubmissionFilters.allSubmissionDateSelected
     "allCreationDateSelected": "All time"
