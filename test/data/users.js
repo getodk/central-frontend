@@ -25,7 +25,8 @@ export const extendedUsers = dataStore({
     verbs = verbsByRole(role),
     createdAt = undefined,
     deletedAt = undefined,
-    preferences = undefined
+    preferences = undefined,
+    lastLoginAt = undefined
   }) => ({
     id,
     type: 'user',
@@ -37,6 +38,7 @@ export const extendedUsers = dataStore({
       : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
     updatedAt: null,
     deletedAt,
+    lastLoginAt,
     preferences: {
       site: preferences?.site ?? {},
       projects: preferences?.projects ?? {}
