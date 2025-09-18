@@ -7,7 +7,37 @@ import testData from '../data';
 import { mockHttp } from '../util/http';
 
 describe('createResource()', () => {
+  describe('setting data', () => {
+    it('updates setAt', () => {
+      const projectData = testData.extendedProjects.createNew();
+      const { requestData } = createTestContainer();
+      should.not.exist(requestData.project.setAt);
+
+      requestData.project.data = projectData;
+      requestData.project.setAt.should.be.an.instanceOf(Date);
+
+      const oldSetAt = requestData.project.setAt;
+      requestData.project.data = null;
+      const newSetAt = requestData.project.setAt;
+      newSetAt.should.be.an.instanceOf(Date);
+      newSetAt.should.not.equal(oldSetAt);
+    });
+  });
+
   describe('request()', () => {
+    it('updates setAt', () => {
+      const projectData = testData.standardProjects.createNew();
+      const container = createTestContainer();
+      const { requestData } = container;
+      should.not.exist(requestData.project.setAt);
+      return mockHttp(container)
+        .request(() => requestData.project.request({ url: '/v1/projects/1' }))
+        .respondWithData(() => projectData)
+        .afterResponse(() => {
+          requestData.project.setAt.should.be.an.instanceOf(Date);
+        });
+    });
+
     describe('patch', () => {
       it('throws an error if clear option is true', () => {
         const { requestData } = createTestContainer({
@@ -22,7 +52,7 @@ describe('createResource()', () => {
       });
 
       it('passes the response and the resource to the callback', () => {
-        const projectData = testData.extendedProjects.createNew();
+        const projectData = testData.standardProjects.createNew();
         const container = createTestContainer({
           requestData: { project: projectData }
         });
@@ -40,6 +70,29 @@ describe('createResource()', () => {
             response.status.should.equal(200);
             response.data.should.eql(projectData);
             (resource === requestData.project).should.be.true;
+          });
+      });
+
+      it('updates patchedAt', () => {
+        const projectData = testData.standardProjects.createNew();
+        const container = createTestContainer({
+          requestData: { project: projectData }
+        });
+        const { requestData } = container;
+
+        should.not.exist(requestData.project.patchedAt);
+        const oldSetAt = requestData.project.setAt;
+
+        return mockHttp(container)
+          .request(() => requestData.project.request({
+            url: '/v1/projects/1',
+            patch: noop
+          }))
+          .respondWithData(() => projectData)
+          .afterResponse(() => {
+            requestData.project.patchedAt.should.be.an.instanceOf(Date);
+            // It should only update patchedAt, not setAt.
+            requestData.project.setAt.should.equal(oldSetAt);
           });
       });
 
