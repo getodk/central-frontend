@@ -24,6 +24,9 @@ except according to the terms contained in the LICENSE file.
               <form-link :form="form"
                 :to="publishedFormPath(form.projectId, form.xmlFormId)"
                 v-tooltip.text/>
+              <span v-if="form.repeatGroup" class="repeat-tag">
+                <span class="icon-refresh"></span>
+                {{ form.repeatGroup }}</span>
             </div>
           </template>
           <template #caption>
@@ -101,6 +104,23 @@ export default {
 
     .form-name {
       @include text-overflow-ellipsis;
+    }
+
+    .repeat-tag {
+      // CSS
+      border-radius: 100px;
+      background: #D0E7F1;
+      font-size: 12px;
+
+      // Layout
+      display: inline-flex;
+      height: 24px;
+      min-width: 22px;
+      margin-left: 8px;
+      padding: 4px 8px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
     }
   }
 
