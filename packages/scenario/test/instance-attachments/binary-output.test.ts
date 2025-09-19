@@ -231,7 +231,7 @@ describe('Instance attachments: binary output', () => {
 		});
 
 		it('produces instance XML if no instance attachments have been uploaded', async () => {
-			const baseMaxChunkSize = Math.floor(Math.random() * 400);
+			const baseMaxChunkSize = Math.floor(Math.random() * 400) + 1;
 
 			const instanceXML = scenario.proposed_serializeInstance();
 			const instanceXMLBytes = instanceXML.length;
