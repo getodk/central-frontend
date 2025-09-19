@@ -1,5 +1,7 @@
 import sinon from 'sinon';
+import { isRef, ref } from 'vue';
 
+import { createResource } from '../../src/request-data/resource';
 import { noop } from '../../src/util/util';
 
 import createTestContainer from '../util/container';
@@ -225,6 +227,76 @@ describe('createResource()', () => {
         .beforeAnyResponse(() => { roles.cancelRequest(); })
         .respondWithProblem()
         .afterResponse(() => { alert.state.should.be.false; });
+    });
+  });
+
+  describe('toRefs()', () => {
+    it('converts getters to refs', async () => {
+      const container = createTestContainer();
+      const refProp = ref(false);
+      const resource = createResource(container, 'myResource', () => ({
+        refProp,
+        nonRefProp: 'foo'
+      }));
+      const refs = resource.toRefs();
+
+      // Test awaitingResponse and setAt.
+      const { awaitingResponse, setAt } = refs;
+      isRef(awaitingResponse).should.be.true;
+      awaitingResponse.value.should.be.false;
+      isRef(setAt).should.be.true;
+      should.not.exist(setAt.value);
+      await mockHttp(container)
+        .request(() => resource.request({ url: '/v1/projects/1' }))
+        .beforeAnyResponse(() => {
+          awaitingResponse.value.should.be.true;
+        })
+        .respondWithData(() => testData.standardProjects.createNew());
+      awaitingResponse.value.should.be.false;
+      expect(setAt.value).to.be.an.instanceOf(Date);
+
+      // Test `data`.
+      const { data } = refs;
+      isRef(data).should.be.true;
+      should.exist(data.value);
+      data.value.should.equal(resource.data);
+
+      // Test refs added via the setup function (here, refProp).
+      isRef(refs.refProp).should.be.true;
+      refs.refProp.value.should.be.false;
+      refProp.value = true;
+      refs.refProp.value.should.be.true;
+
+      // No refs are created from properties without a getter.
+      for (const prop of ['resourceName', 'request', 'nonRefProp']) {
+        should.exist(resource[prop]);
+        should.not.exist(refs[prop]);
+      }
+    });
+
+    it('returns refs that are read-only or not depending on whether there is a setter', () => {
+      const { requestData } = createTestContainer({
+        requestData: { project: testData.extendedProjects.createNew() }
+      });
+      const { awaitingResponse, data } = requestData.project.toRefs();
+
+      // You can't set awaitingResponse because there's no setter on the
+      // resource.
+      awaitingResponse.value.should.be.false;
+      // There's no error on setting awaitingResponse, but Vue does log a
+      // warning.
+      const warn = sinon.fake();
+      sinon.replace(console, 'warn', warn);
+      awaitingResponse.value = true;
+      warn.called.should.be.true;
+      // The value of `true` was ignored.
+      awaitingResponse.value.should.be.false;
+
+      // You can set `data` because there is a setter.
+      should.exist(data.value);
+      data.value = null;
+      should.not.exist(data.value);
+      should.not.exist(requestData.project.data);
     });
   });
 });
