@@ -408,6 +408,7 @@
     "data": "Data",
     // This is the text of a link that links to the documentation.
     "docs": "Docs",
+    "emptyMap": "No map data available yet.",
     // This is shown when the value of an Entity property is empty.
     "emptyValue": "(empty)",
     "error": "Error",
