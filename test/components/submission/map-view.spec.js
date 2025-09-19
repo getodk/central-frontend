@@ -256,7 +256,8 @@ describe('SubmissionMapView', () => {
       const app = await load('/projects/1/forms/f/submissions?map=true');
       const message = app.get('.empty-table-message');
       message.should.be.visible();
-      message.text().should.equal('There are no Submissions yet.');
+      const text = message.text();
+      text.should.equal('No map data available yet. Submissions only appear if they include data in the first geo field.');
       app.find('.geojson-map').exists().should.be.false;
     });
 
