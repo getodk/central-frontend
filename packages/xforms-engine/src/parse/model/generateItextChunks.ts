@@ -46,7 +46,8 @@ const generateChunksForLanguage = (
 	);
 };
 
-export interface ChunkExpressionsByItextId extends Map<string, ReadonlyArray<TextChunkExpression<'string'>>> {}
+export interface ChunkExpressionsByItextId
+	extends Map<string, ReadonlyArray<TextChunkExpression<'string'>>> {}
 
 export const generateItextChunks = (
 	translationElements: readonly DOMItextTranslationElement[]
