@@ -4,7 +4,7 @@ import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDo
 import { TextChunkExpression } from '../expression/TextChunkExpression.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocumentFromDOMSubtree.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import { generateItextChunks } from './ItextTranslationsChunks.ts';
+import { generateItextChunks, type ChunkExpressionsByItextId } from './generateItextChunks.ts';
 import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
 import { ModelBindMap } from './ModelBindMap.ts';
 import type { AnyNodeDefinition } from './NodeDefinition.ts';
@@ -19,7 +19,7 @@ export class ModelDefinition {
 	readonly nodes: NodeDefinitionMap;
 	readonly instance: StaticDocument;
 	readonly itextTranslations: ItextTranslationsDefinition;
-	readonly itextChunks: Map<string, Map<string, ReadonlyArray<TextChunkExpression<'string'>>>>;
+	readonly itextChunks: Map<string, ChunkExpressionsByItextId>;
 
 	constructor(readonly form: XFormDefinition) {
 		const submission = new SubmissionDefinition(form.xformDOM);
