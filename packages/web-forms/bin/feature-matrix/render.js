@@ -27,13 +27,25 @@ const progress = (fraction) => {
 	return `${bar}${remaining} ${Math.floor(fraction * 100)}\\%`;
 };
 
-// Not so smart, blindly breaks the word. Okay for now.
 const wrapString = (str, maxLength) => {
-	let parts = [];
-	for (let i = 0; i < str.length; i += maxLength) {
-		parts.push(str.slice(i, i + maxLength));
+	if (str.length <= maxLength) {
+		return str;
 	}
-	return parts.join('<br/>');
+	const words = str.split(/\s/);
+	const lines = [];
+	let currentLine = '';
+	for (const word of words) {
+		if (currentLine.length + word.length > maxLength) {
+			lines.push(currentLine);
+			currentLine = word;
+		} else {
+			currentLine += ' ' + word;
+		}
+	}
+	if (currentLine != '') {
+		lines.push(currentLine);
+	}
+	return lines.join('<br/>');
 };
 
 // Transform feature-matrix.json object into array
