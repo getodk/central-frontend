@@ -1,5 +1,16 @@
 # @getodk/scenario
 
+## 0.8.0
+
+### Minor Changes
+
+- 05db2e6: Added support for jr:choice-name function
+- a2d3912: Support references to form fields in translated form text
+
+### Patch Changes
+
+- 9860299: Resolved test unreliability by ensuring the size param is always valid
+
 ## 0.7.0
 
 ### Minor Changes

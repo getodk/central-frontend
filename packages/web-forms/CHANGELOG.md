@@ -1,5 +1,14 @@
 # @getodk/web-forms
 
+## 0.15.0
+
+### Minor Changes
+
+- 0d4c5e6: Implemented base64-decode xpath function for decoding strings in forms
+- 05db2e6: Added support for jr:choice-name function
+- a2d3912: Support references to form fields in translated form text
+- 9be65d9: Added pulldata function
+
 ## 0.14.0
 
 ### Minor Changes

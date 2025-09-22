@@ -1,5 +1,12 @@
 # @getodk/xforms-engine
 
+## 0.13.0
+
+### Minor Changes
+
+- 05db2e6: Added support for jr:choice-name function
+- a2d3912: Support references to form fields in translated form text
+
 ## 0.12.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @getodk/common
 
+## 0.8.0
+
+### Minor Changes
+
+- 0d4c5e6: Implemented base64-decode xpath function for decoding strings in forms
+- 05db2e6: Added support for jr:choice-name function
+- a2d3912: Support references to form fields in translated form text
+
 ## 0.7.0
 
 ### Minor Changes
