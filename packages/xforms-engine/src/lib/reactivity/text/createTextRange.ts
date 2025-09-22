@@ -1,12 +1,13 @@
-import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import {
+	JRResourceURL,
+	type JRResourceURLString,
+} from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { TextRole } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
-import { isEngineXPathElement } from '../../../integration/xpath/adapter/kind.ts';
-import { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
 import { type TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
 import { createComputedExpression } from '../createComputedExpression.ts';
@@ -25,45 +26,44 @@ interface ChunksAndMedia {
  * @param chunkExpressions - Array of text source expressions to process.
  * @returns An accessor for an object with all chunks and the first image (if any).
  */
-const createTextChunks = (
+const createTextChunks = <Role extends TextRole>(
 	context: EvaluationContext,
-	chunkExpressions: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>
+	definition: TextRangeDefinition<Role>
 ): Accessor<ChunksAndMedia> => {
 	return createMemo(() => {
 		const chunks: TextChunk[] = [];
 		const mediaSources: MediaSources = {};
 
+		let chunkExpressions: ReadonlyArray<TextChunkExpression<'string'>>;
+
+		if (definition.chunks[0]?.source === 'translation') {
+			const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
+				contextNode: context.contextNode,
+			});
+			chunkExpressions = definition.form.model.getTranslationChunks(
+				itextId,
+				context.getActiveLanguage()
+			);
+		} else {
+			// only translations have 'nodes' chunks
+			chunkExpressions = definition.chunks as Array<TextChunkExpression<'string'>>;
+		}
+
 		chunkExpressions.forEach((chunkExpression) => {
+			if (chunkExpression.resourceType) {
+				mediaSources[chunkExpression.resourceType] = JRResourceURL.from(
+					chunkExpression.stringValue as JRResourceURLString
+				);
+				return;
+			}
+
 			if (chunkExpression.source === 'literal') {
 				chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
 				return;
 			}
 
 			const computed = createComputedExpression(context, chunkExpression)();
-
-			if (typeof computed === 'string') {
-				// not a translation expression
-				chunks.push(new TextChunk(context, chunkExpression.source, computed));
-				return;
-			} else {
-				// translation expression evaluates to an entire itext block, process forms separately
-				computed.forEach((itextForm) => {
-					if (isEngineXPathElement(itextForm) && itextForm instanceof StaticElement) {
-						const formAttribute = itextForm.getAttributeValue('form');
-
-						if (!formAttribute) {
-							const defaultFormValue = itextForm.getXPathValue();
-							chunks.push(new TextChunk(context, chunkExpression.source, defaultFormValue));
-						} else if (['image', 'video', 'audio'].includes(formAttribute)) {
-							const formValue = itextForm.getXPathValue();
-
-							if (JRResourceURL.isJRResourceReference(formValue)) {
-								mediaSources[formAttribute as keyof MediaSources] = JRResourceURL.from(formValue);
-							}
-						}
-					}
-				});
-			}
+			chunks.push(new TextChunk(context, chunkExpression.source, computed));
 		});
 
 		return { chunks, mediaSources };
@@ -86,7 +86,7 @@ export const createTextRange = <Role extends TextRole>(
 	definition: TextRangeDefinition<Role>
 ): ComputedFormTextRange<Role> => {
 	return context.scope.runTask(() => {
-		const textChunks = createTextChunks(context, definition.chunks);
+		const textChunks = createTextChunks(context, definition);
 
 		return createMemo(() => {
 			const chunks = textChunks();

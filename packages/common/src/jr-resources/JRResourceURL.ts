@@ -3,6 +3,13 @@ type JRResourceURLProtocol = typeof JR_RESOURCE_URL_PROTOCOL;
 
 export type JRResourceURLString = `${JRResourceURLProtocol}${string}`;
 
+const ALL_RESOURCE_TYPES = ['image', 'audio', 'video'] as const;
+export type ResourceType = (typeof ALL_RESOURCE_TYPES)[number];
+
+export const isResourceType = (string: string): string is ResourceType => {
+	return ALL_RESOURCE_TYPES.includes(string as ResourceType);
+};
+
 interface ValidatedJRResourceURL extends URL {
 	readonly protocol: JRResourceURLProtocol;
 	readonly href: JRResourceURLString;

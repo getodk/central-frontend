@@ -21,27 +21,26 @@ export abstract class TextElementDefinition<
 	constructor(form: XFormDefinition, owner: TextElementOwner, sourceNode: TextSourceNode<Role>) {
 		super(form, owner, sourceNode);
 
-		const context = this as AnyTextElementDefinition;
 		const refExpression = parseNodesetReference(owner, sourceNode, 'ref');
 
 		if (refExpression == null) {
 			this.chunks = Array.from(sourceNode.childNodes).flatMap((childNode) => {
 				if (isElementNode(childNode)) {
-					return TextChunkExpression.fromOutput(context, childNode) ?? [];
+					return TextChunkExpression.fromOutput(childNode) ?? [];
 				}
 
 				if (isTextNode(childNode)) {
-					return TextChunkExpression.fromLiteral(context, childNode.data);
+					return TextChunkExpression.fromLiteral(childNode.data);
 				}
 
 				return [];
 			});
 		} else {
-			const expression = TextChunkExpression.fromTranslation(context, refExpression);
-			if (expression != null) {
-				this.chunks = [expression];
+			const translationChunk = TextChunkExpression.fromTranslation(refExpression);
+			if (translationChunk) {
+				this.chunks = [translationChunk];
 			} else {
-				this.chunks = [TextChunkExpression.fromReference(context, refExpression)];
+				this.chunks = [TextChunkExpression.fromReference(refExpression)];
 			}
 		}
 	}

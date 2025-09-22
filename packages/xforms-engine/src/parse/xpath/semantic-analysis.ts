@@ -20,6 +20,7 @@ import {
 	collectTypedNodes,
 	findTypedPrincipalExpressionNode,
 	isCompleteSubExpression,
+	type TypedSyntaxNode,
 } from './syntax-traversal.ts';
 
 // prettier-ignore
@@ -106,6 +107,24 @@ const isTranslationFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
 
 export type TranslationExpression = LocalNamedFunctionCallLiteral<'itext'>;
 
+const findFunctionPrincipalExpressionNode = (
+	expression: string
+): TypedSyntaxNode<'function_call'> | null => {
+	let result;
+	try {
+		result = expressionParser.parse(expression);
+	} catch {
+		return null;
+	}
+
+	const functionCallNode = findTypedPrincipalExpressionNode(['function_call'], result.rootNode);
+	if (functionCallNode == null) {
+		return null;
+	}
+
+	return functionCallNode;
+};
+
 /**
  * Determines if an arbitrary XPath expression is (in whole) a translation
  * expression (i.e. a call to `jr:itext`).
@@ -117,19 +136,29 @@ export type TranslationExpression = LocalNamedFunctionCallLiteral<'itext'>;
 export const isTranslationExpression = (
 	expression: string
 ): expression is TranslationExpression => {
-	let result;
-	try {
-		result = expressionParser.parse(expression);
-	} catch {
+	const functionCallNode = findFunctionPrincipalExpressionNode(expression);
+	if (!functionCallNode) {
 		return false;
 	}
-
-	const functionCallNode = findTypedPrincipalExpressionNode(['function_call'], result.rootNode);
-	if (functionCallNode == null) {
-		return false;
-	}
-
 	return isTranslationFunctionCall(functionCallNode);
+};
+
+export const getTranslationExpression = (expression: string): string | null => {
+	const functionCallNode = findFunctionPrincipalExpressionNode(expression);
+	if (!functionCallNode) {
+		return null;
+	}
+
+	if (!isTranslationFunctionCall(functionCallNode)) {
+		return null;
+	}
+
+	const arg = functionCallNode.children.find((child) => child.type === 'argument');
+	if (!arg) {
+		return null;
+	}
+
+	return arg.text;
 };
 
 const isCurrentFunctionCall = (syntaxNode: FunctionCallNode): boolean => {

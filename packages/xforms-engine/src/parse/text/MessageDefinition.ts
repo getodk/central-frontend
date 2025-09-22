@@ -29,11 +29,11 @@ export class MessageDefinition<
 	) {
 		super(bind.form, bind, null);
 
-		const expression = TextChunkExpression.fromTranslation(this, message);
-		if (expression != null) {
-			this.chunks = [expression];
+		const translationChunk = TextChunkExpression.fromTranslation(message);
+		if (translationChunk) {
+			this.chunks = [translationChunk];
 		} else {
-			this.chunks = [TextChunkExpression.fromLiteral(this, message)];
+			this.chunks = [TextChunkExpression.fromLiteral(message)];
 		}
 	}
 }

@@ -48,15 +48,6 @@ import type { ActiveLanguage } from './FormLanguage.ts';
  *   - `h:body//hint/@ref[not(is-translation-expr())]`
  *
  *   (See notes above for clarification of `is-translation-expr()`.)
- *
- * @todo It's unclear whether this will all become simpler or more compelex when
- * we add support for outputs in translations. In theory, the actual translation
- * `<text>` nodes map quite well to the `TextRange` concept (i.e. they are a
- * range of static and output chunks, just like labels and hints). The potential
- * for complications arise from XPath implementation details being largely
- * opaque (as in, the `jr:itext` implementation is encapsulated in the `xpath`
- * package, and the engine doesn't really deal with itext translations at the
- * node level at all).
  */
 // prettier-ignore
 export type TextChunkSource =

@@ -23,7 +23,7 @@ export class RepeatCountControlExpression extends DependentExpression<'number'> 
 		const { countExpression, noAddRemoveExpression } = bodyElement;
 
 		if (countExpression != null) {
-			return new this(bodyElement, countExpression);
+			return new this(countExpression);
 		}
 
 		if (noAddRemoveExpression != null && isConstantTruthyExpression(noAddRemoveExpression)) {
@@ -32,13 +32,13 @@ export class RepeatCountControlExpression extends DependentExpression<'number'> 
 			// repeat's template.
 			const fixedCountExpression = String(Math.max(initialCount, 1));
 
-			return new this(bodyElement, fixedCountExpression);
+			return new this(fixedCountExpression);
 		}
 
 		return null;
 	}
 
-	private constructor(context: RepeatElementDefinition, expression: string) {
-		super(context, 'number', expression);
+	private constructor(expression: string) {
+		super('number', expression);
 	}
 }
