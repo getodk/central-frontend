@@ -6,8 +6,8 @@ import { ItemsetLabelDefinition } from '../../text/ItemsetLabelDefinition.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { parseNodesetReference } from '../../xpath/reference-parsing.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
-import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
 import { RankControlDefinition } from './RankControlDefinition.ts';
+import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
 
 export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 	override readonly category = 'support';
@@ -28,7 +28,7 @@ export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 
 		const nodesetExpression = parseNodesetReference(parent, element, 'nodeset');
 
-		this.nodes = new ItemsetNodesetExpression(this, nodesetExpression);
+		this.nodes = new ItemsetNodesetExpression(nodesetExpression);
 		this.reference = nodesetExpression;
 
 		const valueElement = getValueElement(element);

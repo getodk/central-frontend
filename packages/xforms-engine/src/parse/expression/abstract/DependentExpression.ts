@@ -3,12 +3,7 @@ import type {
 	ConstantExpression,
 	ConstantTruthyExpression,
 } from '../../xpath/semantic-analysis.ts';
-import {
-	isConstantExpression,
-	isConstantTruthyExpression,
-	isTranslationExpression,
-} from '../../xpath/semantic-analysis.ts';
-import type { DependencyContext } from './DependencyContext.ts';
+import { isConstantExpression, isConstantTruthyExpression } from '../../xpath/semantic-analysis.ts';
 
 const evaluatorMethodsByResultType = {
 	boolean: 'evaluateBoolean',
@@ -28,22 +23,6 @@ export type DependentExpressionResult<Type extends DependentExpressionResultType
 	EngineXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
 >;
 
-interface SemanticDependencyOptions {
-	/**
-	 * @default false
-	 */
-	readonly translations?: boolean | undefined;
-}
-
-interface DependentExpressionOptions {
-	/**
-	 * @default false
-	 */
-	readonly ignoreContextReference?: boolean;
-
-	readonly semanticDependencies?: SemanticDependencyOptions;
-}
-
 export interface ConstantDependentExpression<Type extends DependentExpressionResultType>
 	extends DependentExpression<Type> {
 	readonly expression: ConstantExpression;
@@ -60,10 +39,8 @@ export abstract class DependentExpression<Type extends DependentExpressionResult
 	readonly constantTruthyExpression: ConstantTruthyExpression | null;
 
 	constructor(
-		context: DependencyContext,
 		readonly resultType: Type,
-		readonly expression: string,
-		options: DependentExpressionOptions = {}
+		readonly expression: string
 	) {
 		if (resultType === 'boolean' && isConstantTruthyExpression(expression)) {
 			this.constantTruthyExpression = expression;
@@ -77,19 +54,6 @@ export abstract class DependentExpression<Type extends DependentExpressionResult
 		}
 
 		this.evaluatorMethod = evaluatorMethodsByResultType[resultType];
-
-		const {
-			semanticDependencies = {
-				translations: false,
-			},
-		} = options;
-
-		const isTranslated = semanticDependencies.translations && isTranslationExpression(expression);
-
-		if (isTranslated) {
-			this.isTranslated = true;
-			context.isTranslated = true;
-		}
 	}
 
 	isConstantExpression(): this is ConstantDependentExpression<Type> {

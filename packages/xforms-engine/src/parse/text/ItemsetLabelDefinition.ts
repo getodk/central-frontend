@@ -30,11 +30,11 @@ export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
 			throw new Error('<itemset><label> missing ref attribute');
 		}
 
-		const expression = TextChunkExpression.fromTranslation(this, refExpression);
-		if (expression != null) {
-			this.chunks = [expression];
+		const translationChunk = TextChunkExpression.fromTranslation(refExpression);
+		if (translationChunk) {
+			this.chunks = [translationChunk];
 		} else {
-			this.chunks = [TextChunkExpression.fromReference(this, refExpression)];
+			this.chunks = [TextChunkExpression.fromReference(refExpression)];
 		}
 	}
 }
