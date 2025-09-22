@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- see binds for explanations of each case -->
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms/">
     <h:head>
         <h:title>jr-choice-name</h:title>
         <model>
@@ -128,6 +128,9 @@
                         <select_one_name/>
                     </my-repeat>
 
+                    <rank/>
+                    <rank_name/>
+
                     <meta>
                         <instanceID/>
                     </meta>
@@ -192,10 +195,35 @@
             <bind nodeset="/jr-choice-name/my-repeat/select_one" type="string"/>
             <bind calculate="jr:choice-name( ../select_one , ' ../select_one ')" nodeset="/jr-choice-name/my-repeat/select_one_name" type="string"/>
 
+            <!-- works with ranks too -->
+            <bind nodeset="/jr-choice-name/rank" type="rank"/>
+            <bind calculate="jr:choice-name( selected-at(/jr-choice-name/rank, 0) , ' /jr-choice-name/rank ')" nodeset="/jr-choice-name/rank_name" type="string"/>
+
             <bind jr:preload="uid" nodeset="/jr-choice-name/meta/instanceID" readonly="true()" type="string"/>
         </model>
     </h:head>
     <h:body>
+
+        <input ref="/jr-choice-name/literal_choice_name">
+            <label>the first parameter to jr:choice-name can be a literal string</label>
+        </input>
+
+        <input ref="/jr-choice-name/select_one_name_outside">
+            <label>the first parameter to jr:choice-name can be an XPath path</label>
+        </input>
+
+        <input ref="/jr-choice-name/cocotero_name">
+            <label>the first parameter to jr:choice-name can be any expression that returns a string</label>
+        </input>
+
+        <input ref="/jr-choice-name/my-repeat/select_one_name">
+            <label>both parameters to jr:choice-name can be relative XPath paths</label>
+        </input>
+
+        <input ref="/jr-choice-name/rank_name">
+            <label>works with ranks too</label>
+        </input>
+
         <select1 ref="/jr-choice-name/select_one_outside">
             <label ref="jr:itext('/jr-choice-name/select_one_outside:label')"/>
             <item>
@@ -262,5 +290,13 @@
                 </select1>
             </repeat>
         </group>
+
+        <odk:rank ref="/jr-choice-name/rank">
+            <label>Rank</label>
+            <itemset nodeset="instance('cocoteros')/root/item">
+                <value ref="name"/>
+                <label ref="label"/>
+            </itemset>
+        </odk:rank>
     </h:body>
 </h:html>

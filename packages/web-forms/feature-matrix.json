@@ -211,7 +211,7 @@
     "selected(string list, string value)": "✅",
     "selected-at(string list, number index)": "✅",
     "count-selected(node node)": "✅",
-    "jr:choice-name(node node, string value)": "",
+    "jr:choice-name(node node, string value)": "✅",
     "jr:itext(string id)": "✅",
     "indexed-repeat(node-set arg, node-set repeat1, number index1, [node-set repeatN, number indexN]{0,2})": "✅",
     "area(node-set ns|geoshape gs)": "✅",

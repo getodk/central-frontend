@@ -1,4 +1,4 @@
-import { XPathNodeKindKey } from '@getodk/xpath';
+import { type XPathChoiceNode, XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type {
@@ -61,7 +61,8 @@ export class SelectControl
 		XFormsXPathElement,
 		EvaluationContext,
 		ValidationContext,
-		ClientReactiveSerializableValueNode
+		ClientReactiveSerializableValueNode,
+		XPathChoiceNode
 {
 	static from(
 		parent: GeneralParentNode,
@@ -230,5 +231,10 @@ export class SelectControl
 		this.setValueState(effectiveValues);
 
 		return this.root;
+	}
+
+	getChoiceName(value: string): string | null {
+		const option = this.mapOptionsByValue().get(value);
+		return option?.label?.asString ?? null;
 	}
 }

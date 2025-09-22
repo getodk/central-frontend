@@ -67,3 +67,5 @@ export type {
 	XFormsXPathEvaluatorOptions,
 	XFormsXPathRootNode,
 } from './xforms/XFormsXPathEvaluator.ts';
+
+export type { XPathChoiceNode } from './adapter/interface/XPathChoiceNode.ts';

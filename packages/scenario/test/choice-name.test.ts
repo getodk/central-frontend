@@ -18,7 +18,7 @@ import { r } from '../src/jr/resource/ResourcePathHelper.ts';
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('JavaRosa ports: ChoiceNameTest.java', () => {
 	describe('jr:choice-name call on literal choice value', () => {
-		it.fails('gets choice name', async () => {
+		it('gets choice name', async () => {
 			const scenario = await Scenario.init(r('jr-choice-name.xml'));
 
 			expect(scenario.answerOf('/jr-choice-name/literal_choice_name')).toEqualAnswer(
@@ -28,8 +28,9 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 	});
 
 	describe('choice name call outside of repeat with static choices', () => {
-		it.fails('gets choice name', async () => {
+		it('gets choice name', async () => {
 			const scenario = await Scenario.init(r('jr-choice-name.xml'));
+			scenario.answer('/jr-choice-name/select_one_outside', 'choice3');
 
 			expect(scenario.answerOf('/jr-choice-name/select_one_name_outside')).toEqualAnswer(
 				stringAnswer('Choice 3')
@@ -38,10 +39,13 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 	});
 
 	describe('choice name call in repeat with static choices', () => {
-		it.fails('gets choice name', async () => {
+		it('gets choice name', async () => {
 			const scenario = await Scenario.init(r('jr-choice-name.xml'));
+
 			scenario.answer('/jr-choice-name/my-repeat[1]/select_one', 'choice4');
+			scenario.createNewRepeat('/jr-choice-name/my-repeat');
 			scenario.answer('/jr-choice-name/my-repeat[2]/select_one', 'choice1');
+			scenario.createNewRepeat('/jr-choice-name/my-repeat');
 			scenario.answer('/jr-choice-name/my-repeat[3]/select_one', 'choice5');
 
 			expect(scenario.answerOf('/jr-choice-name/my-repeat[1]/select_one_name')).toEqualAnswer(
@@ -57,7 +61,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 	});
 
 	describe('choice name call', () => {
-		it.fails('respects language', async () => {
+		it('respects language', async () => {
 			const scenario = await Scenario.init(r('jr-choice-name.xml'));
 
 			scenario.setLanguage('French (fr)');
@@ -74,14 +78,11 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 			// TODO (web-forms): per @lognaturel,
 			// https://github.com/getodk/javarosa/issues/737 is pertinent.
 			//
-			// TODO (JR): why does test fail if value is not set to choice3 again?
-			// Does changing language not trigger recomputation?
 			scenario.answer('/jr-choice-name/select_one_outside', 'choice3');
 			expect(scenario.answerOf('/jr-choice-name/select_one_name_outside')).toEqualAnswer(
 				stringAnswer('Choice 3')
 			);
 
-			// TODO (JR): why does test fail if value is not set to choice4 again? Does changing language not trigger recomputation?
 			scenario.answer('/jr-choice-name/my-repeat[1]/select_one', 'choice4');
 			expect(scenario.answerOf('/jr-choice-name/my-repeat[1]/select_one_name')).toEqualAnswer(
 				stringAnswer('Choice 4')
@@ -92,7 +93,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 	// The choice list for question cocotero with dynamic itemset is populated on DAG initialization time triggered by the jr:choice-name
 	// expression in the calculate.
 	describe('choice name call with dynamic choices and no predicate', () => {
-		it.fails('selects name', async () => {
+		it('selects name', async () => {
 			const scenario = await Scenario.init(r('jr-choice-name.xml'));
 
 			scenario.answer('/jr-choice-name/cocotero_a', 'a');
@@ -108,7 +109,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 	// set yet, the choice list is empty. Setting the country does not automatically trigger re-computation of the choice list for the
 	// city question. Instead, clients trigger a recomputation of the list when the list is displayed.
 	describe('choice name call with dynamic choices and predicate', () => {
-		it.fails('requires explicit dynamic choices recomputation', async () => {
+		it('requires explicit dynamic choices recomputation', async () => {
 			const scenario = await Scenario.init(
 				'Dynamic Choices and Predicates',
 				html(
