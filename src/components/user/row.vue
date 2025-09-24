@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="last-active">
       <date-time v-if="user.lastLoginAt" :iso="user.lastLoginAt"/>
-      <span v-else>{{ $t('invitationPending') }}</span>
+      <span v-else class="invitation-pending">{{ $t('invitationPending') }}</span>
     </td>
     <td>
       <div class="dropdown">
@@ -146,6 +146,10 @@ export default {
       display: inline-block;
       width: 150px;
     }
+  }
+
+  .invitation-pending {
+    color: #555555;
   }
 }
 </style>

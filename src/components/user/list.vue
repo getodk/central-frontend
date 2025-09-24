@@ -176,7 +176,8 @@ export default {
     ],
     "header": {
       "sitewideRole": "Sitewide Role",
-      "lastActive": "Last active"
+      // Heading for a column that shows last login time of the users
+      "lastActive": "Last Active"
     },
     "alert": {
       "create": "A user was created successfully for “{displayName}”.",

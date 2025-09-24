@@ -5151,8 +5151,8 @@
           "developer_comment": "This is the text of a table column header."
         },
         "lastActive": {
-          "string": "Last active",
-          "developer_comment": "This is the text of a table column header."
+          "string": "Last Active",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
