@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
-      <th v-if="!deleted">
+      <th v-if="!deleted && project.verbs.has('entity.delete')">
         <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
       </th>
       <th>{{ $t('header.createdBy') }}</th>
