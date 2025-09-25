@@ -11,10 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-show="state" id="odata-loading-message">
-    <div id="odata-loading-spinner-container">
-      <spinner :state="state"/>
-    </div>
-    <div id="odata-loading-message-text">{{ message }}</div>
+    <spinner :state="state" inline/>
+    <span id="odata-loading-message-text">{{ message }}</span>
   </div>
 </template>
 
@@ -72,23 +70,13 @@ const message = computed(() => {
 @import '../assets/scss/variables';
 
 #odata-loading-message {
-  margin-left: 28px;
-  margin-top: 20px;
-  padding-bottom: 38px;
-  position: relative;
+  font-size: 12px;
+  padding: 20px 0 38px 28px;
+}
 
-  #odata-loading-spinner-container {
-    margin-right: 8px;
-    position: absolute;
-    top: 8px;
-    width: 16px; // eventually probably better not to default spinner to center.
-  }
-
-  #odata-loading-message-text {
-    color: #555;
-    font-size: 12px;
-    padding-left: 24px;
-  }
+#odata-loading-message-text {
+  color: #555;
+  margin-left: 9px;
 }
 </style>
 
