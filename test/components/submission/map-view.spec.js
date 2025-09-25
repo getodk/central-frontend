@@ -224,7 +224,7 @@ describe('SubmissionMapView', () => {
     it('updates the map', () => {
       testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
       const assertCount = (app, count) => {
-        const { features } = app.getComponent(GeojsonMap).props();
+        const { features } = app.getComponent(GeojsonMap).props().data;
         features.length.should.equal(count);
       };
       return load('/projects/1/forms/f/submissions?map=true')
@@ -309,7 +309,7 @@ describe('SubmissionMapView', () => {
       .createPast(1, { mypoint: 'POINT (1 2)' })
       .createPast(1, { mypoint: null });
     const app = await load('/projects/1/forms/f/submissions?map=true');
-    app.getComponent(GeojsonMap).props().features.length.should.equal(1);
+    app.getComponent(GeojsonMap).props().data.features.length.should.equal(1);
     // Even though there is only one submission in the GeoJSON, that should not
     // change the submission count in the tab badge.
     findTab(app, 'Submissions').get('.badge').text().should.equal('2');

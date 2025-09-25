@@ -3694,6 +3694,12 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "Showing {count} of {total}",
+        "developer_comment": "{count} and {total} are both numbers."
+      }
+    },
     "Home": {
       "heading": {
         "0": {

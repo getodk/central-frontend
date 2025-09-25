@@ -10,19 +10,25 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <geojson-map v-if="geojson.dataExists && geojson.features.length !== 0"
-    :features="geojson.features"/>
-  <odata-loading-message :state="geojson.initiallyLoading" type="submission"
-    :filter="filter != null" :total-count="0" :top="0"/>
+  <div id="submission-map-view" ref="el">
+    <odata-loading-message :state="geojson.initiallyLoading || loadingMap"
+      type="submission" :filter="filter != null" :total-count="0" :top="0"/>
+    <geojson-map :data="geojson.data" :sizer="sizeMap" @show="loadedMap"
+      @selection-changed="selectionChanged"/>
+    <submission-map-popup v-if="selection != null" :instance-id="selection.id"
+      :fieldpath="selection.properties.fieldpath"
+      :coordinates="selection.coordinates"/>
+  </div>
 </template>
 
 <script setup>
-import { watch } from 'vue';
+import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
-import GeojsonMap from '../geojson-map.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
+import SubmissionMapPopup from './map-popup.vue';
 
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
 import { noargs, noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
@@ -44,6 +50,8 @@ const props = defineProps({
   // Table actions
   filter: Object
 });
+
+const GeojsonMap = defineAsyncComponent(loadAsync('GeojsonMap'));
 
 const { odata, createResource } = useRequestData();
 const geojson = createResource('geojson', () => ({
@@ -84,5 +92,33 @@ fetchData();
 watch([() => props.filter, () => props.deleted], noargs(fetchData));
 const refresh = () => fetchData(false);
 
+const loadingMap = ref(false);
+watch(() => geojson.dataExists, (dataExists) => {
+  loadingMap.value = dataExists;
+});
+const loadedMap = () => { loadingMap.value = false; };
+
+const el = useTemplateRef('el');
+// Stretches the map to the bottom of the screen.
+const sizeMap = () => {
+  const rect = el.value.getBoundingClientRect();
+  if (rect.height === 0) return '';
+
+  const padding = 15;
+  // Not sure why this correction is needed. Without it, the map seems to
+  // overflow slightly.
+  const correction = -2;
+  return document.documentElement.clientHeight - rect.top - padding + correction;
+};
+
+const selection = shallowRef(null);
+const selectionChanged = (value) => { selection.value = value; };
+
 defineExpose({ refresh });
 </script>
+
+<style lang="scss">
+#submission-map-view {
+  position: relative;
+}
+</style>
