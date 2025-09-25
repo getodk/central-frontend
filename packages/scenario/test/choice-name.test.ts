@@ -3,6 +3,7 @@ import {
 	body,
 	head,
 	html,
+	input,
 	item,
 	mainInstance,
 	model,
@@ -179,6 +180,56 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 			scenario.answer('/data/city', 'grenoble');
 
 			expect(scenario.answerOf('/data/city_name')).toEqualAnswer(stringAnswer('Grenoble'));
+		});
+	});
+
+	describe('error conditions', () => {
+		it('throws on unknown element', async () => {
+			await expect(async () => {
+				await Scenario.init(
+					'Simplest',
+					html(
+						head(
+							title('Simplest'),
+							model(
+								mainInstance(t('data id="simplest"', t('a'), t('select_one'))),
+								bind('/data/a')
+									.type('string')
+									.calculate("jr:choice-name('choice2', ' /data/NOT_FOUND ')")
+							)
+						),
+						body(
+							select1(
+								'/data/select_one',
+								item('choice1', 'Choice 1 label'),
+								item('choice2', 'Choice 2 label')
+							)
+						)
+					)
+				);
+			}).rejects.toThrow("No element found by evaluating ' /data/NOT_FOUND '");
+		});
+
+		it('throws when value is invalid element type', async () => {
+			await expect(async () => {
+				await Scenario.init(
+					'Simplest',
+					html(
+						head(
+							title('Simplest'),
+							model(
+								mainInstance(t('data id="simplest"', t('a'), t('select_one'))),
+								bind('/data/a')
+									.type('string')
+									.calculate("jr:choice-name('choice2', ' /data/select_one ')")
+							)
+						),
+						body(input('/data/select_one'))
+					)
+				);
+			}).rejects.toThrow(
+				"Evaluating 'jr:choice-name' on element ' /data/select_one ' which has no possible choices."
+			);
 		});
 	});
 });

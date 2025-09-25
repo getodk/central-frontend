@@ -34,7 +34,7 @@ export const choiceName = new StringFunction(
 
 		const firstNode = nodes?.[0];
 		if (!firstNode) {
-			return '';
+			throw new Error(`No element found by evaluating '${value}'`);
 		}
 		if (!('getChoiceName' in firstNode)) {
 			throw new Error(
