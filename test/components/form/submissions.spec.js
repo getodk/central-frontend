@@ -45,6 +45,25 @@ describe('FormSubmissions', () => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('11');
         });
     });
+
+    it('should not change submission count when viewing deleted submissions', () => {
+      testData.extendedForms.createPast(1, { submissions: 5 });
+      testData.extendedSubmissions.createPast(5);
+      testData.extendedSubmissions.createPast(2, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions')
+        .afterResponses(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('5');
+        })
+        .complete()
+        .request(app => {
+          app.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
+          return app.find('.toggle-deleted-submissions').trigger('click');
+        })
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponses(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('5');
+        });
+    });
   });
 
   describe('deleted submissions', () => {
