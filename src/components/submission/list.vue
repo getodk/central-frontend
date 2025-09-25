@@ -315,13 +315,6 @@ export default {
           this.dataView === 'table' && !this.odataFilter && !this.deleted)
           this.formVersion.submissions = this.odata.count;
       }
-    },
-    'odata.removedSubmissions.size': {
-      handler(size) {
-        if (this.formVersion.dataExists && this.odata.dataExists) {
-          this.formVersion.submissions += this.deleted ? size : -size;
-        }
-      }
     }
   },
   created() {
@@ -403,6 +396,7 @@ export default {
           if (confirm != null) this.confirmDelete = confirm;
 
           this.odata.removedSubmissions.add(instanceId);
+          this.formVersion.submissions -= 1;
           /* Before doing a couple more things, we first determine whether
           this.odata.value still includes the Submission and if so, what the
           current index of the Submission is. If a request to refresh
@@ -444,6 +438,7 @@ export default {
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odata.removedSubmissions.add(instanceId);
+          this.formVersion.submissions += 1;
 
           // See the comments in requestDelete().
           const index = this.odata.dataExists
