@@ -59,14 +59,14 @@ except according to the terms contained in the LICENSE file.
       <submission-table-view v-if="dataView === 'table'" ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
         :filter="odataFilter" :fields="selectedFields"
-        :refreshing="refreshing" :total-count="formVersion.submissions"
+        :total-count="formVersion.submissions"
         :awaiting-responses="awaitingResponses"
         @review="reviewModal.show({ submission: $event })"
         @delete="showDelete"
         @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
-        :filter="geojsonFilter" :refreshing="refreshing"/>
+        :filter="geojsonFilter"/>
       <p v-show="emptyTableMessage" class="empty-table-message">
         {{ emptyTableMessage }}
       </p>

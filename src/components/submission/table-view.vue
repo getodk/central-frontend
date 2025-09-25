@@ -16,11 +16,10 @@ except according to the terms contained in the LICENSE file.
     @review="$emit('review', $event)"
     @delete="$emit('delete', $event)"
     @restore="$emit('restore', $event)"/>
-  <odata-loading-message type="submission"
+  <odata-loading-message :state="odata.initiallyLoading"
+    type="submission"
     :top="pagination.size"
-    :odata="odata"
     :filter="!!filter"
-    :refreshing="refreshing"
     :total-count="totalCount"/>
   <!-- @update:page is emitted on size change as well -->
   <Pagination v-if="pagination.count > 0"
@@ -61,13 +60,10 @@ const props = defineProps({
   filter: String,
   fields: Array,
 
-  // Loading message
   totalCount: {
     type: Number,
     default: 0
   },
-  refreshing: Boolean,
-
   awaitingResponses: {
     type: Set,
     required: true
