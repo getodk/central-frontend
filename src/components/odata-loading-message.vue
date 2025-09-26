@@ -24,9 +24,6 @@ import Spinner from './spinner.vue';
 
 import { useI18nUtils } from '../util/i18n';
 
-const { t } = useI18n();
-const { tn } = useI18nUtils();
-
 defineOptions({
   name: 'OdataLoadingMessage'
 });
@@ -41,6 +38,9 @@ const props = defineProps({
   totalCount: Number,
   top: Number
 });
+
+const { t } = useI18n();
+const { tn } = useI18nUtils();
 
 const message = computed(() => {
   if (!props.state) return null;
