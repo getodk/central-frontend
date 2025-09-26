@@ -194,8 +194,8 @@ const countFeaturesInView = () => {
   let count = 0;
   forEachFeatureInView(feature => {
     // This counts the entire cluster even if not all features in the cluster
-    // are in view. That's imprecise on one hand, but also probably less
-    // confusing to users.
+    // are in view. While that's arguably imprecise, it's probably less
+    // confusing to users that way.
     count += isCluster(feature) ? feature.get('features').length : 1;
   });
   inViewCount.value = count;
@@ -251,8 +251,8 @@ const show = async () => {
   await Promise.race([
     new Promise(resolve => {
       mapInstance.once('rendercomplete', resolve);
-      // Nudge mapInstance to render if it's not already doing so for some reason.
-      // Otherwise, the promise may never resolve.
+      // Nudge mapInstance to render if it's not already doing so for some
+      // reason. Otherwise, the promise may never resolve.
       mapInstance.render();
     }),
     new Promise(resolve => { setTimeout(resolve, 1500); })
