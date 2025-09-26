@@ -343,13 +343,6 @@ const selectFeatureAtPixel = (pixel) => {
 ////////////////////////////////////////////////////////////////////////////////
 // HOOKS - TIE EVERYTHING TOGETHER
 
-// OpenLayers event listeners
-const olListeners = [];
-const olOn = (target, type, callback) => {
-  target.on(type, callback);
-  olListeners.push([target, type, callback]);
-};
-
 // We may have attempted to show the map, but failed because the map hadn't been
 // sized. The main reason for that is that an ancestor element was hidden. This
 // ResizeObserver accounts for that case: once the ancestor element becomes
@@ -363,18 +356,23 @@ onMounted(() => {
   // If mapContainer.value is already visible, resizeObserver will run the
   // callback immediately.
   resizeObserver.observe(el.value);
+});
 
-  olOn(mapInstance, 'moveend', () => {
-    if (shown.value) countFeaturesInView();
-  });
+// OpenLayers event listeners
+const olListeners = [];
+const olOn = (target, type, callback) => {
+  target.on(type, callback);
+  olListeners.push([target, type, callback]);
+};
 
-  let lastClick = 0;
-  olOn(mapInstance, 'click', (event) => {
-    const now = Date.now();
-    // If a user double-clicks, ignore the second click.
-    if (now > lastClick + 300) selectFeatureAtPixel(event.pixel);
-    lastClick = now;
-  });
+olOn(mapInstance, 'moveend', () => { if (shown.value) countFeaturesInView(); });
+
+let lastClick = 0;
+olOn(mapInstance, 'click', (event) => {
+  const now = Date.now();
+  // If a user double-clicks, ignore the second click.
+  if (now > lastClick + 300) selectFeatureAtPixel(event.pixel);
+  lastClick = now;
 });
 
 watch(() => props.data, (newData, oldData) => {
