@@ -406,8 +406,7 @@ describe('EntityUpload', () => {
         if (i === 0) return;
         component.get('#entity-table').should.be.hidden();
         const props = component.getComponent(OdataLoadingMessage).props();
-        props.odata.awaitingResponse.should.be.true;
-        props.refreshing.should.be.false;
+        props.state.should.be.true;
         props.totalCount.should.equal(1);
       }));
 
