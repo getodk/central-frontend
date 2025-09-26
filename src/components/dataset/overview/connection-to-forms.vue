@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
                 :to="publishedFormPath(form.projectId, form.xmlFormId)"
                 v-tooltip.text/>
               <span v-if="form.repeatPath" class="repeat-tag"
-                v-tooltip.aria-describedby="form.repeatPath">
+                v-tooltip.no-aria="form.repeatPath">
                 <span class="icon-refresh"></span>
                 {{ form.repeatPath.split('/').filter(Boolean).pop() }}</span>
             </div>
