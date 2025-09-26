@@ -9,7 +9,7 @@ describe('OdataLoadingMessage', () => {
     ['Loading Submissions…',                                  { state: true }],
     ['Loading 10 Submissions…',                               { state: true, top: 250, totalCount: 10 }],
     ['Loading the first 10 of 100 Submissions…',              { state: true, top: 10, totalCount: 100 }],
-    // totalCount is 0
+    // totalCount is 0.
     ['Loading Submissions…',                                  { state: true, top: 250, totalCount: 0 }],
     // No `top`
     ['Loading 10 Submissions…',                               { state: true, totalCount: 10 }],
