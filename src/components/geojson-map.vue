@@ -49,7 +49,7 @@ const props = defineProps({
     default: noop
   }
 });
-const emit = defineEmits(['show', 'selection-changed']);
+const emit = defineEmits(['show', 'shown', 'selection-changed']);
 
 // Set to `true` for logging.
 const debug = false;
@@ -234,6 +234,7 @@ const show = async () => {
   resize();
   if (mapInstance.getSize().find(length => length === 0)) return;
 
+  emit('show');
   fitView(featureSource.getExtent());
 
   // Set abortShow.
@@ -262,7 +263,7 @@ const show = async () => {
   abortShow = noop;
   countFeaturesInView();
   log('shown');
-  emit('show');
+  emit('shown');
 };
 
 const hide = () => {

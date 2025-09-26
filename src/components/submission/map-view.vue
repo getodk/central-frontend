@@ -11,9 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="submission-map-view" ref="el">
-    <odata-loading-message :state="geojson.initiallyLoading || loadingMap"
+    <odata-loading-message :state="geojson.initiallyLoading || showingMap"
       type="submission" :filter="filter != null" :total-count="0" :top="0"/>
-    <geojson-map :data="geojson.data" :sizer="sizeMap" @show="loadedMap"
+    <geojson-map :data="geojson.data" :sizer="sizeMap"
+      @show="showMap(true)" @shown="showMap(false)"
       @selection-changed="selectionChanged"/>
     <submission-map-popup v-if="selection != null" :instance-id="selection.id"
       :fieldpath="selection.properties.fieldpath"
@@ -92,11 +93,8 @@ fetchData();
 watch([() => props.filter, () => props.deleted], noargs(fetchData));
 const refresh = () => fetchData(false);
 
-const loadingMap = ref(false);
-watch(() => geojson.dataExists, (dataExists) => {
-  loadingMap.value = dataExists;
-});
-const loadedMap = () => { loadingMap.value = false; };
+const showingMap = ref(false);
+const showMap = (showing) => { showingMap.value = showing; };
 
 const el = useTemplateRef('el');
 // Stretches the map to the bottom of the screen.
