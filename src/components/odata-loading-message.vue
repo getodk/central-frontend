@@ -38,14 +38,8 @@ const props = defineProps({
     required: true
   },
   filter: Boolean,
-  totalCount: {
-    type: Number,
-    required: true
-  },
-  top: {
-    type: Number,
-    required: true
-  }
+  totalCount: Number,
+  top: Number
 });
 
 const message = computed(() => {
@@ -54,10 +48,10 @@ const message = computed(() => {
   if (props.filter)
     return t(`${props.type}.filtered.withoutCount`);
 
-  if (props.totalCount === 0)
+  if (props.totalCount == null || props.totalCount === 0)
     return t(`${props.type}.withoutCount`);
 
-  if (props.totalCount <= props.top)
+  if (props.top == null || props.totalCount <= props.top)
     return tn(`${props.type}.all`, props.totalCount);
 
   return tn(`${props.type}.first`, props.totalCount, {
