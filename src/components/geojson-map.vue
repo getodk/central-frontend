@@ -367,13 +367,24 @@ const olOn = (target, type, callback) => {
 
 olOn(mapInstance, 'moveend', () => { if (shown.value) countFeaturesInView(); });
 
-let lastClick = 0;
-olOn(mapInstance, 'click', (event) => {
-  const now = Date.now();
-  // If a user double-clicks, ignore the second click.
-  if (now > lastClick + 300) selectFeatureAtPixel(event.pixel);
-  lastClick = now;
-});
+// OpenLayers has a `singleclick` event, but it lags the actual click by 250
+// milliseconds in order to exclude double-clicks. Here, we listen for `click`
+// events in order to avoid the lag, then use ignoreDoubleClick() to account for
+// double-clicks.
+const ignoreDoubleClick = (callback) => {
+  let previousPixel;
+  let previousTime = 0;
+  return (event) => {
+    const now = Date.now();
+    if (!equals(event.pixel, previousPixel) || now > previousTime + 250)
+      callback(event);
+    previousPixel = event.pixel;
+    previousTime = now;
+  };
+};
+olOn(mapInstance, 'click', ignoreDoubleClick(event => {
+  selectFeatureAtPixel(event.pixel);
+}));
 
 watch(() => props.data, (newData, oldData) => {
   log(newData != null
