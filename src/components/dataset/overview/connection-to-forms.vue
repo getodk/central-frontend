@@ -27,7 +27,8 @@ except according to the terms contained in the LICENSE file.
               <span v-if="form.repeatPath" class="repeat-tag"
                 v-tooltip.no-aria="form.repeatPath">
                 <span class="icon-refresh"></span>
-                {{ form.repeatPath.split('/').filter(Boolean).pop() }}</span>
+                <!-- Path includes leading and trailing slashes e.g. /plot/tree/ -->
+                {{ form.repeatPath.slice(0, -1).split('/').pop() }}</span>
             </div>
           </template>
           <template #caption>
