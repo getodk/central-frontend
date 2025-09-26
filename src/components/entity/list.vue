@@ -41,11 +41,10 @@ except according to the terms contained in the LICENSE file.
     <p v-show="emptyTableMessage" class="empty-table-message">
       {{ emptyTableMessage }}
     </p>
-    <odata-loading-message type="entity"
+    <odata-loading-message :state="odataEntities.initiallyLoading"
+      type="entity"
       :top="pagination.size"
-      :odata="odataEntities"
       :filter="odataFilter != null || !!searchTerm"
-      :refreshing="refreshing"
       :total-count="dataset.dataExists ? dataset.entities : 0"/>
 
     <!-- @update:page is emitted on size change as well -->
