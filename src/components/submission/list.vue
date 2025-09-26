@@ -312,7 +312,7 @@ export default {
         // view sets this.odata, as some submissions might not have geo data and
         // won't appear on the map.
         if (this.formVersion.dataExists && this.odata.dataExists &&
-          this.dataView === 'table' && !this.odataFilter)
+          this.dataView === 'table' && !this.odataFilter && !this.deleted)
           this.formVersion.submissions = this.odata.count;
       }
     },
