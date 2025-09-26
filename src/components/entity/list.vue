@@ -30,30 +30,33 @@ except according to the terms contained in the LICENSE file.
         v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
       </teleport-if-exists>
     </div>
-    <entity-table v-show="odataEntities.dataExists" ref="table"
-      v-model:all-selected="allSelected"
-      :properties="dataset.properties" :deleted="deleted"
-      :awaiting-deleted-responses="awaitingResponses"
-      @selection-changed="handleSelectionChange"
-      @update="showUpdate"
-      @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
+    <disable-container :disabled="bulkOperationInProgress"
+      :disabled-message="$t('bulkOpInProgress')">
+      <entity-table v-show="odataEntities.dataExists" ref="table"
+        v-model:all-selected="allSelected"
+        :properties="dataset.properties" :deleted="deleted"
+        :awaiting-deleted-responses="awaitingResponses"
+        @selection-changed="handleSelectionChange"
+        @update="showUpdate"
+        @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
 
-    <p v-show="emptyTableMessage" class="empty-table-message">
-      {{ emptyTableMessage }}
-    </p>
-    <odata-loading-message type="entity"
-      :top="pagination.size"
-      :odata="odataEntities"
-      :filter="odataFilter != null || !!searchTerm"
-      :refreshing="refreshing"
-      :total-count="dataset.dataExists ? dataset.entities : 0"/>
+      <p v-show="emptyTableMessage" class="empty-table-message">
+        {{ emptyTableMessage }}
+      </p>
+      <odata-loading-message type="entity"
+        :top="pagination.size"
+        :odata="odataEntities"
+        :filter="odataFilter != null || !!searchTerm"
+        :refreshing="refreshing"
+        :total-count="dataset.dataExists ? dataset.entities : 0"/>
 
-    <!-- @update:page is emitted on size change as well -->
-    <pagination v-if="pagination.count > 0"
-            v-model:page="pagination.page" v-model:size="pagination.size"
-            :count="pagination.count" :size-options="pageSizeOptions"
-            :spinner="odataEntities.awaitingResponse"
-            @update:page="handlePageChange()"/>
+      <!-- @update:page is emitted on size change as well -->
+      <pagination v-if="pagination.count > 0"
+              v-model:page="pagination.page" v-model:size="pagination.size"
+              :count="pagination.count" :size-options="pageSizeOptions"
+              :spinner="odataEntities.awaitingResponse"
+              @update:page="handlePageChange()"/>
+    </disable-container>
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
@@ -92,6 +95,7 @@ import Pagination from '../pagination.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 import ActionBar from '../action-bar.vue';
+import DisableContainer from '../disable-container.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -107,6 +111,7 @@ export default {
   name: 'EntityList',
   components: {
     ActionBar,
+    DisableContainer,
     EntityDelete,
     EntityDownloadButton,
     EntityRestore,
@@ -575,7 +580,6 @@ export default {
     },
     requestBulkDelete() {
       const uuids = Array.from(this.selectedEntities).map(e => e.__id);
-      // TODO: disable the whole table
 
       const bulkDelete = () => {
         this.bulkOperationInProgress = true;
@@ -727,7 +731,8 @@ export default {
     },
     "actionBar": {
       "message": "{count} Entity selected | {count} Entities selected"
-    }
+    },
+    "bulkOpInProgress": "Bulk operation in progress"
   }
 }
 </i18n>
