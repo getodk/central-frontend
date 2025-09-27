@@ -67,8 +67,8 @@ except according to the terms contained in the LICENSE file.
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
         :filter="geojsonFilter"/>
-      <p v-show="emptyTableMessage" class="empty-table-message">
-        {{ emptyTableMessage }}
+      <p v-show="emptyMessage" class="empty-table-message">
+        {{ emptyMessage }}
       </p>
     </div>
 
@@ -111,6 +111,7 @@ import useReviewState from '../../composables/review-state';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
+import { joinSentences } from '../../util/i18n';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
@@ -278,18 +279,28 @@ export default {
       }
       return Object.keys(query).length !== 0 ? query : null;
     },
-    emptyTableMessage() {
+    emptyMapMessage() {
+      return joinSentences(this.$i18n, [this.$t('common.emptyMap'), this.$t('emptyMap')]);
+    },
+    emptyMessage() {
       if (!this.odata.dataExists) return '';
       if (this.odata.value.length > 0) return '';
 
+      // Cases related to submission deletion
       if (this.odata.removedSubmissions.size === this.odata.count && this.odata.count > 0) {
         return this.deleted ? this.$t('deletedSubmission.allRestored') : this.$t('allDeleted');
       }
       if (this.odata.removedSubmissions.size > 0 && this.odata.value.length === 0) {
         return this.deleted ? this.$t('deletedSubmission.allRestoredOnPage') : this.$t('allDeletedOnPage');
       }
-      return this.deleted ? this.$t('deletedSubmission.emptyTable')
-        : (this.odataFilter ? this.$t('noMatching') : this.$t('submission.emptyTable'));
+      if (this.deleted) {
+        return this.$t('deletedSubmission.emptyTable');
+      }
+
+      if (this.odataFilter) return this.$t('noMatching');
+      return this.dataView === 'table'
+        ? this.$t('submission.emptyTable')
+        : this.emptyMapMessage;
     }
   },
   watch: {
@@ -299,8 +310,7 @@ export default {
       especially when toggling from table view to map view. Map view doesn't
       modify this.odata at all until after the GeoJSON response is received.
       That means that if this.odata isn't reset, the stale data from the table
-      view could persist for a bit, affecting things like
-      this.emptyTableMessage. */
+      view could persist for a bit, affecting things like this.emptyMessage. */
       this.odata.reset();
     },
     'odata.count': {
@@ -516,6 +526,7 @@ export default {
       "testInBrowser": "Test in browser"
     },
     "noMatching": "There are no matching Submissions.",
+    "emptyMap": "Submissions only appear if they include data in the first geo field.",
     "allDeleted": "All Submissions are deleted.",
     "allDeletedOnPage": "All Submissions on the page have been deleted.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
