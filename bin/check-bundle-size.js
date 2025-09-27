@@ -59,6 +59,7 @@ function isTooBig({ path, size }) {
   switch (simpleName) { // eslint-disable-line default-case
     case 'index.js':             return size >   450_000;
     case 'web-form-renderer.js': return size > 3_000_000;
+    case 'geojson-map.js':       return size >   500_000;
   }
 
   const type = extname(path).substr(1);
