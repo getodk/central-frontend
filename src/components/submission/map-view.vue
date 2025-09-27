@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="submission-map-view" ref="el">
     <odata-loading-message :state="geojson.initiallyLoading || showingMap"
-      type="submission" :filter="filter != null" :total-count="0" :top="0"/>
+      type="submission" :filter="filter != null"/>
     <geojson-map :data="geojson.data" :sizer="sizeMap"
       @show="showMap(true)" @shown="showMap(false)"
       @selection-changed="selectionChanged"/>
