@@ -27,6 +27,7 @@
     "jquery": "~3",
     "luxon": "~1",
     "marked": "~4",
+    "ol": "^10.6.1",
     "pako": "~1.0",
     "papaparse": "^5.4.1",
     "qrcode-generator": "~1",

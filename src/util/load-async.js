@@ -123,6 +123,9 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-submission" */
     '../components/form/submission.vue'
   )))
+  .set('GeojsonMap', loader(() => import(
+    '../components/geojson-map.vue'
+  )))
   .set('WebFormRenderer', loader(() => import(
     /* webpackChunkName: "component-web-form-renderer" */
     '../components/web-form-renderer.vue'
