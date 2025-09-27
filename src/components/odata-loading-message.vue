@@ -24,9 +24,6 @@ import Spinner from './spinner.vue';
 
 import { useI18nUtils } from '../util/i18n';
 
-const { t } = useI18n();
-const { tn } = useI18nUtils();
-
 defineOptions({
   name: 'OdataLoadingMessage'
 });
@@ -38,15 +35,12 @@ const props = defineProps({
     required: true
   },
   filter: Boolean,
-  totalCount: {
-    type: Number,
-    required: true
-  },
-  top: {
-    type: Number,
-    required: true
-  }
+  totalCount: Number,
+  top: Number
 });
+
+const { t } = useI18n();
+const { tn } = useI18nUtils();
 
 const message = computed(() => {
   if (!props.state) return null;
@@ -54,10 +48,10 @@ const message = computed(() => {
   if (props.filter)
     return t(`${props.type}.filtered.withoutCount`);
 
-  if (props.totalCount === 0)
+  if (props.totalCount == null || props.totalCount === 0)
     return t(`${props.type}.withoutCount`);
 
-  if (props.totalCount <= props.top)
+  if (props.top == null || props.totalCount <= props.top)
     return tn(`${props.type}.all`, props.totalCount);
 
   return tn(`${props.type}.first`, props.totalCount, {
@@ -67,8 +61,6 @@ const message = computed(() => {
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
-
 #odata-loading-message {
   font-size: 12px;
   padding: 20px 0 38px 28px;
@@ -76,7 +68,7 @@ const message = computed(() => {
 
 #odata-loading-message-text {
   color: #555;
-  margin-left: 9px;
+  margin-left: 8px;
 }
 </style>
 

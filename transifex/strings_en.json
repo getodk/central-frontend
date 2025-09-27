@@ -890,6 +890,9 @@
       "string": "Docs",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "No map data available yet."
+    },
     "emptyValue": {
       "string": "(empty)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -4954,6 +4957,9 @@
       "noMatching": {
         "string": "There are no matching Submissions."
       },
+      "emptyMap": {
+        "string": "Submissions only appear if they include data in the first geo field."
+      },
       "allDeleted": {
         "string": "All Submissions are deleted."
       },
@@ -5163,6 +5169,10 @@
         "sitewideRole": {
           "string": "Sitewide Role",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "Last Active",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5261,6 +5271,9 @@
           "string": "Retire user",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "Invitation Pending"
       }
     },
     "WebFormRenderer": {

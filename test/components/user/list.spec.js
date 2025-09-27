@@ -6,6 +6,7 @@ import UserRow from '../../../src/components/user/row.vue';
 import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { setLuxon } from '../../util/date-time';
 
 describe('UserList', () => {
   beforeEach(() => {
@@ -40,6 +41,30 @@ describe('UserList', () => {
     const link = row.findAllComponents(RouterLinkStub).find(wrapper =>
       wrapper.element.closest('.edit-profile') != null);
     link.props().to.should.equal('/users/1/edit');
+  });
+
+  it('displays user last login date when available', async () => {
+    setLuxon({ defaultZoneName: 'UTC' });
+    const lastLoginAt = '2023-12-01T10:00:00.000Z';
+    testData.extendedUsers.createPast(1, {
+      displayName: 'Test User',
+      email: 'test@example.com',
+      lastLoginAt
+    });
+    const component = await load('/users', { root: false });
+    const rows = component.findAll('.user-row .last-active');
+    rows[1].text().should.equal('2023/12/01 10:00');
+  });
+
+  it('displays "Invitation Pending" for users who have never logged in', async () => {
+    testData.extendedUsers.createPast(1, {
+      displayName: 'New User',
+      email: 'new@example.com'
+      // lastLoginAt is undefined
+    });
+    const component = await load('/users', { root: false });
+    const lastActive = component.get('.user-row .last-active');
+    lastActive.text().should.equal('Invitation Pending');
   });
 
   it('sets the roles', async () => {
