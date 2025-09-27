@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <odata-loading-message :state="geojson.initiallyLoading || showingMap"
       type="submission" :filter="filter != null"/>
     <geojson-map :data="geojson.data" :sizer="sizeMap"
-      @show="showMap(true)" @shown="showMap(false)"
+      @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged"/>
     <submission-map-popup v-if="selection != null" :instance-id="selection.id"
       :fieldpath="selection.properties.fieldpath"
@@ -94,7 +94,7 @@ watch([() => props.filter, () => props.deleted], noargs(fetchData));
 const refresh = () => fetchData(false);
 
 const showingMap = ref(false);
-const showMap = (showing) => { showingMap.value = showing; };
+const setShowing = (value) => { showingMap.value = value; };
 
 const el = useTemplateRef('el');
 // Stretches the map to the bottom of the screen.
