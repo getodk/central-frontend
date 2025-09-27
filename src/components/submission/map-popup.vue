@@ -26,6 +26,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed } from 'vue';
+import { last } from 'ramda';
 
 import Selectable from '../selectable.vue';
 
@@ -48,7 +49,7 @@ const props = defineProps({
 });
 
 const coordinateJson = computed(() => JSON.stringify(props.coordinates, null, 2));
-const fieldName = computed(() => props.fieldpath.match(/\/([^/]+)$/)[1]);
+const fieldName = computed(() => last(props.fieldpath.split('/')));
 </script>
 
 <style lang="scss">
