@@ -32,7 +32,7 @@ import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import Zoom from 'ol/control/Zoom';
 import { createEmpty, extend, getCenter } from 'ol/extent';
 
-import { computed, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
 import { equals } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
@@ -57,6 +57,7 @@ const debug = false;
 const log = debug ? console.log.bind(console) : noop;
 
 const { t, n } = useI18n();
+const { buildMode } = inject('container');
 
 const el = useTemplateRef('el');
 const mapContainer = useTemplateRef('mapContainer');
@@ -68,9 +69,17 @@ const mapContainer = useTemplateRef('mapContainer');
 
 const baseLayer = new TileLayer({ source: new OSM() });
 
+// We use WebGL when possible for performance reasons. If WebGL is not
+// available, we fall back to a basic 2D canvas. Our testing setup doesn't
+// support WebGL. Maybe some users don't as well.
+const supportsWebGL2 = document.createElement('canvas').getContext('webgl2') != null;
+if (!supportsWebGL2 && buildMode !== 'test')
+  // eslint-disable-next-line no-console
+  console.warn('WebGL2 not supported for map');
+const featureLayerClass = supportsWebGL2 ? WebGLVectorLayer : VectorLayer;
+
 const featureSource = new VectorSource();
-// Using WebGL instead of canvas for performance reasons.
-const featureLayer = new WebGLVectorLayer({
+const featureLayer = new featureLayerClass({ // eslint-disable-line new-cap
   source: featureSource,
   style: [...getUnselectedStyles(), ...getSelectedStyles()],
   variables: { selectedId: '' }
