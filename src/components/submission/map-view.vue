@@ -12,9 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <geojson-map v-if="geojson.dataExists && geojson.features.length !== 0"
     :features="geojson.features"/>
-  <odata-loading-message type="submission" :odata="geojson"
-    :filter="filter != null" :refreshing="refreshing" :total-count="0"
-    :top="0"/>
+  <odata-loading-message :state="geojson.initiallyLoading" type="submission"
+    :filter="filter != null" :total-count="0" :top="0"/>
 </template>
 
 <script setup>
@@ -43,10 +42,7 @@ const props = defineProps({
   deleted: Boolean,
 
   // Table actions
-  filter: Object,
-
-  // Loading message
-  refreshing: Boolean
+  filter: Object
 });
 
 const { odata, createResource } = useRequestData();

@@ -5163,6 +5163,10 @@
         "sitewideRole": {
           "string": "Sitewide Role",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "Last Active",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5261,6 +5265,9 @@
           "string": "Retire user",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "Invitation Pending"
       }
     },
     "WebFormRenderer": {

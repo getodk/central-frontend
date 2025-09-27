@@ -59,14 +59,14 @@ except according to the terms contained in the LICENSE file.
       <submission-table-view v-if="dataView === 'table'" ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
         :filter="odataFilter" :fields="selectedFields"
-        :refreshing="refreshing" :total-count="formVersion.submissions"
+        :total-count="formVersion.submissions"
         :awaiting-responses="awaitingResponses"
         @review="reviewModal.show({ submission: $event })"
         @delete="showDelete"
         @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
-        :filter="geojsonFilter" :refreshing="refreshing"/>
+        :filter="geojsonFilter"/>
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
       </p>
@@ -322,15 +322,8 @@ export default {
         // view sets this.odata, as some submissions might not have geo data and
         // won't appear on the map.
         if (this.formVersion.dataExists && this.odata.dataExists &&
-          this.dataView === 'table' && !this.odataFilter)
+          this.dataView === 'table' && !this.odataFilter && !this.deleted)
           this.formVersion.submissions = this.odata.count;
-      }
-    },
-    'odata.removedSubmissions.size': {
-      handler(size) {
-        if (this.formVersion.dataExists && this.odata.dataExists) {
-          this.formVersion.submissions += this.deleted ? size : -size;
-        }
       }
     }
   },
@@ -413,6 +406,7 @@ export default {
           if (confirm != null) this.confirmDelete = confirm;
 
           this.odata.removedSubmissions.add(instanceId);
+          this.formVersion.submissions -= 1;
           /* Before doing a couple more things, we first determine whether
           this.odata.value still includes the Submission and if so, what the
           current index of the Submission is. If a request to refresh
@@ -454,6 +448,7 @@ export default {
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odata.removedSubmissions.add(instanceId);
+          this.formVersion.submissions += 1;
 
           // See the comments in requestDelete().
           const index = this.odata.dataExists

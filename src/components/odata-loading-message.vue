@@ -10,11 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="message != null" id="odata-loading-message">
-    <div id="odata-loading-spinner-container">
-      <spinner :state="message != null"/>
-    </div>
-    <div id="odata-loading-message-text">{{ message }}</div>
+  <div v-show="state" id="odata-loading-message">
+    <spinner :state="state" inline/>
+    <span id="odata-loading-message-text">{{ message }}</span>
   </div>
 </template>
 
@@ -23,87 +21,54 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Spinner from './spinner.vue';
-import { useI18nUtils } from '../util/i18n';
 
-const { t } = useI18n();
-const { tn } = useI18nUtils();
+import { useI18nUtils } from '../util/i18n';
 
 defineOptions({
   name: 'OdataLoadingMessage'
 });
 
 const props = defineProps({
-  odata: {
-    type: Object,
-    required: true
-  },
+  state: Boolean,
   type: {
     type: String,
     required: true
   },
-  refreshing: {
-    type: Boolean,
-    required: true
-  },
-  filter: {
-    type: Boolean,
-    default: false
-  },
-  totalCount: {
-    type: Number,
-    required: true
-  },
-  top: {
-    type: Number,
-    required: true
-  }
+  filter: Boolean,
+  totalCount: Number,
+  top: Number
 });
 
-
+const { t } = useI18n();
+const { tn } = useI18nUtils();
 
 const message = computed(() => {
-  if (!props.odata.awaitingResponse || props.refreshing) return null;
+  if (!props.state) return null;
 
-  if (!props.odata.dataExists) {
-    if (props.filter)
-      return t(`${props.type}.filtered.withoutCount`);
+  if (props.filter)
+    return t(`${props.type}.filtered.withoutCount`);
 
-    if (props.totalCount === 0)
-      return t(`${props.type}.withoutCount`);
+  if (props.totalCount == null || props.totalCount === 0)
+    return t(`${props.type}.withoutCount`);
 
-    if (props.totalCount <= props.top)
-      return tn(`${props.type}.all`, props.totalCount);
+  if (props.top == null || props.totalCount <= props.top)
+    return tn(`${props.type}.all`, props.totalCount);
 
-    return tn(`${props.type}.first`, props.totalCount, {
-      top: props.top
-    });
-  }
-  return null;
+  return tn(`${props.type}.first`, props.totalCount, {
+    top: props.top
+  });
 });
-
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
-
 #odata-loading-message {
-  margin-left: 28px;
-  margin-top: 20px;
-  padding-bottom: 38px;
-  position: relative;
+  font-size: 12px;
+  padding: 20px 0 38px 28px;
+}
 
-  #odata-loading-spinner-container {
-    margin-right: 8px;
-    position: absolute;
-    top: 8px;
-    width: 16px; // eventually probably better not to default spinner to center.
-  }
-
-  #odata-loading-message-text {
-    color: #555;
-    font-size: 12px;
-    padding-left: 24px;
-  }
+#odata-loading-message-text {
+  color: #555;
+  margin-left: 8px;
 }
 </style>
 

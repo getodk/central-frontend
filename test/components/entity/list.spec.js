@@ -1181,6 +1181,21 @@ describe('EntityList', () => {
       createEntities(3);
     });
 
+    it('does not show checkboxes for project viewers', () => {
+      testData.reset();
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(2);
+
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          component.find('#entity-table th input[type="checkbox"]').exists().should.be.false;
+
+          component.findAll('.entity-metadata-row input[type="checkbox"]').length.should.equal(0);
+        });
+    });
+
     it('shows action bar when entities are selected', async () => {
       const component = await loadEntityList();
       const actionBar = component.findComponent({ name: 'ActionBar' });

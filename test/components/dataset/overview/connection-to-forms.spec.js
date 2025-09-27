@@ -85,4 +85,38 @@ describe('ConnectionToForms', () => {
     const component = mountComponent();
     component.get('.summary-item-heading').text().should.be.equal('0');
   });
+
+  it('shows repeat indicator pill for source forms where dataset came from repeat group', () => {
+    testData.extendedDatasets.createPast(1, {
+      name: 'trees',
+      properties: [],
+      sourceForms: [
+        { name: 'Tree Registration', xmlFormId: 'tree_registration', repeatPath: '/farm/plot/trees/' },
+        { name: 'Form with no properties', xmlFormId: 'form_with_no_prop' }
+      ]
+    });
+    const component = mountComponent();
+
+    const rows = component.findAllComponents(ExpandableRow);
+    // Pill text is the last part of the repeat path
+    rows[0].get('.repeat-tag').text().should.be.eql('trees');
+
+    // No pill on  form where dataset is not from repeat
+    rows[1].find('.repeat-tag').exists().should.be.false;
+  });
+
+  it('shows repeat indicator pill with full path as tooltip', async () => {
+    testData.extendedDatasets.createPast(1, {
+      name: 'trees',
+      properties: [],
+      sourceForms: [
+        { name: 'Tree Registration', xmlFormId: 'tree_registration', repeatPath: '/farm/plot/trees/' }
+      ]
+    });
+    const component = mountComponent();
+
+    const row = component.findAllComponents(ExpandableRow)[0];
+
+    await row.get('.repeat-tag').should.have.tooltip('/farm/plot/trees/');
+  });
 });
