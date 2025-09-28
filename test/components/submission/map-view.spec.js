@@ -19,11 +19,16 @@ const toggleView = (view) => (app) =>
 const getView = (app) => {
   // SubmissionTableView always renders #submission-table.
   const hasTable = app.find('#submission-table').exists();
-  // In contrast, SubmissionMapView doesn't always render .geojson-map.
+  // In contrast, while SubmissionMapView always tries to render GeojsonMap,
+  // there may be a delay, since GeojsonMap is loaded async.
   const hasMap = app.findComponent(SubmissionMapView).exists();
   if (hasTable && hasMap) throw new Error('both views are rendered');
   if (!hasTable && !hasMap) throw new Error('neither view is rendered');
   return hasTable ? 'table' : 'map';
+};
+const countFeatures = (app) => {
+  const { data } = app.getComponent(GeojsonMap).props();
+  return data != null ? data.features.length : 0;
 };
 
 const mypoint = testData.fields.geopoint('/mypoint');
@@ -141,17 +146,17 @@ describe('SubmissionMapView', () => {
       });
       return load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
         .afterResponses(app => {
-          app.find('.geojson-map').exists().should.be.true;
+          countFeatures(app).should.equal(1);
         })
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeEachResponse((app, { url }) => {
           url.should.equal('/v1/projects/1/forms/f/submissions.geojson?reviewState=hasIssues');
           // Not a background refresh: the map disappears during the request.
-          app.find('.geojson-map').exists().should.be.false;
+          countFeatures(app).should.equal(0);
         })
         .respondWithData(testData.submissionGeojson)
         .afterResponse(app => {
-          app.find('.geojson-map').exists().should.be.true;
+          countFeatures(app).should.equal(1);
         });
     });
   });
@@ -223,18 +228,14 @@ describe('SubmissionMapView', () => {
 
     it('updates the map', () => {
       testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
-      const assertCount = (app, count) => {
-        const { features } = app.getComponent(GeojsonMap).props().data;
-        features.length.should.equal(count);
-      };
       return load('/projects/1/forms/f/submissions?map=true')
         .afterResponses(app => {
-          assertCount(app, 1);
+          countFeatures(app).should.equal(1);
         })
         .request(app =>
           app.get('#submission-list-refresh-button').trigger('click'))
         .beforeEachResponse((app, _, i) => {
-          if (i === 0) assertCount(app, 1);
+          if (i === 0) countFeatures(app).should.equal(1);
         })
         .respondWithData(() => {
           testData.extendedSubmissions.createNew();
@@ -242,7 +243,7 @@ describe('SubmissionMapView', () => {
         })
         .respondWithData(() => testData.submissionDeletedOData(0))
         .afterResponses(app => {
-          assertCount(app, 2);
+          countFeatures(app).should.equal(2);
         });
     });
   });
@@ -258,7 +259,7 @@ describe('SubmissionMapView', () => {
       message.should.be.visible();
       const text = message.text();
       text.should.equal('No map data available yet. Submissions only appear if they include data in the first geo field.');
-      app.find('.geojson-map').exists().should.be.false;
+      countFeatures(app).should.equal(0);
     });
 
     it('shows a different message if a filter is applied', async () => {
@@ -266,7 +267,7 @@ describe('SubmissionMapView', () => {
       const message = app.get('.empty-table-message');
       message.should.be.visible();
       message.text().should.equal('There are no matching Submissions.');
-      app.find('.geojson-map').exists().should.be.false;
+      countFeatures(app).should.equal(0);
     });
 
     it('hides the empty message after toggling to map view', () =>
@@ -286,7 +287,7 @@ describe('SubmissionMapView', () => {
         })
         .afterResponse(app => {
           app.get('.empty-table-message').should.be.hidden();
-          app.find('.geojson-map').exists().should.be.true;
+          countFeatures(app).should.equal(1);
         }));
   });
 
@@ -310,7 +311,7 @@ describe('SubmissionMapView', () => {
       .createPast(1, { mypoint: 'POINT (1 2)' })
       .createPast(1, { mypoint: null });
     const app = await load('/projects/1/forms/f/submissions?map=true');
-    app.getComponent(GeojsonMap).props().data.features.length.should.equal(1);
+    countFeatures(app).should.equal(1);
     // Even though there is only one submission in the GeoJSON, that should not
     // change the submission count in the tab badge.
     findTab(app, 'Submissions').get('.badge').text().should.equal('2');
