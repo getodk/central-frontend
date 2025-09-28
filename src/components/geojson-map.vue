@@ -289,19 +289,20 @@ const hide = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // SELECT FEATURE
 
-let selectedFeature = null;
+let selectedId;
 
 // Selects an individual feature (not a cluster) or deselects the selected
-// feature.
+// feature (if feature is `null`).
 const selectFeature = (feature) => {
-  if (selectedFeature === feature) return;
+  const id = feature?.getId();
+  if (id === selectedId) return;
 
-  featureLayer.updateStyleVariables({ selectedId: feature?.getId() ?? '' });
-  selectedFeature = feature;
+  featureLayer.updateStyleVariables({ selectedId: id ?? '' });
+  selectedId = id;
 
   if (feature != null) {
     emit('selection-changed', {
-      id: feature.getId(),
+      id,
       properties: feature.getProperties(),
       coordinates: feature.getGeometry().getCoordinates()
     });
