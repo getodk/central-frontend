@@ -421,6 +421,7 @@ const resizeIfShown = () => { if (shown.value) resize(); };
 useEventListener(window, 'resize', resizeIfShown);
 
 onBeforeUnmount(() => {
+  abortShow();
   for (const [target, type, callback] of olListeners) target.un(type, callback);
   resizeObserver.disconnect();
   mapInstance.setTarget(null);
