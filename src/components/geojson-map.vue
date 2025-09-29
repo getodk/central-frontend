@@ -291,6 +291,18 @@ const hide = () => {
 
 let selectedId;
 
+const hitDetectionOptions = {
+  hitTolerance: 5,
+  layerFilter: (layer) => layer === featureLayer
+};
+
+// Updates the cursor based on whether the user is moving over a feature.
+const moveOverFeature = (event) => {
+  if (!shown.value || event.dragging) return;
+  const hit = mapInstance.hasFeatureAtPixel(event.pixel, hitDetectionOptions);
+  mapContainer.value.style.cursor = hit ? 'pointer' : '';
+};
+
 // Selects an individual feature (not a cluster) or deselects the selected
 // feature (if feature is `null`).
 const selectFeature = (feature) => {
@@ -333,10 +345,7 @@ const selectCluster = (cluster) => {
 };
 
 const selectFeatureAtPixel = (pixel) => {
-  const hits = mapInstance.getFeaturesAtPixel(pixel, {
-    hitTolerance: 5,
-    layerFilter: (layer) => layer === featureLayer
-  });
+  const hits = mapInstance.getFeaturesAtPixel(pixel, hitDetectionOptions);
   if (hits.length === 0) {
     selectFeature(null);
   } else {
@@ -376,6 +385,7 @@ const olOn = (target, type, callback) => {
 };
 
 olOn(mapInstance, 'moveend', () => { if (shown.value) countFeaturesInView(); });
+olOn(mapInstance, 'pointermove', moveOverFeature);
 
 // OpenLayers has a `singleclick` event, but it lags the actual click by 250
 // milliseconds in order to exclude double-clicks. Here, we listen for `click`
@@ -463,10 +473,10 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 5px;
     left: 63px;
-    pointer-events: none;
 
     color: #000;
     font-size: 12px;
+    user-select: none;
   }
 }
 </style>
