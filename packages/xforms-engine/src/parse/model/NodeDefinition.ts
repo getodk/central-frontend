@@ -7,10 +7,10 @@ import type { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import type { GroupDefinition } from './GroupDefinition.ts';
 import type { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { AnyRepeatDefinition } from './RepeatDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
-import type { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 /**
  * Corresponds to a model instance root node, i.e.:
@@ -33,10 +33,9 @@ export type RepeatType = 'repeat';
 
 /**
  * Corresponds to a model instance subtree which **does not** correspond to a
- * <repeat> in the form definition. This will typically correspond to a <group>,
- * but this is not strictly necessary per spec (hence the distinct name).
+ * <repeat> in the form definition.
  */
-export type SubtreeNodeType = 'subtree';
+export type GroupNodeType = 'group';
 
 /**
  * Corresponds to a model instance leaf node, i.e. one of:
@@ -51,7 +50,7 @@ export type NodeDefinitionType =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootNodeType
 	| RepeatType
-	| SubtreeNodeType
+	| GroupNodeType
 	| LeafNodeType;
 
 // prettier-ignore
@@ -59,13 +58,13 @@ export type ParentNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootDefinition
 	| AnyRepeatDefinition
-	| SubtreeDefinition;
+	| GroupDefinition;
 
 // prettier-ignore
 export type ChildNodeDefinition =
 	| AnyRepeatDefinition
-	| LeafNodeDefinition
-	| SubtreeDefinition;
+	| GroupDefinition
+	| LeafNodeDefinition;
 
 export abstract class NodeDefinition<Type extends NodeDefinitionType>
 	implements NamedSubtreeDefinition
@@ -92,5 +91,5 @@ export type AnyNodeDefinition =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootDefinition
 	| AnyRepeatDefinition
-	| SubtreeDefinition
+	| GroupDefinition
 	| LeafNodeDefinition;

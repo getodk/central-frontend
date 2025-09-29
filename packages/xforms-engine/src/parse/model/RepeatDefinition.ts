@@ -21,9 +21,9 @@ import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts
 import { RepeatCountControlExpression } from '../expression/RepeatCountControlExpression.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
+import type { GroupDefinition } from './GroupDefinition.ts';
 import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
-import type { SubtreeDefinition } from './SubtreeDefinition.ts';
 
 interface JavaRosaNamespaceURI extends NamespaceURL {
 	readonly href: JAVAROSA_NAMESPACE_URI;
@@ -284,7 +284,7 @@ export interface UncontrolledRepeatDefinition extends RepeatDefinition {
  * "repeat", as defined by a form, where those concepts include:
  *
  * - A {@link RepeatElementDefinition}—corresponding to a `<repeat>` {@link https://getodk.github.io/xforms-spec/#body-elements | body element}—which is associated with the nodeset referencing the "repeat template" and
- *   all "repeat instances" (see below points describing both concepts in more detail). The presence of such a body element determines whether to produce a repeat definition (rather than e.g. a {@link SubtreeDefinition}).
+ *   all "repeat instances" (see below points describing both concepts in more detail). The presence of such a body element determines whether to produce a repeat definition (rather than e.g. a {@link GroupDefinition}).
  *
  * - A "repeat template", defined by a form either
  *   explicitly,

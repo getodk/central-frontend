@@ -41,7 +41,6 @@ export type * from './serialization/InstancePayload.ts';
 export type * from './serialization/InstancePayloadOptions.ts';
 export type * from './serialization/InstanceState.ts';
 export type * from './submission/SubmissionMeta.ts';
-export type * from './SubtreeNode.ts';
 export type * from './TextRange.ts';
 export type * from './TriggerNode.ts';
 export type * from './UploadNode.ts';

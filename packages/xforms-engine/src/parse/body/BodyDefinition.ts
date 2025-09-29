@@ -10,9 +10,7 @@ import type { AnySelectControlDefinition } from './control/SelectControlDefiniti
 import { SelectControlDefinition } from './control/SelectControlDefinition.ts';
 import { TriggerControlDefinition } from './control/TriggerControlDefinition.ts';
 import { UploadControlDefinition } from './control/UploadControlDefinition.ts';
-import { LogicalGroupDefinition } from './group/LogicalGroupDefinition.ts';
-import { PresentationGroupDefinition } from './group/PresentationGroupDefinition.ts';
-import { StructuralGroupDefinition } from './group/StructuralGroupDefinition.ts';
+import { GroupElementDefinition } from './GroupElementDefinition.ts';
 import { RepeatElementDefinition } from './RepeatElementDefinition.ts';
 import { UnsupportedBodyElementDefinition } from './UnsupportedBodyElementDefinition.ts';
 
@@ -31,22 +29,18 @@ export type ControlElementDefinition =
 	| TriggerControlDefinition
 	| UploadControlDefinition;
 
+// prettier-ignore
 type SupportedBodyElementDefinition =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| RepeatElementDefinition
-	| LogicalGroupDefinition
-	| PresentationGroupDefinition
-	| StructuralGroupDefinition
-	| ControlElementDefinition;
+	| ControlElementDefinition
+	| GroupElementDefinition
+	| RepeatElementDefinition;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BodyElementDefinitionConstructor = new (...args: any[]) => SupportedBodyElementDefinition;
 
 const BodyElementDefinitionConstructors = [
 	RepeatElementDefinition,
-	LogicalGroupDefinition,
-	PresentationGroupDefinition,
-	StructuralGroupDefinition,
+	GroupElementDefinition,
 	InputControlDefinition,
 	SelectControlDefinition,
 	RangeControlDefinition,
@@ -62,23 +56,6 @@ export type AnyBodyElementDefinition =
 export type BodyElementDefinitionArray = readonly AnyBodyElementDefinition[];
 
 export type AnyBodyElementType = AnyBodyElementDefinition['type'];
-
-export type AnyGroupElementDefinition = Extract<
-	AnyBodyElementDefinition,
-	{ readonly type: `${string}-group` }
->;
-
-const isGroupElementDefinition = (
-	element: AnyBodyElementDefinition
-): element is AnyGroupElementDefinition => {
-	return element.type.endsWith('-group');
-};
-
-export const groupElementDefinition = (
-	element: AnyBodyElementDefinition
-): AnyGroupElementDefinition | null => {
-	return isGroupElementDefinition(element) ? element : null;
-};
 
 export type AnyControlElementDefinition = Extract<
 	AnyBodyElementDefinition,
@@ -119,11 +96,7 @@ class BodyElementMap extends Map<BodyElementReference, AnyBodyElementDefinition>
 				this.mapElementsByReference(element.children);
 			}
 
-			if (
-				element instanceof LogicalGroupDefinition ||
-				element instanceof PresentationGroupDefinition ||
-				element instanceof StructuralGroupDefinition
-			) {
+			if (element instanceof GroupElementDefinition) {
 				if (reference != null) {
 					this.set(reference, element);
 				}

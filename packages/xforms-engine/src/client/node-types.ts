@@ -22,5 +22,4 @@ export type InstanceNodeType =
 	| RepeatRangeNodeType
 	| 'repeat-instance'
 	| 'group'
-	| 'subtree'
 	| LeafNodeType;

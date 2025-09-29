@@ -1,16 +1,15 @@
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
 import { getLabelElement, getRepeatGroupLabelElement } from '../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../parse/XFormDefinition.ts';
-import type { AnyGroupElementDefinition } from '../../parse/body/BodyDefinition.ts';
-import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import type { AnyControlDefinition } from '../body/control/ControlDefinition.ts';
-import type { BaseGroupDefinition } from '../body/group/BaseGroupDefinition.ts';
+import type { GroupElementDefinition } from '../body/GroupElementDefinition.ts';
+import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { TextElementDefinition } from './abstract/TextElementDefinition.ts';
 
 // prettier-ignore
 export type LabelOwner =
 	| AnyControlDefinition
-	| AnyGroupElementDefinition
+	| GroupElementDefinition
 	| RepeatElementDefinition;
 
 interface LabelElement extends LocalNamedElement<'label'> {}
@@ -39,11 +38,7 @@ export class LabelDefinition extends TextElementDefinition<'label'> {
 		return new this(form, repeat, repeatGroupLabel);
 	}
 
-	static forGroup(
-		form: XFormDefinition,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		group: BaseGroupDefinition<any>
-	): LabelDefinition | null {
+	static forGroup(form: XFormDefinition, group: GroupElementDefinition): LabelDefinition | null {
 		const labelElement = getLabelElement(group.element);
 
 		if (labelElement == null) {

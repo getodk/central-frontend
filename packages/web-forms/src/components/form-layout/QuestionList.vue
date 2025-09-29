@@ -5,10 +5,10 @@ import type {
 	GroupNode,
 	RepeatRangeNode,
 } from '@getodk/xforms-engine';
+import ExpectModelNode from '../dev-only/ExpectModelNode.vue';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';
 import RepeatRange from './RepeatRange.vue';
-import ExpectModelNode from '../dev-only/ExpectModelNode.vue';
 
 defineProps<{ nodes: readonly GeneralChildNode[] }>();
 

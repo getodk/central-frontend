@@ -65,7 +65,7 @@ export class Group
 	) {
 		super(parent, instanceNode, definition);
 
-		this.appearances = definition.bodyElement.appearances;
+		this.appearances = definition.bodyElement?.appearances ?? null;
 
 		const childrenState = createChildrenState<Group, GeneralChildNode>(this);
 

@@ -98,7 +98,7 @@ describe('ModelDefinition', () => {
 					children: null,
 				},
 				{
-					type: 'subtree',
+					type: 'group',
 					bind: {
 						nodeset: '/root/orx:meta',
 					},
@@ -197,10 +197,10 @@ describe('ModelDefinition', () => {
 				// checking just the specific index of the array.
 				children: {
 					0: {
-						type: 'subtree',
+						type: 'group',
 						bind: { nodeset: '/root/grp' },
 						bodyElement: {
-							type: 'logical-group',
+							type: 'group',
 						},
 						children: [
 							{
@@ -226,7 +226,7 @@ describe('ModelDefinition', () => {
 				bodyElement: null,
 				children: {
 					1: {
-						type: 'subtree',
+						type: 'group',
 						bind: { nodeset: '/root/sub' },
 						bodyElement: null,
 						children: [
@@ -247,7 +247,7 @@ describe('ModelDefinition', () => {
 		});
 	});
 
-	describe('repeat subtrees', () => {
+	describe('repeat groups', () => {
 		beforeEach(() => {
 			const xform = html(
 				head(

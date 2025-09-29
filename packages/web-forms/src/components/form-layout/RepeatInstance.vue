@@ -8,10 +8,7 @@ import QuestionList from './QuestionList.vue';
 const props = defineProps<{ instance: RepeatInstanceNode; instanceIndex: number }>();
 
 const isGroup = (child: GeneralChildNode) => {
-	return (
-		child.definition.bodyElement?.type === 'logical-group' ||
-		child.definition.bodyElement?.type === 'presentation-group'
-	);
+	return child.definition.bodyElement?.type === 'group';
 };
 
 const label = computed(() => {

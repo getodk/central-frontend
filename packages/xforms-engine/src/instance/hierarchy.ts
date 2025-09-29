@@ -10,7 +10,6 @@ import type { RepeatRangeControlled } from './repeat/RepeatRangeControlled.ts';
 import type { RepeatRangeUncontrolled } from './repeat/RepeatRangeUncontrolled.ts';
 import type { Root } from './Root.ts';
 import type { SelectControl } from './SelectControl.ts';
-import type { Subtree } from './Subtree.ts';
 import type { TriggerControl } from './TriggerControl.ts';
 import type { UploadControl } from './UploadControl.ts';
 
@@ -22,7 +21,6 @@ export type AnyNode =
 	| PrimaryInstance
 	| Root
 	| Group
-	| Subtree
 	| RepeatRange
 	| RepeatInstance
 	| AnyNote
@@ -40,7 +38,6 @@ export type AnyParentNode =
 	| PrimaryInstance
 	| Root
 	| Group
-	| Subtree
 	| RepeatRange
 	| RepeatInstance;
 
@@ -49,7 +46,6 @@ export type GeneralParentNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| Root
 	| Group
-	| Subtree
 	| RepeatInstance;
 
 // prettier-ignore
@@ -57,7 +53,6 @@ export type AnyChildNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| Root
 	| Group
-	| Subtree
 	| RepeatRange
 	| RepeatInstance
 	| AnyModelValue
@@ -73,7 +68,6 @@ export type AnyChildNode =
 export type GeneralChildNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| Group
-	| Subtree
 	| RepeatRange
 	| AnyModelValue
 	| AnyNote

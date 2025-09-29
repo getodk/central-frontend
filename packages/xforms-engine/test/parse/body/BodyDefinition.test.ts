@@ -230,7 +230,7 @@ describe('BodyDefinition', () => {
 
 				expect(logicalGroup).toMatchObject({
 					category: 'structure',
-					type: 'logical-group',
+					type: 'group',
 					reference: '/root/loggrp',
 					label: null,
 				});
@@ -266,7 +266,7 @@ describe('BodyDefinition', () => {
 
 				expect(logicalGroup).toMatchObject({
 					category: 'structure',
-					type: 'logical-group',
+					type: 'group',
 					reference: '/root/loggrp-2',
 					label: {
 						role: 'label',
@@ -304,7 +304,7 @@ describe('BodyDefinition', () => {
 
 				expect(presentationGroup).toMatchObject({
 					category: 'structure',
-					type: 'presentation-group',
+					type: 'group',
 					reference: null,
 					label: {
 						role: 'label',
@@ -344,7 +344,7 @@ describe('BodyDefinition', () => {
 
 				expect(structuralGroup).toMatchObject({
 					category: 'structure',
-					type: 'structural-group',
+					type: 'group',
 					reference: null,
 					label: null,
 				});

@@ -10,7 +10,6 @@ import type { RepeatRangeControlledNode } from './repeat/RepeatRangeControlledNo
 import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from './RootNode.ts';
 import type { SelectNode } from './SelectNode.ts';
-import type { SubtreeNode } from './SubtreeNode.ts';
 import type { TriggerNode } from './TriggerNode.ts';
 import type { UploadNode } from './UploadNode.ts';
 
@@ -40,7 +39,6 @@ export type RepeatRangeNode =
  */
 export type GeneralParentNode =
 	| RootNode // eslint-disable-line @typescript-eslint/sort-type-constituents
-	| SubtreeNode
 	| GroupNode
 	| RepeatInstanceNode;
 

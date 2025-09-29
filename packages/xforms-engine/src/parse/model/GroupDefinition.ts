@@ -1,19 +1,17 @@
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
-import type {
-	AnyBodyElementDefinition,
-	AnyGroupElementDefinition,
-} from '../body/BodyDefinition.ts';
+import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
+import type { GroupElementDefinition } from '../body/GroupElementDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 
-export class SubtreeDefinition extends DescendentNodeDefinition<
-	'subtree',
-	AnyGroupElementDefinition | null
+export class GroupDefinition extends DescendentNodeDefinition<
+	'group',
+	GroupElementDefinition | null
 > {
-	readonly type = 'subtree';
+	readonly type = 'group';
 
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;

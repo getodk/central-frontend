@@ -4,7 +4,6 @@ import type { InputDefinition } from '../../client/InputNode.ts';
 import type { ModelValueDefinition } from '../../client/ModelValueNode.ts';
 import type { RankDefinition } from '../../client/RankNode.ts';
 import type { SelectDefinition } from '../../client/SelectNode.ts';
-import type { SubtreeDefinition } from '../../client/SubtreeNode.ts';
 import type { TriggerNodeDefinition } from '../../client/TriggerNode.ts';
 import type { UploadDefinition } from '../../client/UploadNode.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
@@ -15,7 +14,6 @@ import type {
 	RangeLeafNodeDefinition,
 } from '../../parse/model/RangeNodeDefinition.ts';
 import { RangeNodeDefinition } from '../../parse/model/RangeNodeDefinition.ts';
-import type { SubtreeDefinition as ModelSubtreeDefinition } from '../../parse/model/SubtreeDefinition.ts';
 import { Group } from '../Group.ts';
 import type { GeneralChildNode, GeneralParentNode } from '../hierarchy.ts';
 import { InputControl } from '../InputControl.ts';
@@ -26,16 +24,9 @@ import { RankControl } from '../RankControl.ts';
 import { RepeatRangeControlled } from '../repeat/RepeatRangeControlled.ts';
 import { RepeatRangeUncontrolled } from '../repeat/RepeatRangeUncontrolled.ts';
 import { SelectControl } from '../SelectControl.ts';
-import { Subtree } from '../Subtree.ts';
 import { TriggerControl } from '../TriggerControl.ts';
 import { UploadControl } from '../UploadControl.ts';
 import { childrenInitOptions } from './childrenInitOptions.ts';
-
-const isSubtreeDefinition = (
-	definition: ModelSubtreeDefinition
-): definition is SubtreeDefinition => {
-	return definition.bodyElement == null;
-};
 
 // prettier-ignore
 type ControlNodeDefinition =
@@ -131,14 +122,7 @@ export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => 
 		const [instanceNode = null] = instanceNodes;
 
 		switch (definition.type) {
-			case 'subtree': {
-				if (isSubtreeDefinition(definition)) {
-					return new Subtree(parent, instanceNode, definition);
-				}
-
-				// TODO: it'd be good to be able to do without this type assertion. The
-				// only distinction between the types is whether `bodyElement` is
-				// `null`, but for some reason that's insufficient to narrow the union.
+			case 'group': {
 				return new Group(parent, instanceNode, definition as GroupDefinition);
 			}
 

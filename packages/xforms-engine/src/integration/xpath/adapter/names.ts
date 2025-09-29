@@ -140,7 +140,6 @@ export const resolveEngineXPathNodeNamespaceURI = (
 		case 'repeat-range:uncontrolled':
 		case 'root':
 		case 'select':
-		case 'subtree':
 		case 'trigger':
 		case 'upload':
 			return node.definition.namespaceDeclarations.get(prefix)?.declaredURI?.href ?? null;

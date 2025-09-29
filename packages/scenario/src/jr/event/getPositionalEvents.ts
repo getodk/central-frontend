@@ -60,7 +60,6 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 		(node): NonTerminalPositionalEvent | readonly [] => {
 			switch (node.nodeType) {
 				case 'root':
-				case 'subtree':
 					return [];
 
 				case 'repeat-instance':
@@ -73,6 +72,9 @@ export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents =>
 					return PromptNewRepeatEvent.from(node);
 
 				case 'group':
+					if (node.appearances === null) {
+						return [];
+					}
 					return GroupEvent.from(node);
 
 				case 'model-value':

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { AnyModelValueNode, AnyNode, SubtreeNode } from '@getodk/xforms-engine';
+import type { AnyModelValueNode, AnyNode, GroupNode } from '@getodk/xforms-engine';
 import Message from 'primevue/message';
 
-type AnyModelNode = AnyModelValueNode | SubtreeNode;
+type AnyModelNode = AnyModelValueNode | GroupNode;
 
 interface ExpectModelNodeProps {
 	readonly node: AnyModelNode;
@@ -11,7 +11,7 @@ interface ExpectModelNodeProps {
 const props = defineProps<ExpectModelNodeProps>();
 
 const isModelNode = (node: AnyNode): node is AnyModelNode => {
-	return node.nodeType === 'model-value' || node.nodeType === 'subtree';
+	return node.nodeType === 'model-value' || node.nodeType === 'group';
 };
 
 const actualNode: AnyNode = props.node;
