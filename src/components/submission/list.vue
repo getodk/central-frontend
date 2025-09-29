@@ -56,6 +56,10 @@ except according to the terms contained in the LICENSE file.
         </teleport-if-exists>
       </div>
 
+      <p v-show="emptyMessage" class="empty-table-message">
+        {{ emptyMessage }}
+      </p>
+
       <submission-table-view v-if="dataView === 'table'" ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
         :filter="odataFilter" :fields="selectedFields"
@@ -67,9 +71,6 @@ except according to the terms contained in the LICENSE file.
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
         :filter="geojsonFilter"/>
-      <p v-show="emptyMessage" class="empty-table-message">
-        {{ emptyMessage }}
-      </p>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
