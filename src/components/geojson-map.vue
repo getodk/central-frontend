@@ -311,16 +311,9 @@ const selectFeature = (feature) => {
 
   featureLayer.updateStyleVariables({ selectedId: id ?? '' });
   selectedId = id;
-
-  if (feature != null) {
-    emit('selection-changed', {
-      id,
-      properties: feature.getProperties(),
-      coordinates: feature.getGeometry().getCoordinates()
-    });
-  } else {
-    emit('selection-changed', null);
-  }
+  emit('selection-changed', feature != null
+    ? { id, properties: feature.getProperties() }
+    : null);
 };
 
 const selectCluster = (cluster) => {
@@ -447,6 +440,8 @@ onBeforeUnmount(() => {
     layer.dispose();
   }
 });
+
+defineExpose({ deselect: () => { selectFeature(null); } });
 </script>
 
 <style lang="scss">

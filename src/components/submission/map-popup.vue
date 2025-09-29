@@ -10,69 +10,97 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <dl id="submission-map-popup" class="dl-horizontal">
-    <dt>{{ $t('title') }}</dt>
-    <dd></dd>
-
-    <dt>{{ $t('header.instanceId') }}</dt>
-    <dd v-tooltip.text>{{ instanceId }}</dd>
-
-    <dt v-tooltip.text>{{ fieldName }}</dt>
-    <dd v-tooltip.text>
-      <selectable><pre><code>{{ coordinateJson }}</code></pre></selectable>
-    </dd>
-  </dl>
+  <map-popup v-show="instanceId != null" icon="file" @hide="$emit('hide')">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <loading :state="submission.awaitingResponse"/>
+      <dl v-if="submission.dataExists">
+        <div>
+          <dt>{{ $t('header.submitterName') }}</dt>
+          <dd>{{ submission.__system.submitterName }}</dd>
+        </div>
+        <div>
+          <dt>{{ $t('header.submissionDate') }}</dt>
+          <dd><date-time :iso="submission.__system.submissionDate"/></dd>
+        </div>
+        <div v-for="field of orderedFields" :key="field.path">
+          <dl-data :value="path(field.pathElements, submission.data)?.toString()">
+            <template #name>
+              <span v-tooltip.no-aria="field.header">{{ field.name }}</span>
+            </template>
+          </dl-data>
+        </div>
+      </dl>
+    </template>
+  </map-popup>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { last } from 'ramda';
+import { computed, watch } from 'vue';
+import { path } from 'ramda';
 
-import Selectable from '../selectable.vue';
+import DateTime from '../date-time.vue';
+import DlData from '../dl-data.vue';
+import Loading from '../loading.vue';
+import MapPopup from '../map-popup.vue';
+
+import useSubmission from '../../request-data/submission';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'SubmissionMapPopup'
 });
 const props = defineProps({
-  instanceId: {
+  projectId: {
     type: String,
     required: true
   },
-  fieldpath: {
+  xmlFormId: {
     type: String,
     required: true
   },
-  coordinates: {
-    type: Array,
-    required: true
-  }
+  instanceId: String,
+  fieldpath: String
 });
+defineEmits(['hide']);
 
-const coordinateJson = computed(() => JSON.stringify(props.coordinates, null, 2));
-const fieldName = computed(() => last(props.fieldpath.split('/')));
+const { fields } = useRequestData();
+const { submission } = useSubmission();
+
+const fetchData = () => submission.request({
+  url: apiPaths.odataSubmission(
+    props.projectId,
+    props.xmlFormId,
+    props.instanceId,
+    { $wkt: true }
+  ),
+  alert: false
+}).catch(noop);
+watch(
+  () => props.instanceId,
+  (instanceId) => {
+    if (instanceId != null)
+      fetchData();
+    else
+      submission.reset();
+  },
+  { immediate: true }
+);
+
+const orderedFields = computed(() => {
+  const { selectable } = fields;
+  const i = selectable.findIndex(field => field.path === props.fieldpath);
+  // i can be -1 if props.fieldpath corresponds to a field that is not in the
+  // current version of the form.
+  if (i === -1) return selectable;
+
+  const result = [...selectable];
+  result.unshift(...result.splice(i, 1));
+  return result;
+});
 </script>
-
-<style lang="scss">
-@import '../../assets/scss/mixins';
-
-#submission-map-popup {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-
-  background-color: #fff;
-  max-width: 500px;
-  padding-block: $padding-block-dl;
-
-  dt, dd { @include text-overflow-ellipsis; }
-
-  pre {
-    background-color: transparent;
-    border: none;
-    margin-bottom: 0;
-  }
-}
-</style>
 
 <i18n lang="json5">
 {

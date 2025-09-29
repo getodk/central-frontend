@@ -14,7 +14,9 @@ except according to the terms contained in the LICENSE file.
 from the user, e.g., entity data. The key and value will be truncated if they
 are too long. -->
 <template>
-  <dt class="dl-data-dt"><span v-tooltip.text>{{ name }}</span></dt>
+  <dt class="dl-data-dt">
+    <slot name="name"><span v-tooltip.text>{{ name }}</span></slot>
+  </dt>
 
   <dd v-if="value == null || value === ''" class="dl-data-dd empty">
     {{ $t('common.emptyValue') }}
@@ -29,10 +31,7 @@ defineOptions({
 defineProps({
   // "key" would have been a nice name for this prop, but sadly that's a
   // reserved name.
-  name: {
-    type: String,
-    required: true
-  },
+  name: String,
   value: String
 });
 </script>

@@ -1,7 +1,7 @@
 @import './variables';
 
 @mixin icon-box {
-  padding: 10px;
+  padding: min(0.5em, 10px);
   border-radius: 6px;
   color: $color-accent-primary;
   background-color: rgba($color-accent-primary, 0.1);  

@@ -13,12 +13,12 @@ except according to the terms contained in the LICENSE file.
   <div id="submission-map-view" ref="el">
     <odata-loading-message :state="geojson.initiallyLoading || showingMap"
       type="submission" :filter="filter != null"/>
-    <geojson-map :data="geojson.data" :sizer="sizeMap"
+    <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
       @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged"/>
-    <submission-map-popup v-if="selection != null" :instance-id="selection.id"
-      :fieldpath="selection.properties.fieldpath"
-      :coordinates="selection.coordinates"/>
+    <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
+      :instance-id="selection?.id" :fieldpath="selection?.properties.fieldpath"
+      @hide="map.deselect()"/>
   </div>
 </template>
 
@@ -95,6 +95,8 @@ const refresh = () => fetchData(false);
 
 const showingMap = ref(false);
 const setShowing = (value) => { showingMap.value = value; };
+
+const map = useTemplateRef('map');
 
 const el = useTemplateRef('el');
 // Stretches the map to the bottom of the screen.
