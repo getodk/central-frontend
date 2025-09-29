@@ -416,6 +416,7 @@ watch(() => props.data, (newData, oldData) => {
 
   if (newData != null) {
     addFeatures();
+
     if (!shown.value)
       show();
     else
