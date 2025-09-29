@@ -104,16 +104,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// UTILITIES
-
-@mixin clearfix {
-  &::before, &::after {
-    content: " ";
-    display: table;
-  }
-
-  &::after { clear: both; }
-}
+// FLOATING ELEMENTS
 
 @mixin floating-container {
   display: flex;
@@ -127,4 +118,33 @@
   pointer-events: none;
 
   & > * { pointer-events: auto; }
+}
+
+// Styles a .close button the same way as the modal close button.
+@mixin modal-close {
+  position: absolute;
+  // x symbol has some top spacing
+  top: calc($padding-modal-top-actions-close - 2px);
+  right: $padding-modal-top-actions-close;
+  color: $color-input;
+  font-weight: normal;
+  opacity: 1;
+
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UTILITIES
+
+@mixin clearfix {
+  &::before, &::after {
+    content: " ";
+    display: table;
+  }
+
+  &::after { clear: both; }
 }
