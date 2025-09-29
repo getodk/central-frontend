@@ -292,7 +292,7 @@ const hide = () => {
 let selectedId;
 
 const hitDetectionOptions = {
-  hitTolerance: 5,
+  hitTolerance: 6,
   layerFilter: (layer) => layer === featureLayer
 };
 
