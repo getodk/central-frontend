@@ -93,6 +93,6 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
   overflow-y: auto;
 
   dl { margin-bottom: 0; }
-  dt:not(.dl-data-dt), dd:not(.dl-data-dd) { @include text-overflow-ellipsis; }
+  dd:not(.dl-data-dd) { @include text-overflow-ellipsis; }
 }
 </style>

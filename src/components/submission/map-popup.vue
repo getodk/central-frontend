@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <dl v-if="submission.dataExists">
         <div>
           <dt>{{ $t('header.submitterName') }}</dt>
-          <dd>{{ submission.__system.submitterName }}</dd>
+          <dd v-tooltip.text>{{ submission.__system.submitterName }}</dd>
         </div>
         <div>
           <dt>{{ $t('header.submissionDate') }}</dt>
