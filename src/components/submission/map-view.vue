@@ -101,8 +101,6 @@ watch(() => geojson.dataExists, (dataExists) => {
   if (!dataExists) setShowing(false);
 });
 
-const map = useTemplateRef('map');
-
 const el = useTemplateRef('el');
 // Stretches the map to the bottom of the screen.
 const sizeMap = () => {
@@ -118,6 +116,8 @@ const sizeMap = () => {
 
 const selection = shallowRef(null);
 const selectionChanged = (value) => { selection.value = value; };
+
+const map = useTemplateRef('map');
 
 defineExpose({ refresh });
 </script>
