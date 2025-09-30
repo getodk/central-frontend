@@ -95,6 +95,11 @@ const refresh = () => fetchData(false);
 
 const showingMap = ref(false);
 const setShowing = (value) => { showingMap.value = value; };
+watch(() => geojson.dataExists, (dataExists) => {
+  // We need to set showingMap.value to `false` if the data is cleared between
+  // the `show` and `shown` events of the GeojsonMap.
+  if (!dataExists) setShowing(false);
+});
 
 const map = useTemplateRef('map');
 
