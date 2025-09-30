@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="el" class="geojson-map">
+  <div v-show="featureCount !== 0" ref="el" class="geojson-map">
     <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown"></div>
     <span v-show="shown" class="count">{{ countMessage }}</span>
   </div>
@@ -217,8 +217,21 @@ const countMessage = computed(() =>
 ////////////////////////////////////////////////////////////////////////////////
 // SHOW/HIDE
 
-// The comments in <style> below about how we use opacity are also relevant
-// here.
+/*
+There are two levels of visibility at play here:
+
+1. display: none. If there is no data, then the component as a whole will be
+   hidden. The component will also be hidden if an ancestor element is hidden.
+   Once the component becomes visible, show() will be called via a
+   ResizeObserver.
+2. opacity: 0. Even once the component is technically visible (once `display` is
+   not 'none'), the map will be transparent. That's because show() is async:
+   before fully showing/opacifying the map to the user, we wait for the map to
+   render fully (e.g., loading tiles). That way, the user won't see layers
+   appear at different times as the tiles fade in. We use opacity for this part
+   instead of `display: none` because the map needs to be visible in order to
+   render.
+*/
 
 const shown = ref(false);
 let abortShow = noop;
@@ -253,10 +266,8 @@ const show = async () => {
     abortShow = noop;
   };
 
-  // Wait for the map to render fully (e.g., loading tiles) by listening for an
-  // OpenLayers `rendercomplete` event. That way, the user won't see the layers
-  // appear at different times as the tiles fade in. But if it takes too long,
-  // just proceed with showing the map.
+  // Wait for the map to render fully. But if it takes too long, just proceed
+  // with showing the map.
   await Promise.race([
     new Promise(resolve => {
       mapInstance.once('rendercomplete', resolve);
@@ -411,6 +422,11 @@ watch(() => props.data, (newData, oldData) => {
     addFeatures();
 
     if (!shown.value)
+      // Even though shown.value is `false`, we can't rely on resizeObserver to
+      // call show(): we have to call it here as well. If props.data were
+      // changed while the map was rendering (while a previous call to show()
+      // was still in progress), the component would be visible, with its size
+      // set, even as the map remains transparent.
       show();
     else
       // If the map isn't already shown, show() above will call
@@ -451,16 +467,6 @@ defineExpose({ deselect: () => { selectFeature(null); } });
   .map-container {
     min-height: 300px;
 
-    /*
-    Using opacity rather than v-show for a couple of reasons:
-
-    - Before showing the map to the user, we wait for the map to render fully.
-      But in order for the map to render, it needs to be visible. Using v-show
-      would prevent that.
-    - OpenLayers has to do work when it becomes visible / when its size is
-      updated. By us "hiding" the map via transparency, OpenLayers has less work
-      to do.
-    */
     opacity: 0;
     &.opaque { opacity: 1; }
   }
