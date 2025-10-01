@@ -153,7 +153,7 @@ $border-radius: 12px;
 
   &.truncate-dt {
     dl { grid-template-columns: fit-content(50%) 1fr; }
-    dt { @include text-overflow-ellipsis; }
+    dt:not(.dl-data-dt) { @include text-overflow-ellipsis; }
   }
 }
 

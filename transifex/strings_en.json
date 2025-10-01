@@ -3697,6 +3697,12 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "Showing {count} of {total}",
+        "developer_comment": "{count} and {total} are both numbers."
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -5022,6 +5028,12 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "This Submission was mapped using {field}, which isn’t in the published Form version.",
+        "developer_comment": "{field} is the name of a Form field."
       }
     },
     "SubmissionRestore": {
