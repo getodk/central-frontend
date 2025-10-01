@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-popup v-show="instanceId != null" id="submission-map-popup" icon="file"
-    @hide="$emit('hide')">
+  <map-popup v-show="submission.dataExists || submission.awaitingResponse"
+    id="submission-map-popup" icon="file" @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <loading :state="submission.awaitingResponse"/>
@@ -90,8 +90,7 @@ const fetchData = () => submission.request({
     props.xmlFormId,
     props.instanceId,
     { $wkt: true }
-  ),
-  alert: false
+  )
 }).catch(noop);
 watch(
   () => props.instanceId,
