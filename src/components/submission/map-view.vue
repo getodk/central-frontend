@@ -10,20 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <geojson-map v-if="geojson.dataExists && geojson.features.length !== 0"
-    :features="geojson.features"/>
-  <odata-loading-message :state="geojson.initiallyLoading" type="submission"
-    :filter="filter != null" :total-count="0" :top="0"/>
+  <div id="submission-map-view" ref="el">
+    <odata-loading-message :state="geojson.initiallyLoading || showingMap"
+      type="submission" :filter="filter != null"/>
+    <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
+      @show="setShowing(true)" @shown="setShowing(false)"
+      @selection-changed="selectionChanged"/>
+    <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
+      :instance-id="selection?.id" :fieldpath="selection?.properties?.fieldpath"
+      @hide="map.deselect()"/>
+  </div>
 </template>
 
 <script setup>
-import { watch } from 'vue';
+import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
-import GeojsonMap from '../geojson-map.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
+import SubmissionMapPopup from './map-popup.vue';
 
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
 import { noargs, noop } from '../../util/util';
+import { styleBox } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -44,6 +52,8 @@ const props = defineProps({
   // Table actions
   filter: Object
 });
+
+const GeojsonMap = defineAsyncComponent(loadAsync('GeojsonMap'));
 
 const { odata, createResource } = useRequestData();
 const geojson = createResource('geojson', () => ({
@@ -84,5 +94,36 @@ fetchData();
 watch([() => props.filter, () => props.deleted], noargs(fetchData));
 const refresh = () => fetchData(false);
 
+const showingMap = ref(false);
+const setShowing = (value) => { showingMap.value = value; };
+watch(() => geojson.dataExists, (dataExists) => {
+  // We need to set showingMap.value to `false` if the data is cleared between
+  // the `show` and `shown` events of the GeojsonMap.
+  if (!dataExists) setShowing(false);
+});
+
+const el = useTemplateRef('el');
+// Stretches the map to the bottom of the screen.
+const sizeMap = () => {
+  const rect = el.value.getBoundingClientRect();
+  if (rect.height === 0) return '';
+  const section = el.value.closest('.page-section');
+  const { marginBottom } = styleBox(getComputedStyle(section));
+  return document.documentElement.clientHeight - rect.top - marginBottom;
+};
+
+const selection = shallowRef(null);
+const selectionChanged = (value) => { selection.value = value; };
+
+const map = useTemplateRef('map');
+
 defineExpose({ refresh });
 </script>
+
+<style lang="scss">
+#submission-map-view {
+  position: relative;
+
+  .page-section:has(&) { margin-bottom: 15px; }
+}
+</style>

@@ -302,19 +302,7 @@ const titleId = `modal-title${id}`;
         }
       }
 
-      .close {
-        position: absolute;
-        // x symbol has some top spacing
-        top: calc($padding-modal-top-actions-close - 2px);
-        right: $padding-modal-top-actions-close;
-        color: $color-input;
-        font-weight: normal;
-        opacity: 1;
-
-        &[aria-disabled="true"] {
-          cursor: not-allowed;
-        }
-      }
+      .close { @include modal-close; }
     }
 
     .modal-header {
