@@ -29,8 +29,12 @@ defineOptions({
   name: 'DlData'
 });
 defineProps({
-  // "key" would have been a nice name for this prop, but sadly that's a
-  // reserved name.
+  /*
+  "key" would have been a nice name for this prop, but sadly that's a reserved
+  name.
+
+  `name` can be passed in as a prop or as a slot.
+  */
   name: String,
   value: String
 });

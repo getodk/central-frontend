@@ -162,6 +162,9 @@ const resize = () => {
   const { sizer } = props;
   const result = sizer();
   if (result != null) {
+    // Here, we set the element's min-height, not its full height.
+    // .map-container also has a min-height, and if that's greater than the
+    // min-height here, the element will be taller than its min-height.
     el.value.style.minHeight = typeof result === 'number'
       ? (result > 0 ? px(result) : '')
       : result;
@@ -237,9 +240,10 @@ let abortShow = noop;
 const show = async () => {
   if (shown.value) return;
 
-  // show() is async, but it can also be called multiple times in a short period
-  // of time. Because of that, show() is abortable. Here, we abort any previous
-  // attempt to show(). That's needed to avoid emitting `show` twice.
+  // show() is async, but there are also cases where it will be called multiple
+  // times in a short period of time. Because of that, show() is abortable.
+  // Here, we abort any previous attempt to show(). That's needed to avoid
+  // emitting `show` twice.
   abortShow();
 
   if (featureCount.value === 0) return;
@@ -330,6 +334,9 @@ const selectCluster = (cluster) => {
 
   const features = cluster.get('features');
   const duration = 1000;
+  // If there aren't too many features in the cluster, calculate their boundary
+  // box and fit the view to that. If there are enough features that such a
+  // calculation might be onerous, just zoom in on the cluster.
   if (features.length < 1000) {
     const extent = createEmpty();
     for (const feature of features)
@@ -363,9 +370,9 @@ const selectFeatureAtPixel = (pixel) => {
 ////////////////////////////////////////////////////////////////////////////////
 // HOOKS - TIE EVERYTHING TOGETHER
 
-// We may have attempted to show the map, but failed because the map hadn't been
-// sized. The main reason for that is that an ancestor element was hidden. This
-// ResizeObserver accounts for that case: once the ancestor element becomes
+// We may have attempted to show() the map, but failed because the map hadn't
+// been sized. The main reason for that is that an ancestor element was hidden.
+// This ResizeObserver accounts for that case: once the ancestor element becomes
 // visible, this component will become visible, and the ResizeObserver will be
 // triggered.
 const resizeObserver = new ResizeObserver(show);
@@ -373,8 +380,8 @@ const resizeObserver = new ResizeObserver(show);
 onMounted(() => {
   mapInstance.setTarget(mapContainer.value);
   addFeatures();
-  // If mapContainer.value is already visible, resizeObserver will run the
-  // callback immediately.
+  // If el.value is already visible, resizeObserver will run the callback
+  // immediately.
   resizeObserver.observe(el.value);
 });
 
@@ -385,7 +392,11 @@ const olOn = (target, type, callback) => {
   olListeners.push([target, type, callback]);
 };
 
-olOn(mapInstance, 'moveend', () => { if (shown.value) countFeaturesInView(); });
+olOn(mapInstance, 'moveend', () => {
+  // show() will trigger an initial `moveend`, so we use shown.value to ignore
+  // that.
+  if (shown.value) countFeaturesInView();
+});
 olOn(mapInstance, 'pointermove', moveOverFeature);
 
 // OpenLayers has a `singleclick` event, but it lags the actual click by 250
@@ -420,7 +431,7 @@ watch(() => props.data, (newData, oldData) => {
 
     if (!shown.value)
       // Even though shown.value is `false`, we can't rely on resizeObserver to
-      // call show(): we have to call it here as well. If props.data were
+      // call show(): we need to call it here as well. If props.data were
       // changed while the map was rendering (while a previous call to show()
       // was still in progress), the component would be visible, with its size
       // set, even as the map remains transparent.
