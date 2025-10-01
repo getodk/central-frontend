@@ -167,8 +167,12 @@ const removeFeatures = () => {
 const resize = () => {
   const { sizer } = props;
   const result = sizer();
-  if (result != null)
-    el.value.style.minHeight = typeof result === 'number' ? px(result) : result;
+  if (result != null) {
+    el.value.style.minHeight = typeof result === 'number'
+      ? (result > 0 ? px(result) : '')
+      : result;
+  }
+
   // .map-container seems to need a concrete height to be set on it (e.g.,
   // setting `height: 100%;` in CSS didn't work).
   mapContainer.value.style.height = px(el.value.getBoundingClientRect().height);
