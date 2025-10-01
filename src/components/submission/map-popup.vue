@@ -15,17 +15,17 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <loading :state="submission.awaitingResponse"/>
-      <dl v-if="submission.dataExists">
-        <div>
-          <dt>{{ $t('header.submitterName') }}</dt>
-          <dd v-tooltip.text>{{ submission.__system.submitterName }}</dd>
-        </div>
-        <div>
-          <dt>{{ $t('header.submissionDate') }}</dt>
-          <dd><date-time :iso="submission.__system.submissionDate"/></dd>
-        </div>
-      </dl>
-      <template v-if="fields.dataExists">
+      <div v-if="fields.dataExists" v-show="submission.dataExists">
+        <dl>
+          <div>
+            <dt>{{ $t('header.submitterName') }}</dt>
+            <dd v-tooltip.text>{{ submission?.__system?.submitterName }}</dd>
+          </div>
+          <div>
+            <dt>{{ $t('header.submissionDate') }}</dt>
+            <dd><date-time :iso="submission?.__system?.submissionDate"/></dd>
+          </div>
+        </dl>
         <div v-if="missingField != null">
           <span class="icon-warning"></span>
           <i18n-t keypath="missingField">
@@ -45,7 +45,7 @@ except according to the terms contained in the LICENSE file.
             </dl-data>
           </div>
         </dl>
-      </template>
+      </div>
     </template>
   </map-popup>
 </template>

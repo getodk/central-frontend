@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged"/>
     <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
-      :instance-id="selection?.id" :fieldpath="selection?.properties.fieldpath"
+      :instance-id="selection?.id" :fieldpath="selection?.properties?.fieldpath"
       @hide="map.deselect()"/>
   </div>
 </template>
