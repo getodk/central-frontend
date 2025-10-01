@@ -475,8 +475,13 @@ defineExpose({ deselect: () => { selectFeature(null); } });
     top: 5px;
     left: 63px;
 
+    background-color: #fff;
+    border-radius: 4px;
     color: #000;
     font-size: 12px;
+    line-height: 16px;
+    padding-block: 6px;
+    padding-inline: 8px;
     user-select: none;
   }
 }
