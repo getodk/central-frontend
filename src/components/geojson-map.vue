@@ -464,7 +464,7 @@ defineExpose({ deselect: () => { selectFeature(null); } });
   position: relative;
 
   .map-container {
-    min-height: 300px;
+    min-height: 350px;
 
     opacity: 0;
     &.opaque { opacity: 1; }
