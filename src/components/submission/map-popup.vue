@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-popup v-show="instanceId != null" icon="file" @hide="$emit('hide')">
+  <map-popup v-show="instanceId != null" id="submission-map-popup" icon="file"
+    @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <loading :state="submission.awaitingResponse"/>
@@ -23,21 +24,35 @@ except according to the terms contained in the LICENSE file.
           <dt>{{ $t('header.submissionDate') }}</dt>
           <dd><date-time :iso="submission.__system.submissionDate"/></dd>
         </div>
-        <div v-for="field of orderedFields" :key="field.path">
-          <dl-data :value="path(field.pathElements, submission.data)?.toString()">
-            <template #name>
-              <span v-tooltip.no-aria="field.header">{{ field.name }}</span>
-            </template>
-          </dl-data>
-        </div>
       </dl>
+      <template v-if="fields.dataExists">
+        <div v-if="missingField != null">
+          <span class="icon-warning"></span>
+          <i18n-t keypath="missingField">
+            <template #field>
+              <strong v-tooltip.no-aria="missingField.header">
+                {{ missingField.name }}
+              </strong>
+            </template>
+          </i18n-t>
+        </div>
+        <dl>
+          <div v-for="field of orderedFields" :key="field.path">
+            <dl-data :value="path(field.pathElements, submission.data)?.toString()">
+              <template #name>
+                <span v-tooltip.no-aria="field.header">{{ field.name }}</span>
+              </template>
+            </dl-data>
+          </div>
+        </dl>
+      </template>
     </template>
   </map-popup>
 </template>
 
 <script setup>
 import { computed, watch } from 'vue';
-import { path } from 'ramda';
+import { last, path } from 'ramda';
 
 import DateTime from '../date-time.vue';
 import DlData from '../dl-data.vue';
@@ -89,24 +104,53 @@ watch(
   { immediate: true }
 );
 
+const fieldIndex = computed(() =>
+  fields.selectable.findIndex(field => field.path === props.fieldpath));
+const missingField = computed(() => {
+  if (props.fieldpath == null || fieldIndex.value !== -1) return null;
+  const elements = props.fieldpath.split('/');
+  elements.shift();
+  return { name: last(elements), header: elements.join('-') };
+});
 const orderedFields = computed(() => {
-  const { selectable } = fields;
-  const i = selectable.findIndex(field => field.path === props.fieldpath);
-  // i can be -1 if props.fieldpath corresponds to a field that is not in the
-  // current version of the form.
-  if (i === -1) return selectable;
-
-  const result = [...selectable];
-  result.unshift(...result.splice(i, 1));
+  if (props.fieldpath == null || fieldIndex.value === -1)
+    return fields.selectable;
+  const result = [...fields.selectable];
+  result.unshift(...result.splice(fieldIndex.value, 1));
   return result;
 });
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#submission-map-popup {
+  dl:first-of-type {
+    padding-bottom: $padding-block-dl;
+    border-bottom: $border-bottom-dl;
+  }
+  dl + div {
+    padding-block: $padding-block-dl;
+    border-bottom: $border-bottom-dl;
+  }
+  dl:last-of-type {
+    padding-top: $padding-block-dl;
+  }
+
+  .icon-warning {
+    color: $color-warning;
+    margin-right: $margin-right-icon;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
   "en": {
     // @transifexKey component.SubmissionBasicDetails.submissionDetails
-    "title": "Submission Details"
+    "title": "Submission Details",
+    // {field} is the name of a Form field.
+    "missingField": "This Submission was mapped using {field}, which isn’t in the published Form version."
   }
 }
 </i18n>

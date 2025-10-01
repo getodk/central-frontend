@@ -41,7 +41,7 @@ h1, .h1 {
 p { @include text-block; }
 
 dl > * {
-  border-bottom: 1px solid #ddd;
+  border-bottom: $border-bottom-dl;
   padding-block: $padding-block-dl;
 
   &:first-of-type { padding-top: 0; }

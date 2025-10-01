@@ -90,18 +90,6 @@ describe('SubmissionMapPopup', () => {
         values.should.eql(['POINT (1 1)', 'Someone', 'POINT (2 2)']);
       }));
 
-  it('shows fields in form order if the geo field is not present', () =>
-    mockHttp()
-      .mount(SubmissionMapPopup, mountOptions({
-        props: { fieldpath: '/field_that_is_no_longer_in_form' }
-      }))
-      .respondWithData(testData.submissionOData)
-      .afterResponse(component => {
-        const names = component.findAllComponents(DlData)
-          .map(pair => pair.get('dt').text());
-        names.should.eql(['first_name', 'p1', 'p2']);
-      }));
-
   it('shows tooltips for form-field data', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions())
@@ -112,6 +100,26 @@ describe('SubmissionMapPopup', () => {
         name.text().should.equal('first_name');
         await name.should.have.tooltip('names-first_name');
         pair.get('dd').should.have.textTooltip();
+      }));
+
+  it('shows a warning if geo field is not in current version of form', () =>
+    mockHttp()
+      .mount(SubmissionMapPopup, mountOptions({
+        props: { fieldpath: '/old_group/old_field' }
+      }))
+      .respondWithData(testData.submissionOData)
+      .afterResponse(async (component) => {
+        const warning = component.get('dl + div');
+        warning.find('.icon-warning').exists().should.be.true;
+        const field = warning.get('strong');
+        field.text().should.equal('old_field');
+        await field.should.have.tooltip('old_group-old_field');
+
+        // The fields that actually are in the current version of the form
+        // should be shown in form order.
+        const names = component.findAllComponents(DlData)
+          .map(pair => pair.get('dt').text());
+        names.should.eql(['first_name', 'p1', 'p2']);
       }));
 
   it('updates after the instanceId changes', () =>
