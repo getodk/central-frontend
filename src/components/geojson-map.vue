@@ -185,8 +185,8 @@ const resize = () => {
 
 const fitView = (extent, options = undefined) => {
   mapInstance.getView().fit(extent, {
-    // Provide enough space for styled features.
-    padding: [40, 40, 40, 40],
+    // We need to provide enough space for styled features.
+    padding: [50, 50, 50, 50],
     // Avoid zooming in to an extreme degree.
     maxZoom: 16,
     ...options
@@ -303,7 +303,6 @@ const hide = () => {
 let selectedId;
 
 const hitDetectionOptions = {
-  hitTolerance: 6,
   layerFilter: (layer) => layer === featureLayer
 };
 
@@ -332,7 +331,7 @@ const selectCluster = (cluster) => {
   selectFeature(null);
 
   const features = cluster.get('features');
-  const duration = 600;
+  const duration = 1000;
   if (features.length < 1000) {
     const extent = createEmpty();
     for (const feature of features)
