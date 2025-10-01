@@ -31,6 +31,7 @@ import SubmissionMapPopup from './map-popup.vue';
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
 import { noargs, noop } from '../../util/util';
+import { styleBox } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -106,12 +107,9 @@ const el = useTemplateRef('el');
 const sizeMap = () => {
   const rect = el.value.getBoundingClientRect();
   if (rect.height === 0) return '';
-
-  const padding = 15;
-  // Not sure why this correction is needed. Without it, the map seems to
-  // overflow slightly.
-  const correction = -2;
-  return document.documentElement.clientHeight - rect.top - padding + correction;
+  const section = el.value.closest('.page-section');
+  const { marginBottom } = styleBox(getComputedStyle(section));
+  return document.documentElement.clientHeight - rect.top - marginBottom;
 };
 
 const selection = shallowRef(null);
@@ -125,5 +123,7 @@ defineExpose({ refresh });
 <style lang="scss">
 #submission-map-view {
   position: relative;
+
+  .page-section:has(&) { margin-bottom: 15px; }
 }
 </style>

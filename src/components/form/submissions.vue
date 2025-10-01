@@ -207,10 +207,6 @@ export default {
     margin-left: auto;
     font-size: initial;
   }
-
-  // We want the map view to stretch to the bottom of the page without being
-  // affected by this bottom margin.
-  .page-section:has(#submission-map-view) { margin-bottom: 0; }
 }
 </style>
 
