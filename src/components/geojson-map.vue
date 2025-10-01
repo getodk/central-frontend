@@ -279,7 +279,7 @@ const show = async () => {
 
   shown.value = true;
   abortShow = noop;
-  countFeaturesInView();
+  inViewCount.value = featureCount.value;
   log('shown');
   emit('shown');
 };
@@ -426,9 +426,8 @@ watch(() => props.data, (newData, oldData) => {
       // set, even as the map remains transparent.
       show();
     else
-      // If the map isn't already shown, show() above will call
-      // countFeaturesInView(). But if the map is shown, we still need to call
-      // countFeaturesInView().
+      // If the map isn't already shown, then show() above will set
+      // inViewCount.value.
       countFeaturesInView();
   } else {
     hide();
