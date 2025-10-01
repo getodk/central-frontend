@@ -80,11 +80,6 @@ defineEmits(['hide']);
     .close {
       opacity: 1;
       color: #fff;
-
-      &:not([aria-disabled]):hover,
-      &:not([aria-disabled]):focus {
-        color: #000;
-      }
     }
   }
 }
