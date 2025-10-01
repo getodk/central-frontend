@@ -83,7 +83,6 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
 }
 
 .map-popup-title {
-  @include text-overflow-ellipsis;
   font-weight: 600;
   // Buffer between the title and the close button
   margin-right: 12px;
