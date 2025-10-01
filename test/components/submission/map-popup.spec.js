@@ -49,7 +49,7 @@ describe('SubmissionMapPopup', () => {
   it('does nothing if instanceId is not defined', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions({
-        props: { instanceId: null }
+        props: { instanceId: null, fieldpath: null }
       }))
       .testNoRequest()
       .afterResponses(component => {
