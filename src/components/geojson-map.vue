@@ -69,16 +69,10 @@ const mapContainer = useTemplateRef('mapContainer');
 
 const baseLayer = new TileLayer({ source: new OSM() });
 
-// We use WebGL when possible for performance reasons. If WebGL is not
-// available, we fall back to a basic 2D canvas. Our testing setup doesn't
-// support WebGL. Maybe some users don't as well.
-const supportsWebGL2 = document.createElement('canvas').getContext('webgl2') != null;
-if (!supportsWebGL2 && buildMode !== 'test')
-  // eslint-disable-next-line no-console
-  console.warn('WebGL2 not supported for map');
-const featureLayerClass = supportsWebGL2 ? WebGLVectorLayer : VectorLayer;
-
 const featureSource = new VectorSource();
+// We use WebGL for performance reasons. WebGL isn't available in our current
+// testing setup, so in test, we fall back to a basic 2D canvas.
+const featureLayerClass = buildMode !== 'test' ? WebGLVectorLayer : VectorLayer;
 const featureLayer = new featureLayerClass({ // eslint-disable-line new-cap
   source: featureSource,
   style: [...getUnselectedStyles(), ...getSelectedStyles()],
