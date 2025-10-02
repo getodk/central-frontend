@@ -282,13 +282,6 @@ export default {
           this.dataset.entities = this.odataEntities.count;
       }
     },
-    'odataEntities.removedEntities.size': {
-      handler(size) {
-        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted && !this.searchTerm) {
-          this.dataset.entities = this.odataEntities.count - size;
-        }
-      }
-    },
     'selectedEntities.size': {
       handler(size) {
         if (size > 0) {
@@ -496,6 +489,7 @@ export default {
           if (confirm != null) this.confirmDelete = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
+          this.dataset.entities -= 1;
 
           /* Before doing a couple more things, we first determine whether
           this.odataEntities.value still includes the entity and if so, what the
@@ -546,6 +540,7 @@ export default {
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
+          this.dataset.entities += 1;
 
           // See the comments in requestDelete().
           const index = this.odataEntities.dataExists
@@ -594,6 +589,8 @@ export default {
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += uuids.length;
 
         uuids.forEach(uuid => this.odataEntities.removedEntities.add(uuid));
+        this.dataset.entities -= uuids.length;
+
 
         this.bulkDeletedEntities = [...this.selectedEntities];
         this.odataEntities.value = this.odataEntities.value.filter(e => !this.selectedEntities.has(e));
@@ -645,6 +642,7 @@ export default {
         this.bulkDeletedEntities.length = 0;
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value -= uuids.length;
         uuids.forEach(uuid => this.odataEntities.removedEntities.delete(uuid));
+        this.dataset.entities += uuids.length;
         this.alert.success(this.$tcn('alert.restored', uuids.length));
       };
 
