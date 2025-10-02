@@ -51,7 +51,8 @@ defineEmits(['hide']);
 
   .action-bar {
     box-shadow: $m3-elevation-light-3;
-    background-color: #fff;
+    background-color: #333;
+    color: #fff;
     display: flex;
     align-items: center;
     border-radius: 4px;
@@ -78,12 +79,7 @@ defineEmits(['hide']);
 
     .close {
       opacity: 1;
-      color: #595E6A;
-
-      &:not([aria-disabled]):hover,
-      &:not([aria-disabled]):focus {
-        color: #000;
-      }
+      color: #fff;
     }
   }
 }
