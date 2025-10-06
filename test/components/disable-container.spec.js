@@ -17,7 +17,6 @@ describe('DisableContainer', () => {
   describe('disabled prop', () => {
     it('shows overlay when disabled is true', () => {
       const component = mountComponent({ props: { disabled: true } });
-      component.find('.disable-container-overlay').should.exist;
       component.get('.disable-container-overlay').should.be.visible();
     });
 
@@ -61,10 +60,10 @@ describe('DisableContainer', () => {
       component.get('.disable-container-overlay').attributes('tabindex').should.equal('0');
     });
 
-    it('overlay has tooltip directive', () => {
-      const component = mountComponent({ props: { disabled: true } });
+    it('overlay has tooltip directive', async () => {
+      const component = mountComponent({ props: { disabled: true, disabledMessage: 'This section is disabled' } });
       const overlay = component.get('.disable-container-overlay');
-      overlay.element.should.exist;
+      await overlay.should.have.tooltip('This section is disabled');
     });
   });
 });
