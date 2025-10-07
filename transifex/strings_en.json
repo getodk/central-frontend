@@ -226,6 +226,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
+      "entity": {
+        "bulk_delete": {
+          "string": "Bulk Delete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "Bulk Restore",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "Give Access",
