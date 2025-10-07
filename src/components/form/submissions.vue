@@ -162,6 +162,7 @@ export default {
             $filter: '__system/deletedAt ne null',
           }
         ),
+        clear: false,
       }).catch(noop);
     },
     toggleDeleted() {

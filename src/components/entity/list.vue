@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
       <button id="entity-list-refresh-button" type="button"
-        class="btn btn-outlined" :aria-disabled="refreshing"
+        class="btn btn-outlined" :aria-disabled="refreshing || bulkOperationInProgress"
         @click="fetchChunk(false, true)">
         <span class="icon-refresh"></span>{{ $t('action.refresh') }}
         <spinner :state="refreshing"/>
@@ -346,6 +346,8 @@ export default {
 
       const $search = this.searchTerm ? this.searchTerm : undefined;
 
+      this.clearSelectedEntities();
+
       this.odataEntities.request({
         url: apiPaths.odataEntities(
           this.projectId,
@@ -577,11 +579,17 @@ export default {
       this.odataEntities.value?.forEach(e => { e.__system.selected = false; });
       this.allSelected = false;
     },
+    cancelBackgroundRefresh() {
+      if (!this.refreshing) return;
+      this.odataEntities.cancelRequest();
+      this.deletedEntityCount.cancelRequest();
+    },
     requestBulkDelete() {
       const uuids = Array.from(this.selectedEntities).map(e => e.__id);
 
       const bulkDelete = () => {
         this.bulkOperationInProgress = true;
+        this.cancelBackgroundRefresh();
         return this.request({
           method: 'POST',
           url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-delete'),
@@ -622,6 +630,8 @@ export default {
       const uuids = this.bulkDeletedEntities.map(e => e.__id);
       const bulkRestore = () => {
         this.bulkOperationInProgress = true;
+        this.cancelBackgroundRefresh();
+
         return this.request({
           method: 'POST',
           url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-restore'),

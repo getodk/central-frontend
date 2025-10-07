@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { nextTick } from 'vue';
+import sinon from 'sinon';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityDelete from '../../../src/components/entity/delete.vue';
@@ -1478,6 +1479,49 @@ describe('EntityList', () => {
       checkboxes[0].element.checked.should.be.false;
       checkboxes[1].element.checked.should.be.false;
     });
+
+    it('clears selected entities when refresh completes', async () => {
+      const component = await loadEntityList()
+        .complete()
+        .request(async c => {
+          const checkboxes = c.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+
+          checkboxes[0].element.checked.should.be.true;
+          checkboxes[1].element.checked.should.be.true;
+
+          const actionBar = c.findComponent({ name: 'ActionBar' });
+          actionBar.props().state.should.be.true;
+          return c.get('#entity-list-refresh-button').trigger('click');
+        })
+        .respondWithData(testData.entityOData)
+        .complete();
+
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      checkboxes[0].element.checked.should.be.false;
+      checkboxes[1].element.checked.should.be.false;
+
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+      actionBar.props().state.should.be.false;
+    });
+
+    it('aborts refresh request when bulk delete is initiated during refresh', () =>
+      loadEntityList()
+        .complete()
+        .request(async component => {
+          sinon.spy(component.vm.$container.requestData.localResources.odataEntities, 'cancelRequest');
+          component.get('#entity-list-refresh-button').trigger('click');
+          const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+          return component.find('.action-bar-container .btn-primary').trigger('click');
+        })
+        .respondWithData(testData.entityOData)
+        .respondWithSuccess()
+        .afterResponses((component) => {
+          component.vm.$container.requestData.localResources.odataEntities.cancelRequest.called.should.be.true;
+        }));
   });
 
   it('sets allSelected to false when all entities on current page are deleted and user navigates to next page', () => {
@@ -1526,5 +1570,26 @@ describe('EntityList', () => {
     await actionBar.find('.close').trigger('click');
 
     headerCheckbox.element.checked.should.be.false;
+  });
+
+  it('disables refresh button when bulk delete is in progress', () => {
+    createEntities(3);
+    return load('/projects/1/entity-lists/trees/entities')
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .beforeAnyResponse(component => {
+        const refreshButton = component.find('#entity-list-refresh-button');
+        refreshButton.attributes('aria-disabled').should.equal('true');
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const refreshButton = component.find('#entity-list-refresh-button');
+        refreshButton.attributes('aria-disabled').should.equal('false');
+      });
   });
 });
