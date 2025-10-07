@@ -521,6 +521,19 @@ describe('EntityList', () => {
       });
     });
 
+    it('shows a success alert even when backend returns 404', async () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      const component = await load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(async (c) => {
+          await c.get('.entity-metadata-row .delete-button').trigger('click');
+          return c.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'Entity “My Entity” has been deleted.');
+    });
+
     describe('last entity was deleted', () => {
       beforeEach(() => {
         testData.extendedEntities.createPast(2);
@@ -747,6 +760,18 @@ describe('EntityList', () => {
         const text = component.get('.toggle-deleted-entities').text();
         text.should.equal('0 deleted Entities');
       });
+    });
+
+    it('shows a success alert even when backend returns 404', async () => {
+      const component = await loadDeletedEntities()
+        .complete()
+        .request(async (c) => {
+          await c.get('.entity-metadata-row .restore-button').trigger('click');
+          return c.get('#entity-restore .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'Entity “My Entity” has been restored.');
     });
 
     describe('last entity was restore', () => {

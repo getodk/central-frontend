@@ -397,7 +397,8 @@ export default {
 
       this.request({
         method: 'DELETE',
-        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId),
+        fulfillProblem: ({ code }) => code === 404.1
       })
         .then(() => {
           this.deleteModal.hide();
@@ -437,7 +438,8 @@ export default {
 
       this.request({
         method: 'POST',
-        url: apiPaths.restoreSubmission(this.projectId, this.xmlFormId, instanceId)
+        url: apiPaths.restoreSubmission(this.projectId, this.xmlFormId, instanceId),
+        fulfillProblem: ({ code }) => code === 404.1
       })
         .then(() => {
           this.restoreModal.hide();
