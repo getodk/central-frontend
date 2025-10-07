@@ -1404,6 +1404,28 @@ describe('EntityList', () => {
         actionBar.props().state.should.be.false;
       }));
 
+    it('disables data table during bulk delete operation', () => load('/projects/1/entity-lists/trees/entities')
+      .complete()
+      .request(async component => {
+        const disableContainer = component.getComponent({ name: 'DisableContainer' });
+        disableContainer.props().disabled.should.be.false;
+
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .beforeEachResponse(component => {
+        const disableContainer = component.getComponent({ name: 'DisableContainer' });
+        disableContainer.props().disabled.should.be.true;
+        disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const disableContainer = component.getComponent({ name: 'DisableContainer' });
+        disableContainer.props().disabled.should.be.false;
+      }));
+
     it('hides alert when entities are selected', async () => {
       const component = await loadEntityList();
 

@@ -158,6 +158,7 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 $edge-offset: 25px;
 $popup-width: 300px;
@@ -249,14 +250,7 @@ $popup-width: 300px;
 }
 
 #form-attachment-popups-backdrop {
-  background-color: #000;
-  bottom: 0;
-  left: 0;
-  opacity: .8;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: $z-index-modal-backdrop;
+  @include overlay(fixed, 0.8);
 }
 
 @keyframes bob {
