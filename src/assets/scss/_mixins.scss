@@ -60,6 +60,34 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// LINKS AND BUTTONS
+
+// Styles a group of buttons similarly to those in the submissions table.
+@mixin action-bar {
+  .btn {
+    [class^="icon-"] { margin-right: 0; }
+    .icon-check { margin-right: -1px; }
+    .icon-pencil { margin-left: 1px; }
+
+    .icon-trash { color: $color-danger; }
+  }
+
+  .more-button {
+    span:first-child { margin-right: 13px; }
+
+    .icon-angle-right {
+      position: absolute;
+      top: #{$padding-top-btn - 2px};
+      right: $hpadding-btn;
+
+      font-size: 20px;
+    }
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // FORMS
 
 @mixin form-control-background {

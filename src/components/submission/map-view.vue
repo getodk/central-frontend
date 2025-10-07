@@ -18,7 +18,9 @@ except according to the terms contained in the LICENSE file.
       @selection-changed="selectionChanged"/>
     <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
       :instance-id="selection?.id" :fieldpath="selection?.properties?.fieldpath"
-      @hide="map.deselect()"/>
+      :awaiting-response="awaitingResponses.has(selection?.id)"
+      @hide="map.deselect()" @review="$emit('review', $event)"
+      @delete="$emit('delete', $event)"/>
   </div>
 </template>
 
@@ -50,8 +52,14 @@ const props = defineProps({
   deleted: Boolean,
 
   // Table actions
-  filter: Object
+  filter: Object,
+
+  awaitingResponses: {
+    type: Set,
+    required: true
+  }
 });
+defineEmits(['review', 'delete']);
 
 const GeojsonMap = defineAsyncComponent(loadAsync('GeojsonMap'));
 
@@ -66,7 +74,7 @@ const geojson = createResource('geojson', () => ({
     const { features } = data;
     odata.setFromResponse({
       data: {
-        value: features.map(({ id }) => ({ __id: id })),
+        value: new Array(features.length),
         '@odata.count': features.length
       },
       config
@@ -93,6 +101,7 @@ const fetchData = (clear = true) => {
 fetchData();
 watch([() => props.filter, () => props.deleted], noargs(fetchData));
 const refresh = () => fetchData(false);
+const cancelRefresh = () => { geojson.cancelRequest(); };
 
 const showingMap = ref(false);
 const setShowing = (value) => { showingMap.value = value; };
@@ -116,8 +125,12 @@ const selection = shallowRef(null);
 const selectionChanged = (value) => { selection.value = value; };
 
 const map = useTemplateRef('map');
+const afterDelete = (instanceId) => {
+  map.value.removeFeature(instanceId);
+  odata.value.length -= 1;
+};
 
-defineExpose({ refresh });
+defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
 </script>
 
 <style lang="scss">

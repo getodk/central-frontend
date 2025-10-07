@@ -171,13 +171,6 @@ const { entityPath } = useRoutes();
     margin-left: 8px;
   }
   .icon-warning { font-size: 12px; }
-  .col-content .icon-angle-right {
-    color: $color-accent-primary;
-    font-size: 20px;
-  }
-
-  .delete-button .icon-trash { color: $color-danger; }
-
   .col-deleted-at { color: $color-danger; }
 }
 </style>

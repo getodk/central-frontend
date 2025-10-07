@@ -1,33 +1,44 @@
+import { T } from 'ramda';
+
 import DateTime from '../../../src/components/date-time.vue';
 import DlData from '../../../src/components/dl-data.vue';
+import GeojsonMap from '../../../src/components/geojson-map.vue';
+import SubmissionActions from '../../../src/components/submission/actions.vue';
+import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionMapPopup from '../../../src/components/submission/map-popup.vue';
+import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import useFields from '../../../src/request-data/fields';
 
 import testData from '../../data';
+import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions } from '../../util/lifecycle';
-import { mockHttp } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => {
+  const project = testData.extendedProjects.last();
+  const projectId = project.id.toString();
   const form = testData.extendedForms.last();
+  const { xmlFormId } = form;
   const { instanceId } = testData.extendedSubmissions.last();
   return mergeMountOptions(options, {
-    props: {
-      projectId: form.projectId.toString(),
-      xmlFormId: form.xmlFormId,
-      instanceId,
-      fieldpath: '/p1'
-    },
+    props: { projectId, xmlFormId, instanceId, fieldpath: '/p1' },
     container: {
-      requestData: testRequestData([useFields], { fields: form._fields })
+      router: mockRouter(`/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}/submissions?map=true`),
+      requestData: testRequestData([useFields], {
+        project,
+        form,
+        fields: form._fields
+      })
     }
   });
 };
 
 describe('SubmissionMapPopup', () => {
   beforeEach(() => {
-    testData.extendedUsers.createPast(1, { displayName: 'Allison' });
+    mockLogin({ displayName: 'Allison' });
     testData.extendedForms.createPast(1, {
       xmlFormId: 'a b',
       fields: [
@@ -145,4 +156,94 @@ describe('SubmissionMapPopup', () => {
         pair.get('dt').text().should.equal('p1');
         pair.props().value.should.equal('POINT (3 3)');
       }));
+
+  it('shows actions', () =>
+    mockHttp()
+      .mount(SubmissionMapPopup, mountOptions())
+      .respondWithData(testData.submissionOData)
+      .afterResponse(component => {
+        const actions = component.getComponent(SubmissionActions);
+        actions.props().submission.__id.should.equal('c d');
+      }));
+
+  describe('review button', () => {
+    const review = (confirm = true) => load('/projects/1/forms/a%20b/submissions?map=true')
+      .complete()
+      .request(app => {
+        app.getComponent(GeojsonMap).vm.selectFeature('c d');
+      })
+      .respondWithData(testData.submissionOData)
+      .complete()
+      .request(async (app) => {
+        await app.get('#submission-map-popup .review-button').trigger('click');
+        if (confirm) {
+          await app.get('#submission-update-review-state input[value="approved"]').setChecked();
+          await app.get('#submission-update-review-state form').trigger('submit');
+        }
+      })
+      .respondIf(T, () => {
+        testData.extendedSubmissions.update(-1, { reviewState: 'approved' });
+        return testData.standardSubmissions.last();
+      });
+
+    it('shows the modal', async () => {
+      const app = await review(false);
+      app.getComponent(SubmissionUpdateReviewState).props().state.should.be.true;
+    });
+
+    it('sends the correct request', () =>
+      review().testRequests([{
+        method: 'PATCH',
+        url: '/v1/projects/1/forms/a%20b/submissions/c%20d',
+        data: { reviewState: 'approved' }
+      }]));
+
+    it('updates the review state', async () => {
+      const app = await review();
+      await app.get('#submission-map-popup .review-button').trigger('click');
+      const input = app.get('#submission-update-review-state input[value="approved"]');
+      input.element.checked.should.be.true;
+    });
+  });
+
+  describe('delete button', () => {
+    const del = (confirm = true) => load('/projects/1/forms/a%20b/submissions?map=true')
+      .complete()
+      .request(app => {
+        app.getComponent(GeojsonMap).vm.selectFeature('c d');
+      })
+      .respondWithData(testData.submissionOData)
+      .complete()
+      .request(async (app) => {
+        await app.get('#submission-map-popup .delete-button').trigger('click');
+        if (confirm)
+          await app.get('#submission-delete .btn-danger').trigger('click');
+      })
+      .respondIf(T, () => ({ success: true }));
+
+    it('shows the modal', async () => {
+      const app = await del(false);
+      app.getComponent(SubmissionDelete).props().state.should.be.true;
+    });
+
+    it('sends the correct request', () =>
+      del().testRequests([{
+        method: 'DELETE',
+        url: '/v1/projects/1/forms/a%20b/submissions/c%20d'
+      }]));
+
+    it('removes the feature from the map', () =>
+      del()
+        .beforeAnyResponse(app => {
+          app.getComponent(GeojsonMap).vm.getFeatures().length.should.equal(1);
+        })
+        .afterResponse(app => {
+          app.getComponent(GeojsonMap).vm.getFeatures().length.should.equal(0);
+        }));
+
+    it('hides the popup', async () => {
+      const app = await del();
+      app.getComponent(SubmissionMapPopup).should.be.hidden();
+    });
+  });
 });

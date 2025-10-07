@@ -533,44 +533,6 @@ describe('SubmissionList', () => {
           .afterResponse(component => {
             component.should.alert('success', 'Submission has been successfully deleted.');
           }));
-
-      it('does not hide table after deleting last submission if submissions are concurrently replaced', () =>
-        delAndCheck()
-          .request(async (component) => {
-            await component.get('#submission-list-refresh-button').trigger('click');
-            return component.get('.submission-metadata-row .delete-button').trigger('click');
-          })
-          .respondWithData(() => {
-            testData.extendedSubmissions.splice(0);
-            testData.extendedSubmissions.createNew();
-            testData.extendedSubmissions.createNew();
-            return testData.submissionOData();
-          })
-          .respondWithData(testData.submissionDeletedOData)
-          .respondWithSuccess()
-          .afterResponses(component => {
-            // Even though there were 2 Submissions before, and there are 2
-            // Submissions now, and 2 Submissions have been deleted, the table should
-            // still be shown.
-            component.get('#submission-table').should.be.visible();
-            // No row should be hidden.
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.submission-metadata-row .delete-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            /* The removedCount should have been reset to 0 when the refreshed
-            Submissions were received. (Otherwise, the previous assertion should
-            have failed.) However, imagine that after that, the removedCount was
-            incorrectly increased to 1 following the success response (if
-            requestDelete() in SubmissionList didn't check whether
-            odata.value still includes the deleted Submission). In that
-            case, this latest deletion would increase the removedCount to 2,
-            which would hide the table. Here, we check that that doesn't
-            happen. */
-            component.get('#submission-table').should.be.visible();
-          }));
     });
   });
 
@@ -765,43 +727,6 @@ describe('SubmissionList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.should.alert('success', 'The Submission has been restored.');
-          }));
-
-      it('does not hide table after restoreing last submission if submissions are concurrently replaced', () =>
-        restoreAndCheck()
-          .request(async (component) => {
-            await component.get('#submission-list-refresh-button').trigger('click');
-            return component.get('.submission-metadata-row .restore-button').trigger('click');
-          })
-          .respondWithData(() => {
-            testData.extendedSubmissions.splice(0);
-            testData.extendedSubmissions.createNew({ deletedAt: new Date().toISOString() });
-            testData.extendedSubmissions.createNew({ deletedAt: new Date().toISOString() });
-            return testData.submissionDeletedOData();
-          })
-          .respondWithSuccess()
-          .afterResponses(component => {
-            // Even though there were 2 deleted Submissions before, and there are 2
-            // deleted Submissions now, and 2 deleted Submissions have been restored, the table should
-            // still be shown.
-            component.get('#submission-table').should.be.visible();
-            // No row should be hidden.
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.submission-metadata-row .restore-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            /* The removedCount should have been reset to 0 when the refreshed
-            deleted Submissions were received. (Otherwise, the previous assertion should
-            have failed.) However, imagine that after that, the removedCount was
-            incorrectly increased to 1 following the success response (if
-            requestDelete() in SubmissionList didn't check whether
-            odata.value still includes the restored Submission). In that
-            case, this latest restore would increase the removedCount to 2,
-            which would hide the table. Here, we check that that doesn't
-            happen. */
-            component.get('#submission-table').should.be.visible();
           }));
     });
   });

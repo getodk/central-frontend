@@ -47,6 +47,11 @@ except according to the terms contained in the LICENSE file.
         </dl>
       </div>
     </template>
+    <template #footer>
+      <submission-actions v-if="submission.dataExists"
+        :submission="submission.data" :awaiting-response="awaitingResponse"
+        @click="handleActions"/>
+    </template>
   </map-popup>
 </template>
 
@@ -58,6 +63,7 @@ import DateTime from '../date-time.vue';
 import DlData from '../dl-data.vue';
 import Loading from '../loading.vue';
 import MapPopup from '../map-popup.vue';
+import SubmissionActions from './actions.vue';
 
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
@@ -77,9 +83,10 @@ const props = defineProps({
     required: true
   },
   instanceId: String,
-  fieldpath: String
+  fieldpath: String,
+  awaitingResponse: Boolean
 });
-defineEmits(['hide']);
+const emit = defineEmits(['hide', 'review', 'delete']);
 
 const { fields } = useRequestData();
 const { submission } = useSubmission();
@@ -118,12 +125,24 @@ const orderedFields = computed(() => {
   result.unshift(...result.splice(fieldIndex.value, 1));
   return result;
 });
+
+const handleActions = (event) => {
+  const action = event.target.closest('.btn-group .btn');
+  if (action == null) return;
+  const { classList } = action;
+  if (classList.contains('review-button'))
+    emit('review', submission.data);
+  else if (classList.contains('delete-button'))
+    emit('delete', submission.data);
+};
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #submission-map-popup {
+  @include action-bar;
+
   dl:first-of-type {
     padding-bottom: $padding-block-dl;
     border-bottom: $border-bottom-dl;

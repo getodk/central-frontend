@@ -160,10 +160,11 @@ const handlePageChange = () => {
   fetchChunk(false);
 };
 const refresh = () => fetchChunk(false, true);
+const cancelRefresh = () => { odata.cancelRequest(); };
 
 const table = useTemplateRef('table');
-const afterReview = (index) => table.value.afterReview(index);
-const afterDelete = (index) => table.value.afterDelete(index);
+const afterReview = (instanceId) => table.value.afterReview(instanceId);
+const afterDelete = (instanceId) => table.value.afterDelete(instanceId);
 
-defineExpose({ refresh, afterReview, afterDelete });
+defineExpose({ refresh, cancelRefresh, afterReview, afterDelete });
 </script>

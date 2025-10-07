@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       </button>
     </div>
     <div ref="body" class="map-popup-body"><slot name="body"></slot></div>
-    <div class="map-popup-actions"><slot name="actions"></slot></div>
+    <div class="map-popup-footer"><slot name="footer"></slot></div>
   </div>
 </template>
 
@@ -66,7 +66,7 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
   > div { padding-inline: $padding-panel-body; }
 }
 
-.map-popup-heading, .map-popup-actions { flex-shrink: 0; }
+.map-popup-heading, .map-popup-footer { flex-shrink: 0; }
 
 .map-popup-heading {
   color: $color-accent-primary;
@@ -94,4 +94,6 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
   dl { margin-bottom: 0; }
   dd:not(.dl-data-dd) { @include text-overflow-ellipsis; }
 }
+
+.map-popup-footer { padding-top: 15px; }
 </style>
