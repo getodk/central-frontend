@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
-    <entity-delete v-bind="deleteModal" checkbox
+    <entity-delete v-bind="deleteModal"
       :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.entity.__id)"
       @hide="deleteModal.hide()" @delete="requestDelete"/>
     <entity-restore v-bind="restoreModal" checkbox
@@ -202,8 +202,6 @@ export default {
       resolveIndex: null,
       resolve: modalData(),
 
-      // state that indicates whether we need to show delete confirmation dialog
-      confirmDelete: true,
       deleteModal: modalData(),
 
       // state that indicates whether we need to show restore confirmation dialog
@@ -473,14 +471,10 @@ export default {
       this.$refs.table.afterUpdate(this.resolveIndex);
     },
     showDelete(entity) {
-      if (this.confirmDelete) {
-        this.deleteModal.show({ entity });
-      } else {
-        this.requestDelete([entity, this.confirmDelete]);
-      }
+      this.deleteModal.show({ entity });
     },
     requestDelete(event) {
-      const [{ __id: uuid, label }, confirm] = event;
+      const [{ __id: uuid, label }] = event;
 
       this.awaitingResponses.add(uuid);
 
@@ -493,7 +487,6 @@ export default {
           if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
 
           this.alert.success(this.$t('alert.entityDeleted', { label }));
-          if (confirm != null) this.confirmDelete = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
 
