@@ -1560,10 +1560,14 @@ describe('EntityList', () => {
         await checkboxes[1].setValue(true);
         return component.find('.action-bar-container .btn-primary').trigger('click');
       })
+      .beforeAnyResponse(component => {
+        const refreshButton = component.find('#entity-list-refresh-button');
+        refreshButton.attributes('aria-disabled').should.equal('true');
+      })
       .respondWithSuccess()
       .afterResponse(component => {
         const refreshButton = component.find('#entity-list-refresh-button');
-        should.not.exist(refreshButton.attributes('disabled'));
+        refreshButton.attributes('aria-disabled').should.equal('false');
       });
   });
 });

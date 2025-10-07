@@ -575,6 +575,7 @@ export default {
       this.allSelected = false;
     },
     cancelBackgroundRefresh() {
+      if (!this.refreshing) return;
       this.odataEntities.cancelRequest();
       this.deletedEntityCount.cancelRequest();
     },
