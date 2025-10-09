@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
       <button id="entity-list-refresh-button" type="button"
-        class="btn btn-outlined" :aria-disabled="refreshing"
+        class="btn btn-outlined" :aria-disabled="refreshing || bulkOperationInProgress"
         @click="fetchChunk(false, true)">
         <span class="icon-refresh"></span>{{ $t('action.refresh') }}
         <spinner :state="refreshing"/>
@@ -30,29 +30,32 @@ except according to the terms contained in the LICENSE file.
         v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
       </teleport-if-exists>
     </div>
-    <entity-table v-show="odataEntities.dataExists" ref="table"
-      v-model:all-selected="allSelected"
-      :properties="dataset.properties" :deleted="deleted"
-      :awaiting-deleted-responses="awaitingResponses"
-      @selection-changed="handleSelectionChange"
-      @update="showUpdate"
-      @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
+    <disable-container :disabled="bulkOperationInProgress"
+      :disabled-message="$t('bulkOpInProgress')">
+      <entity-table v-show="odataEntities.dataExists" ref="table"
+        v-model:all-selected="allSelected"
+        :properties="dataset.properties" :deleted="deleted"
+        :awaiting-deleted-responses="awaitingResponses"
+        @selection-changed="handleSelectionChange"
+        @update="showUpdate"
+        @resolve="showResolve" @delete="showDelete" @restore="showRestore"/>
 
-    <p v-show="emptyTableMessage" class="empty-table-message">
-      {{ emptyTableMessage }}
-    </p>
-    <odata-loading-message :state="odataEntities.initiallyLoading"
-      type="entity"
-      :top="pagination.size"
-      :filter="odataFilter != null || !!searchTerm"
-      :total-count="dataset.dataExists ? dataset.entities : 0"/>
+      <p v-show="emptyTableMessage" class="empty-table-message">
+        {{ emptyTableMessage }}
+      </p>
+      <odata-loading-message :state="odataEntities.initiallyLoading"
+        type="entity"
+        :top="pagination.size"
+        :filter="odataFilter != null || !!searchTerm"
+        :total-count="dataset.dataExists ? dataset.entities : 0"/>
 
-    <!-- @update:page is emitted on size change as well -->
-    <pagination v-if="pagination.count > 0"
-            v-model:page="pagination.page" v-model:size="pagination.size"
-            :count="pagination.count" :size-options="pageSizeOptions"
-            :spinner="odataEntities.awaitingResponse"
-            @update:page="handlePageChange()"/>
+      <!-- @update:page is emitted on size change as well -->
+      <pagination v-if="pagination.count > 0"
+              v-model:page="pagination.page" v-model:size="pagination.size"
+              :count="pagination.count" :size-options="pageSizeOptions"
+              :spinner="odataEntities.awaitingResponse"
+              @update:page="handlePageChange()"/>
+    </disable-container>
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
@@ -91,6 +94,7 @@ import Pagination from '../pagination.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 import ActionBar from '../action-bar.vue';
+import DisableContainer from '../disable-container.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -106,6 +110,7 @@ export default {
   name: 'EntityList',
   components: {
     ActionBar,
+    DisableContainer,
     EntityDelete,
     EntityDownloadButton,
     EntityRestore,
@@ -282,13 +287,6 @@ export default {
           this.dataset.entities = this.odataEntities.count;
       }
     },
-    'odataEntities.removedEntities.size': {
-      handler(size) {
-        if (this.dataset.dataExists && this.odataEntities.dataExists && !this.odataFilter && !this.deleted && !this.searchTerm) {
-          this.dataset.entities = this.odataEntities.count - size;
-        }
-      }
-    },
     'selectedEntities.size': {
       handler(size) {
         if (size > 0) {
@@ -340,6 +338,8 @@ export default {
       }
 
       const $search = this.searchTerm ? this.searchTerm : undefined;
+
+      this.clearSelectedEntities();
 
       this.odataEntities.request({
         url: apiPaths.odataEntities(
@@ -496,6 +496,7 @@ export default {
           if (confirm != null) this.confirmDelete = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
+          this.dataset.entities -= 1;
 
           /* Before doing a couple more things, we first determine whether
           this.odataEntities.value still includes the entity and if so, what the
@@ -546,6 +547,7 @@ export default {
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
+          this.dataset.entities += 1;
 
           // See the comments in requestDelete().
           const index = this.odataEntities.dataExists
@@ -572,12 +574,17 @@ export default {
       this.odataEntities.value?.forEach(e => { e.__system.selected = false; });
       this.allSelected = false;
     },
+    cancelBackgroundRefresh() {
+      if (!this.refreshing) return;
+      this.odataEntities.cancelRequest();
+      this.deletedEntityCount.cancelRequest();
+    },
     requestBulkDelete() {
       const uuids = Array.from(this.selectedEntities).map(e => e.__id);
-      // TODO: disable the whole table
 
       const bulkDelete = () => {
         this.bulkOperationInProgress = true;
+        this.cancelBackgroundRefresh();
         return this.request({
           method: 'POST',
           url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-delete'),
@@ -594,6 +601,8 @@ export default {
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += uuids.length;
 
         uuids.forEach(uuid => this.odataEntities.removedEntities.add(uuid));
+        this.dataset.entities -= uuids.length;
+
 
         this.bulkDeletedEntities = [...this.selectedEntities];
         this.odataEntities.value = this.odataEntities.value.filter(e => !this.selectedEntities.has(e));
@@ -618,6 +627,8 @@ export default {
       const uuids = this.bulkDeletedEntities.map(e => e.__id);
       const bulkRestore = () => {
         this.bulkOperationInProgress = true;
+        this.cancelBackgroundRefresh();
+
         return this.request({
           method: 'POST',
           url: apiPaths.entities(this.projectId, this.datasetName, '/bulk-restore'),
@@ -645,6 +656,7 @@ export default {
         this.bulkDeletedEntities.length = 0;
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value -= uuids.length;
         uuids.forEach(uuid => this.odataEntities.removedEntities.delete(uuid));
+        this.dataset.entities += uuids.length;
         this.alert.success(this.$tcn('alert.restored', uuids.length));
       };
 
@@ -726,7 +738,8 @@ export default {
     },
     "actionBar": {
       "message": "{count} Entity selected | {count} Entities selected"
-    }
+    },
+    "bulkOpInProgress": "Bulk operation in progress"
   }
 }
 </i18n>

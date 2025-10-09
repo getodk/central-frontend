@@ -2260,6 +2260,9 @@
           "string": "{count, plural, one {{count} Entity selected} other {{count} Entities selected}}"
         }
       },
+      "bulkOpInProgress": {
+        "string": "Bulk operation in progress"
+      },
       "action": {
         "download": {
           "unfiltered": {
