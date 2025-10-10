@@ -68,6 +68,8 @@ describe('SubmissionList', () => {
 
   describe('after the refresh button is clicked', () => {
     it('completes a background refresh', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      let initialTime;
       testData.extendedSubmissions.createPast(1);
       const assertRowCount = (count) => (component, _, i) => {
         if (i === 0 || i == null) {
@@ -76,16 +78,26 @@ describe('SubmissionList', () => {
         }
       };
       return load('/projects/1/forms/f/submissions', { root: false })
-        .afterResponses(assertRowCount(1))
-        .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+        .afterResponses((component) => {
+          assertRowCount(1)(component);
+          initialTime = component.get('.table-refresh-info span').text();
+        })
+        .request((component) => {
+          clock.tick(1000);
+          return component.get('#submission-list-refresh-button').trigger('click');
+        })
         .beforeEachResponse(assertRowCount(1))
         .respondWithData(() => {
           testData.extendedSubmissions.createNew();
           return testData.submissionOData();
         })
         .respondWithData(() => testData.submissionDeletedOData())
-        .afterResponse(assertRowCount(2));
+        .afterResponse((component) => {
+          assertRowCount(2)(component);
+
+          const newTime = component.get('.table-refresh-info span').text();
+          newTime.should.not.equal(initialTime);
+        });
     });
 
     it('does not show a loading message', () => {

@@ -992,6 +992,10 @@
     },
     "search": {
       "string": "Search"
+    },
+    "dataRefreshTime": {
+      "string": "Data last refreshed at {date} on {time}",
+      "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
     }
   },
   "mixin": {

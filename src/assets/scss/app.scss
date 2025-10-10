@@ -977,3 +977,14 @@ becomes more complicated.
     margin-left: 10px;
   }
 }
+
+.table-refresh-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  span {
+    font-size: 12px;
+    margin-right: 10px;
+  }
+}
