@@ -11,8 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span :class="htmlClass">
-    <span :class="reviewStateIcon(value)"></span>
-    <span><slot>{{ $t(`reviewState.${value}`) }}</slot></span>
+    <span v-tooltip.sr-only :class="reviewStateIcon(value)"></span>
+    <span :class="{ 'sr-only': tooltip }">
+      <slot>{{ $t(`reviewState.${value}`) }}</slot>
+    </span>
   </span>
 </template>
 
@@ -26,6 +28,10 @@ defineOptions({
 });
 const props = defineProps({
   value: String,
+  // If `false` (the default), text will be shown next to the icon. If `true`,
+  // a tooltip will be added on the icon instead.
+  tooltip: Boolean,
+  // `true` to give the text the same color as the icon.
   colorText: Boolean,
   // Useful when there is a list or column of review states, with a review state
   // on each row. In that case, specifying `true` for `align` will align the
@@ -60,7 +66,7 @@ const { reviewStateIcon } = useReviewState();
 
   // Minimize the CSS specificity to make it easy to override this style (e.g.,
   // in FeedEntry).
-  :where(&) [class^="icon-"] { margin-right: $margin-right-icon; }
+  :where(&) > [class^="icon-"]:where(:first-child) { margin-right: $margin-right-icon; }
 
   &.align {
     .icon-dot-circle-o, .icon-pencil, .icon-check-circle, .icon-times-circle {

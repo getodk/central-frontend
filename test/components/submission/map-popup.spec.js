@@ -5,6 +5,7 @@ import DlData from '../../../src/components/dl-data.vue';
 import GeojsonMap from '../../../src/components/geojson-map.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionMapPopup from '../../../src/components/submission/map-popup.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import useFields from '../../../src/request-data/fields';
@@ -50,6 +51,8 @@ describe('SubmissionMapPopup', () => {
     });
     testData.extendedSubmissions.createPast(1, {
       instanceId: 'c d',
+      meta: { instanceName: 'Some instance' },
+      reviewState: 'approved',
       names: { first_name: 'Someone' },
       p1: 'POINT (1 1)',
       p2: 'POINT (2 2)'
@@ -73,6 +76,37 @@ describe('SubmissionMapPopup', () => {
       .testRequests([{
         url: "/v1/projects/1/forms/a%20b.svc/Submissions('c%20d')?%24wkt=true"
       }]));
+
+  describe('title', () => {
+    it('shows the review state', () =>
+      mockHttp()
+        .mount(SubmissionMapPopup, mountOptions())
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const { value } = component.getComponent(SubmissionReviewState).props();
+          value.should.equal('approved');
+        }));
+
+    it('shows the instance name if there is one', () =>
+      mockHttp()
+        .mount(SubmissionMapPopup, mountOptions())
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const text = component.get('.submission-review-state + span').text();
+          text.should.equal('Some instance');
+        }));
+
+    it('falls back to static text', () => {
+      testData.extendedSubmissions.createPast(1);
+      return mockHttp()
+        .mount(SubmissionMapPopup, mountOptions())
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const text = component.get('.submission-review-state + span').text();
+          text.should.equal('Submission Details');
+        });
+    });
+  });
 
   it('shows submission metadata', () =>
     mockHttp()
