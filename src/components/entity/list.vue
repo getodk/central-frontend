@@ -17,18 +17,23 @@ except according to the terms contained in the LICENSE file.
         <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
         :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
       </form>
-      <button id="entity-list-refresh-button" type="button"
-        class="btn btn-outlined" :aria-disabled="refreshing || bulkOperationInProgress"
-        @click="fetchChunk(false, true)">
-        <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-        <spinner :state="refreshing"/>
-      </button>
       <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
         <entity-download-button :odata-filter="deleted ? null : odataFilter"
         :search-term="deleted ? null : searchTerm"
         :disabled="deleted"
         v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
       </teleport-if-exists>
+    </div>
+    <div class="table-refresh-info">
+      <span>
+        {{ $t('common.dataRefreshTime', { date: formatDate(now), time: formatTime(now) }) }}
+      </span>
+      <button id="entity-list-refresh-button" type="button"
+        class="btn btn-link" :aria-disabled="refreshing || bulkOperationInProgress"
+        @click="fetchChunk(false, true)">
+        <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+        <spinner :state="refreshing"/>
+      </button>
     </div>
     <disable-container :disabled="bulkOperationInProgress"
       :disabled-message="$t('bulkOpInProgress')">
@@ -81,6 +86,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { reactive, watch } from 'vue';
 
+import { DateTime } from 'luxon';
 import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
 import EntityRestore from './restore.vue';
@@ -105,6 +111,7 @@ import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 import { arrayQuery } from '../../util/router';
+import { formatDate, formatTime } from '../../util/date-time';
 
 export default {
   name: 'EntityList',
@@ -218,7 +225,7 @@ export default {
       awaitingResponses: new Set(),
 
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
-      now: new Date().toISOString(),
+      now: DateTime.now(),
       snapshotFilter: '',
       // used for restoring them back when undo button is pressed
       bulkDeletedEntities: [],
@@ -318,6 +325,7 @@ export default {
     this.fetchCreators();
   },
   methods: {
+    formatDate, formatTime,
     // `clear` indicates whether this.odataEntities should be cleared before
     // sending the request. `refresh` indicates whether the request is a
     // background refresh (whether the refresh button was pressed).
@@ -327,8 +335,8 @@ export default {
       const first = clear || refresh;
 
       if (first) {
-        this.now = new Date().toISOString();
-        this.setSnapshotFilter();
+        this.now = DateTime.now();
+        this.setSnapshotFilter(this.now.toUTC().toISO());
         this.pagination.page = 0;
       }
 
@@ -378,13 +386,13 @@ export default {
         this.$emit('fetch-deleted-count');
       }
     },
-    setSnapshotFilter() {
+    setSnapshotFilter(now) {
       this.snapshotFilter = '';
       if (this.deleted) {
-        this.snapshotFilter += `__system/deletedAt le ${this.now}`;
+        this.snapshotFilter += `__system/deletedAt le ${now}`;
       } else {
-        this.snapshotFilter += `__system/createdAt le ${this.now} and `;
-        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
+        this.snapshotFilter += `__system/createdAt le ${now} and `;
+        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${now})`;
       }
     },
     // This method is called directly by DatasetEntities.
@@ -701,9 +709,6 @@ export default {
   align-items: baseline;
   display: flex;
   flex-wrap: wrap-reverse;
-}
-#entity-list-refresh-button {
-  margin-left: auto;
 }
 
 #entity-list table:has(tbody:empty) {

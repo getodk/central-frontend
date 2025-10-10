@@ -84,6 +84,8 @@ describe('EntityList', () => {
 
   describe('after the refresh button is clicked', () => {
     it('completes a background refresh', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      let initialTime;
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
       const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
@@ -93,16 +95,25 @@ describe('EntityList', () => {
         }
       };
       return load('/projects/1/entity-lists/trees/entities', { root: false })
-        .afterResponses(assertRowCount(1))
-        .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+        .afterResponses(component => {
+          assertRowCount(1)(component);
+          initialTime = component.get('.table-refresh-info span').text();
+        })
+        .request(component => {
+          clock.tick(1000);
+          return component.get('#entity-list-refresh-button').trigger('click');
+        })
         .beforeEachResponse(assertRowCount(1))
         .respondWithData(() => {
           testData.extendedEntities.createNew();
           return testData.entityOData();
         })
         .respondWithData(testData.entityDeletedOData)
-        .afterResponse(assertRowCount(2));
+        .afterResponse(component => {
+          assertRowCount(2)(component);
+          const newTime = component.get('.table-refresh-info span').text();
+          newTime.should.not.equal(initialTime);
+        });
     });
 
     it('does not show a loading message', () => {
