@@ -65,12 +65,12 @@ except according to the terms contained in the LICENSE file.
         :filter="odataFilter" :fields="selectedFields"
         :total-count="formVersion.submissions"
         :awaiting-responses="awaitingResponses"
-        @review="reviewModal.show({ submission: $event })"
-        @delete="showDelete"
-        @restore="showRestore"/>
+        @review="showReview" @delete="showDelete" @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
-        :filter="geojsonFilter"/>
+        :filter="geojsonFilter"
+        :awaiting-responses="awaitingResponses"
+        @review="showReview" @delete="showDelete"/>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
@@ -363,20 +363,25 @@ export default {
       if (this.formVersion.keyId != null && this.keys.length === 0)
         this.$emit('fetch-keys');
     },
-    // This method accounts for the unlikely case that the user clicked the
-    // refresh button before reviewing the submission. In that case, the
-    // submission may have been edited or may no longer be shown.
-    afterReview(originalSubmission, reviewState) {
+    cancelBackgroundRefresh() {
+      if (!this.refreshing) return;
+      this.$refs.view.cancelRefresh();
+      this.deletedSubmissionCount.cancelRequest();
+      this.keys.cancelRequest();
+    },
+    showReview(submission) {
+      this.cancelBackgroundRefresh();
+      this.reviewModal.show({ submission });
+    },
+    afterReview(reviewState) {
+      const { submission } = this.reviewModal;
+      submission.__system.reviewState = reviewState;
       this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));
-      const index = this.odata.value.findIndex(submission =>
-        submission.__id === originalSubmission.__id);
-      if (index !== -1) {
-        this.odata.value[index].__system.reviewState = reviewState;
-        this.$refs.view.afterReview(index);
-      }
+      this.$refs.view.afterReview(submission.__id);
     },
     showDelete(submission) {
+      this.cancelBackgroundRefresh();
       if (this.confirmDelete) {
         this.deleteModal.show({ submission });
       } else {
@@ -384,6 +389,7 @@ export default {
       }
     },
     showRestore(submission) {
+      this.cancelBackgroundRefresh();
       if (this.confirmRestore) {
         this.restoreModal.show({ submission });
       } else {
@@ -401,29 +407,14 @@ export default {
       })
         .then(() => {
           this.deleteModal.hide();
-          if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
-
           this.alert.success(this.$t('alert.submissionDeleted'));
           if (confirm != null) this.confirmDelete = confirm;
 
           this.odata.removedSubmissions.add(instanceId);
           this.formVersion.submissions -= 1;
-          /* Before doing a couple more things, we first determine whether
-          this.odata.value still includes the Submission and if so, what the
-          current index of the Submission is. If a request to refresh
-          this.odata (or the GeoJSON) was sent while the deletion request was in
-          progress, then there could be a race condition such that data doesn't
-          exist for this.odata, or this.odata.value no longer
-          includes the Submission. Another possible result of the race condition is
-          that this.odata.value still includes the Submission, but the
-          Submission's index has changed. */
-          const index = this.odata.dataExists
-            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
-            : -1;
-          if (index !== -1) {
-            this.$refs.view.afterDelete(index);
-            this.odata.value.splice(index, 1);
-          }
+          if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
+
+          this.$refs.view.afterDelete(instanceId);
         })
         .catch(noop)
         .finally(() => {
@@ -441,24 +432,15 @@ export default {
       })
         .then(() => {
           this.restoreModal.hide();
-          if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0) {
-            this.deletedSubmissionCount.value -= 1;
-          }
-
           this.alert.success(this.$t('alert.submissionRestored'));
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odata.removedSubmissions.add(instanceId);
           this.formVersion.submissions += 1;
+          if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0)
+            this.deletedSubmissionCount.value -= 1;
 
-          // See the comments in requestDelete().
-          const index = this.odata.dataExists
-            ? this.odata.value.findIndex(submission => submission.__id === instanceId)
-            : -1;
-          if (index !== -1) {
-            this.$refs.view.afterDelete(index);
-            this.odata.value.splice(index, 1);
-          }
+          this.$refs.view.afterDelete(instanceId);
         })
         .catch(noop)
         .finally(() => {

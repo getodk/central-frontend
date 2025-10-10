@@ -180,7 +180,7 @@ export default {
       ]);
       this.fetchActivityData();
     },
-    afterReview(submission, reviewState) {
+    afterReview(reviewState) {
       this.fetchActivityData();
       this.reviewModal.hide();
       this.alert.success(this.$t('alert.updateReviewState'));

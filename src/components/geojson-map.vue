@@ -32,8 +32,8 @@ import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import Zoom from 'ol/control/Zoom';
 import { createEmpty, extend, getCenter } from 'ol/extent';
 
+import { comparator, equals } from 'ramda';
 import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
-import { equals } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import useEventListener from '../composables/event-listener';
@@ -72,12 +72,14 @@ const baseLayer = new TileLayer({ source: new OSM() });
 const featureSource = new VectorSource();
 // We use WebGL for performance reasons. WebGL isn't available in our current
 // testing setup, so in test, we fall back to a basic 2D canvas.
-const featureLayerClass = buildMode !== 'test' ? WebGLVectorLayer : VectorLayer;
-const featureLayer = new featureLayerClass({ // eslint-disable-line new-cap
-  source: featureSource,
-  style: [...getUnselectedStyles(), ...getSelectedStyles()],
-  variables: { selectedId: '' }
-});
+const featureLayer = buildMode !== 'test'
+  ? new WebGLVectorLayer({
+    source: featureSource,
+    style: [...getUnselectedStyles(), ...getSelectedStyles()],
+    variables: { selectedId: '' }
+  })
+  // VectorLayer doesn't support the same options as WebGLVectorLayer.
+  : new VectorLayer({ source: featureSource });
 
 const mapInstance = new Map({
   layers: [baseLayer, featureLayer],
@@ -321,7 +323,8 @@ const selectFeature = (feature) => {
   const id = feature?.getId();
   if (id === selectedId) return;
 
-  featureLayer.updateStyleVariables({ selectedId: id ?? '' });
+  if (featureLayer instanceof WebGLVectorLayer)
+    featureLayer.updateStyleVariables({ selectedId: id ?? '' });
   selectedId = id;
   emit('selection-changed', feature != null
     ? { id, properties: feature.getProperties() }
@@ -464,7 +467,30 @@ onBeforeUnmount(() => {
   }
 });
 
-defineExpose({ deselect: () => { selectFeature(null); } });
+defineExpose({
+  getFeatures: () => featureSource.getFeatures()
+    .map(feature => ({
+      id: feature.getId(),
+      properties: feature.getProperties()
+    }))
+    .sort(comparator((a, b) => a.id < b.id)),
+
+  selectFeature: (id) => {
+    const feature = featureSource.getFeatureById(id);
+    if (feature != null) selectFeature(feature);
+  },
+  deselect: () => { selectFeature(null); },
+
+  removeFeature: (id) => {
+    const feature = featureSource.getFeatureById(id);
+    if (feature == null) return;
+    if (id === selectedId) selectFeature(null);
+    featureSource.removeFeature(feature);
+
+    featureCount.value -= 1;
+    if (shown.value) countFeaturesInView();
+  }
+});
 </script>
 
 <style lang="scss">
