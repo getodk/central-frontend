@@ -11,8 +11,11 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <map-popup v-show="submission.dataExists || submission.awaitingResponse"
-    id="submission-map-popup" icon="file" @hide="$emit('hide')">
-    <template #title>{{ $t('title') }}</template>
+    id="submission-map-popup" @hide="$emit('hide')">
+    <template v-if="submission.dataExists" #title>
+      <submission-review-state :value="submission.__system.reviewState" tooltip/>
+      <span>{{ submission.instanceName ?? $t('submissionDetails') }}</span>
+    </template>
     <template #body>
       <loading :state="submission.awaitingResponse"/>
       <div v-if="fields.dataExists" v-show="submission.dataExists">
@@ -64,6 +67,7 @@ import DlData from '../dl-data.vue';
 import Loading from '../loading.vue';
 import MapPopup from '../map-popup.vue';
 import SubmissionActions from './actions.vue';
+import SubmissionReviewState from './review-state.vue';
 
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
@@ -143,6 +147,13 @@ const handleActions = (event) => {
 #submission-map-popup {
   @include icon-btn-group;
 
+  .submission-review-state {
+    position: relative;
+    top: -1px;
+
+    font-size: 14px;
+  }
+
   dl:first-of-type {
     padding-bottom: $padding-block-dl;
     border-bottom: $border-bottom-dl;
@@ -166,7 +177,7 @@ const handleActions = (event) => {
 {
   "en": {
     // @transifexKey component.SubmissionBasicDetails.submissionDetails
-    "title": "Submission Details",
+    "submissionDetails": "Submission Details",
     // {field} is the name of a Form field.
     "missingField": "This Submission was mapped using {field}, which isn’t in the published Form version."
   }
