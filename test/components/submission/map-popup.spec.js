@@ -3,7 +3,6 @@ import { T } from 'ramda';
 import DateTime from '../../../src/components/date-time.vue';
 import DlData from '../../../src/components/dl-data.vue';
 import GeojsonMap from '../../../src/components/geojson-map.vue';
-import SubmissionActions from '../../../src/components/submission/actions.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionMapPopup from '../../../src/components/submission/map-popup.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
@@ -155,15 +154,6 @@ describe('SubmissionMapPopup', () => {
         const pair = component.getComponent(DlData);
         pair.get('dt').text().should.equal('p1');
         pair.props().value.should.equal('POINT (3 3)');
-      }));
-
-  it('shows actions', () =>
-    mockHttp()
-      .mount(SubmissionMapPopup, mountOptions())
-      .respondWithData(testData.submissionOData)
-      .afterResponse(component => {
-        const actions = component.getComponent(SubmissionActions);
-        actions.props().submission.__id.should.equal('c d');
       }));
 
   describe('review button', () => {

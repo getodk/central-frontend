@@ -141,7 +141,7 @@ const handleActions = (event) => {
 @import '../../assets/scss/mixins';
 
 #submission-map-popup {
-  @include action-bar;
+  @include icon-btn-group;
 
   dl:first-of-type {
     padding-bottom: $padding-block-dl;

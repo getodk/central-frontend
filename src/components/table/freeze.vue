@@ -184,6 +184,6 @@ defineExpose({ getRowPair });
     right: $padding-right-table-data;
   }
 
-  .btn-group { @include action-bar; }
+  .btn-group { @include icon-btn-group; }
 }
 </style>

@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { nextTick } from 'vue';
+
 import EnketoFill from '../../../src/components/enketo/fill.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
@@ -533,6 +534,22 @@ describe('SubmissionList', () => {
           .afterResponse(component => {
             component.should.alert('success', 'Submission has been successfully deleted.');
           }));
+
+      it('cancels a background refresh', () =>
+        delAndCheck()
+          .request(async (component) => {
+            const { odata } = component.vm.$container.requestData.localResources;
+            sinon.spy(odata, 'cancelRequest');
+            await component.get('#submission-list-refresh-button').trigger('click');
+            return component.get('.submission-metadata-row .delete-button').trigger('click');
+          })
+          .respondWithData(testData.submissionOData)
+          .respondWithData(testData.submissionDeletedOData)
+          .respondWithSuccess()
+          .afterResponses(component => {
+            const { odata } = component.vm.$container.requestData.localResources;
+            odata.cancelRequest.called.should.be.true;
+          }));
     });
   });
 
@@ -727,6 +744,21 @@ describe('SubmissionList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.should.alert('success', 'The Submission has been restored.');
+          }));
+
+      it('cancels a background refresh', () =>
+        restoreAndCheck()
+          .request(async (component) => {
+            const { odata } = component.vm.$container.requestData.localResources;
+            sinon.spy(odata, 'cancelRequest');
+            await component.get('#submission-list-refresh-button').trigger('click');
+            return component.get('.submission-metadata-row .restore-button').trigger('click');
+          })
+          .respondWithData(testData.submissionDeletedOData)
+          .respondWithSuccess()
+          .afterResponses(component => {
+            const { odata } = component.vm.$container.requestData.localResources;
+            odata.cancelRequest.called.should.be.true;
           }));
     });
   });

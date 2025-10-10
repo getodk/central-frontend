@@ -172,5 +172,6 @@ const { entityPath } = useRoutes();
   }
   .icon-warning { font-size: 12px; }
   .col-deleted-at { color: $color-danger; }
+  // The actions themselves are styled via the icon-btn-group mixin.
 }
 </style>

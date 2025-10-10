@@ -137,5 +137,6 @@ export default {
     .icon-pencil { margin-right: 5px; }
   }
   .col-deleted-at { color: $color-danger; }
+  // The actions themselves are styled via the icon-btn-group mixin.
 }
 </style>

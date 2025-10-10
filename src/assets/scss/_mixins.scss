@@ -62,8 +62,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
-// Styles a group of buttons similarly to those in the submissions table.
-@mixin action-bar {
+// Styles a group of buttons similarly to those in the submissions table. With
+// the exception of the More button, only an icon is shown for each button (with
+// a tooltip).
+@mixin icon-btn-group {
   .btn {
     [class^="icon-"] { margin-right: 0; }
     .icon-check { margin-right: -1px; }
