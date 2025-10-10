@@ -27,6 +27,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
+import { DateTime } from 'luxon';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import SubmissionMapPopup from './map-popup.vue';
 
@@ -59,7 +60,7 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['review', 'delete']);
+const emit = defineEmits(['review', 'delete', 'dataRefreshed']);
 
 const GeojsonMap = defineAsyncComponent(loadAsync('GeojsonMap'));
 
@@ -86,6 +87,8 @@ const geojson = createResource('geojson', () => ({
 }));
 
 const fetchData = (clear = true) => {
+  emit('dataRefreshed', DateTime.now());
+
   const query = !props.deleted
     ? props.filter
     : { ...props.filter, deleted: true };

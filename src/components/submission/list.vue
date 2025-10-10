@@ -36,12 +36,7 @@ except according to the terms contained in the LICENSE file.
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
         </form>
-        <button id="submission-list-refresh-button" type="button"
-          class="btn btn-outlined" :aria-disabled="refreshing"
-          @click="refresh">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
+
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted"
           :disabled-message="$t('noMapEncryption')"/>
@@ -55,6 +50,17 @@ except according to the terms contained in the LICENSE file.
             @download-filtered="showDownloadModal(true)"/>
         </teleport-if-exists>
       </div>
+      <div class="table-refresh-info">
+        <span>
+          {{ $t('common.dataRefreshTime', { date: formatDate(now), time: formatTime(now) }) }}
+        </span>
+        <button id="submission-list-refresh-button" type="button"
+          class="btn btn-link" :aria-disabled="refreshing"
+          @click="refresh">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
+      </div>
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
@@ -65,12 +71,12 @@ except according to the terms contained in the LICENSE file.
         :filter="odataFilter" :fields="selectedFields"
         :total-count="formVersion.submissions"
         :awaiting-responses="awaitingResponses"
-        @review="showReview" @delete="showDelete" @restore="showRestore"/>
+        @review="showReview" @delete="showDelete" @restore="showRestore" @data-refreshed="setNow"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
         :filter="geojsonFilter"
         :awaiting-responses="awaitingResponses"
-        @review="showReview" @delete="showDelete"/>
+        @review="showReview" @delete="showDelete" @data-refreshed="setNow"/>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
@@ -90,6 +96,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
+import { DateTime } from 'luxon';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import Spinner from '../spinner.vue';
@@ -117,6 +124,7 @@ import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import { formatDate, formatTime } from '../../util/date-time';
 
 export default {
   name: 'SubmissionList',
@@ -224,7 +232,8 @@ export default {
       // state that indicates whether we need to show restore confirmation dialog
       confirmRestore: true,
 
-      awaitingResponses: new Set()
+      awaitingResponses: new Set(),
+      now: DateTime.now()
     };
   },
   computed: {
@@ -332,6 +341,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    formatDate, formatTime,
+    setNow(v) {
+      this.now = v;
+    },
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
