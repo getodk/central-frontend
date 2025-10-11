@@ -72,6 +72,7 @@ const typeByFirstPart = {
   public_link: 'resource.publicLink',
   dataset: 'resource.entityList',
   config: 'resource.config',
+  entity: 'resource.entityList',
 
   // System Operation
   analytics: 'audit.category.task',
@@ -113,6 +114,9 @@ const acteeSpeciesByCategory = {
 // at which point we will have to update this component (perhaps we would use
 // the full action or a prefix instead of the category).
 acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
+
+// Actee of Entity Bulk Delete and Restore is dataset
+acteeSpeciesByCategory.entity = acteeSpeciesByCategory.dataset;
 
 export default {
   name: 'AuditRow',
