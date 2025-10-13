@@ -29,6 +29,8 @@ export default defineConfig({
 	workers: process.env.CI ? 1 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: 'html',
+	snapshotPathTemplate:
+		'{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}',
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
@@ -39,8 +41,8 @@ export default defineConfig({
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: 'on-first-retry',
 
-		/* Only on CI systems run the tests headless */
-		headless: !!process.env.CI,
+		// Turning off headless for visual tests (to compare snapshots) in CI
+		headless: false,
 	},
 
 	/* Configure projects for major browsers */
@@ -52,6 +54,9 @@ export default defineConfig({
 				contextOptions: {
 					//Chrome-specific permissions for test cases requiring copy/paste actions
 					permissions: ['clipboard-read', 'clipboard-write'],
+				},
+				launchOptions: {
+					args: ['--ignore-gpu-blocklist'], // This argument is needed for visual tests on CI's Linux Chrome.
 				},
 			},
 		},
