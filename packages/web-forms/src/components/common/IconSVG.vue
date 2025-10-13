@@ -3,19 +3,25 @@ import { computed } from 'vue';
 import {
 	mdiAlert,
 	mdiAlertCircleOutline,
+	mdiArrowExpandAll,
 	mdiCamera,
 	mdiCheck,
+	mdiCheckCircle,
 	mdiChevronDown,
 	mdiChevronUp,
 	mdiClose,
+	mdiContentSave,
+	mdiCrosshairsGps,
 	mdiDotsVertical,
 	mdiDownload,
 	mdiDragVertical,
 	mdiEyeOutline,
 	mdiFileOutline,
+	mdiFullscreen,
 	mdiImage,
 	mdiMapMarkerOutline,
 	mdiMenu,
+	mdiPencil,
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
@@ -28,19 +34,25 @@ import {
 const iconMap: Record<string, string> = {
 	mdiAlert,
 	mdiAlertCircleOutline,
+	mdiArrowExpandAll,
 	mdiCamera,
 	mdiCheck,
+	mdiCheckCircle,
 	mdiChevronDown,
 	mdiChevronUp,
 	mdiClose,
+	mdiContentSave,
+	mdiCrosshairsGps,
 	mdiDotsVertical,
 	mdiDownload,
 	mdiDragVertical,
 	mdiEyeOutline,
 	mdiFileOutline,
+	mdiFullscreen,
 	mdiImage,
 	mdiMapMarkerOutline,
 	mdiMenu,
+	mdiPencil,
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
@@ -50,7 +62,7 @@ const iconMap: Record<string, string> = {
 };
 
 type IconName = keyof typeof iconMap;
-type IconVariant = 'base' | 'error' | 'inverted' | 'muted' | 'primary' | 'warning';
+type IconVariant = 'base' | 'error' | 'inverted' | 'muted' | 'primary' | 'success' | 'warning';
 type IconSize = 'md' | 'sm';
 
 /**
@@ -111,6 +123,10 @@ const iconSize = computed(() => props.size ?? 'md');
 
 .odk-icon.warning path {
 	fill: var(--odk-warning-text-color);
+}
+
+.odk-icon.success path {
+	fill: var(--odk-success-text-color);
 }
 
 .odk-icon.odk-icon-sm {

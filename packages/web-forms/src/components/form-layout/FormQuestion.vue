@@ -34,8 +34,7 @@ const stopWatch = watch(
 	() => {
 		touched.value = true;
 		stopWatch();
-	},
-	{ deep: true }
+	}
 );
 
 const questionHasError = computed(() => {

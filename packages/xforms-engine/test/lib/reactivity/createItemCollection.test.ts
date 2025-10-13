@@ -14,10 +14,7 @@ import {
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { createInstance } from '../../../src/entrypoints/createInstance.ts';
-import type {
-	createItemCollection,
-	ItemCollectionControl,
-} from '../../../src/lib/reactivity/createItemCollection.ts';
+import type { createItemCollection } from '../../../src/lib/reactivity/createItemCollection.ts';
 import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
 
 /**

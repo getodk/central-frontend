@@ -1,6 +1,7 @@
 import type { RankControlDefinition } from '../parse/body/control/RankControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
+import type { BaseItem } from './BaseItem.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -8,11 +9,7 @@ import type { LeafNodeValidationState } from './validation.ts';
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
 import type { ValueType } from './ValueType.ts';
 
-export interface RankItem {
-	get label(): TextRange<'item-label'>;
-	get value(): string;
-}
-
+export type RankItem = BaseItem;
 export type RankValueOptions = readonly RankItem[];
 
 export interface RankNodeState extends BaseValueNodeState<readonly string[]> {

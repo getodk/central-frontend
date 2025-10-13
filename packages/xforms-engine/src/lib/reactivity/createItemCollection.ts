@@ -2,13 +2,12 @@ import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
-import type { SelectItem } from '../../client/SelectNode.ts';
-import type { RankItem } from '../../client/RankNode.ts';
+import type { BaseItem } from '../../client/BaseItem.ts';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
-import type { SelectControl } from '../../instance/SelectControl.ts';
 import type { RankControl } from '../../instance/RankControl.ts';
+import type { SelectControl } from '../../instance/SelectControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
@@ -19,8 +18,7 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
-export type ItemCollectionControl = RankControl | SelectControl;
-type Item = RankItem | SelectItem;
+type ItemCollectionControl = RankControl | SelectControl;
 type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
 
 const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
@@ -45,7 +43,7 @@ const createItemLabel = (
 const createTranslatedStaticItems = (
 	control: ItemCollectionControl,
 	items: readonly ItemDefinition[]
-): Accessor<readonly Item[]> => {
+): Accessor<readonly BaseItem[]> => {
 	return control.scope.runTask(() => {
 		const labeledItems = items.map((item) => {
 			const { value } = item;
@@ -54,6 +52,7 @@ const createTranslatedStaticItems = (
 			return () => ({
 				value,
 				label: label(),
+				properties: [],
 			});
 		});
 
@@ -101,6 +100,7 @@ const createItemsetItemLabel = (
 interface ItemsetItem {
 	label(): ClientTextRange<'item-label'>;
 	value(): string;
+	properties: Array<[string, () => string]>;
 }
 
 const createItemsetItems = (
@@ -122,9 +122,20 @@ const createItemsetItems = (
 					});
 					const label = createItemsetItemLabel(context, itemset, value);
 
+					const nodeElements = itemNode
+						.getXPathChildNodes()
+						.filter((node) => node.nodeType === 'static-element');
+					const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
+						return [expression.toString(), createComputedExpression(context, expression)] as [
+							string,
+							() => string,
+						];
+					});
+
 					return {
 						label,
 						value,
+						properties,
 					};
 				});
 			});
@@ -135,7 +146,7 @@ const createItemsetItems = (
 const createItemset = (
 	control: ItemCollectionControl,
 	itemset: ItemsetDefinition
-): Accessor<readonly Item[]> => {
+): Accessor<readonly BaseItem[]> => {
 	return control.scope.runTask(() => {
 		const itemsetItems = createItemsetItems(control, itemset);
 
@@ -144,6 +155,9 @@ const createItemset = (
 				return {
 					label: item.label(),
 					value: item.value(),
+					properties: item.properties.map(
+						([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
+					),
 				};
 			});
 		});
@@ -152,7 +166,7 @@ const createItemset = (
 
 /**
  * Creates a reactive computation of a {@link ItemCollectionControl}'s
- * {@link Item}s, in support of the field's `valueOptions`.
+ * {@link BaseItem}s, in support of the field's `valueOptions`.
  *
  * - The control defined with static `<item>`s will compute to an corresponding
  *   static list of items.
@@ -162,7 +176,9 @@ const createItemset = (
  *   their appropriate dependencies (whether relative to the itemset item node,
  *   referencing a form's `itext` translations, etc).
  */
-export const createItemCollection = (control: ItemCollectionControl): Accessor<readonly Item[]> => {
+export const createItemCollection = (
+	control: ItemCollectionControl
+): Accessor<readonly BaseItem[]> => {
 	const { items, itemset } = control.definition.bodyElement;
 
 	if (itemset != null) {

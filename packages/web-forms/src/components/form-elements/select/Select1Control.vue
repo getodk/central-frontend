@@ -2,6 +2,7 @@
 import ColumnarAppearance from '@/components/appearances/ColumnarAppearance.vue';
 import FieldListTable from '@/components/appearances/FieldListTable.vue';
 import UnsupportedAppearance from '@/components/appearances/UnsupportedAppearance.vue';
+import AsyncMap from '@/components/common/map/AsyncMap.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import LikertWidget from '@/components/common/LikertWidget.vue';
@@ -18,6 +19,12 @@ const props = defineProps<Select1ControlProps>();
 const isSelectWithImages = computed(() => props.question.currentState.isSelectWithImages);
 const hasColumnsAppearance = ref(false);
 const hasFieldListRelatedAppearance = ref(false);
+const savedFeatureValue = computed(() => {
+	if (!props.question.appearances.map) {
+		return;
+	}
+	return props.question.currentState.value?.[0];
+});
 
 watchEffect(() => {
 	const appearances = [...props.question.appearances];
@@ -47,7 +54,19 @@ watchEffect(() => {
 		:question="question"
 	/>
 
-	<FieldListTable v-else-if="hasFieldListRelatedAppearance" :class="{ 'select-with-images': isSelectWithImages }" :appearances="question.appearances">
+	<AsyncMap
+		v-else-if="question.appearances.map"
+		:features="question.currentState.valueOptions"
+		:saved-feature-value="savedFeatureValue"
+		:disabled="question.currentState.readonly"
+		@save="(value) => question.selectValue(value ?? '')"
+	/>
+
+	<FieldListTable
+		v-else-if="hasFieldListRelatedAppearance"
+		:class="{ 'select-with-images': isSelectWithImages }"
+		:appearances="question.appearances"
+	>
 		<template #firstColumn>
 			<ControlText :question="question" />
 		</template>
@@ -56,12 +75,16 @@ watchEffect(() => {
 		</template>
 	</FieldListTable>
 
-	<ColumnarAppearance v-else-if="hasColumnsAppearance" :class="{ 'select-with-images': isSelectWithImages }" :appearances="question.appearances">
+	<ColumnarAppearance
+		v-else-if="hasColumnsAppearance"
+		:class="{ 'select-with-images': isSelectWithImages }"
+		:appearances="question.appearances"
+	>
 		<RadioButton :question="question" />
 	</ColumnarAppearance>
 
 	<template v-else>
-		<template v-if="question.appearances.map || question.appearances['image-map']">
+		<template v-if="question.appearances['image-map']">
 			<UnsupportedAppearance
 				:appearance="[...question.appearances].toString()"
 				node-type="Select1"

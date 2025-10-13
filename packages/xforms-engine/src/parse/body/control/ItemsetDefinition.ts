@@ -1,5 +1,8 @@
+import type { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
 import type { ItemsetElement } from '../../../lib/dom/query.ts';
 import { getValueElement } from '../../../lib/dom/query.ts';
+import { DependentExpression } from '../../expression/abstract/DependentExpression.ts';
+import { ItemPropertyExpression } from '../../expression/ItemPropertyExpression.ts';
 import { ItemsetNodesetExpression } from '../../expression/ItemsetNodesetExpression.ts';
 import { ItemsetValueExpression } from '../../expression/ItemsetValueExpression.ts';
 import { ItemsetLabelDefinition } from '../../text/ItemsetLabelDefinition.ts';
@@ -51,5 +54,9 @@ export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
 
 		this.value = new ItemsetValueExpression(this, valueExpression);
 		this.label = ItemsetLabelDefinition.from(form, this);
+	}
+
+	getPropertiesExpressions(propertiesNodes: StaticElement[]): Array<DependentExpression<'string'>> {
+		return ItemPropertyExpression.from(propertiesNodes);
 	}
 }

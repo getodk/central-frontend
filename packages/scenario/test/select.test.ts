@@ -26,7 +26,6 @@ import { setUpSimpleReferenceManager } from '../src/jr/reference/ReferenceManage
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';
 import type { SelectChoice } from '../src/jr/select/SelectChoice.ts';
 import { ANSWER_REQUIRED_BUT_EMPTY } from '../src/jr/validation/ValidateOutcome.ts';
-import { nullValue } from '../src/value/ExpectedNullValue.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('DynamicSelectUpdateTest.java', () => {
@@ -624,65 +623,62 @@ describe('SelectChoiceTest.java', () => {
 	/**
 	 * **PORTING NOTES**
 	 *
-	 * The tests in this sub-suite are currently blocked by several absent features:
+	 * Some tests in this suite are blocked by the absence of support for repeat-based itemsets.
 	 *
-	 * 1. Retrieving external secondary instance resources
-	 * 2. Support for external secondary instance resources when evaluating
-	 *    XPath expressions referencing them
-	 * 3. Any notion of engine API access to the well-known GeoJSON `geometry`
-	 *    property, or any other arbitrary named child nodes present in any
-	 *    secondary instance (whether external or otherwise)
 	 */
 	describe('`getChild`', () => {
-		it.fails('returns named child when choices are from secondary instance', async () => {
+		it('returns properties in order when choices are from secondary instance', async () => {
 			setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
 
 			const scenario = await Scenario.init('external-select-geojson.xml');
 
-			expect(scenario.choicesOf('/data/q').get(1)?.getChild('geometry')).toBe('0.5 104 0 0');
-			expect(scenario.choicesOf('/data/q').get(1)?.getChild('special-property')).toBe(
-				'special value'
-			);
+			const firstChoiceProperties = scenario.choicesOf('/data/q').get(0)?.getProperties();
+			expect(firstChoiceProperties?.length).toEqual(4);
+			expect(firstChoiceProperties).deep.equal([
+				['geometry', '0.5 102 0 0'],
+				['id', 'fs87b'],
+				['name', 'My cool point'],
+				['foo', 'bar'],
+			]);
+
+			const secondChoiceProperties = scenario.choicesOf('/data/q').get(1)?.getProperties();
+			expect(secondChoiceProperties?.length).toEqual(5);
+			expect(scenario.choicesOf('/data/q').get(1)?.getProperties()).deep.equal([
+				['geometry', '0.5 104 0 0'],
+				['id', '67'],
+				['name', 'Your cool point'],
+				['foo', 'quux'],
+				['special-property', 'special value'],
+			]);
 		});
 
-		it.fails(
-			'returns null when choices are from secondary instance and requested child does not exist',
-			async () => {
-				setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
+		it('returns properties with empty string when no value and choices are from secondary instance', async () => {
+			const scenario = await Scenario.init(
+				'Select with empty value',
+				html(
+					head(
+						title('Select with empty value'),
+						model(
+							mainInstance(t("data id='select-empty'", t('select'))),
+							instance('choices', t('item', t('label', 'Item'), t('details', '')))
+						)
+					),
+					body(select1Dynamic('/data/select', "instance('choices')/root/item", 'name', 'label'))
+				)
+			);
 
-				const scenario = await Scenario.init('external-select-geojson.xml');
-
-				expect(scenario.choicesOf('/data/q').get(1)?.getChild('non-existent')).toBe(null);
-			}
-		);
-
-		it.fails(
-			'returns empty string when choices are from secondary instance and requested child has no value',
-			async () => {
-				const scenario = await Scenario.init(
-					'Select with empty value',
-					html(
-						head(
-							title('Select with empty value'),
-							model(
-								mainInstance(t("data id='select-empty'", t('select'))),
-								instance('choices', t('item', t('label', 'Item'), t('property', '')))
-							)
-						),
-						body(select1Dynamic('/data/select', "instance('choices')/root/item", 'name', 'label'))
-					)
-				);
-
-				expect(scenario.choicesOf('/data/select').get(0)?.getChild('property')).toBe('');
-			}
-		);
+			expect(scenario.choicesOf('/data/select').get(0)?.getProperties()).deep.equal([
+				['label', 'Item'],
+				['details', ''],
+			]);
+		});
 
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * This test is also blocked on lack of support for repeat-based itemsets.
+		 * This test is blocked on lack of support for repeat-based itemsets.
 		 */
-		it.fails('updates when choices are from repeat', async () => {
+		it.fails('updates when choices are from repeat and preserve order', async () => {
 			const scenario = await Scenario.init(
 				'Select from repeat',
 				html(
@@ -711,24 +707,18 @@ describe('SelectChoiceTest.java', () => {
 			scenario.answer('/data/repeat[0]/special-property', 'AA');
 
 			expect(scenario.choicesOf('/data/select').get(0)?.getValue()).toBe('a');
-			expect(scenario.choicesOf('/data/select').get(0)?.getChild('special-property')).toBe('AA');
+			expect(scenario.choicesOf('/data/select').get(0)?.getProperties()).deep.equal([
+				['special-property', 'AA'],
+			]);
 
 			scenario.answer('/data/repeat[0]/special-property', 'changed');
 
-			expect(scenario.choicesOf('/data/select').get(0)?.getChild('special-property')).toBe(
-				'changed'
-			);
+			expect(scenario.choicesOf('/data/select').get(0)?.getProperties()).deep.equal([
+				['special-property', 'changed'],
+			]);
 		});
 
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * In theory, this could be made to pass! It makes more sense to fail it
-		 * with the same error as the others above, as it is also subject to the
-		 * same API design considerations. It also may be moot depending on our
-		 * posture towards inline select items generally.
-		 */
-		it.fails('returns null when called on a choice from [an] inline select', async () => {
+		it('returns empty properties when called on a choice from [an] inline select', async () => {
 			const scenario = await Scenario.init(
 				'Static select',
 				html(
@@ -740,113 +730,7 @@ describe('SelectChoiceTest.java', () => {
 				)
 			);
 
-			expect(scenario.choicesOf('/data/select').get(0)?.getChild('invalid-property')).toBe(
-				nullValue()
-			);
-		});
-	});
-
-	/**
-	 * **PORTING NOTES**
-	 *
-	 * It is already obvious at the outset that this API will fall into the same
-	 * category as `getChild` above. Minimal effort has gone into porting these.
-	 * Any further notes that might arise will come from further analysis when the
-	 * affected functionality is prioritized.
-	 */
-	describe('`getAdditionalChildren`', () => {
-		it.fails('returns children in order when choices are from secondary instance', async () => {
-			setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
-
-			const scenario = await Scenario.init('external-select-geojson.xml');
-
-			const firstNodeChildren = scenario.choicesOf('/data/q').get(0)?.getAdditionalChildren();
-
-			expect(firstNodeChildren?.size()).toBe(3);
-			expect(firstNodeChildren?.get(0)).toEqual(['geometry', '0.5 102 0 0']);
-			expect(firstNodeChildren?.get(1)).toEqual(['id', 'fs87b']);
-			expect(firstNodeChildren?.get(2)).toEqual(['foo', 'bar']);
-
-			const secondNodeChildren = scenario.choicesOf('/data/q').get(1)?.getAdditionalChildren();
-
-			expect(secondNodeChildren?.size()).toBe(4);
-			expect(secondNodeChildren?.get(0)).toEqual(['geometry', '0.5 104 0 0']);
-			expect(secondNodeChildren?.get(1)).toEqual(['id', '67']);
-			expect(secondNodeChildren?.get(2)).toEqual(['foo', 'quux']);
-			expect(secondNodeChildren?.get(3)).toEqual(['special-property', 'special value']);
-		});
-
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * The corresponding JavaRosa test name begins with `getChildren`, which seems
-		 * to be a typo (or surprising shorthand) for `getAdditionalChildren
-		 */
-		it.fails('updates when choices are from repeat', async () => {
-			const scenario = await Scenario.init(
-				'Select from repeat',
-				html(
-					head(
-						title('Select from repeat'),
-						model(
-							mainInstance(
-								t(
-									"data id='repeat-select'",
-									t('repeat', t('value'), t('label'), t('special-property')),
-									t('filter'),
-									t('select')
-								)
-							)
-						)
-					),
-					body(
-						repeat('/data/repeat', input('value'), input('label'), input('special-property')),
-						input('filter'),
-						select1Dynamic('/data/select', '../repeat')
-					)
-				)
-			);
-			scenario.answer('/data/repeat[0]/value', 'a');
-			scenario.answer('/data/repeat[0]/label', 'A');
-			scenario.answer('/data/repeat[0]/special-property', 'AA');
-
-			expect(scenario.choicesOf('/data/select').get(0)?.getValue()).toBe('a');
-
-			let children = scenario.choicesOf('/data/select').get(0)?.getAdditionalChildren();
-
-			expect(children?.size()).toBe(2);
-			expect(children?.get(0)).toEqual(['value', 'a']);
-			expect(children?.get(1)).toEqual(['special-property', 'AA']);
-
-			scenario.answer('/data/repeat[0]/special-property', 'changed');
-
-			children = scenario.choicesOf('/data/select').get(0)?.getAdditionalChildren();
-
-			expect(children?.get(1)).toEqual(['special-property', 'changed']);
-		});
-
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * Like the inline (non-itemset) select test for `getChild`, this could be
-		 * made to pass, but was left failing with the rest of the sub-suite based
-		 * on the same reasoning.
-		 */
-		it.fails('returns empty when called on a choice from inline select', async () => {
-			const scenario = await Scenario.init(
-				'Static select',
-				html(
-					head(
-						title('Static select'),
-						model(mainInstance(t("data id='static-select'", t('select'))))
-					),
-					body(select1('/data/select', item('one', 'One'), item('two', 'Two')))
-				)
-			);
-
-			expect(scenario.choicesOf('/data/select').get(0)?.getAdditionalChildren().isEmpty()).toBe(
-				true
-			);
+			expect(scenario.choicesOf('/data/select').get(0)?.getProperties()).deep.equal([]);
 		});
 	});
 });

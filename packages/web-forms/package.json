@@ -78,8 +78,9 @@
     "vue": "^3.5.18"
   },
   "dependencies": {
-    "vue-draggable-plus": "^0.6.0",
-    "@mdi/js": "^7.4.47"
+    "@mdi/js": "^7.4.47",
+    "ol": "^10.6.1",
+    "vue-draggable-plus": "^0.6.0"
   },
   "publishConfig": {
     "access": "public"
