@@ -11,44 +11,38 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <summary-item id="connection-to-forms" icon="magic-wand">
-    <template #heading>
-      {{ propertiesByForm.length }}
-    </template>
-    <template #body>
-      <p>{{ $tcn('formsUpdateEntities', propertiesByForm.length) }}</p>
-      <div class="div">
-        <expandable-row v-for="form in propertiesByForm" :key="form.xmlFormId">
-          <template #title>
-            <div class="form-name">
-              <form-link :form="form"
-                :to="publishedFormPath(form.projectId, form.xmlFormId)"
-                v-tooltip.text/>
-              <span v-if="form.repeatPath" class="repeat-tag"
-                v-tooltip.no-aria="form.repeatPath">
-                <span class="icon-refresh"></span>
-                <!-- Path includes leading and trailing slashes e.g. /plot/tree/ -->
-                {{ form.repeatPath.slice(0, -1).split('/').pop() }}</span>
-            </div>
-          </template>
-          <template #caption>
-            {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
-          </template>
-          <template #details>
-            <i18n-list :list="form.properties" class="property-list"/>
-            <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
-          </template>
-        </expandable-row>
-      </div>
-    </template>
-  </summary-item>
+  <div id="connection-to-forms">
+    <div id="connection-to-forms-heading">{{ $tcn('formsUpdateEntities', propertiesByForm.length) }}</div>
+    <div class="div">
+      <expandable-row v-for="form in propertiesByForm" :key="form.xmlFormId">
+        <template #title>
+          <div class="form-name">
+            <form-link :form="form"
+              :to="publishedFormPath(form.projectId, form.xmlFormId)"
+              v-tooltip.text/>
+            <span v-if="form.repeatPath" class="repeat-tag"
+              v-tooltip.no-aria="form.repeatPath">
+              <span class="icon-refresh"></span>
+              <!-- Path includes leading and trailing slashes e.g. /plot/tree/ -->
+              {{ form.repeatPath.slice(0, -1).split('/').pop() }}</span>
+          </div>
+        </template>
+        <template #caption>
+          {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
+        </template>
+        <template #details>
+          <i18n-list :list="form.properties" class="property-list"/>
+          <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
+        </template>
+      </expandable-row>
+    </div>
+  </div>
 </template>
 
 <script>
 import ExpandableRow from '../../expandable-row.vue';
 import FormLink from '../../form/link.vue';
 import I18nList from '../../i18n/list.vue';
-import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
@@ -58,8 +52,7 @@ export default {
   components: {
     ExpandableRow,
     FormLink,
-    I18nList,
-    SummaryItem
+    I18nList
   },
   setup() {
     const { dataset } = useRequestData();
@@ -92,6 +85,11 @@ export default {
 
 #connection-to-forms{
   margin-bottom: 10px;
+
+  #connection-to-forms-heading {
+    margin: 10px 0px;
+    font-weight: 700;
+  }
 
   .expandable-row {
     border-bottom: 1px solid #ddd;
@@ -143,7 +141,7 @@ export default {
 {
   "en": {
     // The number of Form(s) is shown separately above this text.
-    "formsUpdateEntities": "Form updates Entities in this Entity List | Forms update Entities in this Entity List"
+    "formsUpdateEntities": "{count} Form updating Entities | {count} Forms updating Entities"
   }
 }
 </i18n>

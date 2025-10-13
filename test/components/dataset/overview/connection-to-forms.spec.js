@@ -51,7 +51,7 @@ describe('ConnectionToForms', () => {
     // Wait for I18nList to finish rendering.
     await nextTick();
 
-    component.get('.summary-item-heading').text().should.be.equal('3');
+    component.get('#connection-to-forms-heading').text().should.be.equal('3 Forms updating Entities');
 
     const rows = component.findAllComponents(ExpandableRow);
 
@@ -74,7 +74,7 @@ describe('ConnectionToForms', () => {
   it('does not break if there is no forms', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = mountComponent();
-    component.get('.summary-item-heading').text().should.be.equal('0');
+    component.get('#connection-to-forms-heading').text().should.be.equal('0 Forms updating Entities');
   });
 
   it('does not break if there is no form for a property', () => {
@@ -83,7 +83,7 @@ describe('ConnectionToForms', () => {
       properties: [{ name: 'height', forms: [] }]
     });
     const component = mountComponent();
-    component.get('.summary-item-heading').text().should.be.equal('0');
+    component.get('#connection-to-forms-heading').text().should.be.equal('0 Forms updating Entities');
   });
 
   it('shows repeat indicator pill for source forms where dataset came from repeat group', () => {

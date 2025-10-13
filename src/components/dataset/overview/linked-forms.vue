@@ -11,32 +11,26 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <summary-item id="linked-forms" icon="link">
-    <template #heading>
-      {{ linkedForms.length }}
-    </template>
-    <template #body>
-      <p>{{ $tc('formsConsumeData', linkedForms.length) }}</p>
-      <table v-if="linkedForms.length > 0" class="table">
-        <tbody>
-          <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
-            <td>
-              <form-link :form="form"
-                :to="publishedFormPath(form.projectId, form.xmlFormId)"
-                v-tooltip.text/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </template>
-  </summary-item>
+  <div id="linked-forms">
+    <p id="linked-forms-heading">{{ $tc('formsConsumeData', linkedForms.length) }}</p>
+    <table v-if="linkedForms.length > 0" class="table">
+      <tbody>
+        <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
+          <td>
+            <form-link :form="form"
+              :to="publishedFormPath(form.projectId, form.xmlFormId)"
+              v-tooltip.text/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 
 import FormLink from '../../form/link.vue';
-import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
@@ -56,6 +50,11 @@ const { publishedFormPath } = useRoutes();
 
 #linked-forms {
   margin-bottom: 10px;
+
+  #linked-forms-heading {
+    margin: 10px 0px;
+    font-weight: 700;
+  }
 
   .table{
     margin-bottom: 10px;
@@ -79,7 +78,7 @@ const { publishedFormPath } = useRoutes();
 {
   "en": {
     // Number of form(s) is shown separately above this text
-    "formsConsumeData": "Form uses this Entity List | Forms use this Entity List",
+    "formsConsumeData": "{count} Form uses this Entity List | {count} Forms use this Entity List",
   }
 }
 </i18n>
