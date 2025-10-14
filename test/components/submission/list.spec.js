@@ -420,6 +420,19 @@ describe('SubmissionList', () => {
       });
     });
 
+    it('shows a success alert even when backend returns 404', async () => {
+      testData.extendedSubmissions.createPast(1);
+      const component = await load('/projects/1/forms/f/submissions')
+        .complete()
+        .request(async (c) => {
+          await c.get('.submission-metadata-row .delete-button').trigger('click');
+          return c.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'Submission has been successfully deleted.');
+    });
+
     describe('last submission was deleted', () => {
       beforeEach(() => {
         testData.extendedSubmissions.createPast(2);
@@ -620,6 +633,18 @@ describe('SubmissionList', () => {
         const text = component.get('.toggle-deleted-submissions').text();
         text.should.equal('0 deleted Submissions');
       });
+    });
+
+    it('shows a success alert even when backend returns 404', async () => {
+      const component = await loadDeletedSubmissions()
+        .complete()
+        .request(async (c) => {
+          await c.get('.submission-metadata-row .restore-button').trigger('click');
+          return c.get('#submission-restore .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'The Submission has been restored.');
     });
 
     describe('last submission was restored', () => {

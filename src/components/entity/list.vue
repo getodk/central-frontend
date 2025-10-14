@@ -486,7 +486,8 @@ export default {
 
       this.request({
         method: 'DELETE',
-        url: apiPaths.entity(this.projectId, this.datasetName, uuid)
+        url: apiPaths.entity(this.projectId, this.datasetName, uuid),
+        fulfillProblem: ({ code }) => code === 404.1
       })
         .then(() => {
           this.deleteModal.hide();
@@ -535,7 +536,8 @@ export default {
 
       this.request({
         method: 'POST',
-        url: apiPaths.entityRestore(this.projectId, this.datasetName, uuid)
+        url: apiPaths.entityRestore(this.projectId, this.datasetName, uuid),
+        fulfillProblem: ({ code }) => code === 404.1
       })
         .then(() => {
           this.restoreModal.hide();
