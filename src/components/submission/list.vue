@@ -51,8 +51,8 @@ except according to the terms contained in the LICENSE file.
         </teleport-if-exists>
       </div>
       <div class="table-refresh-info">
-        <span>
-          {{ $t('common.dataRefreshTime', { date: formatDate(now), time: formatTime(now) }) }}
+        <span v-if="odata.dataExists">
+          {{ $t('common.dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
         </span>
         <button id="submission-list-refresh-button" type="button"
           class="btn btn-link" :aria-disabled="refreshing"
@@ -71,12 +71,12 @@ except according to the terms contained in the LICENSE file.
         :filter="odataFilter" :fields="selectedFields"
         :total-count="formVersion.submissions"
         :awaiting-responses="awaitingResponses"
-        @review="showReview" @delete="showDelete" @restore="showRestore" @data-refreshed="setNow"/>
+        @review="showReview" @delete="showDelete" @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
         :filter="geojsonFilter"
         :awaiting-responses="awaitingResponses"
-        @review="showReview" @delete="showDelete" @data-refreshed="setNow"/>
+        @review="showReview" @delete="showDelete"/>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
@@ -232,8 +232,7 @@ export default {
       // state that indicates whether we need to show restore confirmation dialog
       confirmRestore: true,
 
-      awaitingResponses: new Set(),
-      now: DateTime.now()
+      awaitingResponses: new Set()
     };
   },
   computed: {
@@ -311,6 +310,9 @@ export default {
       return this.dataView === 'table'
         ? this.$t('submission.emptyTable')
         : this.emptyMapMessage;
+    },
+    dataRefreshedAt() {
+      return DateTime.fromJSDate(this.odata.setAt);
     }
   },
   watch: {
@@ -342,9 +344,6 @@ export default {
   },
   methods: {
     formatDate, formatTime,
-    setNow(v) {
-      this.now = v;
-    },
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {

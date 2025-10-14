@@ -463,7 +463,7 @@
     "search": "Search",
     // Text shown above the data tables to tell users when data was last fetched / refreshed.
     // {date} is only the date component and {time} is only the time component.
-    "dataRefreshTime": "Data last refreshed at {date} on {time}"
+    "dataRefreshTime": "Data last refreshed on {date} at {time}"
   },
   "mixin": {
     "request": {

@@ -32,7 +32,6 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, reactive, useTemplateRef, watch } from 'vue';
 
-import { DateTime } from 'luxon';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
 import SubmissionTable from './table.vue';
@@ -70,7 +69,7 @@ const props = defineProps({
     required: true
   }
 });
-const emit = defineEmits(['review', 'delete', 'restore', 'dataRefreshed']);
+defineEmits(['review', 'delete', 'restore']);
 
 const { odata, deletedSubmissionCount } = useRequestData();
 
@@ -78,8 +77,9 @@ const pageSizeOptions = [250, 500, 1000];
 const pagination = reactive({ page: 0, size: pageSizeOptions[0], count: 0 });
 
 let snapshotFilter;
-const setSnapshotFilter = (now) => {
+const setSnapshotFilter = () => {
   snapshotFilter = '';
+  const now = new Date().toISOString();
   if (props.deleted) {
     // This is not foolproof. Missing clause: __system/deletedAt became null after `now`.
     // We don't keep restore date, that would have helped here.
@@ -106,9 +106,7 @@ const fetchChunk = (clear, refresh = false) => {
   // Are we fetching the first chunk of submissions or the next chunk?
   const first = clear || refresh;
   if (first) {
-    const now = DateTime.now();
-    setSnapshotFilter(now.toUTC().toISO());
-    emit('dataRefreshed', now);
+    setSnapshotFilter();
     pagination.page = 0;
   }
 

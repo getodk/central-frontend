@@ -27,8 +27,8 @@ except according to the terms contained in the LICENSE file.
         </teleport-if-exists>
       </div>
       <div class="table-refresh-info">
-        <span>
-          {{ $t('common.dataRefreshTime', { date: formatDate(now), time: formatTime(now) }) }}
+        <span v-if="odataEntities.dataExists">
+          {{ $t('common.dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
         </span>
         <button id="entity-list-refresh-button" type="button"
           class="btn btn-link" :aria-disabled="refreshing || bulkOperationInProgress"
@@ -223,7 +223,7 @@ export default {
       awaitingResponses: new Set(),
 
       pagination: { page: 0, size: this.pageSizeOptions[0], count: 0 },
-      now: DateTime.now(),
+      now: new Date().toISOString(),
       snapshotFilter: '',
       // used for restoring them back when undo button is pressed
       bulkDeletedEntities: [],
@@ -275,6 +275,9 @@ export default {
     },
     actionBarState() {
       return this.selectedEntities.size > 0 && !this.alert.state && !this.container.openModal.state;
+    },
+    dataRefreshedAt() {
+      return DateTime.fromJSDate(this.odataEntities.setAt);
     }
   },
   watch: {
@@ -333,8 +336,8 @@ export default {
       const first = clear || refresh;
 
       if (first) {
-        this.now = DateTime.now();
-        this.setSnapshotFilter(this.now.toUTC().toISO());
+        this.now = new Date().toISOString();
+        this.setSnapshotFilter();
         this.pagination.page = 0;
       }
 
@@ -384,13 +387,13 @@ export default {
         this.$emit('fetch-deleted-count');
       }
     },
-    setSnapshotFilter(now) {
+    setSnapshotFilter() {
       this.snapshotFilter = '';
       if (this.deleted) {
-        this.snapshotFilter += `__system/deletedAt le ${now}`;
+        this.snapshotFilter += `__system/deletedAt le ${this.now}`;
       } else {
-        this.snapshotFilter += `__system/createdAt le ${now} and `;
-        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${now})`;
+        this.snapshotFilter += `__system/createdAt le ${this.now} and `;
+        this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
       }
     },
     // This method is called directly by DatasetEntities.
