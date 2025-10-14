@@ -89,6 +89,7 @@ export class JRResourceService {
 		}
 	}
 
+	// Used to mock fetch in unit tests that work with attachments
 	activateResource(metadata: InlineFixtureMetadata, data: string): void {
 		const url = JRResourceURL.from(metadata.url);
 		const load = () => Promise.resolve(data);

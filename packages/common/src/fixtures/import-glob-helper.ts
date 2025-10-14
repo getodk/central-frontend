@@ -67,13 +67,19 @@ export const toGlobLoaderEntries = (
 	const parentPathURL = new URL('./', importMeta.url);
 
 	return Object.entries(globObject).map(([relativePath, value]) => {
-		const { pathname: absolutePath } = new URL(relativePath, parentPathURL);
-		const fixtureAssetURL = new URL(value, import.meta.url);
 		const fixture: GlobFixture = {
-			url: fixtureAssetURL,
+			url: new URL(value, import.meta.url),
 			load: globFixtureLoader(value),
 		};
 
-		return [absolutePath, fixture];
+		let assetsPath: string;
+		if (parentPathURL.pathname.includes('/assets/')) {
+			const filename = /[^/\\]*$/.exec(relativePath)?.[0] ?? '';
+			assetsPath = parentPathURL.pathname + filename;
+		} else {
+			assetsPath = new URL(relativePath, parentPathURL).pathname;
+		}
+
+		return [assetsPath, fixture];
 	});
 };

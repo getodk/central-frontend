@@ -125,18 +125,6 @@ const xformAttachmentFixtureEntries: XFormAttachmentFixtureEntries =
 		return [absolutePath, fixture];
 	});
 
-type XFormAttachmentFixturesByAbsolutePath = ReadonlyMap<string, XFormAttachmentFixture>;
-
-const buildXFormAttachmentFixturesByAbsolutePath = (
-	entries: XFormAttachmentFixtureEntries
-): XFormAttachmentFixturesByAbsolutePath => {
-	return new Map(entries);
-};
-
-export const xformAttachmentFixturesByPath = buildXFormAttachmentFixturesByAbsolutePath(
-	xformAttachmentFixtureEntries
-);
-
 type XFormAttachmentFixturesByDirectory = ReadonlyMap<string, readonly XFormAttachmentFixture[]>;
 
 const buildXFormAttachmentFixturesByDirectory = (
