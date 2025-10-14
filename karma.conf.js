@@ -53,7 +53,8 @@ module.exports = (config) => {
       // Images
       '/img/banner@2x.d6298b0b.png': '/base/src/assets/images/whats-new/banner@2x.png', // Image in what's new modal with hash
       '/img/banner@1x.13a17571.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
-      '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg'
+      '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
+      '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
