@@ -48,7 +48,7 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
 
   position: absolute;
   top: 15px;
-  right: 15px;
+  left: 15px;
 
   width: 315px;
   max-height: 315px;
