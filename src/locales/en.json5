@@ -113,6 +113,10 @@
         "update": "Update",
         "update_publish": "Publish"
       },
+      "entity": {
+        "bulk_delete": "Bulk Delete",
+        "bulk_restore": "Bulk Restore"
+      },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.
       "field_key": {
