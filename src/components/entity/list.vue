@@ -474,7 +474,7 @@ export default {
       this.deleteModal.show({ entity });
     },
     requestDelete(event) {
-      const [{ __id: uuid, label }] = event;
+      const { __id: uuid, label } = event;
 
       this.awaitingResponses.add(uuid);
 

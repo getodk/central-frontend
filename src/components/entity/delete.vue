@@ -46,7 +46,7 @@ const props = defineProps({
 const emit = defineEmits(['hide', 'delete']);
 
 const del = () => {
-  emit('delete', [props.entity]);
+  emit('delete', props.entity);
 };
 </script>
 
