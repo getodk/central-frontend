@@ -11,20 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-delete" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="focusCheckbox">
+    backdrop @hide="$emit('hide')">
     <template #title>{{ $t('title', { label: entity?.label }) }}</template>
     <template #body>
       <p class="modal-introduction">
         <span>{{ $t('introduction[0]', { label: entity?.label }) }}</span>
       </p>
-      <form v-if="checkbox">
-        <div class="checkbox">
-          <label>
-            <input ref="input" v-model="noConfirm" type="checkbox">
-            {{ $t('field.noConfirm') }}
-          </label>
-        </div>
-      </form>
       <div class="modal-actions">
         <button type="button" class="btn btn-link"
           :aria-disabled="awaitingResponse" @click="$emit('hide')">
@@ -40,8 +32,6 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
@@ -50,23 +40,13 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
-  checkbox: Boolean,
   entity: Object,
   awaitingResponse: Boolean
 });
 const emit = defineEmits(['hide', 'delete']);
 
-const noConfirm = ref(false);
-watch(() => props.state, (state) => { if (!state) noConfirm.value = false; });
-
-const input = ref(null);
-const focusCheckbox = () => { if (props.checkbox) input.value.focus(); };
-
 const del = () => {
-  if (props.checkbox)
-    emit('delete', [props.entity, !noConfirm.value]);
-  else
-    emit('delete', [props.entity]);
+  emit('delete', props.entity);
 };
 </script>
 
@@ -79,10 +59,7 @@ const del = () => {
     "introduction": [
       // {label} is the label of an Entity.
       "Are you sure you want to delete “{label}”?"
-    ],
-    "field": {
-      "noConfirm": "Delete immediately without confirmation until I leave the page"
-    }
+    ]
   }
 }
 </i18n>
