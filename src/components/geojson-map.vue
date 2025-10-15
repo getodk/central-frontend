@@ -494,6 +494,15 @@ defineExpose({
 </script>
 
 <style lang="scss">
+// based on Web Forms variables
+// (zoom controls styled similarly to those in WF MapBlock.vue)
+$spacing: 10px;
+$background-color: #fff;
+$radius: 6px;
+$border-color: #cbd5e1;
+$muted-background-color: #F1F5F9;
+$z-index: 1;
+
 .geojson-map {
   position: relative;
 
@@ -507,7 +516,8 @@ defineExpose({
   .count {
     position: absolute;
     top: 5px;
-    left: 63px;
+    left: 50%;
+    transform: translateX(-50%);
 
     background-color: #fff;
     border-radius: 4px;
@@ -517,6 +527,41 @@ defineExpose({
     padding-block: 6px;
     padding-inline: 8px;
     user-select: none;
+  }
+
+  .ol-zoom {
+    position: absolute;
+    right: $spacing;
+    bottom: $spacing;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-shadow: none;
+    background: $background-color;
+    border-radius: $radius;
+    overflow: hidden;
+    border: 1px solid $border-color;
+
+    button,
+    button:hover,
+    button:focus,
+    button:active {
+      height: 37px;
+      width: 36px;
+      border: none;
+      background: $background-color;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 24px;
+      font-weight: 300;
+      cursor: pointer;
+      &:first-child {
+        border-bottom: 1px solid $border-color;
+      }
+      &:hover {
+        background: $muted-background-color;
+      }
+    }
   }
 }
 </style>
