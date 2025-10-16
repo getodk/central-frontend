@@ -77,7 +77,6 @@ const { publishedFormPath } = useRoutes();
 <i18n lang="json5">
 {
   "en": {
-    // Number of form(s) is shown separately above this text
     "formsConsumeData": "{count} Form uses this Entity List | {count} Forms use this Entity List",
   }
 }

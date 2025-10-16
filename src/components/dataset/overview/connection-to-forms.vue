@@ -140,7 +140,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // The number of Form(s) is shown separately above this text.
     "formsUpdateEntities": "{count} Form updating Entities | {count} Forms updating Entities"
   }
 }
