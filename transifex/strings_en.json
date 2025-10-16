@@ -1660,8 +1660,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {Form updates Entities in this Entity List} other {Forms update Entities in this Entity List}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {{count} Form updating Entities} other {{count} Forms updating Entities}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1675,8 +1674,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {{count} Form uses this Entity List} other {{count} Forms use this Entity List}}"
       }
     },
     "DatasetOverviewNewProperty": {
