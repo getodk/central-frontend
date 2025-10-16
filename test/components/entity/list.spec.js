@@ -1332,7 +1332,7 @@ describe('EntityList', () => {
 
     it('disables the other controls during bulk delete operation', () => {
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
-      return load('/projects/1/entity-lists/trees/entities')
+      return load('/projects/1/entity-lists/trees/entities', { attachTo: document.body })
         .complete()
         .request(async component => {
           const disableContainer = component.getComponent({ name: 'DisableContainer' });
@@ -1352,9 +1352,10 @@ describe('EntityList', () => {
           disableContainer.find('#entity-list-actions').exists().should.be.true;
           disableContainer.find('#entity-table').exists().should.be.true;
           disableContainer.find('.pagination').exists().should.be.true;
+          disableContainer.find('#entity-list-refresh-button').exists().should.be.true;
 
           // Assert "Deleted Entities" button is hidden
-          component.find('.toggle-deleted-entities').should.not.be.visible;
+          component.find('.toggle-deleted-entities').should.be.hidden(true);
         })
         .respondWithSuccess()
         .afterResponse(component => {
@@ -1506,26 +1507,5 @@ describe('EntityList', () => {
     await actionBar.find('.close').trigger('click');
 
     headerCheckbox.element.checked.should.be.false;
-  });
-
-  it('disables refresh button when bulk delete is in progress', () => {
-    createEntities(3);
-    return load('/projects/1/entity-lists/trees/entities')
-      .complete()
-      .request(async component => {
-        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
-        await checkboxes[0].setValue(true);
-        await checkboxes[1].setValue(true);
-        return component.find('.action-bar-container .btn-primary').trigger('click');
-      })
-      .beforeAnyResponse(component => {
-        const refreshButton = component.find('#entity-list-refresh-button');
-        refreshButton.attributes('aria-disabled').should.equal('true');
-      })
-      .respondWithSuccess()
-      .afterResponse(component => {
-        const refreshButton = component.find('#entity-list-refresh-button');
-        refreshButton.attributes('aria-disabled').should.equal('false');
-      });
   });
 });

@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
         <button id="entity-list-refresh-button" type="button"
-          class="btn btn-outlined" :aria-disabled="refreshing || bulkOperationInProgress"
+          class="btn btn-outlined" :aria-disabled="refreshing"
           @click="fetchChunk(false, true)">
           <span class="icon-refresh"></span>{{ $t('action.refresh') }}
           <spinner :state="refreshing"/>
