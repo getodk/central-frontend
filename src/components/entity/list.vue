@@ -10,28 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-list">
-    <div id="entity-list-actions" class="table-actions-bar">
-      <form class="form-inline" @submit.prevent>
-        <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
-        <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
-        :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
-      </form>
-      <button id="entity-list-refresh-button" type="button"
-        class="btn btn-outlined" :aria-disabled="refreshing || bulkOperationInProgress"
-        @click="fetchChunk(false, true)">
-        <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-        <spinner :state="refreshing"/>
-      </button>
-      <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
-        <entity-download-button :odata-filter="deleted ? null : odataFilter"
-        :search-term="deleted ? null : searchTerm"
-        :disabled="deleted"
-        v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
-      </teleport-if-exists>
-    </div>
+  <div id="entity-list" :class="{ 'bulk-operation-in-progress': bulkOperationInProgress }">
     <disable-container :disabled="bulkOperationInProgress"
       :disabled-message="$t('bulkOpInProgress')">
+      <div id="entity-list-actions" class="table-actions-bar">
+        <form class="form-inline" @submit.prevent>
+          <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
+          <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
+          :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
+        </form>
+        <button id="entity-list-refresh-button" type="button"
+          class="btn btn-outlined" :aria-disabled="refreshing || bulkOperationInProgress"
+          @click="fetchChunk(false, true)">
+          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+          <spinner :state="refreshing"/>
+        </button>
+        <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
+          <entity-download-button :odata-filter="deleted ? null : odataFilter"
+          :search-term="deleted ? null : searchTerm"
+          :disabled="deleted"
+          v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
+        </teleport-if-exists>
+      </div>
       <entity-table v-show="odataEntities.dataExists" ref="table"
         v-model:all-selected="allSelected"
         :properties="dataset.properties" :deleted="deleted"
@@ -706,6 +706,12 @@ export default {
   }
 
 #entity-table:has(tbody tr) + .empty-table-message {
+  display: none;
+}
+
+// Hiding "Deleted Entities" button when bulk operation is in progress
+// Doing this CSS trick to avoid more communication between DatasetEntities and EntityList
+#dataset-entities:has(.bulk-operation-in-progress) .toggle-deleted-entities {
   display: none;
 }
 </style>

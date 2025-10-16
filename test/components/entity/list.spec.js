@@ -1330,27 +1330,38 @@ describe('EntityList', () => {
         actionBar.props().state.should.be.false;
       }));
 
-    it('disables data table during bulk delete operation', () => load('/projects/1/entity-lists/trees/entities')
-      .complete()
-      .request(async component => {
-        const disableContainer = component.getComponent({ name: 'DisableContainer' });
-        disableContainer.props().disabled.should.be.false;
+    it('disables the other controls during bulk delete operation', () => {
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(async component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.false;
 
-        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
-        await checkboxes[0].setValue(true);
-        await checkboxes[1].setValue(true);
-        return component.find('.action-bar-container .btn-primary').trigger('click');
-      })
-      .beforeEachResponse(component => {
-        const disableContainer = component.getComponent({ name: 'DisableContainer' });
-        disableContainer.props().disabled.should.be.true;
-        disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
-      })
-      .respondWithSuccess()
-      .afterResponse(component => {
-        const disableContainer = component.getComponent({ name: 'DisableContainer' });
-        disableContainer.props().disabled.should.be.false;
-      }));
+          const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+          return component.find('.action-bar-container .btn-primary').trigger('click');
+        })
+        .beforeEachResponse(component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.true;
+          disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
+
+          // Assert that filters, table, pagination controls are in the disabled container
+          disableContainer.find('#entity-list-actions').exists().should.be.true;
+          disableContainer.find('#entity-table').exists().should.be.true;
+          disableContainer.find('.pagination').exists().should.be.true;
+
+          // Assert "Deleted Entities" button is hidden
+          component.find('.toggle-deleted-entities').should.not.be.visible;
+        })
+        .respondWithSuccess()
+        .afterResponse(component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.false;
+        });
+    });
 
     it('hides alert when entities are selected', async () => {
       const component = await loadEntityList();
