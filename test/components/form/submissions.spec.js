@@ -145,7 +145,7 @@ describe('FormSubmissions', () => {
           showDeletedButton.text().should.equal('1 deleted Submission');
         })
         .request((component) => {
-          component.find('#submission-list-refresh-button').trigger('click');
+          component.find('#refresh-button').trigger('click');
         })
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });

@@ -36,12 +36,7 @@ except according to the terms contained in the LICENSE file.
             v-if="selectedFields != null && fields.selectable.length > 11"
             v-model="selectedFields"/>
         </form>
-        <button id="submission-list-refresh-button" type="button"
-          class="btn btn-outlined" :aria-disabled="refreshing"
-          @click="refresh">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
+
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted"
           :disabled-message="$t('noMapEncryption')"/>
@@ -55,6 +50,10 @@ except according to the terms contained in the LICENSE file.
             @download-filtered="showDownloadModal(true)"/>
         </teleport-if-exists>
       </div>
+
+      <table-refresh-bar
+        :disabled="refreshing" :refreshing="refreshing" :odata="odata"
+        @refresh-click="refresh"/>
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
@@ -92,7 +91,6 @@ import { shallowRef, watch } from 'vue';
 
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
-import Spinner from '../spinner.vue';
 import RadioField from '../radio-field.vue';
 import SubmissionDelete from './delete.vue';
 import SubmissionDownload from './download.vue';
@@ -117,6 +115,7 @@ import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import TableRefreshBar from '../table-refresh-bar.vue';
 
 export default {
   name: 'SubmissionList',
@@ -124,7 +123,6 @@ export default {
     EnketoFill,
     Loading,
     RadioField,
-    Spinner,
     SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
@@ -134,6 +132,7 @@ export default {
     SubmissionRestore,
     SubmissionTableView,
     SubmissionUpdateReviewState,
+    TableRefreshBar,
     TeleportIfExists
   },
   inject: ['alert'],

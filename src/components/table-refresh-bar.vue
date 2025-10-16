@@ -1,0 +1,56 @@
+<!--
+Copyright 2025 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+
+<template>
+  <div class="table-refresh-bar">
+    <span v-if="odata.dataExists">
+      {{ $t('common.dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
+    </span>
+    <button id="refresh-button" type="button"
+      class="btn btn-link" :aria-disabled="disabled"
+      @click="$emit('refreshClick')">
+      <span class="icon-refresh"></span>{{ $t('action.refresh') }}
+      <spinner :state="refreshing"/>
+    </button>
+  </div>
+</template>
+
+<script setup>
+import { DateTime } from 'luxon';
+import { computed } from 'vue';
+import { formatDate, formatTime } from '../util/date-time';
+import Spinner from './spinner.vue';
+
+const props = defineProps({
+  odata: Object,
+  refreshing: Boolean,
+  disabled: Boolean
+});
+
+defineEmits(['refreshClick']);
+
+const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
+
+</script>
+
+<style lang="scss">
+.table-refresh-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  span {
+    font-size: 12px;
+    margin-right: 10px;
+  }
+}
+</style>

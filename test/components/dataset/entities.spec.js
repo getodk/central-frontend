@@ -64,7 +64,7 @@ describe('DatasetEntities', () => {
           showDeletedButton.text().should.equal('1 deleted Entity');
         })
         .request((component) => {
-          component.find('#entity-list-refresh-button').trigger('click');
+          component.find('#refresh-button').trigger('click');
         })
         .beforeAnyResponse(() => {
           testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
