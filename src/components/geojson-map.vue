@@ -11,7 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-show="featureCount !== 0" ref="el" class="geojson-map">
-    <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown"></div>
+    <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown">
+      <div class="control-bar">
+        <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button" @click="fitToAllFeatures">
+          <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
+          <img class="fitToAllFeaturesIcon" :src="FitIcon">
+        </button>
+      </div>
+    </div>
     <span v-show="shown" class="count">{{ countMessage }}</span>
   </div>
 </template>
@@ -35,6 +42,9 @@ import { createEmpty, extend, getCenter } from 'ol/extent';
 import { comparator, equals } from 'ramda';
 import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
+
 
 import useEventListener from '../composables/event-listener';
 import { getClusterSizeStyles, getSelectedStyles, getUnselectedStyles } from '../util/map-styles';
@@ -194,6 +204,11 @@ const fitView = (extent, options = undefined) => {
     maxZoom: 16,
     ...options
   });
+};
+
+const fitToAllFeatures = () => {
+  // Used by control button reset the view to show all features
+  fitView(featureSource.getExtent(), { duration: 1000 });
 };
 
 const forEachFeatureInView = (callback) => {
@@ -508,6 +523,8 @@ $z-index: 1;
 
   .map-container {
     min-height: 350px;
+    border: 1px solid $border-color;
+    border-radius: $radius;
 
     opacity: 0;
     &.opaque { opacity: 1; }
@@ -563,6 +580,34 @@ $z-index: 1;
       }
     }
   }
+
+  .control-bar {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: $spacing;
+    right: $spacing;
+    z-index: $z-index;
+    gap: 4px;
+
+    button {
+      background: $background-color;
+      padding: 8px;
+      border-radius: $radius;
+      border: 1px solid $border-color;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+
+      &:hover {
+        background: $muted-background-color;
+      }
+
+      .fitToAllFeaturesIcon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
 }
 </style>
 
@@ -570,7 +615,9 @@ $z-index: 1;
 {
   "en": {
     // {count} and {total} are both numbers.
-    "showing": "Showing {count} of {total}"
+    "showing": "Showing {count} of {total}",
+    // Shown above control button on map to zoom out to show all features
+    "zoomToFit": "Zoom to fit all options"
   }
 }
 </i18n>
