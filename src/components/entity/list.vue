@@ -26,17 +26,8 @@ except according to the terms contained in the LICENSE file.
           v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
         </teleport-if-exists>
       </div>
-      <div class="table-refresh-info">
-        <span v-if="odataEntities.dataExists">
-          {{ $t('common.dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
-        </span>
-        <button id="entity-list-refresh-button" type="button"
-          class="btn btn-link" :aria-disabled="refreshing || bulkOperationInProgress"
-          @click="fetchChunk(false, true)">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
-      </div>
+      <table-refresh-bar :odata="odataEntities" :disabled="refreshing"
+        :refreshing="refreshing" @refresh-click="fetchChunk(false, true)"/>
       <entity-table v-show="odataEntities.dataExists" ref="table"
         v-model:all-selected="allSelected"
         :properties="dataset.properties" :deleted="deleted"
@@ -86,7 +77,6 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { reactive, watch } from 'vue';
 
-import { DateTime } from 'luxon';
 import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
 import EntityRestore from './restore.vue';
@@ -101,6 +91,7 @@ import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 import ActionBar from '../action-bar.vue';
 import DisableContainer from '../disable-container.vue';
+import TableRefreshBar from '../table-refresh-bar.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -111,7 +102,6 @@ import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 import { arrayQuery } from '../../util/router';
-import { formatDate, formatTime } from '../../util/date-time';
 
 export default {
   name: 'EntityList',
@@ -129,6 +119,7 @@ export default {
     Pagination,
     SearchTextbox,
     Spinner,
+    TableRefreshBar,
     TeleportIfExists
   },
   inject: ['alert', 'container'],
@@ -275,9 +266,6 @@ export default {
     },
     actionBarState() {
       return this.selectedEntities.size > 0 && !this.alert.state && !this.container.openModal.state;
-    },
-    dataRefreshedAt() {
-      return DateTime.fromJSDate(this.odataEntities.setAt);
     }
   },
   watch: {
@@ -326,7 +314,6 @@ export default {
     this.fetchCreators();
   },
   methods: {
-    formatDate, formatTime,
     // `clear` indicates whether this.odataEntities should be cleared before
     // sending the request. `refresh` indicates whether the request is a
     // background refresh (whether the refresh button was pressed).

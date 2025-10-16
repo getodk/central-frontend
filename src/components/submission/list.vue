@@ -50,17 +50,10 @@ except according to the terms contained in the LICENSE file.
             @download-filtered="showDownloadModal(true)"/>
         </teleport-if-exists>
       </div>
-      <div class="table-refresh-info">
-        <span v-if="odata.dataExists">
-          {{ $t('common.dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
-        </span>
-        <button id="submission-list-refresh-button" type="button"
-          class="btn btn-link" :aria-disabled="refreshing"
-          @click="refresh">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
-      </div>
+
+      <table-refresh-bar
+        :disabled="refreshing" :refreshing="refreshing" :odata="odata"
+        @refresh-click="refresh"/>
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
@@ -96,10 +89,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
-import { DateTime } from 'luxon';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
-import Spinner from '../spinner.vue';
 import RadioField from '../radio-field.vue';
 import SubmissionDelete from './delete.vue';
 import SubmissionDownload from './download.vue';
@@ -124,7 +115,7 @@ import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
-import { formatDate, formatTime } from '../../util/date-time';
+import TableRefreshBar from '../table-refresh-bar.vue';
 
 export default {
   name: 'SubmissionList',
@@ -132,7 +123,6 @@ export default {
     EnketoFill,
     Loading,
     RadioField,
-    Spinner,
     SubmissionDelete,
     SubmissionDownload,
     SubmissionDownloadButton,
@@ -142,6 +132,7 @@ export default {
     SubmissionRestore,
     SubmissionTableView,
     SubmissionUpdateReviewState,
+    TableRefreshBar,
     TeleportIfExists
   },
   inject: ['alert'],
@@ -310,9 +301,6 @@ export default {
       return this.dataView === 'table'
         ? this.$t('submission.emptyTable')
         : this.emptyMapMessage;
-    },
-    dataRefreshedAt() {
-      return DateTime.fromJSDate(this.odata.setAt);
     }
   },
   watch: {
@@ -343,7 +331,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    formatDate, formatTime,
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {

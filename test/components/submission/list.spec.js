@@ -80,11 +80,11 @@ describe('SubmissionList', () => {
       return load('/projects/1/forms/f/submissions', { root: false })
         .afterResponses((component) => {
           assertRowCount(1)(component);
-          initialTime = component.get('.table-refresh-info span').text();
+          initialTime = component.get('.table-refresh-bar span').text();
         })
         .request((component) => {
           clock.tick(1000);
-          return component.get('#submission-list-refresh-button').trigger('click');
+          return component.get('#refresh-button').trigger('click');
         })
         .beforeEachResponse(assertRowCount(1))
         .respondWithData(() => {
@@ -95,7 +95,7 @@ describe('SubmissionList', () => {
         .afterResponse((component) => {
           assertRowCount(2)(component);
 
-          const newTime = component.get('.table-refresh-info span').text();
+          const newTime = component.get('.table-refresh-bar span').text();
           newTime.should.not.equal(initialTime);
         });
     });
@@ -105,7 +105,7 @@ describe('SubmissionList', () => {
       return loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(component => {
           component.get('#odata-loading-message').should.be.hidden();
         })
@@ -117,7 +117,7 @@ describe('SubmissionList', () => {
       return loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(component => {
           testData.extendedSubmissions.createPast(1);
           component.get('#odata-loading-message').should.be.hidden();
@@ -146,7 +146,7 @@ describe('SubmissionList', () => {
           await app.get('#submission-download-button').trigger('click');
           const modal = app.getComponent(SubmissionDownload);
           await modal.find('input[type="password"]').exists().should.be.false;
-          return app.get('#submission-list-refresh-button').trigger('click');
+          return app.get('#refresh-button').trigger('click');
         })
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
@@ -174,7 +174,7 @@ describe('SubmissionList', () => {
       })
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
         })
@@ -196,7 +196,7 @@ describe('SubmissionList', () => {
       })
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
         })
@@ -247,7 +247,7 @@ describe('SubmissionList', () => {
       loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse((_, { url }) => {
           $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
         })
@@ -300,7 +300,7 @@ describe('SubmissionList', () => {
       return loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
           component.emitted().should.have.property('fetch-deleted-count');
@@ -319,7 +319,7 @@ describe('SubmissionList', () => {
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
         })
@@ -565,7 +565,7 @@ describe('SubmissionList', () => {
           .request(async (component) => {
             const { odata } = component.vm.$container.requestData.localResources;
             sinon.spy(odata, 'cancelRequest');
-            await component.get('#submission-list-refresh-button').trigger('click');
+            await component.get('#refresh-button').trigger('click');
             return component.get('.submission-metadata-row .delete-button').trigger('click');
           })
           .respondWithData(testData.submissionOData)
@@ -788,7 +788,7 @@ describe('SubmissionList', () => {
           .request(async (component) => {
             const { odata } = component.vm.$container.requestData.localResources;
             sinon.spy(odata, 'cancelRequest');
-            await component.get('#submission-list-refresh-button').trigger('click');
+            await component.get('#refresh-button').trigger('click');
             return component.get('.submission-metadata-row .restore-button').trigger('click');
           })
           .respondWithData(testData.submissionDeletedOData)
@@ -879,7 +879,7 @@ describe('SubmissionList', () => {
         .respondWithData(() => testData.submissionOData(250, 250))
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(() => testData.submissionOData(250))
         .afterResponse(async component => {
           // we still use chunky array which load 25 rows at a time
