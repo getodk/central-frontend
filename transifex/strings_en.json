@@ -2146,14 +2146,6 @@
         "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
-    "EntityFilters": {
-      "field": {
-        "creationDate": {
-          "string": "At",
-          "developer_comment": "This is the text of a form field that allows the user to filter Entities by a date range."
-        }
-      }
-    },
     "EntityFiltersConflict": {
       "conflict": {
         "true": {
