@@ -200,7 +200,7 @@ const discardSavedFeature = () => {
 .map-block-component :deep(.ol-zoom) {
 	position: absolute;
 	right: var(--odk-map-spacing);
-	bottom: var(--odk-map-spacing);
+	bottom: 35px;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
@@ -231,6 +231,33 @@ const discardSavedFeature = () => {
 		&:hover {
 			background: var(--odk-muted-background-color);
 		}
+	}
+}
+
+.map-block-component :deep(.ol-attribution) {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	background: rgba(245, 245, 245, 0.8);
+
+	button {
+		display: none;
+	}
+
+	ul {
+		margin: 0;
+		padding: 5px;
+	}
+
+	li {
+		list-style: none;
+	}
+
+	li,
+	a {
+		font-size: 10px;
+		line-height: 14px;
+		color: var(--odk-muted-text-color);
 	}
 }
 

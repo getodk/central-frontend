@@ -97,19 +97,18 @@ const orderedProps = computed(() => {
 	margin: 0;
 
 	.property-line {
-		display: flex;
-		justify-content: flex-start;
-		flex-wrap: wrap;
-		gap: 5px;
+		display: block;
 		padding: 15px 0;
 
 		dt,
 		dd {
+			display: inline;
 			margin: 0;
 		}
 
 		dt:after {
 			content: ':';
+			margin-right: 5px;
 		}
 
 		&:not(:last-child) {

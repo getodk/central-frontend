@@ -5,7 +5,7 @@ import {
 } from '@/components/common/map/map-styles.ts';
 import type { FeatureCollection } from 'geojson';
 import { Map, MapBrowserEvent, View } from 'ol';
-import { Zoom } from 'ol/control';
+import { Attribution, Zoom } from 'ol/control';
 import { getCenter } from 'ol/extent';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -76,7 +76,7 @@ export function useMapBlock() {
 				projection: DEFAULT_VIEW_PROJECTION,
 				extent: getProjection(DEFAULT_VIEW_PROJECTION)?.getExtent(),
 			}),
-			controls: [new Zoom()],
+			controls: [new Zoom(), new Attribution({ collapsible: false })],
 		});
 
 		currentState.value = STATES.READY;
