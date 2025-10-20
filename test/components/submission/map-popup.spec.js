@@ -226,6 +226,11 @@ describe('SubmissionMapPopup', () => {
 
     it('updates the review state', async () => {
       const app = await review();
+      const { value } = app.getComponent(SubmissionMapPopup)
+        .getComponent(SubmissionReviewState)
+        .props();
+      value.should.equal('approved');
+
       await app.get('#submission-map-popup .review-button').trigger('click');
       const input = app.get('#submission-update-review-state input[value="approved"]');
       input.element.checked.should.be.true;
