@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <map-popup v-show="submission.dataExists || submission.awaitingResponse"
-    id="submission-map-popup" @hide="$emit('hide')">
+    id="submission-map-popup" ref="popup" @hide="$emit('hide')">
     <template v-if="submission.dataExists" #title>
       <submission-review-state :value="submission.__system.reviewState" tooltip/>
       <span>{{ submission.instanceName ?? $t('submissionDetails') }}</span>
@@ -59,7 +59,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, useTemplateRef, watch } from 'vue';
 import { last, path } from 'ramda';
 
 import DateTime from '../date-time.vue';
@@ -103,13 +103,18 @@ const fetchData = () => submission.request({
     { $wkt: true }
   )
 }).catch(noop);
+
+const popup = useTemplateRef('popup');
+
 watch(
   () => props.instanceId,
   (instanceId) => {
-    if (instanceId != null)
+    if (instanceId != null) {
       fetchData();
-    else
+    } else {
       submission.reset();
+      if (popup.value != null) popup.value.resetScroll();
+    }
   },
   { immediate: true }
 );

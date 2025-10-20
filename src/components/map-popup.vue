@@ -22,12 +22,13 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { onBeforeUpdate, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 
 defineEmits(['hide']);
 
 const body = useTemplateRef('body');
-onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
+const resetScroll = () => { body.value.scrollTo(0, 0); };
+defineExpose({ resetScroll });
 </script>
 
 <style lang="scss">
