@@ -72,12 +72,16 @@
     "no-buttons": "✅",
     "image-map": "",
     "likert": "✅",
-    "map": "",
+    "map": "✅",
     "field-list": "✅",
     "label": "✅",
     "list-nolabel": "✅",
     "list": "✅",
-    "counter": ""
+    "table-list": "✅",
+    "counter": "",
+    "hidden-answer": "",
+    "printer": "",
+    "masked": ""
   },
   "Parameters": {
     "randomize": "✅",

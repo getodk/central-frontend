@@ -108,8 +108,12 @@ export function useMapBlock() {
 	};
 
 	const fitToAllFeatures = (): void => {
+		if (featuresSource.isEmpty()) {
+			return;
+		}
+
 		const extent = featuresSource.getExtent();
-		if (extent) {
+		if (extent?.length) {
 			mapInstance?.getView().fit(extent, {
 				padding: [50, 50, 50, 50],
 				duration: ANIMATION_TIME,

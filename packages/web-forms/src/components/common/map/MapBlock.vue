@@ -90,7 +90,7 @@ const discardSavedFeature = () => {
 					<IconSVG name="mdiArrowExpandAll" size="sm" />
 				</button>
 				<!-- TODO: translations -->
-				<button title="Zoom to fit all options" @click="mapHandler.fitToAllFeatures">
+				<button title="Zoom to fit all options" :disabled="!props.featureCollection?.features?.length" @click="mapHandler.fitToAllFeatures">
 					<IconSVG name="mdiFullscreen" />
 				</button>
 				<!-- TODO: translations -->
@@ -193,6 +193,11 @@ const discardSavedFeature = () => {
 
 		&:hover {
 			background: var(--odk-muted-background-color);
+		}
+
+		&:disabled {
+			background: var(--odk-muted-background-color);
+			cursor: not-allowed;
 		}
 	}
 }
