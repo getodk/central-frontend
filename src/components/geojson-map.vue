@@ -200,7 +200,7 @@ const resize = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // VIEW
 
-const fitView = (extent = featureSource.getExtent(), options = undefined) => {
+const fitView = (extent, options = undefined) => {
   mapInstance.getView().fit(extent, {
     // We need to provide enough space for styled features.
     padding: [50, 50, 50, 50],
