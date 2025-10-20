@@ -11,15 +11,14 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-show="featureCount !== 0" ref="el" class="geojson-map">
-    <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown">
-      <div class="control-bar">
-        <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button" @click="fitToAllFeatures">
-          <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
-          <img class="fitToAllFeaturesIcon" :src="FitIcon">
-        </button>
-      </div>
-    </div>
+    <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown"></div>
     <span v-show="shown" class="count">{{ countMessage }}</span>
+    <div class="control-bar">
+      <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button" @click="fitViewToAllFeatures()">
+        <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
+        <img class="fitViewToAllFeaturesIcon" :src="FitIcon">
+      </button>
+    </div>
   </div>
 </template>
 
@@ -97,6 +96,11 @@ const mapInstance = new Map({
   controls: [new Zoom()]
 });
 
+
+////////////////////////////////////////////////////////////////////////////////
+// CONSTANTS
+
+const animationDuration = 1000;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +200,7 @@ const resize = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // VIEW
 
-const fitView = (extent, options = undefined) => {
+const fitView = (extent = featureSource.getExtent(), options = undefined) => {
   mapInstance.getView().fit(extent, {
     // We need to provide enough space for styled features.
     padding: [50, 50, 50, 50],
@@ -206,9 +210,9 @@ const fitView = (extent, options = undefined) => {
   });
 };
 
-const fitToAllFeatures = () => {
-  // Used by control button reset the view to show all features
-  fitView(featureSource.getExtent(), { duration: 1000 });
+const fitViewToAllFeatures = (animate = true) => {
+  // Used by map initial view and control button reset the view to show all features
+  fitView(featureSource.getExtent(), { duration: animate ? animationDuration : undefined });
 };
 
 const forEachFeatureInView = (callback) => {
@@ -276,7 +280,7 @@ const show = async () => {
   if (mapInstance.getSize().find(length => length === 0)) return;
 
   emit('show');
-  fitView(featureSource.getExtent());
+  fitViewToAllFeatures(false);
 
   // Set abortShow.
   const abortController = new AbortController();
@@ -351,7 +355,6 @@ const selectCluster = (cluster) => {
   selectFeature(null);
 
   const features = cluster.get('features');
-  const duration = 1000;
   // If there aren't too many features in the cluster, calculate their boundary
   // box and fit the view to that. If there are enough features that such a
   // calculation might be onerous, just zoom in on the cluster.
@@ -359,13 +362,13 @@ const selectCluster = (cluster) => {
     const extent = createEmpty();
     for (const feature of features)
       extend(extent, feature.getGeometry().getExtent());
-    fitView(extent, { duration });
+    fitView(extent, { duration: animationDuration });
   } else {
     const view = mapInstance.getView();
     view.animate({
       center: cluster.getGeometry().getCoordinates(),
       zoom: view.getZoom() + 1,
-      duration
+      duration: animationDuration
     });
   }
 };
@@ -602,7 +605,7 @@ $z-index: 1;
         background: $muted-background-color;
       }
 
-      .fitToAllFeaturesIcon {
+      .fitViewToAllFeaturesIcon {
         width: 20px;
         height: 20px;
       }
