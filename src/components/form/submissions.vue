@@ -166,11 +166,8 @@ export default {
       }).catch(noop);
     },
     toggleDeleted() {
-      const query = {};
-      if (!this.deleted) query.deleted = 'true';
-      if (this.$route.query.map === 'true') query.map = 'true';
-
-      this.$router.push({ path: this.$route.path, query });
+      const { path } = this.$route;
+      this.$router.push(this.deleted ? path : `${path}?deleted=true`);
     }
   }
 };

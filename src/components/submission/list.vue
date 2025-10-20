@@ -38,8 +38,8 @@ except according to the terms contained in the LICENSE file.
         </form>
 
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
-          v-model="dataView" :options="viewOptions" :disabled="encrypted"
-          :disabled-message="$t('noMapEncryption')"/>
+          v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
+          :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
           :to="'.form-submissions-heading-row'">
           <submission-download-button :form-version="formVersion"
@@ -189,7 +189,7 @@ export default {
     });
 
     const dataView = useQueryRef({
-      fromQuery: (query) => (query.map === 'true' ? 'map' : 'table'),
+      fromQuery: (query) => (!query.deleted && query.map === 'true' ? 'map' : 'table'),
       toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
     });
 
@@ -516,7 +516,8 @@ export default {
       "emptyTable": "There are no deleted Submissions.",
       "allRestored": "All deleted Submissions are restored.",
       "allRestoredOnPage": "All Submissions on the page have been restored."
-    }
+    },
+    "noMapDeleted": "Map is unavailable for deleted Submissions"
   }
 }
 </i18n>
