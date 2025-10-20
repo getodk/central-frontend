@@ -19,12 +19,6 @@ except according to the terms contained in the LICENSE file.
           <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
           :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
-        <button id="entity-list-refresh-button" type="button"
-          class="btn btn-outlined" :aria-disabled="refreshing"
-          @click="fetchChunk(false, true)">
-          <span class="icon-refresh"></span>{{ $t('action.refresh') }}
-          <spinner :state="refreshing"/>
-        </button>
         <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
           <entity-download-button :odata-filter="deleted ? null : odataFilter"
           :search-term="deleted ? null : searchTerm"
@@ -32,6 +26,8 @@ except according to the terms contained in the LICENSE file.
           v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
         </teleport-if-exists>
       </div>
+      <table-refresh-bar :odata="odataEntities"
+        :refreshing="refreshing" @refresh-click="fetchChunk(false, true)"/>
       <entity-table v-show="odataEntities.dataExists" ref="table"
         v-model:all-selected="allSelected"
         :properties="dataset.properties" :deleted="deleted"
@@ -95,6 +91,7 @@ import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 import ActionBar from '../action-bar.vue';
 import DisableContainer from '../disable-container.vue';
+import TableRefreshBar from '../table-refresh-bar.vue';
 
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -122,6 +119,7 @@ export default {
     Pagination,
     SearchTextbox,
     Spinner,
+    TableRefreshBar,
     TeleportIfExists
   },
   inject: ['alert', 'container'],
@@ -696,9 +694,6 @@ export default {
   align-items: baseline;
   display: flex;
   flex-wrap: wrap-reverse;
-}
-#entity-list-refresh-button {
-  margin-left: auto;
 }
 
 #entity-list table:has(tbody:empty) {

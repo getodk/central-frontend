@@ -5098,6 +5098,12 @@
         }
       }
     },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Data last refreshed on {date} at {time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
+      }
+    },
     "TimeAndUser": {
       "text": {
         "string": "{dateTime} by {displayName}",
