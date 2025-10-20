@@ -5,6 +5,7 @@ import DlData from '../../../src/components/dl-data.vue';
 import GeojsonMap from '../../../src/components/geojson-map.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionMapPopup from '../../../src/components/submission/map-popup.vue';
+import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
 
 import useFields from '../../../src/request-data/fields';
@@ -50,6 +51,8 @@ describe('SubmissionMapPopup', () => {
     });
     testData.extendedSubmissions.createPast(1, {
       instanceId: 'c d',
+      reviewState: 'hasIssues',
+      meta: { instanceName: 'Some instance' },
       names: { first_name: 'Someone' },
       p1: 'POINT (1 1)',
       p2: 'POINT (2 2)'
@@ -73,6 +76,39 @@ describe('SubmissionMapPopup', () => {
       .testRequests([{
         url: "/v1/projects/1/forms/a%20b.svc/Submissions('c%20d')?%24wkt=true"
       }]));
+
+  describe('title', () => {
+    it('shows the review state', () =>
+      mockHttp()
+        .mount(SubmissionMapPopup, mountOptions())
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const { value } = component.getComponent(SubmissionReviewState).props();
+          value.should.equal('hasIssues');
+        }));
+
+    it('shows the instance name if there is one', () =>
+      mockHttp()
+        .mount(SubmissionMapPopup, mountOptions())
+        .respondWithData(testData.submissionOData)
+        .afterResponse(async (component) => {
+          const span = component.get('.submission-review-state + span');
+          span.text().should.equal('Some instance');
+          await span.should.have.textTooltip();
+        }));
+
+    it('falls back to static text', () => {
+      testData.extendedSubmissions.reset();
+      testData.extendedSubmissions.createPast(1, { p1: 'POINT (3 3)' });
+      return mockHttp()
+        .mount(SubmissionMapPopup, mountOptions())
+        .respondWithData(testData.submissionOData)
+        .afterResponse(component => {
+          const text = component.get('.submission-review-state + span').text();
+          text.should.equal('Submission Details');
+        });
+    });
+  });
 
   it('shows submission metadata', () =>
     mockHttp()
@@ -190,6 +226,11 @@ describe('SubmissionMapPopup', () => {
 
     it('updates the review state', async () => {
       const app = await review();
+      const { value } = app.getComponent(SubmissionMapPopup)
+        .getComponent(SubmissionReviewState)
+        .props();
+      value.should.equal('approved');
+
       await app.get('#submission-map-popup .review-button').trigger('click');
       const input = app.get('#submission-update-review-state input[value="approved"]');
       input.element.checked.should.be.true;
