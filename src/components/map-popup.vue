@@ -10,13 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="map-popup">
+  <div ref="el" class="map-popup">
     <button type="button" class="close" :aria-label="$t('action.close')"
       @click="$emit('hide')">
       <span aria-hidden="true">&times;</span>
     </button>
+    <div v-if="back" class="map-popup-back">
+      <a href="#" @click.prevent="$emit('back')">{{ $t('action.back') }}</a>
+    </div>
     <div class="map-popup-title"><slot name="title"></slot></div>
-    <div ref="body" class="map-popup-body"><slot name="body"></slot></div>
+    <div class="map-popup-body"><slot name="body"></slot></div>
     <div class="map-popup-footer"><slot name="footer"></slot></div>
   </div>
 </template>
@@ -24,11 +27,16 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { useTemplateRef } from 'vue';
 
-defineEmits(['hide']);
+defineProps({
+  back: Boolean
+});
+defineEmits(['hide', 'back']);
 
-const body = useTemplateRef('body');
-const resetScroll = () => { body.value.scrollTo(0, 0); };
-defineExpose({ resetScroll });
+const el = useTemplateRef('el');
+const resetScroll = () => {
+  el.value.querySelector('.map-popup-body').scrollTo(0, 0);
+};
+defineExpose({ el, resetScroll });
 </script>
 
 <style lang="scss">
@@ -60,6 +68,8 @@ defineExpose({ resetScroll });
   > .close { @include modal-close; }
 }
 
+.map-popup-back { padding-bottom: 15px; }
+
 .map-popup-title, .map-popup-footer {
   flex-shrink: 0;
 
@@ -85,3 +95,13 @@ defineExpose({ resetScroll });
 
 .map-popup-footer { padding-top: 21px; }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "back": "Back to list"
+    }
+  }
+}
+</i18n>

@@ -3745,6 +3745,14 @@
         }
       }
     },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "Back to list",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "MarkdownTextarea": {
       "markdownSupported": {
         "string": "Markdown supported",
@@ -5044,6 +5052,11 @@
       "missingField": {
         "string": "This Submission was mapped using {field}, which isn’t in the published Form version.",
         "developer_comment": "{field} is the name of a Form field."
+      }
+    },
+    "SubmissionMapView": {
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Submission in this area} other {{count} Submissions in this area}}"
       }
     },
     "SubmissionRestore": {
