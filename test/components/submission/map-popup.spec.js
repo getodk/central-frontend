@@ -51,8 +51,8 @@ describe('SubmissionMapPopup', () => {
     });
     testData.extendedSubmissions.createPast(1, {
       instanceId: 'c d',
+      reviewState: 'hasIssues',
       meta: { instanceName: 'Some instance' },
-      reviewState: 'approved',
       names: { first_name: 'Someone' },
       p1: 'POINT (1 1)',
       p2: 'POINT (2 2)'
@@ -84,7 +84,7 @@ describe('SubmissionMapPopup', () => {
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
           const { value } = component.getComponent(SubmissionReviewState).props();
-          value.should.equal('approved');
+          value.should.equal('hasIssues');
         }));
 
     it('shows the instance name if there is one', () =>
