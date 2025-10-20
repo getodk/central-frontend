@@ -211,7 +211,7 @@ describe('SubmissionMapView', () => {
       load('/projects/1/forms/f/submissions?map=true')
         .complete()
         .request(app =>
-          app.get('#submission-list-refresh-button').trigger('click'))
+          app.get('#refresh-button').trigger('click'))
         .respondWithData(testData.submissionGeojson)
         .respondWithData(() => testData.submissionDeletedOData(0))
         .testRequests([
@@ -233,7 +233,7 @@ describe('SubmissionMapView', () => {
           countFeatures(app).should.equal(1);
         })
         .request(app =>
-          app.get('#submission-list-refresh-button').trigger('click'))
+          app.get('#refresh-button').trigger('click'))
         .beforeEachResponse((app, _, i) => {
           if (i === 0) countFeatures(app).should.equal(1);
         })

@@ -1660,8 +1660,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {Form updates Entities in this Entity List} other {Forms update Entities in this Entity List}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {{count} Form updating Entities} other {{count} Forms updating Entities}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1675,8 +1674,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {{count} Form uses this Entity List} other {{count} Forms use this Entity List}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2144,14 +2142,6 @@
       "offlineUpdate": {
         "string": "Offline update",
         "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
-      }
-    },
-    "EntityFilters": {
-      "field": {
-        "creationDate": {
-          "string": "At",
-          "developer_comment": "This is the text of a form field that allows the user to filter Entities by a date range."
-        }
       }
     },
     "EntityFiltersConflict": {
@@ -5110,6 +5100,12 @@
           "string": "Notes and comments (optional)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Data last refreshed on {date} at {time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {

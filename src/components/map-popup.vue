@@ -11,32 +11,24 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="map-popup">
-    <div class="map-popup-heading">
-      <span :class="`icon-${icon}`"></span>
-      <span class="map-popup-title"><slot name="title"></slot></span>
-      <button type="button" class="close" :aria-label="$t('action.close')"
-        @click="$emit('hide')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+    <button type="button" class="close" :aria-label="$t('action.close')"
+      @click="$emit('hide')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="map-popup-title"><slot name="title"></slot></div>
     <div ref="body" class="map-popup-body"><slot name="body"></slot></div>
     <div class="map-popup-footer"><slot name="footer"></slot></div>
   </div>
 </template>
 
 <script setup>
-import { onBeforeUpdate, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 
-defineProps({
-  icon: {
-    type: String,
-    required: true
-  }
-});
 defineEmits(['hide']);
 
 const body = useTemplateRef('body');
-onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
+const resetScroll = () => { body.value.scrollTo(0, 0); };
+defineExpose({ resetScroll });
 </script>
 
 <style lang="scss">
@@ -50,8 +42,8 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
   top: 15px;
   left: 15px;
 
-  width: 315px;
-  max-height: 315px;
+  width: 318px;
+  max-height: 363px;
 
   background-color: $color-page-background;
   border-radius: 6px;
@@ -59,33 +51,29 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
               0 1px 1px 0 rgba(0, 0, 0, 0.14),
               0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
-  padding-block: $padding-panel-body;
-  // Setting the inline padding on the children rather than the root element,
-  // because .map-popup-body needs to be the full width of the popup. That's so
-  // its vertical scrollbar is all the way on the right.
+  padding-block: 21px;
+  // Setting the inline padding not on .map-popup, but on its children, because
+  // .map-popup-body needs to be the full width of the popup. That's so its
+  // vertical scrollbar is all the way on the right.
   > div { padding-inline: $padding-panel-body; }
+
+  > .close { @include modal-close; }
 }
 
-.map-popup-heading, .map-popup-footer { flex-shrink: 0; }
+.map-popup-title, .map-popup-footer {
+  flex-shrink: 0;
 
-.map-popup-heading {
-  color: $color-accent-primary;
-  font-size: 20px;
-  padding-bottom: 12px;
-
-  > [class^="icon-"] {
-    @include icon-box;
-    font-size: 16px;
-    margin-right: $margin-right-icon;
-  }
-
-  .close { @include modal-close; }
+  &:empty { display: none; }
 }
 
 .map-popup-title {
-  font-weight: 600;
+  @include text-overflow-ellipsis;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.25;
   // Buffer between the title and the close button
-  margin-right: 12px;
+  margin-right: 24px;
+  padding-bottom: 21px;
 }
 
 .map-popup-body {
@@ -95,5 +83,5 @@ onBeforeUpdate(() => { body.value.scrollTo(0, 0); });
   dd:not(.dl-data-dd) { @include text-overflow-ellipsis; }
 }
 
-.map-popup-footer { padding-top: 15px; }
+.map-popup-footer { padding-top: 21px; }
 </style>

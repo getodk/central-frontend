@@ -525,7 +525,7 @@ $z-index: 1;
   position: relative;
 
   .map-container {
-    min-height: 350px;
+    min-height: 400px;
     border: 1px solid $border-color;
     border-radius: $radius;
 

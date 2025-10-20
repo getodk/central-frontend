@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:creatorId', $event)"/>
     <date-range-picker :model-value="creationDate"
-      :label="$t('field.creationDate')"
+      :label="$t('header.createdAt')"
       :disabled="disabled" :disabled-message="disabledMessage"
       :placeholder="$t('allCreationDateSelected')"
       @update:model-value="$emit('update:creationDate', $event)"/>
@@ -67,11 +67,6 @@ defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
 <i18n lang="json5">
 {
   "en": {
-    "field": {
-      // This is the text of a form field that allows the user to filter
-      // Entities by a date range.
-      "creationDate": "At"
-    },
     // @transifexKey component.SubmissionFilters.allSubmissionDateSelected
     "allCreationDateSelected": "All time"
   }

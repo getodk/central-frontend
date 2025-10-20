@@ -84,6 +84,8 @@ describe('EntityList', () => {
 
   describe('after the refresh button is clicked', () => {
     it('completes a background refresh', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      let initialTime;
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
       const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
@@ -93,16 +95,25 @@ describe('EntityList', () => {
         }
       };
       return load('/projects/1/entity-lists/trees/entities', { root: false })
-        .afterResponses(assertRowCount(1))
-        .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+        .afterResponses(component => {
+          assertRowCount(1)(component);
+          initialTime = component.get('.table-refresh-bar span').text();
+        })
+        .request(component => {
+          clock.tick(1000);
+          return component.get('#refresh-button').trigger('click');
+        })
         .beforeEachResponse(assertRowCount(1))
         .respondWithData(() => {
           testData.extendedEntities.createNew();
           return testData.entityOData();
         })
         .respondWithData(testData.entityDeletedOData)
-        .afterResponse(assertRowCount(2));
+        .afterResponse(component => {
+          assertRowCount(2)(component);
+          const newTime = component.get('.table-refresh-bar span').text();
+          newTime.should.not.equal(initialTime);
+        });
     });
 
     it('does not show a loading message', () => {
@@ -111,7 +122,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(component => {
           component.get('#odata-loading-message').should.be.hidden();
         })
@@ -182,7 +193,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(async (component) => {
           await component.get('.entity-metadata-row .update-button').trigger('click');
           component.getComponent(EntityUpdate).props().state.should.be.false;
@@ -313,7 +324,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(async (component) => {
           await component.get('.entity-metadata-row .resolve-button').trigger('click');
           component.getComponent(EntityResolve).props().state.should.be.false;
@@ -779,7 +790,7 @@ describe('EntityList', () => {
       it('does not hide table after undeleting last entity if entities are concurrently replaced', () =>
         restoreAndCheck()
           .request(async (component) => {
-            await component.get('#entity-list-refresh-button').trigger('click');
+            await component.get('#refresh-button').trigger('click');
             return component.get('.entity-metadata-row .restore-button').trigger('click');
           })
           .respondWithData(() => {
@@ -871,7 +882,7 @@ describe('EntityList', () => {
         .respondWithData(() => testData.entityOData(250, 250))
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(() => testData.entityOData(250))
         .afterResponse(async component => {
           checkIds(component, 250);
@@ -933,7 +944,7 @@ describe('EntityList', () => {
       return loadEntityList()
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(testData.entityOData)
         .afterResponse(component => {
           component.emitted().should.have.property('fetch-deleted-count');
@@ -952,7 +963,7 @@ describe('EntityList', () => {
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
         })
@@ -1330,27 +1341,39 @@ describe('EntityList', () => {
         actionBar.props().state.should.be.false;
       }));
 
-    it('disables data table during bulk delete operation', () => load('/projects/1/entity-lists/trees/entities')
-      .complete()
-      .request(async component => {
-        const disableContainer = component.getComponent({ name: 'DisableContainer' });
-        disableContainer.props().disabled.should.be.false;
+    it('disables the other controls during bulk delete operation', () => {
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/trees/entities', { attachTo: document.body })
+        .complete()
+        .request(async component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.false;
 
-        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
-        await checkboxes[0].setValue(true);
-        await checkboxes[1].setValue(true);
-        return component.find('.action-bar-container .btn-primary').trigger('click');
-      })
-      .beforeEachResponse(component => {
-        const disableContainer = component.getComponent({ name: 'DisableContainer' });
-        disableContainer.props().disabled.should.be.true;
-        disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
-      })
-      .respondWithSuccess()
-      .afterResponse(component => {
-        const disableContainer = component.getComponent({ name: 'DisableContainer' });
-        disableContainer.props().disabled.should.be.false;
-      }));
+          const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+          return component.find('.action-bar-container .btn-primary').trigger('click');
+        })
+        .beforeEachResponse(component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.true;
+          disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
+
+          // Assert that filters, table, pagination controls are in the disabled container
+          disableContainer.find('#entity-list-actions').exists().should.be.true;
+          disableContainer.find('#entity-table').exists().should.be.true;
+          disableContainer.find('.pagination').exists().should.be.true;
+          disableContainer.find('#refresh-button').exists().should.be.true;
+
+          // Assert "Deleted Entities" button is hidden
+          component.find('.toggle-deleted-entities').should.be.hidden(true);
+        })
+        .respondWithSuccess()
+        .afterResponse(component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.false;
+        });
+    });
 
     it('hides alert when entities are selected', async () => {
       const component = await loadEntityList();
@@ -1418,7 +1441,7 @@ describe('EntityList', () => {
 
           const actionBar = c.findComponent({ name: 'ActionBar' });
           actionBar.props().state.should.be.true;
-          return c.get('#entity-list-refresh-button').trigger('click');
+          return c.get('#refresh-button').trigger('click');
         })
         .respondWithData(testData.entityOData)
         .complete();
@@ -1436,7 +1459,7 @@ describe('EntityList', () => {
         .complete()
         .request(async component => {
           sinon.spy(component.vm.$container.requestData.localResources.odataEntities, 'cancelRequest');
-          component.get('#entity-list-refresh-button').trigger('click');
+          component.get('#refresh-button').trigger('click');
           const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
           await checkboxes[0].setValue(true);
           await checkboxes[1].setValue(true);
@@ -1495,26 +1518,5 @@ describe('EntityList', () => {
     await actionBar.find('.close').trigger('click');
 
     headerCheckbox.element.checked.should.be.false;
-  });
-
-  it('disables refresh button when bulk delete is in progress', () => {
-    createEntities(3);
-    return load('/projects/1/entity-lists/trees/entities')
-      .complete()
-      .request(async component => {
-        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
-        await checkboxes[0].setValue(true);
-        await checkboxes[1].setValue(true);
-        return component.find('.action-bar-container .btn-primary').trigger('click');
-      })
-      .beforeAnyResponse(component => {
-        const refreshButton = component.find('#entity-list-refresh-button');
-        refreshButton.attributes('aria-disabled').should.equal('true');
-      })
-      .respondWithSuccess()
-      .afterResponse(component => {
-        const refreshButton = component.find('#entity-list-refresh-button');
-        refreshButton.attributes('aria-disabled').should.equal('false');
-      });
   });
 });
