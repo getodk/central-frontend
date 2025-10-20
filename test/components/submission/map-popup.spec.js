@@ -91,12 +91,14 @@ describe('SubmissionMapPopup', () => {
       mockHttp()
         .mount(SubmissionMapPopup, mountOptions())
         .respondWithData(testData.submissionOData)
-        .afterResponse(component => {
-          const text = component.get('.submission-review-state + span').text();
-          text.should.equal('Some instance');
+        .afterResponse(async (component) => {
+          const span = component.get('.submission-review-state + span');
+          span.text().should.equal('Some instance');
+          await span.should.have.textTooltip();
         }));
 
     it('falls back to static text', () => {
+      testData.extendedSubmissions.reset();
       testData.extendedSubmissions.createPast(1);
       return mockHttp()
         .mount(SubmissionMapPopup, mountOptions())

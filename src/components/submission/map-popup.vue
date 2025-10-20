@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     id="submission-map-popup" ref="popup" @hide="$emit('hide')">
     <template v-if="submission.dataExists" #title>
       <submission-review-state :value="submission.__system.reviewState" tooltip/>
-      <span>{{ submission.instanceName ?? $t('submissionDetails') }}</span>
+      <span v-tooltip.text>{{ submission.instanceName ?? $t('submissionDetails') }}</span>
     </template>
     <template #body>
       <loading :state="submission.awaitingResponse"/>
