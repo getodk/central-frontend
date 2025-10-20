@@ -992,10 +992,6 @@
     },
     "search": {
       "string": "Search"
-    },
-    "dataRefreshTime": {
-      "string": "Data last refreshed on {date} at {time}",
-      "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
     }
   },
   "mixin": {
@@ -5100,6 +5096,12 @@
           "string": "Notes and comments (optional)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Data last refreshed on {date} at {time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {

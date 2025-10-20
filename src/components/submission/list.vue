@@ -51,9 +51,7 @@ except according to the terms contained in the LICENSE file.
         </teleport-if-exists>
       </div>
 
-      <table-refresh-bar
-        :disabled="refreshing" :refreshing="refreshing" :odata="odata"
-        @refresh-click="refresh"/>
+      <table-refresh-bar :refreshing="refreshing" :odata="odata" @refresh-click="refresh"/>
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
@@ -487,8 +485,6 @@ export default {
     #submission-field-dropdown {
       // There are no filters, so no need for margin-left.
       margin-left: 0;
-      // Further increase the space between the dropdown and the refresh button.
-      margin-right: 10px;
     }
   }
 

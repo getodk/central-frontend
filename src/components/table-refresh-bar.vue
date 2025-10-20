@@ -13,10 +13,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="table-refresh-bar">
     <span v-if="odata.dataExists">
-      {{ $t('common.dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
+      {{ $t('dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
     </span>
     <button id="refresh-button" type="button"
-      class="btn btn-link" :aria-disabled="disabled"
+      class="btn btn-link" :aria-disabled="refreshing"
       @click="$emit('refreshClick')">
       <span class="icon-refresh"></span>{{ $t('action.refresh') }}
       <spinner :state="refreshing"/>
@@ -32,8 +32,7 @@ import Spinner from './spinner.vue';
 
 const props = defineProps({
   odata: Object,
-  refreshing: Boolean,
-  disabled: Boolean
+  refreshing: Boolean
 });
 
 defineEmits(['refreshClick']);
@@ -54,3 +53,13 @@ const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
   }
 }
 </style>
+
+<i18n lang="json5">
+  {
+  "en": {
+    // Text shown above the data tables to tell users when data was last fetched / refreshed.
+    // {date} is only the date component and {time} is only the time component.
+    "dataRefreshTime": "Data last refreshed on {date} at {time}"
+  }
+}
+</i18n>

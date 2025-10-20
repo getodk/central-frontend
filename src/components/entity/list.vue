@@ -26,7 +26,7 @@ except according to the terms contained in the LICENSE file.
           v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
         </teleport-if-exists>
       </div>
-      <table-refresh-bar :odata="odataEntities" :disabled="refreshing"
+      <table-refresh-bar :odata="odataEntities"
         :refreshing="refreshing" @refresh-click="fetchChunk(false, true)"/>
       <entity-table v-show="odataEntities.dataExists" ref="table"
         v-model:all-selected="allSelected"
