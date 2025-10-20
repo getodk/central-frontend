@@ -10,16 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="radio-field"
+  <div class="radio-field" :class="{ 'btn-appearance': buttonAppearance }"
     v-tooltip.no-aria="disabled ? disabledMessage : null">
-    <div v-for="{ value, text } of options" :key="value" class="radio"
-      :class="{ disabled }">
-      <label>
-        <input v-model="model" type="radio" :value="value" :disabled="disabled"
-          :aria-describedby="disabledMessageId">
-        <span>{{ text }}</span>
-      </label>
-    </div>
+    <label v-for="{ value, text } of options" :key="value" :class="{ disabled, active: model === value, 'btn btn-toggle': buttonAppearance, radio: !buttonAppearance }">
+      <input v-model="model" type="radio" :value="value" :disabled="disabled" autocomplete="off"
+      :aria-describedby="disabledMessageId">
+      <span v-show="buttonAppearance && model === value" class="icon-check"></span>
+      <span>{{ text }}</span>
+    </label>
     <p v-if="disabledMessageId != null" :id="disabledMessageId" class="sr-only">
       {{ disabledMessage }}
     </p>
@@ -39,7 +37,11 @@ const props = defineProps({
     required: true
   },
   disabled: Boolean,
-  disabledMessage: String
+  disabledMessage: String,
+  buttonAppearance: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const id = nextId;
@@ -47,3 +49,47 @@ nextId += 1;
 const disabledMessageId = computed(() =>
   (props.disabled && props.disabledMessage != null ? `radio-field-disabled${id}` : null));
 </script>
+
+<style lang="scss">
+@import '../assets/scss/variables';
+
+.radio-field {
+  label {
+    font-weight: normal;
+  }
+}
+
+.radio-field.btn-appearance {
+  input[type="radio"] {
+    appearance: none;
+  }
+  .btn-toggle {
+    border-radius: 0 2px 2px 0;
+    border: 1px solid $central-grey-2;
+    background: #FFF;
+    box-shadow: none;
+    padding: 10px 30px;
+    min-width: 80px;
+    position: relative;
+
+    &.active {
+      background: $color-action-light;
+    }
+
+    &:hover, &:focus-within {
+      background-color: $color-action-overlay;
+      color: #FFF;
+    }
+
+    &.disabled{
+      opacity: 0.5;
+    }
+
+    .icon-check {
+      position: absolute;
+      top: 12px;
+      left: 10px;
+    }
+  }
+}
+</style>
