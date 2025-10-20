@@ -42,8 +42,8 @@ defineExpose({ resetScroll });
   top: 15px;
   right: 15px;
 
-  width: 315px;
-  max-height: 315px;
+  width: 318px;
+  max-height: 363px;
 
   background-color: $color-page-background;
   border-radius: 6px;
@@ -51,16 +51,20 @@ defineExpose({ resetScroll });
               0 1px 1px 0 rgba(0, 0, 0, 0.14),
               0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
-  padding-block: 24px $padding-panel-body;
+  padding-block: 21px;
   // Setting the inline padding not on .map-popup, but on its children, because
   // .map-popup-body needs to be the full width of the popup. That's so its
   // vertical scrollbar is all the way on the right.
   > div { padding-inline: $padding-panel-body; }
 
-  .close { @include modal-close; }
+  > .close { @include modal-close; }
 }
 
-.map-popup-title, .map-popup-footer { flex-shrink: 0; }
+.map-popup-title, .map-popup-footer {
+  flex-shrink: 0;
+
+  &:empty { display: none; }
+}
 
 .map-popup-title {
   @include text-overflow-ellipsis;
@@ -68,10 +72,8 @@ defineExpose({ resetScroll });
   font-weight: bold;
   line-height: 1.25;
   // Buffer between the title and the close button
-  margin-right: 27px;
-  padding-bottom: 12px;
-
-  &:empty { display: none; }
+  margin-right: 24px;
+  padding-bottom: 21px;
 }
 
 .map-popup-body {
@@ -81,5 +83,5 @@ defineExpose({ resetScroll });
   dd:not(.dl-data-dd) { @include text-overflow-ellipsis; }
 }
 
-.map-popup-footer { padding-top: 15px; }
+.map-popup-footer { padding-top: 21px; }
 </style>

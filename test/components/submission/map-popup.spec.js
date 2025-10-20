@@ -99,7 +99,7 @@ describe('SubmissionMapPopup', () => {
 
     it('falls back to static text', () => {
       testData.extendedSubmissions.reset();
-      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { p1: 'POINT (3 3)' });
       return mockHttp()
         .mount(SubmissionMapPopup, mountOptions())
         .respondWithData(testData.submissionOData)

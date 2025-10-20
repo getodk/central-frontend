@@ -498,7 +498,7 @@ defineExpose({
   position: relative;
 
   .map-container {
-    min-height: 350px;
+    min-height: 400px;
 
     opacity: 0;
     &.opaque { opacity: 1; }

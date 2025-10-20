@@ -28,8 +28,8 @@ defineOptions({
 });
 const props = defineProps({
   value: String,
-  // If `false` (the default), text will be shown next to the icon. If `true`,
-  // a tooltip will be added on the icon instead.
+  // If `false` (the default), text will be shown next to the icon. If `true`, a
+  // tooltip will be added on the icon instead.
   tooltip: Boolean,
   // `true` to give the text the same color as the icon.
   colorText: Boolean,
