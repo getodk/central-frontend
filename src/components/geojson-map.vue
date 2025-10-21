@@ -14,7 +14,8 @@ except according to the terms contained in the LICENSE file.
     <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown"></div>
     <span v-show="shown" class="count">{{ countMessage }}</span>
     <div class="control-bar">
-      <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button" @click="fitViewToAllFeatures()">
+      <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button"
+        @click="fitViewToAllFeatures()">
         <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
         <img class="fit-icon" :src="FitIcon">
       </button>
@@ -43,7 +44,6 @@ import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watc
 import { useI18n } from 'vue-i18n';
 
 import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
-
 
 import useEventListener from '../composables/event-listener';
 import { getClusterSizeStyles, getSelectedStyles, getUnselectedStyles } from '../util/map-styles';
