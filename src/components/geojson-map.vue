@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <span class="count">{{ countMessage }}</span>
       <div class="control-bar">
         <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button"
-          @click="fitViewToAllFeatures">
+          @click="fitViewToAllFeatures()">
           <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
           <img class="fit-icon" :src="FitIcon">
         </button>
