@@ -519,7 +519,6 @@ $background-color: #fff;
 $radius: 6px;
 $border-color: #cbd5e1;
 $muted-background-color: #F1F5F9;
-$z-index: 1;
 
 .geojson-map {
   position: relative;
@@ -590,7 +589,7 @@ $z-index: 1;
     flex-direction: column;
     top: $spacing;
     right: $spacing;
-    z-index: $z-index;
+    z-index: 1;
     gap: 4px;
 
     button {
