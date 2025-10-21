@@ -64,7 +64,7 @@ except according to the terms contained in the LICENSE file.
         :awaiting-responses="awaitingResponses"
         @review="showReview" @delete="showDelete" @restore="showRestore"/>
       <submission-map-view v-else ref="view"
-        :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
+        :project-id="projectId" :xml-form-id="xmlFormId"
         :filter="geojsonFilter"
         :awaiting-responses="awaitingResponses"
         @review="showReview" @delete="showDelete"/>
