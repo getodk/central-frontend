@@ -620,7 +620,7 @@ $z-index: 1;
     // {count} and {total} are both numbers.
     "showing": "Showing {count} of {total}",
     // Shown above control button on map to zoom out to show all features
-    "zoomToFit": "Zoom to fit all options"
+    "zoomToFit": "Zoom to fit all data"
   }
 }
 </i18n>
