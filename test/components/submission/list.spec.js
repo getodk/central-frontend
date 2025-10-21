@@ -351,6 +351,22 @@ describe('SubmissionList', () => {
           component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
         });
     });
+
+    it('disables map view', () => {
+      const { geopoint } = testData.fields;
+      const fields = [geopoint('/the_place')];
+      testData.extendedForms.createPast(1, { fields });
+
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(testData.submissionDeletedOData)
+        .afterResponses((component) => {
+          component.getComponent('.radio-field').props().disabled.should.be.true;
+        });
+    });
   });
 
   describe('delete', () => {

@@ -1,5 +1,3 @@
-import { F } from 'ramda';
-
 import GeojsonMap from '../../../src/components/geojson-map.vue';
 import RadioField from '../../../src/components/radio-field.vue';
 import SubmissionList from '../../../src/components/submission/list.vue';
@@ -166,38 +164,11 @@ describe('SubmissionMapView', () => {
       testData.extendedForms.createPast(1, { fields: [mypoint] });
     });
 
-    it('shows map view for deleted submissions', () => {
+    it('shows table view for deleted submissions even when ?map=true', () => {
       testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?map=true&deleted=true')
-        .testRequestsInclude([{
-          url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
-        }])
         .afterResponses(app => {
-          getView(app).should.equal('map');
-        });
-    });
-
-    it('preserves map view while toggling deleted submissions', () => {
-      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
-      return load('/projects/1/forms/f/submissions?map=true&reviewState=null')
-        .complete()
-        .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
-        .respondWithData(testData.submissionGeojson)
-        .testRequestsInclude([{
-          // Map view is preserved, but the review state filter is not.
-          url: '/v1/projects/1/forms/f/submissions.geojson?deleted=true'
-        }])
-        .afterResponse(app => {
-          getView(app).should.equal('map');
-          const { fullPath } = app.vm.$route;
-          fullPath.should.equal('/projects/1/forms/f/submissions?deleted=true&map=true');
-        })
-        .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
-        .respondWithData(() => testData.submissionGeojson(F))
-        .afterResponse(app => {
-          getView(app).should.equal('map');
-          const { fullPath } = app.vm.$route;
-          fullPath.should.equal('/projects/1/forms/f/submissions?map=true');
+          getView(app).should.equal('table');
         });
     });
   });

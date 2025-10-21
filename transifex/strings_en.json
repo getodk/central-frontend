@@ -4993,6 +4993,9 @@
           "string": "All Submissions on the page have been restored."
         }
       },
+      "noMapDeleted": {
+        "string": "Map is unavailable for deleted Submissions"
+      },
       "loading": {
         "withoutCount": {
           "string": "Loading Submissions…",
