@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
     <span v-show="shown" class="count">{{ countMessage }}</span>
     <div class="control-bar">
       <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button"
-        @click="fitViewToAllFeatures()">
+        @click="fitViewToAllFeatures">
         <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
         <img class="fit-icon" :src="FitIcon">
       </button>
@@ -209,8 +209,8 @@ const fitView = (extent, options = undefined) => {
 };
 
 const fitViewToAllFeatures = (animate = true) => {
-  // Used by map initial view and control button reset the view to show all features
-  fitView(featureSource.getExtent(), { duration: animate ? animationDuration : undefined });
+  // Used by map initial view and control button to reset the view to show all features
+  fitView(featureSource.getExtent(), animate ? { duration: animationDuration } : null);
 };
 
 const forEachFeatureInView = (callback) => {
