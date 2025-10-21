@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
     <div class="control-bar">
       <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button" @click="fitViewToAllFeatures()">
         <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
-        <img class="fitViewToAllFeaturesIcon" :src="FitIcon">
+        <img class="fit-icon" :src="FitIcon">
       </button>
     </div>
   </div>
@@ -603,7 +603,7 @@ $z-index: 1;
         background: $muted-background-color;
       }
 
-      .fitViewToAllFeaturesIcon {
+      .fit-icon {
         width: 20px;
         height: 20px;
       }
