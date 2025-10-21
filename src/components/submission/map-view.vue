@@ -49,7 +49,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  deleted: Boolean,
 
   // Table actions
   filter: Object,
@@ -86,20 +85,17 @@ const geojson = createResource('geojson', () => ({
 }));
 
 const fetchData = (clear = true) => {
-  const query = !props.deleted
-    ? props.filter
-    : { ...props.filter, deleted: true };
   const url = apiPaths.submissions(
     props.projectId,
     props.xmlFormId,
     false,
     '.geojson',
-    query
+    props.filter
   );
   return geojson.request({ url, clear }).catch(noop);
 };
 fetchData();
-watch([() => props.filter, () => props.deleted], noargs(fetchData));
+watch(() => props.filter, noargs(fetchData));
 const refresh = () => fetchData(false);
 const cancelRefresh = () => { geojson.cancelRequest(); };
 
