@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Notes</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English">
+          <text id="q1:label">
+            <value>_Translated_</value>
+          </text>
+          <text id="/data/group/name:jr:constraintMsg">
+            <value>Must be **longer** than 3</value>
+          </text>
+          <text id="/data/group/selected:jr:requiredMsg">
+            <value>You must select _something_</value>
+          </text>
+        </translation>
+        <translation lang="Español">
+          <text id="q1:label">
+            <value>_Traducida_</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="notes" version="20240802121047">
+          <group>
+            <headings />
+            <name/>
+            <userentered/>
+            <translated/>
+            <selected/>
+            <selectedminimal/>
+            <dropdown/>
+            <rank/>
+            <note/>
+          </group>
+          <group2>
+            <input/>
+          </group2>
+          <rep>
+            <a>default value</a>
+          </rep>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <instance id="selectoptions">
+        <root>
+          <item>
+            <value>plain</value>
+            <label>plain text</label>
+          </item>
+          <item>
+            <value>strong</value>
+            <label>**strong style**</label>
+          </item>
+          <item>
+            <value>emphasis</value>
+            <label>_italics_</label>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/group/headings" readonly="true()" type="string" />
+      <bind nodeset="/data/group/name" type="string" constraint="string-length(.) > 2"
+        jr:constraintMsg="jr:itext('/data/group/name:jr:constraintMsg')" required="true()" />
+      <bind nodeset="/data/group/userentered" readonly="true()" type="string" />
+      <bind nodeset="/data/group/translated" readonly="true()" type="string" />
+      <bind nodeset="/data/group/selected" type="string" required="true()"
+        jr:requiredMsg="jr:itext('/data/group/selected:jr:requiredMsg')"/>
+      <bind nodeset="/data/group/selectedminimal" type="string" />
+      <bind nodeset="/data/group/dropdown" type="string"/>
+      <bind nodeset="/data/group/rank" type="rank"/>
+      <bind nodeset="/data/group2/input" type="string"/>
+      <bind nodeset="/data/rep/a" type="string" />
+      <bind nodeset="/data/group/note" readonly="true()" type="note" />
+    </model>
+  </h:head>
+  <h:body>
+  <!-- need to test in other places, like validation, select item labels, etc -->
+    <group appearance="field-list" ref="/data/group">
+      <input ref="/data/group/headings">
+        <label>You _can_ try this with other &lt;span style="color:red;font-family:cursive"&gt;colours&lt;/span&gt;; **most** primary colours should work.</label>
+      </input>
+      <input ref="/data/group/name">
+        <label>What's your name?</label>
+        <hint>Type **your name** below</hint>
+      </input>
+      <input ref="/data/group/userentered">
+        <label>*You said:&lt;span style="color:red;font-family:cursive"&gt;<output value="/data/group/dropdown" />&lt;/span&gt;* but should it be markeddown?</label>
+      </input>
+      <input ref="/data/group/translated">
+        <label ref="jr:itext('q1:label')" />
+      </input>
+      <group ref="/data/group2">
+        <label>*Groups*</label>
+        <input ref="/data/group2/input">
+          <label>label</label>
+        </input>
+      </group>
+      <group ref="/data/rep">
+        <label>&lt;span style="color:green"&gt;Repeat group&lt;/span&gt;</label>
+        <repeat nodeset="/data/rep">
+            <input ref="/data/rep/a">
+              <label>Repeat input a</label>
+            </input>
+        </repeat>
+      </group>
+      <select1 ref="/data/group/selected">
+        <label>Select options</label>
+        <itemset nodeset="instance('selectoptions')/root/item">
+          <value ref="value" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 appearance="minimal" ref="/data/group/selectedminimal">
+        <label>Select options minimal</label>
+        <item>
+          <label>&lt;span style="color:green"&gt;Yes&lt;/span&gt;</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>&lt;span style="color:red"&gt;No&lt;/span&gt;</label>
+          <value>no</value>
+        </item>
+      </select1>
+      <select appearance="minimal" ref="/data/group/dropdown">
+        <label>Select multiple minimal</label>
+        <item>
+          <label>&lt;span style="color:green"&gt;Yes&lt;/span&gt;</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>&lt;span style="color:red"&gt;No&lt;/span&gt;</label>
+          <value>no</value>
+        </item>
+      </select>
+      <odk:rank ref="/data/group/rank">
+        <label>Rank this <em>stuff</em></label>
+        <item>
+          <label>&lt;span style="color:green"&gt;Green&lt;/span&gt;</label>
+          <value>A</value>
+        </item>
+        <item>
+          <label>&lt;span style="color:red"&gt;Red&lt;/span&gt;</label>
+          <value>B</value>
+        </item>
+        <item>
+          <label>&lt;span style="color:blue"&gt;Blue&lt;/span&gt;</label>
+          <value>C</value>
+        </item>
+        <item>
+          <label>&lt;span style="color:yellow"&gt;Yellow&lt;/span&gt;</label>
+          <value>D</value>
+        </item>
+      </odk:rank>
+      <input ref="/data/group/note">
+        <label>
+# heading 1
+## heading 2
+### heading 3
+#### heading 4
+##### heading 5
+###### heading 6
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Indented text
+
+[get odk](http://www.getodk.org)
+&lt;br/&gt;&lt;br/&gt;
+Escaping: \*hello\*
+&lt;br/&gt;&lt;br/&gt;
+&lt;span style="color:red;font-family:cursive"&gt;signature&lt;/span&gt;
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;p style="text-align:center"&gt;
+  centered paragraph
+&lt;/p&gt;
+
+&lt;br/&gt;&lt;br/&gt;
+
+
+&lt;div style="text-align:center"&gt;centered div&lt;/div&gt;
+
+&lt;table border="1"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;name&lt;/td&gt;
+    &lt;td&gt;value&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;once&lt;/td&gt;
+    &lt;td&gt;twice&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+- unordered list 1
+- unordered list 5
+- unordered list 3
+
+
+1. ordered list 1
+2. ordered list 2
+3. ordered list 3
+
+_styles **can &lt;span style="color:red;"&gt;be&lt;/span&gt; nested** inside_
+
+        </label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

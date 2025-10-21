@@ -2,6 +2,7 @@
 import type { SelectNode } from '@getodk/xforms-engine';
 import Select from 'primevue/select';
 import { computed } from 'vue';
+import MarkdownBlock from './MarkdownBlock.vue';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -21,9 +22,20 @@ const options = computed(() => {
 
 		return {
 			value: option.value,
-			label: option.label.asString,
+			label: option.label.formatted,
+			search: option.label.asString,
 		};
 	});
+});
+
+const selectedLabel = computed(() => {
+	const value = props.question.currentState?.value?.[0];
+	if (!value) {
+		return [];
+	}
+	const valueOptions = props.question.currentState.valueOptions;
+	const found = valueOptions.find((opt) => opt.value === value);
+	return found?.label.formatted;
 });
 
 const selectValue = (value: string) => {
@@ -41,11 +53,18 @@ const selectValue = (value: string) => {
 		:model-value="question.currentState.value[0]"
 		:disabled="props.question.currentState.readonly"
 		:options="options"
-		option-label="label"
+		option-label="search"
 		option-value="value"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
-	/>
+	>
+		<template #option="slotProps">
+			<MarkdownBlock v-for="(elem, index) in slotProps.option.label" :key="index" :elem="elem" />
+		</template>
+		<template #value>
+			<MarkdownBlock v-for="(elem, index) in selectedLabel" :key="index" :elem="elem" />
+		</template>
+	</Select>
 </template>
 
 <style scoped lang="scss">

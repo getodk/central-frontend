@@ -24,6 +24,7 @@ export type {
 } from './hierarchy.ts';
 export type * from './identity.ts';
 export type * from './InputNode.ts';
+export type * from './MarkdownNode.ts';
 export type * from './ModelValueNode.ts';
 export type * from './NoteNode.ts';
 export type * from './OpaqueReactiveObjectFactory.ts';

@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 defineProps<{ question: QuestionNode }>();
 </script>
 
 <template>
 	<div v-if="question.currentState.hint" class="hint">
-		{{ question.currentState.hint?.asString }}
+		<MarkdownBlock v-for="(elem, index) in question.currentState.hint?.formatted" :key="index" :elem="elem" />
 	</div>
 </template>
 

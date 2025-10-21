@@ -36,7 +36,7 @@ describe('FormQuestion', () => {
 
 		expect(selectControl.exists()).toBe(true);
 
-		expect(component.find('label').text()).toEqual('1. Select a fruit');
+		expect(component.find('label').text()).toEqual('Select a fruit');
 	});
 
 	it('shows Rank control for rank nodes', async () => {

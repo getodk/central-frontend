@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
+import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
+import type { MarkdownNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Menu, { type MenuState } from 'primevue/menu';
 import { type MenuItem } from 'primevue/menuitem';
@@ -8,6 +10,7 @@ import { ref } from 'vue';
 
 export interface PanelProps {
 	title?: string;
+	titleFormatted?: MarkdownNode[];
 	labelNumber?: number;
 	menuItems?: MenuItem[];
 	noUi?: boolean;
@@ -16,6 +19,7 @@ export interface PanelProps {
 
 const props = withDefaults(defineProps<PanelProps>(), {
 	title: undefined,
+	titleFormatted: undefined,
 	labelNumber: undefined,
 	menuItems: undefined,
 	noUi: false,
@@ -42,7 +46,10 @@ const menu = ref<InstanceType<typeof Menu> & MenuState>();
 				<h2>
 					<IconSVG v-if="panelState" name="mdiChevronDown" />
 					<IconSVG v-if="!panelState" name="mdiChevronUp" />
-					<span>{{ title }}</span>
+					<template v-if="titleFormatted">
+						<MarkdownBlock v-for="(elem, index) in titleFormatted" :key="index" :elem="elem" />
+					</template>
+					<span v-else>{{ title }}</span>
 				</h2>
 				<span v-if="labelNumber" class="label-number">{{ labelNumber }}</span>
 			</div>

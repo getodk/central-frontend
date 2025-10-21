@@ -10,7 +10,7 @@ export class InputControl {
 	private async getInputByLabel(label: string) {
 		const container = this.page
 			.locator('.question-container')
-			.filter({ has: this.page.locator(`.control-text label span:text-is("${label}")`) });
+			.filter({ has: this.page.locator(`.control-text label:text-is("${label}")`) });
 
 		const input = container.locator('input');
 

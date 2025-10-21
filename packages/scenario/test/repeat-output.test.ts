@@ -126,7 +126,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					scenario.next('/data/repeat[1]/position_in_label');
 
 					expect(
-						scenario.proposed_getQuestionLabelText({
+						scenario.getQuestionLabelText({
 							assertCurrentReference: '/data/repeat[1]/position_in_label',
 						})
 					).toBe('Position: 1');
@@ -138,7 +138,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					scenario.next('/data/repeat[2]/position_in_label');
 
 					expect(
-						scenario.proposed_getQuestionLabelText({
+						scenario.getQuestionLabelText({
 							assertCurrentReference: '/data/repeat[2]/position_in_label',
 						})
 					).toBe('Position: 2');
@@ -276,7 +276,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					scenario.next('/data/repeat[1]/position_in_label');
 
 					expect(
-						scenario.proposed_getQuestionLabelText({
+						scenario.getQuestionLabelText({
 							assertCurrentReference: '/data/repeat[1]/position_in_label',
 						})
 					).toBe('Position: 1');
@@ -288,7 +288,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					scenario.next('/data/repeat[2]/position_in_label');
 
 					expect(
-						scenario.proposed_getQuestionLabelText({
+						scenario.getQuestionLabelText({
 							assertCurrentReference: '/data/repeat[2]/position_in_label',
 						})
 					).toBe('Position: 2');
@@ -340,7 +340,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					scenario.next('/data/repeat[1]/position_in_label');
 
 					expect(
-						scenario.proposed_getQuestionLabelText({
+						scenario.getQuestionLabelText({
 							assertCurrentReference: '/data/repeat[1]/position_in_label',
 						})
 					).toBe('Position: 1');
@@ -352,7 +352,7 @@ describe('Interaction between `<repeat>` and `<output>`', () => {
 					scenario.next('/data/repeat[2]/position_in_label');
 
 					expect(
-						scenario.proposed_getQuestionLabelText({
+						scenario.getQuestionLabelText({
 							assertCurrentReference: '/data/repeat[2]/position_in_label',
 						})
 					).toBe('Position: 2');

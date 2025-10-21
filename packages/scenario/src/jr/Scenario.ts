@@ -13,6 +13,7 @@ import type {
 	RestoreFormInstanceInput,
 	RootNode,
 	SelectNode,
+	TextRange,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Owner, Setter } from 'solid-js';
@@ -32,7 +33,6 @@ import { ImplementationPendingError } from '../error/ImplementationPendingError.
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import type { ReactiveScenario } from '../reactive/ReactiveScenario.ts';
 import { SharedJRResourceService } from '../resources/SharedJRResourceService.ts';
-import type { JRFormEntryCaption } from './caption/JRFormEntryCaption.ts';
 import type { BeginningOfFormEvent } from './event/BeginningOfFormEvent.ts';
 import type { EndOfFormEvent } from './event/EndOfFormEvent.ts';
 import { PositionalEvent } from './event/PositionalEvent.ts';
@@ -947,32 +947,38 @@ export class Scenario {
 		return this.isClientControlled(node);
 	}
 
-	/**
-	 * **PORTING NOTES**
-	 *
-	 * This method is proposed as an alternative to
-	 * {@link JRFormEntryCaption.getQuestionText}, intended to:
-	 *
-	 * - intended to be roughly equivalent in semantics without reliance on that
-	 *   class, viewed as an aspect of JavaRosa internal APIs
-	 *
-	 * - Provide similar positional semantics to other existing {@link Scenario}
-	 *   methods/web forms extensions thereof, where the call site expresses the
-	 *   expected XPath reference of the node at the current positional state.
-	 */
-	proposed_getQuestionLabelText(options: AssertCurrentReferenceOptions): string {
+	getQuestionLabelText(options: AssertCurrentReferenceOptions): string {
+		return this.getQuestionLabel(options).asString;
+	}
+
+	getQuestionLabel(options: AssertCurrentReferenceOptions): TextRange<'label'> {
 		const event = this.getSelectedPositionalEvent();
 
 		this.assertReference(event, options.assertCurrentReference);
 
 		const { currentState } = event.node;
-		const label = currentState.label?.asString;
+		const label = currentState.label;
 
 		if (label == null) {
 			throw new Error(`Question node with reference ${currentState.reference} has no label`);
 		}
 
 		return label;
+	}
+
+	getQuestionHint(options: AssertCurrentReferenceOptions): TextRange<'hint'> {
+		const event = this.getSelectedPositionalEvent();
+
+		this.assertReference(event, options.assertCurrentReference);
+
+		const { currentState } = event.node;
+		const hint = currentState.hint;
+
+		if (hint == null) {
+			throw new Error(`Question node with reference ${currentState.reference} has no hint`);
+		}
+
+		return hint;
 	}
 
 	private getCurrentSelectNode(options: AssertCurrentReferenceOptions): SelectNode {
@@ -1020,14 +1026,17 @@ export class Scenario {
 	proposed_getSelectedOptionLabelsAsText(
 		options: AssertCurrentReferenceOptions
 	): readonly string[] {
-		const node = this.getCurrentSelectNode(options);
+		return this.getSelectedOptionLabels(options).map((option) => option.asString);
+	}
 
+	getSelectedOptionLabels(
+		options: AssertCurrentReferenceOptions
+	): ReadonlyArray<TextRange<'item-label'>> {
+		const node = this.getCurrentSelectNode(options);
 		return node.currentState.value.map((item) => {
 			const option = node.getValueOption(item);
-
 			assert(option != null);
-
-			return option.label.asString;
+			return option.label;
 		});
 	}
 

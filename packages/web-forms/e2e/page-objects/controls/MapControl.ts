@@ -15,7 +15,7 @@ export class MapControl {
 	getMapComponentLocator(label: string) {
 		const question = this.page
 			.locator('.question-container')
-			.filter({ has: this.page.locator(`.control-text label span:text-is("${label}")`) });
+			.filter({ has: this.page.locator(`.control-text label:text-is("${label}")`) });
 		return question.locator(this.MAP_COMPONENT_SELECTOR);
 	}
 

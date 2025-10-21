@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
+import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import type { RepeatRangeNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed } from 'vue';
 import RepeatInstance from './RepeatInstance.vue';
 
 const props = defineProps<{ node: RepeatRangeNode }>();
-const label = computed(() => props.node.currentState.label?.asString);
+const label = computed(() => props.node.currentState.label?.formatted);
 </script>
 <template>
 	<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" />
@@ -20,7 +21,8 @@ const label = computed(() => props.node.currentState.label?.asString);
 	>
 		<IconSVG name="mdiPlus" />
 		<!-- TODO: translations -->
-		<span>Add {{ label }}</span>
+		<span>Add</span>
+		<MarkdownBlock v-for="(elem, index) in label" :key="index" :elem="elem" />
 	</Button>
 </template>
 

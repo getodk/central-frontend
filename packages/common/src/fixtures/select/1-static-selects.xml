@@ -13,10 +13,10 @@
       <itext>
         <translation lang="French">
           <text id="fruit:label">
-            <value>1. Sélectionnez un fruit</value>
+            <value>Sélectionnez un fruit</value>
           </text>
           <text id="fruits:label">
-            <value>2. Sélectionnez plusieurs fruits</value>
+            <value>Sélectionnez plusieurs fruits</value>
           </text>
           <text id="fruit:mango">
             <value>mangue</value>
@@ -87,10 +87,10 @@
         </translation>
         <translation lang="English" default="true()">
           <text id="fruit:label">
-            <value>1. Select a fruit</value>
+            <value>Select a fruit</value>
           </text>
           <text id="fruits:label">
-            <value>2. Select multiple fruits</value>
+            <value>Select multiple fruits</value>
           </text>
           <text id="fruit:mango">
             <value>Mango</value>

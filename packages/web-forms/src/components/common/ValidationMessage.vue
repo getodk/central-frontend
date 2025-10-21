@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import { QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
-import { type ComputedRef, inject, computed } from 'vue';
+import type { MarkdownNode } from '@getodk/xforms-engine';
+import { computed, type ComputedRef, inject } from 'vue';
 
 withDefaults(
 	defineProps<{
-		message?: string;
+		message?: MarkdownNode[];
 		addPlaceholder?: boolean;
 	}>(),
 	{
@@ -22,7 +24,7 @@ const showMessage = inject<ComputedRef<boolean>>(
 <template>
 	<div :class="{ 'validation-placeholder': addPlaceholder }">
 		<span v-show="showMessage" class="validation-message">
-			{{ message }}
+			<MarkdownBlock v-for="(elem, index) in message" :key="index" :elem="elem" />
 		</span>
 	</div>
 </template>

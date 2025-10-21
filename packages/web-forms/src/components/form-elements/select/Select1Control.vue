@@ -2,12 +2,12 @@
 import ColumnarAppearance from '@/components/appearances/ColumnarAppearance.vue';
 import FieldListTable from '@/components/appearances/FieldListTable.vue';
 import UnsupportedAppearance from '@/components/appearances/UnsupportedAppearance.vue';
-import AsyncMap from '@/components/common/map/AsyncMap.vue';
-import ControlText from '@/components/form-elements/ControlText.vue';
-import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import LikertWidget from '@/components/common/LikertWidget.vue';
+import AsyncMap from '@/components/common/map/AsyncMap.vue';
 import RadioButton from '@/components/common/RadioButton.vue';
 import SearchableDropdown from '@/components/common/SearchableDropdown.vue';
+import ValidationMessage from '@/components/common/ValidationMessage.vue';
+import ControlText from '@/components/form-elements/ControlText.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { computed, ref, watchEffect } from 'vue';
 
@@ -96,7 +96,7 @@ watchEffect(() => {
 	</template>
 
 	<ValidationMessage
-		:message="question.validationState.violation?.message.asString"
+		:message="question.validationState.violation?.message.formatted"
 		:add-placeholder="!hasFieldListRelatedAppearance"
 	/>
 </template>

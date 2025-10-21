@@ -80,6 +80,7 @@ defineProps<{ appearances: SelectNodeAppearances }>();
 
 .table-row.label {
 	padding: 0px;
+	color: var(--odk-text-color);
 
 	:deep(.value-option) {
 		cursor: default;

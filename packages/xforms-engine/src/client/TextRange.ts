@@ -1,5 +1,6 @@
 import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { ActiveLanguage } from './FormLanguage.ts';
+import type { MarkdownNode } from './MarkdownNode.ts';
 
 /**
  * **COMMENTARY**
@@ -73,7 +74,6 @@ export interface TextChunk {
 	get language(): ActiveLanguage;
 
 	get asString(): string;
-	get formatted(): unknown;
 }
 
 // eslint-disable-next-line @typescript-eslint/sort-type-constituents
@@ -146,7 +146,7 @@ export interface TextRange<Role extends TextRole, Origin extends TextOrigin = Te
 	[Symbol.iterator](): Iterable<TextChunk>;
 
 	get asString(): string;
-	get formatted(): unknown;
+	get formatted(): MarkdownNode[];
 
 	get imageSource(): JRResourceURL | undefined;
 	get audioSource(): JRResourceURL | undefined;

@@ -1,11 +1,13 @@
 import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+
+import type { MarkdownNode } from '../../client/MarkdownNode.ts';
 import type {
 	TextRange as ClientTextRange,
 	TextChunk,
 	TextOrigin,
 	TextRole,
 } from '../../client/TextRange.ts';
-import { FormattedTextStub } from './FormattedTextStub.ts';
+import { format } from './markdownFormat.ts';
 
 export interface MediaSources {
 	image?: JRResourceURL;
@@ -20,8 +22,8 @@ export class TextRange<Role extends TextRole, Origin extends TextOrigin>
 		yield* this.chunks;
 	}
 
-	get formatted() {
-		return FormattedTextStub;
+	get formatted(): MarkdownNode[] {
+		return format(this.chunks);
 	}
 
 	get asString(): string {

@@ -6,8 +6,8 @@ import InputDate from '@/components/form-elements/input/InputDate.vue';
 import InputDecimal from '@/components/form-elements/input/InputDecimal.vue';
 import InputInt from '@/components/form-elements/input/InputInt.vue';
 import InputNumbersAppearance from '@/components/form-elements/input/InputNumbersAppearance.vue';
-import type { AnyInputNode } from '@getodk/xforms-engine';
 import InputText from '@/components/form-elements/input/InputText.vue';
+import type { AnyInputNode } from '@getodk/xforms-engine';
 
 interface InputControlProps {
 	readonly node: AnyInputNode;
@@ -39,7 +39,7 @@ defineProps<InputControlProps>();
 			<InputText :node="node" />
 		</template>
 	</div>
-	<ValidationMessage :message="node.validationState.violation?.message.asString" />
+	<ValidationMessage :message="node.validationState.violation?.message.formatted" />
 </template>
 
 <style scoped lang="scss">

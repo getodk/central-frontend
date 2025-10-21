@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ControlText from '@/components/form-elements/ControlText.vue';
-import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
+import ValidationMessage from '@/components/common/ValidationMessage.vue';
+import ControlText from '@/components/form-elements/ControlText.vue';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
@@ -113,7 +113,7 @@ watchEffect(() => {
 	/>
 
 	<ValidationMessage
-		:message="question.validationState.violation?.message.asString"
+		:message="question.validationState.violation?.message.formatted"
 	/>
 </template>
 

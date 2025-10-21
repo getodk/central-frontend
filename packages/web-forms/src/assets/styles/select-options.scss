@@ -11,6 +11,7 @@
 	cursor: pointer;
 	background: var(--odk-base-background-color);
 	overflow: hidden;
+	font-weight: 400;
 
 	&:has(.p-checkbox-input:hover),
 	&:has(.p-checkbox-input:focus-visible),
@@ -49,7 +50,7 @@
 	}
 
 	:deep(.text-content) {
-		max-width: calc(100% - 40px);
+		width: calc(100% - 40px);
 		word-break: break-word;
 	}
 

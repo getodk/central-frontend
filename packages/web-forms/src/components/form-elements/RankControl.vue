@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import ControlText from '@/components/form-elements/ControlText.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
+import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
+import ControlText from '@/components/form-elements/ControlText.vue';
 import type { TimerID } from '@getodk/common/types/timers.ts';
 import type { RankNode } from '@getodk/xforms-engine';
 import type { Ref } from 'vue';
@@ -144,7 +145,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 			>
 				<div class="rank-label">
 					<IconSVG name="mdiDragVertical" />
-					<span>{{ props.question.getValueLabel(value)?.asString }}</span>
+					<MarkdownBlock v-for="(elem, j) in props.question.getValueLabel(value)?.formatted" :key="j" :elem="elem" />
 				</div>
 
 				<div class="rank-buttons">
@@ -170,7 +171,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 		</VueDraggable>
 	</div>
 
-	<ValidationMessage :message="question.validationState.violation?.message.asString" />
+	<ValidationMessage :message="question.validationState.violation?.message.formatted" />
 </template>
 
 <style scoped lang="scss">

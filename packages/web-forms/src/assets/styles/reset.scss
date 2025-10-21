@@ -34,14 +34,25 @@ strong {
 	line-height: 1.15;
 }
 
-p,
 span,
 label {
-	font-weight: normal;
+	font-weight: inherit;
 }
 
 label {
 	margin: 0 !important;
+}
+
+label,
+.hint {
+	p {
+		margin: 0;
+		margin-bottom: 1rem;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
 }
 
 code,
