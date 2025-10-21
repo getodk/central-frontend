@@ -12,7 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div v-show="featureCount !== 0" ref="el" class="geojson-map">
     <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown"></div>
-    <span v-show="shown" class="count">{{ countMessage }}</span>
+    <div v-show="shown">
+      <span class="count">{{ countMessage }}</span>
+      <div class="control-bar">
+        <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button"
+          @click="fitViewToAllFeatures()">
+          <!-- eslint-disable-next-line vuejs-accessibility/alt-text -->
+          <img class="fit-icon" :src="FitIcon">
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,6 +45,8 @@ import { comparator, equals } from 'ramda';
 import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
+
 import useEventListener from '../composables/event-listener';
 import { getClusterSizeStyles, getSelectedStyles, getUnselectedStyles } from '../util/map-styles';
 import { noop } from '../util/util';
@@ -58,6 +69,9 @@ const log = debug ? console.log.bind(console) : noop;
 
 const { t, n } = useI18n();
 const { buildMode } = inject('container');
+
+// Constants
+const animationDuration = 1000;
 
 const el = useTemplateRef('el');
 const mapContainer = useTemplateRef('mapContainer');
@@ -196,6 +210,11 @@ const fitView = (extent, options = undefined) => {
   });
 };
 
+const fitViewToAllFeatures = (animate = true) => {
+  // Used by map initial view and control button to reset the view to show all features
+  fitView(featureSource.getExtent(), animate ? { duration: animationDuration } : null);
+};
+
 const forEachFeatureInView = (callback) => {
   const extent = mapInstance.getView().calculateExtent();
   return clusterSource.forEachFeatureIntersectingExtent(extent, callback);
@@ -261,7 +280,7 @@ const show = async () => {
   if (mapInstance.getSize().find(length => length === 0)) return;
 
   emit('show');
-  fitView(featureSource.getExtent());
+  fitViewToAllFeatures(false);
 
   // Set abortShow.
   const abortController = new AbortController();
@@ -336,7 +355,6 @@ const selectCluster = (cluster) => {
   selectFeature(null);
 
   const features = cluster.get('features');
-  const duration = 1000;
   // If there aren't too many features in the cluster, calculate their boundary
   // box and fit the view to that. If there are enough features that such a
   // calculation might be onerous, just zoom in on the cluster.
@@ -344,13 +362,13 @@ const selectCluster = (cluster) => {
     const extent = createEmpty();
     for (const feature of features)
       extend(extent, feature.getGeometry().getExtent());
-    fitView(extent, { duration });
+    fitView(extent, { duration: animationDuration });
   } else {
     const view = mapInstance.getView();
     view.animate({
       center: cluster.getGeometry().getCoordinates(),
       zoom: view.getZoom() + 1,
-      duration
+      duration: animationDuration
     });
   }
 };
@@ -501,13 +519,14 @@ $background-color: #fff;
 $radius: 6px;
 $border-color: #cbd5e1;
 $muted-background-color: #F1F5F9;
-$z-index: 1;
 
 .geojson-map {
   position: relative;
 
   .map-container {
     min-height: 400px;
+    border: 1px solid $border-color;
+    border-radius: $radius;
 
     opacity: 0;
     &.opaque { opacity: 1; }
@@ -563,6 +582,34 @@ $z-index: 1;
       }
     }
   }
+
+  .control-bar {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: $spacing;
+    right: $spacing;
+    z-index: 1;
+    gap: 4px;
+
+    button {
+      background: $background-color;
+      padding: 8px;
+      border-radius: $radius;
+      border: 1px solid $border-color;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+
+      &:hover {
+        background: $muted-background-color;
+      }
+
+      .fit-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
 }
 </style>
 
@@ -570,7 +617,9 @@ $z-index: 1;
 {
   "en": {
     // {count} and {total} are both numbers.
-    "showing": "Showing {count} of {total}"
+    "showing": "Showing {count} of {total}",
+    // Shown above control button on map to zoom out to show all features
+    "zoomToFit": "Zoom to fit all data"
   }
 }
 </i18n>

@@ -3704,6 +3704,10 @@
       "showing": {
         "string": "Showing {count} of {total}",
         "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "Zoom to fit all data",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
       }
     },
     "Home": {
