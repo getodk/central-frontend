@@ -68,6 +68,9 @@ const log = debug ? console.log.bind(console) : noop;
 const { t, n } = useI18n();
 const { buildMode } = inject('container');
 
+// Constants
+const animationDuration = 1000;
+
 const el = useTemplateRef('el');
 const mapContainer = useTemplateRef('mapContainer');
 
@@ -96,11 +99,6 @@ const mapInstance = new Map({
   controls: [new Zoom()]
 });
 
-
-////////////////////////////////////////////////////////////////////////////////
-// CONSTANTS
-
-const animationDuration = 1000;
 
 
 ////////////////////////////////////////////////////////////////////////////////
