@@ -475,13 +475,12 @@ onBeforeUnmount(() => {
   resizeObserver.disconnect();
   mapInstance.setTarget(null);
 
-  // It might not be necessary to manually dispose of layers in this way. It's
+  // It's probably not necessary to manually clean up layers in this way. It's
   // just an attempt to make sure that everything is garbage-collected.
   featureSource.clear(true);
-  for (const layer of mapInstance.getLayers().getArray()) {
+  for (const layer of [...mapInstance.getLayers().getArray()]) {
     mapInstance.removeLayer(layer);
     layer.setSource(null);
-    layer.dispose();
   }
 });
 
