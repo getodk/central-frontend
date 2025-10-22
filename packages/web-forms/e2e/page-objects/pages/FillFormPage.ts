@@ -3,6 +3,7 @@ import { GeopointControl } from '../controls/GeopointControl.js';
 import { InputControl } from '../controls/InputControl.js';
 import { MapControl } from '../controls/MapControl.js';
 import { RepeatControl } from '../controls/RepeatControl.js';
+import { SelectControl } from '../controls/SelectControl.js';
 import { TextControl } from '../controls/TextControl.js';
 
 export class FillFormPage {
@@ -13,6 +14,7 @@ export class FillFormPage {
 	public readonly map: MapControl;
 	public readonly repeat: RepeatControl;
 	public readonly text: TextControl;
+	public readonly select: SelectControl;
 
 	constructor(page: Page) {
 		this.page = page;
@@ -22,6 +24,7 @@ export class FillFormPage {
 		this.map = new MapControl(page);
 		this.repeat = new RepeatControl(page);
 		this.text = new TextControl(page);
+		this.select = new SelectControl(page);
 	}
 
 	async copyToClipboard(valueToCopy: string) {

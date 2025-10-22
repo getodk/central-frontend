@@ -90,7 +90,7 @@
         <hint>Type **your name** below</hint>
       </input>
       <input ref="/data/group/userentered">
-        <label>*You said:&lt;span style="color:red;font-family:cursive"&gt;<output value="/data/group/dropdown" />&lt;/span&gt;* but should it be markeddown?</label>
+        <label>*You said:&lt;span style="color:red;font-family:cursive"&gt;<output value="/data/group/name" />&lt;/span&gt;* but should it be markeddown?</label>
       </input>
       <input ref="/data/group/translated">
         <label ref="jr:itext('q1:label')" />
@@ -110,7 +110,7 @@
         </repeat>
       </group>
       <select1 ref="/data/group/selected">
-        <label>Select options</label>
+        <label>Select options full</label>
         <itemset nodeset="instance('selectoptions')/root/item">
           <value ref="value" />
           <label ref="label" />
