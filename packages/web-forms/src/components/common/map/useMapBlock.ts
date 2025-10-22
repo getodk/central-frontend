@@ -61,6 +61,15 @@ export function useMapBlock() {
 	});
 
 	const initializeMap = (mapContainer: HTMLElement, geoJSON: FeatureCollection): void => {
+		if (!isWebGLAvailable()) {
+			currentState.value = STATES.ERROR;
+			errorMessage.value = {
+				title: 'Graphics issue detected',
+				message: 'Your browser cannot display the map now. Enable graphics acceleration settings.',
+			};
+			return;
+		}
+
 		if (mapInstance) {
 			return;
 		}
@@ -81,6 +90,15 @@ export function useMapBlock() {
 
 		currentState.value = STATES.READY;
 		loadGeometries(geoJSON);
+	};
+
+	const isWebGLAvailable = () => {
+		try {
+			const canvas = document.createElement('canvas');
+			return !!(window.WebGLRenderingContext && canvas.getContext('webgl'));
+		} catch {
+			return false;
+		}
 	};
 
 	const setCursorPointer = (event: MapBrowserEvent) => {
