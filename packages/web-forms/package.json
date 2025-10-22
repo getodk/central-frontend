@@ -1,6 +1,6 @@
 {
   "name": "@getodk/web-forms",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "license": "Apache-2.0",
   "description": "ODK Web Forms",
   "author": "getodk",
@@ -55,7 +55,7 @@
     "@faker-js/faker": "^9.9.0",
     "@fontsource/hanken-grotesk": "^5.2.6",
     "@fontsource/roboto": "^5.2.6",
-    "@getodk/xforms-engine": "0.13.0",
+    "@getodk/xforms-engine": "0.14.0",
     "@playwright/test": "^1.53.2",
     "@primeuix/themes": "1.0.3",
     "@types/ramda": "^0.30.2",

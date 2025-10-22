@@ -1,5 +1,20 @@
 # @getodk/web-forms
 
+## 0.16.0
+
+### Minor Changes
+
+- 36b977f: Support select one from map
+- ca8dc64: Refactor Group types so groups without a ref attribute are displayed
+- d210211: Added support for markdown formatting in labels, hints, and constraints
+
+### Patch Changes
+
+- c7ed41b: Fix validation for the map's "zoom to features" action.
+- 45a3d16: Adds map tile attribution
+- daef669: Throw an error when jr:choice_name is called with a reference that does not exist
+- 9a51706: Display an error on the map if graphics are disabled
+
 ## 0.15.0
 
 ### Minor Changes

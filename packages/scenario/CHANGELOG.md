@@ -1,5 +1,16 @@
 # @getodk/scenario
 
+## 0.9.0
+
+### Minor Changes
+
+- d210211: Added support for markdown formatting in labels, hints, and constraints
+
+### Patch Changes
+
+- 36b977f: Support select one from map
+- daef669: Throw an error when jr:choice_name is called with a reference that does not exist
+
 ## 0.8.0
 
 ### Minor Changes

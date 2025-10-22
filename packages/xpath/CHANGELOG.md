@@ -1,5 +1,14 @@
 # @getodk/xpath
 
+## 0.8.1
+
+### Patch Changes
+
+- daef669: Throw an error when jr:choice_name is called with a reference that does not exist
+- Updated dependencies [36b977f]
+- Updated dependencies [d210211]
+  - @getodk/common@0.9.0
+
 ## 0.8.0
 
 ### Minor Changes

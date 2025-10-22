@@ -1,5 +1,13 @@
 # @getodk/xforms-engine
 
+## 0.14.0
+
+### Minor Changes
+
+- 36b977f: Support select one from map
+- ca8dc64: Refactor Group types so groups without a ref attribute are displayed
+- d210211: Added support for markdown formatting in labels, hints, and constraints
+
 ## 0.13.0
 
 ### Minor Changes
