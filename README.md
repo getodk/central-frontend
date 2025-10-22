@@ -60,6 +60,6 @@ If you run `npm run dev`, open ODK Central Frontend in a browser, then update th
 
 To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`.
 
-Note that this repository's `main.nginx.conf` is for development only.
+Note that the nginx configuration files in `./nginx-conf` are for development only.
 
 For more information on deploying to production, see the [`central`](https://github.com/getodk/central) repository.
