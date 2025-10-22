@@ -331,7 +331,7 @@ const hitDetectionOptions = {
 
 // Updates the cursor based on whether the user is moving over a feature.
 const moveOverFeature = (event) => {
-  if (!shown.value || event.dragging) return;
+  if (event.dragging) return;
   const hit = mapInstance.hasFeatureAtPixel(event.pixel, hitDetectionOptions);
   mapContainer.value.style.cursor = hit ? 'pointer' : '';
 };
