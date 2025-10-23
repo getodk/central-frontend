@@ -11,116 +11,80 @@ except according to the terms contained in the LICENSE file.
 */
 import mapLocationIcon from '../assets/images/geojson-map/map-location.svg';
 
-const DEFAULT_POINT_STYLE = {
-  'icon-src': mapLocationIcon,
-  'icon-width': 40,
-  'icon-height': 40,
-};
+// Filters
+const not = (x) => ['!', x];
+const eq = (x, y) => ['==', x, y];
+const ne = (x, y) => ['!=', x, y];
+const all = (...xs) => ['all', ...xs];
+const geometryType = (...types) => ['in', ['geometry-type'], ['literal', types]];
+const isCluster = ['has', 'clusterSize'];
+const getId = ['get', 'id'];
+const selectedId = ['var', 'selectedId'];
 
-const DEFAULT_LINE_STYLE = {
-  'stroke-width': 6,
-  'stroke-color': '#3E9FCC',
-};
+// A lighter version of $color-accent-primary (magenta)
+const lightColor = 'rgba(222, 142, 183, 0.6)';
 
-const DEFAULT_POLYGON_STYLE = {
-  'fill-color': 'rgba(233, 248, 255, 0.8)',
-  'stroke-width': 6,
-  'stroke-color': '#3E9FCC',
-};
-
-const SCALE_POINT_STYLE = {
-  'icon-src': mapLocationIcon,
-  'icon-width': 50,
-  'icon-height': 50,
-};
-
-const SCALE_LINE_STYLE = {
-  'stroke-width': 10,
-  'stroke-color': '#3E9FCC',
-};
-
-const SCALE_POLYGON_STYLE = {
-  'stroke-width': 10,
-};
-
-const GLOW_POINT_STYLE = {
+// Styles
+const circleStyle = {
   'circle-radius': 30,
-  'circle-fill-color': 'rgba(148, 224, 237, 0.7)',
-  'circle-displacement': [0, 0],
+  'circle-fill-color': lightColor,
+  'circle-displacement': [0, 0]
+};
+const styleIcon = (length) => ({
+  'icon-src': mapLocationIcon,
+  'icon-width': length,
+  'icon-height': length
+});
+const styleStroke = (width, color, fillColor = undefined) => {
+  const result = { 'stroke-width': width, 'stroke-color': color };
+  if (fillColor) result['fill-color'] = fillColor;
+  return result;
 };
 
-const GLOW_LINE_STYLE = {
-  'stroke-width': 20,
-  'stroke-color': 'rgba(148, 224, 237, 0.7)',
-};
+export const getStyles = () => [
+  // Unselected Point
+  {
+    filter: all(geometryType('Point'), not(isCluster), ne(getId, selectedId)),
+    style: styleIcon(40)
+  },
+  // Selected Point
+  {
+    filter: all(geometryType('Point'), eq(getId, selectedId)),
+    style: [circleStyle, styleIcon(50)]
+  },
 
-const GLOW_POLYGON_STYLE = {
-  'stroke-width': 20,
-  'stroke-color': 'rgba(148, 224, 237, 0.7)',
-  'fill-color': 'transparent',
-};
+  // Selected LineString or Polygon
+  {
+    filter: all(geometryType('LineString', 'Polygon'), eq(getId, selectedId)),
+    style: styleStroke(20, lightColor, 'transparent')
+  },
+  // Increase the clickable area of an unselected LineString.
+  {
+    filter: all(geometryType('LineString'), ne(getId, selectedId)),
+    style: styleStroke(20, 'rgba(255, 255, 255, 0.1)')
+  },
+  // Any LineString or Polygon
+  {
+    filter: geometryType('LineString', 'Polygon'),
+    style: styleStroke(3, '#b9005c', 'rgba(185, 0, 92, 0.2)')
+  },
 
-export const getUnselectedStyles = () => {
-  const makeFilter = (type) => [
-    'all',
-    ['!', ['has', 'clusterSize']],
-    ['match', ['geometry-type'], type, true, false],
-    ['!=', ['get', 'id'], ['var', 'selectedId']],
-  ];
+  // Cluster Point
+  {
+    filter: isCluster,
+    style: circleStyle
+  }
+];
 
-  return [
-    {
-      filter: ['has', 'clusterSize'],
-      style: GLOW_POINT_STYLE,
-    },
-    {
-      filter: makeFilter('Point'),
-      style: DEFAULT_POINT_STYLE,
-    },
-    {
-      filter: makeFilter('LineString'),
-      style: DEFAULT_LINE_STYLE,
-    },
-    {
-      filter: makeFilter('Polygon'),
-      style: DEFAULT_POLYGON_STYLE,
-    },
-  ];
-};
-
-export const getSelectedStyles = () => {
-  const makeFilter = (type) => [
-    'all',
-    ['!', ['has', 'clusterSize']],
-    ['match', ['geometry-type'], type, true, false],
-    ['==', ['get', 'id'], ['var', 'selectedId']],
-  ];
-
-  return [
-    {
-      filter: makeFilter('Point'),
-      style: [GLOW_POINT_STYLE, DEFAULT_POINT_STYLE, SCALE_POINT_STYLE],
-    },
-    {
-      filter: makeFilter('LineString'),
-      style: [GLOW_LINE_STYLE, DEFAULT_LINE_STYLE, SCALE_LINE_STYLE],
-    },
-    {
-      filter: makeFilter('Polygon'),
-      style: [GLOW_POLYGON_STYLE, DEFAULT_POLYGON_STYLE, SCALE_POLYGON_STYLE],
-    },
-  ];
-};
-
-export const getClusterSizeStyles = () => {
+export const getTextStyles = () => {
   const style = getComputedStyle(document.body);
   return [
     {
-      filter: ['has', 'clusterSize'],
+      filter: isCluster,
       style: {
         'text-value': ['get', 'clusterSize'],
         'text-font': `500 ${style.fontSize} ${style.fontFamily}`,
-        'text-fill-color': style.color,
+        'text-fill-color': '#333',
       },
     },
   ];

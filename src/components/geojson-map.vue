@@ -48,7 +48,7 @@ import { useI18n } from 'vue-i18n';
 import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
 
 import useEventListener from '../composables/event-listener';
-import { getClusterSizeStyles, getSelectedStyles, getUnselectedStyles } from '../util/map-styles';
+import { getStyles, getTextStyles } from '../util/map-styles';
 import { noop } from '../util/util';
 import { px } from '../util/dom';
 
@@ -89,7 +89,7 @@ const featureSource = new VectorSource();
 const featureLayer = buildMode !== 'test'
   ? new WebGLVectorLayer({
     source: featureSource,
-    style: [...getUnselectedStyles(), ...getSelectedStyles()],
+    style: getStyles(),
     variables: { selectedId: '' }
   })
   // VectorLayer doesn't support the same options as WebGLVectorLayer.
@@ -133,7 +133,7 @@ featureLayer.setSource(clusterSource);
 // separate layer.
 mapInstance.addLayer(new VectorLayer({
   source: clusterSource,
-  style: getClusterSizeStyles()
+  style: getTextStyles()
 }));
 
 const isCluster = (feature) => feature.get('clusterSize') != null;
