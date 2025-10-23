@@ -62,7 +62,7 @@ export const getStyles = () => [
   },
   {
     filter: geometryType('LineString', 'Polygon'),
-    style: styleStroke(3, '#b9005e', 'rgba(185, 0, 94, 0.2)')
+    style: styleStroke(3, '#b9005c', 'rgba(185, 0, 92, 0.2)')
   },
 
   // Cluster points
