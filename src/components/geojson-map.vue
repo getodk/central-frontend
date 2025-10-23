@@ -374,7 +374,7 @@ const forEachFeatureNearPixel = (pixel, radius, callback) => {
   });
 };
 
-const overlapRadius = clusterSource.getDistance().value / 2;
+const overlapRadius = clusterSource.getDistance() / 2;
 
 const getHits = (pixel) => {
   const hits = mapInstance.getFeaturesAtPixel(pixel, hitDetectionOptions);
