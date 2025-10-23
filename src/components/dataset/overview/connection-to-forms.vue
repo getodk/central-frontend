@@ -16,15 +16,20 @@ except according to the terms contained in the LICENSE file.
     <div class="div">
       <expandable-row v-for="form in propertiesByForm" :key="form.xmlFormId">
         <template #title>
-          <div class="form-name">
-            <form-link :form="form"
-              :to="publishedFormPath(form.projectId, form.xmlFormId)"
-              v-tooltip.text/>
+          <div class="form-name-and-tags">
+            <span class="form-name">
+              <form-link :form="form"
+                :to="publishedFormPath(form.projectId, form.xmlFormId)"
+                v-tooltip.text/>
+            </span>
             <span v-if="form.repeatPath" class="repeat-tag"
               v-tooltip.no-aria="form.repeatPath">
               <span class="icon-refresh"></span>
-              <!-- Path includes leading and trailing slashes e.g. /plot/tree/ -->
-              {{ form.repeatPath.slice(0, -1).split('/').pop() }}</span>
+              <span class="repeat-path">
+                <!-- Path includes leading and trailing slashes e.g. /plot/tree/ -->
+                {{ form.repeatPath.slice(0, -1).split('/').pop() }}
+              </span>
+            </span>
           </div>
         </template>
         <template #caption>
@@ -102,11 +107,20 @@ export default {
   .expandable-row-title {
     max-width: calc(100% - 180px);
 
-    .form-name {
+    .form-name-and-tags {
+      display: flex;
+    }
+
+    .form-name{
       @include text-overflow-ellipsis;
+
+      // Shrink name to fit so there is room for tag right next to it
+      flex-shrink: .5;
     }
 
     .repeat-tag {
+      @include text-overflow-ellipsis;
+
       // CSS
       border-radius: 100px;
       background: #D0E7F1;
@@ -115,12 +129,23 @@ export default {
       // Layout
       display: inline-flex;
       height: 24px;
-      min-width: 22px;
+      min-width: 42px;
       margin-left: 8px;
       padding: 4px 8px;
       justify-content: center;
       align-items: center;
       gap: 4px;
+
+      // Shrink tag
+      flex-shrink: 1;
+
+      .icon-refresh{
+        flex-shrink: 0;
+      };
+
+      .repeat-path {
+         @include text-overflow-ellipsis;
+      }
     }
   }
 
