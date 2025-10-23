@@ -22,7 +22,7 @@ const getId = ['get', 'id'];
 const featureVar = ['var', 'selectedId'];
 
 // Styles
-const lightColor = 'rgba(222, 142, 183, 0.60)';
+const lightColor = 'rgba(222, 142, 183, 0.6)';
 const circleStyle = {
   'circle-radius': 30,
   'circle-fill-color': lightColor,
