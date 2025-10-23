@@ -147,7 +147,7 @@ mapInstance.addLayer(clusterSizeLayer);
 const maxZoom = 19;
 // Only show clusters when the zoom level is below maxZoom. Subtracting 0.001
 // because the maxZoom option here is inclusive.
-clusterLayer.setMaxZoom(maxZoom.value - 0.001);
+clusterLayer.setMaxZoom(maxZoom - 0.001);
 clusterSizeLayer.setMaxZoom(clusterLayer.getMaxZoom());
 // Only show featureLayer once clusters are no longer shown.
 featureLayer.setMinZoom(clusterLayer.getMaxZoom());
@@ -221,7 +221,7 @@ const fitView = (extent, options = undefined) => {
     // We need to provide enough space for styled features.
     padding: [50, 50, 50, 50],
     // Avoid zooming in to an extreme degree.
-    maxZoom: 16,
+    maxZoom,
     ...options
   });
 };
