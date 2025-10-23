@@ -450,7 +450,9 @@ const selectCluster = (cluster) => {
 
 const selectFeatureAtPixel = (pixel) => {
   const hits = getHits(pixel);
-  emit('hit', isCluster(hits[0]) ? [] : hits.map(featureToObject));
+  emit('hit', hits.length === 0 || isCluster(hits[0])
+    ? []
+    : hits.map(featureToObject));
 
   if (hits.length === 1) {
     const hit = hits[0];
