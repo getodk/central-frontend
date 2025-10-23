@@ -87,22 +87,22 @@ const clustersDisabledMessage = computed(() => (props.zoom >= maxZoom.value
 
   > :first-child {
     display: flex;
+    justify-content: space-between;
     column-gap: 15px;
   }
 
   a {
     color: #888;
-    margin-left: auto;
 
     span {
       @include text-link;
-
       &:first-child { margin-right: 0; }
     }
   }
 
-  form {
-    margin-top: 10px;
+  form { margin-top: 10px; }
+
+  form, fieldset {
     > :last-child { margin-bottom: 0; }
   }
 
