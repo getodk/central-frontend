@@ -165,8 +165,12 @@ const backToOverlap = () => {
 
 const afterDelete = (instanceId) => {
   map.value.removeFeature(instanceId);
-  if (overlap.value != null)
-    overlap.value = overlap.value.filter(feature => feature.id !== instanceId);
+  if (overlap.value != null) {
+    overlap.value = overlap.value.length > 1
+      ? overlap.value.filter(feature => feature.id !== instanceId)
+      : null;
+  }
+
   odata.value.length -= 1;
 };
 
