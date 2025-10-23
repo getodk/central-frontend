@@ -18,6 +18,7 @@ const ne = (x, y) => ['!=', x, y];
 const all = (...xs) => ['all', ...xs];
 const geometryType = (...types) => ['in', ['geometry-type'], ['literal', types]];
 const isCluster = ['has', 'clusterSize'];
+const isOverlapHint = ['has', 'overlapHint'];
 const getId = ['get', 'id'];
 const selectedId = ['var', 'selectedId'];
 
@@ -25,11 +26,11 @@ const selectedId = ['var', 'selectedId'];
 const lightColor = 'rgba(222, 142, 183, 0.6)';
 
 // Styles
-const circleStyle = {
-  'circle-radius': 30,
+const styleCircle = (radius) => ({
+  'circle-radius': radius,
   'circle-fill-color': lightColor,
   'circle-displacement': [0, 0]
-};
+});
 const styleIcon = (length) => ({
   'icon-src': mapLocationIcon,
   'icon-width': length,
@@ -44,13 +45,13 @@ const styleStroke = (width, color, fillColor = undefined) => {
 export const getStyles = () => [
   // Unselected Point
   {
-    filter: all(geometryType('Point'), not(isCluster), ne(getId, selectedId)),
+    filter: all(geometryType('Point'), not(isCluster), not(isOverlapHint), ne(getId, selectedId)),
     style: styleIcon(40)
   },
   // Selected Point
   {
     filter: all(geometryType('Point'), eq(getId, selectedId)),
-    style: [circleStyle, styleIcon(50)]
+    style: [styleCircle(30), styleIcon(50)]
   },
 
   // Selected LineString or Polygon
@@ -72,7 +73,12 @@ export const getStyles = () => [
   // Cluster Point
   {
     filter: isCluster,
-    style: circleStyle
+    style: styleCircle(30)
+  },
+  // Overlap hint
+  {
+    filter: isOverlapHint,
+    style: styleCircle(20)
   }
 ];
 

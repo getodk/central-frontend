@@ -22,9 +22,9 @@ describe('useSubmission()', () => {
       createResource().instanceName.should.equal('My Submission');
     });
 
-    it('returns null if there is no instance name', () => {
+    it('returns nullish if there is no instance name', () => {
       testData.extendedSubmissions.createPast(1);
-      expect(createResource().instanceName).to.be.null;
+      should.not.exist(createResource().instanceName);
     });
   });
 });

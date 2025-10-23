@@ -21,6 +21,11 @@ except according to the terms contained in the LICENSE file.
           <img class="fit-icon" :src="FitIcon">
         </button>
       </div>
+      <GeojsonMapDevTools v-if="config.devTools" v-model:max-zoom="maxZoom"
+        v-model:cluster="showsClusters"
+        v-model:cluster-distance="clusterDistance"
+        v-model:cluster-min-distance="clusterMinDistance"
+        v-model:overlap-hint="showsOverlapHints" :zoom="zoomLevel"/>
     </div>
   </div>
 </template>
@@ -46,6 +51,7 @@ import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watc
 import { useI18n } from 'vue-i18n';
 
 import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
+import GeojsonMapDevTools from './geojson-map/dev-tools.vue';
 
 import useEventListener from '../composables/event-listener';
 import { getStyles, getTextStyles } from '../util/map-styles';
@@ -62,13 +68,11 @@ const props = defineProps({
 });
 const emit = defineEmits(['show', 'shown', 'hit', 'selection-changed']);
 
-// Set to `true` for logging.
-const debug = false;
-// eslint-disable-next-line no-console
-const log = debug ? console.log.bind(console) : noop;
-
 const { t, n } = useI18n();
-const { buildMode } = inject('container');
+const { config, buildMode } = inject('container');
+
+// eslint-disable-next-line no-console
+const log = config.devTools ? console.log.bind(console) : noop;
 
 // Constants
 const animationDuration = 1000;
@@ -112,8 +116,6 @@ const mapInstance = new Map({
 
 const clusterSource = new Cluster({
   source: featureSource,
-  distance: 40,
-  minDistance: 10,
   geometryFunction: (feature) => {
     const geometry = feature.getGeometry();
     switch (geometry.getType()) {
@@ -131,6 +133,20 @@ const clusterSource = new Cluster({
       clusterSize: n(features.length, 'default')
     }))
 });
+
+const clusterDistance = ref(40);
+const clusterMinDistance = ref(10);
+watch(
+  clusterDistance,
+  (value) => { clusterSource.setDistance(value); },
+  { immediate: true }
+);
+watch(
+  clusterMinDistance,
+  (value) => { clusterSource.setMinDistance(value); },
+  { immediate: true }
+);
+
 const clusterLayer = createWebGLLayer(clusterSource);
 mapInstance.addLayer(clusterLayer);
 
@@ -142,15 +158,23 @@ const clusterSizeLayer = new VectorLayer({
 });
 mapInstance.addLayer(clusterSizeLayer);
 
+const showsClusters = ref(true);
 // Many base layers offer tiles up to a zoom level of 18 or 19. Beyond that, the
 // tiles can get blurry.
-const maxZoom = 19;
-// Only show clusters when the zoom level is below maxZoom. Subtracting 0.001
-// because the maxZoom option here is inclusive.
-clusterLayer.setMaxZoom(maxZoom - 0.001);
-clusterSizeLayer.setMaxZoom(clusterLayer.getMaxZoom());
-// Only show featureLayer once clusters are no longer shown.
-featureLayer.setMinZoom(clusterLayer.getMaxZoom());
+const maxZoom = ref(19);
+watch(
+  [showsClusters, maxZoom],
+  () => {
+    // Only show clusters when the zoom level is below maxZoom. Subtracting
+    // 0.001 because the maxZoom option here is inclusive.
+    clusterLayer.setMaxZoom(showsClusters.value ? maxZoom.value - 0.001 : -1);
+    clusterSizeLayer.setMaxZoom(clusterLayer.getMaxZoom());
+
+    // Only show featureLayer once clusters are no longer shown.
+    featureLayer.setMinZoom(clusterLayer.getMaxZoom());
+  },
+  { immediate: true }
+);
 
 const isCluster = (feature) => feature.get('clusterSize') != null;
 
@@ -221,7 +245,7 @@ const fitView = (extent, options = undefined) => {
     // We need to provide enough space for styled features.
     padding: [50, 50, 50, 50],
     // Avoid zooming in to an extreme degree.
-    maxZoom,
+    maxZoom: maxZoom.value,
     ...options
   });
 };
@@ -251,6 +275,8 @@ const countFeaturesInView = () => {
 };
 const countMessage = computed(() =>
   t('showing', { count: n(inViewCount.value), total: n(featureCount.value) }));
+
+const zoomLevel = ref(0);
 
 
 
@@ -339,6 +365,35 @@ const hide = () => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// OVERLAP HINTS
+
+// getHits() below searches a radius for overlapping features. If
+// showsOverlapHints.value is `true`, then the radius will be shown on the map
+// as a helpful hint.
+const showsOverlapHints = ref(false);
+const overlapHintSource = new VectorSource();
+
+const showOverlapHint = (pixel) => {
+  if (!showsOverlapHints.value) return;
+  overlapHintSource.addFeature(new Feature({
+    geometry: new Point(mapInstance.getCoordinateFromPixel(pixel)),
+    overlapHint: true
+  }));
+};
+const hideOverlapHint = () => { overlapHintSource.clear(true); };
+
+if (config.devTools) {
+  const overlapHintLayer = createWebGLLayer(overlapHintSource);
+  mapInstance.addLayer(overlapHintLayer);
+  watch(showsOverlapHints, (value) => {
+    hideOverlapHint();
+    overlapHintLayer.setVisible(value);
+  });
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // HIT DETECTION
 
 const hitDetectionOptions = {
@@ -374,9 +429,14 @@ const forEachFeatureNearPixel = (source, pixel, radius, callback) => {
   });
 };
 
-const overlapRadius = clusterSource.getDistance() / 2;
+// overlapRadius is the radius within which to seach for overlap. It isn't
+// dynamic (it isn't a computed ref), because it is also hard-coded in
+// getStyles().
+const overlapRadius = clusterDistance.value / 2;
 
 const getHits = (pixel) => {
+  hideOverlapHint();
+
   const hits = mapInstance.getFeaturesAtPixel(pixel, hitDetectionOptions);
   if (hits.length === 0) return hits;
 
@@ -394,6 +454,7 @@ const getHits = (pixel) => {
   forEachFeatureNearPixel(source, pixel, overlapRadius, (feature) => {
     if (!(isCluster(feature) || ids.has(feature.getId()))) hits.push(feature);
   });
+  showOverlapHint(pixel);
 
   return hits;
 };
@@ -416,6 +477,11 @@ const selectFeature = (feature, emitChange = true) => {
   const id = feature?.getId();
   if (id === selectedId) return;
 
+  if (feature != null && feature.getGeometry().getType() === 'Point')
+    // The overlap hint is a circle just like the background of a selected
+    // point, so we hide it.
+    hideOverlapHint();
+
   mapInstance.getLayers().forEach(layer => {
     if (layer instanceof WebGLVectorLayer)
       layer.updateStyleVariables({ selectedId: id ?? '' });
@@ -427,7 +493,6 @@ const selectFeature = (feature, emitChange = true) => {
 };
 
 const selectCluster = (cluster) => {
-  // Deselect any feature that's currently selected.
   selectFeature(null);
 
   const features = cluster.get('features');
@@ -497,6 +562,9 @@ olOn(mapInstance, 'moveend', () => {
   // show() will trigger an initial `moveend`, so we use shown.value to ignore
   // that.
   if (shown.value) countFeaturesInView();
+
+  zoomLevel.value = mapInstance.getView().getZoom();
+  hideOverlapHint();
 });
 olOn(mapInstance, 'pointermove', moveOverFeature);
 
@@ -686,6 +754,12 @@ $muted-background-color: #F1F5F9;
         height: 20px;
       }
     }
+  }
+
+  .geojson-map-dev-tools {
+    position: absolute;
+    right: #{$spacing + 72px};
+    bottom: $spacing;
   }
 }
 </style>
