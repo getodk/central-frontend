@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <map-popup v-show="features != null" ref="popup" class="map-overlap-popup"
-    icon="file" @hide="$emit('hide')">
+    @hide="$emit('hide')">
     <template #title><slot name="title"></slot></template>
     <template #body>
       <loading :state="odata.awaitingResponse"/>
