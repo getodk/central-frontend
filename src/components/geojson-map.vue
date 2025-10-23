@@ -382,8 +382,8 @@ const showOverlapHint = (pixel) => {
 };
 const hideOverlapHint = () => { overlapHintSource.clear(false); };
 
-const overlapHintLayer = config.devTools ? createWebGLLayer(overlapHintSource) : {};
 if (config.devTools) {
+  const overlapHintLayer = createWebGLLayer(overlapHintSource);
   mapInstance.addLayer(overlapHintLayer);
   watch(showsOverlapHints, (value) => {
     overlapHintLayer.setVisible(value);
