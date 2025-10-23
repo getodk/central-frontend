@@ -380,7 +380,7 @@ const showOverlapHint = (pixel) => {
     overlapHint: true
   }));
 };
-const hideOverlapHint = () => { overlapHintSource.clear(false); };
+const hideOverlapHint = () => { overlapHintSource.clear(true); };
 
 if (config.devTools) {
   const overlapHintLayer = createWebGLLayer(overlapHintSource);
