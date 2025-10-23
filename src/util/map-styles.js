@@ -19,7 +19,7 @@ const all = (...xs) => ['all', ...xs];
 const geometryType = (...types) => ['in', ['geometry-type'], ['literal', types]];
 const isCluster = ['has', 'clusterSize'];
 const getId = ['get', 'id'];
-const featureVar = ['var', 'selectedId'];
+const selectedId = ['var', 'selectedId'];
 
 // A lighter version of $color-accent-primary (magenta)
 const lightColor = 'rgba(222, 142, 183, 0.6)';
@@ -44,23 +44,23 @@ const styleStroke = (width, color, fillColor = undefined) => {
 export const getStyles = () => [
   // Unselected Point
   {
-    filter: all(geometryType('Point'), not(isCluster), ne(getId, featureVar)),
+    filter: all(geometryType('Point'), not(isCluster), ne(getId, selectedId)),
     style: styleIcon(40)
   },
   // Selected Point
   {
-    filter: all(geometryType('Point'), eq(getId, featureVar)),
+    filter: all(geometryType('Point'), eq(getId, selectedId)),
     style: [circleStyle, styleIcon(50)]
   },
 
   // Selected LineString or Polygon
   {
-    filter: all(geometryType('LineString', 'Polygon'), eq(getId, featureVar)),
+    filter: all(geometryType('LineString', 'Polygon'), eq(getId, selectedId)),
     style: styleStroke(20, lightColor, 'transparent')
   },
   // Increase the clickable area of an unselected LineString.
   {
-    filter: all(geometryType('LineString'), ne(getId, featureVar)),
+    filter: all(geometryType('LineString'), ne(getId, selectedId)),
     style: styleStroke(20, 'rgba(255, 255, 255, 0.1)')
   },
   // Any LineString or Polygon
