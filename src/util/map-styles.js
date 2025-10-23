@@ -21,8 +21,10 @@ const isCluster = ['has', 'clusterSize'];
 const getId = ['get', 'id'];
 const featureVar = ['var', 'selectedId'];
 
-// Styles
+// A lighter version of $color-accent-primary (magenta)
 const lightColor = 'rgba(222, 142, 183, 0.6)';
+
+// Styles
 const circleStyle = {
   'circle-radius': 30,
   'circle-fill-color': lightColor,
@@ -40,17 +42,18 @@ const styleStroke = (width, color, fillColor = undefined) => {
 };
 
 export const getStyles = () => [
-  // Points
+  // Unselected Point
   {
     filter: all(geometryType('Point'), not(isCluster), ne(getId, featureVar)),
     style: styleIcon(40)
   },
+  // Selected Point
   {
     filter: all(geometryType('Point'), eq(getId, featureVar)),
     style: [circleStyle, styleIcon(50)]
   },
 
-  // LineStrings and Polygons
+  // Selected LineString or Polygon
   {
     filter: all(geometryType('LineString', 'Polygon'), eq(getId, featureVar)),
     style: styleStroke(20, lightColor, 'transparent')
@@ -60,12 +63,13 @@ export const getStyles = () => [
     filter: all(geometryType('LineString'), ne(getId, featureVar)),
     style: styleStroke(20, 'rgba(255, 255, 255, 0.1)')
   },
+  // Any LineString or Polygon
   {
     filter: geometryType('LineString', 'Polygon'),
     style: styleStroke(3, '#b9005c', 'rgba(185, 0, 92, 0.2)')
   },
 
-  // Cluster points
+  // Cluster Point
   {
     filter: isCluster,
     style: circleStyle
