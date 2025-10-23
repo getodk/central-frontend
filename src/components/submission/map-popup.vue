@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-popup v-show="submission.dataExists || submission.awaitingResponse"
-    id="submission-map-popup" ref="popup" @hide="$emit('hide')">
+  <map-popup v-show="instanceId != null" id="submission-map-popup" ref="popup"
+    :back="odata != null" @hide="$emit('hide')" @back="$emit('back')">
     <template v-if="submission.dataExists" #title>
       <submission-review-state :value="submission.__system.reviewState" tooltip/>
       <span v-tooltip.text>{{ submission.instanceName ?? $t('submissionDetails') }}</span>
@@ -71,7 +71,6 @@ import SubmissionReviewState from './review-state.vue';
 
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -88,9 +87,10 @@ const props = defineProps({
   },
   instanceId: String,
   fieldpath: String,
+  odata: Object,
   awaitingResponse: Boolean
 });
-const emit = defineEmits(['hide', 'review', 'delete']);
+const emit = defineEmits(['hide', 'back', 'review', 'delete']);
 
 const { fields } = useRequestData();
 const { submission } = useSubmission();
@@ -102,7 +102,7 @@ const fetchData = () => submission.request({
     props.instanceId,
     { $wkt: true }
   )
-}).catch(noop);
+}).catch(() => { emit('hide'); });
 
 const popup = useTemplateRef('popup');
 
@@ -110,7 +110,10 @@ watch(
   () => props.instanceId,
   (instanceId) => {
     if (instanceId != null) {
-      fetchData();
+      if (props.odata == null)
+        fetchData();
+      else
+        submission.setFromResponse({ data: { value: [props.odata] } });
     } else {
       submission.reset();
       if (popup.value != null) popup.value.resetScroll();

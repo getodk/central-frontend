@@ -15,18 +15,29 @@ except according to the terms contained in the LICENSE file.
       type="submission" :filter="filter != null"/>
     <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
       @show="setShowing(true)" @shown="setShowing(false)"
-      @selection-changed="selectionChanged"/>
+      @selection-changed="selectionChanged" @hit="handleHit"/>
     <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
-      :instance-id="selection?.id" :fieldpath="selection?.properties?.fieldpath"
-      :awaiting-response="awaitingResponses.has(selection?.id)"
-      @hide="map.deselect()" @review="$emit('review', $event)"
-      @delete="$emit('delete', $event)"/>
+      v-bind="selection" :awaiting-response="awaitingResponses.has(selection?.instanceId)"
+      @hide="hidePopup" @back="backToOverlap"
+      @review="$emit('review', $event)" @delete="$emit('delete', $event)"/>
+    <div v-show="selection == null">
+      <map-overlap-popup :features="overlap" :odata-url="overlapUrl"
+        @hide="hidePopup" @preview="overlapPreview" @select="overlapSelect">
+        <template #title>
+          {{ $tcn('overlapTitle', overlap != null ? overlap.length : 0) }}
+        </template>
+        <template #feature="slotProps">
+          {{ slotProps.odata.meta?.instanceName ?? slotProps.odata.__id }}
+        </template>
+      </map-overlap-popup>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
+import MapOverlapPopup from '../map-overlap-popup.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import SubmissionMapPopup from './map-popup.vue';
 
@@ -118,11 +129,48 @@ const sizeMap = () => {
 };
 
 const selection = shallowRef(null);
-const selectionChanged = (value) => { selection.value = value; };
+const selectionChanged = (feature) => {
+  selection.value = feature != null
+    ? { instanceId: feature.id, fieldpath: feature.properties.fieldpath }
+    : null;
+};
 
 const map = useTemplateRef('map');
+
+const overlap = shallowRef(null);
+const handleHit = (hits) => { overlap.value = hits.length > 1 ? hits : null; };
+watch(() => geojson.data, () => { overlap.value = null; });
+const overlapUrl = (query) =>
+  apiPaths.odataSubmissions(props.projectId, props.xmlFormId, false, query);
+const overlapPreview = (data) => {
+  map.value.selectFeature(data != null ? data.feature.id : null, false);
+};
+const overlapSelect = (data) => {
+  const { feature } = data;
+  map.value.selectFeature(feature.id, false);
+  selection.value = {
+    instanceId: feature.id,
+    fieldpath: feature.properties.fieldpath,
+    odata: data.odata
+  };
+};
+
+const hidePopup = () => {
+  map.value.selectFeature(null);
+  overlap.value = null;
+};
+const backToOverlap = () => {
+  map.value.selectFeature(null);
+};
+
 const afterDelete = (instanceId) => {
   map.value.removeFeature(instanceId);
+  if (overlap.value != null) {
+    overlap.value = overlap.value.length > 1
+      ? overlap.value.filter(feature => feature.id !== instanceId)
+      : null;
+  }
+
   odata.value.length -= 1;
 };
 
@@ -136,3 +184,11 @@ defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
   .page-section:has(&) { margin-bottom: 15px; }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "overlapTitle": "{count} Submission in this area | {count} Submissions in this area"
+  }
+}
+</i18n>

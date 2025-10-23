@@ -39,9 +39,9 @@ import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import Zoom from 'ol/control/Zoom';
-import { createEmpty, extend, getCenter } from 'ol/extent';
+import { boundingExtent, createEmpty, extend, getCenter } from 'ol/extent';
 
-import { comparator, equals } from 'ramda';
+import { equals } from 'ramda';
 import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -60,7 +60,7 @@ const props = defineProps({
     default: noop
   }
 });
-const emit = defineEmits(['show', 'shown', 'selection-changed']);
+const emit = defineEmits(['show', 'shown', 'hit', 'selection-changed']);
 
 // Set to `true` for logging.
 const debug = false;
@@ -83,17 +83,21 @@ const mapContainer = useTemplateRef('mapContainer');
 
 const baseLayer = new TileLayer({ source: new OSM() });
 
-const featureSource = new VectorSource();
+const style = getStyles();
 // We use WebGL for performance reasons. WebGL isn't available in our current
 // testing setup, so in test, we fall back to a basic 2D canvas.
-const featureLayer = buildMode !== 'test'
-  ? new WebGLVectorLayer({
-    source: featureSource,
-    style: getStyles(),
+const createWebGLLayer = (source) => (buildMode === 'test'
+  ? new VectorLayer({ source })
+  : new WebGLVectorLayer({
+    source,
+    // It's not really useful to pass these options to VectorLayer in test.
+    // VectorLayer doesn't even support `variables`.
+    style,
     variables: { selectedId: '' }
-  })
-  // VectorLayer doesn't support the same options as WebGLVectorLayer.
-  : new VectorLayer({ source: featureSource });
+  }));
+
+const featureSource = new VectorSource();
+const featureLayer = createWebGLLayer(featureSource);
 
 const mapInstance = new Map({
   layers: [baseLayer, featureLayer],
@@ -127,14 +131,26 @@ const clusterSource = new Cluster({
       clusterSize: n(features.length, 'default')
     }))
 });
-featureLayer.setSource(clusterSource);
+const clusterLayer = createWebGLLayer(clusterSource);
+mapInstance.addLayer(clusterLayer);
 
-// WebGLVectorLayer doesn't seem to support text, so cluster sizes go in a
-// separate layer.
-mapInstance.addLayer(new VectorLayer({
+// WebGLVectorLayer doesn't seem to support text styles, so cluster sizes go in
+// a separate layer.
+const clusterSizeLayer = new VectorLayer({
   source: clusterSource,
   style: getTextStyles()
-}));
+});
+mapInstance.addLayer(clusterSizeLayer);
+
+// Many base layers offer tiles up to a zoom level of 18 or 19. Beyond that, the
+// tiles can get blurry.
+const maxZoom = 19;
+// Only show clusters when the zoom level is below maxZoom. Subtracting 0.001
+// because the maxZoom option here is inclusive.
+clusterLayer.setMaxZoom(maxZoom - 0.001);
+clusterSizeLayer.setMaxZoom(clusterLayer.getMaxZoom());
+// Only show featureLayer once clusters are no longer shown.
+featureLayer.setMinZoom(clusterLayer.getMaxZoom());
 
 const isCluster = (feature) => feature.get('clusterSize') != null;
 
@@ -205,7 +221,7 @@ const fitView = (extent, options = undefined) => {
     // We need to provide enough space for styled features.
     padding: [50, 50, 50, 50],
     // Avoid zooming in to an extreme degree.
-    maxZoom: 16,
+    maxZoom,
     ...options
   });
 };
@@ -215,20 +231,22 @@ const fitViewToAllFeatures = (animate = true) => {
   fitView(featureSource.getExtent(), animate ? { duration: animationDuration } : null);
 };
 
-const forEachFeatureInView = (callback) => {
-  const extent = mapInstance.getView().calculateExtent();
-  return clusterSource.forEachFeatureIntersectingExtent(extent, callback);
-};
-
 const inViewCount = ref(0);
 const countFeaturesInView = () => {
   let count = 0;
-  forEachFeatureInView(feature => {
-    // This counts the entire cluster even if not all features in the cluster
-    // are in view. While that's arguably imprecise, it's probably less
-    // confusing to users that way.
-    count += isCluster(feature) ? feature.get('features').length : 1;
-  });
+  const extent = mapInstance.getView().calculateExtent();
+  if (clusterLayer.isVisible()) {
+    clusterSource.forEachFeatureIntersectingExtent(extent, feature => {
+      // This counts the entire cluster even if not all features in the cluster
+      // are in view. While that's arguably imprecise, it's probably less
+      // confusing to users that way.
+      count += isCluster(feature) ? feature.get('features').length : 1;
+    });
+  } else {
+    featureSource.forEachFeatureIntersectingExtent(extent, () => {
+      count += 1;
+    });
+  }
   inViewCount.value = count;
 };
 const countMessage = computed(() =>
@@ -321,12 +339,10 @@ const hide = () => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// SELECT FEATURE
-
-let selectedId;
+// HIT DETECTION
 
 const hitDetectionOptions = {
-  layerFilter: (layer) => layer === featureLayer
+  layerFilter: (layer) => layer === featureLayer || layer === clusterLayer
 };
 
 // Updates the cursor based on whether the user is moving over a feature.
@@ -336,18 +352,78 @@ const moveOverFeature = (event) => {
   mapContainer.value.style.cursor = hit ? 'pointer' : '';
 };
 
+const forEachFeatureNearPixel = (source, pixel, radius, callback) => {
+  // Start with a boundary box.
+  const corners = [
+    [pixel[0] - radius, pixel[1] - radius], // top-left
+    [pixel[0] + radius, pixel[1] + radius] // bottom-right
+  ];
+  const extent = boundingExtent(corners.map(p =>
+    mapInstance.getCoordinateFromPixel(p)));
+
+  // For features within `extent`, filter for those that are actually within
+  // `radius` pixels of `pixel`.
+  const coordinate = mapInstance.getCoordinateFromPixel(pixel);
+  const r2 = radius ** 2;
+  source.forEachFeatureIntersectingExtent(extent, (feature) => {
+    const closest = mapInstance.getPixelFromCoordinate(
+      feature.getGeometry().getClosestPoint(coordinate)
+    );
+    if ((closest[0] - pixel[0]) ** 2 + (closest[1] - pixel[1]) ** 2 <= r2)
+      callback(feature);
+  });
+};
+
+const overlapRadius = clusterSource.getDistance() / 2;
+
+const getHits = (pixel) => {
+  const hits = mapInstance.getFeaturesAtPixel(pixel, hitDetectionOptions);
+  if (hits.length === 0) return hits;
+
+  if (clusterLayer.isVisible()) {
+    const cluster = hits.find(isCluster);
+    if (cluster != null) return [cluster];
+  }
+
+  // getFeaturesAtPixel() above usually works great, but when features overlap,
+  // it only seems to return the feature on top. Here, we try to detect
+  // additional, overlapping hits by searching for features near `pixel`. As we
+  // do so, we skip clusters and avoid duplicates.
+  const source = clusterLayer.isVisible() ? clusterSource : featureSource;
+  const ids = hits.reduce((set, hit) => set.add(hit.getId()), new Set());
+  forEachFeatureNearPixel(source, pixel, overlapRadius, (feature) => {
+    if (!(isCluster(feature) || ids.has(feature.getId()))) hits.push(feature);
+  });
+
+  return hits;
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SELECT FEATURE
+
+let selectedId;
+
+// Converts an OpenLayers Feature object to a simple object before emitting it.
+// That way, the parent component never has to interact with OpenLayers.
+const featureToObject = (feature) =>
+  ({ id: feature.getId(), properties: feature.getProperties() });
+
 // Selects an individual feature (not a cluster) or deselects the selected
 // feature (if feature is `null`).
-const selectFeature = (feature) => {
+const selectFeature = (feature, emitChange = true) => {
   const id = feature?.getId();
   if (id === selectedId) return;
 
-  if (featureLayer instanceof WebGLVectorLayer)
-    featureLayer.updateStyleVariables({ selectedId: id ?? '' });
+  mapInstance.getLayers().forEach(layer => {
+    if (layer instanceof WebGLVectorLayer)
+      layer.updateStyleVariables({ selectedId: id ?? '' });
+  });
+
   selectedId = id;
-  emit('selection-changed', feature != null
-    ? { id, properties: feature.getProperties() }
-    : null);
+  if (emitChange)
+    emit('selection-changed', feature != null ? featureToObject(feature) : null);
 };
 
 const selectCluster = (cluster) => {
@@ -374,15 +450,19 @@ const selectCluster = (cluster) => {
 };
 
 const selectFeatureAtPixel = (pixel) => {
-  const hits = mapInstance.getFeaturesAtPixel(pixel, hitDetectionOptions);
-  if (hits.length === 0) {
-    selectFeature(null);
-  } else {
+  const hits = getHits(pixel);
+  emit('hit', hits.length === 0 || isCluster(hits[0])
+    ? []
+    : hits.map(featureToObject));
+
+  if (hits.length === 1) {
     const hit = hits[0];
     if (isCluster(hit))
       selectCluster(hit);
     else
       selectFeature(hit);
+  } else {
+    selectFeature(null);
   }
 };
 
@@ -484,23 +564,21 @@ onBeforeUnmount(() => {
   }
 });
 
+// Here, we expose functions that allow the parent component to modify
+// individual features. To update the set of features as a whole, the parent
+// component can change props.data; the functions here are specifically oriented
+// around individual features. We also expose functions that facilitate testing
+// (e.g., getFeatures()).
 defineExpose({
-  getFeatures: () => featureSource.getFeatures()
-    .map(feature => ({
-      id: feature.getId(),
-      properties: feature.getProperties()
-    }))
-    .sort(comparator((a, b) => a.id < b.id)),
-
-  selectFeature: (id) => {
-    const feature = featureSource.getFeatureById(id);
-    if (feature != null) selectFeature(feature);
+  getFeatures: () => featureSource.getFeatures().map(featureToObject),
+  selectFeature: (id, emitChange) => {
+    const feature = id != null ? featureSource.getFeatureById(id) : null;
+    selectFeature(feature, emitChange);
   },
-  deselect: () => { selectFeature(null); },
-
   removeFeature: (id) => {
     const feature = featureSource.getFeatureById(id);
     if (feature == null) return;
+
     if (id === selectedId) selectFeature(null);
     featureSource.removeFeature(feature);
 
