@@ -109,13 +109,8 @@ const preview = (feature) => {
     column-gap: 16px;
 
     $padding-inline: 6px;
-    padding: 11px $padding-inline;
+    padding: 8px $padding-inline;
     margin-inline: -$padding-inline;
-
-    &:hover, &:focus-within {
-      background-color: #eaddff;
-      border-radius: 4px;
-    }
 
     > :first-child { @include text-overflow-ellipsis; }
 
@@ -124,6 +119,13 @@ const preview = (feature) => {
       flex-shrink: 0;
       font-size: 20px;
       padding-right: 3px;
+    }
+
+    &:hover, &:focus-within {
+      background-color: $color-action-background;
+      border-radius: 4px;
+
+      &, & > :last-child { color: #fff; }
     }
   }
 

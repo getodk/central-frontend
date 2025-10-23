@@ -59,7 +59,7 @@ defineExpose({ el, resetScroll });
               0 1px 1px 0 rgba(0, 0, 0, 0.14),
               0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
-  padding-block: 21px;
+  padding-block: 17px $padding-panel-body;
   // Setting the inline padding not on .map-popup, but on its children, because
   // .map-popup-body needs to be the full width of the popup. That's so its
   // vertical scrollbar is all the way on the right.
