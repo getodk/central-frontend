@@ -494,7 +494,6 @@ const selectFeature = (feature, emitChange = true) => {
 
 const selectCluster = (cluster) => {
   selectFeature(null);
-  hideOverlapHint();
 
   const features = cluster.get('features');
   // If there aren't too many features in the cluster, calculate their boundary
