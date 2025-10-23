@@ -57,15 +57,15 @@ dl > * {
 dl:not(.dl-horizontal) {
   > div {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    row-gap: 2px;
   }
 
   dt {
     color: #666;
+    font-size: 12px;
     font-weight: normal;
   }
-
-  dd { font-size: 16px; }
 }
 
 // <dl> elements that are .dl-horizontal are expected to have children that are
