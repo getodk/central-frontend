@@ -352,7 +352,7 @@ const moveOverFeature = (event) => {
   mapContainer.value.style.cursor = hit ? 'pointer' : '';
 };
 
-const forEachFeatureNearPixel = (pixel, radius, callback) => {
+const forEachFeatureNearPixel = (source, pixel, radius, callback) => {
   // Start with a boundary box.
   const corners = [
     [pixel[0] - radius, pixel[1] - radius], // top-left
@@ -365,7 +365,7 @@ const forEachFeatureNearPixel = (pixel, radius, callback) => {
   // `radius` pixels of `pixel`.
   const coordinate = mapInstance.getCoordinateFromPixel(pixel);
   const r2 = radius ** 2;
-  featureSource.forEachFeatureIntersectingExtent(extent, (feature) => {
+  source.forEachFeatureIntersectingExtent(extent, (feature) => {
     const closest = mapInstance.getPixelFromCoordinate(
       feature.getGeometry().getClosestPoint(coordinate)
     );
@@ -388,10 +388,11 @@ const getHits = (pixel) => {
   // getFeaturesAtPixel() above usually works great, but when features overlap,
   // it only seems to return the feature on top. Here, we try to detect
   // additional, overlapping hits by searching for features near `pixel`. As we
-  // do so, we avoid duplicates.
+  // do so, we skip clusters and avoid duplicates.
+  const source = clusterLayer.isVisible() ? clusterSource : featureSource;
   const ids = hits.reduce((set, hit) => set.add(hit.getId()), new Set());
-  forEachFeatureNearPixel(pixel, overlapRadius, (feature) => {
-    if (!ids.has(feature.getId())) hits.push(feature);
+  forEachFeatureNearPixel(source, pixel, overlapRadius, (feature) => {
+    if (!(isCluster(feature) || ids.has(feature.getId()))) hits.push(feature);
   });
 
   return hits;
