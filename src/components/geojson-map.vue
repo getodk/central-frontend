@@ -227,7 +227,10 @@ const resize = () => {
   }
 
   // .map-container seems to need a concrete height to be set on it (e.g.,
-  // setting `height: 100%;` in CSS didn't work).
+  // setting `height: 100%;` in CSS didn't work). Before setting it, we first
+  // unset it: we need to undo any previous resize() call before recalculating
+  // the height.
+  mapContainer.value.style.height = '';
   mapContainer.value.style.height = px(el.value.getBoundingClientRect().height);
 
   const oldSize = mapInstance.getSize();
