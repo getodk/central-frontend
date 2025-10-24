@@ -143,5 +143,22 @@ describe('SubmissionShow', () => {
         app.should.alert('success', 'Submission has been successfully deleted.');
       });
     });
+
+    it('ignores the 404 error', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 'e' });
+      return load('/projects/1/forms/f/submissions/e')
+        .complete()
+        .request(async (app) => {
+          await app.get('#submission-activity-delete-button').trigger('click');
+          return app.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1)
+        .respondFor('/projects/1/forms/f/submissions', {
+          project: false
+        })
+        .afterResponses((app) => {
+          app.should.alert('success', 'Submission has been successfully deleted.');
+        });
+    });
   });
 });

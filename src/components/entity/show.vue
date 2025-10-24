@@ -145,7 +145,8 @@ const { t } = useI18n();
 const requestDelete = () => {
   request({
     method: 'DELETE',
-    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid)
+    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid),
+    fulfillProblem: ({ code }) => code === 404.1
   })
     .then(() => {
       const { label } = entity.currentVersion;

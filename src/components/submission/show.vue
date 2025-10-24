@@ -189,7 +189,8 @@ export default {
     requestDelete([{ __id: instanceId }]) {
       this.request({
         method: 'DELETE',
-        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId),
+        fulfillProblem: ({ code }) => code === 404.1
       })
         .then(() => {
           const message = this.$t('alert.submissionDeleted');
