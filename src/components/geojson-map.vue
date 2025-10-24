@@ -25,6 +25,7 @@ except according to the terms contained in the LICENSE file.
         v-model:cluster="showsClusters"
         v-model:cluster-distance="clusterDistance"
         v-model:cluster-min-distance="clusterMinDistance"
+        v-model:overlap-radius="overlapRadius"
         v-model:overlap-hint="showsOverlapHints" :zoom="zoomLevel"/>
     </div>
   </div>
@@ -54,7 +55,7 @@ import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
 import GeojsonMapDevTools from './geojson-map/dev-tools.vue';
 
 import useEventListener from '../composables/event-listener';
-import { getStyles, getTextStyles } from '../util/map-styles';
+import { getOverlapHintStyles, getStyles, getTextStyles } from '../util/map-styles';
 import { noop } from '../util/util';
 import { px } from '../util/dom';
 
@@ -367,6 +368,9 @@ const hide = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // OVERLAP HINTS
 
+// Radius within which to search for overlap
+const overlapRadius = ref(18);
+
 // getHits() below searches a radius for overlapping features. If
 // showsOverlapHints.value is `true`, then the radius will be shown on the map
 // as a helpful hint.
@@ -383,8 +387,22 @@ const showOverlapHint = (pixel) => {
 const hideOverlapHint = () => { overlapHintSource.clear(true); };
 
 if (config.devTools) {
-  const overlapHintLayer = createWebGLLayer(overlapHintSource);
-  mapInstance.addLayer(overlapHintLayer);
+  let overlapHintLayer;
+  watch(
+    overlapRadius,
+    (radius) => {
+      if (overlapHintLayer != null) {
+        mapInstance.removeLayer(overlapHintLayer);
+        hideOverlapHint();
+      }
+
+      if (radius === '') return;
+      overlapHintLayer = createWebGLLayer(overlapHintSource);
+      overlapHintLayer.setStyle(getOverlapHintStyles(radius));
+      mapInstance.addLayer(overlapHintLayer);
+    },
+    { immediate: true }
+  );
   watch(showsOverlapHints, (value) => {
     hideOverlapHint();
     overlapHintLayer.setVisible(value);
@@ -429,11 +447,6 @@ const forEachFeatureNearPixel = (source, pixel, radius, callback) => {
   });
 };
 
-// overlapRadius is the radius within which to seach for overlap. It isn't
-// dynamic (it isn't a computed ref), because it is also hard-coded in
-// getStyles().
-const overlapRadius = clusterDistance.value / 2;
-
 const getHits = (pixel) => {
   hideOverlapHint();
 
@@ -451,7 +464,7 @@ const getHits = (pixel) => {
   // do so, we skip clusters and avoid duplicates.
   const source = clusterLayer.isVisible() ? clusterSource : featureSource;
   const ids = hits.reduce((set, hit) => set.add(hit.getId()), new Set());
-  forEachFeatureNearPixel(source, pixel, overlapRadius, (feature) => {
+  forEachFeatureNearPixel(source, pixel, overlapRadius.value, (feature) => {
     if (!(isCluster(feature) || ids.has(feature.getId()))) hits.push(feature);
   });
   showOverlapHint(pixel);
