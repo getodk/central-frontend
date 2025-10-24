@@ -152,7 +152,7 @@ describe('SubmissionShow', () => {
           await app.get('#submission-activity-delete-button').trigger('click');
           return app.get('#submission-delete .btn-danger').trigger('click');
         })
-        .respondWithSuccess()
+        .respondWithProblem(404.1)
         .respondFor('/projects/1/forms/f/submissions', {
           project: false
         })
