@@ -45,6 +45,7 @@ import View from 'ol/View';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import Zoom from 'ol/control/Zoom';
 import { boundingExtent, createEmpty, extend, getCenter } from 'ol/extent';
+import { get as getProjection } from 'ol/proj';
 
 import { equals } from 'ramda';
 import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
@@ -103,9 +104,12 @@ const createWebGLLayer = (source) => (buildMode === 'test'
 const featureSource = new VectorSource();
 const featureLayer = createWebGLLayer(featureSource);
 
+const projection = 'EPSG:3857';
 const mapInstance = new Map({
   layers: [baseLayer, featureLayer],
-  view: new View(),
+  // The `extent` option is needed to prevent bugs when panning clones the map.
+  // See https://github.com/getodk/web-forms/pull/491#discussion_r2399078735
+  view: new View({ projection, extent: getProjection(projection).getExtent() }),
   controls: [new Zoom()]
 });
 
