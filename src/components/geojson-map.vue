@@ -370,12 +370,12 @@ const hide = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // OVERLAP HINTS
 
-// Radius within which to search for overlap
+// getHits() below searches a radius for overlapping features. overlapRadius
+// sets that radius.
 const overlapRadius = ref(10);
 
-// getHits() below searches a radius for overlapping features. If
-// showsOverlapHints.value is `true`, then the radius will be shown on the map
-// as a helpful hint.
+// If showsOverlapHints.value is `true`, then the overlap search area will be
+// shown on the map as a helpful hint.
 const showsOverlapHints = ref(false);
 const overlapHintSource = new VectorSource();
 
