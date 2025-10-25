@@ -139,12 +139,12 @@ const clusterDistance = ref(40);
 const clusterMinDistance = ref(10);
 watch(
   clusterDistance,
-  (value) => { clusterSource.setDistance(value); },
+  (value) => { if (value !== '') clusterSource.setDistance(value); },
   { immediate: true }
 );
 watch(
   clusterMinDistance,
-  (value) => { clusterSource.setMinDistance(value); },
+  (value) => { if (value !== '') clusterSource.setMinDistance(value); },
   { immediate: true }
 );
 
@@ -166,6 +166,8 @@ const maxZoom = ref(19);
 watch(
   [showsClusters, maxZoom],
   () => {
+    if (showsClusters.value && maxZoom.value === '') return;
+
     // Only show clusters when the zoom level is below maxZoom. Subtracting
     // 0.001 because the maxZoom option here is inclusive.
     clusterLayer.setMaxZoom(showsClusters.value ? maxZoom.value - 0.001 : -1);
