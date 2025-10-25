@@ -389,25 +389,17 @@ const showOverlapHint = (pixel) => {
 const hideOverlapHint = () => { overlapHintSource.clear(true); };
 
 if (config.devTools) {
-  let overlapHintLayer;
-  watch(
-    overlapRadius,
-    (radius) => {
-      if (overlapHintLayer != null) {
-        mapInstance.removeLayer(overlapHintLayer);
-        hideOverlapHint();
-      }
-
-      if (radius === '') return;
-      overlapHintLayer = createWebGLLayer(overlapHintSource);
-      overlapHintLayer.setStyle(getOverlapHintStyles(radius));
-      mapInstance.addLayer(overlapHintLayer);
-    },
-    { immediate: true }
-  );
+  const overlapHintLayer = createWebGLLayer(overlapHintSource);
+  overlapHintLayer.setStyle(getOverlapHintStyles(overlapRadius.value));
+  mapInstance.addLayer(overlapHintLayer);
   watch(showsOverlapHints, (value) => {
     hideOverlapHint();
     overlapHintLayer.setVisible(value);
+  });
+  watch(overlapRadius, (radius) => {
+    hideOverlapHint();
+    if (radius !== '')
+      overlapHintLayer.setStyle(getOverlapHintStyles(radius));
   });
 }
 
