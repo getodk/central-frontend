@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <form v-show="expanded">
       <p>Zoom level: {{ $n(zoom, 'maximumFractionDigits2') }}</p>
       <form-group v-model="maxZoom" type="number" placeholder="Max auto-zoom"
-        required min="1" autocomplete="off"/>
+        min="1" autocomplete="off"/>
       <hr>
 
       <fieldset :disabled="clustersDisabledMessage != null"
@@ -31,13 +31,16 @@ except according to the terms contained in the LICENSE file.
         </div>
         <form-group v-model="clusterDistance" type="number"
           placeholder="Max distance between features in cluster (px)"
-          required min="1" autocomplete="off"/>
+          min="1" autocomplete="off"/>
         <form-group v-model="clusterMinDistance" type="number"
           placeholder="Min distance between clusters"
-          required min="0" autocomplete="off"/>
+          min="0" autocomplete="off"/>
       </fieldset>
       <hr>
 
+      <form-group v-model="overlapRadius" type="number"
+        placeholder="Radius of overlap search area (px)"
+        min="1" autocomplete="off"/>
       <div class="checkbox">
         <label>
           <input v-model="overlapHint" type="checkbox">Show overlap search area
@@ -59,6 +62,7 @@ const maxZoom = defineModel('maxZoom');
 const cluster = defineModel('cluster');
 const clusterDistance = defineModel('clusterDistance');
 const clusterMinDistance = defineModel('clusterMinDistance');
+const overlapRadius = defineModel('overlapRadius');
 const overlapHint = defineModel('overlapHint');
 const props = defineProps({
   zoom: {
