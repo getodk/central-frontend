@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <form v-show="expanded">
       <p>Zoom level: {{ $n(zoom, 'maximumFractionDigits2') }}</p>
-      <form-group v-model.number="maxZoom" type="number" placeholder="Max auto-zoom"
+      <form-group v-model="maxZoom" type="number" placeholder="Max auto-zoom"
         required min="1" autocomplete="off"/>
       <hr>
 
@@ -29,16 +29,16 @@ except according to the terms contained in the LICENSE file.
         <div class="checkbox">
           <label><input v-model="cluster" type="checkbox">Cluster</label>
         </div>
-        <form-group v-model.number="clusterDistance" type="number"
+        <form-group v-model="clusterDistance" type="number"
           placeholder="Max distance between features in cluster (px)"
           required min="1" autocomplete="off"/>
-        <form-group v-model.number="clusterMinDistance" type="number"
+        <form-group v-model="clusterMinDistance" type="number"
           placeholder="Min distance between clusters"
           required min="0" autocomplete="off"/>
       </fieldset>
       <hr>
 
-      <form-group v-model.number="overlapRadius" type="number"
+      <form-group v-model="overlapRadius" type="number"
         placeholder="Radius to search for overlap (px)"
         required min="1" autocomplete="off"/>
       <div class="checkbox">

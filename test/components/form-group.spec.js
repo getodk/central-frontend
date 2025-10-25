@@ -101,6 +101,26 @@ describe('FormGroup', () => {
     formGroup.get('input').should.be.focused();
   });
 
+  describe('number input', () => {
+    it('emits a number', async () => {
+      const formGroup = mountComponent({
+        props: { modelValue: 1 },
+        attrs: { type: 'number' }
+      });
+      await formGroup.get('input').setValue('2');
+      formGroup.emitted('update:modelValue').should.eql([[2]]);
+    });
+
+    it('emits an empty string if the input is empty', async () => {
+      const formGroup = mountComponent({
+        props: { modelValue: 1 },
+        attrs: { type: 'number' }
+      });
+      await formGroup.get('input').setValue('');
+      formGroup.emitted('update:modelValue').should.eql([['']]);
+    });
+  });
+
   describe('password strength meter', () => {
     it('renders a password strength meter if autocomplete is new-password', () => {
       const formGroup = mountComponent({
