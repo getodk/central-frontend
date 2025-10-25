@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
       <hr>
 
       <form-group v-model="overlapRadius" type="number"
-        placeholder="Radius to search for overlap (px)"
+        placeholder="Radius of overlap search area (px)"
         required min="1" autocomplete="off"/>
       <div class="checkbox">
         <label>
