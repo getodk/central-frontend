@@ -369,7 +369,7 @@ const hide = () => {
 // OVERLAP HINTS
 
 // Radius within which to search for overlap
-const overlapRadius = ref(18);
+const overlapRadius = ref(10);
 
 // getHits() below searches a radius for overlapping features. If
 // showsOverlapHints.value is `true`, then the radius will be shown on the map
