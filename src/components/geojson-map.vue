@@ -215,9 +215,12 @@ const removeFeatures = () => {
 // RESIZE MAP
 
 const resize = () => {
+  log('resizing map');
+
   const { sizer } = props;
   const result = sizer();
   if (result != null) {
+    log('return value from sizer prop:', result);
     // Here, we set the element's min-height, not its full height.
     // .map-container also has a min-height, and if that's greater than the
     // min-height here, the element will be taller than its min-height.
@@ -225,17 +228,21 @@ const resize = () => {
       ? (result > 0 ? px(result) : '')
       : result;
   }
+  log('min-height of .geojson-map:', el.value.style.minHeight);
 
   // .map-container seems to need a concrete height to be set on it (e.g.,
   // setting `height: 100%;` in CSS didn't work). Before setting it, we first
   // unset it: we need to undo any previous resize() call before recalculating
   // the height.
   mapContainer.value.style.height = '';
-  mapContainer.value.style.height = px(el.value.getBoundingClientRect().height);
+  const newHeight = px(el.value.getBoundingClientRect().height);
+  mapContainer.value.style.height = newHeight;
+  log('height of .map-container:', newHeight);
 
-  const oldSize = mapInstance.getSize();
   mapInstance.updateSize();
-  if (!equals(mapInstance.getSize(), oldSize)) log('resized');
+  log('size of mapInstance:', mapInstance.getSize());
+
+  log('done resizing');
 };
 
 
