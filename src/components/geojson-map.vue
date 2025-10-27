@@ -107,8 +107,9 @@ const featureLayer = createWebGLLayer(featureSource);
 const projection = 'EPSG:3857';
 const mapInstance = new Map({
   layers: [baseLayer, featureLayer],
-  // The `extent` option is needed to prevent bugs when panning clones the map.
-  // See https://github.com/getodk/web-forms/pull/491#discussion_r2399078735
+  // The `extent` option is needed to prevent issues related to map cloning,
+  // which happens when panning at low zoom. See
+  // https://github.com/getodk/central-frontend/pull/1384
   view: new View({ projection, extent: getProjection(projection).getExtent() }),
   controls: [new Zoom()]
 });
