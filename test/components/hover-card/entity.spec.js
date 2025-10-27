@@ -1,3 +1,5 @@
+import { pick } from 'ramda';
+
 import DlData from '../../../src/components/dl-data.vue';
 import HoverCardEntity from '../../../src/components/hover-card/entity.vue';
 
@@ -26,7 +28,7 @@ describe('HoverCardEntity', () => {
         data: { p1: 'a', p2: 'b', p3: 'c', p4: 'd', p5: 'e', p6: 'f' }
       });
       const props = mountComponent().findAllComponents(DlData)
-        .map(wrapper => wrapper.props());
+        .map(wrapper => pick(['name', 'value'], wrapper.props()));
       props.should.eql([
         { name: 'p1', value: 'a' },
         { name: 'p2', value: 'b' },
@@ -41,7 +43,7 @@ describe('HoverCardEntity', () => {
         data: { p1: 'a', p2: 'b' }
       });
       const props = mountComponent().findAllComponents(DlData)
-        .map(wrapper => wrapper.props());
+        .map(wrapper => pick(['name', 'value'], wrapper.props()));
       props.should.eql([
         { name: 'p1', value: 'a' },
         { name: 'p2', value: 'b' }

@@ -1,3 +1,5 @@
+import { pick } from 'ramda';
+
 import DlData from '../../../src/components/dl-data.vue';
 import EntityData from '../../../src/components/entity/data.vue';
 import EntityUpdate from '../../../src/components/entity/update.vue';
@@ -55,7 +57,7 @@ describe('EntityData', () => {
       data: { height: '1', circumference: '2' }
     });
     const data = mountComponent().findAllComponents(DlData);
-    data.map(wrapper => wrapper.props()).should.eql([
+    data.map(wrapper => pick(['name', 'value'], wrapper.props())).should.eql([
       { name: 'height', value: '1' },
       { name: 'circumference', value: '2' }
     ]);

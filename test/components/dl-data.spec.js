@@ -5,7 +5,7 @@ import { mergeMountOptions, mount } from '../util/lifecycle';
 const Parent = {
   template: `<dl>
     <div>
-      <dl-data :name="name" :value="value"/>
+      <dl-data :name="name" :value="value" :expandable="false"/>
     </div>
   </dl>`,
   components: { DlData },
