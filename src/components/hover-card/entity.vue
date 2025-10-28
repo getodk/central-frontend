@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
         <dd><date-time :iso="entity.updatedAt ?? entity.createdAt"/></dd>
 
         <dl-data v-for="name of propertyNames" :key="name" :name="name"
-          :value="entityData[name]" :expandable="false"/>
+          :value="entityData[name]"/>
       </dl>
     </template>
   </hover-card>
