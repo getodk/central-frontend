@@ -3,6 +3,7 @@ import { T } from 'ramda';
 import DateTime from '../../../src/components/date-time.vue';
 import DlData from '../../../src/components/dl-data.vue';
 import GeojsonMap from '../../../src/components/geojson-map.vue';
+import SubmissionAttachmentLink from '../../../src/components/submission/attachment-link.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionMapPopup from '../../../src/components/submission/map-popup.vue';
 import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
@@ -135,6 +136,48 @@ describe('SubmissionMapPopup', () => {
         const values = pairs.map(pair => pair.props().value);
         values.should.eql(['Someone', 'POINT (1 1)', 'POINT (2 2)']);
       }));
+
+  it('formats form-field data', () => {
+    testData.extendedForms.createPast(1, {
+      xmlFormId: 'f',
+      fields: [
+        testData.fields.int('/i1'),
+        testData.fields.int('/i2'),
+        testData.fields.binary('/b1'),
+        testData.fields.binary('/b2')
+      ]
+    });
+    testData.extendedSubmissions.createPast(1, {
+      instanceId: 's',
+      i1: 1000,
+      i2: null,
+      b1: 'foo.jpg',
+      b2: null
+    });
+    return mockHttp()
+      .mount(SubmissionMapPopup, mountOptions())
+      .respondWithData(testData.submissionOData)
+      .afterResponse(async (component) => {
+        const dd = component.findAll('.dl-data-dd');
+        dd.length.should.equal(4);
+
+        dd[0].text().should.equal('1,000');
+        dd[1].text().should.equal('(empty)');
+
+        dd[2].getComponent(SubmissionAttachmentLink).props().should.eql({
+          projectId: '1',
+          xmlFormId: 'f',
+          draft: false,
+          instanceId: 's',
+          attachmentName: 'foo.jpg',
+          deleted: false
+        });
+        dd[2].text().should.equal('');
+
+        dd[3].findComponent(SubmissionAttachmentLink).exists().should.be.false;
+        dd[3].text().should.equal('(empty)');
+      });
+  });
 
   it('shows tooltips for form-field data', () =>
     mockHttp()

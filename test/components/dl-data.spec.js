@@ -41,8 +41,7 @@ describe('DlData', () => {
     });
     const dd = component.get('dd');
     dd.find('.expandable-text').exists().should.be.false;
-    dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true;
+    dd.get('.dl-data-empty').text().should.equal('(empty)');
   });
 
   it('renders correctly if the value of a property does not exist', () => {
@@ -51,7 +50,6 @@ describe('DlData', () => {
     });
     const dd = component.get('dd');
     dd.find('.expandable-text').exists().should.be.false;
-    dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true;
+    dd.get('.dl-data-empty').text().should.equal('(empty)');
   });
 });
