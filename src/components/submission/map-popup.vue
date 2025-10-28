@@ -40,10 +40,13 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </div>
         <dl>
-          <div v-for="field of orderedFields" :key="field.path">
+          <div v-for="field of fields.selectable" :key="field.path">
             <dl-data :value="path(field.pathElements, submission.data)?.toString()">
               <template #name>
-                <span v-tooltip.no-aria="field.header">{{ field.name }}</span>
+                <span v-if="field.path === fieldpath" class="icon-check-circle mapped-field-icon"
+                  v-tooltip.sr-only></span>
+                <span v-tooltip.no-aria="field.header" class="field-name">{{ field.name }}</span>
+                <span v-if="field.path === fieldpath" class="sr-only">&nbsp;{{ $t('mappedField') }}</span>
               </template>
             </dl-data>
           </div>
@@ -122,22 +125,12 @@ watch(
   { immediate: true }
 );
 
-const fieldIndex = computed(() =>
-  fields.selectable.findIndex(field => field.path === props.fieldpath));
 const missingField = computed(() => {
-  if (props.fieldpath == null || fieldIndex.value !== -1) return null;
+  if (props.fieldpath == null || fields.selectable.find(field => field.path === props.fieldpath)) return null;
   const elements = props.fieldpath.split('/');
   elements.shift();
   return { name: last(elements), header: elements.join('-') };
 });
-const orderedFields = computed(() => {
-  if (props.fieldpath == null || fieldIndex.value === -1)
-    return fields.selectable;
-  const result = [...fields.selectable];
-  result.unshift(...result.splice(fieldIndex.value, 1));
-  return result;
-});
-
 const handleActions = (event) => {
   const action = event.target.closest('.btn-group .btn');
   if (action == null) return;
@@ -151,6 +144,7 @@ const handleActions = (event) => {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
 
 #submission-map-popup {
   @include icon-btn-group;
@@ -178,6 +172,11 @@ const handleActions = (event) => {
     color: $color-warning;
     margin-right: $margin-right-icon;
   }
+
+  .mapped-field-icon {
+    margin-right: 2px;
+    color: $color-success;
+  }
 }
 </style>
 
@@ -187,7 +186,9 @@ const handleActions = (event) => {
     // @transifexKey component.SubmissionBasicDetails.submissionDetails
     "submissionDetails": "Submission Details",
     // {field} is the name of a Form field.
-    "missingField": "This Submission was mapped using {field}, which isn’t in the published Form version."
+    "missingField": "This Submission was mapped using {field}, which isn’t in the published Form version.",
+    // Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map
+    "mappedField": "Map references this field"
   }
 }
 </i18n>
