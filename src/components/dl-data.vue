@@ -21,10 +21,14 @@ are too long. -->
   <dd v-if="value == null || value === ''" class="dl-data-dd empty">
     {{ $t('common.emptyValue') }}
   </dd>
-  <dd v-else class="dl-data-dd"><div v-tooltip.text>{{ value }}</div></dd>
+  <dd v-else class="dl-data-dd">
+    <expandable-text>{{ value }}</expandable-text>
+  </dd>
 </template>
 
 <script setup>
+import ExpandableText from './expandable-text.vue';
+
 defineOptions({
   name: 'DlData'
 });
@@ -50,8 +54,7 @@ defineProps({
   // .dl-horizontal. See: https://github.com/getodk/central/issues/854
   overflow: hidden;
 
-  div {
-    @include line-clamp(3);
+  .expandable-text {
     overflow-wrap: break-word;
     white-space: break-spaces;
   }
