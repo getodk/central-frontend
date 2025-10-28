@@ -144,12 +144,6 @@ Both evaluator classes provide the following convenience methods:
 
 - Expressions with variable references are parsed incorrectly. There is also no API to provide variable values, even if variable references were supported.
 
-### ODK XForms
-
-We intend to support the full ODK XForms function library, but support is currently incomplete. The following functions are not yet supported (the `jr:` prefix is used by convention to refer to the JavaRosa namespace):
-
-- `jr:choice-name`
-
 ### Non-browser environments
 
 The DOM standard is very complex, and compatibility libraries sometimes differ in terms of standards compliance and compatibility with the major browser implementations. It is likely, perhaps inevitable, that there will be edge cases and minor compatiblity issues when using such a library. At time of writing, no such issues are known in our tested environments, but a couple of minor issues have already been found and fixed during the initial test setup.
