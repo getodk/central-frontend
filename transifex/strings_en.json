@@ -5052,6 +5052,10 @@
       "missingField": {
         "string": "This Submission was mapped using {field}, which isn’t in the published Form version.",
         "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "Map references this field",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
       }
     },
     "SubmissionMapView": {

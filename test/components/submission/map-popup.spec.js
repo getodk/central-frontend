@@ -123,17 +123,17 @@ describe('SubmissionMapPopup', () => {
         dd[1].getComponent(DateTime).props().iso.should.equal(createdAt);
       }));
 
-  it('shows form-field data, ordering the geo field first', () =>
+  it('shows form-field data', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions())
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
         const pairs = component.findAllComponents(DlData);
-        const names = pairs.map(pair => pair.get('dt').text());
-        names.should.eql(['p1', 'first_name', 'p2']);
+        const names = pairs.map(pair => pair.get('dt .field-name').text());
+        names.should.eql(['first_name', 'p1', 'p2']);
 
         const values = pairs.map(pair => pair.props().value);
-        values.should.eql(['POINT (1 1)', 'Someone', 'POINT (2 2)']);
+        values.should.eql(['Someone', 'POINT (1 1)', 'POINT (2 2)']);
       }));
 
   it('shows tooltips for form-field data', () =>
@@ -141,7 +141,7 @@ describe('SubmissionMapPopup', () => {
       .mount(SubmissionMapPopup, mountOptions())
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
-        const pair = component.findAllComponents(DlData)[1];
+        const pair = component.getComponent(DlData);
         const name = pair.get('dt span');
         name.text().should.equal('first_name');
         await name.should.have.tooltip('names-first_name');
@@ -187,9 +187,18 @@ describe('SubmissionMapPopup', () => {
         }
       }])
       .afterResponse(component => {
-        const pair = component.getComponent(DlData);
-        pair.get('dt').text().should.equal('p1');
+        const pair = component.findAllComponents(DlData)[1];
+        pair.get('dt .field-name').text().should.equal('p1');
         pair.props().value.should.equal('POINT (3 3)');
+      }));
+
+  it('shows checkmark for the mapped field', () =>
+    mockHttp()
+      .mount(SubmissionMapPopup, mountOptions())
+      .respondWithData(testData.submissionOData)
+      .afterResponse(async (component) => {
+        const pair = component.findAllComponents(DlData)[1];
+        pair.find('.icon-check-circle').exists().should.be.true;
       }));
 
   describe('review button', () => {
