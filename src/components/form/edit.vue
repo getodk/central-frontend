@@ -205,7 +205,10 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "de": {
     "alert": {
-      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht."
+      "upload": "The new Form definition has been saved as your Draft.",
+      "publish": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.",
+      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
+      "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
     }
   },
   "es": {
@@ -244,6 +247,8 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "pt": {
     "alert": {
+      "upload": "A nova definição de Formulário foi armazenada como o seu rascunho.",
+      "publish": "Seu Rascunho foi publicado. Quaisquer dispositivos usando esse Formulário irão receber a definição do Formulário atualizada e os anexos.",
       "abandon": "A versão de rascunho desse formulário foi excluída com sucesso."
     }
   },

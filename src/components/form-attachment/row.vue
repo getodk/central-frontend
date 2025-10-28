@@ -259,10 +259,10 @@ export default {
       "text": "Noch nicht hochgeladen",
       "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
     },
-    "linkedToDataset": "Mit Entitätsliste {datasetName} verknüpft",
+    "linkedToDataset": "Mit Objektliste {datasetName} verknüpft",
     "uploadToOverride": "Laden Sie eine zu überschreibende Datei hoch.",
     "action": {
-      "linkDataset": "Mit Entitätsliste {datasetName} verknüpfen"
+      "linkDataset": "Mit Objektliste {datasetName} verknüpfen"
     },
     "override": "Überschreiben"
   },

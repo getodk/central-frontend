@@ -242,8 +242,8 @@ export default {
     },
     "submissionStates": "Einsendungenstatus",
     "entities": {
-      "title": "Entitätszusammenfassungen",
-      "subtitle": "(Zeigt die aktivste Entitätsliste von {count} Entitätsliste) | (Zeigt die aktivste Entitätsliste von {count} Entitätslisten)"
+      "title": "Objektzusammenfassungen",
+      "subtitle": "(Zeigt die aktivste Objektliste von {count} Objektliste) | (Zeigt die aktivste Objektliste von {count} Objektlisten)"
     },
     "other": "Anderes"
   },

@@ -748,20 +748,27 @@ export default {
     "noMatching": "Neexistují žádné odpovídající entity."
   },
   "de": {
-    "noEntities": "Es gibt keine Entitäten zum Anzeigen.",
-    "noMatching": "Es gibt keine passenden Entitäten.",
-    "allDeleted": "Alle Entitäten werden gelöscht.",
-    "allDeletedOnPage": "Alle Entitäten auf der Seite wurden gelöscht.",
+    "noEntities": "Es gibt keine Objekte zum Anzeigen.",
+    "noMatching": "Es gibt keine passenden Objekte.",
+    "allDeleted": "Alle Objekte werden gelöscht.",
+    "allDeletedOnPage": "Alle Objekte auf der Seite wurden gelöscht.",
     "alert": {
-      "delete": "Die Entität \"{label}“ wurde gelöscht."
+      "delete": "Das Objekt \"{label}“ wurde gelöscht.",
+      "bulkDelete": "{count} Objekt erfolgreich gelöscht. | {count} Objekte erfolgreich gelöscht.",
+      "restored": "{count} Objekt erfolgreich wiederhergestellt. | {count} Objekte erfolgreich wiederhergestellt."
     },
-    "filterDisabledMessage": "Filterung ist für gelöschte Entitäten nicht verfügbar",
-    "downloadDisabled": "Der Download ist für gelöschte Entitäten nicht verfügbar",
+    "filterDisabledMessage": "Filterung ist für gelöschte Objekte nicht verfügbar",
+    "searchDisabledMessage": "Die Suche nach gelöschten Objekte ist nicht verfügbar",
+    "downloadDisabled": "Der Download ist für gelöschte Objekte nicht verfügbar",
     "deletedEntity": {
-      "emptyTable": "Es gibt keine gelöschten Entitäten.",
-      "allRestored": "Alle gelöschten Entitäten werden wiederhergestellt.",
-      "allRestoredOnPage": "Alle Entitäten auf der Seite wurden wiederhergestellt."
-    }
+      "emptyTable": "Es gibt keine gelöschten Objekte.",
+      "allRestored": "Alle gelöschten Objekte werden wiederhergestellt.",
+      "allRestoredOnPage": "Alle Objekte auf der Seite wurden wiederhergestellt."
+    },
+    "actionBar": {
+      "message": "{count} Objekt ausgewählt | {count} Objekte ausgewählt"
+    },
+    "bulkOpInProgress": "Massenbearbeitung in Bearbeitung"
   },
   "es": {
     "noEntities": "No hay Entidades para mostrar.",
@@ -769,7 +776,9 @@ export default {
     "allDeleted": "Se eliminan todas las Entidades.",
     "allDeletedOnPage": "Se han eliminado todas las Entidades de la página.",
     "alert": {
-      "delete": "Entidad “{label}” se ha eliminado."
+      "delete": "Entidad “{label}” se ha eliminado.",
+      "bulkDelete": "{count}Entidad eliminada correctamente. | {count}Entidades eliminadas correctamente. | {count} Entidades eliminadas correctamente.",
+      "restored": "{count}Entidad restablecida correctamente. | {count}Entidades restablecidas correctamente. | {count} Entidades restablecidas correctamente."
     },
     "filterDisabledMessage": "El Filtro no está disponible para Entidades eliminadas",
     "searchDisabledMessage": "La búsqueda no está disponible para las entidades eliminadas",
@@ -778,7 +787,11 @@ export default {
       "emptyTable": "No hay entidades eliminadas.",
       "allRestored": "Todas las Entidades eliminadas se restauran.",
       "allRestoredOnPage": "Se han restaurado todas las Entidades de la página."
-    }
+    },
+    "actionBar": {
+      "message": "{count}Entidad seleccionada | {count}Entidades seleccionadas | {count} Entidades seleccionadas"
+    },
+    "bulkOpInProgress": "Operación masiva en curso"
   },
   "fr": {
     "noEntities": "Pas d'entités à montrer.",
@@ -786,7 +799,9 @@ export default {
     "allDeleted": "Toutes les Entités sont supprimées.",
     "allDeletedOnPage": "Toutes les Entités de la page ont été supprimées.",
     "alert": {
-      "delete": "L'Entité \"{label}\" a été supprimée."
+      "delete": "L'Entité \"{label}\" a été supprimée.",
+      "bulkDelete": "{count} entité supprimée avec succès. | {count} entités supprimées avec succès. | {count} entités supprimées avec succès.",
+      "restored": "{count} entité restaurée avec succès. | {count} entités restaurées avec succès. | {count} entités restaurées avec succès."
     },
     "filterDisabledMessage": "Le filtrage n'est pas disponible pour les entités supprimées.",
     "searchDisabledMessage": "La recherche n'est pas disponible pour les entités supprimées",
@@ -795,7 +810,11 @@ export default {
       "emptyTable": "Il n'y a pas d'Entité supprimée.",
       "allRestored": "Toutes les Entités supprimées ont été restaurées.",
       "allRestoredOnPage": "Toutes les Entités de la page ont été restaurées."
-    }
+    },
+    "actionBar": {
+      "message": "{count} entité sélectionnée | {count} entités sélectionnées | {count} entités sélectionnées"
+    },
+    "bulkOpInProgress": "Opération en masse en progrès"
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
@@ -803,7 +822,9 @@ export default {
     "allDeleted": "Tutte le entità vengono eliminate.",
     "allDeletedOnPage": "Tutte le entità della pagina sono state eliminate.",
     "alert": {
-      "delete": "La Entità “{label}” è stata cancellata."
+      "delete": "La Entità “{label}” è stata cancellata.",
+      "bulkDelete": "{count}Entità è stata eliminata con successo | {count} Entità sono state eliminate con successo | {count} Entità sono state eliminate con successo",
+      "restored": "{count}Entità è stata ripristinata con successo | {count}Entità sono state ripristinate con successo | {count} Entità sono state ripristinate con successo"
     },
     "filterDisabledMessage": "Il filtro non è disponibile per le Entità eliminate.",
     "searchDisabledMessage": "La ricerca non è disponibile per le entità eliminate",
@@ -812,7 +833,11 @@ export default {
       "emptyTable": "Non ci sono Entità cancellate.",
       "allRestored": "Tutte le entità eliminate vengono ripristinate.",
       "allRestoredOnPage": "Tutte le entità della pagina sono state ripristinate."
-    }
+    },
+    "actionBar": {
+      "message": "{count}Entità selezionata | {count} Entità selezionate | {count} Entità selezionate"
+    },
+    "bulkOpInProgress": "Elaborazione di massa in corso"
   },
   "pt": {
     "noEntities": "Não há Entidades para mostrar.",
@@ -820,14 +845,20 @@ export default {
     "allDeleted": "Todas as Entidades foram excluídas.",
     "allDeletedOnPage": "Todas as Entidades nesta página foram excluídas.",
     "alert": {
-      "delete": "A Entidade \"{label}\" foi excluída."
+      "delete": "A Entidade \"{label}\" foi excluída.",
+      "bulkDelete": "{count} Entidade apagada com sucesso. | {count} Entidades apagadas com sucesso. | {count} Entidades apagadas com sucesso.",
+      "restored": "{count} Entidade recuperada com sucesso. | {count} Entidades recuperadas com sucesso. | {count} Entidades recuperadas com sucesso."
     },
     "filterDisabledMessage": "Não é possível filtrar Entidades excluídas",
+    "searchDisabledMessage": "A busca não está disponível para Entidades excluídas.",
     "downloadDisabled": "Não é possível fazer download de Entidades excluídas",
     "deletedEntity": {
       "emptyTable": "Não há Entidades excluídas.",
       "allRestored": "Todas as Entidades excluídas foram recuperadas.",
       "allRestoredOnPage": "Todas as Entidades nesta página foram recuperadas."
+    },
+    "actionBar": {
+      "message": "{count} Entidade selecionada | {count} Entidades selecionadas | {count} Entidades selecionadas"
     }
   },
   "sw": {

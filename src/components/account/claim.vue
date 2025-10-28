@@ -123,6 +123,9 @@ export default {
     },
     "problem": {
       "401_2": "{message} Der Hyperlink in Ihrer E-Mail könnte abgelaufen sein und vielleicht sollte eine neue E-Mail gesendet werden."
+    },
+    "alert": {
+      "success": "Passwort erfolgreich zurückgesetzt."
     }
   },
   "es": {
@@ -180,6 +183,9 @@ export default {
     },
     "problem": {
       "401_2": "{message} O link de seu email expirou e um novo link precisa ser enviado."
+    },
+    "alert": {
+      "success": "Senha redefinida com sucesso."
     }
   },
   "sw": {

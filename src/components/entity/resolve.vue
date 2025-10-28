@@ -260,7 +260,7 @@ watch(() => props.entity, (entity) => {
     "title": "Parallele Update zu \"{label}\"",
     "instructions": [
       "Updates wurden parallel zu ''{label}\" durchgeführt. Dies bedeutet, dass Änderungen möglicherweise im Konflikt miteinander stehen, da sie zu älteren Daten erstellt wurden, als sie schließlich von Central angewendet wurden.",
-      "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Entitätsdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
+      "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Objektdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
     ],
     "action": {
       "table": {
@@ -268,10 +268,10 @@ watch(() => props.entity, (entity) => {
         "hide": "Zusammenfassungstabelle ausblenden"
       },
       "seeMoreDetails": "Mehr Details anzeigen",
-      "editEntity": "Entität bearbeiten",
+      "editEntity": "Objekt bearbeiten",
       "markAsResolved": "Als gelöst markieren"
     },
-    "successMessage": "Die Konfliktwarnung wurde von der Entität entfernt.",
+    "successMessage": "Die Konfliktwarnung wurde von der Objekt entfernt.",
     "problem": {
       "400_32": "Ein anderer Benutzer hat den Konflikt bereits als gelöst markiert. Bitte aktualisieren Sie, um die aktualisierten Daten zu sehen.",
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."

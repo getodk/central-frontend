@@ -177,6 +177,9 @@ export default {
   "de": {
     "title": "Papierkorb",
     "trashCount": "{count}",
+    "alert": {
+      "restore": "Das Formular \"{name}\" wurde erfolgreich wiederhergestellt."
+    },
     "message": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
   },
   "es": {
@@ -214,6 +217,9 @@ export default {
   "pt": {
     "title": "Lixeira",
     "trashCount": "({count})",
+    "alert": {
+      "restore": "O Formulário \"{name}\" foi recuperado com sucesso."
+    },
     "message": "Formulários e dados relacionados a Formulários são excluídos após 30 dias na Lixeira"
   },
   "sw": {

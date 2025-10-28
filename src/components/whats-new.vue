@@ -112,6 +112,8 @@ function hideModal() {
     }
   },
   "pt": {
+    "title": "Os Rascunhos do formulário foram movidos",
+    "body": "Criar um novo formulário e editá-lo na nova aba de Editar Formulário",
     "action": {
       "gotIt": "Entendi!"
     }

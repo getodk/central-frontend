@@ -137,6 +137,8 @@ const create = () => {
   "pt": {
     "title": "Versão Rascunho",
     "subtitle": "Não há Rascunho ativo para esse Formulário",
+    "toMakeChanges": "para alterar esse Formulário ou seus anexos.",
+    "noEffectUntilPublish": "A versão publicada não será afetada até que você publique o seu Rascunho.",
     "action": {
       "create": "Criar um novo rascunho"
     }

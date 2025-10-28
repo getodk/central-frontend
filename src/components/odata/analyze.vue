@@ -346,7 +346,8 @@ export default {
       "Para conectar-se a este feed OData, selecione sua ferramenta e copie o link para ela."
     ],
     "tab": {
-      "microsoft": "Power BI ou Excel"
+      "microsoft": "Power BI ou Excel",
+      "other": "Outro (API)"
     },
     "help": {
       "microsoft": {

@@ -368,9 +368,9 @@ const showBranchData = () => {
       },
       "entity": {
         "create": {
-          "api": "Entität {label} erstellt von {name}",
+          "api": "Objekt {label} erstellt von {name}",
           "bulkSource": "Datei {name} hochgeladen von {actor}",
-          "submission": "Entität {label} in {dataset} Entitätsliste erzeugt"
+          "submission": "Objekt {label} in {dataset} Objektliste erzeugt"
         },
         "update_version": {
           "submission": {
@@ -383,7 +383,8 @@ const showBranchData = () => {
           "api": "Daten aktualisiert von {name}"
         },
         "update_resolve": "Konfliktwarnung gelöst von {name}",
-        "delete": "Entität {label} gelöscht von {name}"
+        "delete": "Objekt {label} gelöscht von {name}",
+        "restore": "Objekt {label} wiederhergestellt von {name}"
       }
     },
     "offlineUpdate": "Offline-Aktualisierung"

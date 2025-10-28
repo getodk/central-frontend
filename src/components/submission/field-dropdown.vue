@@ -166,6 +166,10 @@ const placeholder = (counts) => counts.selected;
       "columns": "Colunas exibidas",
       "search": "Colunas de busca..."
     },
+    "action": {
+      "all": "Todos",
+      "none": "Nenhum"
+    },
     "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
   },
   "sw": {

@@ -112,8 +112,8 @@ const afterCreateDataset = async (dataset) => {
   },
   "de": {
     "heading": [
-      "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
-      "Entitäten werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
+      "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
+      "Objekte werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
     ],
     "new": "Neu"
   },

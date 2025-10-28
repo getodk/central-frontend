@@ -150,6 +150,10 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Status de conflitos"
+    },
+    "action": {
+      "all": "Todos",
+      "none": "Nenhum"
     }
   },
   "sw": {

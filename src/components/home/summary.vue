@@ -171,6 +171,20 @@ if (currentUser.can('user.list'))
       "body": "Avete bisogno di aiuto? Visitate il forum per porre domande o consultare le discussioni precedenti."
     }
   },
+  "pt": {
+    "projects": {
+      "body": "O Central é organizado em Projetos, cada um contendo seus próprios Formulários e os dados relacionados a eles."
+    },
+    "users": {
+      "body": "Usuários podem ser atribuídos a Projetos para gerenciá-los, coletar dados ou revisar Respostas."
+    },
+    "docs": {
+      "body": "Um Guia de Início Rápido e a documentação de usuário estão disponíveis no site ODK Docs."
+    },
+    "forum": {
+      "body": "Precisa de ajuda? Visite o fórum para fazer perguntas ou visualizar discussões existentes."
+    }
+  },
   "zh-Hant": {
     "projects": {
       "body": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"

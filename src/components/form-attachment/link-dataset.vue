@@ -108,9 +108,9 @@ export default {
     }
   },
   "de": {
-    "title": "Entitätsliste verknüpfen",
+    "title": "Objektliste verknüpfen",
     "introduction": [
-      "Sind Sie sicher, dass Sie die Entitätsliste verknüpfen möchten?",
+      "Sind Sie sicher, dass Sie die Objektliste verknüpfen möchten?",
       "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
     ],
     "action": {

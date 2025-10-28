@@ -253,6 +253,9 @@ export default {
     "field": {
       "workEmail": "Email Adresse (geschäftlich)",
       "organization": "Name der Organisation"
+    },
+    "alert": {
+      "success": "Einstellungen erfolgreich gespeichert."
     }
   },
   "es": {
@@ -431,6 +434,9 @@ export default {
     "field": {
       "workEmail": "Endereço de email de trabalho",
       "organization": "Nome da organização"
+    },
+    "alert": {
+      "success": "Configurações salvas com sucesso."
     }
   },
   "sw": {

@@ -134,7 +134,8 @@ const del = () => {
   "pt": {
     "title": "Deletar Resposta",
     "introduction": [
-      "Você tem certeza que quer deletar esta Resposta?"
+      "Você tem certeza que quer deletar esta Resposta?",
+      "Essa ação irá mover a Resposta para a Lixeira. Após 30 dias na Lixeira, ela será excluída de forma permanente, ela poderá ser recuperada antes disso."
     ],
     "field": {
       "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"

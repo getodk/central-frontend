@@ -88,7 +88,8 @@ export default {
   "de": {
     "field": {
       "submissionDate": "Übermittelt um"
-    }
+    },
+    "allSubmissionDateSelected": "Alle Zeit"
   },
   "es": {
     "field": {
@@ -121,7 +122,8 @@ export default {
   "pt": {
     "field": {
       "submissionDate": "Enviado em"
-    }
+    },
+    "allSubmissionDateSelected": "Todas as datas"
   },
   "sw": {
     "field": {

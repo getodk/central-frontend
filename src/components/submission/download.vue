@@ -481,6 +481,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal.",
+      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schliessen. Wenn er nach 20 Sekunden noch nicht begonnen hat, versuchen Sie es bitte erneut.",
       "parseError": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
     }
   },

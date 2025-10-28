@@ -161,8 +161,8 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     "suggestions": {
       "title": "Vorschläge",
       "invalidQuotes": "Ein zitiertes Feld ist ungültig. Überprüfen Sie die Kopfzeile Ihrer Datei, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt.",
-      "missingLabel": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jede Entität in Central und anderswo zu verwenden ist.",
-      "unknownProperty": "Wenn Sie Eigenschaften zu dieser Entitätsliste hinzufügen möchten, können Sie dies im Abschnitt Entitätseigenschaften auf der Übersichtsseite dieser Entitätsliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist.",
+      "missingLabel": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jedes Objekt in Central und anderswo zu verwenden ist.",
+      "unknownProperty": "Wenn Sie Eigenschaften zu dieser Objektliste hinzufügen möchten, können Sie dies im Abschnitt Objekteigenschaften auf der Übersichtsseite dieser Objektliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist.",
       "duplicateColumn": "Es sieht so aus, als hätten zwei oder mehr Spalten die gleiche Überschrift. Bitte stellen Sie sicher, dass die Spaltenüberschriften eindeutig sind.",
       "emptyColumn": "Es sieht so aus, als ob Sie eine leere Zelle in der Kopfzeile haben. Bitte entfernen Sie alle leeren Spalten in Ihrer Datei.",
       "delimiterNotComma": "Das könnte daran liegen, dass wir das Zellentrennzeichen falsch gesetzt haben. Wir haben {delimiter} benutzt."

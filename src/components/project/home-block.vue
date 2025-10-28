@@ -324,9 +324,9 @@ export default {
     "encrypted": "Verschlüsselt",
     "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung.",
     "showMore": "Zeige alle {count} Formular | Zeige alle {count} Formulare",
-    "showMoreDatasets": "Zeige alle {count} Entitätsliste | Zeige alle {count} Entitätslisten",
+    "showMoreDatasets": "Zeige alle {count} Objektliste | Zeige alle {count} Objektlisten",
     "showFewer": "Zeige weniger von insgesamt {count} Formular | Zeige weniger von insgesamt {count} Formularen",
-    "showFewerDatasets": "Zeige weniger von insgesamt {count} Entitätsliste | Zeige weniger von insgesamt {count} Entitätslisten",
+    "showFewerDatasets": "Zeige weniger von insgesamt {count} Objektliste | Zeige weniger von insgesamt {count} Objektlisten",
     "hidden": "versteckt"
   },
   "es": {

@@ -124,7 +124,7 @@ watchEffect(() => {
     "submissionDeleted": "Toto podání bylo smazáno."
   },
   "de": {
-    "entityDetails": "Entitätsdetails",
+    "entityDetails": "Objektdetails",
     "creatingSubmission": "Übermittlung erstellen",
     "creatingSource": "Quelle erstellen",
     "upload": "Hochladen",

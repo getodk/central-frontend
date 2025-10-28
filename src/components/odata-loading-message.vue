@@ -171,20 +171,20 @@ const message = computed(() => {
   },
   "de": {
     "entity": {
-      "withoutCount": "Lade Entitäten ...",
-      "all": "Lade {count} Entität ... | Lade {count} Entitäten ...",
-      "first": "Laden der ersten {top} von {count} Entität ... | Laden der ersten {top} von {count} Entitäten ...",
-      "middle": "Lade {top} weitere Entität von {count} übrigen... | Lade weitere {top} von {count} übrigen Entitäten...",
+      "withoutCount": "Lade Objekte ...",
+      "all": "Lade {count} Objekt ... | Lade {count} Objekte ...",
+      "first": "Laden des ersten {top} von {count} Objekt ... | Laden der ersten {top} von {count} Objekten ...",
+      "middle": "Lade {top} weiteres Objekt von {count} übrigen... | Lade weitere {top} von {count} übrigen Objekte...",
       "last": {
-        "multiple": "Lade die letzte {count} Entität... | Lade die letzten {count} Entitäten...",
-        "one": "Die letzte Entität wird geladen…"
+        "multiple": "Lade das letzte {count} Objekt... | Lade die letzten {count} Objekte...",
+        "one": "Das letzte Objekt wird geladen…"
       },
       "filtered": {
-        "withoutCount": "Lade passende Entitäten...",
-        "middle": "Lade {top} weitere passende Entität von {count} übrigen... | Lade weitere {top} von {count} übrigen passenden Entitäten...",
+        "withoutCount": "Lade passende Objekte...",
+        "middle": "Lade {top} weitere passende Objekte von {count} übrigen... | Lade weitere {top} von {count} übrigen passenden Objekte...",
         "last": {
-          "multiple": "Lade die letzte {count} passende Entität... | Lade die letzten {count} passenden Entitäten...",
-          "one": "Lade die letzte passende Entität..."
+          "multiple": "Lade das letzte {count} passende Objekt... | Lade die letzten {count} passenden Objekte...",
+          "one": "Lade das letzte passende Objekt..."
         }
       }
     },

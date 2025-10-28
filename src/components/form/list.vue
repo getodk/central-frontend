@@ -127,7 +127,10 @@ export default {
     "action": {
       "create": "Neu"
     },
-    "emptyTable": "Keine Formulare zum Anzeigen vorhanden."
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
+    "alert": {
+      "create": "\"{name}\" wurde als Formularentwurf erzeugt."
+    }
   },
   "es": {
     "title": "Formularios",

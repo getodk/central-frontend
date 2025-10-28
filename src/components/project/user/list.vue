@@ -313,7 +313,7 @@ export default {
         "projectManagers": "Projekt-Manager"
       },
       {
-        "full": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
+        "full": "{projectViewers} können auf alle Formular- und Objektdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
         "projectViewers": "Projekt-Viewer"
       },
       {
@@ -334,7 +334,8 @@ export default {
     "emptyTable": "Es wurden noch keine Benutzer diesem Projekt zugewiesen. Um einen hinzuzufügen, suchen Sie oben nach einem Benutzer.",
     "alert": {
       "unassignWithoutReassign": "Irgendetwas hat nicht funktioniert. \"{displayName}\" wurde aus diesem Projekt entfernt.",
-      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen."
+      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen.",
+      "unassignRole": "\"{displayName}\" wurde erfolgreich aus dem Projekt entfernt."
     }
   },
   "es": {

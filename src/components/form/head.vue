@@ -212,7 +212,7 @@ export default {
       "tabTitle": "Veröffentlichen Sie diesen Formularentwurf, um diese Funktionen zu aktivieren"
     },
     "infoNav": {
-      "entityLists": "{count} Verwandte Entitätsliste | {count} Verwandte Entitätslisten",
+      "entityLists": "{count} Verwandte Objektliste | {count} Verwandte Objektlisten",
       "updatedDatasets": "Aktualisierungen",
       "attachedDatasets": "Verwendet",
       "appUsers": "{count} App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
@@ -286,7 +286,11 @@ export default {
         "back": "Voltar à visão geral do projeto"
       }
     },
+    "formNav": {
+      "tabTitle": "Publique esse Rascunho do formulário para habilitar essas funções"
+    },
     "infoNav": {
+      "updatedDatasets": "Atualizações",
       "attachedDatasets": "Utiliza"
     }
   },

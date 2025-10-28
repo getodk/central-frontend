@@ -213,12 +213,15 @@ export default {
 <i18n>
 {
   "de": {
-    "upload": "Entitäten hochladen",
-    "purgeDescription": "Entitäten werden nach 30 Tagen im Papierkorb gelöscht",
-    "action": {
-      "toggleDeletedEntities": "{count} gelöscht Entität | {count} gelöschte Entitäten"
+    "upload": "Objekte hochladen",
+    "alert": {
+      "upload": "Ihre Objekte wurden erfolgreich hochgeladen."
     },
-    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Entitäten nicht verfügbar"
+    "purgeDescription": "Objekte werden nach 30 Tagen im Papierkorb gelöscht",
+    "action": {
+      "toggleDeletedEntities": "{count} gelöschtes Objekt | {count} gelöschte Objekte"
+    },
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
   },
   "es": {
     "upload": "Subir entidades",
@@ -255,6 +258,9 @@ export default {
   },
   "pt": {
     "upload": "Carregar Entidades",
+    "alert": {
+      "upload": "Suas Entidades foram carregadas com sucesso."
+    },
     "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
     "action": {
       "toggleDeletedEntities": "{count} Entidade excluída | {count} Entidades excluídas | {count} Entidades excluídas"

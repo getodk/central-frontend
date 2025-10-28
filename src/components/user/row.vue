@@ -197,7 +197,8 @@ export default {
     "cannotRetire": "Sie dürfen sich nicht selbst deaktivieren.",
     "action": {
       "retire": "User deaktivieren"
-    }
+    },
+    "invitationPending": "Einladung ausstehend"
   },
   "es": {
     "cannotAssignRole": "No puede editar su propio rol en el proyecto",
@@ -208,7 +209,8 @@ export default {
     "cannotRetire": "No puede retirar su propio usuario",
     "action": {
       "retire": "Retirar usuario"
-    }
+    },
+    "invitationPending": "Invitación pendiente"
   },
   "fr": {
     "cannotAssignRole": "Vous ne pouvez pas modifier votre propre rôle sur le site.",
@@ -219,7 +221,8 @@ export default {
     "cannotRetire": "Vous ne pouvez pas supprimer votre propre compte.",
     "action": {
       "retire": "Supprimer l'utilisateur"
-    }
+    },
+    "invitationPending": "Invitation en attente"
   },
   "id": {
     "cannotAssignRole": "Anda tidak dapat mengubah Peran Seluruh Situs Anda sendiri.",
@@ -240,7 +243,8 @@ export default {
     "cannotRetire": "Non è possibile ritirare se stessi",
     "action": {
       "retire": "Ritira utente"
-    }
+    },
+    "invitationPending": "Invito in sospeso"
   },
   "ja": {
     "cannotAssignRole": "自分自身のサーバーでの役割を編集できません。",
@@ -261,7 +265,8 @@ export default {
     "cannotRetire": "Você não pode desativar você mesmo.",
     "action": {
       "retire": "Desativar usuário"
-    }
+    },
+    "invitationPending": "Convite Pendente"
   },
   "sw": {
     "cannotAssignRole": "Huenda usihariri Jukumu lako la Tovuti nzima.",

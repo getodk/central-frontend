@@ -470,9 +470,10 @@ watch(() => props.state, (state) => {
       "append": "Daten hinzufügen"
     },
     "alert": {
+      "blankLabel": "Fehlende Etikett.",
       "noData": "Ihre Datei enthält keine Daten."
     },
-    "noEntities": "Es gibt keine Entitäten zum Anzeigen."
+    "noEntities": "Es gibt keine Objekte zum Anzeigen."
   },
   "es": {
     "title": "Importar datos de un archivo",
@@ -529,6 +530,7 @@ watch(() => props.state, (state) => {
       "append": "Anexar dados"
     },
     "alert": {
+      "blankLabel": "Rótulo faltando.",
       "noData": "Seu arquivo não contém dados."
     },
     "noEntities": "Não há Entidades para mostrar."

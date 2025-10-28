@@ -520,17 +520,23 @@ onUnmounted(() => {
       "body": "Sie werden nun weitergeleitet."
     },
     "errorModal": {
-      "title": "Übermittlungsfehler"
+      "title": "Übermittlungsfehler",
+      "body": "Ihre Daten wurden nicht übermittelt. Fehlermeldung: {errorMessage} Sie können dieses Dialogfeld schließen und es erneut versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
     },
     "sendingDataModal": {
       "title": "Übermittlung senden",
       "body": "Ihre Daten werden jetzt übermittelt. Bitte schliessen Sie dieses Fenster nicht, bevor es fertig ist."
     },
     "sessionTimeoutModal": {
-      "title": "Sitzung abgelaufen"
+      "title": "Sitzung abgelaufen",
+      "body": {
+        "full": "Bitte {here} in einem anderen Browser-Tab einloggen und erneut versuchen.",
+        "here": "hier"
+      }
     },
     "retryModal": {
-      "title": "Übermittlungsfehler"
+      "title": "Übermittlungsfehler",
+      "body": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
     }
   },
   "es": {
@@ -655,10 +661,12 @@ onUnmounted(() => {
   },
   "pt": {
     "previewModal": {
-      "title": "Os dados são válidos"
+      "title": "Os dados são válidos",
+      "body": "Os dados que você digitou são válidos, mas não foram enviados por que essa é apenas uma Visualização do formulário."
     },
     "submissionModal": {
       "title": "Formulário enviado com sucesso!",
+      "body": "Você pode preencher novamente esse formulário ou fechar a página se já tiver terminado.",
       "action": {
         "fillOutAgain": "Preencher novamente"
       }
@@ -668,13 +676,25 @@ onUnmounted(() => {
       "body": "Você pode fechar essa janela agora."
     },
     "editSubmissionModal": {
+      "title": "Enviado com sucesso",
       "body": "Você será redirecionado agora."
     },
+    "errorModal": {
+      "title": "Erro no envio"
+    },
     "sendingDataModal": {
-      "title": "Enviando a Resposta"
+      "title": "Enviando a Resposta",
+      "body": "Seus dados estão sendo enviados, por favor não feche essa janela até que o envio tenha terminado."
     },
     "sessionTimeoutModal": {
-      "title": "Sessão expirada"
+      "title": "Sessão expirada",
+      "body": {
+        "full": "Por favor, faça login {here} em uma aba diferente do navegador e tente novamente.",
+        "here": "aqui"
+      }
+    },
+    "retryModal": {
+      "title": "Erro no envio"
     }
   },
   "zh-Hant": {
