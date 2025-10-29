@@ -41,12 +41,19 @@ except according to the terms contained in the LICENSE file.
         </div>
         <dl>
           <div v-for="field of fields.selectable" :key="field.path">
-            <dl-data :value="path(field.pathElements, submission.data)?.toString()">
+            <dl-data
+              :value="field.binary !== true ? formatValue(submission.data, field, $i18n) : null">
               <template #name>
                 <span v-if="field.path === fieldpath" class="icon-check-circle mapped-field-icon"
                   v-tooltip.sr-only></span>
                 <span v-tooltip.no-aria="field.header" class="field-name">{{ field.name }}</span>
                 <span v-if="field.path === fieldpath" class="sr-only">&nbsp;{{ $t('mappedField') }}</span>
+              </template>
+              <template v-if="field.binary === true && getValue(submission.data, field) != null"
+                #value>
+                <submission-attachment-link :project-id="projectId"
+                  :xml-form-id="xmlFormId" :instance-id="instanceId"
+                  :attachment-name="getValue(submission.data, field)"/>
               </template>
             </dl-data>
           </div>
@@ -63,17 +70,19 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, useTemplateRef, watch } from 'vue';
-import { last, path } from 'ramda';
+import { last } from 'ramda';
 
 import DateTime from '../date-time.vue';
 import DlData from '../dl-data.vue';
 import Loading from '../loading.vue';
 import MapPopup from '../map-popup.vue';
 import SubmissionActions from './actions.vue';
+import SubmissionAttachmentLink from './attachment-link.vue';
 import SubmissionReviewState from './review-state.vue';
 
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
+import { getValue, formatValue } from '../../util/submission';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
