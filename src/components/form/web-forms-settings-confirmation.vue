@@ -133,7 +133,12 @@ const setWebformsEnabled = () => {
   "de": {
     "webformsConfirmation": {
       "useOdkWebForms": "ODK Web-Formulare verwenden",
-      "intro": "Wir bauen ein neues Web-Formularsystem auf, das schnell und benutzerfreundlich sein soll!"
+      "intro": "Wir bauen ein neues Web-Formularsystem auf, das schnell und benutzerfreundlich sein soll!",
+      "description": {
+        "full": "Einige Funktionen könnten verloren gehen; {seeSupportedFeatures} für Details und {previewYourForm}, bevor Sie zustimmen.",
+        "seeSupportedFeatures": "siehe unterstützte Funktionen",
+        "previewYourForm": "Vorschau auf Ihr Formular"
+      }
     },
     "enketoConfirmation": {
       "description": "Sind Sie sicher, dass Sie von ODK Web-Formulare zu Enketo wechseln wollen?",
@@ -190,6 +195,7 @@ const setWebformsEnabled = () => {
       "useOdkWebForms": "Utilizar ODK Web Forms"
     },
     "enketoConfirmation": {
+      "description": "Você tem certeza que deseja mudar do ODK Web Forms para o Enketo?",
       "useEnketo": "Utilizar o Enketo"
     }
   },

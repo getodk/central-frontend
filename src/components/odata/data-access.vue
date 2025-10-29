@@ -72,6 +72,11 @@ const { oidcEnabled } = inject('config');
       "connectData": "Collegare Dati"
     }
   },
+  "pt": {
+    "action": {
+      "connectData": "Dados de conexão"
+    }
+  },
   "zh-Hant": {
     "action": {
       "connectData": "連接資料"

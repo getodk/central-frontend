@@ -202,6 +202,7 @@ export default {
   "pt": {
     "back": "Voltar para Entidades do Projeto",
     "infoNav": {
+      "connectedForms": "Atualizado por {count} Formulário | Atualizado por {count} Formulários | Atualizado por {count} Formulários",
       "linkedForms": "Utilizado em {count} Formulário | Utilizado em {count} Formulários | Utilizado em {count} Formulários"
     }
   },

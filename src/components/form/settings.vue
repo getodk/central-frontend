@@ -226,9 +226,15 @@ const hideAndReset = () => {
     "action": {
       "delete": "Dieses Formular löschen"
     },
+    "alert": {
+      "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
+    },
     "webFormsSetting": {
       "webForms": "Web-Formulare",
-      "enketoDefault": "Enketo (default)"
+      "description": "Ausfüllen, anschauen und bearbeiten des Formulars \"{formName}\" mit",
+      "enketoDefault": "Enketo (default)",
+      "enketoSelected": "Sie verwenden jetzt Enketo, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten.",
+      "owfSelected": "Sie verwenden jetzt ODK Web Forms, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten."
     }
   },
   "es": {
@@ -248,7 +254,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "Formularios web",
       "description": "Rellene, previsualice y edite su Formulario “{formName}” utilizando",
-      "enketoDefault": "Enketo (default)"
+      "enketoDefault": "Enketo (default)",
+      "enketoSelected": "Ahora estás utilizando Enketo para rellenar, previsualizar y editar tu formulario \"{formName}\".",
+      "owfSelected": "Ahora estás utilizando ODK Web Forms para rellenar, previsualizar y editar tu formulario \"{formName}\"."
     }
   },
   "fr": {
@@ -268,7 +276,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "Web Forms",
       "description": "Remplissez, prévisualisez et éditez votre Formulaire \"{formName}\" en utilisant",
-      "enketoDefault": "Enketo (par défaut)"
+      "enketoDefault": "Enketo (par défaut)",
+      "enketoSelected": "Vous utilisez maintenant Enketo pour remplir, prévisualiser et éditer votre formulaire \"{formName}\".",
+      "owfSelected": "Vous utilisez maintenant ODK Web Forms pour remplir, prévisualiser et éditer votre formulaire \"{formName}\"."
     }
   },
   "id": {
@@ -300,7 +310,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "Formulari Web",
       "description": "Compilate, visualizzate in anteprima e modificate il vostro “{formName}” Formulario usando",
-      "enketoDefault": "Enketo (default)"
+      "enketoDefault": "Enketo (default)",
+      "enketoSelected": "Ora stai utilizzando Enketo per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\".",
+      "owfSelected": "Ora stai utilizzando ODK Web Forms per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\"."
     }
   },
   "ja": {

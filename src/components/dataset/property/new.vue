@@ -114,14 +114,14 @@ const submit = () => {
     "newPropertyName": "Název nové vlastnosti"
   },
   "de": {
-    "title": "Entitätseigenschaft hinzufügen",
+    "title": "Objekteigenschaft hinzufügen",
     "introduction": [
-      "Um eine Entitätseigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen.",
+      "Um eine Objekteigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen.",
       "Sie können auch neue Eigenschaften hinzufügen, indem Sie ein Formular hochladen, das auf sie verweist. In diesem Fall werden die Eigenschaften erstellt, wenn das Formular veröffentlicht wird."
     ],
     "newPropertyName": "Neuer Eigenschaftsname",
     "problem": {
-      "409_3": "In dieser Entitätsliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
+      "409_3": "In dieser Objektliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
     }
   },
   "es": {

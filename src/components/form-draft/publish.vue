@@ -246,6 +246,7 @@ export default {
       "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen.",
       "Möchten Sie fortfahren?"
     ],
+    "newProperties": "Die Veröffentlichung dieses Entwurfs wird {count} Eigenschaft erstellen. Sie kann nicht gelöscht werden. | Die Veröffentlichung dieses Entwurfs wird {count} Eigenschaften erstellen. Diese können nicht gelöscht werden.",
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
     }

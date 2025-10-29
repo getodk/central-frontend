@@ -263,7 +263,8 @@ export default {
     },
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
     "alert": {
-      "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden."
+      "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
+      "revoke": "Der Zugriff des App-Benutzers {displayName} wurde erfolgreich widerrufen."
     }
   },
   "es": {

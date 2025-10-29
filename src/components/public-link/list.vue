@@ -193,6 +193,7 @@ export default {
     ],
     "emptyTable": "Es gibt keine öffentlichen Zugangslinks für dieses Formular.",
     "alert": {
+      "create": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen.",
       "revoke": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
     }
   },
@@ -310,6 +311,7 @@ export default {
     ],
     "emptyTable": "Não existem links de acesso público para esse formulário.",
     "alert": {
+      "create": "Seu Link de Acesso Público foi criado e agora está ativo. Copie o endereço abaixo para distribuí-lo.",
       "revoke": "O link de acesso público \"{displayName}\" foi revogado com sucesso. Nenhuma resposta usando esse link será aceita de agora em diante."
     }
   },

@@ -425,7 +425,9 @@ export default {
       "Warnungen zum Formulardesign:",
       "Workflow-Warnungen:",
       {
-        "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
+        "deletedFormExists": "Es befindet sich ein Formular mit der ID \"{value}\" im Papierkorb. Wenn Sie dieses Formular hochladen, können Sie das andere mit derselben ID nicht mehr wiederherstellen.",
+        "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten.",
+        "oldEntityVersion": "Die Objektspezifikationsversion \"{version}\" ist nicht mit Offline-Objekten kompatibel. Wir empfehlen die Verwendung von Version 2024.1.0 oder neuer."
       },
       "Bitte beheben Sie die Probleme und versuchen es erneut.",
       {

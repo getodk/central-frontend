@@ -164,7 +164,7 @@ watchEffect(() => {
 {
   "de": {
     "action": {
-      "delete": "Entität löschen"
+      "delete": "Objekt löschen"
     }
   },
   "es": {

@@ -144,16 +144,16 @@ const hideAndReset = () => {
     }
   },
   "de": {
-    "entityWorkflow": "Entitätsworkflow",
+    "entityWorkflow": "Objektworkflow",
     "onReceipt": {
-      "label": "Entitäten anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
-      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Entitäten erstellt werden.",
-      "successMessage": "Die Entitäten werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
+      "label": "Objekte anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
+      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Objekte erstellt werden.",
+      "successMessage": "Die Objekte werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
     },
     "onApproval": {
-      "label": "Entitäten erstellen, wenn Einsendungen als genehmigt markiert sind",
-      "description": "Entitätsdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
-      "successMessage": "Die Entitäten werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
+      "label": "Objekte erstellen, wenn Einsendungen als genehmigt markiert sind",
+      "description": "Objektdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
+      "successMessage": "Die Objekte werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
     }
   },
   "es": {

@@ -534,15 +534,18 @@ export default {
       "testInBrowser": "Test im Browser"
     },
     "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "emptyMap": "Übermittlungen werden nur angezeigt, wenn sie Daten im ersten Geofeld enthalten.",
     "allDeleted": "Alle Übermittlungen werden gelöscht.",
     "allDeletedOnPage": "Alle Übermittlungen auf dieser Seite wurden gelöscht.",
     "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
     "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
+    "noMapEncryption": "Karte ist wegen Formularverschlüsselung nicht verfügbar.",
     "deletedSubmission": {
       "emptyTable": "Es gibt keine gelöschten Übermittlungen.",
       "allRestored": "Alle gelöschten Übermittlungen werden wiederhergestellt.",
       "allRestoredOnPage": "Alle Übermittlungen auf dieser Seite wurden wiederhergestellt."
-    }
+    },
+    "noMapDeleted": "Karte ist für gelöschte Übermittlungen nicht verfügbar"
   },
   "es": {
     "action": {
@@ -550,15 +553,18 @@ export default {
       "testInBrowser": "Prueba en el navegador"
     },
     "noMatching": "No hay envíos coincidentes.",
+    "emptyMap": "Los envíos solo aparecen si incluyen datos en el primer campo geo.",
     "allDeleted": "Todos los envíos se han eliminado.",
     "allDeletedOnPage": "Se han eliminado todos los envíos de la página.",
     "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
     "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
+    "noMapEncryption": "Mapa no disponible debido al cifrado de Formulario",
     "deletedSubmission": {
       "emptyTable": "No hay envíos eliminados.",
       "allRestored": "Se restablecen todos los envíos eliminados.",
       "allRestoredOnPage": "Se han restablecido todas las Envíos de la página."
-    }
+    },
+    "noMapDeleted": "El mapa no está disponible para los envíos eliminados."
   },
   "fr": {
     "action": {
@@ -566,15 +572,18 @@ export default {
       "testInBrowser": "Tester dans le naviguateur"
     },
     "noMatching": "Il n'y a pas de soumission correspondante.",
+    "emptyMap": "Les soumissions apparaissent seulement si elles ont une valeur dans le premier champ de type géographique.",
     "allDeleted": "Toutes les soumissions sont supprimées.",
     "allDeletedOnPage": "Toutes les soumissions de la page ont été supprimées.",
     "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
     "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
+    "noMapEncryption": "La carte n'est pas disponible en raison du chiffrement du formulaire.",
     "deletedSubmission": {
       "emptyTable": "Il n'y a pas de Soumissions supprimées",
       "allRestored": "Toutes les Soumissions supprimées ont été restaurées.",
       "allRestoredOnPage": "Toutes les Soumissions de la page ont été restaurées."
-    }
+    },
+    "noMapDeleted": "La carte n'es pas disponible pour les soumissions supprimées."
   },
   "id": {
     "noMatching": "Tidak ada Pengiriman yang cocok."
@@ -585,15 +594,18 @@ export default {
       "testInBrowser": "Testa nel browser"
     },
     "noMatching": "Non sono presenti invii corrispondenti.",
+    "emptyMap": "Gli invii vengono visualizzati solo se includono dati nel primo campo geo.",
     "allDeleted": "Tutti gli invii vengono cancellati.",
     "allDeletedOnPage": "Tutti gli invii presenti nella pagina sono stati cancellati.",
     "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
     "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
+    "noMapEncryption": "Mappa non è disponibile a causa della crittografia del formulario",
     "deletedSubmission": {
       "emptyTable": "Non ci sono invii cancellati.",
       "allRestored": "Tutti gli invii cancellati vengono ripristinati.",
       "allRestoredOnPage": "Tutti i contributi presenti nella pagina sono stati ripristinati."
-    }
+    },
+    "noMapDeleted": "La Mappa non è disponibile per gli invii cancellati"
   },
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"
@@ -608,9 +620,13 @@ export default {
     "allDeletedOnPage": "Todas as Respostas nesta página foram excluídas.",
     "downloadDisabled": "O download está indisponível para Respostas excluídas",
     "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
+    "noMapEncryption": "O mapa não está disponível por que o Formulário está encriptado",
     "deletedSubmission": {
-      "emptyTable": "Não há Respostas excluídas"
-    }
+      "emptyTable": "Não há Respostas excluídas",
+      "allRestored": "Todas as Respostas excluídas foram recuperadas.",
+      "allRestoredOnPage": "Todas as respostas na página foram recuperadas."
+    },
+    "noMapDeleted": "O Mapa está indisponível para Respostas excluídas"
   },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."

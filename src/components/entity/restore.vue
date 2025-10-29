@@ -99,8 +99,8 @@ const restore = () => {
     "title": "Wiederherstellen {label}",
     "introduction": [
       "Sind Sie sicher, dass Sie “{label}” wiederherstellen wollen?",
-      "Die Entität wird in ihrem vorherigen Zustand wiederhergestellt.",
-      "Wenn die Entität erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
+      "Das Objekt wird in ihrem vorherigen Zustand wiederhergestellt.",
+      "Wenn das Objekt erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
     ],
     "field": {
       "noConfirm": "Sofortige Wiederherstellen ohne Bestätigung, bis ich die Seite verlasse"

@@ -174,22 +174,19 @@ export default {
 <i18n>
 {
   "de": {
-    "formsUpdateEntities": "Formular aktualisiert Objekte in dieser Objektliste | Formulare aktualisieren Objekte in dieser Objektliste"
+    "formsUpdateEntities": "{count} Formular, die Entitäten aktualisieren. | {count}Formulare, die Entitäten aktualisieren."
   },
   "es": {
-    "formsUpdateEntities": "El formulario actualiza Entidades en esta Lista de Entidades | Los formularios actualizan Entidades en esta Lista de Entidades | Los formularios actualizan Entidades en esta Lista de Entidades"
+    "formsUpdateEntities": "{count}Formulario que actualiza entidades. | {count}Formularios que actualizan entidades. | {count} Formularios que actualizan entidades."
   },
   "fr": {
-    "formsUpdateEntities": "Formulaire modifiant des Entités de cette Liste d'Entités | Formulaires modifiant des Entités de cette Liste d'Entités | Formulaires modifiant des Entités de cette Liste d'Entités"
+    "formsUpdateEntities": "{count} formulaire met à jour des Entités. | {count} formulaires mettent à jour des Entités. | {count} formulaires mettent à jour des Entités."
   },
   "it": {
-    "formsUpdateEntities": "Formulario aggiorna Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità"
+    "formsUpdateEntities": "{count}Formulario che aggiorna Entità | {count}Formulari che aggiornano Entità | {count} Formulari che aggiornano Entità"
   },
   "pt": {
-    "formsUpdateEntities": "Formulário atualiza Entidades nesta Lista de Entidades | Formulários atualizam Entidades nesta Lista de Entidades | Formulários atualizam Entidades nesta Lista de Entidades"
-  },
-  "zh-Hant": {
-    "formsUpdateEntities": "表單更新此實體清單中的實體"
+    "formsUpdateEntities": "{count}Formulário atualizando Entidades | {count} Formulários atualizando Entidades | {count} Formulários atualizando Entidades"
   }
 }
 </i18n>

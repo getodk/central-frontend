@@ -226,6 +226,9 @@ export default {
         "Dieses Projekt wurde archiviert.",
         "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
       ]
+    },
+    "alert": {
+      "archive": "Das Projekt \"{name}\" wurde archiviert."
     }
   },
   "es": {
@@ -409,6 +412,9 @@ export default {
         "O projeto foi arquivado.",
         "Nessa versão do ODK Central você não pode desarquivar um projeto. Entretanto, essa funcionalidade está planejada para uma versão futura."
       ]
+    },
+    "alert": {
+      "archive": "O projeto \"{name}\" foi arquivado."
     }
   },
   "sw": {

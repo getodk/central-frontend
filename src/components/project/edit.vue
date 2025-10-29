@@ -179,6 +179,9 @@ const submit = () => {
       "name": "Nome do projeto",
       "description": "Descrição do projeto",
       "note": "Adicione notas, links, instruções e outros recursos aqui."
+    },
+    "alert": {
+      "success": "Configurações do projeto salvas."
     }
   },
   "sw": {

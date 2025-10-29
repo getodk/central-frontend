@@ -130,7 +130,7 @@ const afterCreateProperty = () => {
   },
   "de": {
     "connectionsToForms": "Verbindungen zu Formularen",
-    "entityProperties": "Entitätseigenschaften",
+    "entityProperties": "Objekteigenschaften",
     "new": "Neu"
   },
   "es": {

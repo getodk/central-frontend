@@ -74,7 +74,7 @@ const { datasets } = useRequestData();
     "emptyTable": "Nebyly vytvořeny žádné entity pro tento projekt."
   },
   "de": {
-    "emptyTable": "Es wurden noch keine Entitäten für dieses Projekt erstellt."
+    "emptyTable": "Es wurden noch keine Objekte für dieses Projekt erstellt."
   },
   "es": {
     "emptyTable": "Aún no se han creado Entidades para este Proyecto."

@@ -221,6 +221,7 @@ export default {
     "attachmentSummary": "{present} / {expected}"
   },
   "pt": {
+    "submissionDetails": "Detalhes da resposta",
     "formVersion": "Versão do formulário",
     "deviceId": "ID do dispositivo",
     "userAgent": "Agente de usuário",

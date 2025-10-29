@@ -114,7 +114,7 @@ const { publishedFormPath } = useRoutes();
     "none": "(žádný)"
   },
   "de": {
-    "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften.",
+    "emptyTable": "Die Objekte in dieser Objektliste verfügen über keine benutzerdefinierten Eigenschaften.",
     "none": "(Keine)"
   },
   "es": {

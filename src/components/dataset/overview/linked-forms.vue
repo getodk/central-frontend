@@ -86,25 +86,19 @@ const { publishedFormPath } = useRoutes();
 <i18n>
 {
   "de": {
-    "formsConsumeData": "Formular verwendet diese Entitätsliste | Formulare verwenden diese Entitätsliste"
+    "formsConsumeData": "{count}Formular verwendet diese Objektliste | {count}Formulare verwenden diese Objektliste"
   },
   "es": {
-    "formsConsumeData": "El formulario utilizan esta lista de entidades | Los formularios utilizan esta lista de entidades | Los formularios utilizan esta lista de entidades"
+    "formsConsumeData": "{count}Formulario que utiliza esta lista de entidades. | {count}Formularios que utilizan esta lista de entidades. | {count} Formularios que utilizan esta lista de entidades."
   },
   "fr": {
-    "formsConsumeData": "Formulaire utilise cette liste d'entités | Formulaires utilisent cette liste d'entités | Formulaires utilisent cette liste d'entités"
+    "formsConsumeData": "{count} formulaire utilise cette liste d'entités | {count} formulaires utilisent cette liste d'entités | {count} formulaires utilisent cette liste d'entités"
   },
   "it": {
-    "formsConsumeData": "Il formulario utilizza questo elenco di entità | I formulari utilizzano questo elenco di entità | I formulari utilizzano questo elenco di entità"
+    "formsConsumeData": "{count}Formulario che usa questa lista di Entità | {count}Formulari che usano questa lista di Entità | {count}Formulari che usano questa lista di Entità"
   },
   "pt": {
-    "formsConsumeData": "Formulário usa esta Lista de Entidades | Formulários usam esta Lista de Entidades | Formulários usam esta Lista de Entidades"
-  },
-  "sw": {
-    "formsConsumeData": "Fomu hutumia Orodha hii ya Huluki | Fomu hutumia Orodha hii ya Huluki"
-  },
-  "zh-Hant": {
-    "formsConsumeData": "表單使用此實體列表"
+    "formsConsumeData": "{count} Formulário utiliza essa Lista de Entidades | {count}Formulários utilizam essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades"
   }
 }
 </i18n>

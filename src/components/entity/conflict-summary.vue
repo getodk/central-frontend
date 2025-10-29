@@ -254,7 +254,7 @@ const markAsResolved = () => {
       "Wenn alles in Ordnung aussieht, klicken Sie auf „Als 'In Ordnung' markieren“, um diese Warnung zu schließen."
     ],
     "confirmation": {
-      "title": "Ist diese Entität OK?",
+      "title": "Ist dieses Objekt OK?",
       "body": "Nachdem Sie die möglicherweise widersprüchlichen Aktualisierungen überprüft und alle erforderlichen Aktualisierungen vorgenommen haben, können Sie unten auf „Bestätigen“ klicken, um die Warnung zu parallelen Aktualisierungen zu löschen.",
       "confirm": "Bestätigen"
     },

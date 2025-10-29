@@ -55,7 +55,7 @@
       "form": "Formular-Aktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
-      "dataset": "Entitätslistenaktionen",
+      "dataset": "Objektlistenaktionen",
       "config": "Server-Konfigurationsaktionen",
       "upgrade": "Server-Aktualisierung",
       "task": "Systembetrieb"
@@ -79,6 +79,10 @@
         "update": "Aktualisieren",
         "update_publish": "Veröffentlichen",
         "create": "@:audit.action.default.create"
+      },
+      "entity": {
+        "bulk_delete": "Massenlöschung",
+        "bulk_restore": "Massenwiederherstellung"
       },
       "field_key": {
         "assignment_create": "Zugriff erteilen",
@@ -168,6 +172,7 @@
     "newPreview": "Neue Vorschau",
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
+    "selectRow": "Zeile auswählen",
     "reviewParallelUpdates": "Parallele Updates überprüfen",
     "tryAgain": "Nochmals versuchen",
     "upload": "Hochladen",
@@ -203,8 +208,8 @@
     "submissionDate": "Übermittelt um",
     "time": "Zeit",
     "type": "Typ",
-    "entities": "Entitäten insgesamt",
-    "lastEntity": "Neueste Entität"
+    "entities": "Objekte insgesamt",
+    "lastEntity": "Neuestes Objekt"
   },
   "plural": {
     "appUser": "App-Benutzer | App-Benutzer",
@@ -226,10 +231,10 @@
     "appUsers": "App-Benutzer",
     "attachments": "Anhänge",
     "config": "Server-Konfiguration",
-    "entity": "Entität",
-    "entities": "Entitäten",
-    "entityList": "Entitätsliste",
-    "entityLists": "Entitätslisten",
+    "entity": "Objekt",
+    "entities": "Objekte",
+    "entityList": "Objektliste",
+    "entityLists": "Objektlisten",
     "form": "Formular",
     "forms": "Formulare",
     "formAttachments": "Formularanhänge",
@@ -251,10 +256,13 @@
   },
   "alert": {
     "passwordTooShort": "Das Passwort muss mindestens 10 Zeichen lang sein.",
+    "updateEntity": "Objekt wurde erfolgreich aktualisiert.",
     "updateReviewState": "Überprüfung erfolgreich gespeichert.",
+    "versionChange": "Der Server wurde erfolgreich aktualisiert.",
+    "submissionDeleted": "Die Übermittlung wurde erfolgreich gelöscht.",
     "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
-    "entityRestored": "Die Entität \"{label}“ wurde wiederhergestellt.",
-    "entityDeleted": "Die Entität \"{label}“ wurde gelöscht."
+    "entityRestored": "Das Objekt \"{label}“ wurde wiederhergestellt.",
+    "entityDeleted": "Das Objekt \"{label}“ wurde gelöscht."
   },
   "moreInfo": {
     "clickHere": {
@@ -289,7 +297,7 @@
   "entity": {
     "label": "Etikett",
     "entityLabel": "Objektbezeichnung",
-    "entityId": "Entitäts-ID",
+    "entityId": "Objekt-ID",
     "noProperties": "Dieses Formular legt nur das \"Label“ fest.",
     "noEntity": "(keine)",
     "conflictsCount": "{count} Konflikt | {count} Konflikte"
@@ -304,12 +312,14 @@
     "dangerZone": "Gefahrenbereich",
     "data": "Daten",
     "docs": "Dokumentation",
+    "emptyMap": "Es sind noch keine Kartendaten verfügbar.",
     "emptyValue": "(leer)",
     "error": "Fehler",
     "filter": "Filter",
     "forum": "Forum",
     "lastUpdate": "Letzte Aktualisierung",
     "loading": "Wird geladen...",
+    "map": "Karte",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -320,11 +330,12 @@
     "tab": {
       "settings": "Einstellungen"
     },
+    "table": "Tabelle",
     "total": "Total",
     "totalSubmissions": "Gesamtzahl der Übermittlungen",
     "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
     "new": "Neu!",
-    "totalEntities": "Entitäten insgesamt",
+    "totalEntities": "Objekte insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
     "beta": "Beta",
@@ -358,8 +369,18 @@
       "problem": {
         "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht.",
         "409_17": {
-          "message": "Mit diesem Formular wird versucht, eine neue Entitätseigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Entitätseigenschaften zu erstellen, die mit Ausnahme der Gross- und Kleinschreibung mit den vorhandenen übereinstimmen:",
+          "message": "Mit diesem Formular wird versucht, eine neue Objekteigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Objekteigenschaften zu erstellen, die mit Ausnahme der Groß- und Kleinschreibung mit den vorhandenen übereinstimmen:",
           "duplicateProperty": "{provided} (bestehende: {current})"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Ihre Session läuft ab! Sie werden in 2 Minuten ausgeloggt.",
+        "expired": "Ihre Session ist abgelaufen. Melden Sie sich erneut an, um fortzufahren.",
+        "logoutError": {
+          "thereWasProblem": "Es gab ein Problem beim Ausloggen.",
+          "pleaseRefresh": "Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
         }
       }
     }

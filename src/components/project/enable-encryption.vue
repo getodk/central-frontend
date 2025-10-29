@@ -397,7 +397,7 @@ export default {
             "Sie können die Übermittlungsdaten nicht mehr online bearbeiten oder anschauen.",
             "Sie werden nicht mehr in der Lage sein, Daten über OData zu analysieren.",
             "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten.",
-            "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
+            "Neue Einreichungen werden nicht mehr zu Objekte verarbeitet."
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",

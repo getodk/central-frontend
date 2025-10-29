@@ -128,7 +128,7 @@ const convert = ref(null);
       "changeSetting": "Einstellung ändern"
     },
     "explanation": {
-      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
+      "userAction": "Sie legen fest, dass die Erstellung von Objekte erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
       "implication": {
         "full": "Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist. | Sie haben derzeit {records} Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.",
         "records": "{count} Hervorragender Rekord | {count} Ausstehende Aufzeichnungen"
@@ -139,8 +139,8 @@ const convert = ref(null);
       "description": "Ändern Sie die Einstellung und tun Sie nichts mit den ausstehenden Übermittlungen."
     },
     "convert": {
-      "label": "Konvertieren Sie alle ausstehenden Übermittlungen, die Entitäten erstellen.",
-      "description": "Ändern Sie die Einstellung und erstellen Sie Entitäten aus allen Übermittlungen, die eine Entitätserstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
+      "label": "Konvertieren Sie alle ausstehenden Übermittlungen, die Objekte erstellen.",
+      "description": "Ändern Sie die Einstellung und erstellen Sie Objekte aus allen Übermittlungen, die eine Objekterstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
     }
   },
   "es": {

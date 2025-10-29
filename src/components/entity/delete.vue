@@ -71,55 +71,37 @@ const del = () => {
     "title": "Löschen {label}",
     "introduction": [
       "Sind Sie sicher, dass Sie “{label}” löschen wollen?"
-    ],
-    "field": {
-      "noConfirm": "Sofortiges Löschen ohne Bestätigung, bis ich die Seite verlasse"
-    }
+    ]
   },
   "es": {
     "title": "Borrar {label}",
     "introduction": [
       "¿Estás seguro de que quieres borrar “{label}”?"
-    ],
-    "field": {
-      "noConfirm": "Borrar inmediatamente sin confirmación hasta que salga de la página"
-    }
+    ]
   },
   "fr": {
     "title": "Supprimer {label}",
     "introduction": [
       "Êtes vous sûr de vouloir supprimer \"{label}\" ?"
-    ],
-    "field": {
-      "noConfirm": "Supprimer immédiatement sans confirmation jusqu'à ce que je quitte la page"
-    }
+    ]
   },
   "it": {
     "title": "Elimina {label}",
     "introduction": [
       "Sei sicuro di voler eliminare \"{label}\"?"
-    ],
-    "field": {
-      "noConfirm": "Elimina immediatamente senza conferma finché non lascio la pagina"
-    }
+    ]
   },
   "pt": {
     "title": "Excluir {label}",
     "introduction": [
       "Tem certeza de que deseja excluir “{label}”?"
-    ],
-    "field": {
-      "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
-    }
+    ]
   },
   "zh-Hant": {
     "title": "刪除{label}",
     "introduction": [
       "您確定要刪除「{label}」？"
-    ],
-    "field": {
-      "noConfirm": "立即刪除，無需確認，直到我離開頁面"
-    }
+    ]
   }
 }
 </i18n>

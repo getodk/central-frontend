@@ -419,9 +419,9 @@ export default {
     "title": {
       "create": "Übermittelt von {name}",
       "entity": {
-        "create": "Entität {label} in {dataset} Entitätsliste erzeugt",
-        "update": "Entität {label} in {dataset} Entitätsliste aktualisiert",
-        "error": "Problem beim Erstellen einer Entität"
+        "create": "Objekt {label} in {dataset} Objektliste erzeugt",
+        "update": "Objekt {label} in {dataset} Objektliste aktualisiert",
+        "error": "Problem beim Erstellen eines Objekts"
       },
       "updateReviewState": {
         "null": {
@@ -449,7 +449,7 @@ export default {
       "delete": "Gelöscht von {name}",
       "undelete": "Wiederhergestellt von {name}",
       "submissionBacklog": {
-        "hold": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung der Entität",
+        "hold": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung des Objekts",
         "force": "Bearbeitete Übermittlung aus dem Rückstand ohne vorherige Übermittlung in der Offline-Verbuchungskette",
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
@@ -663,6 +663,7 @@ export default {
       },
       "comment": "Comentado por {name}",
       "delete": "Deletado por {name}",
+      "undelete": "Recuperado por {name}",
       "submissionBacklog": {
         "hold": "Aguardando Resposta anterior na cadeia de atualização offline antes de atualizar a Entidade",
         "force": "Resposta processada do backlog sem Resposta anterior na cadeia de atualização offline",

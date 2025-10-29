@@ -154,6 +154,17 @@ export default {
       }
     }
   },
+  "pt": {
+    "action": {
+      "download": {
+        "unfiltered": "Baixar {count} Resposta | Baixar todas as {count} Respostas | Baixar todas as {count} Respostas",
+        "filtered": {
+          "withoutCount": "Baixar todas as Respostas filtradas",
+          "withCount": "Baixar {count} Resposta filtrada | Baixar {count} Respostas filtradas | Baixar {count} Respostas filtradas"
+        }
+      }
+    }
+  },
   "zh-Hant": {
     "action": {
       "download": {

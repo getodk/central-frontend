@@ -201,6 +201,10 @@ const placeholder = (counts) => {
       "submitter": "Enviado por",
       "search": "Pesquisar remetentes…"
     },
+    "action": {
+      "all": "Todos",
+      "none": "Nenhum"
+    },
     "unknown": "Remetente desconhecido"
   },
   "sw": {

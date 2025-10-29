@@ -197,18 +197,18 @@ const hideOrComplete = () => {
     ]
   },
   "de": {
-    "title": "Entitätsliste erstellen",
-    "encrypted": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Entitäten in dieser Liste zu ändern. Entitäten müssen über Central oder die API verwaltet werden.",
-    "entityListName": "Name der Entitätsliste",
+    "title": "Objektliste erstellen",
+    "encrypted": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Objekte in dieser Liste zu ändern. Objekte müssen über Central oder die API verwaltet werden.",
+    "entityListName": "Name der Objektliste",
     "success": [
-      "Die Entitätsliste \"{name}\" ist erstellt worden.",
+      "Die Objektliste \"{name}\" ist erstellt worden.",
       "Sie können damit beginnen, indem Sie die Dateneigenschaften direkt auf dieser Seite hinzufügen oder indem Sie Formulare hochladen, die sie verwenden. In diesem Fall werden alle Eigenschaften, die das Formular aufruft, automatisch erstellt, wenn Sie das Formular veröffentlichen."
     ],
     "problem": {
-      "409_3": "In diesem Projekt existiert bereits eine Entitätsliste mit dem Namen “{datasetName}”."
+      "409_3": "In diesem Projekt existiert bereits eine Objektliste mit dem Namen “{datasetName}”."
     },
     "introduction": [
-      "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
+      "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
     ]
   },
   "es": {

@@ -187,6 +187,12 @@ const viewXml = modalData('FormVersionViewXml');
   },
   "pt": {
     "subtitle": "Carregado",
+    "changed": "Mudanças em relação à versão publicada",
+    "versionName": "Nome da versão: {name}",
+    "action": {
+      "upload": "Carregar nova Definição do Formulário"
+    },
+    "withinDef": "Nesta Definição de Formulário:",
     "title": "Versão Rascunho"
   },
   "zh-Hant": {

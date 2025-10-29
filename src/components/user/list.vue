@@ -217,7 +217,8 @@ export default {
       "Web-Benutzer haben Konten auf dieser Webseite, um Projekte auf diesem Server zu überwachen und zu administrieren. Administratoren können alles auf dieser Seite verwalten. Benutzer ohne seitenweite Rolle können in jedem Projekt in den Projekteinstellungen eine Rolle zugewiesen bekommen. Seitenweite Administratoren und einige Projektrollen können einen Webbrowser zum Ausfüllen von Formularen benutzen. Um Daten über eine App wie {collect} zu übermitteln, erstellen Sie App-Benutzer für jedes Projekt."
     ],
     "header": {
-      "sitewideRole": "Seitenweite Rolle"
+      "sitewideRole": "Seitenweite Rolle",
+      "lastActive": "Zuletzt aktiv"
     },
     "alert": {
       "create": "Ein Benutzer für \"{displayName}\" wurde erfolgreich erstellt.",
@@ -234,7 +235,8 @@ export default {
       "Los usuarios web tienen cuentas en este sitio web, para supervisar y administrar proyectos en el servidor. Los administradores pueden gestionar cualquier cosa en la página. Los usuarios que no poseen un Rol, se le puede asignar un Rol en configuración de proyecto. Los Administradores y algunos roles en el proyecto, pueden usar un explorador web para completar formularios. Para enviar la información a través de una aplicación tal como {collect}, cree Usuarios móviles en cada proyecto."
     ],
     "header": {
-      "sitewideRole": "Rol de sitio"
+      "sitewideRole": "Rol de sitio",
+      "lastActive": "Última actividad"
     },
     "alert": {
       "create": "Se creó un usuario satisfactoriamente para “{displayName}”.",
@@ -251,7 +253,8 @@ export default {
       "Les utilisateurs web ont des comptes sur ce site pour superviser et administrer les projets sur ce serveur. Les administrateurs peuvent gérer tout ce qui se trouve sur le site. Les utilisateurs n'ayant aucun rôle sur l'ensemble du site peuvent toujours être nommés gestionnaires de projet pour n'importe quel projet, à partir des paramètres de ce projet. Les administrateurs sur l'ensemble du site et certains rôles de projet peuvent utiliser leurs navigateurs pour remplir des formulaires. Pour soumettre des données à travers une application telle que {collect}, créez des utilisateurs mobiles pour chaque projet."
     ],
     "header": {
-      "sitewideRole": "Rôle sur l'ensemble du site"
+      "sitewideRole": "Rôle sur l'ensemble du site",
+      "lastActive": "Dernière activité"
     },
     "alert": {
       "create": "Un utilisateur a été créé avec succès pour \"{displayName}\".",
@@ -285,7 +288,8 @@ export default {
       "Gli Utenti Web hanno degli account su questo sito per supervisionare e amministrare i Progetti sul server. Gli amministratori possono gestire qualsiasi cosa sul sito. Agli utenti senza ruolo di supervisione e amministrazione può essere assegnato un ruolo su qualsiasi progetto, attraverso le impostazioni del progetto stesso. Gli amministratori del sito e alcuni ruoli del progetto possono utilizzare un browser Web per compilare i formulari. Per inviare dati tramite un'applicazione come {collect}, create degli Utenti app per ciascun progetto."
     ],
     "header": {
-      "sitewideRole": "Ruolo per tutto il sito"
+      "sitewideRole": "Ruolo per tutto il sito",
+      "lastActive": "Ultima attività"
     },
     "alert": {
       "create": "Un utente è stato creato con successo per \"{displayName}\"",
@@ -319,7 +323,8 @@ export default {
       "Os usuários de site têm contas nesse servidor para supervisionar e administrar os projetos neste servidor. Os administradores podem gerenciar qualquer coisa no site. Os usuários sem permissões de administração do site podem receber uma função em qualquer projeto, a partir das configurações do projeto. Os administradores e algumas funções do projeto podem usar um navegador da web para preencher os formulários. Para enviar dados por meio de um aplicativo como o {collect}, crie usuários de aplicativo para cada projeto."
     ],
     "header": {
-      "sitewideRole": "Função do site"
+      "sitewideRole": "Função do site",
+      "lastActive": "Último Login"
     },
     "alert": {
       "create": "Um usuário foi criado com sucesso para \"{displayName}\".",

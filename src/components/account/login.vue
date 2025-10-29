@@ -251,7 +251,8 @@ export default {
   },
   "de": {
     "alert": {
-      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
+      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten.",
+      "changePassword": "Um Ihr Konto zu schützen, achten Sie darauf, dass Ihr Passwort mindestens 10 Zeichen lang ist."
     },
     "oidc": {
       "body": "Klicken Sie auf Weiter, um zur Anmeldeseite zu gelangen.",
@@ -338,7 +339,8 @@ export default {
   },
   "pt": {
     "alert": {
-      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar."
+      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar.",
+      "changePassword": "Para proteger a sua conta, certifique-se que sua senha tem 10 caracteres ou mais."
     },
     "oidc": {
       "body": "Clique em Continuar para prosseguir para a página de login.",

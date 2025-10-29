@@ -197,7 +197,7 @@ const breadcrumbLinks = computed(() => [
   },
   "de": {
     "back": {
-      "title": "Entitätsdetail",
+      "title": "Objektdetail",
       "back": "Zurück zu {datasetName} Tabelle"
     }
   },
