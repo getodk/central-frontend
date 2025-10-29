@@ -262,20 +262,6 @@ describe('SubmissionMapView', () => {
         }));
   });
 
-  // Submissions with geo data are a subset of all submissions, so we don't show
-  // the count of all submissions when loading the map.
-  it('does not show the submission count in the loading message', () => {
-    testData.extendedForms.createPast(1, { fields: [mypoint] });
-    testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
-    return load('/projects/1/forms/f/submissions')
-      .complete()
-      .request(toggleView('map'))
-      .beforeAnyResponse(app => {
-        app.get('#odata-loading-message').text().should.equal('Loading Submissions…');
-      })
-      .respondWithData(testData.submissionGeojson);
-  });
-
   it('does not update the tab badge', async () => {
     testData.extendedForms.createPast(1, { fields: [mypoint], submissions: 2 });
     testData.extendedSubmissions

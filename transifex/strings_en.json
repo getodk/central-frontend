@@ -5059,6 +5059,9 @@
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": "Preparing map — loading known Submissions and scanning for new ones. This could take a while."
+      },
       "overlapTitle": {
         "string": "{count, plural, one {{count} Submission in this area} other {{count} Submissions in this area}}"
       }
