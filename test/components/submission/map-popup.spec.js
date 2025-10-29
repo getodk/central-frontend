@@ -144,7 +144,8 @@ describe('SubmissionMapPopup', () => {
         testData.fields.int('/i1'),
         testData.fields.int('/i2'),
         testData.fields.binary('/b1'),
-        testData.fields.binary('/b2')
+        testData.fields.binary('/b2'),
+        testData.fields.geopoint('/p1')
       ]
     });
     testData.extendedSubmissions.createPast(1, {
@@ -152,14 +153,15 @@ describe('SubmissionMapPopup', () => {
       i1: 1000,
       i2: null,
       b1: 'foo.jpg',
-      b2: null
+      b2: null,
+      p1: 'POINT (1 1)'
     });
     return mockHttp()
       .mount(SubmissionMapPopup, mountOptions())
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
         const dd = component.findAll('.dl-data-dd');
-        dd.length.should.equal(4);
+        dd.length.should.equal(5);
 
         dd[0].text().should.equal('1,000');
         dd[1].text().should.equal('(empty)');
