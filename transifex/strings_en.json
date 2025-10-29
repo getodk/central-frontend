@@ -3708,6 +3708,9 @@
       "zoomToFit": {
         "string": "Zoom to fit all data",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "string": "Graphics issue detected. Your browser cannot display the map now. Enable graphics acceleration settings."
       }
     },
     "Home": {
