@@ -3107,7 +3107,7 @@
       },
       "alert": {
         "upload": {
-          "string": "The new Form definition has been saved as your Draft."
+          "string": ""
         },
         "publish": {
           "string": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.\n"

@@ -205,7 +205,6 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "de": {
     "alert": {
-      "upload": "The new Form definition has been saved as your Draft.",
       "publish": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.",
       "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
       "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
