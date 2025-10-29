@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
 
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
-          :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
+          :button-appearance="true" :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
           :to="'.form-submissions-heading-row'">
           <submission-download-button :form-version="formVersion"
