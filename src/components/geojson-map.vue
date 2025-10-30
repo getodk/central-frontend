@@ -387,7 +387,7 @@ const hide = () => {
 
 // getHits() below searches a radius for overlapping features. overlapRadius
 // sets that radius.
-const overlapRadius = ref(10);
+const overlapRadius = ref(8);
 
 // If showsOverlapHints.value is `true`, then the overlap search area will be
 // shown on the map as a helpful hint.
@@ -521,7 +521,7 @@ const selectCluster = (cluster) => {
   // If there aren't too many features in the cluster, calculate their boundary
   // box and fit the view to that. If there are enough features that such a
   // calculation might be onerous, just zoom in on the cluster.
-  if (features.length < 1000) {
+  if (features.length <= 2000) {
     const extent = createEmpty();
     for (const feature of features)
       extend(extent, feature.getGeometry().getExtent());
