@@ -275,6 +275,7 @@ const fitViewToAllFeatures = (animate = true) => {
 
 const inViewCount = ref(0);
 const countFeaturesInView = () => {
+  log('counting features in view');
   let count = 0;
   const extent = mapInstance.getView().calculateExtent();
   if (clusterLayer.isVisible()) {
@@ -364,9 +365,9 @@ const show = async () => {
   ]);
   if (abortController.signal.aborted) return;
 
+  countFeaturesInView();
   shown.value = true;
   abortShow = noop;
-  inViewCount.value = featureCount.value;
   log('shown');
   emit('shown');
 };
