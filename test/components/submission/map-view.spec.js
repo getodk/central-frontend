@@ -229,7 +229,7 @@ describe('SubmissionMapView', () => {
       const message = app.get('.empty-table-message');
       message.should.be.visible();
       const text = message.text();
-      text.should.equal('No map data available yet. Submissions only appear if they include data in the first geo field.');
+      text.should.equal('No map data available yet. Submissions only appear if they include data in the first geo field. Learn more about mapping Submissions');
       countFeatures(app).should.equal(0);
     });
 

@@ -55,6 +55,10 @@ except according to the terms contained in the LICENSE file.
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
+        <template v-if="emptyMessage === emptyMapMessage">
+          <br>
+          <doc-link to="central-entities/#managing-entity-data">{{ $t('learnMoreMap') }}</doc-link>
+        </template>
       </p>
 
       <submission-table-view v-if="dataView === 'table'" ref="view"
@@ -87,6 +91,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
+import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import RadioField from '../radio-field.vue';
@@ -118,6 +123,7 @@ import TableRefreshBar from '../table-refresh-bar.vue';
 export default {
   name: 'SubmissionList',
   components: {
+    DocLink,
     EnketoFill,
     Loading,
     RadioField,
@@ -507,6 +513,7 @@ export default {
     },
     "noMatching": "There are no matching Submissions.",
     "emptyMap": "Submissions only appear if they include data in the first geo field.",
+    "learnMoreMap": "Learn more about mapping Submissions",
     "allDeleted": "All Submissions are deleted.",
     "allDeletedOnPage": "All Submissions on the page have been deleted.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",

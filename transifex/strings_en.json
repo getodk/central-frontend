@@ -4975,6 +4975,9 @@
       "emptyMap": {
         "string": "Submissions only appear if they include data in the first geo field."
       },
+      "learnMoreMap": {
+        "string": "Learn more about mapping Submissions"
+      },
       "allDeleted": {
         "string": "All Submissions are deleted."
       },
