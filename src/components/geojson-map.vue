@@ -49,14 +49,14 @@ import { boundingExtent, createEmpty, extend, getCenter } from 'ol/extent';
 import { get as getProjection } from 'ol/proj';
 
 import { equals } from 'ramda';
-import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
-import GeojsonMapDevTools from './geojson-map/dev-tools.vue';
 
 import useEventListener from '../composables/event-listener';
 import { getOverlapHintStyles, getStyles, getTextStyles } from '../util/map-styles';
+import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 import { px } from '../util/dom';
 
@@ -69,6 +69,8 @@ const props = defineProps({
   }
 });
 const emit = defineEmits(['show', 'shown', 'hit', 'selection-changed']);
+
+const GeojsonMapDevTools = defineAsyncComponent(loadAsync('GeojsonMapDevTools'));
 
 const { t, n } = useI18n();
 const { config, buildMode } = inject('container');
