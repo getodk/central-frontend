@@ -59,6 +59,7 @@ import useEventListener from '../composables/event-listener';
 import { getOverlapHintStyles, getStyles, getTextStyles } from '../util/map-styles';
 import { noop } from '../util/util';
 import { px } from '../util/dom';
+import { useI18nUtils } from '../util/i18n';
 
 const props = defineProps({
   data: Object,
@@ -71,6 +72,7 @@ const props = defineProps({
 const emit = defineEmits(['show', 'shown', 'hit', 'selection-changed']);
 
 const { t, n } = useI18n();
+const { joinSentences } = useI18nUtils();
 const { redAlert, config, buildMode } = inject('container');
 
 // eslint-disable-next-line no-console
@@ -100,7 +102,8 @@ try {
 } catch (error) {}
 
 const canRender = webGL || buildMode === 'test';
-if (!canRender) redAlert.show(t('noWebGL'));
+if (!canRender)
+  redAlert.show(joinSentences([t('noWebGL.title'), t('noWebGL.message')]));
 
 const style = getStyles();
 const createWebGLLayer = (source) => (!webGL
@@ -811,7 +814,10 @@ $muted-background-color: #F1F5F9;
     "showing": "Showing {count} of {total}",
     // Shown above control button on map to zoom out to show all features
     "zoomToFit": "Zoom to fit all data",
-    "noWebGL": "Graphics issue detected. Your browser cannot display the map now. Enable graphics acceleration settings."
+    "noWebGL": {
+      "title": "Graphics issue detected.",
+      "message": "Your browser cannot display the map now. Enable graphics acceleration settings."
+    }
   }
 }
 </i18n>

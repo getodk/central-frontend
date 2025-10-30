@@ -3710,7 +3710,12 @@
         "developer_comment": "Shown above control button on map to zoom out to show all features"
       },
       "noWebGL": {
-        "string": "Graphics issue detected. Your browser cannot display the map now. Enable graphics acceleration settings."
+        "title": {
+          "string": "Graphics issue detected."
+        },
+        "message": {
+          "string": "Your browser cannot display the map now. Enable graphics acceleration settings."
+        }
       }
     },
     "Home": {
