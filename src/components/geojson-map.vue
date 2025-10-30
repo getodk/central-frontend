@@ -45,7 +45,7 @@ import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import Zoom from 'ol/control/Zoom';
-import { boundingExtent, createEmpty, extend, getCenter } from 'ol/extent';
+import { boundingExtent, containsExtent, createEmpty as createEmptyExtent, extend, getCenter } from 'ol/extent';
 import { get as getProjection } from 'ol/proj';
 
 import { equals } from 'ramda';
@@ -518,22 +518,33 @@ const selectCluster = (cluster) => {
   selectFeature(null);
 
   const features = cluster.get('features');
+  const view = mapInstance.getView();
   // If there aren't too many features in the cluster, calculate their boundary
   // box and fit the view to that. If there are enough features that such a
   // calculation might be onerous, just zoom in on the cluster.
   if (features.length < 1000) {
-    const extent = createEmpty();
+    const featureExtent = createEmptyExtent();
     for (const feature of features)
-      extend(extent, feature.getGeometry().getExtent());
-    fitView(extent, { duration: animationDuration });
-  } else {
-    const view = mapInstance.getView();
-    view.animate({
-      center: cluster.getGeometry().getCoordinates(),
-      zoom: view.getZoom() + 1,
-      duration: animationDuration
-    });
+      extend(featureExtent, feature.getGeometry().getExtent());
+
+    // The cluster could contain a LineString or Polygon of arbitrary size, so
+    // we have to check whether featureExtent is fully in view. We want to zoom
+    // in, not zoom out.
+    const viewExtent = view.calculateExtent();
+    const viewContainsFeatures = containsExtent(viewExtent, featureExtent) &&
+      !equals(viewExtent, featureExtent);
+
+    if (viewContainsFeatures) {
+      fitView(featureExtent, { duration: animationDuration });
+      return;
+    }
   }
+
+  view.animate({
+    center: cluster.getGeometry().getCoordinates(),
+    zoom: view.getZoom() + 1,
+    duration: animationDuration
+  });
 };
 
 const selectFeatureAtPixel = (pixel) => {
