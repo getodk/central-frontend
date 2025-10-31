@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
         {{ emptyMessage }}
         <template v-if="emptyMessage === emptyMapMessage">
           <br>
-          <doc-link to="central-entities/#managing-entity-data">{{ $t('learnMoreMap') }}</doc-link>
+          <doc-link to="central-submissions/#accessing-submissions">{{ $t('learnMoreMap') }}</doc-link>
         </template>
       </p>
 
