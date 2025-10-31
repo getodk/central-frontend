@@ -33,7 +33,7 @@ defineProps({
   position: relative;
 
   .disable-container-overlay {
-    @include overlay(absolute, 0.5);
+    @include overlay(absolute, 0.3);
     cursor: not-allowed;
   }
 }
