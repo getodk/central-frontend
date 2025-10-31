@@ -45,7 +45,7 @@ import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import Zoom from 'ol/control/Zoom';
-import { boundingExtent, containsExtent, createEmpty as createEmptyExtent, extend, getCenter } from 'ol/extent';
+import { boundingExtent, createEmpty as createEmptyExtent, extend, getCenter } from 'ol/extent';
 import { get as getProjection } from 'ol/proj';
 
 import { equals } from 'ramda';
@@ -79,9 +79,6 @@ const { redAlert, config, buildMode } = inject('container');
 
 // eslint-disable-next-line no-console
 const log = config.devTools ? console.log.bind(console) : noop;
-
-// Constants
-const animationDuration = 1000;
 
 const el = useTemplateRef('el');
 const mapContainer = useTemplateRef('mapContainer');
@@ -285,10 +282,13 @@ const resize = () => {
 ////////////////////////////////////////////////////////////////////////////////
 // VIEW
 
+const viewPadding = 50;
+const animationDuration = 1000;
+
 const fitView = (extent, options = undefined) => {
   mapInstance.getView().fit(extent, {
     // We need to provide enough space for styled features.
-    padding: [50, 50, 50, 50],
+    padding: new Array(4).fill(viewPadding),
     // Avoid zooming in to an extreme degree.
     maxZoom: maxZoom.value,
     ...options
@@ -568,13 +568,18 @@ const selectCluster = (cluster) => {
       extend(featureExtent, feature.getGeometry().getExtent());
 
     // The cluster could contain a LineString or Polygon of arbitrary size, so
-    // we have to check whether featureExtent is fully in view. We want to zoom
-    // in, not zoom out.
-    const viewExtent = view.calculateExtent();
-    const viewContainsFeatures = containsExtent(viewExtent, featureExtent) &&
-      !equals(viewExtent, featureExtent);
+    // it's possible that featureExtent is not fully in view. In that case,
+    // fitting the view to featureExtent could cause the map to zoom out, not
+    // in. Here, we check whether fitting the view to featureExtent would cause
+    // the map to zoom in.
+    const oldResolution = view.getResolution();
+    // Subtracting the padding, as padding reduces the effective size of the
+    // area in which featureExtent can be shown.
+    const size = mapInstance.getSize().map(length => length - 2 * viewPadding);
+    const newResolution = view.getResolutionForExtent(featureExtent, size);
+    const fitWouldZoomIn = newResolution < oldResolution;
 
-    if (viewContainsFeatures) {
+    if (fitWouldZoomIn) {
       fitView(featureExtent, { duration: animationDuration });
       return;
     }
