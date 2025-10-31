@@ -146,6 +146,9 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-version-view-xml" */
     '../components/form-version/view-xml.vue'
   )))
+  .set('GeojsonMapDevTools', loader(() => import(
+    '../components/geojson-map/dev-tools.vue'
+  )))
   .set('Home', loader(() => import(
     /* webpackChunkName: "component-home" */
     '../components/home.vue'
