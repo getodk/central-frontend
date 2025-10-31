@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="submission-map-view" ref="el">
-    <odata-loading-message :state="geojson.initiallyLoading || showingMap"
-      type="submission" :filter="filter != null"/>
+    <loading :state="geojson.initiallyLoading || showingMap"
+      :message="$t('loading')"/>
     <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
       @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged" @hit="handleHit"/>
@@ -37,8 +37,8 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
+import Loading from '../loading.vue';
 import MapOverlapPopup from '../map-overlap-popup.vue';
-import OdataLoadingMessage from '../odata-loading-message.vue';
 import SubmissionMapPopup from './map-popup.vue';
 
 import { apiPaths } from '../../util/request';
@@ -181,6 +181,7 @@ defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
 #submission-map-view {
   position: relative;
 
+  .loading { color: #555; }
   .page-section:has(&) { margin-bottom: 15px; }
 }
 </style>
@@ -188,6 +189,7 @@ defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
 <i18n lang="json5">
 {
   "en": {
+    "loading": "Preparing map — loading known Submissions and scanning for new ones. This could take a while.",
     "overlapTitle": "{count} Submission in this area | {count} Submissions in this area"
   }
 }
