@@ -26,7 +26,7 @@ const selectedId = ['var', 'selectedId'];
 // map. We also considered magenta, but the OSM base map uses magenta for
 // certain features.
 const featureColor = '#6d389f';
-const colorWithAlpha = (alpha = 1) => {
+const colorWithAlpha = (alpha) => {
   const alphaHex = Math.round(255 * alpha).toString(16).padStart(2, 0);
   return featureColor + alphaHex;
 };
