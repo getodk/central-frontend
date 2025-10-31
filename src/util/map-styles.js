@@ -27,7 +27,7 @@ const selectedId = ['var', 'selectedId'];
 // certain features.
 const featureColor = '#6d389f';
 const colorWithAlpha = (alpha) => {
-  const alphaHex = Math.round(255 * alpha).toString(16).padStart(2, 0);
+  const alphaHex = Math.round(255 * alpha).toString(16).padStart(2, '0');
   return featureColor + alphaHex;
 };
 
