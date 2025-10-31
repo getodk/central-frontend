@@ -59,6 +59,7 @@ import { getOverlapHintStyles, getStyles, getTextStyles } from '../util/map-styl
 import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 import { px } from '../util/dom';
+import { useI18nUtils } from '../util/i18n';
 
 const props = defineProps({
   data: Object,
@@ -73,7 +74,8 @@ const emit = defineEmits(['show', 'shown', 'hit', 'selection-changed']);
 const GeojsonMapDevTools = defineAsyncComponent(loadAsync('GeojsonMapDevTools'));
 
 const { t, n } = useI18n();
-const { config, buildMode } = inject('container');
+const { joinSentences } = useI18nUtils();
+const { redAlert, config, buildMode } = inject('container');
 
 // eslint-disable-next-line no-console
 const log = config.devTools ? console.log.bind(console) : noop;
@@ -87,14 +89,26 @@ const mapContainer = useTemplateRef('mapContainer');
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// OPENLAYERS OBJECTS
+// WEBGL
 
-const baseLayer = new TileLayer({ source: new OSM() });
+// We use WebGL for performance reasons. WebGL isn't available in our current
+// testing setup, so in test, we fall back to a basic 2D canvas. That misses out
+// on some styling functionality, but we don't really need that in test. Outside
+// of test though, if WebGL isn't available, we show a redAlert and nothing
+// else. In that setting, styling is needed.
+
+let webGL = false;
+try {
+  const canvas = document.createElement('canvas');
+  if (window.WebGLRenderingContext && canvas.getContext('webgl')) webGL = true;
+} catch (error) {}
+
+const canRender = webGL || buildMode === 'test';
+if (!canRender)
+  redAlert.show(joinSentences([t('noWebGL.title'), t('noWebGL.message')]));
 
 const style = getStyles();
-// We use WebGL for performance reasons. WebGL isn't available in our current
-// testing setup, so in test, we fall back to a basic 2D canvas.
-const createWebGLLayer = (source) => (buildMode === 'test'
+const createWebGLLayer = (source) => (!webGL
   ? new VectorLayer({ source })
   : new WebGLVectorLayer({
     source,
@@ -103,6 +117,13 @@ const createWebGLLayer = (source) => (buildMode === 'test'
     style,
     variables: { selectedId: '' }
   }));
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// OPENLAYERS OBJECTS
+
+const baseLayer = new TileLayer({ source: new OSM() });
 
 const featureSource = new VectorSource();
 const featureLayer = createWebGLLayer(featureSource);
@@ -197,6 +218,10 @@ const featureCount = ref(0);
 
 const addFeatures = () => {
   if (props.data == null) return;
+  // If canRender is `false` -- if WebGL isn't available -- then we can't render
+  // the map correctly. To prevent the map from being shown, here we don't even
+  // allow features to be added.
+  if (!canRender) return;
 
   const features = new GeoJSON().readFeatures(props.data, {
     featureProjection: mapInstance.getView().getProjection()
@@ -418,7 +443,7 @@ const showOverlapHint = (pixel) => {
 };
 const hideOverlapHint = () => { overlapHintSource.clear(true); };
 
-if (config.devTools) {
+if (config.devTools && webGL) {
   const overlapHintLayer = createWebGLLayer(overlapHintSource);
   overlapHintLayer.setStyle(getOverlapHintStyles(overlapRadius.value));
   mapInstance.addLayer(overlapHintLayer);
@@ -818,7 +843,11 @@ $muted-background-color: #F1F5F9;
     // {count} and {total} are both numbers.
     "showing": "Showing {count} of {total}",
     // Shown above control button on map to zoom out to show all features
-    "zoomToFit": "Zoom to fit all data"
+    "zoomToFit": "Zoom to fit all data",
+    "noWebGL": {
+      "title": "Graphics issue detected.",
+      "message": "Your browser cannot display the map now. Enable graphics acceleration settings."
+    }
   }
 }
 </i18n>
