@@ -1470,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Number of Entities created via bulk upload"
+        },
+        "max_geo_per_form": {
+          "string": "Maximum number of Submissions with geo data in a Form"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Number of bulk Entity delete Audit Log Events"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Number of Entity Lists with geometry property"
+        },
+        "num_entity_create_forms": {
+          "string": "Number of Forms that create Entities"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Number of Forms that create Entities in repeats"
+        },
+        "num_entity_update_forms": {
+          "string": "Number of Forms that update Entities"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Number of Forms that update Entities in repeats"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Number of Forms that both create and update Entities"
+        },
+        "num_entities_with_geometry": {
+          "string": "Number of Entities with geometry data"
         }
       }
     },
@@ -4975,6 +5002,9 @@
       "emptyMap": {
         "string": "Submissions only appear if they include data in the first geo field."
       },
+      "learnMoreMap": {
+        "string": "Learn more about mapping Submissions"
+      },
       "allDeleted": {
         "string": "All Submissions are deleted."
       },
@@ -5059,6 +5089,9 @@
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": "Preparing map — loading known Submissions and scanning for new ones. This could take a while."
+      },
       "overlapTitle": {
         "string": "{count, plural, one {{count} Submission in this area} other {{count} Submissions in this area}}"
       }

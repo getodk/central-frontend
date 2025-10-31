@@ -49,14 +49,14 @@ import { boundingExtent, containsExtent, createEmpty as createEmptyExtent, exten
 import { get as getProjection } from 'ol/proj';
 
 import { equals } from 'ramda';
-import { computed, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, inject, onBeforeUnmount, onMounted, useTemplateRef, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FitIcon from '../assets/images/geojson-map/fullscreen.svg';
-import GeojsonMapDevTools from './geojson-map/dev-tools.vue';
 
 import useEventListener from '../composables/event-listener';
 import { getOverlapHintStyles, getStyles, getTextStyles } from '../util/map-styles';
+import { loadAsync } from '../util/load-async';
 import { noop } from '../util/util';
 import { px } from '../util/dom';
 
@@ -69,6 +69,8 @@ const props = defineProps({
   }
 });
 const emit = defineEmits(['show', 'shown', 'hit', 'selection-changed']);
+
+const GeojsonMapDevTools = defineAsyncComponent(loadAsync('GeojsonMapDevTools'));
 
 const { t, n } = useI18n();
 const { config, buildMode } = inject('container');
@@ -275,6 +277,7 @@ const fitViewToAllFeatures = (animate = true) => {
 
 const inViewCount = ref(0);
 const countFeaturesInView = () => {
+  log('counting features in view');
   let count = 0;
   const extent = mapInstance.getView().calculateExtent();
   if (clusterLayer.isVisible()) {
@@ -322,6 +325,7 @@ let abortShow = noop;
 
 const show = async () => {
   if (shown.value) return;
+  log('attempting to show map');
 
   // show() is async, but there are also cases where it will be called multiple
   // times in a short period of time. Because of that, show() is abortable.
@@ -329,17 +333,26 @@ const show = async () => {
   // emitting `show` twice.
   abortShow();
 
-  if (featureCount.value === 0) return;
+  if (featureCount.value === 0) {
+    log('no features; map not shown');
+    return;
+  }
 
   // Before the view can be fit, the map first needs to be sized: otherwise, the
   // fit would be incorrect. If the map hasn't been sized, we return immediately
   // and try again later.
-  if (mapInstance.getSize().find(length => length === 0)) return;
+  if (mapInstance.getSize().some(length => length === 0)) {
+    log('map not sized; not shown');
+    return;
+  }
 
   // Give the parent component an opportunity to resize the map right before
   // it's shown.
   resize();
-  if (mapInstance.getSize().find(length => length === 0)) return;
+  if (mapInstance.getSize().some(length => length === 0)) {
+    log('map not sized; not shown');
+    return;
+  }
 
   emit('show');
   fitViewToAllFeatures(false);
@@ -347,6 +360,7 @@ const show = async () => {
   // Set abortShow.
   const abortController = new AbortController();
   abortShow = () => {
+    log('aborting show');
     abortController.abort();
     abortShow = noop;
   };
@@ -364,9 +378,10 @@ const show = async () => {
   ]);
   if (abortController.signal.aborted) return;
 
+  countFeaturesInView();
+
   shown.value = true;
   abortShow = noop;
-  inViewCount.value = featureCount.value;
   log('shown');
   emit('shown');
 };
@@ -387,7 +402,7 @@ const hide = () => {
 
 // getHits() below searches a radius for overlapping features. overlapRadius
 // sets that radius.
-const overlapRadius = ref(10);
+const overlapRadius = ref(7);
 
 // If showsOverlapHints.value is `true`, then the overlap search area will be
 // shown on the map as a helpful hint.
@@ -522,7 +537,7 @@ const selectCluster = (cluster) => {
   // If there aren't too many features in the cluster, calculate their boundary
   // box and fit the view to that. If there are enough features that such a
   // calculation might be onerous, just zoom in on the cluster.
-  if (features.length < 1000) {
+  if (features.length <= 2000) {
     const featureExtent = createEmptyExtent();
     for (const feature of features)
       extend(featureExtent, feature.getGeometry().getExtent());
