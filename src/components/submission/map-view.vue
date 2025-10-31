@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
+import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch, watchSyncEffect } from 'vue';
 
 import Loading from '../loading.vue';
 import MapOverlapPopup from '../map-overlap-popup.vue';
@@ -94,6 +94,7 @@ const geojson = createResource('geojson', () => ({
     return data;
   }
 }));
+watchSyncEffect(() => { if (geojson.data == null) odata.data = null; });
 
 const fetchData = (clear = true) => {
   const url = apiPaths.submissions(
