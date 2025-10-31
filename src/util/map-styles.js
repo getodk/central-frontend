@@ -26,15 +26,15 @@ const selectedId = ['var', 'selectedId'];
 // map. We also considered magenta, but the OSM base map uses magenta for
 // certain features.
 const featureColor = '#6d389f';
-const withAlpha = (rgbHex, alpha = 1) => {
+const colorWithAlpha = (alpha = 1) => {
   const alphaHex = Math.round(255 * alpha).toString(16).padStart(2, 0);
-  return rgbHex + alphaHex;
+  return featureColor + alphaHex;
 };
 
 // Styles
 const styleCircle = (radius, alpha) => ({
   'circle-radius': radius,
-  'circle-fill-color': withAlpha(featureColor, alpha),
+  'circle-fill-color': colorWithAlpha(alpha),
   'circle-displacement': [0, 0]
 });
 const styleIcon = (length) => ({
@@ -63,7 +63,7 @@ export const getStyles = () => [
   // Selected LineString or Polygon
   {
     filter: all(geometryType('LineString', 'Polygon'), eq(getId, selectedId)),
-    style: styleStroke(20, withAlpha(featureColor, 0.2), 'transparent')
+    style: styleStroke(20, colorWithAlpha(0.2), 'transparent')
   },
   // Increase the clickable area of an unselected LineString.
   {
@@ -73,7 +73,7 @@ export const getStyles = () => [
   // Any LineString or Polygon
   {
     filter: geometryType('LineString', 'Polygon'),
-    style: styleStroke(3, featureColor, withAlpha(featureColor, 0.2))
+    style: styleStroke(3, featureColor, colorWithAlpha(0.2))
   },
 
   // Cluster Point
