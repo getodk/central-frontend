@@ -62,6 +62,7 @@ const disabledMessageId = computed(() =>
 .radio-field.btn-appearance {
   input[type="radio"] {
     appearance: none;
+    opacity: 0;
   }
   .btn-toggle {
     border-radius: 0 2px 2px 0;
