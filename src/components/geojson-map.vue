@@ -366,6 +366,7 @@ const show = async () => {
   if (abortController.signal.aborted) return;
 
   countFeaturesInView();
+
   shown.value = true;
   abortShow = noop;
   log('shown');
