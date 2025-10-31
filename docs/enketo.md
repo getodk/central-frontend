@@ -47,7 +47,7 @@ ODK Central Backend is already configured to connect with Enketo. The following 
     },
 ```
 
-ODK Central Frontend is also already configured for Enketo as well. The following lines should already be in [`main.nginx.conf`](../main.nginx.conf) to create a reverse proxy to Enketo.
+ODK Central Frontend is also already configured for Enketo as well. The following lines should already be in [`./nginx-conf/main.nginx.conf`](../nginx-conf/main.nginx.conf) to create a reverse proxy to Enketo.
 
 ```
     location /- {
