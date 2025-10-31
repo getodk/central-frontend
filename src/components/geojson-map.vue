@@ -325,6 +325,7 @@ let abortShow = noop;
 
 const show = async () => {
   if (shown.value) return;
+  log('attempting to show map');
 
   // show() is async, but there are also cases where it will be called multiple
   // times in a short period of time. Because of that, show() is abortable.
@@ -332,17 +333,26 @@ const show = async () => {
   // emitting `show` twice.
   abortShow();
 
-  if (featureCount.value === 0) return;
+  if (featureCount.value === 0) {
+    log('no features; map not shown');
+    return;
+  }
 
   // Before the view can be fit, the map first needs to be sized: otherwise, the
   // fit would be incorrect. If the map hasn't been sized, we return immediately
   // and try again later.
-  if (mapInstance.getSize().find(length => length === 0)) return;
+  if (mapInstance.getSize().some(length => length === 0)) {
+    log('map not sized; not shown');
+    return;
+  }
 
   // Give the parent component an opportunity to resize the map right before
   // it's shown.
   resize();
-  if (mapInstance.getSize().find(length => length === 0)) return;
+  if (mapInstance.getSize().some(length => length === 0)) {
+    log('map not sized; not shown');
+    return;
+  }
 
   emit('show');
   fitViewToAllFeatures(false);
@@ -350,6 +360,7 @@ const show = async () => {
   // Set abortShow.
   const abortController = new AbortController();
   abortShow = () => {
+    log('aborting show');
     abortController.abort();
     abortShow = noop;
   };
