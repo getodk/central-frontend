@@ -144,6 +144,15 @@ export default {
       "num_entity_creates_sub": "Number of Entities created via Submissions",
       "num_entity_creates_api": "Number of Entities created via API",
       "num_entity_creates_bulk": "Number of Entities created via bulk upload",
+      "max_geo_per_form": "Maximum number of Submissions with geo data in a Form",
+      "num_entity_bulk_deletes": "Number of bulk Entity delete Audit Log Events",
+      "num_datasets_with_geometry": "Number of Entity Lists with geometry property",
+      "num_entity_create_forms": "Number of Forms that create Entities",
+      "num_repeat_entity_create_forms": "Number of Forms that create Entities in repeats",
+      "num_entity_update_forms": "Number of Forms that update Entities",
+      "num_repeat_entity_update_forms": "Number of Forms that update Entities in repeats",
+      "num_entity_create_update_forms": "Number of Forms that both create and update Entities",
+      "num_entities_with_geometry": "Number of Entities with geometry data"
     }
   }
 }
