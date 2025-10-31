@@ -181,6 +181,7 @@ defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
 #submission-map-view {
   position: relative;
 
+  .loading { color: #555; }
   .page-section:has(&) { margin-bottom: 15px; }
 }
 </style>
