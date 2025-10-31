@@ -215,7 +215,11 @@ const isCluster = (feature) => feature.get('clusterSize') != null;
 const featureCount = ref(0);
 
 const addFeatures = () => {
-  if (props.data == null || !canRender) return;
+  if (props.data == null) return;
+  // If canRender is `false` -- if WebGL isn't available -- then we can't render
+  // the map correctly. To prevent the map from being shown, here we don't even
+  // allow features to be added.
+  if (!canRender) return;
 
   const features = new GeoJSON().readFeatures(props.data, {
     featureProjection: mapInstance.getView().getProjection()
