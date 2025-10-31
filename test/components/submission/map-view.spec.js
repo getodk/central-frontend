@@ -241,6 +241,22 @@ describe('SubmissionMapView', () => {
       countFeatures(app).should.equal(0);
     });
 
+    it('hides the empty message during a new request for GeoJSON', () =>
+      load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
+        .afterResponses(app => {
+          app.get('.empty-table-message').should.be.visible();
+        })
+        .request(changeMultiselect('#submission-filters-review-state', [1]))
+        .beforeAnyResponse(app => {
+          app.get('.empty-table-message').should.be.hidden();
+          app.get('#submission-map-view .loading').should.be.visible();
+        })
+        .respondWithData(testData.submissionGeojson)
+        .afterResponse(app => {
+          app.get('.empty-table-message').should.be.visible();
+          app.get('#submission-map-view .loading').should.be.hidden();
+        }));
+
     it('hides the empty message after toggling to map view', () =>
       load('/projects/1/forms/f/submissions')
         .afterResponses(app => {
