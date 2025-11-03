@@ -200,16 +200,23 @@ defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
 <i18n>
 {
   "de": {
+    "loading": "Karte wird vorbereitet – bekannte Einreichungen werden geladen und nach neuen gesucht. Dies kann eine Weile dauern.",
     "overlapTitle": "{count} Übermittlung in diesem Bereich | {count} Übermittlungen in diesem Bereich"
   },
   "es": {
-    "overlapTitle": "{count}Envío a esta zona | {count}Envíos a esta zona | {count}Envíos a esta zona"
+    "loading": "Preparando mapa: cargando envíos conocidos y buscando nuevos. Esto puede tardar un poco.",
+    "overlapTitle": "{count} Envío a esta zona | {count} Envíos a esta zona | {count} Envíos a esta zona"
   },
   "fr": {
+    "loading": "Préparation de carte en cours -- chargement de soumissions connues et analyse des soumissions nouvelles. Ceci pourrait prendre un certain temps.",
     "overlapTitle": "{count} soumission visible | {count} soumissions visibles | {count} soumissions visibles"
   },
   "it": {
+    "loading": "Preparazione della mappa: caricamento degli invii noti e ricerca di quelli nuovi. L'operazione potrebbe richiedere alcuni minuti.",
     "overlapTitle": "{count} Invio in quest'area | {count} Invii in quest'area | {count} Invii in quest'area"
+  },
+  "zh-Hant": {
+    "overlapTitle": "此區域內有{count}筆提交資料"
   }
 }
 </i18n>

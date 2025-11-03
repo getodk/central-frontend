@@ -108,8 +108,8 @@ const diffCounts = computed(() => {
       "datasetsOnly": "Veröffentlichen dieses Entwurfs aktualisiert {count} Objektliste. | Veröffentlichen dieses Entwurfs aktualisiert {count} Objektlisten.",
       "newProperties": {
         "full": "Veröffentlichen dieses Entwurfs aktualisiert {entityLists} und erzeugt {properties}.",
-        "entityLists": "{count}Objektliste | {count}Objektliste",
-        "properties": "{count}Eigenschaft | {count}Eigenschaften"
+        "entityLists": "{count} Objektliste | {count} Objektliste",
+        "properties": "{count} Eigenschaft | {count} Eigenschaften"
       }
     },
     "cannotDeleteProperties": "Eigenschaften können nicht gelöscht werden.",

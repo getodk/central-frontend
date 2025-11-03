@@ -542,6 +542,7 @@ export default {
     },
     "noMatching": "Es gibt keine passenden Übermittlungen.",
     "emptyMap": "Übermittlungen werden nur angezeigt, wenn sie Daten im ersten Geofeld enthalten.",
+    "learnMoreMap": "Erfahren Sie mehr über Mapping-Einreichungen",
     "allDeleted": "Alle Übermittlungen werden gelöscht.",
     "allDeletedOnPage": "Alle Übermittlungen auf dieser Seite wurden gelöscht.",
     "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
@@ -561,6 +562,7 @@ export default {
     },
     "noMatching": "No hay envíos coincidentes.",
     "emptyMap": "Los envíos solo aparecen si incluyen datos en el primer campo geo.",
+    "learnMoreMap": "Más información sobre el mapeo de envíos",
     "allDeleted": "Todos los envíos se han eliminado.",
     "allDeletedOnPage": "Se han eliminado todos los envíos de la página.",
     "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
@@ -580,6 +582,7 @@ export default {
     },
     "noMatching": "Il n'y a pas de soumission correspondante.",
     "emptyMap": "Les soumissions apparaissent seulement si elles ont une valeur dans le premier champ de type géographique.",
+    "learnMoreMap": "Apprenez plus à propos de la carte de soumissions",
     "allDeleted": "Toutes les soumissions sont supprimées.",
     "allDeletedOnPage": "Toutes les soumissions de la page ont été supprimées.",
     "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
@@ -602,6 +605,7 @@ export default {
     },
     "noMatching": "Non sono presenti invii corrispondenti.",
     "emptyMap": "Gli invii vengono visualizzati solo se includono dati nel primo campo geo.",
+    "learnMoreMap": "Scopri di più sulla mappatura degli invii",
     "allDeleted": "Tutti gli invii vengono cancellati.",
     "allDeletedOnPage": "Tutti gli invii presenti nella pagina sono stati cancellati.",
     "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
@@ -644,15 +648,18 @@ export default {
       "testInBrowser": "在瀏覽器中測試"
     },
     "noMatching": "沒有符合的提交內容。",
+    "emptyMap": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。",
     "allDeleted": "所有提交內容都會被刪除。",
     "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
     "downloadDisabled": "已刪除的提交內容無法下載",
     "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
+    "noMapEncryption": "地圖因表單加密而無法使用",
     "deletedSubmission": {
       "emptyTable": "沒有已刪除的提交內容。",
       "allRestored": "所有已刪除的提交內容都會還原。",
       "allRestoredOnPage": "頁面上的所有提交內容都已還原。"
-    }
+    },
+    "noMapDeleted": "地圖無法用於已刪除的提交"
   }
 }
 </i18n>

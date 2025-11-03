@@ -174,19 +174,22 @@ export default {
 <i18n>
 {
   "de": {
-    "formsUpdateEntities": "{count} Formular, die Entitäten aktualisieren. | {count}Formulare, die Entitäten aktualisieren."
+    "formsUpdateEntities": "{count} Formular, die Entitäten aktualisieren. | {count} Formulare, die Entitäten aktualisieren."
   },
   "es": {
-    "formsUpdateEntities": "{count}Formulario que actualiza entidades. | {count}Formularios que actualizan entidades. | {count} Formularios que actualizan entidades."
+    "formsUpdateEntities": "{count} Formulario que actualiza entidades. | {count} Formularios que actualizan entidades. | {count} Formularios que actualizan entidades."
   },
   "fr": {
     "formsUpdateEntities": "{count} formulaire met à jour des Entités. | {count} formulaires mettent à jour des Entités. | {count} formulaires mettent à jour des Entités."
   },
   "it": {
-    "formsUpdateEntities": "{count}Formulario che aggiorna Entità | {count}Formulari che aggiornano Entità | {count} Formulari che aggiornano Entità"
+    "formsUpdateEntities": "{count} Formulario che aggiorna Entità | {count} Formulari che aggiornano Entità | {count} Formulari che aggiornano Entità"
   },
   "pt": {
-    "formsUpdateEntities": "{count}Formulário atualizando Entidades | {count} Formulários atualizando Entidades | {count} Formulários atualizando Entidades"
+    "formsUpdateEntities": "{count} Formulário atualizando Entidades | {count} Formulários atualizando Entidades | {count} Formulários atualizando Entidades"
+  },
+  "zh-Hant": {
+    "formsUpdateEntities": "{count}個表單正在更新實體"
   }
 }
 </i18n>

@@ -1470,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Nombre d'Entités créées par envoi en masse"
+        },
+        "max_geo_per_form": {
+          "string": "Nombre de soumissions maximum ayant des donnés geo dans un formulaire"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Nombre d'événements de suppression en masse"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Nombre de listes d'entités avec une propriété \"geometry\""
+        },
+        "num_entity_create_forms": {
+          "string": "Nombre de formulaires qui créent des entités"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Nombre de formulaires qui créent des entités avec répétition"
+        },
+        "num_entity_update_forms": {
+          "string": "Nombre de formulaires qui mettent à jour des entités"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Nombre de formulaires qui mettent à jour des entités avec répétition"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Nombre de formulaires qui créent et mettent à jour des entités"
+        },
+        "num_entities_with_geometry": {
+          "string": "Nombre d'entités avec données géographiques"
         }
       }
     },
@@ -3708,6 +3735,14 @@
       "zoomToFit": {
         "string": "Recentrer sur toutes les données",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Problème de graphiques détecté"
+        },
+        "message": {
+          "string": "Votre navigateur ne peut pas montrer la carte. Activez les paramètres d'accélération graphique."
+        }
       }
     },
     "Home": {
@@ -4975,6 +5010,9 @@
       "emptyMap": {
         "string": "Les soumissions apparaissent seulement si elles ont une valeur dans le premier champ de type géographique."
       },
+      "learnMoreMap": {
+        "string": "Apprenez plus à propos de la carte de soumissions"
+      },
       "allDeleted": {
         "string": "Toutes les soumissions sont supprimées."
       },
@@ -5054,11 +5092,14 @@
         "developer_comment": "{field} is the name of a Form field."
       },
       "mappedField": {
-        "string": "",
+        "string": "Carte utilise ce champ",
         "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": "Préparation de carte en cours -- chargement de soumissions connues et analyse des soumissions nouvelles. Ceci pourrait prendre un certain temps."
+      },
       "overlapTitle": {
         "string": "{count, plural, one {{count} soumission visible} many {{count} soumissions visibles } other {{count} soumissions visibles }}"
       }

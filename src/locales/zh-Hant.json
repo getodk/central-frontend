@@ -80,6 +80,10 @@
         "update_publish": "發布",
         "create": "@:audit.action.default.create"
       },
+      "entity": {
+        "bulk_delete": "大量刪除",
+        "bulk_restore": "大量還原"
+      },
       "field_key": {
         "assignment_create": "授予存取",
         "assignment_delete": "移除存取",
@@ -168,6 +172,7 @@
     "newPreview": "新預覽",
     "expand": "開啟",
     "collapse": "閉合",
+    "selectRow": "選取列",
     "reviewParallelUpdates": "查看並行更新",
     "tryAgain": "再試一次",
     "upload": "上傳",
@@ -307,12 +312,14 @@
     "dangerZone": "危險區域",
     "data": "資料",
     "docs": "文件",
+    "emptyMap": "尚無可用的地圖資料。",
     "emptyValue": "(空)",
     "error": "錯誤",
     "filter": "過濾",
     "forum": "論壇",
     "lastUpdate": "最後更新日期",
     "loading": "載入...",
+    "map": "地圖",
     "no": "無",
     "noResults": "沒有結果",
     "noUndo": "此操作無法撤銷。",
@@ -323,6 +330,7 @@
     "tab": {
       "settings": "設定"
     },
+    "table": "表格",
     "total": "總計",
     "totalSubmissions": "提交總數",
     "propertiesCount": "{inform} / {count} 特性",

@@ -1470,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Numero di Entità create tramite caricamento massivo"
+        },
+        "max_geo_per_form": {
+          "string": "Numero massimo di invii con dati geografici in un modulo"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Numero di eventi di audit log per cancellazione massiva di Entità"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Numero di elenchi di entità con proprietà geometrica"
+        },
+        "num_entity_create_forms": {
+          "string": "Numero di formulari che creano Entità"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Numero di formulari che creano Entità dentro repeats"
+        },
+        "num_entity_update_forms": {
+          "string": "Numero di formulari che aggiornano Entità"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Numero di formulari che aggiornano Entità dentro repeats"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Numero di formulari che contemporaneamente creano e aggiornano Entità"
+        },
+        "num_entities_with_geometry": {
+          "string": "Numero di entità con proprietà geometrica"
         }
       }
     },
@@ -1660,7 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {{count}Formulario che aggiorna Entità} many {{count}Formulari che aggiornano Entità} other {{count} Formulari che aggiornano Entità}}"
+        "string": "{count, plural, one {{count} Formulario che aggiorna Entità} many {{count} Formulari che aggiornano Entità} other {{count} Formulari che aggiornano Entità}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1674,7 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {{count}Formulario che usa questa lista di Entità} many {{count}Formulari che usano questa lista di Entità} other {{count}Formulari che usano questa lista di Entità}}"
+        "string": "{count, plural, one {{count} Formulario che usa questa lista di Entità} many {{count} Formulari che usano questa lista di Entità} other {{count} Formulari che usano questa lista di Entità}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2219,10 +2246,10 @@
           "string": "La Entità “{label}” è stata cancellata."
         },
         "bulkDelete": {
-          "string": "{count, plural, one { {count}Entità è stata eliminata con successo} many {{count} Entità sono state eliminate con successo} other {{count} Entità sono state eliminate con successo}}"
+          "string": "{count, plural, one {{count} Entità è stata eliminata con successo} many {{count} Entità sono state eliminate con successo} other {{count} Entità sono state eliminate con successo}}"
         },
         "restored": {
-          "string": "{count, plural, one {{count}Entità è stata ripristinata con successo} many {{count}Entità sono state ripristinate con successo} other {{count} Entità sono state ripristinate con successo}}"
+          "string": "{count, plural, one {{count} Entità è stata ripristinata con successo} many {{count} Entità sono state ripristinate con successo} other {{count} Entità sono state ripristinate con successo}}"
         }
       },
       "filterDisabledMessage": {
@@ -2247,7 +2274,7 @@
       },
       "actionBar": {
         "message": {
-          "string": "{count, plural, one {{count}Entità selezionata} many {{count} Entità selezionate} other {{count} Entità selezionate}}"
+          "string": "{count, plural, one {{count} Entità selezionata} many {{count} Entità selezionate} other {{count} Entità selezionate}}"
         }
       },
       "bulkOpInProgress": {
@@ -3708,6 +3735,14 @@
       "zoomToFit": {
         "string": "Ingrandisci per adattare tutti i dati",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Problema grafico rilevato."
+        },
+        "message": {
+          "string": "Il tuo browser non è in grado di visualizzare la mappa al momento. Abilita le impostazioni di accelerazione grafica."
+        }
       }
     },
     "Home": {
@@ -4975,6 +5010,9 @@
       "emptyMap": {
         "string": "Gli invii vengono visualizzati solo se includono dati nel primo campo geo."
       },
+      "learnMoreMap": {
+        "string": "Scopri di più sulla mappatura degli invii"
+      },
       "allDeleted": {
         "string": "Tutti gli invii vengono cancellati."
       },
@@ -5054,11 +5092,14 @@
         "developer_comment": "{field} is the name of a Form field."
       },
       "mappedField": {
-        "string": "",
+        "string": "La mappa fa riferimento a questo campo.",
         "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": "Preparazione della mappa: caricamento degli invii noti e ricerca di quelli nuovi. L'operazione potrebbe richiedere alcuni minuti."
+      },
       "overlapTitle": {
         "string": "{count, plural, one {{count} Invio in quest'area} many {{count} Invii in quest'area} other {{count} Invii in quest'area}}"
       }

@@ -1470,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Número de Entidades criadas por upload em massa"
+        },
+        "max_geo_per_form": {
+          "string": ""
+        },
+        "num_entity_bulk_deletes": {
+          "string": ""
+        },
+        "num_datasets_with_geometry": {
+          "string": ""
+        },
+        "num_entity_create_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_create_forms": {
+          "string": ""
+        },
+        "num_entity_update_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_update_forms": {
+          "string": ""
+        },
+        "num_entity_create_update_forms": {
+          "string": ""
+        },
+        "num_entities_with_geometry": {
+          "string": ""
         }
       }
     },
@@ -1660,7 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {{count}Formulário atualizando Entidades} many {{count} Formulários atualizando Entidades} other {{count} Formulários atualizando Entidades}}"
+        "string": "{count, plural, one {{count} Formulário atualizando Entidades} many {{count} Formulários atualizando Entidades} other {{count} Formulários atualizando Entidades}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1674,7 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {{count} Formulário utiliza essa Lista de Entidades} many {{count}Formulários utilizam essa Lista de Entidades} other {{count} Formulários utilizam essa Lista de Entidades}}"
+        "string": "{count, plural, one {{count} Formulário utiliza essa Lista de Entidades} many {{count} Formulários utilizam essa Lista de Entidades} other {{count} Formulários utilizam essa Lista de Entidades}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -3153,7 +3180,7 @@
           "string": "{count, plural, one {{count} novo anexo} many {{count} novos anexos} other {{count} novos anexos}}"
         },
         "changedCount": {
-          "string": "{count, plural, one {{count}anexo alterado} many {{count}anexos alterados} other {{count}anexos alterados}}"
+          "string": "{count, plural, one {{count} anexo alterado} many {{count} anexos alterados} other {{count} anexos alterados}}"
         },
         "summary": {
           "string": "{changes} desde a versão publicada",
@@ -3708,6 +3735,14 @@
       "zoomToFit": {
         "string": "Ajustar para mostrar todos os dados",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": ""
+        },
+        "message": {
+          "string": ""
+        }
       }
     },
     "Home": {
@@ -4975,6 +5010,9 @@
       "emptyMap": {
         "string": ""
       },
+      "learnMoreMap": {
+        "string": ""
+      },
       "allDeleted": {
         "string": "Todas as Respostas foram excluídas."
       },
@@ -5059,6 +5097,9 @@
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": ""
+      },
       "overlapTitle": {
         "string": "{count, plural, one {} many {} other {}}"
       }
@@ -5124,7 +5165,7 @@
     },
     "TableRefreshBar": {
       "dataRefreshTime": {
-        "string": "Última atualização dos dados em {date}às {time}",
+        "string": "Última atualização dos dados em {date} às {time}",
         "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },

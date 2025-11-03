@@ -777,8 +777,8 @@ export default {
     "allDeletedOnPage": "Se han eliminado todas las Entidades de la página.",
     "alert": {
       "delete": "Entidad “{label}” se ha eliminado.",
-      "bulkDelete": "{count}Entidad eliminada correctamente. | {count}Entidades eliminadas correctamente. | {count} Entidades eliminadas correctamente.",
-      "restored": "{count}Entidad restablecida correctamente. | {count}Entidades restablecidas correctamente. | {count} Entidades restablecidas correctamente."
+      "bulkDelete": "{count} Entidad eliminada correctamente. | {count} Entidades eliminadas correctamente. | {count} Entidades eliminadas correctamente.",
+      "restored": "{count} Entidad restablecida correctamente. | {count} Entidades restablecidas correctamente. | {count} Entidades restablecidas correctamente."
     },
     "filterDisabledMessage": "El Filtro no está disponible para Entidades eliminadas",
     "searchDisabledMessage": "La búsqueda no está disponible para las entidades eliminadas",
@@ -789,7 +789,7 @@ export default {
       "allRestoredOnPage": "Se han restaurado todas las Entidades de la página."
     },
     "actionBar": {
-      "message": "{count}Entidad seleccionada | {count}Entidades seleccionadas | {count} Entidades seleccionadas"
+      "message": "{count} Entidad seleccionada | {count} Entidades seleccionadas | {count} Entidades seleccionadas"
     },
     "bulkOpInProgress": "Operación masiva en curso"
   },
@@ -823,8 +823,8 @@ export default {
     "allDeletedOnPage": "Tutte le entità della pagina sono state eliminate.",
     "alert": {
       "delete": "La Entità “{label}” è stata cancellata.",
-      "bulkDelete": "{count}Entità è stata eliminata con successo | {count} Entità sono state eliminate con successo | {count} Entità sono state eliminate con successo",
-      "restored": "{count}Entità è stata ripristinata con successo | {count}Entità sono state ripristinate con successo | {count} Entità sono state ripristinate con successo"
+      "bulkDelete": "{count} Entità è stata eliminata con successo | {count} Entità sono state eliminate con successo | {count} Entità sono state eliminate con successo",
+      "restored": "{count} Entità è stata ripristinata con successo | {count} Entità sono state ripristinate con successo | {count} Entità sono state ripristinate con successo"
     },
     "filterDisabledMessage": "Il filtro non è disponibile per le Entità eliminate.",
     "searchDisabledMessage": "La ricerca non è disponibile per le entità eliminate",
@@ -835,7 +835,7 @@ export default {
       "allRestoredOnPage": "Tutte le entità della pagina sono state ripristinate."
     },
     "actionBar": {
-      "message": "{count}Entità selezionata | {count} Entità selezionate | {count} Entità selezionate"
+      "message": "{count} Entità selezionata | {count} Entità selezionate | {count} Entità selezionate"
     },
     "bulkOpInProgress": "Elaborazione di massa in corso"
   },
@@ -871,7 +871,9 @@ export default {
     "allDeleted": "所有實體都會被刪除。",
     "allDeletedOnPage": "頁面上的所有實體都已刪除。",
     "alert": {
-      "delete": "實體「1{label}」已被刪除。"
+      "delete": "實體「1{label}」已被刪除。",
+      "bulkDelete": "已成功刪除{count}個實體。",
+      "restored": "已成功還原{count}個實體。"
     },
     "filterDisabledMessage": "已刪除的實體無法使用篩選功能",
     "searchDisabledMessage": "已刪除的實體無法使用搜尋功能",
@@ -880,7 +882,11 @@ export default {
       "emptyTable": "沒有已刪除的實體。",
       "allRestored": "所有已刪除的實體都會還原。",
       "allRestoredOnPage": "頁面上的所有實體都已還原。"
-    }
+    },
+    "actionBar": {
+      "message": "已選取{count}個實體"
+    },
+    "bulkOpInProgress": "正在執行大量作業"
   }
 }
 </i18n>

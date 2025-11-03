@@ -68,10 +68,10 @@ const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
 <i18n>
 {
   "de": {
-    "dataRefreshTime": "Daten zuletzt aktualisiert am {date} um{time}"
+    "dataRefreshTime": "Daten zuletzt aktualisiert am {date} um {time}"
   },
   "es": {
-    "dataRefreshTime": "Última actualización de los datos el{date} a las {time}"
+    "dataRefreshTime": "Última actualización de los datos el {date} a las {time}"
   },
   "fr": {
     "dataRefreshTime": "Données rafraîchies le {date} à {time}"
@@ -80,7 +80,10 @@ const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
     "dataRefreshTime": "Ultimo aggiornamento dei dati il {date} alle {time}"
   },
   "pt": {
-    "dataRefreshTime": "Última atualização dos dados em {date}às {time}"
+    "dataRefreshTime": "Última atualização dos dados em {date} às {time}"
+  },
+  "zh-Hant": {
+    "dataRefreshTime": "資料最後重新整理時間：{date}{time}"
   }
 }
 </i18n>

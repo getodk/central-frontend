@@ -288,7 +288,8 @@ export default {
     "cannotRetire": "您無法自己停用。",
     "action": {
       "retire": "停用使用者"
-    }
+    },
+    "invitationPending": "邀請待處理"
   }
 }
 </i18n>
