@@ -294,7 +294,16 @@ export default {
       "num_reset_failed_to_pending_count": "Anzahl der Fälle, in denen der Benutzer einen fehlgeschlagenen Upload auf einen S3-kompatiblen Speicher zurückgesetzt hat",
       "num_entity_creates_sub": "Anzahl der durch Übermittlungen erstellten Objekte",
       "num_entity_creates_api": "Anzahl der durch die API erstellten Objekte",
-      "num_entity_creates_bulk": "Anzahl der Objekte, die über Massen-Upload erstellt wurden"
+      "num_entity_creates_bulk": "Anzahl der Objekte, die über Massen-Upload erstellt wurden",
+      "max_geo_per_form": "Maximale Anzahl von Übermittlungen mit Geodaten in einem Formular",
+      "num_entity_bulk_deletes": "Anzahl der Audit-Protokollereignisse zum Löschen von Massenentitäten",
+      "num_datasets_with_geometry": "Anzahl der Entitätslisten mit Geometrieeigenschaft",
+      "num_entity_create_forms": "Anzahl der Formulare, die Entitäten erstellen",
+      "num_repeat_entity_create_forms": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats erstellen",
+      "num_entity_update_forms": "Anzahl der Formulare, die Entitäten aktualisieren",
+      "num_repeat_entity_update_forms": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats aktualisieren",
+      "num_entity_create_update_forms": "Anzahl der Formulare, die Entitäten sowohl erstellen als auch aktualisieren",
+      "num_entities_with_geometry": "Anzahl der Entitäten mit Geometriedaten"
     }
   },
   "es": {
@@ -372,7 +381,16 @@ export default {
       "num_reset_failed_to_pending_count": "Número de veces que el usuario ha restablecido una carga fallida en un almacenamiento compatible con S3",
       "num_entity_creates_sub": "Número de entidades creadas a través de envíos",
       "num_entity_creates_api": "Número de entidades creadas a través de la API",
-      "num_entity_creates_bulk": "Número de entidades creadas mediante carga masiva"
+      "num_entity_creates_bulk": "Número de entidades creadas mediante carga masiva",
+      "max_geo_per_form": "Número máximo de envíos con datos geográficos en un formulario",
+      "num_entity_bulk_deletes": "Número de eventos de registro de auditoría de eliminación masiva de entidades",
+      "num_datasets_with_geometry": "Número de listas de entidades con propiedad geométrica",
+      "num_entity_create_forms": "Número de formularios que crean entidades",
+      "num_repeat_entity_create_forms": "Número de formularios que crean entidades en repeticiones",
+      "num_entity_update_forms": "Número de formularios que actualizan entidades",
+      "num_repeat_entity_update_forms": "Número de formularios que actualizan entidades en repeticiones",
+      "num_entity_create_update_forms": "Número de formularios que crean y actualizan entidades",
+      "num_entities_with_geometry": "Número de entidades con datos geométricos"
     }
   },
   "fr": {
@@ -450,7 +468,16 @@ export default {
       "num_reset_failed_to_pending_count": "Nombre de fois qu'un utilisateur a réinitialisé un envoi échoué au stockage externe compatible avec S3",
       "num_entity_creates_sub": "Nombre d'Entités créées par soumissions",
       "num_entity_creates_api": "Nombre d'Entités créées par API",
-      "num_entity_creates_bulk": "Nombre d'Entités créées par envoi en masse"
+      "num_entity_creates_bulk": "Nombre d'Entités créées par envoi en masse",
+      "max_geo_per_form": "Nombre de soumissions maximum ayant des donnés geo dans un formulaire",
+      "num_entity_bulk_deletes": "Nombre d'événements de suppression en masse",
+      "num_datasets_with_geometry": "Nombre de listes d'entités avec une propriété \"geometry\"",
+      "num_entity_create_forms": "Nombre de formulaires qui créent des entités",
+      "num_repeat_entity_create_forms": "Nombre de formulaires qui créent des entités avec répétition",
+      "num_entity_update_forms": "Nombre de formulaires qui mettent à jour des entités",
+      "num_repeat_entity_update_forms": "Nombre de formulaires qui mettent à jour des entités avec répétition",
+      "num_entity_create_update_forms": "Nombre de formulaires qui créent et mettent à jour des entités",
+      "num_entities_with_geometry": "Nombre d'entités avec données géographiques"
     }
   },
   "id": {
@@ -552,7 +579,16 @@ export default {
       "num_reset_failed_to_pending_count": "Numero di volte in cui l'utente ha ripristinato il caricamento fallito su uno storage compatibile con S3",
       "num_entity_creates_sub": "Numero di Entità create attraverso invii",
       "num_entity_creates_api": "Numero di Entità create tramite API",
-      "num_entity_creates_bulk": "Numero di Entità create tramite caricamento massivo"
+      "num_entity_creates_bulk": "Numero di Entità create tramite caricamento massivo",
+      "max_geo_per_form": "Numero massimo di invii con dati geografici in un modulo",
+      "num_entity_bulk_deletes": "Numero di eventi di audit log per cancellazione massiva di Entità",
+      "num_datasets_with_geometry": "Numero di elenchi di entità con proprietà geometrica",
+      "num_entity_create_forms": "Numero di formulari che creano Entità",
+      "num_repeat_entity_create_forms": "Numero di formulari che creano Entità dentro repeats",
+      "num_entity_update_forms": "Numero di formulari che aggiornano Entità",
+      "num_repeat_entity_update_forms": "Numero di formulari che aggiornano Entità dentro repeats",
+      "num_entity_create_update_forms": "Numero di formulari che contemporaneamente creano e aggiornano Entità",
+      "num_entities_with_geometry": "Numero di entità con proprietà geometrica"
     }
   },
   "ja": {

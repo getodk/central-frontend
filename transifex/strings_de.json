@@ -1470,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Anzahl der Objekte, die über Massen-Upload erstellt wurden"
+        },
+        "max_geo_per_form": {
+          "string": "Maximale Anzahl von Übermittlungen mit Geodaten in einem Formular"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Anzahl der Audit-Protokollereignisse zum Löschen von Massenentitäten"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Anzahl der Entitätslisten mit Geometrieeigenschaft"
+        },
+        "num_entity_create_forms": {
+          "string": "Anzahl der Formulare, die Entitäten erstellen"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats erstellen"
+        },
+        "num_entity_update_forms": {
+          "string": "Anzahl der Formulare, die Entitäten aktualisieren"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats aktualisieren"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Anzahl der Formulare, die Entitäten sowohl erstellen als auch aktualisieren"
+        },
+        "num_entities_with_geometry": {
+          "string": "Anzahl der Entitäten mit Geometriedaten"
         }
       }
     },
@@ -1660,7 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {{count} Formular, die Entitäten aktualisieren. } other {{count}Formulare, die Entitäten aktualisieren. }}"
+        "string": "{count, plural, one {{count} Formular, die Entitäten aktualisieren. } other {{count} Formulare, die Entitäten aktualisieren. }}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1674,7 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {{count}Formular verwendet diese Objektliste} other {{count}Formulare verwenden diese Objektliste}}"
+        "string": "{count, plural, one {{count} Formular verwendet diese Objektliste} other {{count} Formulare verwenden diese Objektliste}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -3107,7 +3134,7 @@
       },
       "alert": {
         "upload": {
-          "string": ""
+          "string": "Das neue Formular steht jetzt als Entwurf zur Verfügung."
         },
         "publish": {
           "string": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.\n"
@@ -3227,11 +3254,11 @@
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
           },
           "entityLists": {
-            "string": "{count, plural, one {{count}Objektliste} other {{count}Objektliste}}",
+            "string": "{count, plural, one {{count} Objektliste} other {{count} Objektliste}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           },
           "properties": {
-            "string": "{count, plural, one {{count}Eigenschaft} other {{count}Eigenschaften}}",
+            "string": "{count, plural, one {{count} Eigenschaft} other {{count} Eigenschaften}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           }
         }
@@ -3702,12 +3729,20 @@
     },
     "GeojsonMap": {
       "showing": {
-        "string": "Zeigen {count}von {total}",
+        "string": "Zeigen {count} von {total}",
         "developer_comment": "{count} and {total} are both numbers."
       },
       "zoomToFit": {
         "string": "Zoomen, um alle Daten anzuzeigen.",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Grafikproblem erkannt."
+        },
+        "message": {
+          "string": "Ihr Browser kann die Karte derzeit nicht anzeigen. Aktivieren Sie die Grafikbeschleunigungseinstellungen."
+        }
       }
     },
     "Home": {
@@ -4975,6 +5010,9 @@
       "emptyMap": {
         "string": "Übermittlungen werden nur angezeigt, wenn sie Daten im ersten Geofeld enthalten."
       },
+      "learnMoreMap": {
+        "string": "Erfahren Sie mehr über Mapping-Einreichungen"
+      },
       "allDeleted": {
         "string": "Alle Übermittlungen werden gelöscht."
       },
@@ -5050,15 +5088,18 @@
     },
     "SubmissionMapPopup": {
       "missingField": {
-        "string": "Diese Übermittlung wurde mit {field}zugeordnet, das nicht in der veröffentlichten Formularversion enthalten ist.",
+        "string": "Diese Übermittlung wurde mit {field} zugeordnet, das nicht in der veröffentlichten Formularversion enthalten ist.",
         "developer_comment": "{field} is the name of a Form field."
       },
       "mappedField": {
-        "string": "",
+        "string": "Karte verweist auf dieses Feld.",
         "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": "Karte wird vorbereitet – bekannte Einreichungen werden geladen und nach neuen gesucht. Dies kann eine Weile dauern."
+      },
       "overlapTitle": {
         "string": "{count, plural, one {{count} Übermittlung in diesem Bereich} other {{count} Übermittlungen in diesem Bereich}}"
       }
@@ -5124,7 +5165,7 @@
     },
     "TableRefreshBar": {
       "dataRefreshTime": {
-        "string": "Daten zuletzt aktualisiert am {date} um{time}",
+        "string": "Daten zuletzt aktualisiert am {date} um {time}",
         "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },

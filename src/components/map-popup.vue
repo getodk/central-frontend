@@ -128,6 +128,11 @@ defineExpose({ el, resetScroll });
     "action": {
       "back": "Torna all'elenco"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "back": "返回清單"
+    }
   }
 }
 </i18n>

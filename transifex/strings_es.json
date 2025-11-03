@@ -1470,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Número de entidades creadas mediante carga masiva"
+        },
+        "max_geo_per_form": {
+          "string": "Número máximo de envíos con datos geográficos en un formulario"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Número de eventos de registro de auditoría de eliminación masiva de entidades"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Número de listas de entidades con propiedad geométrica"
+        },
+        "num_entity_create_forms": {
+          "string": "Número de formularios que crean entidades"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Número de formularios que crean entidades en repeticiones"
+        },
+        "num_entity_update_forms": {
+          "string": "Número de formularios que actualizan entidades"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Número de formularios que actualizan entidades en repeticiones"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Número de formularios que crean y actualizan entidades"
+        },
+        "num_entities_with_geometry": {
+          "string": "Número de entidades con datos geométricos"
         }
       }
     },
@@ -1660,7 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {{count}Formulario que actualiza entidades.} many {{count}Formularios que actualizan entidades.} other {{count} Formularios que actualizan entidades.}}"
+        "string": "{count, plural, one {{count} Formulario que actualiza entidades.} many {{count} Formularios que actualizan entidades.} other {{count} Formularios que actualizan entidades.}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1674,7 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {{count}Formulario que utiliza esta lista de entidades.} many {{count}Formularios que utilizan esta lista de entidades.} other {{count} Formularios que utilizan esta lista de entidades.}}"
+        "string": "{count, plural, one {{count} Formulario que utiliza esta lista de entidades.} many {{count} Formularios que utilizan esta lista de entidades.} other {{count} Formularios que utilizan esta lista de entidades.}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2219,10 +2246,10 @@
           "string": "Entidad “{label}” se ha eliminado."
         },
         "bulkDelete": {
-          "string": "{count, plural, one {{count}Entidad eliminada correctamente.} many {{count}Entidades eliminadas correctamente.} other {{count} Entidades eliminadas correctamente.}}"
+          "string": "{count, plural, one {{count} Entidad eliminada correctamente.} many {{count} Entidades eliminadas correctamente.} other {{count} Entidades eliminadas correctamente.}}"
         },
         "restored": {
-          "string": "{count, plural, one {{count}Entidad restablecida correctamente.} many {{count}Entidades restablecidas correctamente.} other {{count} Entidades restablecidas correctamente.}}"
+          "string": "{count, plural, one {{count} Entidad restablecida correctamente.} many {{count} Entidades restablecidas correctamente.} other {{count} Entidades restablecidas correctamente.}}"
         }
       },
       "filterDisabledMessage": {
@@ -2247,7 +2274,7 @@
       },
       "actionBar": {
         "message": {
-          "string": "{count, plural, one {{count}Entidad seleccionada} many {{count}Entidades seleccionadas} other {{count} Entidades seleccionadas}}"
+          "string": "{count, plural, one {{count} Entidad seleccionada} many {{count} Entidades seleccionadas} other {{count} Entidades seleccionadas}}"
         }
       },
       "bulkOpInProgress": {
@@ -3708,6 +3735,14 @@
       "zoomToFit": {
         "string": "Ajustar para mostrar todos los datos",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Se ha detectado un problema gráfico."
+        },
+        "message": {
+          "string": "Tu navegador no puede mostrar el mapa ahora. Activa la configuración de aceleración gráfica."
+        }
       }
     },
     "Home": {
@@ -4975,6 +5010,9 @@
       "emptyMap": {
         "string": "Los envíos solo aparecen si incluyen datos en el primer campo geo."
       },
+      "learnMoreMap": {
+        "string": "Más información sobre el mapeo de envíos"
+      },
       "allDeleted": {
         "string": "Todos los envíos se han eliminado."
       },
@@ -5050,17 +5088,20 @@
     },
     "SubmissionMapPopup": {
       "missingField": {
-        "string": "Este Envío se ha mapeado utilizando{field} , que no se encuentra en la versión publicada del Formulario.",
+        "string": "Este Envío se ha mapeado utilizando {field}, que no se encuentra en la versión publicada del Formulario.",
         "developer_comment": "{field} is the name of a Form field."
       },
       "mappedField": {
-        "string": "",
+        "string": "El mapa hace referencia a este campo. ",
         "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
       }
     },
     "SubmissionMapView": {
+      "loading": {
+        "string": "Preparando mapa: cargando envíos conocidos y buscando nuevos. Esto puede tardar un poco."
+      },
       "overlapTitle": {
-        "string": "{count, plural, one {{count}Envío a esta zona} many {{count}Envíos a esta zona} other {{count}Envíos a esta zona}}"
+        "string": "{count, plural, one {{count} Envío a esta zona} many {{count} Envíos a esta zona} other {{count} Envíos a esta zona}}"
       }
     },
     "SubmissionRestore": {
@@ -5124,7 +5165,7 @@
     },
     "TableRefreshBar": {
       "dataRefreshTime": {
-        "string": "Última actualización de los datos el{date} a las {time}",
+        "string": "Última actualización de los datos el {date} a las {time}",
         "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },

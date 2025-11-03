@@ -861,23 +861,43 @@ $muted-background-color: #F1F5F9;
 <i18n>
 {
   "de": {
-    "showing": "Zeigen {count}von {total}",
-    "zoomToFit": "Zoomen, um alle Daten anzuzeigen."
+    "showing": "Zeigen {count} von {total}",
+    "zoomToFit": "Zoomen, um alle Daten anzuzeigen.",
+    "noWebGL": {
+      "title": "Grafikproblem erkannt.",
+      "message": "Ihr Browser kann die Karte derzeit nicht anzeigen. Aktivieren Sie die Grafikbeschleunigungseinstellungen."
+    }
   },
   "es": {
     "showing": "Mostrando {count} de {total}",
-    "zoomToFit": "Ajustar para mostrar todos los datos"
+    "zoomToFit": "Ajustar para mostrar todos los datos",
+    "noWebGL": {
+      "title": "Se ha detectado un problema gráfico.",
+      "message": "Tu navegador no puede mostrar el mapa ahora. Activa la configuración de aceleración gráfica."
+    }
   },
   "fr": {
     "showing": "{count} de {total} affichés",
-    "zoomToFit": "Recentrer sur toutes les données"
+    "zoomToFit": "Recentrer sur toutes les données",
+    "noWebGL": {
+      "title": "Problème de graphiques détecté",
+      "message": "Votre navigateur ne peut pas montrer la carte. Activez les paramètres d'accélération graphique."
+    }
   },
   "it": {
     "showing": "Mostrando {count} di {total}",
-    "zoomToFit": "Ingrandisci per adattare tutti i dati"
+    "zoomToFit": "Ingrandisci per adattare tutti i dati",
+    "noWebGL": {
+      "title": "Problema grafico rilevato.",
+      "message": "Il tuo browser non è in grado di visualizzare la mappa al momento. Abilita le impostazioni di accelerazione grafica."
+    }
   },
   "pt": {
     "zoomToFit": "Ajustar para mostrar todos os dados"
+  },
+  "zh-Hant": {
+    "showing": "正在顯示{total}項中的第{count}項",
+    "zoomToFit": "縮放以符合所有資料"
   }
 }
 </i18n>

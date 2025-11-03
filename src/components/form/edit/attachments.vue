@@ -144,7 +144,7 @@ const tag = computed(() => {
     "missingCount": "{count} anexo faltando | {count} anexos faltando | {count} anexos faltando",
     "diff": {
       "newCount": "{count} novo anexo | {count} novos anexos | {count} novos anexos",
-      "changedCount": "{count}anexo alterado | {count}anexos alterados | {count}anexos alterados",
+      "changedCount": "{count} anexo alterado | {count} anexos alterados | {count} anexos alterados",
       "summary": "{changes} desde a versão publicada"
     }
   },

@@ -86,19 +86,22 @@ const { publishedFormPath } = useRoutes();
 <i18n>
 {
   "de": {
-    "formsConsumeData": "{count}Formular verwendet diese Objektliste | {count}Formulare verwenden diese Objektliste"
+    "formsConsumeData": "{count} Formular verwendet diese Objektliste | {count} Formulare verwenden diese Objektliste"
   },
   "es": {
-    "formsConsumeData": "{count}Formulario que utiliza esta lista de entidades. | {count}Formularios que utilizan esta lista de entidades. | {count} Formularios que utilizan esta lista de entidades."
+    "formsConsumeData": "{count} Formulario que utiliza esta lista de entidades. | {count} Formularios que utilizan esta lista de entidades. | {count} Formularios que utilizan esta lista de entidades."
   },
   "fr": {
     "formsConsumeData": "{count} formulaire utilise cette liste d'entités | {count} formulaires utilisent cette liste d'entités | {count} formulaires utilisent cette liste d'entités"
   },
   "it": {
-    "formsConsumeData": "{count}Formulario che usa questa lista di Entità | {count}Formulari che usano questa lista di Entità | {count}Formulari che usano questa lista di Entità"
+    "formsConsumeData": "{count} Formulario che usa questa lista di Entità | {count} Formulari che usano questa lista di Entità | {count} Formulari che usano questa lista di Entità"
   },
   "pt": {
-    "formsConsumeData": "{count} Formulário utiliza essa Lista de Entidades | {count}Formulários utilizam essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades"
+    "formsConsumeData": "{count} Formulário utiliza essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades"
+  },
+  "zh-Hant": {
+    "formsConsumeData": "{count}個表單使用此實體清單"
   }
 }
 </i18n>

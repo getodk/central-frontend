@@ -372,7 +372,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "網頁表單",
       "description": "使用以下功能填寫、預覽和編輯您的表單 「{formName}」",
-      "enketoDefault": "Enketo (預設)"
+      "enketoDefault": "Enketo (預設)",
+      "enketoSelected": "您目前正在使用 Enketo 填寫、預覽及編輯「{formName}」表單。",
+      "owfSelected": "您目前正在使用 ODK 網頁表單填寫、預覽及編輯「{formName}」表單。"
     }
   }
 }

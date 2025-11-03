@@ -164,7 +164,11 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
   "zh-Hant": {
     "action": {
       "download": {
-        "unfiltered": "下載所有{count}個實體"
+        "unfiltered": "下載所有{count}個實體",
+        "filtered": {
+          "withCount": "下載{count}個符合的實體",
+          "withoutCount": "下載所有符合的實體"
+        }
       }
     }
   }
