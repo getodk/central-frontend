@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #infonav>
         <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
           </template>
           <template #dropdown>
             <li v-for="form in dataset.sourceForms" :key="form.xmlFormId">

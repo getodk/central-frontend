@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.create'">
-        <span class="icon-magic-wand"></span>
+        <span class="icon-magic"></span>
         <i18n-t v-if="entry.details.source?.submission != null"
           keypath="title.entity.create.submission">
           <template #label>
@@ -209,7 +209,7 @@ const showBranchData = () => {
 
 .entity-feed-entry {
   .icon-cloud-upload { color: #bbb; }
-  .icon-magic-wand { color: $color-action-foreground; }
+  .icon-magic { color: $color-action-foreground; }
   .icon-pencil { color: #666; }
   .icon-random {
     color: #bbb;

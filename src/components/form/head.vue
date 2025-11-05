@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
           && uniqueDatasetCount > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
           </template>
           <template #dropdown>
             <li v-if="formDatasetDiff.length > 0">

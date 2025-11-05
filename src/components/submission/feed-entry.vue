@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.create'">
-        <span class="icon-magic-wand entity-icon"></span>
+        <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
             <entity-link v-if="entityDetails?.currentVersion?.label != null"
@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.update.version'">
-        <span class="icon-magic-wand entity-icon"></span>
+        <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
             <entity-link v-if="entityDetails?.currentVersion?.label != null"
