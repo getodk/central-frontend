@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('/fonts/icomoon.ttf?bk7r1j') format('truetype'),
-    url('/fonts/icomoon.woff?bk7r1j') format('woff'),
-    url('/fonts/icomoon.svg?bk7r1j#icomoon') format('svg');
+    url('/fonts/icomoon.ttf?8wnuuu') format('truetype'),
+    url('/fonts/icomoon.woff?8wnuuu') format('woff'),
+    url('/fonts/icomoon.svg?8wnuuu#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -222,11 +222,11 @@
 .icon-database:before {
   content: "\e964";
 }
+.icon-magic:before {
+  content: "\f0d0";
+}
 .icon-link:before {
   content: "\e9cb";
-}
-.icon-magic-wand:before {
-  content: "\f0d0";
 }
 .icon-caret-left:before {
   content: "\f0d9";
@@ -285,9 +285,12 @@
 .icon-file-code-o:before {
   content: "\f1c9";
 }
+.icon-calendar:before {
+  content: "\f073";
+}
 .icon-search:before {
   content: "\f002";
 }
-.icon-calendar:before {
-  content: "\f073";
+.icon-map-marker:before {
+  content: "\f041";
 }
