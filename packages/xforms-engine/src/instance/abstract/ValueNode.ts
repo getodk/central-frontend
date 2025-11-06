@@ -36,6 +36,7 @@ export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
 export interface ValueNodeStateSpec<RuntimeValue> extends DescendantNodeStateSpec<RuntimeValue> {
 	readonly children: null;
+	readonly attributes: null;
 	readonly value: SimpleAtomicState<RuntimeValue>;
 	readonly instanceValue: Accessor<string>;
 }

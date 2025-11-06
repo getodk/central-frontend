@@ -16,7 +16,7 @@ const collectDefinitions = (
 
 	result.set(nodeset, definition);
 
-	if (definition.type === 'leaf-node') {
+	if (definition.type === 'leaf-node' || definition.type === 'attribute') {
 		return result;
 	}
 

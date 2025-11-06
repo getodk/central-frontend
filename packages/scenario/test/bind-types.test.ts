@@ -728,7 +728,7 @@ describe('Data (<bind type>) type support', () => {
 			let scenario: Scenario;
 
 			beforeEach(async () => {
-				scenario = scenario = await Scenario.init(
+				scenario = await Scenario.init(
 					'Cast fractional value to int',
 					// prettier-ignore
 					html(
@@ -736,7 +736,7 @@ describe('Data (<bind type>) type support', () => {
 							title('Cast fractional value to int'),
 							model(
 								mainInstance(
-									t('data id="cast-fractional-value-to-int',
+									t('data id="cast-fractional-value-to-int"',
 										t('count-default', '2.5'),
 										t('repeat-count jr:template=""',
 											t('anything')))),
@@ -778,7 +778,7 @@ describe('Data (<bind type>) type support', () => {
 							title('Cast fractional value to int'),
 							model(
 								mainInstance(
-									t('data id="cast-fractional-value-to-int',
+									t('data id="cast-fractional-value-to-int"',
 										t('count-calc-input-str'),
 										t('count-calc'),
 										t('repeat-count jr:template=""'))),
@@ -806,7 +806,7 @@ describe('Data (<bind type>) type support', () => {
 							title('Cast fractional value to int'),
 							model(
 								mainInstance(
-									t('data id="cast-fractional-value-to-int',
+									t('data id="cast-fractional-value-to-int"',
 										t('count-calc-input-dec'),
 										t('count-calc'),
 										t('repeat-count jr:template=""'))),
@@ -834,7 +834,7 @@ describe('Data (<bind type>) type support', () => {
 							title('Cast fractional value to int'),
 							model(
 								mainInstance(
-									t('data id="cast-fractional-value-to-int',
+									t('data id="cast-fractional-value-to-int"',
 										t('count-calc'),
 										t('repeat-count jr:template=""'))),
 								bind('/data/count-calc')

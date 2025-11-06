@@ -17,6 +17,10 @@ import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.
 import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
 import { createPrimaryInstanceState } from '../lib/client-reactivity/instance-state/createPrimaryInstanceState.ts';
 import { prepareInstancePayload } from '../lib/client-reactivity/instance-state/prepareInstancePayload.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -32,7 +36,9 @@ import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
+import { buildAttributes } from './attachments/buildAttributes.ts';
 import { InstanceAttachmentsState } from './attachments/InstanceAttachmentsState.ts';
+import type { Attribute } from './Attribute.ts';
 import type { InitialInstanceState } from './input/InitialInstanceState.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
@@ -71,6 +77,7 @@ interface PrimaryInstanceStateSpec {
 	readonly label: null;
 	readonly hint: null;
 	readonly children: Accessor<readonly FormNodeID[]>;
+	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 
@@ -154,6 +161,8 @@ export class PrimaryInstance<
 	readonly evaluator: EngineXPathEvaluator;
 	override readonly contextNode = this;
 
+	private readonly attributeState: AttributeState;
+
 	constructor(options: PrimaryInstanceOptions<Mode>) {
 		const { mode, initialState, scope, model, secondaryInstances, config } = options;
 		const { instance: modelInstance } = model;
@@ -193,8 +202,10 @@ export class PrimaryInstance<
 		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<this, Root>(this);
+		const attributeState = createAttributeState(this.scope);
 
 		this.getChildren = childrenState.getChildren;
+		this.attributeState = attributeState;
 
 		const stateSpec: PrimaryInstanceStateSpec = {
 			activeLanguage: getActiveLanguage,
@@ -207,6 +218,7 @@ export class PrimaryInstance<
 			valueOptions: null,
 			value: null,
 			children: childrenState.childIds,
+			attributes: attributeState.getAttributes,
 		};
 
 		const state = createSharedNodeState(scope, stateSpec, config);
@@ -227,6 +239,7 @@ export class PrimaryInstance<
 		this.instanceState = createPrimaryInstanceState(this);
 
 		childrenState.setChildren([root]);
+		attributeState.setAttributes(buildAttributes(this));
 		setIsAttached(true);
 	}
 
@@ -278,5 +291,9 @@ export class PrimaryInstance<
 		});
 
 		return Promise.resolve(result);
+	}
+
+	getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }

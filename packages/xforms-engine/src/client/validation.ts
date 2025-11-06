@@ -193,7 +193,15 @@ export interface AncestorNodeValidationState {
 	get violations(): readonly DescendantNodeViolationReference[];
 }
 
+/**
+ * Convenience interface for nodes that cannot be invalid.
+ */
+export interface NullValidationState {
+	get violations(): readonly [];
+}
+
 // prettier-ignore
 export type NodeValidationState =
 	| AncestorNodeValidationState
-	| LeafNodeValidationState;
+	| LeafNodeValidationState
+	| NullValidationState;

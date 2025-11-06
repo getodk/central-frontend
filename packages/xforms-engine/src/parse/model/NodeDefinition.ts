@@ -1,3 +1,4 @@
+import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type {
 	NamedSubtreeDefinition,
@@ -6,6 +7,8 @@ import type {
 import type { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
+import type { AttributeDefinition } from './AttributeDefinition.ts';
+import type { AttributeDefinitionMap } from './AttributeDefinitionMap.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import type { GroupDefinition } from './GroupDefinition.ts';
 import type { LeafNodeDefinition } from './LeafNodeDefinition.ts';
@@ -45,13 +48,16 @@ export type GroupNodeType = 'group';
  */
 export type LeafNodeType = 'leaf-node';
 
+export type AttributeNodeType = 'attribute';
+
 // prettier-ignore
 export type NodeDefinitionType =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| RootNodeType
 	| RepeatType
 	| GroupNodeType
-	| LeafNodeType;
+	| LeafNodeType
+	| AttributeNodeType;
 
 // prettier-ignore
 export type ParentNodeDefinition =
@@ -76,8 +82,9 @@ export abstract class NodeDefinition<Type extends NodeDefinitionType>
 	abstract readonly isTranslated: boolean;
 	abstract readonly root: RootDefinition;
 	abstract readonly parent: ParentNodeDefinition | null;
-	abstract readonly template: StaticElement;
+	abstract readonly template: StaticAttribute | StaticElement;
 	abstract readonly children: readonly ChildNodeDefinition[] | null;
+	abstract readonly attributes: AttributeDefinitionMap | null;
 
 	readonly nodeset: string;
 
@@ -92,4 +99,5 @@ export type AnyNodeDefinition =
 	| RootDefinition
 	| AnyRepeatDefinition
 	| GroupDefinition
-	| LeafNodeDefinition;
+	| LeafNodeDefinition
+	| AttributeDefinition;

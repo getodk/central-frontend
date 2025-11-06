@@ -1,3 +1,4 @@
+import type { Attribute } from './Attribute.ts';
 import type { Group } from './Group.ts';
 import type { AnyInputControl } from './InputControl.ts';
 import type { AnyModelValue } from './ModelValue.ts';
@@ -62,7 +63,8 @@ export type AnyChildNode =
 	| RankControl
 	| SelectControl
 	| TriggerControl
-	| UploadControl;
+	| UploadControl
+	| Attribute;
 
 // prettier-ignore
 export type GeneralChildNode =

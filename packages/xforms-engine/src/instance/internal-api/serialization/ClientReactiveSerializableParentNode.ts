@@ -1,5 +1,6 @@
 import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
+import type { Attribute } from '../../Attribute.ts';
 
 export interface ClientReactiveSerializableChildNode {
 	readonly instanceState: InstanceState;
@@ -10,6 +11,7 @@ export interface ClientReactiveSerializableParentNodeCurrentState<
 > {
 	get relevant(): boolean;
 	get children(): readonly Child[];
+	get attributes(): readonly Attribute[];
 }
 
 export interface ClientReactiveSerializableParentNodeDefinition {

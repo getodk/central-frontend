@@ -94,6 +94,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
+				attributes: null,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,

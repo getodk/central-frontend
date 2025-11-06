@@ -167,7 +167,11 @@ export abstract class DescendantNode<
 						return true;
 					}
 				}
-
+				for (const attr of parent.getAttributes()) {
+					if (attr === self) {
+						return true;
+					}
+				}
 				return false;
 			});
 		});

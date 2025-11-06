@@ -1,5 +1,5 @@
-import type { TemplatedNodeAttributeSerializationError } from '../../../error/TemplatedNodeAttributeSerializationError.ts';
 import type { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
+import type { Attribute } from '../../Attribute.ts';
 import type { GeneralChildNode } from '../../hierarchy.ts';
 import type {
 	ClientReactiveSerializableParentNode,
@@ -9,8 +9,7 @@ import type {
 
 export interface ClientReactiveSerializableTemplatedNodeCurrentState
 	extends ClientReactiveSerializableParentNodeCurrentState<GeneralChildNode> {
-	/** @see {@link TemplatedNodeAttributeSerializationError} */
-	get attributes(): unknown;
+	get attributes(): readonly Attribute[];
 }
 
 export interface ClientReactiveSerializableTemplatedNodeDefinition

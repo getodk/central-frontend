@@ -1,3 +1,5 @@
+import type { GeneralChildNode } from '../client/hierarchy.ts';
+import type { Attribute } from '../instance/Attribute.ts';
 import type { NamespaceDeclarationMap } from './names/NamespaceDeclarationMap.ts';
 import type { QualifiedName } from './names/QualifiedName.ts';
 
@@ -78,15 +80,6 @@ export const escapeXMLText = <Text extends string>(
 		: (out as EscapedXMLText);
 };
 
-interface SerializableElementAttribute {
-	serializeAttributeXML(): string;
-}
-
-interface ElementXMLSerializationOptions {
-	readonly namespaceDeclarations?: NamespaceDeclarationMap;
-	readonly attributes?: readonly SerializableElementAttribute[];
-}
-
 const serializeElementNamespaceDeclarationXML = (
 	namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
@@ -103,24 +96,11 @@ const serializeElementNamespaceDeclarationXML = (
 		.join('');
 };
 
-const serializeElementAttributeXML = (
-	attributes?: readonly SerializableElementAttribute[]
-): string => {
-	if (attributes == null) {
-		return '';
-	}
-
-	return attributes
-		.map((attribute) => {
-			return attribute.serializeAttributeXML();
-		})
-		.join('');
-};
-
 const serializeElementXML = (
 	qualifiedName: QualifiedName,
 	children: string,
-	options: ElementXMLSerializationOptions = {}
+	attributes: string,
+	namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
 	// See JSDoc for the `getPrefixedName` method. If we find we do actually need
 	// custom element (subtree) prefix resolution, we'd uncomment the argument
@@ -133,11 +113,9 @@ const serializeElementXML = (
 	const nodeName = qualifiedName.getPrefixedName(
 		// options.namespaceDeclarations
 	);
-	const namespaceDeclarations = serializeElementNamespaceDeclarationXML(
-		options.namespaceDeclarations
-	);
-	const attributes = serializeElementAttributeXML(options.attributes);
-	const prefix = `<${nodeName}${namespaceDeclarations}${attributes}`;
+	const serializedNamespaceDeclarations =
+		serializeElementNamespaceDeclarationXML(namespaceDeclarations);
+	const prefix = `<${nodeName}${serializedNamespaceDeclarations}${attributes}`;
 
 	if (children === '') {
 		return `${prefix}/>`;
@@ -146,18 +124,36 @@ const serializeElementXML = (
 	return `${prefix}>${children}</${nodeName}>`;
 };
 
+export const serializeAttributeXML = (
+	qualifiedName: QualifiedName,
+	xmlValue: EscapedXMLText
+): string => {
+	const nodeName = qualifiedName.getPrefixedName();
+	return ` ${nodeName}="${xmlValue.normalize()}"`;
+};
+
 export const serializeParentElementXML = (
 	qualifiedName: QualifiedName,
-	serializedChildren: readonly string[],
-	options?: ElementXMLSerializationOptions
+	children: readonly GeneralChildNode[],
+	attributes: readonly Attribute[],
+	namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	return serializeElementXML(qualifiedName, serializedChildren.join(''), options);
+	const serializedChildren = children.map((child) => child.instanceState.instanceXML).join('');
+	const serializedAttributes = attributes
+		.map((attribute) => attribute.instanceState.instanceXML)
+		.join('');
+	return serializeElementXML(
+		qualifiedName,
+		serializedChildren,
+		serializedAttributes,
+		namespaceDeclarations
+	);
 };
 
 export const serializeLeafElementXML = (
 	qualifiedName: QualifiedName,
 	xmlValue: EscapedXMLText,
-	options?: ElementXMLSerializationOptions
+	namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	return serializeElementXML(qualifiedName, xmlValue.normalize(), options);
+	return serializeElementXML(qualifiedName, xmlValue.normalize(), '', namespaceDeclarations);
 };

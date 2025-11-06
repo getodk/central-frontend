@@ -100,6 +100,7 @@ export class TriggerControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
+				attributes: null,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,

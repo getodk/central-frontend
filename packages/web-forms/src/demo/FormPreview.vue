@@ -59,11 +59,14 @@ xformResource
 		alert('Failed to load the Form XML');
 	});
 
-const handleSubmit = (payload: MonolithicInstancePayload) => {
+const handleSubmit = async (payload: MonolithicInstancePayload) => {
 	// eslint-disable-next-line no-console
 	console.log('submission payload:', payload);
-
-	alert(`Submit button was pressed`);
+	for (const value of payload.data[0].values()) {
+		// eslint-disable-next-line no-console
+		console.log(await value.text());
+	}
+	alert('Submit button was pressed');
 };
 
 const handleSubmitChunked = (payload: ChunkedInstancePayload) => {

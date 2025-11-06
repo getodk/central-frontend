@@ -11,7 +11,7 @@ type NamedNodeDefinitionMap = ReadonlyMap<QualifiedName, NamedNodeDefinition>;
 export interface NamedSubtreeDefinition extends NamedNodeDefinition {
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly parent: NamedSubtreeDefinition | null;
-	readonly attributes?: NamedNodeDefinitionMap;
+	readonly attributes: NamedNodeDefinitionMap | null;
 }
 
 /**

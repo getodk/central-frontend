@@ -17,6 +17,10 @@ import type {
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createNodeRangeInstanceState } from '../../lib/client-reactivity/instance-state/createNodeRangeInstanceState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../../lib/reactivity/createAttributeState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -32,6 +36,7 @@ import type {
 	DescendantNodeSharedStateSpec,
 } from '../abstract/DescendantNode.ts';
 import { DescendantNode } from '../abstract/DescendantNode.ts';
+import type { Attribute } from '../Attribute.ts';
 import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
@@ -41,6 +46,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly children: Accessor<readonly FormNodeID[]>;
+	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly valueOptions: null;
 	readonly value: null;
 }
@@ -60,6 +66,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 		ClientReactiveSerializableParentNode<RepeatInstance>
 {
 	protected readonly childrenState: ChildrenState<RepeatInstance>;
+	protected readonly attributeState: AttributeState;
 
 	/**
 	 * A repeat range doesn't have a corresponding primary instance element of its
@@ -156,8 +163,10 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 		const repeatRange = this as AnyDescendantNode as RepeatRange;
 
 		const childrenState = createChildrenState<RepeatRange, RepeatInstance>(repeatRange);
+		const attributeState = createAttributeState(this.scope);
 
 		this.childrenState = childrenState;
+		this.attributeState = attributeState;
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -170,6 +179,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 				label: createNodeLabel(this, definition),
 				hint: null,
 				children: childrenState.childIds,
+				attributes: attributeState.getAttributes,
 				valueOptions: null,
 				value: null,
 			},
@@ -259,5 +269,9 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 
 	getChildren(): readonly RepeatInstance[] {
 		return this.childrenState.getChildren();
+	}
+
+	getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }

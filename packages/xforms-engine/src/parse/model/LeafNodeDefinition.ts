@@ -20,6 +20,7 @@ export class LeafNodeDefinition<V extends ValueType = ValueType>
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;
 	readonly children = null;
+	readonly attributes = null;
 
 	constructor(
 		parent: ParentNodeDefinition,

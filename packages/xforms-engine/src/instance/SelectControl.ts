@@ -153,6 +153,7 @@ export class SelectControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
+				attributes: null,
 				valueOptions,
 				value: valueState,
 				instanceValue: this.getInstanceValue,

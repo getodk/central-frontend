@@ -97,7 +97,8 @@ export type XFormsXPathDescendantNodeKind =
 	| XFormsXPathNodeRangeKind
 	| XPathElementKind
 	| XPathTextKind
-	| XPathCommentKind;
+	| XPathCommentKind
+	| XPathAttributeKind;
 
 export interface XFormsXPathDescendantNode extends XFormsXPathNode {
 	readonly [XPathNodeKindKey]: XFormsXPathDescendantNodeKind;
@@ -109,6 +110,7 @@ export type XFormsXPathPrimaryInstanceNodeKind =
 	| XPathDocumentKind
 	| XFormsXPathNodeRangeKind
 	| XPathElementKind
+	| XPathAttributeKind
 	| XPathTextKind;
 
 export interface XFormsXPathPrimaryInstanceNode extends XFormsXPathNode {

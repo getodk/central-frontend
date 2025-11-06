@@ -3,6 +3,7 @@ import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { AttributeDefinitionMap } from './AttributeDefinitionMap.ts';
 import { GroupDefinition } from './GroupDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
@@ -11,7 +12,6 @@ import { NodeDefinition } from './NodeDefinition.ts';
 import { NoteNodeDefinition } from './NoteNodeDefinition.ts';
 import { RangeNodeDefinition } from './RangeNodeDefinition.ts';
 import { RepeatDefinition } from './RepeatDefinition.ts';
-import { RootAttributeMap } from './RootAttributeMap.ts';
 import type { SubmissionDefinition } from './SubmissionDefinition.ts';
 
 export class RootDefinition extends NodeDefinition<'root'> {
@@ -22,7 +22,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 	readonly parent = null;
 	readonly template: StaticElement;
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
-	readonly attributes: RootAttributeMap;
+	readonly attributes: AttributeDefinitionMap;
 	readonly children: readonly ChildNodeDefinition[];
 
 	readonly isTranslated = false;
@@ -51,7 +51,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 
 		this.qualifiedName = qualifiedName;
 		this.template = template;
-		this.attributes = RootAttributeMap.from(this, template);
+		this.attributes = AttributeDefinitionMap.from(model, template);
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
 		this.children = this.buildSubtree(this, template);
 	}
@@ -87,7 +87,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			const [firstChild, ...restChildren] = children;
 
 			if (bodyElement?.type === 'repeat') {
-				return RepeatDefinition.from(parent, bind, bodyElement, children);
+				return RepeatDefinition.from(model, parent, bind, bodyElement, children);
 			}
 
 			if (restChildren.length) {
@@ -107,7 +107,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 				);
 			}
 
-			return new GroupDefinition(parent, bind, bodyElement, element);
+			return new GroupDefinition(model, parent, bind, bodyElement, element);
 		});
 	}
 

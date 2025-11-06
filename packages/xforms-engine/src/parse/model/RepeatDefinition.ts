@@ -19,9 +19,11 @@ import type { NamespaceURL } from '../../lib/names/NamespaceURL.ts';
 import type { QualifiedName, QualifiedNameSource } from '../../lib/names/QualifiedName.ts';
 import type { RepeatElementDefinition } from '../body/RepeatElementDefinition.ts';
 import { RepeatCountControlExpression } from '../expression/RepeatCountControlExpression.ts';
+import { AttributeDefinitionMap } from './AttributeDefinitionMap.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
 import type { GroupDefinition } from './GroupDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
@@ -313,18 +315,20 @@ export interface UncontrolledRepeatDefinition extends RepeatDefinition {
  */
 export class RepeatDefinition extends DescendentNodeDefinition<'repeat', RepeatElementDefinition> {
 	static from(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: RepeatElementDefinition,
 		instanceNodes: RepeatInstanceNodes
 	): AnyRepeatDefinition;
 	static from(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: RepeatElementDefinition,
 		instanceNodes: RepeatInstanceNodes
 	): RepeatDefinition {
-		return new this(parent, bind, bodyElement, instanceNodes);
+		return new this(model, parent, bind, bodyElement, instanceNodes);
 	}
 
 	readonly type = 'repeat';
@@ -333,8 +337,10 @@ export class RepeatDefinition extends DescendentNodeDefinition<'repeat', RepeatE
 	readonly template: StaticElement;
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;
+	readonly attributes: AttributeDefinitionMap;
 
 	private constructor(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: RepeatElementDefinition,
@@ -353,6 +359,7 @@ export class RepeatDefinition extends DescendentNodeDefinition<'repeat', RepeatE
 		this.children = root.buildSubtree(self, template);
 
 		const initialCount = this.omitTemplate(instanceNodes).length;
+		this.attributes = AttributeDefinitionMap.from(model, template);
 
 		this.count = RepeatCountControlExpression.from(bodyElement, initialCount);
 	}

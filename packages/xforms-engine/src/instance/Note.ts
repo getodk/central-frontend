@@ -105,6 +105,7 @@ export class Note<V extends ValueType = ValueType>
 				noteText,
 
 				children: null,
+				attributes: null,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,

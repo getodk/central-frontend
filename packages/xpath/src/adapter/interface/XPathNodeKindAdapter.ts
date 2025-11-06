@@ -36,6 +36,7 @@ export type AdapterChildNode<T extends XPathNode> =
 	| AdapterElement<T>
 	| AdapterText<T>
 	| AdapterComment<T>
+	| AdapterAttribute<T>
 	| AdapterProcessingInstruction<T>;
 
 // prettier-ignore

@@ -76,6 +76,7 @@ export class ModelValue<V extends ValueType = ValueType>
 				label: null,
 				hint: null,
 				children: null,
+				attributes: null,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,

@@ -9,6 +9,10 @@ import { UploadValueTypeError } from '../error/UploadValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createValueNodeInstanceState } from '../lib/client-reactivity/instance-state/createValueNodeInstanceState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createInstanceAttachment } from '../lib/reactivity/createInstanceAttachment.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -20,6 +24,7 @@ import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
+import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
@@ -57,6 +62,7 @@ interface UploadControlStateSpec extends DescendantNodeStateSpec<InstanceAttachm
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
 	readonly children: null;
+	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly valueOptions: null;
 	readonly value: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
 	readonly instanceValue: Accessor<InstanceAttachmentFileName>;
@@ -95,6 +101,7 @@ export class UploadControl
 
 	private readonly validation: SharedValidationState;
 	private readonly instanceAttachment: InstanceAttachment;
+	private readonly attributeState: AttributeState;
 
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';
@@ -133,6 +140,8 @@ export class UploadControl
 		const instanceAttachment = createInstanceAttachment(this);
 
 		this.instanceAttachment = instanceAttachment;
+		const attributeState = createAttributeState(this.scope);
+		this.attributeState = attributeState;
 		this.decodeInstanceValue = instanceAttachment.decodeInstanceValue;
 		this.getXPathValue = instanceAttachment.getInstanceValue;
 
@@ -149,6 +158,7 @@ export class UploadControl
 				children: null,
 				valueOptions: null,
 				value: instanceAttachment.valueState,
+				attributes: attributeState.getAttributes,
 				instanceValue: instanceAttachment.getInstanceValue,
 			},
 			this.instanceConfig
@@ -180,5 +190,9 @@ export class UploadControl
 		this.instanceAttachment.setValue(value);
 
 		return this.root;
+	}
+
+	getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }

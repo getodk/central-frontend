@@ -11,21 +11,23 @@ import { TagXFormsElement } from './TagXFormsElement.ts';
 import type { XFormsElement } from './XFormsElement.ts';
 import { emptyMap } from './collections.ts';
 
+interface NameAndAttributes {
+	name: string;
+	attributes: Map<string, string>;
+}
 type AttributeTuple = readonly [nodeName: string, value: string];
-
 type AttributeTuples = readonly AttributeTuple[];
-
 type Int = number;
 
-const parseAttributes = (name: string): Map<string, string> => {
-	if (!name.includes(' ')) {
-		return new Map();
+const parseName = (tag: string): NameAndAttributes => {
+	const words = tag.match(/(?:[^\s"]+|"[^"]*")+/g) ?? [];
+	const attributes = new Map<string, string>();
+	if (!words.length) {
+		return { name: tag, attributes };
 	}
 
-	const attributes = new Map<string, string>();
-	const words = name.split(' ');
-
-	for (const word of words.slice(1)) {
+	const name = words.shift()!;
+	for (const word of words) {
 		const parts = /^(.*)(?<!\\)=(["'].*)/.exec(word);
 
 		if (parts == null) {
@@ -38,23 +40,7 @@ const parseAttributes = (name: string): Map<string, string> => {
 			attributeValueString!.substring(1, attributeValueString!.length - 1)
 		);
 	}
-
-	return attributes;
-};
-
-const parseName = (name: string): string => {
-	if (!name.includes(' ')) {
-		return name;
-	}
-
-	// This non-null assertion is inherently safe, as `String#split` will always
-	// return at least one item. In theory, this could be expressed in the
-	// built-in lib type as:
-	//
-	// `split(...): [string, ...string[]]`.
-	//
-	// Maybe ask if that's a welcome contribution?
-	return name.split(' ')[0]!;
+	return { name, attributes };
 };
 
 interface t {
@@ -62,21 +48,20 @@ interface t {
 	(name: string, innerHtml: string): XFormsElement;
 }
 
-export const t: t = (name, ...args): XFormsElement => {
-	const parsedName = parseName(name);
-	const attributes = parseAttributes(name);
+export const t: t = (tag, ...args): XFormsElement => {
+	const { name, attributes } = parseName(tag);
 
 	const [innerHtmlOrFirstChild] = args;
 
 	if (innerHtmlOrFirstChild == null) {
-		return new EmptyXFormsElement(parsedName, attributes);
+		return new EmptyXFormsElement(name, attributes);
 	}
 
 	if (typeof innerHtmlOrFirstChild === 'string') {
-		return new StringLiteralXFormsElement(parsedName, attributes, innerHtmlOrFirstChild);
+		return new StringLiteralXFormsElement(name, attributes, innerHtmlOrFirstChild);
 	}
 
-	return new TagXFormsElement(parsedName, attributes, args as readonly XFormsElement[]);
+	return new TagXFormsElement(name, attributes, args as readonly XFormsElement[]);
 };
 
 // It would have been nice to use the `interface` technique to declare overrides for
