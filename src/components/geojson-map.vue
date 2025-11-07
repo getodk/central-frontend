@@ -774,7 +774,7 @@ $muted-background-color: #F1F5F9;
 
     .icon-map-marker{
       padding-right: $margin-right-icon;
-    };
+    }
   }
 
   .ol-zoom {
