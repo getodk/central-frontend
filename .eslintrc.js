@@ -30,7 +30,6 @@ module.exports = {
         '/^\\w+.conflict./',
         '/^\\w+.outdatedVersionHtml./', // check that file's comments
         '/^\\w+.type./',
-        '/^\\w+./',
         '/^\\w+.title.submissionBacklog./',
         '/^\\w+.title.updateReviewState./',
         '/^\\w+.component.WebFormRenderer./', // dynamic modals
