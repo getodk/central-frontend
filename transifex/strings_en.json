@@ -809,6 +809,9 @@
         "string": "your",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Send me occasional emails about new features and best practices."
     }
   },
   "submission": {

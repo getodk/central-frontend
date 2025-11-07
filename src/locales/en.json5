@@ -363,7 +363,8 @@
       // "This" refers to improving Central.
       "full": "To do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you.",
       "your": "your"
-    }
+    },
+    "mailingListOptIn": "Send me occasional emails about new features and best practices."
   },
   "submission": {
     // This is a possible state for a Submission. It means that the Submission

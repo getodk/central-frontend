@@ -23,9 +23,12 @@ except according to the terms contained in the LICENSE file.
         {{ $t('body') }}
       </p>
       <div class="modal-actions">
+        <div class="checkbox">
+          <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
+        </div>
         <button type="button" class="btn btn-primary"
           @click="hideModal">
-          {{ $t('action.gotIt') }}
+          {{ $t('action.done') }}
         </button>
       </div>
     </template>
@@ -47,6 +50,7 @@ const { openModal } = inject('container');
 const { currentUser, projects } = useRequestData();
 
 const isVisible = ref(false);
+const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn);
 
 watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
@@ -60,11 +64,36 @@ watch(() => projects.dataExists, () => {
 });
 
 function hideModal() {
+  // Set modal to always be dismissed
   currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+  // Set mailing list opt in to what was selected
+  currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
   isVisible.value = false;
 }
 
 </script>
+
+<style lang="scss">
+@import '../assets/scss/variables';
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+
+  .checkbox {
+    margin-bottom: 0px;
+    font-size: 12px;
+
+    input[type=checkbox] {
+      margin-top: 2px;
+    }
+  }
+
+  .btn {
+     margin-left: auto;
+  }
+}
+</style>
 
 <i18n lang="json5">
   {
