@@ -22,18 +22,20 @@ module.exports = {
       src: 'src/',
       callExpression: '^(\\$t|t|\\$tc|tc|\\$tcn|tcn|\\$tn|tn)$',
       ignores: [
-        '/^\\w+.audit.action./',
-        '/^\\w+.audit.category./',
-        '/^\\w+.oidc.error./',
-        '/^\\w+.fields./',
-        '/^\\w+.tab./',
-        '/^\\w+.conflict./',
-        '/^\\w+.outdatedVersionHtml./', // check that file's comments
-        '/^\\w+.type./',
-        '/^\\w+.title.submissionBacklog./',
-        '/^\\w+.title.updateReviewState./',
-        '/^\\w+.component.WebFormRenderer./', // dynamic modals
-        '/^\\w+.reviewState./',
+        '/^[\\w-]+\\.audit\\.action\\./',
+        '/^[\\w-]+\\.audit\\.category\\./',
+        '/^[\\w-]+\\.back\\.back$/',
+        '/^[\\w-]+\\.back\\.title$/',
+        '/^[\\w-]+\\.component\\.WebFormRenderer\\./', // dynamic modals
+        '/^[\\w-]+\\.conflict\\./',
+        '/^[\\w-]+\\.fields\\./',
+        '/^[\\w-]+\\.oidc.error\\./',
+        '/^[\\w-]+\\.outdatedVersionHtml\\./', // check that file's comments
+        '/^[\\w-]+\\.reviewState\\./',
+        '/^[\\w-]+\\.tab\\./',
+        '/^[\\w-]+\\.title\\.submissionBacklog\\./',
+        '/^[\\w-]+\\.title\\.updateReviewState\\./',
+        '/^[\\w-]+\\.type\\./',
         '/Modal\\.(body|title)$/',
       ],
     }],
