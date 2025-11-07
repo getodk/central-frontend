@@ -9,7 +9,7 @@ const containsSubarray = (array, subarray) => {
 };
 
 const logThenThrow = (toLog, errorMessage) => {
-  console.error(toLog); // eslint-disable-line no-console
+  console.error(toLog);
   throw new Error(errorMessage);
 };
 
