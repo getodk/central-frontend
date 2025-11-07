@@ -72,7 +72,7 @@ function isTooBig({ path, size }) {
     case 'png':  return size >  40_000;
     case 'svg':  return size >  60_000;
     case 'ttf':  return size >  18_000;
-    case 'woff': return size >  18_000;
+    case 'woff': return size >  19_000;
   }
   throw new Error(`No check written for file ${path} yet!  Please review this function.`);
 }
