@@ -22,6 +22,7 @@ module.exports = {
       src: 'src/',
       callExpression: '^(\\$t|t|\\$tc|tc|\\$tcn|tcn|\\$tn|tn)$',
       ignores: [
+        // /^[\w-]+\./ should match all locale keys, e.g. "en", "zh-Hant" etc.
         /^[\w-]+\.audit\.action\./,
         /^[\w-]+\.audit\.category\./,
         /^[\w-]+\.back\.back$/,
