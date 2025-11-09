@@ -1,5 +1,6 @@
 export type * from './attachments/InstanceAttachmentMeta.ts';
 export type * from './attachments/InstanceAttachmentsConfig.ts';
+export type * from './AttributeNode.ts';
 export type * from './constants.ts';
 export * as constants from './constants.ts';
 export type * from './form/CreateFormInstance.ts';

@@ -50,8 +50,7 @@ export type XFormsXPathChildNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| EngineXPathElement
 	| EngineXPathText
-	| EngineXPathComment
-	| EngineXPathAttribute;
+	| EngineXPathComment;
 
 // prettier-ignore
 type XPathAdapterParentNode =
