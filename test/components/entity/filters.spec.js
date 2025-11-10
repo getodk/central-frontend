@@ -369,4 +369,21 @@ describe('EntityFilters', () => {
         component.getComponent(DateRangePicker).props().disabled.should.be.true;
       });
   });
+
+  describe('reset button', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1);
+    });
+
+    it('resets the filters when clicked', () =>
+      load('/projects/1/entity-lists/trees/entities?conflict=true')
+        .complete()
+        .request(component => {
+          component.get('.btn-reset').trigger('click');
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponses(component => {
+          should.not.exist(component.vm.$route.query.conflict);
+        }));
+  });
 });

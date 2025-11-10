@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Select row",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Reset",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
