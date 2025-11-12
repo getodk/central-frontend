@@ -1,5 +1,16 @@
 # @getodk/web-forms
 
+## 0.17.0
+
+### Minor Changes
+
+- cf1c541: Support binding and serializing element attributes
+
+### Patch Changes
+
+- e547142: Enhanced sanitization of markdown input
+- 7936df6: Minor increases in dependancies to resolve disclosed vulnerabilities
+
 ## 0.16.0
 
 ### Minor Changes

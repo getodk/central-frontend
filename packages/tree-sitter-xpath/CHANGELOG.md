@@ -1,5 +1,11 @@
 # @getodk/tree-sitter-xpath
 
+## 0.2.1
+
+### Patch Changes
+
+- 7936df6: Minor increases in dependancies to resolve disclosed vulnerabilities
+
 ## 0.2.0
 
 ### Minor Changes

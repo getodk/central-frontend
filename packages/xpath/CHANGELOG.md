@@ -1,5 +1,19 @@
 # @getodk/xpath
 
+## 0.9.0
+
+### Minor Changes
+
+- cf1c541: Support binding and serializing element attributes
+
+### Patch Changes
+
+- 7936df6: Minor increases in dependancies to resolve disclosed vulnerabilities
+- Updated dependencies [cf1c541]
+- Updated dependencies [e547142]
+- Updated dependencies [7936df6]
+  - @getodk/common@0.10.0
+
 ## 0.8.1
 
 ### Patch Changes
