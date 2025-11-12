@@ -9,6 +9,26 @@ import type {
 import DOMPurify from 'dompurify';
 import type { StyleValue } from 'vue';
 
+const DOM_PURIFY_SETTINGS = {
+	ALLOWED_TAGS: [
+		'b',
+		'br',
+		'em',
+		'i',
+		'li',
+		'ol',
+		'p',
+		'span',
+		'strong',
+		'table',
+		'td',
+		'tr',
+		'u',
+		'ul',
+	],
+	ALLOWED_ATTR: ['style'],
+};
+
 interface MarkdownProps {
 	readonly elem: MarkdownNode;
 }
@@ -29,7 +49,7 @@ const getUrl = (node: ParentMarkdownNode): string | undefined => {
 };
 
 const purify = (node: HtmlMarkdownNode): string => {
-	return DOMPurify.sanitize(node.unsafeHtml);
+	return DOMPurify.sanitize(node.unsafeHtml, DOM_PURIFY_SETTINGS);
 };
 </script>
 

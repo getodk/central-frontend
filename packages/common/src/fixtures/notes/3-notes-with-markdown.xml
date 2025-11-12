@@ -184,14 +184,14 @@ Escaping: \*hello\*
 
 &lt;div style="text-align:center"&gt;centered div&lt;/div&gt;
 
-&lt;table border="1"&gt;
+&lt;table style="border:1px solid"&gt;
   &lt;tr&gt;
-    &lt;td&gt;name&lt;/td&gt;
-    &lt;td&gt;value&lt;/td&gt;
+    &lt;td style="border:1px solid"&gt;name&lt;/td&gt;
+    &lt;td style="border:1px solid"&gt;value&lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-    &lt;td&gt;once&lt;/td&gt;
-    &lt;td&gt;twice&lt;/td&gt;
+    &lt;td style="border:1px solid"&gt;once&lt;/td&gt;
+    &lt;td style="border:1px solid"&gt;twice&lt;/td&gt;
   &lt;/tr&gt;
 &lt;/table&gt;
 

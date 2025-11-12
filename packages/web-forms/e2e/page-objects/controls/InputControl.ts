@@ -7,7 +7,7 @@ export class InputControl {
 		this.page = page;
 	}
 
-	private async getInputByLabel(label: string) {
+	async getInputByLabel(label: string) {
 		const container = this.page
 			.locator('.question-container')
 			.filter({ has: this.page.locator(`.control-text label:text-is("${label}")`) });
