@@ -60,6 +60,9 @@ defineProps({
   "pt": {
     "title": "Erro de dados"
   },
+  "zh": {
+    "title": "数据错误"
+  },
   "zh-Hant": {
     "title": "資料錯誤"
   }

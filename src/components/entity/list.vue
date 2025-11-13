@@ -865,6 +865,29 @@ export default {
     "noEntities": "Hakuna Fomu za kuonyesha.",
     "noMatching": "Hakuna Huluki zinazolingana."
   },
+  "zh": {
+    "noEntities": "暂无实体可显示。",
+    "noMatching": "没有匹配的实体。",
+    "allDeleted": "所有实体已被删除。",
+    "allDeletedOnPage": "本页所有实体已被删除。",
+    "alert": {
+      "delete": "实体“{label}”已被删除。",
+      "bulkDelete": "{count}个实体已成功删除。",
+      "restored": "{count}个实体已成功复原。"
+    },
+    "filterDisabledMessage": "筛选功能对已删除的实体不可用",
+    "searchDisabledMessage": "搜索功能对已删除的实体不可用",
+    "downloadDisabled": "下载功能对已删除的实体不可用",
+    "deletedEntity": {
+      "emptyTable": "没有已删除的实体。",
+      "allRestored": "所有已删除的实体已复原。",
+      "allRestoredOnPage": "本页所有实体已复原。"
+    },
+    "actionBar": {
+      "message": "已选择{count}个实体"
+    },
+    "bulkOpInProgress": "批量操作执行中"
+  },
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
     "noMatching": "無相符的實體。",

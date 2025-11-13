@@ -207,6 +207,19 @@ const submit = () => {
       "success": "Maelezo ya mtumiaji yamehifadhiwa!"
     }
   },
+  "zh": {
+    "title": "基础信息",
+    "emailDisabled": "您的邮箱地址不可更改。该地址在 Central 与您的登录服务器之间用于身份验证。",
+    "action": {
+      "update": "更新详情"
+    },
+    "problem": {
+      "409_3": "您无法将邮箱修改为 {email}，此账户已存在。请尝试其他邮箱地址。"
+    },
+    "alert": {
+      "success": "用户资料已保存！"
+    }
+  },
   "zh-Hant": {
     "title": "基本訊息",
     "emailDisabled": "您的電子郵件地址無法變更。它在 Central 和您的登入伺服器之間使用，以確保您的身分。",

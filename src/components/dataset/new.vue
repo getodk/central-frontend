@@ -276,6 +276,21 @@ const hideOrComplete = () => {
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi."
     ]
   },
+  "zh": {
+    "title": "创建实体列表",
+    "encrypted": "此项目已加密。表单及其提交数据将无法修改此列表中的任何实体。实体必须通过Central平台或API进行管理。",
+    "entityListName": "实体列表名称",
+    "success": [
+      "实体列表“{name}”已成功创建。",
+      "您可以直接在本页面添加数据属性来开始使用，也可通过上传调用该实体的表单来实现。若选择后者，当表单发布时，其引用的所有属性都将自动创建。"
+    ],
+    "problem": {
+      "409_3": "该项目中已存在名称为{datasetName}的实体列表。"
+    },
+    "introduction": [
+      "实体功能支持跨表单共享信息，便于您收集纵向数据、进行长期案例管理，以及实现多步骤工作流程。"
+    ]
+  },
   "zh-Hant": {
     "title": "建立實體列表",
     "encrypted": "該專案已加密。表格和提交內容將無法修改此清單中的任何實體。實體必須透過 Central 或 API 進行管理。",

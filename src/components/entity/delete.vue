@@ -97,6 +97,12 @@ const del = () => {
       "Tem certeza de que deseja excluir “{label}”?"
     ]
   },
+  "zh": {
+    "title": "删除{label}",
+    "introduction": [
+      "您确定要删除{label}吗？"
+    ]
+  },
   "zh-Hant": {
     "title": "刪除{label}",
     "introduction": [

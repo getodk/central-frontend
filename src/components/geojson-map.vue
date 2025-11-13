@@ -901,6 +901,14 @@ $muted-background-color: #F1F5F9;
   "pt": {
     "zoomToFit": "Ajustar para mostrar todos os dados"
   },
+  "zh": {
+    "showing": "当前显示第{count}项，共{total}项",
+    "zoomToFit": "缩放至全数据视图",
+    "noWebGL": {
+      "title": "图形显示异常。",
+      "message": "您的浏览器无法显示地图。请启用图形加速设置。"
+    }
+  },
   "zh-Hant": {
     "showing": "正在顯示{total}項中的第{count}項",
     "zoomToFit": "縮放以符合所有資料"

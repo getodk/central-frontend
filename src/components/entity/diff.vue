@@ -118,6 +118,9 @@ $tabs-indent: 3px;
   "pt": {
     "noChange": "Não há alterações para mostrar."
   },
+  "zh": {
+    "noChange": "没有可显示的更改"
+  },
   "zh-Hant": {
     "noChange": "沒有可顯示的變更。"
   }

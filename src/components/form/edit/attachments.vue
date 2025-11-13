@@ -148,6 +148,15 @@ const tag = computed(() => {
       "summary": "{changes} desde a versão publicada"
     }
   },
+  "zh": {
+    "noAttachments": "此定义无需附件，因此无需上传任何文件。",
+    "missingCount": "{count}个缺失附件",
+    "diff": {
+      "newCount": "{count}个新附件",
+      "changedCount": "{count}个已修改的附件",
+      "summary": "自发布版本以来有{changes}"
+    }
+  },
   "zh-Hant": {
     "noAttachments": "此定義不需要任何附件，因此沒有任何東西需要上傳。",
     "missingCount": "{count}個遺失附件",

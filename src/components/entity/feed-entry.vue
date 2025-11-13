@@ -603,6 +603,44 @@ const showBranchData = () => {
       }
     }
   },
+  "zh": {
+    "title": {
+      "submission": {
+        "create": {
+          "notDeleted": "由{submitter}上传的提交{instanceName}",
+          "deleted": {
+            "full": "{deletedSubmission}由{name}上传",
+            "deletedSubmission": "（已删除的提交{id}）"
+          }
+        },
+        "approval": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已批准"
+        }
+      },
+      "entity": {
+        "create": {
+          "api": "由{name}创建实体{label}",
+          "bulkSource": "由{actor}上传档案{name}",
+          "submission": "在{dataset}实体清单中建立了实体{label}"
+        },
+        "update_version": {
+          "submission": {
+            "notDeleted": "通过提交{instanceName}更新的数据",
+            "deleted": {
+              "full": "已由{deletedSubmission}更新数据",
+              "deletedSubmission": "（已删除的提交{id}）"
+            }
+          },
+          "api": "数据已被{name}更新"
+        },
+        "update_resolve": "冲突警告已被{name}解决",
+        "delete": "实体{label}已被{name}删除",
+        "restore": "实体{label}已被{name}复原"
+      }
+    },
+    "offlineUpdate": "离线更新"
+  },
   "zh-Hant": {
     "title": {
       "submission": {

@@ -192,6 +192,12 @@ th.col-deleted-at { color: $color-danger; }
       "updatedAtAndActions": "Ilisasishwa Mwisho / Vitendo"
     }
   },
+  "zh": {
+    "header": {
+      "updatedAtAndActions": "最后更新/操作",
+      "deletedAt": "删除于"
+    }
+  },
   "zh-Hant": {
     "header": {
       "updatedAtAndActions": "最後更新/操作",

@@ -167,6 +167,16 @@ export default {
       "link": "Kiungo"
     }
   },
+  "zh": {
+    "title": "关联实体列表",
+    "introduction": [
+      "您确定要关联该实体列表吗？",
+      "您上传的温江将被删除，您可以随时重新上传。"
+    ],
+    "action": {
+      "link": "链接"
+    }
+  },
   "zh-Hant": {
     "title": "連結實體清單",
     "introduction": [

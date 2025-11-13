@@ -188,6 +188,9 @@ export default {
   "pt": {
     "formsUpdateEntities": "{count} Formulário atualizando Entidades | {count} Formulários atualizando Entidades | {count} Formulários atualizando Entidades"
   },
+  "zh": {
+    "formsUpdateEntities": "{count}个表单正在更新实体"
+  },
   "zh-Hant": {
     "formsUpdateEntities": "{count}個表單正在更新實體"
   }

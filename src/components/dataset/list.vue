@@ -151,6 +151,13 @@ const afterCreateDataset = async (dataset) => {
       "Mashirika huundwa kupitia muundo wa fomu na yanaweza kuambatishwa kwa Fomu yoyote."
     ]
   },
+  "zh": {
+    "heading": [
+      "实体功能支持跨表单共享信息，便于您收集纵向数据、进行长期案例管理，以及实现多步骤工作流程。",
+      "实体通过表单设计创建，可关联至任意表单。"
+    ],
+    "new": "更新"
+  },
   "zh-Hant": {
     "heading": [
       "實體清單允許您在表單之間共用資訊，以便收集縱向資料、隨時間管理案例，並透過多個步驟表示其他工作流程。",

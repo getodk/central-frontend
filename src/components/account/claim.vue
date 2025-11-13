@@ -196,6 +196,17 @@ export default {
       "401_2": "{message} Huenda muda wa kiungo katika barua pepe yako umeisha, na huenda barua pepe mpya ikatumwa."
     }
   },
+  "zh": {
+    "action": {
+      "set": "设置密码"
+    },
+    "problem": {
+      "401_2": "{message}您邮件中的链接可能已失效，需要重新发送邮件。"
+    },
+    "alert": {
+      "success": "密码重设成功"
+    }
+  },
   "zh-Hant": {
     "action": {
       "set": "設定密碼"

@@ -133,6 +133,13 @@ const changeInput = (event) => {
     },
     "parsing": "Lendo dados…"
   },
+  "zh": {
+    "text": {
+      "full": "请将.csv文件拖拽至此，或者{chooseOne}进行导入",
+      "chooseOne": "请选择一个"
+    },
+    "parsing": "读取数据..."
+  },
   "zh-Hant": {
     "text": {
       "full": "拖曳一個 .csv 檔案到這，或者 {chooseOne}進行匯入。",

@@ -301,6 +301,22 @@ export default {
       }
     }
   },
+  "zh": {
+    "projectNav": {
+      "action": {
+        "back": "返回项目概览"
+      }
+    },
+    "formNav": {
+      "tabTitle": "发布此草稿表单以启用这些功能"
+    },
+    "infoNav": {
+      "entityLists": "{count}个关联的实体列表",
+      "updatedDatasets": "更新",
+      "attachedDatasets": "用途",
+      "appUsers": "已分配{count}个应用用户"
+    }
+  },
   "zh-Hant": {
     "projectNav": {
       "action": {

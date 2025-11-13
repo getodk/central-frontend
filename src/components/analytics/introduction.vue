@@ -195,6 +195,19 @@ const hideAndNavigate = (navigate, event) => {
       "improveCentral": "Boresha Central"
     }
   },
+  "zh": {
+    "title": "助力完善Central！",
+    "introduction": [
+      {
+        "full": "在系统设置的{usageReporting}选项中，您可以选择向Central团队共享匿名使用数据或联系方式。",
+        "usageReporting": "使用报告"
+      },
+      "您也可以选择不再显示此提示信息。"
+    ],
+    "action": {
+      "improveCentral": "完善Central"
+    }
+  },
   "zh-Hant": {
     "title": "幫助改善 Central!",
     "introduction": [

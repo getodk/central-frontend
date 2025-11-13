@@ -151,6 +151,12 @@ export default {
       "download": "Pakua data (.csv)"
     }
   },
+  "zh": {
+    "action": {
+      "download": "下载数据（.csv）"
+    },
+    "possibleConflictsCount": "{count}可能的冲突"
+  },
   "zh-Hant": {
     "action": {
       "download": "下載資料 (.csv)"

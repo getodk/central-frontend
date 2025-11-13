@@ -192,6 +192,17 @@ const submit = () => {
       "note": "Ongeza vidokezo, viungo, maagizo na nyenzo zingine hapa."
     }
   },
+  "zh": {
+    "title": "基础信息",
+    "field": {
+      "name": "项目名称",
+      "description": "项目描述",
+      "note": "请在此处添加备注、链接、说明及其他资料。"
+    },
+    "alert": {
+      "success": "项目设置已保存。"
+    }
+  },
   "zh-Hant": {
     "title": "基本訊息",
     "field": {

@@ -182,6 +182,13 @@ const status = computed(() => (props.progress < 1
       "processing": "Processando arquivo…"
     }
   },
+  "zh": {
+    "rowCount": "找到{count}行数据",
+    "status": {
+      "sending": "传送文件...({percentUploaded})",
+      "processing": "处理文件..."
+    }
+  },
   "zh-Hant": {
     "rowCount": "找到{count}行資料",
     "status": {

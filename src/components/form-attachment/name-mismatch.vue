@@ -192,6 +192,16 @@ export default {
       "Tunakagua mara mbili kwa sababu majina ya faili hayalingani"
     ]
   },
+  "zh": {
+    "title": {
+      "upload": "上传文件",
+      "replace": "替换文件"
+    },
+    "introduction": [
+      "您确定要将{filename}上传为{attachmentName}吗？",
+      "我们正在进行二次核对，因为文件名不匹配。"
+    ]
+  },
   "zh-Hant": {
     "title": {
       "upload": "上傳檔案",

@@ -274,6 +274,16 @@ const currentVersion = computed(() =>
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
     }
   },
+  "zh": {
+    "title": "更新{label}",
+    "header": {
+      "currentValue": "当前数值",
+      "updatedValue": "更新后的数值"
+    },
+    "problem": {
+      "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
+    }
+  },
   "zh-Hant": {
     "title": "更新{label}",
     "header": {

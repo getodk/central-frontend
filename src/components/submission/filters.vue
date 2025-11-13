@@ -130,6 +130,12 @@ export default {
       "submissionDate": "Imewasilishwa kwa"
     }
   },
+  "zh": {
+    "field": {
+      "submissionDate": "上传于："
+    },
+    "allSubmissionDateSelected": "所有时间"
+  },
   "zh-Hant": {
     "field": {
       "submissionDate": "提交於"

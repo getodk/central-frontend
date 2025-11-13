@@ -227,6 +227,14 @@ export default {
     "trashCount": "({count})",
     "message": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
   },
+  "zh": {
+    "title": "回收站",
+    "trashCount": "（{count}）",
+    "alert": {
+      "restore": "表单“{name}”已成功恢复。"
+    },
+    "message": "表单及相关数据在回收站保留30天后将被删除"
+  },
   "zh-Hant": {
     "title": "垃圾桶",
     "trashCount": "({count})",

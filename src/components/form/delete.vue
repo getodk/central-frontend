@@ -166,6 +166,14 @@ export default {
     ],
     "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
   },
+  "zh": {
+    "title": "删除表单",
+    "introduction": [
+      "您确定要删除表单{name}以及它的所有提交内容吗？",
+      "此操作将把表单移至回收站。表单在回收站保留30天后将被永久清除，但在此之前可以随时恢复。"
+    ],
+    "noDeleteEntities": "通过本表单提交所创建的任何实体均不会被删除。在今后的Central版本中，将支持实体删除功能。"
+  },
   "zh-Hant": {
     "title": "刪除表單",
     "introduction": [

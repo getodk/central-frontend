@@ -129,6 +129,11 @@ defineExpose({ el, resetScroll });
       "back": "Torna all'elenco"
     }
   },
+  "zh": {
+    "action": {
+      "back": "返回列表"
+    }
+  },
   "zh-Hant": {
     "action": {
       "back": "返回清單"

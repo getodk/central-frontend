@@ -168,6 +168,10 @@ const propertiesCount = computed(() => tn(
     "new": "mpya!",
     "addedByThisDraft": "Imeongezwa na Rasimu hii"
   },
+  "zh": {
+    "new": "更新！",
+    "addedByThisDraft": "由此草稿添加"
+  },
   "zh-Hant": {
     "new": "新增！",
     "addedByThisDraft": "已由草稿新增"

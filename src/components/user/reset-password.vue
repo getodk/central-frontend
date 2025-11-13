@@ -150,6 +150,13 @@ export default {
       "resetPassword": "Weka upya nenosiri"
     }
   },
+  "zh": {
+    "title": "重置密码",
+    "introduction": {
+      "full": "一旦您点击下方的 {resetPassword}，用户 “{displayName}” \u003c{email}> 的密码将立即失效。系统将向 {email} 发送包含后续操作指南的邮件。",
+      "resetPassword": "重置密码"
+    }
+  },
   "zh-Hant": {
     "title": "重設密碼",
     "introduction": {

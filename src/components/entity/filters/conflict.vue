@@ -165,6 +165,19 @@ const placeholder = (counts) => {
       "conflict": "Hali ya migogoro"
     }
   },
+  "zh": {
+    "conflict": {
+      "true": "可能存在冲突",
+      "false": "无冲突"
+    },
+    "field": {
+      "conflict": "冲突状态"
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    }
+  },
   "zh-Hant": {
     "conflict": {
       "true": "可能發生衝突",

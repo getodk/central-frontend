@@ -100,6 +100,9 @@ const { publishedFormPath } = useRoutes();
   "pt": {
     "formsConsumeData": "{count} Formulário utiliza essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades"
   },
+  "zh": {
+    "formsConsumeData": "{count}个表单使用此实体列表"
+  },
   "zh-Hant": {
     "formsConsumeData": "{count}個表單使用此實體清單"
   }

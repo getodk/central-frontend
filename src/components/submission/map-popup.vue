@@ -228,6 +228,11 @@ const handleActions = (event) => {
   "pt": {
     "submissionDetails": "Detalhes da resposta"
   },
+  "zh": {
+    "missingField": "此提交数据在映射时使用了已发布表单版本中不存在的字段 {field}。",
+    "mappedField": "地图引用此字段",
+    "submissionDetails": "提交详情"
+  },
   "zh-Hant": {
     "missingField": "此提交是使用{field}進行地圖標記的，而該功能並未包含在已發布的表單版本中。",
     "mappedField": "地圖參照此欄位",

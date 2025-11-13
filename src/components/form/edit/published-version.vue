@@ -114,6 +114,13 @@ const { form, formDraft } = useRequestData();
     },
     "versionName": "Nome da versão: {name}"
   },
+  "zh": {
+    "title": "当前版本",
+    "subtitle": {
+      "published": "{dateTime}已发布"
+    },
+    "versionName": "版本名称：{name}"
+  },
   "zh-Hant": {
     "title": "當前版本",
     "subtitle": {

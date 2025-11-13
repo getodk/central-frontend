@@ -216,6 +216,18 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "delimiterNotComma": "Isso pode ter ocorrido porque definimos o delimitador de célula errado. Usamos {delimiter}."
     }
   },
+  "zh": {
+    "expectedHeader": "规范表头",
+    "suggestions": {
+      "title": "建议",
+      "invalidQuotes": "引用的字段无效。请检查您的文件表头，是否有异常值。",
+      "missingLabel": "您必须提供{label}属性。该属性将用于在Central及其他各处标识每个实体的名称。",
+      "unknownProperty": "如需为此实体列表添加属性，您可通过实体列表概览页的“实体属性”版块进行操作，或上传并发布引用了该属性的表单。",
+      "duplicateColumn": "两个或以上纵列的表头名称可能重复。请确保所有列表标题是唯一的。",
+      "emptyColumn": "您的标题中可能有空白单元格。请移除文件中所有的空白列。",
+      "delimiterNotComma": "可能使用了错误的表格分隔值。这里使用的是{delimiter}。."
+    }
+  },
   "zh-Hant": {
     "expectedHeader": "預期標題",
     "suggestions": {

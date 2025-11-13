@@ -77,6 +77,11 @@ const { oidcEnabled } = inject('config');
       "connectData": "Dados de conexão"
     }
   },
+  "zh": {
+    "action": {
+      "connectData": "连接数据"
+    }
+  },
   "zh-Hant": {
     "action": {
       "connectData": "連接資料"

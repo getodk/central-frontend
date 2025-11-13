@@ -267,6 +267,17 @@ export default {
     },
     "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
   },
+  "zh": {
+    "upload": "上传实体",
+    "alert": {
+      "upload": "您的实体已成功上传。"
+    },
+    "purgeDescription": "实体将在30天后从垃圾箱中删除",
+    "action": {
+      "toggleDeletedEntities": "{count}个已删除的实体"
+    },
+    "analyzeDisabledDeletedData": "已删除的实体无法使用 OData 访问"
+  },
   "zh-Hant": {
     "upload": "上傳實體",
     "alert": {

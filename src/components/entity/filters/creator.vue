@@ -193,6 +193,18 @@ const placeholder = (counts) => {
     "unknown": "Criador desconhecido",
     "emptyTable": "Não há Entidades ainda."
   },
+  "zh": {
+    "field": {
+      "creator": "创建人",
+      "search": "搜索创建人…"
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "unknown": "未知创建人",
+    "emptyTable": "目前尚无实体。"
+  },
   "zh-Hant": {
     "field": {
       "creator": "建立者",
