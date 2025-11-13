@@ -41,15 +41,13 @@ const isPossibleDuplicate = (paths) => {
 };
 
 const logDuplicate = (s, paths) => {
-  /* eslint-disable no-console */
   console.log(JSON.stringify(s));
   console.log('Transifex keys:');
   for (const path of paths) console.log(`- ${path.join('.')}`);
   console.log();
-  /* eslint-enable no-console */
 };
 
-console.log('Possible duplicates:\n'); // eslint-disable-line no-console
+console.log('Possible duplicates:\n');
 for (const [s, paths] of pathsByString.entries()) {
   if (isPossibleDuplicate(paths)) logDuplicate(s, paths);
 }
