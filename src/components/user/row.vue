@@ -279,6 +279,18 @@ export default {
       "retire": "Staafu mtumiaji"
     }
   },
+  "zh": {
+    "cannotAssignRole": "您无权修改自身的全局角色。",
+    "field": {
+      "sitewideRole": "全局角色"
+    },
+    "cannotResetPassword": "您无权在此页面重置自身密码。如需修改密码，请前往个人资料设置。",
+    "cannotRetire": "您无法停用自己。",
+    "action": {
+      "retire": "停用使用者"
+    },
+    "invitationPending": "待确认邀请"
+  },
   "zh-Hant": {
     "cannotAssignRole": "您不得編輯自己的網站範圍角色",
     "field": {

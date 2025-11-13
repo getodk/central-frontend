@@ -334,6 +334,26 @@ export default {
       "revoke": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
     }
   },
+  "zh": {
+    "action": {
+      "create": "创建公开链接"
+    },
+    "heading": [
+      {
+        "full": "任何人通过公开访问链接均可使用网页浏览器填写此表单。您可以创建多个链接来追踪表单的分发渠道、限制特定用户群的访问时长等等。请注意，这些链接仅在表单处于公开{state}时有效。",
+        "state": "状态"
+      },
+      {
+        "full": "公开链接适用于自主填报场景。若您的数据收集者需要多次提交同一表单，请{clickHere}了解其他选项。",
+        "clickHere": "点击这里"
+      }
+    ],
+    "emptyTable": "此表单没有公开访问链接。",
+    "alert": {
+      "create": "您的公开访问链接已生成并生效。请复制下方链接进行使用。",
+      "revoke": "公开访问链接 “{displayName}” 已成功撤销。此链接将不再接受任何提交。"
+    }
+  },
   "zh-Hant": {
     "action": {
       "create": "建立公共訪問連結"

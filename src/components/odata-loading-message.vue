@@ -437,6 +437,44 @@ const message = computed(() => {
       }
     }
   },
+  "zh": {
+    "entity": {
+      "withoutCount": "正在加载实体…",
+      "all": "正在加载{count}个实体…",
+      "first": "正在加载前{top}项（共{count}项）实体…",
+      "middle": "正在继续加载剩余{count}项中的{top}项实体…",
+      "last": {
+        "multiple": "正在加载最后{count}项实体…",
+        "one": "正在加载最后1项实体…"
+      },
+      "filtered": {
+        "withoutCount": "正在加载匹配的实体…",
+        "middle": "正在继续加载剩余{count}项匹配实体中的{top}项…",
+        "last": {
+          "multiple": "正在加载最后{count}项匹配实体…",
+          "one": "正在加载最后1项匹配实体…"
+        }
+      }
+    },
+    "submission": {
+      "withoutCount": "正在加载提交内容...",
+      "all": "正在加载{count}个提交内容...",
+      "first": "正在加载前 {top} 条提交（共 {count} 条）…",
+      "middle": "正在继续加载 {top} 条提交（剩余 {count} 条）…",
+      "last": {
+        "multiple": "正在加载{count}条提交...",
+        "one": "正在加载最后一条提交..."
+      },
+      "filtered": {
+        "withoutCount": "正在加载符合的提交...",
+        "middle": "正在继续加载 {top} 条匹配的提交（剩余 {count} 条）…",
+        "last": {
+          "multiple": "正在加载最后 {count} 条匹配的提交…",
+          "one": "正在加载最后一条匹配的提交…"
+        }
+      }
+    }
+  },
   "zh-Hant": {
     "entity": {
       "withoutCount": "載入實體…",

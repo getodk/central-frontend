@@ -112,6 +112,12 @@ defineEmits(['update:modelValue']);
       "newest": "Mpya zaidi"
     }
   },
+  "zh": {
+    "sortOptions": {
+      "alphabetical": "按字母顺序",
+      "newest": "最新优先"
+    }
+  },
   "zh-Hant": {
     "sortOptions": {
       "alphabetical": "按字母順序",

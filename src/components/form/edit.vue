@@ -257,6 +257,14 @@ body:has(#form-edit) { background-color: #fff; }
       "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi."
     }
   },
+  "zh": {
+    "alert": {
+      "upload": "新的表单定义已保存为草稿。",
+      "publish": "您的草稿已发布。所有使用此表单的设备现在将获取更新后的表单定义和附件。",
+      "abandon": "此表单的草稿版本已成功删除。",
+      "delete": "表单“{name}”已成功删除。"
+    }
+  },
   "zh-Hant": {
     "alert": {
       "upload": "新的表單定義已儲存為您的草稿。",

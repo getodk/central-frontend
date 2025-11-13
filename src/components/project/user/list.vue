@@ -559,6 +559,39 @@ export default {
       "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu."
     }
   },
+  "zh": {
+    "heading": [
+      "网站管理员自动成为所有项目的经理。其他用户可被授予本项目特定角色：",
+      {
+        "full": "{projectManagers}可执行本项目所有管理任务，并可通过网页浏览器填写表单",
+        "projectManagers": "项目经理"
+      },
+      {
+        "full": "{projectViewers}可访问并下载本项目所有表单和实体数据，但无法更改设置或数据",
+        "projectViewers": "项目查看者"
+      },
+      {
+        "full": "{dataCollectors}可通过网页浏览器填写表单，但无法查看或修改数据及设置",
+        "dataCollectors": "数据收集员"
+      }
+    ],
+    "field": {
+      "q": {
+        "canList": "搜索用户…",
+        "cannotList": "输入完整用户邮箱地址…"
+      }
+    },
+    "header": {
+      "user": "用户",
+      "projectRole": "项目角色"
+    },
+    "emptyTable": "当前项目暂无分配用户。请通过上方搜索框添加用户。",
+    "alert": {
+      "unassignWithoutReassign": "出现错误。“{displayName}”已被移出项目。",
+      "assignRole": "操作成功！“{displayName}”已被授予本项目“{roleName}”角色。",
+      "unassignRole": "“{displayName}”已被移出本项目。"
+    }
+  },
   "zh-Hant": {
     "heading": [
       "網站管理員自動被視為每個專案的管理者。其他使用者可以擁有特定於此專案的角色：",

@@ -214,6 +214,17 @@ const placeholder = (counts) => {
     },
     "unknown": "Mwasilishaji asiyejulikana"
   },
+  "zh": {
+    "field": {
+      "submitter": "上传于",
+      "search": "查找提交人..."
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "unknown": "未知提交者"
+  },
   "zh-Hant": {
     "field": {
       "submitter": "由提交者",

@@ -91,6 +91,9 @@ defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
   "pt": {
     "allCreationDateSelected": "Todas as datas"
   },
+  "zh": {
+    "allCreationDateSelected": "所有时间"
+  },
   "zh-Hant": {
     "allCreationDateSelected": "全部時間"
   }

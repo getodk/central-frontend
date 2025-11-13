@@ -215,6 +215,10 @@ defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
     "loading": "Preparazione della mappa: caricamento degli invii noti e ricerca di quelli nuovi. L'operazione potrebbe richiedere alcuni minuti.",
     "overlapTitle": "{count} Invio in quest'area | {count} Invii in quest'area | {count} Invii in quest'area"
   },
+  "zh": {
+    "loading": "正在准备地图——正在加载已有提交数据并扫描新增内容，此过程可能需要一些时间。",
+    "overlapTitle": "此区域内有 {count} 条提交数据"
+  },
   "zh-Hant": {
     "overlapTitle": "此區域內有{count}筆提交資料"
   }

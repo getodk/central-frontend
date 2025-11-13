@@ -463,6 +463,20 @@ export default {
       "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
     }
   },
+  "zh": {
+    "action": {
+      "upload": "选择文件"
+    },
+    "orDrag": "或将文件拖拽至此以上传",
+    "problem": {
+      "noneUploaded": "{message}没有文件上传成功。",
+      "someUploaded": "{message} 成功上传 {uploaded}/{total} 个文件。"
+    },
+    "alert": {
+      "success": "{count}个文件已成功上传。",
+      "link": "实体清单已成功关联。"
+    }
+  },
   "zh-Hant": {
     "action": {
       "upload": "選擇檔案"

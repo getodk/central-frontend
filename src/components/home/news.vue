@@ -84,6 +84,9 @@ const iframeSrc = computed(() => `https://getodk.github.io/central/news.html?out
   "sw": {
     "title": "Habari"
   },
+  "zh": {
+    "title": "更新"
+  },
   "zh-Hant": {
     "title": "新訊息"
   }

@@ -378,6 +378,15 @@ export default {
     "showFewerDatasets": "Onyesha idadi ndogo ya Orodha ya Huluki chache kati ya {count} | Onyesha chini ya Orodha {count} jumla ya Huluki",
     "hidden": "Fiche"
   },
+  "zh": {
+    "encrypted": "已加密",
+    "encryptionTip": "此项目使用托管加密。",
+    "showMore": "显示{count}个表单",
+    "showMoreDatasets": "显示{count}个实体列表",
+    "showFewer": "显示前几行的{count}个表单",
+    "showFewerDatasets": "显示前几行的{count}个实体列表",
+    "hidden": "隐藏"
+  },
   "zh-Hant": {
     "encrypted": "加密",
     "encryptionTip": "該專案使用託管加密。",

@@ -208,6 +208,12 @@ export default {
       "notes": "Vidokezo na maoni (si lazima)"
     }
   },
+  "zh": {
+    "title": "更新审核状态",
+    "field": {
+      "notes": "注释和评论（可选）"
+    }
+  },
   "zh-Hant": {
     "title": "更新審核狀態",
     "field": {

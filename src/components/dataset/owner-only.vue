@@ -273,6 +273,31 @@ const confirm = () => update(ownerOnly.value)
       }
     }
   },
+  "zh": {
+    "panel": {
+      "title": "App用户与数据收集者实体权限"
+    },
+    "accessAll": "访问所有实体",
+    "accessAllDefault": "访问所有实体（默认）",
+    "ownerOnly": "仅访问自己的实体",
+    "radio": {
+      "false": "本项目内的App用户和数据收集员将可通过其被分配的表单访问所有相关实体。",
+      "true": "本项目中的应用用户和数据收集员只能访问他们自己创建的实体，以促进隐私保护并限制数据传输。"
+    },
+    "falseModal": {
+      "introduction": "App用户和数据收集者拥有访问实体的权限，包括他们未建立的实体。"
+    },
+    "trueModal": {
+      "introduction": "App用户和数据收集者将失去对非本人创建实体的访问权限。其他类型的用户仍可访问所有实体。",
+      "action": {
+        "confirm": "访问本人创建的实体"
+      }
+    },
+    "alert": {
+      "changeToFalse": "App使用者和数据收集者现在可以访问所有的实体。",
+      "changeToTrue": "App使用者和数据收集者现在只能访问他们创建的实体。"
+    }
+  },
   "zh-Hant": {
     "panel": {
       "title": "應用程式使用者和資料收集器實體存取"

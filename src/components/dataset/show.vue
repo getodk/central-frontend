@@ -209,6 +209,13 @@ export default {
   "sw": {
     "back": "Rudi kwenye vyombo vya Mradi"
   },
+  "zh": {
+    "back": "返回至项目实体",
+    "infoNav": {
+      "connectedForms": "由{count}个表单更新",
+      "linkedForms": "用于{count}个表单"
+    }
+  },
   "zh-Hant": {
     "back": "返回專案實體",
     "infoNav": {

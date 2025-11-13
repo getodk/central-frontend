@@ -350,6 +350,24 @@ export default {
       "retire": "Mtumiaji \"{displayName}\" amestaafu."
     }
   },
+  "zh": {
+    "action": {
+      "create": "新建网页用户"
+    },
+    "heading": [
+      "网站用户在本站拥有账户，用于监督和管理本服务器上的项目。管理员拥有最高管理权限。无全局角色的用户可在任意项目中通过项目设置被授予特定角色。全局管理员及部分项目角色可通过网页浏览器填写表单。如需通过 {collect} 等应用程序提交数据，请为每个项目创建应用用户。"
+    ],
+    "header": {
+      "sitewideRole": "全局管理员",
+      "lastActive": "最新活动"
+    },
+    "alert": {
+      "create": "已成功为用户 “{displayName}” 创建账户。",
+      "assignRole": "操作成功！已为用户 “{displayName}” 分配全局角色 “{roleName}”。",
+      "resetPassword": "用户 “{displayName}” 的密码已失效。系统已向 {email} 发送操作指南邮件。",
+      "retire": "用户 “{displayName}” 已停用。"
+    }
+  },
   "zh-Hant": {
     "action": {
       "create": "建立網頁用戶"

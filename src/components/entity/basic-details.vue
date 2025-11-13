@@ -165,6 +165,13 @@ watchEffect(() => {
     "creatingSubmission": "Kuunda Uwasilishaji",
     "submissionDeleted": "Wasilisho hili limefutwa."
   },
+  "zh": {
+    "entityDetails": "实体详情",
+    "creatingSubmission": "正在创建提交",
+    "creatingSource": "正在创建来源",
+    "upload": "上传",
+    "submissionDeleted": "此提交已被删除。"
+  },
   "zh-Hant": {
     "entityDetails": "實體詳細資料",
     "creatingSubmission": "建立提交",
