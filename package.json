@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.7.0",
+    "@intlify/eslint-plugin-vue-i18n": "^4.1.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@playwright/test": "^1.51.1",
     "@vitejs/plugin-vue": "^5.2.3",
