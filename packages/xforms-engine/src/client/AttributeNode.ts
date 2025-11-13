@@ -30,11 +30,7 @@ export interface AttributeNode {
 	 */
 	readonly root: Root;
 
-	/**
-	 * Each node links back to its parent, if any. All nodes have a parent except
-	 * the form's {@link root}.
-	 */
-	readonly parent: unknown;
+	readonly owner: unknown;
 
 	/**
 	 * Each node provides a discrete object representing the stateful aspects of

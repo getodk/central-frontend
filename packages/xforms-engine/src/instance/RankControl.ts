@@ -10,6 +10,7 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { sharedValueCodecs } from '../lib/codecs/getSharedValueCodec.ts';
 import { MultipleValueItemCodec } from '../lib/codecs/items/MultipleValueItemCodec.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -22,6 +23,7 @@ import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unkno
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
+import { buildAttributes } from './attachments/buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
@@ -123,6 +125,8 @@ export class RankControl
 		const baseValueState = this.valueState;
 		const [baseGetValue, setValue] = baseValueState;
 
+		const attributeState = createAttributeState(this.scope);
+
 		/**
 		 * @ToDo As new value options become available, they're not yet in the
 		 * `currentValues` state. This appends them. We intend to change this
@@ -174,13 +178,15 @@ export class RankControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: null,
+				attributes: attributeState.getAttributes,
 				valueOptions,
 				value: valueState,
 				instanceValue: this.getInstanceValue,
 			},
 			this.instanceConfig
 		);
+
+		attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;

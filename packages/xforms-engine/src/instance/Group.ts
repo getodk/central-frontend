@@ -8,10 +8,7 @@ import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createParentNodeInstanceState } from '../lib/client-reactivity/instance-state/createParentNodeInstanceState.ts';
-import {
-	createAttributeState,
-	type AttributeState,
-} from '../lib/reactivity/createAttributeState.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -50,7 +47,6 @@ export class Group
 		ClientReactiveSerializableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
-	private readonly attributeState: AttributeState;
 
 	override readonly [XPathNodeKindKey] = 'element';
 
@@ -79,7 +75,6 @@ export class Group
 		const attributeState = createAttributeState(this.scope);
 
 		this.childrenState = childrenState;
-		this.attributeState = attributeState;
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -115,9 +110,5 @@ export class Group
 
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
-	}
-
-	getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
 	}
 }

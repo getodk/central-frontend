@@ -14,8 +14,9 @@ export const createValueNodeInstanceState = (
 			}
 
 			const xmlValue = escapeXMLText(node.currentState.instanceValue);
+			const attributes = node.currentState.attributes;
 
-			return serializeLeafElementXML(qualifiedName, xmlValue);
+			return serializeLeafElementXML(qualifiedName, xmlValue, attributes);
 		},
 	};
 };

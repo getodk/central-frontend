@@ -17,10 +17,7 @@ import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.
 import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
 import { createPrimaryInstanceState } from '../lib/client-reactivity/instance-state/createPrimaryInstanceState.ts';
 import { prepareInstancePayload } from '../lib/client-reactivity/instance-state/prepareInstancePayload.ts';
-import {
-	createAttributeState,
-	type AttributeState,
-} from '../lib/reactivity/createAttributeState.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -161,8 +158,6 @@ export class PrimaryInstance<
 	readonly evaluator: EngineXPathEvaluator;
 	override readonly contextNode = this;
 
-	private readonly attributeState: AttributeState;
-
 	constructor(options: PrimaryInstanceOptions<Mode>) {
 		const { mode, initialState, scope, model, secondaryInstances, config } = options;
 		const { instance: modelInstance } = model;
@@ -205,7 +200,6 @@ export class PrimaryInstance<
 		const attributeState = createAttributeState(this.scope);
 
 		this.getChildren = childrenState.getChildren;
-		this.attributeState = attributeState;
 
 		const stateSpec: PrimaryInstanceStateSpec = {
 			activeLanguage: getActiveLanguage,
@@ -291,9 +285,5 @@ export class PrimaryInstance<
 		});
 
 		return Promise.resolve(result);
-	}
-
-	getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
 	}
 }

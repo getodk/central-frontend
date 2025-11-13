@@ -13,6 +13,7 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -21,6 +22,8 @@ import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
+import { buildAttributes } from './attachments/buildAttributes.ts';
+import type { Attribute } from './Attribute.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
@@ -69,6 +72,7 @@ const nodeOptionsFactoryByType: NodeOptionsFactoryByType = {
 interface InputControlStateSpec<V extends ValueType> extends ValueNodeStateSpec<RuntimeValue<V>> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
+	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly valueOptions: null;
 }
 
@@ -118,6 +122,7 @@ export class InputControl<V extends ValueType = ValueType>
 
 		this.appearances = definition.bodyElement.appearances;
 		this.nodeOptions = nodeOptionsFactoryByType[definition.valueType](definition.bodyElement);
+		const attributeState = createAttributeState(this.scope);
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -130,13 +135,15 @@ export class InputControl<V extends ValueType = ValueType>
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: null,
+				attributes: attributeState.getAttributes,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
 			},
 			this.instanceConfig
 		);
+
+		attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;

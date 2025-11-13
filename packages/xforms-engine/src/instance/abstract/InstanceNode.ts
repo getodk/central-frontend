@@ -240,13 +240,13 @@ export abstract class InstanceNode<
 	 * (though for those nodes it will always be empty). This affords consistency
 	 * and efficiency of interface for those internal uses.
 	 */
-	abstract getChildren(this: AnyInstanceNode): ReadonlyArray<Exclude<AnyChildNode, Attribute>>;
+	abstract getChildren(this: AnyInstanceNode): readonly AnyChildNode[];
 
 	// XFormsXPathNode
 	/**
 	 * @todo Values as text nodes(?)
 	 */
-	getXPathChildNodes(): ReadonlyArray<Exclude<AnyChildNode, Attribute>> {
+	getXPathChildNodes(): readonly AnyChildNode[] {
 		return (this as AnyInstanceNode).getChildren().flatMap((child) => {
 			switch (child.nodeType) {
 				case 'repeat-range:controlled':

@@ -4,7 +4,6 @@ import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 export type SerializedInstanceValue = string;
 
 interface ClientReactiveSerializableAttributeNodeCurrentState {
-	get relevant(): boolean;
 	get instanceValue(): SerializedInstanceValue;
 }
 

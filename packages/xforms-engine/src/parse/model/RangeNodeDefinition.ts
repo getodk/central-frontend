@@ -9,6 +9,7 @@ import type {
 } from '../body/control/RangeControlDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 import type { ParentNodeDefinition } from './NodeDefinition.ts';
 
 const RANGE_VALUE_TYPES = ['decimal', 'int'] as const;
@@ -89,6 +90,7 @@ export class RangeNodeDefinition<V extends RangeValueType = RangeValueType>
 	implements RangeLeafNodeDefinition<V>
 {
 	static from<V extends ValueType>(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		bind: BindDefinition<V>,
 		bodyElement: RangeControlDefinition,
@@ -96,18 +98,19 @@ export class RangeNodeDefinition<V extends RangeValueType = RangeValueType>
 	): RangeNodeDefinition<Extract<V, RangeValueType>> {
 		assertRangeBindDefinition(bind);
 
-		return new this(parent, bind, bodyElement, node);
+		return new this(model, parent, bind, bodyElement, node);
 	}
 
 	readonly bounds: RangeNodeBoundsDefinition<V>;
 
 	private constructor(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		override readonly bind: BindDefinition<V>,
 		override readonly bodyElement: RangeControlDefinition,
 		node: StaticLeafElement
 	) {
-		super(parent, bind, bodyElement, node);
+		super(model, parent, bind, bodyElement, node);
 
 		this.bounds = RangeNodeBoundsDefinition.from(bodyElement.bounds, bind);
 	}

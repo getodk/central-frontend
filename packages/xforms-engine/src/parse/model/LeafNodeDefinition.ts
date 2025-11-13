@@ -6,8 +6,10 @@ import {
 } from '../../lib/names/NamespaceDeclarationMap.ts';
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { AnyBodyElementDefinition, ControlElementDefinition } from '../body/BodyDefinition.ts';
+import { AttributeDefinitionMap } from './AttributeDefinitionMap.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { DescendentNodeDefinition } from './DescendentNodeDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 import type { ParentNodeDefinition } from './NodeDefinition.ts';
 
 export class LeafNodeDefinition<V extends ValueType = ValueType>
@@ -20,9 +22,10 @@ export class LeafNodeDefinition<V extends ValueType = ValueType>
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly qualifiedName: QualifiedName;
 	readonly children = null;
-	readonly attributes = null;
+	readonly attributes: AttributeDefinitionMap;
 
 	constructor(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		bind: BindDefinition,
 		bodyElement: AnyBodyElementDefinition | null,
@@ -37,6 +40,7 @@ export class LeafNodeDefinition<V extends ValueType = ValueType>
 		this.valueType = bind.type.resolved satisfies ValueType as V;
 		this.qualifiedName = template.qualifiedName;
 		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
+		this.attributes = AttributeDefinitionMap.from(model, template);
 	}
 
 	toJSON() {

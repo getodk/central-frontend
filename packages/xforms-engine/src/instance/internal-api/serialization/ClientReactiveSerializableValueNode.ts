@@ -1,5 +1,6 @@
 import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
+import type { Attribute } from '../../Attribute.ts';
 import type {
 	ClientReactiveSerializableChildNode,
 	ClientReactiveSerializableParentNode,
@@ -14,6 +15,7 @@ interface ClientReactiveSerializableValueNodeCurrentState {
 	 * @todo Consider moving into {@link InstanceState}
 	 */
 	get instanceValue(): SerializedInstanceValue;
+	get attributes(): readonly Attribute[];
 }
 
 interface ClientReactiveSerializableValueNodeDefinition {

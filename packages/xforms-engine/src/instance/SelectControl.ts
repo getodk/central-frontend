@@ -14,6 +14,7 @@ import { SelectValueTypeError } from '../error/SelectValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { getSelectCodec } from '../lib/codecs/getSelectCodec.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -26,6 +27,7 @@ import type { SelectType } from '../parse/body/control/SelectControlDefinition.t
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
+import { buildAttributes } from './attachments/buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
@@ -108,6 +110,7 @@ export class SelectControl
 
 		this.appearances = definition.bodyElement.appearances;
 		this.selectType = definition.bodyElement.type;
+		const attributeState = createAttributeState(this.scope);
 
 		const valueOptions = createItemCollection(this);
 
@@ -153,7 +156,7 @@ export class SelectControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: null,
+				attributes: attributeState.getAttributes,
 				valueOptions,
 				value: valueState,
 				instanceValue: this.getInstanceValue,
@@ -161,6 +164,8 @@ export class SelectControl
 			},
 			this.instanceConfig
 		);
+
+		attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;

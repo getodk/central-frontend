@@ -9,6 +9,7 @@ import type { HintDefinition } from '../text/HintDefinition.ts';
 import type { LabelDefinition } from '../text/LabelDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 import type { ParentNodeDefinition } from './NodeDefinition.ts';
 
 // prettier-ignore
@@ -41,6 +42,7 @@ export type NoteTextDefinition =
  */
 export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
 	static from<V extends ValueType>(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		bind: BindDefinition<V>,
 		bodyElement: AnyBodyElementDefinition | null,
@@ -57,16 +59,17 @@ export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNod
 			return null;
 		}
 
-		return new this(parent, bind, bodyElement, noteTextDefinition, node);
+		return new this(model, parent, bind, bodyElement, noteTextDefinition, node);
 	}
 
 	constructor(
+		model: ModelDefinition,
 		parent: ParentNodeDefinition,
 		override readonly bind: NoteBindDefinition<V>,
 		override readonly bodyElement: InputControlDefinition,
 		readonly noteTextDefinition: NoteTextDefinition,
 		template: StaticLeafElement
 	) {
-		super(parent, bind, bodyElement, template);
+		super(model, parent, bind, bodyElement, template);
 	}
 }

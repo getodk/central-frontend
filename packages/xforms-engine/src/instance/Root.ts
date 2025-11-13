@@ -12,10 +12,7 @@ import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createRootInstanceState } from '../lib/client-reactivity/instance-state/createRootInstanceState.ts';
-import {
-	createAttributeState,
-	type AttributeState,
-} from '../lib/reactivity/createAttributeState.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -63,7 +60,6 @@ export class Root
 		ClientReactiveSerializableParentNode<GeneralChildNode>
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
-	private readonly attributeState: AttributeState;
 
 	// XFormsXPathElement
 	override readonly [XPathNodeKindKey] = 'element';
@@ -106,7 +102,6 @@ export class Root
 		const attributeState = createAttributeState(this.scope);
 
 		this.childrenState = childrenState;
-		this.attributeState = attributeState;
 		this.languages = parent.languages;
 
 		const state = createSharedNodeState(
@@ -143,10 +138,6 @@ export class Root
 
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
-	}
-
-	getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
 	}
 
 	// RootNode

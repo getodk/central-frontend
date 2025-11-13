@@ -153,7 +153,15 @@ export const serializeParentElementXML = (
 export const serializeLeafElementXML = (
 	qualifiedName: QualifiedName,
 	xmlValue: EscapedXMLText,
+	attributes: readonly Attribute[],
 	namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	return serializeElementXML(qualifiedName, xmlValue.normalize(), '', namespaceDeclarations);
+	const serializedAttributes =
+		attributes?.map((attribute) => attribute.instanceState.instanceXML).join('') ?? '';
+	return serializeElementXML(
+		qualifiedName,
+		xmlValue.normalize(),
+		serializedAttributes,
+		namespaceDeclarations
+	);
 };

@@ -21,6 +21,7 @@ import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../../lib/reactivity/validation/createValidation.ts';
 import { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
+import type { Attribute } from '../Attribute.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type {
@@ -36,7 +37,7 @@ export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
 export interface ValueNodeStateSpec<RuntimeValue> extends DescendantNodeStateSpec<RuntimeValue> {
 	readonly children: null;
-	readonly attributes: null;
+	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly value: SimpleAtomicState<RuntimeValue>;
 	readonly instanceValue: Accessor<string>;
 }

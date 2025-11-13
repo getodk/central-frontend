@@ -11,6 +11,7 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { RangeCodec } from '../lib/codecs/RangeCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
+import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -24,6 +25,7 @@ import type {
 } from '../parse/model/RangeNodeDefinition.ts';
 import type { Root } from './Root.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
+import { buildAttributes } from './attachments/buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
@@ -82,6 +84,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
+		const attributeState = createAttributeState(this.scope);
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -94,13 +97,15 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: null,
+				attributes: attributeState.getAttributes,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
 			},
 			this.instanceConfig
 		);
+
+		attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
