@@ -361,9 +361,7 @@ describe('EntityUpload', () => {
     const upload = (query = '') => {
       mockLogin();
       testData.extendedDatasets.createPast(1);
-      return load(`/projects/1/entity-lists/trees/entities${query}`, {
-        root: query !== ''
-      })
+      return load(`/projects/1/entity-lists/trees/entities${query}`)
         .complete()
         .request(async (component) => {
           await component.get('#dataset-entities-upload-button').trigger('click');

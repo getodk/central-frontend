@@ -28,7 +28,8 @@ except according to the terms contained in the LICENSE file.
           <submission-filters v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
             v-model:reviewState="reviewStates"
-            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"
+            @reset-click="resetFilters"/>
         </form>
         <!-- TODO: merge these two forms -->
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
@@ -365,6 +366,9 @@ export default {
       // emit event to parent component to re-fetch keys if needed
       if (this.formVersion.keyId != null && this.keys.length === 0)
         this.$emit('fetch-keys');
+    },
+    resetFilters() {
+      this.$router.replace({ path: this.$route.path, query: {} });
     },
     cancelBackgroundRefresh() {
       if (!this.refreshing) return;
