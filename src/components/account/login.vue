@@ -32,6 +32,11 @@ except according to the terms contained in the LICENSE file.
             <form-group v-model="password" type="password"
               :placeholder="$t('field.password')" required
               autocomplete="current-password"/>
+            <div v-if="showMailingListOptIn" class="checkbox">
+              <label>
+                <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
+              </label>
+            </div>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary"
                 :aria-disabled="disabled">
@@ -69,14 +74,15 @@ export default {
     return !this.disabled;
   },
   setup() {
-    const { session } = useRequestData();
-    return { session };
+    const { currentUser, session } = useRequestData();
+    return { currentUser, session };
   },
   data() {
     return {
       disabled: false,
       email: '',
-      password: ''
+      password: '',
+      mailingListOptIn: true,
     };
   },
   computed: {
@@ -85,6 +91,9 @@ export default {
       const next = typeof query.next === 'string' ? query.next : null;
       const qs = queryString({ next });
       return `/v1/oidc/login${qs}`;
+    },
+    showMailingListOptIn() {
+      return this.$route.query.source === 'claim';
     }
   },
   created() {
@@ -177,6 +186,11 @@ export default {
           (code === 401.2 ? this.$t('problem.401_2') : null)
       })
         .then(() => logIn(this.container, true))
+        .then(() => {
+          if (this.showMailingListOptIn) {
+            this.currentUser.preferences.site.mailingListOptIn = this.mailingListOptIn;
+          }
+        })
         .then(() => {
           this.navigateToNext(
             this.$route.query.next,
