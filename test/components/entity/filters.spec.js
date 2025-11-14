@@ -376,7 +376,7 @@ describe('EntityFilters', () => {
     });
 
     it('resets the filters when clicked', () =>
-      load('/projects/1/entity-lists/trees/entities?conflict=true')
+      load('/projects/1/entity-lists/trees/entities?conflict=true&creatorId=1')
         .complete()
         .request(component => {
           component.get('.btn-reset').trigger('click');

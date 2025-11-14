@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <form class="form-inline" @submit.prevent>
           <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
           <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
-          :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null" @reset-click="reset"/>
+          :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null" @reset-click="resetFilters"/>
         </form>
         <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
           <entity-download-button :odata-filter="deleted ? null : odataFilter"
@@ -383,12 +383,15 @@ export default {
         this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
       }
     },
-    // This method is called directly by DatasetEntities. + the @reset-click handler of filters
+    resetFilters() {
+      this.$router.replace({ path: this.$route.path, query: {} });
+    },
+    // This method is called directly by DatasetEntities.
     reset() {
       if (this.odataFilter == null && !this.searchTerm) {
         this.fetchChunk(true);
       } else {
-        this.$router.replace({ path: this.$route.path, query: {} });
+        this.resetFilters();
       }
     },
     fetchCreators() {

@@ -450,7 +450,7 @@ describe('SubmissionFilters', () => {
     });
 
     it('resets the filters when clicked', () =>
-      loadComponent('submitterId=1&submitterId=2')
+      loadComponent('submitterId=1&submitterId=2&reviewState=null')
         .complete()
         .request(component => {
           component.get('.btn-reset').trigger('click');
