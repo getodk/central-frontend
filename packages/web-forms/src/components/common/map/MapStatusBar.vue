@@ -1,39 +1,66 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
 import Button from 'primevue/button';
+import ProgressSpinner from 'primevue/progressspinner';
 
-defineProps<{ hasSavedFeature: boolean }>();
-const emit = defineEmits(['view-details']);
+defineProps<{
+	isFeatureSaved: boolean;
+	isCapturing: boolean;
+	canRemove: boolean;
+	canSave: boolean;
+	canViewDetails: boolean;
+}>();
+const emit = defineEmits(['view-details', 'save', 'discard']);
 </script>
 
 <template>
 	<div class="map-status-bar">
-		<div v-if="hasSavedFeature" class="map-status-saved">
+		<div v-if="isCapturing" class="map-status-container">
+			<div class="map-status">
+				<ProgressSpinner class="map-status-spinner" stroke-width="5px" />
+				<!-- TODO: translations -->
+				<span>Capturing location...</span>
+			</div>
+		</div>
+
+		<div v-else-if="isFeatureSaved" class="map-status-container">
 			<div class="map-status">
 				<IconSVG name="mdiCheckCircle" variant="success" />
 				<!-- TODO: translations -->
 				<span>Point saved</span>
 			</div>
-			<Button outlined severity="contrast" @click="emit('view-details')">
+			<Button v-if="canRemove" outlined severity="contrast" @click="emit('discard')">
+				<span>–</span>
+				<!-- TODO: translations -->
+				<span class="mobile-only">Remove</span>
+				<span class="desktop-only">Remove point</span>
+			</Button>
+			<Button v-if="canViewDetails" outlined severity="contrast" @click="emit('view-details')">
 				<!-- TODO: translations -->
 				<span>View details</span>
 			</Button>
 		</div>
 
-		<div v-else class="map-status">
-			<IconSVG name="mdiMapMarkerOutline" />
-			<!-- TODO: translations -->
-			<span>No point saved</span>
+		<div v-else class="map-status-container">
+			<div class="map-status">
+				<IconSVG name="mdiMapMarkerOutline" />
+				<!-- TODO: translations -->
+				<span>No point saved</span>
+			</div>
+			<Button v-if="canSave" @click="emit('save')">
+				<IconSVG name="mdiCheckboxMarkedCircleOutline" size="sm" variant="inverted" />
+				<!-- TODO: translations -->
+				<span class="mobile-only">Save</span>
+				<span class="desktop-only">Save point</span>
+			</Button>
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
-@use 'primeflex/core/_variables.scss' as pf;
-
 .map-status-bar,
-.map-status,
-.map-status-saved {
+.map-status-container,
+.map-status {
 	display: flex;
 	align-items: center;
 	flex-wrap: nowrap;
@@ -49,7 +76,7 @@ const emit = defineEmits(['view-details']);
 	gap: 10px;
 }
 
-.map-status-saved {
+.map-status-container {
 	justify-content: space-between;
 	width: 100%;
 }
@@ -62,5 +89,10 @@ const emit = defineEmits(['view-details']);
 	&:hover {
 		background: var(--odk-muted-background-color);
 	}
+}
+
+.map-status-spinner {
+	width: 20px;
+	height: 20px;
 }
 </style>

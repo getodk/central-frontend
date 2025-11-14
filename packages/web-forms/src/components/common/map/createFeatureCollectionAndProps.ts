@@ -61,18 +61,37 @@ const getGeoJSONGeometry = (coords: Coordinates[]): Geometry => {
 	return { type: 'LineString', coordinates: coords };
 };
 
-export const createFeatureCollectionAndProps = (odkFeatures: readonly SelectItem[] | undefined) => {
+const normalizeODKFeature = (odkFeature: SelectItem | string) => {
+	if (typeof odkFeature === 'string') {
+		return {
+			label: odkFeature,
+			value: odkFeature,
+			properties: [['geometry', odkFeature]],
+		};
+	}
+
+	return {
+		...odkFeature,
+		label: odkFeature.label?.asString,
+	};
+};
+
+export const createFeatureCollectionAndProps = (
+	odkFeatures: readonly SelectItem[] | readonly string[] | undefined
+) => {
 	const orderedExtraPropsMap = new Map<string, Array<[key: string, value: string]>>();
 	const features: Feature[] = [];
 
-	odkFeatures?.forEach((option) => {
+	odkFeatures?.forEach((odkFeature) => {
+		const normalizedFeature = normalizeODKFeature(odkFeature);
+
 		const orderedProps: Array<[string, string]> = [];
 		const reservedProps: Record<string, string> = {
-			[PROPERTY_PREFIX + 'label']: option.label?.asString,
-			[PROPERTY_PREFIX + 'value']: option.value,
+			[PROPERTY_PREFIX + 'label']: normalizedFeature.label,
+			[PROPERTY_PREFIX + 'value']: normalizedFeature.value,
 		};
 
-		option.properties.forEach(([key, value]) => {
+		normalizedFeature.properties.forEach(([key, value]) => {
 			if (RESERVED_MAP_PROPERTIES.includes(key)) {
 				reservedProps[PROPERTY_PREFIX + key] = value.trim();
 			} else {
@@ -80,19 +99,21 @@ export const createFeatureCollectionAndProps = (odkFeatures: readonly SelectItem
 			}
 		});
 
-		orderedExtraPropsMap.set(option.value, orderedProps);
+		if (orderedProps.length) {
+			orderedExtraPropsMap.set(normalizedFeature.value, orderedProps);
+		}
 
 		const geometry = reservedProps[PROPERTY_PREFIX + 'geometry'];
 		if (!geometry?.length) {
 			// eslint-disable-next-line no-console -- Skip silently to match Collect behaviour.
-			console.warn(`Missing or empty geometry for option: ${option.value}`);
+			console.warn(`Missing or empty geometry for option: ${normalizedFeature.value}`);
 			return;
 		}
 
 		const geoJSONCoords = getGeoJSONCoordinates(geometry);
 		if (!geoJSONCoords?.length) {
 			// eslint-disable-next-line no-console -- Skip silently to match Collect behaviour.
-			console.warn(`Missing geo points for option: ${option.value}`);
+			console.warn(`Missing geo points for option: ${normalizedFeature.value}`);
 			return;
 		}
 

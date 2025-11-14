@@ -46,7 +46,7 @@ describe('createFeatureCollectionAndProps', () => {
 			],
 		});
 
-		expect(orderedExtraPropsMap).toEqual(new Map([['point1', []]]));
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('converts an ODK trace to a GeoJSON LineString feature', () => {
@@ -81,7 +81,7 @@ describe('createFeatureCollectionAndProps', () => {
 			],
 		});
 
-		expect(orderedExtraPropsMap).toEqual(new Map([['trace1', []]]));
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('converts an ODK shape to a GeoJSON Polygon feature', () => {
@@ -122,7 +122,7 @@ describe('createFeatureCollectionAndProps', () => {
 			],
 		});
 
-		expect(orderedExtraPropsMap).toEqual(new Map([['shape1', []]]));
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('skips features with invalid ODK geometry and logs warning', () => {
@@ -158,12 +158,7 @@ describe('createFeatureCollectionAndProps', () => {
 		expect(console.warn).toHaveBeenCalledWith(
 			expect.stringContaining('Invalid geo point coordinates: invalid-geometry')
 		);
-		expect(orderedExtraPropsMap).toEqual(
-			new Map([
-				['invalid1', []],
-				['point1', []],
-			])
-		);
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('skips features with empty ODK geometry and logs warning', () => {
@@ -199,12 +194,7 @@ describe('createFeatureCollectionAndProps', () => {
 		expect(console.warn).toHaveBeenCalledWith(
 			expect.stringContaining('Missing or empty geometry for option: empty1')
 		);
-		expect(orderedExtraPropsMap).toEqual(
-			new Map([
-				['empty1', []],
-				['point1', []],
-			])
-		);
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('handles undefined odkFeatures input', () => {
@@ -301,7 +291,7 @@ describe('createFeatureCollectionAndProps', () => {
 			],
 		});
 
-		expect(orderedExtraPropsMap).toEqual(new Map([['point1', []]]));
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('handles invalid ODK coordinates (out of range)', () => {
@@ -337,12 +327,7 @@ describe('createFeatureCollectionAndProps', () => {
 		expect(console.warn).toHaveBeenCalledWith(
 			expect.stringContaining('Invalid geo point coordinates: 100 -200 100 5')
 		);
-		expect(orderedExtraPropsMap).toEqual(
-			new Map([
-				['invalid1', []],
-				['point1', []],
-			])
-		);
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('handles partial ODK point format (missing altitude/accuracy)', () => {
@@ -372,7 +357,7 @@ describe('createFeatureCollectionAndProps', () => {
 			],
 		});
 
-		expect(orderedExtraPropsMap).toEqual(new Map([['point1', []]]));
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('handles ODK point with extra whitespace', () => {
@@ -404,7 +389,7 @@ describe('createFeatureCollectionAndProps', () => {
 			],
 		});
 
-		expect(orderedExtraPropsMap).toEqual(new Map([['point1', []]]));
+		expect(orderedExtraPropsMap).toEqual(new Map());
 	});
 
 	it('converts multiple ODK features (Point, LineString, Polygon, invalid) to a GeoJSON FeatureCollection', () => {
@@ -490,9 +475,7 @@ describe('createFeatureCollectionAndProps', () => {
 		expect(orderedExtraPropsMap).toEqual(
 			new Map([
 				['point1', [['custom-prop', 'value1']]],
-				['trace1', []],
 				['shape1', [['another-prop', 'value2']]],
-				['invalid1', []],
 			])
 		);
 
@@ -500,5 +483,85 @@ describe('createFeatureCollectionAndProps', () => {
 		expect(console.warn).toHaveBeenCalledWith(
 			expect.stringContaining('Invalid geo point coordinates: invalid-geometry')
 		);
+	});
+
+	it('converts string ODK features to a GeoJSON FeatureCollection', () => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const odkFeatures: string[] = [
+			'40.7128 -74.0060 100 5',
+			'40.7128 -74.0060 100 5;40.7129 -74.0061 100 5',
+			'40.7128 -74.0060 100 5;40.7129 -74.0061 100 5;40.7128 -74.0060 100 5',
+			'', // invalid feature
+			'40.7128', // invalid feature
+			'abc', // invalid feature
+		];
+
+		const { featureCollection, orderedExtraPropsMap } =
+			createFeatureCollectionAndProps(odkFeatures);
+
+		expect(featureCollection).toEqual({
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: [-74.006, 40.7128],
+					},
+					properties: {
+						odk_label: '40.7128 -74.0060 100 5',
+						odk_value: '40.7128 -74.0060 100 5',
+						odk_geometry: '40.7128 -74.0060 100 5',
+					},
+				},
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'LineString',
+						coordinates: [
+							[-74.006, 40.7128],
+							[-74.0061, 40.7129],
+						],
+					},
+					properties: {
+						odk_label: '40.7128 -74.0060 100 5;40.7129 -74.0061 100 5',
+						odk_value: '40.7128 -74.0060 100 5;40.7129 -74.0061 100 5',
+						odk_geometry: '40.7128 -74.0060 100 5;40.7129 -74.0061 100 5',
+					},
+				},
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[-74.006, 40.7128],
+								[-74.0061, 40.7129],
+								[-74.006, 40.7128],
+							],
+						],
+					},
+					properties: {
+						odk_label: '40.7128 -74.0060 100 5;40.7129 -74.0061 100 5;40.7128 -74.0060 100 5',
+						odk_value: '40.7128 -74.0060 100 5;40.7129 -74.0061 100 5;40.7128 -74.0060 100 5',
+						odk_geometry: '40.7128 -74.0060 100 5;40.7129 -74.0061 100 5;40.7128 -74.0060 100 5',
+					},
+				},
+			],
+		});
+
+		expect(orderedExtraPropsMap).toEqual(new Map());
+
+		// eslint-disable-next-line no-console
+		expect(console.warn).toHaveBeenCalledWith('Missing or empty geometry for option: ');
+		// eslint-disable-next-line no-console
+		expect(console.warn).toHaveBeenCalledWith('Invalid geo point coordinates: 40.7128');
+		// eslint-disable-next-line no-console
+		expect(console.warn).toHaveBeenCalledWith('Missing geo points for option: 40.7128');
+		// eslint-disable-next-line no-console
+		expect(console.warn).toHaveBeenCalledWith('Invalid geo point coordinates: abc');
+		// eslint-disable-next-line no-console
+		expect(console.warn).toHaveBeenCalledWith('Missing geo points for option: abc');
 	});
 });

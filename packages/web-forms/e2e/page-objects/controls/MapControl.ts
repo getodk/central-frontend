@@ -129,7 +129,7 @@ export class MapControl {
 	}
 
 	async viewDetailsOfSavedFeature(mapComponent: Locator) {
-		const button = mapComponent.locator('.map-status-saved').getByText('View details');
+		const button = mapComponent.locator('.map-status-container').getByText('View details');
 		await expect(button).toBeVisible();
 		await button.click();
 	}

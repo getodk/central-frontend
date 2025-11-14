@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Geopoint with map</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="yes_no-0">
+            <value>Yes</value>
+          </text>
+          <text id="yes_no-1">
+            <value>No</value>
+          </text>
+          <text id="/data/maps_group:label">
+            <value>"maps" appearance</value>
+          </text>
+          <text id="/data/maps_group/select_to_disable:label">
+            <value>Select 'yes' to test readonly mode.</value>
+          </text>
+          <text id="/data/maps_group/select_to_show:label">
+            <value>Select 'yes' to make the geopoint relevant (visible).</value>
+          </text>
+          <text id="/data/maps_group/default_value:label">
+            <value>Enter lat lon alt acc (e.g., 37.7749 -122.4194 0 0) to test with default; leave blank for no
+              default.
+            </value>
+          </text>
+          <text id="/data/maps_group/geo_maps:label">
+            <value>Observe the map display</value>
+          </text>
+          <text id="/data/placement_map_group:label">
+            <value>"placement-maps" appearance</value>
+          </text>
+          <text id="/data/placement_map_group/select_to_disable_pl:label">
+            <value>Select 'yes' to test readonly mode.</value>
+          </text>
+          <text id="/data/placement_map_group/select_to_show_pl:label">
+            <value>Select 'yes' to make the geopoint relevant (visible).</value>
+          </text>
+          <text id="/data/placement_map_group/default_value_pl:label">
+            <value>Enter lat lon alt acc (e.g., 37.7749 -122.4194 0 0) to test with default; leave blank for no
+              default.
+            </value>
+          </text>
+          <text id="/data/placement_map_group/geo_placement_map:label">
+            <value>Observe the map display</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="yes_no-0">
+            <value>Oui</value>
+          </text>
+          <text id="yes_no-1">
+            <value>Non</value>
+          </text>
+          <text id="/data/maps_group:label">
+            <value>D'apparence "maps"</value>
+          </text>
+          <text id="/data/maps_group/select_to_disable:label">
+            <value>Sélectionnez 'oui' pour tester le mode en lecture seule.</value>
+          </text>
+          <text id="/data/maps_group/select_to_show:label">
+            <value>Sélectionnez 'oui' pour rendre le géopoint pertinent (visible).</value>
+          </text>
+          <text id="/data/maps_group/default_value:label">
+            <value>Entrez lat lon alt acc (ex. : 37.7749 -122.4194 0 0) pour tester avec valeur par défaut; laissez vide
+              pour aucune valeur par défaut.
+            </value>
+          </text>
+          <text id="/data/maps_group/geo_maps:label">
+            <value>Observez l'affichage de la carte</value>
+          </text>
+          <text id="/data/placement_map_group:label">
+            <value>D'apparence "placement-map"</value>
+          </text>
+          <text id="/data/placement_map_group/select_to_disable_pl:label">
+            <value>Sélectionnez 'oui' pour tester le mode en lecture seule.</value>
+          </text>
+          <text id="/data/placement_map_group/select_to_show_pl:label">
+            <value>Sélectionnez 'oui' pour rendre le géopoint pertinent (visible).</value>
+          </text>
+          <text id="/data/placement_map_group/default_value_pl:label">
+            <value>Entrez lat lon alt acc (ex. : 37.7749 -122.4194 0 0) pour tester avec valeur par défaut; laissez vide
+              pour aucune valeur par défaut.
+            </value>
+          </text>
+          <text id="/data/placement_map_group/geo_placement_map:label">
+            <value>Observez l'affichage de la carte</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="geopoint_with_map" version="202510311">
+          <maps_group>
+            <select_to_disable/>
+            <select_to_show/>
+            <default_value/>
+            <geo_maps/>
+          </maps_group>
+          <placement_map_group>
+            <select_to_disable_pl/>
+            <select_to_show_pl/>
+            <default_value_pl/>
+            <geo_placement_map/>
+          </placement_map_group>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="yes_no">
+        <root>
+          <item>
+            <itextId>yes_no-0</itextId>
+            <name>yes</name>
+          </item>
+          <item>
+            <itextId>yes_no-1</itextId>
+            <name>no</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/maps_group/select_to_disable" type="string" required="true()"/>
+      <bind nodeset="/data/maps_group/select_to_show" type="string"/>
+      <bind nodeset="/data/maps_group/default_value" type="string"/>
+      <bind nodeset="/data/maps_group/geo_maps" type="geopoint" calculate=" /data/maps_group/default_value "
+            relevant=" /data/maps_group/select_to_show  = 'yes'" readonly=" /data/maps_group/select_to_disable  = 'yes'"
+            required="true()"/>
+      <bind nodeset="/data/placement_map_group/select_to_disable_pl" type="string" required="true()"/>
+      <bind nodeset="/data/placement_map_group/select_to_show_pl" type="string"/>
+      <bind nodeset="/data/placement_map_group/default_value_pl" type="string"/>
+      <bind nodeset="/data/placement_map_group/geo_placement_map" type="geopoint"
+            calculate=" /data/placement_map_group/default_value_pl "
+            relevant=" /data/placement_map_group/select_to_show_pl  = 'yes'"
+            readonly=" /data/placement_map_group/select_to_disable_pl  = 'yes'" required="true()"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/maps_group">
+      <label ref="jr:itext('/data/maps_group:label')"/>
+      <select1 ref="/data/maps_group/select_to_disable">
+        <label ref="jr:itext('/data/maps_group/select_to_disable:label')"/>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name"/>
+          <label ref="jr:itext(itextId)"/>
+        </itemset>
+      </select1>
+      <select1 ref="/data/maps_group/select_to_show">
+        <label ref="jr:itext('/data/maps_group/select_to_show:label')"/>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name"/>
+          <label ref="jr:itext(itextId)"/>
+        </itemset>
+      </select1>
+      <input ref="/data/maps_group/default_value">
+        <label ref="jr:itext('/data/maps_group/default_value:label')"/>
+      </input>
+      <input ref="/data/maps_group/geo_maps" appearance="maps">
+        <label ref="jr:itext('/data/maps_group/geo_maps:label')"/>
+      </input>
+    </group>
+    <group ref="/data/placement_map_group">
+      <label ref="jr:itext('/data/placement_map_group:label')"/>
+      <select1 ref="/data/placement_map_group/select_to_disable_pl">
+        <label ref="jr:itext('/data/placement_map_group/select_to_disable_pl:label')"/>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name"/>
+          <label ref="jr:itext(itextId)"/>
+        </itemset>
+      </select1>
+      <select1 ref="/data/placement_map_group/select_to_show_pl">
+        <label ref="jr:itext('/data/placement_map_group/select_to_show_pl:label')"/>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name"/>
+          <label ref="jr:itext(itextId)"/>
+        </itemset>
+      </select1>
+      <input ref="/data/placement_map_group/default_value_pl">
+        <label ref="jr:itext('/data/placement_map_group/default_value_pl:label')"/>
+      </input>
+      <input ref="/data/placement_map_group/geo_placement_map" appearance="placement-map">
+        <label ref="jr:itext('/data/placement_map_group/geo_placement_map:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>

@@ -106,4 +106,24 @@
 		background-size: 200% 100%;
 		animation: shimmer 1.5s infinite;
 	}
+
+	.desktop-only {
+		display: inline;
+	}
+
+	.mobile-only {
+		display: none;
+	}
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	.odk-form {
+		.desktop-only {
+			display: none;
+		}
+
+		.mobile-only {
+			display: inline;
+		}
+	}
 }

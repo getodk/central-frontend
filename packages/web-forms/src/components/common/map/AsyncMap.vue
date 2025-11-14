@@ -7,6 +7,7 @@
 import type { SelectItem } from '@getodk/xforms-engine';
 import ProgressSpinner from 'primevue/progressspinner';
 import { computed, type DefineComponent, onMounted, shallowRef } from 'vue';
+import type { Mode } from '@/components/common/map/getModeConfig.ts';
 import {
 	createFeatureCollectionAndProps,
 	type Feature,
@@ -15,14 +16,15 @@ import {
 type MapBlockComponent = DefineComponent<{
 	featureCollection: { type: string; features: Feature[] };
 	disabled: boolean;
+	mode: Mode;
 	orderedExtraProps: Map<string, Array<[key: string, value: string]>>;
-	savedFeatureValue: string | undefined;
+	savedFeatureValue: Feature | undefined;
 }>;
 
 interface AsyncMapProps {
-	// ToDo: Expand typing when implementing Geo Point/Shape/Trace question types.
-	features: readonly SelectItem[];
+	features?: readonly SelectItem[];
 	disabled: boolean;
+	mode: Mode;
 	savedFeatureValue: string | undefined;
 }
 
@@ -38,6 +40,13 @@ const STATES = {
 const mapComponent = shallowRef<MapBlockComponent | null>(null);
 const currentState = shallowRef<(typeof STATES)[keyof typeof STATES]>(STATES.LOADING);
 const featureCollectionAndProps = computed(() => createFeatureCollectionAndProps(props.features));
+const savedFeatureValue = computed(() => {
+	if (!props.savedFeatureValue) {
+		return;
+	}
+	const { featureCollection } = createFeatureCollectionAndProps([props.savedFeatureValue]);
+	return featureCollection.features?.[0];
+});
 
 const loadMap = async () => {
 	currentState.value = STATES.LOADING;
@@ -74,6 +83,7 @@ onMounted(loadMap);
 			:is="mapComponent"
 			v-else
 			:feature-collection="featureCollectionAndProps.featureCollection"
+			:mode="mode"
 			:ordered-extra-props="featureCollectionAndProps.orderedExtraPropsMap"
 			:saved-feature-value="savedFeatureValue"
 			:disabled="disabled"

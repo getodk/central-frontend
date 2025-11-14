@@ -9,6 +9,7 @@ import SearchableDropdown from '@/components/common/SearchableDropdown.vue';
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
+import { MODES } from '@/components/common/map/getModeConfig.ts';
 import { computed, ref, watchEffect } from 'vue';
 
 interface Select1ControlProps {
@@ -57,6 +58,7 @@ watchEffect(() => {
 	<AsyncMap
 		v-else-if="question.appearances.map"
 		:features="question.currentState.valueOptions"
+		:mode="MODES.SELECT"
 		:saved-feature-value="savedFeatureValue"
 		:disabled="question.currentState.readonly"
 		@save="(value) => question.selectValue(value ?? '')"

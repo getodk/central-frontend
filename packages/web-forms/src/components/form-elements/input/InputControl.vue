@@ -2,6 +2,7 @@
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
 import InputGeopoint from '@/components/form-elements/input/geopoint/InputGeopoint.vue';
+import InputGeopointWithMap from '@/components/form-elements/input/InputGeopointWithMap.vue';
 import InputDate from '@/components/form-elements/input/InputDate.vue';
 import InputDecimal from '@/components/form-elements/input/InputDecimal.vue';
 import InputInt from '@/components/form-elements/input/InputInt.vue';
@@ -30,7 +31,8 @@ defineProps<InputControlProps>();
 			<InputNumbersAppearance :node="node" />
 		</template>
 		<template v-else-if="node.valueType === 'geopoint'">
-			<InputGeopoint :question="node" />
+			<InputGeopointWithMap v-if="node.appearances['placement-map'] || node.appearances.maps" :question="node" />
+			<InputGeopoint v-else :question="node" />
 		</template>
 		<template v-else-if="node.valueType === 'date'">
 			<InputDate :question="node" />
