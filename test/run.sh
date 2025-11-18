@@ -27,7 +27,7 @@ for pattern in "$@"; do
 	# warnings; and warnings from Karma.
 	set -- -F -e 'WARN LOG:' -e 'ERROR LOG:' -e 'Module Warning' -e 'WARN [web-server]:' "$output"
 	warnings=$(grep -c "$@")
-	if (( $warnings > 4 )); then
+	if (( $warnings > 2)); then
 		grep -C5 "$@"
 		# Reset the text format in case the search results contained formatted text.
 		tput sgr0
