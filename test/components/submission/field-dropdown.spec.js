@@ -9,6 +9,7 @@ import testData from '../../data';
 import { loadSubmissionList } from '../../util/submission';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { testRequestData } from '../../util/request-data';
+import { mockLogin } from '../../util/session';
 
 const mountComponent = (options) =>
   mount(SubmissionFieldDropdown, mergeMountOptions(options, {
@@ -25,6 +26,10 @@ const strings = (min, max) => {
 };
 
 describe('SubmissionFieldDropdown', () => {
+  beforeEach(() => {
+    mockLogin();
+  });
+
   it('passes an option for each selectable field', () => {
     const component = mountComponent({
       container: {
