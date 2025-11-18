@@ -18,7 +18,16 @@ export default () => {
 
   const dataView = useQueryRef({
     fromQuery: (query) => (!query.deleted && query.map === 'true' ? 'map' : 'table'),
-    toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
+    toQuery: (value) => {
+      if (value === 'map') {
+        return {
+          map: true,
+          'page-size': null,
+          'page-number': null
+        };
+      }
+      return { map: null };
+    }
   });
 
   const options = computed(() => [

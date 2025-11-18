@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     type="submission"
     :top="pagination.size"
     :filter="!!filter"
-    :total-count="totalCount"/>
+    :total-count="pagination.page ? 0 : totalCount"/>
   <!-- @update:page is emitted on size change as well -->
   <Pagination v-if="pagination.count > 0"
     v-model:page="pagination.page" v-model:size="pagination.size"
@@ -34,6 +34,7 @@ import { computed, reactive, useTemplateRef, watch } from 'vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
 import SubmissionTable from './table.vue';
+import usePaginationQueryRef from '../../composables/pagination-query-ref';
 
 import { apiPaths } from '../../util/request';
 import { noop, reemit, reexpose } from '../../util/util';
@@ -73,9 +74,10 @@ const emit = defineEmits(['review', 'delete', 'restore']);
 const { odata, deletedSubmissionCount } = useRequestData();
 
 const pageSizeOptions = [250, 500, 1000];
+const { pageNumber, pageSize } = usePaginationQueryRef(pageSizeOptions);
 const pagination = reactive({
-  page: 0,
-  size: pageSizeOptions[0],
+  page: pageNumber,
+  size: pageSize,
   count: computed(() => (odata.dataExists ? odata.count : 0)),
   removed: computed(() => (odata.dataExists ? odata.removedSubmissions : 0))
 });
@@ -88,12 +90,10 @@ const odataSelect = computed(() => {
 });
 
 // `clear` indicates whether this.odata should be cleared before sending the
-// request. `refresh` indicates whether the request is a background refresh
+// request. `refresh` indicates whether the request is a background refresh.
 // (whether the refresh button was pressed).
 const fetchChunk = (clear, refresh = false) => {
-  // Are we fetching the first chunk of submissions or the next chunk?
-  const first = clear || refresh;
-  if (first) {
+  if (refresh) {
     pagination.page = 0;
   }
 
@@ -115,6 +115,11 @@ const fetchChunk = (clear, refresh = false) => {
     clear
   })
     .then(() => {
+      const lastPage = Math.max(0, Math.ceil(odata.count / pagination.size) - 1);
+      if (pagination.page > lastPage) {
+        pagination.page = lastPage;
+        fetchChunk(true);
+      }
       if (props.deleted) {
         deletedSubmissionCount.cancelRequest();
         if (!deletedSubmissionCount.dataExists) {
@@ -126,7 +131,10 @@ const fetchChunk = (clear, refresh = false) => {
     .catch(noop);
 };
 fetchChunk(true);
-watch([() => props.filter, () => props.deleted], () => { fetchChunk(true); });
+watch([() => props.filter, () => props.deleted], () => {
+  pagination.page = 0;
+  fetchChunk(true);
+});
 watch(() => props.fields, (_, oldFields) => {
   // SubmissionList resets column selector when delete button is pressed, in
   // that case we don't want to send request from here.

@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     type="entity"
     :top="pagination.size"
     :filter="filter != null || !!searchTerm"
-    :total-count="dataset.dataExists ? dataset.entities : 0"/>
+    :total-count="dataset.dataExists && !pagination.page ? dataset.entities : 0"/>
   <!-- @update:page is emitted on size change as well -->
   <Pagination v-if="pagination.count > 0"
     v-model:page="pagination.page" v-model:size="pagination.size"
@@ -34,6 +34,7 @@ import { computed, inject, reactive, useTemplateRef, watch } from 'vue';
 import EntityTable from './table.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
+import usePaginationQueryRef from '../../composables/pagination-query-ref';
 
 import { apiPaths } from '../../util/request';
 import { noop, reemit, reexpose } from '../../util/util';
@@ -60,9 +61,10 @@ const datasetName = inject('datasetName');
 const { dataset, odataEntities, deletedEntityCount } = useRequestData();
 
 const pageSizeOptions = [250, 500, 1000];
+const { pageNumber, pageSize } = usePaginationQueryRef(pageSizeOptions);
 const pagination = reactive({
-  page: 0,
-  size: pageSizeOptions[0],
+  page: pageNumber,
+  size: pageSize,
   count: computed(() => (odataEntities.dataExists ? odataEntities.count : 0)),
   removed: computed(() => (odataEntities.dataExists ? odataEntities.removedEntities : 0))
 });
@@ -71,9 +73,7 @@ const pagination = reactive({
 // request. `refresh` indicates whether the request is a background refresh
 // (whether the refresh button was pressed).
 const fetchChunk = (clear, refresh = false) => {
-  // Are we fetching the first chunk of entities or the next chunk?
-  const first = clear || refresh;
-  if (first) {
+  if (refresh) {
     pagination.page = 0;
   }
 
@@ -97,6 +97,11 @@ const fetchChunk = (clear, refresh = false) => {
     clear
   })
     .then(() => {
+      const lastPage = Math.max(0, Math.ceil(odataEntities.count / pagination.size) - 1);
+      if (pagination.page > lastPage) {
+        pagination.page = lastPage;
+        fetchChunk(true);
+      }
       if (props.deleted) {
         deletedEntityCount.cancelRequest();
         if (!deletedEntityCount.dataExists) {
@@ -109,6 +114,7 @@ const fetchChunk = (clear, refresh = false) => {
 };
 fetchChunk(true);
 watch([() => props.deleted, () => props.filter, () => props.searchTerm], () => {
+  pagination.page = 0;
   fetchChunk(true);
 });
 const handlePageChange = () => {
