@@ -1,9 +1,11 @@
 import FormGroup from '@/components/form-layout/FormGroup.vue';
 import RepeatInstance from '@/components/form-layout/RepeatInstance.vue';
 import RepeatRange from '@/components/form-layout/RepeatRange.vue';
+import { IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
 import type { RepeatRangeNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assert, describe, expect, it } from 'vitest';
+import { shallowRef } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../helpers.ts';
 
 const mountComponent = async (fileName: string) => {
@@ -20,7 +22,10 @@ const mountComponent = async (fileName: string) => {
 		props: {
 			node,
 		},
-		global: globalMountOptions,
+		global: {
+			...globalMountOptions,
+			provide: { [IS_FORM_EDIT_MODE]: shallowRef(false) },
+		},
 	});
 };
 

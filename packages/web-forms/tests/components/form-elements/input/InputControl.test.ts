@@ -1,8 +1,8 @@
 import FormQuestion from '@/components/form-layout/FormQuestion.vue';
-import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import { SUBMIT_PRESSED, IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
 import { mount } from '@vue/test-utils';
 import { assert, describe, expect, it } from 'vitest';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers';
 
 const mountComponent = async (questionNumber: number, submitPressed = false) => {
@@ -13,7 +13,10 @@ const mountComponent = async (questionNumber: number, submitPressed = false) => 
 
 	return mount(FormQuestion, {
 		props: { question },
-		global: { ...globalMountOptions, provide: { [SUBMIT_PRESSED]: ref(submitPressed) } },
+		global: {
+			...globalMountOptions,
+			provide: { [SUBMIT_PRESSED]: ref(submitPressed), [IS_FORM_EDIT_MODE]: shallowRef(false) },
+		},
 		attachTo: document.body,
 	});
 };

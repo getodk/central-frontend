@@ -126,16 +126,19 @@
       <bind nodeset="/data/maps_group/select_to_disable" type="string" required="true()"/>
       <bind nodeset="/data/maps_group/select_to_show" type="string"/>
       <bind nodeset="/data/maps_group/default_value" type="string"/>
-      <bind nodeset="/data/maps_group/geo_maps" type="geopoint" calculate=" /data/maps_group/default_value "
-            relevant=" /data/maps_group/select_to_show  = 'yes'" readonly=" /data/maps_group/select_to_disable  = 'yes'"
+      <bind nodeset="/data/maps_group/geo_maps" type="geopoint"
+            calculate="coalesce(/data/maps_group/geo_maps, /data/maps_group/default_value)"
+            relevant=" /data/maps_group/select_to_show  = 'yes'"
+            readonly=" /data/maps_group/select_to_disable  = 'yes'"
             required="true()"/>
       <bind nodeset="/data/placement_map_group/select_to_disable_pl" type="string" required="true()"/>
       <bind nodeset="/data/placement_map_group/select_to_show_pl" type="string"/>
       <bind nodeset="/data/placement_map_group/default_value_pl" type="string"/>
       <bind nodeset="/data/placement_map_group/geo_placement_map" type="geopoint"
-            calculate=" /data/placement_map_group/default_value_pl "
+            calculate="coalesce(/data/placement_map_group/geo_placement_map, /data/placement_map_group/default_value_pl)"
             relevant=" /data/placement_map_group/select_to_show_pl  = 'yes'"
-            readonly=" /data/placement_map_group/select_to_disable_pl  = 'yes'" required="true()"/>
+            readonly=" /data/placement_map_group/select_to_disable_pl  = 'yes'"
+            required="true()"/>
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
