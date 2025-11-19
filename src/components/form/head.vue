@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
           && uniqueDatasetCount > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
           </template>
           <template #dropdown>
             <li v-if="formDatasetDiff.length > 0">
@@ -299,6 +299,22 @@ export default {
       "action": {
         "back": "Rudi kwa Muhtasari wa Mradi"
       }
+    }
+  },
+  "zh": {
+    "projectNav": {
+      "action": {
+        "back": "返回项目概览"
+      }
+    },
+    "formNav": {
+      "tabTitle": "发布此草稿表单以启用这些功能"
+    },
+    "infoNav": {
+      "entityLists": "{count}个关联的实体列表",
+      "updatedDatasets": "更新",
+      "attachedDatasets": "用途",
+      "appUsers": "已分配{count}个应用用户"
     }
   },
   "zh-Hant": {

@@ -168,6 +168,13 @@ export default {
       "revokeAccess": "Batilisha ufikiaji"
     }
   },
+  "zh": {
+    "seeCode": "查看代码",
+    "accessRevoked": "权限已撤销",
+    "action": {
+      "revokeAccess": "撤销权限"
+    }
+  },
   "zh-Hant": {
     "seeCode": "查看 QR code",
     "accessRevoked": "存取權限被撤銷",

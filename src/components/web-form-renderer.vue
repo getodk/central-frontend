@@ -697,6 +697,46 @@ onUnmounted(() => {
       "title": "Erro no envio"
     }
   },
+  "zh": {
+    "previewModal": {
+      "title": "数据有效",
+      "body": "您输入的数据格式正确，但因当前处于表单预览模式，故未执行提交。"
+    },
+    "submissionModal": {
+      "title": "表单提交成功！",
+      "body": "您可继续填写此表单，或完成后关闭页面。",
+      "action": {
+        "fillOutAgain": "再次填写"
+      }
+    },
+    "thankYouModal": {
+      "title": "感谢您的参与！",
+      "body": "您现在可以关闭此窗口。"
+    },
+    "editSubmissionModal": {
+      "title": "提交成功",
+      "body": "页面即将跳转"
+    },
+    "errorModal": {
+      "title": "提交错误",
+      "body": "数据提交失败。错误信息：{errorMessage} 请关闭对话框后重试。若问题持续，请联系表单发放方或{supportEmail}。"
+    },
+    "sendingDataModal": {
+      "title": "正在提交",
+      "body": "您的数据正在上传。在完成之前，请不要关闭此窗口。"
+    },
+    "sessionTimeoutModal": {
+      "title": "会话过期",
+      "body": {
+        "full": "请在新浏览器标签页中{here}登录后重试。",
+        "here": "这里"
+      }
+    },
+    "retryModal": {
+      "title": "提交错误",
+      "body": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
+    }
+  },
   "zh-Hant": {
     "previewModal": {
       "title": "資料有效",

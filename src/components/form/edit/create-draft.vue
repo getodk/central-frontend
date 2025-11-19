@@ -148,6 +148,15 @@ const create = () => {
       "create": "Unda Rasimu mpya"
     }
   },
+  "zh": {
+    "title": "草稿版本",
+    "subtitle": "此表单无活跃草稿",
+    "toMakeChanges": "以修改此表单或其附件。",
+    "noEffectUntilPublish": "在您发布草稿之前，已发布版本不会受到影响。",
+    "action": {
+      "create": "创建新草稿"
+    }
+  },
   "zh-Hant": {
     "title": "草稿版本",
     "subtitle": "此表格無活動草稿",

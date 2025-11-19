@@ -234,6 +234,27 @@ const convert = ref(null);
       "label": "Ninaelewa na hii sio shida kwangu."
     }
   },
+  "zh": {
+    "title": "待提交",
+    "action": {
+      "changeSetting": "更改设置"
+    },
+    "explanation": {
+      "userAction": "您正在设置在Central首次接收到提交时创建实体。",
+      "implication": {
+        "full": "您当前有 {records} 条记录尚未标记为已批准或已拒绝。",
+        "records": "{count}个待记录"
+      }
+    },
+    "dontConvert": {
+      "label": "我理解，这对我来说没有问题。",
+      "description": "更改设置并对待处理的提交不执行任何操作。"
+    },
+    "convert": {
+      "label": "转换所有待处理的，会创建实体的提交。",
+      "description": "更改设置，并从所有会创建实体，且尚未被批准或拒绝的提交中创建实体。"
+    }
+  },
   "zh-Hant": {
     "title": "待提交的內容",
     "action": {

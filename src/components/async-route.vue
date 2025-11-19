@@ -181,6 +181,11 @@ export default {
       "loadError": "ukurasa ulioomba haukuweza kupakiwa. Tafadhali onyesha upya ukurasa na ujaribu tena"
     }
   },
+  "zh": {
+    "alert": {
+      "loadError": "无法加载您请求的页面。请刷新页面后重试。"
+    }
+  },
   "zh-Hant": {
     "alert": {
       "loadError": "無法載入您要求的頁面。請重新載入頁面並再試一次。"

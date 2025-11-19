@@ -355,6 +355,28 @@ const hideAndReset = () => {
       "delete": "Futa Fomu hii"
     }
   },
+  "zh": {
+    "state": {
+      "title": "表单状态",
+      "body": {
+        "full": "请前往项目{formAccessSettings}以调整此表单状态。",
+        "formAccessSettings": "表单访问设置"
+      }
+    },
+    "action": {
+      "delete": "删除此表单"
+    },
+    "alert": {
+      "delete": "表单“{name}”已成功删除。"
+    },
+    "webFormsSetting": {
+      "webForms": "Web表单",
+      "description": "填写、预览和编辑您的“{formName}”表单，请使用",
+      "enketoDefault": "Enketo（默认）",
+      "enketoSelected": "您当前正在使用Enketo填写、预览和编辑“{formName}”表单。",
+      "owfSelected": "您当前正在使用ODK Web表单填写、预览和编辑“{formName}”表单。"
+    }
+  },
   "zh-Hant": {
     "state": {
       "title": "表單狀態",

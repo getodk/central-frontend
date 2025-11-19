@@ -221,6 +221,19 @@ const hideAndReset = () => {
       "successMessage": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
     }
   },
+  "zh": {
+    "entityWorkflow": "实体工作流程",
+    "onReceipt": {
+      "label": "在 Central 接收到提交后立即创建实体",
+      "description": "在建立实体之前，您将没有机会查看或修改数据。",
+      "successMessage": "Central 在接收到提交后将立即创建实体。"
+    },
+    "onApproval": {
+      "label": "当提交被标记为“已批准”时创建实体",
+      "description": "在有人查看资料之前，实体数据不会更新。如有必要，可修改。",
+      "successMessage": "当提交标记为“已批准”时，将创建实体。"
+    }
+  },
   "zh-Hant": {
     "entityWorkflow": "實體工作流程",
     "onReceipt": {

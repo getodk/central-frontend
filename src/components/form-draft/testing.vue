@@ -160,6 +160,14 @@ const hidePopover = () => { popoverData.target = null; };
       "willBeDeleted": "serão excluídas"
     }
   },
+  "zh": {
+    "title": "测试此草稿",
+    "entitiesTesting": "此表单定义将创建或更新实体。目前草稿表单暂不支持实体创建或更新功能，您需要发布表单后才能验证实体功能。",
+    "deletionWarning": {
+      "full": "在此提交的数据在发布草稿时{willBeDeleted}！",
+      "willBeDeleted": "将被删除"
+    }
+  },
   "zh-Hant": {
     "title": "測試此草稿",
     "entitiesTesting": "此表格定義會建立或更新實體。目前，實體不會由草稿表單建立或更新，因此您需要發佈表單以驗證實體功能。",

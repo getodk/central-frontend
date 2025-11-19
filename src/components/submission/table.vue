@@ -185,6 +185,12 @@ defineExpose({ afterReview, afterDelete });
       "stateAndActions": "Hali na vitendo"
     }
   },
+  "zh": {
+    "header": {
+      "stateAndActions": "状态与操作",
+      "deletedAt": "删除于"
+    }
+  },
   "zh-Hant": {
     "header": {
       "stateAndActions": "狀態和動作",

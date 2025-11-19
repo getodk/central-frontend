@@ -152,6 +152,13 @@ export default {
       "Mawasilisho yaliyopo kutoka kwa mtumiaji huyu yatasalia, lakini mtu yeyote anayemtegemea mtumiaji huyu atalazimika kuunda upya ili kuendelea kupakua Fomu au kupakia Mawasilisho"
     ]
   },
+  "zh": {
+    "title": "撤销用户权限",
+    "introduction": [
+      "您确定要撤销App用户{displayName}的权限吗？",
+      "该用户已提交的数据将予以保留，但任何依赖此用户的流程都需创建新用户，以继续下载表单或上传内容。"
+    ]
+  },
   "zh-Hant": {
     "title": "撤銷使用者存取權限",
     "introduction": [

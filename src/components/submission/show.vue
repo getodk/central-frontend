@@ -278,6 +278,12 @@ export default {
       "back": "Rudi kwenye Jedwali la Mawasilisho"
     }
   },
+  "zh": {
+    "back": {
+      "title": "提交详情",
+      "back": "返回提交表格"
+    }
+  },
   "zh-Hant": {
     "back": {
       "title": "提交詳情",

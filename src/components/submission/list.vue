@@ -28,7 +28,8 @@ except according to the terms contained in the LICENSE file.
           <submission-filters v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
             v-model:reviewState="reviewStates"
-            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"
+            @reset-click="resetFilters"/>
         </form>
         <!-- TODO: merge these two forms -->
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
@@ -366,6 +367,9 @@ export default {
       if (this.formVersion.keyId != null && this.keys.length === 0)
         this.$emit('fetch-keys');
     },
+    resetFilters() {
+      this.$router.replace({ path: this.$route.path, query: {} });
+    },
     cancelBackgroundRefresh() {
       if (!this.refreshing) return;
       this.$refs.view.cancelRefresh();
@@ -641,6 +645,26 @@ export default {
   },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
+  },
+  "zh": {
+    "action": {
+      "testOnDevice": "在设备上测试",
+      "testInBrowser": "在浏览器中测试"
+    },
+    "noMatching": "没有符合的提交内容",
+    "emptyMap": "仅当提交数据包含首个地理字段的信息时，才会显示相应记录。",
+    "learnMoreMap": "进一步了解提交地图数据功能",
+    "allDeleted": "已删除所有提交内容。",
+    "allDeletedOnPage": "当前页面中的所有提交数据已被删除。",
+    "downloadDisabled": "导出选项",
+    "filterDisabledMessage": "对于已删除的提交内容，筛选功能不可用。",
+    "noMapEncryption": "地图功能因表单加密而不可用。",
+    "deletedSubmission": {
+      "emptyTable": "没有已删除的提交内容。",
+      "allRestored": "所有已删除的提交内容都已恢复。",
+      "allRestoredOnPage": "所有此页面上的提交内容都已还原。"
+    },
+    "noMapDeleted": "对于已删除的提交内容，地图功能不可用"
   },
   "zh-Hant": {
     "action": {

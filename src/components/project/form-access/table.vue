@@ -270,6 +270,12 @@ export default {
       "state": "hali"
     }
   },
+  "zh": {
+    "header": {
+      "form": "表单",
+      "state": "状态"
+    }
+  },
   "zh-Hant": {
     "header": {
       "form": "表單",

@@ -21,6 +21,11 @@ except according to the terms contained in the LICENSE file.
       @update:model-value="$emit('update:creationDate', $event)"/>
     <entity-filters-conflict :model-value="conflict" :disabled="disabled"
       :disabled-message="disabledMessage" @update:model-value="$emit('update:conflict', $event)"/>
+     <button type="button" class="btn btn-link btn-reset"
+      :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
+      @click="$emit('resetClick')">
+      {{ $t('action.reset') }}
+    </button>
   </span>
 </template>
 
@@ -54,7 +59,7 @@ defineProps({
     required: true
   }
 });
-defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
+defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId', 'resetClick']);
 
 </script>
 
@@ -90,6 +95,9 @@ defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId']);
   },
   "pt": {
     "allCreationDateSelected": "Todas as datas"
+  },
+  "zh": {
+    "allCreationDateSelected": "所有时间"
   },
   "zh-Hant": {
     "allCreationDateSelected": "全部時間"

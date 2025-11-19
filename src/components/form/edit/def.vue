@@ -195,6 +195,16 @@ const viewXml = modalData('FormVersionViewXml');
     "withinDef": "Nesta Definição de Formulário:",
     "title": "Versão Rascunho"
   },
+  "zh": {
+    "subtitle": "已上传",
+    "changed": "自发布版本以来",
+    "versionName": "版本名称：{name}",
+    "action": {
+      "upload": "上传新表单定义"
+    },
+    "withinDef": "在此表单定义中：",
+    "title": "草稿版本"
+  },
   "zh-Hant": {
     "subtitle": "已上傳",
     "changed": "與發布版本相比有變更",
