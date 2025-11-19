@@ -25,7 +25,14 @@ const mountOptions = (options = undefined) => {
   const { xmlFormId } = form;
   const { instanceId } = testData.extendedSubmissions.last();
   return mergeMountOptions(options, {
-    props: { projectId, xmlFormId, instanceId, fieldpath: '/p1' },
+    props: {
+      projectId,
+      xmlFormId,
+      feature: {
+        id: instanceId,
+        properties: { fieldpath: '/p1' }
+      },
+    },
     container: {
       router: mockRouter(`/projects/${projectId}/forms/${encodeURIComponent(xmlFormId)}/submissions?map=true`),
       requestData: testRequestData([useFields], {
@@ -63,7 +70,7 @@ describe('SubmissionMapPopup', () => {
   it('does nothing if instanceId is not defined', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions({
-        props: { instanceId: null, fieldpath: null }
+        props: { feature: null }
       }))
       .testNoRequest()
       .afterResponses(component => {
@@ -196,7 +203,12 @@ describe('SubmissionMapPopup', () => {
   it('shows a warning if geo field is not in current version of form', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions({
-        props: { fieldpath: '/old_group/old_field' }
+        props: {
+          feature: {
+            id: 'c d',
+            properties: { fieldpath: '/old_group/old_field' }
+          }
+        }
       }))
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
@@ -223,7 +235,12 @@ describe('SubmissionMapPopup', () => {
           instanceId: 'another',
           p1: 'POINT (3 3)'
         });
-        return component.setProps({ instanceId: 'another' });
+        return component.setProps({
+          feature: {
+            id: 'another',
+            properties: { fieldpath: '/p1' }
+          }
+        });
       })
       .respondWithData(() => testData.submissionOData(1))
       .testRequests([{

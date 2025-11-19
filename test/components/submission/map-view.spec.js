@@ -249,12 +249,12 @@ describe('SubmissionMapView', () => {
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeAnyResponse(app => {
           app.get('.empty-table-message').should.be.hidden();
-          app.get('#submission-map-view .loading').should.be.visible();
+          app.get('#map-view .loading').should.be.visible();
         })
         .respondWithData(testData.submissionGeojson)
         .afterResponse(app => {
           app.get('.empty-table-message').should.be.visible();
-          app.get('#submission-map-view .loading').should.be.hidden();
+          app.get('#map-view .loading').should.be.hidden();
         }));
 
     it('hides the empty message after toggling to map view', () =>
