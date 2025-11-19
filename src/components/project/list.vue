@@ -320,6 +320,19 @@ export default {
       "create": "Mradi wako mpya umeundwa."
     }
   },
+  "zh": {
+    "archived": "已存档的项目",
+    "action": {
+      "create": "更新"
+    },
+    "emptyTable": {
+      "canCreate": "请先创建一个项目。项目可以帮助您通过将表单分组，和通过用户来管理数据。",
+      "cannotCreate": "暂无项目可显示。如果您本应再次拥有项目，请联系为您创建此账户的负责人。对方可能需要为您分配相应的项目角色权限。"
+    },
+    "alert": {
+      "create": "您的新项目以成功建立。"
+    }
+  },
   "zh-Hant": {
     "archived": "已歸檔專案",
     "action": {

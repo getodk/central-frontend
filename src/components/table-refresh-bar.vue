@@ -82,6 +82,9 @@ const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
   "pt": {
     "dataRefreshTime": "Última atualização dos dados em {date} às {time}"
   },
+  "zh": {
+    "dataRefreshTime": "数据最后更新于{date}日{time}时"
+  },
   "zh-Hant": {
     "dataRefreshTime": "資料最後重新整理時間：{date}{time}"
   }

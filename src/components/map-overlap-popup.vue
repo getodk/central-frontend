@@ -169,6 +169,9 @@ const preview = (feature) => {
   "sw": {
     "deletedMessage": "Rasimali hii imefutwa"
   },
+  "zh": {
+    "deletedMessage": "该资源已删除。"
+  },
   "zh-Hant": {
     "deletedMessage": "該資源已被刪除。"
   }

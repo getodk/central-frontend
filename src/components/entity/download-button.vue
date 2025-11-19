@@ -161,6 +161,17 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       }
     }
   },
+  "zh": {
+    "action": {
+      "download": {
+        "unfiltered": "下载全部{count}个实体",
+        "filtered": {
+          "withCount": "下载{count}个匹配的实体",
+          "withoutCount": "下载所有匹配的实体"
+        }
+      }
+    }
+  },
   "zh-Hant": {
     "action": {
       "download": {

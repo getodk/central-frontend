@@ -387,6 +387,25 @@ export default {
     },
     "override": "Batilisha"
   },
+  "zh": {
+    "type": {
+      "image": "图片",
+      "audio": "音频",
+      "video": "视频",
+      "file": "数据文件"
+    },
+    "replace": "替换",
+    "notUploaded": {
+      "text": "还未上传",
+      "title": "若要上传文件，请将一个或多个文件拖拽到本页面。"
+    },
+    "linkedToDataset": "关联到实体列表{datasetName}",
+    "uploadToOverride": "上传文件以替换。",
+    "action": {
+      "linkDataset": "关联实体列表{datasetName}"
+    },
+    "override": "覆盖"
+  },
   "zh-Hant": {
     "type": {
       "image": "影像",

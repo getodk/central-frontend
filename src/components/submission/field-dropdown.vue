@@ -179,6 +179,17 @@ const placeholder = (counts) => counts.selected;
     },
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
   },
+  "zh": {
+    "field": {
+      "columns": "显示列",
+      "search": "搜索列…"
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "warning": "选择过多列可能导致设备运行缓慢。"
+  },
   "zh-Hant": {
     "field": {
       "columns": "顯示欄位",

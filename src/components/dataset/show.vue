@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #infonav>
         <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
           </template>
           <template #dropdown>
             <li v-for="form in dataset.sourceForms" :key="form.xmlFormId">
@@ -208,6 +208,13 @@ export default {
   },
   "sw": {
     "back": "Rudi kwenye vyombo vya Mradi"
+  },
+  "zh": {
+    "back": "返回至项目实体",
+    "infoNav": {
+      "connectedForms": "由{count}个表单更新",
+      "linkedForms": "用于{count}个表单"
+    }
   },
   "zh-Hant": {
     "back": "返回專案實體",

@@ -231,6 +231,12 @@ const breadcrumbLinks = computed(() => [
       "back": "Rudi kwenye Jedwali la {datasetName}"
     }
   },
+  "zh": {
+    "back": {
+      "title": "实体详情",
+      "back": "回到{datasetName}表格"
+    }
+  },
   "zh-Hant": {
     "back": {
       "title": "實體詳細資訊",

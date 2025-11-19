@@ -1,0 +1,401 @@
+{
+  "title": {
+    "resetPassword": "重置密码",
+    "setPassword": "设置密码",
+    "editProfile": "编辑资料",
+    "download": "下载",
+    "pageNotFound": "页面不存在",
+    "details": "详情"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "表单权限"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "publicAccess": "公开访问",
+      "versions": "版本",
+      "editForm": "编辑表单"
+    }
+  },
+  "systemHome": {
+    "title": "系统设置",
+    "tab": {
+      "audits": "服务器审计记录",
+      "analytics": "使用报告"
+    }
+  },
+  "role": {
+    "none": "无",
+    "admin": "管理员",
+    "manager": "项目经理",
+    "viewer": "项目查看者",
+    "formfill": "数据收集者"
+  },
+  "formState": {
+    "open": "开启",
+    "closing": "正在关闭",
+    "closed": "已关闭",
+    "unpublished": "尚未发布"
+  },
+  "reviewState": {
+    "received": "已接收",
+    "hasIssues": "有疑问",
+    "edited": "已编辑",
+    "approved": "已批准",
+    "rejected": "已拒绝",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "所有操作记录",
+      "user": "网页使用者的操作记录",
+      "project": "项目操作记录",
+      "form": "表单操作记录",
+      "field_key": "APP用户操作记录",
+      "public_link": "公开链接操作记录",
+      "dataset": "实体清单操作记录",
+      "config": "服务器设置记录",
+      "upgrade": "服务器更新",
+      "task": "系统操作"
+    },
+    "action": {
+      "default": {
+        "create": "创建",
+        "update": "更新详情",
+        "session_end": "撤销",
+        "delete": "删除"
+      },
+      "analytics": "使用报告",
+      "blobs": {
+        "s3_upload": "上传文件至储存空间",
+        "s3_failed_to_pending": "标记文件以重新上传至储存空间"
+      },
+      "config": {
+        "set": "设置"
+      },
+      "dataset": {
+        "update": "更新",
+        "update_publish": "发布",
+        "create": "@:audit.action.default.create"
+      },
+      "entity": {
+        "bulk_delete": "批量删除",
+        "bulk_restore": "批量恢复"
+      },
+      "field_key": {
+        "assignment_create": "授予权限",
+        "assignment_delete": "移除权限",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "创建或更新草稿",
+        "update_draft_replace": "替换草稿",
+        "update_publish": "发布草稿",
+        "update_draft_delete": "放弃草稿",
+        "attachment_update": "更新附件",
+        "submission_export": "下载提交的内容",
+        "restore": "恢复",
+        "purge": "清除",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "授予权限",
+        "assignment_delete": "移除权限",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "submission": {
+        "purge": "清除上传的内容"
+      },
+      "upgrade": {
+        "process_form": "编辑表单",
+        "process_form_draft": "编辑表单草稿",
+        "process_form_entities_version": "标记表单以升级",
+        "server": "新版本"
+      },
+      "user": {
+        "assignment_create": "分配角色",
+        "assignment_delete": "撤销角色",
+        "delete": "退出",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "取消",
+    "clear": "清除",
+    "close": "关闭",
+    "comment": "评论",
+    "continue": "继续",
+    "create": "创建",
+    "createSubmission": "新的上传",
+    "delete": "删除",
+    "done": "完成",
+    "download": "下载",
+    "edit": "编辑",
+    "editProfile": "编辑资料",
+    "finish": "完成",
+    "logIn": "登录",
+    "looksGood": "一切顺利，请继续",
+    "more": "更多",
+    "neverMind": "不用了，请取消",
+    "next": "下一步",
+    "noCancel": "不是，请取消",
+    "ok": "确认",
+    "proceed": "继续",
+    "refresh": "刷新",
+    "refreshPage": "刷新页面",
+    "resetPassword": "重置密码",
+    "review": "审核",
+    "save": "保存",
+    "saveSettings": "保存设置",
+    "sort": "排序",
+    "undo": "撤销",
+    "update": "更新",
+    "yesProceed": "是的，请继续",
+    "showPreview": "预览",
+    "hidePreview": "隐藏预览",
+    "newPreview": "新的预览",
+    "expand": "展开",
+    "collapse": "收起",
+    "selectRow": "选择行",
+    "reviewParallelUpdates": "审核并行更新",
+    "tryAgain": "重试",
+    "upload": "上传",
+    "restore": "恢复"
+  },
+  "field": {
+    "comment": "写评论...",
+    "dateRange": "日期范围",
+    "displayName": "展示名称",
+    "email": "邮件地址",
+    "name": "名字",
+    "newPassword": "新密码",
+    "oldPassword": "旧密码",
+    "passphrase": "密码短语",
+    "password": "密码",
+    "passwordConfirm": "新密码（确认）",
+    "type": "类型"
+  },
+  "header": {
+    "actions": "操作记录",
+    "created": "已创建",
+    "createdBy": "创建人",
+    "createdAt": "创建于",
+    "updatedBy": "更新于",
+    "displayName": "展示名称",
+    "email": "邮件地址",
+    "instanceId": "实例ID",
+    "lastSubmission": "最新的上传",
+    "recentActivity": "近期活动",
+    "name": "名字",
+    "listName": "列表名称",
+    "submitterName": "上传者",
+    "submissionDate": "上传于",
+    "time": "时间",
+    "type": "类型",
+    "entities": "实体总数",
+    "lastEntity": "最新实体"
+  },
+  "plural": {
+    "appUser": "APP用户",
+    "form": "表单",
+    "project": "项目",
+    "submission": "上传的内容",
+    "user": "用户",
+    "webUser": "网页用户"
+  },
+  "count": {
+    "appUser": "{count}APP用户",
+    "attachments": "{count}附件",
+    "form": "{count}表单",
+    "submission": "{count}上传的内容",
+    "warning": "{count}警告"
+  },
+  "resource": {
+    "appUser": "APP用户",
+    "appUsers": "APP用户",
+    "attachments": "附件",
+    "config": "服务器设置",
+    "entity": "实体",
+    "entities": "实体",
+    "entityList": "实体列表",
+    "entityLists": "实体列表",
+    "form": "表单",
+    "forms": "表单",
+    "formAttachments": "表单附件",
+    "project": "项目",
+    "projects": "项目",
+    "property": "属性",
+    "properties": "属性",
+    "publicLink": "公开访问链接",
+    "user": "用户",
+    "users": "用户",
+    "webUser": "网页用户",
+    "webUsers": "网页用户",
+    "session": "会话",
+    "submission": "上传的内容",
+    "submissions": "上传的内容",
+    "projectRoles": "项目角色",
+    "formPreview": "表单预览",
+    "draft": "草稿"
+  },
+  "alert": {
+    "passwordTooShort": "密码必须超过10个字符。",
+    "updateEntity": "实体已更新成功。",
+    "updateReviewState": "审核已保存成功。",
+    "versionChange": "此服务器已更新成功。",
+    "submissionDeleted": "上传的内容已成功删除。",
+    "submissionRestored": "此上传内容已回复。",
+    "entityRestored": "实体\"{label}\"已恢复。",
+    "entityDeleted": "实体“{label}”已被删除。"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "点击{clickHere}获得更多内容。",
+      "clickHere": "点击此处"
+    },
+    "helpArticle": {
+      "full": "请参考{helpArticle}以获取更多内容。",
+      "helpArticle": "此说明文件"
+    },
+    "learnMore": "了解更多。"
+  },
+  "analytics": {
+    "alwaysImprove": "我们一直努力改进ODK Central",
+    "needFeedback": {
+      "full": "为此，我们需要{your}评价，以便我们了解您是如何使用ODK Central的，以及如何更好的为您服务",
+      "your": "您的"
+    }
+  },
+  "submission": {
+    "missingAttachment": "无附件",
+    "action": {
+      "edit": "编辑（{count}）"
+    },
+    "editDisabled": "您无法编辑加密的内容。",
+    "binaryLinkTitle": "文件已提交。点击下载。",
+    "encryptionMessage": "文件已加密，无法预览。",
+    "noSubmission": "（无）",
+    "emptyTable": "目前没有提交的内容。",
+    "fileDownloadUnavailable": "已删除的文件无法下载。"
+  },
+  "entity": {
+    "label": "标签",
+    "entityLabel": "实体标签",
+    "entityId": "实体ID",
+    "noProperties": "此表单仅设定“标签”。",
+    "noEntity": "（无）",
+    "conflictsCount": "{count}冲突"
+  },
+  "common": {
+    "activity": "活动",
+    "anybody": "（任何人）",
+    "areYouSure": "您确定要继续吗？",
+    "basicInfo": "基础信息",
+    "conflict": "冲突",
+    "conflicts": "冲突",
+    "dangerZone": "危险区域",
+    "data": "数据",
+    "docs": "文件",
+    "emptyMap": "地图数据不可用。",
+    "emptyValue": "（空）",
+    "error": "错误",
+    "filter": "筛选",
+    "forum": "论坛",
+    "lastUpdate": "最新更新",
+    "loading": "加载中...",
+    "map": "地图",
+    "no": "否",
+    "noResults": "无结果",
+    "noUndo": "此操作无法撤销。",
+    "rowNumber": "行",
+    "success": "成功！",
+    "system": "系统",
+    "yes": "是",
+    "tab": {
+      "settings": "设置"
+    },
+    "table": "表格",
+    "total": "总计",
+    "totalSubmissions": "上传总计",
+    "propertiesCount": "{inform}/{count}特性",
+    "new": "更新！",
+    "totalEntities": "实体总计",
+    "versionShort": "版本{version}",
+    "warning": "警告",
+    "beta": "测试版",
+    "none": "（无）",
+    "search": "搜索",
+    "reviewState": "审核状态",
+    "status": "状态",
+    "version": "版本"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "您上传的文件“{name}”已超过100MB的限制。",
+        "entityTooLarge": "您上传的数据过大。"
+      }
+    }
+  },
+  "util": {
+    "csv": {
+      "readError": "读取您的文件{message}时出现问题",
+      "invalidCSV": "此文件“{name}”不是一个有效的.csv文件。无法读取。",
+      "rowError": "此文件{message}的第{row}行有错误",
+      "invalidQuotes": "引用的字段无效。请检查改行是否有异常值。",
+      "emptyRow": "这一行为空白。",
+      "dataWithoutHeader": "预期有 {expected} 列，但实际只有 {actual} 列。"
+    },
+    "request": {
+      "noRequest": "请求错误：未检测到有效请求。",
+      "noResponse": "请求错误：未收到请求响应。",
+      "errorNotProblem": "出现错误：错误代码{status}。",
+      "problem": {
+        "404_1": "无法找到您的资源。此资源可能已经删除。",
+        "409_17": {
+          "message": "此表单尝试创建与现有实体相同的新实体属性（大写除外）：",
+          "duplicateProperty": "{provided}（已存在：{current}）"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "您的会话即将过期！您将于2分钟后登出。",
+        "expired": "您的会话已过期。请重新登录以继续。",
+        "logoutError": {
+          "thereWasProblem": "退出登录时发生错误。",
+          "pleaseRefresh": "请刷新页面并重试。"
+        }
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "您确定要离开此页面吗？您的更改可能不会被保存。"
+  },
+  "formStateDescription": {
+    "open": "此表单可供下载且正在接收提交。",
+    "closing": "此表单不可下载但仍可接收提交。",
+    "closed": "此表单不可下载且不接收提交。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name}（已存档）"
+    }
+  }
+}

@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div v-show="featureCount !== 0" ref="el" class="geojson-map">
     <div ref="mapContainer" class="map-container" :class="{ opaque: shown }" tabindex="0" :inert="!shown"></div>
     <div v-show="shown">
-      <span class="count">{{ countMessage }}</span>
+      <span class="count"><span class="icon-map-marker"></span>{{ countMessage }}</span>
       <div class="control-bar">
         <button v-tooltip.aria-describedby="$t('zoomToFit')" type="button"
           @click="fitViewToAllFeatures()">
@@ -735,6 +735,8 @@ defineExpose({
 </script>
 
 <style lang="scss">
+@import '../assets/scss/variables';
+
 // based on Web Forms variables
 // (zoom controls styled similarly to those in WF MapBlock.vue)
 $spacing: 10px;
@@ -769,6 +771,10 @@ $muted-background-color: #F1F5F9;
     padding-block: 6px;
     padding-inline: 8px;
     user-select: none;
+
+    .icon-map-marker{
+      padding-right: $margin-right-icon;
+    }
   }
 
   .ol-zoom {
@@ -894,6 +900,14 @@ $muted-background-color: #F1F5F9;
   },
   "pt": {
     "zoomToFit": "Ajustar para mostrar todos os dados"
+  },
+  "zh": {
+    "showing": "当前显示第{count}项，共{total}项",
+    "zoomToFit": "缩放至全数据视图",
+    "noWebGL": {
+      "title": "图形显示异常。",
+      "message": "您的浏览器无法显示地图。请启用图形加速设置。"
+    }
   },
   "zh-Hant": {
     "showing": "正在顯示{total}項中的第{count}項",

@@ -21,6 +21,7 @@ const locales = {
   ja: { warnVariableSeparator: false },
   pt: {},
   sw: {},
+  zh: { warnVariableSeparator: false },
   'zh-Hant': { warnVariableSeparator: false }
 };
 

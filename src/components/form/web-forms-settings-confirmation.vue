@@ -199,6 +199,21 @@ const setWebformsEnabled = () => {
       "useEnketo": "Utilizar o Enketo"
     }
   },
+  "zh": {
+    "webformsConfirmation": {
+      "useOdkWebForms": "使用 ODK Web Forms",
+      "intro": "我们正在打造全新的Web表单体验，旨在提供更快速、更友好的操作界面！",
+      "description": {
+        "full": "部分功能可能受限；详情请{seeSupportedFeatures}，并在启用前{previewYourForm}。",
+        "seeSupportedFeatures": "查看支持的功能列表",
+        "previewYourForm": "预览表单效果"
+      }
+    },
+    "enketoConfirmation": {
+      "description": "确定要从ODK Web表单切换至Enketo吗？",
+      "useEnketo": "使用Enketo"
+    }
+  },
   "zh-Hant": {
     "webformsConfirmation": {
       "useOdkWebForms": "使用 ODK Web Forms",

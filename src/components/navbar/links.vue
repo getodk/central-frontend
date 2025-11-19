@@ -109,6 +109,9 @@ export default {
   "sw": {
     "current": "sasa"
   },
+  "zh": {
+    "current": "当前"
+  },
   "zh-Hant": {
     "current": "目前"
   }

@@ -141,6 +141,16 @@ const del = () => {
       "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
     }
   },
+  "zh": {
+    "title": "删除提交内容",
+    "introduction": [
+      "您确定要删除此条提交吗？",
+      "此操作将把提交数据移至回收站。数据在回收站保留30天后将被永久清除，但在此之前可随时恢复。"
+    ],
+    "field": {
+      "noConfirm": "在离开本页面前，无需确认，立即删除。"
+    }
+  },
   "zh-Hant": {
     "title": "刪除提交內容",
     "introduction": [

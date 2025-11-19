@@ -153,6 +153,12 @@ watch([action, dateRange], fetchData);
     ],
     "emptyTable": "Hakuna maingizo ya kumbukumbu ya ukaguzi yanayolingana"
   },
+  "zh": {
+    "heading": [
+      "此处记录本服务器执行的重要操作日志，用户、项目或表单设置的更改均会在此显示。"
+    ],
+    "emptyTable": "没有匹配的审计日志条目。"
+  },
   "zh-Hant": {
     "heading": [
       "在這裡您將找到在此伺服器上執行的重要操作的日誌。可以在此處找到對使用者、專案或表單設定所做的變更。"

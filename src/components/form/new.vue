@@ -735,6 +735,54 @@ export default {
       }
     ]
   },
+  "zh": {
+    "title": {
+      "create": "创建表单",
+      "update": "上传新表单定义"
+    },
+    "introduction": [
+      {
+        "create": "请上传XForms XML文件或XLSForm Excel文件以创建表单。",
+        "update": "请上传XForms XML文件或XLSForm Excel文件以更新草稿。"
+      },
+      {
+        "full": "若尚无表单文件，可使用{tools}辅助设计。",
+        "tools": "可用工具"
+      },
+      "若需上传表单附件，可在创建表单后的下一页进行操作。"
+    ],
+    "dropZone": {
+      "full": "请将文件拖放至此，或{chooseOne}上传。",
+      "chooseOne": "选择文件"
+    },
+    "action": {
+      "uploadAnyway": "仍然上传"
+    },
+    "alert": {
+      "fileRequired": "请选择文件。"
+    },
+    "problem": {
+      "400_8": "您上传的表单定义文件与此表单不匹配：表单ID应为“{expected}”，但上传文件为“{actual}”。",
+      "400_15": "XLSForm转换失败：{error}",
+      "409_3": "此项目中已存在表单ID为“{xmlFormId}”的表单"
+    },
+    "fields": "字段：",
+    "warningsText": [
+      "此文件可用，但存在以下潜在问题：",
+      "表单设计警告：",
+      "工作流警告：",
+      {
+        "deletedFormExists": "回收站中已存在ID为“{value}”的表单。若上传此表单，将无法恢复同名ID的表单。",
+        "structureChanged": "以下字段已被删除、重命名或移至其他组/重复节段。默认情况下，这些字段将不会在提交表格中显示，也不会包含在导出数据中。",
+        "oldEntityVersion": "实体规范版本“{version}”与离线实体功能不兼容。建议使用2024.1.0或更高版本。"
+      },
+      "请修正问题后重试。",
+      {
+        "create": "若确认可忽略这些问题，请点击下方按钮继续创建表单：",
+        "update": "若确认可忽略这些问题，请点击下方按钮继续更新草稿："
+      }
+    ]
+  },
   "zh-Hant": {
     "title": {
       "create": "建立表單",

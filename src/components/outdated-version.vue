@@ -150,6 +150,13 @@ const dismiss = () => {
     "dismiss": "Ignorar por 30 dias",
     "dismissTooltip": "Clique aqui para ignorar este aviso por 30 dias."
   },
+  "zh": {
+    "title": "版本过旧",
+    "instructionsToUpgrade": "版本升级指南",
+    "instructionsToUpgradeTooltip": "点击此处查看Central升级指南",
+    "dismiss": "30天内不再提示",
+    "dismissTooltip": "点击此处可在30天内隐藏此提示。"
+  },
   "zh-Hant": {
     "title": "過時的版本",
     "instructionsToUpgrade": "升級說明",

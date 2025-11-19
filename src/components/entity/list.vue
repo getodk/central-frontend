@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <form class="form-inline" @submit.prevent>
           <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
           <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
-          :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
+          :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null" @reset-click="resetFilters"/>
         </form>
         <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
           <entity-download-button :odata-filter="deleted ? null : odataFilter"
@@ -383,15 +383,15 @@ export default {
         this.snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${this.now})`;
       }
     },
+    resetFilters() {
+      this.$router.replace({ path: this.$route.path, query: {} });
+    },
     // This method is called directly by DatasetEntities.
     reset() {
-      if (this.odataFilter == null && !this.searchTerm)
+      if (this.odataFilter == null && !this.searchTerm) {
         this.fetchChunk(true);
-      else {
-        // This change will cause the watcher in created() to fetch
-        // entities.
-        this.conflict = [true, false];
-        this.searchTerm = '';
+      } else {
+        this.resetFilters();
       }
     },
     fetchCreators() {
@@ -864,6 +864,29 @@ export default {
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
     "noMatching": "Hakuna Huluki zinazolingana."
+  },
+  "zh": {
+    "noEntities": "暂无实体可显示。",
+    "noMatching": "没有匹配的实体。",
+    "allDeleted": "所有实体已被删除。",
+    "allDeletedOnPage": "本页所有实体已被删除。",
+    "alert": {
+      "delete": "实体“{label}”已被删除。",
+      "bulkDelete": "{count}个实体已成功删除。",
+      "restored": "{count}个实体已成功复原。"
+    },
+    "filterDisabledMessage": "筛选功能对已删除的实体不可用",
+    "searchDisabledMessage": "搜索功能对已删除的实体不可用",
+    "downloadDisabled": "下载功能对已删除的实体不可用",
+    "deletedEntity": {
+      "emptyTable": "没有已删除的实体。",
+      "allRestored": "所有已删除的实体已复原。",
+      "allRestoredOnPage": "本页所有实体已复原。"
+    },
+    "actionBar": {
+      "message": "已选择{count}个实体"
+    },
+    "bulkOpInProgress": "批量操作执行中"
   },
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",

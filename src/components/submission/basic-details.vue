@@ -239,6 +239,16 @@ export default {
     "expected": "{count} inatarajiwa | {count} inatarajiwa",
     "attachmentSummary": "{present} / {expected}"
   },
+  "zh": {
+    "submissionDetails": "提交详情",
+    "formVersion": "表单版本",
+    "deviceId": "设备ID",
+    "userAgent": "用户代理",
+    "attachments": "附件",
+    "present": "{count}个文件",
+    "expected": "预期数量：{count}个",
+    "attachmentSummary": "实际{present}个/预期{expected}个"
+  },
   "zh-Hant": {
     "submissionDetails": "提交詳情",
     "formVersion": "表單版本",

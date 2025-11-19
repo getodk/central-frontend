@@ -232,7 +232,9 @@
     "collapse": "Collapse",
     // @transifexKey component.FormTrashRow.action.restore
     "restore": "Restore",
-    "selectRow": "Select row"
+    "selectRow": "Select row",
+    // This text is shown on a button that resets the data filters
+    "reset": "Reset"
   },
   "field": {
     "comment": "Leave a comment…",

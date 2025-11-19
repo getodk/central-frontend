@@ -165,6 +165,17 @@ export default {
       }
     }
   },
+  "zh": {
+    "action": {
+      "download": {
+        "unfiltered": "下载全部{count}个提交的内容",
+        "filtered": {
+          "withoutCount": "下载符合条件的所有提交内容",
+          "withCount": "下载个{count}个符合筛选条件的提交"
+        }
+      }
+    }
+  },
   "zh-Hant": {
     "action": {
       "download": {

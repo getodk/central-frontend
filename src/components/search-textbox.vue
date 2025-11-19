@@ -154,6 +154,11 @@ watch(() => props.modelValue, (value) => {
       "clearSearch": "Futa utafutaji"
     }
   },
+  "zh": {
+    "action": {
+      "clearSearch": "清除搜索条件"
+    }
+  },
   "zh-Hant": {
     "action": {
       "clearSearch": "清除搜尋"

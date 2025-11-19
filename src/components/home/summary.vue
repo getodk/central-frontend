@@ -185,6 +185,20 @@ if (currentUser.can('user.list'))
       "body": "Precisa de ajuda? Visite o fórum para fazer perguntas ou visualizar discussões existentes."
     }
   },
+  "zh": {
+    "projects": {
+      "body": "Central采用项目制管理，每个项目包含独立的表单及相关数据。"
+    },
+    "users": {
+      "body": "用户可被分配至不同项目，以执行管理、数据收集或提交审核等任务。"
+    },
+    "docs": {
+      "body": "ODK文档网站提供入门指南和用户手册。"
+    },
+    "forum": {
+      "body": "需要帮助？欢迎访问论坛提问或浏览历史讨论。"
+    }
+  },
   "zh-Hant": {
     "projects": {
       "body": "Central 以專案為單位組織，每個專案包含其表單與相關數據。"

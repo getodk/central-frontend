@@ -104,6 +104,11 @@ const text = computed(() => {
     "api": "Atualização por {name}",
     "bulk": "Arquivo {filename} carregado por {name}"
   },
+  "zh": {
+    "submission": "提交{instanceName}",
+    "api": "由{name}更新",
+    "bulk": "文件{filename}由{name}上传"
+  },
   "zh-Hant": {
     "submission": "提交{instanceName}",
     "api": "由 {name}更新",

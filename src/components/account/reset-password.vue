@@ -138,6 +138,11 @@ export default {
       "success": "Barua pepe imetumwa kwa {email} ikiwa na maagizo zaidi."
     }
   },
+  "zh": {
+    "alert": {
+      "success": "已向{email}发送邮件，内含后续操作说明。"
+    }
+  },
   "zh-Hant": {
     "alert": {
       "success": "一封電子郵件已發送至 {email} 並附有進一步說明。"

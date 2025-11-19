@@ -104,6 +104,9 @@ const surveyLink = computed(() => {
   "pt": {
     "feedback": "Feedback"
   },
+  "zh": {
+    "feedback": "反馈"
+  },
   "zh-Hant": {
     "feedback": "回饋"
   }
