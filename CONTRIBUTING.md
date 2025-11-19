@@ -160,7 +160,7 @@ We use [Transifex](https://www.transifex.com/getodk/central/) to manage our tran
 We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. Run `restructure.js` from the root directory of the repository:
 
 ```bash
-node bin/transifex/restructure.js
+npm run transifex:fix
 ```
 
 `restructure.js` will also be run in a Git pre-commit hook to help ensure that changes to `strings_en.json` are committed.
