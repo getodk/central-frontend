@@ -242,8 +242,8 @@ export default {
     },
     "submissionStates": "Einsendungenstatus",
     "entities": {
-      "title": "Entitätszusammenfassungen",
-      "subtitle": "(Zeigt die aktivste Entitätsliste von {count} Entitätsliste) | (Zeigt die aktivste Entitätsliste von {count} Entitätslisten)"
+      "title": "Objektzusammenfassungen",
+      "subtitle": "(Zeigt die aktivste Objektliste von {count} Objektliste) | (Zeigt die aktivste Objektliste von {count} Objektlisten)"
     },
     "other": "Anderes"
   },
@@ -349,6 +349,24 @@ export default {
       "subtitle": "(Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha ya Huluki) | (Inaonyesha Orodha ya Huluki inayotumika zaidi {count} ya Orodha za Huluki)"
     },
     "other": "Nyingine"
+  },
+  "zh": {
+    "title": "匿名使用报告",
+    "introduction": [
+      "感谢您考虑发送使用信息，这些数据将帮助我们更好地优先处理您的需求！",
+      "此处显示的是我们当前收集的报告。为了响应新的功能和需求，我们可能会不时调整报告内容，但我们只会收集如当前所示的汇总平均数据。",
+      "您可以随时来这里检查收集的内容"
+    ],
+    "projects": {
+      "title": "项目概要",
+      "subtitle": "正在展示{count}个项目中最活跃的项目"
+    },
+    "submissionStates": "提交状态",
+    "entities": {
+      "title": "实体摘要",
+      "subtitle": "（显示{count}个实体列表中最活跃的实体列表）"
+    },
+    "other": "其他"
   },
   "zh-Hant": {
     "title": "匿名使用報告",

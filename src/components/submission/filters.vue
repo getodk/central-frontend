@@ -22,6 +22,11 @@ except according to the terms contained in the LICENSE file.
     <submission-filters-review-state :model-value="reviewState"
       :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:reviewState', $event)"/>
+    <button type="button" class="btn btn-link btn-reset"
+      :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
+      @click="$emit('resetClick')">
+      {{ $t('action.reset') }}
+    </button>
   </span>
 </template>
 
@@ -59,7 +64,7 @@ export default {
       required: false
     }
   },
-  emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState']
+  emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState', 'resetClick']
 };
 </script>
 
@@ -71,7 +76,7 @@ export default {
       // Submissions by a date range.
       "submissionDate": "Submitted at"
     },
-    // Text shown when in Submission date filter when Submissions for all dates are shown
+    // Text shown when in date filter when records for all dates are shown
     "allSubmissionDateSelected": "All time"
   }
 }
@@ -88,7 +93,8 @@ export default {
   "de": {
     "field": {
       "submissionDate": "Übermittelt um"
-    }
+    },
+    "allSubmissionDateSelected": "Alle Zeit"
   },
   "es": {
     "field": {
@@ -121,12 +127,19 @@ export default {
   "pt": {
     "field": {
       "submissionDate": "Enviado em"
-    }
+    },
+    "allSubmissionDateSelected": "Todas as datas"
   },
   "sw": {
     "field": {
       "submissionDate": "Imewasilishwa kwa"
     }
+  },
+  "zh": {
+    "field": {
+      "submissionDate": "上传于："
+    },
+    "allSubmissionDateSelected": "所有时间"
   },
   "zh-Hant": {
     "field": {

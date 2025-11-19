@@ -213,6 +213,16 @@ export default {
     },
     "onceHelp": "Ruhusu Uwasilishaji mmoja tu kutoka kwa kila kivinjari."
   },
+  "zh": {
+    "title": "创建公开访问链接",
+    "introduction": [
+      "任何获取此链接的用户均可通过网页浏览器填写表单。请使用显示的名称记录链接的发布位置、共享对象、有效期限等信息。"
+    ],
+    "field": {
+      "once": "单次提交"
+    },
+    "onceHelp": "每个浏览器仅允许提交一次。"
+  },
   "zh-Hant": {
     "title": "建立公共訪問連結",
     "introduction": [

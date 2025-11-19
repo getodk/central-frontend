@@ -201,6 +201,10 @@ const placeholder = (counts) => {
       "submitter": "Enviado por",
       "search": "Pesquisar remetentes…"
     },
+    "action": {
+      "all": "Todos",
+      "none": "Nenhum"
+    },
     "unknown": "Remetente desconhecido"
   },
   "sw": {
@@ -209,6 +213,17 @@ const placeholder = (counts) => {
       "search": "Tafuta wawasilishaji..."
     },
     "unknown": "Mwasilishaji asiyejulikana"
+  },
+  "zh": {
+    "field": {
+      "submitter": "上传于",
+      "search": "查找提交人..."
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "unknown": "未知提交者"
   },
   "zh-Hant": {
     "field": {

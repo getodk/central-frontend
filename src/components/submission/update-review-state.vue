@@ -124,7 +124,7 @@ export default {
         .then(() => {
           // It is the responsibility of the parent component to update the
           // submission.
-          this.$emit('success', this.submission, this.selectedState);
+          this.$emit('success', this.selectedState);
         })
         .catch(noop);
     }
@@ -206,6 +206,12 @@ export default {
     "title": "Sasisha Uhakiki wa hali",
     "field": {
       "notes": "Vidokezo na maoni (si lazima)"
+    }
+  },
+  "zh": {
+    "title": "更新审核状态",
+    "field": {
+      "notes": "注释和评论（可选）"
     }
   },
   "zh-Hant": {

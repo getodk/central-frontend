@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.create'">
-        <span class="icon-magic-wand"></span>
+        <span class="icon-magic"></span>
         <i18n-t v-if="entry.details.source?.submission != null"
           keypath="title.entity.create.submission">
           <template #label>
@@ -129,13 +129,13 @@ except according to the terms contained in the LICENSE file.
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
-      <template v-else-if="entry.action === 'entity.delete'">
+      <template v-else-if="(entry.action === 'entity.delete' || entry.action === 'entity.bulk.delete')">
         <span class="icon-trash"></span>
         <i18n-t keypath="title.entity.delete">
           <template #name><actor-link :actor="entry.actor"/></template>
         </i18n-t>
       </template>
-      <template v-else-if="entry.action === 'entity.restore'">
+      <template v-else-if="(entry.action === 'entity.restore' || entry.action === 'entity.bulk.restore')">
         <span class="icon-recycle"></span>
         <i18n-t keypath="title.entity.restore">
           <template #label>
@@ -209,7 +209,7 @@ const showBranchData = () => {
 
 .entity-feed-entry {
   .icon-cloud-upload { color: #bbb; }
-  .icon-magic-wand { color: $color-action-foreground; }
+  .icon-magic { color: $color-action-foreground; }
   .icon-pencil { color: #666; }
   .icon-random {
     color: #bbb;
@@ -368,9 +368,9 @@ const showBranchData = () => {
       },
       "entity": {
         "create": {
-          "api": "Entität {label} erstellt von {name}",
+          "api": "Objekt {label} erstellt von {name}",
           "bulkSource": "Datei {name} hochgeladen von {actor}",
-          "submission": "Entität {label} in {dataset} Entitätsliste erzeugt"
+          "submission": "Objekt {label} in {dataset} Objektliste erzeugt"
         },
         "update_version": {
           "submission": {
@@ -383,7 +383,8 @@ const showBranchData = () => {
           "api": "Daten aktualisiert von {name}"
         },
         "update_resolve": "Konfliktwarnung gelöst von {name}",
-        "delete": "Entität {label} gelöscht von {name}"
+        "delete": "Objekt {label} gelöscht von {name}",
+        "restore": "Objekt {label} wiederhergestellt von {name}"
       }
     },
     "offlineUpdate": "Offline-Aktualisierung"
@@ -601,6 +602,44 @@ const showBranchData = () => {
         "update_resolve": "Onyo la migogoro limetatuliwa kwa {name}"
       }
     }
+  },
+  "zh": {
+    "title": {
+      "submission": {
+        "create": {
+          "notDeleted": "由{submitter}上传的提交{instanceName}",
+          "deleted": {
+            "full": "{deletedSubmission}由{name}上传",
+            "deletedSubmission": "（已删除的提交{id}）"
+          }
+        },
+        "approval": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已批准"
+        }
+      },
+      "entity": {
+        "create": {
+          "api": "由{name}创建实体{label}",
+          "bulkSource": "由{actor}上传档案{name}",
+          "submission": "在{dataset}实体清单中建立了实体{label}"
+        },
+        "update_version": {
+          "submission": {
+            "notDeleted": "通过提交{instanceName}更新的数据",
+            "deleted": {
+              "full": "已由{deletedSubmission}更新数据",
+              "deletedSubmission": "（已删除的提交{id}）"
+            }
+          },
+          "api": "数据已被{name}更新"
+        },
+        "update_resolve": "冲突警告已被{name}解决",
+        "delete": "实体{label}已被{name}删除",
+        "restore": "实体{label}已被{name}复原"
+      }
+    },
+    "offlineUpdate": "离线更新"
   },
   "zh-Hant": {
     "title": {

@@ -11,32 +11,26 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <summary-item id="linked-forms" icon="link">
-    <template #heading>
-      {{ linkedForms.length }}
-    </template>
-    <template #body>
-      <p>{{ $tc('formsConsumeData', linkedForms.length) }}</p>
-      <table v-if="linkedForms.length > 0" class="table">
-        <tbody>
-          <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
-            <td>
-              <form-link :form="form"
-                :to="publishedFormPath(form.projectId, form.xmlFormId)"
-                v-tooltip.text/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </template>
-  </summary-item>
+  <div id="linked-forms">
+    <p id="linked-forms-heading">{{ $tc('formsConsumeData', linkedForms.length) }}</p>
+    <table v-if="linkedForms.length > 0" class="table">
+      <tbody>
+        <tr v-for="(form) in linkedForms" :key="form.xmlFormId">
+          <td>
+            <form-link :form="form"
+              :to="publishedFormPath(form.projectId, form.xmlFormId)"
+              v-tooltip.text/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 
 import FormLink from '../../form/link.vue';
-import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
@@ -56,6 +50,11 @@ const { publishedFormPath } = useRoutes();
 
 #linked-forms {
   margin-bottom: 10px;
+
+  #linked-forms-heading {
+    margin: 10px 0px;
+    font-weight: 700;
+  }
 
   .table{
     margin-bottom: 10px;
@@ -78,8 +77,7 @@ const { publishedFormPath } = useRoutes();
 <i18n lang="json5">
 {
   "en": {
-    // Number of form(s) is shown separately above this text
-    "formsConsumeData": "Form uses this Entity List | Forms use this Entity List",
+    "formsConsumeData": "{count} Form uses this Entity List | {count} Forms use this Entity List",
   }
 }
 </i18n>
@@ -88,25 +86,25 @@ const { publishedFormPath } = useRoutes();
 <i18n>
 {
   "de": {
-    "formsConsumeData": "Formular verwendet diese Entitätsliste | Formulare verwenden diese Entitätsliste"
+    "formsConsumeData": "{count} Formular verwendet diese Objektliste | {count} Formulare verwenden diese Objektliste"
   },
   "es": {
-    "formsConsumeData": "El formulario utilizan esta lista de entidades | Los formularios utilizan esta lista de entidades | Los formularios utilizan esta lista de entidades"
+    "formsConsumeData": "{count} Formulario que utiliza esta lista de entidades. | {count} Formularios que utilizan esta lista de entidades. | {count} Formularios que utilizan esta lista de entidades."
   },
   "fr": {
-    "formsConsumeData": "Formulaire utilise cette liste d'entités | Formulaires utilisent cette liste d'entités | Formulaires utilisent cette liste d'entités"
+    "formsConsumeData": "{count} formulaire utilise cette liste d'entités | {count} formulaires utilisent cette liste d'entités | {count} formulaires utilisent cette liste d'entités"
   },
   "it": {
-    "formsConsumeData": "Il formulario utilizza questo elenco di entità | I formulari utilizzano questo elenco di entità | I formulari utilizzano questo elenco di entità"
+    "formsConsumeData": "{count} Formulario che usa questa lista di Entità | {count} Formulari che usano questa lista di Entità | {count} Formulari che usano questa lista di Entità"
   },
   "pt": {
-    "formsConsumeData": "Formulário usa esta Lista de Entidades | Formulários usam esta Lista de Entidades | Formulários usam esta Lista de Entidades"
+    "formsConsumeData": "{count} Formulário utiliza essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades | {count} Formulários utilizam essa Lista de Entidades"
   },
-  "sw": {
-    "formsConsumeData": "Fomu hutumia Orodha hii ya Huluki | Fomu hutumia Orodha hii ya Huluki"
+  "zh": {
+    "formsConsumeData": "{count}个表单使用此实体列表"
   },
   "zh-Hant": {
-    "formsConsumeData": "表單使用此實體列表"
+    "formsConsumeData": "{count}個表單使用此實體清單"
   }
 }
 </i18n>

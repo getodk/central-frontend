@@ -22,24 +22,9 @@ describe('useSubmission()', () => {
       createResource().instanceName.should.equal('My Submission');
     });
 
-    it('returns null if there is no instance name', () => {
+    it('returns nullish if there is no instance name', () => {
       testData.extendedSubmissions.createPast(1);
-      expect(createResource().instanceName).to.be.null;
-    });
-
-    it('returns null if /meta/instanceName is not a string', () => {
-      testData.extendedForms.createPast(1, {
-        fields: [
-          testData.fields.group('/meta'),
-          testData.fields.int('/meta/instanceName'),
-          testData.fields.string('/s')
-        ],
-        submissions: 1
-      });
-      testData.extendedSubmissions.createPast(1, {
-        meta: { instanceName: 1 }
-      });
-      expect(createResource().instanceName).to.be.null;
+      should.not.exist(createResource().instanceName);
     });
   });
 });

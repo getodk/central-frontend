@@ -443,4 +443,21 @@ describe('SubmissionFilters', () => {
         odataRequests.should.equal(1);
       });
   });
+
+  describe('reset button', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1);
+    });
+
+    it('resets the filters when clicked', () =>
+      loadComponent('submitterId=1&submitterId=2&reviewState=null')
+        .complete()
+        .request(component => {
+          component.get('.btn-reset').trigger('click');
+        })
+        .respondWithData(testData.submissionOData)
+        .afterResponses(component => {
+          should.not.exist(component.vm.$route.query.submitterId);
+        }));
+  });
 });

@@ -177,6 +177,9 @@ export default {
   "de": {
     "title": "Papierkorb",
     "trashCount": "{count}",
+    "alert": {
+      "restore": "Das Formular \"{name}\" wurde erfolgreich wiederhergestellt."
+    },
     "message": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
   },
   "es": {
@@ -214,12 +217,23 @@ export default {
   "pt": {
     "title": "Lixeira",
     "trashCount": "({count})",
+    "alert": {
+      "restore": "O Formulário \"{name}\" foi recuperado com sucesso."
+    },
     "message": "Formulários e dados relacionados a Formulários são excluídos após 30 dias na Lixeira"
   },
   "sw": {
     "title": "Takataka",
     "trashCount": "({count})",
     "message": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
+  },
+  "zh": {
+    "title": "回收站",
+    "trashCount": "（{count}）",
+    "alert": {
+      "restore": "表单“{name}”已成功恢复。"
+    },
+    "message": "表单及相关数据在回收站保留30天后将被删除"
   },
   "zh-Hant": {
     "title": "垃圾桶",

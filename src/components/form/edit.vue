@@ -205,7 +205,10 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "de": {
     "alert": {
-      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht."
+      "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
+      "publish": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.",
+      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
+      "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
     }
   },
   "es": {
@@ -244,12 +247,22 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "pt": {
     "alert": {
+      "upload": "A nova definição de Formulário foi armazenada como o seu rascunho.",
+      "publish": "Seu Rascunho foi publicado. Quaisquer dispositivos usando esse Formulário irão receber a definição do Formulário atualizada e os anexos.",
       "abandon": "A versão de rascunho desse formulário foi excluída com sucesso."
     }
   },
   "sw": {
     "alert": {
       "abandon": "Toleo la Rasimu la Fomu hii limefutwa kwa ufanisi."
+    }
+  },
+  "zh": {
+    "alert": {
+      "upload": "新的表单定义已保存为草稿。",
+      "publish": "您的草稿已发布。所有使用此表单的设备现在将获取更新后的表单定义和附件。",
+      "abandon": "此表单的草稿版本已成功删除。",
+      "delete": "表单“{name}”已成功删除。"
     }
   },
   "zh-Hant": {

@@ -434,7 +434,10 @@ class MockHttp {
   // Specifies a response to return for a matching request.
   respondIf(f, responseCallback) {
     return this._with({
-      respondIf: [...this._respondIf, [f, responseCallback]]
+      respondIf: [
+        ...this._respondIf,
+        [f, (config) => mockResponse.of(responseCallback(config))]
+      ]
     });
   }
 
@@ -459,12 +462,8 @@ class MockHttp {
         if (option === false) return series;
         if (typeof response === 'function')
           return series.respond(() => mockResponse.of((option ?? response)()));
-        if (Array.isArray(response)) {
-          return series.respondIf(
-            response[0],
-            () => mockResponse.of((option ?? response[1])())
-          );
-        }
+        if (Array.isArray(response))
+          return series.respondIf(response[0], option ?? response[1]);
         throw new Error(`invalid response for component ${componentName}`);
       },
       this
@@ -699,7 +698,7 @@ class MockHttp {
       let isOrdered = false;
       for (const [i, [f, ifCallback]] of this._respondIf.entries()) {
         if (!respondedIf.has(i) && f(config)) {
-          responseCallback = ifCallback;
+          responseCallback = () => ifCallback(config);
           respondedIf.add(i);
           break;
         }

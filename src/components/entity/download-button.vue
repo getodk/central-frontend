@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="entity-download-button" class="dropdown">
     <a class="btn btn-primary" :class="{ disabled }" :href="href"
-      :data-toggle="odataFilter ? 'dropdown' : null">
+      :data-toggle="odataFilter || searchTerm ? 'dropdown' : null">
       <span class="icon-arrow-circle-down"></span>
       <span>{{ $t('action.download') }}</span>
     </a>
@@ -41,6 +41,7 @@ import { useRequestData } from '../../request-data';
 
 const props = defineProps({
   odataFilter: String,
+  searchTerm: String,
   disabled: Boolean
 });
 
@@ -51,7 +52,7 @@ const href = computed(() =>
   apiPaths.entities(projectId, datasetName, '.csv'));
 
 const filteredHref = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter }));
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter, $search: props.searchTerm }));
 
 const { dataset, odataEntities } = useRequestData();
 const { t } = useI18n();
@@ -91,10 +92,10 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Download {count} Entity | Download all {count} Entities",
         "filtered": {
-          "withCount": "Download {count} Entity matching the filter | Download {count} Entities matching the filter",
+          "withCount": "Download {count} matching Entity | Download {count} matching Entities",
           // This is the text of a button. This text is shown when the number of
           // matching Entities is unknown.
-          "withoutCount": "Download all Entities matching the filter"
+          "withoutCount": "Download all matching Entities"
         }
       }
     }
@@ -108,10 +109,10 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
   "de": {
     "action": {
       "download": {
-        "unfiltered": "{count} Entität herunterladen | Alle {count} Entitäten herunterladen",
+        "unfiltered": "{count} Objekt herunterladen | Alle {count} Objekte herunterladen",
         "filtered": {
-          "withCount": "{count} Entität herunterladen, die dem Filter entsprechen | {count} Entitäten herunterladen, die dem Filter entsprechen",
-          "withoutCount": "Alle Entitäten herunterladen, die dem Filter entsprechen"
+          "withCount": "{count} Objekt herunterladen, die dem Filter entsprechen | {count} Objekte herunterladen, die dem Filter entsprechen",
+          "withoutCount": "Alle Objekte herunterladen, die dem Filter entsprechen"
         }
       }
     }
@@ -121,8 +122,8 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Descargar {count} Entidad | Descargar todas las {count} Entidades | Descargar todas las {count} Entidades",
         "filtered": {
-          "withCount": "Descargar {count} Entidad que coincide con el filtro | Descargar {count} entidades que coincidan con el filtro | Descargar {count} entidades que coincidan con el filtro",
-          "withoutCount": "Descargar todas las entidades que coincidan con el filtro"
+          "withCount": "Descargar {count} entidad coincidente | Descargar {count} entidades coincidentes | Descargar {count} entidades coincidentes",
+          "withoutCount": "Descargar todas las entidades coincidentes"
         }
       }
     }
@@ -132,8 +133,8 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Télécharger {count} entité (toutes) | Télécharger {count} entités (toutes) | Télécharger {count} entités (toutes)",
         "filtered": {
-          "withCount": "Télécharger {count} entité filtrée | Télécharger {count} entités filtrées | Télécharger {count} entités filtrées",
-          "withoutCount": "Télécharger toutes les entitées filtrées"
+          "withCount": "Télécharger {count} entité correspondante | Télécharger {count} entités correspondantes | Télécharger {count} entités correspondantes",
+          "withoutCount": "Télécharger toutes les entités correspondantes"
         }
       }
     }
@@ -143,8 +144,8 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Scarica {count} entità | Scarica tutte le {count} entità | Scarica tutte le {count} entità",
         "filtered": {
-          "withCount": "Scaricare la {count} Entità che corrisponde al filtro | Scaricare le {count} Entità che corrispondono al filtro | Scaricare le {count} Entità che corrispondono al filtro",
-          "withoutCount": "Scaricare tutte le Entità che corrispondono al filtro"
+          "withCount": "Scarica {count} Entità corrispondenti | Scarica {count} Entità corrispondenti | Scarica {count} Entità corrispondenti",
+          "withoutCount": "Scarica tutte le Entità corrispondenti"
         }
       }
     }
@@ -154,7 +155,19 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "Baixar {count} Entidade | Baixar todas as {count} Entidades | Baixar todas as {count} Entidades",
         "filtered": {
+          "withCount": "Baixar {count} Entidade correspondente | Baixar {count} Entidades correspondentes | Baixar {count} Entidades correspondentes",
           "withoutCount": "Baixar todas as Entidades correspondentes"
+        }
+      }
+    }
+  },
+  "zh": {
+    "action": {
+      "download": {
+        "unfiltered": "下载全部{count}个实体",
+        "filtered": {
+          "withCount": "下载{count}个匹配的实体",
+          "withoutCount": "下载所有匹配的实体"
         }
       }
     }
@@ -164,8 +177,8 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
       "download": {
         "unfiltered": "下載所有{count}個實體",
         "filtered": {
-          "withCount": "下載符合篩選條件的{count}個實體",
-          "withoutCount": "下載符合篩選條件的所有實體"
+          "withCount": "下載{count}個符合的實體",
+          "withoutCount": "下載所有符合的實體"
         }
       }
     }

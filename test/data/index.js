@@ -45,7 +45,11 @@ const testData = Object.assign( // eslint-disable-line prefer-object-spread
   Users
 );
 
-testData.seed = seed;
-testData.reset = resetDataStores;
+seed();
+
+testData.reset = () => {
+  resetDataStores();
+  seed();
+};
 
 export default testData;

@@ -608,6 +608,16 @@ const emptyMessage = computed(() => (searchValue.value === ''
       "apply": "Applica"
     }
   },
+  "pt": {
+    "action": {
+      "apply": "Aplicar"
+    }
+  },
+  "zh": {
+    "action": {
+      "apply": "应用"
+    }
+  },
   "zh-Hant": {
     "action": {
       "apply": "應用"

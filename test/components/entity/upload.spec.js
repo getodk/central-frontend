@@ -361,9 +361,7 @@ describe('EntityUpload', () => {
     const upload = (query = '') => {
       mockLogin();
       testData.extendedDatasets.createPast(1);
-      return load(`/projects/1/entity-lists/trees/entities${query}`, {
-        root: query !== ''
-      })
+      return load(`/projects/1/entity-lists/trees/entities${query}`)
         .complete()
         .request(async (component) => {
           await component.get('#dataset-entities-upload-button').trigger('click');
@@ -406,8 +404,7 @@ describe('EntityUpload', () => {
         if (i === 0) return;
         component.get('#entity-table').should.be.hidden();
         const props = component.getComponent(OdataLoadingMessage).props();
-        props.odata.awaitingResponse.should.be.true;
-        props.refreshing.should.be.false;
+        props.state.should.be.true;
         props.totalCount.should.equal(1);
       }));
 

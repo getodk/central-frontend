@@ -260,7 +260,7 @@ watch(() => props.entity, (entity) => {
     "title": "Parallele Update zu \"{label}\"",
     "instructions": [
       "Updates wurden parallel zu ''{label}\" durchgeführt. Dies bedeutet, dass Änderungen möglicherweise im Konflikt miteinander stehen, da sie zu älteren Daten erstellt wurden, als sie schließlich von Central angewendet wurden.",
-      "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Entitätsdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
+      "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Objektdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
     ],
     "action": {
       "table": {
@@ -268,10 +268,10 @@ watch(() => props.entity, (entity) => {
         "hide": "Zusammenfassungstabelle ausblenden"
       },
       "seeMoreDetails": "Mehr Details anzeigen",
-      "editEntity": "Entität bearbeiten",
+      "editEntity": "Objekt bearbeiten",
       "markAsResolved": "Als gelöst markieren"
     },
-    "successMessage": "Die Konfliktwarnung wurde von der Entität entfernt.",
+    "successMessage": "Die Konfliktwarnung wurde von der Objekt entfernt.",
     "problem": {
       "400_32": "Ein anderer Benutzer hat den Konflikt bereits als gelöst markiert. Bitte aktualisieren Sie, um die aktualisierten Daten zu sehen.",
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
@@ -375,6 +375,27 @@ watch(() => props.entity, (entity) => {
     "successMessage": "Onyo la migogoro limeondolewa kwenye Shirika.",
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
+    }
+  },
+  "zh": {
+    "title": "并行更新至“{label}”",
+    "instructions": [
+      "对“{label}”进行了并行更新。这意味着更改可能相互冲突，因为提交者是基于旧版数据进行的修改，而Central最终将其应用到了更新的数据版本上。",
+      "请检查更新内容，根据需要编辑数据。若确认该实体数据正确，请点击“标记为已解决”以清除此警告信息。"
+    ],
+    "action": {
+      "table": {
+        "show": "显示汇总表格",
+        "hide": "隐藏汇总表格"
+      },
+      "seeMoreDetails": "显示更多细节",
+      "editEntity": "编辑实体",
+      "markAsResolved": "标记为已解决"
+    },
+    "successMessage": "该实体的冲突警告已清除。",
+    "problem": {
+      "400_32": "其他用户已将此冲突标记为已解决，请刷新查看更新后的数据。",
+      "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
     }
   },
   "zh-Hant": {

@@ -192,7 +192,7 @@ describe('EntityFeedEntry', () => {
 
     it('shows the correct icon', () => {
       createEntity();
-      const icon = mountComponent().find('.feed-entry-title .icon-magic-wand');
+      const icon = mountComponent().find('.feed-entry-title .icon-magic');
       icon.exists().should.be.true;
     });
 

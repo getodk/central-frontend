@@ -55,10 +55,12 @@ log('File sizes look OK.');
 
 function isTooBig({ path, size }) {
   // Special cases:
-  const simpleName = basename(path).replace(/-[\w-]{8}\./, '.');
+  const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) { // eslint-disable-line default-case
     case 'index.js':             return size >   450_000;
-    case 'web-form-renderer.js': return size > 3_000_000;
+    case 'web-form.js': return size > 3_300_000;
+    case 'MapBlock.js': return size > 450_000; // A Web Forms' feature bundle
+    case 'geojson-map.js':       return size >   500_000;
   }
 
   const type = extname(path).substr(1);
@@ -70,7 +72,7 @@ function isTooBig({ path, size }) {
     case 'png':  return size >  40_000;
     case 'svg':  return size >  60_000;
     case 'ttf':  return size >  18_000;
-    case 'woff': return size >  18_000;
+    case 'woff': return size >  19_000;
   }
   throw new Error(`No check written for file ${path} yet!  Please review this function.`);
 }

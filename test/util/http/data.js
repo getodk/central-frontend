@@ -3,10 +3,11 @@ import { pick } from 'ramda';
 import useForm from '../../../src/request-data/form';
 import useProject from '../../../src/request-data/project';
 import useDatasets from '../../../src/request-data/datasets';
+import { apiPaths } from '../../../src/util/request';
 
 import testData from '../../data';
 import { mockResponse } from '../axios';
-import { apiPaths } from '../../../src/util/request';
+import { relativeUrl } from '../request';
 
 // The names of the following properties correspond to requestData resources.
 const responseDefaults = {
@@ -132,14 +133,49 @@ const responsesByComponent = {
   }),
   FormSubmissions: componentResponses({
     keys: () => testData.standardKeys.sorted(),
-    deletedSubmissionCount: () => testData.submissionDeletedOData(0),
     fields: () => testData.extendedForms.last()._fields,
-    odata: testData.submissionOData,
     submitters: () => testData.extendedFieldKeys
       .sorted()
       .sort((fieldKey1, fieldKey2) =>
         fieldKey1.displayName.localeCompare(fieldKey2.displayName))
-      .map(testData.toActor)
+      .map(testData.toActor),
+    deletedSubmissionCount: [
+      ({ url }) => {
+        if (!url.includes('top=0')) return false;
+        return matchesApiPath(
+          (projectId, xmlFormId) => apiPaths.odataSubmissions(projectId, xmlFormId, false),
+          url
+        );
+      },
+      () => testData.submissionDeletedOData(0)
+    ],
+    odata: [
+      ({ url }) => {
+        if (url.includes('top=0')) return false;
+        return matchesApiPath(
+          (projectId, xmlFormId) => apiPaths.odataSubmissions(projectId, xmlFormId, false),
+          url
+        );
+      },
+      ({ url }) => {
+        const filter = relativeUrl(url).searchParams.get('$filter');
+        return filter.includes('__system/deletedAt eq null')
+          ? testData.submissionOData()
+          : testData.submissionDeletedOData();
+      }
+    ],
+    geojson: [
+      ({ url }) => matchesApiPath(
+        (projectId, xmlFormId) => apiPaths.submissions(projectId, xmlFormId, false, '.geojson'),
+        url
+      ),
+      ({ url }) => {
+        const filter = url.includes('deleted=true')
+          ? (submission) => submission.deletedAt != null
+          : (submission) => submission.deletedAt == null;
+        return testData.submissionGeojson(filter);
+      }
+    ]
   }),
   PublicLinkList: componentResponses({
     publicLinks: () => testData.standardPublicLinks.sorted()
@@ -173,7 +209,7 @@ const responsesByComponent = {
     ],
     odata: [
       ({ url }) => matchesApiPath((projectId, xmlFormId) => apiPaths.odataSubmissions(projectId, xmlFormId, true), url),
-      testData.submissionOData
+      () => testData.submissionOData()
     ]
   }),
   FormSettings: [],
@@ -198,7 +234,12 @@ const responsesByComponent = {
   DatasetOverview: [],
   DatasetEntities: componentResponses({
     deletedEntityCount: () => testData.entityDeletedOData(0),
-    odataEntities: true
+    odataEntities: true,
+    entityCreators: () => testData.extendedFieldKeys
+      .sorted()
+      .sort((fieldKey1, fieldKey2) =>
+        fieldKey1.displayName.localeCompare(fieldKey2.displayName))
+      .map(testData.toActor)
   }),
   DatasetSettings: [],
   EntityShow: componentResponses({

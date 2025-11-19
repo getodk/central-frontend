@@ -144,16 +144,16 @@ const hideAndReset = () => {
     }
   },
   "de": {
-    "entityWorkflow": "Entitätsworkflow",
+    "entityWorkflow": "Objektworkflow",
     "onReceipt": {
-      "label": "Entitäten anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
-      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Entitäten erstellt werden.",
-      "successMessage": "Die Entitäten werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
+      "label": "Objekte anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
+      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Objekte erstellt werden.",
+      "successMessage": "Die Objekte werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
     },
     "onApproval": {
-      "label": "Entitäten erstellen, wenn Einsendungen als genehmigt markiert sind",
-      "description": "Entitätsdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
-      "successMessage": "Die Entitäten werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
+      "label": "Objekte erstellen, wenn Einsendungen als genehmigt markiert sind",
+      "description": "Objektdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
+      "successMessage": "Die Objekte werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
     }
   },
   "es": {
@@ -219,6 +219,19 @@ const hideAndReset = () => {
       "label": "Unda Huluki wakati Mawasilisho yametiwa alama kuwa Yameidhinishwa",
       "description": "Data ya huluki haitasasishwa hadi mtu aikague data. Marekebisho yanaweza kufanywa ikiwa ni lazima.",
       "successMessage": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
+    }
+  },
+  "zh": {
+    "entityWorkflow": "实体工作流程",
+    "onReceipt": {
+      "label": "在 Central 接收到提交后立即创建实体",
+      "description": "在建立实体之前，您将没有机会查看或修改数据。",
+      "successMessage": "Central 在接收到提交后将立即创建实体。"
+    },
+    "onApproval": {
+      "label": "当提交被标记为“已批准”时创建实体",
+      "description": "在有人查看资料之前，实体数据不会更新。如有必要，可修改。",
+      "successMessage": "当提交标记为“已批准”时，将创建实体。"
     }
   },
   "zh-Hant": {

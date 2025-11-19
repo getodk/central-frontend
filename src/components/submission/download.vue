@@ -481,6 +481,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal.",
+      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schliessen. Wenn er nach 20 Sekunden noch nicht begonnen hat, versuchen Sie es bitte erneut.",
       "parseError": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
     }
   },
@@ -668,6 +669,36 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "alert": {
       "unavailable": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi",
       "parseError": "Hitilafu fulani imetokea wakati wa kuomba data yako."
+    }
+  },
+  "zh": {
+    "title": "下载提交的内容",
+    "exportOptions": "导出选项",
+    "field": {
+      "splitSelectMultiples": "将“多选”字段拆分为多个列",
+      "removeGroupNames": "删除群组名称",
+      "deletedFields": "包含未发布表单中的字段"
+    },
+    "deletedFieldsHelp": "若需查看以往表单版本中引用的字段，请使用此选项。",
+    "noSelectMultiple": "此表单不包含多选项",
+    "encryptedForm": "加密表单无法通过此方式处理。",
+    "deletedFieldsDisabledForDraft": "草稿表单无法通过此方式处理。",
+    "introduction": [
+      "若要下载此数据，您需要提供您的安全密钥。您的安全密钥仅用于解密您的数据以便下载，之后服务器将不会保留该密钥。"
+    ],
+    "hint": "提示：{hint}",
+    "noRepeat": "此表格没有重复值",
+    "action": {
+      "download": {
+        "mainTable": "主数据表（不包含重复数据）",
+        "allTables": "全部数据表",
+        "withAttachments": "全部数据与附件"
+      }
+    },
+    "alert": {
+      "unavailable": "数据下载尚不可用，请稍后重试。",
+      "submit": "数据下载即将开始。开始后即可关闭本提示。若20秒后仍未开始，请重新尝试。",
+      "parseError": "数据请求过程中出现错误。"
     }
   },
   "zh-Hant": {

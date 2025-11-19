@@ -12,14 +12,14 @@
     "test:e2e": "e2e-tests/run-tests.sh"
   },
   "volta": {
-    "node": "22.12.0"
+    "node": "22.21.0"
   },
   "gitHooks": {
     "pre-commit": "node bin/transifex/restructure.js && git diff --exit-code -- transifex/strings_en.json"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
-    "@getodk/web-forms": "^0.13.1",
+    "@getodk/web-forms": "^0.17.0",
     "axios": "^1.6.2",
     "bootstrap": "~3",
     "dompurify": "^3.2.5",
@@ -27,6 +27,7 @@
     "jquery": "~3",
     "luxon": "~1",
     "marked": "~4",
+    "ol": "^10.6.1",
     "pako": "~1.0",
     "papaparse": "^5.4.1",
     "qrcode-generator": "~1",

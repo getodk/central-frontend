@@ -108,7 +108,18 @@ const { form, formDraft } = useRequestData();
     "versionName": "Nome della versione: {name}"
   },
   "pt": {
-    "title": "Versão atual"
+    "title": "Versão atual",
+    "subtitle": {
+      "published": "Publicado em {dateTime}"
+    },
+    "versionName": "Nome da versão: {name}"
+  },
+  "zh": {
+    "title": "当前版本",
+    "subtitle": {
+      "published": "{dateTime}已发布"
+    },
+    "versionName": "版本名称：{name}"
   },
   "zh-Hant": {
     "title": "當前版本",

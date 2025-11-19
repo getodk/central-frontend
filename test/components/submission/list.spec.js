@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { nextTick } from 'vue';
+
 import EnketoFill from '../../../src/components/enketo/fill.vue';
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
@@ -27,36 +28,27 @@ describe('SubmissionList', () => {
   describe('initial requests', () => {
     it('sends the correct requests for a form', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      let count = 0;
-      return loadSubmissionList()
-        .beforeEachResponse((_, { url }, i) => {
-          count += 1;
-          if (i === 0)
-            url.should.equal('/v1/projects/1/forms/a%20b/fields?odata=true');
-          else if (i === 1)
-            url.should.startWith('/v1/projects/1/forms/a%20b.svc/Submissions?');
-          else
-            url.should.equal('/v1/projects/1/forms/a%20b/submissions/submitters');
-        })
-        .afterResponses(() => {
-          count.should.equal(3);
-        });
+      return loadSubmissionList().testRequests([
+        { url: '/v1/projects/1/forms/a%20b/fields?odata=true' },
+        { url: '/v1/projects/1/forms/a%20b/submissions/submitters' },
+        {
+          url: ({ pathname }) => {
+            pathname.should.equal('/v1/projects/1/forms/a%20b.svc/Submissions');
+          }
+        }
+      ]);
     });
 
     it('sends the correct requests for a form draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      let count = 0;
-      return loadSubmissionList()
-        .beforeEachResponse((_, { url }, i) => {
-          count += 1;
-          if (i === 0)
-            url.should.equal('/v1/projects/1/forms/a%20b/draft/fields?odata=true');
-          else
-            url.should.startWith('/v1/projects/1/forms/a%20b/draft.svc/Submissions?');
-        })
-        .afterResponses(() => {
-          count.should.equal(2);
-        });
+      return loadSubmissionList().testRequests([
+        { url: '/v1/projects/1/forms/a%20b/draft/fields?odata=true' },
+        {
+          url: ({ pathname }) => {
+            pathname.should.equal('/v1/projects/1/forms/a%20b/draft.svc/Submissions');
+          }
+        }
+      ]);
     });
   });
 
@@ -76,24 +68,36 @@ describe('SubmissionList', () => {
 
   describe('after the refresh button is clicked', () => {
     it('completes a background refresh', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      let initialTime;
       testData.extendedSubmissions.createPast(1);
-      const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
-        if (i === responseIndex) {
+      const assertRowCount = (count) => (component, _, i) => {
+        if (i === 0 || i == null) {
           component.findAllComponents(SubmissionMetadataRow).length.should.equal(count);
           component.findAllComponents(SubmissionDataRow).length.should.equal(count);
         }
       };
       return load('/projects/1/forms/f/submissions', { root: false })
-        .afterResponses(assertRowCount(1))
-        .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+        .afterResponses((component) => {
+          assertRowCount(1)(component);
+          initialTime = component.get('.table-refresh-bar span').text();
+        })
+        .request((component) => {
+          clock.tick(1000);
+          return component.get('#refresh-button').trigger('click');
+        })
         .beforeEachResponse(assertRowCount(1))
         .respondWithData(() => {
           testData.extendedSubmissions.createNew();
           return testData.submissionOData();
         })
         .respondWithData(() => testData.submissionDeletedOData())
-        .afterResponse(assertRowCount(2));
+        .afterResponse((component) => {
+          assertRowCount(2)(component);
+
+          const newTime = component.get('.table-refresh-bar span').text();
+          newTime.should.not.equal(initialTime);
+        });
     });
 
     it('does not show a loading message', () => {
@@ -101,7 +105,7 @@ describe('SubmissionList', () => {
       return loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(component => {
           component.get('#odata-loading-message').should.be.hidden();
         })
@@ -113,7 +117,7 @@ describe('SubmissionList', () => {
       return loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(component => {
           testData.extendedSubmissions.createPast(1);
           component.get('#odata-loading-message').should.be.hidden();
@@ -142,7 +146,7 @@ describe('SubmissionList', () => {
           await app.get('#submission-download-button').trigger('click');
           const modal = app.getComponent(SubmissionDownload);
           await modal.find('input[type="password"]').exists().should.be.false;
-          return app.get('#submission-list-refresh-button').trigger('click');
+          return app.get('#refresh-button').trigger('click');
         })
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
@@ -170,7 +174,7 @@ describe('SubmissionList', () => {
       })
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
         })
@@ -192,7 +196,7 @@ describe('SubmissionList', () => {
       })
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
         })
@@ -243,7 +247,7 @@ describe('SubmissionList', () => {
       loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse((_, { url }) => {
           $select(url).should.equal('__id,__system,g/s1,s2,s3,s4,s5,s6,s7,s8,s9,s10');
         })
@@ -296,7 +300,7 @@ describe('SubmissionList', () => {
       return loadSubmissionList()
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(testData.submissionOData)
         .afterResponse(component => {
           component.emitted().should.have.property('fetch-deleted-count');
@@ -315,7 +319,7 @@ describe('SubmissionList', () => {
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
         })
@@ -345,6 +349,22 @@ describe('SubmissionList', () => {
         .respondWithData(testData.submissionDeletedOData)
         .afterResponses((component) => {
           component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
+        });
+    });
+
+    it('disables map view', () => {
+      const { geopoint } = testData.fields;
+      const fields = [geopoint('/the_place')];
+      testData.extendedForms.createPast(1, { fields });
+
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(testData.submissionDeletedOData)
+        .afterResponses((component) => {
+          component.getComponent('.radio-field').props().disabled.should.be.true;
         });
     });
   });
@@ -426,6 +446,19 @@ describe('SubmissionList', () => {
         const component = await del();
         component.get('.toggle-deleted-submissions').should.be.visible();
       });
+    });
+
+    it('shows a success alert even when backend returns 404', async () => {
+      testData.extendedSubmissions.createPast(1);
+      const component = await load('/projects/1/forms/f/submissions')
+        .complete()
+        .request(async (c) => {
+          await c.get('.submission-metadata-row .delete-button').trigger('click');
+          return c.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'Submission has been successfully deleted.');
     });
 
     describe('last submission was deleted', () => {
@@ -543,42 +576,20 @@ describe('SubmissionList', () => {
             component.should.alert('success', 'Submission has been successfully deleted.');
           }));
 
-      it('does not hide table after deleting last submission if submissions are concurrently replaced', () =>
+      it('cancels a background refresh', () =>
         delAndCheck()
           .request(async (component) => {
-            await component.get('#submission-list-refresh-button').trigger('click');
+            const { odata } = component.vm.$container.requestData.localResources;
+            sinon.spy(odata, 'cancelRequest');
+            await component.get('#refresh-button').trigger('click');
             return component.get('.submission-metadata-row .delete-button').trigger('click');
           })
-          .respondWithData(() => {
-            testData.extendedSubmissions.splice(0);
-            testData.extendedSubmissions.createNew();
-            testData.extendedSubmissions.createNew();
-            return testData.submissionOData();
-          })
+          .respondWithData(testData.submissionOData)
           .respondWithData(testData.submissionDeletedOData)
           .respondWithSuccess()
           .afterResponses(component => {
-            // Even though there were 2 Submissions before, and there are 2
-            // Submissions now, and 2 Submissions have been deleted, the table should
-            // still be shown.
-            component.get('#submission-table').should.be.visible();
-            // No row should be hidden.
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.submission-metadata-row .delete-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            /* The removedCount should have been reset to 0 when the refreshed
-            Submissions were received. (Otherwise, the previous assertion should
-            have failed.) However, imagine that after that, the removedCount was
-            incorrectly increased to 1 following the success response (if
-            requestDelete() in SubmissionList didn't check whether
-            odata.value still includes the deleted Submission). In that
-            case, this latest deletion would increase the removedCount to 2,
-            which would hide the table. Here, we check that that doesn't
-            happen. */
-            component.get('#submission-table').should.be.visible();
+            const { odata } = component.vm.$container.requestData.localResources;
+            odata.cancelRequest.called.should.be.true;
           }));
     });
   });
@@ -587,8 +598,7 @@ describe('SubmissionList', () => {
     const loadDeletedSubmissions = () => {
       testData.extendedSubmissions.createPast(1, { instanceId: 'e', deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-        deletedSubmissionCount: false,
-        odata: testData.submissionDeletedOData
+        deletedSubmissionCount: false
       });
     };
 
@@ -653,6 +663,18 @@ describe('SubmissionList', () => {
       });
     });
 
+    it('shows a success alert even when backend returns 404', async () => {
+      const component = await loadDeletedSubmissions()
+        .complete()
+        .request(async (c) => {
+          await c.get('.submission-metadata-row .restore-button').trigger('click');
+          return c.get('#submission-restore .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'The Submission has been restored.');
+    });
+
     describe('last submission was restored', () => {
       beforeEach(() => {
         testData.extendedSubmissions.createPast(2, { deletedAt: new Date().toISOString() });
@@ -666,8 +688,7 @@ describe('SubmissionList', () => {
 
       it('hides the table', () =>
         load('/projects/1/forms/f/submissions?deleted=true', { root: false, attachTo: document.body }, {
-          deletedSubmissionCount: false,
-          odata: testData.submissionDeletedOData
+          deletedSubmissionCount: false
         })
           .complete()
           .request(restore(1))
@@ -683,8 +704,7 @@ describe('SubmissionList', () => {
 
       it('shows a message', () =>
         load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-          deletedSubmissionCount: false,
-          odata: testData.submissionDeletedOData
+          deletedSubmissionCount: false
         })
           .complete()
           .request(restore(1))
@@ -703,8 +723,7 @@ describe('SubmissionList', () => {
     it('continues to show modal if checkbox was not checked', () => {
       testData.extendedSubmissions.createPast(2, { deletedAt: new Date().toISOString() });
       return load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-        deletedSubmissionCount: false,
-        odata: testData.submissionDeletedOData
+        deletedSubmissionCount: false
       })
         .complete()
         .request(async (component) => {
@@ -725,8 +744,7 @@ describe('SubmissionList', () => {
           .createPast(1, { instanceId: 'e1', deletedAt: new Date().toISOString() })
           .createPast(1, { instanceId: 'e2', deletedAt: new Date().toISOString() });
         return load('/projects/1/forms/f/submissions?deleted=true', { root: false }, {
-          deletedSubmissionCount: false,
-          odata: testData.submissionDeletedOData
+          deletedSubmissionCount: false
         })
           .complete()
           .request(async (component) => {
@@ -781,41 +799,19 @@ describe('SubmissionList', () => {
             component.should.alert('success', 'The Submission has been restored.');
           }));
 
-      it('does not hide table after restoreing last submission if submissions are concurrently replaced', () =>
+      it('cancels a background refresh', () =>
         restoreAndCheck()
           .request(async (component) => {
-            await component.get('#submission-list-refresh-button').trigger('click');
+            const { odata } = component.vm.$container.requestData.localResources;
+            sinon.spy(odata, 'cancelRequest');
+            await component.get('#refresh-button').trigger('click');
             return component.get('.submission-metadata-row .restore-button').trigger('click');
           })
-          .respondWithData(() => {
-            testData.extendedSubmissions.splice(0);
-            testData.extendedSubmissions.createNew({ deletedAt: new Date().toISOString() });
-            testData.extendedSubmissions.createNew({ deletedAt: new Date().toISOString() });
-            return testData.submissionDeletedOData();
-          })
+          .respondWithData(testData.submissionDeletedOData)
           .respondWithSuccess()
           .afterResponses(component => {
-            // Even though there were 2 deleted Submissions before, and there are 2
-            // deleted Submissions now, and 2 deleted Submissions have been restored, the table should
-            // still be shown.
-            component.get('#submission-table').should.be.visible();
-            // No row should be hidden.
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.submission-metadata-row .restore-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            /* The removedCount should have been reset to 0 when the refreshed
-            deleted Submissions were received. (Otherwise, the previous assertion should
-            have failed.) However, imagine that after that, the removedCount was
-            incorrectly increased to 1 following the success response (if
-            requestDelete() in SubmissionList didn't check whether
-            odata.value still includes the restored Submission). In that
-            case, this latest restore would increase the removedCount to 2,
-            which would hide the table. Here, we check that that doesn't
-            happen. */
-            component.get('#submission-table').should.be.visible();
+            const { odata } = component.vm.$container.requestData.localResources;
+            odata.cancelRequest.called.should.be.true;
           }));
     });
   });
@@ -899,7 +895,7 @@ describe('SubmissionList', () => {
         .respondWithData(() => testData.submissionOData(250, 250))
         .complete()
         .request(component =>
-          component.get('#submission-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(() => testData.submissionOData(250))
         .afterResponse(async component => {
           // we still use chunky array which load 25 rows at a time

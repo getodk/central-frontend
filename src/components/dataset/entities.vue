@@ -147,6 +147,7 @@ export default {
             $filter: '__system/deletedAt ne null',
           }
         ),
+        clear: false,
       }).catch(noop);
     },
     toggleDeleted() {
@@ -212,12 +213,15 @@ export default {
 <i18n>
 {
   "de": {
-    "upload": "Entitäten hochladen",
-    "purgeDescription": "Entitäten werden nach 30 Tagen im Papierkorb gelöscht",
-    "action": {
-      "toggleDeletedEntities": "{count} gelöscht Entität | {count} gelöschte Entitäten"
+    "upload": "Objekte hochladen",
+    "alert": {
+      "upload": "Ihre Objekte wurden erfolgreich hochgeladen."
     },
-    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Entitäten nicht verfügbar"
+    "purgeDescription": "Objekte werden nach 30 Tagen im Papierkorb gelöscht",
+    "action": {
+      "toggleDeletedEntities": "{count} gelöschtes Objekt | {count} gelöschte Objekte"
+    },
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
   },
   "es": {
     "upload": "Subir entidades",
@@ -254,11 +258,25 @@ export default {
   },
   "pt": {
     "upload": "Carregar Entidades",
+    "alert": {
+      "upload": "Suas Entidades foram carregadas com sucesso."
+    },
     "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
     "action": {
       "toggleDeletedEntities": "{count} Entidade excluída | {count} Entidades excluídas | {count} Entidades excluídas"
     },
     "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
+  },
+  "zh": {
+    "upload": "上传实体",
+    "alert": {
+      "upload": "您的实体已成功上传。"
+    },
+    "purgeDescription": "实体将在30天后从垃圾箱中删除",
+    "action": {
+      "toggleDeletedEntities": "{count}个已删除的实体"
+    },
+    "analyzeDisabledDeletedData": "已删除的实体无法使用 OData 访问"
   },
   "zh-Hant": {
     "upload": "上傳實體",

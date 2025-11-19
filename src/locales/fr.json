@@ -80,6 +80,10 @@
         "update_publish": "Publier",
         "create": "@:audit.action.default.create"
       },
+      "entity": {
+        "bulk_delete": "Supprimer sélection",
+        "bulk_restore": "Restaurer sélection"
+      },
       "field_key": {
         "assignment_create": "Donner accès",
         "assignment_delete": "Retirer accès",
@@ -168,6 +172,7 @@
     "newPreview": "Nouvel Aperçu",
     "expand": "Déplier",
     "collapse": "Replier",
+    "selectRow": "Sélectionner ligne",
     "reviewParallelUpdates": "Examiner les mises à jour parallèles",
     "tryAgain": "Essayer encore",
     "upload": "Téléverser",
@@ -307,12 +312,14 @@
     "dangerZone": "Zone Dangereuse",
     "data": "Données",
     "docs": "Documents",
+    "emptyMap": "Aucune données cartographiques disponibles.",
     "emptyValue": "(vide)",
     "error": "Erreur",
     "filter": "Filtrer",
     "forum": "Forum",
     "lastUpdate": "Dernière mise à jour",
     "loading": "Chargement...",
+    "map": "Carte",
     "no": "Non",
     "noResults": "Aucun résultat",
     "noUndo": "Cette action ne pourra pas être annulée",
@@ -323,6 +330,7 @@
     "tab": {
       "settings": "Paramètres"
     },
+    "table": "Tableau",
     "total": "Total",
     "totalSubmissions": "Nombre total de soumissions",
     "propertiesCount": "{inform} de {count} propriété | {inform} de {count} propriétés | {inform} de {count} propriété(s)",

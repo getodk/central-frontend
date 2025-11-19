@@ -67,6 +67,8 @@ $padding-top-btn: 6px;
 $font-size-dropdown-menu: $font-size-btn;
 $min-width-dropdown-menu: 150px;
 
+// <dl>
+$border-bottom-dl: 1px solid #ddd;
 $padding-block-dl: 10px;
 
 // Forms
@@ -85,6 +87,8 @@ $padding-bottom-table-data: 8px;
 $padding-left-table-data: 8px;
 $padding-right-table-data: 8px;
 $padding-top-table-data: 8px;
+// Row
+$color-selected-row: #E4EDF1;
 
 // Panels
 $box-shadow-panel-main: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
@@ -131,3 +135,7 @@ $max-width-page-body: 1280px;
 
 // Popover
 $box-shadow-popover: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+// Figma Variables
+$m3-elevation-light-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30);
+$central-grey-2: #E3E4E4;

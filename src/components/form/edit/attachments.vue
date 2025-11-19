@@ -108,7 +108,8 @@ const tag = computed(() => {
     "missingCount": "{count} Fehlender Anhang | {count} Fehlende Anhänge",
     "diff": {
       "newCount": "{count} Neue Anhang | {count} Neue Anhänge",
-      "changedCount": "{count} geänderte Anhang | {count} geänderte Anhänge"
+      "changedCount": "{count} geänderte Anhang | {count} geänderte Anhänge",
+      "summary": "{changes} seit der veröffentlichten Version"
     }
   },
   "es": {
@@ -142,7 +143,18 @@ const tag = computed(() => {
     "noAttachments": "Essa definição de formulário não requer anexos, portanto não há nada a ser carregado.",
     "missingCount": "{count} anexo faltando | {count} anexos faltando | {count} anexos faltando",
     "diff": {
-      "newCount": "{count} novo anexo | {count} novos anexos | {count} novos anexos"
+      "newCount": "{count} novo anexo | {count} novos anexos | {count} novos anexos",
+      "changedCount": "{count} anexo alterado | {count} anexos alterados | {count} anexos alterados",
+      "summary": "{changes} desde a versão publicada"
+    }
+  },
+  "zh": {
+    "noAttachments": "此定义无需附件，因此无需上传任何文件。",
+    "missingCount": "{count}个缺失附件",
+    "diff": {
+      "newCount": "{count}个新附件",
+      "changedCount": "{count}个已修改的附件",
+      "summary": "自发布版本以来有{changes}"
     }
   },
   "zh-Hant": {

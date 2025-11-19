@@ -127,7 +127,10 @@ export default {
     "action": {
       "create": "Neu"
     },
-    "emptyTable": "Keine Formulare zum Anzeigen vorhanden."
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
+    "alert": {
+      "create": "\"{name}\" wurde als Formularentwurf erzeugt."
+    }
   },
   "es": {
     "title": "Formularios",
@@ -186,6 +189,16 @@ export default {
       "create": "Mpya"
     },
     "emptyTable": "hakuna Fomu za kuonyesha"
+  },
+  "zh": {
+    "title": "表单",
+    "action": {
+      "create": "更新"
+    },
+    "emptyTable": "暂无表单可显示。",
+    "alert": {
+      "create": "表单草稿“{name}”已创建。"
+    }
   },
   "zh-Hant": {
     "title": "表單",

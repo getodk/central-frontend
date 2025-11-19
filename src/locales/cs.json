@@ -15,7 +15,8 @@
   "formHead": {
     "tab": {
       "publicAccess": "Veřejný přístup",
-      "versions": "Verze"
+      "versions": "Verze",
+      "editForm": "Upravit formulář"
     }
   },
   "systemHome": {
@@ -48,6 +49,7 @@
   },
   "audit": {
     "category": {
+      "nonverbose": "Všechny akce",
       "user": "Akce webového uživatele",
       "project": "Akce projektu",
       "form": "Akce formuláře",
@@ -55,7 +57,8 @@
       "public_link": "Akce s veřejným přístupem",
       "dataset": "Seznam akcí entit",
       "config": "Akce konfigurace serveru",
-      "upgrade": "Upgrade serveru"
+      "upgrade": "Upgrade serveru",
+      "task": "Provoz systému"
     },
     "action": {
       "default": {
@@ -91,6 +94,7 @@
         "update_draft_delete": "Opustit koncept",
         "attachment_update": "Aktualizovat přílohy",
         "submission_export": "Stáhnout příspěvky",
+        "restore": "Obnovit",
         "purge": "Vyčistit",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -103,9 +107,14 @@
         "session_end": "@:audit.action.default.session_end",
         "delete": "@:audit.action.default.delete"
       },
+      "submission": {
+        "purge": "Vyčištění podání"
+      },
       "upgrade": {
         "process_form": "Zpracování formuláře",
-        "process_form_draft": "Zpracování návrhu formuláře"
+        "process_form_draft": "Zpracování návrhu formuláře",
+        "process_form_entities_version": "Označit formulář pro aktualizaci",
+        "server": "Nová verze"
       },
       "user": {
         "assignment_create": "Přiřadit roli",
@@ -129,6 +138,7 @@
     "comment": "Komentář",
     "continue": "Pokračovat",
     "create": "Vytvořit",
+    "createSubmission": "Nové Podání",
     "delete": "Smazat",
     "done": "Hotovo",
     "download": "Stáhnout",
@@ -144,11 +154,13 @@
     "ok": "OK",
     "proceed": "Pokračovat",
     "refresh": "Obnovit",
+    "refreshPage": "Obnovit stranu",
     "resetPassword": "Resetovat heslo",
     "review": "Zkontrolovat",
     "save": "Uložit",
     "saveSettings": "Uložit nastavení",
     "sort": "Seřadit",
+    "undo": "Zpět",
     "update": "Aktualizovat",
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
@@ -207,6 +219,7 @@
   "resource": {
     "appUser": "Uživatel aplikace",
     "appUsers": "Uživatelé aplikace",
+    "attachments": "Přílohy",
     "config": "Konfigurace serveru",
     "entity": "Entita",
     "entities": "Subjekty",
@@ -230,6 +243,11 @@
     "projectRoles": "Role projektu",
     "formPreview": "Náhled formuláře",
     "draft": "Koncept"
+  },
+  "alert": {
+    "passwordTooShort": "Heslo musí mít nejméně 10 znaků.",
+    "updateEntity": "Entita byla úspěšně aktualizována.",
+    "updateReviewState": "Kontrola úspěšně uložena"
   },
   "moreInfo": {
     "clickHere": {
@@ -284,6 +302,7 @@
     "forum": "Fórum",
     "lastUpdate": "Poslední aktualizace",
     "loading": "Načítání...",
+    "map": "Mapa",
     "no": "Ne",
     "noResults": "Žádné výsledky",
     "noUndo": "Tuto akci nelze vrátit zpět.",
@@ -300,6 +319,9 @@
     "totalEntities": "Celkem entit",
     "versionShort": "v{version}",
     "warning": "Upozornění",
+    "beta": "Beta",
+    "none": "(žádný)",
+    "search": "Hledat",
     "reviewState": "Přezkoumání stavu",
     "status": "Stav",
     "version": "Verze"

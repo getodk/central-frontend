@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="entity-data-row">
+  <tr class="entity-data-row" :class="{ 'entity-row-selected': entity.__system.selected }">
     <td v-for="property of properties" :key="property.name">
       <span v-tooltip.text>{{ entity[property.odataName] }}</span>
     </td>
@@ -34,3 +34,11 @@ defineProps({
   }
 });
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+.entity-row-selected {
+  background-color: $color-selected-row;
+}
+</style>

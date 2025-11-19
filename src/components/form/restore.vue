@@ -124,6 +124,14 @@ export default {
   "pt": {
     "title": "Recuperar Formulário"
   },
+  "zh": {
+    "title": "恢复表单",
+    "introduction": [
+      "确定要恢复表单{name}吗？",
+      "表单将恢复至先前状态，包括所有数据、设置和权限。",
+      "若该表单再次被删除，将再过30天才会被移除。"
+    ]
+  },
   "zh-Hant": {
     "title": "還原表格",
     "introduction": [

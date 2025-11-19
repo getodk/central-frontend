@@ -470,9 +470,10 @@ watch(() => props.state, (state) => {
       "append": "Daten hinzufügen"
     },
     "alert": {
+      "blankLabel": "Fehlende Etikett.",
       "noData": "Ihre Datei enthält keine Daten."
     },
-    "noEntities": "Es gibt keine Entitäten zum Anzeigen."
+    "noEntities": "Es gibt keine Objekte zum Anzeigen."
   },
   "es": {
     "title": "Importar datos de un archivo",
@@ -529,12 +530,28 @@ watch(() => props.state, (state) => {
       "append": "Anexar dados"
     },
     "alert": {
+      "blankLabel": "Rótulo faltando.",
       "noData": "Seu arquivo não contém dados."
     },
     "noEntities": "Não há Entidades para mostrar."
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha."
+  },
+  "zh": {
+    "title": "从文件导入数据",
+    "table": {
+      "server": "{name}服务器数据",
+      "file": "要导入的数据"
+    },
+    "action": {
+      "append": "添加数据"
+    },
+    "alert": {
+      "blankLabel": "无标签",
+      "noData": "您的文件不包含任何数据。"
+    },
+    "noEntities": "暂无实体可显示。"
   },
   "zh-Hant": {
     "title": "從文件匯入數據",

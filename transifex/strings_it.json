@@ -226,6 +226,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
+      "entity": {
+        "bulk_delete": {
+          "string": "Eliminazione in blocco",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "Ripristino in blocco",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "Dare accesso",
@@ -463,6 +473,10 @@
     },
     "collapse": {
       "string": "Chiudere",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "Seleziona riga",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -886,6 +900,9 @@
       "string": "Documentazione",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "Non sono ancora disponibili dati cartografici."
+    },
     "emptyValue": {
       "string": "(vuoto)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -906,6 +923,9 @@
     },
     "loading": {
       "string": "Caricando..."
+    },
+    "map": {
+      "string": "Mappa"
     },
     "no": {
       "string": "No"
@@ -936,6 +956,9 @@
         "string": "Impostazioni",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "table": {
+      "string": "Tabella"
     },
     "total": {
       "string": "Totale"
@@ -1447,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Numero di Entità create tramite caricamento massivo"
+        },
+        "max_geo_per_form": {
+          "string": "Numero massimo di invii con dati geografici in un modulo"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Numero di eventi di audit log per cancellazione massiva di Entità"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Numero di elenchi di entità con proprietà geometrica"
+        },
+        "num_entity_create_forms": {
+          "string": "Numero di formulari che creano Entità"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Numero di formulari che creano Entità dentro repeats"
+        },
+        "num_entity_update_forms": {
+          "string": "Numero di formulari che aggiornano Entità"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Numero di formulari che aggiornano Entità dentro repeats"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Numero di formulari che contemporaneamente creano e aggiornano Entità"
+        },
+        "num_entities_with_geometry": {
+          "string": "Numero di entità con proprietà geometrica"
         }
       }
     },
@@ -1637,8 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {Formulario aggiorna Entità in questa lista di Entità} many {Formulari aggiornano Entità in questa lista di Entità} other {Formulari aggiornano Entità in questa lista di Entità}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {{count} Formulario che aggiorna Entità} many {{count} Formulari che aggiornano Entità} other {{count} Formulari che aggiornano Entità}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1652,8 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Il formulario utilizza questo elenco di entità} many {I formulari utilizzano questo elenco di entità} other {I formulari utilizzano questo elenco di entità}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {{count} Formulario che usa questa lista di Entità} many {{count} Formulari che usano questa lista di Entità} other {{count} Formulari che usano questa lista di Entità}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2151,6 +2199,34 @@
         }
       }
     },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "Creato da",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "Cerca creatore...",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "Tutto",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "Nessuno/a",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": "Creatore sconosciuto"
+      },
+      "emptyTable": {
+        "string": "Non ci sono ancora entità"
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "Non ci sono entità da mostrare.",
@@ -2168,6 +2244,12 @@
       "alert": {
         "delete": {
           "string": "La Entità “{label}” è stata cancellata."
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {{count} Entità è stata eliminata con successo} many {{count} Entità sono state eliminate con successo} other {{count} Entità sono state eliminate con successo}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {{count} Entità è stata ripristinata con successo} many {{count} Entità sono state ripristinate con successo} other {{count} Entità sono state ripristinate con successo}}"
         }
       },
       "filterDisabledMessage": {
@@ -2190,6 +2272,14 @@
           "string": "Tutte le entità della pagina sono state ripristinate."
         }
       },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {{count} Entità selezionata} many {{count} Entità selezionate} other {{count} Entità selezionate}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": "Elaborazione di massa in corso"
+      },
       "action": {
         "download": {
           "unfiltered": {
@@ -2198,11 +2288,11 @@
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {Scaricare la {count} Entità che corrisponde al filtro} many {Scaricare le {count} Entità che corrispondono al filtro} other {Scaricare le {count} Entità che corrispondono al filtro}}",
+              "string": "{count, plural, one {Scarica {count} Entità corrispondenti} many {Scarica {count} Entità corrispondenti} other {Scarica {count} Entità corrispondenti}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "Scaricare tutte le Entità che corrispondono al filtro",
+              "string": "Scarica tutte le Entità corrispondenti",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -3453,6 +3543,14 @@
         "enketoDefault": {
           "string": "Enketo (default)",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "Ora stai utilizzando Enketo per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\".",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "Ora stai utilizzando ODK Web Forms per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\".",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3629,6 +3727,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "Mostrando {count} di {total}",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "Ingrandisci per adattare tutti i dati",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Problema grafico rilevato."
+        },
+        "message": {
+          "string": "Il tuo browser non è in grado di visualizzare la mappa al momento. Abilita le impostazioni di accelerazione grafica."
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3661,6 +3777,14 @@
       "forum": {
         "body": {
           "string": "Avete bisogno di aiuto? Visitate il forum per porre domande o consultare le discussioni precedenti."
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "Torna all'elenco",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4829,7 +4953,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "Per tutto il tempo",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4883,6 +5007,12 @@
       "noMatching": {
         "string": "Non sono presenti invii corrispondenti."
       },
+      "emptyMap": {
+        "string": "Gli invii vengono visualizzati solo se includono dati nel primo campo geo."
+      },
+      "learnMoreMap": {
+        "string": "Scopri di più sulla mappatura degli invii"
+      },
       "allDeleted": {
         "string": "Tutti gli invii vengono cancellati."
       },
@@ -4895,6 +5025,9 @@
       "filterDisabledMessage": {
         "string": "Il filtro non è disponibile per gli invii cancellati."
       },
+      "noMapEncryption": {
+        "string": "Mappa non è disponibile a causa della crittografia del formulario "
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": "Non ci sono invii cancellati."
@@ -4905,6 +5038,9 @@
         "allRestoredOnPage": {
           "string": "Tutti i contributi presenti nella pagina sono stati ripristinati."
         }
+      },
+      "noMapDeleted": {
+        "string": "La Mappa non è disponibile per gli invii cancellati"
       },
       "loading": {
         "withoutCount": {
@@ -4948,6 +5084,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "Questo invio è stato mappato utilizzando {field}, che non è presente nella versione pubblicata del formulario.",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "La mappa fa riferimento a questo campo.",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": "Preparazione della mappa: caricamento degli invii noti e ricerca di quelli nuovi. L'operazione potrebbe richiedere alcuni minuti."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Invio in quest'area} many {{count} Invii in quest'area} other {{count} Invii in quest'area}}"
       }
     },
     "SubmissionRestore": {
@@ -5007,6 +5161,12 @@
           "string": "Note e commenti (opzionale)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Ultimo aggiornamento dei dati il {date} alle {time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5089,6 +5249,10 @@
         "sitewideRole": {
           "string": "Ruolo per tutto il sito",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "Ultima attività",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5187,6 +5351,9 @@
           "string": "Ritira utente",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "Invito in sospeso"
       }
     },
     "WebFormRenderer": {

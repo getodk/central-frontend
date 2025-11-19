@@ -89,8 +89,16 @@ const handleActions = ({ target, data }) => {
   if (target.classList.contains('restore-button')) emit('restore', data);
 };
 const table = ref(null);
-const afterReview = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+const findIndex = (instanceId) =>
+  odata.value.findIndex(submission => submission.__id === instanceId);
+const afterReview = (instanceId) => {
+  markRowsChanged(table.value.getRowPair(findIndex(instanceId)));
+};
+const afterDelete = (instanceId) => {
+  const index = findIndex(instanceId);
+  markRowsDeleted(table.value.getRowPair(index));
+  odata.value.splice(index, 1);
+};
 defineExpose({ afterReview, afterDelete });
 </script>
 
@@ -98,6 +106,8 @@ defineExpose({ afterReview, afterDelete });
 @import '../../assets/scss/mixins';
 
 #submission-table {
+  table:has(tbody:empty) { display: none; }
+
   .table-freeze-scrolling {
     th, td {
       @include text-overflow-ellipsis;
@@ -173,6 +183,12 @@ defineExpose({ afterReview, afterDelete });
   "sw": {
     "header": {
       "stateAndActions": "Hali na vitendo"
+    }
+  },
+  "zh": {
+    "header": {
+      "stateAndActions": "状态与操作",
+      "deletedAt": "删除于"
     }
   },
   "zh-Hant": {

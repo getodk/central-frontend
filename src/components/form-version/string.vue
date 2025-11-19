@@ -74,6 +74,9 @@ export default {
   "sw": {
     "blank": "(tupu)"
   },
+  "zh": {
+    "blank": "（空）"
+  },
   "zh-Hant": {
     "blank": "(空白)"
   }

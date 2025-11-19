@@ -128,7 +128,7 @@ const convert = ref(null);
       "changeSetting": "Einstellung ändern"
     },
     "explanation": {
-      "userAction": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
+      "userAction": "Sie legen fest, dass die Erstellung von Objekte erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden.",
       "implication": {
         "full": "Sie haben derzeit {records} Aufzeichnung, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet ist. | Sie haben derzeit {records} Aufzeichnungen, die weder als „Genehmigt“ noch als „Abgelehnt“ gekennzeichnet sind.",
         "records": "{count} Hervorragender Rekord | {count} Ausstehende Aufzeichnungen"
@@ -139,8 +139,8 @@ const convert = ref(null);
       "description": "Ändern Sie die Einstellung und tun Sie nichts mit den ausstehenden Übermittlungen."
     },
     "convert": {
-      "label": "Konvertieren Sie alle ausstehenden Übermittlungen, die Entitäten erstellen.",
-      "description": "Ändern Sie die Einstellung und erstellen Sie Entitäten aus allen Übermittlungen, die eine Entitätserstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
+      "label": "Konvertieren Sie alle ausstehenden Übermittlungen, die Objekte erstellen.",
+      "description": "Ändern Sie die Einstellung und erstellen Sie Objekte aus allen Übermittlungen, die eine Objekterstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
     }
   },
   "es": {
@@ -232,6 +232,27 @@ const convert = ref(null);
     },
     "dontConvert": {
       "label": "Ninaelewa na hii sio shida kwangu."
+    }
+  },
+  "zh": {
+    "title": "待提交",
+    "action": {
+      "changeSetting": "更改设置"
+    },
+    "explanation": {
+      "userAction": "您正在设置在Central首次接收到提交时创建实体。",
+      "implication": {
+        "full": "您当前有 {records} 条记录尚未标记为已批准或已拒绝。",
+        "records": "{count}个待记录"
+      }
+    },
+    "dontConvert": {
+      "label": "我理解，这对我来说没有问题。",
+      "description": "更改设置并对待处理的提交不执行任何操作。"
+    },
+    "convert": {
+      "label": "转换所有待处理的，会创建实体的提交。",
+      "description": "更改设置，并从所有会创建实体，且尚未被批准或拒绝的提交中创建实体。"
     }
   },
   "zh-Hant": {

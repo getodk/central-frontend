@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { computed, isRef, readonly, shallowReactive, toRef } from 'vue';
+import { computed, isRef, shallowReactive } from 'vue';
 
 import { isProblem, logAxiosError, requestAlertMessage, withHttpMethods } from '../util/request';
 import { noop } from '../util/util';
@@ -28,6 +28,22 @@ Internal properties are not intended to be used outside this file.
 */
 const _store = Symbol('store');
 
+const toRefsHandler = {
+  get: (resource, prop) => {
+    if (!(prop in resource)) return undefined;
+    let owner = resource;
+    while (!Object.hasOwn(owner, prop)) owner = Object.getPrototypeOf(owner);
+    const descriptor = Object.getOwnPropertyDescriptor(owner, prop);
+    if (descriptor.get == null) return undefined;
+    if (descriptor.set == null) return computed(() => resource[prop]);
+    return computed({
+      get: () => resource[prop],
+      // eslint-disable-next-line no-param-reassign
+      set: (value) => { resource[prop] = value; }
+    });
+  }
+};
+
 // Subclasses must define a property named `data`.
 class BaseResource {
   /*
@@ -45,32 +61,41 @@ class BaseResource {
   }
 
   get awaitingResponse() { return this[_store].awaitingResponse; }
+  // `Date` object for when the `data` property was last set (including setting
+  // it to `null`)
+  get setAt() { return this[_store].setAt; }
+  // `Date` object for when the `data` property was last patched. See the
+  // `patch` option of the request() method below.
+  get patchedAt() { return this[_store].patchedAt; }
 
   get dataExists() { return this[_store].data != null; }
   get initiallyLoading() { return this.awaitingResponse && !this.dataExists; }
 
-  toRefs() {
-    return {
-      awaitingResponse: readonly(toRef(this[_store], 'awaitingResponse')),
-      initiallyLoading: computed(() => this.initiallyLoading),
-      dataExists: computed(() => this.dataExists)
-    };
-  }
+  // Converts getters and setters on the resource to computed refs.
+  toRefs() { return new Proxy(this, toRefsHandler); }
 }
 
 const _container = Symbol('container');
 const _abortController = Symbol('abortController');
 class Resource extends BaseResource {
   constructor(container, name) {
-    const store = shallowReactive({ data: null, awaitingResponse: false });
+    const store = shallowReactive({
+      data: null,
+      awaitingResponse: false,
+      setAt: null,
+      patchedAt: null
+    });
     super(name, store);
     this[_container] = container;
     this[_abortController] = null;
   }
 
   get data() { return this[_store].data; }
-  set data(value) { this[_store].data = value; }
-  toRefs() { return { ...super.toRefs(), data: toRef(this[_store], 'data') }; }
+
+  set data(value) {
+    this[_store].data = value;
+    this[_store].setAt = new Date();
+  }
 
   cancelRequest() { if (this.awaitingResponse) this[_abortController].abort(); }
 
@@ -277,6 +302,7 @@ class Resource extends BaseResource {
         } else {
           if (!this.dataExists) throw new Error('data does not exist');
           patch(response, this);
+          this[_store].patchedAt = new Date();
         }
       });
   }
@@ -318,24 +344,15 @@ export const createResource = (container, name, setup = undefined) => {
   const proxy = new Proxy(resource, proxyHandler);
 
   if (setup != null) {
-    const refs = {};
     setCurrentResource(proxy);
     for (const [key, value] of Object.entries(setup(proxy))) {
       if (isRef(value)) {
         Object.defineProperty(resource, key, { get: () => value.value });
-        refs[key] = value;
       } else {
         resource[key] = value;
       }
     }
     setCurrentResource(null);
-
-    if (Object.keys(refs).length !== 0) {
-      resource.toRefs = () => ({
-        ...Resource.prototype.toRefs.call(resource),
-        ...refs
-      });
-    }
   }
 
   return proxy;
@@ -351,7 +368,6 @@ class ResourceView extends BaseResource {
   }
 
   get data() { return this[_view].value; }
-  toRefs() { return { ...super.toRefs(), data: this[_view] }; }
 }
 
 export const resourceView = (resource, lens) =>

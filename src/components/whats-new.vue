@@ -112,8 +112,17 @@ function hideModal() {
     }
   },
   "pt": {
+    "title": "Os Rascunhos do formulário foram movidos",
+    "body": "Criar um novo formulário e editá-lo na nova aba de Editar Formulário",
     "action": {
       "gotIt": "Entendi!"
+    }
+  },
+  "zh": {
+    "title": "表单草稿位置已更新",
+    "body": "请创建新表单，并在“编辑表单”标签页中进行编辑。",
+    "action": {
+      "gotIt": "知道了！"
     }
   },
   "zh-Hant": {

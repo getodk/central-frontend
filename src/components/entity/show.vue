@@ -145,7 +145,8 @@ const { t } = useI18n();
 const requestDelete = () => {
   request({
     method: 'DELETE',
-    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid)
+    url: apiPaths.entity(props.projectId, props.datasetName, props.uuid),
+    fulfillProblem: ({ code }) => code === 404.1
   })
     .then(() => {
       const { label } = entity.currentVersion;
@@ -196,7 +197,7 @@ const breadcrumbLinks = computed(() => [
   },
   "de": {
     "back": {
-      "title": "Entitätsdetail",
+      "title": "Objektdetail",
       "back": "Zurück zu {datasetName} Tabelle"
     }
   },
@@ -228,6 +229,12 @@ const breadcrumbLinks = computed(() => [
     "back": {
       "title": "Data ya Huluki",
       "back": "Rudi kwenye Jedwali la {datasetName}"
+    }
+  },
+  "zh": {
+    "back": {
+      "title": "实体详情",
+      "back": "回到{datasetName}表格"
     }
   },
   "zh-Hant": {

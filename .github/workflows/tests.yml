@@ -15,6 +15,12 @@ jobs:
     timeout-minutes: 120
     runs-on: ubuntu-latest
     steps:
+
+    # This one weird trick speeds up every build!
+    # see: https://github.com/getodk/central-backend/pull/1642
+    # see: https://github.com/actions/runner/issues/4030
+    - run: sudo apt-get remove --purge man-db
+
     - uses: actions/checkout@v4
       with:
         path: client
@@ -42,7 +48,7 @@ jobs:
     - name: Set node version
       uses: actions/setup-node@v4
       with:
-        node-version: 22.12.0
+        node-version: 22.21.0
         cache: 'npm'
         cache-dependency-path: 'central/client/package-lock.json'
     - name: Run tests

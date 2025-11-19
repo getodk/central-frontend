@@ -14,14 +14,14 @@ except according to the terms contained in the LICENSE file.
   <div v-if="dataset.dataExists" id="dataset-overview">
     <page-section id="dataset-overview-form-connections">
       <template #heading>
-        <span>{{ $t('connectionsToForms') }}</span>
+        <span class="dataset-overview-heading"><span class="icon-link"></span>{{ $t('connectionsToForms') }}</span>
       </template>
       <template #body>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-7">
             <connection-to-forms/>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-5">
             <linked-forms/>
           </div>
         </div>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
     </page-section>
     <page-section>
       <template #heading>
-        <span>{{ $t('entityProperties') }}</span>
+        <span class="dataset-overview-heading"><span class="icon-cog"></span>{{ $t('entityProperties') }}</span>
         <button v-if="project.dataExists && project.permits('dataset.update')"
           id="dataset-property-new-button" type="button" class="btn btn-primary"
           @click="newDatasetPropertyModal.show()">
@@ -88,6 +88,21 @@ const afterCreateProperty = () => {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
+#dataset-overview .page-section-heading {
+  font-size: 24px;
+  margin: 20px 0px;
+
+  .dataset-overview-heading {
+    [class^="icon-"] {
+      @include icon-box;
+      font-size: 24px;
+      margin-right: 10px;
+    }
+  }
+}
+
 #dataset-overview-form-connections{
   margin-bottom: 0;
 }
@@ -115,7 +130,7 @@ const afterCreateProperty = () => {
   },
   "de": {
     "connectionsToForms": "Verbindungen zu Formularen",
-    "entityProperties": "Entitätseigenschaften",
+    "entityProperties": "Objekteigenschaften",
     "new": "Neu"
   },
   "es": {
@@ -141,6 +156,11 @@ const afterCreateProperty = () => {
   "sw": {
     "connectionsToForms": "Viunganisho kwa Fomu",
     "entityProperties": "Sifa za Mashirika"
+  },
+  "zh": {
+    "connectionsToForms": "关联表单",
+    "entityProperties": "实体属性",
+    "new": "更新"
   },
   "zh-Hant": {
     "connectionsToForms": "與表單的連接",

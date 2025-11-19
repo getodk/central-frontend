@@ -11,39 +11,43 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <summary-item id="connection-to-forms" icon="magic-wand">
-    <template #heading>
-      {{ propertiesByForm.length }}
-    </template>
-    <template #body>
-      <p>{{ $tcn('formsUpdateEntities', propertiesByForm.length) }}</p>
-      <div class="div">
-        <expandable-row v-for="form in propertiesByForm" :key="form.xmlFormId">
-          <template #title>
-            <div class="form-name">
+  <div id="connection-to-forms">
+    <div id="connection-to-forms-heading">{{ $tcn('formsUpdateEntities', propertiesByForm.length) }}</div>
+    <div class="div">
+      <expandable-row v-for="form in propertiesByForm" :key="form.xmlFormId">
+        <template #title>
+          <div class="form-name-and-tags">
+            <span class="form-name">
               <form-link :form="form"
                 :to="publishedFormPath(form.projectId, form.xmlFormId)"
                 v-tooltip.text/>
-            </div>
-          </template>
-          <template #caption>
-            {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
-          </template>
-          <template #details>
-            <i18n-list :list="form.properties" class="property-list"/>
-            <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
-          </template>
-        </expandable-row>
-      </div>
-    </template>
-  </summary-item>
+            </span>
+            <span v-if="form.repeatPath" class="repeat-tag"
+              v-tooltip.no-aria="form.repeatPath">
+              <span class="icon-refresh"></span>
+              <span class="repeat-path">
+                <!-- Path includes leading and trailing slashes e.g. /plot/tree/ -->
+                {{ form.repeatPath.slice(0, -1).split('/').pop() }}
+              </span>
+            </span>
+          </div>
+        </template>
+        <template #caption>
+          {{ $tcn('common.propertiesCount', totalProperties, { inform: $n(form.properties.length, 'default') }) }}
+        </template>
+        <template #details>
+          <i18n-list :list="form.properties" class="property-list"/>
+          <span v-if="form.properties.length === 0" class="no-properties">{{ $t('entity.noProperties') }}</span>
+        </template>
+      </expandable-row>
+    </div>
+  </div>
 </template>
 
 <script>
 import ExpandableRow from '../../expandable-row.vue';
 import FormLink from '../../form/link.vue';
 import I18nList from '../../i18n/list.vue';
-import SummaryItem from '../../summary-item.vue';
 
 import useRoutes from '../../../composables/routes';
 import { useRequestData } from '../../../request-data';
@@ -53,8 +57,7 @@ export default {
   components: {
     ExpandableRow,
     FormLink,
-    I18nList,
-    SummaryItem
+    I18nList
   },
   setup() {
     const { dataset } = useRequestData();
@@ -88,6 +91,11 @@ export default {
 #connection-to-forms{
   margin-bottom: 10px;
 
+  #connection-to-forms-heading {
+    margin: 10px 0px;
+    font-weight: 700;
+  }
+
   .expandable-row {
     border-bottom: 1px solid #ddd;
   }
@@ -99,8 +107,45 @@ export default {
   .expandable-row-title {
     max-width: calc(100% - 180px);
 
-    .form-name {
+    .form-name-and-tags {
+      display: flex;
+    }
+
+    .form-name{
       @include text-overflow-ellipsis;
+
+      // Shrink name to fit so there is room for tag right next to it
+      flex-shrink: .5;
+    }
+
+    .repeat-tag {
+      @include text-overflow-ellipsis;
+
+      // CSS
+      border-radius: 100px;
+      background: #D0E7F1;
+      font-size: 12px;
+
+      // Layout
+      display: inline-flex;
+      height: 24px;
+      min-width: 42px;
+      margin-left: 8px;
+      padding: 4px 8px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+
+      // Shrink tag
+      flex-shrink: 1;
+
+      .icon-refresh{
+        flex-shrink: 0;
+      };
+
+      .repeat-path {
+         @include text-overflow-ellipsis;
+      }
     }
   }
 
@@ -120,8 +165,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // The number of Form(s) is shown separately above this text.
-    "formsUpdateEntities": "Form updates Entities in this Entity List | Forms update Entities in this Entity List"
+    "formsUpdateEntities": "{count} Form updating Entities | {count} Forms updating Entities"
   }
 }
 </i18n>
@@ -130,22 +174,25 @@ export default {
 <i18n>
 {
   "de": {
-    "formsUpdateEntities": "Formular aktualisiert Objekte in dieser Objektliste | Formulare aktualisieren Objekte in dieser Objektliste"
+    "formsUpdateEntities": "{count} Formular, die Entitäten aktualisieren. | {count} Formulare, die Entitäten aktualisieren."
   },
   "es": {
-    "formsUpdateEntities": "El formulario actualiza Entidades en esta Lista de Entidades | Los formularios actualizan Entidades en esta Lista de Entidades | Los formularios actualizan Entidades en esta Lista de Entidades"
+    "formsUpdateEntities": "{count} Formulario que actualiza entidades. | {count} Formularios que actualizan entidades. | {count} Formularios que actualizan entidades."
   },
   "fr": {
-    "formsUpdateEntities": "Formulaire modifiant des Entités de cette Liste d'Entités | Formulaires modifiant des Entités de cette Liste d'Entités | Formulaires modifiant des Entités de cette Liste d'Entités"
+    "formsUpdateEntities": "{count} formulaire met à jour des Entités. | {count} formulaires mettent à jour des Entités. | {count} formulaires mettent à jour des Entités."
   },
   "it": {
-    "formsUpdateEntities": "Formulario aggiorna Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità | Formulari aggiornano Entità in questa lista di Entità"
+    "formsUpdateEntities": "{count} Formulario che aggiorna Entità | {count} Formulari che aggiornano Entità | {count} Formulari che aggiornano Entità"
   },
   "pt": {
-    "formsUpdateEntities": "Formulário atualiza Entidades nesta Lista de Entidades | Formulários atualizam Entidades nesta Lista de Entidades | Formulários atualizam Entidades nesta Lista de Entidades"
+    "formsUpdateEntities": "{count} Formulário atualizando Entidades | {count} Formulários atualizando Entidades | {count} Formulários atualizando Entidades"
+  },
+  "zh": {
+    "formsUpdateEntities": "{count}个表单正在更新实体"
   },
   "zh-Hant": {
-    "formsUpdateEntities": "表單更新此實體清單中的實體"
+    "formsUpdateEntities": "{count}個表單正在更新實體"
   }
 }
 </i18n>

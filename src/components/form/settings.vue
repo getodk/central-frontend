@@ -77,7 +77,7 @@ except according to the terms contained in the LICENSE file.
     </div>
     <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
-    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="confirmationModal.hide()"/>
+    <form-web-forms-settings-confirmation v-bind="confirmationModal" @hide="hideAndReset" @success="afterSettingChanged"/>
   </div>
 </template>
 
@@ -97,6 +97,7 @@ defineOptions({
 });
 
 const alert = inject('alert');
+const toast = inject('toast');
 
 const { t } = useI18n();
 const router = useRouter();
@@ -112,10 +113,19 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
+
 const webformsEnabled = ref(form.webformsEnabled);
 watch(() => form.dataExists, () => {
   webformsEnabled.value = form.webformsEnabled;
 });
+
+const afterSettingChanged = () => {
+  const message = webformsEnabled.value
+    ? t('webFormsSetting.owfSelected', { formName: form.nameOrId })
+    : t('webFormsSetting.enketoSelected', { formName: form.nameOrId });
+  toast.show(message);
+  confirmationModal.hide();
+};
 
 const hideAndReset = () => {
   webformsEnabled.value = form.webformsEnabled;
@@ -180,7 +190,11 @@ const hideAndReset = () => {
       // Description of a section. {formName} is replaced with the name of the Form
       "description": "Fill out, preview and edit your “{formName}” Form using",
       // The word "Enketo" should not be translated
-      "enketoDefault": "Enketo (default)"
+      "enketoDefault": "Enketo (default)",
+      // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
+      "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
+      // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
+      "owfSelected": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form."
     }
   }
 }
@@ -212,9 +226,15 @@ const hideAndReset = () => {
     "action": {
       "delete": "Dieses Formular löschen"
     },
+    "alert": {
+      "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
+    },
     "webFormsSetting": {
       "webForms": "Web-Formulare",
-      "enketoDefault": "Enketo (default)"
+      "description": "Ausfüllen, anschauen und bearbeiten des Formulars \"{formName}\" mit",
+      "enketoDefault": "Enketo (default)",
+      "enketoSelected": "Sie verwenden jetzt Enketo, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten.",
+      "owfSelected": "Sie verwenden jetzt ODK Web Forms, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten."
     }
   },
   "es": {
@@ -234,7 +254,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "Formularios web",
       "description": "Rellene, previsualice y edite su Formulario “{formName}” utilizando",
-      "enketoDefault": "Enketo (default)"
+      "enketoDefault": "Enketo (default)",
+      "enketoSelected": "Ahora estás utilizando Enketo para rellenar, previsualizar y editar tu formulario \"{formName}\".",
+      "owfSelected": "Ahora estás utilizando ODK Web Forms para rellenar, previsualizar y editar tu formulario \"{formName}\"."
     }
   },
   "fr": {
@@ -254,7 +276,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "Web Forms",
       "description": "Remplissez, prévisualisez et éditez votre Formulaire \"{formName}\" en utilisant",
-      "enketoDefault": "Enketo (par défaut)"
+      "enketoDefault": "Enketo (par défaut)",
+      "enketoSelected": "Vous utilisez maintenant Enketo pour remplir, prévisualiser et éditer votre formulaire \"{formName}\".",
+      "owfSelected": "Vous utilisez maintenant ODK Web Forms pour remplir, prévisualiser et éditer votre formulaire \"{formName}\"."
     }
   },
   "id": {
@@ -286,7 +310,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "Formulari Web",
       "description": "Compilate, visualizzate in anteprima e modificate il vostro “{formName}” Formulario usando",
-      "enketoDefault": "Enketo (default)"
+      "enketoDefault": "Enketo (default)",
+      "enketoSelected": "Ora stai utilizzando Enketo per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\".",
+      "owfSelected": "Ora stai utilizzando ODK Web Forms per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\"."
     }
   },
   "ja": {
@@ -329,6 +355,28 @@ const hideAndReset = () => {
       "delete": "Futa Fomu hii"
     }
   },
+  "zh": {
+    "state": {
+      "title": "表单状态",
+      "body": {
+        "full": "请前往项目{formAccessSettings}以调整此表单状态。",
+        "formAccessSettings": "表单访问设置"
+      }
+    },
+    "action": {
+      "delete": "删除此表单"
+    },
+    "alert": {
+      "delete": "表单“{name}”已成功删除。"
+    },
+    "webFormsSetting": {
+      "webForms": "Web表单",
+      "description": "填写、预览和编辑您的“{formName}”表单，请使用",
+      "enketoDefault": "Enketo（默认）",
+      "enketoSelected": "您当前正在使用Enketo填写、预览和编辑“{formName}”表单。",
+      "owfSelected": "您当前正在使用ODK Web表单填写、预览和编辑“{formName}”表单。"
+    }
+  },
   "zh-Hant": {
     "state": {
       "title": "表單狀態",
@@ -346,7 +394,9 @@ const hideAndReset = () => {
     "webFormsSetting": {
       "webForms": "網頁表單",
       "description": "使用以下功能填寫、預覽和編輯您的表單 「{formName}」",
-      "enketoDefault": "Enketo (預設)"
+      "enketoDefault": "Enketo (預設)",
+      "enketoSelected": "您目前正在使用 Enketo 填寫、預覽及編輯「{formName}」表單。",
+      "owfSelected": "您目前正在使用 ODK 網頁表單填寫、預覽及編輯「{formName}」表單。"
     }
   }
 }

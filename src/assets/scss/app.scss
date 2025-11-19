@@ -41,7 +41,7 @@ h1, .h1 {
 p { @include text-block; }
 
 dl > * {
-  border-bottom: 1px solid #ddd;
+  border-bottom: $border-bottom-dl;
   padding-block: $padding-block-dl;
 
   &:first-of-type { padding-top: 0; }
@@ -57,15 +57,15 @@ dl > * {
 dl:not(.dl-horizontal) {
   > div {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    row-gap: 2px;
   }
 
   dt {
     color: #666;
+    font-size: 12px;
     font-weight: normal;
   }
-
-  dd { font-size: 16px; }
 }
 
 // <dl> elements that are .dl-horizontal are expected to have children that are
@@ -186,7 +186,7 @@ class. */
 ////////////////////////////////////////////////////////////////////////////////
 // LINKS AND BUTTONS
 
-.btn, a {
+.btn, a, button.close {
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     cursor: not-allowed;
     opacity: 0.65;
@@ -280,7 +280,7 @@ $btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 }
 
 a, .btn-link {
-  &:hover, &.disabled, &[aria-disabled="true"], fieldset[disabled] & {
+  &:hover, &.disabled, &[aria-disabled="true"], &[aria-disabled="true"]:focus, fieldset[disabled] & {
     text-decoration: none;
   }
 

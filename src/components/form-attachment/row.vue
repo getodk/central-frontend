@@ -259,10 +259,10 @@ export default {
       "text": "Noch nicht hochgeladen",
       "title": "Um eine oder mehrere Dateien hochzuladen, verwenden Sie Drag-and-Drop auf diese Seite"
     },
-    "linkedToDataset": "Mit Entitätsliste {datasetName} verknüpft",
+    "linkedToDataset": "Mit Objektliste {datasetName} verknüpft",
     "uploadToOverride": "Laden Sie eine zu überschreibende Datei hoch.",
     "action": {
-      "linkDataset": "Mit Entitätsliste {datasetName} verknüpfen"
+      "linkDataset": "Mit Objektliste {datasetName} verknüpfen"
     },
     "override": "Überschreiben"
   },
@@ -386,6 +386,25 @@ export default {
       "linkDataset": "Unganisha Orodha ya Huluki {datasetName}"
     },
     "override": "Batilisha"
+  },
+  "zh": {
+    "type": {
+      "image": "图片",
+      "audio": "音频",
+      "video": "视频",
+      "file": "数据文件"
+    },
+    "replace": "替换",
+    "notUploaded": {
+      "text": "还未上传",
+      "title": "若要上传文件，请将一个或多个文件拖拽到本页面。"
+    },
+    "linkedToDataset": "关联到实体列表{datasetName}",
+    "uploadToOverride": "上传文件以替换。",
+    "action": {
+      "linkDataset": "关联实体列表{datasetName}"
+    },
+    "override": "覆盖"
   },
   "zh-Hant": {
     "type": {

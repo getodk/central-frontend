@@ -124,7 +124,7 @@ watchEffect(() => {
     "submissionDeleted": "Toto podání bylo smazáno."
   },
   "de": {
-    "entityDetails": "Entitätsdetails",
+    "entityDetails": "Objektdetails",
     "creatingSubmission": "Übermittlung erstellen",
     "creatingSource": "Quelle erstellen",
     "upload": "Hochladen",
@@ -164,6 +164,13 @@ watchEffect(() => {
   "sw": {
     "creatingSubmission": "Kuunda Uwasilishaji",
     "submissionDeleted": "Wasilisho hili limefutwa."
+  },
+  "zh": {
+    "entityDetails": "实体详情",
+    "creatingSubmission": "正在创建提交",
+    "creatingSource": "正在创建来源",
+    "upload": "上传",
+    "submissionDeleted": "此提交已被删除。"
   },
   "zh-Hant": {
     "entityDetails": "實體詳細資料",

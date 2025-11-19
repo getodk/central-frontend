@@ -197,18 +197,18 @@ const hideOrComplete = () => {
     ]
   },
   "de": {
-    "title": "Entitätsliste erstellen",
-    "encrypted": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Entitäten in dieser Liste zu ändern. Entitäten müssen über Central oder die API verwaltet werden.",
-    "entityListName": "Name der Entitätsliste",
+    "title": "Objektliste erstellen",
+    "encrypted": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Objekte in dieser Liste zu ändern. Objekte müssen über Central oder die API verwaltet werden.",
+    "entityListName": "Name der Objektliste",
     "success": [
-      "Die Entitätsliste \"{name}\" ist erstellt worden.",
+      "Die Objektliste \"{name}\" ist erstellt worden.",
       "Sie können damit beginnen, indem Sie die Dateneigenschaften direkt auf dieser Seite hinzufügen oder indem Sie Formulare hochladen, die sie verwenden. In diesem Fall werden alle Eigenschaften, die das Formular aufruft, automatisch erstellt, wenn Sie das Formular veröffentlichen."
     ],
     "problem": {
-      "409_3": "In diesem Projekt existiert bereits eine Entitätsliste mit dem Namen “{datasetName}”."
+      "409_3": "In diesem Projekt existiert bereits eine Objektliste mit dem Namen “{datasetName}”."
     },
     "introduction": [
-      "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
+      "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können."
     ]
   },
   "es": {
@@ -274,6 +274,21 @@ const hideOrComplete = () => {
   "sw": {
     "introduction": [
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi."
+    ]
+  },
+  "zh": {
+    "title": "创建实体列表",
+    "encrypted": "此项目已加密。表单及其提交数据将无法修改此列表中的任何实体。实体必须通过Central平台或API进行管理。",
+    "entityListName": "实体列表名称",
+    "success": [
+      "实体列表“{name}”已成功创建。",
+      "您可以直接在本页面添加数据属性来开始使用，也可通过上传调用该实体的表单来实现。若选择后者，当表单发布时，其引用的所有属性都将自动创建。"
+    ],
+    "problem": {
+      "409_3": "该项目中已存在名称为{datasetName}的实体列表。"
+    },
+    "introduction": [
+      "实体功能支持跨表单共享信息，便于您收集纵向数据、进行长期案例管理，以及实现多步骤工作流程。"
     ]
   },
   "zh-Hant": {

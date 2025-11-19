@@ -3,6 +3,9 @@ import EnketoIframe from '../../src/components/enketo-iframe.vue';
 import { mergeMountOptions, mount } from '../util/lifecycle';
 import { mockRouter } from '../util/router';
 import { wait } from '../util/util';
+import testData from '../data';
+import { load } from '../util/http';
+import { mockLogin } from '../util/session';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
@@ -24,6 +27,13 @@ const postMessageToParent = async (iframe, data) => {
   await wait();
 };
 
+const submit = async (component) => {
+  const form = component.get('#account-login form');
+  await form.get('input[type="email"]').setValue('test@email.com');
+  await form.get('input[type="password"]').setValue('foo');
+  return form.trigger('submit');
+};
+
 describe('EnketoIframe', () => {
   [
     { actionType: 'new', expected: `/enketo-passthrough/${enketoId}` },
@@ -38,6 +48,28 @@ describe('EnketoIframe', () => {
       iframe.exists().should.be.true;
       iframe.attributes('src').should.contain(expected);
     });
+  });
+
+  it('renders iframe with /single prefix when single=true query parameter for new submission', async () => {
+    mockLogin();
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    const app = await load('/projects/1/forms/a/submissions/new?single=true')
+      .complete();
+
+    const iframe = app.find('iframe');
+    iframe.attributes('src').should.contain('/enketo-passthrough/single/');
+  });
+
+  it('renders iframe without /single prefix when single=false for public-link', async () => {
+    testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+    const app = await load(`/f/${enketoId}?single=false&st=token`)
+      .restoreSession(false) // it's public link so not need to restore sessioin
+      .complete();
+
+    const iframe = app.find('iframe');
+    iframe.attributes('src').should.contain(`/enketo-passthrough/${enketoId}`);
+    iframe.attributes('src').should.not.contain('/single/');
   });
 
   it('redirects on submissionsuccess message with return_url - internal', async () => {
@@ -77,6 +109,29 @@ describe('EnketoIframe', () => {
     fakeAssign.calledWith(new URL('http://example.com/projects/1')).should.be.true;
   });
 
+  it('redirect on submissionsuccess for new submission when single=true', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new' },
+      container: {
+        router: mockRouter('/?return_url=http://example.com/projects/1&single=true'),
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.true;
+    fakeAssign.args[0][0].href.should.equal('http://example.com/projects/1');
+  });
+
   it('does not redirect on invalid return URL', async () => {
     const fakeAssign = sinon.fake();
     const wrapper = mountComponent({
@@ -98,6 +153,51 @@ describe('EnketoIframe', () => {
 
     fakeAssign.called.should.be.false;
     wrapper.vm.$router.push.called.should.be.false;
+  });
+
+  it('does not redirect on submissionsuccess for public-link when single=false', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'public-link' },
+      container: {
+        router: mockRouter('/?return_url=http://example.com/projects/1&single=false'),
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.false;
+  });
+
+  // 'single' query parameter is false implicitly
+  it('does not redirects on submissionsuccess for new submission', async () => {
+    const fakeAssign = sinon.fake();
+    const wrapper = mountComponent({
+      props: { enketoId, actionType: 'new' },
+      container: {
+        router: mockRouter('/?return_url=http://example.com/projects/1'),
+        location: {
+          origin: window.location.origin,
+          assign: (url) => {
+            fakeAssign(url);
+          }
+        }
+      }
+    });
+    const iframe = wrapper.find('iframe');
+
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+
+    fakeAssign.called.should.be.false;
   });
 
   it('bubbles up the message event', async () => {
@@ -155,7 +255,7 @@ describe('EnketoIframe', () => {
     src.should.contain('hello%20world');
   });
 
-  it('passes + sign as it is', () => {
+  it('passes + sign as %20', () => {
     const wrapper = mountComponent({
       props: { enketoId, actionType: 'new' },
       container: {
@@ -165,7 +265,25 @@ describe('EnketoIframe', () => {
     const iframe = wrapper.find('iframe');
     const src = iframe.attributes('src');
 
-    src.should.contain('hello%20+%20world');
+    src.should.contain('hello%20%20%20world');
+  });
+
+  it('should pass %20 to the iframe after login redirect', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+    return load('/login?next=%2Fprojects%2F1%2Fforms%2Ff%2Fsubmissions%2Fnew%3Fd%5Bfirstname%5D%3Djohn%2520doe')
+      .restoreSession(false)
+      .complete()
+      .request(submit)
+      .respondWithData(() => testData.sessions.createNew())
+      .respondWithData(() => testData.extendedUsers.last())
+      .respondWithData(() => testData.extendedProjects.first())
+      .respondWithData(() => testData.extendedForms.last())
+      .afterResponses(app => {
+        const iframe = app.find('iframe');
+        const src = iframe.attributes('src');
+        src.should.contain('john%20doe');
+      });
   });
 });
 

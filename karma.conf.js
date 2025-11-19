@@ -43,14 +43,18 @@ module.exports = (config) => {
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
       { pattern: 'public/blank.html', served: true, included: false },
       { pattern: 'test/files/*', served: true, included: false },
-      { pattern: 'src/assets/images/whats-new/*', served: true, included: false }
+      { pattern: 'src/assets/images/**', served: true, included: false }
     ],
     proxies: {
       '/fonts/': '/base/public/fonts/',
       '/blank.html': '/base/public/blank.html',
       '/test/files/': '/base/test/files/',
+
+      // Images
       '/img/banner@2x.d6298b0b.png': '/base/src/assets/images/whats-new/banner@2x.png', // Image in what's new modal with hash
-      '/img/banner@1x.13a17571.png': '/base/src/assets/images/whats-new/banner@1x.png' // Smaller resolution for circleCI test
+      '/img/banner@1x.13a17571.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
+      '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
+      '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']

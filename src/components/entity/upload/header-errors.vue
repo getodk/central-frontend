@@ -161,8 +161,8 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     "suggestions": {
       "title": "Vorschläge",
       "invalidQuotes": "Ein zitiertes Feld ist ungültig. Überprüfen Sie die Kopfzeile Ihrer Datei, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt.",
-      "missingLabel": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jede Entität in Central und anderswo zu verwenden ist.",
-      "unknownProperty": "Wenn Sie Eigenschaften zu dieser Entitätsliste hinzufügen möchten, können Sie dies im Abschnitt Entitätseigenschaften auf der Übersichtsseite dieser Entitätsliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist.",
+      "missingLabel": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jedes Objekt in Central und anderswo zu verwenden ist.",
+      "unknownProperty": "Wenn Sie Eigenschaften zu dieser Objektliste hinzufügen möchten, können Sie dies im Abschnitt Objekteigenschaften auf der Übersichtsseite dieser Objektliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist.",
       "duplicateColumn": "Es sieht so aus, als hätten zwei oder mehr Spalten die gleiche Überschrift. Bitte stellen Sie sicher, dass die Spaltenüberschriften eindeutig sind.",
       "emptyColumn": "Es sieht so aus, als ob Sie eine leere Zelle in der Kopfzeile haben. Bitte entfernen Sie alle leeren Spalten in Ihrer Datei.",
       "delimiterNotComma": "Das könnte daran liegen, dass wir das Zellentrennzeichen falsch gesetzt haben. Wir haben {delimiter} benutzt."
@@ -214,6 +214,18 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "duplicateColumn": "Parece que duas ou mais colunas têm o mesmo cabeçalho. Certifique-se de que os cabeçalhos das colunas sejam exclusivos.",
       "emptyColumn": "Parece que você tem uma célula vazia no cabeçalho. Remova todas as colunas vazias do seu arquivo.",
       "delimiterNotComma": "Isso pode ter ocorrido porque definimos o delimitador de célula errado. Usamos {delimiter}."
+    }
+  },
+  "zh": {
+    "expectedHeader": "规范表头",
+    "suggestions": {
+      "title": "建议",
+      "invalidQuotes": "引用的字段无效。请检查您的文件表头，是否有异常值。",
+      "missingLabel": "您必须提供{label}属性。该属性将用于在Central及其他各处标识每个实体的名称。",
+      "unknownProperty": "如需为此实体列表添加属性，您可通过实体列表概览页的“实体属性”版块进行操作，或上传并发布引用了该属性的表单。",
+      "duplicateColumn": "两个或以上纵列的表头名称可能重复。请确保所有列表标题是唯一的。",
+      "emptyColumn": "您的标题中可能有空白单元格。请移除文件中所有的空白列。",
+      "delimiterNotComma": "可能使用了错误的表格分隔值。这里使用的是{delimiter}。."
     }
   },
   "zh-Hant": {

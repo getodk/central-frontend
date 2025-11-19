@@ -1,7 +1,7 @@
 @import './variables';
 
 @mixin icon-box {
-  padding: 10px;
+  padding: min(0.5em, 10px);
   border-radius: 6px;
   color: $color-accent-primary;
   background-color: rgba($color-accent-primary, 0.1);  
@@ -60,6 +60,36 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// LINKS AND BUTTONS
+
+// Styles a group of buttons similarly to those in the submissions table. With
+// the exception of the More button, only an icon is shown for each button (with
+// a tooltip).
+@mixin icon-btn-group {
+  .btn {
+    [class^="icon-"] { margin-right: 0; }
+    .icon-check { margin-right: -1px; }
+    .icon-pencil { margin-left: 1px; }
+
+    .icon-trash { color: $color-danger; }
+  }
+
+  .more-button {
+    span:first-child { margin-right: 13px; }
+
+    .icon-angle-right {
+      position: absolute;
+      top: #{$padding-top-btn - 2px};
+      right: $hpadding-btn;
+
+      font-size: 20px;
+    }
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // FORMS
 
 @mixin form-control-background {
@@ -104,6 +134,38 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// FLOATING ELEMENTS
+
+@mixin floating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  left: 10vw;
+  width: 80vw;
+  bottom: 34px;
+  z-index: $z-index-toast;
+  pointer-events: none;
+
+  & > * { pointer-events: auto; }
+}
+
+// Styles a .close button the same way as the modal close button.
+@mixin modal-close {
+  position: absolute;
+  // x symbol has some top spacing
+  top: calc($padding-modal-top-actions-close - 2px);
+  right: $padding-modal-top-actions-close;
+  float: none;
+
+  color: $color-input;
+  font-weight: normal;
+  opacity: 1;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // UTILITIES
 
 @mixin clearfix {
@@ -113,4 +175,15 @@
   }
 
   &::after { clear: both; }
+}
+
+@mixin overlay($position, $opacity) {
+  position: $position;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $z-index-modal-backdrop;
+  background-color: #000;
+  opacity: $opacity;
 }

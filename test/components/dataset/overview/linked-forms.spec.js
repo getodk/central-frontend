@@ -21,7 +21,7 @@ describe('LinkedForms', () => {
       ]
     });
     const component = mountComponent();
-    component.get('.summary-item-heading').text().should.be.equal('2');
+    component.get('#linked-forms-heading').text().should.be.equal('2 Forms use this Entity List');
 
     const rows = component.findAll('tr');
 
@@ -35,6 +35,6 @@ describe('LinkedForms', () => {
   it('does not break if there is no form', () => {
     testData.extendedDatasets.createPast(1, { name: 'trees' });
     const component = mountComponent();
-    component.get('.summary-item-heading').text().should.be.equal('0');
+    component.get('#linked-forms-heading').text().should.be.equal('0 Forms use this Entity List');
   });
 });

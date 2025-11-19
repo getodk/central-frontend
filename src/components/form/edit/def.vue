@@ -187,7 +187,23 @@ const viewXml = modalData('FormVersionViewXml');
   },
   "pt": {
     "subtitle": "Carregado",
+    "changed": "Mudanças em relação à versão publicada",
+    "versionName": "Nome da versão: {name}",
+    "action": {
+      "upload": "Carregar nova Definição do Formulário"
+    },
+    "withinDef": "Nesta Definição de Formulário:",
     "title": "Versão Rascunho"
+  },
+  "zh": {
+    "subtitle": "已上传",
+    "changed": "自发布版本以来",
+    "versionName": "版本名称：{name}",
+    "action": {
+      "upload": "上传新表单定义"
+    },
+    "withinDef": "在此表单定义中：",
+    "title": "草稿版本"
   },
   "zh-Hant": {
     "subtitle": "已上傳",

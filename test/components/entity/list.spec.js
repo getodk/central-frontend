@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { nextTick } from 'vue';
+import sinon from 'sinon';
 import DateTime from '../../../src/components/date-time.vue';
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityDelete from '../../../src/components/entity/delete.vue';
@@ -47,7 +48,8 @@ describe('EntityList', () => {
           searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
           searchParams.get('$top').should.be.eql('250');
         }
-      }
+      },
+      { url: '/v1/projects/1/datasets/trees/entities/creators' },
     ]);
   });
 
@@ -82,6 +84,8 @@ describe('EntityList', () => {
 
   describe('after the refresh button is clicked', () => {
     it('completes a background refresh', () => {
+      const clock = sinon.useFakeTimers(Date.now());
+      let initialTime;
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
       const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
@@ -91,16 +95,25 @@ describe('EntityList', () => {
         }
       };
       return load('/projects/1/entity-lists/trees/entities', { root: false })
-        .afterResponses(assertRowCount(1))
-        .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+        .afterResponses(component => {
+          assertRowCount(1)(component);
+          initialTime = component.get('.table-refresh-bar span').text();
+        })
+        .request(component => {
+          clock.tick(1000);
+          return component.get('#refresh-button').trigger('click');
+        })
         .beforeEachResponse(assertRowCount(1))
         .respondWithData(() => {
           testData.extendedEntities.createNew();
           return testData.entityOData();
         })
         .respondWithData(testData.entityDeletedOData)
-        .afterResponse(assertRowCount(2));
+        .afterResponse(component => {
+          assertRowCount(2)(component);
+          const newTime = component.get('.table-refresh-bar span').text();
+          newTime.should.not.equal(initialTime);
+        });
     });
 
     it('does not show a loading message', () => {
@@ -109,7 +122,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(component => {
           component.get('#odata-loading-message').should.be.hidden();
         })
@@ -180,7 +193,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(async (component) => {
           await component.get('.entity-metadata-row .update-button').trigger('click');
           component.getComponent(EntityUpdate).props().state.should.be.false;
@@ -311,7 +324,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeEachResponse(async (component) => {
           await component.get('.entity-metadata-row .resolve-button').trigger('click');
           component.getComponent(EntityResolve).props().state.should.be.false;
@@ -520,6 +533,19 @@ describe('EntityList', () => {
       });
     });
 
+    it('shows a success alert even when backend returns 404', async () => {
+      testData.extendedEntities.createPast(1, { label: 'My Entity' });
+      const component = await load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(async (c) => {
+          await c.get('.entity-metadata-row .delete-button').trigger('click');
+          return c.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'Entity “My Entity” has been deleted.');
+    });
+
     describe('last entity was deleted', () => {
       beforeEach(() => {
         testData.extendedEntities.createPast(2);
@@ -557,106 +583,6 @@ describe('EntityList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.get('.empty-table-message').should.be.visible();
-          }));
-    });
-
-    it('continues to show modal if checkbox was not checked', () => {
-      testData.extendedEntities.createPast(2);
-      return load('/projects/1/entity-lists/trees/entities', { root: false })
-        .complete()
-        .request(async (component) => {
-          const row = component.get('.entity-metadata-row:last-child');
-          await row.get('.delete-button').trigger('click');
-          return component.get('#entity-delete .btn-danger').trigger('click');
-        })
-        .respondWithSuccess()
-        .afterResponse(async (component) => {
-          await component.get('.entity-metadata-row .delete-button').trigger('click');
-          component.getComponent(EntityDelete).props().state.should.be.true;
-        });
-    });
-
-    describe('deleting after checking the checkbox', () => {
-      const delAndCheck = () => {
-        testData.extendedEntities
-          .createPast(1, { uuid: 'e1', label: 'Entity 1' })
-          .createPast(1, { uuid: 'e2', label: 'Entity 2' });
-        return load('/projects/1/entity-lists/trees/entities', { root: false })
-          .complete()
-          .request(async (component) => {
-            const row = component.get('.entity-metadata-row:last-child');
-            await row.get('.delete-button').trigger('click');
-            const modal = component.getComponent(EntityDelete);
-            await modal.get('input').setChecked();
-            return modal.get('.btn-danger').trigger('click');
-          })
-          .respondWithSuccess()
-          .complete();
-      };
-
-      it('immediately sends a request', () =>
-        delAndCheck()
-          .request(component =>
-            component.get('.entity-metadata-row .delete-button').trigger('click'))
-          .respondWithProblem()
-          .testRequests([{
-            method: 'DELETE',
-            url: '/v1/projects/1/datasets/trees/entities/e2'
-          }]));
-
-      it('does not show the modal', () =>
-        delAndCheck()
-          .request(async (component) => {
-            await component.get('.entity-metadata-row .delete-button').trigger('click');
-            component.getComponent(EntityDelete).props().state.should.be.false;
-          })
-          .respondWithProblem());
-
-      it('shows the correct alert', () =>
-        delAndCheck()
-          .request(component =>
-            component.get('.entity-metadata-row .delete-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            component.should.alert('success', 'Entity “Entity 2” has been deleted.');
-          }));
-
-      it('does not hide table after deleting last entity if entities are concurrently replaced', () =>
-        delAndCheck()
-          .request(async (component) => {
-            await component.get('#entity-list-refresh-button').trigger('click');
-            return component.get('.entity-metadata-row .delete-button').trigger('click');
-          })
-          .respondWithData(() => {
-            testData.extendedEntities.splice(0);
-            testData.extendedEntities.createNew();
-            testData.extendedEntities.createNew();
-            return testData.entityOData();
-          })
-          .respondWithData(testData.entityDeletedOData)
-          .respondWithSuccess()
-          .afterResponses(component => {
-            // Even though there were 2 entities before, and there are 2
-            // entities now, and 2 entities have been deleted, the table should
-            // still be shown.
-            component.get('#entity-table').should.be.visible();
-            // No row should be hidden.
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.entity-metadata-row .delete-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            /* The delete count should have been reset to 0 when the refreshed
-            entities were received. (Otherwise, the previous assertion should
-            have failed.) However, imagine that after that, the delete count was
-            incorrectly increased to 1 following the success response (if
-            requestDelete() in EntityList didn't check whether
-            odataEntities.value still includes the deleted entity). In that
-            case, this latest deletion would increase the delete count to 2,
-            which would hide the table. Here, we check that that doesn't
-            happen. */
-            component.get('#entity-table').should.be.visible();
           }));
     });
   });
@@ -746,6 +672,18 @@ describe('EntityList', () => {
         const text = component.get('.toggle-deleted-entities').text();
         text.should.equal('0 deleted Entities');
       });
+    });
+
+    it('shows a success alert even when backend returns 404', async () => {
+      const component = await loadDeletedEntities()
+        .complete()
+        .request(async (c) => {
+          await c.get('.entity-metadata-row .restore-button').trigger('click');
+          return c.get('#entity-restore .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1);
+
+      component.should.alert('success', 'Entity “My Entity” has been restored.');
     });
 
     describe('last entity was restore', () => {
@@ -852,7 +790,7 @@ describe('EntityList', () => {
       it('does not hide table after undeleting last entity if entities are concurrently replaced', () =>
         restoreAndCheck()
           .request(async (component) => {
-            await component.get('#entity-list-refresh-button').trigger('click');
+            await component.get('#refresh-button').trigger('click');
             return component.get('.entity-metadata-row .restore-button').trigger('click');
           })
           .respondWithData(() => {
@@ -944,7 +882,7 @@ describe('EntityList', () => {
         .respondWithData(() => testData.entityOData(250, 250))
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(() => testData.entityOData(250))
         .afterResponse(async component => {
           checkIds(component, 250);
@@ -1006,7 +944,7 @@ describe('EntityList', () => {
       return loadEntityList()
         .complete()
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .respondWithData(testData.entityOData)
         .afterResponse(component => {
           component.emitted().should.have.property('fetch-deleted-count');
@@ -1025,7 +963,7 @@ describe('EntityList', () => {
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
-          component.get('#entity-list-refresh-button').trigger('click'))
+          component.get('#refresh-button').trigger('click'))
         .beforeAnyResponse(() => {
           testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
         })
@@ -1173,5 +1111,412 @@ describe('EntityList', () => {
         .afterResponse(app => {
           app.get('.search-textbox').element.value.should.be.equal('john');
         }));
+  });
+
+  describe('bulk delete functionality', () => {
+    beforeEach(() => {
+      createEntities(3);
+    });
+
+    it('does not show checkboxes for project viewers', () => {
+      testData.reset();
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(2);
+
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          component.find('#entity-table th input[type="checkbox"]').exists().should.be.false;
+
+          component.findAll('.entity-metadata-row input[type="checkbox"]').length.should.equal(0);
+        });
+    });
+
+    it('shows action bar when entities are selected', async () => {
+      const component = await loadEntityList();
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+      actionBar.props().state.should.be.false;
+
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+      await checkboxes[1].setValue(true);
+
+      actionBar.props().state.should.be.true;
+      actionBar.props().message.should.equal('2 Entities selected');
+    });
+
+    it('hides action bar when all entities are deselected', async () => {
+      const component = await loadEntityList();
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+
+      // Click on checkboxes to select entities first
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+      await checkboxes[1].setValue(true);
+
+      actionBar.props().state.should.be.true;
+
+      await checkboxes[0].setValue(false);
+      await checkboxes[1].setValue(false);
+
+      actionBar.props().state.should.be.false;
+    });
+
+    it('handles select all functionality', async () => {
+      const component = await loadEntityList();
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+
+      actionBar.props().state.should.be.false;
+
+      // Click the header "select all" checkbox
+      const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+      const rowCheckboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+
+      await headerCheckbox.setValue(true);
+
+      actionBar.props().state.should.be.true;
+      actionBar.props().message.should.equal('3 Entities selected');
+
+      rowCheckboxes.forEach(checkbox => {
+        checkbox.element.checked.should.be.true;
+      });
+
+      // unselect all
+      await headerCheckbox.setValue(false);
+      actionBar.props().state.should.be.false;
+      rowCheckboxes.forEach(checkbox => {
+        checkbox.element.checked.should.be.false;
+      });
+    });
+
+    it('handles bulk delete request successfully', () => load('/projects/1/entity-lists/trees/entities')
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .beforeEachResponse((_, { url, data }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+        const entities = testData.extendedEntities.sorted();
+        const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
+        data.ids.should.eql(expectedUUIDs);
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.false;
+
+        const remainingRows = component.findAllComponents(EntityMetadataRow);
+        remainingRows.length.should.equal(1);
+
+        const deletedEntitiesButton = component.find('.toggle-deleted-entities');
+        deletedEntitiesButton.text().should.equal('2 deleted Entities');
+      }));
+
+    it('shows alert on failure of bulk delete request', () => loadEntityList()
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+      })
+      .respondWithProblem(500.1)
+      .afterResponse(component => {
+        component.should.alert('danger');
+      }));
+
+    it('handles try again button when bulk delete fails', () => load('/projects/1/entity-lists/trees/entities')
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithProblem(500.1)
+      .complete()
+      .request(component => {
+        const tryAgainButton = component.find('.alert .btn');
+        return tryAgainButton.trigger('click');
+      })
+      .beforeEachResponse((_, { url, data }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+        const entities = testData.extendedEntities.sorted();
+        const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
+        data.ids.should.eql(expectedUUIDs);
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const remainingRows = component.findAllComponents(EntityMetadataRow);
+        remainingRows.length.should.equal(1);
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.false;
+      }));
+
+    it('should undo the bulk delete', () => load('/projects/1/entity-lists/trees/entities')
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(component => {
+        const undoButton = component.find('.alert .btn');
+        return undoButton.trigger('click');
+      })
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const remainingRows = component.findAllComponents(EntityMetadataRow);
+        remainingRows.length.should.equal(3);
+        const deletedEntitiesButton = component.find('.toggle-deleted-entities');
+        deletedEntitiesButton.exists().should.be.false;
+      }));
+
+    it('shows alert when bulk restore fails and doesnt show action bar on hiding the alert', () => loadEntityList()
+      .complete()
+      .request(async component => {
+        // First perform bulk delete to have entities to restore
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(component => component.vm.$container.alert.cta.handler())
+      .beforeEachResponse((_, { url }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+      })
+      .respondWithProblem(500.1)
+      .afterResponse(component => {
+        component.should.alert('danger');
+        component.vm.alert.last.hide();
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.false;
+      }));
+
+    it('handles try again button when bulk restore fails', () => load('/projects/1/entity-lists/trees/entities')
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(component => {
+        const undoButton = component.find('.alert .btn');
+        return undoButton.trigger('click');
+      })
+      .respondWithProblem(500.1)
+      .complete()
+      .request(component => {
+        const tryAgainButton = component.find('.alert .btn');
+        return tryAgainButton.trigger('click');
+      })
+      .beforeEachResponse((_, { url, data }) => {
+        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+        const entities = testData.extendedEntities.sorted();
+        const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
+        data.ids.should.eql(expectedUUIDs);
+      })
+      .respondWithSuccess()
+      .afterResponse(component => {
+        const remainingRows = component.findAllComponents(EntityMetadataRow);
+        remainingRows.length.should.equal(3); // All 3 entities should be back
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.false;
+      }));
+
+    it('disables the other controls during bulk delete operation', () => {
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/trees/entities', { attachTo: document.body })
+        .complete()
+        .request(async component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.false;
+
+          const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+          return component.find('.action-bar-container .btn-primary').trigger('click');
+        })
+        .beforeEachResponse(component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.true;
+          disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
+
+          // Assert that filters, table, pagination controls are in the disabled container
+          disableContainer.find('#entity-list-actions').exists().should.be.true;
+          disableContainer.find('#entity-table').exists().should.be.true;
+          disableContainer.find('.pagination').exists().should.be.true;
+          disableContainer.find('#refresh-button').exists().should.be.true;
+
+          // Assert "Deleted Entities" button is hidden
+          component.find('.toggle-deleted-entities').should.be.hidden(true);
+        })
+        .respondWithSuccess()
+        .afterResponse(component => {
+          const disableContainer = component.getComponent({ name: 'DisableContainer' });
+          disableContainer.props().disabled.should.be.false;
+        });
+    });
+
+    it('hides alert when entities are selected', async () => {
+      const component = await loadEntityList();
+
+      // Show an alert first
+      component.vm.alert.info('Some alert message');
+      component.vm.alert.state.should.be.true;
+
+      // Select an entity by clicking its checkbox - this should hide the alert
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+
+      component.vm.alert.state.should.be.false;
+    });
+
+    it('removes entity from selection when individually deleted', () => loadEntityList()
+      .complete()
+      .request(async component => {
+        const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+        await checkboxes[0].setValue(true);
+        await checkboxes[1].setValue(true);
+
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.true;
+        actionBar.props().message.should.equal('2 Entities selected');
+
+        await component.get('.entity-metadata-row:first-child .delete-button').trigger('click');
+        return component.get('#entity-delete .btn-danger').trigger('click');
+      })
+      .respondWithSuccess()
+      .afterResponse(async component => {
+        const actionBar = component.findComponent({ name: 'ActionBar' });
+        actionBar.props().state.should.be.true;
+        actionBar.props().message.should.equal('1 Entity selected');
+      }));
+
+    it('clears selected entities when action bar close button is pressed', async () => {
+      const component = await loadEntityList();
+
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      await checkboxes[0].setValue(true);
+      await checkboxes[1].setValue(true);
+
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+      actionBar.props().state.should.be.true;
+      actionBar.props().message.should.equal('2 Entities selected');
+
+      await actionBar.find('.close').trigger('click');
+
+      actionBar.props().state.should.be.false;
+      checkboxes[0].element.checked.should.be.false;
+      checkboxes[1].element.checked.should.be.false;
+    });
+
+    it('clears selected entities when refresh completes', async () => {
+      const component = await loadEntityList()
+        .complete()
+        .request(async c => {
+          const checkboxes = c.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+
+          checkboxes[0].element.checked.should.be.true;
+          checkboxes[1].element.checked.should.be.true;
+
+          const actionBar = c.findComponent({ name: 'ActionBar' });
+          actionBar.props().state.should.be.true;
+          return c.get('#refresh-button').trigger('click');
+        })
+        .respondWithData(testData.entityOData)
+        .complete();
+
+      const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+      checkboxes[0].element.checked.should.be.false;
+      checkboxes[1].element.checked.should.be.false;
+
+      const actionBar = component.findComponent({ name: 'ActionBar' });
+      actionBar.props().state.should.be.false;
+    });
+
+    it('aborts refresh request when bulk delete is initiated during refresh', () =>
+      loadEntityList()
+        .complete()
+        .request(async component => {
+          sinon.spy(component.vm.$container.requestData.localResources.odataEntities, 'cancelRequest');
+          component.get('#refresh-button').trigger('click');
+          const checkboxes = component.findAll('.entity-metadata-row input[type="checkbox"]');
+          await checkboxes[0].setValue(true);
+          await checkboxes[1].setValue(true);
+          return component.find('.action-bar-container .btn-primary').trigger('click');
+        })
+        .respondWithData(testData.entityOData)
+        .respondWithSuccess()
+        .afterResponses((component) => {
+          component.vm.$container.requestData.localResources.odataEntities.cancelRequest.called.should.be.true;
+        }));
+  });
+
+  it('sets allSelected to false when all entities on current page are deleted and user navigates to next page', () => {
+    createEntities(251);
+    return loadEntityList()
+      .complete()
+      .request(async component => {
+        const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+        await headerCheckbox.setValue(true);
+        return component.find('.action-bar-container .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(component => component.find('button[aria-label="Next page"]').trigger('click'))
+      .respondWithData(() => testData.entityOData(1, 250))
+      .afterResponse(component => {
+        const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+        headerCheckbox.element.checked.should.be.false;
+      });
+  });
+
+  it('preserves select all checkbox state when edit modal is cancelled', async () => {
+    createEntities(3);
+    const component = await loadEntityList();
+
+    const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+    await headerCheckbox.setValue(true);
+    headerCheckbox.element.checked.should.be.true;
+
+    await component.get('.entity-metadata-row:first-child .update-button').trigger('click');
+
+    await component.get('#entity-update .btn-link').trigger('click');
+
+    headerCheckbox.element.checked.should.be.true;
+  });
+
+  it('unchecks select all checkbox when action bar close button is pressed', async () => {
+    createEntities(3);
+    const component = await loadEntityList();
+
+    const headerCheckbox = component.find('#entity-table input[type="checkbox"]');
+    await headerCheckbox.setValue(true);
+    headerCheckbox.element.checked.should.be.true;
+
+    const actionBar = component.findComponent({ name: 'ActionBar' });
+    await actionBar.find('.close').trigger('click');
+
+    headerCheckbox.element.checked.should.be.false;
   });
 });

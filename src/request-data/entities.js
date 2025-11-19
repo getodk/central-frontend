@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 import { shallowReactive, reactive } from 'vue';
 
 import { useRequestData } from './index';
+import { computeIfExists } from './util';
 
 const transformValue = (data, config) => {
   const { searchParams } = new URL(config.url, window.location.origin);
@@ -22,7 +23,8 @@ const transformValue = (data, config) => {
     ...entity,
     __system: {
       ...entity.__system,
-      rowNumber: count - skip - index
+      rowNumber: count - skip - index,
+      selected: false
     }
   }));
 };
@@ -48,5 +50,9 @@ export default () => {
       value: data['@odata.count']
     })
   }));
-  return { odataEntities: entityOData, deletedEntityCount };
+  const entityCreators = createResource('entityCreators', () => ({
+    ids: computeIfExists(() =>
+      entityCreators.reduce((set, { id }) => set.add(id), new Set()))
+  }));
+  return { odataEntities: entityOData, deletedEntityCount, entityCreators };
 };

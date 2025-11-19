@@ -90,6 +90,7 @@ watch(() => props.modelValue, (value) => {
 
   .close {
     right: 10px;
+    top: 6px;
   }
 }
 </style>
@@ -151,6 +152,11 @@ watch(() => props.modelValue, (value) => {
   "sw": {
     "action": {
       "clearSearch": "Futa utafutaji"
+    }
+  },
+  "zh": {
+    "action": {
+      "clearSearch": "清除搜索条件"
     }
   },
   "zh-Hant": {

@@ -137,6 +137,8 @@ const create = () => {
   "pt": {
     "title": "Versão Rascunho",
     "subtitle": "Não há Rascunho ativo para esse Formulário",
+    "toMakeChanges": "para alterar esse Formulário ou seus anexos.",
+    "noEffectUntilPublish": "A versão publicada não será afetada até que você publique o seu Rascunho.",
     "action": {
       "create": "Criar um novo rascunho"
     }
@@ -144,6 +146,15 @@ const create = () => {
   "sw": {
     "action": {
       "create": "Unda Rasimu mpya"
+    }
+  },
+  "zh": {
+    "title": "草稿版本",
+    "subtitle": "此表单无活跃草稿",
+    "toMakeChanges": "以修改此表单或其附件。",
+    "noEffectUntilPublish": "在您发布草稿之前，已发布版本不会受到影响。",
+    "action": {
+      "create": "创建新草稿"
     }
   },
   "zh-Hant": {

@@ -166,6 +166,10 @@ const placeholder = (counts) => counts.selected;
       "columns": "Colunas exibidas",
       "search": "Colunas de busca..."
     },
+    "action": {
+      "all": "Todos",
+      "none": "Nenhum"
+    },
     "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
   },
   "sw": {
@@ -174,6 +178,17 @@ const placeholder = (counts) => counts.selected;
       "search": "Tafuta safu wima..."
     },
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
+  },
+  "zh": {
+    "field": {
+      "columns": "显示列",
+      "search": "搜索列…"
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "warning": "选择过多列可能导致设备运行缓慢。"
   },
   "zh-Hant": {
     "field": {

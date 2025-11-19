@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.create'">
-        <span class="icon-magic-wand entity-icon"></span>
+        <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
             <entity-link v-if="entityDetails?.currentVersion?.label != null"
@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.update.version'">
-        <span class="icon-magic-wand entity-icon"></span>
+        <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
             <entity-link v-if="entityDetails?.currentVersion?.label != null"
@@ -419,9 +419,9 @@ export default {
     "title": {
       "create": "Übermittelt von {name}",
       "entity": {
-        "create": "Entität {label} in {dataset} Entitätsliste erzeugt",
-        "update": "Entität {label} in {dataset} Entitätsliste aktualisiert",
-        "error": "Problem beim Erstellen einer Entität"
+        "create": "Objekt {label} in {dataset} Objektliste erzeugt",
+        "update": "Objekt {label} in {dataset} Objektliste aktualisiert",
+        "error": "Problem beim Erstellen eines Objekts"
       },
       "updateReviewState": {
         "null": {
@@ -449,7 +449,7 @@ export default {
       "delete": "Gelöscht von {name}",
       "undelete": "Wiederhergestellt von {name}",
       "submissionBacklog": {
-        "hold": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung der Entität",
+        "hold": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung des Objekts",
         "force": "Bearbeitete Übermittlung aus dem Rückstand ohne vorherige Übermittlung in der Offline-Verbuchungskette",
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
@@ -663,6 +663,7 @@ export default {
       },
       "comment": "Comentado por {name}",
       "delete": "Deletado por {name}",
+      "undelete": "Recuperado por {name}",
       "submissionBacklog": {
         "hold": "Aguardando Resposta anterior na cadeia de atualização offline antes de atualizar a Entidade",
         "force": "Resposta processada do backlog sem Resposta anterior na cadeia de atualização offline",
@@ -701,6 +702,46 @@ export default {
         }
       },
       "comment": "Maoni kutoka kwa {name}"
+    }
+  },
+  "zh": {
+    "title": {
+      "create": "由{name}提交",
+      "entity": {
+        "create": "在{dataset}实体清单中建立了实体{label}",
+        "update": "在{dataset}实体清单中更新了实体{label}",
+        "error": "实体处理异常"
+      },
+      "updateReviewState": {
+        "null": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已接收"
+        },
+        "hasIssues": {
+          "full": "{name}{reviewState}",
+          "reviewState": "存在异常"
+        },
+        "edited": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已编辑"
+        },
+        "approved": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已批准"
+        },
+        "rejected": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已拒绝"
+        }
+      },
+      "comment": "由{name}评论",
+      "delete": "由{name}删除",
+      "undelete": "由{name}复原",
+      "submissionBacklog": {
+        "hold": "正在等待离线更新链中的前序提交，随后将更新实体",
+        "force": "已处理积压队列中的提交（离线更新链中无前序提交）",
+        "reprocess": "离线更新链中的前序提交已接收"
+      }
     }
   },
   "zh-Hant": {
