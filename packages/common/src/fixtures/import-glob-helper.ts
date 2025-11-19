@@ -26,7 +26,7 @@ if (IS_NODE_RUNTIME) {
 
 		async blob(): Promise<Blob> {
 			const buffer = await readFile(this.fsPath);
-			return new Blob([buffer]);
+			return new Blob([new Uint8Array(buffer)]);
 		}
 	}
 

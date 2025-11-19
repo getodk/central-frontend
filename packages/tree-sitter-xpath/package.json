@@ -21,20 +21,21 @@
   ],
   "engines": {
     "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
-    "yarn": "1.22.22"
+    "yarn": "4.10.3"
   },
   "scripts": {
-    "build": "npm-run-all -nl build:*",
+    "build": "npm-run-all -nl 'build:*'",
     "build:pre": "node ./scripts/build/pre.mjs",
     "build:js": "vite build",
     "build:tree-sitter": "cd dist && tree-sitter generate && tree-sitter build --wasm",
     "build:parser-types": "node ./scripts/build/parser-types.mjs",
-    "test": "npm-run-all -nl test:*",
+    "test": "npm-run-all -nl 'test:*'",
     "test:types": "tsc --project ./tsconfig.json",
     "test:grammar": "tree-sitter test --wasm"
   },
   "devDependencies": {
     "@asgerf/dts-tree-sitter": "0.21.0",
+    "npm-run-all2": "^8.0.4",
     "tree-sitter": "0.22.1",
     "tree-sitter-cli": "0.24.5",
     "vite": "^7.0.8",
@@ -43,10 +44,6 @@
   },
   "peerDependencies": {
     "web-tree-sitter": "0.24.5"
-  },
-  "resolutions": {
-    "**/tree-sitter": "0.22.1",
-    "@asgerf/dts-tree-sitter/tree-sitter": "0.22.1"
   },
   "publishConfig": {
     "access": "public"

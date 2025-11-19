@@ -36,10 +36,10 @@
   ],
   "engines": {
     "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
-    "yarn": "1.22.22"
+    "yarn": "4.10.3"
   },
   "scripts": {
-    "test": "npm-run-all --print-name --print-label test-node:* test-browser:*",
+    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
     "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
@@ -53,6 +53,7 @@
   "devDependencies": {
     "@vitest/browser": "^3.2.4",
     "jsdom": "^26.1.0",
+    "npm-run-all2": "^8.0.4",
     "vite": "^7.0.8",
     "vitest": "^3.2.4"
   }

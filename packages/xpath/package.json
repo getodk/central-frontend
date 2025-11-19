@@ -32,15 +32,14 @@
   ],
   "engines": {
     "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
-    "yarn": "1.22.22"
+    "yarn": "4.10.3"
   },
   "scripts": {
-    "build": "npm-run-all -nl build:*",
+    "build": "npm-run-all -nl 'build:*'",
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
     "dev": "vite",
-    "//": "echo '--continue-on-error is temporary, intent to show all test environments running in CI'",
-    "test": "npm-run-all --continue-on-error --print-name --print-label test-node:* test-browser:*",
+    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
     "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
@@ -49,7 +48,7 @@
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
     "test-watch:webkit": "BROWSER_NAME=webkit vitest",
-    "test:types": "npm-run-all -nl test:types:*",
+    "test:types": "npm-run-all -nl 'test:types:*'",
     "test:types:main": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit",
     "test:types:test": "tsc --project ./test/tsconfig.json --emitDeclarationOnly false --noEmit"
   },
@@ -66,6 +65,7 @@
     "@vitest/browser": "^3.2.4",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",
     "jsdom": "^26.1.0",
+    "npm-run-all2": "^8.0.4",
     "vite": "^7.0.8",
     "vite-plugin-babel": "^1.3.2",
     "vite-plugin-dts": "^4.5.4",

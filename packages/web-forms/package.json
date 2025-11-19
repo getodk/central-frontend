@@ -24,16 +24,16 @@
   ],
   "engines": {
     "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
-    "yarn": "1.22.22"
+    "yarn": "4.10.3"
   },
   "scripts": {
-    "build": "npm-run-all -nl build:*",
+    "build": "npm-run-all -nl 'build:*'",
     "build:clean": "rimraf dist/ dist-demo/",
     "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
     "dev": "vite",
     "dist-demo": "yarn build && yarn vite serve dist-demo --port 5174",
-    "test": "npm-run-all -nl test:*",
+    "test": "npm-run-all -nl 'test:*'",
     "test:e2e:functional:all": "playwright test --project=functional-*",
     "test:e2e:functional:chromium": "playwright test --project=functional-chromium",
     "test:e2e:functional:firefox": "playwright test --project=functional-firefox",
@@ -49,7 +49,7 @@
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
     "test-watch:webkit": "BROWSER_NAME=webkit vitest",
-    "test:types": "npm-run-all -nl test:types:*",
+    "test:types": "npm-run-all -nl 'test:types:*'",
     "test:types:app": "vue-tsc --project ./tsconfig.app.json --emitDeclarationOnly false --noEmit",
     "test:types:node": "vue-tsc --project ./tsconfig.node.json --emitDeclarationOnly false --noEmit",
     "test:types:vitest": "vue-tsc --project ./tsconfig.vitest.json --emitDeclarationOnly false --noEmit"
@@ -66,16 +66,19 @@
     "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^26.1.0",
+    "npm-run-all2": "^8.0.4",
     "primeflex": "^4.0.0",
     "primevue": "4.3.3",
     "ramda": "^0.31.3",
+    "rimraf": "^6.0.1",
     "sass": "^1.89.2",
     "vite": "^7.0.8",
     "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-static-copy": "^3.1.2",
     "vitest": "^3.2.4",
     "vue": "3.5.18",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue-tsc": "^3.0.1"
   },
   "peerDependencies": {
     "vue": "^3.5.18"
