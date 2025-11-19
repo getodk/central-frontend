@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import { FillFormPage } from '../page-objects/pages/FillFormPage.ts';
-import { PreviewPage } from '../page-objects/pages/PreviewPage.ts';
+import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
+import { PreviewPage } from '../../page-objects/pages/PreviewPage.ts';
 
 test.describe('Geopoint Question Type', () => {
 	test.describe('Geolocation permission granted', () => {

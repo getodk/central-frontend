@@ -16,9 +16,16 @@ interface PackageJson {
 const { version = 'Unknown' } = JSON.parse(
 	readFileSync(resolve('package.json'), 'utf-8')
 ) as PackageJson;
-const buildNumber = execSync('git rev-parse --short HEAD', {
-	encoding: 'utf-8',
-}).trim();
+
+let buildNumber: string | null = null;
+try {
+	buildNumber = execSync('git rev-parse --short HEAD', {
+		encoding: 'utf-8',
+		stdio: ['ignore', 'pipe', 'ignore'],
+	}).trim();
+} catch {
+	buildNumber = null;
+}
 
 const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 

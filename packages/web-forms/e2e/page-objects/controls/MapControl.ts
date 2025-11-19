@@ -58,6 +58,21 @@ export class MapControl {
 		await this.page.mouse.up();
 	}
 
+	async longPressMap(mapComponent: Locator, moveX: number, moveY: number) {
+		const box = await mapComponent.locator(this.MAP_CONTAINER_SELECTOR).boundingBox();
+		if (!box) {
+			return;
+		}
+
+		const centerX = box.x + box.width / 2;
+		const centerY = box.y + box.height / 2;
+
+		await this.page.mouse.move(centerX + moveX, centerY + moveY);
+		await this.page.mouse.down();
+		await this.page.waitForTimeout(1000); // Press and hold
+		await this.page.mouse.up();
+	}
+
 	async zoomIn(mapComponent: Locator, times = 1) {
 		const button = mapComponent.locator('.ol-zoom').getByText('+', { exact: true });
 		await expect(button).toBeVisible();
@@ -88,6 +103,8 @@ export class MapControl {
 		const button = mapComponent.locator('button[title="Zoom to current location"]');
 		await expect(button).toBeVisible();
 		await button.click();
+		// Wait for the current location icon to appear on the map.
+		await this.page.waitForTimeout(this.ANIMATION_TIME);
 	}
 
 	async toggleFullScreen(mapComponent: Locator) {
@@ -128,10 +145,30 @@ export class MapControl {
 		await button.click();
 	}
 
+	async savePoint(mapComponent: Locator) {
+		const button = mapComponent.locator('.map-status-container').getByText('Save point');
+		await expect(button).toBeVisible();
+		await button.click();
+	}
+
+	async removeSavedPoint(mapComponent: Locator) {
+		const button = mapComponent.locator('.map-status-container').getByText('Remove point');
+		await expect(button).toBeVisible();
+		await button.click();
+	}
+
 	async viewDetailsOfSavedFeature(mapComponent: Locator) {
 		const button = mapComponent.locator('.map-status-container').getByText('View details');
 		await expect(button).toBeVisible();
 		await button.click();
+	}
+
+	async getLocationFromOverlay(mapComponent: Locator) {
+		const button = mapComponent.locator('.map-overlay').getByText('Get location');
+		await expect(button).toBeVisible();
+		await button.click();
+		// Wait for the current location icon to appear on the map.
+		await this.page.waitForTimeout(this.ANIMATION_TIME);
 	}
 
 	async closeProperties(mapComponent: Locator) {
@@ -177,7 +214,7 @@ export class MapControl {
 		}
 
 		await expect(map).toHaveScreenshot(snapshotName, {
-			maxDiffPixels: 5000,
+			maxDiffPixelRatio: 0.02,
 		});
 	}
 }
