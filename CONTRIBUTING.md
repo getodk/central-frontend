@@ -163,8 +163,6 @@ We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/re
 npm run transifex:fix
 ```
 
-`restructure.js` will also be run in a Git pre-commit hook to help ensure that changes to `strings_en.json` are committed.
-
 `restructure.js` adds developer comments to `strings_en.json` by reading JSON5 comments. To use JSON5 comments in a single file component, specify `lang="json5"` for the `i18n` custom block. For example:
 
 ```html
