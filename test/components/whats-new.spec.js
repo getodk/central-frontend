@@ -72,7 +72,8 @@ describe('WhatsNew modal', () => {
 
   describe('set user preference', () => {
     it('sets the whatsNewDismissed2025_1 preference when modal closed', async () => {
-      mockLogin({ createdAt: '2025-01-01' });
+      // Setting default mailingListOptIn to false prevents extra request being sent to change it.
+      mockLogin({ createdAt: '2025-01-01', preferences: { site: { mailingListOptIn: false } } });
       await load('/', { root: false })
         .complete()
         .request(app => app.findComponent(WhatsNew).find('.btn').trigger('click'))

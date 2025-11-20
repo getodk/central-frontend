@@ -66,8 +66,9 @@ watch(() => projects.dataExists, () => {
 function hideModal() {
   // Set modal to always be dismissed
   currentUser.preferences.site.whatsNewDismissed2025_1 = true;
-  // Set mailing list opt in to what was selected
-  currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
+  // If preference changed, set mailing list opt in to what was selected
+  if (mailingListOptIn.value !== currentUser.preferences.site.mailingListOptIn)
+    currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
   isVisible.value = false;
 }
 
