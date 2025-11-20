@@ -33,6 +33,9 @@ import { noargs, noop } from '../../util/util';
 import { styleBox } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'MapView'
+});
 const props = defineProps({
   url: {
     type: String,
