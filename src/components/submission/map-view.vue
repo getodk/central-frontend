@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-view ref="view" :odata="odata" :url="geojsonUrl">
+  <map-view ref="view" :odata="odata" :url="geojsonUrl"
+    :loading="$t('loading')">
     <template #popup="{ feature, odata: odataElement, listeners }">
       <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
         :instance-id="feature?.id" :fieldpath="feature?.properties?.fieldpath"

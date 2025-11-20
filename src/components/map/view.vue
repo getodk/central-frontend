@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="map-view" ref="el">
-    <loading :state="geojson.initiallyLoading || showingMap"
-      :message="$t('loading')"/>
+    <Loading :state="geojson.initiallyLoading || showingMap"
+      :message="loading"/>
     <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
       @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged" @hit="handleHit"/>
@@ -40,6 +40,10 @@ const props = defineProps({
   },
   odata: {
     type: Object,
+    required: true
+  },
+  loading: {
+    type: String,
     required: true
   }
 });
