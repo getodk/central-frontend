@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <map-view ref="view" :odata="odata" :url="geojsonUrl">
     <template #popup="{ feature, odata: odataElement, listeners }">
       <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
-        :feature="feature" :odata="odataElement"
+        :instance-id="feature?.id" :fieldpath="feature?.properties?.fieldpath"
+        :odata="odataElement"
         :awaiting-response="awaitingResponses.has(feature?.id)" v-on="listeners"
         @review="$emit('review', $event)" @delete="$emit('delete', $event)"/>
     </template>

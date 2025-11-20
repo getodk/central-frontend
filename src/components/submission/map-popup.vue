@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-popup v-show="feature != null" id="submission-map-popup" ref="popup"
+  <map-popup v-show="instanceId != null" id="submission-map-popup" ref="popup"
     :back="odata != null" @hide="$emit('hide')" @back="$emit('back')">
     <template v-if="submission.dataExists" #title>
       <submission-review-state :value="submission.__system.reviewState" tooltip/>
@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
               <template v-if="field.binary === true && getValue(submission.data, field) != null"
                 #value>
                 <submission-attachment-link :project-id="projectId"
-                  :xml-form-id="xmlFormId" :instance-id="feature.id"
+                  :xml-form-id="xmlFormId" :instance-id="instanceId"
                   :attachment-name="getValue(submission.data, field)"/>
               </template>
             </dl-data>
@@ -97,7 +97,8 @@ const props = defineProps({
     type: String,
     required: true
   },
-  feature: Object,
+  instanceId: String,
+  fieldpath: String,
   odata: Object,
   awaitingResponse: Boolean
 });
@@ -110,7 +111,7 @@ const fetchData = () => submission.request({
   url: apiPaths.odataSubmission(
     props.projectId,
     props.xmlFormId,
-    props.feature.id,
+    props.instanceId,
     { $wkt: true }
   )
 }).catch(() => { emit('hide'); });
@@ -118,9 +119,9 @@ const fetchData = () => submission.request({
 const popup = useTemplateRef('popup');
 
 watch(
-  () => props.feature,
-  (feature) => {
-    if (feature != null) {
+  () => props.instanceId,
+  (instanceId) => {
+    if (instanceId != null) {
       if (props.odata == null)
         fetchData();
       else
@@ -133,10 +134,9 @@ watch(
   { immediate: true }
 );
 
-const fieldpath = computed(() => props.feature?.properties?.fieldpath);
 const missingField = computed(() => {
-  if (fieldpath.value == null || fields.selectable.find(field => field.path === fieldpath.value)) return null;
-  const elements = fieldpath.value.split('/');
+  if (props.fieldpath == null || fields.selectable.find(field => field.path === props.fieldpath)) return null;
+  const elements = props.fieldpath.split('/');
   elements.shift();
   return { name: last(elements), header: elements.join('-') };
 });
