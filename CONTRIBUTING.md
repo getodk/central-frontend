@@ -157,7 +157,7 @@ We use [Transifex](https://www.transifex.com/getodk/central/) to manage our tran
 
 `strings_en.json` is formatted as Transifex [Structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of Structured JSON is that it supports developer comments. However, Structured JSON is a different format from the JSON that Vue I18n expects.
 
-We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. You can run `restructure.js` via this `npm` script:
+We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. You can run `restructure.js` via:
 
 ```bash
 npm run transifex:fix
