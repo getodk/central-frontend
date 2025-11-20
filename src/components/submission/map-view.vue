@@ -10,11 +10,11 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-view ref="view" :odata="odata" :url="geojsonUrl"
-    :awaiting-responses="awaitingResponses">
-    <template #popup="{ listeners, ...slotProps }">
+  <map-view ref="view" :odata="odata" :url="geojsonUrl">
+    <template #popup="{ feature, odata: odataElement, listeners }">
       <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
-        v-bind="slotProps" v-on="listeners"
+        :feature="feature" :odata="odataElement"
+        :awaiting-response="awaitingResponses.has(feature?.id)" v-on="listeners"
         @review="$emit('review', $event)" @delete="$emit('delete', $event)"/>
     </template>
     <template #overlap="{ features, listeners }">

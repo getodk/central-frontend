@@ -17,7 +17,6 @@ except according to the terms contained in the LICENSE file.
       @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged" @hit="handleHit"/>
     <slot name="popup" v-bind="selection"
-      :awaiting-response="awaitingResponses.has(selection?.feature?.id)"
       :listeners="{ hide: hidePopup, back: backToOverlap }">
     </slot>
     <div v-show="selection == null">
@@ -45,10 +44,6 @@ const props = defineProps({
   },
   odata: {
     type: Object,
-    required: true
-  },
-  awaitingResponses: {
-    type: Set,
     required: true
   }
 });
