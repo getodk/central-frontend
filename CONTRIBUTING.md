@@ -157,13 +157,11 @@ We use [Transifex](https://www.transifex.com/getodk/central/) to manage our tran
 
 `strings_en.json` is formatted as Transifex [Structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of Structured JSON is that it supports developer comments. However, Structured JSON is a different format from the JSON that Vue I18n expects.
 
-We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. Run `restructure.js` from the root directory of the repository:
+We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. You can run `restructure.js` via:
 
 ```bash
-node bin/transifex/restructure.js
+npm run transifex:fix
 ```
-
-`restructure.js` will also be run in a Git pre-commit hook to help ensure that changes to `strings_en.json` are committed.
 
 `restructure.js` adds developer comments to `strings_en.json` by reading JSON5 comments. To use JSON5 comments in a single file component, specify `lang="json5"` for the `i18n` custom block. For example:
 
