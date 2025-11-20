@@ -11,9 +11,6 @@ jobs:
     steps:
       - checkout
       - run: npm ci
-      - run: |
-          node bin/transifex/restructure.js
-          git diff --exit-code -- transifex/strings_en.json
       - run: npm run lint
       - browser-tools/install-chrome
       - run: npm run test
