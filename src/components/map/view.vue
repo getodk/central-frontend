@@ -101,7 +101,9 @@ const sizeMap = () => {
 };
 
 const selection = shallowRef(null);
-const selectionChanged = (feature) => { selection.value = { feature }; };
+const selectionChanged = (feature) => {
+  selection.value = feature != null ? { feature } : null;
+};
 
 const map = useTemplateRef('map');
 
@@ -112,9 +114,8 @@ const overlapPreview = (data) => {
   map.value.selectFeature(data != null ? data.feature.id : null, false);
 };
 const overlapSelect = (data) => {
-  const { feature } = data;
-  map.value.selectFeature(feature.id, false);
-  selection.value = { feature, odata: data.odata };
+  map.value.selectFeature(data.feature.id, false);
+  selection.value = data;
 };
 
 const hidePopup = () => {

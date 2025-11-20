@@ -24,8 +24,8 @@ except according to the terms contained in the LICENSE file.
         <template #title>
           {{ $tcn('overlapTitle', features != null ? features.length : 0) }}
         </template>
-        <template #feature="slotProps">
-          {{ slotProps.odata.meta?.instanceName ?? slotProps.odata.__id }}
+        <template #feature="{ odata: odataElement }">
+          {{ odataElement.meta?.instanceName ?? odataElement.__id }}
         </template>
       </map-overlap-popup>
     </template>
@@ -80,12 +80,10 @@ const overlapUrl = (query) =>
   apiPaths.odataSubmissions(props.projectId, props.xmlFormId, false, query);
 
 const view = ref(null);
-const delegateToView = (name) => (...args) => view.value[name](...args);
-
 defineExpose({
-  refresh: delegateToView('refresh'),
-  cancelRefresh: delegateToView('cancelRefresh'),
-  afterDelete: delegateToView('afterDelete'),
+  // Delegate these functions to the MapView.
+  ...Object.fromEntries(['refresh', 'cancelRefresh', 'afterDelete']
+    .map(name => [name, (...args) => view.value[name](...args)])),
 
   afterReview: noop
 });
