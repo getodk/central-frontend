@@ -16,13 +16,9 @@ except according to the terms contained in the LICENSE file.
     <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
       @show="setShowing(true)" @shown="setShowing(false)"
       @selection-changed="selectionChanged" @hit="handleHit"/>
-    <slot name="popup" v-bind="selection"
-      :listeners="{ hide: hidePopup, back: backToOverlap }">
-    </slot>
+    <slot name="popup" v-bind="selection" :listeners="popupListeners"></slot>
     <div v-show="selection == null">
-      <slot name="overlap" :features="overlap"
-        :listeners="{ hide: hidePopup, preview: overlapPreview, select: overlapSelect }">
-      </slot>
+      <slot name="overlap" :features="overlap" :listeners="overlapListeners"></slot>
     </div>
   </div>
 </template>
@@ -105,25 +101,27 @@ const selectionChanged = (feature) => {
   selection.value = feature != null ? { feature } : null;
 };
 
-const map = useTemplateRef('map');
-
 const overlap = shallowRef(null);
 const handleHit = (hits) => { overlap.value = hits.length > 1 ? hits : null; };
 watch(() => geojson.data, () => { overlap.value = null; });
-const overlapPreview = (data) => {
-  map.value.selectFeature(data != null ? data.feature.id : null, false);
-};
-const overlapSelect = (data) => {
-  map.value.selectFeature(data.feature.id, false);
-  selection.value = data;
-};
 
+const map = useTemplateRef('map');
 const hidePopup = () => {
   map.value.selectFeature(null);
   overlap.value = null;
 };
-const backToOverlap = () => {
-  map.value.selectFeature(null);
+const backToOverlap = () => { map.value.selectFeature(null); };
+const popupListeners = { hide: hidePopup, back: backToOverlap };
+
+const overlapListeners = {
+  hide: hidePopup,
+  preview: (data) => {
+    map.value.selectFeature(data != null ? data.feature.id : null, false);
+  },
+  select: (data) => {
+    map.value.selectFeature(data.feature.id, false);
+    selection.value = data;
+  }
 };
 
 const afterDelete = (instanceId) => {
