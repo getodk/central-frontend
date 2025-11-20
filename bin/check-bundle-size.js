@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-console, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
+/* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
 
 const { execSync } = require('node:child_process');
 const { basename, extname } = require('node:path');
