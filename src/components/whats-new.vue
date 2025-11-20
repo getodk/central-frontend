@@ -78,11 +78,18 @@ function hideModal() {
 
 .modal-actions {
   display: flex;
+  column-gap: 10px;
   align-items: center;
 
   .checkbox {
+    flex: 1;
     margin-bottom: 0px;
     font-size: 12px;
+
+    label {
+      display: block;
+      text-align: left;
+    }
 
     input[type=checkbox] {
       margin-top: 2px;
