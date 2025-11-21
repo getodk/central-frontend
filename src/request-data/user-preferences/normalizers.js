@@ -53,10 +53,11 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
     return val === true;
   }
 
-  // Return true if true or undefined (not yet set)
-  // Only return false if really false
+  // Return true, false, or null/undefined based on the value
+  // true if explicitly true, false if explicitly false, null/undefined otherwise
   static mailingListOptIn(val) {
-    return val !== false;
+    if (val === true || val === false) return val;
+    return null;
   }
 }
 

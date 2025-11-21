@@ -23,13 +23,21 @@ except according to the terms contained in the LICENSE file.
         {{ $t('body') }}
       </p>
       <div class="modal-actions">
-        <div class="checkbox">
-          <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
-        </div>
-        <button type="button" class="btn btn-primary"
-          @click="hideModal">
-          {{ $t('action.done') }}
-        </button>
+        <template v-if="!initialOptIn">
+          <div class="checkbox">
+            <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
+          </div>
+          <button type="button" class="btn btn-primary"
+            @click="hideModal">
+            {{ $t('action.done') }}
+          </button>
+          </template>
+        <template v-else>
+          <button type="button" class="btn btn-primary"
+            @click="hideModal">
+            {{ $t('action.gotIt') }}
+          </button>
+        </template>
       </div>
     </template>
   </modal>
@@ -50,7 +58,8 @@ const { openModal } = inject('container');
 const { currentUser, projects } = useRequestData();
 
 const isVisible = ref(false);
-const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn);
+const initialOptIn = currentUser.preferences.site.mailingListOptIn;
+const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
 watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
@@ -66,9 +75,11 @@ watch(() => projects.dataExists, () => {
 function hideModal() {
   // Set modal to always be dismissed
   currentUser.preferences.site.whatsNewDismissed2025_1 = true;
-  // If preference changed, set mailing list opt in to what was selected
-  if (mailingListOptIn.value !== currentUser.preferences.site.mailingListOptIn)
+  // If user was not already opted in and preference changed, then save preference.
+  if (!currentUser.preferences.site.mailingListOptIn &&
+    mailingListOptIn.value !== currentUser.preferences.site.mailingListOptIn) {
     currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
+  }
   isVisible.value = false;
 }
 
