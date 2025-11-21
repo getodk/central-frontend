@@ -45,6 +45,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  // Loading message
   loading: {
     type: String,
     required: true
