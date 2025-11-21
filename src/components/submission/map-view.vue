@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, ref } from 'vue';
 
-import MapOverlapPopup from '../map-overlap-popup.vue';
+import MapOverlapPopup from '../map/overlap-popup.vue';
 import MapView from '../map/view.vue';
 import SubmissionMapPopup from './map-popup.vue';
 

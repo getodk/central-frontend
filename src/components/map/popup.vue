@@ -40,7 +40,7 @@ defineExpose({ el, resetScroll });
 </script>
 
 <style lang="scss">
-@import '../assets/scss/mixins';
+@import '../../assets/scss/mixins';
 
 .map-popup {
   display: flex;
