@@ -2303,6 +2303,11 @@
         }
       }
     },
+    "EntityMapView": {
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
+      }
+    },
     "EntityMetadataRow": {
       "reviewParallelUpdates": {
         "string": "Review parallel updates",
