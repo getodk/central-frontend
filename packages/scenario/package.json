@@ -26,8 +26,8 @@
     "./types/do-not-import.d.ts"
   ],
   "engines": {
-    "node": "^20.19.3 || ^22.12.0 || ^24.3.0",
-    "yarn": "4.10.3"
+    "node": "^20.19.3 || ^22.12.0 || ^24.11.0",
+    "yarn": "4.11.0"
   },
   "scripts": {
     "benchmark": "npm-run-all -nl 'benchmark-node:*' 'benchmark-browser:*'",
