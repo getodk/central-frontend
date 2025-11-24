@@ -73,11 +73,10 @@ watch(() => projects.dataExists, () => {
 });
 
 function hideModal() {
-  // Set modal to always be dismissed
   currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+
   // If user was not already opted in and preference changed, then save preference.
-  if (!currentUser.preferences.site.mailingListOptIn &&
-    mailingListOptIn.value !== currentUser.preferences.site.mailingListOptIn) {
+  if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
     currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
   }
   isVisible.value = false;
