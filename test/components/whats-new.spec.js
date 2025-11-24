@@ -87,15 +87,7 @@ describe('WhatsNew modal', () => {
   });
 
   describe('mailing list opt in', () => {
-    it('dismissal button text says got it if no checkbox visible and if already opted in', async () => {
-      // Setting default mailingListOptIn to false prevents extra request being sent to change it.
-      mockLogin({ createdAt: '2025-01-01', preferences: { site: { mailingListOptIn: true } } });
-      await load('/', { root: false })
-        .complete()
-        .request(app => app.findComponent(WhatsNew).get('.modal-actions > button').text().should.equal('Got it!'));
-    });
-
-    it('dismissal button text says done if not opted in', async () => {
+    it('dismissal button text', async () => {
       // Setting default mailingListOptIn to false prevents extra request being sent to change it.
       mockLogin({ createdAt: '2025-01-01', preferences: { site: { mailingListOptIn: false } } });
       await load('/', { root: false })

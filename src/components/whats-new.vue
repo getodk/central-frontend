@@ -23,21 +23,13 @@ except according to the terms contained in the LICENSE file.
         {{ $t('body') }}
       </p>
       <div class="modal-actions">
-        <template v-if="!initialOptIn">
-          <div class="checkbox">
-            <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
-          </div>
-          <button type="button" class="btn btn-primary"
-            @click="hideModal">
-            {{ $t('action.done') }}
-          </button>
-          </template>
-        <template v-else>
-          <button type="button" class="btn btn-primary"
-            @click="hideModal">
-            {{ $t('action.gotIt') }}
-          </button>
-        </template>
+        <div v-if="!initialOptIn" class="checkbox">
+          <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
+        </div>
+        <button type="button" class="btn btn-primary"
+          @click="hideModal">
+          {{ $t('action.done') }}
+        </button>
       </div>
     </template>
   </modal>
