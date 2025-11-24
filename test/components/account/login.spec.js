@@ -249,13 +249,13 @@ describe('AccountLogin', () => {
       load('/login?source=claim')
         .restoreSession(false)
         .complete()
-        .request(app => app.find('#mailingListOptIn').get('input[type="checkbox"]').element.checked.should.be.true));
+        .request(app => app.find('#mailing-list-opt-in').get('input[type="checkbox"]').element.checked.should.be.true));
 
     it('does not show the checkbox if query parameter is not included', () =>
       load('/login?source=other')
         .restoreSession(false)
         .complete()
-        .request(app => app.find('#mailingListOptIn').exists().should.be.false));
+        .request(app => app.find('#mailing-list-opt-in').exists().should.be.false));
 
     it('sends a request to opt-in to the mailing list', () => {
       testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
@@ -278,7 +278,7 @@ describe('AccountLogin', () => {
         .restoreSession(false)
         .complete()
         .request(async (app) => {
-          await app.find('#mailingListOptIn').get('input[type="checkbox"]').setValue(false);
+          await app.find('#mailing-list-opt-in').get('input[type="checkbox"]').setValue(false);
           return submit(app);
         })
         .respondWithData(() => testData.sessions.createNew())

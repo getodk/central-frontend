@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
             <form-group v-model="password" type="password"
               :placeholder="$t('field.password')" required
               autocomplete="current-password"/>
-            <div v-if="showMailingListOptIn" id="mailingListOptIn" class="checkbox">
+            <div v-if="showMailingListOptIn" id="mailing-list-opt-in" class="checkbox">
               <label>
                 <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
               </label>
