@@ -52,6 +52,13 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
   static whatsNewDismissed2025_1(val) {
     return val === true;
   }
+
+  // Return true, false, or null/undefined based on the value
+  // true if explicitly true, false if explicitly false, null/undefined otherwise
+  static mailingListOptIn(val) {
+    if (val === true || val === false) return val;
+    return null;
+  }
 }
 
 export class ProjectPreferenceNormalizer extends PreferenceNormalizer {
