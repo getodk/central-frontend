@@ -12,7 +12,7 @@ import {
 	type RuntimeValue,
 } from '../lib/codecs/getSharedValueCodec.ts';
 import type { RuntimeValueSetter, RuntimeValueState } from '../lib/codecs/ValueCodec.ts';
-import { createAttributeValueState } from '../lib/reactivity/createAttributeValueState.ts';
+import { createInstanceValueState } from '../lib/reactivity/createInstanceValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import {
@@ -32,6 +32,7 @@ import type { Root } from './Root.ts';
 export interface AttributeStateSpec {
 	readonly value: SimpleAtomicState<string>;
 	readonly instanceValue: Accessor<string>;
+	readonly relevant: Accessor<boolean>;
 }
 
 export class Attribute
@@ -91,7 +92,7 @@ export class Attribute
 	};
 
 	readonly contextReference = (): string => {
-		return '@' + this.definition.qualifiedName.getPrefixedName();
+		return this.owner.contextReference() + '/@' + this.definition.qualifiedName.getPrefixedName();
 	};
 
 	constructor(
@@ -114,7 +115,7 @@ export class Attribute
 		this.evaluator = owner.evaluator;
 		this.decodeInstanceValue = codec.decodeInstanceValue;
 
-		const instanceValueState = createAttributeValueState(this);
+		const instanceValueState = createInstanceValueState(this);
 		const valueState = codec.createRuntimeValueState(instanceValueState);
 
 		const [getInstanceValue] = instanceValueState;
@@ -129,6 +130,7 @@ export class Attribute
 			{
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
+				relevant: this.owner.isRelevant,
 			},
 			owner.instanceConfig
 		);

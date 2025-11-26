@@ -39,8 +39,8 @@ export class GroupElementDefinition extends BodyElementDefinition<'group'> {
 			return childName !== 'label';
 		});
 
-		this.children = this.body.getChildElementDefinitions(form, this, element, childElements);
 		this.reference = parseNodesetReference(parent, element, 'ref');
+		this.children = this.body.getChildElementDefinitions(form, this, element, childElements);
 		this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
 		this.label = LabelDefinition.forGroup(form, this);
 	}

@@ -39,7 +39,6 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 	readonly saveIncomplete: BindComputationExpression<'saveIncomplete'>;
 
 	// TODO: these are deferred until prioritized
-	// readonly preload: string | null;
 	// readonly preloadParams: string | null;
 	// readonly 'max-pixels': string | null;
 
@@ -95,7 +94,6 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 		this.constraintMsg = MessageDefinition.from(this, 'constraintMsg');
 		this.requiredMsg = MessageDefinition.from(this, 'requiredMsg');
 
-		// this.preload = BindComputation.forExpression(this, 'preload');
 		// this.preloadParams = BindComputation.forExpression(this, 'preloadParams');
 		// this['max-pixels'] = BindComputation.forExpression(this, 'max-pixels');
 	}

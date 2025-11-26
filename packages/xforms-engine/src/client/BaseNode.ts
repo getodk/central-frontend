@@ -1,3 +1,4 @@
+import type { Attribute } from '../instance/Attribute.ts';
 import type { TokenListParser } from '../lib/TokenListParser.ts';
 import type { AnyNodeDefinition } from '../parse/model/NodeDefinition.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
@@ -129,6 +130,11 @@ export interface BaseNodeState {
 	 * is an internal engine consideration.
 	 */
 	get value(): unknown;
+
+	/**
+	 * Nodes can own attributes, which have a literal or reference value.
+	 */
+	get attributes(): readonly Attribute[];
 }
 
 /**

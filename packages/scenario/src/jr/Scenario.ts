@@ -19,6 +19,7 @@ import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import type { Accessor, Owner, Setter } from 'solid-js';
 import { createMemo, createSignal } from 'solid-js';
 import { afterEach, assert, expect } from 'vitest';
+import { AttributeNodeAnswer } from '../answer/AttributeNodeAnswer.ts';
 import { RankValuesAnswer } from '../answer/RankValuesAnswer.ts';
 import { SelectValuesAnswer } from '../answer/SelectValuesAnswer.ts';
 import type { ValueNodeAnswer } from '../answer/ValueNodeAnswer.ts';
@@ -180,11 +181,12 @@ export class Scenario {
 		this: This,
 		...args: ScenarioStaticInitParameters
 	): Promise<This['prototype']> {
-		let formMeta: ScenarioFormMeta;
-
 		if (isFormFileName(args[0])) {
 			return this.init(r(args[0]));
-		} else if (args.length === 1) {
+		}
+
+		let formMeta: ScenarioFormMeta;
+		if (args.length === 1) {
 			const [resource] = args;
 
 			formMeta = {
@@ -463,6 +465,17 @@ export class Scenario {
 
 	answerOf(reference: string): ValueNodeAnswer {
 		return answerOf(this.instanceRoot, reference);
+	}
+
+	attributeOf(reference: string, attributeName: string): AttributeNodeAnswer {
+		const node = this.getInstanceNode(reference);
+		const attribute = node.currentState.attributes.find((attr) => {
+			return attr.definition.qualifiedName.localName === attributeName;
+		});
+		if (attribute == null) {
+			throw new Error(`No attribute node for reference: ${reference}/@${attributeName}`);
+		}
+		return new AttributeNodeAnswer(attribute);
 	}
 
 	/**

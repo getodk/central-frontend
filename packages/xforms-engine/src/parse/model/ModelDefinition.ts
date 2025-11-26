@@ -6,6 +6,7 @@ import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocument
 import type { XFormDefinition } from '../XFormDefinition.ts';
 import { generateItextChunks, type ChunkExpressionsByItextId } from './generateItextChunks.ts';
 import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
+import { ModelActionMap } from './ModelActionMap.ts';
 import { ModelBindMap } from './ModelBindMap.ts';
 import type { AnyNodeDefinition } from './NodeDefinition.ts';
 import type { NodeDefinitionMap } from './nodeDefinitionMap.ts';
@@ -15,6 +16,7 @@ import { SubmissionDefinition } from './SubmissionDefinition.ts';
 
 export class ModelDefinition {
 	readonly binds: ModelBindMap;
+	readonly actions: ModelActionMap;
 	readonly root: RootDefinition;
 	readonly nodes: NodeDefinitionMap;
 	readonly instance: StaticDocument;
@@ -25,6 +27,7 @@ export class ModelDefinition {
 		const submission = new SubmissionDefinition(form.xformDOM);
 
 		this.binds = ModelBindMap.fromModel(this);
+		this.actions = ModelActionMap.fromModel(this);
 		this.instance = parseStaticDocumentFromDOMSubtree(form.xformDOM.primaryInstanceRoot, {
 			nodesetPrefix: '/',
 		});

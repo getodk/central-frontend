@@ -1,8 +1,9 @@
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap.ts';
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
-import type { BodyClassList } from '../body/BodyDefinition.ts';
+import type { AnyBodyElementDefinition, BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { ActionDefinition } from './ActionDefinition.ts';
 import { AttributeDefinitionMap } from './AttributeDefinitionMap.ts';
 import { GroupDefinition } from './GroupDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
@@ -56,6 +57,19 @@ export class RootDefinition extends NodeDefinition<'root'> {
 		this.children = this.buildSubtree(this, template);
 	}
 
+	private mapActions(bodyElement: AnyBodyElementDefinition) {
+		const source = bodyElement.reference;
+		if (!source) {
+			return;
+		}
+		for (const child of bodyElement.element.children) {
+			if (child.nodeName === 'setvalue') {
+				const action = new ActionDefinition(this.model, child, source);
+				this.model.actions.add(action);
+			}
+		}
+	}
+
 	buildSubtree(parent: ParentNodeDefinition, node: StaticElement): readonly ChildNodeDefinition[] {
 		const { form, model } = this;
 		const { body } = form;
@@ -85,6 +99,10 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			const bind = binds.getOrCreateBindDefinition(nodeset);
 			const bodyElement = body.getBodyElement(nodeset);
 			const [firstChild, ...restChildren] = children;
+
+			if (bodyElement) {
+				this.mapActions(bodyElement);
+			}
 
 			if (bodyElement?.type === 'repeat') {
 				return RepeatDefinition.from(model, parent, bind, bodyElement, children);

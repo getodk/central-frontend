@@ -7,6 +7,7 @@ import {
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import { escapeXMLText, serializeAttributeXML } from '../../lib/xml-serialization.ts';
 import type { BindDefinition } from './BindDefinition.ts';
+import type { ModelDefinition } from './ModelDefinition.ts';
 import { NodeDefinition } from './NodeDefinition.ts';
 import type { RootDefinition } from './RootDefinition.ts';
 
@@ -29,7 +30,7 @@ export class AttributeDefinition
 	readonly qualifiedName: QualifiedName;
 
 	constructor(
-		root: RootDefinition,
+		readonly model: ModelDefinition,
 		bind: BindDefinition,
 		readonly template: StaticAttribute
 	) {
@@ -37,7 +38,7 @@ export class AttributeDefinition
 
 		const { value } = template;
 
-		this.root = root;
+		this.root = model.root;
 
 		this.value = value;
 		this.qualifiedName = template.qualifiedName;

@@ -12,6 +12,9 @@
 
                     <my-value>5</my-value>
                     <my-calculated-value/>
+                    <meta>
+                        <instanceID/>
+                    </meta>
                 </data>
             </instance>
 

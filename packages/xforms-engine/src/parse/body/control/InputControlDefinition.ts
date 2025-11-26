@@ -1,8 +1,8 @@
+import { parseToFloat, parseToInteger } from '../../../lib/number-parsers.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { InputAppearanceDefinition } from '../appearance/inputAppearanceParser.ts';
 import { inputAppearanceParser } from '../appearance/inputAppearanceParser.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
-import { parseToFloat, parseToInteger } from '../../../lib/number-parsers.ts';
 import { ControlDefinition } from './ControlDefinition.ts';
 
 export class InputControlDefinition extends ControlDefinition<'input'> {

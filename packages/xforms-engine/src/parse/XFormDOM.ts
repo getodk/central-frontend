@@ -11,6 +11,7 @@ import type {
 import { DefaultEvaluator } from '@getodk/xpath';
 
 interface DOMBindElement extends KnownAttributeLocalNamedElement<'bind', 'nodeset'> {}
+interface DOMSetValueElement extends KnownAttributeLocalNamedElement<'setvalue', 'event'> {}
 
 const getMetaElement = (primaryInstanceRoot: Element): Element | null => {
 	for (const child of primaryInstanceRoot.children) {
@@ -336,6 +337,7 @@ export class XFormDOM {
 
 	readonly model: Element;
 	readonly binds: readonly DOMBindElement[];
+	readonly setValues: readonly DOMSetValueElement[];
 	readonly primaryInstance: Element;
 	readonly primaryInstanceRoot: Element;
 
@@ -364,6 +366,12 @@ export class XFormDOM {
 		});
 		let binds: readonly DOMBindElement[] = evaluator.evaluateNodes<DOMBindElement>(
 			'./xf:bind[@nodeset]',
+			{
+				contextNode: model,
+			}
+		);
+		const setValues: readonly DOMSetValueElement[] = evaluator.evaluateNodes<DOMSetValueElement>(
+			'./xf:setvalue[@event]',
 			{
 				contextNode: model,
 			}
@@ -417,6 +425,7 @@ export class XFormDOM {
 		this.title = title;
 		this.model = model;
 		this.binds = binds;
+		this.setValues = setValues;
 		this.primaryInstance = primaryInstance;
 		this.primaryInstanceRoot = primaryInstanceRoot;
 		this.itextTranslationElements = itextTranslationElements;
