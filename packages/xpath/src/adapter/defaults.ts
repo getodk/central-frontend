@@ -16,11 +16,10 @@ import type { XPathDOMProvider } from './xpathDOMProvider.ts';
 import { xpathDOMProvider } from './xpathDOMProvider.ts';
 
 /**
- * Truly silly type hack so that TypeScript doesn't unwrap the names of Default*
- * types to their WHAT* equivalent. This is for clarity at usage and reference
- * sites, internally but especially at the package boundary.
+ * This is for clarity at usage and reference sites,
+ * internally but especially at the package boundary.
  */
-type AsDefault<T> = T | (T & { readonly _?: never });
+type AsDefault<T> = T;
 
 type DefaultDOMAdapter = AsDefault<WHATDOMAdapter>;
 

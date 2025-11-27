@@ -193,8 +193,6 @@ type AnyApparentExprType =
 
 export type AnyExprType = AnyApparentExprType;
 
-export type AnyOperationExprType = OperationExprType;
-
 export type AnyBinaryExprType = BinaryExprType;
 
 export type AnyUnaryExprType = UnaryExprType;
@@ -236,7 +234,6 @@ export type AnyContextuallyScopedType = VariableReferenceType;
 export type AnySyntaxType =
 	| AnyBinaryExprType
 	| AnyContextuallyScopedType
-	| AnyExprType
 	| AnyFunctionType
 	| AnyLiteralType
 	| AnyLocationPathType

@@ -63,7 +63,7 @@ export interface StaticNamespaces<
 			: undefined;
 
 	has(key: null): true;
-	has(key: DefaultPrefix | keyof Mapping): true;
+	has(key: DefaultPrefix): true;
 	has(key: keyof Mapping): true;
 	has(key: string): false;
 }

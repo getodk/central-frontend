@@ -33,7 +33,7 @@ export function useMapInteractions(mapInstance: Map): UseMapInteractions {
 		if ('IntersectionObserver' in window) {
 			currentLocationObserver.value = new IntersectionObserver(
 				([entry]) => {
-					if (!entry.isIntersecting) {
+					if (!entry?.isIntersecting) {
 						onMapNotVisible();
 					}
 				},
@@ -123,12 +123,14 @@ export function useMapInteractions(mapInstance: Map): UseMapInteractions {
 				return false;
 			},
 			handleMoveEvent: (event) => {
-				if (!startPixel || !timer) {
+				if (!startPixel?.length || !timer || !event.pixel?.length) {
 					return;
 				}
 
-				const distanceX = Math.abs(event.pixel[0] - startPixel[0]);
-				const distanceY = Math.abs(event.pixel[1] - startPixel[1]);
+				const [eventX, eventY] = event.pixel as [number, number];
+				const [startX, startY] = startPixel as [number, number];
+				const distanceX = Math.abs(eventX - startX);
+				const distanceY = Math.abs(eventY - startY);
 				if (distanceX > pixelTolerance || distanceY > pixelTolerance) {
 					clearTimeout(timer);
 					timer = null;

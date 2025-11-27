@@ -2,7 +2,7 @@ import type { JSONValue } from '../../../../types/JSONValue.ts';
 import { UnreachableError } from '../../../lib/error/UnreachableError.ts';
 import type { Inspectable } from './shared-extension-types.ts';
 
-type SerializableInspectable = JSONValue | string;
+type SerializableInspectable = JSONValue;
 
 const serializeInspectable = (value: SerializableInspectable): string => {
 	return JSON.stringify(value);

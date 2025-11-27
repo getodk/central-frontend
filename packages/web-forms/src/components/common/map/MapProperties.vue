@@ -14,8 +14,9 @@ const props = defineProps<{
 
 const emit = defineEmits(['close', 'save', 'discard']);
 const orderedProps = computed(() => {
-	if (props.reservedProps) {
-		return props.orderedExtraProps.get(props.reservedProps[ODK_VALUE_PROPERTY]) ?? [];
+	const key = props.reservedProps?.[ODK_VALUE_PROPERTY];
+	if (key) {
+		return props.orderedExtraProps.get(key) ?? [];
 	}
 
 	return [];

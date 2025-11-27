@@ -13,10 +13,10 @@ import { isComputedPropertySpec, isMutablePropertySpec } from './createSpecified
 // prettier-ignore
 type MutableKeyOf<Spec extends StateSpec> = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[K in string & keyof Spec]: Spec[K] extends MutablePropertySpec<any>
+	[K in Extract<keyof Spec, string>]: Spec[K] extends MutablePropertySpec<any>
 		? K
 		: never;
-}[string & keyof Spec];
+}[Extract<keyof Spec, string>];
 
 type SetEnginePropertyState<Spec extends StateSpec> = <K extends MutableKeyOf<Spec>>(
 	key: K,

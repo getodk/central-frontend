@@ -117,7 +117,10 @@ type GetQuestionAtIndexParameters<
 	expectedType?: ExpectedQuestionType | null
 ];
 
-type AnswerItemCollectionParameters = readonly [reference: string, ...selectionValues: string[]];
+type AnswerItemCollectionParameters = readonly [
+	reference: string,
+	...selectionValues: [string, string, ...string[]],
+];
 
 // prettier-ignore
 type AnswerParameters =
@@ -125,9 +128,7 @@ type AnswerParameters =
 	| readonly [reference: string, value: unknown]
 	| readonly [value: unknown];
 
-const isAnswerItemCollectionParams = (
-	args: AnswerParameters
-): args is AnswerItemCollectionParameters => {
+const isAnswerItemCollectionParams = (args: AnswerParameters) => {
 	return args.length > 2 && args.every((arg) => typeof arg === 'string');
 };
 
@@ -424,7 +425,7 @@ export class Scenario {
 
 	answer(...args: AnswerParameters): ValueNodeAnswer {
 		if (isAnswerItemCollectionParams(args)) {
-			return this.answerItemCollectionQuestion(...args);
+			return this.answerItemCollectionQuestion(...(args as AnswerItemCollectionParameters));
 		}
 
 		const [arg0, arg1, ...rest] = args;
@@ -502,7 +503,7 @@ export class Scenario {
 			return node?.currentState.reference === reference;
 		});
 
-		if (event == null || event.eventType !== 'QUESTION' || event.node.nodeType !== 'select') {
+		if (event?.eventType !== 'QUESTION' || event.node.nodeType !== 'select') {
 			throw new Error(`No choices for reference: ${reference}`);
 		}
 

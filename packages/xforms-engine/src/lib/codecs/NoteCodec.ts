@@ -10,7 +10,7 @@ export type NoteRuntimeValue<V extends ValueType> =
 // prettier-ignore
 export type NoteInputValue<V extends ValueType> =
 	| RuntimeInputValue<V>
-	| RuntimeValue<V>
+	| RuntimeValue<V> // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
 	| null;
 
 export class NoteCodec<V extends ValueType> extends ValueCodec<

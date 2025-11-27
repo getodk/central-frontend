@@ -40,7 +40,7 @@ watch(configErrors, (value) => {
 const { convertXlsForm } = useXlsFormOnline(xlsformOnlineBaseUrl);
 
 const fileChangeHandler = async (e: HTMLInputElementEvent) => {
-	if (e.target?.files?.length == 1) {
+	if (e.target?.files?.length == 1 && e.target.files[0]) {
 		await uploadFile(e.target.files[0]);
 	}
 };
@@ -58,7 +58,7 @@ const fileDropHandler = async (e: DragEvent) => {
 		return;
 	}
 
-	if (!e.dataTransfer || e.dataTransfer.files.length == 0) {
+	if (!e.dataTransfer || e.dataTransfer.files.length == 0 || !e.dataTransfer.files[0]) {
 		return;
 	}
 

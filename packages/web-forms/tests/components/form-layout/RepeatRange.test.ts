@@ -13,7 +13,8 @@ const mountComponent = async (fileName: string) => {
 	const [node] = xform.currentState.children;
 
 	assert(
-		node.nodeType === 'repeat-range:controlled' || node.nodeType === 'repeat-range:uncontrolled'
+		node &&
+			(node.nodeType === 'repeat-range:controlled' || node.nodeType === 'repeat-range:uncontrolled')
 	);
 
 	node satisfies RepeatRangeNode;

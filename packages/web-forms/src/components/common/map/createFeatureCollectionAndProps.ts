@@ -25,7 +25,7 @@ export interface Feature {
 	properties: Record<string, string>;
 }
 
-const getGeoJSONCoordinates = (geometry: string) => {
+const getGeoJSONCoordinates = (geometry: string): [Coordinates, ...Coordinates[]] | undefined => {
 	const coordinates: Coordinates[] = [];
 	for (const coord of geometry.split(';')) {
 		const [lat, lon] = coord.trim().split(/\s+/).map(Number);
@@ -43,16 +43,16 @@ const getGeoJSONCoordinates = (geometry: string) => {
 		coordinates.push([lon, lat]);
 	}
 
-	return coordinates;
+	return coordinates.length ? (coordinates as [Coordinates, ...Coordinates[]]) : undefined;
 };
 
-const getGeoJSONGeometry = (coords: Coordinates[]): Geometry => {
+const getGeoJSONGeometry = (coords: [Coordinates, ...Coordinates[]]): Geometry => {
 	if (coords.length === 1) {
 		return { type: 'Point', coordinates: coords[0] };
 	}
 
 	const [firstLongitude, firstLatitude] = coords[0];
-	const [lastLongitude, lastLatitude] = coords[coords.length - 1];
+	const [lastLongitude, lastLatitude] = coords[coords.length - 1]!; // ! because coords.length > 1
 
 	if (firstLongitude === lastLongitude && firstLatitude === lastLatitude) {
 		return { type: 'Polygon', coordinates: [coords] };
@@ -91,7 +91,7 @@ export const createFeatureCollectionAndProps = (
 			[PROPERTY_PREFIX + 'value']: normalizedFeature.value,
 		};
 
-		normalizedFeature.properties.forEach(([key, value]) => {
+		normalizedFeature.properties.forEach(([key = '', value = '']) => {
 			if (RESERVED_MAP_PROPERTIES.includes(key)) {
 				reservedProps[PROPERTY_PREFIX + key] = value.trim();
 			} else {
@@ -111,7 +111,7 @@ export const createFeatureCollectionAndProps = (
 		}
 
 		const geoJSONCoords = getGeoJSONCoordinates(geometry);
-		if (!geoJSONCoords?.length) {
+		if (!geoJSONCoords) {
 			// eslint-disable-next-line no-console -- Skip silently to match Collect behaviour.
 			console.warn(`Missing geo points for option: ${normalizedFeature.value}`);
 			return;

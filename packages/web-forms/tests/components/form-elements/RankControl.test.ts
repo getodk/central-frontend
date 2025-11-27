@@ -43,8 +43,8 @@ describe('RankControl', () => {
 	};
 
 	const swapItems = (options: string[], indexA: number, indexB: number) => {
-		const temp = options[indexA];
-		options[indexA] = options[indexB];
+		const temp = options[indexA]!;
+		options[indexA] = options[indexB]!;
 		options[indexB] = temp;
 	};
 
@@ -128,18 +128,19 @@ describe('RankControl', () => {
 		const questionListControl = await getQuestionListWithChoiceFilter();
 		const formQuestions = questionListControl.findAllComponents(FormQuestion);
 		expect(formQuestions).length(1);
+		expect(formQuestions[0]).toBeDefined();
 
-		const selectControl = formQuestions[0].findComponent(SelectControl) as VueWrapper;
+		const selectControl = formQuestions[0]!.findComponent(SelectControl) as VueWrapper;
 		expect(selectControl.exists()).toBe(true);
 		const selectOptions = selectControl.findAll('.value-option');
 		expect(selectOptions).length(10);
 
-		await selectOption(selectOptions[5]);
-		await selectOption(selectOptions[9]);
+		await selectOption(selectOptions[5]!);
+		await selectOption(selectOptions[9]!);
 
 		const refreshedFormQuestions = questionListControl.findAllComponents(FormQuestion);
 		expect(refreshedFormQuestions).length(2);
-		const rankControl = refreshedFormQuestions[1].findComponent(RankControl) as VueWrapper;
+		const rankControl = refreshedFormQuestions[1]!.findComponent(RankControl) as VueWrapper;
 		expect(rankControl.exists()).toBe(true);
 
 		await clickOnRankItemsButton(rankControl);
@@ -148,7 +149,7 @@ describe('RankControl', () => {
 		expect(rankOptions).toEqual(['Environmental Sustainability', 'Creativity and Innovation']);
 
 		await moveOptionUp(rankControl, 2);
-		await selectOption(selectOptions[1]);
+		await selectOption(selectOptions[1]!);
 
 		const orderedRankOptions = getAllOptions(rankControl);
 		expect(orderedRankOptions).length(3);

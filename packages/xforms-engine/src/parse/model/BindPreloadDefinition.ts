@@ -2,9 +2,9 @@ import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
 import type { BindElement } from './BindElement.ts';
 
-type PartiallyKnownPreloadParameter<Known extends string> =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	PartiallyKnownString<NonNullable<Known>> | Extract<Known, null>;
+type PartiallyKnownPreloadParameter<Known extends string> = PartiallyKnownString<
+	NonNullable<Known>
+>;
 
 interface PreloadParametersByType {
 	readonly uid: string | null;

@@ -166,6 +166,9 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 		const sinRotation = Math.sin(rotation);
 
 		const [featureCenterLong, featureCenterLat] = getCenter(geometry.getExtent());
+		if (!featureCenterLong || !featureCenterLat) {
+			return;
+		}
 		const targetCoordinates = [
 			featureCenterLong - xOffsetInMapUnits * cosRotation + yOffsetInMapUnits * sinRotation,
 			featureCenterLat - xOffsetInMapUnits * sinRotation - yOffsetInMapUnits * cosRotation,

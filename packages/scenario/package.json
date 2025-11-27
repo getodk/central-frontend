@@ -50,10 +50,10 @@
     "@getodk/xforms-engine": "0.15.0",
     "@js-joda/core": "^5.6.5",
     "@vitest/browser": "^3.2.4",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",
-    "solid-js": "^1.9.7",
-    "vite": "^7.0.8",
+    "solid-js": "^1.9.10",
+    "vite": "^7.2.4",
     "vitest": "^3.2.4"
   },
   "dependencies": {

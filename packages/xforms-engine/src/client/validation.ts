@@ -204,4 +204,4 @@ export interface NullValidationState {
 export type NodeValidationState =
 	| AncestorNodeValidationState
 	| LeafNodeValidationState
-	| NullValidationState;
+	| NullValidationState; // eslint-disable-line @typescript-eslint/no-redundant-type-constituents

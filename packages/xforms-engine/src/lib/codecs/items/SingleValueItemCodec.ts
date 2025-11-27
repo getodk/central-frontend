@@ -12,9 +12,7 @@ export type SingleValueSelectRuntimeValues =
  * @see {@link encodeValueFactory}
  */
 // prettier-ignore
-type SingleValueSelectCodecValues =
-	| SingleValueSelectRuntimeValues
-	| readonly string[];
+type SingleValueSelectCodecValues = readonly string[];
 
 /**
  * @todo This is more permissive than it should be, allowing an array of any

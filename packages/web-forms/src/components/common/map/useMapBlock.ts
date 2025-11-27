@@ -135,10 +135,15 @@ export function useMapBlock(mode: Mode, events: { onFeaturePlacement: () => void
 		}
 
 		mapInstance.addLayer(singleFeatureLayer);
+		if (!savedFeatureValue) {
+			return;
+		}
+
 		// TODO: extend to LineString and Polygon types
-		if (savedFeatureValue && savedFeatureValue.geometry.type === 'Point') {
-			const [longitude, latitude] = savedFeatureValue.geometry.coordinates;
-			loadAndSaveSingleFeature(longitude, latitude, savedFeatureValue.properties);
+		const { geometry, properties } = savedFeatureValue;
+		if (geometry.type === 'Point' && geometry.coordinates.length === 2) {
+			const [longitude, latitude] = geometry.coordinates as [number, number];
+			loadAndSaveSingleFeature(longitude, latitude, properties);
 			return;
 		}
 	};
@@ -160,24 +165,25 @@ export function useMapBlock(mode: Mode, events: { onFeaturePlacement: () => void
 
 		if (currentMode.interactions.drag) {
 			mapInteractions.setupFeatureDrag(singleFeatureLayer, (feature) =>
-				handleFeaturePlacement(feature)
+				handlePointPlacement(feature)
 			);
 		}
 
 		if (currentMode.interactions.longPress) {
 			mapInteractions.setupLongPressPoint(featuresSource, (feature) =>
-				handleFeaturePlacement(feature)
+				handlePointPlacement(feature)
 			);
 		}
 	};
 
-	const handleFeaturePlacement = (feature: Feature) => {
+	const handlePointPlacement = (feature: Feature) => {
 		const geometry = (feature as Feature<Point>).getGeometry();
-		if (!geometry) {
+		const coordinates = geometry?.getCoordinates();
+		if (!coordinates || coordinates.length < 2) {
 			return;
 		}
 
-		const [longitude, latitude] = toLonLat(geometry.getCoordinates());
+		const [longitude, latitude] = toLonLat(coordinates) as [number, number];
 		feature.set(ODK_VALUE_PROPERTY, formatODKValue(longitude, latitude));
 		mapFeatures?.saveFeature(feature);
 

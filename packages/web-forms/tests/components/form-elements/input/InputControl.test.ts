@@ -9,7 +9,7 @@ const mountComponent = async (questionNumber: number, submitPressed = false) => 
 	const xform = await getReactiveForm('1-validation.xml');
 	const question = xform.currentState.children[questionNumber];
 
-	assert(question.nodeType === 'input');
+	assert(question?.nodeType === 'input');
 
 	return mount(FormQuestion, {
 		props: { question },

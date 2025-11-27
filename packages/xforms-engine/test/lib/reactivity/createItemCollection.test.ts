@@ -222,7 +222,7 @@ describe('createItemCollection - reactive `<select>`/`<select1>`/`<odk:rank>` it
 					expect.fail(`Unexpected default language: ${fr.language}`);
 				}
 
-				if (en == null || en.language !== 'en') {
+				if (en?.language !== 'en') {
 					expect.fail(`Unexpected alternate language: ${en?.language}`);
 				}
 
@@ -230,11 +230,7 @@ describe('createItemCollection - reactive `<select>`/`<select1>`/`<odk:rank>` it
 
 				const select = root.currentState.children[0];
 
-				if (
-					select == null ||
-					select.nodeType !== 'select' ||
-					select.currentState.reference !== '/data/select'
-				) {
+				if (select?.nodeType !== 'select' || select.currentState.reference !== '/data/select') {
 					expect.fail('Failed to find select for testing its reactive label translations');
 				}
 

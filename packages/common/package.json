@@ -52,9 +52,9 @@
   },
   "devDependencies": {
     "@vitest/browser": "^3.2.4",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",
-    "vite": "^7.0.8",
+    "vite": "^7.2.4",
     "vitest": "^3.2.4"
   }
 }

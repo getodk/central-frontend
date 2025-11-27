@@ -48,7 +48,7 @@ const formatThousandsSep = (numberString: string) => {
 	const leadingDots = new RegExp(`^\\${decimalSeparator}+`);
 	const extraDots = new RegExp(`(?<=.*\\${decimalSeparator}.*)\\${decimalSeparator}`, 'g');
 
-	const [integerPart, decimalPart = ''] = numberString
+	const [integerPart = '', decimalPart = ''] = numberString
 		.replace(nonDigitDot, '')
 		.replace(leadingDots, '')
 		.replace(extraDots, '')

@@ -71,7 +71,8 @@ describe('LanguageChanger', () => {
 
 		await component.find('li[aria-posinset="2"]').trigger('mousedown');
 
-		xform.setLanguage(component.emitted<FormLanguage[]>('update:activeLanguage')![0][0]);
+		// @ts-expect-error - not undefined
+		xform.setLanguage(component.emitted<FormLanguage[]>('update:activeLanguage')[0][0]);
 		expect(xform.currentState.activeLanguage.language).toEqual('Español');
 
 		await component.setProps({ activeLanguage: xform.currentState.activeLanguage });
