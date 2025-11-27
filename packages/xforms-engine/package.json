@@ -72,10 +72,12 @@
     "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",
     "typedoc": "^0.28.14",
+    "typescript": "~5.9.3",
     "vite": "^7.2.4",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "web-tree-sitter": "0.24.5"
   },
   "peerDependencies": {
     "solid-js": "^1.9.7"
