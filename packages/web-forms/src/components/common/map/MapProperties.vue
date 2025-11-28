@@ -135,12 +135,16 @@ const orderedProps = computed(() => {
 
 @media screen and (max-width: #{pf.$sm}) {
 	.map-properties {
+		--odk-map-properties-spacing-md: 8px;
+	}
+
+	.map-properties {
 		top: unset;
 		bottom: 70px;
 		left: 0;
 		right: 0;
 		margin: 0 auto;
-		width: calc(100% - var(--odk-map-properties-spacing-md));
+		width: calc(100% - (var(--odk-map-properties-spacing-md) * 2));
 		max-height: 50%;
 	}
 }

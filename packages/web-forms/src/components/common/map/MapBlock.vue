@@ -173,7 +173,7 @@ const discardSavedFeature = () => {
 @use 'primeflex/core/_variables.scss' as pf;
 
 .map-block-component {
-	--odk-map-spacing: 10px;
+	--odk-map-spacing: 8px;
 }
 
 .map-block-component {
@@ -233,70 +233,64 @@ const discardSavedFeature = () => {
 	}
 }
 
-.control-bar {
-	position: absolute;
-	display: flex;
-	flex-direction: column;
-	top: var(--odk-map-spacing);
-	right: var(--odk-map-spacing);
-	z-index: var(--odk-z-index-form-floating);
-	gap: 4px;
-
-	button {
-		background: var(--odk-base-background-color);
-		padding: 8px;
-		border-radius: var(--odk-radius);
-		border: 1px solid var(--odk-border-color);
-		cursor: pointer;
-		-webkit-tap-highlight-color: transparent;
-
-		&:hover {
-			background: var(--odk-muted-background-color);
-		}
-
-		&:disabled {
-			background: var(--odk-muted-background-color);
-			cursor: not-allowed;
-		}
-	}
-}
-
-.map-block-component :deep(.ol-zoom) {
+@mixin map-floating-control-bar {
 	position: absolute;
 	right: var(--odk-map-spacing);
-	bottom: 35px;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
 	align-items: center;
 	box-shadow: none;
-	background: var(--odk-base-background-color);
-	border-radius: var(--odk-radius);
+	background: none;
 	overflow: hidden;
+	gap: var(--odk-map-spacing);
+	z-index: var(--odk-z-index-form-floating);
+}
+
+@mixin map-control-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 42px;
+	width: 42px;
 	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	background: var(--odk-base-background-color);
+	font-size: 24px;
+	font-weight: 300;
+	color: var(--odk-text-color);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+
+	&:hover {
+		background: var(--odk-muted-background-color);
+		color: var(--odk-text-color);
+	}
+
+	&:disabled {
+		background: var(--odk-muted-background-color);
+		cursor: not-allowed;
+	}
+}
+
+.control-bar {
+	@include map-floating-control-bar;
+	top: var(--odk-map-spacing);
+
+	button {
+		@include map-control-button;
+	}
+}
+
+.map-block-component :deep(.ol-zoom) {
+	@include map-floating-control-bar;
+	bottom: 35px;
 
 	button,
 	button:hover,
 	button:focus,
 	button:active {
-		height: 37px;
-		width: 36px;
-		border: none;
-		background: var(--odk-base-background-color);
-		-webkit-tap-highlight-color: transparent;
-		font-size: 24px;
-		font-weight: 300;
-		color: var(--odk-text-color);
-		cursor: pointer;
-
-		&:first-child {
-			border-bottom: 1px solid var(--odk-border-color);
-		}
-
-		&:hover {
-			background: var(--odk-muted-background-color);
-			color: var(--odk-text-color);
-		}
+		@include map-control-button;
 	}
 }
 
@@ -354,10 +348,6 @@ const discardSavedFeature = () => {
 
 @media screen and (max-width: #{pf.$sm}) {
 	.map-block-component {
-		--odk-map-spacing: 5px;
-	}
-
-	.map-block-component {
 		height: fit-content;
 	}
 
@@ -367,7 +357,7 @@ const discardSavedFeature = () => {
 		height: calc(100vh - var(--map-status-bar-min-height) - var(--map-label-min-height));
 
 		:deep(.ol-zoom) {
-			top: 165px;
+			top: 195px;
 			bottom: unset;
 		}
 	}
