@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
+  <modal id="whats-new-modal" :state="isVisible" backdrop :hideable="true" @hide="hideModal">
     <template #banner>
       <img
         srcset="../assets/images/whats-new/banner@1x.png, ../assets/images/whats-new/banner@2x.png 2x"
@@ -79,7 +79,7 @@ function hideModal() {
 <style lang="scss">
 @import '../assets/scss/variables';
 
-.modal-actions {
+#whats-new-modal .modal-actions {
   display: flex;
   column-gap: 10px;
   align-items: center;
@@ -100,7 +100,7 @@ function hideModal() {
   }
 
   .btn {
-     margin-left: auto;
+    margin-left: auto;
   }
 }
 </style>
