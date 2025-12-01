@@ -4,7 +4,7 @@ export const mockLogger = () => ({ log: sinon.fake(), error: sinon.fake() });
 
 export const mockLocation = (mockedProperties) => new Proxy({}, {
   get: (_, name) =>
-    (Object.prototype.hasOwnProperty.call(mockedProperties, name)
+    (Object.hasOwn(mockedProperties, name)
       ? mockedProperties[name]
       : window.location[name])
 });
