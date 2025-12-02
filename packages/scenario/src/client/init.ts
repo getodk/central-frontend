@@ -7,6 +7,7 @@ import type {
 	LoadFormWarningResult,
 	MissingResourceBehavior,
 	OpaqueReactiveObjectFactory,
+	PreloadProperties,
 	RootNode,
 } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
@@ -27,6 +28,7 @@ export interface TestFormOptions {
 	readonly missingResourceBehavior: MissingResourceBehavior;
 	readonly stateFactory: OpaqueReactiveObjectFactory;
 	readonly instanceAttachments: InstanceAttachmentsConfig;
+	readonly preloadProperties: PreloadProperties;
 }
 
 const defaultConfig = {
@@ -62,6 +64,7 @@ export const initializeTestForm = async (
 				instance: {
 					stateFactory: options.stateFactory,
 					instanceAttachments: options.instanceAttachments,
+					preloadProperties: options.preloadProperties,
 				},
 			});
 		});

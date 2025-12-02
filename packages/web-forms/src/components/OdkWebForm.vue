@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import FormLoadFailureDialog from '@/components/FormLoadFailureDialog.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
+import FormHeader from '@/components/form-layout/FormHeader.vue';
+import QuestionList from '@/components/form-layout/QuestionList.vue';
 import {
 	FORM_IMAGE_CACHE,
 	FORM_OPTIONS,
@@ -8,8 +11,8 @@ import {
 } from '@/lib/constants/injection-keys.ts';
 import type { FormStateSuccessResult } from '@/lib/init/form-state.ts';
 import { initializeFormState } from '@/lib/init/initialize-form-state.ts';
-import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
 import { loadFormState } from '@/lib/init/load-form-state';
+import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
 import { updateSubmittedFormState } from '@/lib/init/update-submitted-form-state.ts';
 import type {
 	HostSubmissionResultCallback,
@@ -22,20 +25,20 @@ import type {
 	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
+	PreloadProperties,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
 import { computed, getCurrentInstance, provide, readonly, ref, shallowRef, watchEffect } from 'vue';
-import FormLoadFailureDialog from '@/components/FormLoadFailureDialog.vue';
-import FormHeader from '@/components/form-layout/FormHeader.vue';
-import QuestionList from '@/components/form-layout/QuestionList.vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 
 export interface OdkWebFormsProps {
 	readonly formXml: string;
 	readonly fetchFormAttachment: FetchFormAttachment;
+	readonly trackDevice?: boolean;
+	readonly preloadProperties?: PreloadProperties;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 
 	/**
@@ -165,6 +168,8 @@ const init = async () => {
 	state.value = await loadFormState(props.formXml, {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
+		preloadProperties: props.preloadProperties,
+		trackDevice: props.trackDevice,
 	});
 
 	if (state.value.instance?.mode === 'edit') {

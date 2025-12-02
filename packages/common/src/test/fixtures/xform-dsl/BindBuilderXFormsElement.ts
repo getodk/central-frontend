@@ -1,3 +1,4 @@
+import { JAVAROSA_PREFIX } from '../../../constants/xmlns.ts';
 import { EmptyXFormsElement } from './EmptyXFormsElement.ts';
 import type { XFormsElement } from './XFormsElement.ts';
 
@@ -56,9 +57,11 @@ class BindBuilderXFormsElement implements XFormsElement {
 	}
 
 	preload(expression: string): BindBuilderXFormsElement {
-		this.bindAttributes.set('jr:preload', expression);
+		return this.withAttribute(JAVAROSA_PREFIX, 'preload', expression);
+	}
 
-		return this;
+	preloadParams(expression: string): BindBuilderXFormsElement {
+		return this.withAttribute(JAVAROSA_PREFIX, 'preloadParams', expression);
 	}
 
 	readonly(expression = 'true()'): BindBuilderXFormsElement {

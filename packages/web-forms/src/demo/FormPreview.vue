@@ -5,6 +5,7 @@ import type {
 	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
+	PreloadProperties,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { ref } from 'vue';
@@ -73,6 +74,12 @@ const handleSubmitChunked = (payload: ChunkedInstancePayload) => {
 	// eslint-disable-next-line no-console
 	console.log('CHUNKED submission payload:', payload);
 };
+
+const preloadProperties: PreloadProperties = {
+	email: 'fake@fake.fake',
+	phoneNumber: '+1235556789',
+	username: 'nousername',
+};
 </script>
 <template>
 	<template v-if="formPreviewState">
@@ -81,6 +88,8 @@ const handleSubmitChunked = (payload: ChunkedInstancePayload) => {
 			:fetch-form-attachment="formPreviewState.fetchFormAttachment"
 			:missing-resource-behavior="formPreviewState.missingResourceBehavior"
 			:submission-max-size="Infinity"
+			:preload-properties="preloadProperties"
+			:track-device="true"
 			@submit="handleSubmit"
 			@submit-chunked="handleSubmitChunked"
 		/>

@@ -175,6 +175,7 @@ export class Scenario {
 				fileNameFactory: ({ basename, extension }) => `${basename}${extension ?? ''}`,
 				...overrideOptions?.instanceAttachments,
 			},
+			preloadProperties: overrideOptions?.preloadProperties ?? {},
 		};
 	}
 

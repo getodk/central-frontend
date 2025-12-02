@@ -208,6 +208,7 @@ export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
 	instanceRoot: ClientReactiveSerializableInstance,
 	options: PrepareInstancePayloadOptions<PayloadType>
 ): InstancePayload<PayloadType> => {
+	instanceRoot.root.parent.model.triggerXformsRevalidateListeners();
 	const validation = validateInstance(instanceRoot);
 	const submissionMeta = instanceRoot.definition.submission;
 	const instanceFile = new InstanceFile(instanceRoot);

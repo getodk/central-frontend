@@ -38,9 +38,7 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.
 	readonly saveIncomplete: BindComputationExpression<'saveIncomplete'>;
 
-	// TODO: these are deferred until prioritized
-	// readonly preloadParams: string | null;
-	// readonly 'max-pixels': string | null;
+	// TODO: deferred until prioritized: readonly 'max-pixels': string | null;
 
 	protected _parentBind: BindDefinition | null | undefined;
 
@@ -94,7 +92,6 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 		this.constraintMsg = MessageDefinition.from(this, 'constraintMsg');
 		this.requiredMsg = MessageDefinition.from(this, 'requiredMsg');
 
-		// this.preloadParams = BindComputation.forExpression(this, 'preloadParams');
 		// this['max-pixels'] = BindComputation.forExpression(this, 'max-pixels');
 	}
 

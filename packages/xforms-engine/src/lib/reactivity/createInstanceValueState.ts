@@ -4,7 +4,9 @@ import type { AttributeContext } from '../../instance/internal-api/AttributeCont
 import type { InstanceValueContext } from '../../instance/internal-api/InstanceValueContext.ts';
 import { ActionComputationExpression } from '../../parse/expression/ActionComputationExpression.ts';
 import type { BindComputationExpression } from '../../parse/expression/BindComputationExpression.ts';
-import { ActionDefinition, SET_ACTION_EVENTS } from '../../parse/model/ActionDefinition.ts';
+import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
+import type { AnyBindPreloadDefinition } from '../../parse/model/BindPreloadDefinition.ts';
+import { XFORM_EVENT } from '../../parse/model/Event.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 
@@ -22,8 +24,6 @@ const isAddingRepeatChild = (context: ValueContext) => {
 
 /**
  * Special case, does not correspond to any event.
- *
- * @see {@link shouldPreloadUID}
  */
 const isEditInitialLoad = (context: ValueContext) => {
 	return context.rootDocument.initializationMode === 'edit';
@@ -95,38 +95,51 @@ const guardDownstreamReadonlyWrites = (
 };
 
 /**
- * Per {@link https://getodk.github.io/xforms-spec/#preload-attributes:~:text=concatenation%20of%20%E2%80%98uuid%3A%E2%80%99%20and%20uuid()}
- */
-const PRELOAD_UID_EXPRESSION = 'concat("uuid:", uuid())';
-
-/**
  * @todo It feels increasingly awkward to keep piling up preload stuff here, but it won't stay that way for long. In the meantime, this seems like the best way to express the cases where `preload="uid"` should be effective, i.e.:
  *
  * - When an instance is first loaded ({@link isInstanceFirstLoad})
  * - When an instance is initially loaded for editing ({@link isEditInitialLoad})
  */
-const shouldPreloadUID = (context: ValueContext) => {
+const isLoading = (context: ValueContext) => {
 	return isInstanceFirstLoad(context) || isEditInitialLoad(context);
 };
 
-/**
- * @todo This is a temporary one-off, until we support the full range of
- * {@link https://getodk.github.io/xforms-spec/#preload-attributes | preloads}.
- */
-const setPreloadUIDValue = (context: ValueContext, valueState: RelevantValueState): void => {
-	const { preload } = context.definition.bind;
+const setValueIfPreloadDefined = (
+	context: ValueContext,
+	setValue: SimpleAtomicStateSetter<string>,
+	preload: AnyBindPreloadDefinition
+) => {
+	const value = preload.getValue(context);
+	if (value) {
+		setValue(value);
+	}
+};
 
-	if (preload?.type !== 'uid' || !shouldPreloadUID(context)) {
+const postloadValue = (
+	context: ValueContext,
+	setValue: SimpleAtomicStateSetter<string>,
+	preload: AnyBindPreloadDefinition
+) => {
+	const ref = context.contextReference();
+	context.definition.model.registerXformsRevalidateListener(ref, () => {
+		setValueIfPreloadDefined(context, setValue, preload);
+	});
+};
+
+const preloadValue = (context: ValueContext, setValue: SimpleAtomicStateSetter<string>): void => {
+	const { preload } = context.definition.bind;
+	if (!preload) {
 		return;
 	}
 
-	const preloadUIDValue = context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION, {
-		contextNode: context.contextNode,
-	});
+	if (preload.event === XFORM_EVENT.xformsRevalidate) {
+		postloadValue(context, setValue, preload);
+		return;
+	}
 
-	const [, setValue] = valueState;
-
-	setValue(preloadUIDValue);
+	if (isLoading(context)) {
+		setValueIfPreloadDefined(context, setValue, preload);
+	}
 };
 
 const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
@@ -168,7 +181,7 @@ const bindToRepeatInstance = (
  * computations to the provided value setter, on initialization and any
  * subsequent reactive update.
  *
- * @see {@link setPreloadUIDValue} for important details about spec ordering of
+ * @see {@link preloadValue} for important details about spec ordering of
  * events and computations.
  */
 const createCalculation = (
@@ -220,22 +233,22 @@ const registerAction = (
 	setValue: SimpleAtomicStateSetter<string>,
 	action: ActionDefinition
 ) => {
-	if (action.events.includes(SET_ACTION_EVENTS.odkInstanceFirstLoad)) {
+	if (action.events.includes(XFORM_EVENT.odkInstanceFirstLoad)) {
 		if (isInstanceFirstLoad(context)) {
 			createCalculation(context, setValue, action.computation);
 		}
 	}
-	if (action.events.includes(SET_ACTION_EVENTS.odkInstanceLoad)) {
+	if (action.events.includes(XFORM_EVENT.odkInstanceLoad)) {
 		if (!isAddingRepeatChild(context)) {
 			createCalculation(context, setValue, action.computation);
 		}
 	}
-	if (action.events.includes(SET_ACTION_EVENTS.odkNewRepeat)) {
+	if (action.events.includes(XFORM_EVENT.odkNewRepeat)) {
 		if (isAddingRepeatChild(context)) {
 			createCalculation(context, setValue, action.computation);
 		}
 	}
-	if (action.events.includes(SET_ACTION_EVENTS.xformsValueChanged)) {
+	if (action.events.includes(XFORM_EVENT.xformsValueChanged)) {
 		createValueChangedCalculation(context, setValue, action);
 	}
 };
@@ -259,12 +272,9 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
 		const baseValueState = createSignal(initialValue);
 		const relevantValueState = createRelevantValueState(context, baseValueState);
 
-		/**
-		 * @see {@link setPreloadUIDValue} for important details about spec ordering of events and computations.
-		 */
-		setPreloadUIDValue(context, relevantValueState);
-
 		const [, setValue] = relevantValueState;
+
+		preloadValue(context, setValue);
 
 		const { calculate } = context.definition.bind;
 		if (calculate != null) {

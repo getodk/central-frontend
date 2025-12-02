@@ -1,5 +1,6 @@
 import type { InstanceState } from '../../../client/serialization/InstanceState.ts';
 import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
+import type { BindDefinition } from '../../../parse/model/BindDefinition.ts';
 import type { Attribute } from '../../Attribute.ts';
 import type {
 	ClientReactiveSerializableChildNode,
@@ -20,6 +21,7 @@ interface ClientReactiveSerializableValueNodeCurrentState {
 
 interface ClientReactiveSerializableValueNodeDefinition {
 	readonly qualifiedName: QualifiedName;
+	readonly bind: BindDefinition;
 }
 
 export interface ClientReactiveSerializableValueNode {

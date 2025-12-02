@@ -1,4 +1,5 @@
-import { ActionDefinition, SET_ACTION_EVENTS } from './ActionDefinition.ts';
+import { ActionDefinition } from './ActionDefinition.ts';
+import { XFORM_EVENT } from './Event.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
 const REPEAT_REGEX = /(\[[^\]]*\])/gm;
@@ -16,7 +17,7 @@ export class ModelActionMap extends Map<string, ActionDefinition> {
 		super(
 			model.form.xformDOM.setValues.map((setValueElement) => {
 				const action = new ActionDefinition(model, setValueElement);
-				if (action.events.includes(SET_ACTION_EVENTS.odkNewRepeat)) {
+				if (action.events.includes(XFORM_EVENT.odkNewRepeat)) {
 					throw new Error('Model contains "setvalue" element with "odk-new-repeat" event');
 				}
 				const key = ModelActionMap.getKey(action.ref);

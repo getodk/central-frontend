@@ -41,6 +41,7 @@ export class FormInstance<Mode extends FormInstanceInitializationMode>
 		const config: InstanceConfig = {
 			clientStateFactory: instanceConfig.stateFactory ?? identity,
 			computeAttachmentName: instanceConfig.instanceAttachments?.fileNameFactory ?? (() => null),
+			preloadProperties: instanceConfig.preloadProperties ?? {},
 		};
 		const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
 			...options.instanceOptions,

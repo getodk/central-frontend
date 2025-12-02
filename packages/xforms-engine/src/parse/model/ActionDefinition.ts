@@ -1,16 +1,7 @@
 import { isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import { ActionComputationExpression } from '../expression/ActionComputationExpression.ts';
+import { type XFormEvent, XFORM_EVENT } from './Event.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
-
-export const SET_ACTION_EVENTS = {
-	odkInstanceLoad: 'odk-instance-load',
-	odkInstanceFirstLoad: 'odk-instance-first-load',
-	odkNewRepeat: 'odk-new-repeat',
-	xformsValueChanged: 'xforms-value-changed',
-} as const;
-type SetActionEvent = (typeof SET_ACTION_EVENTS)[keyof typeof SET_ACTION_EVENTS];
-const isKnownEvent = (event: SetActionEvent): event is SetActionEvent =>
-	Object.values(SET_ACTION_EVENTS).includes(event);
 
 export class ActionDefinition {
 	static getRef(model: ModelDefinition, setValueElement: Element): string | null {
@@ -39,19 +30,23 @@ export class ActionDefinition {
 		return "''";
 	}
 
-	static getEvents(element: Element): SetActionEvent[] {
+	static isKnownEvent = (event: XFormEvent): event is XFormEvent => {
+		return Object.values(XFORM_EVENT).includes(event);
+	};
+
+	static getEvents(element: Element): XFormEvent[] {
 		const events = element.getAttribute('event')?.split(' ') ?? [];
-		const unknownEvents = events.filter((event) => !isKnownEvent(event as SetActionEvent));
+		const unknownEvents = events.filter((event) => !this.isKnownEvent(event as XFormEvent));
 		if (unknownEvents.length) {
 			throw new Error(
 				`An action was registered for unsupported events: ${unknownEvents.join(', ')}`
 			);
 		}
-		return events as SetActionEvent[];
+		return events as XFormEvent[];
 	}
 
 	readonly ref: string;
-	readonly events: SetActionEvent[];
+	readonly events: XFormEvent[];
 	readonly computation: ActionComputationExpression<'string'>;
 	readonly source: string | undefined;
 

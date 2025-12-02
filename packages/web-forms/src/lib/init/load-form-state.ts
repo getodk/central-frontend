@@ -4,18 +4,22 @@ import type {
 	FetchResourceResponse,
 	FormResource,
 	MissingResourceBehavior,
+	PreloadProperties,
 	ResolvableFormInstance,
 	ResolvableFormInstanceInput,
 } from '@getodk/xforms-engine';
 import { loadForm } from '@getodk/xforms-engine';
 import { FormInitializationError } from '../error/FormInitializationError.ts';
+import { ENGINE_FORM_INSTANCE_CONFIG } from './engine-config.ts';
 import type {
 	FormState,
 	FormStateFailureResult,
 	FormStateSuccessResult,
 	InstantiableForm,
 } from './form-state.ts';
-import { ENGINE_FORM_INSTANCE_CONFIG } from './engine-config.ts';
+
+const DEVICE_ID_KEY = 'odk-deviceid';
+const DEVICE_ID_PREFIX = 'getodk.org:webforms:';
 
 export interface FormOptions {
 	readonly fetchFormAttachment: FetchFormAttachment;
@@ -66,6 +70,8 @@ const resolvableFormInstanceInput = (options: EditInstanceOptions): ResolvableFo
 interface LoadFormStateOptions {
 	readonly form: FormOptions;
 	readonly editInstance?: EditInstanceOptions | null;
+	readonly trackDevice?: boolean;
+	readonly preloadProperties?: PreloadProperties;
 }
 
 const failure = (error: FormInitializationError): FormStateFailureResult => {
@@ -88,6 +94,29 @@ const success = (form: InstantiableForm, instance: AnyFormInstance): FormStateSu
 	};
 };
 
+const getDeviceId = () => {
+	const id = localStorage.getItem(DEVICE_ID_KEY);
+	if (id) {
+		return id;
+	}
+	const deviceId = DEVICE_ID_PREFIX + crypto.randomUUID();
+	localStorage.setItem(DEVICE_ID_KEY, deviceId);
+	return deviceId;
+};
+
+const getFormInstanceConfig = (options: LoadFormStateOptions) => {
+	const preloadProperties = {
+		...options.preloadProperties,
+	};
+	if (!preloadProperties.deviceID && options.trackDevice) {
+		preloadProperties.deviceID = getDeviceId();
+	}
+	return {
+		...ENGINE_FORM_INSTANCE_CONFIG,
+		preloadProperties,
+	};
+};
+
 export const loadFormState = async (
 	formResource: FormResource,
 	options: LoadFormStateOptions
@@ -98,9 +127,11 @@ export const loadFormState = async (
 		return failure(FormInitializationError.fromError(form.error));
 	}
 
+	const config = getFormInstanceConfig(options);
+
 	if (options.editInstance == null) {
 		try {
-			const instance = form.createInstance(ENGINE_FORM_INSTANCE_CONFIG);
+			const instance = form.createInstance(config);
 
 			return success(form, instance);
 		} catch (cause) {
@@ -110,7 +141,7 @@ export const loadFormState = async (
 
 	try {
 		const instanceOptions = resolvableFormInstanceInput(options.editInstance);
-		const instance = await form.editInstance(instanceOptions, ENGINE_FORM_INSTANCE_CONFIG);
+		const instance = await form.editInstance(instanceOptions, config);
 
 		return success(form, instance);
 	} catch (cause) {

@@ -24,6 +24,7 @@ import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { AttributeDefinition } from '../parse/model/AttributeDefinition.ts';
 import type { AnyChildNode, AnyNode } from './hierarchy.ts';
 import type { AttributeContext } from './internal-api/AttributeContext.ts';
+import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { DecodeInstanceValue } from './internal-api/InstanceValueContext.ts';
 import type { ClientReactiveSerializableAttributeNode } from './internal-api/serialization/ClientReactiveSerializableAttributeNode.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
@@ -66,6 +67,7 @@ export class Attribute
 	readonly contextNode: AnyNode;
 	readonly scope: ReactiveScope;
 	readonly rootDocument: PrimaryInstance;
+	readonly instanceConfig: InstanceConfig;
 
 	readonly root: Root;
 
@@ -107,6 +109,7 @@ export class Attribute
 		this.rootDocument = owner.rootDocument;
 
 		this.root = owner.root;
+		this.instanceConfig = owner.instanceConfig;
 
 		this.getActiveLanguage = owner.getActiveLanguage;
 		this.validationState = { violations: [] };
@@ -132,7 +135,7 @@ export class Attribute
 				instanceValue: this.getInstanceValue,
 				relevant: this.owner.isRelevant,
 			},
-			owner.instanceConfig
+			this.instanceConfig
 		);
 
 		this.state = state;

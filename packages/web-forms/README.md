@@ -17,9 +17,11 @@ To use this library in a Vue.js application:
     :missing-resource-behavior="missingBehavior"
     :submission-max-size="5242880"  <!-- 5MB -->
     :edit-instance="editOptions"
+    :preload-properties="preloadProperties"
+    :track-device="true"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
-  />
+/>
 ```
 
 ### Plugin
@@ -40,6 +42,8 @@ The `<OdkWebForm>` component accepts the following props:
 - `missingResourceBehavior` (`MissingResourceBehavior`, optional): Defines behavior when resources are missing
 - `submissionMaxSize` (`number`, optional): Maximum size for chunked submissions. Required when subscribing to `submitChunked` event
 - `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing
+- `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
+- `trackDevice` (`boolean`, optional, defaults to `false`): If `true`, generates a unique identifier for this device and stores it in `localstorage` for use in subsequent submissions. Ignored if `preloadProperties.deviceID` is given.
 
 ### Events (`OdkWebFormEmits`)
 

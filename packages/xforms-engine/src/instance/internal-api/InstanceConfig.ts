@@ -1,5 +1,8 @@
 import type { InstanceAttachmentFileNameFactory } from '../../client/attachments/InstanceAttachmentsConfig.ts';
-import type { FormInstanceConfig } from '../../client/form/FormInstanceConfig.ts';
+import type {
+	FormInstanceConfig,
+	PreloadProperties,
+} from '../../client/form/FormInstanceConfig.ts';
 import type { OpaqueReactiveObjectFactory } from '../../client/OpaqueReactiveObjectFactory.ts';
 
 export interface InstanceConfig {
@@ -9,4 +12,6 @@ export interface InstanceConfig {
 	readonly clientStateFactory: OpaqueReactiveObjectFactory;
 
 	readonly computeAttachmentName: InstanceAttachmentFileNameFactory;
+
+	readonly preloadProperties: PreloadProperties;
 }

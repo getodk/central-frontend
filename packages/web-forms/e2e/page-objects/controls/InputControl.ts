@@ -8,11 +8,9 @@ export class InputControl {
 	}
 
 	async getInputByLabel(label: string) {
-		const container = this.page
-			.locator('.question-container')
-			.filter({ has: this.page.locator(`.control-text label:text-is("${label}")`) });
-
-		const input = container.locator('input');
+		const input = this.page.locator(
+			`.question-container:has(.control-text label:text-is("${label}")) input`
+		);
 
 		await expect(input, `Input for label "${label}" not found`).toBeVisible();
 		await input.scrollIntoViewIfNeeded();
