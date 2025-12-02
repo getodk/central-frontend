@@ -30,7 +30,7 @@ export default class PreferenceNormalizer {
   }
 
   static normalizeFn(prop) {
-    const normalizer = Object.prototype.hasOwnProperty.call(this, prop) ? this[prop] : undefined;
+    const normalizer = Object.hasOwn(this, prop) ? this[prop] : undefined;
     if (normalizer !== undefined) return normalizer;
     throw new PreferenceNotRegisteredError(prop, this);
   }
