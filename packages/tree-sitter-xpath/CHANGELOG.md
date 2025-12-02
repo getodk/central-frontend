@@ -1,5 +1,11 @@
 # @getodk/tree-sitter-xpath
 
+## 0.2.2
+
+### Patch Changes
+
+- 0be7d7c: Upgrade dependencies
+
 ## 0.2.1
 
 ### Patch Changes

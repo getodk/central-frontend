@@ -1,5 +1,17 @@
 # @getodk/scenario
 
+## 0.11.0
+
+### Minor Changes
+
+- bac8412: Add support for all jr:preload options
+- 6da0c6c: Add support for setvalue action and odk-instance-first-load, odk-new-repeat, xforms-value-changed events
+- 3ec1d26: Support attributes on leaf nodes
+
+### Patch Changes
+
+- 0be7d7c: Upgrade dependencies
+
 ## 0.10.0
 
 ### Minor Changes

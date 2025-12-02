@@ -1,5 +1,18 @@
 # @getodk/web-forms
 
+## 0.18.0
+
+### Minor Changes
+
+- 4025b67: Use Geopoint's placement mode when editing submissions.
+- bac8412: Add support for all jr:preload options
+- 6da0c6c: Add support for setvalue action and odk-instance-first-load, odk-new-repeat, xforms-value-changed events
+- 79a21e4: Adds support for Geopoint with "maps" and "placement-map" appearances.
+
+### Patch Changes
+
+- 0be7d7c: Upgrade dependencies
+
 ## 0.17.0
 
 ### Minor Changes

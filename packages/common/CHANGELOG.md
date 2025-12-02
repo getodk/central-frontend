@@ -1,5 +1,15 @@
 # @getodk/common
 
+## 0.11.0
+
+### Minor Changes
+
+- bac8412: Add support for all jr:preload options
+
+### Patch Changes
+
+- 0be7d7c: Upgrade dependencies
+
 ## 0.10.0
 
 ### Minor Changes

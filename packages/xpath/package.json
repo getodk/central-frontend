@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xpath",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "license": "Apache-2.0",
   "description": "XPath implementation for ODK Web Forms",
   "type": "module",
@@ -53,13 +53,13 @@
     "test:types:test": "tsc --project ./test/tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "@getodk/common": "0.10.0",
+    "@getodk/common": "0.11.0",
     "crypto-js": "^4.2.0",
     "temporal-polyfill": "^0.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
-    "@getodk/tree-sitter-xpath": "0.2.1",
+    "@getodk/tree-sitter-xpath": "0.2.2",
     "@playwright/test": "^1.57.0",
     "@types/crypto-js": "^4.2.2",
     "@vitest/browser": "^3.2.4",
