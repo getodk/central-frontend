@@ -19,6 +19,12 @@ except according to the terms contained in the LICENSE file.
       <loading :state="entity.awaitingResponse"/>
       <dl v-if="dataset.dataExists" v-show="entity.dataExists">
         <div>
+          <dt>{{ $t('header.createdBy') }}</dt>
+          <dd v-tooltip.text>
+            {{ entity.dataExists ? entity.__system.creatorName : '' }}
+          </dd>
+        </div>
+        <div>
           <dt>{{ $t('header.createdAt') }}</dt>
           <dd>
             <date-time :iso="entity.dataExists ? entity.createdAt : null"/>
