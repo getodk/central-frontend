@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
         <div>
           <dt>{{ $t('header.createdAt') }}</dt>
           <dd>
-            <date-time :iso="entity.dataExists ? entity.createdAt : null"/>
+            <date-time :iso="entity.dataExists ? entity.__system.createdAt : null"/>
           </dd>
         </div>
         <div v-for="property of dataset.properties" :key="property.name">
