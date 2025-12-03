@@ -11,6 +11,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: ./bin/check-images.sh
+  shellcheck:
+    timeout-minutes: 2
+    runs-on: ubutun-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: sudo apt-get install shellcheck
+    - run: ./bin/check-scripts.sh
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
