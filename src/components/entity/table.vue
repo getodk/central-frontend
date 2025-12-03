@@ -118,6 +118,8 @@ const changeAllSelection = (checked) => {
 @import '../../assets/scss/mixins';
 
 #entity-table {
+  table:has(tbody:empty) { display: none; }
+
   .table-freeze-scrolling {
     th, td {
       @include text-overflow-ellipsis;

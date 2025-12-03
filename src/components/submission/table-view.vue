@@ -101,7 +101,8 @@ const odataSelect = computed(() => {
 });
 
 // `clear` indicates whether this.odata should be cleared before sending the
-// request. `refresh` indicates whether the request is a background refresh.
+// request. `refresh` indicates whether the request is a background refresh
+// (whether the refresh button was pressed).
 const fetchChunk = (clear, refresh = false) => {
   // Are we fetching the first chunk of submissions or the next chunk?
   const first = clear || refresh;

@@ -1,5 +1,5 @@
+import { T, comparator, omit, pick } from 'ramda';
 import { faker } from '@faker-js/faker';
-import { comparator, omit, pick } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedAudits } from './audits';
@@ -9,6 +9,7 @@ import { extendedSubmissions } from './submissions';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { toActor } from './actors';
+import { wktToGeojson } from '../util/data';
 
 // This will be the entities store. We define it immediately to prevent an
 // ESLint error.
@@ -300,6 +301,24 @@ const restToOData = (filterExpression) => (top = 250, skip = 0, asc = false) => 
     })
   };
 };
+export const entityOData = restToOData(entity => entity.deletedAt == null);
+export const entityDeletedOData = restToOData(entity => entity.deletedAt != null);
+
+// In testing, we assume that the entity `geometry` property is WKT, but that's
+// not actually the case in production. We just assume that to parallel
+// submission OData, where geo fields are returned as WKT. We could use the
+// actual ODK format for `geometry`, but we'd end up just converting it to
+// GeoJSON anyway.
+export const entityGeojson = (filterExpression = T) => ({
+  type: 'FeatureCollection',
+  features: extendedEntities.sorted()
+    .filter(filterExpression)
+    .map(entity => {
+      const geojson = wktToGeojson(entity.currentVersion.data.geometry);
+      return geojson != null ? { ...geojson, id: entity.uuid } : null;
+    })
+    .filter(geojson => geojson)
+});
 
 // Creates a source submission along with submission audit log events.
 extendedEntities.createSourceSubmission = (sourceAction, submissionOptions = {}, deleted = false) => {
@@ -366,7 +385,3 @@ extendedEntities.resolve = (index) => {
   // Update updatedAt.
   entities.update(index);
 };
-
-export const entityOData = restToOData(entity => entity.deletedAt == null);
-
-export const entityDeletedOData = restToOData(entity => entity.deletedAt != null);

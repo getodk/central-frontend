@@ -2242,6 +2242,9 @@
       "noMatching": {
         "string": "There are no matching Entities."
       },
+      "emptyMap": {
+        "string": "Entities only appear if they include data in the geometry property."
+      },
       "allDeleted": {
         "string": "All Entities are deleted."
       },
@@ -2264,6 +2267,9 @@
       },
       "searchDisabledMessage": {
         "string": "Search is unavailable for deleted Entities"
+      },
+      "mapDisabled": {
+        "string": "Map is unavailable for deleted Entities"
       },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Entities"

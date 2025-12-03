@@ -65,7 +65,7 @@ const overlapUrl = (query) =>
 const view = ref(null);
 defineExpose({
   // Delegate these functions to the MapView.
-  ...Object.fromEntries(['refresh', 'cancelRefresh', 'afterDelete']
+  ...Object.fromEntries(['fetchData', 'cancelFetch', 'afterDelete']
     .map(name => [name, (...args) => view.value[name](...args)]))
 });
 </script>
