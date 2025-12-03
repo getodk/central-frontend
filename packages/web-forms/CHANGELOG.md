@@ -1,5 +1,11 @@
 # @getodk/web-forms
 
+## 0.18.1
+
+### Patch Changes
+
+- 9252e91: Fix form reset to set preload parameters correctly
+
 ## 0.18.0
 
 ### Minor Changes
