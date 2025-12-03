@@ -1,10 +1,18 @@
 import type {
 	EditFormInstance,
-	FormInstanceConfig,
 	InstanceAttachmentsConfig,
 	InstancePayload,
+	PreloadProperties,
 } from '@getodk/xforms-engine';
 import { reactive } from 'vue';
+
+const DEVICE_ID_KEY = 'odk-deviceid';
+const DEVICE_ID_PREFIX = 'getodk.org:webforms:';
+
+interface GetFormInstanceConfigOptions {
+	readonly trackDevice?: boolean;
+	readonly preloadProperties?: PreloadProperties;
+}
 
 /**
  * At present, the Web Forms strategy for producing distinct instance attachment
@@ -32,7 +40,30 @@ const INSTANCE_ATTACHMENTS_CONFIG: InstanceAttachmentsConfig = {
 	},
 };
 
-export const ENGINE_FORM_INSTANCE_CONFIG: FormInstanceConfig = {
-	stateFactory: reactive,
-	instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
+const getDeviceId = () => {
+	const id = localStorage.getItem(DEVICE_ID_KEY);
+	if (id) {
+		return id;
+	}
+	const deviceId = DEVICE_ID_PREFIX + crypto.randomUUID();
+	localStorage.setItem(DEVICE_ID_KEY, deviceId);
+	return deviceId;
+};
+
+const getPreloadProperties = (options: GetFormInstanceConfigOptions) => {
+	if (!options.trackDevice || options.preloadProperties?.deviceID) {
+		return options.preloadProperties;
+	}
+	return {
+		...options.preloadProperties,
+		deviceID: getDeviceId(),
+	};
+};
+
+export const getFormInstanceConfig = (options: GetFormInstanceConfigOptions) => {
+	return {
+		stateFactory: reactive,
+		instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
+		preloadProperties: getPreloadProperties(options),
+	};
 };

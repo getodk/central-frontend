@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow';
+import type { HostSubmissionResultCallback } from '@/lib/submission/host-submission-result-callback';
 import { xformFixturesByCategory, XFormResource } from '@getodk/common/fixtures/xforms.ts';
 import type {
 	ChunkedInstancePayload,
@@ -60,7 +62,10 @@ xformResource
 		alert('Failed to load the Form XML');
 	});
 
-const handleSubmit = async (payload: MonolithicInstancePayload) => {
+const handleSubmit = async (
+	payload: MonolithicInstancePayload,
+	clearFormCallback: HostSubmissionResultCallback
+) => {
 	// eslint-disable-next-line no-console
 	console.log('submission payload:', payload);
 	for (const value of payload.data[0].values()) {
@@ -68,6 +73,7 @@ const handleSubmit = async (payload: MonolithicInstancePayload) => {
 		console.log(await value.text());
 	}
 	alert('Submit button was pressed');
+	clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
 };
 
 const handleSubmitChunked = (payload: ChunkedInstancePayload) => {

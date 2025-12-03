@@ -66,8 +66,11 @@ const hostSubmissionResultCallbackFactory = (
 		hostResult: OptionalAwaitableHostSubmissionResult
 	): Promise<void> => {
 		const submissionResult = await hostResult;
-
-		state.value = updateSubmittedFormState(submissionResult, currentState);
+		const options = {
+			preloadProperties: props.preloadProperties,
+			trackDevice: props.trackDevice,
+		};
+		state.value = updateSubmittedFormState(submissionResult, currentState, options);
 	};
 
 	return (hostResult) => {

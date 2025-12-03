@@ -10,16 +10,13 @@ import type {
 } from '@getodk/xforms-engine';
 import { loadForm } from '@getodk/xforms-engine';
 import { FormInitializationError } from '../error/FormInitializationError.ts';
-import { ENGINE_FORM_INSTANCE_CONFIG } from './engine-config.ts';
+import { getFormInstanceConfig } from './engine-config.ts';
 import type {
 	FormState,
 	FormStateFailureResult,
 	FormStateSuccessResult,
 	InstantiableForm,
 } from './form-state.ts';
-
-const DEVICE_ID_KEY = 'odk-deviceid';
-const DEVICE_ID_PREFIX = 'getodk.org:webforms:';
 
 export interface FormOptions {
 	readonly fetchFormAttachment: FetchFormAttachment;
@@ -91,29 +88,6 @@ const success = (form: InstantiableForm, instance: AnyFormInstance): FormStateSu
 		form,
 		instance,
 		root: instance.root,
-	};
-};
-
-const getDeviceId = () => {
-	const id = localStorage.getItem(DEVICE_ID_KEY);
-	if (id) {
-		return id;
-	}
-	const deviceId = DEVICE_ID_PREFIX + crypto.randomUUID();
-	localStorage.setItem(DEVICE_ID_KEY, deviceId);
-	return deviceId;
-};
-
-const getFormInstanceConfig = (options: LoadFormStateOptions) => {
-	const preloadProperties = {
-		...options.preloadProperties,
-	};
-	if (!preloadProperties.deviceID && options.trackDevice) {
-		preloadProperties.deviceID = getDeviceId();
-	}
-	return {
-		...ENGINE_FORM_INSTANCE_CONFIG,
-		preloadProperties,
 	};
 };
 
