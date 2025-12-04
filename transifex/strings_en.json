@@ -2306,6 +2306,14 @@
         }
       }
     },
+    "EntityMapView": {
+      "loading": {
+        "string": "Preparing map. This could take a while."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
+      }
+    },
     "EntityMetadataRow": {
       "reviewParallelUpdates": {
         "string": "Review parallel updates",
