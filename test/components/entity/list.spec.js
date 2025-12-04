@@ -88,8 +88,8 @@ describe('EntityList', () => {
       let initialTime;
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
-      const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
-        if (i === responseIndex) {
+      const assertRowCount = (count) => (component, _, i) => {
+        if (i === 0 || i == null) {
           component.findAllComponents(EntityMetadataRow).length.should.equal(count);
           component.findAllComponents(EntityDataRow).length.should.equal(count);
         }
