@@ -34,9 +34,9 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, inject, ref } from 'vue';
 
+import EntityMapPopup from './map-popup.vue';
 import MapOverlapPopup from '../map/overlap-popup.vue';
 import MapView from '../map/view.vue';
-import EntityMapPopup from './map-popup.vue';
 
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
