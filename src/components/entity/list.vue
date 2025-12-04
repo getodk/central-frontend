@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
           <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
           :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null" @reset-click="resetFilters"/>
         </form>
-        <radio-field v-if="dataset.dataExists && dataset.mappable"
+        <radio-field v-if="dataset.dataExists && dataset.hasGeometry"
           v-model="dataView" :options="viewOptions" :disabled="deleted"
           :disabled-message="$t('mapDisabled')" button-appearance/>
         <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">

@@ -96,7 +96,7 @@ export default (container, createResource) => {
 
       return shallowReactive(data);
     },
-    mappable: computeIfExists(() =>
+    hasGeometry: computeIfExists(() =>
       dataset.properties.some(({ name }) => name === 'geometry'))
   }));
 };
