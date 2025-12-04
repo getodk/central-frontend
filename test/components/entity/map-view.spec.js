@@ -79,13 +79,13 @@ describe('EntityMapView', () => {
     });
   });
 
-  describe('filters', () => {
-    it('passes filters through to the request', () => {
+  describe('filters and search', () => {
+    it('passes filters and search through to the request', () => {
       setLuxon({ defaultZoneName: 'UTC' });
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'geometry' }]
       });
-      return load('/projects/1/entity-lists/trees/entities?map=true&creatorId=1&creatorId=2&start=1970-01-01&end=1970-01-02&conflict=true')
+      return load('/projects/1/entity-lists/trees/entities?map=true&creatorId=1&creatorId=2&start=1970-01-01&end=1970-01-02&conflict=true&search=foo')
         .testRequestsInclude([{
           url: ({ pathname, searchParams }) => {
             pathname.should.equal('/v1/projects/1/datasets/trees/entities.geojson');
@@ -93,6 +93,7 @@ describe('EntityMapView', () => {
             searchParams.get('start__gte').should.equal('1970-01-01T00:00:00.000Z');
             searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
             searchParams.getAll('conflict').should.eql(['soft', 'hard']);
+            searchParams.get('search').should.equal('foo');
           }
         }]);
     });
@@ -109,6 +110,29 @@ describe('EntityMapView', () => {
         .beforeEachResponse((app, { url }) => {
           url.should.equal('/v1/projects/1/datasets/trees/entities.geojson?conflict=null');
           // Not a background refresh: the map disappears during the request.
+          countFeatures(app).should.equal(0);
+        })
+        .respondWithData(testData.entityGeojson)
+        .afterResponse(app => {
+          countFeatures(app).should.equal(1);
+        });
+    });
+
+    it('refreshes the map after the search term changes', () => {
+      testData.extendedEntities.createPast(1, {
+        data: { geometry: 'POINT (1 2)' }
+      });
+      return load('/projects/1/entity-lists/trees/entities?map=true', { attachTo: document.body })
+        .afterResponses(app => {
+          countFeatures(app).should.equal(1);
+        })
+        .request(async (app) => {
+          const search = app.get('.search-textbox');
+          await search.setValue('foo');
+          return search.trigger('keydown', { key: 'enter' });
+        })
+        .beforeEachResponse((app, { url }) => {
+          url.should.equal('/v1/projects/1/datasets/trees/entities.geojson?search=foo');
           countFeatures(app).should.equal(0);
         })
         .respondWithData(testData.entityGeojson)

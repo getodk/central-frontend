@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"
         @restore="showRestore"/>
       <entity-map-view v-else ref="view" :filter="geojsonFilter"
-        :awaiting-responses="awaitingResponses"/>
+        :search-term="searchTerm" :awaiting-responses="awaitingResponses"/>
     </disable-container>
 
     <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
