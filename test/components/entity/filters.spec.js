@@ -32,6 +32,8 @@ describe('EntityFilters', () => {
         load('/projects/1/entity-lists/trees/entities', { root: false })
           .testRequestsInclude([{
             url: ({ searchParams }) => {
+              // Checking for 250 to confirm that it's the request for the
+              // actual data, not just the deletion count.
               searchParams.get('$top').should.equal('250');
               const filter = searchParams.get('$filter');
               filter.should.not.match(/__system\/conflict ne null/);
