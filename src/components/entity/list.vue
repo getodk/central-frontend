@@ -253,7 +253,7 @@ export default {
         query.end__lte = this.creationDateRange[1].endOf('day').toISO();
       }
       if (this.conflict.length === 1)
-        query.conflict = this.conflict[0] ? 'soft,hard' : 'null';
+        query.conflict = this.conflict[0] ? ['soft', 'hard'] : 'null';
       return Object.keys(query).length !== 0 ? query : null;
     },
     emptyMessage() {
