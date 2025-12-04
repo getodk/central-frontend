@@ -15,10 +15,10 @@ export const enketoBasePath = '/-';
 export const noop = () => {};
 export const noargs = (f) => () => f();
 
+export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);
+
 export const kebabToCamel = (s) =>
   s.replace(/-([a-z])/g, (match) => match[1].toUpperCase());
-
-export const sumUnderThreshold = (list, threshold) => list.reduce((acc, i) => acc + Math.min(i, threshold), 0);
 
 export const getCookieValue = (key, doc = document) => decodeURIComponent(doc.cookie.split(';')
   .map(cookie => cookie.trim())
