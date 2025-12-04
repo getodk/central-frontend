@@ -30,9 +30,9 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { inject, reactive, useTemplateRef, watch } from 'vue';
 
+import EntityTable from './table.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
-import EntityTable from './table.vue';
 
 import { apiPaths } from '../../util/request';
 import { noop, reemit } from '../../util/util';
