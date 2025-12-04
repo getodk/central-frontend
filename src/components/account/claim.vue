@@ -80,7 +80,7 @@ export default {
       })
         .then(() => {
           const message = this.$t('alert.success');
-          return this.$router.push('/login')
+          return this.$router.push({ path: '/login', query: { source: 'claim' } })
             .then(() => { this.alert.success(message); });
         })
         .catch(noop);

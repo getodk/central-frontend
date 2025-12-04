@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
+  <modal id="whats-new-modal" :state="isVisible" backdrop :hideable="true" @hide="hideModal">
     <template #banner>
       <img
         srcset="../assets/images/whats-new/banner@1x.png, ../assets/images/whats-new/banner@2x.png 2x"
@@ -23,9 +23,12 @@ except according to the terms contained in the LICENSE file.
         {{ $t('body') }}
       </p>
       <div class="modal-actions">
+        <div v-if="!initialOptIn" class="checkbox">
+          <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
+        </div>
         <button type="button" class="btn btn-primary"
           @click="hideModal">
-          {{ $t('action.gotIt') }}
+          {{ $t('action.done') }}
         </button>
       </div>
     </template>
@@ -47,6 +50,8 @@ const { openModal } = inject('container');
 const { currentUser, projects } = useRequestData();
 
 const isVisible = ref(false);
+const initialOptIn = currentUser.preferences.site.mailingListOptIn;
+const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
 watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
@@ -61,10 +66,44 @@ watch(() => projects.dataExists, () => {
 
 function hideModal() {
   currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+
+  // If user was not already opted in and preference changed, then save preference.
+  if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
+    currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
+  }
   isVisible.value = false;
 }
 
 </script>
+
+<style lang="scss">
+@import '../assets/scss/variables';
+
+#whats-new-modal .modal-actions {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+
+  .checkbox {
+    flex: 1;
+    margin-bottom: 0px;
+    font-size: 12px;
+
+    label {
+      display: block;
+      text-align: left;
+    }
+
+    input[type=checkbox] {
+      margin-top: 2px;
+    }
+  }
+
+  .btn {
+    margin-left: auto;
+  }
+}
+</style>
 
 <i18n lang="json5">
   {

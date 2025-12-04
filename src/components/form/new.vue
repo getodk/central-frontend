@@ -22,8 +22,10 @@ definition for an existing form -->
       <div v-show="warnings != null" class="modal-warnings">
         <p>{{ $t('warningsText[0]') }}</p>
 
-        <p v-if="warnings?.xlsFormWarnings">
-          <strong>{{ $t('warningsText[1]') }}</strong>
+        <template v-if="warnings?.xlsFormWarnings">
+          <p>
+            <strong>{{ $t('warningsText[1]') }}</strong>
+          </p>
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.xlsFormWarnings">
@@ -34,10 +36,12 @@ definition for an existing form -->
               </template>
             </li>
           </ul>
-        </p>
+        </template>
 
-        <p v-if="warnings?.workflowWarnings">
-          <strong>{{ $t('warningsText[2]') }}</strong>
+        <template v-if="warnings?.workflowWarnings">
+          <p>
+            <strong>{{ $t('warningsText[2]') }}</strong>
+          </p>
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.workflowWarnings">
@@ -59,7 +63,7 @@ definition for an existing form -->
               </template>
             </li>
           </ul>
-        </p>
+        </template>
 
         <p>
           <span>{{ $t('warningsText[4]') }}</span>
