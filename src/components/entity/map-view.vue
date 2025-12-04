@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-view ref="view" :odata="odataEntities" :url="geojsonUrl">
+  <map-view ref="view" :odata="odataEntities" :url="geojsonUrl"
+    :loading="$t('loading')">
     <template #popup="{ feature, odata: odataElement, listeners }">
       <entity-map-popup :uuid="feature?.id" :odata="odataElement"
         :awaiting-response="awaitingResponses.has(feature?.id)"
@@ -72,6 +73,7 @@ defineExpose({
 <i18n lang="json5">
 {
   "en": {
+    "loading": "Preparing map. This could take a while.",
     "overlapTitle": "{count} Entity in this area | {count} Entities in this area"
   }
 }
