@@ -28,7 +28,6 @@ const responseDefaults = {
   // Common local resources
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
-  odataEntities: testData.entityOData,
   audits: () => testData.extendedAudits.sorted()
 };
 
@@ -169,12 +168,7 @@ const responsesByComponent = {
         (projectId, xmlFormId) => apiPaths.submissions(projectId, xmlFormId, false, '.geojson'),
         url
       ),
-      ({ url }) => {
-        const filter = url.includes('deleted=true')
-          ? (submission) => submission.deletedAt != null
-          : (submission) => submission.deletedAt == null;
-        return testData.submissionGeojson(filter);
-      }
+      () => testData.submissionGeojson(submission => submission.deletedAt == null)
     ]
   }),
   PublicLinkList: componentResponses({
@@ -233,13 +227,31 @@ const responsesByComponent = {
   }),
   DatasetOverview: [],
   DatasetEntities: componentResponses({
-    deletedEntityCount: () => testData.entityDeletedOData(0),
-    odataEntities: true,
     entityCreators: () => testData.extendedFieldKeys
       .sorted()
       .sort((fieldKey1, fieldKey2) =>
         fieldKey1.displayName.localeCompare(fieldKey2.displayName))
-      .map(testData.toActor)
+      .map(testData.toActor),
+    deletedEntityCount: [
+      ({ url }) => matchesApiPath(apiPaths.odataEntities, url) && url.includes('top=0'),
+      () => testData.entityDeletedOData(0)
+    ],
+    odata: [
+      ({ url }) => matchesApiPath(apiPaths.odataEntities, url) && !url.includes('top=0'),
+      ({ url }) => {
+        const filter = relativeUrl(url).searchParams.get('$filter');
+        return filter.includes('__system/deletedAt eq null')
+          ? testData.entityOData()
+          : testData.entityDeletedOData();
+      }
+    ],
+    geojson: [
+      ({ url }) => matchesApiPath(
+        (projectId, datasetName) => apiPaths.entities(projectId, datasetName, '.geojson'),
+        url
+      ),
+      () => testData.entityGeojson(entity => entity.deletedAt == null)
+    ]
   }),
   DatasetSettings: [],
   EntityShow: componentResponses({

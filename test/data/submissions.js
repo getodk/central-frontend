@@ -8,6 +8,7 @@ import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { fields } from './fields';
 import { toActor } from './actors';
+import { wktToGeojson } from '../util/data';
 
 const fakeDateTime = () => {
   const date = faker.datatype.boolean() ? faker.date.past() : faker.date.future();
@@ -71,22 +72,18 @@ const randomOData = (instanceId, versionFields, partial) => versionFields
 const odataToGeojson = (odata, versionFields) => {
   const field = versionFields.find(({ type }) => type === 'geopoint');
   if (field == null) return null;
+
   const path = field.path.split('/');
   path.shift();
-  const value = getPath(path, odata);
-  if (value == null) return null;
-  const match = value.match(/\d+(\.\d+)?/g);
-  if (match == null) return null;
-  const coordinates = match.map(s => Number.parseInt(s, 10));
-  return {
-    type: 'Feature',
-    id: odata.__id,
-    geometry: {
-      type: 'GeometryCollection',
-      geometries: [{ type: 'Point', coordinates }]
-    },
-    properties: { fieldpath: field.path }
-  };
+
+  const geojson = wktToGeojson(getPath(path, odata));
+  return geojson == null
+    ? null
+    : {
+      ...geojson,
+      id: odata.__id,
+      properties: { fieldpath: field.path }
+    };
 };
 
 // eslint-disable-next-line import/prefer-default-export

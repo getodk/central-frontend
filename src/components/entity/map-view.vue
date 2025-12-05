@@ -46,6 +46,7 @@ defineOptions({
 });
 const props = defineProps({
   filter: Object,
+  searchTerm: String,
   awaitingResponses: {
     type: Set,
     required: true
@@ -57,15 +58,17 @@ const datasetName = inject('datasetName');
 
 const { odataEntities } = useRequestData();
 
-const geojsonUrl = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.geojson', props.filter));
+const geojsonUrl = computed(() => {
+  const query = { ...props.filter, $search: props.searchTerm };
+  return apiPaths.entities(projectId, datasetName, '.geojson', query);
+});
 const overlapUrl = (query) =>
   apiPaths.odataEntities(projectId, datasetName, query);
 
 const view = ref(null);
 defineExpose({
   // Delegate these functions to the MapView.
-  ...Object.fromEntries(['refresh', 'cancelRefresh', 'afterDelete']
+  ...Object.fromEntries(['fetchData', 'cancelFetch', 'afterDelete']
     .map(name => [name, (...args) => view.value[name](...args)]))
 });
 </script>

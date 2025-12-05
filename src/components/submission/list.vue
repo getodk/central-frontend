@@ -107,6 +107,7 @@ import SubmissionTableView from './table-view.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
 
+import useDataView from '../../composables/data-view';
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -195,16 +196,14 @@ export default {
       })
     });
 
-    const dataView = useQueryRef({
-      fromQuery: (query) => (!query.deleted && query.map === 'true' ? 'map' : 'table'),
-      toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
-    });
+    const { dataView, options: viewOptions } = useDataView();
 
     const { request } = useRequest();
 
     return {
       form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates, dataView,
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      dataView, viewOptions,
       request
     };
   },
@@ -232,12 +231,6 @@ export default {
     };
   },
   computed: {
-    viewOptions() {
-      return [
-        { value: 'table', text: this.$t('common.table') },
-        { value: 'map', text: this.$t('common.map') }
-      ];
-    },
     filtersOnSubmitterId() {
       if (this.submitterIds.length === 0) return false;
       const selectedAll = this.submitters.dataExists &&
@@ -309,15 +302,6 @@ export default {
     }
   },
   watch: {
-    dataView() {
-      /* Both view components set this.odata, but they don't reset this.odata
-      when they're unmounted. It's important for this.odata to be reset,
-      especially when toggling from table view to map view. Map view doesn't
-      modify this.odata at all until after the GeoJSON response is received.
-      That means that if this.odata isn't reset, the stale data from the table
-      view could persist for a bit, affecting things like this.emptyMessage. */
-      this.odata.reset();
-    },
     'odata.count': {
       handler() {
         // Update this.formVersion.submissions to match this.odata.count.

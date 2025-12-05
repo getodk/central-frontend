@@ -82,9 +82,10 @@ const overlapUrl = (query) =>
 
 const view = ref(null);
 defineExpose({
-  // Delegate these functions to the MapView.
-  ...Object.fromEntries(['refresh', 'cancelRefresh', 'afterDelete']
-    .map(name => [name, (...args) => view.value[name](...args)])),
+  // Functions exposed from the MapView
+  refresh: () => view.value.fetchData(false),
+  cancelRefresh: () => view.value.cancelFetch(),
+  afterDelete: (instanceId) => view.value.afterDelete(instanceId),
 
   afterReview: noop
 });

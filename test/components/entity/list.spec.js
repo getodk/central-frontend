@@ -41,6 +41,7 @@ describe('EntityList', () => {
           searchParams.get('$top').should.be.eql('0');
         }
       },
+      { url: '/v1/projects/1/datasets/trees/entities/creators' },
       {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)
@@ -49,7 +50,6 @@ describe('EntityList', () => {
           searchParams.get('$top').should.be.eql('250');
         }
       },
-      { url: '/v1/projects/1/datasets/trees/entities/creators' },
     ]);
   });
 
@@ -88,8 +88,8 @@ describe('EntityList', () => {
       let initialTime;
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
-      const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
-        if (i === responseIndex) {
+      const assertRowCount = (count) => (component, _, i) => {
+        if (i === 0 || i == null) {
           component.findAllComponents(EntityMetadataRow).length.should.equal(count);
           component.findAllComponents(EntityDataRow).length.should.equal(count);
         }
@@ -598,11 +598,7 @@ describe('EntityList', () => {
       });
       return load(
         '/projects/1/entity-lists/trees/entities?deleted=true',
-        { root: false, attachTo: document.body },
-        {
-          deletedEntityCount: false,
-          odataEntities: testData.entityDeletedOData
-        }
+        { root: false, attachTo: document.body }
       );
     };
 
@@ -989,11 +985,7 @@ describe('EntityList', () => {
       testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
       const app = await load(
         '/projects/1/entity-lists/trees/entities?deleted=true',
-        { root: false, attachTo: document.body },
-        {
-          deletedEntityCount: false,
-          odataEntities: testData.entityDeletedOData
-        }
+        { root: false, attachTo: document.body }
       );
       const button = app.getComponent('#entity-download-button');
       button.get('.btn-primary').classes().should.include('disabled');
@@ -1031,11 +1023,11 @@ describe('EntityList', () => {
 
     it('should read searched text from the URL', () =>
       load('/projects/1/entity-lists/trees/entities?search=john', { root: false })
-        .beforeEachResponse((_, { url }, index) => {
-          if (index !== 1) return;
-          const search = relativeUrl(url).searchParams.get('$search');
-          search.should.be.equal('john');
-        }));
+        .testRequestsInclude([{
+          url: ({ searchParams }) => {
+            searchParams.get('$search').should.be.equal('john');
+          }
+        }]));
 
     it('should re-renders the table after enter is pressed', () => {
       testData.extendedEntities.createPast(1);

@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { T } from 'ramda';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
@@ -370,9 +371,11 @@ describe('EntityUpload', () => {
           return modal.get('.modal-actions .btn-primary').trigger('click');
         })
         .respondWithSuccess()
-        .respondWithData(() => {
+        .respondIf(T, ({ url }) => {
           testData.extendedEntities.createPast(1);
-          return testData.entityOData();
+          return url.includes('.svc')
+            ? testData.entityOData()
+            : testData.entityGeojson();
         });
     };
 
@@ -397,6 +400,12 @@ describe('EntityUpload', () => {
             searchParams.get('$count').should.be.eql('true');
           }
         }
+      ]));
+
+    it('sends a new request for GeoJSON', () =>
+      upload('?map=true').testRequests([
+        null,
+        { url: '/v1/projects/1/datasets/trees/entities.geojson' }
       ]));
 
     it('renders correctly during the request', () =>

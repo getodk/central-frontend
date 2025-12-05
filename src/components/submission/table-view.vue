@@ -13,9 +13,7 @@ except according to the terms contained in the LICENSE file.
   <submission-table v-show="odata.dataExists" ref="table"
     :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
     :fields="fields" :awaiting-deleted-responses="awaitingResponses"
-    @review="$emit('review', $event)"
-    @delete="$emit('delete', $event)"
-    @restore="$emit('restore', $event)"/>
+    v-on="reemitters"/>
   <odata-loading-message :state="odata.initiallyLoading"
     type="submission"
     :top="pagination.size"
@@ -37,7 +35,7 @@ import Pagination from '../pagination.vue';
 import SubmissionTable from './table.vue';
 
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
+import { noop, reemit } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -69,7 +67,7 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['review', 'delete', 'restore']);
+const emit = defineEmits(['review', 'delete', 'restore']);
 
 const { odata, deletedSubmissionCount } = useRequestData();
 
@@ -101,7 +99,8 @@ const odataSelect = computed(() => {
 });
 
 // `clear` indicates whether this.odata should be cleared before sending the
-// request. `refresh` indicates whether the request is a background refresh.
+// request. `refresh` indicates whether the request is a background refresh
+// (whether the refresh button was pressed).
 const fetchChunk = (clear, refresh = false) => {
   // Are we fetching the first chunk of submissions or the next chunk?
   const first = clear || refresh;
@@ -161,6 +160,8 @@ const handlePageChange = () => {
 };
 const refresh = () => fetchChunk(false, true);
 const cancelRefresh = () => { odata.cancelRequest(); };
+
+const reemitters = reemit(emit, ['review', 'delete', 'restore']);
 
 const table = useTemplateRef('table');
 const afterReview = (instanceId) => table.value.afterReview(instanceId);
