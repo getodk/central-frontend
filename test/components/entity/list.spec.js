@@ -188,20 +188,22 @@ describe('EntityList', () => {
       });
     });
 
-    it('does not show the modal during a refresh of the table', () => {
+    it('cancels a background refresh of the table', () => {
       testData.extendedEntities.createPast(1);
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
           component.get('#refresh-button').trigger('click'))
-        .beforeEachResponse(async (component) => {
-          await component.get('.entity-metadata-row .update-button').trigger('click');
-          component.getComponent(EntityUpdate).props().state.should.be.false;
+        .beforeAnyResponse(component =>
+          component.get('.entity-metadata-row .update-button').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedEntities.createNew();
+          return testData.entityOData();
         })
-        .respondWithData(testData.entityOData)
         .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
-          component.getComponent(EntityUpdate).props().state.should.be.false;
+          component.getComponent(EntityUpdate).props().state.should.be.true;
+          component.findAllComponents(EntityMetadataRow).length.should.equal(1);
         });
     });
 
@@ -303,7 +305,7 @@ describe('EntityList', () => {
         .respondWithData(relevantToConflict)
         .afterResponse(component => {
           const modal = component.getComponent(EntityResolve);
-          modal.props().entity.__id.should.equal('e2');
+          modal.props().entity.uuid.should.equal('e2');
           return modal.get('.btn-primary').trigger('click');
         })
         .request(component => {
@@ -313,11 +315,11 @@ describe('EntityList', () => {
         .respondWithData(relevantToConflict)
         .afterResponse(component => {
           const modal = component.getComponent(EntityResolve);
-          modal.props().entity.__id.should.equal('e1');
+          modal.props().entity.uuid.should.equal('e1');
         });
     });
 
-    it('does not show the modal during a refresh of the table', () => {
+    it('cancels a background refresh of the table', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
 
@@ -325,14 +327,17 @@ describe('EntityList', () => {
         .complete()
         .request(component =>
           component.get('#refresh-button').trigger('click'))
-        .beforeEachResponse(async (component) => {
-          await component.get('.entity-metadata-row .resolve-button').trigger('click');
-          component.getComponent(EntityResolve).props().state.should.be.false;
+        .beforeAnyResponse(component =>
+          component.get('.entity-metadata-row .resolve-button').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedEntities.createNew();
+          return testData.entityOData();
         })
-        .respondWithData(testData.entityOData)
         .respondWithData(testData.entityDeletedOData)
-        .afterResponse(component => {
-          component.getComponent(EntityResolve).props().state.should.be.false;
+        .respondWithData(relevantToConflict)
+        .afterResponses(component => {
+          component.getComponent(EntityResolve).props().state.should.be.true;
+          component.findAllComponents(EntityMetadataRow).length.should.equal(1);
         });
     });
 
@@ -467,7 +472,7 @@ describe('EntityList', () => {
       });
       await component.get('.entity-metadata-row .delete-button').trigger('click');
       const { entity } = component.getComponent(EntityDelete).props();
-      entity.label.should.equal('My Entity');
+      entity.currentVersion.label.should.equal('My Entity');
     });
 
     it('implements some standard button things', () => {
@@ -780,31 +785,6 @@ describe('EntityList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.should.alert('success', 'Entity “My Entity” has been restored.');
-          }));
-
-      // see the comment above in the similar test for delete Entity
-      it('does not hide table after undeleting last entity if entities are concurrently replaced', () =>
-        restoreAndCheck()
-          .request(async (component) => {
-            await component.get('#refresh-button').trigger('click');
-            return component.get('.entity-metadata-row .restore-button').trigger('click');
-          })
-          .respondWithData(() => {
-            testData.extendedEntities.splice(0);
-            testData.extendedEntities.createNew({ deletedAt: new Date().toISOString() });
-            testData.extendedEntities.createNew({ deletedAt: new Date().toISOString() });
-            return testData.entityDeletedOData();
-          })
-          .respondWithSuccess()
-          .afterResponses(component => {
-            component.get('#entity-table').should.be.visible();
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.entity-metadata-row .restore-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            component.get('#entity-table').should.be.visible();
           }));
     });
   });

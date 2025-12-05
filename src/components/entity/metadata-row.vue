@@ -35,30 +35,9 @@ except according to the terms contained in the LICENSE file.
         </span>
         <span class="icon-angle-right"></span>
       </div>
-      <div class="btn-group">
-        <button v-if="verbs.has('entity.delete')" type="button"
-          class="delete-button btn btn-default"
-          :aria-label="$t('action.delete')" v-tooltip.aria-label>
-          <span class="icon-trash"></span><spinner :state="awaitingResponse"/>
-        </button>
-        <button v-if="verbs.has('entity.update')" type="button"
-          class="update-button btn btn-default" :aria-label="updateLabel"
-          v-tooltip.aria-label>
-          <span class="icon-pencil"></span>
-        </button>
-        <button v-if="entity.__system.conflict" type="button"
-          class="resolve-button btn btn-danger" :aria-label="$t('action.reviewParallelUpdates')"
-          v-tooltip.aria-label>
-          <span class="icon-random"></span>
-        </button>
-        <router-link v-slot="{ href }"
-          :to="entityPath(projectId, datasetName, entity.__id)" custom>
-          <a class="more-button btn btn-default" :href="href" target="_blank">
-            <span>{{ $t('action.more') }}</span>
-            <span class="icon-angle-right"></span>
-          </a>
-        </router-link>
-      </div>
+      <entity-actions :uuid="entity.__id" :version="entity.__system.version"
+        :conflict="entity.__system.conflict"
+        :awaiting-response="awaitingResponse"/>
     </td>
     <td v-else class="action-cell">
       <div class="col-content col-deleted-at">
@@ -77,17 +56,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
-
 import DateTime from '../date-time.vue';
+import EntityActions from './actions.vue';
 import Spinner from '../spinner.vue';
-
-import useRoutes from '../../composables/routes';
 
 defineOptions({
   name: 'EntityMetadataRow'
 });
-const props = defineProps({
+defineProps({
   entity: {
     type: Object,
     required: true
@@ -107,15 +83,6 @@ const props = defineProps({
   awaitingResponse: Boolean
 });
 defineEmits(['selectionChanged']);
-const projectId = inject('projectId');
-const datasetName = inject('datasetName');
-
-const { i18n } = inject('container');
-const updateLabel = computed(() => i18n.t('submission.action.edit', {
-  count: i18n.n(props.entity.__system.updates, 'default')
-}));
-
-const { entityPath } = useRoutes();
 </script>
 
 <style lang="scss">
@@ -137,7 +104,7 @@ const { entityPath } = useRoutes();
     padding-top: 4px;
     padding-bottom: 4px;
 
-    // Ensure that the column is wide enough that the .btn-group does not wrap.
+    // Ensure that the column is wide enough that EntityActions does not wrap.
     min-width: 170px;
     &:lang(id) { min-width: 215px; }
   }

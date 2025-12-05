@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <map-popup v-show="uuid != null" ref="popup" :back="odata != null"
-    @hide="$emit('hide')" @back="$emit('back')">
+  <map-popup v-show="uuid != null" id="entity-map-popup" ref="popup"
+    :back="odata != null" @hide="$emit('hide')" @back="$emit('back')">
     <template #title>
       <span v-tooltip.text>
         {{ entity.dataExists ? entity.currentVersion.label : '' }}
@@ -38,6 +38,11 @@ except according to the terms contained in the LICENSE file.
         </div>
       </dl>
     </template>
+    <template #footer>
+      <entity-actions v-if="entity.dataExists" :uuid="entity.uuid"
+        :version="entity.currentVersion.version" :conflict="entity.conflict"
+        :awaiting-response="awaitingResponse" @click="handleActions"/>
+    </template>
   </map-popup>
 </template>
 
@@ -46,6 +51,7 @@ import { computed, inject, reactive, useTemplateRef, watch } from 'vue';
 
 import DateTime from '../date-time.vue';
 import DlData from '../dl-data.vue';
+import EntityActions from './actions.vue';
 import Loading from '../loading.vue';
 import MapPopup from '../map/popup.vue';
 
@@ -61,7 +67,7 @@ const props = defineProps({
   odata: Object,
   awaitingResponse: Boolean
 });
-const emit = defineEmits(['hide', 'back']);
+const emit = defineEmits(['hide', 'back', 'update', 'resolve', 'delete']);
 
 const projectId = inject('projectId');
 const datasetName = inject('datasetName');
@@ -95,4 +101,31 @@ watch(() => props.uuid, (uuid) => {
 
 const propertyData = computed(() =>
   (entity.dataExists ? entity.currentVersion.data : Object.create(null)));
+
+const handleActions = (event) => {
+  const action = event.target.closest('.btn');
+  if (action == null) return;
+  const { classList } = action;
+  if (classList.contains('delete-button'))
+    emit('delete', entity.data);
+  else if (classList.contains('update-button'))
+    emit('update', entity.data);
+  else if (classList.contains('resolve-button'))
+    emit('resolve', entity.data);
+};
+const updateEntity = (updatedEntity) => {
+  // Preserve extended metadata before overwriting entity.data.
+  const { creator } = entity;
+  entity.setFromResponse({ data: updatedEntity });
+  entity.creator = creator;
+};
+defineExpose({ updateEntity });
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/mixins';
+
+#entity-map-popup {
+  @include icon-btn-group;
+}
+</style>

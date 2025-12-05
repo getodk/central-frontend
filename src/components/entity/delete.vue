@@ -12,10 +12,10 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-delete" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')">
-    <template #title>{{ $t('title', { label: entity?.label }) }}</template>
+    <template #title>{{ $t('title', { label }) }}</template>
     <template #body>
       <p class="modal-introduction">
-        <span>{{ $t('introduction[0]', { label: entity?.label }) }}</span>
+        <span>{{ $t('introduction[0]', { label }) }}</span>
       </p>
       <div class="modal-actions">
         <button type="button" class="btn btn-link"
@@ -32,6 +32,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
@@ -40,10 +42,13 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
+  // An entity in the format of a REST response (not OData)
   entity: Object,
   awaitingResponse: Boolean
 });
 const emit = defineEmits(['hide', 'delete']);
+
+const label = computed(() => props.entity?.currentVersion?.label);
 
 const del = () => {
   emit('delete', props.entity);
