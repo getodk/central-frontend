@@ -59,7 +59,7 @@ const datasetName = inject('datasetName');
 const { odataEntities } = useRequestData();
 
 const geojsonUrl = computed(() => {
-  const query = { ...props.filter, search: props.searchTerm };
+  const query = { ...props.filter, $search: props.searchTerm };
   return apiPaths.entities(projectId, datasetName, '.geojson', query);
 });
 const overlapUrl = (query) =>

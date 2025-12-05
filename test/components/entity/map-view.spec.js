@@ -93,7 +93,7 @@ describe('EntityMapView', () => {
             searchParams.get('start__gte').should.equal('1970-01-01T00:00:00.000Z');
             searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
             searchParams.getAll('conflict').should.eql(['soft', 'hard']);
-            searchParams.get('search').should.equal('foo');
+            searchParams.get('$search').should.equal('foo');
           }
         }]);
     });
@@ -132,7 +132,7 @@ describe('EntityMapView', () => {
           return search.trigger('keydown', { key: 'enter' });
         })
         .beforeEachResponse((app, { url }) => {
-          url.should.equal('/v1/projects/1/datasets/trees/entities.geojson?search=foo');
+          url.should.equal('/v1/projects/1/datasets/trees/entities.geojson?%24search=foo');
           countFeatures(app).should.equal(0);
         })
         .respondWithData(testData.entityGeojson)
