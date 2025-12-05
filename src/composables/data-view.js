@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { inject } from 'vue';
+import { computed, inject } from 'vue';
 
 import useQueryRef from './query-ref';
 
@@ -21,10 +21,10 @@ export default () => {
     toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
   });
 
-  const options = [
+  const options = computed(() => [
     { value: 'table', text: i18n.t('common.table') },
     { value: 'map', text: i18n.t('common.map') }
-  ];
+  ]);
 
   return { dataView, options };
 };
