@@ -52,6 +52,7 @@ defineExpose({ el, resetScroll });
 
   width: 318px;
   max-height: 363px;
+  overflow: hidden;
 
   background-color: $color-page-background;
   border-radius: 6px;
