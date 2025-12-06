@@ -919,6 +919,72 @@ describe('EntityList', () => {
           component.find('.pagination select').element.value.should.be.eql('2');
         });
     });
+
+    it('adds page-size query parameter when page size is changed', () => {
+      createEntities(251);
+      return load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(component => {
+          const sizeDropdown = component.find('.pagination select:has(option[value="500"])');
+          return sizeDropdown.setValue(500);
+        })
+        .respondWithData(() => testData.entityOData(500))
+        .afterResponse(component => {
+          component.vm.$route.query['page-size'].should.equal('500');
+        });
+    });
+
+    it('adds page-number query parameter when next page is clicked', () => {
+      createEntities(251);
+      return load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.entityOData(250, 250))
+        .afterResponse(component => {
+          component.vm.$route.query['page-number'].should.equal('2');
+        });
+    });
+
+    it('displays the correct page when page-number is provided in URL', () => {
+      createEntities(501);
+      return load('/projects/1/entity-lists/trees/entities?page-number=2', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination select').element.value.should.be.eql('1');
+        });
+    });
+
+    it('displays correct number of rows when page-size is provided in URL', () => {
+      createEntities(600);
+      return load('/projects/1/entity-lists/trees/entities?page-size=500', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination select:has(option[value="500"])').element.value.should.be.eql('500');
+        });
+    });
+
+    it('selects first page when page-number is less than 1 in URL', () => {
+      createEntities(251);
+      return load('/projects/1/entity-lists/trees/entities?page-number=0', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination select').element.value.should.be.eql('0');
+        });
+    });
+
+    it('selects last page when page-number is greater than last page in URL', () => {
+      createEntities(501);
+      return load('/projects/1/entity-lists/trees/entities?page-number=999', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination select').element.value.should.be.eql('2');
+        });
+    });
+
+    it('floors page-size to nearest valid value when invalid page-size is provided in URL', () => {
+      createEntities(251);
+      return load('/projects/1/entity-lists/trees/entities?page-size=350', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination select:has(option[value="500"])').element.value.should.be.eql('250');
+        });
+    });
   });
 
   describe('deleted entities', () => {
@@ -949,7 +1015,7 @@ describe('EntityList', () => {
 
     it('updates the deleted count', () => {
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
-      return load('/projects/1/entity-lists/truee/entities', { root: false, container: { router: testRouter() } })
+      return load('/projects/1/entity-lists/tree/entities', { root: false, container: { router: testRouter() } })
         .complete()
         .request(component =>
           component.get('.toggle-deleted-entities').trigger('click'))
