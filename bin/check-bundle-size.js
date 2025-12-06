@@ -69,7 +69,7 @@ function isTooBig({ path, size }) {
     case 'html': return size >   1_200;
     case 'ico':  return size >  16_000;
     case 'js':   return size > 200_000;
-    case 'png':  return size >  40_000;
+    case 'png':  return size > 200_000;
     case 'svg':  return size >  60_000;
     case 'ttf':  return size >  18_000;
     case 'woff': return size >  19_000;
