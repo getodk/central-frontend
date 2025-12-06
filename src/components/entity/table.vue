@@ -54,6 +54,7 @@ import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table/freeze.vue';
 
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';
+import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -76,23 +77,66 @@ const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionCh
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { project, odataEntities } = useRequestData();
+const { project, dataset, odataEntities } = useRequestData();
 
-const afterAction = ({ target, data, index }) => {
+const afterAction = ({ target, data }) => {
   const { classList } = target;
-  if (classList.contains('delete-button'))
-    emit('delete', data);
-  else if (classList.contains('update-button'))
-    emit('update', index);
-  else if (classList.contains('resolve-button'))
-    emit('resolve', index);
-  else if (target.classList.contains('restore-button'))
+  if (target.classList.contains('restore-button'))
     emit('restore', data);
+
+  const restEntity = odataEntityToRest(data, dataset.properties);
+  if (classList.contains('delete-button'))
+    emit('delete', restEntity);
+  else if (classList.contains('update-button'))
+    emit('update', restEntity);
+  else if (classList.contains('resolve-button'))
+    emit('resolve', restEntity);
 };
 const table = ref(null);
-const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
-defineExpose({ afterUpdate, afterDelete });
+const findIndex = (uuid) =>
+  odataEntities.value.findIndex(entity => entity.__id === uuid);
+const afterUpdate = (updatedEntity, resolving) => {
+  const index = findIndex(updatedEntity.uuid);
+
+  // Update the OData using the REST response.
+  const oldOData = odataEntities.value[index];
+  const newOData = Object.assign(Object.create(null), {
+    __id: oldOData.__id,
+    label: updatedEntity.currentVersion.label,
+    __system: {
+      ...oldOData.__system,
+      version: updatedEntity.currentVersion.version,
+      updates: oldOData.__system.updates + 1,
+      updatedAt: updatedEntity.updatedAt
+    }
+  });
+  const { data: updatedData } = updatedEntity.currentVersion;
+  for (const { name, odataName } of dataset.properties)
+    newOData[odataName] = updatedData[name];
+  odataEntities.value[index] = newOData;
+
+  if (!resolving) markRowsChanged(table.value.getRowPair(index));
+};
+const afterResolve = (updatedEntity) => {
+  const index = findIndex(updatedEntity.uuid);
+
+  // Update the OData using the REST response.
+  const newOData = Object.create(null);
+  Object.assign(newOData, odataEntities.value[index]);
+  newOData.__system = {
+    ...newOData.__system,
+    conflict: null,
+    updatedAt: updatedEntity.updatedAt
+  };
+  odataEntities.value[index] = newOData;
+
+  markRowsChanged(table.value.getRowPair(index));
+};
+const afterDelete = (uuid) => {
+  const index = findIndex(uuid);
+  markRowsDeleted(table.value.getRowPair(index));
+  odataEntities.value.splice(index, 1);
+};
 
 const handleSelectionChanged = (checked, index) => {
   const data = odataEntities.value[index];
@@ -112,6 +156,8 @@ const changeAllSelection = (checked) => {
   });
   emit('selectionChanged', 'all', checked);
 };
+
+defineExpose({ afterUpdate, afterResolve, afterDelete });
 </script>
 
 <style lang="scss">

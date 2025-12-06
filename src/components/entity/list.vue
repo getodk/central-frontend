@@ -44,13 +44,15 @@ except according to the terms contained in the LICENSE file.
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"
         @restore="showRestore"/>
       <entity-map-view v-else ref="view" :filter="geojsonFilter"
-        :search-term="searchTerm" :awaiting-responses="awaitingResponses"/>
+        :search-term="searchTerm" :awaiting-responses="awaitingResponses"
+        @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
     </disable-container>
 
-    <entity-update v-bind="update" @hide="hideUpdate" @success="afterUpdate"/>
+    <entity-update v-bind="update" :geometry-disabled="dataView === 'map'"
+      @hide="hideUpdate" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
     <entity-delete v-bind="deleteModal"
-      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.entity.__id)"
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.entity.uuid)"
       @hide="deleteModal.hide()" @delete="requestDelete"/>
     <entity-restore v-bind="restoreModal" checkbox
       :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.entity.__id)"
@@ -95,7 +97,6 @@ import { apiPaths, requestAlertMessage } from '../../util/request';
 import { joinSentences } from '../../util/i18n';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
-import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 import { arrayQuery } from '../../util/router';
 
@@ -193,14 +194,8 @@ export default {
     return {
       refreshing: false,
 
-      // The index of the entity being updated
-      updateIndex: null,
       update: modalData(),
-
-      // The index of the entity being resolved
-      resolveIndex: null,
       resolve: modalData(),
-
       deleteModal: modalData(),
 
       // state that indicates whether we need to show restore confirmation dialog
@@ -350,80 +345,43 @@ export default {
         url: apiPaths.entityCreators(this.projectId, this.datasetName)
       }).catch(noop);
     },
-    showUpdate(index) {
-      if (this.refreshing) return;
-      this.updateIndex = index;
-      const odataEntity = this.odataEntities.value[index];
-      this.update.show({
-        entity: odataEntityToRest(odataEntity, this.dataset.properties)
-      });
+    showUpdate(entity) {
+      this.cancelBackgroundRefresh();
+      this.update.show({ entity });
     },
     hideUpdate() {
       this.update.hide();
-      this.updateIndex = null;
-      if (this.resolveIndex != null) {
-        this.showResolve(this.resolveIndex);
-      }
+      if (this.resolve.entity != null) this.resolve.show();
     },
     afterUpdate(updatedEntity) {
-      const index = this.updateIndex;
       this.hideUpdate();
       this.alert.success(this.$t('alert.updateEntity'));
 
-      // Update the OData using the REST response.
-      const oldOData = this.odataEntities.value[index];
-      const newOData = Object.assign(Object.create(null), {
-        __id: oldOData.__id,
-        label: updatedEntity.currentVersion.label,
-        __system: {
-          ...oldOData.__system,
-          version: updatedEntity.currentVersion.version,
-          updates: oldOData.__system.updates + 1,
-          updatedAt: updatedEntity.updatedAt
-        }
-      });
-      const { data: updatedData } = updatedEntity.currentVersion;
-      for (const { name, odataName } of this.dataset.properties)
-        newOData[odataName] = updatedData[name];
-      this.odataEntities.value[index] = newOData;
-
-      if (this.resolveIndex == null)
-        this.$refs.view.afterUpdate(index);
-      else
-        this.showResolve(this.resolveIndex);
+      const resolving = this.resolve.entity != null;
+      this.$refs.view.afterUpdate(updatedEntity, resolving);
+      if (resolving) this.resolve.show({ entity: updatedEntity });
     },
-    showResolve(index) {
-      if (this.refreshing) return;
-      this.resolveIndex = index;
-      this.resolve.show({ entity: this.odataEntities.value[index] });
+    showResolve(entity) {
+      this.cancelBackgroundRefresh();
+      this.resolve.show({ entity });
     },
     hideResolve(showUpdate) {
       if (showUpdate) {
         this.resolve.hide(false);
-        this.$nextTick(() => this.showUpdate(this.resolveIndex));
+        this.$nextTick(() => this.showUpdate(this.resolve.entity));
       } else {
         this.resolve.hide();
-        this.resolveIndex = null;
       }
     },
     afterResolve(updatedEntity) {
-      // Update the OData using the REST response.
-      const newOData = Object.create(null);
-      Object.assign(newOData, this.odataEntities.value[this.resolveIndex]);
-      newOData.__system = {
-        ...newOData.__system,
-        conflict: null,
-        updatedAt: updatedEntity.updatedAt
-      };
-      this.odataEntities.value[this.resolveIndex] = newOData;
-
-      this.$refs.view.afterUpdate(this.resolveIndex);
+      this.$refs.view.afterResolve(updatedEntity);
     },
     showDelete(entity) {
+      this.cancelBackgroundRefresh();
       this.deleteModal.show({ entity });
     },
-    requestDelete(event) {
-      const { __id: uuid, label } = event;
+    requestDelete(entity) {
+      const { uuid } = entity;
 
       this.awaitingResponses.add(uuid);
 
@@ -434,30 +392,15 @@ export default {
       })
         .then(() => {
           this.deleteModal.hide();
-          if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
-
+          const { label } = entity.currentVersion;
           this.alert.success(this.$t('alert.entityDeleted', { label }));
 
           this.odataEntities.removedEntities.add(uuid);
+          this.removeSelectedEntity(uuid);
           this.dataset.entities -= 1;
+          if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
 
-          /* Before doing a couple more things, we first determine whether
-          this.odataEntities.value still includes the entity and if so, what the
-          current index of the entity is. If a request to refresh
-          this.odataEntities was sent while the deletion request was in
-          progress, then there could be a race condition such that data doesn't
-          exist for this.odataEntities, or this.odataEntities.value no longer
-          includes the entity. Another possible result of the race condition is
-          that this.odataEntities.value still includes the entity, but the
-          entity's index has changed. */
-          const index = this.odataEntities.dataExists
-            ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
-            : -1;
-          if (index !== -1) {
-            this.$refs.view.afterDelete(index);
-            this.selectedEntities.delete(this.odataEntities.value[index]);
-            this.odataEntities.value.splice(index, 1);
-          }
+          this.$refs.view.afterDelete(uuid);
         })
         .catch(noop)
         .finally(() => {
@@ -465,6 +408,7 @@ export default {
         });
     },
     showRestore(entity) {
+      this.cancelBackgroundRefresh();
       if (this.confirmRestore) {
         this.restoreModal.show({ entity });
       } else {
@@ -483,24 +427,16 @@ export default {
       })
         .then(() => {
           this.restoreModal.hide();
-          if (this.deletedEntityCount.dataExists && this.deletedEntityCount.value > 0) {
-            this.deletedEntityCount.value -= 1;
-          }
-
           this.alert.success(this.$t('alert.entityRestored', { label }));
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
+          this.removeSelectedEntity(uuid);
           this.dataset.entities += 1;
+          if (this.deletedEntityCount.dataExists && this.deletedEntityCount.value > 0)
+            this.deletedEntityCount.value -= 1;
 
-          // See the comments in requestDelete().
-          const index = this.odataEntities.dataExists
-            ? this.odataEntities.value.findIndex(entity => entity.__id === uuid)
-            : -1;
-          if (index !== -1) {
-            this.$refs.view.afterDelete(index);
-            this.odataEntities.value.splice(index, 1);
-          }
+          this.$refs.view.afterDelete(uuid);
         })
         .catch(noop)
         .finally(() => {
@@ -511,6 +447,14 @@ export default {
       this.selectedEntities.clear();
       this.odataEntities.value?.forEach(e => { e.__system.selected = false; });
       this.allSelected = false;
+    },
+    removeSelectedEntity(uuid) {
+      for (const entity of this.selectedEntities) {
+        if (entity.__id === uuid) {
+          this.selectedEntities.delete(entity);
+          return;
+        }
+      }
     },
     cancelBackgroundRefresh() {
       if (!this.refreshing) return;

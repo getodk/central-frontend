@@ -9,6 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { computed } from 'vue';
 
 export const enketoBasePath = '/-';
 
@@ -26,7 +27,18 @@ export const getCookieValue = (key, doc = document) => decodeURIComponent(doc.co
   .find(cookie => cookie.startsWith(`${key}=`))
   ?.split('=')[1] || '');
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VUE
+
 // Returns an object of event handlers that simply re-emit the specified events.
 // Useful for nested components. Pass the resulting object to v-on.
 export const reemit = (emit, events) => Object.fromEntries(events.map(name =>
   [kebabToCamel(name), (...args) => emit(name, ...args)]));
+
+// Returns an object of computed refs that delegate to the exposed properties of
+// a template ref. Useful for nested components. Pass the resulting object to
+// defineExpose().
+export const reexpose = (templateRef, names) => Object.fromEntries(names.map(name =>
+  [name, computed(() => templateRef.value[name])]));

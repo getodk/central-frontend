@@ -51,6 +51,9 @@ import Spinner from '../spinner.vue';
 import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
+defineOptions({
+  name: 'SubmissionActions'
+});
 const props = defineProps({
   submission: {
     type: Object,

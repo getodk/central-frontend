@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse"
     size="large" backdrop @hide="$emit('hide')">
-    <template #title>{{ $t('title', entity) }}</template>
+    <template #title>{{ $t('title', { label }) }}</template>
     <template #body>
       <div v-if="!success">
         <div class="modal-introduction">
-          <p>{{ $t('instructions[0]', entity) }}</p>
+          <p>{{ $t('instructions[0]', { label }) }}</p>
           <p v-if="canUpdate">
             {{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}
           </p>
@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         <div v-show="tableShown" id="entity-resolve-table-container">
           <loading :state="entityVersions.awaitingResponse"/>
           <entity-conflict-table v-if="entityVersions.dataExists" ref="table"
-            :uuid="entity.__id" :versions="entityVersions.data"
+            :uuid="entity.uuid" :versions="entityVersions.data"
             link-target="_blank"/>
         </div>
         <div id="entity-resolve-table-toggle">
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
           </a>
         </div>
 
-        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.__id)"
+        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.uuid)"
           :class="{ disabled: awaitingResponse }" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
@@ -88,6 +88,10 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
+  // An entity in the format of a REST response (not OData). Note that extended
+  // metadata is not guaranteed to be available: if the entity is updated via
+  // the edit button in this modal, then props.entity will be set to the PATCH
+  // response.
   entity: Object
 });
 const emit = defineEmits(['hide', 'success']);
@@ -97,6 +101,7 @@ const emit = defineEmits(['hide', 'success']);
 const { project } = useRequestData();
 const entityVersions = useEntityVersions();
 
+const label = computed(() => props.entity?.currentVersion?.label);
 const canUpdate = computed(() =>
   project.dataExists && project.permits('entity.update'));
 
@@ -107,7 +112,7 @@ const alert = inject('alert');
 const { t } = useI18n();
 const requestEntityVersions = () => {
   entityVersions.request({
-    url: apiPaths.entityVersions(projectId, datasetName, props.entity.__id, { relevantToConflict: true }),
+    url: apiPaths.entityVersions(projectId, datasetName, props.entity.uuid, { relevantToConflict: true }),
     extended: true
   })
     .then(() => {
@@ -129,9 +134,9 @@ const { request, awaitingResponse } = useRequest();
 const success = ref(false);
 const markAsResolve = () => {
   const { entity } = props;
-  const url = apiPaths.entity(projectId, datasetName, entity.__id, {
+  const url = apiPaths.entity(projectId, datasetName, entity.uuid, {
     resolve: true,
-    baseVersion: entity.__system.version
+    baseVersion: entity.currentVersion.version
   });
   request.patch(
     url,

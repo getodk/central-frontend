@@ -35,7 +35,7 @@ import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
 
 import { apiPaths } from '../../util/request';
-import { noop, reemit } from '../../util/util';
+import { noop, reemit, reexpose } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -148,8 +148,8 @@ const reemitters = reemit(
 );
 
 const table = useTemplateRef('table');
-const afterUpdate = (index) => table.value.afterUpdate(index);
-const afterDelete = (index) => table.value.afterDelete(index);
-
-defineExpose({ ...exposedFetch, afterUpdate, afterDelete });
+defineExpose({
+  ...exposedFetch,
+  ...reexpose(table, ['afterUpdate', 'afterResolve', 'afterDelete'])
+});
 </script>

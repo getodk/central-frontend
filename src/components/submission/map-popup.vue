@@ -141,7 +141,7 @@ const missingField = computed(() => {
   return { name: last(elements), header: elements.join('-') };
 });
 const handleActions = (event) => {
-  const action = event.target.closest('.btn-group .btn');
+  const action = event.target.closest('.btn');
   if (action == null) return;
   const { classList } = action;
   if (classList.contains('review-button'))

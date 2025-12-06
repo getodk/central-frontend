@@ -54,6 +54,7 @@ const props = defineProps({
   state: Boolean,
   checkbox: Boolean,
   awaitingResponse: Boolean,
+  // An entity in OData format
   entity: Object
 });
 const emit = defineEmits(['hide', 'restore']);

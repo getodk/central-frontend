@@ -26,7 +26,8 @@ except according to the terms contained in the LICENSE file.
       <div class="form-group">
         <textarea-autosize :id="textareaId" ref="textarea"
           :model-value="modelValue ?? oldValue ?? ''" :min-height="minHeight"
-          :required="required" @update:model-value="update"/>
+          :required="required" :disabled="disabled"
+          :disabled-message="disabledMessage" @update:model-value="update"/>
       </div>
     </td>
   </tr>
@@ -52,7 +53,9 @@ const props = defineProps({
     type: String,
     required: true
   },
-  required: Boolean
+  required: Boolean,
+  disabled: Boolean,
+  disabledMessage: String
 });
 const emit = defineEmits(['update:modelValue']);
 

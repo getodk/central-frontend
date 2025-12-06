@@ -35,7 +35,9 @@ except according to the terms contained in the LICENSE file.
               <template v-if="dataset.dataExists">
                 <entity-update-row v-for="{ name } of dataset.properties"
                   :key="name" ref="propertyRows" v-model="data[name]"
-                  :old-value="currentVersion.data[name]" :label="name"/>
+                  :old-value="currentVersion.data[name]" :label="name"
+                  :disabled="name === 'geometry' && geometryDisabled"
+                  :disabled-message="$t('geometryDisabled')"/>
               </template>
             </tbody>
           </table>
@@ -77,7 +79,9 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
-  entity: Object
+  // An entity in the format of a REST response (not OData)
+  entity: Object,
+  geometryDisabled: Boolean
 });
 
 const emit = defineEmits(['hide', 'success']);
@@ -194,6 +198,7 @@ const currentVersion = computed(() =>
       "currentValue": "Current Value",
       "updatedValue": "Updated Value"
     },
+    "geometryDisabled": "Geometry can’t be updated from the map.",
     "problem": {
       "409_15": "Data has been modified by another user. Please refresh to see the updated data."
     }

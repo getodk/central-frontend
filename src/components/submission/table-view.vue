@@ -35,7 +35,7 @@ import Pagination from '../pagination.vue';
 import SubmissionTable from './table.vue';
 
 import { apiPaths } from '../../util/request';
-import { noop, reemit } from '../../util/util';
+import { noop, reemit, reexpose } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -164,8 +164,8 @@ const cancelRefresh = () => { odata.cancelRequest(); };
 const reemitters = reemit(emit, ['review', 'delete', 'restore']);
 
 const table = useTemplateRef('table');
-const afterReview = (instanceId) => table.value.afterReview(instanceId);
-const afterDelete = (instanceId) => table.value.afterDelete(instanceId);
-
-defineExpose({ refresh, cancelRefresh, afterReview, afterDelete });
+defineExpose({
+  refresh, cancelRefresh,
+  ...reexpose(table, ['afterReview', 'afterDelete'])
+});
 </script>
