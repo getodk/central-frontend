@@ -5,10 +5,10 @@ import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 
-describe.only('WhatsNew modal', () => {
+describe('WhatsNew modal', () => {
   describe('shows modal', () => {
     it('shows modal to admin with 0 projects', async () => {
-      mockLogin({ createdAt: '2025-01-01' });
+      mockLogin();
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
       baseModal.exists().should.be.true;
@@ -16,7 +16,7 @@ describe.only('WhatsNew modal', () => {
     });
 
     it('shows modal to admin with populated projects', async () => {
-      mockLogin({ createdAt: '2025-01-01' });
+      mockLogin();
       testData.extendedProjects.createPast(1);
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
@@ -25,7 +25,7 @@ describe.only('WhatsNew modal', () => {
     });
 
     it('shows modal to project manager with 1 project', async () => {
-      mockLogin({ role: 'none', createdAt: '2025-01-01' });
+      mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'manager' });
       const app = await load('/', { root: false }, { users: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
@@ -33,8 +33,17 @@ describe.only('WhatsNew modal', () => {
       baseModal.props().state.should.be.true;
     });
 
+    it('shows modal to project viewer with 1 project', async () => {
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer' });
+      const app = await load('/', { root: false }, { users: false });
+      const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
+      baseModal.exists().should.be.true;
+      baseModal.props().state.should.be.true;
+    });
+
     it('shows image in modal', async () => {
-      mockLogin({ createdAt: '2025-01-01' });
+      mockLogin();
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
       const img = baseModal.find('img');
@@ -43,18 +52,9 @@ describe.only('WhatsNew modal', () => {
   });
 
   describe('does not show modal', () => {
-    it('does not show modal to newly created admin', async () => {
-      mockLogin({ createdAt: '2025-05-07' });
-      testData.extendedProjects.createPast(1);
-      const app = await load('/', { root: false });
-      const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
-      baseModal.exists().should.be.true;
-      baseModal.props().state.should.be.false;
-    });
-
-    it('does not show modal to project viewer with no management role', async () => {
+    it('does not show modal to data collector', async () => {
       mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer' });
+      testData.extendedProjects.createPast(1, { role: 'formfill' });
       const app = await load('/', { root: false }, { users: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
       baseModal.exists().should.be.true;
@@ -62,7 +62,7 @@ describe.only('WhatsNew modal', () => {
     });
 
     it('does not show modal if already dismissed (user preference set)', async () => {
-      mockLogin({ createdAt: '2025-01-01', preferences: { site: { whatsNewDismissed2025_4: true }, projects: {} } });
+      mockLogin({ preferences: { site: { whatsNewDismissed2025_4: true }, projects: {} } });
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
       baseModal.exists().should.be.true;
@@ -150,7 +150,7 @@ describe.only('WhatsNew modal', () => {
 
     it('if no pref yet, shows checked checkbox. if left checked, sends request to explicitly opt IN.', async () => {
       // Setting default mailingListOptIn to false prevents extra request being sent to change it.
-      mockLogin({ createdAt: '2025-01-01' });
+      mockLogin();
       await load('/', { root: false })
         .complete()
         .request(async (app) => {
@@ -169,7 +169,7 @@ describe.only('WhatsNew modal', () => {
 
     it('if no pref yet, shows checkbox. if explicitly unchecked checked, sends request to explicitly opt OUT.', async () => {
       // Setting default mailingListOptIn to false prevents extra request being sent to change it.
-      mockLogin({ createdAt: '2025-01-01' });
+      mockLogin();
       await load('/', { root: false })
         .complete()
         .request(async (app) => {
