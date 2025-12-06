@@ -5464,17 +5464,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Form drafts have moved",
+        "string": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Create a new Form and edit it on the new Edit Form tab"
-      },
-      "action": {
-        "gotIt": {
-          "string": "Got it!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
       }
     }
   },
