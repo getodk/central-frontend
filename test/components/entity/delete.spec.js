@@ -10,9 +10,7 @@ const mountComponent = (options = undefined) =>
 
 describe('EntityDelete', () => {
   it('shows the entity label', () => {
-    const entity = testData.extendedEntities.createPast(1, {
-      label: 'My Entity'
-    });
+    testData.extendedEntities.createPast(1, { label: 'My Entity' });
     const modal = mountComponent();
     modal.get('.modal-title').text().should.equal('Delete My Entity');
     modal.get('.modal-introduction').text().should.include('My Entity');
