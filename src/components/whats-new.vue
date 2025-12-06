@@ -57,15 +57,14 @@ watch(() => projects.dataExists, () => {
   const canUpdateForm = currentUser.can('form.update') ||
     projects.data.some(project => project.verbs.has('form.update'));
   if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
-    new Date(currentUser.data.createdAt) < new Date('2025-05-06') && // Check that user was created prior to 2025.1 release (approx)
     !openModal.state && // Check that no other modal (e.g. new project) is open
-    !currentUser.preferences.site.whatsNewDismissed2025_1) {
+    !currentUser.preferences.site.whatsNewDismissed2025_4) {
     isVisible.value = true;
   }
 });
 
 function hideModal() {
-  currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+  currentUser.preferences.site.whatsNewDismissed2025_4 = true;
 
   // If user was not already opted in and preference changed, then save preference.
   if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
@@ -109,8 +108,8 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Form drafts have moved",
-      "body": "Create a new Form and edit it on the new Edit Form tab",
+      "title": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
+      "body": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!",
       "action": {
         // This is the text of a button that is used to close the modal.
         "gotIt": "Got it!"

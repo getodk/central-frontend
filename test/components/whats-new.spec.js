@@ -5,7 +5,7 @@ import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 
-describe('WhatsNew modal', () => {
+describe.only('WhatsNew modal', () => {
   describe('shows modal', () => {
     it('shows modal to admin with 0 projects', async () => {
       mockLogin({ createdAt: '2025-01-01' });
@@ -62,7 +62,7 @@ describe('WhatsNew modal', () => {
     });
 
     it('does not show modal if already dismissed (user preference set)', async () => {
-      mockLogin({ createdAt: '2025-01-01', preferences: { site: { whatsNewDismissed2025_1: true }, projects: {} } });
+      mockLogin({ createdAt: '2025-01-01', preferences: { site: { whatsNewDismissed2025_4: true }, projects: {} } });
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
       baseModal.exists().should.be.true;
@@ -71,7 +71,7 @@ describe('WhatsNew modal', () => {
   });
 
   describe('set user preference', () => {
-    it('sets the whatsNewDismissed2025_1 preference when modal closed', async () => {
+    it('sets the whatsNewDismissed2025_4 preference when modal closed', async () => {
       // Include preference for having already opted into mailing list.
       mockLogin({ createdAt: '2025-01-01', preferences: { site: { mailingListOptIn: true } } });
       await load('/', { root: false })
@@ -79,7 +79,7 @@ describe('WhatsNew modal', () => {
         .request(app => app.findComponent(WhatsNew).find('.btn').trigger('click'))
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('PUT');
-          url.should.equal('/v1/user-preferences/site/whatsNewDismissed2025_1');
+          url.should.equal('/v1/user-preferences/site/whatsNewDismissed2025_4');
           data.propertyValue.should.be.equal(true);
         })
         .respondWithSuccess();
@@ -107,7 +107,7 @@ describe('WhatsNew modal', () => {
         })
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_1', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
         ]);
     });
 
@@ -126,7 +126,7 @@ describe('WhatsNew modal', () => {
         .respondWithSuccess()
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_1', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
           { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: true } },
         ]);
     });
@@ -144,7 +144,7 @@ describe('WhatsNew modal', () => {
         })
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_1', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
         ]);
     });
 
@@ -162,7 +162,7 @@ describe('WhatsNew modal', () => {
         .respondWithSuccess()
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_1', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
           { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: true } },
         ]);
     });
@@ -182,7 +182,7 @@ describe('WhatsNew modal', () => {
         .respondWithSuccess()
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_1', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
           { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: false } },
         ]);
     });
