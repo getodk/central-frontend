@@ -30,3 +30,11 @@ export const getCookieValue = (key, doc = document) => decodeURIComponent(doc.co
 // Useful for nested components. Pass the resulting object to v-on.
 export const reemit = (emit, events) => Object.fromEntries(events.map(name =>
   [kebabToCamel(name), (...args) => emit(name, ...args)]));
+
+export const arraysAreEqual = (arr1, arr2) => {
+  if (!arr1 || !arr2 || arr1.length !== arr2.length) {
+    return false;
+  }
+  return arr1.every((element, index) =>
+    element === arr2[index]);
+};

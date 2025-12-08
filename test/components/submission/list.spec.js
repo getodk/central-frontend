@@ -943,4 +943,45 @@ describe('SubmissionList', () => {
         });
     });
   });
+
+  describe('reset button', () => {
+    beforeEach(() => {
+      testData.extendedForms.createPast(1);
+    });
+
+    it('resets the filters when clicked', () =>
+      loadSubmissionList({ container: { router: testRouter() } })
+        .route('/projects/1/forms/f/submissions?submitterId=1&submitterId=2&reviewState=null')
+        .complete()
+        .request(component => {
+          component.get('.btn-reset').trigger('click');
+        })
+        .respondWithData(testData.submissionOData)
+        .afterResponses(component => {
+          should.not.exist(component.vm.$route.query.submitterId);
+        }));
+
+    it('resets column field', () => {
+      const { string } = testData.fields;
+      const fields = [];
+      for (let i = 0; i <= 20; i += 1) fields.push(string(`/s${i}`));
+      testData.extendedForms.createPast(1, { fields });
+      loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', [19]))
+        .respondWithData(testData.submissionOData)
+        .complete()
+        .request(component => {
+          component.get('.btn-reset').trigger('click');
+        })
+        .respondWithData(testData.submissionOData)
+        .afterResponses(component => {
+          const selected = component.getComponent('#submission-field-dropdown').props().modelValue;
+          selected.map(field => field.path).should.eql([
+            's1', '/s2', '/s3', '/s4', '/s5',
+            '/s6', '/s7', '/s8', '/s9', '/s10'
+          ]);
+        });
+    });
+  });
 });

@@ -150,7 +150,7 @@ const fetchChunk = (clear, refresh = false) => {
 fetchChunk(true);
 watch([() => props.filter, () => props.deleted], () => { fetchChunk(true); });
 watch(() => props.fields, (_, oldFields) => {
-  if (oldFields != null) fetchChunk(true);
+  if (oldFields != null && !props.deleted) fetchChunk(true);
 });
 const handlePageChange = () => {
   // This function is called for size change as well. So the total number of submissions are
