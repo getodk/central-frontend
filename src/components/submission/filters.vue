@@ -22,11 +22,6 @@ except according to the terms contained in the LICENSE file.
     <submission-filters-review-state :model-value="reviewState"
       :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:reviewState', $event)"/>
-    <button type="button" class="btn btn-link btn-reset"
-      :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
-      @click="$emit('resetClick')">
-      {{ $t('action.reset') }}
-    </button>
   </span>
 </template>
 
@@ -64,7 +59,7 @@ export default {
       required: false
     }
   },
-  emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState', 'resetClick']
+  emits: ['update:submitterId', 'update:submissionDate', 'update:reviewState']
 };
 </script>
 

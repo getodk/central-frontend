@@ -28,15 +28,20 @@ except according to the terms contained in the LICENSE file.
           <submission-filters v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
             v-model:reviewState="reviewStates"
-            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"
-            @reset-click="resetFilters"/>
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
         <!-- TODO: merge these two forms -->
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
-            v-model="selectedFields"/>
+            v-model="selectedFields" :disabled="deleted"
+            :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
+        <button type="button" class="btn btn-link btn-reset"
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('filterDisabledMessage') : null"
+          @click="resetFilters">
+          {{ $t('action.reset') }}
+        </button>
 
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
@@ -92,6 +97,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
+import { equals } from 'ramda';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -314,12 +320,24 @@ export default {
           this.dataView === 'table' && !this.odataFilter && !this.deleted)
           this.formVersion.submissions = this.odata.count;
       }
+    },
+    deleted() {
+      this.setDefaultSelectedFields();
     }
   },
   created() {
     this.fetchData();
   },
   methods: {
+    setDefaultSelectedFields() {
+      // We also use 11 in the SubmissionFieldDropdown v-if.
+      const defaultFields = this.fields.selectable.length <= 11
+        ? this.fields.selectable
+        : this.fields.selectable.slice(0, 10);
+      if (!equals(this.selectedFields, defaultFields)) {
+        this.selectedFields = defaultFields;
+      }
+    },
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
@@ -327,10 +345,7 @@ export default {
         })
       })
         .then(() => {
-          // We also use 11 in the SubmissionFieldDropdown v-if.
-          this.selectedFields = this.fields.selectable.length <= 11
-            ? this.fields.selectable
-            : this.fields.selectable.slice(0, 10);
+          this.setDefaultSelectedFields();
         })
         .catch(noop);
       if (!this.draft) {
@@ -352,7 +367,10 @@ export default {
         this.$emit('fetch-keys');
     },
     resetFilters() {
-      this.$router.replace({ path: this.$route.path, query: {} });
+      this.setDefaultSelectedFields();
+      if (this.odataFilter != null) {
+        this.$router.replace({ path: this.$route.path, query: {} });
+      }
     },
     cancelBackgroundRefresh() {
       if (!this.refreshing) return;
