@@ -396,10 +396,10 @@ export default {
           this.alert.success(this.$t('alert.entityDeleted', { label }));
 
           this.odataEntities.removedEntities.add(uuid);
-          this.removeSelectedEntity(uuid);
           this.dataset.entities -= 1;
           if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
 
+          this.removeSelectedEntity(uuid);
           this.$refs.view.afterDelete(uuid);
         })
         .catch(noop)
