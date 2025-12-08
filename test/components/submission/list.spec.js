@@ -950,8 +950,7 @@ describe('SubmissionList', () => {
     });
 
     it('resets the filters when clicked', () =>
-      loadSubmissionList({ container: { router: testRouter() } })
-        .route('/projects/1/forms/f/submissions?submitterId=1&submitterId=2&reviewState=null')
+      load('/projects/1/forms/f/submissions?submitterId=1&submitterId=2&reviewState=null')
         .complete()
         .request(component => {
           component.get('.btn-reset').trigger('click');

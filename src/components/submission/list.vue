@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
             :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
         <button type="button" class="btn btn-link btn-reset"
-          :aria-disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('filterDisabledMessage') : null"
           @click="resetFilters">
           {{ $t('action.reset') }}
         </button>
