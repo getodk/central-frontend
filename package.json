@@ -16,7 +16,7 @@
     "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
   },
   "volta": {
-    "node": "22.21.0"
+    "node": "22.21.1"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
