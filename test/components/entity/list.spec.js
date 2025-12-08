@@ -203,6 +203,7 @@ describe('EntityList', () => {
         .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
           component.getComponent(EntityUpdate).props().state.should.be.true;
+          // The new entity from the refresh response is not shown in the table.
           component.findAllComponents(EntityMetadataRow).length.should.equal(1);
         });
     });
