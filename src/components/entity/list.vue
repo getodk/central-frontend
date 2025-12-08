@@ -431,7 +431,6 @@ export default {
           if (confirm != null) this.confirmRestore = confirm;
 
           this.odataEntities.removedEntities.add(uuid);
-          this.removeSelectedEntity(uuid);
           this.dataset.entities += 1;
           if (this.deletedEntityCount.dataExists && this.deletedEntityCount.value > 0)
             this.deletedEntityCount.value -= 1;
