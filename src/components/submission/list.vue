@@ -97,6 +97,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
+import { equals } from 'ramda';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -122,7 +123,7 @@ import { apiPaths } from '../../util/request';
 import { arrayQuery } from '../../util/router';
 import { joinSentences } from '../../util/i18n';
 import { modalData } from '../../util/reactivity';
-import { arraysAreEqual, noop } from '../../util/util';
+import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
 import TableRefreshBar from '../table-refresh-bar.vue';
@@ -333,7 +334,7 @@ export default {
       const defaultFields = this.fields.selectable.length <= 11
         ? this.fields.selectable
         : this.fields.selectable.slice(0, 10);
-      if (!arraysAreEqual(this.selectedFields, defaultFields)) {
+      if (!equals(this.selectedFields, defaultFields)) {
         this.selectedFields = defaultFields;
       }
     },
@@ -367,7 +368,7 @@ export default {
     },
     resetFilters() {
       this.setDefaultSelectedFields();
-      if (this.odataFilter !== null) {
+      if (this.odataFilter != null) {
         this.$router.replace({ path: this.$route.path, query: {} });
       }
     },
