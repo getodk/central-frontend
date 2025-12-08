@@ -49,10 +49,10 @@ except according to the terms contained in the LICENSE file.
     </disable-container>
 
     <entity-update v-bind="update" :geometry-disabled="dataView === 'map'"
-      @hide="hideUpdate" @success="afterUpdate"/>
+      @hide="hideUpdate(true)" @success="afterUpdate"/>
     <entity-resolve v-bind="resolve" @hide="hideResolve" @success="afterResolve"/>
     <entity-delete v-bind="deleteModal"
-      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.entity.uuid)"
+      :awaiting-response="deleteModal.state && awaitingResponses.has(deleteModal.entity.__id)"
       @hide="deleteModal.hide()" @delete="requestDelete"/>
     <entity-restore v-bind="restoreModal" checkbox
       :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.entity.__id)"
@@ -94,6 +94,7 @@ import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
 import { apiPaths, requestAlertMessage } from '../../util/request';
+import { odataEntityToRest } from '../../util/odata';
 import { joinSentences } from '../../util/i18n';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
@@ -194,7 +195,10 @@ export default {
     return {
       refreshing: false,
 
+      // The OData of the entity being updated
+      odataForUpdate: null,
       update: modalData(),
+
       resolve: modalData(),
       deleteModal: modalData(),
 
@@ -347,19 +351,36 @@ export default {
     },
     showUpdate(entity) {
       this.cancelBackgroundRefresh();
-      this.update.show({ entity });
+      this.odataForUpdate = entity;
+      this.update.show({
+        entity: odataEntityToRest(entity, this.dataset.properties)
+      });
     },
-    hideUpdate() {
+    hideUpdate(showResolve) {
       this.update.hide();
-      if (this.resolve.entity != null) this.resolve.show();
+      this.odataForUpdate = null;
+      if (showResolve && this.resolve.entity != null) this.resolve.show();
     },
     afterUpdate(updatedEntity) {
-      this.hideUpdate();
+      const { odataForUpdate } = this;
+      this.hideUpdate(false);
       this.alert.success(this.$t('alert.updateEntity'));
 
-      const resolving = this.resolve.entity != null;
-      this.$refs.view.afterUpdate(updatedEntity, resolving);
-      if (resolving) this.resolve.show({ entity: updatedEntity });
+      // Update the OData using the REST response.
+      const { currentVersion } = updatedEntity;
+      Object.assign(odataForUpdate.__system, {
+        version: currentVersion.version,
+        updates: currentVersion.version - 1,
+        updatedAt: updatedEntity.updatedAt
+      });
+      odataForUpdate.label = currentVersion.label;
+      for (const { name, odataName } of this.dataset.properties)
+        odataForUpdate[odataName] = currentVersion.data[name];
+
+      if (this.resolve.entity == null)
+        this.$refs.view.afterUpdate(updatedEntity.uuid);
+      else
+        this.resolve.show();
     },
     showResolve(entity) {
       this.cancelBackgroundRefresh();
@@ -374,14 +395,20 @@ export default {
       }
     },
     afterResolve(updatedEntity) {
-      this.$refs.view.afterResolve(updatedEntity);
+      // Update the OData using the REST response.
+      Object.assign(this.resolve.entity.__system, {
+        conflict: null,
+        updatedAt: updatedEntity.updatedAt
+      });
+
+      this.$refs.view.afterUpdate(updatedEntity.uuid);
     },
     showDelete(entity) {
       this.cancelBackgroundRefresh();
       this.deleteModal.show({ entity });
     },
-    requestDelete(entity) {
-      const { uuid } = entity;
+    requestDelete(event) {
+      const { __id: uuid, label } = event;
 
       this.awaitingResponses.add(uuid);
 
@@ -392,7 +419,6 @@ export default {
       })
         .then(() => {
           this.deleteModal.hide();
-          const { label } = entity.currentVersion;
           this.alert.success(this.$t('alert.entityDeleted', { label }));
 
           this.odataEntities.removedEntities.add(uuid);

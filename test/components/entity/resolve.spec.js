@@ -1,3 +1,5 @@
+import { last } from 'ramda';
+
 import EntityResolve from '../../../src/components/entity/resolve.vue';
 
 import testData from '../../data';
@@ -21,7 +23,7 @@ const showModal = (respond = true) => {
     })
     .request(modal => modal.setProps({
       state: true,
-      entity: testData.standardEntities.last()
+      entity: last(testData.entityOData().value)
     }))
     .modify(series =>
       (respond ? series.respondWithData(relevantToConflict) : series));
@@ -156,7 +158,7 @@ describe('EntityResolve', () => {
           await modal.setProps({ state: false, entity: null });
           await modal.setProps({
             state: true,
-            entity: testData.standardEntities.first()
+            entity: testData.entityOData().value[0]
           });
         })
         .respondWithData(relevantToConflict)

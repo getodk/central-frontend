@@ -306,7 +306,7 @@ describe('EntityList', () => {
         .respondWithData(relevantToConflict)
         .afterResponse(component => {
           const modal = component.getComponent(EntityResolve);
-          modal.props().entity.uuid.should.equal('e2');
+          modal.props().entity.__id.should.equal('e2');
           return modal.get('.btn-primary').trigger('click');
         })
         .request(component => {
@@ -316,7 +316,7 @@ describe('EntityList', () => {
         .respondWithData(relevantToConflict)
         .afterResponse(component => {
           const modal = component.getComponent(EntityResolve);
-          modal.props().entity.uuid.should.equal('e1');
+          modal.props().entity.__id.should.equal('e1');
         });
     });
 
@@ -473,7 +473,7 @@ describe('EntityList', () => {
       });
       await component.get('.entity-metadata-row .delete-button').trigger('click');
       const { entity } = component.getComponent(EntityDelete).props();
-      entity.currentVersion.label.should.equal('My Entity');
+      entity.label.should.equal('My Entity');
     });
 
     it('implements some standard button things', () => {

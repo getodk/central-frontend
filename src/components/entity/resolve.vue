@@ -12,11 +12,11 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-resolve" :state="state" :hideable="!awaitingResponse"
     size="large" backdrop @hide="$emit('hide')">
-    <template #title>{{ $t('title', { label }) }}</template>
+    <template #title>{{ $t('title', entity) }}</template>
     <template #body>
       <div v-if="!success">
         <div class="modal-introduction">
-          <p>{{ $t('instructions[0]', { label }) }}</p>
+          <p>{{ $t('instructions[0]', entity) }}</p>
           <p v-if="canUpdate">
             {{ $t('instructions[1]', { markAsResolved: $t('action.markAsResolved') }) }}
           </p>
@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         <div v-show="tableShown" id="entity-resolve-table-container">
           <loading :state="entityVersions.awaitingResponse"/>
           <entity-conflict-table v-if="entityVersions.dataExists" ref="table"
-            :uuid="entity.uuid" :versions="entityVersions.data"
+            :uuid="entity.__id" :versions="entityVersions.data"
             link-target="_blank"/>
         </div>
         <div id="entity-resolve-table-toggle">
@@ -41,7 +41,7 @@ except according to the terms contained in the LICENSE file.
           </a>
         </div>
 
-        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.uuid)"
+        <router-link class="btn btn-default more-details" :to="entityPath(projectId, datasetName, entity?.__id)"
           :class="{ disabled: awaitingResponse }" target="_blank">
           <span class="icon-external-link-square"></span>{{ $t('action.seeMoreDetails') }}
         </router-link>
@@ -88,10 +88,7 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
-  // An entity in the format of a REST response (not OData). Note that extended
-  // metadata is not guaranteed to be available: if the entity is updated via
-  // the edit button in this modal, then props.entity will be set to the PATCH
-  // response.
+  // An entity in OData format
   entity: Object
 });
 const emit = defineEmits(['hide', 'success']);
@@ -101,7 +98,6 @@ const emit = defineEmits(['hide', 'success']);
 const { project } = useRequestData();
 const entityVersions = useEntityVersions();
 
-const label = computed(() => props.entity?.currentVersion?.label);
 const canUpdate = computed(() =>
   project.dataExists && project.permits('entity.update'));
 
@@ -112,7 +108,7 @@ const alert = inject('alert');
 const { t } = useI18n();
 const requestEntityVersions = () => {
   entityVersions.request({
-    url: apiPaths.entityVersions(projectId, datasetName, props.entity.uuid, { relevantToConflict: true }),
+    url: apiPaths.entityVersions(projectId, datasetName, props.entity.__id, { relevantToConflict: true }),
     extended: true
   })
     .then(() => {
@@ -134,9 +130,9 @@ const { request, awaitingResponse } = useRequest();
 const success = ref(false);
 const markAsResolve = () => {
   const { entity } = props;
-  const url = apiPaths.entity(projectId, datasetName, entity.uuid, {
+  const url = apiPaths.entity(projectId, datasetName, entity.__id, {
     resolve: true,
-    baseVersion: entity.currentVersion.version
+    baseVersion: entity.__system.version
   });
   request.patch(
     url,
@@ -157,13 +153,14 @@ const markAsResolve = () => {
     .catch(noop);
 };
 
-// props.entity is changed after the user clicks the button in the table row,
-// when the modal is shown. It is also changed after the user clicks the
-// "Edit Entity" button in the modal, then uses EntityUpdate to update the
-// entity. props.entity is changed to `null` when the modal is completely
-// hidden (not just when switching to EntityUpdate).
-watch(() => props.entity, (entity) => {
-  if (entity != null) {
+// props.entity is set after the user clicks the button in the table row, when
+// the modal is shown. If the user clicks the "Edit Entity" button in the modal,
+// then uses EntityUpdate to update the entity, then props.entity is not
+// changed, but props.entity.__system.version is. props.entity is changed to
+// `null` when the modal is completely hidden (not just when switching to
+// EntityUpdate).
+watch(() => props.entity?.__system?.version, (version) => {
+  if (version != null) {
     requestEntityVersions();
   } else {
     entityVersions.reset();

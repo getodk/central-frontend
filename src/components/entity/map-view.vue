@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <map-view ref="view" :odata="odataEntities" :url="geojsonUrl"
     :loading="$t('loading')">
     <template #popup="{ feature, odata: odataElement, listeners }">
-      <entity-map-popup ref="popup" :uuid="feature?.id" :odata="odataElement"
+      <entity-map-popup :uuid="feature?.id" :odata="odataElement"
         :awaiting-response="awaitingResponses.has(feature?.id)"
         v-on="{ ...listeners, ...reemitters }"/>
     </template>
@@ -39,7 +39,7 @@ import MapOverlapPopup from '../map/overlap-popup.vue';
 import MapView from '../map/view.vue';
 
 import { apiPaths } from '../../util/request';
-import { reemit, reexpose } from '../../util/util';
+import { noop, reemit, reexpose } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -70,11 +70,9 @@ const overlapUrl = (query) =>
 const reemitters = reemit(emit, ['update', 'resolve', 'delete']);
 
 const view = ref(null);
-const popup = ref(null);
-const updateEntity = (updatedEntity) => popup.value.updateEntity(updatedEntity);
 defineExpose({
   ...reexpose(view, ['fetchData', 'cancelFetch', 'afterDelete']),
-  afterUpdate: updateEntity, afterResolve: updateEntity
+  afterUpdate: noop
 });
 </script>
 

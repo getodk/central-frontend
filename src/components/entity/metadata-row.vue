@@ -35,9 +35,7 @@ except according to the terms contained in the LICENSE file.
         </span>
         <span class="icon-angle-right"></span>
       </div>
-      <entity-actions :uuid="entity.__id" :version="entity.__system.version"
-        :conflict="entity.__system.conflict"
-        :awaiting-response="awaitingResponse"/>
+      <entity-actions :entity="entity" :awaiting-response="awaitingResponse"/>
     </td>
     <td v-else class="action-cell">
       <div class="col-content col-deleted-at">

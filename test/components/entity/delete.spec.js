@@ -1,3 +1,5 @@
+import { last } from 'ramda';
+
 import EntityDelete from '../../../src/components/entity/delete.vue';
 
 import testData from '../../data';
@@ -5,7 +7,7 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
   mount(EntityDelete, mergeMountOptions(options, {
-    props: { state: true, entity: testData.extendedEntities.last() }
+    props: { state: true, entity: last(testData.entityOData().value) }
   }));
 
 describe('EntityDelete', () => {

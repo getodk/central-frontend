@@ -21,12 +21,13 @@ except according to the terms contained in the LICENSE file.
       v-tooltip.aria-label>
       <span class="icon-pencil"></span>
     </button>
-    <button v-if="conflict" type="button" class="resolve-button btn btn-danger"
+    <button v-if="entity.__system.conflict" type="button"
+      class="resolve-button btn btn-danger"
       :aria-label="$t('action.reviewParallelUpdates')" v-tooltip.aria-label>
       <span class="icon-random"></span>
     </button>
     <router-link v-slot="{ href }"
-      :to="entityPath(project.id, datasetName, uuid)" custom>
+      :to="entityPath(project.id, datasetName, entity.__id)" custom>
       <a class="more-button btn btn-default" :href="href" target="_blank">
         <span>{{ $t('action.more') }}</span>
         <span class="icon-angle-right"></span>
@@ -49,15 +50,10 @@ defineOptions({
   name: 'EntityActions'
 });
 const props = defineProps({
-  uuid: {
-    type: String,
+  entity: {
+    type: Object,
     required: true
   },
-  version: {
-    type: Number,
-    required: true
-  },
-  conflict: String,
   awaitingResponse: Boolean
 });
 
@@ -69,7 +65,7 @@ const { i18n } = inject('container');
 const { project } = useRequestData();
 
 const updateLabel = computed(() => i18n.t('submission.action.edit', {
-  count: i18n.n(props.version - 1, 'default')
+  count: i18n.n(props.entity.__system.updates, 'default')
 }));
 
 const { entityPath } = useRoutes();

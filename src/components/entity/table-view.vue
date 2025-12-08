@@ -150,6 +150,6 @@ const reemitters = reemit(
 const table = useTemplateRef('table');
 defineExpose({
   ...exposedFetch,
-  ...reexpose(table, ['afterUpdate', 'afterResolve', 'afterDelete'])
+  ...reexpose(table, ['afterUpdate', 'afterDelete'])
 });
 </script>
