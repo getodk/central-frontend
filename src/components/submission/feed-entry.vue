@@ -73,7 +73,6 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'entity.error'">
         <span class="icon-warning"></span>
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
-        <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
       <template v-else-if="entry.action?.startsWith('submission.backlog')">
         <span class="icon-clock-o"></span>
@@ -92,6 +91,9 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <markdown-view v-if="comment != null" :raw-markdown="comment"/>
+      <template v-else-if="entry.action === 'entity.error'">
+        <div class="entity-error-message">{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</div>
+      </template>
       <template v-else-if="entryDiffs != null">
         <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
           :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
@@ -206,7 +208,7 @@ export default {
 .submission-feed-entry {
   .entity-error-message{
     font-size: 12px;
-    margin-left: 10px;
+    margin: 10px;
     font-weight: normal;
   }
 
