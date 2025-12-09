@@ -69,8 +69,12 @@ if [[ ${CI-} = true ]]; then
   cd client
 fi
 
-log "Installing npm packages..."
-npm ci
+if [[ "$SKIP_INSTALL" = "true" ]]; then
+  log "Skipping npm install."
+else
+  log "Installing npm packages..."
+  npm ci
+fi
 
 cd e2e-tests
 log "Playwright: $(npx playwright --version)"
