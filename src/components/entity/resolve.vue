@@ -88,6 +88,7 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
+  // An entity in OData format
   entity: Object
 });
 const emit = defineEmits(['hide', 'success']);
@@ -152,13 +153,14 @@ const markAsResolve = () => {
     .catch(noop);
 };
 
-// props.entity is changed after the user clicks the button in the table row,
-// when the modal is shown. It is also changed after the user clicks the
-// "Edit Entity" button in the modal, then uses EntityUpdate to update the
-// entity. props.entity is changed to `null` when the modal is completely
-// hidden (not just when switching to EntityUpdate).
-watch(() => props.entity, (entity) => {
-  if (entity != null) {
+// props.entity is set after the user clicks the button in the table row, when
+// the modal is shown. If the user clicks the "Edit Entity" button in the modal,
+// then uses EntityUpdate to update the entity, then props.entity is not
+// changed, but props.entity.__system.version is. props.entity is changed to
+// `null` when the modal is completely hidden (not just when switching to
+// EntityUpdate).
+watch(() => props.entity?.__system?.version, (version) => {
+  if (version != null) {
     requestEntityVersions();
   } else {
     entityVersions.reset();
