@@ -10,6 +10,7 @@ ODK_PORT="8989"
 ODK_PROTOCOL="http://"
 ODK_USER="alice@example.com"
 ODK_PASSWORD="Testpassword@12345"
+SKIP_INSTALL=false
 
 show_help() {
   cat <<EOF
@@ -23,6 +24,7 @@ Options:
   --password=PASSWORD Set the protocol (default: $ODK_PASSWORD)
   --ui                Pass --ui option to playwright
   --help              Show this help message and exit
+  --skip-install      Assume playwright is already available
 EOF
 }
 
@@ -35,6 +37,7 @@ while [[ $# -gt 0 ]]; do
     --user=*) ODK_USER="${1#*=}"; shift ;;
     --password=*) ODK_PASSWORD="${1#*=}"; shift ;;
     --ui) PLAYWRIGHT_UI=true; shift ;;
+    --skip-install) SKIP_INSTALL=true; shift ;;
     --help) show_help; exit 0 ;;
     *) echo "Unknown option: $1"; show_help; exit 1 ;;
   esac
@@ -72,8 +75,12 @@ npm ci
 cd e2e-tests
 log "Playwright: $(npx playwright --version)"
 
-log "Installing playwright deps..."
-npx playwright install --with-deps
+if [[ "$SKIP_INSTALL" = "true" ]]; then
+  log "Skipping playwright install."
+else
+  log "Installing playwright deps..."
+  npx playwright install --with-deps
+fi
 
 log "Running playwright tests..."
 npx playwright test ${PLAYWRIGHT_UI:+--ui}
