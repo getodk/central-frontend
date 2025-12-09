@@ -12,10 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <label class="form-group" :class="htmlClass">
     <slot name="before"></slot>
-    <input ref="input" v-bind="$attrs" class="form-control" :value="modelValue"
+    <input ref="input" v-model="modelValue" v-bind="$attrs" class="form-control"
       :placeholder="requiredLabel(placeholder, required)" :required="required"
-      v-tooltip.aria-describedby="tooltip" :autocomplete="autocomplete"
-      @input="$emit('update:modelValue', $event.target.value)">
+      v-tooltip.aria-describedby="tooltip" :autocomplete="autocomplete">
     <password-strength v-if="autocomplete === 'new-password'"
       :password="modelValue"/>
     <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
@@ -33,11 +32,8 @@ import { requiredLabel } from '../util/dom';
 defineOptions({
   inheritAttrs: false
 });
+const modelValue = defineModel({ required: true });
 const props = defineProps({
-  modelValue: {
-    type: String,
-    required: true
-  },
   placeholder: {
     type: String,
     required: true
@@ -50,7 +46,6 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['update:modelValue']);
 
 const htmlClass = computed(() => ({
   'new-password': props.autocomplete === 'new-password',

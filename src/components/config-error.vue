@@ -87,6 +87,10 @@ const loadError = computed(() => requestAlertMessage(i18n, config.loadError));
     "title": "Erro ao carregar o Central",
     "body": "Ocorreu um erro ao carregar o Central."
   },
+  "zh": {
+    "title": "载入Central时出错",
+    "body": "载入Central时发生错误。"
+  },
   "zh-Hant": {
     "title": "載入 Central 時出錯",
     "body": "載入 Central 時發生錯誤。"

@@ -83,6 +83,9 @@ const { tabPath, tabClass } = useTabs('/users');
   "sw": {
     "title": "Mipangilio ya Mtumiaji"
   },
+  "zh": {
+    "title": "用户设置"
+  },
   "zh-Hant": {
     "title": "使用者設定"
   }

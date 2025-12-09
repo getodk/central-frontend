@@ -123,7 +123,7 @@ const hidePopover = () => { popoverData.target = null; };
 {
   "de": {
     "title": "Diesen Entwurf prüfen",
-    "entitiesTesting": "Diese Formulardefinition erstellt oder aktualisiert Entitäten. Im Moment werden Entitäten nicht durch Formularentwürfe erstellt oder aktualisiert, daher müssen Sie das Formular veröffentlichen, um die Funktionalität von Entitäten zu überprüfen.",
+    "entitiesTesting": "Diese Formulardefinition erstellt oder aktualisiert Objekte. Im Moment werden Objekte nicht durch Formularentwürfe erstellt oder aktualisiert, daher müssen Sie das Formular veröffentlichen, um die Funktionalität von Objekte zu überprüfen.",
     "deletionWarning": {
       "full": "Hier eingereichte Übermittlungen {willBeDeleted} wenn Sie den Entwurf veröffentlichen!",
       "willBeDeleted": "wird gelöscht"
@@ -154,7 +154,19 @@ const hidePopover = () => { popoverData.target = null; };
     }
   },
   "pt": {
-    "title": "Testar esse Rascunho"
+    "title": "Testar esse Rascunho",
+    "deletionWarning": {
+      "full": "Respostas enviadas aqui {willBeDeleted} quando você publicar esse Rascunho!",
+      "willBeDeleted": "serão excluídas"
+    }
+  },
+  "zh": {
+    "title": "测试此草稿",
+    "entitiesTesting": "此表单定义将创建或更新实体。目前草稿表单暂不支持实体创建或更新功能，您需要发布表单后才能验证实体功能。",
+    "deletionWarning": {
+      "full": "在此提交的数据在发布草稿时{willBeDeleted}！",
+      "willBeDeleted": "将被删除"
+    }
   },
   "zh-Hant": {
     "title": "測試此草稿",

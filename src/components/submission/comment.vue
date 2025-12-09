@@ -152,6 +152,9 @@ export default {
   "sw": {
     "editWithoutComment": "Umefanya mabadiliko kwenye data hii. Tafadhali eleza mabadiliko uliyofanya."
   },
+  "zh": {
+    "editWithoutComment": "您已编辑此数据，请简要描述所做更改。"
+  },
   "zh-Hant": {
     "editWithoutComment": "您已對此資料進行了編輯。請描述您所做的變更。"
   }

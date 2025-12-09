@@ -161,7 +161,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "dataset": {
-        "string": "Entitätslistenaktionen",
+        "string": "Objektlistenaktionen",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "config": {
@@ -224,6 +224,16 @@
         "update_publish": {
           "string": "Veröffentlichen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        }
+      },
+      "entity": {
+        "bulk_delete": {
+          "string": "Massenlöschung",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "Massenwiederherstellung",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "field_key": {
@@ -464,6 +474,10 @@
     "collapse": {
       "string": "Verkleinern",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "Zeile auswählen",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -581,11 +595,11 @@
       "developer_comment": "This is the text of a table column header."
     },
     "entities": {
-      "string": "Entitäten insgesamt",
+      "string": "Objekte insgesamt",
       "developer_comment": "This is the text of a table column header. The column shows the number of entities for the Entity List"
     },
     "lastEntity": {
-      "string": "Neueste Entität",
+      "string": "Neuestes Objekt",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     }
   },
@@ -649,19 +663,19 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entity": {
-      "string": "Entität",
+      "string": "Objekt",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entities": {
-      "string": "Entitäten",
+      "string": "Objekte",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityList": {
-      "string": "Entitätsliste",
+      "string": "Objektliste",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "entityLists": {
-      "string": "Entitätslisten",
+      "string": "Objektlisten",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "form": {
@@ -738,22 +752,22 @@
       "string": "Das Passwort muss mindestens 10 Zeichen lang sein."
     },
     "updateEntity": {
-      "string": ""
+      "string": "Objekt wurde erfolgreich aktualisiert."
     },
     "updateReviewState": {
       "string": "Überprüfung erfolgreich gespeichert."
     },
     "versionChange": {
-      "string": ""
+      "string": "Der Server wurde erfolgreich aktualisiert."
     },
     "submissionDeleted": {
-      "string": ""
+      "string": "Die Übermittlung wurde erfolgreich gelöscht."
     },
     "submissionRestored": {
       "string": "Die Übermittlung wurde wiederhergestellt."
     },
     "entityRestored": {
-      "string": "Die Entität \"{label}“ wurde wiederhergestellt."
+      "string": "Das Objekt \"{label}“ wurde wiederhergestellt."
     }
   },
   "moreInfo": {
@@ -838,7 +852,7 @@
       "string": "Objektbezeichnung"
     },
     "entityId": {
-      "string": "Entitäts-ID",
+      "string": "Objekt-ID",
       "developer_comment": "This is the UUID of an Entity."
     },
     "noProperties": {
@@ -886,6 +900,9 @@
       "string": "Dokumentation",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "Es sind noch keine Kartendaten verfügbar."
+    },
     "emptyValue": {
       "string": "(leer)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -906,6 +923,9 @@
     },
     "loading": {
       "string": "Wird geladen..."
+    },
+    "map": {
+      "string": "Karte"
     },
     "no": {
       "string": "Nein"
@@ -937,6 +957,9 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
+    "table": {
+      "string": "Tabelle"
+    },
     "total": {
       "string": "Total"
     },
@@ -951,7 +974,7 @@
       "string": "Neu!"
     },
     "totalEntities": {
-      "string": "Entitäten insgesamt"
+      "string": "Objekte insgesamt"
     },
     "versionShort": {
       "string": "v{version}",
@@ -1026,7 +1049,7 @@
         },
         "409_17": {
           "message": {
-            "string": "{count, plural, one {Mit diesem Formular wird versucht, eine neue Entitätseigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt:} other {Dieses Formular versucht, neue Entitätseigenschaften zu erstellen, die mit Ausnahme der Gross- und Kleinschreibung mit den vorhandenen übereinstimmen:}}"
+            "string": "{count, plural, one {Mit diesem Formular wird versucht, eine neue Objekteigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt:} other {Dieses Formular versucht, neue Objekteigenschaften zu erstellen, die mit Ausnahme der Groß- und Kleinschreibung mit den vorhandenen übereinstimmen:}}"
           },
           "duplicateProperty": {
             "string": "{provided} (bestehende: {current})",
@@ -1038,17 +1061,17 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": ""
+          "string": "Ihre Session läuft ab! Sie werden in 2 Minuten ausgeloggt."
         },
         "expired": {
-          "string": ""
+          "string": "Ihre Session ist abgelaufen. Melden Sie sich erneut an, um fortzufahren."
         },
         "logoutError": {
           "thereWasProblem": {
-            "string": ""
+            "string": "Es gab ein Problem beim Ausloggen."
           },
           "pleaseRefresh": {
-            "string": ""
+            "string": "Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
           }
         }
       }
@@ -1075,7 +1098,7 @@
       },
       "alert": {
         "success": {
-          "string": ""
+          "string": "Passwort erfolgreich zurückgesetzt."
         }
       }
     },
@@ -1085,7 +1108,7 @@
           "string": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
         },
         "changePassword": {
-          "string": ""
+          "string": "Um Ihr Konto zu schützen, achten Sie darauf, dass Ihr Passwort mindestens 10 Zeichen lang ist."
         }
       },
       "oidc": {
@@ -1182,7 +1205,7 @@
       },
       "alert": {
         "success": {
-          "string": ""
+          "string": "Einstellungen erfolgreich gespeichert."
         }
       }
     },
@@ -1344,16 +1367,16 @@
           "string": "Anzahl der Eigenschaften"
         },
         "num_creation_forms": {
-          "string": "Anzahl der Formulare, die die Entitätsliste aktualisieren"
+          "string": "Anzahl der Formulare, die die Objektliste aktualisieren"
         },
         "num_followup_forms": {
-          "string": "Anzahl der Formulare, die die Entitätsliste verwenden"
+          "string": "Anzahl der Formulare, die die Objektliste verwenden"
         },
         "num_entities": {
-          "string": "Anzahl der Entitäten in der Entitätsliste"
+          "string": "Anzahl der Objekte in der Objektliste"
         },
         "num_failed_entities": {
-          "string": "Anzahl der Fehler bei der Entitätserstellung"
+          "string": "Anzahl der Fehler bei der Objekterstellung"
         },
         "num_entity_updates": {
           "string": "Anzahl der Objekterneuerungen"
@@ -1422,10 +1445,10 @@
           "string": "Anzahl der zwangsverarbeiteten Offline-Entity-Einsendungen"
         },
         "max_entity_branch_delay": {
-          "string": "Maximale Zeit für die Verarbeitung der Offline-Aktualisierungskette für Entitäten"
+          "string": "Maximale Zeit für die Verarbeitung der Offline-Objekt-Update-Folge"
         },
         "num_owner_only_datasets": {
-          "string": ""
+          "string": "Anzahl der Objektlisten, die nur dem Eigentümer vorbehalten sind"
         },
         "num_xml_only_form_defs": {
           "string": "Anzahl der Formulardefinitionen ohne zugehöriges XLSFormular"
@@ -1440,13 +1463,40 @@
           "string": "Anzahl der Fälle, in denen der Benutzer einen fehlgeschlagenen Upload auf einen S3-kompatiblen Speicher zurückgesetzt hat"
         },
         "num_entity_creates_sub": {
-          "string": "Anzahl der erstellten Entitäten über Übermittlungen"
+          "string": "Anzahl der durch Übermittlungen erstellten Objekte"
         },
         "num_entity_creates_api": {
-          "string": "Anzahl der über API erstellten Entitäten"
+          "string": "Anzahl der durch die API erstellten Objekte"
         },
         "num_entity_creates_bulk": {
-          "string": "Anzahl der Entitäten, die über Massen-Upload erstellt wurden"
+          "string": "Anzahl der Objekte, die über Massen-Upload erstellt wurden"
+        },
+        "max_geo_per_form": {
+          "string": "Maximale Anzahl von Übermittlungen mit Geodaten in einem Formular"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Anzahl der Audit-Protokollereignisse zum Löschen von Massenentitäten"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Anzahl der Entitätslisten mit Geometrieeigenschaft"
+        },
+        "num_entity_create_forms": {
+          "string": "Anzahl der Formulare, die Entitäten erstellen"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats erstellen"
+        },
+        "num_entity_update_forms": {
+          "string": "Anzahl der Formulare, die Entitäten aktualisieren"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats aktualisieren"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Anzahl der Formulare, die Entitäten sowohl erstellen als auch aktualisieren"
+        },
+        "num_entities_with_geometry": {
+          "string": "Anzahl der Entitäten mit Geometriedaten"
         }
       }
     },
@@ -1481,11 +1531,11 @@
       },
       "entities": {
         "title": {
-          "string": "Entitätszusammenfassungen",
+          "string": "Objektzusammenfassungen",
           "developer_comment": "This is the title shown above a series of metrics about Entities usage."
         },
         "subtitle": {
-          "string": "{count, plural, one { (Zeigt die aktivste Entitätsliste von {count} Entitätsliste)} other { (Zeigt die aktivste Entitätsliste von {count} Entitätslisten)}}"
+          "string": "{count, plural, one { (Zeigt die aktivste Objektliste von {count} Objektliste)} other { (Zeigt die aktivste Objektliste von {count} Objektlisten)}}"
         }
       },
       "other": {
@@ -1559,34 +1609,34 @@
     },
     "DatasetEntities": {
       "upload": {
-        "string": "Entitäten hochladen"
+        "string": "Objekte hochladen"
       },
       "alert": {
         "upload": {
-          "string": ""
+          "string": "Ihre Objekte wurden erfolgreich hochgeladen. "
         }
       },
       "purgeDescription": {
-        "string": "Entitäten werden nach 30 Tagen im Papierkorb gelöscht"
+        "string": "Objekte werden nach 30 Tagen im Papierkorb gelöscht"
       },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, one {{count} gelöscht Entität } other {{count} gelöschte Entitäten }}",
+          "string": "{count, plural, one {{count} gelöschtes Objekt } other {{count} gelöschte Objekte }}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "analyzeDisabledDeletedData": {
-        "string": "Der OData-Zugriff ist für gelöschte Entitäten nicht verfügbar"
+        "string": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
       }
     },
     "DatasetList": {
       "heading": {
         "0": {
-          "string": "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
+          "string": "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
           "developer_comment": "A brief introduction to Entities shown above Entity Lists for the current Project"
         },
         "1": {
-          "string": "Entitäten werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
+          "string": "Objekte werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
         }
       },
       "new": {
@@ -1596,20 +1646,20 @@
     },
     "DatasetNew": {
       "title": {
-        "string": "Entitätsliste erstellen",
+        "string": "Objektliste erstellen",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "encrypted": {
-        "string": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Entitäten in dieser Liste zu ändern. Entitäten müssen über Central oder die API verwaltet werden.",
+        "string": "Dieses Projekt ist verschlüsselt. Formulare und Übermittlungen sind nicht in der Lage, Objekte in dieser Liste zu ändern. Objekte müssen über Central oder die API verwaltet werden.",
         "developer_comment": "This is shown in the introduction as a usage note/warning when the project is encrypted."
       },
       "entityListName": {
-        "string": "Name der Entitätsliste",
+        "string": "Name der Objektliste",
         "developer_comment": "This appears above a text input field for the name of an Entity List"
       },
       "success": {
         "0": {
-          "string": "Die Entitätsliste \"{name}\" ist erstellt worden."
+          "string": "Die Objektliste \"{name}\" ist erstellt worden."
         },
         "1": {
           "string": "Sie können damit beginnen, indem Sie die Dateneigenschaften direkt auf dieser Seite hinzufügen oder indem Sie Formulare hochladen, die sie verwenden. In diesem Fall werden alle Eigenschaften, die das Formular aufruft, automatisch erstellt, wenn Sie das Formular veröffentlichen."
@@ -1617,7 +1667,7 @@
       },
       "problem": {
         "409_3": {
-          "string": "In diesem Projekt existiert bereits eine Entitätsliste mit dem Namen “{datasetName}”."
+          "string": "In diesem Projekt existiert bereits eine Objektliste mit dem Namen “{datasetName}”."
         }
       }
     },
@@ -1627,7 +1677,7 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "entityProperties": {
-        "string": "Entitätseigenschaften",
+        "string": "Objekteigenschaften",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
@@ -1637,13 +1687,12 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {Formular aktualisiert Objekte in dieser Objektliste} other {Formulare aktualisieren Objekte in dieser Objektliste}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {{count} Formular, die Entitäten aktualisieren. } other {{count} Formulare, die Entitäten aktualisieren. }}"
       }
     },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
-        "string": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften."
+        "string": "Die Objekte in dieser Objektliste verfügen über keine benutzerdefinierten Eigenschaften."
       },
       "none": {
         "string": "(Keine)",
@@ -1652,18 +1701,17 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Formular verwendet diese Entitätsliste} other {Formulare verwenden diese Entitätsliste}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {{count} Formular verwendet diese Objektliste} other {{count} Formulare verwenden diese Objektliste}}"
       }
     },
     "DatasetOverviewNewProperty": {
       "title": {
-        "string": "Entitätseigenschaft hinzufügen",
+        "string": "Objekteigenschaft hinzufügen",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Um eine Entitätseigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen."
+          "string": "Um eine Objekteigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen."
         },
         "1": {
           "string": "Sie können auch neue Eigenschaften hinzufügen, indem Sie ein Formular hochladen, das auf sie verweist. In diesem Fall werden die Eigenschaften erstellt, wenn das Formular veröffentlicht wird."
@@ -1674,56 +1722,56 @@
       },
       "problem": {
         "409_3": {
-          "string": "In dieser Entitätsliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
+          "string": "In dieser Objektliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
         }
       }
     },
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "",
+          "string": "App-Benutzer und Datensammler-Objekt Zugriff",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
       "accessAll": {
-        "string": ""
+        "string": "Zugriff auf alle Objekte"
       },
       "accessAllDefault": {
-        "string": ""
+        "string": "Zugriff auf alle Objekte (Standard)"
       },
       "ownerOnly": {
-        "string": ""
+        "string": "Nur auf eigene Objekte zugreifen"
       },
       "radio": {
         "false": {
-          "string": ""
+          "string": "App-Benutzer und Datenerfasser innerhalb dieses Projekts haben Zugriff auf alle Objekte innerhalb der ihnen zugewiesenen Formulare."
         },
         "true": {
-          "string": ""
+          "string": "App-Benutzer und Datensammler innerhalb dieses Projekts haben nur Zugriff auf die Objekte, die sie selbst erstellen. Dies fördert den Datenschutz und begrenzt die Datenübertragungen."
         }
       },
       "falseModal": {
         "introduction": {
-          "string": ""
+          "string": "App-Benutzer und Datensammler haben Zugriff auf alle Objekte, einschließlich derjenigen, die sie nicht selbst erstellt haben."
         }
       },
       "trueModal": {
         "introduction": {
-          "string": ""
+          "string": "App-Benutzer und Datensammler verlieren den Zugriff auf die Objekte, die sie nicht selbst erstellt haben. Alle anderen Benutzertypen behalten den Zugriff auf alle Objekte.\n"
         },
         "action": {
           "confirm": {
-            "string": "",
+            "string": "Zugriff auf eigene Objekte",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
       },
       "alert": {
         "changeToFalse": {
-          "string": ""
+          "string": "App-Nutzer und Datensammler haben nun Zugang zu allen Objekte."
         },
         "changeToTrue": {
-          "string": ""
+          "string": "App-Benutzer und Datensammler haben nun nur noch Zugriff auf die Objekte, die sie selbst erstellen.\n"
         }
       }
     },
@@ -1739,7 +1787,7 @@
       },
       "explanation": {
         "userAction": {
-          "string": "Sie legen fest, dass die Erstellung von Entitäten erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden."
+          "string": "Sie legen fest, dass die Erstellung von Objekte erfolgt, wenn die Übermittlungen erstmals von Central empfangen werden."
         },
         "implication": {
           "full": {
@@ -1762,10 +1810,10 @@
       },
       "convert": {
         "label": {
-          "string": "Konvertieren Sie alle ausstehenden Übermittlungen, die Entitäten erstellen."
+          "string": "Konvertieren Sie alle ausstehenden Übermittlungen, die Objekte erstellen."
         },
         "description": {
-          "string": "Ändern Sie die Einstellung und erstellen Sie Entitäten aus allen Übermittlungen, die eine Entitätserstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
+          "string": "Ändern Sie die Einstellung und erstellen Sie Objekte aus allen Übermittlungen, die eine Objekterstellung anzeigen und nicht genehmigt oder abgelehnt wurden."
         }
       }
     },
@@ -1782,29 +1830,29 @@
     },
     "DatasetSettings": {
       "entityWorkflow": {
-        "string": "Entitätsworkflow",
+        "string": "Objektworkflow",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "onReceipt": {
         "label": {
-          "string": "Entitäten anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind"
+          "string": "Objekte anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind"
         },
         "description": {
-          "string": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Entitäten erstellt werden."
+          "string": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Objekte erstellt werden."
         },
         "successMessage": {
-          "string": "Die Entitäten werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
+          "string": "Die Objekte werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
         }
       },
       "onApproval": {
         "label": {
-          "string": "Entitäten erstellen, wenn Einsendungen als genehmigt markiert sind"
+          "string": "Objekte erstellen, wenn Einsendungen als genehmigt markiert sind"
         },
         "description": {
-          "string": "Entitätsdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden."
+          "string": "Objektdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden."
         },
         "successMessage": {
-          "string": "Die Entitäten werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
+          "string": "Die Objekte werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
         }
       }
     },
@@ -1836,7 +1884,7 @@
     },
     "DatasetTable": {
       "emptyTable": {
-        "string": "Es wurden noch keine Entitäten für dieses Projekt erstellt."
+        "string": "Es wurden noch keine Objekte für dieses Projekt erstellt."
       }
     },
     "Download": {
@@ -1867,14 +1915,14 @@
     "EntityActivity": {
       "action": {
         "delete": {
-          "string": "Entität löschen",
+          "string": "Objekt löschen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
     "EntityBasicDetails": {
       "entityDetails": {
-        "string": "Entitätsdetails"
+        "string": "Objektdetails"
       },
       "creatingSubmission": {
         "string": "Übermittlung erstellen",
@@ -1914,7 +1962,7 @@
       },
       "confirmation": {
         "title": {
-          "string": "Ist diese Entität OK?"
+          "string": "Ist dieses Objekt OK?"
         },
         "body": {
           "string": "Nachdem Sie die möglicherweise widersprüchlichen Aktualisierungen überprüft und alle erforderlichen Aktualisierungen vorgenommen haben, können Sie unten auf „Bestätigen“ klicken, um die Warnung zu parallelen Aktualisierungen zu löschen."
@@ -2075,7 +2123,7 @@
         "entity": {
           "create": {
             "api": {
-              "string": "Entität {label} erstellt von {name}",
+              "string": "Objekt {label} erstellt von {name}",
               "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
             },
             "bulkSource": {
@@ -2109,11 +2157,11 @@
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           },
           "delete": {
-            "string": "Entität {label} gelöscht von {name}",
+            "string": "Objekt {label} gelöscht von {name}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           },
           "restore": {
-            "string": "",
+            "string": "Objekt {label} wiederhergestellt von {name}",
             "developer_comment": "This text is shown in a list of events. {name} is the name of a Web User."
           }
         }
@@ -2151,58 +2199,100 @@
         }
       }
     },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "Erstellt von",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "Ersteller suchen…",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "Alle",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "Keine",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": "Unbekannter Ersteller "
+      },
+      "emptyTable": {
+        "string": "Es gibt noch keine Objekte."
+      }
+    },
     "EntityList": {
       "noEntities": {
-        "string": "Es gibt keine Entitäten zum Anzeigen.",
+        "string": "Es gibt keine Objekte zum Anzeigen.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
       },
       "noMatching": {
-        "string": "Es gibt keine passenden Entitäten."
+        "string": "Es gibt keine passenden Objekte."
       },
       "allDeleted": {
-        "string": "Alle Entitäten werden gelöscht."
+        "string": "Alle Objekte werden gelöscht."
       },
       "allDeletedOnPage": {
-        "string": "Alle Entitäten auf der Seite wurden gelöscht."
+        "string": "Alle Objekte auf der Seite wurden gelöscht."
       },
       "alert": {
         "delete": {
-          "string": "Die Entität \"{label}“ wurde gelöscht."
+          "string": "Das Objekt \"{label}“ wurde gelöscht."
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {{count} Objekt erfolgreich gelöscht.} other {{count} Objekte erfolgreich gelöscht.}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {{count} Objekt erfolgreich wiederhergestellt.} other {{count} Objekte erfolgreich wiederhergestellt.}}"
         }
       },
       "filterDisabledMessage": {
-        "string": "Filterung ist für gelöschte Entitäten nicht verfügbar"
+        "string": "Filterung ist für gelöschte Objekte nicht verfügbar"
       },
       "searchDisabledMessage": {
-        "string": ""
+        "string": "Die Suche nach gelöschten Objekte ist nicht verfügbar"
       },
       "downloadDisabled": {
-        "string": "Der Download ist für gelöschte Entitäten nicht verfügbar"
+        "string": "Der Download ist für gelöschte Objekte nicht verfügbar"
       },
       "deletedEntity": {
         "emptyTable": {
-          "string": "Es gibt keine gelöschten Entitäten."
+          "string": "Es gibt keine gelöschten Objekte."
         },
         "allRestored": {
-          "string": "Alle gelöschten Entitäten werden wiederhergestellt."
+          "string": "Alle gelöschten Objekte werden wiederhergestellt."
         },
         "allRestoredOnPage": {
-          "string": "Alle Entitäten auf der Seite wurden wiederhergestellt."
+          "string": "Alle Objekte auf der Seite wurden wiederhergestellt."
         }
+      },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {{count} Objekt ausgewählt} other {{count} Objekte ausgewählt}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": "Massenbearbeitung in Bearbeitung\n"
       },
       "action": {
         "download": {
           "unfiltered": {
-            "string": "{count, plural, one {{count} Entität herunterladen} other {Alle {count} Entitäten herunterladen}}",
+            "string": "{count, plural, one {{count} Objekt herunterladen} other {Alle {count} Objekte herunterladen}}",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {{count} Entität herunterladen, die dem Filter entsprechen} other {{count} Entitäten herunterladen, die dem Filter entsprechen}}",
+              "string": "{count, plural, one {{count} Objekt herunterladen, die dem Filter entsprechen} other {{count} Objekte herunterladen, die dem Filter entsprechen}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "Alle Entitäten herunterladen, die dem Filter entsprechen",
+              "string": "Alle Objekte herunterladen, die dem Filter entsprechen",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
@@ -2225,7 +2315,7 @@
           "string": "Updates wurden parallel zu ''{label}\" durchgeführt. Dies bedeutet, dass Änderungen möglicherweise im Konflikt miteinander stehen, da sie zu älteren Daten erstellt wurden, als sie schließlich von Central angewendet wurden."
         },
         "1": {
-          "string": "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Entitätsdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
+          "string": "Überprüfen Sie die Updates, nehmen Sie die erforderlichen Bearbeitungen vor, und wenn Sie sicher sind, dass die Objektdaten korrekt sind, drücken Sie 'Als behoben markieren', um diese Warnmeldung zu löschen."
         }
       },
       "action": {
@@ -2244,7 +2334,7 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "editEntity": {
-          "string": "Entität bearbeiten",
+          "string": "Objekt bearbeiten",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "markAsResolved": {
@@ -2253,7 +2343,7 @@
         }
       },
       "successMessage": {
-        "string": "Die Konfliktwarnung wurde von der Entität entfernt."
+        "string": "Die Konfliktwarnung wurde von der Objekt entfernt."
       },
       "problem": {
         "400_32": {
@@ -2272,17 +2362,17 @@
           "developer_comment": "{label} is the label of an Entity."
         },
         "1": {
-          "string": "Die Entität wird in ihrem vorherigen Zustand wiederhergestellt."
+          "string": "Das Objekt wird in ihrem vorherigen Zustand wiederhergestellt."
         },
         "2": {
-          "string": "Wenn die Entität erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
+          "string": "Wenn das Objekt erneut gelöscht wird, dauert es 30 Tage bis es entfernt wird."
         }
       }
     },
     "EntityShow": {
       "back": {
         "title": {
-          "string": "Entitätsdetail",
+          "string": "Objektdetail",
           "developer_comment": "This is shown at the top of the page."
         },
         "back": {
@@ -2346,7 +2436,7 @@
       },
       "alert": {
         "blankLabel": {
-          "string": ""
+          "string": "Fehlende Etikett."
         },
         "noData": {
           "string": "Ihre Datei enthält keine Daten."
@@ -2402,11 +2492,11 @@
           "string": "Ein zitiertes Feld ist ungültig. Überprüfen Sie die Kopfzeile Ihrer Datei, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt."
         },
         "missingLabel": {
-          "string": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jede Entität in Central und anderswo zu verwenden ist.",
+          "string": "Eine {label} Eigenschaft ist erforderlich. Die Bezeichnung gibt den Namen an, der für jedes Objekt in Central und anderswo zu verwenden ist.",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "unknownProperty": {
-          "string": "Wenn Sie Eigenschaften zu dieser Entitätsliste hinzufügen möchten, können Sie dies im Abschnitt Entitätseigenschaften auf der Übersichtsseite dieser Entitätsliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist."
+          "string": "Wenn Sie Eigenschaften zu dieser Objektliste hinzufügen möchten, können Sie dies im Abschnitt Objekteigenschaften auf der Übersichtsseite dieser Objektliste tun, oder Sie können ein Formular hochladen und veröffentlichen, das auf die Eigenschaft verweist."
         },
         "duplicateColumn": {
           "string": "Es sieht so aus, als hätten zwei oder mehr Spalten die gleiche Überschrift. Bitte stellen Sie sicher, dass die Spaltenüberschriften eindeutig sind."
@@ -2527,7 +2617,7 @@
           "string": "Der App-Benutzer \"{displayName}\" ist erstellt worden."
         },
         "revoke": {
-          "string": ""
+          "string": "Der Zugriff des App-Benutzers {displayName} wurde erfolgreich widerrufen.\n"
         }
       }
     },
@@ -2679,12 +2769,12 @@
     },
     "FormAttachmentLinkDataset": {
       "title": {
-        "string": "Entitätsliste verknüpfen",
+        "string": "Objektliste verknüpfen",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": "Sind Sie sicher, dass Sie die Entitätsliste verknüpfen möchten?"
+          "string": "Sind Sie sicher, dass Sie die Objektliste verknüpfen möchten?"
         },
         "1": {
           "string": "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
@@ -2723,7 +2813,7 @@
           "string": "{count, plural, one {{count} Datei wurde erfolgreich hochgeladen.} other {{count} Dateien wurden erfolgreich hochgeladen.}}"
         },
         "link": {
-          "string": ""
+          "string": "Objektliste erfolgreich verknüpft."
         }
       },
       "header": {
@@ -2854,7 +2944,7 @@
         }
       },
       "linkedToDataset": {
-        "string": "Mit Entitätsliste {datasetName} verknüpft",
+        "string": "Mit Objektliste {datasetName} verknüpft",
         "developer_comment": "This is shown for a Form Attachment that is linked to an Entity List"
       },
       "uploadToOverride": {
@@ -2862,7 +2952,7 @@
       },
       "action": {
         "linkDataset": {
-          "string": "Mit Entitätsliste {datasetName} verknüpfen",
+          "string": "Mit Objektliste {datasetName} verknüpfen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2913,7 +3003,7 @@
         }
       },
       "noDeleteEntities": {
-        "string": "Alle durch die Einreichungen dieses Formulars erstellten Entitäten werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Entitäten zu löschen."
+        "string": "Alle durch die Einreichungen dieses Formulars erstellten Objekte werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Objekte zu löschen."
       }
     },
     "FormDraftAbandon": {
@@ -2987,7 +3077,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, one {} other {}}"
+        "string": "{count, plural, one {Die Veröffentlichung dieses Entwurfs wird {count} Eigenschaft erstellen. Sie kann nicht gelöscht werden.} other {Die Veröffentlichung dieses Entwurfs wird {count} Eigenschaften erstellen. Diese können nicht gelöscht werden.\n}}"
       },
       "problem": {
         "409_6": {
@@ -3044,10 +3134,10 @@
       },
       "alert": {
         "upload": {
-          "string": ""
+          "string": "Das neue Formular steht jetzt als Entwurf zur Verfügung."
         },
         "publish": {
-          "string": ""
+          "string": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.\n"
         },
         "abandon": {
           "string": "Die Entwurfsversion dieses Formulars wurde gelöscht."
@@ -3060,7 +3150,7 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "entitiesTesting": {
-        "string": "Diese Formulardefinition erstellt oder aktualisiert Entitäten. Im Moment werden Entitäten nicht durch Formularentwürfe erstellt oder aktualisiert, daher müssen Sie das Formular veröffentlichen, um die Funktionalität von Entitäten zu überprüfen."
+        "string": "Diese Formulardefinition erstellt oder aktualisiert Objekte. Im Moment werden Objekte nicht durch Formularentwürfe erstellt oder aktualisiert, daher müssen Sie das Formular veröffentlichen, um die Funktionalität von Objekte zu überprüfen."
       },
       "subtitle": {
         "full": {
@@ -3093,7 +3183,7 @@
           "string": "{count, plural, one {{count} geänderte Anhang} other {{count} geänderte Anhänge}}"
         },
         "summary": {
-          "string": "",
+          "string": "{changes} seit der veröffentlichten Version",
           "developer_comment": "{changes} describes changes that have been made to Form attachments. For example: \"1 new attachment and 2 changed attachments\""
         }
       }
@@ -3152,23 +3242,23 @@
     },
     "FormEditEntities": {
       "datasetCount": {
-        "string": "{count, plural, one {} other {}}"
+        "string": "{count, plural, one {Übermittlungen an diese Formular-Definition wird {count} Objektliste aktualisieren.\n} other {Übermittlungen an diese Formular-Definition werden {count} Objektlisten aktualisieren.\n}}"
       },
       "diffCounts": {
         "datasetsOnly": {
-          "string": "{count, plural, one {} other {}}"
+          "string": "{count, plural, one {Veröffentlichen dieses Entwurfs aktualisiert {count} Objektliste.} other {Veröffentlichen dieses Entwurfs aktualisiert {count} Objektlisten.}}"
         },
         "newProperties": {
           "full": {
-            "string": "",
+            "string": "Veröffentlichen dieses Entwurfs aktualisiert {entityLists} und erzeugt {properties}.",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {entityLists} has the plural form: {count} Entity Lists\n- {properties} has the plural form: {count} properties"
           },
           "entityLists": {
-            "string": "{count, plural, one {{count}Entitätsliste} other {{count}Entitätsliste}}",
+            "string": "{count, plural, one {{count} Objektliste} other {{count} Objektliste}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {entityLists} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           },
           "properties": {
-            "string": "{count, plural, one {{count}Eigenschaft} other {{count}Eigenschaften}}",
+            "string": "{count, plural, one {{count} Eigenschaft} other {{count} Eigenschaften}}",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           }
         }
@@ -3178,11 +3268,11 @@
         "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
-        "string": "Mit dieser Definition werden keine Entitäten aktualisiert.",
+        "string": "Mit dieser Definition werden keine Objekte aktualisiert.",
         "developer_comment": "\"Definition\" refers to a Form Definition."
       },
       "whatAreEntities": {
-        "string": "Was sind Entitäten?"
+        "string": "Was sind Objekte?"
       }
     },
     "FormEditPublishedVersion": {
@@ -3214,7 +3304,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Verwandte Entitätsliste} other {{count} Verwandte Entitätslisten}}"
+          "string": "{count, plural, one {{count} Verwandte Objektliste} other {{count} Verwandte Objektlisten}}"
         },
         "updatedDatasets": {
           "string": "Aktualisierungen",
@@ -3257,7 +3347,7 @@
       },
       "alert": {
         "create": {
-          "string": ""
+          "string": "\"{name}\" wurde als Formularentwurf erzeugt."
         }
       }
     },
@@ -3350,13 +3440,13 @@
         },
         "3": {
           "deletedFormExists": {
-            "string": ""
+            "string": "Es befindet sich ein Formular mit der ID \"{value}\" im Papierkorb. Wenn Sie dieses Formular hochladen, können Sie das andere mit derselben ID nicht mehr wiederherstellen.\n"
           },
           "structureChanged": {
             "string": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
           },
           "oldEntityVersion": {
-            "string": ""
+            "string": "Die Objektspezifikationsversion \"{version}\" ist nicht mit Offline-Objekten kompatibel. Wir empfehlen die Verwendung von Version 2024.1.0 oder neuer.\n"
           }
         },
         "4": {
@@ -3438,7 +3528,7 @@
       },
       "alert": {
         "delete": {
-          "string": ""
+          "string": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
         }
       },
       "webFormsSetting": {
@@ -3447,12 +3537,20 @@
           "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
         },
         "description": {
-          "string": "",
+          "string": "Ausfüllen, anschauen und bearbeiten des Formulars \"{formName}\" mit",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDefault": {
           "string": "Enketo (default)",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "Sie verwenden jetzt Enketo, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten.",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "Sie verwenden jetzt ODK Web Forms, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten.",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3520,7 +3618,7 @@
       },
       "alert": {
         "restore": {
-          "string": ""
+          "string": "Das Formular \"{name}\" wurde erfolgreich wiederhergestellt."
         }
       },
       "message": {
@@ -3605,7 +3703,7 @@
         },
         "description": {
           "full": {
-            "string": "",
+            "string": "Einige Funktionen könnten verloren gehen; {seeSupportedFeatures} für Details und {previewYourForm}, bevor Sie zustimmen.\n",
             "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
           },
           "seeSupportedFeatures": {
@@ -3626,6 +3724,24 @@
         "useEnketo": {
           "string": "Enketo verwenden",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        }
+      }
+    },
+    "GeojsonMap": {
+      "showing": {
+        "string": "Zeigen {count} von {total}",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "Zoomen, um alle Daten anzuzeigen.",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Grafikproblem erkannt."
+        },
+        "message": {
+          "string": "Ihr Browser kann die Karte derzeit nicht anzeigen. Aktivieren Sie die Grafikbeschleunigungseinstellungen."
         }
       }
     },
@@ -3661,6 +3777,14 @@
       "forum": {
         "body": {
           "string": "Brauchen Sie Hilfe? Besuchen Sie das Forum, um Fragen zu stellen oder frühere Diskussionen zu verfolgen."
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "Zurück zur Liste",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3748,43 +3872,43 @@
     "OdataLoadingMessage": {
       "entity": {
         "withoutCount": {
-          "string": "Lade Entitäten ...",
+          "string": "Lade Objekte ...",
           "developer_comment": "This text is shown when the number of Entities loading is unknown."
         },
         "all": {
-          "string": "{count, plural, one {Lade {count} Entität ...} other {Lade {count} Entitäten ...}}"
+          "string": "{count, plural, one {Lade {count} Objekt ...} other {Lade {count} Objekte ...}}"
         },
         "first": {
-          "string": "{count, plural, one {Laden der ersten {top} von {count} Entität ...} other {Laden der ersten {top} von {count} Entitäten ...}}",
+          "string": "{count, plural, one {Laden des ersten {top} von {count} Objekt ...} other {Laden der ersten {top} von {count} Objekten ...}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "middle": {
-          "string": "{count, plural, one {Lade {top} weitere Entität von {count} übrigen...} other {Lade weitere {top} von {count} übrigen Entitäten...}}",
+          "string": "{count, plural, one {Lade {top} weiteres Objekt von {count} übrigen...} other {Lade weitere {top} von {count} übrigen Objekte...}}",
           "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
         },
         "last": {
           "multiple": {
-            "string": "{count, plural, one {Lade die letzte {count} Entität...} other {Lade die letzten {count} Entitäten...}}"
+            "string": "{count, plural, one {Lade das letzte {count} Objekt...} other {Lade die letzten {count} Objekte...}}"
           },
           "one": {
-            "string": "Die letzte Entität wird geladen…"
+            "string": "Das letzte Objekt wird geladen…"
           }
         },
         "filtered": {
           "withoutCount": {
-            "string": "Lade passende Entitäten...",
+            "string": "Lade passende Objekte...",
             "developer_comment": "This text is shown when the number of Entities loading is unknown."
           },
           "middle": {
-            "string": "{count, plural, one {Lade {top} weitere passende Entität von {count} übrigen...} other {Lade weitere {top} von {count} übrigen passenden Entitäten...}}",
+            "string": "{count, plural, one {Lade {top} weitere passende Objekte von {count} übrigen...} other {Lade weitere {top} von {count} übrigen passenden Objekte...}}",
             "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
           },
           "last": {
             "multiple": {
-              "string": "{count, plural, one {Lade die letzte {count} passende Entität...} other {Lade die letzten {count} passenden Entitäten...}}"
+              "string": "{count, plural, one {Lade das letzte {count} passende Objekt...} other {Lade die letzten {count} passenden Objekte...}}"
             },
             "one": {
-              "string": "Lade die letzte passende Entität..."
+              "string": "Lade das letzte passende Objekt..."
             }
           }
         }
@@ -3922,7 +4046,7 @@
                 "string": "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten."
               },
               "7": {
-                "string": "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
+                "string": "Neue Einreichungen werden nicht mehr zu Objekte verarbeitet."
               }
             },
             "1": {
@@ -4099,7 +4223,7 @@
         "developer_comment": "This clickable text is shown below a table of forms where only a few out of the total number (\"count\") of forms is shown."
       },
       "showMoreDatasets": {
-        "string": "{count, plural, one {Zeige alle {count} Entitätsliste} other {Zeige alle {count} Entitätslisten}}",
+        "string": "{count, plural, one {Zeige alle {count} Objektliste} other {Zeige alle {count} Objektlisten}}",
         "developer_comment": "This clickable text is shown below a table of entity lists where only a few out of the total number (\"count\") of entity lists is shown."
       },
       "showFewer": {
@@ -4107,7 +4231,7 @@
         "developer_comment": "This clickable text is shown below an expanded table of forms that can be collapsed to hide some forms. \"Count\" refers to the number of forms."
       },
       "showFewerDatasets": {
-        "string": "{count, plural, one {Zeige weniger von insgesamt {count} Entitätsliste} other {Zeige weniger von insgesamt {count} Entitätslisten}}",
+        "string": "{count, plural, one {Zeige weniger von insgesamt {count} Objektliste} other {Zeige weniger von insgesamt {count} Objektlisten}}",
         "developer_comment": "This clickable text is shown below an expanded table of entity lists that can be collapsed to hide some entity list. \"Count\" refers to the number of entity lists."
       },
       "hidden": {
@@ -4220,7 +4344,7 @@
       },
       "alert": {
         "archive": {
-          "string": ""
+          "string": "Das Projekt \"{name}\" wurde archiviert."
         }
       }
     },
@@ -4300,7 +4424,7 @@
         },
         "2": {
           "full": {
-            "string": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
+            "string": "{projectViewers} können auf alle Formular- und Objektdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
             "developer_comment": "This text is shown in a list of Roles.\n\n{projectViewers} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nProject Viewers"
           },
           "projectViewers": {
@@ -4352,7 +4476,7 @@
           "string": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen."
         },
         "unassignRole": {
-          "string": ""
+          "string": "\"{displayName}\" wurde erfolgreich aus dem Projekt entfernt."
         }
       },
       "action": {
@@ -4428,7 +4552,7 @@
       },
       "alert": {
         "create": {
-          "string": ""
+          "string": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen."
         },
         "revoke": {
           "string": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
@@ -4641,7 +4765,7 @@
           "string": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal."
         },
         "submit": {
-          "string": ""
+          "string": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schliessen. Wenn er nach 20 Sekunden noch nicht begonnen hat, versuchen Sie es bitte erneut."
         },
         "parseError": {
           "string": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
@@ -4706,13 +4830,13 @@
         },
         "entity": {
           "create": {
-            "string": "Entität {label} in {dataset} Entitätsliste erzeugt"
+            "string": "Objekt {label} in {dataset} Objektliste erzeugt"
           },
           "update": {
-            "string": "Entität {label} in {dataset} Entitätsliste aktualisiert"
+            "string": "Objekt {label} in {dataset} Objektliste aktualisiert"
           },
           "error": {
-            "string": "Problem beim Erstellen einer Entität"
+            "string": "Problem beim Erstellen eines Objekts"
           }
         },
         "updateReviewState": {
@@ -4781,7 +4905,7 @@
         },
         "submissionBacklog": {
           "hold": {
-            "string": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung der Entität",
+            "string": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung des Objekts",
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           },
           "force": {
@@ -4828,8 +4952,8 @@
         }
       },
       "allSubmissionDateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "string": "Alle Zeit",
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4883,6 +5007,12 @@
       "noMatching": {
         "string": "Es gibt keine passenden Übermittlungen."
       },
+      "emptyMap": {
+        "string": "Übermittlungen werden nur angezeigt, wenn sie Daten im ersten Geofeld enthalten."
+      },
+      "learnMoreMap": {
+        "string": "Erfahren Sie mehr über Mapping-Einreichungen"
+      },
       "allDeleted": {
         "string": "Alle Übermittlungen werden gelöscht."
       },
@@ -4895,6 +5025,9 @@
       "filterDisabledMessage": {
         "string": "Filterung ist für gelöschte Übermittlungen nicht verfügbar"
       },
+      "noMapEncryption": {
+        "string": "Karte ist wegen Formularverschlüsselung nicht verfügbar."
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": "Es gibt keine gelöschten Übermittlungen."
@@ -4905,6 +5038,9 @@
         "allRestoredOnPage": {
           "string": "Alle Übermittlungen auf dieser Seite wurden wiederhergestellt."
         }
+      },
+      "noMapDeleted": {
+        "string": "Karte ist für gelöschte Übermittlungen nicht verfügbar"
       },
       "loading": {
         "withoutCount": {
@@ -4948,6 +5084,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "Diese Übermittlung wurde mit {field} zugeordnet, das nicht in der veröffentlichten Formularversion enthalten ist.",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "Karte verweist auf dieses Feld.",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": "Karte wird vorbereitet – bekannte Einreichungen werden geladen und nach neuen gesucht. Dies kann eine Weile dauern."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Übermittlung in diesem Bereich} other {{count} Übermittlungen in diesem Bereich}}"
       }
     },
     "SubmissionRestore": {
@@ -5007,6 +5161,12 @@
           "string": "Notizen und Kommentare (optional)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Daten zuletzt aktualisiert am {date} um {time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5089,6 +5249,10 @@
         "sitewideRole": {
           "string": "Seitenweite Rolle",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "Zuletzt aktiv",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5187,6 +5351,9 @@
           "string": "User deaktivieren",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "Einladung ausstehend"
       }
     },
     "WebFormRenderer": {
@@ -5233,7 +5400,7 @@
           "string": "Übermittlungsfehler"
         },
         "body": {
-          "string": ""
+          "string": "Ihre Daten wurden nicht übermittelt. Fehlermeldung: {errorMessage} Sie können dieses Dialogfeld schließen und es erneut versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}.\n"
         }
       },
       "sendingDataModal": {
@@ -5250,7 +5417,7 @@
         },
         "body": {
           "full": {
-            "string": "",
+            "string": "Bitte {here} in einem anderen Browser-Tab einloggen und erneut versuchen.",
             "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
           },
           "here": {
@@ -5264,7 +5431,7 @@
           "string": "Übermittlungsfehler"
         },
         "body": {
-          "string": ""
+          "string": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
         },
         "action": {
           "tryAgain": {

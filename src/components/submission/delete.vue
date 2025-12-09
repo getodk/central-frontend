@@ -134,10 +134,21 @@ const del = () => {
   "pt": {
     "title": "Deletar Resposta",
     "introduction": [
-      "Você tem certeza que quer deletar esta Resposta?"
+      "Você tem certeza que quer deletar esta Resposta?",
+      "Essa ação irá mover a Resposta para a Lixeira. Após 30 dias na Lixeira, ela será excluída de forma permanente, ela poderá ser recuperada antes disso."
     ],
     "field": {
       "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
+    }
+  },
+  "zh": {
+    "title": "删除提交内容",
+    "introduction": [
+      "您确定要删除此条提交吗？",
+      "此操作将把提交数据移至回收站。数据在回收站保留30天后将被永久清除，但在此之前可随时恢复。"
+    ],
+    "field": {
+      "noConfirm": "在离开本页面前，无需确认，立即删除。"
     }
   },
   "zh-Hant": {

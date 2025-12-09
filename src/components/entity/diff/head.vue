@@ -237,6 +237,20 @@ const change = (value) => {
       "updating": "(atualizando {version})"
     }
   },
+  "zh": {
+    "introduction": "此提交更新已应用于该实体第{version}版，但它是基于第{baseVersion}版创建的。",
+    "hardConflict": {
+      "description": "其他更新已写入相同属性。"
+    },
+    "softConflict": {
+      "title": "并行更新"
+    },
+    "tab": {
+      "baseDiff": "提交者视图",
+      "serverDiff": "Central系统视图",
+      "updating": "（{version}更新中）"
+    }
+  },
   "zh-Hant": {
     "introduction": "此提交更新已套用至該實體的版本 {version}，但它是基於版本{baseVersion}建立的。",
     "hardConflict": {

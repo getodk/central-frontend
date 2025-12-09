@@ -189,7 +189,8 @@ export default {
     requestDelete([{ __id: instanceId }]) {
       this.request({
         method: 'DELETE',
-        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId)
+        url: apiPaths.submission(this.projectId, this.xmlFormId, instanceId),
+        fulfillProblem: ({ code }) => code === 404.1
       })
         .then(() => {
           const message = this.$t('alert.submissionDeleted');
@@ -275,6 +276,12 @@ export default {
     "back": {
       "title": "Maelezo ya Uwasilishaji",
       "back": "Rudi kwenye Jedwali la Mawasilisho"
+    }
+  },
+  "zh": {
+    "back": {
+      "title": "提交详情",
+      "back": "返回提交表格"
     }
   },
   "zh-Hant": {

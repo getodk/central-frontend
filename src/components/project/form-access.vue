@@ -314,13 +314,25 @@ export default {
     "heading": [
       "Usuários de aplicativo somente podem ver e preencher os formulários para os quais receberem autorização explícita na tabela abaixo. Gerentes de projeto e coletores de dados podem usar um navegador de internet para preencher qualquer formulário no projeto que esteja com status Aberto."
     ],
-    "emptyTable": "Não há formulários para exibir."
+    "emptyTable": "Não há formulários para exibir.",
+    "alert": {
+      "success": "Suas alterações foram salvas com sucesso."
+    }
   },
   "sw": {
     "heading": [
       "Watumiaji wa Programu wanaweza tu kuona na kujaza Fomu ambazo wamepewa ufikiaji wa uwazi katika jedwali lililo hapa chini. Wasimamizi wa Miradi na Wakusanyaji Data wanaweza kutumia kivinjari cha wavuti kujaza Fomu yoyote katika Mradi ambayo iko katika hali ya Wazi."
     ],
     "emptyTable": "Hakuna Fomu za kuonyesha."
+  },
+  "zh": {
+    "heading": [
+      "应用用户仅可查看并填写下方表格中明确授权的表单。项目经理和数据收集员可通过网页浏览器填写项目中处于“开放”状态的任何表单。"
+    ],
+    "emptyTable": "暂无表单可显示。",
+    "alert": {
+      "success": "您的修改已成功保存。"
+    }
   },
   "zh-Hant": {
     "heading": [

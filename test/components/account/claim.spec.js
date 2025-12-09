@@ -81,6 +81,12 @@ describe('AccountClaim', () => {
       app.vm.$route.path.should.equal('/login');
     });
 
+    it('includes source=claim query param when redirecting to login', async () => {
+      const app = await submit();
+      app.vm.$route.path.should.equal('/login');
+      app.vm.$route.query.source.should.equal('claim');
+    });
+
     it('shows a success alert', async () => {
       const app = await submit();
       app.should.alert('success');

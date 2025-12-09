@@ -3,6 +3,7 @@ import { T } from 'ramda';
 import DateTime from '../../../src/components/date-time.vue';
 import DlData from '../../../src/components/dl-data.vue';
 import GeojsonMap from '../../../src/components/geojson-map.vue';
+import SubmissionAttachmentLink from '../../../src/components/submission/attachment-link.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 import SubmissionMapPopup from '../../../src/components/submission/map-popup.vue';
 import SubmissionReviewState from '../../../src/components/submission/review-state.vue';
@@ -123,25 +124,69 @@ describe('SubmissionMapPopup', () => {
         dd[1].getComponent(DateTime).props().iso.should.equal(createdAt);
       }));
 
-  it('shows form-field data, ordering the geo field first', () =>
+  it('shows form-field data', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions())
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
         const pairs = component.findAllComponents(DlData);
-        const names = pairs.map(pair => pair.get('dt').text());
-        names.should.eql(['p1', 'first_name', 'p2']);
+        const names = pairs.map(pair => pair.get('dt .field-name').text());
+        names.should.eql(['first_name', 'p1', 'p2']);
 
         const values = pairs.map(pair => pair.props().value);
-        values.should.eql(['POINT (1 1)', 'Someone', 'POINT (2 2)']);
+        values.should.eql(['Someone', 'POINT (1 1)', 'POINT (2 2)']);
       }));
+
+  it('formats form-field data', () => {
+    testData.extendedForms.createPast(1, {
+      xmlFormId: 'f',
+      fields: [
+        testData.fields.int('/i1'),
+        testData.fields.int('/i2'),
+        testData.fields.binary('/b1'),
+        testData.fields.binary('/b2'),
+        testData.fields.geopoint('/p1')
+      ]
+    });
+    testData.extendedSubmissions.createPast(1, {
+      instanceId: 's',
+      i1: 1000,
+      i2: null,
+      b1: 'foo.jpg',
+      b2: null,
+      p1: 'POINT (1 1)'
+    });
+    return mockHttp()
+      .mount(SubmissionMapPopup, mountOptions())
+      .respondWithData(testData.submissionOData)
+      .afterResponse(async (component) => {
+        const dd = component.findAll('.dl-data-dd');
+        dd.length.should.equal(5);
+
+        dd[0].text().should.equal('1,000');
+        dd[1].text().should.equal('(empty)');
+
+        dd[2].getComponent(SubmissionAttachmentLink).props().should.eql({
+          projectId: '1',
+          xmlFormId: 'f',
+          draft: false,
+          instanceId: 's',
+          attachmentName: 'foo.jpg',
+          deleted: false
+        });
+        dd[2].text().should.equal('');
+
+        dd[3].findComponent(SubmissionAttachmentLink).exists().should.be.false;
+        dd[3].text().should.equal('(empty)');
+      });
+  });
 
   it('shows tooltips for form-field data', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions())
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
-        const pair = component.findAllComponents(DlData)[1];
+        const pair = component.getComponent(DlData);
         const name = pair.get('dt span');
         name.text().should.equal('first_name');
         await name.should.have.tooltip('names-first_name');
@@ -187,9 +232,18 @@ describe('SubmissionMapPopup', () => {
         }
       }])
       .afterResponse(component => {
-        const pair = component.getComponent(DlData);
-        pair.get('dt').text().should.equal('p1');
+        const pair = component.findAllComponents(DlData)[1];
+        pair.get('dt .field-name').text().should.equal('p1');
         pair.props().value.should.equal('POINT (3 3)');
+      }));
+
+  it('shows checkmark for the mapped field', () =>
+    mockHttp()
+      .mount(SubmissionMapPopup, mountOptions())
+      .respondWithData(testData.submissionOData)
+      .afterResponse(async (component) => {
+        const pair = component.findAllComponents(DlData)[1];
+        pair.find('.icon-check-circle').exists().should.be.true;
       }));
 
   describe('review button', () => {

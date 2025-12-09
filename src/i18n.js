@@ -49,6 +49,9 @@ addLocale('it', { name: 'Italiano' });
 addLocale('ja', { name: '日本語', sentenceSeparator: '' });
 addLocale('pt', { name: 'Português' });
 addLocale('sw', { name: 'Kiswahili' });
+// Simplified Chinese
+addLocale('zh', { name: '汉语', sentenceSeparator: '' });
+// Traditional Chinese
 addLocale('zh-Hant', { name: '漢語', sentenceSeparator: '' });
 
 
@@ -97,6 +100,7 @@ const pluralizationRules = {
   // plural form for pt. However, unlike those languages, we use the "one" form
   // for 0.
   pt: (count) => (count === 0 || count === 1 ? 0 : 2),
+  zh: noPlural,
   'zh-Hant': noPlural
 };
 pluralizationRules.fr = pluralizationRules.es;

@@ -572,6 +572,36 @@ $popup-width: 300px;
       }
     }
   },
+  "zh": {
+    "title": "上传文件",
+    "duringDragover": {
+      "dropToUpload": "立即松手以上传此文件为{attachmentName}。",
+      "dragover": "请将文件拖拽至要替换的表单附件上方，松手即可完成上传替换。",
+      "dropToPrepare": {
+        "full": "立即松手，准备将 {countOfFiles} 个文件上传至此表单。",
+        "countOfFiles": "{count}个文件"
+      }
+    },
+    "afterSelection": {
+      "matched": {
+        "full": "{countOfFiles}准备上传",
+        "countOfFiles": "{count}个文件"
+      },
+      "someUnmatched": {
+        "full": "有 {countOfFiles} 个文件因文件名无法识别将被忽略。如需上传，请重命名文件或将其单独拖拽至指定位置。",
+        "countOfFiles": "{count}个文件"
+      },
+      "noneMatched": "无法识别您尝试上传的任何文件。请将文件重命名为与上方列表匹配的名称，或将其逐一拖拽到对应目标区域。"
+    },
+    "duringUpload": {
+      "total": "请稍候，正在上传您的{count}个文件：",
+      "current": "传送文件{filename}（{percentUploaded}）",
+      "remaining": {
+        "beforeLast": "还剩{count}个文件。",
+        "last": "这是最后一个文件。"
+      }
+    }
+  },
   "zh-Hant": {
     "title": "上傳多個檔案",
     "duringDragover": {

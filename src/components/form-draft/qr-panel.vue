@@ -190,6 +190,20 @@ const { projectPath } = useRoutes();
   "sw": {
     "collectProjectName": "[Rasimu] {name}"
   },
+  "zh": {
+    "title": "测试代码",
+    "introduction": {
+      "full": "这是一个{temporaryCode}。",
+      "temporaryCode": "临时代码（测试用）"
+    },
+    "stopsWorking": "发布此草稿后，测试代码将失效。",
+    "instructions": "扫描此二维码即可在设备上配置Collect，用于向此测试表格提交测试数据。",
+    "codesForUsers": {
+      "full": "如需创建分发给用户的二维码，请前往{appUsers}页面。",
+      "appUsers": "APP用户"
+    },
+    "collectProjectName": "[草稿] {name}"
+  },
   "zh-Hant": {
     "title": "測試程式碼",
     "introduction": {

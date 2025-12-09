@@ -87,6 +87,12 @@ defineEmits(['rows']);
       "largeCell": "Algumas células são anormalmente grandes, o que pode indicar dificuldades na leitura do seu arquivo:"
     }
   },
+  "zh": {
+    "row": {
+      "raggedRows": "部分行包含的纵列数少于预期：",
+      "largeCell": "部分单元格异常过大，这可能会使文件读取失败："
+    }
+  },
   "zh-Hant": {
     "row": {
       "raggedRows": "在某些行中發現的列數少於預期：",

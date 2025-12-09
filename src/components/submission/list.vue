@@ -34,12 +34,18 @@ except according to the terms contained in the LICENSE file.
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
-            v-model="selectedFields"/>
+            v-model="selectedFields" :disabled="deleted"
+            :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
+        <button type="button" class="btn btn-link btn-reset"
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('filterDisabledMessage') : null"
+          @click="resetFilters">
+          {{ $t('action.reset') }}
+        </button>
 
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
-          :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
+          :button-appearance="true" :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
           :to="'.form-submissions-heading-row'">
           <submission-download-button :form-version="formVersion"
@@ -55,6 +61,10 @@ except according to the terms contained in the LICENSE file.
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
+        <template v-if="emptyMessage === emptyMapMessage">
+          <br>
+          <doc-link to="central-submissions/#accessing-submissions">{{ $t('learnMoreMap') }}</doc-link>
+        </template>
       </p>
 
       <submission-table-view v-if="dataView === 'table'" ref="view"
@@ -64,7 +74,7 @@ except according to the terms contained in the LICENSE file.
         :awaiting-responses="awaitingResponses"
         @review="showReview" @delete="showDelete" @restore="showRestore"/>
       <submission-map-view v-else ref="view"
-        :project-id="projectId" :xml-form-id="xmlFormId" :deleted="deleted"
+        :project-id="projectId" :xml-form-id="xmlFormId"
         :filter="geojsonFilter"
         :awaiting-responses="awaitingResponses"
         @review="showReview" @delete="showDelete"/>
@@ -87,6 +97,8 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
+import { equals } from 'ramda';
+import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import RadioField from '../radio-field.vue';
@@ -101,6 +113,7 @@ import SubmissionTableView from './table-view.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
 
+import useDataView from '../../composables/data-view';
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -118,6 +131,7 @@ import TableRefreshBar from '../table-refresh-bar.vue';
 export default {
   name: 'SubmissionList',
   components: {
+    DocLink,
     EnketoFill,
     Loading,
     RadioField,
@@ -188,16 +202,14 @@ export default {
       })
     });
 
-    const dataView = useQueryRef({
-      fromQuery: (query) => (!query.deleted && query.map === 'true' ? 'map' : 'table'),
-      toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
-    });
+    const { dataView, options: viewOptions } = useDataView();
 
     const { request } = useRequest();
 
     return {
       form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates, dataView,
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      dataView, viewOptions,
       request
     };
   },
@@ -225,12 +237,6 @@ export default {
     };
   },
   computed: {
-    viewOptions() {
-      return [
-        { value: 'table', text: this.$t('common.table') },
-        { value: 'map', text: this.$t('common.map') }
-      ];
-    },
     filtersOnSubmitterId() {
       if (this.submitterIds.length === 0) return false;
       const selectedAll = this.submitters.dataExists &&
@@ -302,15 +308,6 @@ export default {
     }
   },
   watch: {
-    dataView() {
-      /* Both view components set this.odata, but they don't reset this.odata
-      when they're unmounted. It's important for this.odata to be reset,
-      especially when toggling from table view to map view. Map view doesn't
-      modify this.odata at all until after the GeoJSON response is received.
-      That means that if this.odata isn't reset, the stale data from the table
-      view could persist for a bit, affecting things like this.emptyMessage. */
-      this.odata.reset();
-    },
     'odata.count': {
       handler() {
         // Update this.formVersion.submissions to match this.odata.count.
@@ -323,12 +320,24 @@ export default {
           this.dataView === 'table' && !this.odataFilter && !this.deleted)
           this.formVersion.submissions = this.odata.count;
       }
+    },
+    deleted() {
+      this.setDefaultSelectedFields();
     }
   },
   created() {
     this.fetchData();
   },
   methods: {
+    setDefaultSelectedFields() {
+      // We also use 11 in the SubmissionFieldDropdown v-if.
+      const defaultFields = this.fields.selectable.length <= 11
+        ? this.fields.selectable
+        : this.fields.selectable.slice(0, 10);
+      if (!equals(this.selectedFields, defaultFields)) {
+        this.selectedFields = defaultFields;
+      }
+    },
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
@@ -336,10 +345,7 @@ export default {
         })
       })
         .then(() => {
-          // We also use 11 in the SubmissionFieldDropdown v-if.
-          this.selectedFields = this.fields.selectable.length <= 11
-            ? this.fields.selectable
-            : this.fields.selectable.slice(0, 10);
+          this.setDefaultSelectedFields();
         })
         .catch(noop);
       if (!this.draft) {
@@ -359,6 +365,12 @@ export default {
       // emit event to parent component to re-fetch keys if needed
       if (this.formVersion.keyId != null && this.keys.length === 0)
         this.$emit('fetch-keys');
+    },
+    resetFilters() {
+      this.setDefaultSelectedFields();
+      if (this.odataFilter != null) {
+        this.$router.replace({ path: this.$route.path, query: {} });
+      }
     },
     cancelBackgroundRefresh() {
       if (!this.refreshing) return;
@@ -507,6 +519,7 @@ export default {
     },
     "noMatching": "There are no matching Submissions.",
     "emptyMap": "Submissions only appear if they include data in the first geo field.",
+    "learnMoreMap": "Learn more about mapping Submissions",
     "allDeleted": "All Submissions are deleted.",
     "allDeletedOnPage": "All Submissions on the page have been deleted.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
@@ -534,15 +547,19 @@ export default {
       "testInBrowser": "Test im Browser"
     },
     "noMatching": "Es gibt keine passenden Übermittlungen.",
+    "emptyMap": "Übermittlungen werden nur angezeigt, wenn sie Daten im ersten Geofeld enthalten.",
+    "learnMoreMap": "Erfahren Sie mehr über Mapping-Einreichungen",
     "allDeleted": "Alle Übermittlungen werden gelöscht.",
     "allDeletedOnPage": "Alle Übermittlungen auf dieser Seite wurden gelöscht.",
     "downloadDisabled": "Der Download ist für gelöschte Übermittlungen nicht verfügbar",
     "filterDisabledMessage": "Filterung ist für gelöschte Übermittlungen nicht verfügbar",
+    "noMapEncryption": "Karte ist wegen Formularverschlüsselung nicht verfügbar.",
     "deletedSubmission": {
       "emptyTable": "Es gibt keine gelöschten Übermittlungen.",
       "allRestored": "Alle gelöschten Übermittlungen werden wiederhergestellt.",
       "allRestoredOnPage": "Alle Übermittlungen auf dieser Seite wurden wiederhergestellt."
-    }
+    },
+    "noMapDeleted": "Karte ist für gelöschte Übermittlungen nicht verfügbar"
   },
   "es": {
     "action": {
@@ -550,15 +567,19 @@ export default {
       "testInBrowser": "Prueba en el navegador"
     },
     "noMatching": "No hay envíos coincidentes.",
+    "emptyMap": "Los envíos solo aparecen si incluyen datos en el primer campo geo.",
+    "learnMoreMap": "Más información sobre el mapeo de envíos",
     "allDeleted": "Todos los envíos se han eliminado.",
     "allDeletedOnPage": "Se han eliminado todos los envíos de la página.",
     "downloadDisabled": "La descarga no está disponible para los envíos eliminados",
     "filterDisabledMessage": "El Filtro no está disponible para los Envíos eliminados",
+    "noMapEncryption": "Mapa no disponible debido al cifrado de Formulario",
     "deletedSubmission": {
       "emptyTable": "No hay envíos eliminados.",
       "allRestored": "Se restablecen todos los envíos eliminados.",
       "allRestoredOnPage": "Se han restablecido todas las Envíos de la página."
-    }
+    },
+    "noMapDeleted": "El mapa no está disponible para los envíos eliminados."
   },
   "fr": {
     "action": {
@@ -566,15 +587,19 @@ export default {
       "testInBrowser": "Tester dans le naviguateur"
     },
     "noMatching": "Il n'y a pas de soumission correspondante.",
+    "emptyMap": "Les soumissions apparaissent seulement si elles ont une valeur dans le premier champ de type géographique.",
+    "learnMoreMap": "Apprenez plus à propos de la carte de soumissions",
     "allDeleted": "Toutes les soumissions sont supprimées.",
     "allDeletedOnPage": "Toutes les soumissions de la page ont été supprimées.",
     "downloadDisabled": "Le téléchargement n'est pas possible pour les Soumissions supprimées.",
     "filterDisabledMessage": "Le filtrage n'est pas possible pour les Soumissions supprimées.",
+    "noMapEncryption": "La carte n'est pas disponible en raison du chiffrement du formulaire.",
     "deletedSubmission": {
       "emptyTable": "Il n'y a pas de Soumissions supprimées",
       "allRestored": "Toutes les Soumissions supprimées ont été restaurées.",
       "allRestoredOnPage": "Toutes les Soumissions de la page ont été restaurées."
-    }
+    },
+    "noMapDeleted": "La carte n'es pas disponible pour les soumissions supprimées."
   },
   "id": {
     "noMatching": "Tidak ada Pengiriman yang cocok."
@@ -585,15 +610,19 @@ export default {
       "testInBrowser": "Testa nel browser"
     },
     "noMatching": "Non sono presenti invii corrispondenti.",
+    "emptyMap": "Gli invii vengono visualizzati solo se includono dati nel primo campo geo.",
+    "learnMoreMap": "Scopri di più sulla mappatura degli invii",
     "allDeleted": "Tutti gli invii vengono cancellati.",
     "allDeletedOnPage": "Tutti gli invii presenti nella pagina sono stati cancellati.",
     "downloadDisabled": "Il download non è disponibile per gli invii cancellati",
     "filterDisabledMessage": "Il filtro non è disponibile per gli invii cancellati.",
+    "noMapEncryption": "Mappa non è disponibile a causa della crittografia del formulario",
     "deletedSubmission": {
       "emptyTable": "Non ci sono invii cancellati.",
       "allRestored": "Tutti gli invii cancellati vengono ripristinati.",
       "allRestoredOnPage": "Tutti i contributi presenti nella pagina sono stati ripristinati."
-    }
+    },
+    "noMapDeleted": "La Mappa non è disponibile per gli invii cancellati"
   },
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"
@@ -608,12 +637,36 @@ export default {
     "allDeletedOnPage": "Todas as Respostas nesta página foram excluídas.",
     "downloadDisabled": "O download está indisponível para Respostas excluídas",
     "filterDisabledMessage": "A filtragem está indisponível para Respostas excluídas",
+    "noMapEncryption": "O mapa não está disponível por que o Formulário está encriptado",
     "deletedSubmission": {
-      "emptyTable": "Não há Respostas excluídas"
-    }
+      "emptyTable": "Não há Respostas excluídas",
+      "allRestored": "Todas as Respostas excluídas foram recuperadas.",
+      "allRestoredOnPage": "Todas as respostas na página foram recuperadas."
+    },
+    "noMapDeleted": "O Mapa está indisponível para Respostas excluídas"
   },
   "sw": {
     "noMatching": "Hakuna Mawasilisho yanayolingana."
+  },
+  "zh": {
+    "action": {
+      "testOnDevice": "在设备上测试",
+      "testInBrowser": "在浏览器中测试"
+    },
+    "noMatching": "没有符合的提交内容",
+    "emptyMap": "仅当提交数据包含首个地理字段的信息时，才会显示相应记录。",
+    "learnMoreMap": "进一步了解提交地图数据功能",
+    "allDeleted": "已删除所有提交内容。",
+    "allDeletedOnPage": "当前页面中的所有提交数据已被删除。",
+    "downloadDisabled": "导出选项",
+    "filterDisabledMessage": "对于已删除的提交内容，筛选功能不可用。",
+    "noMapEncryption": "地图功能因表单加密而不可用。",
+    "deletedSubmission": {
+      "emptyTable": "没有已删除的提交内容。",
+      "allRestored": "所有已删除的提交内容都已恢复。",
+      "allRestoredOnPage": "所有此页面上的提交内容都已还原。"
+    },
+    "noMapDeleted": "对于已删除的提交内容，地图功能不可用"
   },
   "zh-Hant": {
     "action": {
@@ -621,15 +674,18 @@ export default {
       "testInBrowser": "在瀏覽器中測試"
     },
     "noMatching": "沒有符合的提交內容。",
+    "emptyMap": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。",
     "allDeleted": "所有提交內容都會被刪除。",
     "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
     "downloadDisabled": "已刪除的提交內容無法下載",
     "filterDisabledMessage": "無法對已刪除的提交內容進行過濾",
+    "noMapEncryption": "地圖因表單加密而無法使用",
     "deletedSubmission": {
       "emptyTable": "沒有已刪除的提交內容。",
       "allRestored": "所有已刪除的提交內容都會還原。",
       "allRestoredOnPage": "頁面上的所有提交內容都已還原。"
-    }
+    },
+    "noMapDeleted": "地圖無法用於已刪除的提交"
   }
 }
 </i18n>

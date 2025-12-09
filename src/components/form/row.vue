@@ -298,6 +298,12 @@ export default {
     },
     "formClosingTip": "Fomu Hii Inafungwa na inakubali Mawasilisho yake ya mwisho. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
   },
+  "zh": {
+    "action": {
+      "fill": "请填写表格"
+    },
+    "formClosingTip": "此表单即将关闭并接收最终提交。当前不可下载但仍可接收提交。"
+  },
   "zh-Hant": {
     "action": {
       "fill": "填寫表格"

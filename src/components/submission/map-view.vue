@@ -10,30 +10,38 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="submission-map-view" ref="el">
-    <odata-loading-message :state="geojson.initiallyLoading || showingMap"
-      type="submission" :filter="filter != null"/>
-    <geojson-map ref="map" :data="geojson.data" :sizer="sizeMap"
-      @show="setShowing(true)" @shown="setShowing(false)"
-      @selection-changed="selectionChanged"/>
-    <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
-      :instance-id="selection?.id" :fieldpath="selection?.properties?.fieldpath"
-      :awaiting-response="awaitingResponses.has(selection?.id)"
-      @hide="map.deselect()" @review="$emit('review', $event)"
-      @delete="$emit('delete', $event)"/>
-  </div>
+  <map-view ref="view" :odata="odata" :url="geojsonUrl"
+    :loading="$t('loading')">
+    <template #popup="{ feature, odata: odataElement, listeners }">
+      <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
+        :instance-id="feature?.id" :fieldpath="feature?.properties?.fieldpath"
+        :odata="odataElement"
+        :awaiting-response="awaitingResponses.has(feature?.id)"
+        v-on="{ ...listeners, ...reemitters }"/>
+    </template>
+    <template #overlap="{ features, listeners }">
+      <map-overlap-popup :features="features" :odata-url="overlapUrl"
+        v-on="listeners">
+        <template #title>
+          {{ $tcn('overlapTitle', features != null ? features.length : 0) }}
+        </template>
+        <template #feature="{ odata: odataElement }">
+          {{ odataElement.meta?.instanceName ?? odataElement.__id }}
+        </template>
+      </map-overlap-popup>
+    </template>
+  </map-view>
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, ref } from 'vue';
 
-import OdataLoadingMessage from '../odata-loading-message.vue';
+import MapOverlapPopup from '../map/overlap-popup.vue';
+import MapView from '../map/view.vue';
 import SubmissionMapPopup from './map-popup.vue';
 
 import { apiPaths } from '../../util/request';
-import { loadAsync } from '../../util/load-async';
-import { noargs, noop } from '../../util/util';
-import { styleBox } from '../../util/dom';
+import { noop, reemit } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -49,7 +57,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  deleted: Boolean,
 
   // Table actions
   filter: Object,
@@ -59,84 +66,67 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['review', 'delete']);
+const emit = defineEmits(['review', 'delete']);
 
-const GeojsonMap = defineAsyncComponent(loadAsync('GeojsonMap'));
+const { odata } = useRequestData();
 
-const { odata, createResource } = useRequestData();
-const geojson = createResource('geojson', () => ({
-  transformResponse: ({ data, config }) => {
-    // After the GeoJSON response is received, we also set `odata`, as if we
-    // received an OData response. That's needed because `odata` drives much of
-    // the logic in SubmissionList. For a long time, SubmissionList was only a
-    // table and only cared about OData. When we set `odata`, we set as little
-    // data as possible in order to minimize the memory footprint.
-    const { features } = data;
-    odata.setFromResponse({
-      data: {
-        value: new Array(features.length),
-        '@odata.count': features.length
-      },
-      config
-    });
+const geojsonUrl = computed(() => apiPaths.submissions(
+  props.projectId,
+  props.xmlFormId,
+  false,
+  '.geojson',
+  props.filter
+));
+const overlapUrl = (query) =>
+  apiPaths.odataSubmissions(props.projectId, props.xmlFormId, false, query);
 
-    // After setting `odata`, return the GeoJSON unchanged.
-    return data;
-  }
-}));
+const reemitters = reemit(emit, ['review', 'delete']);
 
-const fetchData = (clear = true) => {
-  const query = !props.deleted
-    ? props.filter
-    : { ...props.filter, deleted: true };
-  const url = apiPaths.submissions(
-    props.projectId,
-    props.xmlFormId,
-    false,
-    '.geojson',
-    query
-  );
-  return geojson.request({ url, clear }).catch(noop);
-};
-fetchData();
-watch([() => props.filter, () => props.deleted], noargs(fetchData));
-const refresh = () => fetchData(false);
-const cancelRefresh = () => { geojson.cancelRequest(); };
+const view = ref(null);
+defineExpose({
+  // Functions exposed from the MapView
+  refresh: () => view.value.fetchData(false),
+  cancelRefresh: () => view.value.cancelFetch(),
+  afterDelete: (instanceId) => view.value.afterDelete(instanceId),
 
-const showingMap = ref(false);
-const setShowing = (value) => { showingMap.value = value; };
-watch(() => geojson.dataExists, (dataExists) => {
-  // We need to set showingMap.value to `false` if the data is cleared between
-  // the `show` and `shown` events of the GeojsonMap.
-  if (!dataExists) setShowing(false);
+  afterReview: noop
 });
-
-const el = useTemplateRef('el');
-// Stretches the map to the bottom of the screen.
-const sizeMap = () => {
-  const rect = el.value.getBoundingClientRect();
-  if (rect.height === 0) return '';
-  const section = el.value.closest('.page-section');
-  const { marginBottom } = styleBox(getComputedStyle(section));
-  return document.documentElement.clientHeight - rect.top - marginBottom;
-};
-
-const selection = shallowRef(null);
-const selectionChanged = (value) => { selection.value = value; };
-
-const map = useTemplateRef('map');
-const afterDelete = (instanceId) => {
-  map.value.removeFeature(instanceId);
-  odata.value.length -= 1;
-};
-
-defineExpose({ refresh, cancelRefresh, afterReview: noop, afterDelete });
 </script>
 
-<style lang="scss">
-#submission-map-view {
-  position: relative;
-
-  .page-section:has(&) { margin-bottom: 15px; }
+<i18n lang="json5">
+{
+  "en": {
+    "loading": "Preparing map — loading known Submissions and scanning for new ones. This could take a while.",
+    "overlapTitle": "{count} Submission in this area | {count} Submissions in this area"
+  }
 }
-</style>
+</i18n>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "de": {
+    "loading": "Karte wird vorbereitet – bekannte Einreichungen werden geladen und nach neuen gesucht. Dies kann eine Weile dauern.",
+    "overlapTitle": "{count} Übermittlung in diesem Bereich | {count} Übermittlungen in diesem Bereich"
+  },
+  "es": {
+    "loading": "Preparando mapa: cargando envíos conocidos y buscando nuevos. Esto puede tardar un poco.",
+    "overlapTitle": "{count} Envío a esta zona | {count} Envíos a esta zona | {count} Envíos a esta zona"
+  },
+  "fr": {
+    "loading": "Préparation de carte en cours -- chargement de soumissions connues et analyse des soumissions nouvelles. Ceci pourrait prendre un certain temps.",
+    "overlapTitle": "{count} soumission visible | {count} soumissions visibles | {count} soumissions visibles"
+  },
+  "it": {
+    "loading": "Preparazione della mappa: caricamento degli invii noti e ricerca di quelli nuovi. L'operazione potrebbe richiedere alcuni minuti.",
+    "overlapTitle": "{count} Invio in quest'area | {count} Invii in quest'area | {count} Invii in quest'area"
+  },
+  "zh": {
+    "loading": "正在准备地图——正在加载已有提交数据并扫描新增内容，此过程可能需要一些时间。",
+    "overlapTitle": "此区域内有 {count} 条提交数据"
+  },
+  "zh-Hant": {
+    "overlapTitle": "此區域內有{count}筆提交資料"
+  }
+}
+</i18n>

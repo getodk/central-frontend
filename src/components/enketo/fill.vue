@@ -127,6 +127,12 @@ export default {
       "notOpen": "Fomu hii haikubali Mawasilisho mapya kwa sasa"
     }
   },
+  "zh": {
+    "disabled": {
+      "processing": "Web表单尚未就绪，仍在处理中。请稍后刷新重试。",
+      "notOpen": "此表单当前暂不接受新的提交。"
+    }
+  },
   "zh-Hant": {
     "disabled": {
       "processing": "網路表單尚不可用。它尚未完成處理。請稍後重新載入並重試。",

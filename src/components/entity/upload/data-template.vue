@@ -94,6 +94,12 @@ const setFilename = (event) => {
       "downloadTemplate": "Baixar um modelo de dados (.csv)"
     }
   },
+  "zh": {
+    "text": {
+      "full": "如果您不确定，您可以{downloadTemplate}",
+      "downloadTemplate": "下载数据模板（.csv）"
+    }
+  },
   "zh-Hant": {
     "text": {
       "full": "如果您不確定，您可以{downloadTemplate}",

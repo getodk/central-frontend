@@ -187,6 +187,14 @@ export default {
       "idAndVersion": "Kitambulisho na Toleo"
     }
   },
+  "zh": {
+    "header": {
+      "closedForms": "已关闭的表单",
+      "reviewStates": "审核状态",
+      "latest": "最新的",
+      "idAndVersion": "ID与版本"
+    }
+  },
   "zh-Hant": {
     "header": {
       "closedForms": "封閉表單",

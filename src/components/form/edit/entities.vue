@@ -103,9 +103,18 @@ const diffCounts = computed(() => {
 <i18n>
 {
   "de": {
+    "datasetCount": "Übermittlungen an diese Formular-Definition wird {count} Objektliste aktualisieren. | Übermittlungen an diese Formular-Definition werden {count} Objektlisten aktualisieren.",
+    "diffCounts": {
+      "datasetsOnly": "Veröffentlichen dieses Entwurfs aktualisiert {count} Objektliste. | Veröffentlichen dieses Entwurfs aktualisiert {count} Objektlisten.",
+      "newProperties": {
+        "full": "Veröffentlichen dieses Entwurfs aktualisiert {entityLists} und erzeugt {properties}.",
+        "entityLists": "{count} Objektliste | {count} Objektliste",
+        "properties": "{count} Eigenschaft | {count} Eigenschaften"
+      }
+    },
     "cannotDeleteProperties": "Eigenschaften können nicht gelöscht werden.",
-    "notEntityRelated": "Mit dieser Definition werden keine Entitäten aktualisiert.",
-    "whatAreEntities": "Was sind Entitäten?"
+    "notEntityRelated": "Mit dieser Definition werden keine Objekte aktualisiert.",
+    "whatAreEntities": "Was sind Objekte?"
   },
   "es": {
     "datasetCount": "Los envíos a esta definición de formulario actualizarán {count} Lista de entidades. | Los envíos a esta definición de formulario actualizarán {count} Listas de entidades. | Los envíos a esta definición de formulario actualizarán {count} Listas de entidades.",
@@ -150,7 +159,23 @@ const diffCounts = computed(() => {
     "whatAreEntities": "Cosa sono le entità?"
   },
   "pt": {
+    "cannotDeleteProperties": "Propriedades não podem ser excluídas",
+    "notEntityRelated": "Essa definição não atualiza nenhuma Entidade.",
     "whatAreEntities": "O que são Entidades?"
+  },
+  "zh": {
+    "datasetCount": "此表单定义的提交将更新{count}个实体列表。",
+    "diffCounts": {
+      "datasetsOnly": "发布此草稿将更新{count}个实体列表。",
+      "newProperties": {
+        "full": "发布此草稿将更新{entityLists}并创建{properties}。",
+        "entityLists": "{count}个实体列表",
+        "properties": "{count}种属性"
+      }
+    },
+    "cannotDeleteProperties": "属性不可删除。",
+    "notEntityRelated": "此定义不更新任何实体。",
+    "whatAreEntities": "什么是实体？"
   },
   "zh-Hant": {
     "datasetCount": "提交此表格定義將更新{count}個實體清單。",

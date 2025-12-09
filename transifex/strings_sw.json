@@ -226,6 +226,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
+      "entity": {
+        "bulk_delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "kutoa ufikiaji",
@@ -463,6 +473,10 @@
     },
     "collapse": {
       "string": "Punguza",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -886,6 +900,9 @@
       "string": "Hati",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": ""
+    },
     "emptyValue": {
       "string": "(tupu)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -906,6 +923,9 @@
     },
     "loading": {
       "string": "Inapakia..."
+    },
+    "map": {
+      "string": ""
     },
     "no": {
       "string": "Hapana"
@@ -936,6 +956,9 @@
         "string": "mipangilio",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "table": {
+      "string": ""
     },
     "total": {
       "string": "jumla"
@@ -1447,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": ""
+        },
+        "max_geo_per_form": {
+          "string": ""
+        },
+        "num_entity_bulk_deletes": {
+          "string": ""
+        },
+        "num_datasets_with_geometry": {
+          "string": ""
+        },
+        "num_entity_create_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_create_forms": {
+          "string": ""
+        },
+        "num_entity_update_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_update_forms": {
+          "string": ""
+        },
+        "num_entity_create_update_forms": {
+          "string": ""
+        },
+        "num_entities_with_geometry": {
+          "string": ""
         }
       }
     },
@@ -1637,8 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {} other {}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {} other {}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1652,8 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Fomu hutumia Orodha hii ya Huluki} other {Fomu hutumia Orodha hii ya Huluki}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {} other {}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2151,6 +2199,34 @@
         }
       }
     },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": ""
+      },
+      "emptyTable": {
+        "string": ""
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "Hakuna Fomu za kuonyesha.",
@@ -2168,6 +2244,12 @@
       "alert": {
         "delete": {
           "string": ""
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {} other {}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {} other {}}"
         }
       },
       "filterDisabledMessage": {
@@ -2189,6 +2271,14 @@
         "allRestoredOnPage": {
           "string": ""
         }
+      },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {} other {}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": ""
       },
       "action": {
         "download": {
@@ -3453,6 +3543,14 @@
         "enketoDefault": {
           "string": "",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3629,6 +3727,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": ""
+        },
+        "message": {
+          "string": ""
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3661,6 +3777,14 @@
       "forum": {
         "body": {
           "string": ""
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4829,7 +4953,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4883,6 +5007,12 @@
       "noMatching": {
         "string": "Hakuna Mawasilisho yanayolingana."
       },
+      "emptyMap": {
+        "string": ""
+      },
+      "learnMoreMap": {
+        "string": ""
+      },
       "allDeleted": {
         "string": ""
       },
@@ -4895,6 +5025,9 @@
       "filterDisabledMessage": {
         "string": ""
       },
+      "noMapEncryption": {
+        "string": ""
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": ""
@@ -4905,6 +5038,9 @@
         "allRestoredOnPage": {
           "string": ""
         }
+      },
+      "noMapDeleted": {
+        "string": ""
       },
       "loading": {
         "withoutCount": {
@@ -4948,6 +5084,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": ""
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {} other {}}"
       }
     },
     "SubmissionRestore": {
@@ -5007,6 +5161,12 @@
           "string": "Vidokezo na maoni (si lazima)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5089,6 +5249,10 @@
         "sitewideRole": {
           "string": "Jukumu la Tovuti nzima",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5187,6 +5351,9 @@
           "string": "Staafu mtumiaji",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": ""
       }
     },
     "WebFormRenderer": {

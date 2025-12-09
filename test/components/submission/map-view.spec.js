@@ -229,7 +229,7 @@ describe('SubmissionMapView', () => {
       const message = app.get('.empty-table-message');
       message.should.be.visible();
       const text = message.text();
-      text.should.equal('No map data available yet. Submissions only appear if they include data in the first geo field.');
+      text.should.equal('No map data available yet. Submissions only appear if they include data in the first geo field. Learn more about mapping Submissions');
       countFeatures(app).should.equal(0);
     });
 
@@ -240,6 +240,22 @@ describe('SubmissionMapView', () => {
       message.text().should.equal('There are no matching Submissions.');
       countFeatures(app).should.equal(0);
     });
+
+    it('hides the empty message during a new request for GeoJSON', () =>
+      load('/projects/1/forms/f/submissions?map=true', { attachTo: document.body })
+        .afterResponses(app => {
+          app.get('.empty-table-message').should.be.visible();
+        })
+        .request(changeMultiselect('#submission-filters-review-state', [1]))
+        .beforeAnyResponse(app => {
+          app.get('.empty-table-message').should.be.hidden();
+          app.get('#map-view .loading').should.be.visible();
+        })
+        .respondWithData(testData.submissionGeojson)
+        .afterResponse(app => {
+          app.get('.empty-table-message').should.be.visible();
+          app.get('#map-view .loading').should.be.hidden();
+        }));
 
     it('hides the empty message after toggling to map view', () =>
       load('/projects/1/forms/f/submissions')
@@ -260,20 +276,6 @@ describe('SubmissionMapView', () => {
           app.get('.empty-table-message').should.be.hidden();
           countFeatures(app).should.equal(1);
         }));
-  });
-
-  // Submissions with geo data are a subset of all submissions, so we don't show
-  // the count of all submissions when loading the map.
-  it('does not show the submission count in the loading message', () => {
-    testData.extendedForms.createPast(1, { fields: [mypoint] });
-    testData.extendedSubmissions.createPast(1, { mypoint: 'POINT (1 2)' });
-    return load('/projects/1/forms/f/submissions')
-      .complete()
-      .request(toggleView('map'))
-      .beforeAnyResponse(app => {
-        app.get('#odata-loading-message').text().should.equal('Loading Submissions…');
-      })
-      .respondWithData(testData.submissionGeojson);
   });
 
   it('does not update the tab badge', async () => {

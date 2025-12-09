@@ -103,6 +103,18 @@ const placeholder = (counts) => {
       "none": "Nessuno/a"
     }
   },
+  "pt": {
+    "action": {
+      "all": "Todos",
+      "none": "Nenhum"
+    }
+  },
+  "zh": {
+    "action": {
+      "all": "全部",
+      "none": "无"
+    }
+  },
   "zh-Hant": {
     "action": {
       "all": "全部",

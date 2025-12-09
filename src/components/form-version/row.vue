@@ -97,6 +97,9 @@ defineEmits(['view-xml']);
   "pt": {
     "current": "Versão publicada atualmente"
   },
+  "zh": {
+    "current": "当前已发布版本"
+  },
   "zh-Hant": {
     "current": "當前已發布版本"
   }

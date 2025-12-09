@@ -44,7 +44,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "editForm": {
-        "string": "",
+        "string": "Upravit formulář",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -137,7 +137,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "",
+        "string": "Všechny akce",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -173,7 +173,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "task": {
-        "string": "",
+        "string": "Provoz systému",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -226,6 +226,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
+      "entity": {
+        "bulk_delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "Dát přístup",
@@ -262,7 +272,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "",
+          "string": "Obnovit",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -282,7 +292,7 @@
       },
       "submission": {
         "purge": {
-          "string": "",
+          "string": "Vyčištění podání",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -296,11 +306,11 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "process_form_entities_version": {
-          "string": "",
+          "string": "Označit formulář pro aktualizaci",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "server": {
-          "string": "",
+          "string": "Nová verze",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -346,7 +356,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "",
+      "string": "Nové Podání",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
@@ -410,7 +420,7 @@
       "developer_comment": "This is the text of a button that refreshes data."
     },
     "refreshPage": {
-      "string": "",
+      "string": "Obnovit stranu",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "resetPassword": {
@@ -434,7 +444,7 @@
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
     "undo": {
-      "string": "",
+      "string": "Zpět",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
@@ -463,6 +473,10 @@
     },
     "collapse": {
       "string": "Sbalit",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -641,7 +655,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "attachments": {
-      "string": "",
+      "string": "Přílohy",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -735,13 +749,13 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": ""
+      "string": "Heslo musí mít nejméně 10 znaků."
     },
     "updateEntity": {
-      "string": ""
+      "string": "Entita byla úspěšně aktualizována."
     },
     "updateReviewState": {
-      "string": ""
+      "string": "Kontrola úspěšně uložena"
     },
     "versionChange": {
       "string": ""
@@ -886,6 +900,9 @@
       "string": "Dokumentace",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": ""
+    },
     "emptyValue": {
       "string": "(prázdný)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -906,6 +923,9 @@
     },
     "loading": {
       "string": "Načítání..."
+    },
+    "map": {
+      "string": "Mapa"
     },
     "no": {
       "string": "Ne"
@@ -937,6 +957,9 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
+    "table": {
+      "string": ""
+    },
     "total": {
       "string": "Celkem"
     },
@@ -962,13 +985,13 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "beta": {
-      "string": ""
+      "string": "Beta"
     },
     "none": {
-      "string": ""
+      "string": "(žádný)"
     },
     "search": {
-      "string": ""
+      "string": "Hledat"
     }
   },
   "mixin": {
@@ -1447,6 +1470,33 @@
         },
         "num_entity_creates_bulk": {
           "string": ""
+        },
+        "max_geo_per_form": {
+          "string": ""
+        },
+        "num_entity_bulk_deletes": {
+          "string": ""
+        },
+        "num_datasets_with_geometry": {
+          "string": ""
+        },
+        "num_entity_create_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_create_forms": {
+          "string": ""
+        },
+        "num_entity_update_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_update_forms": {
+          "string": ""
+        },
+        "num_entity_create_update_forms": {
+          "string": ""
+        },
+        "num_entities_with_geometry": {
+          "string": ""
         }
       }
     },
@@ -1637,8 +1687,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1652,8 +1701,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2151,6 +2199,34 @@
         }
       }
     },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": ""
+      },
+      "emptyTable": {
+        "string": ""
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "Nejsou zde žádné subjekty, které by bylo možné zobrazit.",
@@ -2168,6 +2244,12 @@
       "alert": {
         "delete": {
           "string": ""
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
         }
       },
       "filterDisabledMessage": {
@@ -2189,6 +2271,14 @@
         "allRestoredOnPage": {
           "string": ""
         }
+      },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": ""
       },
       "action": {
         "download": {
@@ -3453,6 +3543,14 @@
         "enketoDefault": {
           "string": "",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3629,6 +3727,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": ""
+        },
+        "message": {
+          "string": ""
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3661,6 +3777,14 @@
       "forum": {
         "body": {
           "string": ""
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4829,7 +4953,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4883,6 +5007,12 @@
       "noMatching": {
         "string": "Neexistují žádné odpovídající příspěvky."
       },
+      "emptyMap": {
+        "string": ""
+      },
+      "learnMoreMap": {
+        "string": ""
+      },
       "allDeleted": {
         "string": ""
       },
@@ -4895,6 +5025,9 @@
       "filterDisabledMessage": {
         "string": ""
       },
+      "noMapEncryption": {
+        "string": ""
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": ""
@@ -4905,6 +5038,9 @@
         "allRestoredOnPage": {
           "string": ""
         }
+      },
+      "noMapDeleted": {
+        "string": ""
       },
       "loading": {
         "withoutCount": {
@@ -4948,6 +5084,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": ""
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "SubmissionRestore": {
@@ -5007,6 +5161,12 @@
           "string": "Poznámky a komentáře (volitelné)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5089,6 +5249,10 @@
         "sitewideRole": {
           "string": "Role úplného přístupu",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5187,6 +5351,9 @@
           "string": "Uspat uživatele",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": ""
       }
     },
     "WebFormRenderer": {

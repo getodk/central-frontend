@@ -397,7 +397,7 @@ export default {
             "Sie können die Übermittlungsdaten nicht mehr online bearbeiten oder anschauen.",
             "Sie werden nicht mehr in der Lage sein, Daten über OData zu analysieren.",
             "Sie können Übermittlungen nicht mehr in ihrem Webbrowser bearbeiten.",
-            "Neue Einreichungen werden nicht mehr zu Entitäten verarbeitet."
+            "Neue Einreichungen werden nicht mehr zu Objekte verarbeitet."
           ],
           [
             "Außerdem treffen die folgenden Punkte in dieser Version von ODK Central zu:",
@@ -782,6 +782,60 @@ export default {
     },
     "alert": {
       "passphraseTooShort": "Tafadhali weka kaulisiri yenye urefu wa angalau vibambo 10."
+    }
+  },
+  "zh": {
+    "title": "使用加密",
+    "steps": [
+      {
+        "introduction": [
+          [
+            "如果您启用加密，以下情况将会发生：",
+            "已最终提交的数据将在移动设备上被加密。",
+            "静态提交数据将在Central服务器端加密存储。",
+            [
+              "配置了手动{submission}密钥的表单将继续使用原有密钥，且需手动解密。",
+              "若需对这些表单启用Central自动加密流程，请移除{base64RsaPublicKey}配置项。"
+            ],
+            "您将无法在线编辑或查看提交数据。",
+            "您将无法通过OData分析数据。",
+            "您将无法在网页浏览器中编辑提交数据。",
+            "新提交的数据将不再处理至实体。"
+          ],
+          [
+            "此外，此版本ODK Central中以下情况适用：",
+            [
+              "现有提交数据将保持未加密状态。"
+            ],
+            [
+              "加密功能一旦启用将无法关闭。"
+            ],
+            "现有草稿表单的测试提交数据将被永久删除。"
+          ],
+          {
+            "full": "您可在{here}了解更多加密相关信息。若确认启用，请点击“下一步”继续。",
+            "here": "此处"
+          }
+        ]
+      },
+      {
+        "introduction": [
+          "首先，您需要设置一个安全密钥。该口令将用于解密您所提交的数据。为保护您的隐私，服务器不会保存此口令：只有持有该口令的人员，才能解密并查阅您提交的数据。",
+          {
+            "full": "如果您遗失了该安全密钥，将无法{no}找回它或您的数据！",
+            "no": "否"
+          }
+        ]
+      }
+    ],
+    "success": [
+      "加密功能已在此项目中配置完成。所有移动设备必须获取或重新获取最新版本的表单，才可以启用加密。"
+    ],
+    "field": {
+      "hint": "安全密钥提示（可选）"
+    },
+    "alert": {
+      "passphraseTooShort": "请输入至少10个字符长的安全密钥。"
     }
   },
   "zh-Hant": {

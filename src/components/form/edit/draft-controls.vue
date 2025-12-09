@@ -134,6 +134,14 @@ const abandonText = computed(() => (!form.dataExists
       "publish": "Chapisha Rasimu"
     }
   },
+  "zh": {
+    "action": {
+      "delete": "删除表单",
+      "abandon": "放弃草稿",
+      "publish": "发布草稿"
+    },
+    "title": "准备发布"
+  },
   "zh-Hant": {
     "action": {
       "delete": "刪除表單",

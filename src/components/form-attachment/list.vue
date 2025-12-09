@@ -376,7 +376,8 @@ export default {
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
     },
     "alert": {
-      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen."
+      "success": "{count} Datei wurde erfolgreich hochgeladen. | {count} Dateien wurden erfolgreich hochgeladen.",
+      "link": "Objektliste erfolgreich verknüpft."
     }
   },
   "es": {
@@ -449,7 +450,8 @@ export default {
       "someUploaded": "{message} Apenas {uploaded} de {total} arquivo foi carregado com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso."
     },
     "alert": {
-      "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso."
+      "success": "{count} arquivo foi carregado com sucesso. | {count} arquivos foram carregados com sucesso. | {count} arquivos foram carregados com sucesso.",
+      "link": "Lista de Entidades vinculada com sucesso."
     }
   },
   "sw": {
@@ -459,6 +461,20 @@ export default {
     },
     "alert": {
       "success": "faili {count} imepakiwa. | faili {count} zimepakiwa."
+    }
+  },
+  "zh": {
+    "action": {
+      "upload": "选择文件"
+    },
+    "orDrag": "或将文件拖拽至此以上传",
+    "problem": {
+      "noneUploaded": "{message}没有文件上传成功。",
+      "someUploaded": "{message} 成功上传 {uploaded}/{total} 个文件。"
+    },
+    "alert": {
+      "success": "{count}个文件已成功上传。",
+      "link": "实体清单已成功关联。"
     }
   },
   "zh-Hant": {

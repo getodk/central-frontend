@@ -290,6 +290,25 @@ const { projectPath, formPath } = useRoutes();
       }
     ]
   },
+  "zh": {
+    "title": "提交选项",
+    "introduction": [
+      "向ODK Central提交数据有以下几种方式：",
+      {
+        "full": "创建{appUsers}并使用{collect}安卓应用程序。此方式最适合数据收集员需访问多个表单、处于离线状态或使用复杂表单的场景。",
+        "appUsers": "APP用户"
+      },
+      {
+        "full": "创建一个或多个{publicLinks}，供受访者自行填报数据。",
+        "publicLinks": "公开访问链接"
+      },
+      {
+        "full": "为每位数据收集员创建角色为{dataCollector}的{webUser}。这些用户将登录Central平台，通过网页浏览器填写表单。项目经理也可通过网页浏览器创建提交记录。",
+        "webUser": "网页用户",
+        "dataCollector": "数据收集者"
+      }
+    ]
+  },
   "zh-Hant": {
     "title": "提交選項",
     "introduction": [

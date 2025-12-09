@@ -41,6 +41,7 @@ describe('EntityList', () => {
           searchParams.get('$top').should.be.eql('0');
         }
       },
+      { url: '/v1/projects/1/datasets/trees/entities/creators' },
       {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)
@@ -49,7 +50,6 @@ describe('EntityList', () => {
           searchParams.get('$top').should.be.eql('250');
         }
       },
-      { url: '/v1/projects/1/datasets/trees/entities/creators' },
     ]);
   });
 
@@ -88,8 +88,8 @@ describe('EntityList', () => {
       let initialTime;
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
-      const assertRowCount = (count, responseIndex = 0) => (component, _, i) => {
-        if (i === responseIndex) {
+      const assertRowCount = (count) => (component, _, i) => {
+        if (i === 0 || i == null) {
           component.findAllComponents(EntityMetadataRow).length.should.equal(count);
           component.findAllComponents(EntityDataRow).length.should.equal(count);
         }
@@ -188,20 +188,23 @@ describe('EntityList', () => {
       });
     });
 
-    it('does not show the modal during a refresh of the table', () => {
+    it('cancels a background refresh of the table', () => {
       testData.extendedEntities.createPast(1);
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .complete()
         .request(component =>
           component.get('#refresh-button').trigger('click'))
-        .beforeEachResponse(async (component) => {
-          await component.get('.entity-metadata-row .update-button').trigger('click');
-          component.getComponent(EntityUpdate).props().state.should.be.false;
+        .beforeAnyResponse(component =>
+          component.get('.entity-metadata-row .update-button').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedEntities.createNew();
+          return testData.entityOData();
         })
-        .respondWithData(testData.entityOData)
         .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
-          component.getComponent(EntityUpdate).props().state.should.be.false;
+          component.getComponent(EntityUpdate).props().state.should.be.true;
+          // The new entity from the refresh response is not shown in the table.
+          component.findAllComponents(EntityMetadataRow).length.should.equal(1);
         });
     });
 
@@ -317,7 +320,7 @@ describe('EntityList', () => {
         });
     });
 
-    it('does not show the modal during a refresh of the table', () => {
+    it('cancels a background refresh of the table', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
 
@@ -325,14 +328,17 @@ describe('EntityList', () => {
         .complete()
         .request(component =>
           component.get('#refresh-button').trigger('click'))
-        .beforeEachResponse(async (component) => {
-          await component.get('.entity-metadata-row .resolve-button').trigger('click');
-          component.getComponent(EntityResolve).props().state.should.be.false;
+        .beforeAnyResponse(component =>
+          component.get('.entity-metadata-row .resolve-button').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedEntities.createNew();
+          return testData.entityOData();
         })
-        .respondWithData(testData.entityOData)
         .respondWithData(testData.entityDeletedOData)
-        .afterResponse(component => {
-          component.getComponent(EntityResolve).props().state.should.be.false;
+        .respondWithData(relevantToConflict)
+        .afterResponses(component => {
+          component.getComponent(EntityResolve).props().state.should.be.true;
+          component.findAllComponents(EntityMetadataRow).length.should.equal(1);
         });
     });
 
@@ -598,11 +604,7 @@ describe('EntityList', () => {
       });
       return load(
         '/projects/1/entity-lists/trees/entities?deleted=true',
-        { root: false, attachTo: document.body },
-        {
-          deletedEntityCount: false,
-          odataEntities: testData.entityDeletedOData
-        }
+        { root: false, attachTo: document.body }
       );
     };
 
@@ -785,31 +787,6 @@ describe('EntityList', () => {
           .afterResponse(component => {
             component.should.alert('success', 'Entity “My Entity” has been restored.');
           }));
-
-      // see the comment above in the similar test for delete Entity
-      it('does not hide table after undeleting last entity if entities are concurrently replaced', () =>
-        restoreAndCheck()
-          .request(async (component) => {
-            await component.get('#refresh-button').trigger('click');
-            return component.get('.entity-metadata-row .restore-button').trigger('click');
-          })
-          .respondWithData(() => {
-            testData.extendedEntities.splice(0);
-            testData.extendedEntities.createNew({ deletedAt: new Date().toISOString() });
-            testData.extendedEntities.createNew({ deletedAt: new Date().toISOString() });
-            return testData.entityDeletedOData();
-          })
-          .respondWithSuccess()
-          .afterResponses(component => {
-            component.get('#entity-table').should.be.visible();
-            component.find('[data-mark-rows-deleted]').exists().should.be.false;
-          })
-          .request(component =>
-            component.get('.entity-metadata-row .restore-button').trigger('click'))
-          .respondWithSuccess()
-          .afterResponse(component => {
-            component.get('#entity-table').should.be.visible();
-          }));
     });
   });
 
@@ -989,11 +966,7 @@ describe('EntityList', () => {
       testData.extendedEntities.createPast(1, { label: 'deleted 1', deletedAt: new Date().toISOString() });
       const app = await load(
         '/projects/1/entity-lists/trees/entities?deleted=true',
-        { root: false, attachTo: document.body },
-        {
-          deletedEntityCount: false,
-          odataEntities: testData.entityDeletedOData
-        }
+        { root: false, attachTo: document.body }
       );
       const button = app.getComponent('#entity-download-button');
       button.get('.btn-primary').classes().should.include('disabled');
@@ -1031,11 +1004,11 @@ describe('EntityList', () => {
 
     it('should read searched text from the URL', () =>
       load('/projects/1/entity-lists/trees/entities?search=john', { root: false })
-        .beforeEachResponse((_, { url }, index) => {
-          if (index !== 1) return;
-          const search = relativeUrl(url).searchParams.get('$search');
-          search.should.be.equal('john');
-        }));
+        .testRequestsInclude([{
+          url: ({ searchParams }) => {
+            searchParams.get('$search').should.be.equal('john');
+          }
+        }]));
 
     it('should re-renders the table after enter is pressed', () => {
       testData.extendedEntities.createPast(1);

@@ -154,6 +154,28 @@ export default {
       }
     }
   },
+  "pt": {
+    "action": {
+      "download": {
+        "unfiltered": "Baixar {count} Resposta | Baixar todas as {count} Respostas | Baixar todas as {count} Respostas",
+        "filtered": {
+          "withoutCount": "Baixar todas as Respostas filtradas",
+          "withCount": "Baixar {count} Resposta filtrada | Baixar {count} Respostas filtradas | Baixar {count} Respostas filtradas"
+        }
+      }
+    }
+  },
+  "zh": {
+    "action": {
+      "download": {
+        "unfiltered": "下载全部{count}个提交的内容",
+        "filtered": {
+          "withoutCount": "下载符合条件的所有提交内容",
+          "withCount": "下载个{count}个符合筛选条件的提交"
+        }
+      }
+    }
+  },
   "zh-Hant": {
     "action": {
       "download": {

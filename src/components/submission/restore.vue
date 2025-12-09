@@ -147,6 +147,17 @@ const restore = () => {
       "noConfirm": "Recuperar imediatamente sem pedir confirmação até que eu saia desta página"
     }
   },
+  "zh": {
+    "title": "恢复提交",
+    "introduction": [
+      "您确定要恢复此条提交数据吗？",
+      "该提交数据将恢复至先前状态，包括标注等相关数据也将一并还原。",
+      "若再次删除此提交数据，系统将在30天后执行永久清除。"
+    ],
+    "field": {
+      "noConfirm": "在我离开页面前，无需确认立即恢复"
+    }
+  },
   "zh-Hant": {
     "title": "恢復提交內容",
     "introduction": [

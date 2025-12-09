@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Select row",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Reset",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "your",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Send me occasional emails about new features and best practices."
     }
   },
   "submission": {
@@ -1470,6 +1477,33 @@
         },
         "num_entity_creates_bulk": {
           "string": "Number of Entities created via bulk upload"
+        },
+        "max_geo_per_form": {
+          "string": "Maximum number of Submissions with geo data in a Form"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Number of bulk Entity delete Audit Log Events"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Number of Entity Lists with geometry property"
+        },
+        "num_entity_create_forms": {
+          "string": "Number of Forms that create Entities"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Number of Forms that create Entities in repeats"
+        },
+        "num_entity_update_forms": {
+          "string": "Number of Forms that update Entities"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Number of Forms that update Entities in repeats"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Number of Forms that both create and update Entities"
+        },
+        "num_entities_with_geometry": {
+          "string": "Number of Entities with geometry data"
         }
       }
     },
@@ -2208,6 +2242,9 @@
       "noMatching": {
         "string": "There are no matching Entities."
       },
+      "emptyMap": {
+        "string": "Entities only appear if they include data in the geometry property."
+      },
       "allDeleted": {
         "string": "All Entities are deleted."
       },
@@ -2230,6 +2267,9 @@
       },
       "searchDisabledMessage": {
         "string": "Search is unavailable for deleted Entities"
+      },
+      "mapDisabled": {
+        "string": "Map is unavailable for deleted Entities"
       },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Entities"
@@ -2270,6 +2310,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Preparing map. This could take a while."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
     "EntityMetadataRow": {
@@ -2380,6 +2428,9 @@
           "string": "Updated Value",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "Geometry can’t be updated from the map."
       },
       "problem": {
         "409_15": {
@@ -3708,6 +3759,14 @@
       "zoomToFit": {
         "string": "Zoom to fit all data",
         "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Graphics issue detected."
+        },
+        "message": {
+          "string": "Your browser cannot display the map now. Enable graphics acceleration settings."
+        }
       }
     },
     "Home": {
@@ -3742,6 +3801,14 @@
       "forum": {
         "body": {
           "string": "Need help? Visit the forum to ask questions or browse past discussions."
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "Back to list",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4967,6 +5034,9 @@
       "emptyMap": {
         "string": "Submissions only appear if they include data in the first geo field."
       },
+      "learnMoreMap": {
+        "string": "Learn more about mapping Submissions"
+      },
       "allDeleted": {
         "string": "All Submissions are deleted."
       },
@@ -5044,6 +5114,18 @@
       "missingField": {
         "string": "This Submission was mapped using {field}, which isn’t in the published Form version.",
         "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "Map references this field",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": "Preparing map — loading known Submissions and scanning for new ones. This could take a while."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Submission in this area} other {{count} Submissions in this area}}"
       }
     },
     "SubmissionRestore": {
@@ -5385,17 +5467,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Form drafts have moved",
+        "string": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Create a new Form and edit it on the new Edit Form tab"
-      },
-      "action": {
-        "gotIt": {
-          "string": "Got it!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
       }
     }
   },

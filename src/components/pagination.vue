@@ -273,6 +273,18 @@ const sizeModel = computed({
       "size": "por página"
     }
   },
+  "zh": {
+    "action": {
+      "first": "首页",
+      "previous": "上一页",
+      "next": "下一页",
+      "last": "末页"
+    },
+    "rows": "第{range}行/共{count}行",
+    "field": {
+      "size": "每页显示"
+    }
+  },
   "zh-Hant": {
     "action": {
       "first": "第一頁",

@@ -32,6 +32,11 @@ except according to the terms contained in the LICENSE file.
             <form-group v-model="password" type="password"
               :placeholder="$t('field.password')" required
               autocomplete="current-password"/>
+            <div v-if="showMailingListOptIn" id="mailing-list-opt-in" class="checkbox">
+              <label>
+                <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
+              </label>
+            </div>
             <div class="panel-footer">
               <button type="submit" class="btn btn-primary"
                 :aria-disabled="disabled">
@@ -69,14 +74,15 @@ export default {
     return !this.disabled;
   },
   setup() {
-    const { session } = useRequestData();
-    return { session };
+    const { currentUser, session } = useRequestData();
+    return { currentUser, session };
   },
   data() {
     return {
       disabled: false,
       email: '',
-      password: ''
+      password: '',
+      mailingListOptIn: true,
     };
   },
   computed: {
@@ -85,6 +91,9 @@ export default {
       const next = typeof query.next === 'string' ? query.next : null;
       const qs = queryString({ next });
       return `/v1/oidc/login${qs}`;
+    },
+    showMailingListOptIn() {
+      return this.$route.query.source === 'claim';
     }
   },
   created() {
@@ -178,6 +187,9 @@ export default {
       })
         .then(() => logIn(this.container, true))
         .then(() => {
+          if (this.showMailingListOptIn) {
+            this.currentUser.preferences.site.mailingListOptIn = this.mailingListOptIn;
+          }
           this.navigateToNext(
             this.$route.query.next,
             (location) => {
@@ -251,7 +263,8 @@ export default {
   },
   "de": {
     "alert": {
-      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten."
+      "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten.",
+      "changePassword": "Um Ihr Konto zu schützen, achten Sie darauf, dass Ihr Passwort mindestens 10 Zeichen lang ist."
     },
     "oidc": {
       "body": "Klicken Sie auf Weiter, um zur Anmeldeseite zu gelangen.",
@@ -338,7 +351,8 @@ export default {
   },
   "pt": {
     "alert": {
-      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar."
+      "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar.",
+      "changePassword": "Para proteger a sua conta, certifique-se que sua senha tem 10 caracteres ou mais."
     },
     "oidc": {
       "body": "Clique em Continuar para prosseguir para a página de login.",
@@ -368,6 +382,24 @@ export default {
     },
     "problem": {
       "401_2": "Anwani ya barua pepe na/au nenosiri si sahihi."
+    }
+  },
+  "zh": {
+    "alert": {
+      "alreadyLoggedIn": "已有用户登录，请刷新页面继续。",
+      "changePassword": "为保护您的账户安全，请确保密码长度不少于10个字符。"
+    },
+    "oidc": {
+      "body": "点击“继续”前往登录页面。",
+      "error": {
+        "auth-ok-user-not-found": "您的邮箱地址没有关联的Central账户。请联系Central管理员为您创建账户以继续操作。",
+        "email-not-verified": "您的邮箱地址尚未通过登录服务器验证。请联系系统管理员。",
+        "email-claim-not-provided": "Central无法访问您账户关联的邮箱地址。这可能是因为服务器管理员配置有误，或未为您的账户设置邮箱地址。也可能是您在登录过程中选择了隐私选项所致。如是后者，请重试并确保已勾选共享邮箱信息。",
+        "internal-server-error": "登录过程中出现错误，请联系服务器管理员。"
+      }
+    },
+    "problem": {
+      "401_2": "邮箱地址和/或密码不正确。"
     }
   },
   "zh-Hant": {

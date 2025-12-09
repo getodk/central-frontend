@@ -68,6 +68,9 @@ export default {
   "pt": {
     "noLogDateSelected": "(nenhum)"
   },
+  "zh": {
+    "noLogDateSelected": "（无）"
+  },
   "zh-Hant": {
     "noLogDateSelected": "(無)"
   }

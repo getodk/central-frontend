@@ -22,12 +22,7 @@ export default () => {
       result.__system = reactive(result.__system);
       return result;
     },
-    instanceName: computeIfExists(() => {
-      const { meta } = submission;
-      if (meta == null || typeof meta !== 'object') return null;
-      const { instanceName } = meta;
-      return typeof instanceName === 'string' ? instanceName : null;
-    }),
+    instanceName: computeIfExists(() => submission.meta?.instanceName),
     instanceNameOrId: computeIfExists(() =>
       submission.instanceName ?? submission.__id)
   }));
