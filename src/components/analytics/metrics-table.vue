@@ -921,7 +921,16 @@ export default {
       "num_reset_failed_to_pending_count": "使用者重置上傳到 S3 相容儲存失敗的次數",
       "num_entity_creates_sub": "透過提交創建的實體數量",
       "num_entity_creates_api": "透過API建立的實體數量",
-      "num_entity_creates_bulk": "透過批次上傳建立的實體數量"
+      "num_entity_creates_bulk": "透過批次上傳建立的實體數量",
+      "max_geo_per_form": "表單中具有地理資料的提交次數上限",
+      "num_entity_bulk_deletes": "批次刪除實體的稽核日誌事件數量",
+      "num_datasets_with_geometry": "具有地理資料的實體清單數量",
+      "num_entity_create_forms": "可建立實體的表單數量",
+      "num_repeat_entity_create_forms": "可建立重複實體的表單數量",
+      "num_entity_update_forms": "可更新實體的表單數量",
+      "num_repeat_entity_update_forms": "可更新重複實體的表單數量",
+      "num_entity_create_update_forms": "建立並更新實體的表單數量",
+      "num_entities_with_geometry": "含有地理資料的實體數量"
     }
   }
 }

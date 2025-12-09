@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Zeile auswählen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Zurücksetzen",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "dein",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Senden Sie mir gelegentlich E-Mails über neue Funktionen und bewährte Verfahren."
     }
   },
   "submission": {
@@ -2235,6 +2242,9 @@
       "noMatching": {
         "string": "Es gibt keine passenden Objekte."
       },
+      "emptyMap": {
+        "string": "Entitäten werden nur angezeigt, wenn sie Daten in der Geometrieeigenschaft enthalten."
+      },
       "allDeleted": {
         "string": "Alle Objekte werden gelöscht."
       },
@@ -2257,6 +2267,9 @@
       },
       "searchDisabledMessage": {
         "string": "Die Suche nach gelöschten Objekte ist nicht verfügbar"
+      },
+      "mapDisabled": {
+        "string": "Karte nach gelöschten Objekte ist nicht verfügbar"
       },
       "downloadDisabled": {
         "string": "Der Download ist für gelöschte Objekte nicht verfügbar"
@@ -2297,6 +2310,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Karte wird vorbereitet. Dies kann einen Moment dauern."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entität in diesem Umkreis} other {{count} Entitäten in diesem Umkreis}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2428,9 @@
           "string": "Aktualisierter Wert",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "Die Geometrie kann nicht über die Karte aktualisiert werden."
       },
       "problem": {
         "409_15": {
@@ -2559,7 +2583,7 @@
           "string": "Aktualisieren Sie jetzt, um Ihre Daten zu schützen und von den neuesten Funktionen zu profitieren."
         },
         "sentence2": {
-          "string": "Wenn Sie Central nicht pflegen wollen, versuchen Sie  {OdkCloudLink}.",
+          "string": "Wenn Sie Central nicht pflegen wollen, versuchen Sie {OdkCloudLink}.",
           "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
         }
       }
@@ -5443,17 +5467,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Formularentwürfe wurden verschoben",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Erstellen Sie ein neues Formular und bearbeiten Sie es auf der neuen Registerkarte Formular bearbeiten"
-      },
-      "action": {
-        "gotIt": {
-          "string": "Ich hab's!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": ""
       }
     }
   },
