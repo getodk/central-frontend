@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "选择行",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "重设",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "您的",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "不定期向我发送有关新功能和最佳实践的电子邮件。"
     }
   },
   "submission": {
@@ -2235,6 +2242,9 @@
       "noMatching": {
         "string": "没有匹配的实体。"
       },
+      "emptyMap": {
+        "string": ""
+      },
       "allDeleted": {
         "string": "所有实体已被删除。"
       },
@@ -2257,6 +2267,9 @@
       },
       "searchDisabledMessage": {
         "string": "搜索功能对已删除的实体不可用"
+      },
+      "mapDisabled": {
+        "string": ""
       },
       "downloadDisabled": {
         "string": "下载功能对已删除的实体不可用"
@@ -2297,6 +2310,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "正在准备地图。这可能需要一段时间。"
+      },
+      "overlapTitle": {
+        "string": "{count, plural, other {此区域内有{count}个实体}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2428,9 @@
           "string": "更新后的数值",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": ""
       },
       "problem": {
         "409_15": {
@@ -5443,17 +5467,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "表单草稿位置已更新",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "请创建新表单，并在“编辑表单”标签页中进行编辑。"
-      },
-      "action": {
-        "gotIt": {
-          "string": "知道了！",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": ""
       }
     }
   },

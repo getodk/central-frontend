@@ -126,6 +126,7 @@ defineExpose({
     "overlapTitle": "此区域内有 {count} 条提交数据"
   },
   "zh-Hant": {
+    "loading": "正在準備地圖——正在載入已有提交資料並掃描新增內容，此過程可能需要一些時間。",
     "overlapTitle": "此區域內有{count}筆提交資料"
   }
 }

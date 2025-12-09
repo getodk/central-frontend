@@ -225,6 +225,7 @@ const currentVersion = computed(() =>
       "currentValue": "Aktueller Wert",
       "updatedValue": "Aktualisierter Wert"
     },
+    "geometryDisabled": "Die Geometrie kann nicht über die Karte aktualisiert werden.",
     "problem": {
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
     }
@@ -235,6 +236,7 @@ const currentVersion = computed(() =>
       "currentValue": "Valor actual",
       "updatedValue": "Valor actualizado"
     },
+    "geometryDisabled": "La geometría no se puede actualizar desde el mapa.",
     "problem": {
       "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
     }
@@ -245,6 +247,7 @@ const currentVersion = computed(() =>
       "currentValue": "Valeur actuelle",
       "updatedValue": "Valeur Mise à jour"
     },
+    "geometryDisabled": "La géométrie ne peut être modifiée depuis la carte.",
     "problem": {
       "409_15": "Les données ont été modifiées par un autre utilisateur. Merci de rafraîchir pour voir les données mises à jour."
     }
@@ -255,6 +258,7 @@ const currentVersion = computed(() =>
       "currentValue": "Valore corrente",
       "updatedValue": "Valore aggiornato"
     },
+    "geometryDisabled": "La geometria non può essere aggiornata dalla mappa.",
     "problem": {
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
