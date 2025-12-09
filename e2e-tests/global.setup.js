@@ -15,7 +15,7 @@ setup('create new project', async ({ request }) => {
       name: `E2E Test - ${(new Date()).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}`
     }
   });
-  expect(createProjectResponse.ok()).toBeTruthy();
+  expect(createProjectResponse).toBeOK();
   const project = await createProjectResponse.json();
 
   expect(project.id).not.toBeFalsy();
