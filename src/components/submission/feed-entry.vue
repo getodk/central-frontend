@@ -207,9 +207,7 @@ export default {
 
 .submission-feed-entry {
   .entity-error-message{
-    font-size: 12px;
     margin: 10px;
-    font-weight: normal;
   }
 
   .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
