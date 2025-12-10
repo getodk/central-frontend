@@ -55,6 +55,7 @@ export PW_EXPERIMENTAL_SERVICE_WORKER_NETWORK_EVENTS=1
 if [[ ${CI-} = true ]]; then
   log "Installing apt dependencies..."
   sudo apt-get install -y wait-for-it
+  sudo -k
 
   log "Waiting for ODK Central to start..."
   wait-for-it $ODK_DOMAIN:$ODK_PORT --strict --timeout=60 -- echo '[e2e-tester] odk-central is UP!'
@@ -74,6 +75,7 @@ log "Playwright: $(npx playwright --version)"
 
 log "Installing playwright deps..."
 npx playwright install --with-deps
+sudo -k
 
 log "Running playwright tests..."
 npx playwright test ${PLAYWRIGHT_UI:+--ui}
