@@ -6,18 +6,35 @@ const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 
 setup('create new project', async ({ request }) => {
-  const createProjectResponse = await request.post(`${appUrl}/v1/projects`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${credentials}`
-    },
-    data: {
-      name: `E2E Test - ${(new Date()).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}`
-    }
-  });
-  expect(createProjectResponse.ok()).toBeTruthy();
-  const project = await createProjectResponse.json();
+  try {
+    const createProjectResponse = await request.post(`${appUrl}/v1/projects`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${credentials}`
+      },
+      data: {
+        name: `E2E Test - ${(new Date()).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}`
+      }
+    });
 
-  expect(project.id).not.toBeFalsy();
-  process.env.PROJECT_ID = project.id;
+    expect(createProjectResponse.ok()).toBeTruthy();
+    const project = await createProjectResponse.json();
+
+    expect(project.id).not.toBeFalsy();
+    process.env.PROJECT_ID = project.id;
+  } catch (err) {
+    console.log(err, Object.keys(err));
+    if (err.message.includes('ECONNREFUSED')) {
+      throw Error(`
+        Failed to connect to central-backend.
+
+        Either:
+
+        1. confirm it's running at ${appUrl}, or
+        2. update ODK_URL env var to point to the running instance
+      `);
+    }
+
+    throw err;
+  }
 });
