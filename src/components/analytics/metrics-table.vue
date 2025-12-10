@@ -152,7 +152,8 @@ export default {
       "num_entity_update_forms": "Number of Forms that update Entities",
       "num_repeat_entity_update_forms": "Number of Forms that update Entities in repeats",
       "num_entity_create_update_forms": "Number of Forms that both create and update Entities",
-      "num_entities_with_geometry": "Number of Entities with geometry data"
+      "num_entities_with_geometry": "Number of Entities with geometry data",
+      "num_multi_entity_errors": "Number of errors from repeat Entities"
     }
   }
 }
