@@ -289,6 +289,7 @@ const currentVersion = computed(() =>
       "currentValue": "当前数值",
       "updatedValue": "更新后的数值"
     },
+    "geometryDisabled": "无法通过地图更新几何数据。",
     "problem": {
       "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
     }
@@ -299,6 +300,7 @@ const currentVersion = computed(() =>
       "currentValue": "目前數值",
       "updatedValue": "更新數值"
     },
+    "geometryDisabled": "無法透過地圖更新地理資料。",
     "problem": {
       "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
     }
