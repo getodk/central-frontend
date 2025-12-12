@@ -331,6 +331,7 @@ describe('SubmissionMapPopup', () => {
         })
         .afterResponse(app => {
           app.getComponent(GeojsonMap).vm.getFeatures().length.should.equal(0);
+          app.get('#submission-list .empty-table-message').should.be.visible();
         }));
 
     it('hides the popup', async () => {
