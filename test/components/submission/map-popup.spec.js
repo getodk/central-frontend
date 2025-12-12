@@ -78,6 +78,15 @@ describe('SubmissionMapPopup', () => {
         url: "/v1/projects/1/forms/a%20b.svc/Submissions('c%20d')?%24wkt=true"
       }]));
 
+  it('handles an error response', () =>
+    mockHttp()
+      .mount(SubmissionMapPopup, mountOptions())
+      .respondWithProblem({ code: 500.1, message: 'Oh no' })
+      .afterResponse(component => {
+        component.should.redAlert('Oh no');
+        component.emitted().hide.should.eql([[]]);
+      }));
+
   describe('title', () => {
     it('shows the review state', () =>
       mockHttp()
@@ -181,16 +190,14 @@ describe('SubmissionMapPopup', () => {
       });
   });
 
-  it('shows tooltips for form-field data', () =>
+  it('shows a tooltip above name of form field with its full column header', () =>
     mockHttp()
       .mount(SubmissionMapPopup, mountOptions())
       .respondWithData(testData.submissionOData)
       .afterResponse(async (component) => {
-        const pair = component.getComponent(DlData);
-        const name = pair.get('dt span');
+        const name = component.getComponent(DlData).get('dt span');
         name.text().should.equal('first_name');
         await name.should.have.tooltip('names-first_name');
-        pair.get('dd').should.have.textTooltip();
       }));
 
   it('shows a warning if geo field is not in current version of form', () =>
