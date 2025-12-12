@@ -790,6 +790,7 @@ export default {
   "zh": {
     "noEntities": "暂无实体可显示。",
     "noMatching": "没有匹配的实体。",
+    "emptyMap": "仅当实体包含几何属性数据时才会显示该实体。",
     "allDeleted": "所有实体已被删除。",
     "allDeletedOnPage": "本页所有实体已被删除。",
     "alert": {
@@ -799,6 +800,7 @@ export default {
     },
     "filterDisabledMessage": "筛选功能对已删除的实体不可用",
     "searchDisabledMessage": "搜索功能对已删除的实体不可用",
+    "mapDisabled": "已删除实体的地图功能不可用",
     "downloadDisabled": "下载功能对已删除的实体不可用",
     "deletedEntity": {
       "emptyTable": "没有已删除的实体。",
@@ -813,6 +815,7 @@ export default {
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
     "noMatching": "無相符的實體。",
+    "emptyMap": "只有在實體包含地理屬性資料時，才會顯示該實體。",
     "allDeleted": "所有實體都會被刪除。",
     "allDeletedOnPage": "頁面上的所有實體都已刪除。",
     "alert": {
@@ -822,6 +825,7 @@ export default {
     },
     "filterDisabledMessage": "已刪除的實體無法使用篩選功能",
     "searchDisabledMessage": "已刪除的實體無法使用搜尋功能",
+    "mapDisabled": "已刪除實體的地圖功能不可用",
     "downloadDisabled": "已刪除的實體無法下載",
     "deletedEntity": {
       "emptyTable": "沒有已刪除的實體。",

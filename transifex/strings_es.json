@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Número de entidades con datos geométricos"
+        },
+        "num_multi_entity_errors": {
+          "string": "Número de errores de entidades repetidas"
         }
       }
     },
@@ -5467,11 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "",
+        "string": "Mapas ️🗺️, eliminación masiva ️🗑️ y mejor visibilidad del sistema 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "Presentamos una nueva vista de mapa para envíos y entidades, una limpieza de datos más rápida con la eliminación masiva de entidades y una visión más clara del sistema gracias a los estados visibles de las invitaciones de los usuarios y las marcas de tiempo de «última actualización»."
       }
     }
   },

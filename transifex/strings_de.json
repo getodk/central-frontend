@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Anzahl der Entitäten mit Geometriedaten"
+        },
+        "num_multi_entity_errors": {
+          "string": "Anzahl der Fehler durch wiederholte Entitäten"
         }
       }
     },
@@ -5467,11 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "",
+        "string": "Karten ️🗺️, Massenlöschung ️🗑️ und bessere Systemtransparenz 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "Einführung einer neuen Kartenansicht für Übermittlungen und Entitäten, schnellere Datenbereinigung durch Massenlöschung von Entitäten und übersichtlichere Systemeinblicke durch sichtbare Einladungsstatus von Benutzern und Zeitstempel „Zuletzt aktualisiert“!"
       }
     }
   },
