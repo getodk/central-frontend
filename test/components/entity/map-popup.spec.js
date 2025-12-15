@@ -1,10 +1,14 @@
 import DateTime from '../../../src/components/date-time.vue';
 import DlData from '../../../src/components/dl-data.vue';
+import EntityDelete from '../../../src/components/entity/delete.vue';
 import EntityMapPopup from '../../../src/components/entity/map-popup.vue';
+import EntityResolve from '../../../src/components/entity/resolve.vue';
+import EntityUpdate from '../../../src/components/entity/update.vue';
+import GeojsonMap from '../../../src/components/geojson-map.vue';
 
 import testData from '../../data';
+import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions } from '../../util/lifecycle';
-import { mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 
@@ -104,7 +108,7 @@ describe('EntityMapPopup', () => {
       .mount(EntityMapPopup, mountOptions())
       .modify(requestEntity)
       .afterResponse(async (component) => {
-        const span = component.get('.map-popup-title span');
+        const span = component.get('#entity-map-popup .map-popup-title span');
         span.text().should.equal('Dogwood');
         await span.should.have.textTooltip();
       }));
@@ -158,8 +162,183 @@ describe('EntityMapPopup', () => {
         }
       }])
       .afterResponse(component => {
-        component.get('.map-popup-title').text().should.equal('Elm');
+        component.get('#entity-map-popup .map-popup-title').text().should.equal('Elm');
         const { value } = component.findAllComponents(DlData)[2].props();
         value.should.equal('POINT (4 4)');
       }));
+
+  describe('update button', () => {
+    const showUpdate = () => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
+      .complete()
+      .request(app => {
+        app.getComponent(GeojsonMap).vm.selectFeature('e');
+      })
+      .respondWithData(testData.entityOData)
+      .afterResponse(app =>
+        app.get('#entity-map-popup .update-button').trigger('click'));
+    const update = () => showUpdate()
+      .request(async (app) => {
+        const modal = app.getComponent(EntityUpdate);
+        await modal.get('textarea').setValue('Updated Entity');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithData(() => {
+        testData.extendedEntityVersions.createNew({
+          label: 'Updated Entity'
+        });
+        return testData.standardEntities.last();
+      });
+
+    it('shows the modal', async () => {
+      const app = await showUpdate();
+      app.getComponent(EntityUpdate).props().state.should.be.true;
+    });
+
+    it('sends the correct request', () =>
+      update().testRequests([{
+        method: 'PATCH',
+        url: '/v1/projects/1/datasets/%C3%A1/entities/e?baseVersion=1',
+        data: { label: 'Updated Entity', data: Object.create(null) }
+      }]));
+
+    it('updates the label', async () => {
+      const app = await update();
+      const text = app.get('#entity-map-popup .map-popup-title').text();
+      text.should.equal('Updated Entity');
+    });
+  });
+
+  describe('resolve button', () => {
+    beforeEach(() => {
+      // Create a conflict.
+      testData.extendedEntityVersions
+        .createPast(1, { height: '2' })
+        .createPast(1, { label: 'Elm', baseVersion: 1 });
+    });
+
+    const relevantToConflict = () => testData.extendedEntityVersions.sorted()
+      .filter(version => version.relevantToConflict);
+    const showResolve = () => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
+      .complete()
+      .request(app => {
+        app.getComponent(GeojsonMap).vm.selectFeature('e');
+      })
+      .respondWithData(testData.entityOData)
+      .complete()
+      .request(app =>
+        app.get('#entity-map-popup .resolve-button').trigger('click'))
+      .respondWithData(relevantToConflict)
+      .complete();
+
+    it('shows the modal', async () => {
+      const app = await showResolve();
+      app.getComponent(EntityResolve).props().state.should.be.true;
+    });
+
+    describe('marking as resolved', () => {
+      const resolve = () => showResolve()
+        .request(app =>
+          app.get('#entity-resolve .mark-as-resolved').trigger('click'))
+        .respondWithData(() => {
+          testData.extendedEntities.resolve(-1);
+          return testData.standardEntities.last();
+        });
+
+      it('sends the correct request', () =>
+        resolve().testRequests([{
+          method: 'PATCH',
+          url: '/v1/projects/1/datasets/%C3%A1/entities/e?resolve=true&baseVersion=3'
+        }]));
+
+      it('hides the button in the popup', async () => {
+        const app = await resolve();
+        app.find('#entity-map-popup .resolve-button').exists().should.be.false;
+      });
+    });
+
+    describe('updating data', () => {
+      const update = () => showResolve()
+        .request(async (app) => {
+          await app.get('#entity-resolve .edit-entity').trigger('click');
+          const modal = app.getComponent(EntityUpdate);
+          await modal.get('textarea').setValue('Updated Entity');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithData(() => {
+          testData.extendedEntityVersions.createNew({
+            label: 'Updated Entity'
+          });
+          return testData.standardEntities.last();
+        })
+        .respondWithData(relevantToConflict);
+
+      it('requests new data for the conflict table', () =>
+        update().testRequestsInclude([{
+          url: '/v1/projects/1/datasets/%C3%A1/entities/e/versions?relevantToConflict=true',
+          extended: true
+        }]));
+
+      it('updates the label in the resolve modal', async () => {
+        const app = await update();
+        const modal = app.getComponent(EntityResolve);
+        modal.props().state.should.be.true;
+        modal.get('.modal-title').text().should.include('Updated Entity');
+      });
+
+      it('updates the label in the update modal', async () => {
+        const app = await update();
+        await app.get('#entity-resolve .edit-entity').trigger('click');
+        const modal = app.getComponent(EntityUpdate);
+        modal.props().state.should.be.true;
+        modal.get('.modal-title').text().should.equal('Update Updated Entity');
+      });
+
+      it('updates the label in the popup', async () => {
+        const app = await update();
+        await app.get('#entity-resolve .close').trigger('click');
+        const text = app.get('#entity-map-popup .map-popup-title').text();
+        text.should.equal('Updated Entity');
+      });
+    });
+  });
+
+  describe('delete button', () => {
+    const showDelete = () => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
+      .complete()
+      .request(app => {
+        app.getComponent(GeojsonMap).vm.selectFeature('e');
+      })
+      .respondWithData(testData.entityOData)
+      .afterResponse(app =>
+        app.get('#entity-map-popup .delete-button').trigger('click'));
+    const del = () => showDelete()
+      .request(app => app.get('#entity-delete .btn-danger').trigger('click'))
+      .respondWithSuccess();
+
+    it('shows the modal', async () => {
+      const app = await showDelete();
+      app.getComponent(EntityDelete).props().state.should.be.true;
+    });
+
+    it('sends the correct request', () =>
+      del().testRequests([{
+        method: 'DELETE',
+        url: '/v1/projects/1/datasets/%C3%A1/entities/e'
+      }]));
+
+    it('removes the feature from the map', () =>
+      del()
+        .beforeAnyResponse(app => {
+          app.getComponent(GeojsonMap).vm.getFeatures().length.should.equal(1);
+        })
+        .afterResponse(app => {
+          app.getComponent(GeojsonMap).vm.getFeatures().length.should.equal(0);
+          app.get('#entity-list .empty-table-message').should.be.visible();
+        }));
+
+    it('hides the popup', async () => {
+      const app = await del();
+      app.getComponent(EntityMapPopup).should.be.hidden();
+    });
+  });
 });
