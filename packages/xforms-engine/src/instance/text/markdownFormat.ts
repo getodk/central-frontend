@@ -42,7 +42,7 @@ const SUPPORTED_HTML_TAGS = Object.entries(HTML_TAG_MAP).map(([tag, type]) => {
 	};
 });
 
-let outputStrings: Map<string, string>;
+const outputStrings = new Map<string, string>();
 
 function validateStyleProperty(name: string | undefined, value: string | undefined): boolean {
 	if (!name || !value) {
@@ -208,7 +208,8 @@ function toOdkMarkdown(str: string): MarkdownNode[] {
 }
 
 export function format(chunks: readonly TextChunk[]): MarkdownNode[] {
-	outputStrings = new Map<string, string>();
 	const str = escapeEditableChunks(chunks);
-	return toOdkMarkdown(str);
+	const result = toOdkMarkdown(str);
+	outputStrings.clear();
+	return result;
 }

@@ -1,56 +1,11 @@
 <script lang="ts" setup>
-import type {
-	AnchorMarkdownNode,
-	HtmlMarkdownNode,
-	MarkdownNode,
-	ParentMarkdownNode,
-	StyledMarkdownNode,
-} from '@getodk/xforms-engine';
-import DOMPurify from 'dompurify';
-import type { StyleValue } from 'vue';
-
-const DOM_PURIFY_SETTINGS = {
-	ALLOWED_TAGS: [
-		'b',
-		'br',
-		'em',
-		'i',
-		'li',
-		'ol',
-		'p',
-		'span',
-		'strong',
-		'table',
-		'td',
-		'tr',
-		'u',
-		'ul',
-	],
-	ALLOWED_ATTR: ['style'],
-};
+import { getStylePropertyMap, getUrl, purify } from '@/lib/format/markdown';
+import type { MarkdownNode } from '@getodk/xforms-engine';
 
 interface MarkdownProps {
 	readonly elem: MarkdownNode;
 }
-
 const { elem } = defineProps<MarkdownProps>();
-
-const getStylePropertyMap = (node: ParentMarkdownNode): StyleValue | undefined => {
-	const properties = (node as StyledMarkdownNode).properties;
-	if (properties) {
-		return properties.style as StyleValue;
-	}
-};
-
-const getUrl = (node: ParentMarkdownNode): string | undefined => {
-	if (node.elementName === 'a') {
-		return (node as AnchorMarkdownNode).url;
-	}
-};
-
-const purify = (node: HtmlMarkdownNode): string => {
-	return DOMPurify.sanitize(node.unsafeHtml, DOM_PURIFY_SETTINGS);
-};
 </script>
 
 <template>
