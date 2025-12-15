@@ -168,31 +168,29 @@ describe('EntityMapPopup', () => {
       }));
 
   describe('update button', () => {
-    const update = (confirm = true) => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
+    const showUpdate = () => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
       .complete()
       .request(app => {
         app.getComponent(GeojsonMap).vm.selectFeature('e');
       })
       .respondWithData(testData.entityOData)
       .afterResponse(app =>
-        app.get('#entity-map-popup .update-button').trigger('click'))
-      .modify(series => (!confirm
-        ? series
-        : series
-          .request(async (app) => {
-            const modal = app.getComponent(EntityUpdate);
-            await modal.get('textarea').setValue('Updated Entity');
-            return modal.get('form').trigger('submit');
-          })
-          .respondWithData(() => {
-            testData.extendedEntityVersions.createNew({
-              label: 'Updated Entity'
-            });
-            return testData.standardEntities.last();
-          })));
+        app.get('#entity-map-popup .update-button').trigger('click'));
+    const update = () => showUpdate()
+      .request(async (app) => {
+        const modal = app.getComponent(EntityUpdate);
+        await modal.get('textarea').setValue('Updated Entity');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithData(() => {
+        testData.extendedEntityVersions.createNew({
+          label: 'Updated Entity'
+        });
+        return testData.standardEntities.last();
+      });
 
     it('shows the modal', async () => {
-      const app = await update(false);
+      const app = await showUpdate();
       app.getComponent(EntityUpdate).props().state.should.be.true;
     });
 
@@ -233,12 +231,12 @@ describe('EntityMapPopup', () => {
       .complete();
 
     it('shows the modal', async () => {
-      const app = await showResolve(false);
+      const app = await showResolve();
       app.getComponent(EntityResolve).props().state.should.be.true;
     });
 
     describe('marking as resolved', () => {
-      const resolve = (series) => series
+      const resolve = () => showResolve()
         .request(app =>
           app.get('#entity-resolve .mark-as-resolved').trigger('click'))
         .respondWithData(() => {
@@ -247,19 +245,15 @@ describe('EntityMapPopup', () => {
         });
 
       it('sends the correct request', () =>
-        showResolve()
-          .modify(resolve)
-          .testRequests([{
-            method: 'PATCH',
-            url: '/v1/projects/1/datasets/%C3%A1/entities/e?resolve=true&baseVersion=3'
-          }]));
+        resolve().testRequests([{
+          method: 'PATCH',
+          url: '/v1/projects/1/datasets/%C3%A1/entities/e?resolve=true&baseVersion=3'
+        }]));
 
-      it('hides the button in the popup', async () =>
-        showResolve()
-          .modify(resolve)
-          .afterResponse(app => {
-            app.find('#entity-map-popup .resolve-button').exists().should.be.false;
-          }));
+      it('hides the button in the popup', async () => {
+        const app = await resolve();
+        app.find('#entity-map-popup .resolve-button').exists().should.be.false;
+      });
     });
 
     describe('updating data', () => {
@@ -309,22 +303,20 @@ describe('EntityMapPopup', () => {
   });
 
   describe('delete button', () => {
-    const del = (confirm = true) => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
+    const showDelete = () => load('/projects/1/entity-lists/%C3%A1/entities?map=true')
       .complete()
       .request(app => {
         app.getComponent(GeojsonMap).vm.selectFeature('e');
       })
       .respondWithData(testData.entityOData)
       .afterResponse(app =>
-        app.get('#entity-map-popup .delete-button').trigger('click'))
-      .modify(series => (!confirm
-        ? series
-        : series
-          .request(app => app.get('#entity-delete .btn-danger').trigger('click'))
-          .respondWithSuccess()));
+        app.get('#entity-map-popup .delete-button').trigger('click'));
+    const del = () => showDelete()
+      .request(app => app.get('#entity-delete .btn-danger').trigger('click'))
+      .respondWithSuccess();
 
     it('shows the modal', async () => {
-      const app = await del(false);
+      const app = await showDelete();
       app.getComponent(EntityDelete).props().state.should.be.true;
     });
 
