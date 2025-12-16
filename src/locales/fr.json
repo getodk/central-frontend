@@ -173,6 +173,7 @@
     "expand": "Déplier",
     "collapse": "Replier",
     "selectRow": "Sélectionner ligne",
+    "reset": "Réinitialiser",
     "reviewParallelUpdates": "Examiner les mises à jour parallèles",
     "tryAgain": "Essayer encore",
     "upload": "Téléverser",
@@ -280,7 +281,8 @@
     "needFeedback": {
       "full": "Pour cela nous avons besoin de {your} retour, ainsi nous pourrons comprendre qui sont les utilisateurs de Central, et comment l'améliorer pour vous.",
       "your": "votre"
-    }
+    },
+    "mailingListOptIn": "Envoyez moi occasionnellement des e-mails à propos des nouveautés et des bonnes pratiques."
   },
   "submission": {
     "missingAttachment": "Fichier joint manquant",
