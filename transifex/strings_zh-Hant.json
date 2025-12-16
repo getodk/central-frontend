@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "選取列",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "重設",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "您",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "請不定期寄送電子郵件給我，告知新功能與最佳實踐。"
     }
   },
   "submission": {
@@ -1472,31 +1479,34 @@
           "string": "透過批次上傳建立的實體數量"
         },
         "max_geo_per_form": {
-          "string": ""
+          "string": "表單中具有地理資料的提交次數上限"
         },
         "num_entity_bulk_deletes": {
-          "string": ""
+          "string": "批次刪除實體的稽核日誌事件數量"
         },
         "num_datasets_with_geometry": {
-          "string": ""
+          "string": "具有地理資料的實體清單數量"
         },
         "num_entity_create_forms": {
-          "string": ""
+          "string": "可建立實體的表單數量"
         },
         "num_repeat_entity_create_forms": {
-          "string": ""
+          "string": "可建立重複實體的表單數量"
         },
         "num_entity_update_forms": {
-          "string": ""
+          "string": "可更新實體的表單數量"
         },
         "num_repeat_entity_update_forms": {
-          "string": ""
+          "string": "可更新重複實體的表單數量"
         },
         "num_entity_create_update_forms": {
-          "string": ""
+          "string": "建立並更新實體的表單數量"
         },
         "num_entities_with_geometry": {
-          "string": ""
+          "string": "含有地理資料的實體數量"
+        },
+        "num_multi_entity_errors": {
+          "string": "重複實體的錯誤次數"
         }
       }
     },
@@ -2235,6 +2245,9 @@
       "noMatching": {
         "string": "無相符的實體。"
       },
+      "emptyMap": {
+        "string": "只有在實體包含地理屬性資料時，才會顯示該實體。"
+      },
       "allDeleted": {
         "string": "所有實體都會被刪除。"
       },
@@ -2257,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "已刪除的實體無法使用搜尋功能"
+      },
+      "mapDisabled": {
+        "string": "已刪除實體的地圖功能不可用"
       },
       "downloadDisabled": {
         "string": "已刪除的實體無法下載"
@@ -2297,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "正在準備地圖。這可能需要一段時間。"
+      },
+      "overlapTitle": {
+        "string": "{count, plural, other {此區域內有 {count} 個實體}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2431,9 @@
           "string": "更新數值",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "無法透過地圖更新地理資料。"
       },
       "problem": {
         "409_15": {
@@ -3738,10 +3765,10 @@
       },
       "noWebGL": {
         "title": {
-          "string": ""
+          "string": "圖形顯示異常。"
         },
         "message": {
-          "string": ""
+          "string": "您的瀏覽器目前無法顯示地圖。請啟用圖形加速設定。"
         }
       }
     },
@@ -5011,7 +5038,7 @@
         "string": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。"
       },
       "learnMoreMap": {
-        "string": ""
+        "string": "進一步了解提交地圖資料功能"
       },
       "allDeleted": {
         "string": "所有提交內容都會被刪除。"
@@ -5098,7 +5125,7 @@
     },
     "SubmissionMapView": {
       "loading": {
-        "string": ""
+        "string": "正在準備地圖——正在載入已有提交資料並掃描新增內容，此過程可能需要一些時間。"
       },
       "overlapTitle": {
         "string": "{count, plural, other {此區域內有{count}筆提交資料}}"
@@ -5443,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "表單草稿已移動",
+        "string": "地圖功能️🗺️、批次刪除️🗑️，以及更佳的系統可見性👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "建立新表單，並在新的「編輯表單」標籤上編輯它"
-      },
-      "action": {
-        "gotIt": {
-          "string": "知道了！",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "我們推出了全新的地圖視圖，可同時展示提交資料與實體；透過批次刪除實體來實現更高效率的資料清理；系統可視化也全面提升——現在可清楚查看使用者邀請狀態與「最後更新」時間戳！"
       }
     }
   },

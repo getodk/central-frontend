@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Seleziona riga",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Ripristina",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "tuo",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Inviami occasionalmente delle e-mail sulle nuove funzionalità e sulle migliori prassi."
     }
   },
   "submission": {
@@ -1497,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Numero di entità con proprietà geometrica"
+        },
+        "num_multi_entity_errors": {
+          "string": "Numero di errori da Entità ripetute"
         }
       }
     },
@@ -2235,6 +2245,9 @@
       "noMatching": {
         "string": "Non sono presenti Entità corrispondenti."
       },
+      "emptyMap": {
+        "string": "Le entità vengono visualizzate solo se includono dati nella proprietà geometria."
+      },
       "allDeleted": {
         "string": "Tutte le entità vengono eliminate."
       },
@@ -2257,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "La ricerca non è disponibile per le entità eliminate"
+      },
+      "mapDisabled": {
+        "string": "La mappa non è disponibile per le entità eliminate"
       },
       "downloadDisabled": {
         "string": "Il download non è disponibile per le Entità eliminate"
@@ -2297,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Preparazione della mappa. L'operazione potrebbe richiedere alcuni minuti."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entità in quest'area} many {{count} Entità in quest'area} other {{count} Entità in quest'area}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2431,9 @@
           "string": "Valore aggiornato",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "La geometria non può essere aggiornata dalla mappa."
       },
       "problem": {
         "409_15": {
@@ -5443,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Le bozze dei formulari sono state spostate",
+        "string": "Mappe ️🗺️, eliminazione in blocco ️🗑️ e migliore visibilità del sistema 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Creare un nuovo formulario e modificarlo nella nuova scheda Modifica del formulario."
-      },
-      "action": {
-        "gotIt": {
-          "string": "Capito!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Presentiamo una nuova visualizzazione della mappa per gli invii e le entità, una gestione dei dati più rapida grazie alla cancellazione in blocco delle entità e una visione più chiara del sistema grazie alla visualizzazione dello stato degli inviti agli utenti e dei timestamp dell'ultimo aggiornamento."
       }
     }
   },
