@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Selecionar linha",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "seu",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": ""
     }
   },
   "submission": {
@@ -1496,6 +1503,9 @@
           "string": ""
         },
         "num_entities_with_geometry": {
+          "string": ""
+        },
+        "num_multi_entity_errors": {
           "string": ""
         }
       }
@@ -2235,6 +2245,9 @@
       "noMatching": {
         "string": "Não há Entidades correspondentes."
       },
+      "emptyMap": {
+        "string": ""
+      },
       "allDeleted": {
         "string": "Todas as Entidades foram excluídas."
       },
@@ -2257,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "A busca não está disponível para Entidades excluídas."
+      },
+      "mapDisabled": {
+        "string": ""
       },
       "downloadDisabled": {
         "string": "Não é possível fazer download de Entidades excluídas"
@@ -2297,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": ""
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {} many {} other {}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2431,9 @@
           "string": "Valor Atualizado",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": ""
       },
       "problem": {
         "409_15": {
@@ -5443,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Os Rascunhos do formulário foram movidos",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Criar um novo formulário e editá-lo na nova aba de Editar Formulário"
-      },
-      "action": {
-        "gotIt": {
-          "string": "Entendi!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": ""
       }
     }
   },
