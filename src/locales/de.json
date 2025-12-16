@@ -173,6 +173,7 @@
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
     "selectRow": "Zeile auswählen",
+    "reset": "Zurücksetzen",
     "reviewParallelUpdates": "Parallele Updates überprüfen",
     "tryAgain": "Nochmals versuchen",
     "upload": "Hochladen",
@@ -280,7 +281,8 @@
     "needFeedback": {
       "full": "Wir benötigen {your} Feedback, damit wir verstehen können, wie du Central verwendest und wie wir es für dich besser machen können.",
       "your": "dein"
-    }
+    },
+    "mailingListOptIn": "Senden Sie mir gelegentlich E-Mails über neue Funktionen und bewährte Verfahren."
   },
   "submission": {
     "missingAttachment": "Fehlender Anhang",

@@ -40,6 +40,7 @@ defineOptions({
 
 .breadcrumbs + #page-head .h1 {
   margin-top: 0;
+  line-height: 1.15;
 }
 
 #page-head-title-infonav {

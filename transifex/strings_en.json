@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Number of Entities with geometry data"
+        },
+        "num_multi_entity_errors": {
+          "string": "Number of errors from repeat Entities"
         }
       }
     },
