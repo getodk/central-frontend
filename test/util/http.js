@@ -298,9 +298,17 @@ const resolveRoute = (location) => routeResolver.resolve(location);
 // any async component will be unwrapped from AsyncRoute.
 const routeComponents = (route) => route.matched.map(routeRecord => {
   const { asyncRoute } = routeRecord.meta;
-  return asyncRoute == null
-    ? routeRecord.components.default
-    : loadAsyncCache.get(asyncRoute.componentName).default;
+  if (asyncRoute == null) return routeRecord.components.default;
+
+  const m = loadAsyncCache.get(asyncRoute.componentName);
+  if (m == null) {
+    // eslint-disable-next-line no-console
+    console.error(`Component ${asyncRoute.componentName} was not found in the loadAsync() cache.`);
+    // eslint-disable-next-line no-console
+    console.error('The loadAsync() cache contains', loadAsyncCache.size, 'entries.');
+    throw new Error('component not found in loadAsync() cache');
+  }
+  return m.default;
 });
 
 class MockHttp {

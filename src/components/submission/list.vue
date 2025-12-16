@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
             v-model="selectedFields" :disabled="deleted"
             :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
-        <button type="button" class="btn btn-link btn-reset"
+        <button v-if="!draft" type="button" class="btn btn-link btn-reset"
           :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('filterDisabledMessage') : null"
           @click="resetFilters">
           {{ $t('action.reset') }}
@@ -675,6 +675,7 @@ export default {
     },
     "noMatching": "沒有符合的提交內容。",
     "emptyMap": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。",
+    "learnMoreMap": "進一步了解提交地圖資料功能",
     "allDeleted": "所有提交內容都會被刪除。",
     "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
     "downloadDisabled": "已刪除的提交內容無法下載",

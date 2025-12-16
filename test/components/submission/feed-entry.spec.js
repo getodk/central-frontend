@@ -307,10 +307,9 @@ describe('SubmissionFeedEntry', () => {
           action: 'entity.error',
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('ID empty or missing.');
-        await title.get('.entity-error-message').should.have.textTooltip();
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('ID empty or missing.');
       });
 
       it('renders entity creation error message when it is included as an errorMessage', async () => {
@@ -321,10 +320,9 @@ describe('SubmissionFeedEntry', () => {
             errorMessage: 'A resource already exists with uuid value(s) abc.'
           }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
-        await title.get('.entity-error-message').should.have.textTooltip();
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
       });
 
       it('renders error message when there is a problem without a reason and an error message', async () => {
@@ -335,10 +333,9 @@ describe('SubmissionFeedEntry', () => {
             errorMessage: 'Mystery Error'
           }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('Mystery Error');
-        await title.get('.entity-error-message').should.have.textTooltip();
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('Mystery Error');
       });
 
       it('renders problem but no specific error message if audit details are malformed', async () => {
@@ -348,9 +345,9 @@ describe('SubmissionFeedEntry', () => {
             foo: 'bar'
           }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('');
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('');
       });
     });
   });

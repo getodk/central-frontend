@@ -664,6 +664,7 @@ export default {
   "de": {
     "noEntities": "Es gibt keine Objekte zum Anzeigen.",
     "noMatching": "Es gibt keine passenden Objekte.",
+    "emptyMap": "Entitäten werden nur angezeigt, wenn sie Daten in der Geometrieeigenschaft enthalten.",
     "allDeleted": "Alle Objekte werden gelöscht.",
     "allDeletedOnPage": "Alle Objekte auf der Seite wurden gelöscht.",
     "alert": {
@@ -673,6 +674,7 @@ export default {
     },
     "filterDisabledMessage": "Filterung ist für gelöschte Objekte nicht verfügbar",
     "searchDisabledMessage": "Die Suche nach gelöschten Objekte ist nicht verfügbar",
+    "mapDisabled": "Karte nach gelöschten Objekte ist nicht verfügbar",
     "downloadDisabled": "Der Download ist für gelöschte Objekte nicht verfügbar",
     "deletedEntity": {
       "emptyTable": "Es gibt keine gelöschten Objekte.",
@@ -687,6 +689,7 @@ export default {
   "es": {
     "noEntities": "No hay Entidades para mostrar.",
     "noMatching": "No hay entidades coincidentes.",
+    "emptyMap": "Las entidades solo aparecen si incluyen datos en la propiedad de geometría.",
     "allDeleted": "Se eliminan todas las Entidades.",
     "allDeletedOnPage": "Se han eliminado todas las Entidades de la página.",
     "alert": {
@@ -696,6 +699,7 @@ export default {
     },
     "filterDisabledMessage": "El Filtro no está disponible para Entidades eliminadas",
     "searchDisabledMessage": "La búsqueda no está disponible para las entidades eliminadas",
+    "mapDisabled": "La mapa no está disponible para las entidades eliminadas",
     "downloadDisabled": "La descarga no está disponible para Entidades eliminadas",
     "deletedEntity": {
       "emptyTable": "No hay entidades eliminadas.",
@@ -710,6 +714,7 @@ export default {
   "fr": {
     "noEntities": "Pas d'entités à montrer.",
     "noMatching": "Il n'y a pas d'Entités correspondantes",
+    "emptyMap": "Les entités n'apparaissent que si elles ont une propriété géographique.",
     "allDeleted": "Toutes les Entités sont supprimées.",
     "allDeletedOnPage": "Toutes les Entités de la page ont été supprimées.",
     "alert": {
@@ -719,6 +724,7 @@ export default {
     },
     "filterDisabledMessage": "Le filtrage n'est pas disponible pour les entités supprimées.",
     "searchDisabledMessage": "La recherche n'est pas disponible pour les entités supprimées",
+    "mapDisabled": "La carte n'est pas disponible pour les entités supprimées.",
     "downloadDisabled": "Le téléchargement n'est pas disponible pour les entités supprimées.",
     "deletedEntity": {
       "emptyTable": "Il n'y a pas d'Entité supprimée.",
@@ -733,6 +739,7 @@ export default {
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
     "noMatching": "Non sono presenti Entità corrispondenti.",
+    "emptyMap": "Le entità vengono visualizzate solo se includono dati nella proprietà geometria.",
     "allDeleted": "Tutte le entità vengono eliminate.",
     "allDeletedOnPage": "Tutte le entità della pagina sono state eliminate.",
     "alert": {
@@ -742,6 +749,7 @@ export default {
     },
     "filterDisabledMessage": "Il filtro non è disponibile per le Entità eliminate.",
     "searchDisabledMessage": "La ricerca non è disponibile per le entità eliminate",
+    "mapDisabled": "La mappa non è disponibile per le entità eliminate",
     "downloadDisabled": "Il download non è disponibile per le Entità eliminate",
     "deletedEntity": {
       "emptyTable": "Non ci sono Entità cancellate.",
@@ -782,6 +790,7 @@ export default {
   "zh": {
     "noEntities": "暂无实体可显示。",
     "noMatching": "没有匹配的实体。",
+    "emptyMap": "仅当实体包含几何属性数据时才会显示该实体。",
     "allDeleted": "所有实体已被删除。",
     "allDeletedOnPage": "本页所有实体已被删除。",
     "alert": {
@@ -791,6 +800,7 @@ export default {
     },
     "filterDisabledMessage": "筛选功能对已删除的实体不可用",
     "searchDisabledMessage": "搜索功能对已删除的实体不可用",
+    "mapDisabled": "已删除实体的地图功能不可用",
     "downloadDisabled": "下载功能对已删除的实体不可用",
     "deletedEntity": {
       "emptyTable": "没有已删除的实体。",
@@ -805,6 +815,7 @@ export default {
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
     "noMatching": "無相符的實體。",
+    "emptyMap": "只有在實體包含地理屬性資料時，才會顯示該實體。",
     "allDeleted": "所有實體都會被刪除。",
     "allDeletedOnPage": "頁面上的所有實體都已刪除。",
     "alert": {
@@ -814,6 +825,7 @@ export default {
     },
     "filterDisabledMessage": "已刪除的實體無法使用篩選功能",
     "searchDisabledMessage": "已刪除的實體無法使用搜尋功能",
+    "mapDisabled": "已刪除實體的地圖功能不可用",
     "downloadDisabled": "已刪除的實體無法下載",
     "deletedEntity": {
       "emptyTable": "沒有已刪除的實體。",
