@@ -16,8 +16,8 @@ except according to the terms contained in the LICENSE file.
       <submission-map-popup :project-id="projectId" :xml-form-id="xmlFormId"
         :instance-id="feature?.id" :fieldpath="feature?.properties?.fieldpath"
         :odata="odataElement"
-        :awaiting-response="awaitingResponses.has(feature?.id)" v-on="listeners"
-        @review="$emit('review', $event)" @delete="$emit('delete', $event)"/>
+        :awaiting-response="awaitingResponses.has(feature?.id)"
+        v-on="{ ...listeners, ...reemitters }"/>
     </template>
     <template #overlap="{ features, listeners }">
       <map-overlap-popup :features="features" :odata-url="overlapUrl"
@@ -41,7 +41,7 @@ import MapView from '../map/view.vue';
 import SubmissionMapPopup from './map-popup.vue';
 
 import { apiPaths } from '../../util/request';
-import { noop } from '../../util/util';
+import { noop, reemit } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -66,7 +66,7 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['review', 'delete']);
+const emit = defineEmits(['review', 'delete']);
 
 const { odata } = useRequestData();
 
@@ -80,11 +80,14 @@ const geojsonUrl = computed(() => apiPaths.submissions(
 const overlapUrl = (query) =>
   apiPaths.odataSubmissions(props.projectId, props.xmlFormId, false, query);
 
+const reemitters = reemit(emit, ['review', 'delete']);
+
 const view = ref(null);
 defineExpose({
-  // Delegate these functions to the MapView.
-  ...Object.fromEntries(['refresh', 'cancelRefresh', 'afterDelete']
-    .map(name => [name, (...args) => view.value[name](...args)])),
+  // Functions exposed from the MapView
+  refresh: () => view.value.fetchData(false),
+  cancelRefresh: () => view.value.cancelFetch(),
+  afterDelete: (instanceId) => view.value.afterDelete(instanceId),
 
   afterReview: noop
 });
@@ -123,6 +126,7 @@ defineExpose({
     "overlapTitle": "此区域内有 {count} 条提交数据"
   },
   "zh-Hant": {
+    "loading": "正在準備地圖——正在載入已有提交資料並掃描新增內容，此過程可能需要一些時間。",
     "overlapTitle": "此區域內有{count}筆提交資料"
   }
 }

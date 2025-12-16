@@ -79,12 +79,14 @@ const geojson = createResource('geojson', () => ({
 // eslint-disable-next-line vue/no-mutating-props
 watchSyncEffect(() => { if (geojson.data == null) props.odata.data = null; });
 
-const fetchData = (clear = true) =>
-  geojson.request({ url: props.url, clear }).catch(noop);
+const fetchData = (clear = true) => {
+  if (clear) props.odata.reset();
+  return geojson.request({ url: props.url, clear }).catch(noop);
+};
 fetchData();
 watch(() => props.url, noargs(fetchData));
-const refresh = () => fetchData(false);
-const cancelRefresh = () => { geojson.cancelRequest(); };
+// For defineExpose()
+const cancelFetch = () => { geojson.cancelRequest(); };
 
 const showingMap = ref(false);
 const setShowing = (value) => { showingMap.value = value; };
@@ -143,7 +145,7 @@ const afterDelete = (instanceId) => {
   props.odata.value.length -= 1; // eslint-disable-line vue/no-mutating-props
 };
 
-defineExpose({ refresh, cancelRefresh, afterDelete });
+defineExpose({ fetchData, cancelFetch, afterDelete });
 </script>
 
 <style lang="scss">

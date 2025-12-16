@@ -23,7 +23,8 @@ const mountComponent = (props = undefined) => {
     },
     props: mergedProps,
     container: {
-      router: mockRouter('/projects/1/entity-lists/trees/entities')
+      router: mockRouter('/projects/1/entity-lists/trees/entities'),
+      requestData: { project: testData.extendedProjects.last() }
     }
   });
 };

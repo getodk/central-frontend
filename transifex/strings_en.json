@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Number of Entities with geometry data"
+        },
+        "num_multi_entity_errors": {
+          "string": "Number of errors from repeat Entities"
         }
       }
     },
@@ -2242,6 +2245,9 @@
       "noMatching": {
         "string": "There are no matching Entities."
       },
+      "emptyMap": {
+        "string": "Entities only appear if they include data in the geometry property."
+      },
       "allDeleted": {
         "string": "All Entities are deleted."
       },
@@ -2264,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "Search is unavailable for deleted Entities"
+      },
+      "mapDisabled": {
+        "string": "Map is unavailable for deleted Entities"
       },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Entities"
@@ -2304,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Preparing map. This could take a while."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
     "EntityMetadataRow": {
@@ -2414,6 +2431,9 @@
           "string": "Updated Value",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "Geometry can’t be updated from the map."
       },
       "problem": {
         "409_15": {
@@ -5450,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Form drafts have moved",
+        "string": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Create a new Form and edit it on the new Edit Form tab"
-      },
-      "action": {
-        "gotIt": {
-          "string": "Got it!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
       }
     }
   },
