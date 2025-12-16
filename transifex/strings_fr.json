@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Sélectionner ligne ",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Réinitialiser",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "votre",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Envoyez moi occasionnellement des e-mails à propos des nouveautés et des bonnes pratiques. "
     }
   },
   "submission": {
@@ -1497,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Nombre d'entités avec données géographiques"
+        },
+        "num_multi_entity_errors": {
+          "string": "Nombre d'erreurs d'entités créées par répétition"
         }
       }
     },
@@ -2235,6 +2245,9 @@
       "noMatching": {
         "string": "Il n'y a pas d'Entités correspondantes"
       },
+      "emptyMap": {
+        "string": "Les entités n'apparaissent que si elles ont une propriété géographique."
+      },
       "allDeleted": {
         "string": "Toutes les Entités sont supprimées."
       },
@@ -2257,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "La recherche n'est pas disponible pour les entités supprimées"
+      },
+      "mapDisabled": {
+        "string": "La carte n'est pas disponible pour les entités supprimées."
       },
       "downloadDisabled": {
         "string": "Le téléchargement n'est pas disponible pour les entités supprimées."
@@ -2297,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Préparation de la carte. Cela peut prendre un peu de temps."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} entité dans cette zone} many {{count} entités dans cette zone} other {{count} entités dans cette zone}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2431,9 @@
           "string": "Valeur Mise à jour",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "La géométrie ne peut être modifiée depuis la carte."
       },
       "problem": {
         "409_15": {
@@ -5443,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Les ébauches de Formulaires ont été déplacées.",
+        "string": "Cartes 🗺️, suppression en masse 🗑️, et plus de visibilité 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer le Formulaire»"
-      },
-      "action": {
-        "gotIt": {
-          "string": "J'ai compris !",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Essayez les nouvelles vues cartographiques pour les soumissions et les entités, nettoyez vos données plus rapidement avec la suppression en masse des entités, et comprenez mieux vos utilisateurs grâce à l'affichage des statuts d'invitation!"
       }
     }
   },

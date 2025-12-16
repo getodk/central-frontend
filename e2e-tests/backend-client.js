@@ -125,6 +125,14 @@ export default class BackendClient {
     };
   };
 
+  alwaysHideModal = async () => {
+    const request = await this.#getRequest();
+    const response = await request.put('/v1/user-preferences/site/whatsNewDismissed2025_4', {
+      data: { propertyValue: true }
+    });
+    expect(response.ok()).toBeTruthy();
+  };
+
   async dispose() {
     await this.#request.dispose();
   }

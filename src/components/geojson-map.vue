@@ -901,7 +901,11 @@ $muted-background-color: #F1F5F9;
   },
   "zh-Hant": {
     "showing": "正在顯示{total}項中的第{count}項",
-    "zoomToFit": "縮放以符合所有資料"
+    "zoomToFit": "縮放以符合所有資料",
+    "noWebGL": {
+      "title": "圖形顯示異常。",
+      "message": "您的瀏覽器目前無法顯示地圖。請啟用圖形加速設定。"
+    }
   }
 }
 </i18n>
