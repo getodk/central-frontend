@@ -14,7 +14,7 @@ jobs:
       with:
         node-version: 22.21.1
         cache: 'npm'
-    - run: ./bin/check-for-large-files.js
+    - run: ./bin/check-for-large-files.sh
     - run: npm ci
     - run: npm run build
     - run: ./bin/check-bundle-size.js
