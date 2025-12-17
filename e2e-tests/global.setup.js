@@ -17,6 +17,17 @@ setup('create new project', async ({ request }) => {
       }
     });
 
+    if (createProjectResponse.status() === 401) {
+      throw Error(`
+        Credentials check failed.
+
+        Confirm that:
+
+          1. the user '${user}' exists, and
+          2. their password matches the ODK_PASSWORD env var
+      `);
+    }
+
     expect(createProjectResponse.ok()).toBeTruthy();
     const project = await createProjectResponse.json();
 
@@ -32,8 +43,8 @@ setup('create new project', async ({ request }) => {
         1. confirm it's running at ${appUrl}, or
         2. update ODK_URL env var to point to the running instance
       `);
+    } else {
+      throw err;
     }
-
-    throw err;
   }
 });
