@@ -23,7 +23,6 @@ setup('create new project', async ({ request }) => {
     expect(project.id).not.toBeFalsy();
     process.env.PROJECT_ID = project.id;
   } catch (err) {
-    console.log(err, Object.keys(err));
     if (err.message.includes('ECONNREFUSED')) {
       throw Error(`
         Failed to connect to central-backend.
