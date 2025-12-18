@@ -15,6 +15,18 @@ setup('create new project', async ({ request }) => {
       name: `E2E Test - ${(new Date()).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}`
     }
   });
+
+  if (createProjectResponse.status() === 401) {
+    throw Error(`
+      Credentials check failed.
+
+      Confirm that:
+
+        1. the user '${user}' exists, and
+        2. their password matches the ODK_PASSWORD env var
+    `);
+  }
+
   expect(createProjectResponse).toBeOK();
   const project = await createProjectResponse.json();
 
