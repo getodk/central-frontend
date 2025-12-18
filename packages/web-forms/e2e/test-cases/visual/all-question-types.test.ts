@@ -174,6 +174,64 @@ test.describe('All Question Types (Visual)', () => {
 			await formPage.map.expectMapScreenshot(mapComponent, 'geopoint-maps-initial-state.png');
 		});
 	});
+
+	test.describe('Geoshape', () => {
+		let mapComponent: Locator;
+
+		test.beforeAll(async () => {
+			await formPage.waitForNetworkIdle();
+			await formPage.text.expectHint('geoshape type with no appearance');
+			mapComponent = formPage.map.getMapComponentLocator(
+				'Polygon that can be either manually-entered or automatically recorded on a map'
+			);
+		});
+
+		test.beforeEach(async () => {
+			await formPage.waitForNetworkIdle();
+			await formPage.map.expectMapVisible(mapComponent);
+			await formPage.map.scrollMapIntoView(mapComponent);
+		});
+
+		test('autocloses shape when adding vertices', async () => {
+			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-initial-state.png');
+			await formPage.waitForNetworkIdle();
+			await formPage.map.scrollMapIntoView(mapComponent);
+			await formPage.map.longPressMap(mapComponent, 100, 100);
+			await formPage.map.longPressMap(mapComponent, 150, -50);
+			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-uncompleted-polygon.png');
+			await formPage.map.longPressMap(mapComponent, 50, -150);
+			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-autoclose-polygon.png');
+		});
+	});
+
+	test.describe('Geotrace', () => {
+		let mapComponent: Locator;
+
+		test.beforeAll(async () => {
+			await formPage.waitForNetworkIdle();
+			await formPage.text.expectHint('geotrace type with no appearance');
+			mapComponent = formPage.map.getMapComponentLocator(
+				'Line that can be either manually-entered or automatically recorded on a map'
+			);
+		});
+
+		test.beforeEach(async () => {
+			await formPage.waitForNetworkIdle();
+			await formPage.map.expectMapVisible(mapComponent);
+			await formPage.map.scrollMapIntoView(mapComponent);
+		});
+
+		test('should not autoclose the trace when adding vertices', async () => {
+			await formPage.map.expectMapScreenshot(mapComponent, 'geotrace-initial-state.png');
+			await formPage.waitForNetworkIdle();
+			await formPage.map.scrollMapIntoView(mapComponent);
+			await formPage.map.longPressMap(mapComponent, 100, 100);
+			await formPage.map.longPressMap(mapComponent, 150, -50);
+			await formPage.map.expectMapScreenshot(mapComponent, 'geotrace-two-points.png');
+			await formPage.map.longPressMap(mapComponent, 50, -75);
+			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-three-points.png');
+		});
+	});
 });
 
 test.describe('All Question Types - Geolocation permission denied', () => {

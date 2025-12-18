@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import GeolocationFormattedValue from '@/components/common/GeolocationFormattedValue.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
 import { QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
 import { computed, type ComputedRef, inject, ref } from 'vue';
@@ -15,7 +16,6 @@ import {
 	type GeolocationRequestSuccess,
 } from './geolocation-request.ts';
 import { GeopointAccuracy } from './GeopointAccuracy.ts';
-import GeopointFormattedValue from '@/components/common/GeopointFormattedValue.vue';
 
 interface InputGeopointProps {
 	readonly question: GeopointInputNode;
@@ -137,7 +137,7 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 			</div>
 			<div class="geopoint-value">
 				<strong class="geo-quality">{{ committedValueAccuracy.label }}</strong>
-				<GeopointFormattedValue :question="question" />
+				<GeolocationFormattedValue :question="question" />
 				<Button
 					v-if="!isDisabled"
 					outlined

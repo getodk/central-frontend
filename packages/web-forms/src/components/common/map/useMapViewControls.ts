@@ -37,6 +37,7 @@ export interface UseMapViewControls {
 	watchCurrentLocation: (onSuccess: () => void, onError: () => void) => void;
 }
 
+export const COORDINATE_LAYOUT_XYZM = 'XYZM';
 export const DEFAULT_VIEW_CENTER = [0, 0];
 export const MIN_ZOOM = 2;
 const MAX_ZOOM = 19;
@@ -243,8 +244,15 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 				return;
 			}
 
-			const parsedCoords = fromLonLat([newLocation.longitude, newLocation.latitude]);
-			userCurrentLocationFeature.value = new Feature({ geometry: new Point(parsedCoords) });
+			const parsedCoords = fromLonLat([
+				newLocation.longitude,
+				newLocation.latitude,
+				newLocation.altitude ?? 0,
+				newLocation.accuracy,
+			]);
+			userCurrentLocationFeature.value = new Feature({
+				geometry: new Point(parsedCoords, COORDINATE_LAYOUT_XYZM),
+			});
 			currentLocationSource.addFeature(userCurrentLocationFeature.value);
 
 			if (canCenterView) {

@@ -2,13 +2,27 @@ import type { ValueType } from '../../client/ValueType.ts';
 import type { DatetimeInputValue, DatetimeRuntimeValue } from './DateValueCodec.ts';
 import { DateValueCodec } from './DateValueCodec.ts';
 import {
-	DecimalValueCodec,
 	type DecimalInputValue,
 	type DecimalRuntimeValue,
+	DecimalValueCodec,
 } from './DecimalValueCodec.ts';
-import type { GeopointInputValue, GeopointRuntimeValue } from './Geopoint/Geopoint.ts';
-import { GeopointValueCodec } from './Geopoint/GeopointValueCodec.ts';
-import { IntValueCodec, type IntInputValue, type IntRuntimeValue } from './IntValueCodec.ts';
+import { createGeolocationValueCodec } from './geolocation/createGeolocationValueCodec.ts';
+import {
+	Geopoint,
+	type GeopointInputValue,
+	type GeopointRuntimeValue,
+} from './geolocation/Geopoint.ts';
+import {
+	Geoshape,
+	type GeoshapeInputValue,
+	type GeoshapeRuntimeValue,
+} from './geolocation/Geoshape.ts';
+import {
+	Geotrace,
+	type GeotraceInputValue,
+	type GeotraceRuntimeValue,
+} from './geolocation/Geotrace.ts';
+import { type IntInputValue, type IntRuntimeValue, IntValueCodec } from './IntValueCodec.ts';
 import { StringValueCodec } from './StringValueCodec.ts';
 import type { ValueCodec } from './ValueCodec.ts';
 import { ValueTypePlaceholderCodec } from './ValueTypePlaceholderCodec.ts';
@@ -22,8 +36,8 @@ interface RuntimeValuesByType {
 	readonly time: string;
 	readonly dateTime: string;
 	readonly geopoint: GeopointRuntimeValue;
-	readonly geotrace: string;
-	readonly geoshape: string;
+	readonly geotrace: GeotraceRuntimeValue;
+	readonly geoshape: GeoshapeRuntimeValue;
 	readonly binary: string;
 	readonly barcode: string;
 	readonly intent: string;
@@ -40,8 +54,8 @@ interface RuntimeInputValuesByType {
 	readonly time: string;
 	readonly dateTime: string;
 	readonly geopoint: GeopointInputValue;
-	readonly geotrace: string;
-	readonly geoshape: string;
+	readonly geotrace: GeotraceInputValue;
+	readonly geoshape: GeoshapeInputValue;
 	readonly binary: string;
 	readonly barcode: string;
 	readonly intent: string;
@@ -68,12 +82,24 @@ export const sharedValueCodecs: SharedValueCodecs = {
 	date: new DateValueCodec(),
 	time: new ValueTypePlaceholderCodec('time'),
 	dateTime: new ValueTypePlaceholderCodec('dateTime'),
-	geopoint: new GeopointValueCodec(),
-	geotrace: new ValueTypePlaceholderCodec('geotrace'),
-	geoshape: new ValueTypePlaceholderCodec('geoshape'),
 	binary: new ValueTypePlaceholderCodec('binary'),
 	barcode: new ValueTypePlaceholderCodec('barcode'),
 	intent: new ValueTypePlaceholderCodec('intent'),
+	geopoint: createGeolocationValueCodec<'geopoint', GeopointRuntimeValue, GeopointInputValue>(
+		'geopoint',
+		(value) => Geopoint.parseGeopointToString(value),
+		(value) => Geopoint.parseStringToGeopoint(value)
+	),
+	geotrace: createGeolocationValueCodec<'geotrace', GeotraceRuntimeValue, GeotraceInputValue>(
+		'geotrace',
+		(value) => Geotrace.parseGeotraceString(value),
+		(value) => Geotrace.parseStringToGeotrace(value)
+	),
+	geoshape: createGeolocationValueCodec<'geoshape', GeoshapeRuntimeValue, GeoshapeInputValue>(
+		'geoshape',
+		(value) => Geoshape.parseGeoshapeString(value),
+		(value) => Geoshape.parseStringToGeoshape(value)
+	),
 };
 
 export const getSharedValueCodec = <V extends ValueType>(valueType: V): SharedValueCodec<V> => {

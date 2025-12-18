@@ -9,15 +9,19 @@ describe('getModeConfig', () => {
 			interactions: {
 				select: true,
 				longPress: false,
-				drag: false,
+				dragFeature: false,
+				dragFeatureAndVertex: false,
 			},
 			capabilities: {
 				canSaveCurrentLocation: false,
 				canRemoveCurrentLocation: false,
 				canLoadMultiFeatures: true,
 				canViewProperties: true,
+				canSelectFeatureOrVertex: false,
 				canShowMapOverlay: false,
 				canShowMapOverlayOnError: false,
+				canUndoLastChange: false,
+				canDeleteFeature: false,
 			},
 		});
 	});
@@ -29,15 +33,19 @@ describe('getModeConfig', () => {
 			interactions: {
 				select: false,
 				longPress: false,
-				drag: false,
+				dragFeature: false,
+				dragFeatureAndVertex: false,
 			},
 			capabilities: {
 				canSaveCurrentLocation: true,
 				canRemoveCurrentLocation: true,
 				canLoadMultiFeatures: false,
 				canViewProperties: false,
+				canSelectFeatureOrVertex: false,
 				canShowMapOverlay: true,
 				canShowMapOverlayOnError: true,
+				canUndoLastChange: false,
+				canDeleteFeature: false,
 			},
 		});
 	});
@@ -49,15 +57,43 @@ describe('getModeConfig', () => {
 			interactions: {
 				select: false,
 				longPress: true,
-				drag: true,
+				dragFeature: true,
+				dragFeatureAndVertex: false,
 			},
 			capabilities: {
 				canSaveCurrentLocation: true,
 				canRemoveCurrentLocation: true,
 				canLoadMultiFeatures: false,
 				canViewProperties: false,
+				canSelectFeatureOrVertex: false,
 				canShowMapOverlay: true,
 				canShowMapOverlayOnError: false,
+				canUndoLastChange: false,
+				canDeleteFeature: false,
+			},
+		});
+	});
+
+	it('returns correct config for DRAW mode', () => {
+		const config = getModeConfig(MODES.DRAW);
+
+		expect(config).toEqual({
+			interactions: {
+				select: true,
+				longPress: true,
+				dragFeature: false,
+				dragFeatureAndVertex: true,
+			},
+			capabilities: {
+				canSaveCurrentLocation: false,
+				canRemoveCurrentLocation: false,
+				canLoadMultiFeatures: false,
+				canViewProperties: false,
+				canSelectFeatureOrVertex: true,
+				canShowMapOverlay: false,
+				canShowMapOverlayOnError: false,
+				canUndoLastChange: true,
+				canDeleteFeature: true,
 			},
 		});
 	});
@@ -70,15 +106,19 @@ describe('getModeConfig', () => {
 			interactions: {
 				select: false,
 				longPress: false,
-				drag: false,
+				dragFeature: false,
+				dragFeatureAndVertex: false,
 			},
 			capabilities: {
 				canSaveCurrentLocation: false,
 				canRemoveCurrentLocation: false,
 				canLoadMultiFeatures: false,
 				canViewProperties: false,
+				canSelectFeatureOrVertex: false,
 				canShowMapOverlay: false,
 				canShowMapOverlayOnError: false,
+				canUndoLastChange: false,
+				canDeleteFeature: false,
 			},
 		});
 	});

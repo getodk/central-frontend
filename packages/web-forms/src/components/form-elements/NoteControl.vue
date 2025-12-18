@@ -1,7 +1,16 @@
 <script setup lang="ts">
-import GeopointFormattedValue from '@/components/common/GeopointFormattedValue.vue';
+import GeolocationFormattedValue from '@/components/common/GeolocationFormattedValue.vue';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { AnyNoteNode, DateNoteValue, GeopointNoteValue } from '@getodk/xforms-engine';
+import type {
+	AnyNoteNode,
+	DateNoteValue,
+	GeopointNoteNode,
+	GeopointNoteValue,
+	GeoshapeNoteNode,
+	GeoshapeNoteValue,
+	GeotraceNoteNode,
+	GeotraceNoteValue,
+} from '@getodk/xforms-engine';
 import { computed } from 'vue';
 import ControlText from './ControlText.vue';
 
@@ -35,7 +44,12 @@ const assertTextRenderableValue: AssertTextRenderableValue = (value) => {
 	}
 };
 
-type NoteRenderableValue = DateNoteValue | GeopointNoteValue | TextRenderableValue;
+type NoteRenderableValue =
+	| DateNoteValue
+	| GeopointNoteValue
+	| GeoshapeNoteValue
+	| GeotraceNoteValue
+	| TextRenderableValue;
 
 const value = computed<NoteRenderableValue>(() => {
 	const { question } = props;
@@ -45,6 +59,8 @@ const value = computed<NoteRenderableValue>(() => {
 		case 'int':
 		case 'decimal':
 		case 'geopoint':
+		case 'geotrace':
+		case 'geoshape':
 			return question.currentState.value;
 
 		case 'date':
@@ -53,8 +69,6 @@ const value = computed<NoteRenderableValue>(() => {
 		case 'boolean':
 		case 'time':
 		case 'dateTime':
-		case 'geotrace':
-		case 'geoshape':
 		case 'binary':
 		case 'barcode':
 		case 'intent':
@@ -65,6 +79,12 @@ const value = computed<NoteRenderableValue>(() => {
 			throw new UnreachableError(question);
 	}
 });
+
+const isGeolocationNode = (
+	node: AnyNoteNode
+): node is GeopointNoteNode | GeoshapeNoteNode | GeotraceNoteNode => {
+	return ['geopoint', 'geoshape', 'geotrace'].includes(node.valueType);
+};
 </script>
 
 <template>
@@ -72,8 +92,8 @@ const value = computed<NoteRenderableValue>(() => {
 		<ControlText :question="question" />
 
 		<div v-if="value != null" class="note-value">
-			<template v-if="question.valueType === 'geopoint'">
-				<GeopointFormattedValue :question="question" />
+			<template v-if="isGeolocationNode(question)">
+				<GeolocationFormattedValue :question="question" />
 			</template>
 
 			<template v-else>

@@ -5,6 +5,7 @@ import InputGeopoint from '@/components/form-elements/input/geopoint/InputGeopoi
 import InputGeopointWithMap from '@/components/form-elements/input/InputGeopointWithMap.vue';
 import InputDate from '@/components/form-elements/input/InputDate.vue';
 import InputDecimal from '@/components/form-elements/input/InputDecimal.vue';
+import InputGeoMultiPoint from '@/components/form-elements/input/InputGeoMultiPoint.vue';
 import InputInt from '@/components/form-elements/input/InputInt.vue';
 import InputNumbersAppearance from '@/components/form-elements/input/InputNumbersAppearance.vue';
 import InputText from '@/components/form-elements/input/InputText.vue';
@@ -37,6 +38,12 @@ const isFormEditMode = inject(IS_FORM_EDIT_MODE);
 		<template v-else-if="node.valueType === 'geopoint'">
 			<InputGeopointWithMap v-if="isFormEditMode || (node.appearances['placement-map'] || node.appearances.maps)" :question="node" />
 			<InputGeopoint v-else :question="node" />
+		</template>
+		<template v-else-if="node.valueType === 'geoshape'">
+			<InputGeoMultiPoint :question="node" draw-feature-type="shape" />
+		</template>
+		<template v-else-if="node.valueType === 'geotrace'">
+			<InputGeoMultiPoint :question="node" draw-feature-type="trace" />
 		</template>
 		<template v-else-if="node.valueType === 'date'">
 			<InputDate :question="node" />

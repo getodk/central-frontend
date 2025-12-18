@@ -49,8 +49,8 @@ interface InputNodeOptionsByValueType {
 	readonly time: null;
 	readonly dateTime: null;
 	readonly geopoint: GeoInputNodeOptions;
-	readonly geotrace: GeoInputNodeOptions;
-	readonly geoshape: GeoInputNodeOptions;
+	readonly geotrace: null;
+	readonly geoshape: null;
 	readonly binary: null;
 	readonly barcode: null;
 	readonly intent: null;
@@ -86,12 +86,16 @@ export type IntInputValue = InputValue<'int'>;
 export type DecimalInputValue = InputValue<'decimal'>;
 export type DateInputValue = InputValue<'date'>;
 export type GeopointInputValue = InputValue<'geopoint'>;
+export type GeoshapeInputValue = InputValue<'geoshape'>;
+export type GeotraceInputValue = InputValue<'geotrace'>;
 
 export type StringInputNode = InputNode<'string'>;
 export type IntInputNode = InputNode<'int'>;
 export type DecimalInputNode = InputNode<'decimal'>;
 export type DateInputNode = InputNode<'date'>;
 export type GeopointInputNode = InputNode<'geopoint'>;
+export type GeoshapeInputNode = InputNode<'geoshape'>;
+export type GeotraceInputNode = InputNode<'geotrace'>;
 
 // prettier-ignore
 type SupportedInputValueType =
@@ -100,7 +104,9 @@ type SupportedInputValueType =
 	| 'int'
 	| 'decimal'
 	| 'date'
-	| 'geopoint';
+	| 'geopoint'
+	| 'geoshape'
+	| 'geotrace';
 
 type TemporaryStringValueType = Exclude<ValueType, SupportedInputValueType>;
 
@@ -114,4 +120,6 @@ export type AnyInputNode =
 	| DecimalInputNode
 	| DateInputNode
 	| GeopointInputNode
+	| GeoshapeInputNode
+	| GeotraceInputNode
 	| TemporaryStringValueInputNode;

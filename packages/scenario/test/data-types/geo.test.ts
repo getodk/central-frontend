@@ -276,7 +276,7 @@ describe('Geoshape', () => {
 										'data id="geoshape-area"',
 										t(
 											'polygon',
-											'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.25146813817506 21.758421137528785 0 0;'
+											'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.253094215699576 21.756382658677467 0 0;'
 										),
 										t('area')
 									)
@@ -294,7 +294,7 @@ describe('Geoshape', () => {
 				// http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
 				// assertThat(Double.parseDouble(scenario.answerOf("/data/area").getDisplayText()),
 				// 		closeTo(151452, 0.5));
-				expect(scenario.answerOf('/data/area')).toHaveAnswerCloseTo(expectedArea(151452, 0.5));
+				expect(scenario.answerOf('/data/area')).toHaveAnswerCloseTo(expectedArea(209372.61, 0.5));
 			});
 
 			describe('when shape has fewer than three points', () => {

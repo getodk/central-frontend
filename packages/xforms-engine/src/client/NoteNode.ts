@@ -83,12 +83,16 @@ export type IntNoteValue = NoteValue<'int'>;
 export type DecimalNoteValue = NoteValue<'decimal'>;
 export type DateNoteValue = NoteValue<'date'>;
 export type GeopointNoteValue = NoteValue<'geopoint'>;
+export type GeoshapeNoteValue = NoteValue<'geoshape'>;
+export type GeotraceNoteValue = NoteValue<'geotrace'>;
 
 export type StringNoteNode = NoteNode<'string'>;
 export type IntNoteNode = NoteNode<'int'>;
 export type DecimalNoteNode = NoteNode<'decimal'>;
 export type DateNoteNode = NoteNode<'date'>;
 export type GeopointNoteNode = NoteNode<'geopoint'>;
+export type GeoshapeNoteNode = NoteNode<'geoshape'>;
+export type GeotraceNoteNode = NoteNode<'geotrace'>;
 
 // prettier-ignore
 type SupportedNoteValueType =
@@ -97,7 +101,9 @@ type SupportedNoteValueType =
 	| 'int'
 	| 'decimal'
 	| 'date'
-	| 'geopoint';
+	| 'geopoint'
+	| 'geoshape'
+	| 'geotrace';
 
 type TemporaryStringValueType = Exclude<ValueType, SupportedNoteValueType>;
 
@@ -111,4 +117,6 @@ export type AnyNoteNode =
 	| DecimalNoteNode
 	| DateNoteNode
 	| GeopointNoteNode
+	| GeoshapeNoteNode
+	| GeotraceNoteNode
 	| TemporaryStringValueNoteNode;

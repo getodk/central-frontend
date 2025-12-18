@@ -13,7 +13,7 @@ test.describe('Geopoint Question Type', () => {
 
 			const previewPage = new PreviewPage(page);
 			await previewPage.goToDevPage();
-			await previewPage.openDevDemoForm('geopoint', 'geopoint.xml', 'Geopoint');
+			await previewPage.openDevDemoForm('geolocation', 'geopoint.xml', 'Geopoint');
 		});
 
 		test('captures good-accuracy location', async ({ context }) => {
@@ -37,7 +37,7 @@ test.describe('Geopoint Question Type', () => {
 			await formPage.geopoint.saveLocation();
 
 			await formPage.geopoint.expectGeopointFormattedValue(
-				['Accuracy: 10 m', 'Latitude: 40.7128', 'Longitude: -74.006'],
+				['Accuracy: 10 m,', 'Latitude: 40.7128,', 'Longitude: -74.006.'],
 				'Good accuracy'
 			);
 		});
@@ -59,7 +59,7 @@ test.describe('Geopoint Question Type', () => {
 			await formPage.geopoint.saveLocation();
 
 			await formPage.geopoint.expectGeopointFormattedValue(
-				['Accuracy: 500 m', 'Latitude: 80.5128', 'Longitude: -99.9099'],
+				['Accuracy: 500 m,', 'Latitude: 80.5128,', 'Longitude: -99.9099.'],
 				'Poor accuracy'
 			);
 		});
@@ -80,7 +80,7 @@ test.describe('Geopoint Question Type', () => {
 			await formPage.geopoint.saveLocation();
 
 			await formPage.geopoint.expectGeopointFormattedValue(
-				['Accuracy: 350 m', 'Latitude: 79.5128', 'Longitude: -95.9099'],
+				['Accuracy: 350 m,', 'Latitude: 79.5128,', 'Longitude: -95.9099.'],
 				'Poor accuracy'
 			);
 
@@ -96,7 +96,7 @@ test.describe('Geopoint Question Type', () => {
 			await formPage.geopoint.saveLocation();
 
 			await formPage.geopoint.expectGeopointFormattedValue(
-				['Accuracy: 7 m', 'Latitude: 80.5128', 'Longitude: -99.9099'],
+				['Accuracy: 7 m,', 'Latitude: 80.5128,', 'Longitude: -99.9099.'],
 				'Good accuracy'
 			);
 		});
@@ -114,7 +114,7 @@ test.describe('Geopoint Question Type', () => {
 
 			const previewPage = new PreviewPage(page);
 			await previewPage.goToDevPage();
-			await previewPage.openDevDemoForm('geopoint', 'geopoint.xml', 'Geopoint');
+			await previewPage.openDevDemoForm('geolocation', 'geopoint.xml', 'Geopoint');
 		});
 
 		test('displays troubleshooting message when permission is denied', async () => {

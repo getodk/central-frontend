@@ -13,9 +13,12 @@ import {
 	type Feature,
 } from '@/components/common/map/createFeatureCollectionAndProps.ts';
 
+type DrawFeatureType = 'shape' | 'trace';
+
 type MapBlockComponent = DefineComponent<{
 	featureCollection: { type: string; features: Feature[] };
 	disabled: boolean;
+	drawFeatureType?: DrawFeatureType;
 	mode: Mode;
 	orderedExtraProps: Map<string, Array<[key: string, value: string]>>;
 	savedFeatureValue: Feature | undefined;
@@ -24,6 +27,7 @@ type MapBlockComponent = DefineComponent<{
 interface AsyncMapProps {
 	features?: readonly SelectItem[];
 	disabled: boolean;
+	drawFeatureType?: DrawFeatureType;
 	mode: Mode;
 	savedFeatureValue: string | undefined;
 }
@@ -82,6 +86,7 @@ onMounted(loadMap);
 		<component
 			:is="mapComponent"
 			v-else
+			:draw-feature-type="drawFeatureType"
 			:feature-collection="featureCollectionAndProps.featureCollection"
 			:mode="mode"
 			:ordered-extra-props="featureCollectionAndProps.orderedExtraPropsMap"

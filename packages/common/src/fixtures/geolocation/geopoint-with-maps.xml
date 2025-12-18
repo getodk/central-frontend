@@ -95,14 +95,14 @@
       <instance>
         <data id="geopoint_with_map" version="202510311">
           <maps_group>
-            <select_to_disable/>
-            <select_to_show/>
+            <select_to_disable>no</select_to_disable>
+            <select_to_show>yes</select_to_show>
             <default_value/>
             <geo_maps/>
           </maps_group>
           <placement_map_group>
-            <select_to_disable_pl/>
-            <select_to_show_pl/>
+            <select_to_disable_pl>no</select_to_disable_pl>
+            <select_to_show_pl>yes</select_to_show_pl>
             <default_value_pl/>
             <geo_placement_map/>
           </placement_map_group>

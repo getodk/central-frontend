@@ -22,7 +22,7 @@ export class GeopointControl {
 	async expectGeopointFormattedValue(expectedLocation: string[], expectedQuality?: string) {
 		for (const location of expectedLocation) {
 			const formattedValue = this.page
-				.locator('.geopoint-formatted-value')
+				.locator('.geolocation-formatted-value')
 				.getByText(location, { exact: true });
 			await expect(formattedValue).toBeVisible();
 		}

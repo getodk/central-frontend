@@ -69,8 +69,9 @@ export class MapControl {
 
 		await this.page.mouse.move(centerX + moveX, centerY + moveY);
 		await this.page.mouse.down();
-		await this.page.waitForTimeout(1000); // Press and hold
+		await this.page.waitForTimeout(1400); // Press and hold
 		await this.page.mouse.up();
+		await this.page.waitForTimeout(300); // Process point
 	}
 
 	async zoomIn(mapComponent: Locator, times = 1) {

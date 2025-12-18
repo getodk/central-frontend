@@ -22,9 +22,11 @@ const hasColumnsAppearance = ref(false);
 const hasFieldListRelatedAppearance = ref(false);
 const savedFeatureValue = computed(() => {
 	if (!props.question.appearances.map) {
-		return;
+		return '';
 	}
-	return props.question.currentState.value?.[0];
+	const value = props.question.currentState.value?.[0];
+	const item = props.question.currentState.valueOptions.find((option) => option.value === value);
+	return item?.properties.find(([key = '']) => key === 'geometry')?.[1] ?? '';
 });
 
 watchEffect(() => {

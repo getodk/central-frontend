@@ -6,18 +6,23 @@
  */
 import IconSVG from '@/components/common/IconSVG.vue';
 import type { Mode } from '@/components/common/map/getModeConfig.ts';
+import MapConfirm from '@/components/common/map/MapConfirm.vue';
+import MapControls from '@/components/common/map/MapControls.vue';
 import MapProperties from '@/components/common/map/MapProperties.vue';
 import MapStatusBar from '@/components/common/map/MapStatusBar.vue';
 import { STATES, useMapBlock } from '@/components/common/map/useMapBlock.ts';
+import { type DrawFeatureType } from '@/components/common/map/useMapInteractions.ts';
 import { QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
-import type { FeatureCollection, Feature } from 'geojson';
+import type { Feature, FeatureCollection } from 'geojson';
+import type { Coordinate } from 'ol/coordinate';
 import Button from 'primevue/button';
-import { computed, type ComputedRef, inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import Message from 'primevue/message';
+import { computed, type ComputedRef, inject, onMounted, onUnmounted, ref, watch } from 'vue';
 
 interface MapBlockProps {
 	featureCollection: FeatureCollection;
 	disabled: boolean;
+	drawFeatureType?: DrawFeatureType;
 	mode: Mode;
 	orderedExtraProps: Map<string, Array<[string, string]>>;
 	savedFeatureValue: Feature | undefined;
@@ -27,12 +32,24 @@ const props = defineProps<MapBlockProps>();
 const emit = defineEmits(['save']);
 const mapElement = ref<HTMLElement | undefined>();
 const isFullScreen = ref(false);
+const confirmDeleteAction = ref(false);
+const selectedVertex = ref<Coordinate | undefined>();
 const showErrorStyle = inject<ComputedRef<boolean>>(
 	QUESTION_HAS_ERROR,
 	computed(() => false)
 );
 
-const mapHandler = useMapBlock(props.mode, { onFeaturePlacement: () => emitSavedFeature() });
+const mapHandler = useMapBlock(
+	{ mode: props.mode, drawFeatureType: props.drawFeatureType },
+	{
+		onFeaturePlacement: () => emitSavedFeature(),
+		onVertexSelect: (vertex) => (selectedVertex.value = vertex),
+	}
+);
+
+const showSecondaryControls = computed(() => {
+	return !props.disabled && (mapHandler.canUndoChange() || mapHandler.canDeleteFeatureOrVertex());
+});
 
 onMounted(() => {
 	if (!mapElement.value || !mapHandler) {
@@ -51,13 +68,18 @@ onUnmounted(() => {
 
 watch(
 	() => props.featureCollection,
-	(newData) => mapHandler.updateFeatureCollection(newData, props.savedFeatureValue),
+	(newData) => {
+		mapHandler.updateFeatureCollection(newData, props.savedFeatureValue);
+		emitSavedFeature();
+	},
 	{ deep: true }
 );
 
 watch(
 	() => props.savedFeatureValue,
-	(newValue) => newValue && mapHandler.findAndSaveFeature(newValue)
+	(newValue) => {
+		mapHandler.findAndSaveFeature(newValue);
+	}
 );
 
 watch(
@@ -72,7 +94,7 @@ const handleEscapeKey = (event: KeyboardEvent) => {
 };
 
 const emitSavedFeature = () => {
-	emit('save', mapHandler.getSavedFeatureValue());
+	emit('save', mapHandler.getSavedFeatureValue() ?? '');
 };
 
 const saveSelection = () => {
@@ -89,34 +111,31 @@ const discardSavedFeature = () => {
 	mapHandler.discardSavedFeature();
 	emitSavedFeature();
 };
+
+const triggerDelete = () => {
+	if (mapHandler.confirmDeleteFeature()) {
+		confirmDeleteAction.value = true;
+		return;
+	}
+	mapHandler.deleteVertex();
+	emitSavedFeature();
+};
+
+const deleteFeature = () => {
+	mapHandler.deleteFeature();
+	confirmDeleteAction.value = false;
+	emitSavedFeature();
+};
+
+const undoLastChange = () => {
+	mapHandler.undoLastChange();
+	emitSavedFeature();
+};
 </script>
 
 <template>
 	<div class="map-block-component">
 		<div :class="{ 'map-container': true, 'map-full-screen': isFullScreen }">
-			<div class="control-bar">
-				<!-- TODO: translations -->
-				<button
-					:class="{ 'control-active': isFullScreen }"
-					title="Full Screen"
-					@click="isFullScreen = !isFullScreen"
-				>
-					<IconSVG name="mdiArrowExpandAll" size="sm" />
-				</button>
-				<!-- TODO: translations -->
-				<button
-					title="Zoom to fit all options"
-					:disabled="!mapHandler.canFitToAllFeatures()"
-					@click="mapHandler.fitToAllFeatures"
-				>
-					<IconSVG name="mdiFullscreen" />
-				</button>
-				<!-- TODO: translations -->
-				<button title="Zoom to current location" @click="mapHandler.watchCurrentLocation">
-					<IconSVG name="mdiCrosshairsGps" size="sm" />
-				</button>
-			</div>
-
 			<div ref="mapElement" class="map-block">
 				<div v-if="mapHandler.shouldShowMapOverlay()" class="map-overlay">
 					<Button outlined severity="contrast" @click="mapHandler.watchCurrentLocation">
@@ -126,15 +145,36 @@ const discardSavedFeature = () => {
 					</Button>
 				</div>
 
-				<Message v-if="!disabled && mapHandler.canLongPressAndDrag()" severity="contrast" closable size="small" class="map-message">
+				<MapControls
+					:is-full-screen="isFullScreen"
+					:disable-fit-all-features="mapHandler.isMapEmpty()"
+					:disable-undo="!mapHandler.canUndoChange()"
+					:disable-delete="!mapHandler.isFeatureSelected()"
+					:show-secondary-controls="showSecondaryControls"
+					@toggle-full-screen="isFullScreen = !isFullScreen"
+					@fit-all-features="mapHandler.fitToAllFeatures"
+					@watch-current-location="mapHandler.watchCurrentLocation"
+					@trigger-delete="triggerDelete"
+					@undo-last-change="undoLastChange"
+				/>
+
+				<Message
+					v-if="!disabled && mapHandler.canLongPressAndDrag()"
+					severity="contrast"
+					closable
+					size="small"
+					:class="{ 'map-message': true, 'above-secondary-controls': showSecondaryControls }"
+				>
 					<!-- TODO: translations -->
-					<span v-if="savedFeatureValue">Long press and drag move point</span>
+					<span v-if="savedFeatureValue">Press and drag to move a point</span>
 					<span v-else>Long press to place a point</span>
 				</Message>
 			</div>
 
 			<MapStatusBar
-				:is-feature-saved="mapHandler.isFeatureSaved()"
+				:draw-feature-type="drawFeatureType"
+				:saved-feature-value="savedFeatureValue"
+				:selected-vertex="selectedVertex"
 				:is-capturing="mapHandler.currentState.value === STATES.CAPTURING"
 				class="map-status-bar-component"
 				:can-remove="!disabled && mapHandler.canRemoveCurrentLocation()"
@@ -167,14 +207,17 @@ const discardSavedFeature = () => {
 			<span>{{ mapHandler.errorMessage.value.message }}</span>
 		</div>
 	</div>
+
+	<MapConfirm
+		v-model:visible="confirmDeleteAction"
+		:draw-feature-type="drawFeatureType"
+		@delete-feature="deleteFeature"
+	/>
 </template>
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
-
-.map-block-component {
-	--odk-map-spacing: 8px;
-}
+@use '../../../assets/styles/map-block' as mb;
 
 .map-block-component {
 	position: relative;
@@ -189,6 +232,10 @@ const discardSavedFeature = () => {
 	border: 1px solid var(--odk-border-color);
 	border-radius: var(--odk-radius);
 	overflow: hidden;
+	// Fixes iPhone select issues on map
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-touch-callout: none;
 
 	.map-block {
 		position: relative;
@@ -233,64 +280,15 @@ const discardSavedFeature = () => {
 	}
 }
 
-@mixin map-floating-control-bar {
-	position: absolute;
-	right: var(--odk-map-spacing);
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	align-items: center;
-	box-shadow: none;
-	background: none;
-	overflow: hidden;
-	gap: var(--odk-map-spacing);
-	z-index: var(--odk-z-index-form-floating);
-}
-
-@mixin map-control-button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 42px;
-	width: 42px;
-	border: 1px solid var(--odk-border-color);
-	border-radius: var(--odk-radius);
-	background: var(--odk-base-background-color);
-	font-size: 24px;
-	font-weight: 300;
-	color: var(--odk-text-color);
-	cursor: pointer;
-	-webkit-tap-highlight-color: transparent;
-
-	&:hover {
-		background: var(--odk-muted-background-color);
-		color: var(--odk-text-color);
-	}
-
-	&:disabled {
-		background: var(--odk-muted-background-color);
-		cursor: not-allowed;
-	}
-}
-
-.control-bar {
-	@include map-floating-control-bar;
-	top: var(--odk-map-spacing);
-
-	button {
-		@include map-control-button;
-	}
-}
-
 .map-block-component :deep(.ol-zoom) {
-	@include map-floating-control-bar;
+	@include mb.map-control-bar-vertical;
 	bottom: 35px;
 
 	button,
 	button:hover,
 	button:focus,
 	button:active {
-		@include map-control-button;
+		@include mb.map-control-button;
 	}
 }
 
@@ -338,10 +336,10 @@ const discardSavedFeature = () => {
 
 .map-message {
 	width: max-content;
-	max-width: 90%;
+	max-width: calc(100% - (var(--odk-map-controls-spacing) * 2));
 	position: absolute;
 	z-index: var(--odk-z-index-form-floating);
-	bottom: 0;
+	bottom: -11px;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
@@ -362,14 +360,13 @@ const discardSavedFeature = () => {
 		}
 	}
 
-	.control-bar {
-		top: var(--odk-map-spacing);
-		right: var(--odk-map-spacing);
+	.map-block-component :deep(.ol-zoom) {
+		right: var(--odk-map-controls-spacing);
+		bottom: var(--odk-map-controls-spacing);
 	}
 
-	.map-block-component :deep(.ol-zoom) {
-		right: var(--odk-map-spacing);
-		bottom: var(--odk-map-spacing);
+	.map-message.above-secondary-controls {
+		bottom: 61px;
 	}
 }
 </style>

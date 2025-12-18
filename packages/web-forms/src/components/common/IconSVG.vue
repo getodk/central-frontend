@@ -4,6 +4,7 @@ import {
 	mdiAlert,
 	mdiAlertCircleOutline,
 	mdiArrowExpandAll,
+	mdiArrowULeftTop,
 	mdiCamera,
 	mdiCheck,
 	mdiCheckboxMarkedCircleOutline,
@@ -26,8 +27,11 @@ import {
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
+	mdiTrashCanOutline,
 	mdiUnfoldMoreHorizontal,
 	mdiUpload,
+	mdiVectorPolygon,
+	mdiVectorPolyline,
 	mdiWeb,
 } from '@mdi/js';
 
@@ -36,6 +40,7 @@ const iconMap: Record<string, string> = {
 	mdiAlert,
 	mdiAlertCircleOutline,
 	mdiArrowExpandAll,
+	mdiArrowULeftTop,
 	mdiCamera,
 	mdiCheck,
 	mdiCheckboxMarkedCircleOutline,
@@ -58,8 +63,11 @@ const iconMap: Record<string, string> = {
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
+	mdiTrashCanOutline,
 	mdiUnfoldMoreHorizontal,
 	mdiUpload,
+	mdiVectorPolygon,
+	mdiVectorPolyline,
 	mdiWeb,
 };
 

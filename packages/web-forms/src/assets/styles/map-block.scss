@@ -1,0 +1,50 @@
+.map-block-component {
+	--odk-map-controls-spacing: 8px;
+}
+
+@mixin map-control-bar {
+	position: absolute;
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	box-shadow: none;
+	background: none;
+	overflow: hidden;
+	gap: var(--odk-map-controls-spacing);
+	z-index: var(--odk-z-index-form-floating);
+}
+
+@mixin map-control-bar-vertical {
+	@include map-control-bar;
+	right: var(--odk-map-controls-spacing);
+	flex-direction: column;
+}
+
+@mixin map-control-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 42px;
+	width: 42px;
+	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	background: var(--odk-base-background-color);
+	font-size: 24px;
+	font-weight: 300;
+	color: var(--odk-text-color);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+
+	&:hover {
+		background: var(--odk-muted-background-color);
+		color: var(--odk-text-color);
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+
+		svg {
+			opacity: 0.5;
+		}
+	}
+}

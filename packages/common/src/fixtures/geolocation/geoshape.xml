@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Geoshape</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="yes_no-0">
+            <value>Yes</value>
+          </text>
+          <text id="yes_no-1">
+            <value>No</value>
+          </text>
+          <text id="/data/select_to_disable:label">
+            <value>Select 'yes' to test readonly mode.</value>
+          </text>
+          <text id="/data/select_to_show:label">
+            <value>Select 'yes' to make the geoshape relevant (visible).</value>
+          </text>
+          <text id="/data/default_value:label">
+            <value>Enter geoshape points (e.g., 37.7749 -122.4194 0 0; 37.775 -122.419 0 0; 37.774 -122.420 0 0; 37.7749 -122.4194 0 0) to test with default; leave blank for no default.</value>
+          </text>
+          <text id="/data/geo:label">
+            <value>Observe the map display</value>
+          </text>
+        </translation>
+        <translation lang="French (fr)">
+          <text id="yes_no-0">
+            <value>Oui</value>
+          </text>
+          <text id="yes_no-1">
+            <value>Non</value>
+          </text>
+          <text id="/data/select_to_disable:label">
+            <value>Sélectionnez 'oui' pour tester le mode en lecture seule.</value>
+          </text>
+          <text id="/data/select_to_show:label">
+            <value>Sélectionnez 'oui' pour rendre le géoshape pertinent (visible).</value>
+          </text>
+          <text id="/data/default_value:label">
+            <value>Entrez les points du géoshape (ex. : 37.7749 -122.4194 0 0; 37.775 -122.419 0 0; 37.774 -122.420 0 0; 37.7749 -122.4194 0 0) pour tester avec valeur par défaut; laissez vide pour aucune valeur par défaut.</value>
+          </text>
+          <text id="/data/geo:label">
+            <value>Observez l'affichage de la carte</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="geoshape_test" version="202510311">
+          <select_to_disable>no</select_to_disable>
+          <select_to_show>yes</select_to_show>
+          <default_value/>
+          <geo/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="yes_no">
+        <root>
+          <item>
+            <itextId>yes_no-0</itextId>
+            <name>yes</name>
+          </item>
+          <item>
+            <itextId>yes_no-1</itextId>
+            <name>no</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/select_to_disable" type="string" required="true()"/>
+      <bind nodeset="/data/select_to_show" type="string"/>
+      <bind nodeset="/data/default_value" type="string"/>
+      <bind nodeset="/data/geo" type="geoshape"
+            calculate="coalesce(/data/geo, /data/default_value)"
+            relevant="/data/select_to_show = 'yes'"
+            readonly="/data/select_to_disable = 'yes'"
+            required="true()"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/select_to_disable">
+      <label ref="jr:itext('/data/select_to_disable:label')"/>
+      <itemset nodeset="instance('yes_no')/root/item">
+        <value ref="name"/>
+        <label ref="jr:itext(itextId)"/>
+      </itemset>
+    </select1>
+    <select1 ref="/data/select_to_show">
+      <label ref="jr:itext('/data/select_to_show:label')"/>
+      <itemset nodeset="instance('yes_no')/root/item">
+        <value ref="name"/>
+        <label ref="jr:itext(itextId)"/>
+      </itemset>
+    </select1>
+    <input ref="/data/default_value">
+      <label ref="jr:itext('/data/default_value:label')"/>
+    </input>
+    <input ref="/data/geo">
+      <label ref="jr:itext('/data/geo:label')"/>
+    </input>
+  </h:body>
+</h:html>

@@ -21,6 +21,8 @@
             <note_calc_decimal_from_int />
             <date_note>2025-12-21T23:30:05</date_note>
             <geopoint_note>38.253094215699576 21.756382658677467 0 150</geopoint_note>
+            <geotrace_note>37.7749 -122.4194 0 0; 37.775 -122.419 0 0; 37.774 -122.420 0 0</geotrace_note>
+            <geoshape_note>37.7749 -122.4194 0 0; 37.775 -122.419 0 0; 37.774 -122.420 0 0; 37.7749 -122.4194 0 0</geoshape_note>
           </group>
           <meta>
             <instanceID />
@@ -41,6 +43,8 @@
         calculate="/data/group/read_only_int_value + 1.5" readonly="true()" />
       <bind nodeset="/data/group/date_note" type="date" readonly="true()" />
       <bind nodeset="/data/group/geopoint_note" type="geopoint" readonly="true()" />
+      <bind nodeset="/data/group/geotrace_note" type="geotrace" readonly="true()" />
+      <bind nodeset="/data/group/geoshape_note" type="geoshape" readonly="true()" />
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
     </model>
   </h:head>
@@ -85,6 +89,12 @@
       </input>
       <input ref="/data/group/geopoint_note">
         <label>A note with geopoint type</label>
+      </input>
+      <input ref="/data/group/geotrace_note">
+        <label>A note with geotrace type</label>
+      </input>
+      <input ref="/data/group/geoshape_note">
+        <label>A note with geoshape type</label>
       </input>
     </group>
   </h:body>
