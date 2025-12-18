@@ -159,6 +159,12 @@ export default {
       "notOpen": "Katika toleo hili la ODK Central, onyesho la kukagua linapatikana kwa Fomu zilizo katika \"OPEN STATE\""
     }
   },
+  "zh": {
+    "disabled": {
+      "processing": "此表单的预览功能尚未处理完成，请稍后刷新重试。",
+      "notOpen": "此版本ODK Central中，预览功能仅对“开放”状态的表单开放。"
+    }
+  },
   "zh-Hant": {
     "disabled": {
       "processing": "預覽尚未完成此表單的處理。請稍後重新載入並重試。",

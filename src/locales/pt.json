@@ -49,6 +49,7 @@
   },
   "audit": {
     "category": {
+      "nonverbose": "Todas as ações",
       "user": "Ações de usuários do site",
       "project": "Ações do projeto",
       "form": "Ações de formulário",
@@ -78,6 +79,10 @@
         "update": "Atualizar",
         "update_publish": "Publicar",
         "create": "@:audit.action.default.create"
+      },
+      "entity": {
+        "bulk_delete": "Exclusão em massa",
+        "bulk_restore": "Recuperação em massa"
       },
       "field_key": {
         "assignment_create": "Conceder acesso",
@@ -112,7 +117,8 @@
       "upgrade": {
         "process_form": "Processar formulário",
         "process_form_draft": "Processar formulário de teste",
-        "process_form_entities_version": "Marcar Formulário para Atualização"
+        "process_form_entities_version": "Marcar Formulário para Atualização",
+        "server": "Nova versão"
       },
       "user": {
         "assignment_create": "Atribuir função",
@@ -152,11 +158,13 @@
     "ok": "Tudo certo",
     "proceed": "Prosseguir",
     "refresh": "Atualizar",
+    "refreshPage": "Atualizar a página",
     "resetPassword": "Redefinir senha",
     "review": "Revisar",
     "save": "Salvar",
     "saveSettings": "Salvar configuração",
     "sort": "Ordenar",
+    "undo": "Desfazer",
     "update": "Atualizar",
     "yesProceed": "Sim, prossiga",
     "showPreview": "Visualizar",
@@ -164,6 +172,7 @@
     "newPreview": "Nova Visualização Prévia",
     "expand": "Expandir",
     "collapse": "Condensar",
+    "selectRow": "Selecionar linha",
     "reviewParallelUpdates": "Revisar atualizações paralelas",
     "tryAgain": "Tentar novamente",
     "upload": "Carregar",
@@ -246,6 +255,11 @@
     "draft": "Rascunho"
   },
   "alert": {
+    "passwordTooShort": "A senha precisa ter no mínimo 10 caracteres.",
+    "updateEntity": "A entidade foi atualizada com sucesso.",
+    "updateReviewState": "Revisão salva com sucesso.",
+    "versionChange": "O servidor foi atualizado com sucesso.",
+    "submissionDeleted": "A Resposta foi excluída com sucesso.",
     "submissionRestored": "A Resposta foi recuperada.",
     "entityRestored": "A Entidade \"{label}\" foi recuperada.",
     "entityDeleted": "A Entidade \"{label}\" foi excluída."
@@ -298,12 +312,14 @@
     "dangerZone": "Zona de perigo",
     "data": "Dados",
     "docs": "Documentação",
+    "emptyMap": "Ainda não há dados de mapa disponíveis.",
     "emptyValue": "(vazio)",
     "error": "Erro",
     "filter": "Filtrar",
     "forum": "Fórum",
     "lastUpdate": "Última atualização",
     "loading": "Carregando...",
+    "map": "Mapa",
     "no": "Não",
     "noResults": "Não há resultados",
     "noUndo": "Esta ação não pode se desfeita.",
@@ -314,6 +330,7 @@
     "tab": {
       "settings": "Configurações"
     },
+    "table": "Tabela",
     "total": "Total",
     "totalSubmissions": "Total de Respostas",
     "propertiesCount": "{inform} de {count} propriedade | {inform} de {count} propriedades | {inform} de {count} propriedades",
@@ -323,6 +340,7 @@
     "warning": "Aviso",
     "beta": "Beta",
     "none": "(nenhum)",
+    "search": "Busca",
     "reviewState": "Status da revisão",
     "status": "Situação",
     "version": "Versão"
@@ -353,6 +371,16 @@
         "409_17": {
           "message": "Este Formulário tenta criar uma nova propriedade de Entidade que corresponde a uma já existente, exceto pelas letras maiúsculas: | Este Formulário tenta criar novas propriedades de Entidade que correspondem às existentes, exceto pelas letras maiúsculas: | Este Formulário tenta criar novas propriedades de Entidade que correspondem às existentes, exceto pelas letras maiúsculas:",
           "duplicateProperty": "{provided}(existentes: {current})"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Sua sessão está prestes a expirar! Você será desconectado em 2 minutos.",
+        "expired": "Sua sessão expirou. Efetue o login novamente para continuar.",
+        "logoutError": {
+          "thereWasProblem": "Ocorreu um problema ao sair.",
+          "pleaseRefresh": "Por favor, atualize a página e tente novamente."
         }
       }
     }

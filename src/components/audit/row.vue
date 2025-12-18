@@ -252,6 +252,10 @@ export default {
     "deletedMessage": "Rasimali hii imefutwa",
     "purgedMessage": "Rasilimali hii imesafishwa."
   },
+  "zh": {
+    "deletedMessage": "该资源已删除。",
+    "purgedMessage": "该资源已清除。"
+  },
   "zh-Hant": {
     "deletedMessage": "該資源已被刪除。",
     "purgedMessage": "該資源已清除。"

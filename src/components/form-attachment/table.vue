@@ -141,6 +141,11 @@ const dsHashset = computed(() =>
       "uploaded": "Imepakiwa"
     }
   },
+  "zh": {
+    "header": {
+      "uploaded": "已上传"
+    }
+  },
   "zh-Hant": {
     "header": {
       "uploaded": "已上傳"

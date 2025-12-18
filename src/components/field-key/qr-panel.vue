@@ -474,6 +474,41 @@ export default {
       "Changanua msimbo huu wa QR ili kusanidi kifaa kilicho na akaunti \"{displayName}\"."
     ]
   },
+  "zh": {
+    "title": {
+      "managed": "客户端配置代码",
+      "legacy": "旧版客户端配置代码"
+    },
+    "body": [
+      {
+        "managed": {
+          "full": "这是一个{managedCode}。",
+          "managedCode": "收管的QR Code"
+        },
+        "legacy": {
+          "full": "这是一个{legacyCode}。",
+          "legacyCode": "旧版QR Code"
+        }
+      },
+      {
+        "managed": "Collect将精确同步“{displayName}”可用的所有表单，并自动更新。用户无需手动获取空白表单。此外，只要检测到网络连接，已完成的表单将立即自动上传。",
+        "legacy": "用户需要在设备上手动获取空白表单，并决定更新哪些表单。同时，他们也需手动提交已完成表单。"
+      },
+      {
+        "managed": {
+          "full": "如需恢复旧版操作模式，请{switchToLegacy}。",
+          "switchToLegacy": "切换到{legacyCode}",
+          "legacyCode": "旧版QR Code"
+        },
+        "legacy": {
+          "full": "要启用更严谨可靠的受控流程，请{switchToManaged}。",
+          "switchToManaged": "切换到{managedCode}",
+          "managedCode": "收管的QR Code"
+        }
+      },
+      "扫描此QR Code以将账户{displayName}配置到设备。"
+    ]
+  },
   "zh-Hant": {
     "title": {
       "managed": "客戶端配置QR code",

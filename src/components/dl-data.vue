@@ -18,13 +18,19 @@ are too long. -->
     <slot name="name"><span v-tooltip.text>{{ name }}</span></slot>
   </dt>
 
-  <dd v-if="value == null || value === ''" class="dl-data-dd empty">
-    {{ $t('common.emptyValue') }}
+  <dd class="dl-data-dd">
+    <slot name="value">
+      <span v-if="value == null || value === ''" class="dl-data-empty">
+        {{ $t('common.emptyValue') }}
+      </span>
+      <expandable-text v-else>{{ value }}</expandable-text>
+    </slot>
   </dd>
-  <dd v-else class="dl-data-dd"><div v-tooltip.text>{{ value }}</div></dd>
 </template>
 
 <script setup>
+import ExpandableText from './expandable-text.vue';
+
 defineOptions({
   name: 'DlData'
 });
@@ -36,6 +42,7 @@ defineProps({
   `name` can be passed in as a prop or as a slot.
   */
   name: String,
+  // `value` can be passed in as a prop or as a slot.
   value: String
 });
 </script>
@@ -50,15 +57,14 @@ defineProps({
   // .dl-horizontal. See: https://github.com/getodk/central/issues/854
   overflow: hidden;
 
-  div {
-    @include line-clamp(3);
+  .expandable-text {
     overflow-wrap: break-word;
     white-space: break-spaces;
   }
+}
 
-  &.empty {
-    @include italic;
-    color: #888;
-  }
+.dl-data-empty {
+  @include italic;
+  color: #888;
 }
 </style>

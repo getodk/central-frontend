@@ -74,7 +74,7 @@ const { datasets } = useRequestData();
     "emptyTable": "Nebyly vytvořeny žádné entity pro tento projekt."
   },
   "de": {
-    "emptyTable": "Es wurden noch keine Entitäten für dieses Projekt erstellt."
+    "emptyTable": "Es wurden noch keine Objekte für dieses Projekt erstellt."
   },
   "es": {
     "emptyTable": "Aún no se han creado Entidades para este Proyecto."
@@ -90,6 +90,9 @@ const { datasets } = useRequestData();
   },
   "sw": {
     "emptyTable": "Bado hakuna Huluki ambazo zimeundwa kwa ajili ya Mradi huu."
+  },
+  "zh": {
+    "emptyTable": "尚未为此项目建立任何实体"
   },
   "zh-Hant": {
     "emptyTable": "尚未為此專案建立任何實體。"

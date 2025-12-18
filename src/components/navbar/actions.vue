@@ -178,6 +178,15 @@ export default {
       "logOut": "Umetoka kwenye ukurasa kwa mafanikio."
     }
   },
+  "zh": {
+    "notLoggedIn": "未登录",
+    "action": {
+      "logOut": "退出登录"
+    },
+    "alert": {
+      "logOut": "您已成功退出登录。"
+    }
+  },
   "zh-Hant": {
     "notLoggedIn": "尚未登入",
     "action": {

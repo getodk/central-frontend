@@ -211,6 +211,18 @@ export default {
       "Watumiaji kwenye seva yako ya kuingia lazima wawe na akaunti ya Kati ili kuingia Kati. Mara tu unapofungua akaunti hii, mtumiaji kwenye seva yako ya kuingia na anwani ya barua pepe unayotoa ataweza kuingia kwenye Central."
     ]
   },
+  "zh": {
+    "title": "新建网页用户",
+    "introduction": [
+      "一旦创建此账户，系统将向您提供的邮箱发送设置密码及后续操作指南。"
+    ],
+    "oidcIntroduction": [
+      "您登录服务器上的用户必须拥有 Central 账户方可登录 Central。一旦创建此账户，登录服务器上使用该邮箱的用户即可访问 Central。"
+    ],
+    "problem": {
+      "409_3": "此邮箱 {email} 似乎已注册账户，请尝试其他邮箱地址。"
+    }
+  },
   "zh-Hant": {
     "title": "建立網頁使用者",
     "introduction": [

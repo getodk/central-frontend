@@ -203,6 +203,10 @@ watch(() => props.settings, () => {
   "sw": {
     "altText": "Msimbo wa Usanidi wa Mteja"
   },
+  "zh": {
+    "draft": "临时代码（测试用）",
+    "altText": "客户端配置代码"
+  },
   "zh-Hant": {
     "draft": "臨時測試程式碼",
     "altText": "客戶端配置QR code"

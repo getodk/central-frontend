@@ -146,6 +146,12 @@ export default {
     ],
     "auditsTitle": "Ripoti za Matumizi ya Hivi Punde"
   },
+  "zh": {
+    "heading": [
+      "下方可选择是否允许本Central服务器向Central团队共享匿名使用信息。此设置将对整个服务器生效。"
+    ],
+    "auditsTitle": "最近的使用报告"
+  },
   "zh-Hant": {
     "heading": [
       "在下方，您可以選擇此 Central 伺服器是否與 Central 團隊共用匿名使用資訊。此設定會影響整個伺服器。"

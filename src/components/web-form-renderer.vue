@@ -16,6 +16,7 @@ except according to the terms contained in the LICENSE file.
       :form-xml="formVersionXml.data"
       :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
+      :track-device="true"
       @submit="handleSubmit"/>
   </template>
 
@@ -520,17 +521,23 @@ onUnmounted(() => {
       "body": "Sie werden nun weitergeleitet."
     },
     "errorModal": {
-      "title": "Übermittlungsfehler"
+      "title": "Übermittlungsfehler",
+      "body": "Ihre Daten wurden nicht übermittelt. Fehlermeldung: {errorMessage} Sie können dieses Dialogfeld schließen und es erneut versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
     },
     "sendingDataModal": {
       "title": "Übermittlung senden",
       "body": "Ihre Daten werden jetzt übermittelt. Bitte schliessen Sie dieses Fenster nicht, bevor es fertig ist."
     },
     "sessionTimeoutModal": {
-      "title": "Sitzung abgelaufen"
+      "title": "Sitzung abgelaufen",
+      "body": {
+        "full": "Bitte {here} in einem anderen Browser-Tab einloggen und erneut versuchen.",
+        "here": "hier"
+      }
     },
     "retryModal": {
-      "title": "Übermittlungsfehler"
+      "title": "Übermittlungsfehler",
+      "body": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
     }
   },
   "es": {
@@ -655,10 +662,12 @@ onUnmounted(() => {
   },
   "pt": {
     "previewModal": {
-      "title": "Os dados são válidos"
+      "title": "Os dados são válidos",
+      "body": "Os dados que você digitou são válidos, mas não foram enviados por que essa é apenas uma Visualização do formulário."
     },
     "submissionModal": {
       "title": "Formulário enviado com sucesso!",
+      "body": "Você pode preencher novamente esse formulário ou fechar a página se já tiver terminado.",
       "action": {
         "fillOutAgain": "Preencher novamente"
       }
@@ -668,13 +677,65 @@ onUnmounted(() => {
       "body": "Você pode fechar essa janela agora."
     },
     "editSubmissionModal": {
+      "title": "Enviado com sucesso",
       "body": "Você será redirecionado agora."
     },
+    "errorModal": {
+      "title": "Erro no envio"
+    },
     "sendingDataModal": {
-      "title": "Enviando a Resposta"
+      "title": "Enviando a Resposta",
+      "body": "Seus dados estão sendo enviados, por favor não feche essa janela até que o envio tenha terminado."
     },
     "sessionTimeoutModal": {
-      "title": "Sessão expirada"
+      "title": "Sessão expirada",
+      "body": {
+        "full": "Por favor, faça login {here} em uma aba diferente do navegador e tente novamente.",
+        "here": "aqui"
+      }
+    },
+    "retryModal": {
+      "title": "Erro no envio"
+    }
+  },
+  "zh": {
+    "previewModal": {
+      "title": "数据有效",
+      "body": "您输入的数据格式正确，但因当前处于表单预览模式，故未执行提交。"
+    },
+    "submissionModal": {
+      "title": "表单提交成功！",
+      "body": "您可继续填写此表单，或完成后关闭页面。",
+      "action": {
+        "fillOutAgain": "再次填写"
+      }
+    },
+    "thankYouModal": {
+      "title": "感谢您的参与！",
+      "body": "您现在可以关闭此窗口。"
+    },
+    "editSubmissionModal": {
+      "title": "提交成功",
+      "body": "页面即将跳转"
+    },
+    "errorModal": {
+      "title": "提交错误",
+      "body": "数据提交失败。错误信息：{errorMessage} 请关闭对话框后重试。若问题持续，请联系表单发放方或{supportEmail}。"
+    },
+    "sendingDataModal": {
+      "title": "正在提交",
+      "body": "您的数据正在上传。在完成之前，请不要关闭此窗口。"
+    },
+    "sessionTimeoutModal": {
+      "title": "会话过期",
+      "body": {
+        "full": "请在新浏览器标签页中{here}登录后重试。",
+        "here": "这里"
+      }
+    },
+    "retryModal": {
+      "title": "提交错误",
+      "body": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
     }
   },
   "zh-Hant": {

@@ -226,6 +226,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
+      "entity": {
+        "bulk_delete": {
+          "string": "大量刪除",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "大量還原",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "授予存取",
@@ -464,6 +474,14 @@
     "collapse": {
       "string": "閉合",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "選取列",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "重設",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -795,6 +813,9 @@
         "string": "您",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "請不定期寄送電子郵件給我，告知新功能與最佳實踐。"
     }
   },
   "submission": {
@@ -886,6 +907,9 @@
       "string": "文件",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "尚無可用的地圖資料。"
+    },
     "emptyValue": {
       "string": "(空)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -906,6 +930,9 @@
     },
     "loading": {
       "string": "載入..."
+    },
+    "map": {
+      "string": "地圖"
     },
     "no": {
       "string": "無"
@@ -936,6 +963,9 @@
         "string": "設定",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "table": {
+      "string": "表格"
     },
     "total": {
       "string": "總計"
@@ -1447,6 +1477,36 @@
         },
         "num_entity_creates_bulk": {
           "string": "透過批次上傳建立的實體數量"
+        },
+        "max_geo_per_form": {
+          "string": "表單中具有地理資料的提交次數上限"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "批次刪除實體的稽核日誌事件數量"
+        },
+        "num_datasets_with_geometry": {
+          "string": "具有地理資料的實體清單數量"
+        },
+        "num_entity_create_forms": {
+          "string": "可建立實體的表單數量"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "可建立重複實體的表單數量"
+        },
+        "num_entity_update_forms": {
+          "string": "可更新實體的表單數量"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "可更新重複實體的表單數量"
+        },
+        "num_entity_create_update_forms": {
+          "string": "建立並更新實體的表單數量"
+        },
+        "num_entities_with_geometry": {
+          "string": "含有地理資料的實體數量"
+        },
+        "num_multi_entity_errors": {
+          "string": "重複實體的錯誤次數"
         }
       }
     },
@@ -1637,8 +1697,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, other {表單更新此實體清單中的實體}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, other {{count}個表單正在更新實體}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1652,8 +1711,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, other {表單使用此實體列表}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, other {{count}個表單使用此實體清單}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2151,6 +2209,34 @@
         }
       }
     },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "建立者",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "搜尋建立者…",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "全部",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "無",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": "未知的建立者"
+      },
+      "emptyTable": {
+        "string": "目前尚無實體。"
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "沒有可顯示的實體。",
@@ -2158,6 +2244,9 @@
       },
       "noMatching": {
         "string": "無相符的實體。"
+      },
+      "emptyMap": {
+        "string": "只有在實體包含地理屬性資料時，才會顯示該實體。"
       },
       "allDeleted": {
         "string": "所有實體都會被刪除。"
@@ -2168,6 +2257,12 @@
       "alert": {
         "delete": {
           "string": "實體「1{label}」已被刪除。"
+        },
+        "bulkDelete": {
+          "string": "{count, plural, other {已成功刪除{count}個實體。}}"
+        },
+        "restored": {
+          "string": "{count, plural, other {已成功還原{count}個實體。}}"
         }
       },
       "filterDisabledMessage": {
@@ -2175,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "已刪除的實體無法使用搜尋功能"
+      },
+      "mapDisabled": {
+        "string": "已刪除實體的地圖功能不可用"
       },
       "downloadDisabled": {
         "string": "已刪除的實體無法下載"
@@ -2190,6 +2288,14 @@
           "string": "頁面上的所有實體都已還原。"
         }
       },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, other {已選取{count}個實體}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": "正在執行大量作業"
+      },
       "action": {
         "download": {
           "unfiltered": {
@@ -2198,15 +2304,23 @@
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, other {下載符合篩選條件的{count}個實體}}",
+              "string": "{count, plural, other {下載{count}個符合的實體}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "下載符合篩選條件的所有實體",
+              "string": "下載所有符合的實體",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "正在準備地圖。這可能需要一段時間。"
+      },
+      "overlapTitle": {
+        "string": "{count, plural, other {此區域內有 {count} 個實體}}"
       }
     },
     "EntityMetadataRow": {
@@ -2317,6 +2431,9 @@
           "string": "更新數值",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "無法透過地圖更新地理資料。"
       },
       "problem": {
         "409_15": {
@@ -3453,6 +3570,14 @@
         "enketoDefault": {
           "string": "Enketo (預設)",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "您目前正在使用 Enketo 填寫、預覽及編輯「{formName}」表單。",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "您目前正在使用 ODK 網頁表單填寫、預覽及編輯「{formName}」表單。",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3629,6 +3754,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "正在顯示{total}項中的第{count}項",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "縮放以符合所有資料",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "圖形顯示異常。"
+        },
+        "message": {
+          "string": "您的瀏覽器目前無法顯示地圖。請啟用圖形加速設定。"
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3661,6 +3804,14 @@
       "forum": {
         "body": {
           "string": "需要協助嗎？訪問論壇提問或瀏覽過去的討論。"
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "返回清單",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4829,7 +4980,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "全部時間",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4883,6 +5034,12 @@
       "noMatching": {
         "string": "沒有符合的提交內容。"
       },
+      "emptyMap": {
+        "string": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。"
+      },
+      "learnMoreMap": {
+        "string": "進一步了解提交地圖資料功能"
+      },
       "allDeleted": {
         "string": "所有提交內容都會被刪除。"
       },
@@ -4895,6 +5052,9 @@
       "filterDisabledMessage": {
         "string": "無法對已刪除的提交內容進行過濾"
       },
+      "noMapEncryption": {
+        "string": "地圖因表單加密而無法使用"
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": "沒有已刪除的提交內容。"
@@ -4905,6 +5065,9 @@
         "allRestoredOnPage": {
           "string": "頁面上的所有提交內容都已還原。"
         }
+      },
+      "noMapDeleted": {
+        "string": "地圖無法用於已刪除的提交"
       },
       "loading": {
         "withoutCount": {
@@ -4948,6 +5111,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "此提交是使用{field}進行地圖標記的，而該功能並未包含在已發布的表單版本中。",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "地圖參照此欄位",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": "正在準備地圖——正在載入已有提交資料並掃描新增內容，此過程可能需要一些時間。"
+      },
+      "overlapTitle": {
+        "string": "{count, plural, other {此區域內有{count}筆提交資料}}"
       }
     },
     "SubmissionRestore": {
@@ -5007,6 +5188,12 @@
           "string": "註釋和評論（可選）",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "資料最後重新整理時間：{date}{time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5089,6 +5276,10 @@
         "sitewideRole": {
           "string": "全站角色",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "最後活動時間",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5187,6 +5378,9 @@
           "string": "停用使用者",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "邀請待處理"
       }
     },
     "WebFormRenderer": {
@@ -5276,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "表單草稿已移動",
+        "string": "地圖功能️🗺️、批次刪除️🗑️，以及更佳的系統可見性👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "建立新表單，並在新的「編輯表單」標籤上編輯它"
-      },
-      "action": {
-        "gotIt": {
-          "string": "知道了！",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "我們推出了全新的地圖視圖，可同時展示提交資料與實體；透過批次刪除實體來實現更高效率的資料清理；系統可視化也全面提升——現在可清楚查看使用者邀請狀態與「最後更新」時間戳！"
       }
     }
   },

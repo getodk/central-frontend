@@ -10,19 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="state" class="loading">{{ $t('common.loading') }}</div>
+  <div v-show="state" class="loading">
+    {{ message ?? $t('common.loading') }}
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'Loading',
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
+<script setup>
+defineProps({
+  state: Boolean,
+  message: String
+});
 </script>
 
 <style lang="scss">

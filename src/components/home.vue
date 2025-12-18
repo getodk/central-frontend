@@ -111,6 +111,11 @@ const config = inject('config');
       "Karibu Central"
     ]
   },
+  "zh": {
+    "heading": [
+      "欢迎使用Central。"
+    ]
+  },
   "zh-Hant": {
     "heading": [
       "歡迎來到 Central."

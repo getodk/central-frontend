@@ -80,6 +80,10 @@
         "update_publish": "Pubblica",
         "create": "@:audit.action.default.create"
       },
+      "entity": {
+        "bulk_delete": "Eliminazione in blocco",
+        "bulk_restore": "Ripristino in blocco"
+      },
       "field_key": {
         "assignment_create": "Dare accesso",
         "assignment_delete": "Rimuovere accesso",
@@ -168,6 +172,8 @@
     "newPreview": "Nuova anteprima",
     "expand": "Espandere",
     "collapse": "Chiudere",
+    "selectRow": "Seleziona riga",
+    "reset": "Ripristina",
     "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
     "tryAgain": "Ritenta ancora",
     "upload": "Carica",
@@ -275,7 +281,8 @@
     "needFeedback": {
       "full": "Per fare questo, abbiamo bisogno del {your} feedback, cosicché possiamo capire come stai usando Central, e come potrebbe essere meglio per te.",
       "your": "tuo"
-    }
+    },
+    "mailingListOptIn": "Inviami occasionalmente delle e-mail sulle nuove funzionalità e sulle migliori prassi."
   },
   "submission": {
     "missingAttachment": "Allegati mancanti",
@@ -307,12 +314,14 @@
     "dangerZone": "Zona pericolo",
     "data": "Dati",
     "docs": "Documentazione",
+    "emptyMap": "Non sono ancora disponibili dati cartografici.",
     "emptyValue": "(vuoto)",
     "error": "Errore",
     "filter": "Filtro",
     "forum": "Forum",
     "lastUpdate": "Ultima aggiornamento",
     "loading": "Caricando...",
+    "map": "Mappa",
     "no": "No",
     "noResults": "Nessun risultato",
     "noUndo": "Quest'azione non può essere annullata",
@@ -323,6 +332,7 @@
     "tab": {
       "settings": "Impostazioni"
     },
+    "table": "Tabella",
     "total": "Totale",
     "totalSubmissions": "Invii totali",
     "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà",

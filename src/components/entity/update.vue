@@ -35,7 +35,9 @@ except according to the terms contained in the LICENSE file.
               <template v-if="dataset.dataExists">
                 <entity-update-row v-for="{ name } of dataset.properties"
                   :key="name" ref="propertyRows" v-model="data[name]"
-                  :old-value="currentVersion.data[name]" :label="name"/>
+                  :old-value="currentVersion.data[name]" :label="name"
+                  :disabled="name === 'geometry' && geometryDisabled"
+                  :disabled-message="$t('geometryDisabled')"/>
               </template>
             </tbody>
           </table>
@@ -77,7 +79,9 @@ defineOptions({
 });
 const props = defineProps({
   state: Boolean,
-  entity: Object
+  // An entity in the format of a REST response (not OData)
+  entity: Object,
+  geometryDisabled: Boolean
 });
 
 const emit = defineEmits(['hide', 'success']);
@@ -194,6 +198,7 @@ const currentVersion = computed(() =>
       "currentValue": "Current Value",
       "updatedValue": "Updated Value"
     },
+    "geometryDisabled": "Geometry can’t be updated from the map.",
     "problem": {
       "409_15": "Data has been modified by another user. Please refresh to see the updated data."
     }
@@ -220,6 +225,7 @@ const currentVersion = computed(() =>
       "currentValue": "Aktueller Wert",
       "updatedValue": "Aktualisierter Wert"
     },
+    "geometryDisabled": "Die Geometrie kann nicht über die Karte aktualisiert werden.",
     "problem": {
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
     }
@@ -230,6 +236,7 @@ const currentVersion = computed(() =>
       "currentValue": "Valor actual",
       "updatedValue": "Valor actualizado"
     },
+    "geometryDisabled": "La geometría no se puede actualizar desde el mapa.",
     "problem": {
       "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
     }
@@ -240,6 +247,7 @@ const currentVersion = computed(() =>
       "currentValue": "Valeur actuelle",
       "updatedValue": "Valeur Mise à jour"
     },
+    "geometryDisabled": "La géométrie ne peut être modifiée depuis la carte.",
     "problem": {
       "409_15": "Les données ont été modifiées par un autre utilisateur. Merci de rafraîchir pour voir les données mises à jour."
     }
@@ -250,6 +258,7 @@ const currentVersion = computed(() =>
       "currentValue": "Valore corrente",
       "updatedValue": "Valore aggiornato"
     },
+    "geometryDisabled": "La geometria non può essere aggiornata dalla mappa.",
     "problem": {
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
     }
@@ -274,12 +283,24 @@ const currentVersion = computed(() =>
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
     }
   },
+  "zh": {
+    "title": "更新{label}",
+    "header": {
+      "currentValue": "当前数值",
+      "updatedValue": "更新后的数值"
+    },
+    "geometryDisabled": "无法通过地图更新几何数据。",
+    "problem": {
+      "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
+    }
+  },
   "zh-Hant": {
     "title": "更新{label}",
     "header": {
       "currentValue": "目前數值",
       "updatedValue": "更新數值"
     },
+    "geometryDisabled": "無法透過地圖更新地理資料。",
     "problem": {
       "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
     }

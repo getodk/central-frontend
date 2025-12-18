@@ -92,6 +92,9 @@ const { userPath } = useRoutes();
   "sw": {
     "text": "{dateTime} na {displayName}"
   },
+  "zh": {
+    "text": "{dateTime} 由 {displayName}"
+  },
   "zh-Hant": {
     "text": "{dateTime} 由{displayName}"
   }

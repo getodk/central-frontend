@@ -200,6 +200,16 @@ export default {
       "title": "Kiungo cha Ufikiaji wa Umma bado hakipatikani. Haijamaliza kuchakatwa. Tafadhali onyesha upya baadaye na ujaribu tena."
     }
   },
+  "zh": {
+    "action": {
+      "revoke": "撤销"
+    },
+    "revoked": "已撤销",
+    "unavailable": {
+      "text": "暂时不可用",
+      "title": "公开访问链接尚不可用，仍在处理中。请稍后刷新重试。"
+    }
+  },
   "zh-Hant": {
     "action": {
       "revoke": "撤銷"

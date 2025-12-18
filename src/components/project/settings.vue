@@ -226,6 +226,9 @@ export default {
         "Dieses Projekt wurde archiviert.",
         "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
       ]
+    },
+    "alert": {
+      "archive": "Das Projekt \"{name}\" wurde archiviert."
     }
   },
   "es": {
@@ -409,6 +412,9 @@ export default {
         "O projeto foi arquivado.",
         "Nessa versão do ODK Central você não pode desarquivar um projeto. Entretanto, essa funcionalidade está planejada para uma versão futura."
       ]
+    },
+    "alert": {
+      "archive": "O projeto \"{name}\" foi arquivado."
     }
   },
   "sw": {
@@ -438,6 +444,38 @@ export default {
         "Mradi huu umewekwa kwenye kumbukumbu.",
         "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
       ]
+    }
+  },
+  "zh": {
+    "encryption": {
+      "title": "加密",
+      "body": {
+        "unencrypted": [
+          "此项目未启用提交数据加密功能。"
+        ],
+        "encrypted": [
+          {
+            "full": "此项目{enabled}提交数据加密功能。",
+            "enabled": "已启用"
+          },
+          "此版本ODK Central中，加密功能一旦开启将无法禁用。"
+        ]
+      },
+      "action": {
+        "enableEncryption": "启用加密"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "归档此项目"
+      },
+      "archived": [
+        "此项目已归档。",
+        "此版本ODK Central不支持项目取消归档，该功能计划在后续版本中推出。"
+      ]
+    },
+    "alert": {
+      "archive": "项目“{name}”已归档。"
     }
   },
   "zh-Hant": {

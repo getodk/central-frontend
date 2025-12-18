@@ -346,7 +346,8 @@ export default {
       "Para conectar-se a este feed OData, selecione sua ferramenta e copie o link para ela."
     ],
     "tab": {
-      "microsoft": "Power BI ou Excel"
+      "microsoft": "Power BI ou Excel",
+      "other": "Outro (API)"
     },
     "help": {
       "microsoft": {
@@ -382,6 +383,30 @@ export default {
       "other": {
         "full": "Kwa maelezo kamili ya usaidizi wetu wa OData, tafadhali angalia {article}.",
         "article": "Makala hii"
+      }
+    }
+  },
+  "zh": {
+    "title": "正在使用OData",
+    "introduction": [
+      "OData是一项用于在工具与服务间传输数据的标准。主流分析工具如{powerBi}、{excel}、{python}及{r}等，均可通过OData获取数据并进行分析。",
+      "若要连接此OData数据源，请选择您使用的工具并将对应链接复制到工具中。"
+    ],
+    "tab": {
+      "microsoft": "Power BI或Excel",
+      "other": "其他（API）"
+    },
+    "help": {
+      "microsoft": {
+        "full": "若要查看如何在Power BI中使用OData，请参考{pageForPowerBi}。有关Excel的使用说明，请参见{pageForExcel}。",
+        "pageForExcel": "此页面",
+        "pageForPowerBi": "此页面"
+      },
+      "python": "若要从Python连接Central，我们推荐使用{pyODK}。pyODK作为Central的官方Python客户端，能够显著简化数据分析与工作流自动化流程。",
+      "r": "若要从 R 语言连接 Central，我们推荐使用 {ruODK}。该程序包由 ODK 社区成员开发并维护。",
+      "other": {
+        "full": "如需了解我们对于OData支持的完整说明，请参考{article}。",
+        "article": "此文章"
       }
     }
   },

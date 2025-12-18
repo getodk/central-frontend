@@ -313,7 +313,7 @@ export default {
         "projectManagers": "Projekt-Manager"
       },
       {
-        "full": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
+        "full": "{projectViewers} können auf alle Formular- und Objektdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
         "projectViewers": "Projekt-Viewer"
       },
       {
@@ -334,7 +334,8 @@ export default {
     "emptyTable": "Es wurden noch keine Benutzer diesem Projekt zugewiesen. Um einen hinzuzufügen, suchen Sie oben nach einem Benutzer.",
     "alert": {
       "unassignWithoutReassign": "Irgendetwas hat nicht funktioniert. \"{displayName}\" wurde aus diesem Projekt entfernt.",
-      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen."
+      "assignRole": "\"{displayName}\" wurde erfolgreich die Rolle eines \"{roleName}\" in diesem Projekt zugewiesen.",
+      "unassignRole": "\"{displayName}\" wurde erfolgreich aus dem Projekt entfernt."
     }
   },
   "es": {
@@ -556,6 +557,39 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi.",
       "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu."
+    }
+  },
+  "zh": {
+    "heading": [
+      "网站管理员自动成为所有项目的经理。其他用户可被授予本项目特定角色：",
+      {
+        "full": "{projectManagers}可执行本项目所有管理任务，并可通过网页浏览器填写表单",
+        "projectManagers": "项目经理"
+      },
+      {
+        "full": "{projectViewers}可访问并下载本项目所有表单和实体数据，但无法更改设置或数据",
+        "projectViewers": "项目查看者"
+      },
+      {
+        "full": "{dataCollectors}可通过网页浏览器填写表单，但无法查看或修改数据及设置",
+        "dataCollectors": "数据收集员"
+      }
+    ],
+    "field": {
+      "q": {
+        "canList": "搜索用户…",
+        "cannotList": "输入完整用户邮箱地址…"
+      }
+    },
+    "header": {
+      "user": "用户",
+      "projectRole": "项目角色"
+    },
+    "emptyTable": "当前项目暂无分配用户。请通过上方搜索框添加用户。",
+    "alert": {
+      "unassignWithoutReassign": "出现错误。“{displayName}”已被移出项目。",
+      "assignRole": "操作成功！“{displayName}”已被授予本项目“{roleName}”角色。",
+      "unassignRole": "“{displayName}”已被移出本项目。"
     }
   },
   "zh-Hant": {

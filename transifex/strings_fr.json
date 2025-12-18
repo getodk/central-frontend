@@ -226,6 +226,16 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
+      "entity": {
+        "bulk_delete": {
+          "string": "Supprimer sélection",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "Restaurer sélection",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "Donner accès",
@@ -464,6 +474,14 @@
     "collapse": {
       "string": "Replier",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "Sélectionner ligne ",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Réinitialiser",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -795,6 +813,9 @@
         "string": "votre",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Envoyez moi occasionnellement des e-mails à propos des nouveautés et des bonnes pratiques. "
     }
   },
   "submission": {
@@ -886,6 +907,9 @@
       "string": "Documents",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "Aucune données cartographiques disponibles."
+    },
     "emptyValue": {
       "string": "(vide)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -906,6 +930,9 @@
     },
     "loading": {
       "string": "Chargement..."
+    },
+    "map": {
+      "string": "Carte"
     },
     "no": {
       "string": "Non"
@@ -936,6 +963,9 @@
         "string": "Paramètres ",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
+    },
+    "table": {
+      "string": "Tableau"
     },
     "total": {
       "string": "Total"
@@ -1447,6 +1477,36 @@
         },
         "num_entity_creates_bulk": {
           "string": "Nombre d'Entités créées par envoi en masse"
+        },
+        "max_geo_per_form": {
+          "string": "Nombre de soumissions maximum ayant des donnés geo dans un formulaire"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Nombre d'événements de suppression en masse"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Nombre de listes d'entités avec une propriété \"geometry\""
+        },
+        "num_entity_create_forms": {
+          "string": "Nombre de formulaires qui créent des entités"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Nombre de formulaires qui créent des entités avec répétition"
+        },
+        "num_entity_update_forms": {
+          "string": "Nombre de formulaires qui mettent à jour des entités"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Nombre de formulaires qui mettent à jour des entités avec répétition"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Nombre de formulaires qui créent et mettent à jour des entités"
+        },
+        "num_entities_with_geometry": {
+          "string": "Nombre d'entités avec données géographiques"
+        },
+        "num_multi_entity_errors": {
+          "string": "Nombre d'erreurs d'entités créées par répétition"
         }
       }
     },
@@ -1637,8 +1697,7 @@
     },
     "DatasetOverviewConnectionToForms": {
       "formsUpdateEntities": {
-        "string": "{count, plural, one {Formulaire modifiant des Entités de cette Liste d'Entités} many {Formulaires modifiant des Entités de cette Liste d'Entités} other {Formulaires modifiant des Entités de cette Liste d'Entités}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
+        "string": "{count, plural, one {{count} formulaire met à jour des Entités.} many {{count} formulaires mettent à jour des Entités.} other {{count} formulaires mettent à jour des Entités.}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1652,8 +1711,7 @@
     },
     "DatasetOverviewLinkedForms": {
       "formsConsumeData": {
-        "string": "{count, plural, one {Formulaire utilise cette liste d'entités} many {Formulaires utilisent cette liste d'entités} other {Formulaires utilisent cette liste d'entités}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "string": "{count, plural, one {{count} formulaire utilise cette liste d'entités} many {{count} formulaires utilisent cette liste d'entités} other {{count} formulaires utilisent cette liste d'entités}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2151,6 +2209,34 @@
         }
       }
     },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "Créé par",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "Rechercher un créateur...",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "action": {
+        "all": {
+          "string": "Tous",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "Aucun",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": "Créateur inconnu"
+      },
+      "emptyTable": {
+        "string": "Pas encore d'entités."
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "Pas d'entités à montrer.",
@@ -2158,6 +2244,9 @@
       },
       "noMatching": {
         "string": "Il n'y a pas d'Entités correspondantes"
+      },
+      "emptyMap": {
+        "string": "Les entités n'apparaissent que si elles ont une propriété géographique."
       },
       "allDeleted": {
         "string": "Toutes les Entités sont supprimées."
@@ -2168,6 +2257,12 @@
       "alert": {
         "delete": {
           "string": "L'Entité \"{label}\" a été supprimée."
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {{count} entité supprimée avec succès.} many {{count} entités supprimées avec succès.} other {{count} entités supprimées avec succès.}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {{count} entité restaurée avec succès.} many {{count} entités restaurées avec succès.} other {{count} entités restaurées avec succès.}}"
         }
       },
       "filterDisabledMessage": {
@@ -2175,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "La recherche n'est pas disponible pour les entités supprimées"
+      },
+      "mapDisabled": {
+        "string": "La carte n'est pas disponible pour les entités supprimées."
       },
       "downloadDisabled": {
         "string": "Le téléchargement n'est pas disponible pour les entités supprimées."
@@ -2190,6 +2288,14 @@
           "string": "Toutes les Entités de la page ont été restaurées."
         }
       },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {{count} entité sélectionnée} many {{count} entités sélectionnées} other {{count} entités sélectionnées}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": "Opération en masse en progrès"
+      },
       "action": {
         "download": {
           "unfiltered": {
@@ -2198,15 +2304,23 @@
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {Télécharger {count} entité filtrée} many {Télécharger {count} entités filtrées} other {Télécharger {count} entités filtrées}}",
+              "string": "{count, plural, one {Télécharger {count} entité correspondante} many {Télécharger {count} entités correspondantes} other {Télécharger {count} entités correspondantes}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "Télécharger toutes les entitées filtrées",
+              "string": "Télécharger toutes les entités correspondantes",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Préparation de la carte. Cela peut prendre un peu de temps."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} entité dans cette zone} many {{count} entités dans cette zone} other {{count} entités dans cette zone}}"
       }
     },
     "EntityMetadataRow": {
@@ -2317,6 +2431,9 @@
           "string": "Valeur Mise à jour",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "La géométrie ne peut être modifiée depuis la carte."
       },
       "problem": {
         "409_15": {
@@ -3453,6 +3570,14 @@
         "enketoDefault": {
           "string": "Enketo (par défaut)",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "Vous utilisez maintenant Enketo pour remplir, prévisualiser et éditer votre formulaire \"{formName}\".",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "Vous utilisez maintenant ODK Web Forms pour remplir, prévisualiser et éditer votre formulaire \"{formName}\".",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3629,6 +3754,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "{count} de {total} affichés",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "Recentrer sur toutes les données",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Problème de graphiques détecté"
+        },
+        "message": {
+          "string": "Votre navigateur ne peut pas montrer la carte. Activez les paramètres d'accélération graphique."
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3661,6 +3804,14 @@
       "forum": {
         "body": {
           "string": "Besoin d'aide ? Visitez le forum pour poser des questions ou parcourir les anciennes discussions."
+        }
+      }
+    },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "Retourner à la liste",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4829,7 +4980,7 @@
       },
       "allSubmissionDateSelected": {
         "string": "Tout temps",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
@@ -4883,6 +5034,12 @@
       "noMatching": {
         "string": "Il n'y a pas de soumission correspondante."
       },
+      "emptyMap": {
+        "string": "Les soumissions apparaissent seulement si elles ont une valeur dans le premier champ de type géographique."
+      },
+      "learnMoreMap": {
+        "string": "Apprenez plus à propos de la carte de soumissions"
+      },
       "allDeleted": {
         "string": "Toutes les soumissions sont supprimées."
       },
@@ -4895,6 +5052,9 @@
       "filterDisabledMessage": {
         "string": "Le filtrage n'est pas possible pour les Soumissions supprimées."
       },
+      "noMapEncryption": {
+        "string": "La carte n'est pas disponible en raison du chiffrement du formulaire."
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": "Il n'y a pas de Soumissions supprimées"
@@ -4905,6 +5065,9 @@
         "allRestoredOnPage": {
           "string": "Toutes les Soumissions de la page ont été restaurées."
         }
+      },
+      "noMapDeleted": {
+        "string": "La carte n'es pas disponible pour les soumissions supprimées."
       },
       "loading": {
         "withoutCount": {
@@ -4948,6 +5111,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "Cette soumission a été cartographiée selon le champ {field} qui n'est pas dans la version publiée du formulaire.",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "Carte utilise ce champ",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": "Préparation de carte en cours -- chargement de soumissions connues et analyse des soumissions nouvelles. Ceci pourrait prendre un certain temps."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} soumission visible} many {{count} soumissions visibles } other {{count} soumissions visibles }}"
       }
     },
     "SubmissionRestore": {
@@ -5007,6 +5188,12 @@
           "string": "Notes et commentaires (facultatif)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Données rafraîchies le {date} à {time} ",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5089,6 +5276,10 @@
         "sitewideRole": {
           "string": "Rôle sur l'ensemble du site",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "Dernière activité",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5187,6 +5378,9 @@
           "string": "Supprimer l'utilisateur",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "Invitation en attente"
       }
     },
     "WebFormRenderer": {
@@ -5276,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Les ébauches de Formulaires ont été déplacées.",
+        "string": "Cartes 🗺️, suppression en masse 🗑️, et plus de visibilité 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer le Formulaire»"
-      },
-      "action": {
-        "gotIt": {
-          "string": "J'ai compris !",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Essayez les nouvelles vues cartographiques pour les soumissions et les entités, nettoyez vos données plus rapidement avec la suppression en masse des entités, et comprenez mieux vos utilisateurs grâce à l'affichage des statuts d'invitation!"
       }
     }
   },

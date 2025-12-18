@@ -1888,14 +1888,14 @@
       "attrs": [],
       "properties": {
         "name": "star",
-        "id": 9,
+        "id": 68,
         "order": 4,
         "prevSize": 28,
         "code": 61445
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 9
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 68
     },
     {
       "icon": {
@@ -1915,14 +1915,14 @@
       "attrs": [],
       "properties": {
         "name": "user",
-        "id": 11,
+        "id": 69,
         "order": 5,
         "prevSize": 28,
         "code": 61447
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 11
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 69
     },
     {
       "icon": {
@@ -1943,14 +1943,14 @@
       "attrs": [],
       "properties": {
         "name": "chain",
-        "id": 170,
-        "order": 8,
+        "id": 70,
+        "order": 3,
         "prevSize": 28,
         "code": 61633
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 170
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 70
     },
     {
       "icon": {
@@ -1970,14 +1970,14 @@
       "attrs": [],
       "properties": {
         "name": "paperclip",
-        "id": 175,
+        "id": 71,
         "order": 11,
         "prevSize": 28,
         "code": 61638
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 175
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 71
     },
     {
       "icon": {
@@ -1997,14 +1997,14 @@
       "attrs": [],
       "properties": {
         "name": "desktop",
-        "id": 237,
+        "id": 72,
         "order": 3,
         "prevSize": 28,
         "code": 61704
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 237
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 72
     },
     {
       "icon": {
@@ -2024,14 +2024,14 @@
       "attrs": [],
       "properties": {
         "name": "circle",
-        "id": 245,
+        "id": 73,
         "order": 7,
         "prevSize": 28,
         "code": 61713
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 245
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 73
     },
     {
       "icon": {
@@ -2051,14 +2051,14 @@
       "attrs": [],
       "properties": {
         "name": "pencil-square",
-        "id": 297,
+        "id": 74,
         "order": 6,
         "prevSize": 28,
         "code": 61771
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 297
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 74
     },
     {
       "icon": {
@@ -2078,14 +2078,14 @@
       "attrs": [],
       "properties": {
         "name": "file-code-o",
-        "id": 415,
+        "id": 75,
         "order": 10,
         "prevSize": 28,
         "code": 61897
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 415
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 75
     },
     {
       "icon": {
@@ -2105,14 +2105,14 @@
       "attrs": [],
       "properties": {
         "name": "calendar",
-        "id": 78,
+        "id": 76,
         "order": 89,
         "prevSize": 28,
         "code": 61555
       },
-      "setIdx": 1,
-      "setId": 3,
-      "iconIdx": 416
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 76
     },
     {
       "icon": {
@@ -2132,14 +2132,41 @@
       "attrs": [],
       "properties": {
         "name": "search",
-        "id": 76,
+        "id": 77,
         "order": 88,
         "prevSize": 28,
         "code": 61442
       },
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 77
+    },
+    {
+      "icon": {
+        "paths": [
+          "M438.857 365.714c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM585.143 365.714c0 34.857-4 70.857-18.857 102.286l-208 442.286c-12 25.143-38.286 40.571-65.714 40.571s-53.714-15.429-65.143-40.571l-208.571-442.286c-14.857-31.429-18.857-67.429-18.857-102.286 0-161.714 130.857-292.571 292.571-292.571s292.571 130.857 292.571 292.571z"
+        ],
+        "width": 585.1428571428571,
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "map-marker"
+        ],
+        "defaultCode": 61505,
+        "grid": 14
+      },
+      "attrs": [],
+      "properties": {
+        "name": "map-marker",
+        "id": 65,
+        "order": 2,
+        "prevSize": 28,
+        "code": 61505
+      },
       "setIdx": 1,
       "setId": 3,
-      "iconIdx": 417
+      "iconIdx": 65
     }
   ],
   "height": 1024,

@@ -80,7 +80,7 @@ export default {
       })
         .then(() => {
           const message = this.$t('alert.success');
-          return this.$router.push('/login')
+          return this.$router.push({ path: '/login', query: { source: 'claim' } })
             .then(() => { this.alert.success(message); });
         })
         .catch(noop);
@@ -123,6 +123,9 @@ export default {
     },
     "problem": {
       "401_2": "{message} Der Hyperlink in Ihrer E-Mail könnte abgelaufen sein und vielleicht sollte eine neue E-Mail gesendet werden."
+    },
+    "alert": {
+      "success": "Passwort erfolgreich zurückgesetzt."
     }
   },
   "es": {
@@ -180,6 +183,9 @@ export default {
     },
     "problem": {
       "401_2": "{message} O link de seu email expirou e um novo link precisa ser enviado."
+    },
+    "alert": {
+      "success": "Senha redefinida com sucesso."
     }
   },
   "sw": {
@@ -188,6 +194,17 @@ export default {
     },
     "problem": {
       "401_2": "{message} Huenda muda wa kiungo katika barua pepe yako umeisha, na huenda barua pepe mpya ikatumwa."
+    }
+  },
+  "zh": {
+    "action": {
+      "set": "设置密码"
+    },
+    "problem": {
+      "401_2": "{message}您邮件中的链接可能已失效，需要重新发送邮件。"
+    },
+    "alert": {
+      "success": "密码重设成功"
     }
   },
   "zh-Hant": {

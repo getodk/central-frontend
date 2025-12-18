@@ -114,7 +114,7 @@ const { publishedFormPath } = useRoutes();
     "none": "(žádný)"
   },
   "de": {
-    "emptyTable": "Die Entitäten in dieser Entitätsliste verfügen über keine benutzerdefinierten Eigenschaften.",
+    "emptyTable": "Die Objekte in dieser Objektliste verfügen über keine benutzerdefinierten Eigenschaften.",
     "none": "(Keine)"
   },
   "es": {
@@ -135,6 +135,10 @@ const { publishedFormPath } = useRoutes();
   },
   "sw": {
     "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
+  },
+  "zh": {
+    "emptyTable": "该实体清单中的实体没有任何使用者定义的属性。",
+    "none": "（无）"
   },
   "zh-Hant": {
     "emptyTable": "此實體清單中的實體沒有任何使用者定義的屬性。",

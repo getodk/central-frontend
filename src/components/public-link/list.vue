@@ -193,6 +193,7 @@ export default {
     ],
     "emptyTable": "Es gibt keine öffentlichen Zugangslinks für dieses Formular.",
     "alert": {
+      "create": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen.",
       "revoke": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
     }
   },
@@ -310,6 +311,7 @@ export default {
     ],
     "emptyTable": "Não existem links de acesso público para esse formulário.",
     "alert": {
+      "create": "Seu Link de Acesso Público foi criado e agora está ativo. Copie o endereço abaixo para distribuí-lo.",
       "revoke": "O link de acesso público \"{displayName}\" foi revogado com sucesso. Nenhuma resposta usando esse link será aceita de agora em diante."
     }
   },
@@ -330,6 +332,26 @@ export default {
     "emptyTable": "Hakuna Viungo vya Ufikiaji wa Umma vya Fomu hii.",
     "alert": {
       "revoke": "Kiungo cha Ufikiaji wa Umma \"{displayName}\" kimebatilishwa. Hakuna Mawasilisho Zaidi yatakubaliwa kwa kutumia Kiungo hiki."
+    }
+  },
+  "zh": {
+    "action": {
+      "create": "创建公开链接"
+    },
+    "heading": [
+      {
+        "full": "任何人通过公开访问链接均可使用网页浏览器填写此表单。您可以创建多个链接来追踪表单的分发渠道、限制特定用户群的访问时长等等。请注意，这些链接仅在表单处于公开{state}时有效。",
+        "state": "状态"
+      },
+      {
+        "full": "公开链接适用于自主填报场景。若您的数据收集者需要多次提交同一表单，请{clickHere}了解其他选项。",
+        "clickHere": "点击这里"
+      }
+    ],
+    "emptyTable": "此表单没有公开访问链接。",
+    "alert": {
+      "create": "您的公开访问链接已生成并生效。请复制下方链接进行使用。",
+      "revoke": "公开访问链接 “{displayName}” 已成功撤销。此链接将不再接受任何提交。"
     }
   },
   "zh-Hant": {

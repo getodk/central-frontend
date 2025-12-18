@@ -83,7 +83,7 @@ export default (container, createResource) => {
   createResource('form', () => ({
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
-  createResource('dataset', () => ({
+  createResource('dataset', (dataset) => ({
     transformResponse: ({ data }) => {
       // Add projectId to forms. FormLink expects this property to exist on form
       // objects.
@@ -95,6 +95,8 @@ export default (container, createResource) => {
       }
 
       return shallowReactive(data);
-    }
+    },
+    hasGeometry: computeIfExists(() =>
+      dataset.properties.some(({ name }) => name === 'geometry'))
   }));
 };

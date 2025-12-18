@@ -123,6 +123,13 @@ const { audits } = useRequestData();
       "details": "Maelezo"
     }
   },
+  "zh": {
+    "header": {
+      "initiator": "发起者",
+      "target": "目标",
+      "details": "详情"
+    }
+  },
   "zh-Hant": {
     "header": {
       "initiator": "引發者",

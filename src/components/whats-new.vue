@@ -9,13 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+<!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
-  <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
+  <modal id="whats-new-modal" :state="isVisible" backdrop :hideable="true" @hide="hideModal">
     <template #banner>
       <img
         srcset="../assets/images/whats-new/banner@1x.png, ../assets/images/whats-new/banner@2x.png 2x"
-        src="../assets/images/whats-new/banner@1x.png"
-        alt="Modal banner image showing Create a New Draft button with arrow pointing to Edit Form tab.">
+        src="../assets/images/whats-new/banner@1x.png">
     </template>
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -23,9 +23,12 @@ except according to the terms contained in the LICENSE file.
         {{ $t('body') }}
       </p>
       <div class="modal-actions">
+        <div v-if="!initialOptIn" class="checkbox">
+          <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
+        </div>
         <button type="button" class="btn btn-primary"
           @click="hideModal">
-          {{ $t('action.gotIt') }}
+          {{ $t('action.done') }}
         </button>
       </div>
     </template>
@@ -47,35 +50,69 @@ const { openModal } = inject('container');
 const { currentUser, projects } = useRequestData();
 
 const isVisible = ref(false);
+const initialOptIn = currentUser.preferences.site.mailingListOptIn;
+const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
 watch(() => projects.dataExists, () => {
-  const canUpdateForm = currentUser.can('form.update') ||
-    projects.data.some(project => project.verbs.has('form.update'));
+  // When updating `canUpdateForm` in the future, consider the *verb* for the audience.
+  // For 2025.4, we decided it could be shown to project viewers as well,
+  // where the previous modal was only shown to admins and project managers.
+  const canUpdateForm = currentUser.can('submission.list') ||
+    projects.data.some(project => project.verbs.has('submission.list'));
   if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
-    new Date(currentUser.data.createdAt) < new Date('2025-05-06') && // Check that user was created prior to 2025.1 release (approx)
     !openModal.state && // Check that no other modal (e.g. new project) is open
-    !currentUser.preferences.site.whatsNewDismissed2025_1) {
+    !currentUser.preferences.site.whatsNewDismissed2025_4) {
     isVisible.value = true;
   }
 });
 
 function hideModal() {
-  currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+  currentUser.preferences.site.whatsNewDismissed2025_4 = true;
+
+  // If user was not already opted in and preference changed, then save preference.
+  if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
+    currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
+  }
   isVisible.value = false;
 }
 
 </script>
 
+<style lang="scss">
+@import '../assets/scss/variables';
+
+#whats-new-modal .modal-actions {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+
+  .checkbox {
+    flex: 1;
+    margin-bottom: 0px;
+    font-size: 12px;
+
+    label {
+      display: block;
+      text-align: left;
+    }
+
+    input[type=checkbox] {
+      margin-top: 2px;
+    }
+  }
+
+  .btn {
+    margin-left: auto;
+  }
+}
+</style>
+
 <i18n lang="json5">
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Form drafts have moved",
-      "body": "Create a new Form and edit it on the new Edit Form tab",
-      "action": {
-        // This is the text of a button that is used to close the modal.
-        "gotIt": "Got it!"
-      }
+      "title": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
+      "body": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
     }
   }
 </i18n>
@@ -84,44 +121,28 @@ function hideModal() {
 <i18n>
 {
   "de": {
-    "title": "Formularentwürfe wurden verschoben",
-    "body": "Erstellen Sie ein neues Formular und bearbeiten Sie es auf der neuen Registerkarte Formular bearbeiten",
-    "action": {
-      "gotIt": "Ich hab's!"
-    }
+    "title": "Karten ️🗺️, Massenlöschung ️🗑️ und bessere Systemtransparenz 👀",
+    "body": "Einführung einer neuen Kartenansicht für Übermittlungen und Entitäten, schnellere Datenbereinigung durch Massenlöschung von Entitäten und übersichtlichere Systemeinblicke durch sichtbare Einladungsstatus von Benutzern und Zeitstempel „Zuletzt aktualisiert“!"
   },
   "es": {
-    "title": "Los borradores de formularios se han trasladado",
-    "body": "Cree un nuevo formulario y edítelo en la nueva pestaña Editar formulario",
-    "action": {
-      "gotIt": "¡Ya está!"
-    }
+    "title": "Mapas ️🗺️, eliminación masiva ️🗑️ y mejor visibilidad del sistema 👀",
+    "body": "Presentamos una nueva vista de mapa para envíos y entidades, una limpieza de datos más rápida con la eliminación masiva de entidades y una visión más clara del sistema gracias a los estados visibles de las invitaciones de los usuarios y las marcas de tiempo de «última actualización»."
   },
   "fr": {
-    "title": "Les ébauches de Formulaires ont été déplacées.",
-    "body": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer le Formulaire»",
-    "action": {
-      "gotIt": "J'ai compris !"
-    }
+    "title": "Cartes 🗺️, suppression en masse 🗑️, et plus de visibilité 👀",
+    "body": "Essayez les nouvelles vues cartographiques pour les soumissions et les entités, nettoyez vos données plus rapidement avec la suppression en masse des entités, et comprenez mieux vos utilisateurs grâce à l'affichage des statuts d'invitation!"
   },
   "it": {
-    "title": "Le bozze dei formulari sono state spostate",
-    "body": "Creare un nuovo formulario e modificarlo nella nuova scheda Modifica del formulario.",
-    "action": {
-      "gotIt": "Capito!"
-    }
+    "title": "Mappe ️🗺️, eliminazione in blocco ️🗑️ e migliore visibilità del sistema 👀",
+    "body": "Presentiamo una nuova visualizzazione della mappa per gli invii e le entità, una gestione dei dati più rapida grazie alla cancellazione in blocco delle entità e una visione più chiara del sistema grazie alla visualizzazione dello stato degli inviti agli utenti e dei timestamp dell'ultimo aggiornamento."
   },
-  "pt": {
-    "action": {
-      "gotIt": "Entendi!"
-    }
+  "zh": {
+    "title": "地图功能️🗺️、批量删除️🗑️，及更强的系统可见性👀",
+    "body": "我们推出了全新的地图视图，可同时展示提交数据与实体；通过批量删除实体实现高效数据清理；系统可视化也得到提升——现在可清晰查看用户邀请状态及“最后更新”时间戳！"
   },
   "zh-Hant": {
-    "title": "表單草稿已移動",
-    "body": "建立新表單，並在新的「編輯表單」標籤上編輯它",
-    "action": {
-      "gotIt": "知道了！"
-    }
+    "title": "地圖功能️🗺️、批次刪除️🗑️，以及更佳的系統可見性👀",
+    "body": "我們推出了全新的地圖視圖，可同時展示提交資料與實體；透過批次刪除實體來實現更高效率的資料清理；系統可視化也全面提升——現在可清楚查看使用者邀請狀態與「最後更新」時間戳！"
   }
 }
 </i18n>

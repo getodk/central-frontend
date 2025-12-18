@@ -30,37 +30,45 @@ describe('EntityFilters', () => {
     describe('initial request', () => {
       it('does not filter by conflict by default', () =>
         load('/projects/1/entity-lists/trees/entities', { root: false })
-          .beforeEachResponse((_, { url }, index) => {
-            if (index !== 1) return;
-            const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.not.match(/__system\/conflict ne null/);
-          }));
+          .testRequestsInclude([{
+            url: ({ searchParams }) => {
+              // Checking for 250 to confirm that it's the request for the
+              // actual data, not just the deletion count.
+              searchParams.get('$top').should.equal('250');
+              const filter = searchParams.get('$filter');
+              filter.should.not.match(/__system\/conflict ne null/);
+            }
+          }]));
 
       it('sends the correct request for ?conflict=true', () =>
         load('/projects/1/entity-lists/trees/entities?conflict=true', { root: false })
-          .beforeEachResponse((_, { url }, index) => {
-            if (index !== 1) return;
-            const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.match(/__system\/conflict ne null/);
-          }));
+          .testRequestsInclude([{
+            url: ({ searchParams }) => {
+              searchParams.get('$top').should.equal('250');
+              const filter = searchParams.get('$filter');
+              filter.should.match(/__system\/conflict ne null/);
+            }
+          }]));
 
       it('sends the correct request for ?conflict=false', () =>
         load('/projects/1/entity-lists/trees/entities?conflict=false', { root: false })
-          .beforeEachResponse((_, { url }, index) => {
-            if (index !== 1) return;
-            const filter = relativeUrl(url).searchParams.get('$filter');
-            filter.should.match(/__system\/conflict eq null/);
-          }));
+          .testRequestsInclude([{
+            url: ({ searchParams }) => {
+              searchParams.get('$top').should.equal('250');
+              const filter = searchParams.get('$filter');
+              filter.should.match(/__system\/conflict eq null/);
+            }
+          }]));
 
-      it('filters on submitter if ?submitter is specified', () =>
+      it('filters on creator if ?creator is specified', () =>
         load('/projects/1/entity-lists/trees/entities?creatorId=1&creatorId=2')
-          .beforeEachResponse((_, { url }, index) => {
-            if (index !== 1) return;
-            if (url.includes('.svc')) {
-              const filter = relativeUrl(url).searchParams.get('$filter');
+          .testRequestsInclude([{
+            url: ({ searchParams }) => {
+              searchParams.get('$top').should.equal('250');
+              const filter = searchParams.get('$filter');
               filter.should.match(/__system\/creatorId eq 1 or __system\/creatorId eq 2/);
             }
-          }));
+          }]));
     });
 
     describe('initial filter selection', () => {
@@ -99,10 +107,12 @@ describe('EntityFilters', () => {
       for (const query of cases) {
         it(`falls back to the default for ?${query}`, () =>
           load(`/projects/1/entity-lists/trees/entities?${query}`, { root: false })
-            .beforeEachResponse((_, { url }, index) => {
-              if (index !== 1) return;
-              relativeUrl(url).searchParams.get('$filter').should.not.match(/conflict/);
-            }));
+            .testRequestsInclude([{
+              url: ({ searchParams }) => {
+                searchParams.get('$top').should.equal('250');
+                searchParams.get('$filter').should.not.match(/conflict/);
+              }
+            }]));
       }
     });
 
@@ -359,8 +369,6 @@ describe('EntityFilters', () => {
     testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
     return load('/projects/1/entity-lists/trees/entities?deleted=true', {
       attachTo: document.body
-    }, {
-      deletedEntityCount: false
     })
       .afterResponses(component => {
         const conflictFilter = component.findAll('.multiselect select');
@@ -368,5 +376,22 @@ describe('EntityFilters', () => {
         conflictFilter[1].attributes('aria-disabled').should.equal('true');
         component.getComponent(DateRangePicker).props().disabled.should.be.true;
       });
+  });
+
+  describe('reset button', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1);
+    });
+
+    it('resets the filters when clicked', () =>
+      load('/projects/1/entity-lists/trees/entities?conflict=true&creatorId=1')
+        .complete()
+        .request(component => {
+          component.get('.btn-reset').trigger('click');
+        })
+        .respondWithData(testData.entityOData)
+        .afterResponses(component => {
+          should.not.exist(component.vm.$route.query.conflict);
+        }));
   });
 });

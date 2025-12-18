@@ -21,6 +21,7 @@ const locales = {
   ja: { warnVariableSeparator: false },
   pt: {},
   sw: {},
+  zh: { warnVariableSeparator: false },
   'zh-Hant': { warnVariableSeparator: false }
 };
 
@@ -689,7 +690,6 @@ const readSourceMessages = (localesDir, filenamesByComponent) => {
       try {
         componentMessages = parse(json, reviver);
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.error(`could not parse the Vue I18n JSON of ${componentName}`);
         throw e;
       }
@@ -981,7 +981,6 @@ const validateTranslation = (locale) => ({ source, translated, path }) => {
     if (locales[locale].warnVariableSeparator) {
       const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
       if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
-        // eslint-disable-next-line no-console
         console.warn(`warning: ${path.join('.')}: variable without separator.`);
       }
     }

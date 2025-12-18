@@ -112,8 +112,8 @@ const afterCreateDataset = async (dataset) => {
   },
   "de": {
     "heading": [
-      "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
-      "Entitäten werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
+      "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
+      "Objekte werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
     ],
     "new": "Neu"
   },
@@ -150,6 +150,13 @@ const afterCreateDataset = async (dataset) => {
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi.",
       "Mashirika huundwa kupitia muundo wa fomu na yanaweza kuambatishwa kwa Fomu yoyote."
     ]
+  },
+  "zh": {
+    "heading": [
+      "实体功能支持跨表单共享信息，便于您收集纵向数据、进行长期案例管理，以及实现多步骤工作流程。",
+      "实体通过表单设计创建，可关联至任意表单。"
+    ],
+    "new": "更新"
   },
   "zh-Hant": {
     "heading": [

@@ -372,6 +372,23 @@ export default {
       "createAnother": "Unda nyingine"
     }
   },
+  "zh": {
+    "title": "新建App用户",
+    "introduction": [
+      "此用户最初将没有访问任何表单的权限。您能够在用户建立后分配权限。"
+    ],
+    "success": [
+      "App用户“{displayName}”已建立。",
+      "您可以立即为“{displayName}”配置移动设备，也可以稍后通过在“App用户”表格中点击“查看代码”来完成配置。",
+      {
+        "full": "您可能需要访问此项目的{formAccessSettings}，以便为该用户设置表单访问权限。",
+        "formAccessSettings": "表单权限设置"
+      }
+    ],
+    "action": {
+      "createAnother": "新建另一个"
+    }
+  },
   "zh-Hant": {
     "title": "建立App使用者",
     "introduction": [

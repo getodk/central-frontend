@@ -459,6 +459,24 @@ defineExpose({ resize });
     },
     "branch": "Cadeia de atualização offline"
   },
+  "zh": {
+    "noConflicts": "没有可显示的冲突。",
+    "basedOn": {
+      "label": "基于",
+      "description": "作者在进行修改时所看到的该实体版本"
+    },
+    "source": {
+      "label": "来源",
+      "description": "产生此版本的更新"
+    },
+    "status": {
+      "historical": "包含此历史版本，是因为最近的一次同步是更新基于该实体的此版本。",
+      "lastGoodVersion": "这是最新且一致的版本。在此更新之后，可能存在冲突的同步更新已被创建。",
+      "softConflict": "此版本可能基于过期的数据创建。",
+      "hardConflict": "这个版本是与其他更新并行制作的，其中某些更新尝试写入与本更新相同的属性。"
+    },
+    "branch": "离线更新链"
+  },
   "zh-Hant": {
     "noConflicts": "沒有可顯示的衝突。",
     "basedOn": {
