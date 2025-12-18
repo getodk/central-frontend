@@ -28,15 +28,20 @@ except according to the terms contained in the LICENSE file.
           <submission-filters v-model:submitterId="submitterIds"
             v-model:submissionDate="submissionDateRange"
             v-model:reviewState="reviewStates"
-            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"
-            @reset-click="resetFilters"/>
+            :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
         <!-- TODO: merge these two forms -->
         <form v-if="!draft" class="form-inline field-dropdown-form" @submit.prevent>
           <submission-field-dropdown
             v-if="selectedFields != null && fields.selectable.length > 11"
-            v-model="selectedFields"/>
+            v-model="selectedFields" :disabled="deleted"
+            :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
+        <button v-if="!draft" type="button" class="btn btn-link btn-reset"
+          :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('filterDisabledMessage') : null"
+          @click="resetFilters">
+          {{ $t('action.reset') }}
+        </button>
 
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
@@ -92,6 +97,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import { shallowRef, watch } from 'vue';
 
+import { equals } from 'ramda';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
@@ -107,6 +113,7 @@ import SubmissionTableView from './table-view.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 import TeleportIfExists from '../teleport-if-exists.vue';
 
+import useDataView from '../../composables/data-view';
 import useFields from '../../request-data/fields';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
@@ -195,16 +202,14 @@ export default {
       })
     });
 
-    const dataView = useQueryRef({
-      fromQuery: (query) => (!query.deleted && query.map === 'true' ? 'map' : 'table'),
-      toQuery: (value) => ({ map: value === 'map' ? 'true' : null })
-    });
+    const { dataView, options: viewOptions } = useDataView();
 
     const { request } = useRequest();
 
     return {
       form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
-      submitterIds, submissionDateRange, reviewStates, allReviewStates, dataView,
+      submitterIds, submissionDateRange, reviewStates, allReviewStates,
+      dataView, viewOptions,
       request
     };
   },
@@ -232,12 +237,6 @@ export default {
     };
   },
   computed: {
-    viewOptions() {
-      return [
-        { value: 'table', text: this.$t('common.table') },
-        { value: 'map', text: this.$t('common.map') }
-      ];
-    },
     filtersOnSubmitterId() {
       if (this.submitterIds.length === 0) return false;
       const selectedAll = this.submitters.dataExists &&
@@ -309,15 +308,6 @@ export default {
     }
   },
   watch: {
-    dataView() {
-      /* Both view components set this.odata, but they don't reset this.odata
-      when they're unmounted. It's important for this.odata to be reset,
-      especially when toggling from table view to map view. Map view doesn't
-      modify this.odata at all until after the GeoJSON response is received.
-      That means that if this.odata isn't reset, the stale data from the table
-      view could persist for a bit, affecting things like this.emptyMessage. */
-      this.odata.reset();
-    },
     'odata.count': {
       handler() {
         // Update this.formVersion.submissions to match this.odata.count.
@@ -330,12 +320,24 @@ export default {
           this.dataView === 'table' && !this.odataFilter && !this.deleted)
           this.formVersion.submissions = this.odata.count;
       }
+    },
+    deleted() {
+      this.setDefaultSelectedFields();
     }
   },
   created() {
     this.fetchData();
   },
   methods: {
+    setDefaultSelectedFields() {
+      // We also use 11 in the SubmissionFieldDropdown v-if.
+      const defaultFields = this.fields.selectable.length <= 11
+        ? this.fields.selectable
+        : this.fields.selectable.slice(0, 10);
+      if (!equals(this.selectedFields, defaultFields)) {
+        this.selectedFields = defaultFields;
+      }
+    },
     fetchData() {
       this.fields.request({
         url: apiPaths.fields(this.projectId, this.xmlFormId, this.draft, {
@@ -343,10 +345,7 @@ export default {
         })
       })
         .then(() => {
-          // We also use 11 in the SubmissionFieldDropdown v-if.
-          this.selectedFields = this.fields.selectable.length <= 11
-            ? this.fields.selectable
-            : this.fields.selectable.slice(0, 10);
+          this.setDefaultSelectedFields();
         })
         .catch(noop);
       if (!this.draft) {
@@ -368,7 +367,10 @@ export default {
         this.$emit('fetch-keys');
     },
     resetFilters() {
-      this.$router.replace({ path: this.$route.path, query: {} });
+      this.setDefaultSelectedFields();
+      if (this.odataFilter != null) {
+        this.$router.replace({ path: this.$route.path, query: {} });
+      }
     },
     cancelBackgroundRefresh() {
       if (!this.refreshing) return;
@@ -673,6 +675,7 @@ export default {
     },
     "noMatching": "沒有符合的提交內容。",
     "emptyMap": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。",
+    "learnMoreMap": "進一步了解提交地圖資料功能",
     "allDeleted": "所有提交內容都會被刪除。",
     "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
     "downloadDisabled": "已刪除的提交內容無法下載",

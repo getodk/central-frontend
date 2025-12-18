@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-console, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
+/* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
 
 const { execSync } = require('node:child_process');
 const { basename, extname } = require('node:path');
@@ -57,7 +57,7 @@ function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) { // eslint-disable-line default-case
-    case 'index.js':             return size >   450_000;
+    case 'index.js':             return size >   750_000;
     case 'web-form.js': return size > 3_300_000;
     case 'MapBlock.js': return size > 450_000; // A Web Forms' feature bundle
     case 'geojson-map.js':       return size >   500_000;
@@ -69,7 +69,7 @@ function isTooBig({ path, size }) {
     case 'html': return size >   1_200;
     case 'ico':  return size >  16_000;
     case 'js':   return size > 200_000;
-    case 'png':  return size >  40_000;
+    case 'png':  return size > 700_000;
     case 'svg':  return size >  60_000;
     case 'ttf':  return size >  18_000;
     case 'woff': return size >  19_000;

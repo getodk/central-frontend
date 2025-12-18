@@ -40,7 +40,7 @@ defineExpose({ el, resetScroll });
 </script>
 
 <style lang="scss">
-@import '../assets/scss/mixins';
+@import '../../assets/scss/mixins';
 
 .map-popup {
   display: flex;
@@ -52,6 +52,7 @@ defineExpose({ el, resetScroll });
 
   width: 318px;
   max-height: 363px;
+  overflow: hidden;
 
   background-color: $color-page-background;
   border-radius: 6px;

@@ -20,7 +20,7 @@ We disable elements in a few different ways:
     `disabled` attribute. For more context, see this article:
     https://css-tricks.com/making-disabled-buttons-more-inclusive/
   - For similar reasons, we use aria-disabled="true" for .form-control elements,
-    including <select> elements and most <input> elements.
+    including <select>, <textarea>, and most <input> elements.
   - For checkboxes specifically, we use the `disabled` attribute rather than
     aria-disabled. That's because it's not trivial to style checkboxes so that
     an aria-disabled checkbox looks like a checkbox with a `disabled` attribute.
@@ -65,7 +65,8 @@ const preventDisabledClick = (event) => {
 };
 
 const preventDisabledInput = (event) => {
-  if (event.target.tagName === 'INPUT' &&
+  const { tagName } = event.target;
+  if ((tagName === 'INPUT' || tagName === 'TEXTAREA') &&
     event.target.getAttribute('aria-disabled') === 'true')
     preventAndStop(event);
 };

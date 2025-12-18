@@ -244,6 +244,53 @@ describe('AccountLogin', () => {
     });
   });
 
+  describe('source=claim query param', () => {
+    it('shows the mailing list opt-in checkbox and is checked by default', () =>
+      load('/login?source=claim')
+        .restoreSession(false)
+        .complete()
+        .request(app => app.find('#mailing-list-opt-in').get('input[type="checkbox"]').element.checked.should.be.true));
+
+    it('does not show the checkbox if query parameter is not included', () =>
+      load('/login?source=other')
+        .restoreSession(false)
+        .complete()
+        .request(app => app.find('#mailing-list-opt-in').exists().should.be.false));
+
+    it('sends a request to opt-in to the mailing list', () => {
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+      return load('/login?source=claim')
+        .restoreSession(false)
+        .complete()
+        .request(submit) // checkbox is checked by default
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondWithSuccess()
+        .respondFor('/', { users: false })
+        .testRequestsInclude([
+          { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: true } },
+        ]);
+    });
+
+    it('sends a request to opt-out of the mailing list', () => {
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+      return load('/login?source=claim')
+        .restoreSession(false)
+        .complete()
+        .request(async (app) => {
+          await app.find('#mailing-list-opt-in').get('input[type="checkbox"]').setValue(false);
+          return submit(app);
+        })
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondWithSuccess()
+        .respondFor('/', { users: false })
+        .testRequestsInclude([
+          { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: false } },
+        ]);
+    });
+  });
+
   describe('OIDC is enabled', () => {
     it('renders a link to OIDC login', async () => {
       const component = await load('/login', {

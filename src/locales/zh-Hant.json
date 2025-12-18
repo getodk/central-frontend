@@ -173,6 +173,7 @@
     "expand": "開啟",
     "collapse": "閉合",
     "selectRow": "選取列",
+    "reset": "重設",
     "reviewParallelUpdates": "查看並行更新",
     "tryAgain": "再試一次",
     "upload": "上傳",
@@ -280,7 +281,8 @@
     "needFeedback": {
       "full": "為此，我們需要 {your} 的回饋，以便我們了解您如何使用 ODK Central，以及它如何對您更好。",
       "your": "您"
-    }
+    },
+    "mailingListOptIn": "請不定期寄送電子郵件給我，告知新功能與最佳實踐。"
   },
   "submission": {
     "missingAttachment": "遺失附件",

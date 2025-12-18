@@ -71,6 +71,7 @@ module.exports = {
     'operator-linebreak': ['error', 'after', {
       overrides: { '?': 'before', ':': 'before' }
     }],
+    'prefer-object-has-own': 'error',
     'space-before-function-paren': ['error', {
       anonymous: 'never',
       named: 'never',

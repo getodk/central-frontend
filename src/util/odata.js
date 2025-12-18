@@ -19,15 +19,21 @@ export const odataLiteral = (value) => (value != null
 // Converts the OData for an entity to an entity in the format of a REST
 // response.
 export const odataEntityToRest = (odata, properties) => {
+  const { creatorId, creatorName } = odata.__system;
+  const creator = { id: creatorId, displayName: creatorName };
+
   const propertyData = Object.create(null);
   for (const { name, odataName } of properties) {
     const value = odata[odataName];
     if (value != null) propertyData[name] = value;
   }
+
   return {
     uuid: odata.__id,
+    creatorId,
+    creator,
     ...pick(
-      ['conflict', 'updates', 'creatorId', 'createdAt', 'updatedAt'],
+      ['conflict', 'updates', 'createdAt', 'updatedAt'],
       odata.__system
     ),
     currentVersion: {

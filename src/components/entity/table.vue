@@ -78,21 +78,28 @@ const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionCh
 // created.
 const { project, odataEntities } = useRequestData();
 
-const afterAction = ({ target, data, index }) => {
+const afterAction = ({ target, data }) => {
   const { classList } = target;
   if (classList.contains('delete-button'))
     emit('delete', data);
   else if (classList.contains('update-button'))
-    emit('update', index);
+    emit('update', data);
   else if (classList.contains('resolve-button'))
-    emit('resolve', index);
+    emit('resolve', data);
   else if (target.classList.contains('restore-button'))
     emit('restore', data);
 };
 const table = ref(null);
-const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
-defineExpose({ afterUpdate, afterDelete });
+const findIndex = (uuid) =>
+  odataEntities.value.findIndex(entity => entity.__id === uuid);
+const afterUpdate = (uuid) => {
+  markRowsChanged(table.value.getRowPair(findIndex(uuid)));
+};
+const afterDelete = (uuid) => {
+  const index = findIndex(uuid);
+  markRowsDeleted(table.value.getRowPair(index));
+  odataEntities.value.splice(index, 1);
+};
 
 const handleSelectionChanged = (checked, index) => {
   const data = odataEntities.value[index];
@@ -112,12 +119,16 @@ const changeAllSelection = (checked) => {
   });
   emit('selectionChanged', 'all', checked);
 };
+
+defineExpose({ afterUpdate, afterDelete });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
 #entity-table {
+  table:has(tbody:empty) { display: none; }
+
   .table-freeze-scrolling {
     th, td {
       @include text-overflow-ellipsis;
