@@ -13,7 +13,7 @@ jobs:
     - run: ./bin/check-images.sh
   shellcheck:
     timeout-minutes: 2
-    runs-on: ubutun-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - run: sudo apt-get install shellcheck
