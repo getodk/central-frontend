@@ -25,7 +25,7 @@ import type { XFormsXPathEvaluator } from './xforms/XFormsXPathEvaluator.ts';
  */
 
 export type * from './evaluator/Evaluator.ts';
-export { Evaluator } from './evaluator/Evaluator.ts';
+export { clearCache, Evaluator } from './evaluator/Evaluator.ts';
 
 /**
  * - - -

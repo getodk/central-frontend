@@ -348,6 +348,7 @@ export function useMapInteractions(
 
 	const teardownMap = () => {
 		currentLocationObserver.value?.disconnect();
+		currentLocationObserver.value = undefined;
 		removeMapInteractions();
 		mapInstance.getViewport().removeEventListener('contextmenu', preventContextMenu);
 	};

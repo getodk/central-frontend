@@ -40,11 +40,11 @@ import { LineString, Point, Polygon } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, get as getProjection } from 'ol/proj';
 import { OSM } from 'ol/source';
 import VectorSource from 'ol/source/Vector';
+import { shared as iconImageCache } from 'ol/style/IconImageCache';
 import { shallowRef, watch } from 'vue';
-import { get as getProjection } from 'ol/proj';
 
 export const STATES = {
 	LOADING: 'loading',
@@ -345,7 +345,34 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
 	const teardownMap = () => {
 		mapViewControls?.stopWatchingCurrentLocation();
+		mapViewControls = undefined;
 		mapInteractions?.teardownMap();
+		mapInteractions = undefined;
+		mapFeatures = undefined;
+
+		iconImageCache.clear();
+		if (mapInstance) {
+			const layers = mapInstance.getLayers().getArray();
+			layers.forEach((layer) => {
+				layer.dispose();
+				mapInstance!.removeLayer(layer);
+			});
+			const olCanvas = mapInstance.getViewport().querySelector('canvas');
+			if (olCanvas) {
+				const gl = olCanvas.getContext('webgl') ?? olCanvas.getContext('webgl2');
+				if (gl) {
+					const loseContext = gl.getExtension('WEBGL_lose_context');
+					if (loseContext) {
+						loseContext.loseContext();
+					}
+				}
+			}
+			mapInstance.getInteractions().clear();
+			mapInstance.getOverlays().clear();
+			mapInstance.dispose();
+			mapInstance.setTarget();
+			mapInstance = undefined;
+		}
 	};
 
 	const shouldShowMapOverlay = () => {

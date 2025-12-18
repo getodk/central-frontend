@@ -1,5 +1,3 @@
-import type { Owner } from 'solid-js';
-import { getOwner } from 'solid-js';
 import { MISSING_RESOURCE_BEHAVIOR } from '../client/constants.ts';
 import type { FormResource } from '../client/form/FormResource.ts';
 import type { LoadForm, LoadFormOptions } from '../client/form/LoadForm.ts';
@@ -7,40 +5,12 @@ import type { LoadFormResult } from '../client/form/LoadFormResult.ts';
 import { LoadFormFailureError } from '../error/LoadFormFailureError.ts';
 import { retrieveFormDefinition } from '../instance/resource.ts';
 import type { ReactiveScope } from '../lib/reactivity/scope.ts';
-import { createReactiveScope } from '../lib/reactivity/scope.ts';
 import { XFormDOM } from '../parse/XFormDOM.ts';
 import { XFormDefinition } from '../parse/XFormDefinition.ts';
 import { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { FormFailureResult } from './FormResult/FormFailureResult.ts';
 import { FormSuccessResult } from './FormResult/FormSuccessResult.ts';
-
-/**
- * Creates a {@link ReactiveScope | reactive scope} from which all form
- * instances derive, and:
- *
- * - if a client loads a form within a Solid reactive context, the scope will be
- *   disposed along with the client's reactive context; OR
- * - if a client loads a form outside a Solid reactive context (typically: if a
- *   client does not use Solid reactivity), the scope will disposed if and when
- *   the engine drops access to the loaded form
- *
- * **IMPORTANT:** this **MUST** be called synchronously. If it is called in an
- * `async` function, it **MUST** be called before any `await` expression; if it
- * is called in any other flow with mixed synchrony, it must be called before
- * yielding to the event loop. Failing to do this will cause the engine to lose
- * access to a client's Solid reactive context, potentially leaking form
- * reactivity indefinitely.
- */
-const createPotentiallyClientOwnedReactiveScope = (): ReactiveScope => {
-	/**
-	 * A {@link clientOwner | client owner} is the owner of a client's Solid
-	 * reactive context, if one exists. If none exists, the {@link ReactiveScope}
-	 * is fully owned by the engine.
-	 */
-	const clientOwner: Owner | null = getOwner();
-
-	return createReactiveScope({ owner: clientOwner });
-};
+import { createPotentiallyClientOwnedReactiveScope } from './createPotentiallyClientOwnedReactiveScope.ts';
 
 type GlobalFetch = typeof globalThis.fetch;
 

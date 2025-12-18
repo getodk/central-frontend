@@ -107,6 +107,10 @@ const namespaceURIs = new UpsertableMap<
 	UpsertableMap<string | null, string | null>
 >();
 
+export const clearCache = () => {
+	namespaceURIs.clear();
+};
+
 type XPathNSResolverFunction = (prefix: string | null) => string | null;
 
 interface XPathNSResolverObject {

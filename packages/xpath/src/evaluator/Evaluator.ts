@@ -14,6 +14,7 @@ import { fn } from '../functions/fn/index.ts';
 import type { ExpressionParser, ParseOptions } from '../static/grammar/ExpressionParser.ts';
 import { createExpression } from './expression/factory.ts';
 import { FunctionLibraryCollection } from './functions/FunctionLibraryCollection.ts';
+import { clearCache as nrClearCache } from './NamespaceResolver.ts';
 import { toXPathEvaluationResult } from './result/toXPathEvaluationResult.ts';
 import {
 	XPATH_EVALUATION_RESULT,
@@ -56,6 +57,10 @@ type EvaluatedNode<
 		AssertExists extends true
 			? U
 			: U | null;
+
+export const clearCache = () => {
+	nrClearCache();
+};
 
 export class Evaluator<T extends XPathNode> {
 	readonly domProvider: XPathDOMProvider<T>;

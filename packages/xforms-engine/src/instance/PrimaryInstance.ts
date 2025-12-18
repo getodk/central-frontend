@@ -1,4 +1,4 @@
-import { XPathNodeKindKey } from '@getodk/xpath';
+import { clearCache, XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
 import type { FormInstanceInitializationMode } from '../client/form/FormInstance.ts';
@@ -84,6 +84,7 @@ interface PrimaryInstanceStateSpec {
 
 interface PrimaryInstanceStateInputByMode {
 	readonly create: null;
+	readonly reset: null;
 	readonly edit: InitialInstanceState;
 	readonly restore: InitialInstanceState;
 }
@@ -92,7 +93,7 @@ export type PrimaryInstanceInitialState<Mode extends FormInstanceInitializationM
 	PrimaryInstanceStateInputByMode[Mode];
 
 export interface BasePrimaryInstanceOptions {
-	readonly scope: ReactiveScope;
+	scope: ReactiveScope;
 	readonly model: ModelDefinition;
 	readonly secondaryInstances: SecondaryInstancesDefinition;
 }
@@ -163,6 +164,8 @@ export class PrimaryInstance<
 		const { instance: modelInstance } = model;
 		const activeInstance = initialState?.document ?? modelInstance;
 		const definition = model.getRootDefinition(activeInstance);
+
+		clearCache();
 
 		super(config, null, activeInstance, definition, {
 			scope,

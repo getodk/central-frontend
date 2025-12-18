@@ -9,19 +9,13 @@ interface ResetFormStateOptions {
 	readonly preloadProperties?: PreloadProperties;
 }
 
-/**
- * @todo Clean up {@link currentState}'s {@link FormStateSuccessResult.instance}
- * before creating a new one. (Requires engine support, but will need to be
- * invoked here!)
- */
 const resetInstanceState = (
 	currentState: FormStateSuccessResult,
 	options: ResetFormStateOptions
 ): FormStateSuccessResult => {
 	const { form } = currentState;
 	const instanceConfig = getFormInstanceConfig(options);
-	const instance = form.createInstance(instanceConfig);
-
+	const instance = form.resetInstance(instanceConfig);
 	return {
 		status: 'FORM_STATE_SUCCESS',
 		error: null,

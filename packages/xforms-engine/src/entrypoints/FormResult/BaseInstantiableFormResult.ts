@@ -5,6 +5,7 @@ import type {
 } from '../../client/form/EditFormInstance.ts';
 import type { FormInstanceConfig } from '../../client/form/FormInstanceConfig.ts';
 import type { FormResultStatus } from '../../client/form/LoadFormResult.ts';
+import type { ResetFormInstance } from '../../client/form/ResetFormInstance.ts';
 import type {
 	RestoreFormInstance,
 	RestoreFormInstanceInput,
@@ -13,7 +14,8 @@ import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDe
 import { InitialInstanceState } from '../../instance/input/InitialInstanceState.ts';
 import type { BasePrimaryInstanceOptions } from '../../instance/PrimaryInstance.ts';
 import type { FormResource } from '../../instance/resource.ts';
-import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
+import { type ReactiveScope } from '../../lib/reactivity/scope.ts';
+import { createPotentiallyClientOwnedReactiveScope } from '../createPotentiallyClientOwnedReactiveScope.ts';
 import type { InstantiableFormResult } from '../FormInstance.ts';
 import { FormInstance } from '../FormInstance.ts';
 import type { BaseFormResultProperty } from './BaseFormResult.ts';
@@ -37,6 +39,7 @@ export abstract class BaseInstantiableFormResult<
 	Status extends InstantiableFormResultStatus,
 > extends BaseFormResult<Status> {
 	readonly createInstance: CreateFormInstance;
+	readonly resetInstance: ResetFormInstance;
 	readonly editInstance: EditFormInstance;
 	readonly restoreInstance: RestoreFormInstance;
 
@@ -58,6 +61,12 @@ export abstract class BaseInstantiableFormResult<
 				initialState: null,
 				instanceConfig,
 			});
+		};
+
+		this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
+			instanceOptions.scope.dispose();
+			instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
+			return this.createInstance(instanceConfig);
 		};
 
 		this.editInstance = async (
