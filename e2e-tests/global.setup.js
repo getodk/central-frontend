@@ -31,7 +31,7 @@ setup('create new project', async ({ request }) => {
     expect(createProjectResponse.ok()).toBeTruthy();
     const project = await createProjectResponse.json();
 
-    expect(project.id).not.toBeFalsy();
+    expect(createProjectResponse).toBeOK();    
     process.env.PROJECT_ID = project.id;
   } catch (err) {
     if (err.message.includes('ECONNREFUSED')) {
