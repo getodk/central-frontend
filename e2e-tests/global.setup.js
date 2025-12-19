@@ -27,7 +27,7 @@ setup('create new project', async ({ request }) => {
     `);
   }
 
-  expect(createProjectResponse.ok()).toBeTruthy();
+  expect(createProjectResponse).toBeOK();
   const project = await createProjectResponse.json();
 
   expect(project.id).not.toBeFalsy();

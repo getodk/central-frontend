@@ -7,6 +7,8 @@ const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64
 const projectId = process.env.PROJECT_ID;
 
 teardown('delete project', async () => {
+  if (!projectId) return;
+
   const result = await fetch(`${appUrl}/v1/projects/${projectId}`, {
     method: 'DELETE',
     headers: {
