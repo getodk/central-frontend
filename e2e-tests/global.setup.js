@@ -28,10 +28,10 @@ setup('create new project', async ({ request }) => {
       `);
     }
 
-    expect(createProjectResponse.ok()).toBeTruthy();
+    expect(createProjectResponse).toBeOK();
     const project = await createProjectResponse.json();
 
-    expect(createProjectResponse).toBeOK();    
+    expect(project.id).not.toBeFalsy();
     process.env.PROJECT_ID = project.id;
   } catch (err) {
     if (err.message.includes('ECONNREFUSED')) {
