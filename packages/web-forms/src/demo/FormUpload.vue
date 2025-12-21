@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
 import Button from 'primevue/button';
+import Checkbox from 'primevue/checkbox';
 import ProgressSpinner from 'primevue/progressspinner';
 import { RouterLink } from 'vue-router';
 
@@ -28,7 +29,7 @@ const xlsformOnlineBaseUrl = computed(() => config.value?.['xlsform-online-url']
 
 const inDevMode = import.meta.env.DEV;
 
-const bypassConverterForXml = ref<boolean>(false);
+const bypassConverterForXml = ref<boolean>(true);
 
 watch(configErrors, (value) => {
 	if (value) {
@@ -141,7 +142,8 @@ document.addEventListener(
 	<div class="form-upload-component">
 		<template v-if="xformUrl == null">
 			<div
-				:class="{ dropbox: true, highlighted: highlighted }"
+				class="dropbox"
+				:class="{ highlighted: highlighted }"
 				@drop.prevent="fileDropHandler"
 				@dragenter.prevent="toggleHighlight"
 				@dragleave.prevent="toggleHighlight"
@@ -152,12 +154,12 @@ document.addEventListener(
 						<IconSVG name="mdiFileOutline" variant="muted" />
 						Drag and drop XLSForm or <a href="javascript:;" class="upload-file-link" @click="fileInput.click()">upload form</a>
 					</span>
-					<template v-if="inDevMode">
-						<label>
-							<input v-model="bypassConverterForXml" type="checkbox">
+					<div v-if="inDevMode">
+						<Checkbox v-model="bypassConverterForXml" binary input-id="bypass-xml" />
+						<label for="bypass-xml">
 							Bypass converter for <code>XML</code> upload
 						</label>
-					</template>
+					</div>
 				</template>
 				<template v-else>
 					<ProgressSpinner class="upload-spinner" />
@@ -166,7 +168,7 @@ document.addEventListener(
 			</div>
 		</template>
 
-		<div v-else class="preview-wrapper">
+		<div v-else class="preview-wrapper dropbox">
 			<div class="textbox-with-icon">
 				<IconSVG name="mdiFileOutline" class="doc-input-icon" />
 				<InputText :value="uploadedFilename" class="uploaded-file-textbox" />
@@ -235,6 +237,10 @@ document.addEventListener(
 
 		.odk-icon {
 			margin-top: -4px;
+		}
+
+		.p-button-contrast {
+			background-color: var(--odk-base-background-color);
 		}
 	}
 
