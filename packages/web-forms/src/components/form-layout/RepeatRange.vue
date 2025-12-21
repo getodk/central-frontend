@@ -21,8 +21,10 @@ const label = computed(() => props.node.currentState.label?.formatted);
 	>
 		<IconSVG name="mdiPlus" />
 		<!-- TODO: translations -->
-		<span>Add</span>
-		<MarkdownBlock v-for="(elem, index) in label" :key="index" :elem="elem" />
+		<span>
+			Add
+			<MarkdownBlock v-for="(elem, index) in label" :key="index" :elem="elem" />
+		</span>
 	</Button>
 </template>
 
