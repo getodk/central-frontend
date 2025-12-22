@@ -91,7 +91,7 @@ export default defineConfig(({ mode }) => {
 				formats: ['es'],
 			},
 			rollupOptions: {
-				external: ['fs', 'path'],
+				external: ['fs', 'path', 'temporal-polyfill'],
 			},
 		},
 		define: {

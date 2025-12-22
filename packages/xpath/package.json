@@ -54,8 +54,7 @@
   },
   "dependencies": {
     "@getodk/common": "0.11.0",
-    "crypto-js": "^4.2.0",
-    "temporal-polyfill": "^0.3.0"
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -74,6 +73,9 @@
     "vite-plugin-no-bundle": "^4.0.0",
     "vitest": "^3.2.4",
     "web-tree-sitter": "0.24.5"
+  },
+  "peerDependencies": {
+    "temporal-polyfill": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"
