@@ -47,7 +47,7 @@ const menu = ref<InstanceType<typeof Menu> & MenuState>();
 					<IconSVG v-if="panelState" name="mdiChevronDown" />
 					<IconSVG v-if="!panelState" name="mdiChevronUp" />
 					<span v-if="titleFormatted">
-						<MarkdownBlock v-for="(elem, index) in titleFormatted" :key="index" :elem="elem" />
+						<MarkdownBlock v-for="elem in titleFormatted" :key="elem.id" :elem="elem" />
 					</span>
 					<span v-else>{{ title }}</span>
 				</h2>

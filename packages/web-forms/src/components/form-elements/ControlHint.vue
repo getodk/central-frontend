@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
-defineProps<{ question: QuestionNode }>();
+import { computed } from 'vue';
+const props = defineProps<{ question: QuestionNode }>();
+
+const label = computed(() => props.question.currentState.hint?.formatted);
 </script>
 
 <template>
 	<div v-if="question.currentState.hint" class="hint">
-		<MarkdownBlock v-for="(elem, index) in question.currentState.hint?.formatted" :key="index" :elem="elem" />
+		<MarkdownBlock v-for="elem in label" :key="elem.id" :elem="elem" />
 	</div>
 </template>
 

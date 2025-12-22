@@ -19,7 +19,7 @@ const audio = computed(() => props.label.audioSource);
 
 <template>
 	<span v-if="text != null" class="text-content">
-		<MarkdownBlock v-for="(elem, index) in text" :key="index" :elem="elem" />
+		<MarkdownBlock v-for="elem in text" :key="elem.id" :elem="elem" />
 	</span>
 
 	<div v-if="image || video || audio" class="media-content">

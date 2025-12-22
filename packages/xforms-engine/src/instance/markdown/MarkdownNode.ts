@@ -2,18 +2,26 @@ import {
 	type AnchorMarkdownNode,
 	type ChildMarkdownNode as ClientChildMarkdownNode,
 	type HtmlMarkdownNode as ClientHtmlMarkdownNode,
+	type MarkdownNode as ClientMarkdownNode,
 	type ParentMarkdownNode as ClientParentMarkdownNode,
 	type StyledMarkdownNode as ClientStyledMarkdownNode,
 	type ElementName,
-	type MarkdownNode,
 	type MarkdownProperty,
 } from '../../client';
 
-abstract class ParentMarkdownNode implements ClientParentMarkdownNode {
+abstract class MarkdownNode {
+	readonly id: string;
+	constructor() {
+		this.id = crypto.randomUUID();
+	}
+}
+
+abstract class ParentMarkdownNode extends MarkdownNode implements ClientParentMarkdownNode {
 	readonly children;
 	readonly role = 'parent';
 	abstract elementName: ElementName;
-	constructor(children: MarkdownNode[]) {
+	constructor(children: ClientMarkdownNode[]) {
+		super();
 		this.children = children;
 	}
 }
@@ -69,18 +77,20 @@ export class ListItem extends ParentMarkdownNode {
 export class Anchor extends ParentMarkdownNode implements AnchorMarkdownNode {
 	readonly elementName = 'a';
 	readonly url: string;
-	constructor(children: MarkdownNode[], url: string) {
+	constructor(children: ClientMarkdownNode[], url: string) {
 		super(children);
 		this.url = url;
 	}
 }
 
 abstract class StyledMarkdownNode implements ClientParentMarkdownNode {
+	readonly id: string;
 	readonly children;
 	readonly role = 'parent';
 	abstract elementName: ElementName;
 	readonly properties: MarkdownProperty | undefined;
-	constructor(children: MarkdownNode[], properties: MarkdownProperty | undefined) {
+	constructor(children: ClientMarkdownNode[], properties: MarkdownProperty | undefined) {
+		this.id = crypto.randomUUID();
 		this.children = children;
 		this.properties = properties;
 	}
@@ -98,18 +108,20 @@ export class Div extends StyledMarkdownNode implements ClientStyledMarkdownNode 
 	readonly elementName = 'div';
 }
 
-export class ChildMarkdownNode implements ClientChildMarkdownNode {
+export class ChildMarkdownNode extends MarkdownNode implements ClientChildMarkdownNode {
 	readonly role = 'child';
 	readonly value: string;
 	constructor(value: string) {
+		super();
 		this.value = value;
 	}
 }
 
-export class Html implements ClientHtmlMarkdownNode {
+export class Html extends MarkdownNode implements ClientHtmlMarkdownNode {
 	readonly role = 'html';
 	readonly unsafeHtml: string;
 	constructor(unsafeHtml: string) {
+		super();
 		this.unsafeHtml = unsafeHtml;
 	}
 }

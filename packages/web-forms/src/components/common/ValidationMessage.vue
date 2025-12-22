@@ -24,7 +24,7 @@ const showMessage = inject<ComputedRef<boolean>>(
 <template>
 	<div :class="{ 'validation-placeholder': addPlaceholder }">
 		<span v-show="showMessage" class="validation-message">
-			<MarkdownBlock v-for="(elem, index) in message" :key="index" :elem="elem" />
+			<MarkdownBlock v-for="elem in message" :key="elem.id" :elem="elem" />
 		</span>
 	</div>
 </template>

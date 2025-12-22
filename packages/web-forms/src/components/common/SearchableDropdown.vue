@@ -59,10 +59,10 @@ const selectValue = (value: string) => {
 		@change="$emit('change')"
 	>
 		<template #option="slotProps">
-			<MarkdownBlock v-for="(elem, index) in slotProps.option.label" :key="index" :elem="elem" />
+			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
-			<MarkdownBlock v-for="(elem, index) in selectedLabel" :key="index" :elem="elem" />
+			<MarkdownBlock v-for="elem in selectedLabel" :key="elem.id" :elem="elem" />
 		</template>
 	</Select>
 </template>

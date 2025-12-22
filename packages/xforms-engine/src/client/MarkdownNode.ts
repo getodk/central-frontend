@@ -16,17 +16,20 @@ export type ElementName =
 export type MarkdownNode = ChildMarkdownNode | HtmlMarkdownNode | ParentMarkdownNode;
 
 export interface ParentMarkdownNode {
+	readonly id: string;
 	readonly role: 'parent';
 	readonly elementName: string;
 	readonly children: MarkdownNode[];
 }
 
 export interface ChildMarkdownNode {
+	readonly id: string;
 	readonly role: 'child';
 	readonly value: string;
 }
 
 export interface HtmlMarkdownNode {
+	readonly id: string;
 	readonly role: 'html';
 	readonly unsafeHtml: string;
 }

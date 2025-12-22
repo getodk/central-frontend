@@ -20,11 +20,11 @@ const { elem } = defineProps<MarkdownProps>();
 
 	<!-- link -->
 	<a v-else-if="elem.role === 'parent' && elem.elementName === 'a'" :href="getUrl(elem)" target="_blank">
-		<MarkdownBlock v-for="(child, index) in elem.children" :key="index" :elem="child" />
+		<MarkdownBlock v-for="child in elem.children" :key="child.id" :elem="child" />
 	</a>
 
 	<!-- any other parent element -->
 	<component :is="elem.elementName" v-else-if="elem.elementName" :style="getStylePropertyMap(elem)">
-		<MarkdownBlock v-for="(child, index) in elem.children" :key="index" :elem="child" />
+		<MarkdownBlock v-for="child in elem.children" :key="child.id" :elem="child" />
 	</component>
 </template>

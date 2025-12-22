@@ -145,7 +145,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 			>
 				<div class="rank-label">
 					<IconSVG name="mdiDragVertical" />
-					<MarkdownBlock v-for="(elem, j) in props.question.getValueLabel(value)?.formatted" :key="j" :elem="elem" />
+					<MarkdownBlock v-for="elem in props.question.getValueLabel(value)?.formatted" :key="elem.id" :elem="elem" />
 				</div>
 
 				<div class="rank-buttons">

@@ -15,7 +15,7 @@ const audio = computed(() => question.currentState.label?.audioSource);
 
 <template>
 	<label :for="question.nodeId" :class="{ required: question.currentState.required }">
-		<MarkdownBlock v-for="(elem, index) in text" :key="index" :elem="elem" />
+		<MarkdownBlock v-for="elem in text" :key="elem.id" :elem="elem" />
 		<div v-if="image || video || audio" class="media-content">
 			<ImageBlock v-if="image" :resource-url="image" :alt="alt" />
 

@@ -23,7 +23,7 @@ const label = computed(() => props.node.currentState.label?.formatted);
 		<!-- TODO: translations -->
 		<span>
 			Add
-			<MarkdownBlock v-for="(elem, index) in label" :key="index" :elem="elem" />
+			<MarkdownBlock v-for="elem in label" :key="elem.id" :elem="elem" />
 		</span>
 	</Button>
 </template>

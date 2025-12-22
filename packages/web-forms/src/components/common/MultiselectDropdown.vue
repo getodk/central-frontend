@@ -69,13 +69,13 @@ const selectedLabels = computed(() => {
 		@change="$emit('change')"
 	>
 		<template #option="slotProps">
-			<MarkdownBlock v-for="(elem, index) in slotProps.option.label" :key="index" :elem="elem" />
+			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
 			<template v-for="(markdown, index) in selectedLabels" :key="index">
 				<!-- eslint-disable-next-line -->
 				<template v-if="index > 0">, </template>
-				<MarkdownBlock v-for="(elem, j) in markdown" :key="j" :elem="elem" />
+				<MarkdownBlock v-for="elem in markdown" :key="elem.id" :elem="elem" />
 			</template>
 		</template>
 	</MultiSelect>
