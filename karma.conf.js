@@ -34,6 +34,7 @@ webpackConfigForKarma.module.rules.push({
   test: /\.xml$/,
   use: 'raw-loader'
 });
+webpackConfigForKarma.optimization.emitOnErrors = false;
 
 module.exports = (config) => {
   config.set({
