@@ -59,7 +59,15 @@ module.exports = (config) => {
       'test/index.js': ['webpack', 'sourcemap']
     },
     webpack: webpackConfigForKarma,
-    browsers: ['ChromeHeadless'],
+    browsers: [
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-dev-shm-usage'],
+      },
+    ],
+    captureTimeout: 60000,
+    browserDisconnectTimeout: 10000,
+    browserNoActivityTimeout: 60000,
     reporters: ['spec'],
     singleRun: true,
     client: {
