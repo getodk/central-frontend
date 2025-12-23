@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 on:
   push:
@@ -15,5 +15,6 @@ jobs:
         node-version: 22.21.1
         cache: 'npm'
     - run: npm ci
-    - run: npm run build
-    - run: ./bin/check-bundle-size.js
+    - run: npm run lint
+    - uses: browser-actions/setup-chrome@v2
+    - run: npm run test
