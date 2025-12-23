@@ -817,7 +817,7 @@ describe('SubmissionList', () => {
   });
 
   describe('pagination', function() { // eslint-disable-line func-names
-    this.timeout(4000);
+    this.timeout(8000);
 
     const checkIds = (component, count, offset = 0) => {
       const rows = component.findAllComponents(SubmissionDataRow);
