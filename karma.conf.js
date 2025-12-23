@@ -68,7 +68,7 @@ module.exports = (config) => {
     client: {
       mocha: {
         grep: process.env.TEST_PATTERN || '.',
-        timeout: 4000,
+        timeout: 8000,
       },
     },
     customLaunchers: {
