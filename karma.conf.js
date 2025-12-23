@@ -59,12 +59,7 @@ module.exports = (config) => {
       'test/index.js': ['webpack', 'sourcemap']
     },
     webpack: webpackConfigForKarma,
-    browsers: [
-      ChromeHeadlessNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-dev-shm-usage'],
-      },
-    ],
+    browsers: ['ChromeHeadlessNoSandbox'],
     captureTimeout: 60000,
     browserDisconnectTimeout: 10000,
     browserNoActivityTimeout: 60000,
@@ -77,7 +72,11 @@ module.exports = (config) => {
       ChromeDebugging: {
         base: 'Chrome',
         flags: ['--remote-debugging-port=8333']
-      }
+      },
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-dev-shm-usage'],
+      },
     }
   });
 };
