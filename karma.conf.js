@@ -61,7 +61,7 @@ module.exports = (config) => {
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadlessNoSandbox'],
     captureTimeout: 60000,
-    browserDisconnectTimeout: 10000,
+    browserDisconnectTimeout: 60000,
     browserNoActivityTimeout: 60000,
     reporters: ['spec'],
     singleRun: true,
