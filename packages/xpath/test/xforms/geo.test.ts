@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
-describe('distance() and area() functions', () => {
+describe('geo functions', () => {
 	let testContext: XFormsTestContext;
 
 	beforeEach(() => {
@@ -127,6 +127,61 @@ describe('distance() and area() functions', () => {
 	[{ expression: 'area()' }, { expression: 'distance()' }].forEach(({ expression }) => {
 		it.fails(`throws error when no parameters are provided in expression ${expression}`, () => {
 			testContext.evaluate(expression);
+		});
+	});
+
+	describe('geofence', () => {
+		const UNIT_CUBE = '0 0 0 0;0 1 0 0;1 1 0 0;1 0 0 0;0 0 0 0';
+
+		const createContext = (point: string) => {
+			return createXFormsTestContext(`
+				<root>
+					<point>${point}</point>
+					<area>${UNIT_CUBE}</area>
+				</root>
+			`);
+		};
+
+		[
+			{ expression: '0.5 0.5 0 0', expected: true }, // inside
+			{ expression: '-1 0.5 0 0', expected: false }, // outside left
+			{ expression: '2 0.5 0 0', expected: false }, // outside right
+			{ expression: '0.5 2 0 0', expected: false }, // outside above
+			{ expression: '0.5 -1 0 0', expected: false }, // outside below
+			{ expression: '-1 0 0 0', expected: false }, // outside co-linear w/ bottom edge
+			{ expression: '-1 1 0 0', expected: false }, // outside co-linear w/ top edge
+			{ expression: '0 -1 0 0', expected: false }, // outside below vertex ("...They were carefully chosen to make the program work correctly when the point is vertically below a vertex.")
+		].forEach(({ expression, expected }) => {
+			it(`${expression} is ${expected ? 'inside' : 'outside'} of unit cube`, () => {
+				testContext = createContext(expression);
+				testContext.assertBooleanValue(`geofence("${expression}", "${UNIT_CUBE}")`, expected);
+				testContext.assertBooleanValue(`geofence("${expression}", /root/area)`, expected);
+				testContext.assertBooleanValue(`geofence(/root/point, /root/area)`, expected);
+			});
+		});
+
+		it('returns false when path evals to empty', () => {
+			testContext = createContext('');
+			testContext.assertBooleanValue('geofence(/root/point, /root/area)', false);
+		});
+
+		it('returns false when second parameter is not valid trace', () => {
+			testContext.assertBooleanValue('geofence("0 0 0 0", "")', false);
+		});
+
+		it('returns false when second parameter is not a closed shape', () => {
+			testContext.assertBooleanValue(
+				'geofence("0 0 0 0", "0 0 0 0;0 1 0 0;1 1 0 0;1 0 0 0;2 0 0 0")',
+				false
+			);
+		});
+
+		it.fails('throws error when no parameters are provided', () => {
+			testContext.evaluate('geofence()');
+		});
+
+		it.fails('throws error when only one parameter provided', () => {
+			testContext.evaluate('geofence("")');
 		});
 	});
 });

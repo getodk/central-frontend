@@ -3,7 +3,7 @@ import { JRCompatibleError } from './JRCompatibleError.ts';
 // prettier-ignore
 type JRCompatibleFallibleGeoFunction =
 	| 'distance'
-	| 'geofence' // TODO!
+	| 'geofence'
 	;
 
 export class JRCompatibleGeoValueError extends JRCompatibleError {
