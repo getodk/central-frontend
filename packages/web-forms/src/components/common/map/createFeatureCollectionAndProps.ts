@@ -10,6 +10,9 @@ const RESERVED_MAP_PROPERTIES = [
 	'stroke',
 	'stroke-width',
 	'fill',
+	'__version',
+	'__trunkVersion',
+	'__branchId',
 ];
 
 type Coordinates = [longitude: number, latitude: number];

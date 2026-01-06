@@ -264,6 +264,56 @@ describe('createFeatureCollectionAndProps', () => {
 		);
 	});
 
+	it('removes reserved properties of Entities in orderedExtraPropsMap', () => {
+		const odkFeatures: SelectItem[] = [
+			createSelectItem('point1', 'Point 1', '40.7128 -74.0060 100 5', [
+				['__version', 'v34.29.7'],
+				['clinic-name', 'New Hope Clinic'],
+				['__trunkVersion', 'v1.1.1'],
+				['__clinic-id', '123456'],
+				['__branchId', 'id-abc'],
+				['another-prop', 'value2'],
+			]),
+		];
+
+		const { featureCollection, orderedExtraPropsMap } =
+			createFeatureCollectionAndProps(odkFeatures);
+
+		expect(featureCollection).toEqual({
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: [-74.006, 40.7128],
+					},
+					properties: {
+						odk___branchId: 'id-abc',
+						odk___trunkVersion: 'v1.1.1',
+						odk___version: 'v34.29.7',
+						odk_geometry: '40.7128 -74.0060 100 5',
+						odk_label: 'Point 1',
+						odk_value: 'point1',
+					},
+				},
+			],
+		});
+
+		expect(orderedExtraPropsMap).toEqual(
+			new Map([
+				[
+					'point1',
+					[
+						['clinic-name', 'New Hope Clinic'],
+						['__clinic-id', '123456'],
+						['another-prop', 'value2'],
+					],
+				],
+			])
+		);
+	});
+
 	it('handles null label in ODK features', () => {
 		const odkFeatures: SelectItem[] = [
 			createSelectItem('point1', null, '40.7128 -74.0060 100 5', [['marker-color', '#ff0000']]),
