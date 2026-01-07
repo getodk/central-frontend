@@ -46,7 +46,7 @@ describe('EntityList', () => {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)
           pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
-          searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+          expect(searchParams.get('$filter')).to.be.null;
           searchParams.get('$top').should.be.eql('250');
         }
       },

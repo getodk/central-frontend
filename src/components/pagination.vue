@@ -35,8 +35,9 @@ except according to the terms contained in the LICENSE file.
       <i18n-t tag="div" keypath="rows" :plural="sizeOfCurrentPage"
         class="form-group">
         <template #range>
+          <template v-if="empty">0</template>
           <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-          <select v-if="lastPage > 0 && lastPage < 20" v-model="pageModel"
+          <select v-else-if="lastPage > 0 && lastPage < 20" v-model="pageModel"
             class="form-control">
             <option v-for="[value, text] of pageOptions" :key="value" :value="value">
               {{ text }}
@@ -83,6 +84,7 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  empty: Boolean,
   spinner: Boolean
 });
 const emit = defineEmits(['update:page', 'update:size']);

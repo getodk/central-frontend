@@ -208,7 +208,6 @@ export default {
 
       awaitingResponses: new Set(),
 
-      snapshotFilter: '',
       // used for restoring them back when undo button is pressed
       bulkDeletedEntities: [],
       selectedEntities: new Set(),
@@ -259,13 +258,6 @@ export default {
       if (!this.odataEntities.dataExists) return '';
       if (this.odataEntities.value.length > 0) return '';
 
-      // Cases related to entity deletion
-      if (this.odataEntities.removedEntities.size === this.odataEntities.count && this.odataEntities.count > 0) {
-        return this.deleted ? this.$t('deletedEntity.allRestored') : this.$t('allDeleted');
-      }
-      if (this.odataEntities.removedEntities.size > 0 && this.odataEntities.value.length === 0) {
-        return this.deleted ? this.$t('deletedEntity.allRestoredOnPage') : this.$t('allDeletedOnPage');
-      }
       if (this.deleted) {
         return this.$t('deletedEntity.emptyTable');
       }
@@ -421,7 +413,6 @@ export default {
           this.deleteModal.hide();
           this.alert.success(this.$t('alert.entityDeleted', { label }));
 
-          this.odataEntities.removedEntities.add(uuid);
           this.dataset.entities -= 1;
           if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
 
@@ -456,7 +447,6 @@ export default {
           this.alert.success(this.$t('alert.entityRestored', { label }));
           if (confirm != null) this.confirmRestore = confirm;
 
-          this.odataEntities.removedEntities.add(uuid);
           this.dataset.entities += 1;
           if (this.deletedEntityCount.dataExists && this.deletedEntityCount.value > 0)
             this.deletedEntityCount.value -= 1;
@@ -507,7 +497,6 @@ export default {
       const onSuccess = () => {
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += uuids.length;
 
-        uuids.forEach(uuid => this.odataEntities.removedEntities.add(uuid));
         this.dataset.entities -= uuids.length;
 
 
@@ -562,7 +551,6 @@ export default {
 
         this.bulkDeletedEntities.length = 0;
         if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value -= uuids.length;
-        uuids.forEach(uuid => this.odataEntities.removedEntities.delete(uuid));
         this.dataset.entities += uuids.length;
         this.alert.success(this.$tcn('alert.restored', uuids.length));
       };
@@ -630,8 +618,6 @@ export default {
     "noEntities": "There are no Entities to show.",
     "noMatching": "There are no matching Entities.",
     "emptyMap": "Entities only appear if they include data in the geometry property.",
-    "allDeleted": "All Entities are deleted.",
-    "allDeletedOnPage": "All Entities on the page have been deleted.",
     "alert": {
       "delete": "Entity “{label}” has been deleted.",
       "bulkDelete": "{count} Entity successfully deleted. | {count} Entities successfully deleted.",
@@ -643,8 +629,6 @@ export default {
     "downloadDisabled": "Download is unavailable for deleted Entities",
     "deletedEntity": {
       "emptyTable": "There are no deleted Entities.",
-      "allRestored": "All deleted Entities are restored.",
-      "allRestoredOnPage": "All Entities on the page have been restored."
     },
     "actionBar": {
       "message": "{count} Entity selected | {count} Entities selected"
