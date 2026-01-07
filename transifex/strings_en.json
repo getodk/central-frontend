@@ -2248,12 +2248,6 @@
       "emptyMap": {
         "string": "Entities only appear if they include data in the geometry property."
       },
-      "allDeleted": {
-        "string": "All Entities are deleted."
-      },
-      "allDeletedOnPage": {
-        "string": "All Entities on the page have been deleted."
-      },
       "alert": {
         "delete": {
           "string": "Entity “{label}” has been deleted."
@@ -2280,12 +2274,6 @@
       "deletedEntity": {
         "emptyTable": {
           "string": "There are no deleted Entities."
-        },
-        "allRestored": {
-          "string": "All deleted Entities are restored."
-        },
-        "allRestoredOnPage": {
-          "string": "All Entities on the page have been restored."
         }
       },
       "actionBar": {
@@ -5040,12 +5028,6 @@
       "learnMoreMap": {
         "string": "Learn more about mapping Submissions"
       },
-      "allDeleted": {
-        "string": "All Submissions are deleted."
-      },
-      "allDeletedOnPage": {
-        "string": "All Submissions on the page have been deleted."
-      },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Submissions"
       },
@@ -5058,12 +5040,6 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "There are no deleted Submissions."
-        },
-        "allRestored": {
-          "string": "All deleted Submissions are restored."
-        },
-        "allRestoredOnPage": {
-          "string": "All Submissions on the page have been restored."
         }
       },
       "noMapDeleted": {

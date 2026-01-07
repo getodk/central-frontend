@@ -36,7 +36,7 @@ describe('EntityFilters', () => {
               // actual data, not just the deletion count.
               searchParams.get('$top').should.equal('250');
               const filter = searchParams.get('$filter');
-              filter.should.not.match(/__system\/conflict ne null/);
+              expect(filter).not.to.match(/__system\/conflict ne null/);
             }
           }]));
 
@@ -110,7 +110,7 @@ describe('EntityFilters', () => {
             .testRequestsInclude([{
               url: ({ searchParams }) => {
                 searchParams.get('$top').should.equal('250');
-                searchParams.get('$filter').should.not.match(/conflict/);
+                expect(searchParams.get('$filter')).not.to.match(/conflict/);
               }
             }]));
       }
@@ -301,12 +301,12 @@ describe('EntityFilters', () => {
         .beforeEachResponse((_, { url }) => {
           const filters = new URL(url, window.location.origin).searchParams.get('$filter').split(' and ');
 
-          const start = filters[2].split(' ge ')[1];
+          const start = filters[0].split(' ge ')[1];
           start.should.equal('1970-01-01T00:00:00.000Z');
 
           DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
 
-          const end = filters[3].split(' le ')[1];
+          const end = filters[1].split(' le ')[1];
           end.should.equal('1970-01-02T23:59:59.999Z');
           DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
         })
