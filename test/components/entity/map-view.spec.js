@@ -5,6 +5,7 @@ import { changeMultiselect } from '../../util/trigger';
 import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { relativeUrl } from '../../util/request';
 import { setLuxon } from '../../util/date-time';
 
 const findToggle = (component) => component.find('#entity-list .radio-field');
@@ -89,10 +90,12 @@ describe('EntityMapView', () => {
         .testRequestsInclude([{
           url: ({ pathname, searchParams }) => {
             pathname.should.equal('/v1/projects/1/datasets/trees/entities.geojson');
-            searchParams.getAll('creatorId').should.eql(['1', '2']);
-            searchParams.get('start__gte').should.equal('1970-01-01T00:00:00.000Z');
-            searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
-            searchParams.getAll('conflict').should.eql(['soft', 'hard']);
+            searchParams.get('$filter').split(' and ').should.eql([
+              '(__system/creatorId eq 1 or __system/creatorId eq 2)',
+              '__system/createdAt ge 1970-01-01T00:00:00.000Z',
+              '__system/createdAt le 1970-01-02T23:59:59.999Z',
+              '__system/conflict ne null'
+            ]);
             searchParams.get('$search').should.equal('foo');
           }
         }]);
@@ -108,7 +111,10 @@ describe('EntityMapView', () => {
         })
         .request(changeMultiselect('#entity-filters-conflict', [1]))
         .beforeEachResponse((app, { url }) => {
-          url.should.equal('/v1/projects/1/datasets/trees/entities.geojson?conflict=null');
+          url.should.startWith('/v1/projects/1/datasets/trees/entities.geojson?');
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.equal('__system/conflict eq null');
+
           // Not a background refresh: the map disappears during the request.
           countFeatures(app).should.equal(0);
         })
