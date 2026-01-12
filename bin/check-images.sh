@@ -4,6 +4,11 @@ shopt -s inherit_errexit
 
 log() { echo >&2 "[$(basename "$0")] $*"; }
 
+# MacOS/BSD compat
+if ! command -v sha256sum >/dev/null; then
+  sha256sum() { shasum -a 256 "$@"; }
+fi
+
 fatal_error() {
   log "!!!"
   log "!!! $*"
