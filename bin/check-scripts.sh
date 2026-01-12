@@ -29,14 +29,14 @@ for script in $scriptFiles; do
   fi
   log "    Passed OK."
 
-  #log "  Checking for tab-based indentation..."
-  #if grep $'\t' "$script"; then
-  #  log "    !!! Tab(s) found."
-  #  log "    !!!"
-  #  log "    !!! Please use spaces for indentation."
-  #  exit 1
-  #fi
-  #log "    Passed OK."
+  log "  Checking for tab-based indentation..."
+  if grep $'\t' "$script"; then
+    log "    !!! Tab(s) found."
+    log "    !!!"
+    log "    !!! Please use spaces for indentation."
+    exit 1
+  fi
+  log "    Passed OK."
 
   log "  Checking shebang..."
   shebang="$(head -n3 "$script")"
