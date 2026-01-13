@@ -8,7 +8,7 @@
     "build": "vite build",
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ e2e-tests/ *.js",
     "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ bin/ test/ *.js",
-    "lint": "npm run eslint && npm run transifex:lint",
+    "lint": "npm run eslint && npm run transifex:lint && ./bin/check-for-large-files.sh",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
     "test": "./test/run.sh",
     "test:e2e": "e2e-tests/run-tests.sh",
