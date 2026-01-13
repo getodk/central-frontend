@@ -46,7 +46,7 @@ defineOptions({
   name: 'EntityMapView'
 });
 const props = defineProps({
-  filter: Object,
+  filter: String,
   searchTerm: String,
   awaitingResponses: {
     type: Set,
@@ -61,7 +61,7 @@ const datasetName = inject('datasetName');
 const { odataEntities } = useRequestData();
 
 const geojsonUrl = computed(() => {
-  const query = { ...props.filter, $search: props.searchTerm };
+  const query = { $filter: props.filter, $search: props.searchTerm };
   return apiPaths.entities(projectId, datasetName, '.geojson', query);
 });
 const overlapUrl = (query) =>
