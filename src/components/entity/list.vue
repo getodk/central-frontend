@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         @clear-selection="clearSelectedEntities"
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"
         @restore="showRestore"/>
-      <entity-map-view v-else ref="view" :filter="geojsonFilter"
+      <entity-map-view v-else ref="view" :filter="odataFilter"
         :search-term="searchTerm" :awaiting-responses="awaitingResponses"
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
     </disable-container>
@@ -243,17 +243,6 @@ export default {
         conditions.push(this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
-    },
-    geojsonFilter() {
-      const query = {};
-      if (this.filtersOnCreatorId) query.creatorId = this.creatorIds;
-      if (this.creationDateRange.length !== 0) {
-        query.start__gte = this.creationDateRange[0].toISO();
-        query.end__lte = this.creationDateRange[1].endOf('day').toISO();
-      }
-      if (this.conflict.length === 1)
-        query.conflict = this.conflict[0] ? ['soft', 'hard'] : 'null';
-      return Object.keys(query).length !== 0 ? query : null;
     },
     emptyMessage() {
       if (!this.odataEntities.dataExists) return '';
