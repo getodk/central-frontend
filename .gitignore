@@ -23,9 +23,6 @@ npm-debug.log*
 *.sln
 *.sw?
 
-/.nginx/*
-!/.nginx/.gitkeep
-
 /.eslintcache
 public/index.html
 test-results
