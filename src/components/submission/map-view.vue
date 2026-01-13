@@ -59,7 +59,7 @@ const props = defineProps({
   },
 
   // Table actions
-  filter: Object,
+  filter: String,
 
   awaitingResponses: {
     type: Set,
@@ -75,7 +75,7 @@ const geojsonUrl = computed(() => apiPaths.submissions(
   props.xmlFormId,
   false,
   '.geojson',
-  props.filter
+  { $filter: props.filter }
 ));
 const overlapUrl = (query) =>
   apiPaths.odataSubmissions(props.projectId, props.xmlFormId, false, query);
