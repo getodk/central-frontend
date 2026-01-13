@@ -55,7 +55,7 @@ jobs:
     - name: Set node version
       uses: actions/setup-node@v4
       with:
-        node-version-file: package.json
+        node-version-file: central/client/package.json
         cache: 'npm'
         cache-dependency-path: 'central/client/package-lock.json'
     - name: Run tests
