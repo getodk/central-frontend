@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nf start vite,nginx",
+    "dev": "          nf start vite,nginx-docker",
+    "dev-no-docker": "nf start vite,nginx-host",
     "dev:build": "nf start build,nginx",
     "build": "vite build",
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ e2e-tests/ *.js",
