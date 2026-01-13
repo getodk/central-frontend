@@ -1,4 +1,6 @@
 #!/bin/bash -eu
+set -o pipefail
+shopt -s inherit_errexit
 
 log() {
   echo "[e2e-tester] $*"
@@ -61,11 +63,11 @@ if [[ ${CI-} = true ]]; then
   sudo -k
 
   log "Waiting for ODK Central to start..."
-  wait-for-it $ODK_DOMAIN:$ODK_PORT --strict --timeout=60 -- echo '[e2e-tester] odk-central is UP!'
+  wait-for-it "$ODK_DOMAIN:$ODK_PORT" --strict --timeout=60 -- echo '[e2e-tester] odk-central is UP!'
 
   log "Creating test users..."
-  docker compose exec service bash -c "echo $ODK_PASSWORD | node lib/bin/cli.js --email $ODK_USER user-create"
-  docker compose exec service node lib/bin/cli.js --email $ODK_USER user-promote
+  docker compose exec service bash -c "echo '$ODK_PASSWORD' | node lib/bin/cli.js --email '$ODK_USER' user-create"
+  docker compose exec service node lib/bin/cli.js --email "$ODK_USER" user-promote
   log "Test user created."
   cd client
 fi
