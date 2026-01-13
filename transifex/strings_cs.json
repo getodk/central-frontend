@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "vaší",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": ""
     }
   },
   "submission": {
@@ -1496,6 +1503,9 @@
           "string": ""
         },
         "num_entities_with_geometry": {
+          "string": ""
+        },
+        "num_multi_entity_errors": {
           "string": ""
         }
       }
@@ -2235,6 +2245,9 @@
       "noMatching": {
         "string": "Neexistují žádné odpovídající entity."
       },
+      "emptyMap": {
+        "string": ""
+      },
       "allDeleted": {
         "string": ""
       },
@@ -2256,6 +2269,9 @@
         "string": ""
       },
       "searchDisabledMessage": {
+        "string": ""
+      },
+      "mapDisabled": {
         "string": ""
       },
       "downloadDisabled": {
@@ -2297,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": ""
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2431,9 @@
           "string": "Aktualizovaná hodnota",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": ""
       },
       "problem": {
         "409_15": {
@@ -5448,12 +5475,6 @@
       },
       "body": {
         "string": ""
-      },
-      "action": {
-        "gotIt": {
-          "string": "",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
       }
     }
   },

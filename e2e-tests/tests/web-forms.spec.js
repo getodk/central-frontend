@@ -13,6 +13,7 @@ let publicLink;
 
 test.beforeAll(async ({ playwright }, testInfo) => {
   const backendClient = new BackendClient(playwright, `${testInfo.project.name}_wf`);
+  await backendClient.alwaysHideModal();
   const resources = await backendClient.createFormAndChildren();
   publishedForm = resources.form;
   draftForm = resources.formDraft;

@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
             v-model="selectedFields" :disabled="deleted"
             :disabled-message="deleted ? $t('filterDisabledMessage') : null"/>
         </form>
-        <button type="button" class="btn btn-link btn-reset"
+        <button v-if="!draft" type="button" class="btn btn-link btn-reset"
           :aria-disabled="deleted" v-tooltip.aria-describedby="deleted ? $t('filterDisabledMessage') : null"
           @click="resetFilters">
           {{ $t('action.reset') }}
@@ -75,7 +75,7 @@ except according to the terms contained in the LICENSE file.
         @review="showReview" @delete="showDelete" @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId"
-        :filter="geojsonFilter"
+        :filter="odataFilter"
         :awaiting-responses="awaitingResponses"
         @review="showReview" @delete="showDelete"/>
     </div>
@@ -267,21 +267,6 @@ export default {
         conditions.push(`(${condition})`);
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
-    },
-    geojsonFilter() {
-      if (this.draft) return null;
-      const query = {};
-      if (this.filtersOnSubmitterId) query.submitterId = this.submitterIds;
-      if (this.submissionDateRange.length !== 0) {
-        query.start__gte = this.submissionDateRange[0].toISO();
-        query.end__lte = this.submissionDateRange[1].endOf('day').toISO();
-      }
-      if (this.reviewStates.length !== this.allReviewStates.length) {
-        query.reviewState = this.reviewStates.map(reviewState =>
-          // Undo odataLiteral(): remove quotes.
-          (reviewState === 'null' ? reviewState : reviewState.slice(1, -1)));
-      }
-      return Object.keys(query).length !== 0 ? query : null;
     },
     emptyMapMessage() {
       return joinSentences(this.$i18n, [this.$t('common.emptyMap'), this.$t('emptyMap')]);
@@ -675,6 +660,7 @@ export default {
     },
     "noMatching": "沒有符合的提交內容。",
     "emptyMap": "只有當提交內容包含第一個地理欄位的資料時，才會顯示。",
+    "learnMoreMap": "進一步了解提交地圖資料功能",
     "allDeleted": "所有提交內容都會被刪除。",
     "allDeletedOnPage": "頁面上的所有提交內容都已刪除。",
     "downloadDisabled": "已刪除的提交內容無法下載",
