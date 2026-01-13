@@ -34,7 +34,7 @@ webpackConfigForKarma.module.rules.push({
   test: /\.xml$/,
   use: 'raw-loader'
 });
-// This makes karma fail if webpack erros, which seems like it should
+// This makes karma fail if webpack errors, which seems like it should
 // be enabled (and be the default anyway), but causes problems:
 //webpackConfigForKarma.optimization.emitOnErrors = false;
 
