@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "          nf start vite,nginx-docker",
     "dev-no-docker": "nf start vite,nginx-host",
-    "dev:build": "nf start build,nginx",
+    "dev:build": "nf start build,nginx-docker",
+    "dev-no-docker:build": "nf start build,nginx-host",
     "build": "vite build",
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ e2e-tests/ *.js",
     "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ bin/ test/ *.js",
