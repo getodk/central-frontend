@@ -61,5 +61,9 @@ export default defineConfig(({ mode }) => ({
   optimizeDeps: mode === 'development'
     ? { esbuildOptions: { target: buildTarget } }
     : {},
-  server: devServer
+  server: devServer,
+  preview: {
+    port: 8989,
+    strictPort: true,
+  },
 }));
