@@ -59,6 +59,7 @@
     "karma": "~6",
     "karma-chrome-launcher": "~3",
     "karma-mocha": "~2.0",
+    "karma-source-map-support": "^1.4.0",
     "karma-sourcemap-loader": "~0.3",
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "^5.0.0",
