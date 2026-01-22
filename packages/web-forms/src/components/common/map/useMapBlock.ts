@@ -226,7 +226,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 			return;
 		}
 
-		mapInteractions?.savePreviousFeatureState(feature);
+		mapInteractions?.pushUndoState(feature);
 		const coordsLeft = deleteVertexFromFeature(feature, vertexIndex);
 		if (coordsLeft > 0) {
 			updateAndSaveFeature(feature);
@@ -239,7 +239,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 	const deleteFeature = () => {
 		const feature = mapFeatures?.getSelectedFeature();
 		if (canDeleteFeatureOrVertex() && feature) {
-			mapInteractions?.savePreviousFeatureState(feature);
+			mapInteractions?.pushUndoState(feature);
 			clearMap();
 		}
 	};
@@ -256,14 +256,14 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
 	const canUndoChange = () => {
 		const { canUndoLastChange, canLoadMultiFeatures } = currentMode.capabilities;
-		const hasState = !!mapInteractions?.hasPreviousFeatureState();
+		const hasState = !!mapInteractions?.hasUndoHistory();
 		return hasState && canUndoLastChange && !canLoadMultiFeatures;
 	};
 
 	const undoLastChange = () => {
 		if (canUndoChange()) {
 			clearMap();
-			const previousFeatureState = mapInteractions?.popPreviousFeatureState();
+			const previousFeatureState = mapInteractions?.popUndoState();
 			if (previousFeatureState) {
 				featuresSource.addFeature(previousFeatureState);
 				updateAndSaveFeature(previousFeatureState);

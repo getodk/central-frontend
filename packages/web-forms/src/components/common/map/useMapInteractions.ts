@@ -30,10 +30,10 @@ export const DRAW_FEATURE_TYPES = {
 export type DrawFeatureType = (typeof DRAW_FEATURE_TYPES)[keyof typeof DRAW_FEATURE_TYPES];
 
 export interface UseMapInteractions {
-	hasPreviousFeatureState: () => boolean;
-	popPreviousFeatureState: () => Feature | null | undefined;
+	hasUndoHistory: () => boolean;
+	popUndoState: () => Feature | null | undefined;
 	removeMapInteractions: () => void;
-	savePreviousFeatureState: (feature: Feature | null) => void;
+	pushUndoState: (feature: Feature | null) => void;
 	setupFeatureDrag: (layer: VectorLayer, onDrag: (feature: Feature) => void) => void;
 	setupLongPressPoint: (source: VectorSource, onLongPress: (feature: Feature) => void) => void;
 	setupMapVisibilityObserver: (mapContainer: HTMLElement, onMapNotVisible: () => void) => void;
@@ -58,7 +58,7 @@ export function useMapInteractions(
 	const pointerInteraction = shallowRef<PointerInteraction | undefined>();
 	const translateInteraction = shallowRef<Translate | undefined>();
 	const modifyInteraction = shallowRef<Modify | undefined>();
-	const previousFeatureState = shallowRef<Feature | null | undefined>();
+	const undoStack = shallowRef<Array<Feature | null>>([]);
 
 	const setupMapVisibilityObserver = (mapContainer: HTMLElement, onMapNotVisible: () => void) => {
 		if ('IntersectionObserver' in window) {
@@ -188,7 +188,7 @@ export function useMapInteractions(
 	) => {
 		const resolution = mapInstance.getView().getResolution() ?? 1;
 		const feature = source.getFeatures()?.[0];
-		savePreviousFeatureState(feature ?? null);
+		pushUndoState(feature ?? null);
 		const updatedFeature = resolveFeatureForLongPress(coordinate, resolution, feature)!;
 
 		if (!drawFeatureType && !source.isEmpty()) {
@@ -303,7 +303,7 @@ export function useMapInteractions(
 
 		modifyInteraction.value.on('modifystart', () => {
 			setCursor('grab');
-			savePreviousFeatureState(source.getFeatures()?.[0] ?? null);
+			pushUndoState(source.getFeatures()?.[0] ?? null);
 		});
 		modifyInteraction.value.on('modifyend', (event) => onDragFeature(event.features, onDrag));
 		mapInstance.addInteraction(modifyInteraction.value);
@@ -323,41 +323,48 @@ export function useMapInteractions(
 		}
 	};
 
-	const savePreviousFeatureState = (feature: Feature | null) => {
+	const pushUndoState = (feature: Feature | null) => {
 		if (!capabilities.canUndoLastChange) {
 			return;
 		}
 
-		if (!feature) {
-			previousFeatureState.value = null;
+		// Here null is a valid state representing clearing the map
+		const snapshot: Feature | null = feature?.clone() ?? null;
+		if (snapshot) {
+			snapshot.unset(SELECTED_VERTEX_INDEX_PROPERTY);
+			snapshot.unset(IS_SELECTED_PROPERTY);
+		}
+
+		undoStack.value = [...undoStack.value, snapshot];
+	};
+
+	const popUndoState = () => {
+		if (!undoStack.value.length) {
 			return;
 		}
 
-		previousFeatureState.value = feature.clone();
-		previousFeatureState.value.unset(SELECTED_VERTEX_INDEX_PROPERTY);
-		previousFeatureState.value.unset(IS_SELECTED_PROPERTY);
-	};
+		const newStack = [...undoStack.value];
+		const feature = newStack.pop();
+		undoStack.value = newStack;
 
-	const popPreviousFeatureState = () => {
-		const feature = previousFeatureState.value;
-		previousFeatureState.value = undefined; // Undefined means no state to restore.
 		return feature;
 	};
 
-	const hasPreviousFeatureState = () => previousFeatureState.value !== undefined;
+	const hasUndoHistory = () => undoStack.value.length > 0;
 
 	const teardownMap = () => {
 		currentLocationObserver.value?.disconnect();
 		currentLocationObserver.value = undefined;
+		undoStack.value = [];
 		removeMapInteractions();
 		mapInstance.getViewport().removeEventListener('contextmenu', preventContextMenu);
 	};
 
 	return {
-		hasPreviousFeatureState,
-		popPreviousFeatureState,
+		hasUndoHistory,
+		popUndoState,
 		removeMapInteractions,
-		savePreviousFeatureState,
+		pushUndoState,
 		setupFeatureDrag,
 		setupLongPressPoint,
 		setupMapVisibilityObserver,
