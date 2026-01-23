@@ -1617,6 +1617,17 @@
         "string": "There was an error loading Central."
       }
     },
+    "DatasetDelete": {
+      "title": {
+        "string": "Delete Dataset",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to delete the Entity List ‟{name}”? This cannot be undone."
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": "Upload Entities"
@@ -1864,6 +1875,34 @@
         "successMessage": {
           "string": "Entities will be created when Submissions are marked as Approved."
         }
+      },
+      "action": {
+        "delete": {
+          "string": "Delete Entity List",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "The Entity List “{name}” has been successfully deleted."
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "The Entity List ‟{name}” is related to {formsCount}.",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": "Before you can deleted it, you’ll need to unlink it from the related Forms."
+          },
+          "2": {
+            "string": "Learn more here."
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+        }
       }
     },
     "DatasetShow": {
@@ -1895,6 +1934,17 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "No Entities have been created for this Project yet."
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "Download data (.csv)",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "possibleConflictsCount": {
+        "string": "{count, plural, one {{count} possible conflict} other {{count} possible conflicts}}"
       }
     },
     "Download": {

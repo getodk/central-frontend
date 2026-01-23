@@ -11,48 +11,85 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-settings">
-    <div v-if="dataset.dataExists" class="panel panel-simple">
-      <div class="panel-heading">
-        <h1 class="panel-title">{{ $t('entityWorkflow') }}</h1>
+    <div class="row">
+      <div class="col-xs-6">
+        <div v-if="dataset.dataExists" class="panel panel-simple">
+          <div class="panel-heading">
+            <h1 class="panel-title">{{ $t('entityWorkflow') }}</h1>
+          </div>
+          <div class="panel-body">
+            <form id="dataset-settings-form">
+              <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
+                <label>
+                  <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false"
+                    aria-describedby="dataset-setting-on-receipt" :disabled="dataset.awaitingResponse"
+                    @change="update()">
+                  <strong>{{ $t('onReceipt.label') }}</strong>
+                </label>
+                <p id="dataset-setting-on-receipt" class="help-block">
+                  {{ $t('onReceipt.description') }}
+                </p>
+              </div>
+              <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
+                <label>
+                  <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true"
+                    aria-describedby="dataset-setting-on-approval" :disabled="dataset.awaitingResponse"
+                    @change="update()">
+                  <strong>{{ $t('onApproval.label') }}</strong>
+                </label>
+                <p id="dataset-setting-on-approval" class="help-block">
+                  {{ $t('onApproval.description') }}
+                </p>
+              </div>
+            </form>
+          </div>
+
+          <dataset-owner-only/>
+        </div>
       </div>
-      <div class="panel-body">
-        <form id="dataset-settings-form">
-          <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
-            <label>
-              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false"
-                aria-describedby="dataset-setting-on-receipt" :disabled="dataset.awaitingResponse" @change="update()">
-              <strong>{{ $t('onReceipt.label') }}</strong>
-            </label>
-            <p id="dataset-setting-on-receipt" class="help-block">
-              {{ $t('onReceipt.description') }}
+      <div class="col-xs-6">
+        <div class="panel panel-simple-danger">
+          <div class="panel-heading">
+            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
+          </div>
+          <div class="panel-body">
+            <p v-if="dependentFormsCount > 0" class="dependent-forms-help">
+              <i18n-t tag="span" keypath="dependentForms.description[0]">
+                <template #name> {{ dataset.name }}</template>
+                <template #formsCount>
+                  <strong>{{ $tc('dependentForms.formsCount', dependentFormsCount) }}</strong>
+                </template>
+              </i18n-t>
+              <br>
+              <span>{{ $t('dependentForms.description[1]') }}</span>&nbsp;
+              <a href="#">{{ $t('dependentForms.description[2]') }}</a>
+            </p>
+            <p>
+              <button type="button" class="btn btn-danger" :aria-disabled="dependentFormsCount > 0" @click="deleteModal.show()">
+                {{ $t('action.delete') }}&hellip;
+              </button>
             </p>
           </div>
-          <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
-            <label>
-              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true"
-                aria-describedby="dataset-setting-on-approval" :disabled="dataset.awaitingResponse" @change="update()">
-              <strong>{{ $t('onApproval.label') }}</strong>
-            </label>
-            <p id="dataset-setting-on-approval" class="help-block">
-              {{ $t('onApproval.description') }}
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
-    <dataset-owner-only/>
 
+    <dataset-delete v-bind="deleteModal" @hide="deleteModal.hide()"
+      @success="afterDelete"/>
     <dataset-pending-submissions v-bind="pendingSubmissionModal" @hide="hideAndReset" @success="hideAndUpdate"/>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, inject } from 'vue';
+import { ref, watch, inject, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import DatasetOwnerOnly from './owner-only.vue';
 import DatasetPendingSubmissions from './pending-submissions.vue';
+import DatasetDelete from './delete.vue';
 
+import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
@@ -62,6 +99,8 @@ defineOptions({
 });
 
 const { t } = useI18n();
+const router = useRouter();
+const { projectPath } = useRoutes();
 
 const alert = inject('alert');
 
@@ -70,6 +109,8 @@ const { project, dataset } = useRequestData();
 const approvalRequired = ref(dataset.approvalRequired);
 
 const pendingSubmissionModal = modalData();
+
+const deleteModal = modalData();
 
 watch(() => dataset.dataExists, () => {
   approvalRequired.value = dataset.approvalRequired;
@@ -106,8 +147,31 @@ const hideAndReset = () => {
   pendingSubmissionModal.hide();
   approvalRequired.value = dataset.approvalRequired;
 };
+
+const afterDelete = () => {
+  const message = t('alert.delete', { name: dataset.name });
+  router.push(projectPath('entity-lists'))
+    .then(() => { alert.success(message); });
+};
+
+const dependentFormsCount = computed(() => (!dataset.dataExists ? 0 : dataset.sourceForms.length + dataset.linkedForms.length));
 </script>
 
+<style lang="scss">
+@import '../../assets/scss/_variables.scss';
+
+#dataset-settings {
+  .panel-simple-danger .panel-body {
+    margin-bottom: 15px;
+    margin-top: 10px;
+    text-align: center;
+
+    .dependent-forms-help {
+      text-align: left;
+    }
+  }
+}
+</style>
 <i18n lang="json5">
 {
   "en": {
@@ -122,6 +186,22 @@ const hideAndReset = () => {
       "label": "Create Entities when Submissions are marked as Approved",
       "description": "Entity data will not update until a person reviews the data. Corrections can be made if necessary.",
       "successMessage": "Entities will be created when Submissions are marked as Approved."
+    },
+    "action": {
+      "delete": "Delete Entity List"
+    },
+    "alert": {
+      "delete": "The Entity List “{name}” has been successfully deleted."
+    },
+    "dependentForms" : {
+      "description": [
+        // {formsCount} is the number of Forms that are dependent on the Entity List.
+        // Example: 4 Forms
+        "The Entity List ‟{name}” is related to {formsCount}.",
+        "Before you can deleted it, you’ll need to unlink it from the related Forms.",
+        "Learn more here."
+      ],
+      "formsCount": "{count} Form | {count} Forms",
     }
   }
 }
