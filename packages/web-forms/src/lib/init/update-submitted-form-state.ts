@@ -1,10 +1,12 @@
 import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
+import type { FormOptions } from '@/lib/init/load-form-state.ts';
 import type { OptionalHostSubmissionResult } from '@/lib/submission/host-submission-result-callback.ts';
 import type { PreloadProperties } from '@getodk/xforms-engine';
 import { getFormInstanceConfig } from './engine-config.ts';
 import type { FormStateSuccessResult } from './form-state.ts';
 
 interface ResetFormStateOptions {
+	readonly form: FormOptions;
 	readonly trackDevice?: boolean;
 	readonly preloadProperties?: PreloadProperties;
 }

@@ -12,7 +12,7 @@
     "geopoint": "✅",
     "geotrace": "✅",
     "geoshape": "✅",
-    "start-geopoint": "",
+    "start-geopoint": "✅",
     "range": "✅",
     "image": "✅",
     "barcode": "",

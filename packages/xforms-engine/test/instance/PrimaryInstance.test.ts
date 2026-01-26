@@ -87,6 +87,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 					clientStateFactory,
 					computeAttachmentName: () => null,
 					preloadProperties: {},
+					geolocationProvider: { getLocation: () => Promise.resolve('') },
 				},
 			});
 		});

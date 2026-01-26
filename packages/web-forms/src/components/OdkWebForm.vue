@@ -3,6 +3,7 @@ import FormLoadFailureDialog from '@/components/FormLoadFailureDialog.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
 import FormHeader from '@/components/form-layout/FormHeader.vue';
 import QuestionList from '@/components/form-layout/QuestionList.vue';
+import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
 import {
 	FORM_IMAGE_CACHE,
 	FORM_OPTIONS,
@@ -14,6 +15,7 @@ import { initializeFormState } from '@/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
 import { updateSubmittedFormState } from '@/lib/init/update-submitted-form-state.ts';
+import { geolocationService } from '@/lib/services/geolocationService.ts';
 import type {
 	HostSubmissionResultCallback,
 	OptionalAwaitableHostSubmissionResult,
@@ -30,7 +32,16 @@ import type {
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
-import { computed, getCurrentInstance, provide, readonly, ref, shallowRef, watchEffect } from 'vue';
+import {
+	computed,
+	getCurrentInstance,
+	onUnmounted,
+	provide,
+	readonly,
+	ref,
+	shallowRef,
+	watchEffect,
+} from 'vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 
@@ -67,6 +78,7 @@ const hostSubmissionResultCallbackFactory = (
 	): Promise<void> => {
 		const submissionResult = await hostResult;
 		const options = {
+			form: formOptions,
 			preloadProperties: props.preloadProperties,
 			trackDevice: props.trackDevice,
 		};
@@ -126,6 +138,7 @@ const isEmitSubscribed = (eventKey: EventKey): boolean => {
 
 const emitSubmit = async (currentState: FormStateSuccessResult) => {
 	if (isEmitSubscribed('onSubmit')) {
+		await waitAllTasksToFinish();
 		const payload = await currentState.root.prepareInstancePayload({
 			payloadType: 'monolithic',
 		});
@@ -143,6 +156,7 @@ const emitSubmitChunked = async (currentState: FormStateSuccessResult) => {
 			throw new Error('The `submissionMaxSize` prop is required for chunked submissions');
 		}
 
+		await waitAllTasksToFinish();
 		const payload = await currentState.root.prepareInstancePayload({
 			payloadType: 'chunked',
 			maxSize,
@@ -155,9 +169,27 @@ const emitSubmitChunked = async (currentState: FormStateSuccessResult) => {
 
 const emit = defineEmits<OdkWebFormEmits>();
 
+const getLocation = async (): Promise<string> => {
+	let point = '';
+	try {
+		geolocationErrorMessage.value = '';
+		point = await geolocationService.getCurrentPosition();
+	} catch (error) {
+		// eslint-disable-next-line no-console -- Skip silently to match Collect behaviour.
+		console.warn('Error occurred while retrieving background location.', error);
+		// TODO: translations
+		geolocationErrorMessage.value =
+			'Location unavailable. Enable GPS and browser permissions, then restart the form to try again.';
+	}
+
+	floatingErrorActive.value = !!geolocationErrorMessage.value.length;
+	return point;
+};
+
 const formOptions = readonly<FormOptions>({
 	fetchFormAttachment: props.fetchFormAttachment,
 	missingResourceBehavior: props.missingResourceBehavior,
+	geolocationProvider: { getLocation: () => getLocation() },
 });
 provide(FORM_OPTIONS, formOptions);
 provide(FORM_IMAGE_CACHE, new Map<JRResourceURLString, ObjectURL>());
@@ -166,6 +198,7 @@ const state = initializeFormState();
 const submitPressed = ref(false);
 const floatingErrorActive = ref(false);
 const showValidationError = ref(false);
+const geolocationErrorMessage = ref<string | null>(null);
 
 const init = async () => {
 	state.value = await loadFormState(props.formXml, {
@@ -205,16 +238,23 @@ const validationErrorMessage = computed(() => {
 
 	// TODO: translations
 	if (violationLength === 0) return '';
-	else if (violationLength === 1) return '1 question with error';
-	else return `${violationLength} questions with errors`;
+	else if (violationLength === 1) return '1 question with error.';
+	else return `${violationLength} questions with errors.`;
 });
 
 watchEffect(() => {
-	if (floatingErrorActive.value && validationErrorMessage.value?.length) {
+	if (
+		floatingErrorActive.value &&
+		(validationErrorMessage.value?.length || geolocationErrorMessage.value?.length)
+	) {
 		showValidationError.value = true;
 	} else {
 		showValidationError.value = false;
 	}
+});
+
+onUnmounted(() => {
+	geolocationService.teardown();
 });
 </script>
 <!--
@@ -235,10 +275,7 @@ watchEffect(() => {
 	/>
 
 	<template v-if="state.status === 'FORM_STATE_FAILURE'">
-		<FormLoadFailureDialog
-			severity="error"
-			:error="state.error"
-		/>
+		<FormLoadFailureDialog severity="error" :error="state.error" />
 	</template>
 
 	<div
@@ -249,9 +286,22 @@ watchEffect(() => {
 		<div class="form-wrapper">
 			<div v-if="showValidationError" class="error-banner-placeholder" />
 			<!-- Closable error message to clear the view and avoid overlap with other elements -->
-			<Message v-if="showValidationError" severity="error" class="form-error-message" :closable="true" @close="floatingErrorActive = false">
+			<Message
+				v-if="showValidationError"
+				severity="error"
+				class="form-error-message"
+				:closable="true"
+				@close="floatingErrorActive = false"
+			>
 				<IconSVG name="mdiAlertCircleOutline" variant="error" />
-				<span>{{ validationErrorMessage }}</span>
+				<ul class="form-error-text-wrap">
+					<li v-if="validationErrorMessage?.length">
+						{{ validationErrorMessage }}
+					</li>
+					<li v-if="geolocationErrorMessage?.length">
+						{{ geolocationErrorMessage }}
+					</li>
+				</ul>
 			</Message>
 
 			<FormHeader :form="state.root" />
@@ -346,6 +396,16 @@ watchEffect(() => {
 
 			.odk-icon {
 				margin-right: 10px;
+			}
+
+			.form-error-text-wrap {
+				margin: 0;
+				list-style: none;
+				padding: 0;
+
+				li:not(:last-child) {
+					margin-bottom: 10px;
+				}
 			}
 		}
 	}

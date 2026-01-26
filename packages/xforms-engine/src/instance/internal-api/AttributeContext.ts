@@ -11,6 +11,7 @@ import type { InstanceConfig } from './InstanceConfig.ts';
 export interface InstanceAttributeContextDocument {
 	readonly initializationMode: FormInstanceInitializationMode;
 	readonly isAttached: Accessor<boolean>;
+	getBackgroundGeopoint: Accessor<Promise<string>>;
 }
 
 export type DecodeInstanceValue = (value: string) => string;

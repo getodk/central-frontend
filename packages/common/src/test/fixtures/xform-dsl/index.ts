@@ -338,6 +338,10 @@ export const setvalue = (event: string, ref: string, value?: string): XFormsElem
 	return t(`setvalue event="${event}" ref="${ref}"${valueAttribute}`);
 };
 
+export const setgeopoint = (event: string, ref: string): XFormsElement => {
+	return t(`odk:setgeopoint event="${event}" ref="${ref}"`);
+};
+
 export const setvalueLiteral = (event: string, ref: string, innerHtml: string): XFormsElement => {
 	return t(`setvalue event="${event}" ref="${ref}"`, innerHtml);
 };

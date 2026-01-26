@@ -1,5 +1,6 @@
 import type { OdkWebFormsProps } from '@/components/OdkWebForm.vue';
 import OdkWebForm from '@/components/OdkWebForm.vue';
+import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
 import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
 import type {
 	HostSubmissionResult,
@@ -426,7 +427,7 @@ describe('OdkWebForm', () => {
 				},
 			});
 
-			await flushPromises();
+			await waitAllTasksToFinish();
 
 			let textInput = component.get<HTMLInputElement>('input.p-inputtext');
 
@@ -436,6 +437,7 @@ describe('OdkWebForm', () => {
 
 			// Click submit
 			await component.get('button[aria-label="Send"]').trigger('click');
+			await waitAllTasksToFinish();
 
 			// Check either:
 			//

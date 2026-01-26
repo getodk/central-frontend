@@ -176,6 +176,9 @@ export class Scenario {
 				...overrideOptions?.instanceAttachments,
 			},
 			preloadProperties: overrideOptions?.preloadProperties ?? {},
+			geolocationProvider: overrideOptions?.geolocationProvider ?? {
+				getLocation: () => Promise.resolve(''),
+			},
 		};
 	}
 

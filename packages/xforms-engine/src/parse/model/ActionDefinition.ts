@@ -4,12 +4,12 @@ import { type XFormEvent, XFORM_EVENT } from './Event.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
 export class ActionDefinition {
-	static getRef(model: ModelDefinition, setValueElement: Element): string | null {
-		if (setValueElement.hasAttribute('ref')) {
-			return setValueElement.getAttribute('ref') ?? null;
+	static getRef(model: ModelDefinition, element: Element): string | null {
+		if (element.hasAttribute('ref')) {
+			return element.getAttribute('ref') ?? null;
 		}
-		if (setValueElement.hasAttribute('bind')) {
-			const bindId = setValueElement.getAttribute('bind');
+		if (element.hasAttribute('bind')) {
+			const bindId = element.getAttribute('bind');
 			const bindDefinition = Array.from(model.binds.values()).find((definition) => {
 				return definition.bindElement.getAttribute('id') === bindId;
 			});
@@ -58,7 +58,7 @@ export class ActionDefinition {
 		const ref = ActionDefinition.getRef(model, element);
 		if (!ref) {
 			throw new Error(
-				'Invalid setvalue element - you must define either "ref" or "bind" attribute'
+				`Invalid ${element.localName} element - you must define either "ref" or "bind" attribute`
 			);
 		}
 		this.ref = ref;

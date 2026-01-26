@@ -3,6 +3,7 @@ import type {
 	FetchFormAttachment,
 	FetchResourceResponse,
 	FormResource,
+	GeolocationProvider,
 	MissingResourceBehavior,
 	PreloadProperties,
 	ResolvableFormInstance,
@@ -21,6 +22,7 @@ import type {
 export interface FormOptions {
 	readonly fetchFormAttachment: FetchFormAttachment;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
+	readonly geolocationProvider?: GeolocationProvider;
 }
 
 export type ResolveInstanceAttachment = (fileName: string) => Promise<FetchResourceResponse>;

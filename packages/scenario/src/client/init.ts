@@ -1,6 +1,7 @@
 import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import type {
 	FormResource,
+	GeolocationProvider,
 	InstanceAttachmentsConfig,
 	LoadFormOptions,
 	LoadFormSuccessResult,
@@ -29,6 +30,7 @@ export interface TestFormOptions {
 	readonly stateFactory: OpaqueReactiveObjectFactory;
 	readonly instanceAttachments: InstanceAttachmentsConfig;
 	readonly preloadProperties: PreloadProperties;
+	readonly geolocationProvider: GeolocationProvider;
 }
 
 const defaultConfig = {
@@ -65,6 +67,7 @@ export const initializeTestForm = async (
 					stateFactory: options.stateFactory,
 					instanceAttachments: options.instanceAttachments,
 					preloadProperties: options.preloadProperties,
+					geolocationProvider: options.geolocationProvider,
 				},
 			});
 		});

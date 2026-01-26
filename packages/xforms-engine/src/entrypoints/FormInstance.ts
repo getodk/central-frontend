@@ -42,6 +42,7 @@ export class FormInstance<Mode extends FormInstanceInitializationMode>
 			clientStateFactory: instanceConfig.stateFactory ?? identity,
 			computeAttachmentName: instanceConfig.instanceAttachments?.fileNameFactory ?? (() => null),
 			preloadProperties: instanceConfig.preloadProperties ?? {},
+			geolocationProvider: instanceConfig.geolocationProvider,
 		};
 		const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
 			...options.instanceOptions,
@@ -49,6 +50,7 @@ export class FormInstance<Mode extends FormInstanceInitializationMode>
 			initialState,
 			config,
 		};
+
 		const { root } = new PrimaryInstance(primaryInstanceOptions);
 
 		this.mode = mode;

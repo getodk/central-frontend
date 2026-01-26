@@ -16,6 +16,10 @@ export interface PreloadProperties {
 	readonly phoneNumber?: string;
 }
 
+export interface GeolocationProvider {
+	getLocation(): Promise<string>;
+}
+
 export interface FormInstanceConfig {
 	/**
 	 * A client may specify a generic function for constructing stateful objects.
@@ -35,4 +39,6 @@ export interface FormInstanceConfig {
 	readonly instanceAttachments?: InstanceAttachmentsConfig;
 
 	readonly preloadProperties?: PreloadProperties;
+
+	readonly geolocationProvider?: GeolocationProvider;
 }

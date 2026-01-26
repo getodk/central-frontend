@@ -1,6 +1,7 @@
 import { clearCache, XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
+import type { GeolocationProvider } from '../client';
 import type { FormInstanceInitializationMode } from '../client/form/FormInstance.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
@@ -134,6 +135,7 @@ export class PrimaryInstance<
 	readonly hasNonRelevantAncestor = () => false;
 	readonly isRelevant = () => true;
 
+	private geolocationProvider: GeolocationProvider | undefined;
 	// TranslationContext (support)
 	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
 
@@ -176,6 +178,7 @@ export class PrimaryInstance<
 		this.model = model;
 		this.attachments = new InstanceAttachmentsState(initialState?.attachments);
 		this.instanceNode = activeInstance;
+		this.geolocationProvider = config.geolocationProvider;
 
 		const [isAttached, setIsAttached] = createSignal(false);
 
@@ -288,5 +291,14 @@ export class PrimaryInstance<
 		});
 
 		return Promise.resolve(result);
+	}
+
+	async getBackgroundGeopoint(): Promise<string> {
+		if (!this.geolocationProvider) {
+			return '';
+		}
+
+		const location = await this.geolocationProvider.getLocation();
+		return location ?? '';
 	}
 }

@@ -3,6 +3,7 @@ import { NamespaceDeclarationMap } from '../../lib/names/NamespaceDeclarationMap
 import { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { AnyBodyElementDefinition, BodyClassList } from '../body/BodyDefinition.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
+import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../XFormDOM.ts';
 import { ActionDefinition } from './ActionDefinition.ts';
 import { AttributeDefinitionMap } from './AttributeDefinitionMap.ts';
 import { GroupDefinition } from './GroupDefinition.ts';
@@ -63,7 +64,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 			return;
 		}
 		for (const child of bodyElement.element.children) {
-			if (child.nodeName === 'setvalue') {
+			if (child.nodeName === SET_VALUE_LOCAL_NAME || child.nodeName === SET_GEOPOINT_LOCAL_NAME) {
 				const action = new ActionDefinition(this.model, child, source);
 				this.model.actions.add(action);
 			}
