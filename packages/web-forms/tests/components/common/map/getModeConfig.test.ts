@@ -61,7 +61,7 @@ describe('getModeConfig', () => {
 				dragFeatureAndVertex: false,
 			},
 			capabilities: {
-				canSaveCurrentLocation: true,
+				canSaveCurrentLocation: false,
 				canRemoveCurrentLocation: true,
 				canLoadMultiFeatures: false,
 				canViewProperties: false,

@@ -25,11 +25,10 @@ const props = defineProps<{
 	drawFeatureType?: DrawFeatureType;
 	isCapturing: boolean;
 	canRemove: boolean;
-	canSave: boolean;
 	canViewDetails: boolean;
 }>();
 
-const emit = defineEmits(['view-details', 'save', 'discard']);
+const emit = defineEmits(['view-details', 'discard']);
 
 const LINE_ICON = 'mdiVectorPolyline';
 const POLYGON_ICON = 'mdiVectorPolygon';
@@ -146,12 +145,6 @@ const savedStatus = computed<StatusDetails | null>(() => {
 				<!-- TODO: translations -->
 				<span>{{ noSavedStatus.message }}</span>
 			</div>
-			<Button v-if="canSave" @click="emit('save')">
-				<IconSVG name="mdiCheckboxMarkedCircleOutline" size="sm" variant="inverted" />
-				<!-- TODO: translations -->
-				<span class="mobile-only">Save</span>
-				<span class="desktop-only">Save point</span>
-			</Button>
 		</div>
 	</div>
 </template>

@@ -289,6 +289,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
 		currentState.value = STATES.LOADING;
 		mapFeatures?.loadAndSaveSingleFeature(featuresSource, feature);
+		events.onFeaturePlacement?.();
 		currentState.value = STATES.READY;
 	};
 
@@ -311,7 +312,8 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
 	const saveCurrentLocation = () => {
 		const location = mapViewControls?.getUserCurrentLocation();
-		if (!currentMode.capabilities.canSaveCurrentLocation || !location) {
+		const { canSaveCurrentLocation } = currentMode.capabilities;
+		if (!canSaveCurrentLocation || mapFeatures?.getSavedFeature() || !location) {
 			return;
 		}
 
@@ -336,7 +338,11 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 			clearSavedFeature();
 			return;
 		}
+
 		clearMap();
+		if (currentMode.capabilities.canSaveCurrentLocation) {
+			mapViewControls?.stopWatchingCurrentLocation();
+		}
 	};
 
 	const unselectFeature = () => mapFeatures?.selectFeature(undefined);
@@ -377,7 +383,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
 	const shouldShowMapOverlay = () => {
 		const { canShowMapOverlayOnError, canShowMapOverlay } = currentMode.capabilities;
-		const hasLocationFeature = mapViewControls?.hasCurrentLocationFeature();
+		const hasLocationFeature = !!mapViewControls?.getUserCurrentLocation();
 		const hasNoRelevantFeature = !hasLocationFeature && !mapFeatures?.getSavedFeature();
 
 		if (currentState.value === STATES.ERROR) {
@@ -385,11 +391,6 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		}
 
 		return currentState.value === STATES.READY && canShowMapOverlay && hasNoRelevantFeature;
-	};
-
-	const canSaveCurrentLocation = () => {
-		const hasLocationFeature = !!mapViewControls?.hasCurrentLocationFeature();
-		return currentMode.capabilities.canSaveCurrentLocation && hasLocationFeature;
 	};
 
 	const canRemoveCurrentLocation = () => {
@@ -405,7 +406,10 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		currentState.value = STATES.CAPTURING;
 
 		mapViewControls?.watchCurrentLocation(
-			() => (currentState.value = STATES.READY),
+			() => {
+				currentState.value = STATES.READY;
+				saveCurrentLocation();
+			},
 			() => {
 				currentState.value = STATES.ERROR;
 				// TODO: translations
@@ -446,12 +450,10 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		isMapEmpty: () => featuresSource.isEmpty(),
 		fitToAllFeatures: () => mapViewControls?.fitToAllFeatures(featuresSource),
 		watchCurrentLocation,
-		canSaveCurrentLocation,
 		canRemoveCurrentLocation,
 
 		discardSavedFeature,
 		saveSelectedFeature: () => mapFeatures?.saveSelectedFeature(),
-		saveCurrentLocation,
 		findAndSaveFeature,
 		getSavedFeature: () => mapFeatures?.getSavedFeature()?.clone(),
 		getSavedFeatureValue: () => mapFeatures?.getSavedFeatureValue(),

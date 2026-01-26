@@ -102,11 +102,6 @@ const saveSelection = () => {
 	emitSavedFeature();
 };
 
-const saveCurrentLocation = () => {
-	mapHandler.saveCurrentLocation();
-	emitSavedFeature();
-};
-
 const discardSavedFeature = () => {
 	mapHandler.discardSavedFeature();
 	emitSavedFeature();
@@ -178,10 +173,8 @@ const undoLastChange = () => {
 				:is-capturing="mapHandler.currentState.value === STATES.CAPTURING"
 				class="map-status-bar-component"
 				:can-remove="!disabled && mapHandler.canRemoveCurrentLocation()"
-				:can-save="!disabled && mapHandler.canSaveCurrentLocation()"
 				:can-view-details="mapHandler.canViewProperties()"
 				@discard="discardSavedFeature"
-				@save="saveCurrentLocation"
 				@view-details="mapHandler.selectSavedFeature"
 			/>
 

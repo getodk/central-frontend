@@ -125,18 +125,12 @@ test.describe('All Question Types (Visual)', () => {
 			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-current-location.png');
 		});
 
-		test('saves current location, adds a new point elsewhere, removes saved point', async () => {
-			await formPage.map.savePoint(mapComponent);
-			await formPage.map.expectMapScreenshot(
-				mapComponent,
-				'placement-map-current-location-saved.png'
-			);
-
+		test('adds a new point elsewhere, removes saved point', async () => {
 			await formPage.map.longPressMap(mapComponent, 100, 100);
 			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-new-point-saved.png');
 
 			await formPage.map.removeSavedPoint(mapComponent);
-			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-initial-state.png');
+			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-point-removed.png');
 		});
 	});
 
@@ -163,13 +157,7 @@ test.describe('All Question Types (Visual)', () => {
 			await formPage.map.expectMapScreenshot(mapComponent, 'geopoint-maps-current-location.png');
 		});
 
-		test('saves current location and removes saved point', async () => {
-			await formPage.map.savePoint(mapComponent);
-			await formPage.map.expectMapScreenshot(
-				mapComponent,
-				'geopoint-maps-current-location-saved.png'
-			);
-
+		test('removes saved point', async () => {
 			await formPage.map.removeSavedPoint(mapComponent);
 			await formPage.map.expectMapScreenshot(mapComponent, 'geopoint-maps-initial-state.png');
 		});

@@ -146,12 +146,6 @@ export class MapControl {
 		await button.click();
 	}
 
-	async savePoint(mapComponent: Locator) {
-		const button = mapComponent.locator('.map-status-container').getByText('Save point');
-		await expect(button).toBeVisible();
-		await button.click();
-	}
-
 	async removeSavedPoint(mapComponent: Locator) {
 		const button = mapComponent.locator('.map-status-container').getByText('Remove point');
 		await expect(button).toBeVisible();

@@ -170,9 +170,6 @@ export function useMapFeatures(
 		() => savedFeature.value,
 		(newSavedFeature) => {
 			updateFeaturesStyle(SAVED_ID_PROPERTY, newSavedFeature);
-			if (newSavedFeature) {
-				viewControls.stopWatchingCurrentLocation();
-			}
 		}
 	);
 
