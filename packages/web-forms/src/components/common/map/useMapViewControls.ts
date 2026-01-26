@@ -1,7 +1,8 @@
+import { toGeoJsonCoordinateArray } from '@/components/common/map/geojson-parsers.ts';
 import { Map, type View } from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
-import { getCenter } from 'ol/extent';
+import { getCenter, isEmpty as isExtendEmpty } from 'ol/extent';
 import Feature from 'ol/Feature';
 import { Point } from 'ol/geom';
 import VectorLayer from 'ol/layer/Vector';
@@ -67,7 +68,7 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 		}
 
 		const extent = source.getExtent();
-		if (!extent?.length) {
+		if (isExtendEmpty(extent)) {
 			return;
 		}
 
@@ -243,12 +244,13 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 				return;
 			}
 
-			const parsedCoords = fromLonLat([
+			const coords = toGeoJsonCoordinateArray(
 				newLocation.longitude,
 				newLocation.latitude,
-				newLocation.altitude ?? 0,
-				newLocation.accuracy,
-			]);
+				newLocation.altitude,
+				newLocation.accuracy
+			);
+			const parsedCoords = fromLonLat(coords);
 			userCurrentLocationFeature.value = new Feature({
 				geometry: new Point(parsedCoords, COORDINATE_LAYOUT_XYZM),
 			});

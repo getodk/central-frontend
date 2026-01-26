@@ -5,16 +5,18 @@
  * load on demand. Avoids main bundle bloat.
  */
 import IconSVG from '@/components/common/IconSVG.vue';
-import type { Mode } from '@/components/common/map/getModeConfig.ts';
-import MapConfirm from '@/components/common/map/MapConfirm.vue';
+import { type Mode, type SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
+import MapAdvancedPanel from '@/components/common/map/MapAdvancedPanel.vue';
+import MapConfirmDialog from '@/components/common/map/MapConfirmDialog.vue';
 import MapControls from '@/components/common/map/MapControls.vue';
 import MapProperties from '@/components/common/map/MapProperties.vue';
 import MapStatusBar from '@/components/common/map/MapStatusBar.vue';
+import MapUpdateCoordsDialog from '@/components/common/map/MapUpdateCoordsDialog.vue';
 import { STATES, useMapBlock } from '@/components/common/map/useMapBlock.ts';
-import { type DrawFeatureType } from '@/components/common/map/useMapInteractions.ts';
 import { QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
 import type { Feature, FeatureCollection } from 'geojson';
 import type { Coordinate } from 'ol/coordinate';
+import { toLonLat } from 'ol/proj';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
 import { computed, type ComputedRef, inject, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -22,7 +24,7 @@ import { computed, type ComputedRef, inject, onMounted, onUnmounted, ref, watch 
 interface MapBlockProps {
 	featureCollection: FeatureCollection;
 	disabled: boolean;
-	drawFeatureType?: DrawFeatureType;
+	singleFeatureType?: SingleFeatureType;
 	mode: Mode;
 	orderedExtraProps: Map<string, Array<[string, string]>>;
 	savedFeatureValue: Feature | undefined;
@@ -32,7 +34,9 @@ const props = defineProps<MapBlockProps>();
 const emit = defineEmits(['save']);
 const mapElement = ref<HTMLElement | undefined>();
 const isFullScreen = ref(false);
+const isAdvancedPanelOpen = ref(false);
 const confirmDeleteAction = ref(false);
+const isUpdateCoordsDialogOpen = ref(false);
 const selectedVertex = ref<Coordinate | undefined>();
 const showErrorStyle = inject<ComputedRef<boolean>>(
 	QUESTION_HAS_ERROR,
@@ -40,12 +44,19 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 );
 
 const mapHandler = useMapBlock(
-	{ mode: props.mode, drawFeatureType: props.drawFeatureType },
+	{ mode: props.mode, singleFeatureType: props.singleFeatureType },
 	{
 		onFeaturePlacement: () => emitSavedFeature(),
 		onVertexSelect: (vertex) => (selectedVertex.value = vertex),
 	}
 );
+
+const advancedPanelCoords = computed<Coordinate | null>(() => {
+	if (!mapHandler.canOpenAdvancedPanel()) {
+		return null;
+	}
+	return selectedVertex.value?.length ? toLonLat(selectedVertex.value) : null;
+});
 
 const showSecondaryControls = computed(() => {
 	return !props.disabled && (mapHandler.canUndoChange() || mapHandler.canDeleteFeatureOrVertex());
@@ -126,6 +137,16 @@ const undoLastChange = () => {
 	mapHandler.undoLastChange();
 	emitSavedFeature();
 };
+
+const updateFeatureCoords = (newCoords: Coordinate[] | Coordinate[][]) => {
+	mapHandler.updateFeatureCoordinates(newCoords);
+	emitSavedFeature();
+};
+
+const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
+	mapHandler.updateVertexCoords(newCoords);
+	emitSavedFeature();
+};
 </script>
 
 <template>
@@ -167,15 +188,25 @@ const undoLastChange = () => {
 			</div>
 
 			<MapStatusBar
-				:draw-feature-type="drawFeatureType"
-				:saved-feature-value="savedFeatureValue"
-				:selected-vertex="selectedVertex"
-				:is-capturing="mapHandler.currentState.value === STATES.CAPTURING"
-				class="map-status-bar-component"
+				:can-open-advanced-panel="!disabled && mapHandler.canOpenAdvancedPanel()"
 				:can-remove="!disabled && mapHandler.canRemoveCurrentLocation()"
 				:can-view-details="mapHandler.canViewProperties()"
+				:single-feature-type="singleFeatureType"
+				:is-capturing="mapHandler.currentState.value === STATES.CAPTURING"
+				:saved-feature-value="savedFeatureValue"
+				:selected-vertex="selectedVertex"
+				class="map-status-bar-component"
 				@discard="discardSavedFeature"
 				@view-details="mapHandler.selectSavedFeature"
+				@toggle-advanced-panel="isAdvancedPanelOpen = !isAdvancedPanelOpen"
+			/>
+
+			<MapAdvancedPanel
+				v-if="!disabled && mapHandler.canOpenAdvancedPanel()"
+				:is-open="isAdvancedPanelOpen"
+				:coordinates="advancedPanelCoords"
+				@open-paste-dialog="isUpdateCoordsDialogOpen = true"
+				@save="saveAdvancedPanelCoords"
 			/>
 
 			<MapProperties
@@ -201,10 +232,16 @@ const undoLastChange = () => {
 		</div>
 	</div>
 
-	<MapConfirm
+	<MapConfirmDialog
 		v-model:visible="confirmDeleteAction"
-		:draw-feature-type="drawFeatureType"
+		:single-feature-type="singleFeatureType"
 		@delete-feature="deleteFeature"
+	/>
+
+	<MapUpdateCoordsDialog
+		v-model:visible="isUpdateCoordsDialogOpen"
+		:single-feature-type="singleFeatureType"
+		@save="updateFeatureCoords"
 	/>
 </template>
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
 import {
-	DRAW_FEATURE_TYPES,
-	type DrawFeatureType,
-} from '@/components/common/map/useMapInteractions.ts';
+	SINGLE_FEATURE_TYPES,
+	type SingleFeatureType,
+} from '@/components/common/map/getModeConfig.ts';
 import { isCoordsEqual } from '@/components/common/map/vertex-geometry.ts';
 import { truncateDecimals } from '@/lib/format/truncate-decimals.ts';
 import type { Feature, LineString, Point, Polygon, Position } from 'geojson';
@@ -22,24 +22,25 @@ interface StatusDetails {
 const props = defineProps<{
 	savedFeatureValue: Feature | undefined;
 	selectedVertex: Coordinate | undefined;
-	drawFeatureType?: DrawFeatureType;
+	singleFeatureType?: SingleFeatureType;
 	isCapturing: boolean;
 	canRemove: boolean;
 	canViewDetails: boolean;
+	canOpenAdvancedPanel: boolean;
 }>();
 
-const emit = defineEmits(['view-details', 'discard']);
+const emit = defineEmits(['discard', 'toggle-advanced-panel', 'view-details']);
 
 const LINE_ICON = 'mdiVectorPolyline';
 const POLYGON_ICON = 'mdiVectorPolygon';
 
 const noSavedStatus = computed<StatusDetails>(() => {
 	// TODO: translations
-	if (props.drawFeatureType === DRAW_FEATURE_TYPES.TRACE) {
+	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.TRACE) {
 		return { message: 'No trace saved', icon: LINE_ICON };
 	}
 
-	if (props.drawFeatureType === DRAW_FEATURE_TYPES.SHAPE) {
+	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE) {
 		return { message: 'No shape saved', icon: POLYGON_ICON };
 	}
 
@@ -66,18 +67,17 @@ const selectedVertexInfo = computed(() => {
 });
 
 const countPoints = (coords: Position | Position[] | Position[][] | undefined = []) => {
-	const isPoint = !props.drawFeatureType && coords?.length;
-	if (isPoint) {
+	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.POINT && coords?.length) {
 		return 1;
 	}
 
-	if (props.drawFeatureType === DRAW_FEATURE_TYPES.TRACE) {
+	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.TRACE) {
 		return coords.length;
 	}
 
 	const ring = coords[0];
 	if (
-		props.drawFeatureType === DRAW_FEATURE_TYPES.SHAPE &&
+		props.singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE &&
 		Array.isArray(ring) &&
 		isCoordsEqual(ring[0] as [number, number], ring[ring.length - 1] as [number, number])
 	) {
@@ -87,8 +87,35 @@ const countPoints = (coords: Position | Position[] | Position[][] | undefined = 
 	return 0;
 };
 
+const getSavedMessageForMultiFeature = (type: string) => {
+	const geometryType = type?.toLowerCase();
+	// TODO: translations
+	if (geometryType === 'point') {
+		return 'Point saved';
+	}
+
+	if (geometryType === 'linestring') {
+		return 'Trace saved';
+	}
+
+	if (geometryType === 'polygon') {
+		return 'Shape saved';
+	}
+
+	return 'Feature saved';
+};
+
 const savedStatus = computed<StatusDetails | null>(() => {
 	const geometry = props.savedFeatureValue?.geometry as LineString | Point | Polygon | undefined;
+	const expectAnyFeature = !props.singleFeatureType;
+	if (expectAnyFeature && geometry) {
+		return {
+			message: getSavedMessageForMultiFeature(geometry.type),
+			icon: 'mdiCheckCircle',
+			highlight: true,
+		};
+	}
+
 	const count = countPoints(geometry?.coordinates);
 	if (count === 0) {
 		return null;
@@ -96,11 +123,11 @@ const savedStatus = computed<StatusDetails | null>(() => {
 
 	// TODO: translations
 	const message = `${count} points saved`;
-	if (props.drawFeatureType === DRAW_FEATURE_TYPES.TRACE) {
+	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.TRACE) {
 		return { message, icon: LINE_ICON };
 	}
 
-	if (props.drawFeatureType === DRAW_FEATURE_TYPES.SHAPE) {
+	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE) {
 		return { message, icon: POLYGON_ICON };
 	}
 
@@ -127,16 +154,18 @@ const savedStatus = computed<StatusDetails | null>(() => {
 				<IconSVG :name="savedStatus.icon" :variant="savedStatus.highlight ? 'success' : 'base'" />
 				<span>{{ savedStatus.message }}</span>
 			</div>
-			<Button v-if="canRemove" outlined severity="contrast" @click="emit('discard')">
-				<span>–</span>
-				<!-- TODO: translations -->
-				<span class="mobile-only">Remove</span>
-				<span class="desktop-only">Remove point</span>
-			</Button>
-			<Button v-if="canViewDetails" outlined severity="contrast" @click="emit('view-details')">
-				<!-- TODO: translations -->
-				<span>View details</span>
-			</Button>
+			<div class="map-status-buttons">
+				<Button v-if="canRemove" outlined severity="contrast" @click="emit('discard')">
+					<span>–</span>
+					<!-- TODO: translations -->
+					<span class="mobile-only">Remove</span>
+					<span class="desktop-only">Remove point</span>
+				</Button>
+				<Button v-if="canViewDetails" outlined severity="contrast" @click="emit('view-details')">
+					<!-- TODO: translations -->
+					<span>View details</span>
+				</Button>
+			</div>
 		</div>
 
 		<div v-else class="map-status-container">
@@ -146,10 +175,24 @@ const savedStatus = computed<StatusDetails | null>(() => {
 				<span>{{ noSavedStatus.message }}</span>
 			</div>
 		</div>
+
+		<Button
+			v-if="canOpenAdvancedPanel"
+			class="advanced-button"
+			outlined
+			severity="contrast"
+			@click="emit('toggle-advanced-panel')"
+		>
+			<IconSVG name="mdiCogOutline" />
+			<!-- TODO: translations -->
+			<span>Advanced</span>
+		</Button>
 	</div>
 </template>
 
 <style scoped lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+
 .map-status-bar,
 .map-status-container,
 .map-status {
@@ -181,10 +224,25 @@ const savedStatus = computed<StatusDetails | null>(() => {
 	&:hover {
 		background: var(--odk-muted-background-color);
 	}
+
+	&:disabled {
+		cursor: not-allowed;
+	}
 }
 
 .map-status-spinner {
 	width: 20px;
 	height: 20px;
+}
+
+.map-status-buttons {
+	display: flex;
+	gap: var(--odk-map-controls-spacing);
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	.advanced-button span {
+		display: none;
+	}
 }
 </style>

@@ -1,3 +1,4 @@
+import { COORDINATE_LAYOUT_XYZM } from '@/components/common/map/useMapViewControls.ts';
 import type { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
 import { Point, LineString, Polygon } from 'ol/geom';
@@ -116,7 +117,7 @@ export const addTraceVertex = (
 		coords.push(newVertex);
 	}
 
-	geometry?.setCoordinates(coords);
+	geometry?.setCoordinates(coords, COORDINATE_LAYOUT_XYZM);
 	return feature;
 };
 
@@ -156,7 +157,7 @@ export const addShapeVertex = (
 		ring.push([...firstVertex]);
 	}
 
-	geometry?.setCoordinates([ring]);
+	geometry?.setCoordinates([ring], COORDINATE_LAYOUT_XYZM);
 	return feature;
 };
 
@@ -223,8 +224,23 @@ export const deleteVertexFromFeature = (
 			geometry instanceof LineString
 				? deleteVertexFromLine(coords, index)
 				: deleteVertexFromPolygon(coords, index);
-		geometry.setCoordinates(updatedCoords as Coordinate[] & Coordinate[][]);
+		geometry.setCoordinates(updatedCoords as Coordinate[] & Coordinate[][], COORDINATE_LAYOUT_XYZM);
 	}
 
 	return coords.length;
+};
+
+export const updateVertexCoordinate = (
+	feature: Feature<LineString | Polygon> | undefined,
+	index: number,
+	newCoordinates: Coordinate
+) => {
+	const geometry = feature?.getGeometry();
+	const coords = getFlatCoordinates(geometry);
+
+	if (geometry && index >= 0 && index < coords.length) {
+		coords[index] = newCoordinates;
+		const updatedCoords = geometry instanceof LineString ? coords : [coords];
+		geometry.setCoordinates(updatedCoords as Coordinate[] & Coordinate[][], COORDINATE_LAYOUT_XYZM);
+	}
 };

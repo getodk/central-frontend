@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SINGLE_FEATURE_TYPES } from '@/components/common/map/getModeConfig.ts';
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
 import InputGeopoint from '@/components/form-elements/input/geopoint/InputGeopoint.vue';
@@ -40,10 +41,10 @@ const isFormEditMode = inject(IS_FORM_EDIT_MODE);
 			<InputGeopoint v-else :question="node" />
 		</template>
 		<template v-else-if="node.valueType === 'geoshape'">
-			<InputGeoMultiPoint :question="node" draw-feature-type="shape" />
+			<InputGeoMultiPoint :question="node" :single-feature-type="SINGLE_FEATURE_TYPES.SHAPE" />
 		</template>
 		<template v-else-if="node.valueType === 'geotrace'">
-			<InputGeoMultiPoint :question="node" draw-feature-type="trace" />
+			<InputGeoMultiPoint :question="node" :single-feature-type="SINGLE_FEATURE_TYPES.TRACE" />
 		</template>
 		<template v-else-if="node.valueType === 'date'">
 			<InputDate :question="node" />

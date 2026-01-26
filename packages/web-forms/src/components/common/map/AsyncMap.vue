@@ -4,21 +4,17 @@
  * This prevents unnecessary bloat in the main application bundle, reducing initial load times and improving performance.
  * Use dynamic imports instead (e.g., `await import(importPath)`) for lazy-loading these dependencies only when required.
  */
+import { createFeatureCollectionAndProps } from '@/components/common/map/geojson-parsers.ts';
+import type { Mode, SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
 import type { SelectItem } from '@getodk/xforms-engine';
+import type { Feature } from 'geojson';
 import ProgressSpinner from 'primevue/progressspinner';
 import { computed, type DefineComponent, onMounted, shallowRef } from 'vue';
-import type { Mode } from '@/components/common/map/getModeConfig.ts';
-import {
-	createFeatureCollectionAndProps,
-	type Feature,
-} from '@/components/common/map/createFeatureCollectionAndProps.ts';
-
-type DrawFeatureType = 'shape' | 'trace';
 
 type MapBlockComponent = DefineComponent<{
 	featureCollection: { type: string; features: Feature[] };
 	disabled: boolean;
-	drawFeatureType?: DrawFeatureType;
+	singleFeatureType?: SingleFeatureType;
 	mode: Mode;
 	orderedExtraProps: Map<string, Array<[key: string, value: string]>>;
 	savedFeatureValue: Feature | undefined;
@@ -27,7 +23,7 @@ type MapBlockComponent = DefineComponent<{
 interface AsyncMapProps {
 	features?: readonly SelectItem[];
 	disabled: boolean;
-	drawFeatureType?: DrawFeatureType;
+	singleFeatureType?: SingleFeatureType;
 	mode: Mode;
 	savedFeatureValue: string | undefined;
 }
@@ -86,7 +82,7 @@ onMounted(loadMap);
 		<component
 			:is="mapComponent"
 			v-else
-			:draw-feature-type="drawFeatureType"
+			:single-feature-type="singleFeatureType"
 			:feature-collection="featureCollectionAndProps.featureCollection"
 			:mode="mode"
 			:ordered-extra-props="featureCollectionAndProps.orderedExtraPropsMap"

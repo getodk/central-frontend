@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {
-	DRAW_FEATURE_TYPES,
-	type DrawFeatureType,
-} from '@/components/common/map/useMapInteractions.ts';
+	SINGLE_FEATURE_TYPES,
+	type SingleFeatureType,
+} from '@/components/common/map/getModeConfig.ts';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 
 defineProps<{
-	drawFeatureType: DrawFeatureType | undefined;
+	singleFeatureType: SingleFeatureType | undefined;
 	visible: boolean;
 }>();
 
@@ -15,16 +15,22 @@ const emit = defineEmits(['update:visible', 'deleteFeature']);
 </script>
 
 <template>
-	<Dialog :visible="visible" modal class="map-block-dialog" :draggable="false" @update:visible="emit('update:visible', $event)">
+	<Dialog
+		:visible="visible"
+		modal
+		class="map-block-dialog"
+		:draggable="false"
+		@update:visible="emit('update:visible', $event)"
+	>
 		<template #header>
 			<!-- TODO: translations -->
-			<strong v-if="drawFeatureType === DRAW_FEATURE_TYPES.SHAPE">Delete entire shape?</strong>
+			<strong v-if="singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE">Delete entire shape?</strong>
 			<strong v-else>Delete entire trace?</strong>
 		</template>
 
 		<template #default>
 			<!-- TODO: translations -->
-			<p v-if="drawFeatureType === DRAW_FEATURE_TYPES.SHAPE">
+			<p v-if="singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE">
 				Are you sure you want to delete this entire shape and start over?
 			</p>
 			<p v-else>

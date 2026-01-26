@@ -1,4 +1,8 @@
-import type { ModeCapabilities } from '@/components/common/map/getModeConfig.ts';
+import {
+	type ModeCapabilities,
+	SINGLE_FEATURE_TYPES,
+	type SingleFeatureType,
+} from '@/components/common/map/getModeConfig.ts';
 import { getPhantomPointStyle } from '@/components/common/map/map-styles.ts';
 import {
 	IS_SELECTED_PROPERTY,
@@ -23,12 +27,6 @@ import type { Pixel } from 'ol/pixel';
 import type VectorSource from 'ol/source/Vector';
 import { shallowRef } from 'vue';
 
-export const DRAW_FEATURE_TYPES = {
-	SHAPE: 'shape',
-	TRACE: 'trace',
-} as const;
-export type DrawFeatureType = (typeof DRAW_FEATURE_TYPES)[keyof typeof DRAW_FEATURE_TYPES];
-
 export interface UseMapInteractions {
 	hasUndoHistory: () => boolean;
 	popUndoState: () => Feature | null | undefined;
@@ -52,7 +50,7 @@ const SELECT_HIT_TOLERANCE = 15;
 export function useMapInteractions(
 	mapInstance: Map,
 	capabilities: ModeCapabilities,
-	drawFeatureType: DrawFeatureType | undefined
+	singleFeatureType: SingleFeatureType | undefined
 ): UseMapInteractions {
 	const currentLocationObserver = shallowRef<IntersectionObserver | undefined>();
 	const pointerInteraction = shallowRef<PointerInteraction | undefined>();
@@ -170,11 +168,11 @@ export function useMapInteractions(
 		resolution: number,
 		feature: Feature | undefined
 	) => {
-		if (drawFeatureType === DRAW_FEATURE_TYPES.SHAPE) {
+		if (singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE) {
 			return addShapeVertex(resolution, coordinate, feature, LONG_PRESS_HIT_TOLERANCE);
 		}
 
-		if (drawFeatureType === DRAW_FEATURE_TYPES.TRACE) {
+		if (singleFeatureType === SINGLE_FEATURE_TYPES.TRACE) {
 			return addTraceVertex(resolution, coordinate, feature, LONG_PRESS_HIT_TOLERANCE);
 		}
 
@@ -191,7 +189,7 @@ export function useMapInteractions(
 		pushUndoState(feature ?? null);
 		const updatedFeature = resolveFeatureForLongPress(coordinate, resolution, feature)!;
 
-		if (!drawFeatureType && !source.isEmpty()) {
+		if (singleFeatureType === SINGLE_FEATURE_TYPES.POINT && !source.isEmpty()) {
 			source.clear(true);
 		}
 

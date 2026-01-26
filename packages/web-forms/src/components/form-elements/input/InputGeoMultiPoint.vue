@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import AsyncMap from '@/components/common/map/AsyncMap.vue';
-import { MODES } from '@/components/common/map/getModeConfig.ts';
+import { MODES, type SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
 import type { GeoshapeInputNode, GeotraceInputNode } from '@getodk/xforms-engine';
 
 interface InputGeoMultiPointProps {
 	readonly question: GeoshapeInputNode | GeotraceInputNode;
-	readonly drawFeatureType: 'shape' | 'trace';
+	readonly singleFeatureType: SingleFeatureType;
 }
 
 defineProps<InputGeoMultiPointProps>();
@@ -14,9 +14,9 @@ defineProps<InputGeoMultiPointProps>();
 <template>
 	<AsyncMap
 		:disabled="question.currentState.readonly"
-		:draw-feature-type="drawFeatureType"
 		:mode="MODES.DRAW"
 		:saved-feature-value="question.currentState.instanceValue"
+		:single-feature-type="singleFeatureType"
 		@save="(value) => question.setValue(value ?? '')"
 	/>
 </template>

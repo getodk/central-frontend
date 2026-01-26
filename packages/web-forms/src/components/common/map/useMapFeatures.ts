@@ -1,17 +1,30 @@
-import type { ModeCapabilities } from '@/components/common/map/getModeConfig.ts';
+import {
+	type ModeCapabilities,
+	SINGLE_FEATURE_TYPES,
+	type SingleFeatureType,
+} from '@/components/common/map/getModeConfig.ts';
 import { ODK_VALUE_PROPERTY } from '@/components/common/map/useMapBlock.ts';
-import type { UseMapViewControls } from '@/components/common/map/useMapViewControls.ts';
+import {
+	COORDINATE_LAYOUT_XYZM,
+	type UseMapViewControls,
+} from '@/components/common/map/useMapViewControls.ts';
 import type { FeatureCollection, Feature as GeoJsonFeature } from 'geojson';
 import { Map } from 'ol';
+import type { Coordinate } from 'ol/coordinate';
 import { intersects } from 'ol/extent';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
+import { LineString, Point, Polygon } from 'ol/geom';
 import type WebGLVectorLayer from 'ol/layer/WebGLVector';
 import type VectorSource from 'ol/source/Vector';
 import { shallowRef, watch } from 'vue';
 
 export interface UseMapFeatures {
-	createFeature: (geoJsonFeature: GeoJsonFeature) => Feature | undefined;
+	createFeatureFromGeoJSON: (geoJsonFeature: GeoJsonFeature) => Feature | undefined;
+	createFeatureFromType: (
+		type: SingleFeatureType | undefined,
+		coords: Coordinate | Coordinate[] | Coordinate[][]
+	) => Feature | undefined;
 	findAndSaveFeature: (
 		source: VectorSource,
 		value: GeoJsonFeature | undefined,
@@ -45,7 +58,7 @@ export function useMapFeatures(
 	const selectedFeature = shallowRef<Feature | undefined>();
 	const savedFeature = shallowRef<Feature | undefined>();
 
-	const createFeature = (geoJsonFeature: GeoJsonFeature): Feature | undefined => {
+	const createFeatureFromGeoJSON = (geoJsonFeature: GeoJsonFeature): Feature | undefined => {
 		const feature: Feature | Feature[] = new GeoJSON().readFeature(geoJsonFeature, {
 			dataProjection: DEFAULT_GEOJSON_PROJECTION,
 			featureProjection: mapInstance.getView().getProjection(),
@@ -56,6 +69,27 @@ export function useMapFeatures(
 		}
 
 		return feature;
+	};
+
+	const createFeatureFromType = (
+		type: SingleFeatureType | undefined,
+		coords: Coordinate | Coordinate[] | Coordinate[][]
+	): Feature | undefined => {
+		if (type === SINGLE_FEATURE_TYPES.SHAPE) {
+			return new Feature({
+				geometry: new Polygon(coords as Coordinate[][], COORDINATE_LAYOUT_XYZM),
+			});
+		}
+
+		if (type === SINGLE_FEATURE_TYPES.TRACE) {
+			return new Feature({
+				geometry: new LineString(coords as Coordinate[], COORDINATE_LAYOUT_XYZM),
+			});
+		}
+
+		if (type === SINGLE_FEATURE_TYPES.POINT) {
+			return new Feature({ geometry: new Point(coords as Coordinate, COORDINATE_LAYOUT_XYZM) });
+		}
 	};
 
 	const loadAndSaveSingleFeature = (source: VectorSource, feature: Feature) => {
@@ -174,7 +208,8 @@ export function useMapFeatures(
 	);
 
 	return {
-		createFeature,
+		createFeatureFromGeoJSON,
+		createFeatureFromType,
 		findAndSaveFeature,
 		getSavedFeature,
 		getSavedFeatureValue,

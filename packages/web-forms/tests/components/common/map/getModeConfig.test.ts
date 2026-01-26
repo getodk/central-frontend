@@ -22,6 +22,8 @@ describe('getModeConfig', () => {
 				canShowMapOverlayOnError: false,
 				canUndoLastChange: false,
 				canDeleteFeature: false,
+				canUpdateFeatureCoordinates: false,
+				canUpdateVertexCoordinates: false,
 			},
 		});
 	});
@@ -46,6 +48,8 @@ describe('getModeConfig', () => {
 				canShowMapOverlayOnError: true,
 				canUndoLastChange: false,
 				canDeleteFeature: false,
+				canUpdateFeatureCoordinates: false,
+				canUpdateVertexCoordinates: false,
 			},
 		});
 	});
@@ -70,6 +74,8 @@ describe('getModeConfig', () => {
 				canShowMapOverlayOnError: false,
 				canUndoLastChange: false,
 				canDeleteFeature: false,
+				canUpdateFeatureCoordinates: false,
+				canUpdateVertexCoordinates: false,
 			},
 		});
 	});
@@ -94,6 +100,8 @@ describe('getModeConfig', () => {
 				canShowMapOverlayOnError: false,
 				canUndoLastChange: true,
 				canDeleteFeature: true,
+				canUpdateFeatureCoordinates: true,
+				canUpdateVertexCoordinates: true,
 			},
 		});
 	});
@@ -119,6 +127,8 @@ describe('getModeConfig', () => {
 				canShowMapOverlayOnError: false,
 				canUndoLastChange: false,
 				canDeleteFeature: false,
+				canUpdateFeatureCoordinates: false,
+				canUpdateVertexCoordinates: false,
 			},
 		});
 	});
