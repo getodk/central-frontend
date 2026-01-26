@@ -11,12 +11,13 @@ import type {
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { DescendantNodeInitOptions } from '../children/DescendantNodeInitOptions.ts';
-import type { AnyChildNode, AnyParentNode, RepeatRange } from '../hierarchy.ts';
+import type { AnyChildNode, AnyNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
@@ -63,7 +64,7 @@ export abstract class DescendantNode<
 		Definition extends DescendantNodeDefinition,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Spec extends DescendantNodeStateSpec<any>,
-		Parent extends AnyParentNode,
+		Parent extends AnyNode,
 		Child extends AnyChildNode | null = null,
 	>
 	extends InstanceNode<Definition, Spec, Parent, Child>
@@ -137,7 +138,7 @@ export abstract class DescendantNode<
 
 	constructor(
 		override readonly parent: Parent,
-		override readonly instanceNode: StaticElement | null,
+		override readonly instanceNode: StaticAttribute | StaticElement | null,
 		override readonly definition: Definition,
 		options?: DescendantNodeOptions
 	) {

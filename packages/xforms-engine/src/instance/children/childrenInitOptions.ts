@@ -1,3 +1,4 @@
+import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
@@ -37,7 +38,7 @@ const collectModelChildNodesets = (parentTemplate: StaticElement): readonly stri
 type InstanceNodesByNodeset = ReadonlyMap<string, readonly [StaticElement, ...StaticElement[]]>;
 
 const groupChildElementsByNodeset = (
-	parent: StaticDocument | StaticElement
+	parent: StaticAttribute | StaticDocument | StaticElement
 ): InstanceNodesByNodeset => {
 	const result = new Map<string, [StaticElement, ...StaticElement[]]>();
 

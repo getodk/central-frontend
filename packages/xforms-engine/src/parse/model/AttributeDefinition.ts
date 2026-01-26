@@ -19,6 +19,7 @@ export class AttributeDefinition
 
 	readonly value: string;
 	readonly type = 'attribute';
+	readonly valueType = 'string';
 	readonly namespaceDeclarations: NamespaceDeclarationMap;
 	readonly bodyElement = null;
 	readonly root: RootDefinition;
@@ -55,5 +56,11 @@ export class AttributeDefinition
 
 	serializeAttributeXML(): string {
 		return this.serializedXML;
+	}
+
+	toJSON() {
+		const { bind, bodyElement, parent, root, ...rest } = this;
+
+		return rest;
 	}
 }

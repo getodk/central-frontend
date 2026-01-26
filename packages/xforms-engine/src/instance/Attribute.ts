@@ -1,9 +1,8 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { AttributeNode } from '../client/AttributeNode.ts';
-import type { ActiveLanguage, InstanceState, NullValidationState } from '../client/index.ts';
+import type { InstanceState, NullValidationState } from '../client/index.ts';
 import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXPathNode.ts';
-import type { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
 import { createAttributeNodeInstanceState } from '../lib/client-reactivity/instance-state/createAttributeNodeInstanceState.ts';
 import {
@@ -19,31 +18,31 @@ import {
 	createSharedNodeState,
 	type SharedNodeState,
 } from '../lib/reactivity/node-state/createSharedNodeState.ts';
-import type { ReactiveScope } from '../lib/reactivity/scope.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { AttributeDefinition } from '../parse/model/AttributeDefinition.ts';
-import type { AnyChildNode, AnyNode } from './hierarchy.ts';
+import { DescendantNode, type DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
+import type { AnyNode } from './hierarchy.ts';
 import type { AttributeContext } from './internal-api/AttributeContext.ts';
-import type { InstanceConfig } from './internal-api/InstanceConfig.ts';
 import type { DecodeInstanceValue } from './internal-api/InstanceValueContext.ts';
 import type { ClientReactiveSerializableAttributeNode } from './internal-api/serialization/ClientReactiveSerializableAttributeNode.ts';
-import type { PrimaryInstance } from './PrimaryInstance.ts';
 import type { Root } from './Root.ts';
 
-export interface AttributeStateSpec {
+export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
+	readonly children: null;
 	readonly value: SimpleAtomicState<string>;
 	readonly instanceValue: Accessor<string>;
 	readonly relevant: Accessor<boolean>;
 }
 
 export class Attribute
+	extends DescendantNode<AttributeDefinition, AttributeStateSpec, AnyNode, null>
 	implements
 		AttributeNode,
 		ClientReactiveSerializableAttributeNode,
 		AttributeContext,
 		XFormsXPathAttribute
 {
-	readonly [XPathNodeKindKey] = 'attribute';
+	override readonly [XPathNodeKindKey] = 'attribute';
 
 	protected readonly state: SharedNodeState<AttributeStateSpec>;
 	protected readonly engineState: EngineState<AttributeStateSpec>;
@@ -62,60 +61,27 @@ export class Attribute
 	protected readonly getInstanceValue: Accessor<string>;
 	protected readonly valueState: RuntimeValueState<RuntimeValue<'string'>>;
 	protected readonly setValueState: RuntimeValueSetter<RuntimeInputValue<'string'>>;
-	readonly evaluator: EngineXPathEvaluator;
-	readonly getActiveLanguage: Accessor<ActiveLanguage>;
-	readonly contextNode: AnyNode;
-	readonly scope: ReactiveScope;
-	readonly rootDocument: PrimaryInstance;
-	readonly instanceConfig: InstanceConfig;
 
-	readonly root: Root;
-
-	readonly isRelevant: Accessor<boolean> = () => {
-		return this.owner.isRelevant();
-	};
-
-	readonly isAttached: Accessor<boolean> = () => {
+	override readonly isAttached: Accessor<boolean> = () => {
 		return this.owner.isAttached();
-	};
-
-	readonly isReadonly: Accessor<boolean> = () => {
-		return true;
-	};
-
-	readonly hasReadonlyAncestor: Accessor<boolean> = () => {
-		const { owner } = this;
-		return owner.hasReadonlyAncestor() || owner.isReadonly();
-	};
-
-	readonly hasNonRelevantAncestor: Accessor<boolean> = () => {
-		const { owner } = this;
-		return owner.hasNonRelevantAncestor() || !owner.isRelevant();
-	};
-
-	readonly contextReference = (): string => {
-		return this.owner.contextReference() + '/@' + this.definition.qualifiedName.getPrefixedName();
 	};
 
 	constructor(
 		readonly owner: AnyNode,
-		readonly definition: AttributeDefinition,
-		readonly instanceNode: StaticAttribute
+		definition: AttributeDefinition,
+		override readonly instanceNode: StaticAttribute
 	) {
+		const computeReference = () => {
+			return `${this.owner.contextReference()}/@${this.definition.qualifiedName.getPrefixedName()}`;
+		};
+
+		super(owner, instanceNode, definition, { computeReference });
+
 		const codec = getSharedValueCodec('string');
 
-		this.contextNode = owner;
-		this.scope = owner.scope;
-		this.rootDocument = owner.rootDocument;
-
-		this.root = owner.root;
-		this.instanceConfig = owner.instanceConfig;
-
-		this.getActiveLanguage = owner.getActiveLanguage;
 		this.validationState = { violations: [] };
 
 		this.valueType = 'string';
-		this.evaluator = owner.evaluator;
 		this.decodeInstanceValue = codec.decodeInstanceValue;
 
 		const instanceValueState = createInstanceValueState(this);
@@ -134,6 +100,15 @@ export class Attribute
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
 				relevant: this.owner.isRelevant,
+
+				readonly: () => true,
+				reference: this.contextReference,
+				required: () => false,
+				children: null,
+				label: () => null,
+				hint: () => null,
+				attributes: () => [],
+				valueOptions: () => [],
 			},
 			this.instanceConfig
 		);
@@ -152,13 +127,5 @@ export class Attribute
 
 	getChildren(): readonly [] {
 		return [];
-	}
-
-	getXPathChildNodes(): readonly AnyChildNode[] {
-		return [];
-	}
-
-	getXPathValue(): string {
-		return '';
 	}
 }

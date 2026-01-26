@@ -20,6 +20,7 @@ export class StaticAttribute extends StaticNode<'attribute'> implements XFormsXP
 	readonly nodeset: string;
 	readonly attributes = [] as const;
 	readonly children = null;
+	readonly childElements = [];
 	readonly value: string;
 
 	constructor(

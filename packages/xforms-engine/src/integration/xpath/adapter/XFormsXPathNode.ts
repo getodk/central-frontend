@@ -120,6 +120,7 @@ export interface XFormsXPathPrimaryInstanceNode extends XFormsXPathNode {
 // prettier-ignore
 export type XFormsXPathPrimaryInstanceDescendantNodeKind =
 	| XFormsXPathNodeRangeKind
+	| XPathAttributeKind
 	| XPathElementKind
 	| XPathTextKind;
 
